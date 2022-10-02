@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View"/>
+        <import type="android.widget.ImageView.ScaleType"/>
+        <variable
+            name="data"
+            type="org.linphone.activities.main.chat.data.ChatMessageContentData" />
+        <variable
+            name="longClickListener"
+            type="android.view.View.OnLongClickListener"/>
+        <variable
+            name="inflatedVisibility"
+            type="Integer" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onLongClick="@{longClickListener}"
+        android:visibility="@{inflatedVisibility}"
+        inflatedLifecycleOwner="@{true}">
+
+        <org.linphone.views.VoiceRecordProgressBar
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/progress_bar_height"
+            android:layout_centerVertical="true"
+            android:progress="@{data.voiceRecordPlayingPosition}"
+            android:secondaryProgress="@{data.voiceRecordPlayingPosition}"
+            app:max="@{data.voiceRecordDuration}"
+            app:progressDrawable="@drawable/chat_message_audio_record_progress"
+            app:secondaryProgressTint="@{data.outgoing ? @color/chat_bubble_outgoing_color_dark : @color/chat_bubble_incoming_color_dark}"
+            app:primaryLeftMargin="40dp"
+            app:primaryRightMargin="50dp"/>
+
+        <ImageView
+            android:id="@+id/play_voice_record"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:contentDescription="@string/content_description_play_voice_recording"
+            android:background="@drawable/round_recording_button_background_dark"
+            android:onClick="@{() -> data.isVoiceRecordPlaying() ? data.pauseVoiceRecording() : data.playVoiceRecording()}"
+            android:padding="9dp"
+            android:src="@{data.isVoiceRecordPlaying() ? @drawable/record_pause_dark : @drawable/record_play_dark, default=@drawable/record_play_dark}" />
+
+        <TextView
+            android:id="@+id/recording_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:text="@{data.formattedDuration, default=`00:00`}"
+            android:textColor="@color/light_primary_text_color"
+            android:textSize="15sp" />
+
+    </RelativeLayout>
+
+</layout>

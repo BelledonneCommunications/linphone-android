@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="applyClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.voip.viewmodels.ConferenceParticipantsViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="?attr/voipBackgroundBWColor">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/main_activity_top_bar_size"
+            android:layout_gravity="center_horizontal"
+            android:background="?attr/voipToolbarBackgroundColor"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/back"
+                android:contentDescription="@string/content_description_go_back"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:padding="18dp"
+                android:src="@drawable/back" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.6"
+                android:gravity="center"
+                android:orientation="horizontal"
+                style="@style/calls_list_header_font"
+                android:text="@string/conference_schedule_participants_list"/>
+
+            <ImageView
+                android:onClick="@{applyClickListener}"
+                android:enabled="@{viewModel.selectedAddresses.size() > 0}"
+                android:contentDescription="@string/content_description_enter_edition_mode"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:padding="18dp"
+                android:src="@drawable/icon_apply" />
+
+        </LinearLayout>
+
+        <EditText
+            android:text="@={viewModel.filter}"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:inputType="textPersonName"
+            android:layout_margin="10dp"
+            android:drawableLeft="@drawable/search"
+            android:drawablePadding="10dp"
+            android:background="@color/transparent_color"
+            android:backgroundTint="@color/transparent_color"
+            android:hint="@string/contact_filter_hint"/>
+
+        <HorizontalScrollView
+            android:id="@+id/layoutContactsSelected"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="?attr/voipToolbarBackgroundColor"
+            android:fadeScrollbars="false"
+            android:lines="1">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:lines="1"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:scrollIndicators="bottom"
+                app:entries="@{viewModel.selectedAddresses}"
+                app:parent="@{viewModel}"
+                app:layout="@{@layout/contact_selected_cell}" />
+
+        </HorizontalScrollView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/contactsList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            style="@style/empty_list_font"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:text="@string/no_sip_contact"
+            android:visibility="@{viewModel.sipContactsSelected &amp;&amp; viewModel.contactsList.empty ? View.VISIBLE : View.GONE}" />
+
+        <TextView
+            style="@style/empty_list_font"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:text="@string/no_contact"
+            android:visibility="@{!viewModel.sipContactsSelected &amp;&amp; viewModel.contactsList.empty ? View.VISIBLE : View.GONE}" />
+
+    </LinearLayout>
+
+</layout>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="cancelClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="selectAllClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="unSelectAllClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="deleteClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.main.viewmodels.ListTopBarViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/main_activity_top_bar_size"
+        android:background="?attr/lightToolbarBackgroundColor"
+        android:visibility="@{viewModel.isEditionEnabled ? View.VISIBLE : View.GONE, default=gone}"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:onClick="@{cancelClickListener}"
+            android:contentDescription="@string/content_description_exit_edition_mode"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:background="?attr/button_background_drawable"
+            android:padding="10dp"
+            android:src="@drawable/cancel" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.4" />
+
+        <ImageView
+            android:onClick="@{selectAllClickListener}"
+            android:visibility="@{viewModel.isSelectionNotEmpty ? View.GONE : View.VISIBLE}"
+            android:contentDescription="@string/content_description_select_all"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:background="?attr/button_background_drawable"
+            android:padding="15dp"
+            android:src="@drawable/select_all" />
+
+        <ImageView
+            android:onClick="@{unSelectAllClickListener}"
+            android:visibility="@{viewModel.isSelectionNotEmpty ? View.VISIBLE : View.GONE}"
+            android:contentDescription="@string/content_description_unselect_all"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:background="?attr/button_background_drawable"
+            android:padding="15dp"
+            android:src="@drawable/deselect_all" />
+
+        <ImageView
+            android:onClick="@{deleteClickListener}"
+            android:enabled="@{viewModel.isSelectionNotEmpty}"
+            android:contentDescription="@string/content_description_delete_selection"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:background="?attr/button_background_drawable"
+            android:padding="15dp"
+            android:src="@drawable/delete" />
+
+    </LinearLayout>
+
+</layout>

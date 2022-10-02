@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="createAccountClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="accountLoginClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="genericAccountLoginClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="remoteProvisioningClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.assistant.viewmodels.WelcomeViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/top_bar_fragment"
+            android:name="org.linphone.activities.assistant.fragments.TopBarFragment"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/main_activity_top_bar_size"
+            android:layout_alignParentTop="true"
+            tools:layout="@layout/assistant_top_bar_fragment" />
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/top_bar_fragment">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/standard_text_font"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/assistant_welcome_title"
+                    android:paddingTop="10dp"
+                    android:textAllCaps="true" />
+
+                <TextView
+                    style="@style/standard_small_text_font"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_gravity="top"
+                    android:paddingTop="10dp"
+                    android:text="@string/assistant_welcome_desc" />
+
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:columnCount="2">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="fill"
+                        android:layout_columnSpan="2"
+                        android:orientation="horizontal"
+                        android:layout_margin="10dp">
+
+                        <CheckBox
+                            android:enabled="@{!viewModel.termsAndPrivacyAccepted}"
+                            android:checked="@={viewModel.termsAndPrivacyAccepted}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                        <TextView
+                            android:id="@+id/terms_and_privacy"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/account_creation"
+                        android:enabled="@{viewModel.termsAndPrivacyAccepted}"
+                        android:visibility="@{viewModel.showCreateAccount ? View.VISIBLE : View.GONE}"
+                        android:onClick="@{createAccountClickListener}"
+                        style="@style/button_font"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:layout_margin="20dp"
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="fill"
+                        android:layout_columnWeight="1"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/assistant_button"
+                        android:textColor="@drawable/assistant_button_text_color"
+                        android:text="@string/assistant_create_account" />
+
+                    <TextView
+                        android:id="@+id/account_connection"
+                        android:enabled="@{viewModel.termsAndPrivacyAccepted}"
+                        android:visibility="@{viewModel.showLinphoneLogin ? View.VISIBLE : View.GONE}"
+                        android:onClick="@{accountLoginClickListener}"
+                        style="@style/button_font"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:layout_margin="20dp"
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="fill"
+                        android:layout_columnWeight="1"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/assistant_button"
+                        android:textColor="@drawable/assistant_button_text_color"
+                        android:text="@string/assistant_login_linphone" />
+
+                    <TextView
+                        android:id="@+id/generic_connection"
+                        android:enabled="@{viewModel.termsAndPrivacyAccepted}"
+                        android:visibility="@{viewModel.showGenericLogin ? View.VISIBLE : View.GONE}"
+                        android:onClick="@{genericAccountLoginClickListener}"
+                        style="@style/button_font"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:layout_margin="20dp"
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="fill"
+                        android:layout_columnWeight="1"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/assistant_button"
+                        android:textColor="@drawable/assistant_button_text_color"
+                        android:text="@string/assistant_login_generic" />
+
+                    <TextView
+                        android:id="@+id/remote_configuration"
+                        android:enabled="@{viewModel.termsAndPrivacyAccepted}"
+                        android:visibility="@{viewModel.showRemoteProvisioning ? View.VISIBLE : View.GONE}"
+                        android:onClick="@{remoteProvisioningClickListener}"
+                        style="@style/button_font"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:layout_margin="20dp"
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="fill"
+                        android:layout_columnWeight="1"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/assistant_button"
+                        android:textColor="@drawable/assistant_button_text_color"
+                        android:text="@string/assistant_remote_provisioning" />
+
+                </GridLayout>
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </RelativeLayout>
+
+</layout>

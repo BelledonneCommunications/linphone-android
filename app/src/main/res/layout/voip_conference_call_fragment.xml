@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="org.linphone.activities.voip.ConferenceDisplayMode" />
+
+        <import type="com.google.android.flexbox.FlexDirection" />
+
+        <variable
+            name="controlsViewModel"
+            type="org.linphone.activities.voip.viewmodels.ControlsViewModel" />
+
+        <variable
+            name="callsViewModel"
+            type="org.linphone.activities.voip.viewmodels.CallsViewModel" />
+
+        <variable
+            name="conferenceViewModel"
+            type="org.linphone.activities.voip.viewmodels.ConferenceViewModel" />
+
+        <variable
+            name="statsViewModel"
+            type="org.linphone.activities.voip.viewmodels.StatisticsListViewModel" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinator"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/voipBackgroundColor">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@{controlsViewModel.fullScreenMode ? @color/black_color : @color/transparent_color}">
+
+            <ViewStub
+                android:id="@+id/stubbed_conference_active_speaker_layout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout="@layout/voip_conference_active_speaker"
+                android:visibility="@{conferenceViewModel.conferenceDisplayMode == ConferenceDisplayMode.ACTIVE_SPEAKER &amp;&amp; conferenceViewModel.conferenceExists &amp;&amp; !callsViewModel.currentCallData.isActiveAndNotInConference ? View.VISIBLE : View.GONE, default=gone}"
+                app:conferenceViewModel="@{conferenceViewModel}"
+                app:controlsViewModel="@{controlsViewModel}"
+                app:inflatedVisibility="@{conferenceViewModel.conferenceDisplayMode == ConferenceDisplayMode.ACTIVE_SPEAKER &amp;&amp; conferenceViewModel.conferenceExists &amp;&amp; !callsViewModel.currentCallData.isActiveAndNotInConference ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ViewStub
+                android:id="@+id/stubbed_conference_grid_layout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout="@layout/voip_conference_grid"
+                android:visibility="@{conferenceViewModel.conferenceDisplayMode == ConferenceDisplayMode.GRID &amp;&amp; conferenceViewModel.conferenceExists &amp;&amp; !callsViewModel.currentCallData.isActiveAndNotInConference ? View.VISIBLE : View.GONE, default=gone}"
+                app:conferenceViewModel="@{conferenceViewModel}"
+                app:controlsViewModel="@{controlsViewModel}"
+                app:inflatedVisibility="@{conferenceViewModel.conferenceDisplayMode == ConferenceDisplayMode.GRID &amp;&amp; conferenceViewModel.conferenceExists &amp;&amp; !callsViewModel.currentCallData.isActiveAndNotInConference ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ViewStub
+                android:id="@+id/stubbed_conference_audio_only_layout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout="@layout/voip_conference_audio_only"
+                android:visibility="@{conferenceViewModel.conferenceDisplayMode == ConferenceDisplayMode.AUDIO_ONLY &amp;&amp; conferenceViewModel.conferenceExists &amp;&amp; !callsViewModel.currentCallData.isActiveAndNotInConference ? View.VISIBLE : View.GONE, default=gone}"
+                app:conferenceViewModel="@{conferenceViewModel}"
+                app:controlsViewModel="@{controlsViewModel}"
+                app:inflatedVisibility="@{conferenceViewModel.conferenceDisplayMode == ConferenceDisplayMode.AUDIO_ONLY &amp;&amp; conferenceViewModel.conferenceExists &amp;&amp; !callsViewModel.currentCallData.isActiveAndNotInConference ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ViewStub
+                android:id="@+id/stubbed_audio_routes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginBottom="10dp"
+                android:layout="@layout/voip_buttons_audio_routes"
+                android:visibility="@{controlsViewModel.audioRoutesEnabled ? View.VISIBLE : View.GONE}"
+                app:controlsViewModel="@{controlsViewModel}"
+                app:inflatedVisibility="@{controlsViewModel.audioRoutesEnabled ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toTopOf="@id/primary_buttons"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <include
+                android:id="@+id/primary_buttons"
+                layout="@layout/voip_buttons"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/voip_buttons_fragment_size"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:visibility="@{controlsViewModel.fullScreenMode || controlsViewModel.pipMode ? View.GONE : View.VISIBLE}"
+                app:callsViewModel="@{callsViewModel}"
+                app:conferenceViewModel="@{conferenceViewModel}"
+                app:controlsViewModel="@{controlsViewModel}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintWidth_max="@dimen/voip_buttons_max_width" />
+
+            <ViewStub
+                android:id="@+id/stubbed_paused_conference"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="5dp"
+                android:layout="@layout/voip_conference_paused"
+                android:visibility="@{conferenceViewModel.isConferenceLocallyPaused ? View.VISIBLE : View.GONE, default=gone}"
+                app:conferenceViewModel="@{conferenceViewModel}"
+                app:inflatedVisibility="@{conferenceViewModel.isConferenceLocallyPaused ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toTopOf="@id/primary_buttons"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/popup_background"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/voip_translucent_popup_background"
+                android:onClick="@{() -> controlsViewModel.hideExtraButtons(false)}"
+                android:visibility="@{controlsViewModel.showExtras ? View.VISIBLE : View.GONE, default=gone}" />
+
+            <include
+                android:id="@+id/extra_buttons_layout"
+                layout="@layout/voip_buttons_extra"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/voip_call_extra_buttons_height"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:translationY="@{controlsViewModel.extraButtonsMenuTranslateY, default=@dimen/voip_call_extra_buttons_translate_y}"
+                app:callsViewModel="@{callsViewModel}"
+                app:conferenceViewModel="@{conferenceViewModel}"
+                app:controlsViewModel="@{controlsViewModel}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintWidth_max="@dimen/voip_extra_menu_max_width" />
+
+            <ViewStub
+                android:id="@+id/stubbed_call_stats"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout="@layout/voip_call_stats"
+                android:visibility="@{controlsViewModel.callStatsVisible ? View.VISIBLE : View.GONE, default=gone}"
+                app:controlsViewModel="@{controlsViewModel}"
+                app:inflatedVisibility="@{controlsViewModel.callStatsVisible ? View.VISIBLE : View.GONE}"
+                app:statsViewModel="@{statsViewModel}" />
+
+            <ViewStub
+                android:id="@+id/stubbed_numpad"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout="@layout/voip_numpad"
+                android:visibility="@{controlsViewModel.numpadVisible ? View.VISIBLE : View.GONE, default=gone}"
+                app:controlsViewModel="@{controlsViewModel}"
+                app:inflatedVisibility="@{controlsViewModel.numpadVisible ? View.VISIBLE : View.GONE}" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <include
+            android:id="@+id/creation_pending_layout"
+            layout="@layout/voip_conference_creation_pending_wait_layout"
+            bind:visibility="@{conferenceViewModel.conferenceCreationPending}" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</layout>

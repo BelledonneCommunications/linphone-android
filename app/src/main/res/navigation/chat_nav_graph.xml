@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/chat_nav_graph"
+    app:startDestination="@id/emptyChatFragment">
+
+    <fragment
+        android:id="@+id/emptyChatFragment"
+        android:name="org.linphone.activities.main.fragments.EmptyFragment"
+        tools:layout="@layout/empty_fragment"
+        android:label="EmptyChatFragment"  />
+
+    <action android:id="@+id/action_global_emptyChatFragment"
+        app:destination="@id/emptyChatFragment" />
+
+    <fragment
+        android:id="@+id/detailChatRoomFragment"
+        android:name="org.linphone.activities.main.chat.fragments.DetailChatRoomFragment"
+        tools:layout="@layout/chat_room_detail_fragment"
+        android:label="DetailChatRoomFragment">
+        <action
+            android:id="@+id/action_detailChatRoomFragment_to_imdnFragment"
+            app:destination="@id/imdnFragment" />
+        <action
+            android:id="@+id/action_detailChatRoomFragment_to_devicesFragment"
+            app:destination="@id/devicesFragment" />
+        <action
+            android:id="@+id/action_detailChatRoomFragment_to_groupInfoFragment"
+            app:destination="@id/groupInfoFragment" />
+        <action
+            android:id="@+id/action_detailChatRoomFragment_to_ephemeralFragment"
+            app:destination="@id/ephemeralFragment" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_detailChatRoomFragment"
+        app:destination="@id/detailChatRoomFragment" />
+
+    <fragment
+        android:id="@+id/chatRoomCreationFragment"
+        android:name="org.linphone.activities.main.chat.fragments.ChatRoomCreationFragment"
+        tools:layout="@layout/chat_room_creation_fragment"
+        android:label="ChatRoomCreationFragment">
+        <argument
+            android:name="createGroup"
+            app:argType="boolean"
+            android:defaultValue="false" />
+        <action
+            android:id="@+id/action_chatRoomCreationFragment_to_groupInfoFragment"
+            app:destination="@id/groupInfoFragment" />
+        <action
+            android:id="@+id/action_chatRoomCreationFragment_to_detailChatRoomFragment"
+            app:destination="@id/detailChatRoomFragment" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_chatRoomCreationFragment"
+        app:destination="@id/chatRoomCreationFragment" />
+
+    <fragment
+        android:id="@+id/devicesFragment"
+        android:name="org.linphone.activities.main.chat.fragments.DevicesFragment"
+        tools:layout="@layout/chat_room_devices_fragment"
+        android:label="DevicesFragment" />
+
+    <fragment
+        android:id="@+id/groupInfoFragment"
+        android:name="org.linphone.activities.main.chat.fragments.GroupInfoFragment"
+        tools:layout="@layout/chat_room_group_info_fragment"
+        android:label="GroupInfoFragment">
+        <action
+            android:id="@+id/action_groupInfoFragment_to_chatRoomCreationFragment"
+            app:destination="@id/chatRoomCreationFragment" />
+        <action
+            android:id="@+id/action_groupInfoFragment_to_detailChatRoomFragment"
+            app:destination="@id/detailChatRoomFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/imdnFragment"
+        android:name="org.linphone.activities.main.chat.fragments.ImdnFragment"
+        tools:layout="@layout/chat_room_imdn_fragment"
+        android:label="ImdnFragment">
+        <argument
+            android:name="MessageId"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/ephemeralFragment"
+        android:name="org.linphone.activities.main.chat.fragments.EphemeralFragment"
+        tools:layout="@layout/chat_room_ephemeral_fragment"
+        android:label="EphemeralFragment" />
+
+</navigation>

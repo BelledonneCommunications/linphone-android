@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="org.linphone.activities.voip.ConferenceDisplayMode" />
+
+        <variable
+            name="cancelClickListener"
+            type="android.view.View.OnClickListener" />
+
+        <variable
+            name="dismissDialogClickListener"
+            type="android.view.View.OnClickListener" />
+
+        <variable
+            name="conferenceViewModel"
+            type="org.linphone.activities.voip.viewmodels.ConferenceViewModel" />
+
+        <variable
+            name="controlsViewModel"
+            type="org.linphone.activities.voip.viewmodels.ControlsViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/voip_top_bar_size"
+            android:background="?attr/voipToolbarBackgroundColor"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                style="@style/calls_list_header_font"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:gravity="center_vertical"
+                android:text="@string/call_action_change_conf_layout"
+                app:layout_constraintTop_toBottomOf="@id/top_bar" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/cancel"
+                android:onClick="@{cancelClickListener}"
+                android:padding="10dp"
+                android:src="@drawable/icon_cancel"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="?attr/voipBackgroundBWColor"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/top_bar">
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:checked="@{conferenceViewModel.conferenceDisplayMode == ConferenceDisplayMode.GRID}"
+                    android:drawableEnd="@drawable/icon_conference_layout_grid"
+                    android:drawableTint="?attr/voipDrawableColor"
+                    android:enabled="@{conferenceViewModel.conferenceParticipantDevices.size() > conferenceViewModel.maxParticipantsForMosaicLayout ? false : true}"
+                    android:onClickListener="@{() -> conferenceViewModel.changeLayout(ConferenceDisplayMode.GRID)}"
+                    android:text="@string/conference_display_mode_mosaic" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/dividerColor" />
+
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:checked="@{conferenceViewModel.conferenceDisplayMode == ConferenceDisplayMode.ACTIVE_SPEAKER}"
+                    android:drawableEnd="@drawable/icon_conference_layout_active_speaker"
+                    android:drawableTint="?attr/voipDrawableColor"
+                    android:onClickListener="@{() -> conferenceViewModel.changeLayout(ConferenceDisplayMode.ACTIVE_SPEAKER)}"
+                    android:text="@string/conference_display_mode_active_speaker" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/dividerColor" />
+
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:checked="@{conferenceViewModel.conferenceDisplayMode == ConferenceDisplayMode.AUDIO_ONLY}"
+                    android:drawableEnd="@drawable/icon_conference_layout_audio_only"
+                    android:drawableTint="?attr/voipDrawableColor"
+                    android:onClickListener="@{() -> conferenceViewModel.changeLayout(ConferenceDisplayMode.AUDIO_ONLY)}"
+                    android:text="@string/conference_display_mode_audio_only" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/dividerColor" />
+
+            </RadioGroup>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <org.linphone.activities.voip.views.RoundCornersTextureView
+            android:id="@+id/local_preview_video_surface"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="10dp"
+            android:layout_size="@{@dimen/video_preview_max_size}"
+            app:alignTopRight="true"
+            app:displayMode="black_bars"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_max="200dp"
+            app:layout_constraintWidth_max="200dp" />
+
+        <ImageView
+            android:id="@+id/switch_camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:contentDescription="@string/content_description_switch_camera"
+            android:onClick="@{() -> controlsViewModel.switchCamera()}"
+            android:padding="10dp"
+            android:src="@drawable/icon_call_camera_switch"
+            android:visibility="@{controlsViewModel.isSwitchCameraAvailable &amp;&amp; !controlsViewModel.pipMode ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintEnd_toEndOf="@id/local_preview_video_surface"
+            app:layout_constraintTop_toTopOf="@id/local_preview_video_surface" />
+
+        <include
+            android:id="@+id/too_many_participants_dialog"
+            layout="@layout/voip_dialog_info"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:dialogMessage="@{@string/conference_layout_too_many_participants_for_mosaic}"
+            app:dismissClickListener="@{dismissDialogClickListener}" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

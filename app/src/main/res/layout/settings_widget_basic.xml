@@ -1,40 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:gravity="center_vertical|left">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="title"
+            type="String" />
+        <variable
+            name="subtitle"
+            type="String" />
+        <variable
+            name="enabled"
+            type="Boolean" />
+        <variable
+            name="icon"
+            type="android.graphics.drawable.Drawable" />
+        <variable
+            name="listener"
+            type="org.linphone.activities.main.settings.SettingListener" />
+    </data>
 
     <RelativeLayout
-        android:id="@+id/setting_layout"
+        android:onClick="@{() -> listener.onClicked()}"
+        android:enabled="@{enabled ?? true}"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:paddingTop="15dp"
-        android:paddingBottom="15dp">
+        android:layout_height="wrap_content">
 
-        <org.linphone.views.MarqueeTextView
-            android:id="@+id/setting_title"
-            android:singleLine="true"
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:layout_marginLeft="@dimen/settings_margin"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="@null"
+            android:visibility="@{icon != null ? View.VISIBLE : View.GONE}"
+            android:src="@{icon}" />
+
+        <TextView
+            android:id="@+id/settings_title"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:gravity="center_vertical"
+            android:text="@{title}"
+            android:enabled="@{enabled ?? true}"
+            android:visibility="@{title.length() > 0 ? View.VISIBLE : View.GONE}"
+            android:maxLines="2"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="@dimen/settings_margin"
+            android:layout_marginRight="@dimen/settings_margin"
+            android:layout_toRightOf="@id/icon"
             style="@style/settings_item_font"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            app:autoSizeTextType="uniform"
+            app:autoSizeMinTextSize="@dimen/setting_title_min_size"
+            app:autoSizeMaxTextSize="@dimen/setting_title_max_size"
+            app:autoSizeStepGranularity="@dimen/settings_granularity_step"/>
 
-        <org.linphone.views.MarqueeTextView
-            android:id="@+id/setting_subtitle"
-            android:singleLine="true"
-            android:layout_below="@id/setting_title"
-            style="@style/settings_item_subtitle_font"
+        <TextView
+            android:id="@+id/settings_subtitle"
+            android:text="@{subtitle}"
+            android:enabled="@{enabled ?? true}"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="20dp"
+            android:gravity="center_vertical"
+            android:visibility="@{subtitle.length() > 0 ? View.VISIBLE : View.GONE}"
+            android:maxLines="1"
+            android:layout_below="@id/settings_title"
+            android:layout_marginLeft="@dimen/settings_margin"
+            android:layout_marginRight="@dimen/settings_margin"
+            android:layout_toRightOf="@id/icon"
+            style="@style/settings_item_subtitle_font"
+            app:autoSizeTextType="uniform"
+            app:autoSizeMinTextSize="@dimen/setting_subtitle_min_size"
+            app:autoSizeMaxTextSize="@dimen/setting_subtitle_max_size"
+            app:autoSizeStepGranularity="@dimen/settings_granularity_step"/>
+
+        <View
+            android:layout_marginTop="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/settings_subtitle"
+            android:background="?attr/dividerColor" />
 
     </RelativeLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?attr/dividerColor" />
-
-</LinearLayout>
+</layout>

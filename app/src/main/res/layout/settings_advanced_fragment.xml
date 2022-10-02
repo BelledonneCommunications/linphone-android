@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:linphone="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+        <import type="android.text.InputType"/>
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.main.settings.viewmodels.AdvancedSettingsViewModel"/>
+        <variable
+            name="sharedMainViewModel"
+            type="org.linphone.activities.main.viewmodels.SharedMainViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/main_activity_top_bar_size"
+            android:layout_gravity="center_horizontal"
+            android:background="?attr/lightToolbarBackgroundColor"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/back"
+                android:visibility="@{sharedMainViewModel.isSlidingPaneSlideable ? View.VISIBLE : View.GONE}"
+                android:contentDescription="@string/content_description_go_back"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:background="?attr/button_background_drawable"
+                android:padding="18dp"
+                android:src="@drawable/back" />
+
+            <TextView
+                style="@style/accent_colored_title_font"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.6"
+                android:gravity="center"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:padding="15dp"
+                android:text="@string/settings_advanced_title"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:visibility="@{sharedMainViewModel.isSlidingPaneSlideable ? View.INVISIBLE : View.GONE}" />
+
+        </LinearLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/top_bar">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/settings_category_font"
+                    android:text="@string/advanced_settings_debug_title"
+                    android:paddingTop="15dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/advanced_settings_debug_mode_title}"
+                    linphone:listener="@{viewModel.debugModeListener}"
+                    linphone:checked="@={viewModel.debugMode}"/>
+
+                <include
+                    layout="@layout/settings_widget_text"
+                    linphone:title="@{@string/advanced_settings_logs_server_url_title}"
+                    linphone:subtitle="@{@string/advanced_settings_logs_server_url_summary}"
+                    linphone:listener="@{viewModel.logsServerUrlListener}"
+                    linphone:defaultValue="@{viewModel.logsServerUrl}"
+                    linphone:inputType="@{InputType.TYPE_TEXT_VARIATION_URI}"
+                    linphone:enabled="@{viewModel.debugMode}"/>
+
+                <include
+                    layout="@layout/settings_widget_basic"
+                    linphone:title="@{@string/advanced_settings_send_debug_logs_title}"
+                    linphone:listener="@{viewModel.sendDebugLogsListener}"
+                    linphone:enabled="@{viewModel.debugMode}"/>
+
+                <include
+                    layout="@layout/settings_widget_basic"
+                    linphone:title="@{@string/advanced_settings_reset_debug_logs_title}"
+                    linphone:listener="@{viewModel.resetDebugLogsListener}"
+                    linphone:enabled="@{viewModel.debugMode}"/>
+
+                <TextView
+                    style="@style/settings_category_font"
+                    android:text="@string/advanced_settings_other_title"
+                    android:paddingTop="15dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:enabled="@{viewModel.backgroundModeEnabled}"
+                    linphone:title="@{@string/advanced_settings_background_mode_title}"
+                    linphone:subtitle="@{@string/advanced_settings_background_mode_summary}"
+                    linphone:listener="@{viewModel.backgroundModeListener}"
+                    linphone:checked="@={viewModel.backgroundMode}"/>
+
+                <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/advanced_settings_auto_start_title}"
+                    linphone:listener="@{viewModel.autoStartListener}"
+                    linphone:checked="@={viewModel.autoStart}"/>
+
+                <include
+                    layout="@layout/settings_widget_list"
+                    linphone:title="@{@string/advanced_settings_dark_mode_title}"
+                    linphone:listener="@{viewModel.darkModeListener}"
+                    linphone:selectedIndex="@{viewModel.darkModeIndex}"
+                    linphone:labels="@{viewModel.darkModeLabels}"/>
+
+                <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/advanced_settings_animations_title}"
+                    linphone:listener="@{viewModel.animationsListener}"
+                    linphone:checked="@={viewModel.animations}"/>
+
+                <include
+                    layout="@layout/settings_widget_text"
+                    linphone:title="@{@string/advanced_settings_device_name_title}"
+                    linphone:subtitle="@{@string/advanced_settings_device_name_summary}"
+                    linphone:listener="@{viewModel.deviceNameListener}"
+                    linphone:defaultValue="@{viewModel.deviceName}"/>
+
+                <include
+                    layout="@layout/settings_widget_text"
+                    linphone:title="@{@string/advanced_settings_remote_provisioning_url_title}"
+                    linphone:listener="@{viewModel.remoteProvisioningUrlListener}"
+                    linphone:defaultValue="@{viewModel.remoteProvisioningUrl}"
+                    linphone:inputType="@{InputType.TYPE_TEXT_VARIATION_URI}"/>
+
+                <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/advanced_settings_vfs_title}"
+                    linphone:subtitle="@{@string/advanced_settings_vfs_summary}"
+                    linphone:listener="@{viewModel.vfsListener}"
+                    linphone:checked="@={viewModel.vfs}"
+                    linphone:enabled="@{!viewModel.vfs}"/>
+
+                <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/advanced_settings_disable_fragment_security_title}"
+                    linphone:subtitle="@{@string/advanced_settings_disable_fragment_security_summary}"
+                    linphone:listener="@{viewModel.disableSecureFragmentListener}"
+                    linphone:checked="@={viewModel.disableSecureFragment}"/>
+
+                <TextView
+                    style="@style/settings_category_font"
+                    android:text="@string/advanced_settings_android_title"
+                    android:paddingTop="15dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <include
+                    layout="@layout/settings_widget_basic"
+                    android:visibility="@{viewModel.batterySettingsVisibility ? View.VISIBLE : View.GONE}"
+                    linphone:listener="@{viewModel.goToBatterySettingsListener}"
+                    linphone:title="@{@string/advanced_settings_go_to_battery_optimization_settings}" />
+
+                <include
+                    layout="@layout/settings_widget_basic"
+                    android:visibility="@{viewModel.powerManagerSettingsVisibility ? View.VISIBLE : View.GONE}"
+                    linphone:listener="@{viewModel.goToPowerManagerSettingsListener}"
+                    linphone:title="@{@string/advanced_settings_go_to_power_manager_settings}" />
+
+                <include
+                    layout="@layout/settings_widget_basic"
+                    linphone:listener="@{viewModel.goToAndroidSettingsListener}"
+                    linphone:title="@{@string/advanced_settings_go_to_android_app_settings}" />
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <include
+            layout="@layout/wait_layout"
+            bind:visibility="@{viewModel.uploadInProgress}"/>
+
+    </RelativeLayout>
+
+</layout>

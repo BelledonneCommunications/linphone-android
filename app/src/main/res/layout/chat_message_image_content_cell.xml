@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <import type="android.widget.ImageView.ScaleType"/>
+        <variable
+            name="data"
+            type="org.linphone.activities.main.chat.data.ChatMessageContentData" />
+        <variable
+            name="longClickListener"
+            type="android.view.View.OnLongClickListener"/>
+        <variable
+            name="inflatedVisibility"
+            type="Integer" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="@{inflatedVisibility}"
+        inflatedLifecycleOwner="@{true}">
+
+        <ImageView
+            android:onClick="@{() -> data.openFile()}"
+            android:onLongClick="@{longClickListener}"
+            android:contentDescription="@string/content_description_downloaded_file_transfer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintHeight_max="@dimen/chat_message_bubble_image_height_big"
+            app:layout_constraintHeight_min="@dimen/chat_message_bubble_image_height_small"
+            android:layout_size="@{data.alone ? 0f : @dimen/chat_message_bubble_file_size}"
+            coil="@{data.filePath}"
+            android:scaleType="@{data.alone ? ScaleType.FIT_CENTER : ScaleType.CENTER_CROP}"
+            android:adjustViewBounds="true"
+            tools:ignore="MissingConstraints" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

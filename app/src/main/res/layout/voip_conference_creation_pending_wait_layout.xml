@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="visibility"
+            type="Boolean" />
+    </data>
+
+    <RelativeLayout
+        android:id="@+id/creation_pending_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="@{visibility ? View.VISIBLE : View.GONE}">
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:indeterminate="true"
+            android:indeterminateTint="?attr/accentColor"
+            android:indeterminateDrawable="@drawable/icon_spinner_rotating" />
+
+        <TextView
+            android:id="@+id/progress_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_below="@id/progress"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/primary_color"
+            android:textStyle="bold"
+            android:text="@string/operation_in_progress_wait" />
+
+    </RelativeLayout>
+
+</layout>

@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="org.linphone.activities.voip.ConferenceDisplayMode" />
+
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.main.conference.viewmodels.ConferenceWaitingRoomViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/voipBackgroundColor">
+
+        <TextView
+            android:id="@+id/conference_subject"
+            style="@style/conference_waiting_room_subject_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="20dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{viewModel.subject, default=`Conference subject`}" />
+
+        <TextView
+            style="@style/conference_waiting_room_no_video_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/conference_waiting_room_video_disabled"
+            android:visibility="@{viewModel.isVideoEnabled ? View.GONE : View.VISIBLE}" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/conference_controls"
+            android:layout_below="@id/conference_subject"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/shape_remote_video_background"
+            android:visibility="@{viewModel.isVideoEnabled ? View.VISIBLE : View.GONE, default=gone}">
+
+            <org.linphone.activities.voip.views.RoundCornersTextureView
+                android:id="@+id/local_preview_video_surface"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:alignTopRight="false"
+                app:displayMode="occupy_all_space"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:contentDescription="@string/content_description_switch_camera"
+                android:enabled="@{!viewModel.joinInProgress}"
+                android:onClick="@{() -> viewModel.switchCamera()}"
+                android:padding="10dp"
+                android:src="@drawable/icon_call_camera_switch"
+                android:visibility="@{viewModel.isSwitchCameraAvailable ? View.VISIBLE : View.GONE}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/conference_controls"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/buttons"
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/cancel"
+                style="@style/big_orange_button_font"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/shape_rect_gray_button"
+                android:gravity="center"
+                android:onClick="@{() -> viewModel.cancel()}"
+                android:paddingLeft="20dp"
+                android:paddingTop="8dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="8dp"
+                android:text="@string/conference_waiting_room_cancel_call"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/start"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_max="@dimen/conference_waiting_room_buttons_max_width"/>
+
+            <TextView
+                android:id="@+id/start"
+                style="@style/big_orange_button_bold_font"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="20dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_orange_background"
+                android:enabled="@{viewModel.networkReachable &amp;&amp; !viewModel.joinInProgress}"
+                android:gravity="center"
+                android:onClick="@{() -> viewModel.start()}"
+                android:paddingLeft="20dp"
+                android:paddingTop="8dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="8dp"
+                android:text="@string/conference_waiting_room_start_call"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/cancel"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintWidth_max="@dimen/conference_waiting_room_buttons_max_width" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/buttons"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/shape_audio_routes_background"
+            android:translationY="@{viewModel.audioRoutesMenuTranslateY, default=@dimen/voip_audio_routes_menu_translate_y}"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="@dimen/voip_call_button_size"
+                android:layout_height="@dimen/voip_call_button_size"
+                android:layout_margin="5dp"
+                android:background="@drawable/button_toggle_background_reverse"
+                android:contentDescription="@string/content_description_use_bluetooth_headset"
+                android:onClick="@{() -> viewModel.setBluetoothAudioRoute()}"
+                android:selected="@{viewModel.isBluetoothHeadsetSelected}"
+                android:src="@drawable/icon_bluetooth" />
+
+            <ImageView
+                android:layout_width="@dimen/voip_call_button_size"
+                android:layout_height="@dimen/voip_call_button_size"
+                android:layout_margin="5dp"
+                android:background="@drawable/button_toggle_background_reverse"
+                android:contentDescription="@string/content_description_use_earpiece"
+                android:onClick="@{() -> viewModel.setEarpieceAudioRoute()}"
+                android:selected="@{!viewModel.isSpeakerSelected &amp;&amp; !viewModel.isBluetoothHeadsetSelected}"
+                android:src="@drawable/icon_earpiece" />
+
+            <ImageView
+                android:layout_width="@dimen/voip_call_button_size"
+                android:layout_height="@dimen/voip_call_button_size"
+                android:layout_margin="5dp"
+                android:background="@drawable/button_toggle_background_reverse"
+                android:contentDescription="@string/content_description_use_speaker"
+                android:onClick="@{() -> viewModel.setSpeakerAudioRoute()}"
+                android:selected="@{viewModel.isSpeakerSelected}"
+                android:src="@drawable/icon_speaker" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/buttons"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/shape_audio_routes_background"
+            android:translationY="@{viewModel.conferenceLayoutMenuTranslateY, default=@dimen/voip_audio_routes_menu_translate_y}"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="@dimen/voip_call_button_size"
+                android:layout_height="@dimen/voip_call_button_size"
+                android:layout_margin="5dp"
+                android:background="@drawable/button_toggle_background_reverse"
+                android:contentDescription="@string/conference_display_mode_mosaic"
+                android:onClick="@{() -> viewModel.setMosaicLayout()}"
+                android:padding="10dp"
+                android:selected="@{viewModel.selectedLayout == ConferenceDisplayMode.GRID}"
+                android:src="@drawable/icon_conference_layout_grid"
+                app:tint="@color/white_color" />
+
+            <ImageView
+                android:layout_width="@dimen/voip_call_button_size"
+                android:layout_height="@dimen/voip_call_button_size"
+                android:layout_margin="5dp"
+                android:background="@drawable/button_toggle_background_reverse"
+                android:contentDescription="@string/conference_display_mode_active_speaker"
+                android:onClick="@{() -> viewModel.setActiveSpeakerLayout()}"
+                android:padding="10dp"
+                android:selected="@{viewModel.selectedLayout == ConferenceDisplayMode.ACTIVE_SPEAKER}"
+                android:src="@drawable/icon_conference_layout_active_speaker"
+                app:tint="@color/white_color" />
+
+            <ImageView
+                android:layout_width="@dimen/voip_call_button_size"
+                android:layout_height="@dimen/voip_call_button_size"
+                android:layout_margin="5dp"
+                android:background="@drawable/button_toggle_background_reverse"
+                android:contentDescription="@string/conference_display_mode_audio_only"
+                android:onClick="@{() -> viewModel.setAudioOnlyLayout()}"
+                android:padding="10dp"
+                android:selected="@{viewModel.selectedLayout == ConferenceDisplayMode.AUDIO_ONLY}"
+                android:src="@drawable/icon_conference_layout_audio_only"
+                app:tint="@color/white_color" />
+
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/buttons"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/voip_buttons_fragment_size"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dp">
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/button_background_reverse"
+                android:contentDescription="@{viewModel.isMicrophoneMuted ? @string/content_description_disable_mic_mute : @string/content_description_enable_mic_mute}"
+                android:enabled="@{!viewModel.joinInProgress}"
+                android:onClick="@{() -> viewModel.toggleMuteMicrophone()}"
+                android:padding="5dp"
+                android:selected="@{viewModel.isMicrophoneMuted}"
+                android:src="@drawable/icon_toggle_mic"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="W,1:1"
+                app:layout_constraintEnd_toStartOf="@id/speaker" />
+
+            <RelativeLayout
+                android:id="@+id/speaker"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="W,1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/button_background_reverse"
+                    android:contentDescription="@{viewModel.isSpeakerSelected ? @string/content_description_disable_speaker : @string/content_description_enable_speaker}"
+                    android:enabled="@{!viewModel.joinInProgress}"
+                    android:onClick="@{() -> viewModel.toggleSpeaker()}"
+                    android:padding="5dp"
+                    android:selected="@{viewModel.isSpeakerSelected}"
+                    android:src="@drawable/icon_toggle_speaker"
+                    android:visibility="@{viewModel.audioRoutesEnabled ? View.GONE : View.VISIBLE}" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/button_toggle_background_reverse"
+                    android:contentDescription="@string/content_description_toggle_audio_menu"
+                    android:enabled="@{!viewModel.joinInProgress}"
+                    android:onClick="@{() -> viewModel.toggleAudioRoutesMenu()}"
+                    android:padding="5dp"
+                    android:selected="@{viewModel.audioRoutesSelected}"
+                    android:src="@drawable/icon_audio_routes"
+                    android:visibility="@{viewModel.audioRoutesEnabled ? View.VISIBLE : View.GONE, default=gone}" />
+
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:background="@drawable/button_background_reverse"
+                android:contentDescription="@{viewModel.isVideoEnabled ? @string/content_description_disable_video : @string/content_description_enable_video}"
+                android:enabled="@{!viewModel.joinInProgress &amp;&amp; viewModel.isVideoAvailable &amp;&amp; !viewModel.isLowBandwidth}"
+                android:onClick="@{() -> viewModel.toggleVideo()}"
+                android:padding="5dp"
+                android:selected="@{viewModel.isVideoEnabled}"
+                android:src="@drawable/icon_toggle_camera"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="W,1:1"
+                app:layout_constraintStart_toEndOf="@id/speaker" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/button_toggle_background_reverse"
+                android:contentDescription="@string/content_description_toggle_layout_menu"
+                android:enabled="@{!viewModel.joinInProgress &amp;&amp; !viewModel.isLowBandwidth}"
+                android:onClick="@{() -> viewModel.toggleLayoutMenu()}"
+                android:padding="10dp"
+                android:selected="@{viewModel.layoutMenuSelected}"
+                android:src="@{viewModel.selectedLayout == ConferenceDisplayMode.ACTIVE_SPEAKER ? @drawable/icon_conference_layout_active_speaker : viewModel.selectedLayout == ConferenceDisplayMode.AUDIO_ONLY ? @drawable/icon_conference_layout_audio_only : @drawable/icon_conference_layout_grid, default=@drawable/icon_conference_layout_grid}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="W,1:1"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </RelativeLayout>
+
+</layout>

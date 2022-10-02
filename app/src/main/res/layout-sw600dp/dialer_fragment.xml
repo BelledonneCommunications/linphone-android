@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="newContactClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="newConferenceClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="transferCallClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.main.dialer.viewmodels.DialerViewModel"/>
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/grey_color">
+
+        <ImageView
+            android:visibility="@{viewModel.showPreview ? View.GONE : View.VISIBLE}"
+            android:layout_width="400dp"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/ui_layout"
+            android:padding="30dp"
+            android:layout_centerHorizontal="true"
+            android:contentDescription="@null"
+            android:src="@drawable/dialer_background" />
+
+        <org.linphone.mediastream.video.capture.CaptureTextureView
+            android:id="@+id/video_preview_window"
+            android:visibility="@{viewModel.showPreview ? View.VISIBLE : View.GONE, default=gone}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"/>
+
+        <ImageView
+            android:onClick="@{() -> viewModel.switchCamera()}"
+            android:visibility="@{viewModel.showPreview &amp;&amp; viewModel.showSwitchCamera ? View.VISIBLE : View.GONE, default=gone}"
+            android:contentDescription="@string/content_description_switch_camera"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="20dp"
+            android:background="@drawable/round_button_background"
+            android:padding="10dp"
+            android:src="@drawable/camera_switch" />
+
+        <RelativeLayout
+            android:id="@+id/ui_layout"
+            android:layout_width="300dp"
+            android:layout_height="460dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="50dp"
+            android:layout_alignParentBottom="true"
+            android:background="?attr/backgroundColor">
+
+            <RelativeLayout
+                android:id="@+id/address_bar"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/main_activity_top_bar_size"
+                android:layout_alignParentTop="true"
+                android:background="?attr/lightToolbarBackgroundColor">
+
+                <ImageView
+                    android:id="@+id/erase"
+                    android:onClick="@{() -> viewModel.eraseLastChar()}"
+                    android:onLongClick="@{() -> viewModel.eraseAll()}"
+                    android:contentDescription="@string/content_description_dialer_erase"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:focusableInTouchMode="true"
+                    android:src="@drawable/backspace" />
+
+                <EditText
+                    android:id="@+id/sip_uri_input"
+                    android:text="@={viewModel.enteredUri}"
+                    android:beforeTextChanged="@{(text, start, count, after) -> viewModel.onBeforeUriChanged(sipUriInput, count, after)}"
+                    android:afterTextChanged="@{(text) -> viewModel.onAfterUriChanged(sipUriInput, text)}"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/erase"
+                    android:background="@color/transparent_color"
+                    android:backgroundTint="@color/transparent_color"
+                    android:ellipsize="start"
+                    android:hint="@string/dialer_address_bar_hint"
+                    android:inputType="textEmailAddress|textUri"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="5dp"
+                    android:textColorHint="@color/light_grey_color" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/controls"
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/main_activity_top_bar_size">
+
+                <ImageView
+                    android:onClick="@{newConferenceClickListener}"
+                    android:visibility="@{viewModel.scheduleConferenceAvailable ? View.VISIBLE : View.GONE}"
+                    android:contentDescription="@string/content_description_create_conference"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:background="?attr/button_background_drawable"
+                    android:padding="5dp"
+                    android:src="@drawable/icon_video_conf_new" />
+
+                <ImageView
+                    android:onClick="@{newContactClickListener}"
+                    android:visibility="@{viewModel.scheduleConferenceAvailable ? View.GONE : View.VISIBLE, default=gone}"
+                    android:enabled="@{viewModel.enteredUri.length() > 0}"
+                    android:contentDescription="@string/content_description_add_contact"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:background="?attr/button_background_drawable"
+                    android:padding="15dp"
+                    android:src="@drawable/contact_add" />
+
+                <ImageView
+                    android:onClick="@{() -> viewModel.startCall()}"
+                    android:visibility="@{viewModel.atLeastOneCall ? View.GONE : View.VISIBLE}"
+                    android:contentDescription="@string/content_description_start_call"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/call"
+                    android:padding="12dp"
+                    android:src="@{viewModel.autoInitiateVideoCalls ? @drawable/call_video_start : @drawable/call_audio_start, default=@drawable/call_audio_start}" />
+
+                <ImageView
+                    android:onClick="@{() -> viewModel.startCall()}"
+                    android:visibility="@{viewModel.atLeastOneCall &amp;&amp; !viewModel.transferVisibility ? View.VISIBLE : View.GONE, default=gone}"
+                    android:contentDescription="@string/content_description_add_call"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/call"
+                    android:padding="12dp"
+                    android:src="@drawable/call_add" />
+
+                <ImageView
+                    android:onClick="@{transferCallClickListener}"
+                    android:visibility="@{viewModel.atLeastOneCall &amp;&amp; viewModel.transferVisibility ? View.VISIBLE : View.GONE, default=gone}"
+                    android:contentDescription="@string/content_description_transfer_call"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/call"
+                    android:padding="12dp"
+                    android:src="@drawable/call_transfer" />
+
+            </LinearLayout>
+
+            <include
+                layout="@layout/numpad"
+                android:layout_above="@id/controls"
+                android:layout_below="@id/address_bar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:keyListener="@{viewModel.onKeyClick}" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</layout>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="data"
+            type="org.linphone.activities.main.chat.data.ChatMessageAttachmentData" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_margin="5dp"
+        android:orientation="vertical">
+
+        <ImageView
+            android:visibility="@{data.image ? View.VISIBLE : View.GONE}"
+            android:contentDescription="@string/content_description_pending_file_transfer"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            coil="@{data.path}"/>
+
+        <ImageView
+            android:visibility="@{data.video ? View.VISIBLE : View.GONE}"
+            android:contentDescription="@string/content_description_pending_file_transfer"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            coilVideoPreview="@{data.path}"/>
+
+        <ImageView
+            android:visibility="@{data.video ? View.VISIBLE : View.GONE, default=gone}"
+            android:layout_width="@dimen/play_pause_button_size"
+            android:layout_height="@dimen/play_pause_button_size"
+            android:padding="9dp"
+            android:src="@drawable/record_play_dark"
+            android:background="@drawable/round_recording_button_background_dark"
+            android:contentDescription="@string/content_description_chat_message_video_attachment"
+            android:layout_centerInParent="true"/>
+
+        <LinearLayout
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="?attr/backgroundColor"
+            android:visibility="@{data.image || data.video ? View.GONE : View.VISIBLE}">
+
+            <TextView
+                style="@style/chat_file_attachment_font"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:ellipsize="middle"
+                android:singleLine="true"
+                android:padding="10dp"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:drawablePadding="5dp"
+                android:drawableTop="@{data.pdf ? @drawable/file_pdf : (data.audio ? @drawable/file_audio : @drawable/file), default=@drawable/file}"
+                android:text="@{data.fileName, default=`test.txt`}"/>
+
+        </LinearLayout>
+
+        <ImageView
+            android:onClick="@{() -> data.delete()}"
+            android:contentDescription="@string/content_description_remove_pending_file_transfer"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/field_clean" />
+
+    </RelativeLayout>
+
+</layout>

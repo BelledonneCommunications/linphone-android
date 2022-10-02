@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="callsViewModel"
+            type="org.linphone.activities.voip.viewmodels.CallsViewModel" />
+
+        <variable
+            name="controlsViewModel"
+            type="org.linphone.activities.voip.viewmodels.ControlsViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/voipBackgroundColor">
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:indeterminate="true"
+            android:indeterminateDrawable="@drawable/icon_spinner_rotating"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/outgoing_call_title"
+            style="@style/call_header_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/call_outgoing_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/progress" />
+
+        <Chronometer
+            android:id="@+id/outgoing_call_timer"
+            style="@style/call_header_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/outgoing_call_title" />
+
+        <ImageView
+            android:id="@+id/avatar"
+            coilVoipContactAlt="@{callsViewModel.currentCallData}"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="10dp"
+            android:contentDescription="@null"
+            android:visibility="@{callsViewModel.currentCallData.isConferenceCall ? View.GONE : View.VISIBLE}"
+            app:layout_constraintBottom_toTopOf="@id/conference_avatar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_max="@dimen/voip_contact_avatar_max_size"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/outgoing_call_timer"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintWidth_max="@dimen/voip_contact_avatar_max_size" />
+
+        <ImageView
+            android:id="@+id/conference_avatar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="10dp"
+            android:contentDescription="@null"
+            android:src="@drawable/icon_multiple_contacts_avatar"
+            android:background="@drawable/generated_avatar_bg"
+            android:visibility="@{callsViewModel.currentCallData.isConferenceCall ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintBottom_toTopOf="@id/callee_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_max="@dimen/voip_contact_avatar_max_size"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/avatar"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintWidth_max="@dimen/voip_contact_avatar_max_size" />
+
+        <TextView
+            android:id="@+id/callee_name"
+            style="@style/call_header_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{callsViewModel.currentCallData.remoteConferenceSubject ?? callsViewModel.currentCallData.contact.name ?? callsViewModel.currentCallData.displayName, default=`Bilbo Baggins`}"
+            app:layout_constraintBottom_toTopOf="@id/callee_address"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/conference_avatar" />
+
+        <TextView
+            android:id="@+id/callee_address"
+            style="@style/call_header_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="@{callsViewModel.currentCallData.isConferenceCall ? callsViewModel.currentCallData.remoteConferenceSubject : callsViewModel.currentCallData.displayableAddress, default=`sip:bilbo.baggins@sip.linphone.org`}"
+            app:layout_constraintBottom_toTopOf="@id/buttons"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/callee_name" />
+
+        <include
+            android:id="@+id/buttons"
+            layout="@layout/voip_buttons_outgoing"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/voip_buttons_fragment_size"
+            android:layout_margin="10dp"
+            app:callsViewModel="@{callsViewModel}"
+            app:controlsViewModel="@{controlsViewModel}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintWidth_max="@dimen/voip_buttons_max_width" />
+
+        <org.linphone.activities.voip.views.RoundCornersTextureView
+            android:id="@+id/local_preview_video_surface"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="10dp"
+            android:layout_size="@{@dimen/video_preview_max_size}"
+            app:alignTopRight="true"
+            app:displayMode="black_bars"
+            app:layout_constraintBottom_toTopOf="@id/buttons"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_max="200dp"
+            app:layout_constraintWidth_max="200dp" />
+
+        <ImageView
+            android:id="@+id/switch_camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:contentDescription="@string/content_description_switch_camera"
+            android:onClick="@{() -> controlsViewModel.switchCamera()}"
+            android:padding="10dp"
+            android:src="@drawable/icon_call_camera_switch"
+            android:visibility="@{controlsViewModel.isSwitchCameraAvailable &amp;&amp; !controlsViewModel.pipMode ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintEnd_toEndOf="@id/local_preview_video_surface"
+            app:layout_constraintTop_toTopOf="@id/local_preview_video_surface" />
+
+        <ViewStub
+            android:id="@+id/stub_numpad"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout="@layout/voip_numpad"
+            android:visibility="@{controlsViewModel.numpadVisible ? View.VISIBLE : View.GONE, default=gone}"
+            app:controlsViewModel="@{controlsViewModel}"
+            app:inflatedVisibility="@{controlsViewModel.numpadVisible ? View.VISIBLE : View.GONE}" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

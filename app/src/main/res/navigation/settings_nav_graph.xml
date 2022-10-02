@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/settings_nav_graph_xml"
+    app:startDestination="@id/emptySettingsFragment">
+
+    <fragment
+        android:id="@+id/emptySettingsFragment"
+        android:name="org.linphone.activities.main.fragments.EmptyFragment"
+        tools:layout="@layout/empty_fragment"
+        android:label="EmptySettingsFragment" />
+
+    <action android:id="@+id/action_global_emptySettingsFragment"
+        app:destination="@id/emptySettingsFragment" />
+
+    <fragment
+        android:id="@+id/accountSettingsFragment"
+        android:name="org.linphone.activities.main.settings.fragments.AccountSettingsFragment"
+        tools:layout="@layout/settings_account_fragment"
+        android:label="AccountSettingsFragment" >
+        <argument
+            android:name="Identity"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_accountSettingsFragment_to_phoneAccountLinkingFragment"
+            app:destination="@id/phoneAccountLinkingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/advancedSettingsFragment"
+        android:name="org.linphone.activities.main.settings.fragments.AdvancedSettingsFragment"
+        tools:layout="@layout/settings_advanced_fragment"
+        android:label="AdvancedSettingsFragment" />
+    <fragment
+        android:id="@+id/audioSettingsFragment"
+        android:name="org.linphone.activities.main.settings.fragments.AudioSettingsFragment"
+        tools:layout="@layout/settings_audio_fragment"
+        android:label="AudioSettingsFragment" />
+    <fragment
+        android:id="@+id/callSettingsFragment"
+        android:name="org.linphone.activities.main.settings.fragments.CallSettingsFragment"
+        tools:layout="@layout/settings_call_fragment"
+        android:label="CallSettingsFragment" />
+    <fragment
+        android:id="@+id/chatSettingsFragment"
+        android:name="org.linphone.activities.main.settings.fragments.ChatSettingsFragment"
+        tools:layout="@layout/settings_chat_fragment"
+        android:label="ChatSettingsFragment" />
+    <fragment
+        android:id="@+id/contactsSettingsFragment"
+        android:name="org.linphone.activities.main.settings.fragments.ContactsSettingsFragment"
+        tools:layout="@layout/settings_contacts_fragment"
+        android:label="ContactsSettingsFragment" >
+        <action
+            android:id="@+id/action_contactsSettingsFragment_to_ldapSettingsFragment"
+            app:destination="@id/ldapSettingsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/networkSettingsFragment"
+        android:name="org.linphone.activities.main.settings.fragments.NetworkSettingsFragment"
+        tools:layout="@layout/settings_network_fragment"
+        android:label="NetworkSettingsFragment" />
+    <fragment
+        android:id="@+id/videoSettingsFragment"
+        android:name="org.linphone.activities.main.settings.fragments.VideoSettingsFragment"
+        tools:layout="@layout/settings_video_fragment"
+        android:label="VideoSettingsFragment" />
+    <fragment
+        android:id="@+id/tunnelSettingsFragment"
+        android:name="org.linphone.activities.main.settings.fragments.TunnelSettingsFragment"
+        tools:layout="@layout/settings_tunnel_fragment"
+        android:label="TunnelSettingsFragment" />
+    <action
+        android:id="@+id/action_global_tunnelSettingsFragment"
+        app:destination="@id/tunnelSettingsFragment" />
+    <action
+        android:id="@+id/action_global_videoSettingsFragment"
+        app:destination="@id/videoSettingsFragment" />
+    <action
+        android:id="@+id/action_global_callSettingsFragment"
+        app:destination="@id/callSettingsFragment" />
+    <action
+        android:id="@+id/action_global_networkSettingsFragment"
+        app:destination="@id/networkSettingsFragment" />
+    <action
+        android:id="@+id/action_global_chatSettingsFragment"
+        app:destination="@id/chatSettingsFragment" />
+    <action
+        android:id="@+id/action_global_contactsSettingsFragment"
+        app:destination="@id/contactsSettingsFragment" />
+    <action
+        android:id="@+id/action_global_accountSettingsFragment"
+        app:destination="@id/accountSettingsFragment" />
+    <action
+        android:id="@+id/action_global_advancedSettingsFragment"
+        app:destination="@id/advancedSettingsFragment" />
+    <action
+        android:id="@+id/action_global_conferencesSettingsFragment"
+        app:destination="@id/conferencesSettingsFragment"/>
+    <action
+        android:id="@+id/action_global_audioSettingsFragment"
+        app:destination="@id/audioSettingsFragment" />
+    <fragment
+        android:id="@+id/phoneAccountLinkingFragment"
+        tools:layout="@layout/assistant_phone_account_linking_fragment"
+        android:name="org.linphone.activities.assistant.fragments.PhoneAccountLinkingFragment"
+        android:label="PhoneAccountLinkingFragment" >
+        <action
+            android:id="@+id/action_phoneAccountLinkingFragment_to_phoneAccountValidationFragment"
+            app:destination="@id/phoneAccountValidationFragment" />
+        <argument
+            android:name="Username"
+            app:argType="string" />
+        <argument
+            android:name="Password"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="HA1"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/phoneAccountValidationFragment"
+        tools:layout="@layout/assistant_phone_account_validation_fragment"
+        android:name="org.linphone.activities.assistant.fragments.PhoneAccountValidationFragment"
+        android:label="PhoneAccountValidationFragment" >
+        <action
+            android:id="@+id/action_phoneAccountValidationFragment_to_accountSettingsFragment"
+            app:destination="@id/accountSettingsFragment" />
+        <argument
+            android:name="PhoneNumber"
+            app:argType="string" />
+        <argument
+            android:name="IsLogin"
+            app:argType="boolean" />
+        <argument
+            android:name="IsCreation"
+            app:argType="boolean" />
+        <argument
+            android:name="IsLinking"
+            app:argType="boolean" />
+    </fragment>
+    <fragment
+        android:id="@+id/ldapSettingsFragment"
+        android:name="org.linphone.activities.main.settings.fragments.LdapSettingsFragment"
+        tools:layout="@layout/settings_ldap_fragment"
+        android:label="LdapSettingsFragment" />
+    <fragment
+        android:id="@+id/conferencesSettingsFragment"
+        tools:layout="@layout/settings_conferences_fragment"
+        android:name="org.linphone.activities.main.settings.fragments.ConferencesSettingsFragment"
+        android:label="ConferencesSettingsFragment" />
+</navigation>

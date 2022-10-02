@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <bitmap android:src="@drawable/voip_conference_audio_only"
+            android:tint="?attr/voipDrawablePressedColor"/>
+    </item>
+    <item android:state_enabled="false">
+        <bitmap android:src="@drawable/voip_conference_audio_only"
+            android:tint="?attr/voipDrawableDisabledColor"/>
+    </item>
+    <item>
+        <bitmap android:src="@drawable/voip_conference_audio_only"
+            android:tint="?attr/voipDrawableColor2"/>
+    </item>
+</selector>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.main.viewmodels.SharedMainViewModel" />
+        <variable
+            name="callOverlayViewModel"
+            type="org.linphone.activities.main.viewmodels.CallOverlayViewModel" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/root_coordinator_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/backgroundColor">
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/status_fragment"
+                android:name="org.linphone.activities.main.fragments.StatusFragment"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/status_fragment_size"
+                android:layout_alignParentTop="true"
+                tools:layout="@layout/status_fragment" />
+
+            <androidx.drawerlayout.widget.DrawerLayout
+                android:id="@+id/side_menu"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/status_fragment">
+
+                <include
+                    android:id="@+id/content"
+                    layout="@layout/main_activity_content"/>
+
+                <!-- Side Menu -->
+                <RelativeLayout
+                    android:id="@+id/side_menu_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="left">
+
+                    <androidx.fragment.app.FragmentContainerView
+                        android:id="@+id/side_menu_fragment"
+                        android:name="org.linphone.activities.main.sidemenu.fragments.SideMenuFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        tools:layout="@layout/side_menu_fragment" />
+
+                </RelativeLayout>
+
+            </androidx.drawerlayout.widget.DrawerLayout>
+
+            <include
+                android:id="@+id/call_overlay"
+                layout="@layout/call_overlay"
+                android:layout_width="@dimen/call_overlay_size"
+                android:layout_height="@dimen/call_overlay_size"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                tools:visibility="@{callOverlayViewModel.displayCallOverlay}"/>
+
+        </RelativeLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</layout>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="conferenceViewModel"
+            type="org.linphone.activities.voip.viewmodels.ConferenceViewModel" />
+        <variable
+            name="inflatedVisibility"
+            type="Integer" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/voip_translucent_popup_background"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="@{inflatedVisibility}"
+        inflatedLifecycleOwner="@{true}">
+
+        <ImageView
+            android:id="@+id/resume_conference"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_max="@dimen/voip_contact_avatar_max_size"
+            app:layout_constraintWidth_max="@dimen/voip_contact_avatar_max_size"
+            app:layout_constraintDimensionRatio="1:1"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/shape_orange_circle"
+            android:contentDescription="@null"
+            android:onClick="@{() -> conferenceViewModel.resumeConference()}"
+            android:padding="40dp"
+            android:src="@drawable/voip_conference_play_big"
+            app:layout_constraintBottom_toTopOf="@id/out_of_conf_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/out_of_conf_title"
+            style="@style/conference_paused_title_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="@string/conference_paused_title"
+            app:layout_constraintBottom_toTopOf="@id/out_of_conf_subtitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/resume_conference" />
+
+        <TextView
+            android:id="@+id/out_of_conf_subtitle"
+            style="@style/conference_paused_subtitle_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:gravity="center"
+            android:text="@string/conference_paused_subtitle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/out_of_conf_title" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

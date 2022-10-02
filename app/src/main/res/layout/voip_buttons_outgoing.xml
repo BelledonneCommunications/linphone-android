@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="callsViewModel"
+            type="org.linphone.activities.voip.viewmodels.CallsViewModel" />
+
+        <variable
+            name="controlsViewModel"
+            type="org.linphone.activities.voip.viewmodels.ControlsViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/voip_buttons_fragment_size">
+
+        <ImageView
+            android:id="@+id/hangup"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/button_call_terminate_background"
+            android:contentDescription="@string/content_description_terminate_call"
+            android:onClick="@{() -> controlsViewModel.hangUp()}"
+            android:padding="5dp"
+            android:src="@drawable/icon_call_hangup"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="W,1.26:1"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/microphone"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/button_background_reverse"
+            android:contentDescription="@{callsViewModel.isMicrophoneMuted ? @string/content_description_disable_mic_mute : @string/content_description_enable_mic_mute}"
+            android:enabled="@{callsViewModel.isMuteMicrophoneEnabled}"
+            android:onClick="@{() -> callsViewModel.toggleMuteMicrophone()}"
+            android:padding="5dp"
+            android:selected="@{callsViewModel.isMicrophoneMuted}"
+            android:src="@drawable/icon_toggle_mic"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="W,1:1"
+            app:layout_constraintEnd_toStartOf="@id/speaker"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="@id/hangup" />
+
+        <ImageView
+            android:id="@+id/speaker"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:background="@drawable/button_background_reverse"
+            android:contentDescription="@{controlsViewModel.isSpeakerSelected ? @string/content_description_disable_speaker : @string/content_description_enable_speaker}"
+            android:onClick="@{() -> controlsViewModel.toggleSpeaker()}"
+            android:padding="5dp"
+            android:selected="@{controlsViewModel.isSpeakerSelected}"
+            android:src="@drawable/icon_toggle_speaker"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="W,1:1"
+            app:layout_constraintEnd_toEndOf="@id/numpad"
+            app:layout_constraintStart_toEndOf="@id/microphone" />
+
+        <ImageView
+            android:id="@+id/numpad"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/button_background"
+            android:contentDescription="@string/content_description_show_numpad"
+            android:onClick="@{() -> controlsViewModel.showNumpad()}"
+            android:padding="10dp"
+            android:src="@drawable/icon_call_numpad"
+            android:visibility="@{controlsViewModel.isOutgoingEarlyMedia ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="W,1:1"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="transparent_color">#00000000</color>
+
+    <color name="primary_color">#ff5e00</color> <!-- Try to have a color that renders well on both light & dark theme -->
+    <!-- You can use https://material.io/design/color/#tools-for-picking-colors to get dark color value from primary -->
+    <color name="primary_dark_color">#e65000</color>
+    <color name="primary_light_color">#ffab4d</color>
+    <color name="notification_led_color">#ff8000</color>
+
+    <color name="black_color">#000000</color>
+    <color name="dark_grey_color">#444444</color>
+    <color name="grey_color">#808080</color>
+    <color name="light_grey_color">#c4c4c4</color>
+    <color name="white_color">#ffffff</color>
+    <color name="red_color">#ff0000</color>
+    <color name="green_color">#96c11f</color>
+    <color name="dark_green_color">#7d9f21</color>
+
+    <color name="voip_gray_blue_color">#798791</color>
+    <color name="voip_light_gray">#D0D8DE</color>
+    <color name="voip_dark_gray">#4B5964</color>
+    <color name="voip_gray">#96A5B1</color>
+    <color name="voip_gray_background">#AFAFAF</color>
+    <color name="voip_gray_dots">#D8D8D8</color>
+    <color name="voip_call_record_background">#EBEBEB</color>
+    <color name="voip_calls_list_inactive_background">#F0F1F2</color>
+    <color name="voip_translucent_popup_background">#A64B5964</color>
+    <color name="voip_translucent_popup_alt_background">#E64B5964</color>
+    <color name="voip_numpad_background">#E4E4E4</color>
+    <color name="voip_conference_participant_paused_background">#303030</color>
+    <color name="voip_dark_color">#252E35</color>  <!-- Background -->
+    <color name="voip_dark_color2">#3F464B</color>  <!-- Light gray -->
+    <color name="voip_dark_color3">#475663</color> <!-- Extra buttons -->
+    <color name="voip_dark_color4">#2D3841</color> <!-- Top bars -->
+    <color name="voip_dark_color5">#353B3F</color> <!-- Scheduled conference background dark mode -->
+    <color name="voip_text_dark_color">#6E8596</color> <!-- Text color above voip_dark_color5 -->
+    <color name="voip_conf_address_text_color">#A2A2A2</color>
+    <color name="voip_conference_updated_color">#EFAE00</color>
+    <color name="voip_conference_cancelled_title_color">#FF0000</color>
+    <color name="voip_conference_cancelled_bg_color_light">#FFE6E6</color>
+    <color name="voip_conference_cancelled_bg_color_dark">#3D3434</color>
+
+    <color name="form_field_gray_background">#F7F7F7</color>
+
+    <color name="imdn_read_color">#3eb5c0</color>
+    <color name="toolbar_color">#e1e1e1</color>
+    <color name="header_background_color">#f3f3f3</color>
+
+    <color name="chat_bubble_text_color">#a1a1a1</color>
+    <color name="chat_bubble_incoming_color">#f3f3f3</color>
+    <color name="chat_bubble_incoming_color_dark">#9b9b9b</color>
+    <!-- Do not use a color with transparency here, it will look bad when in dark mode!
+    We use a solid color representation of the primary color but with 10% transparency.
+    For each RGB value of the color, the math to get is:
+    C' = C * (A / 255) + 255 * (1 - (A / 255)) so for 10% transparency: C' = C * 0.1 + 229.5 -->
+    <color name="chat_bubble_outgoing_color">#ffeee5</color>
+    <color name="chat_bubble_outgoing_color_dark">#ff9e67</color>
+    <color name="chat_bubble_file_background_color">#f4f4f4</color>
+    <color name="chat_bubble_file_background_border_color">#dedede</color>
+
+    <color name="disabled_color">#808080</color>
+    <color name="contact_disabled_color">#99ffffff</color>
+
+    <color name="led_registered">#96c11f</color>
+    <color name="led_registration_in_progress">#ffa645</color>
+    <color name="led_not_registered">#e1e1e1</color>
+    <color name="led_error">#ff0000</color>
+</resources>

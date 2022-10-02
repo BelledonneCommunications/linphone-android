@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="data"
+            type="org.linphone.activities.main.chat.data.ChatMessageContentData" />
+        <variable
+            name="longClickListener"
+            type="android.view.View.OnLongClickListener"/>
+        <variable
+            name="inflatedVisibility"
+            type="Integer" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="@dimen/chat_message_bubble_file_size"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/chat_message_bubble_file_size"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="?attr/backgroundColor"
+        android:visibility="@{inflatedVisibility}"
+        inflatedLifecycleOwner="@{true}">
+
+        <TextView
+            style="@style/chat_file_attachment_font"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:drawableTop="@{data.video ? @drawable/file_video : (data.image ? @drawable/file_picture : (data.pdf ? @drawable/file_pdf : (data.audio ? @drawable/file_audio : (data.voiceRecording ? @drawable/audio_recording_reply_preview_default : @drawable/file)))), default=@drawable/file}"
+            android:drawablePadding="5dp"
+            android:ellipsize="middle"
+            android:gravity="center"
+            android:onClick="@{() -> data.openFile()}"
+            android:onLongClick="@{longClickListener}"
+            android:singleLine="true"
+            android:text="@{data.fileName, default=`test.pdf`}"
+            android:textAlignment="center" />
+
+    </RelativeLayout>
+
+</layout>

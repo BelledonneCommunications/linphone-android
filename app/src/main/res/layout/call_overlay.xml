@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="visibility"
+            type="Boolean" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="@dimen/call_overlay_size"
+        android:layout_height="@dimen/call_overlay_size"
+        android:visibility="@{visibility ? View.VISIBLE : View.GONE}">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/background_round_primary_color"
+            android:contentDescription="@string/content_description_go_back_to_call"
+            android:adjustViewBounds="true"
+            android:padding="10dp"
+            android:src="@drawable/call_back" />
+
+    </RelativeLayout>
+
+</layout>

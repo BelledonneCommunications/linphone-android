@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <bitmap android:src="@drawable/record_play_default"
+            android:tint="@color/dark_grey_color"/>
+    </item>
+</selector>
+

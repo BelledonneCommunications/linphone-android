@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="statsViewModel"
+            type="org.linphone.activities.voip.viewmodels.StatisticsListViewModel" />
+        <variable
+            name="controlsViewModel"
+            type="org.linphone.activities.voip.viewmodels.ControlsViewModel" />
+        <variable
+            name="inflatedVisibility"
+            type="Integer" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/stats_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/voip_translucent_popup_background"
+        android:clickable="true"
+        android:visibility="@{inflatedVisibility}"
+        inflatedLifecycleOwner="@{true}">
+
+        <View
+            android:id="@+id/background"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="80dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="70dp"
+            android:background="@drawable/shape_call_popup_background"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintWidth_max="@dimen/voip_views_max_width" />
+
+        <ImageView
+            android:id="@+id/hide_stats"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:contentDescription="@string/content_description_hide_statistics"
+            android:onClick="@{() -> controlsViewModel.hideCallStats()}"
+            android:src="@drawable/icon_cancel_alt"
+            app:layout_constraintEnd_toEndOf="@id/background"
+            app:layout_constraintTop_toTopOf="@id/background" />
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/stats_scroll_layout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_below="@id/hide_stats"
+            app:layout_constraintEnd_toEndOf="@id/background"
+            app:layout_constraintStart_toStartOf="@id/background"
+            app:layout_constraintTop_toBottomOf="@id/hide_stats"
+            app:layout_constraintBottom_toBottomOf="@id/background"
+            android:layout_marginBottom="10dp">
+
+            <LinearLayout
+                android:id="@+id/stats_list_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:entries="@{statsViewModel.callStatsList}"
+                app:layout="@{@layout/voip_call_stats_cell}" />
+
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

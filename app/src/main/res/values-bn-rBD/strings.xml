@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources [
+<!ENTITY appName "Linphone">
+]>
+<resources>
+    <string name="service_auto_start_description">&appName; স্বয়ংক্রিয়ভাবে চালু হয়েছে</string>
+    <string name="service_name">&appName; পরিষেবা</string>
+    <string name="username">ব্যাবহারকারীর নাম</string>
+    <string name="email">ইমেইল</string>
+    <string name="domain">ডোমেইন</string>
+    <string name="sip_address">এসআইপি ঠিকানা</string>
+    <string name="service_description">আড়ালে থাকা অবস্থায় কলগুলো পেতে এটা আবশ্যিক</string>
+    <string name="about_privacy_policy">আমাদের গোপনীয়তা সুরক্ষা নীতিমালাটি দেখুন</string>
+    <string name="password">শব্দচাবি</string>
+    <string name="sip_addresses">এসআইপি ঠিকানা</string>
+</resources>

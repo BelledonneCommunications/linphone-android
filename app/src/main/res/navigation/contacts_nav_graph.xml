@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:startDestination="@id/emptyContactFragment">
+
+    <fragment
+        android:id="@+id/emptyContactFragment"
+        android:name="org.linphone.activities.main.fragments.EmptyFragment"
+        tools:layout="@layout/empty_fragment"
+        android:label="EmptyContactFragment" />
+
+    <action android:id="@+id/action_global_emptyContactFragment"
+        app:destination="@id/emptyContactFragment" />
+
+    <fragment
+        android:id="@+id/detailContactFragment"
+        android:name="org.linphone.activities.main.contact.fragments.DetailContactFragment"
+        tools:layout="@layout/contact_detail_fragment"
+        android:label="DetailContactFragment">
+
+        <action
+            android:id="@+id/action_detailContactFragment_to_contactEditorFragment"
+            app:destination="@id/contactEditorFragment" />
+
+        <action
+            android:id="@+id/action_detailContactFragment_to_detailChatRoomFragment"
+            app:destination="@id/chat_nav_graph" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_detailContactFragment"
+        app:destination="@id/detailContactFragment" />
+
+    <fragment
+        android:id="@+id/contactEditorFragment"
+        android:name="org.linphone.activities.main.contact.fragments.ContactEditorFragment"
+        tools:layout="@layout/contact_editor_fragment"
+        android:label="ContactEditorFragment">
+        <argument
+            android:name="SipUri"
+            app:argType="string"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_contactEditorFragment_to_detailContactFragment"
+            app:destination="@id/detailContactFragment" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_contactEditorFragment"
+        app:destination="@id/contactEditorFragment" />
+
+</navigation>

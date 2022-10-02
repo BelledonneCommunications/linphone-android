@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="inflatedVisibility"
+            type="Integer" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/remotely_paused_call_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/voip_translucent_popup_background"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="@{inflatedVisibility}"
+        inflatedLifecycleOwner="@{true}">
+
+        <ImageView
+            android:id="@+id/paused_call"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_max="@dimen/voip_contact_avatar_max_size"
+            app:layout_constraintWidth_max="@dimen/voip_contact_avatar_max_size"
+            app:layout_constraintDimensionRatio="1:1"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/shape_orange_circle"
+            android:contentDescription="@null"
+            android:padding="40dp"
+            android:src="@drawable/voip_conference_paused_big"
+            app:layout_constraintBottom_toTopOf="@id/paused_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/paused_title"
+            style="@style/conference_paused_title_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="5dp"
+            android:gravity="center"
+            android:text="@string/call_remotely_paused_title"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/paused_call" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

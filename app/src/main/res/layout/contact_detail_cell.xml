@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="data"
+            type="org.linphone.activities.main.contact.data.ContactNumberOrAddressData" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="?attr/dividerColor" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="@{data.sip ? @string/sip_address : @string/phone_number}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="10dp"
+                android:textAllCaps="true"
+                android:textColor="?attr/primarySubtextDarkColor" />
+
+            <ImageView
+                android:visibility="@{data.hasPresence ? View.VISIBLE : View.GONE}"
+                android:contentDescription="@string/content_description_linphone_user"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerInside"
+                android:src="@drawable/linphone_logo_tinted" />
+
+            <TextView
+                android:visibility="@{data.showInvite ? View.VISIBLE : View.GONE}"
+                android:onClick="@{() -> data.smsInvite()}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:padding="10dp"
+                android:text="@string/contact_invite_friend"
+                android:textColor="?attr/accentColor"
+                android:textSize="16.7sp"
+                android:fontFamily="sans-serif"
+                android:lineSpacingExtra="16.7sp" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:text="@{data.displayedValue}"
+            style="@style/contact_name_list_cell_font"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fadingEdge="horizontal"
+            android:gravity="center"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:textIsSelectable="true"
+            android:scrollHorizontally="true"
+            android:singleLine="true" />
+
+        <TextView
+            android:text="@{data.typeLabel}"
+            android:visibility="@{data.typeLabel.length() > 0 ? View.VISIBLE : View.GONE, default=gone}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="?attr/primarySubtextDarkColor"
+            android:textSize="13sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:onClick="@{() -> data.startCall()}"
+                android:enabled="@{data.address != null}"
+                android:contentDescription="@string/content_description_start_call"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/round_orange_button_background"
+                android:src="@drawable/call_start_default" />
+
+            <ImageView
+                android:onClick="@{() -> data.startChat(false)}"
+                android:enabled="@{data.address != null}"
+                android:visibility="@{data.chatAllowed &amp;&amp; !data.hidePlainChat ? View.VISIBLE : View.GONE}"
+                android:contentDescription="@string/content_description_start_chat"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/round_orange_button_background"
+                android:src="@drawable/chat_start_default" />
+
+            <RelativeLayout
+                android:onClick="@{() -> data.startChat(true)}"
+                android:enabled="@{data.address != null}"
+                android:visibility="@{data.chatAllowed &amp;&amp; data.showSecureChat ? View.VISIBLE : View.GONE}"
+                android:layout_width="70dp"
+                android:layout_height="60dp"
+                android:layout_margin="10dp">
+
+                <ImageView
+                    android:contentDescription="@string/content_description_start_encrypted_chat"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/round_orange_button_background"
+                    android:src="@drawable/chat_start_default" />
+
+                <ImageView
+                    android:layout_width="21dp"
+                    android:layout_height="21dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:contentDescription="@string/content_description_start_encrypted_chat"
+                    android:src="@drawable/security_toggle_icon_green" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</layout>

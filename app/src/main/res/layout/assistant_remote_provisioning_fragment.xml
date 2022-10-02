@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="qrCodeClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.assistant.viewmodels.RemoteProvisioningViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/top_bar_fragment"
+            android:name="org.linphone.activities.assistant.fragments.TopBarFragment"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/main_activity_top_bar_size"
+            android:layout_alignParentTop="true"
+            tools:layout="@layout/assistant_top_bar_fragment" />
+
+        <LinearLayout
+            android:layout_below="@id/top_bar_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/standard_text_font"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/assistant_remote_provisioning_title"
+                android:paddingTop="10dp"
+                android:textAllCaps="true" />
+
+            <TextView
+                style="@style/standard_small_text_font"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="top"
+                android:paddingTop="10dp"
+                android:text="@string/assistant_remote_provisioning_desc" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/assistant_remote_provisioning_url">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    errorMessage="@={viewModel.urlError}"
+                    urlConfirmationValidation="@{true}"
+                    android:text="@={viewModel.urlToFetch}"
+                    android:imeOptions="actionDone"
+                    android:singleLine="true"
+                    android:inputType="textUri"
+                    android:background="@color/transparent_color"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:onClick="@{() -> viewModel.fetchAndApply()}"
+                android:enabled="@{viewModel.fetchEnabled}"
+                android:text="@string/assistant_fetch_apply"
+                android:background="@drawable/assistant_button"
+                android:textColor="@drawable/assistant_button_text_color"
+                style="@style/button_font"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_marginTop="20dp"/>
+
+            <TextView
+                android:onClick="@{qrCodeClickListener}"
+                android:text="@string/assistant_launch_qrcode"
+                android:background="@drawable/assistant_button"
+                android:textColor="@drawable/assistant_button_text_color"
+                style="@style/button_font"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_marginTop="20dp"/>
+
+        </LinearLayout>
+
+        <include
+            layout="@layout/wait_layout"
+            bind:visibility="@{viewModel.fetchInProgress}"/>
+
+    </RelativeLayout>
+
+</layout>

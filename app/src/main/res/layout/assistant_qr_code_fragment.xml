@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.assistant.viewmodels.QrCodeViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/top_bar_fragment"
+            android:name="org.linphone.activities.assistant.fragments.TopBarFragment"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/main_activity_top_bar_size"
+            android:layout_alignParentTop="true"
+            tools:layout="@layout/assistant_top_bar_fragment" />
+
+        <RelativeLayout
+            android:layout_below="@id/top_bar_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/black_color">
+
+            <TextureView
+                android:id="@+id/qr_code_capture_texture"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"/>
+
+            <ImageView
+                android:onClick="@{() -> viewModel.switchCamera()}"
+                android:visibility="@{viewModel.showSwitchCamera ? View.VISIBLE : View.GONE}"
+                android:contentDescription="@string/content_description_switch_camera"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/round_button_background"
+                android:padding="10dp"
+                android:src="@drawable/camera_switch"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</layout>

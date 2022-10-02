@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="nextClickListener"
+            type="android.view.View.OnClickListener" />
+        <variable
+            name="datePickerClickListener"
+            type="android.view.View.OnClickListener" />
+        <variable
+            name="timePickerClickListener"
+            type="android.view.View.OnClickListener" />
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.main.conference.viewmodels.ConferenceSchedulingViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="?attr/voipBackgroundBWColor">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/main_activity_top_bar_size"
+            android:layout_gravity="center_horizontal"
+            android:background="?attr/voipToolbarBackgroundColor"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/back"
+                android:contentDescription="@string/content_description_go_back"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:padding="18dp"
+                android:src="@drawable/back" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.6"
+                android:gravity="center"
+                android:orientation="horizontal"
+                style="@style/calls_list_header_font"
+                android:text="@{viewModel.isUpdate ? @string/conference_schedule_edit : viewModel.scheduleForLater ? @string/conference_schedule_title : @string/conference_group_call_title, default=@string/conference_group_call_title}"/>
+
+            <ImageView
+                android:onClick="@{nextClickListener}"
+                android:enabled="@{viewModel.continueEnabled, default=false}"
+                android:contentDescription="@string/content_description_enter_edition_mode"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:padding="18dp"
+                android:src="@drawable/icon_next" />
+
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/conference_scheduling_font"
+                        android:text="@string/conference_schedule_subject_title"
+                        android:drawablePadding="5dp"
+                        app:drawableRightCompat="@drawable/voip_mandatory" />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:layout_marginTop="5dp"
+                        android:inputType="text"
+                        style="@style/conference_scheduling_font"
+                        android:background="@drawable/shape_edittext_background"
+                        android:hint="@{viewModel.scheduleForLater ? @string/conference_schedule_subject_hint : @string/conference_group_call_subject_hint, default=@string/conference_group_call_subject_hint}"
+                        android:text="@={viewModel.subject}" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="10dp"
+                    android:gravity="center"
+                    android:background="@drawable/shape_form_field_background">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center">
+
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:checked="@={viewModel.scheduleForLater}"
+                            android:enabled="@{!viewModel.isUpdate}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"/>
+
+                        <TextView
+                            android:onClick="@{() -> viewModel.toggleSchedule()}"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            style="@style/conference_scheduling_font"
+                            android:text="@string/conference_schedule_later"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:visibility="@{viewModel.scheduleForLater ? View.VISIBLE: View.GONE}"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="10dp"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:baselineAligned="false">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_columnWeight="1"
+                                android:layout_margin="5dp"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    style="@style/conference_scheduling_font"
+                                    android:text="@string/conference_schedule_date"
+                                    android:drawablePadding="5dp"
+                                    app:drawableRightCompat="@drawable/voip_mandatory"/>
+
+                                <TextView
+                                    android:onClick="@{datePickerClickListener}"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:padding="10dp"
+                                    android:layout_marginTop="5dp"
+                                    style="@style/conference_scheduling_font"
+                                    android:background="@drawable/icon_spinner_background"
+                                    android:text="@{viewModel.formattedDate}" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_columnWeight="1"
+                                android:layout_margin="5dp"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    style="@style/conference_scheduling_font"
+                                    android:text="@string/conference_schedule_duration"/>
+
+                                <Spinner
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:padding="10dp"
+                                    android:layout_marginTop="5dp"
+                                    style="@style/conference_scheduling_font"
+                                    android:background="@drawable/icon_spinner_background"
+                                    app:entries="@{viewModel.durationList}"
+                                    app:selectedValue="@={viewModel.duration}"/>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:baselineAligned="false">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_margin="5dp"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    style="@style/conference_scheduling_font"
+                                    android:text="@string/conference_schedule_time"
+                                    android:drawablePadding="5dp"
+                                    app:drawableRightCompat="@drawable/voip_mandatory"/>
+
+                                <TextView
+                                    android:onClick="@{timePickerClickListener}"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:padding="10dp"
+                                    android:layout_marginTop="5dp"
+                                    style="@style/conference_scheduling_font"
+                                    android:background="@drawable/icon_spinner_background"
+                                    android:text="@{viewModel.formattedTime}" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_margin="5dp"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    style="@style/conference_scheduling_font"
+                                    android:text="@string/conference_schedule_timezone"/>
+
+                                <Spinner
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:padding="10dp"
+                                    android:layout_marginTop="5dp"
+                                    style="@style/conference_scheduling_font"
+                                    android:background="@drawable/icon_spinner_background"
+                                    app:entries="@{viewModel.timeZones}"
+                                    app:selectedValue="@={viewModel.timeZone}"/>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="@style/conference_scheduling_font"
+                                android:text="@string/conference_schedule_description_title"/>
+
+                            <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="10dp"
+                                android:layout_marginTop="5dp"
+                                android:gravity="top"
+                                android:minLines="3"
+                                android:maxLines="5"
+                                android:inputType="textMultiLine"
+                                style="@style/conference_scheduling_font"
+                                android:background="@drawable/shape_edittext_background"
+                                android:hint="@string/conference_schedule_description_hint"
+                                android:text="@={viewModel.description}"/>
+
+                        </LinearLayout>
+
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="@{viewModel.isUpdate ? @string/conference_schedule_send_updated_invite_chat : @string/conference_schedule_send_invite_chat, default=@string/conference_schedule_send_invite_chat}"
+                            android:checked="@={viewModel.sendInviteViaChat, default=true}"
+                            style="@style/conference_scheduling_font"/>
+
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:visibility="gone"
+                            android:text="@{viewModel.isUpdate ? @string/conference_schedule_send_updated_invite_email : @string/conference_schedule_send_invite_email, default=@string/conference_schedule_send_invite_email}"
+                            android:checked="@={viewModel.sendInviteViaEmail}"
+                            style="@style/conference_scheduling_font"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <TextView
+                    android:visibility="gone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/conference_schedule_encryption"
+                    style="@style/conference_scheduling_font"/>
+
+                <LinearLayout
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:onClick="@{() -> viewModel.updateEncryption(false)}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@string/content_description_e2e_encryption_disabled"
+                        android:src="@drawable/security_toggle_icon_grey"/>
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:checked="@={viewModel.isEncrypted}"
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:switchMinWidth="50dp"
+                        android:textOff=""
+                        android:textOn=""/>
+
+                    <ImageView
+                        android:onClick="@{() -> viewModel.updateEncryption(true)}"
+                        android:contentDescription="@string/content_description_e2e_encryption_enabled"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/security_toggle_icon_green" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    style="@style/conference_scheduling_font"
+                    android:text="@string/conference_schedule_mandatory_field"
+                    android:drawablePadding="5dp"
+                    app:drawableLeftCompat="@drawable/voip_mandatory" />
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+</layout>

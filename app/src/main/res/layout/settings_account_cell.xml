@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="data"
+            type="org.linphone.activities.main.settings.viewmodels.AccountSettingsViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:onClick="@{() -> data.accountsSettingsListener.onAccountClicked(data.identity)}"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|left">
+
+        <ImageView
+            android:id="@+id/led"
+            android:background="@drawable/led_background"
+            android:padding="2dp"
+            android:src="@{data.iconResource, default=@drawable/led_not_registered}"
+            android:contentDescription="@{data.iconContentDescription}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
+
+        <org.linphone.views.MarqueeTextView
+            android:id="@+id/settings_title"
+            android:text="@{data.displayUsernameInsteadOfIdentity ? data.userName : data.identity}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:layout_toLeftOf="@id/led"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            style="@style/settings_item_font"/>
+
+        <org.linphone.views.MarqueeTextView
+            android:id="@+id/settings_subtitle"
+            android:visibility="@{data.isDefault() ? View.VISIBLE : View.GONE}"
+            android:text="@string/settings_default_account_subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:layout_below="@id/settings_title"
+            android:layout_toLeftOf="@id/led"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            style="@style/settings_item_subtitle_font"/>
+
+        <View
+            android:layout_marginTop="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/settings_subtitle"
+            android:background="?attr/dividerColor" />
+
+    </RelativeLayout>
+
+</layout>

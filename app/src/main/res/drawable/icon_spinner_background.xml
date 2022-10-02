@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <layer-list>
+            <item>
+                <shape>
+                    <gradient
+                        android:angle="90"
+                        android:endColor="?attr/voipFormBackgroundColor"
+                        android:startColor="?attr/voipFormBackgroundColor"
+                        android:type="linear" />
+                    <stroke android:width="@dimen/conference_schedule_form_field_border_thickness" android:color="?attr/voipFormFieldBackgroundColor" />
+                    <corners android:radius="0dp" />
+                    <padding android:bottom="3dp" android:left="3dp" android:right="3dp" android:top="3dp" />
+                </shape>
+            </item>
+
+            <item android:right="5dp">
+                <bitmap android:gravity="center_vertical|right" android:src="@drawable/voip_dropdown" />
+            </item>
+
+        </layer-list>
+    </item>
+</selector>

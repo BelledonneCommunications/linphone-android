@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:linphone="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View"/>
+        <import type="android.text.InputType"/>
+        <variable
+            name="viewModel"
+            type="org.linphone.activities.main.settings.viewmodels.LdapSettingsViewModel"/>
+        <variable
+            name="sharedMainViewModel"
+            type="org.linphone.activities.main.viewmodels.SharedMainViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/main_activity_top_bar_size"
+            android:layout_gravity="center_horizontal"
+            android:background="?attr/lightToolbarBackgroundColor"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/back"
+                android:visibility="@{sharedMainViewModel.isSlidingPaneSlideable ? View.VISIBLE : View.GONE}"
+                android:contentDescription="@string/content_description_go_back"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:background="?attr/button_background_drawable"
+                android:padding="18dp"
+                android:src="@drawable/back" />
+
+            <TextView
+                style="@style/accent_colored_title_font"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.6"
+                android:gravity="center"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:padding="15dp"
+                android:text="@string/contacts_settings_ldap_title"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:visibility="@{sharedMainViewModel.isSlidingPaneSlideable ? View.INVISIBLE : View.GONE}" />
+
+        </LinearLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/top_bar">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/contacts_settings_ldap_enable_title}"
+                    linphone:listener="@{viewModel.ldapEnableListener}"
+                    linphone:checked="@={viewModel.ldapEnable}"/>
+
+                <include
+                    layout="@layout/settings_widget_basic"
+                    linphone:title="@{@string/contacts_settings_ldap_delete_title}"
+                    linphone:listener="@{viewModel.deleteListener}"/>
+
+                <TextView
+                    style="@style/settings_category_font"
+                    android:text="@string/contacts_settings_ldap_connection_title"
+                    android:paddingTop="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <include
+                    layout="@layout/settings_widget_text"
+                    linphone:title="@{@string/contacts_settings_ldap_server_title}"
+                    linphone:listener="@{viewModel.ldapServerListener}"
+                    linphone:defaultValue="@{viewModel.ldapServer}"
+                    linphone:inputType="@{InputType.TYPE_TEXT_VARIATION_URI}"/>
+
+                <include
+                    layout="@layout/settings_widget_text"
+                    linphone:title="@{@string/contacts_settings_ldap_bind_dn_title}"
+                    linphone:listener="@{viewModel.ldapBindDnListener}"
+                    linphone:defaultValue="@{viewModel.ldapBindDn}"
+                    linphone:inputType="@{InputType.TYPE_CLASS_TEXT}"/>
+
+                <include
+                    layout="@layout/settings_widget_text"
+                    linphone:title="@{@string/contacts_settings_ldap_password_title}"
+                    linphone:listener="@{viewModel.ldapPasswordListener}"
+                    linphone:defaultValue="@{viewModel.ldapPassword}"
+                    linphone:inputType="@{InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD}"/>
+
+                <include
+                    layout="@layout/settings_widget_list"
+                    linphone:title="@{@string/contacts_settings_ldap_auth_method_title}"
+                    linphone:listener="@{viewModel.ldapAuthMethodListener}"
+                    linphone:selectedIndex="@{viewModel.ldapAuthMethodIndex}"
+                    linphone:labels="@{viewModel.ldapAuthMethodLabels}"/>
+
+                <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/contacts_settings_ldap_tls_title}"
+                    linphone:listener="@{viewModel.ldapTlsListener}"
+                    linphone:checked="@={viewModel.ldapTls}"/>
+
+                <include
+                    layout="@layout/settings_widget_list"
+                    linphone:title="@{@string/contacts_settings_ldap_cert_check_title}"
+                    linphone:listener="@{viewModel.ldapCertCheckListener}"
+                    linphone:selectedIndex="@{viewModel.ldapCertCheckIndex}"
+                    linphone:labels="@{viewModel.ldapCertCheckLabels}"/>
+
+                <TextView
+                    style="@style/settings_category_font"
+                    android:text="@string/contacts_settings_ldap_search_title"
+                    android:paddingTop="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <include
+                    layout="@layout/settings_widget_text"
+                    linphone:title="@{@string/contacts_settings_ldap_search_base_title}"
+                    linphone:subtitle="@{@string/contacts_settings_ldap_search_base_subtitle}"
+                    linphone:listener="@{viewModel.ldapSearchBaseListener}"
+                    linphone:defaultValue="@{viewModel.ldapSearchBase}"
+                    linphone:inputType="@{InputType.TYPE_CLASS_TEXT}"/>
+
+                <include
+                    layout="@layout/settings_widget_text"
+                    linphone:title="@{@string/contacts_settings_ldap_search_filter_title}"
+                    linphone:listener="@{viewModel.ldapSearchFilterListener}"
+                    linphone:defaultValue="@{viewModel.ldapSearchFilter}"
+                    linphone:inputType="@{InputType.TYPE_CLASS_TEXT}"/>
+
+                <include
+                    layout="@layout/settings_widget_text"
+                    linphone:title="@{@string/contacts_settings_ldap_search_max_results_title}"
+                    linphone:listener="@{viewModel.ldapSearchMaxResultsListener}"
+                    linphone:defaultValue="@{viewModel.ldapSearchMaxResults.toString()}"
+                    linphone:inputType="@{InputType.TYPE_CLASS_NUMBER}"/>
+
+                <include
+                    layout="@layout/settings_widget_text"
+                    linphone:title="@{@string/contacts_settings_ldap_search_timeout_title}"
+                    linphone:subtitle="@{@string/contacts_settings_ldap_search_timeout_subtitle}"
+                    linphone:listener="@{viewModel.ldapSearchTimeoutListener}"
+                    linphone:defaultValue="@{viewModel.ldapSearchTimeout.toString()}"
+                    linphone:inputType="@{InputType.TYPE_CLASS_NUMBER}"/>
+
+                <include
+                    layout="@layout/settings_widget_text"
+                    linphone:title="@{@string/contacts_settings_ldap_request_delay_title}"
+                    linphone:subtitle="@{@string/contacts_settings_ldap_request_delay_subtitle}"
+                    linphone:listener="@{viewModel.ldapRequestDelayListener}"
+                    linphone:defaultValue="@{viewModel.ldapRequestDelay.toString()}"
+                    linphone:inputType="@{InputType.TYPE_CLASS_NUMBER}"/>
+
+                <include
+                    layout="@layout/settings_widget_text"
+                    linphone:title="@{@string/contacts_settings_ldap_minimum_characters_title}"
+                    linphone:listener="@{viewModel.ldapMinimumCharactersListener}"
+                    linphone:defaultValue="@{viewModel.ldapMinimumCharacters.toString()}"
+                    linphone:inputType="@{InputType.TYPE_CLASS_NUMBER}"/>
+
+                <TextView
+                    style="@style/settings_category_font"
+                    android:text="@string/contacts_settings_ldap_parsing_title"
+                    android:paddingTop="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <include
+                    layout="@layout/settings_widget_text"
+                    linphone:title="@{@string/contacts_settings_ldap_name_attribute_title}"
+                    linphone:listener="@{viewModel.ldapNameAttributeListener}"
+                    linphone:defaultValue="@{viewModel.ldapNameAttribute}"
+                    linphone:inputType="@{InputType.TYPE_CLASS_TEXT}"/>
+
+                <include
+                    layout="@layout/settings_widget_text"
+                    linphone:title="@{@string/contacts_settings_ldap_sip_attribute_title}"
+                    linphone:listener="@{viewModel.ldapSipAttributeListener}"
+                    linphone:defaultValue="@{viewModel.ldapSipAttribute}"
+                    linphone:inputType="@{InputType.TYPE_CLASS_TEXT}"/>
+
+                <include
+                    layout="@layout/settings_widget_text"
+                    linphone:title="@{@string/contacts_settings_ldap_sip_domain_title}"
+                    linphone:listener="@{viewModel.ldapSipDomainListener}"
+                    linphone:defaultValue="@{viewModel.ldapSipDomain}"
+                    linphone:inputType="@{InputType.TYPE_CLASS_TEXT}"/>
+
+                <TextView
+                    style="@style/settings_category_font"
+                    android:text="@string/contacts_settings_ldap_misc_title"
+                    android:paddingTop="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/contacts_settings_ldap_debug_title}"
+                    linphone:listener="@{viewModel.ldapDebugListener}"
+                    linphone:checked="@={viewModel.ldapDebug}"/>
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </RelativeLayout>
+
+</layout>
