@@ -102,7 +102,7 @@ class ConferenceViewModel : ViewModel() {
 
             if (conferenceParticipantDevices.value.orEmpty().size == 2) {
                 secondParticipantJoinedEvent.value = Event(true)
-            } else if (conferenceParticipantDevices.value.orEmpty().size == 3) {
+            } else if (conferenceParticipantDevices.value.orEmpty().size > 2) {
                 moreThanTwoParticipantsJoinedEvent.value = Event(true)
             }
         }
