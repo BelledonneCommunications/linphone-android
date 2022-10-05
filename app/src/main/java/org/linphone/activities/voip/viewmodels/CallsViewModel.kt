@@ -101,6 +101,7 @@ class CallsViewModel : ViewModel() {
             }
 
             val currentCall = core.currentCall
+            Log.i("[Calls] Current call is ${currentCall?.remoteAddress?.asStringUriOnly()}")
             if (currentCall != null && currentCallData.value?.call != currentCall) {
                 updateCurrentCallData(currentCall)
             } else if (currentCall == null && core.callsNb > 0) {
@@ -110,6 +111,7 @@ class CallsViewModel : ViewModel() {
             if (state == Call.State.End || state == Call.State.Released || state == Call.State.Error) {
                 removeCallFromList(call)
                 if (core.callsNb > 0) {
+                    Log.i("[Calls] Call has ended but there are still at least one other existing call")
                     callEndedEvent.value = Event(call)
                 }
             } else if (call.state == Call.State.UpdatedByRemote) {
@@ -254,9 +256,18 @@ class CallsViewModel : ViewModel() {
     private fun updateCurrentCallData(currentCall: Call?) {
         var callToUse = currentCall
         if (currentCall == null) {
-            if (coreContext.core.callsNb == 1) return // There is only one call, most likely it is paused
+            Log.i("[Calls] Current call is now null")
 
-            Log.w("[Calls] Current call is now null")
+            if (coreContext.core.callsNb == 1) {
+                // Make sure the current call data is matching the only call
+                val firstData = callsData.value?.firstOrNull()
+                if (firstData != null && currentCallData.value != firstData) {
+                    Log.i("[Calls] Only one call in Core and the current call data doesn't match it, updating it")
+                    currentCallData.value = firstData!!
+                }
+                return
+            }
+
             val firstCall = coreContext.core.calls.find { call ->
                 call.state != Call.State.Error && call.state != Call.State.End && call.state != Call.State.Released
             }
