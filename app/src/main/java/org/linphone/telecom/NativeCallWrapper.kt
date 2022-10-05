@@ -19,6 +19,7 @@
  */
 package org.linphone.telecom
 
+import android.annotation.TargetApi
 import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.telecom.CallAudioState
@@ -31,10 +32,15 @@ import org.linphone.core.Call
 import org.linphone.core.tools.Log
 import org.linphone.utils.AudioRouteUtils
 
+@TargetApi(29)
 class NativeCallWrapper(var callId: String) : Connection() {
     init {
+        val properties = connectionProperties or PROPERTY_SELF_MANAGED
+        connectionProperties = properties
+
         val capabilities = connectionCapabilities or CAPABILITY_MUTE or CAPABILITY_SUPPORT_HOLD or CAPABILITY_HOLD
         connectionCapabilities = capabilities
+
         audioModeIsVoip = true
         statusHints = StatusHints(
             "",
@@ -117,6 +123,10 @@ class NativeCallWrapper(var callId: String) : Connection() {
     override fun onSilence() {
         Log.i("[Connection] Call with id: $callId asked to be silenced")
         coreContext.core.stopRinging()
+    }
+
+    fun stateAsString(): String {
+        return intStateToString(state)
     }
 
     private fun getCall(): Call? {
