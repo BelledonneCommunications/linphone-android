@@ -9,17 +9,17 @@
             type="org.linphone.activities.main.chat.viewmodels.ImdnViewModel" />
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:id="@+id/top_bar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/main_activity_top_bar_size"
             android:background="?attr/lightToolbarBackgroundColor"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:id="@+id/back"
@@ -48,17 +48,24 @@
         </LinearLayout>
 
         <include
+            android:id="@+id/message"
             layout="@layout/chat_message_list_cell"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:data="@{viewModel.chatMessageViewModel}" />
+            app:data="@{viewModel.chatMessageViewModel}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/top_bar"
+            app:layout_constraintHeight_max="200dp"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/participantsList"
             android:layout_marginTop="5dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/message"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
