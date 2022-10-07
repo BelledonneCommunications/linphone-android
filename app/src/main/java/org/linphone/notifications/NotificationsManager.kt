@@ -36,8 +36,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.LocusIdCompat
 import androidx.core.graphics.drawable.IconCompat
 import androidx.navigation.NavDeepLinkBuilder
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -372,8 +370,13 @@ class NotificationsManager(private val context: Context) {
     private fun startForeground(notificationId: Int, callNotification: Notification) {
         if (currentForegroundServiceNotificationId == 0 && service != null) {
             Log.i("[Notifications Manager] Starting service as foreground using call notification [$notificationId]")
-            currentForegroundServiceNotificationId = notificationId
-            service?.startForeground(currentForegroundServiceNotificationId, callNotification)
+            try {
+                currentForegroundServiceNotificationId = notificationId
+                service?.startForeground(currentForegroundServiceNotificationId, callNotification)
+            } catch (e: Exception) {
+                Log.e("[Notifications Manager] Foreground service wasn't allowed! $e")
+                currentForegroundServiceNotificationId = 0
+            }
         } else {
             Log.w("[Notifications Manager] Can't start foreground service using notification id [$notificationId] (current foreground service notification id is [$currentForegroundServiceNotificationId]) and service [$service]")
         }
