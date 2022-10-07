@@ -69,6 +69,8 @@
                 android:layout_height="wrap_content"
                 android:singleLine="false"
                 android:layout_marginTop="5dp"
+                android:maxLines="5"
+                android:ellipsize="end"
                 style="@style/chat_message_reply_font"
                 android:text="@{data.text, default=`Lorem ipsum`}"/>
 

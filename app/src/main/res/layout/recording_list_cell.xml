@@ -83,26 +83,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true">
+                android:layout_alignParentTop="true"
+                android:layout_toLeftOf="@id/playing_info"
+                android:layout_marginEnd="5dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@{data.name}" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=" - " />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@{data.formattedDate}" />
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text="@{data.name + `-` + data.formattedDate, default=`This is a sample meeeting recording - 13:50`}" />
 
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/playing_info"
                 style="@style/standard_text_font"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -115,17 +110,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="@{data.formattedPosition}" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="/" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@{data.formattedDuration}" />
+                    android:text="@{data.formattedPosition + `/` + data.formattedDuration, default=`00:00/00:04`}" />
 
             </LinearLayout>
 

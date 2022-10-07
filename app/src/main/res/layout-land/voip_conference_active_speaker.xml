@@ -54,13 +54,15 @@
         <TextView
             android:id="@+id/remote_name"
             style="@style/call_header_title"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
             android:layout_marginTop="@{controlsViewModel.folded ? @dimen/voip_conference_header_folded_top_margin : @dimen/margin_0dp}"
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@{conferenceViewModel.subject, default=@string/conference_default_title}"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/toggle_conference_recording"
             app:layout_constraintTop_toBottomOf="@id/hinge_top" />
 
         <Chronometer
