@@ -728,6 +728,9 @@ class NotificationsManager(private val context: Context) {
 
         if (text.isEmpty()) {
             for (content in message.contents) {
+                if (text.isNotEmpty()) {
+                    text += ", "
+                }
                 text += content.name
             }
         }

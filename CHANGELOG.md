@@ -28,6 +28,7 @@ Group changes to describe their impact on the project, as follows:
 
 ### Changed
 - In-call views have been re-designed
+- "Media Encryption Mandatory" setting now allows for any media encryption (instead of only the one selected in the above setting previously)
 - Improved how call logs are handled to improve performances
 - Improved how contact avatars are generated
 - 3-dots menu even for basic chat rooms with more options
