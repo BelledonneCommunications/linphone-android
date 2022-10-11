@@ -8,6 +8,9 @@
 mtu=1300
 force_ice_disablement=0
 
+[rtp]
+accept_any_encryption=1
+
 [sip]
 guess_hostname=1
 register_only_when_network_is_up=1
@@ -26,7 +29,7 @@ ec_calibrator_cool_tones=1
 [video]
 displaytype=MSAndroidTextureDisplay
 auto_resize_preview_to_keep_ratio=1
-max_mosaic_size=vga
+max_conference_size=vga
 
 [misc]
 enable_basic_to_client_group_chat_room_migration=0
