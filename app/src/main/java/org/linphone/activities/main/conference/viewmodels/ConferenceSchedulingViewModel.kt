@@ -165,7 +165,7 @@ class ConferenceSchedulingViewModel : ContactsSelectionViewModel() {
             it.id == TimeZone.getDefault().id
         }
         duration.value = durationList.find {
-            it.value == 3600
+            it.value == 60
         }
 
         continueEnabled.value = false
