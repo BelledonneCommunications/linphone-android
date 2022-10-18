@@ -23,6 +23,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.R
 import org.linphone.utils.AppUtils
+import org.linphone.utils.Event
 
 class DialogViewModel(val message: String, val title: String = "") : ViewModel() {
     var showDoNotAskAgain: Boolean = false
@@ -40,6 +41,8 @@ class DialogViewModel(val message: String, val title: String = "") : ViewModel()
     var iconResource: Int = 0
 
     val doNotAskAgain = MutableLiveData<Boolean>()
+
+    val dismissEvent = MutableLiveData<Event<Boolean>>()
 
     init {
         doNotAskAgain.value = false
@@ -91,5 +94,9 @@ class DialogViewModel(val message: String, val title: String = "") : ViewModel()
 
     fun onOkClicked() {
         onOk(doNotAskAgain.value == true)
+    }
+
+    fun dismiss() {
+        dismissEvent.value = Event(true)
     }
 }

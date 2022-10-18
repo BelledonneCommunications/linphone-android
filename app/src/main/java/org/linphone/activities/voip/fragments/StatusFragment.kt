@@ -140,6 +140,12 @@ class StatusFragment : GenericFragment<VoipStatusFragmentBinding>() {
             getString(R.string.zrtp_dialog_ok_button_label)
         )
 
+        viewModel.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
         zrtpDialog = dialog
         dialog.show()
     }
