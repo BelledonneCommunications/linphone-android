@@ -54,7 +54,7 @@ class StatusViewModel : StatusViewModel() {
             authenticationToken: String?
         ) {
             updateEncryptionInfo(call)
-            if (call.currentParams.mediaEncryption == MediaEncryption.ZRTP && !call.authenticationTokenVerified) {
+            if (call.currentParams.mediaEncryption == MediaEncryption.ZRTP && !call.authenticationTokenVerified && call.authenticationToken != null) {
                 showZrtpDialogEvent.value = Event(call)
             }
         }
@@ -80,7 +80,7 @@ class StatusViewModel : StatusViewModel() {
         if (currentCall != null) {
             updateEncryptionInfo(currentCall)
 
-            if (currentCall.currentParams.mediaEncryption == MediaEncryption.ZRTP && !currentCall.authenticationTokenVerified) {
+            if (currentCall.currentParams.mediaEncryption == MediaEncryption.ZRTP && !currentCall.authenticationTokenVerified && currentCall.authenticationToken != null) {
                 showZrtpDialogEvent.value = Event(currentCall)
             }
         }
@@ -120,11 +120,11 @@ class StatusViewModel : StatusViewModel() {
                 encryptionContentDescription.value = R.string.content_description_call_secured
             }
             MediaEncryption.ZRTP -> {
-                encryptionIcon.value = when (call.authenticationTokenVerified) {
+                encryptionIcon.value = when (call.authenticationTokenVerified || call.authenticationToken == null) {
                     true -> R.drawable.security_ok
                     else -> R.drawable.security_pending
                 }
-                encryptionContentDescription.value = when (call.authenticationTokenVerified) {
+                encryptionContentDescription.value = when (call.authenticationTokenVerified || call.authenticationToken == null) {
                     true -> R.string.content_description_call_secured
                     else -> R.string.content_description_call_security_pending
                 }
