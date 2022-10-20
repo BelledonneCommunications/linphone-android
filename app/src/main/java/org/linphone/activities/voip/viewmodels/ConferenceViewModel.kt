@@ -167,26 +167,19 @@ class ConferenceViewModel : ViewModel() {
             }
         }
 
-        override fun onParticipantDeviceIsSpeakingChanged(
+        override fun onActiveSpeakerParticipantDevice(
             conference: Conference,
-            participantDevice: ParticipantDevice,
-            isSpeaking: Boolean
+            participantDevice: ParticipantDevice
         ) {
-            Log.i("[Conference] Participant [${participantDevice.address.asStringUriOnly()}] is ${if (isSpeaking) "speaking" else "not speaking"}")
-            if (isSpeaking) {
-                val device = conferenceParticipantDevices.value.orEmpty().find {
-                    it.participantDevice.address.weakEqual(participantDevice.address)
-                }
-                if (device != null && device != speakingParticipant.value) {
-                    Log.i("[Conference] Found participant device")
-                    if (!device.isMe) {
-                        // TODO: FIXME: remove, this is a temporary workaround to not have your name
-                        //  displayed above someone else video in active speaker layout when you talk
-                        speakingParticipant.value = device!!
-                    }
-                } else if (device == null) {
-                    Log.w("[Conference] Participant device [${participantDevice.address.asStringUriOnly()}] is speaking but couldn't find it in devices list")
-                }
+            Log.i("[Conference] Participant [${participantDevice.address.asStringUriOnly()}] is currently being displayed as active speaker")
+            val device = conferenceParticipantDevices.value.orEmpty().find {
+                it.participantDevice.address.weakEqual(participantDevice.address)
+            }
+            if (device != null && device != speakingParticipant.value) {
+                Log.i("[Conference] Found actively speaking participant device")
+                speakingParticipant.value = device!!
+            } else if (device == null) {
+                Log.w("[Conference] Participant device [${participantDevice.address.asStringUriOnly()}] is the active speaker but couldn't find it in devices list")
             }
         }
 
@@ -428,6 +421,7 @@ class ConferenceViewModel : ViewModel() {
         val devices = arrayListOf<ConferenceParticipantDeviceData>()
 
         val participantsList = conference.participantList
+        val activelySpeakingParticipantDevice = conference.activeSpeakerParticipantDevice
         Log.i("[Conference] Conference has ${participantsList.size} participants")
         for (participant in participantsList) {
             val participantDevices = participant.devices
@@ -437,10 +431,12 @@ class ConferenceViewModel : ViewModel() {
                 Log.i("[Conference] Participant device found: ${device.name} (${device.address.asStringUriOnly()})")
                 val deviceData = ConferenceParticipantDeviceData(device, false)
                 devices.add(deviceData)
+
+                if (activelySpeakingParticipantDevice == device) {
+                    Log.i("[Conference] Actively speaking participant device found: ${device.name} (${device.address.asStringUriOnly()})")
+                    speakingParticipant.value = deviceData
+                }
             }
-        }
-        if (devices.isNotEmpty()) {
-            speakingParticipant.value = devices.first()
         }
 
         for (device in conference.me.devices) {
