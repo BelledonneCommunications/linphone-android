@@ -23,7 +23,9 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
+import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
@@ -186,6 +188,7 @@ class CallActivity : ProximitySensorActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onPictureInPictureModeChanged(
         isInPictureInPictureMode: Boolean,
         newConfig: Configuration
@@ -195,6 +198,7 @@ class CallActivity : ProximitySensorActivity() {
             // To hide UI except for TextureViews
             controlsViewModel.pipMode.value = isInPictureInPictureMode
         }
+        super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
     }
 
     override fun onResume() {

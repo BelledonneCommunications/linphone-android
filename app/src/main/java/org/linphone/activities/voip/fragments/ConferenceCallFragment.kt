@@ -262,6 +262,7 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
         super.onResume()
 
         if (conferenceViewModel.conferenceDisplayMode.value == ConferenceDisplayMode.ACTIVE_SPEAKER) {
+            Log.i("[Conference Call] Conference fragment is resuming, current display mode is active speaker, adjusting layout")
             adjustActiveSpeakerLayout()
         }
     }
@@ -346,7 +347,7 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
     }
 
     private fun adjustActiveSpeakerLayout() {
-        if (conferenceViewModel.conferenceCreationPending.value == false) {
+        if (conferenceViewModel.conference.value?.state == Conference.State.Created) {
             val participantsCount = conferenceViewModel.conferenceParticipantDevices.value.orEmpty().size
             Log.i("[Conference Call] Updating active speaker layout for [$participantsCount] participants")
             when (participantsCount) {
@@ -354,6 +355,8 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
                 2 -> switchToActiveSpeakerLayoutForTwoParticipants()
                 else -> switchToActiveSpeakerLayoutForMoreThanTwoParticipants()
             }
+        } else {
+            Log.w("[Conference] Active speaker layout not adjusted, conference state is: ${conferenceViewModel.conference.value?.state}")
         }
     }
 
