@@ -89,6 +89,7 @@ class ConferenceViewModel : ViewModel() {
             updateParticipantsList(conference)
 
             if (conferenceParticipants.value.orEmpty().isEmpty()) {
+                speakingParticipant.value?.videoEnabled?.value = false
                 allParticipantsLeftEvent.value = Event(true)
             }
         }
@@ -190,7 +191,6 @@ class ConferenceViewModel : ViewModel() {
             when (state) {
                 Conference.State.Created -> {
                     configureConference(conference)
-                    conferenceCreationPending.value = false
                 }
                 Conference.State.TerminationPending -> {
                     terminateConference(conference)
@@ -210,6 +210,10 @@ class ConferenceViewModel : ViewModel() {
             if (state == Conference.State.Instantiated) {
                 conferenceCreationPending.value = true
                 initConference(conference)
+            } else if (state == Conference.State.Created) {
+                if (conferenceCreationPending.value == true) {
+                    conferenceCreationPending.value = false
+                }
             }
         }
     }
@@ -239,10 +243,13 @@ class ConferenceViewModel : ViewModel() {
             Log.i("[Conference] Found an existing conference: $conference in state $state")
             if (state != Conference.State.TerminationPending && state != Conference.State.Terminated) {
                 initConference(conference)
-                if (state == Conference.State.Created) {
-                    configureConference(conference)
-                } else {
+                if (state == Conference.State.Instantiated) {
                     conferenceCreationPending.value = true
+                } else if (state == Conference.State.Created) {
+                    if (conferenceCreationPending.value == true) {
+                        conferenceCreationPending.value = false
+                    }
+                    configureConference(conference)
                 }
             }
         }
