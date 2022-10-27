@@ -259,8 +259,10 @@ class ConferenceWaitingRoomViewModel : MessageNotifierViewModel() {
         }
         updateAudioRouteState()
 
-        audioRoutesSelected.value = false
-        audioRoutesMenuAnimator.reverse()
+        if (audioRoutesSelected.value == true) {
+            audioRoutesSelected.value = false
+            audioRoutesMenuAnimator.reverse()
+        }
     }
 
     fun setSpeakerAudioRoute() {
@@ -273,8 +275,10 @@ class ConferenceWaitingRoomViewModel : MessageNotifierViewModel() {
         }
         updateAudioRouteState()
 
-        audioRoutesSelected.value = false
-        audioRoutesMenuAnimator.reverse()
+        if (audioRoutesSelected.value == true) {
+            audioRoutesSelected.value = false
+            audioRoutesMenuAnimator.reverse()
+        }
     }
 
     fun setEarpieceAudioRoute() {
@@ -287,8 +291,10 @@ class ConferenceWaitingRoomViewModel : MessageNotifierViewModel() {
         }
         updateAudioRouteState()
 
-        audioRoutesSelected.value = false
-        audioRoutesMenuAnimator.reverse()
+        if (audioRoutesSelected.value == true) {
+            audioRoutesSelected.value = false
+            audioRoutesMenuAnimator.reverse()
+        }
     }
 
     fun toggleLayoutMenu() {
