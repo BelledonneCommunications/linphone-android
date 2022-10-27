@@ -234,13 +234,14 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:visibility="@{viewModel.description.length() == 0 ? View.GONE : View.VISIBLE}">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 style="@style/conference_scheduling_font"
-                                android:text="@string/conference_schedule_description_title"/>
+                                android:text="@string/conference_schedule_description_hint"/>
 
                             <EditText
                                 android:layout_width="match_parent"

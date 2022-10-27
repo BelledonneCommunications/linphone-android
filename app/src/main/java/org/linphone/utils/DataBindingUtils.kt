@@ -34,6 +34,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.Guideline
 import androidx.databinding.*
+import coil.dispose
 import coil.load
 import coil.request.CachePolicy
 import coil.request.videoFrameMillis
@@ -344,6 +345,8 @@ private suspend fun loadContactPictureWithCoil(
     textColor: Int = 0,
     defaultAvatar: String? = null
 ) {
+    imageView.dispose()
+
     val context = imageView.context
     if (contact == null) {
         if (defaultAvatar != null) {
@@ -351,7 +354,7 @@ private suspend fun loadContactPictureWithCoil(
                 transformations(CircleCropTransformation())
             }
         } else {
-            imageView.load(R.drawable.icon_single_contact_avatar)
+            imageView.load(R.drawable.icon_single_contact_avatar_alt)
         }
     } else if (contact.showGroupChatAvatar) {
         imageView.load(AppCompatResources.getDrawable(context, R.drawable.icon_multiple_contacts_avatar))
@@ -363,7 +366,7 @@ private suspend fun loadContactPictureWithCoil(
             transformations(CircleCropTransformation())
             error(
                 if (displayName.isEmpty() || AppUtils.getInitials(displayName) == "+") {
-                    AppCompatResources.getDrawable(context, R.drawable.icon_single_contact_avatar)
+                    AppCompatResources.getDrawable(context, R.drawable.icon_single_contact_avatar_alt)
                 } else {
                     coroutineScope {
                         withContext(Dispatchers.IO) {
