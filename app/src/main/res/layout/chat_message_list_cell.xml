@@ -70,6 +70,8 @@
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:background="@drawable/generated_avatar_bg"
+            android:src="@drawable/voip_single_contact_avatar"
             android:gravity="center"
             android:visibility="@{data.chatMessage.outgoing || selectionListViewModel.isEditionEnabled ? View.GONE : (data.hideAvatar ? View.INVISIBLE : View.VISIBLE)}" />
 

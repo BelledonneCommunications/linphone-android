@@ -33,7 +33,9 @@
                     coilContact="@{data}"
                     android:layout_marginLeft="40dp"
                     android:layout_marginRight="10dp"
-                    android:layout_centerVertical="true"/>
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/generated_avatar_bg"
+                    android:src="@drawable/voip_single_contact_avatar"/>
 
                 <ImageView
                     android:visibility="@{data.isInRemoteConference ? View.VISIBLE : View.GONE, default=gone}"
