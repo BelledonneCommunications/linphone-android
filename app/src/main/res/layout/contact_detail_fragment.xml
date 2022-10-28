@@ -87,6 +87,8 @@
                     android:layout_width="@dimen/contact_avatar_big_size"
                     android:layout_height="@dimen/contact_avatar_big_size"
                     coilContactBig="@{viewModel}"
+                    android:background="@drawable/generated_avatar_bg"
+                    android:src="@drawable/voip_single_contact_avatar"
                     android:contentDescription="@null" />
 
                 <TextView

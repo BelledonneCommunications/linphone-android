@@ -354,7 +354,7 @@ private suspend fun loadContactPictureWithCoil(
                 transformations(CircleCropTransformation())
             }
         } else {
-            imageView.load(R.drawable.icon_single_contact_avatar_alt)
+            imageView.load(R.drawable.icon_single_contact_avatar)
         }
     } else if (contact.showGroupChatAvatar) {
         imageView.load(AppCompatResources.getDrawable(context, R.drawable.icon_multiple_contacts_avatar))
@@ -366,7 +366,7 @@ private suspend fun loadContactPictureWithCoil(
             transformations(CircleCropTransformation())
             error(
                 if (displayName.isEmpty() || AppUtils.getInitials(displayName) == "+") {
-                    AppCompatResources.getDrawable(context, R.drawable.icon_single_contact_avatar_alt)
+                    AppCompatResources.getDrawable(context, R.drawable.icon_single_contact_avatar)
                 } else {
                     coroutineScope {
                         withContext(Dispatchers.IO) {
