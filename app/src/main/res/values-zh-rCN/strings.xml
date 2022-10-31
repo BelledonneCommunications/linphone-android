@@ -170,7 +170,6 @@
     <string name="missed_call_notification_body">来自%s 的未接来电</string>
     <string name="missed_calls_notification_body">%d 未接来电</string>
     <string name="zrtp_dialog_title">通讯安全</string>
-    <string name="zrtp_dialog_ok_button_label">接受</string>
     <string name="dialog_default_delete_one">你确定要删除这个项目吗？</string>
     <string name="dialog_update_available">有可用的更新</string>
     <string name="dialog_try_open_file_as_text_title">找不到此类文件的应用</string>
@@ -292,7 +291,6 @@
     <string name="account_settings_outbound_proxy_title">外出代理服务器</string>
     <string name="account_settings_avpf_rr_interval_title">AVPF常规RTCP间隔</string>
     <string name="notification_channel_incoming_call_name">&appName; 来电通知</string>
-    <string name="zrtp_dialog_message">请与您的联系人确认以下SAS代码</string>
     <string name="yesterday">昨日</string>
     <string name="transport_tcp">TCP传输控制协议</string>
     <string name="app_description"><i>自由</i>的 SIP 客户端</string>
@@ -488,7 +486,6 @@
     <string name="assistant_link_account">关联账户</string>
     <string name="assistant_remote_provisioning_title">获取远程配置</string>
     <string name="assistant_remote_provisioning_desc">请提供您的配置网址</string>
-    <string name="zrtp_dialog_deny_button_label">拒绝</string>
     <string name="dialog_zrtp_local_sas">说：</string>
     <string name="dialog_zrtp_remote_sas">确认您的对话者说：</string>
     <string name="dialog_do_not_ask_again">不再显示</string>

@@ -403,7 +403,6 @@
     <string name="account_settings_user_id_summary">Digite ID de autenticação se diferente do nome de usuário (opcional)</string>
 
     <string name="notification_channel_incoming_call_name">&appName; notificações de chamadas recebidas</string>
-    <string name="zrtp_dialog_message">Confirme o seguinte código SAS com o seu correspondente</string>
     <string name="dialog_lime_security_message">As mensagens instantâneas são criptografadas de ponta a ponta em conversas seguras. É possível atualizar o nível de segurança de uma conversa autenticando os participantes. Para isso, ligue para o contato e siga o processo de autenticação.</string>
     <string name="content_description_add_phone_number_field">Adicionar um campo de número de telefone</string>
     <string name="content_description_pause_call">Pausar a chamada</string>
@@ -465,8 +464,6 @@
     <string name="missed_call_notification_body">Chamada perdida de %s</string>
     <string name="missed_calls_notification_body" tools:ignore="PluralsCandidate">%d chamadas perdidas</string>
     <string name="zrtp_dialog_title">Segurança de comunicação</string>
-    <string name="zrtp_dialog_ok_button_label">Aceitar</string>
-    <string name="zrtp_dialog_deny_button_label">Negar</string>
     <string name="dialog_zrtp_local_sas">Diz:</string>
     <string name="dialog_zrtp_remote_sas">Confirme se o seu interlocutor diz:</string>
     <string name="dialog_do_not_ask_again">Não mostre novamente</string>

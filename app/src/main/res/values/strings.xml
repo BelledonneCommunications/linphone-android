@@ -724,11 +724,11 @@
 
     <!-- Dialog -->
     <string name="zrtp_dialog_title">Communication security</string>
-    <string name="zrtp_dialog_message">Confirm the following SAS code with your correspondent</string>
-    <string name="zrtp_dialog_ok_button_label">Accept</string>
-    <string name="zrtp_dialog_deny_button_label">Deny</string>
+    <string name="zrtp_dialog_explanation">To raise the security level, you can check the following codes with your correspondent.</string>
+    <string name="zrtp_dialog_later_button_label">Later</string>
+    <string name="zrtp_dialog_correct_button_label">Correct</string>
     <string name="dialog_zrtp_local_sas">Say:</string>
-    <string name="dialog_zrtp_remote_sas">Confirm that your interlocutor says:</string>
+    <string name="dialog_zrtp_remote_sas">Your correspondent must say:</string>
     <string name="dialog_do_not_ask_again">Do not show again</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_delete">Delete</string>

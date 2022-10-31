@@ -89,9 +89,6 @@
     <string name="missed_call_notification_body">Llamada perdida de %s</string>
     <string name="missed_calls_notification_body">%d llamadas perdidas</string>
     <string name="zrtp_dialog_title">Seguridad de comunicación</string>
-    <string name="zrtp_dialog_message">Confirme el siguiente código SAS con su corresponsal</string>
-    <string name="zrtp_dialog_ok_button_label">Aceptar</string>
-    <string name="zrtp_dialog_deny_button_label">Denegar</string>
     <string name="dialog_zrtp_local_sas">Diga:</string>
     <string name="dialog_do_not_ask_again">No mostrar de nuevo</string>
     <string name="dialog_cancel">Cancelar</string>

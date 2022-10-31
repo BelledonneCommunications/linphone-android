@@ -6,7 +6,6 @@ plugins {
 }
 
 def appVersionName = "4.7.0"
-// def appVersionCode = 40700
 def appVersionCode = 40701
 
 static def getPackageName() {

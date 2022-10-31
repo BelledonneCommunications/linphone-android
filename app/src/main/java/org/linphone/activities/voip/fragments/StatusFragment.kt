@@ -107,7 +107,7 @@ class StatusFragment : GenericFragment<VoipStatusFragmentBinding>() {
             }
         }
 
-        val viewModel = DialogViewModel(getString(R.string.zrtp_dialog_message), getString(R.string.zrtp_dialog_title))
+        val viewModel = DialogViewModel(getString(R.string.zrtp_dialog_explanation), getString(R.string.zrtp_dialog_title))
         viewModel.showZrtp = true
         viewModel.zrtpReadSas = toRead.uppercase(Locale.getDefault())
         viewModel.zrtpListenSas = toListen.uppercase(Locale.getDefault())
@@ -120,14 +120,14 @@ class StatusFragment : GenericFragment<VoipStatusFragmentBinding>() {
 
         val dialog: Dialog = DialogUtils.getVoipDialog(requireContext(), viewModel)
 
-        viewModel.showDeleteButton(
+        viewModel.showCancelButton(
             {
                 call.authenticationTokenVerified = false
                 this@StatusFragment.viewModel.updateEncryptionInfo(call)
                 dialog.dismiss()
                 zrtpDialog = null
             },
-            getString(R.string.zrtp_dialog_deny_button_label)
+            getString(R.string.zrtp_dialog_later_button_label)
         )
 
         viewModel.showOkButton(
@@ -137,7 +137,7 @@ class StatusFragment : GenericFragment<VoipStatusFragmentBinding>() {
                 dialog.dismiss()
                 zrtpDialog = null
             },
-            getString(R.string.zrtp_dialog_ok_button_label)
+            getString(R.string.zrtp_dialog_correct_button_label)
         )
 
         viewModel.dismissEvent.observe(viewLifecycleOwner) {

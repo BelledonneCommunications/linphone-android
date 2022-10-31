@@ -299,9 +299,6 @@
     <string name="incoming_call_notification_answer_action_label">Hívásfogadás</string>
     <string name="received_chat_notification_mark_as_read_label">Megjelölés olvasottként</string>
     <string name="missed_call_notification_title">Nem fogadott hívás</string>
-    <string name="zrtp_dialog_message">Erősítse meg a következő SAS-kódot a hívott felével</string>
-    <string name="zrtp_dialog_ok_button_label">Elfogad</string>
-    <string name="zrtp_dialog_deny_button_label">Elutasítás</string>
     <string name="dialog_zrtp_local_sas">Mond:</string>
     <string name="dialog_do_not_ask_again">Többet ne mutassa</string>
     <string name="dialog_cancel">Mégse</string>
