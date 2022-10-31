@@ -357,8 +357,6 @@
     <string name="missed_call_notification_title">Пропущенный звонок</string>
     <string name="missed_call_notification_body">Пропущен звонок от %s</string>
     <string name="zrtp_dialog_title">Безопасность связи</string>
-    <string name="zrtp_dialog_ok_button_label">Принять</string>
-    <string name="zrtp_dialog_deny_button_label">Отклонить</string>
     <string name="dialog_zrtp_local_sas">Говорит:</string>
     <string name="dialog_zrtp_remote_sas">Подтвердите, что ваш собеседник говорит:</string>
     <string name="dialog_do_not_ask_again">Не показывать снова</string>
@@ -555,7 +553,6 @@
     <string name="notification_channel_chat_name">Уведомления о мгновенных сообщениях &appName;</string>
     <string name="received_chat_notification_reply_label">Ответить</string>
     <string name="missed_calls_notification_body" tools:ignore="PluralsCandidate">%d пропущенных звонков</string>
-    <string name="zrtp_dialog_message">Подтвердить предыдущий код SAS у вашего собеседника</string>
     <string name="dialog_lime_security_message">Мгновенные сообщения шифруются сквозным шифрованием в защищенных разговорах. Можно повысить уровень безопасности разговора путем аутентификации участников. Для этого позвоните контакту и выполните процедуру аутентификации.</string>
     <string name="dialog_try_open_file_as_text_body">Хотите попробовать открыть его как обычный текстовый файл\?</string>
     <string name="content_description_switch_camera">Переключение с передней камеры на заднюю и наоборот</string>

@@ -410,9 +410,6 @@
     <string name="missed_call_notification_body">來自 %s 的未接來電</string>
     <string name="missed_calls_notification_body">%d 通未接來電</string>
     <string name="zrtp_dialog_title">通訊安全性</string>
-    <string name="zrtp_dialog_message">請與對方確認下列 SAS 代碼</string>
-    <string name="zrtp_dialog_ok_button_label">接受</string>
-    <string name="zrtp_dialog_deny_button_label">拒絕</string>
     <string name="dialog_zrtp_local_sas">說：</string>
     <string name="dialog_do_not_ask_again">不再顯示</string>
     <string name="dialog_cancel">取消</string>

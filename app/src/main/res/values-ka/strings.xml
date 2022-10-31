@@ -574,8 +574,6 @@
     <string name="received_chat_notification_reply_label">პასუხი</string>
     <string name="received_chat_notification_mark_as_read_label">წაკითხულად მონიშვნა</string>
     <string name="missed_call_notification_title">გამოტოვებული ზარი</string>
-    <string name="zrtp_dialog_ok_button_label">მიღება</string>
-    <string name="zrtp_dialog_deny_button_label">უარყოფა</string>
     <string name="dialog_zrtp_local_sas">თქვით:</string>
     <string name="dialog_zrtp_remote_sas">დაადასტურეთ, რომ მოსაუბრე ამბობს:</string>
     <string name="dialog_do_not_ask_again">აღარ აჩვენოთ</string>
@@ -702,7 +700,6 @@
     <string name="missed_call_notification_body">გამოტოვებული ზარი %s-სგან</string>
     <string name="missed_calls_notification_body" tools:ignore="PluralsCandidate">%d გამოტოვებული ზარი</string>
     <string name="zrtp_dialog_title">კავშირის უსაფრთხოება</string>
-    <string name="zrtp_dialog_message">დაადასტურეთ შემდეგი SAS კოდი თქვენს მოსაუბრესთან</string>
     <string name="dialog_lime_security_message">დაუყოვნებლივი შეტყობინებები არის ბოლოდან ბოლომდე დაშიფრული დაცულ საუბრებში. შესაძლებელია საუბრის უსაფრთხოების დონის ამაღლების მონაწილეთა აუთენტიფიკაციის მეშვეობით. ამისათვის, დაურეკეთ კონტაქტს და მიჰყევით აუთენტიფიკაციის პროცესს.</string>
     <string name="dialog_update_available">ხელმისაწვდომია განახლება</string>
     <string name="dialog_try_open_file_as_text_body">გსურთ, სცადოთ მისი გახსნა უბრალო ტექსტურ ფაილად\?</string>
