@@ -299,7 +299,7 @@
     <string name="account_settings_avpf_rr_interval_title">AVPF regular RTCP 間隔</string>
     <string name="notification_channel_service_name">&appName; 服務通知</string>
     <string name="received_chat_notification_mark_as_read_label">標記為已讀</string>
-    <string name="dialog_zrtp_remote_sas">確認您的對話者說：</string>
+    <string name="dialog_zrtp_remote_sas">您的對話者必須說：</string>
     <string name="dialog_lime_security_message">在加密對話中，即時訊息是被端到端加密的。透過驗證參與者的身份，可以再增加提高對話的安全等級。若要這麼做，請打電話給聯絡人，並進行身份驗證。</string>
     <string name="content_description_switch_camera">切換前後攝影機</string>
     <string name="content_description_disable_mic_mute">取消麥克風靜音</string>
@@ -763,4 +763,7 @@
     <string name="conference_scheduled_cancelled_by_me">您已取消此會議</string>
     <string name="conference_schedule_send_updated_invite_chat">透過 &appName; 更新活動資訊</string>
     <string name="conference_schedule_send_updated_invite_email">透過電子郵件更新活動資訊</string>
+    <string name="zrtp_dialog_explanation">為了增加安全性，您可以與對方確認下列代碼是否相符。</string>
+    <string name="zrtp_dialog_later_button_label">稍後</string>
+    <string name="zrtp_dialog_correct_button_label">確認正確</string>
 </resources>
