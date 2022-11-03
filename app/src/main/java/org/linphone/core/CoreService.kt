@@ -70,17 +70,19 @@ class CoreService : CoreService() {
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
-        if (coreContext.core.callsNb > 0) {
-            Log.w("[Service] Task removed but there is at least one active call, do not stop the Core!")
-        } else if (!corePreferences.keepServiceAlive) {
-            if (coreContext.core.isInBackground) {
-                Log.i("[Service] Task removed, stopping Core")
-                coreContext.stop()
+        if (LinphoneApplication.contextExists()) {
+            if (coreContext.core.callsNb > 0) {
+                Log.w("[Service] Task removed but there is at least one active call, do not stop the Core!")
+            } else if (!corePreferences.keepServiceAlive) {
+                if (coreContext.core.isInBackground) {
+                    Log.i("[Service] Task removed, stopping Core")
+                    coreContext.stop()
+                } else {
+                    Log.w("[Service] Task removed but Core is not in background, skipping")
+                }
             } else {
-                Log.w("[Service] Task removed but Core is not in background, skipping")
+                Log.i("[Service] Task removed but we were asked to keep the service alive, so doing nothing")
             }
-        } else {
-            Log.i("[Service] Task removed but we were asked to keep the service alive, so doing nothing")
         }
 
         super.onTaskRemoved(rootIntent)
