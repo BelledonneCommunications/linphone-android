@@ -372,7 +372,18 @@ class NotificationsManager(private val context: Context) {
             Log.i("[Notifications Manager] Starting service as foreground using call notification [$notificationId]")
             try {
                 currentForegroundServiceNotificationId = notificationId
-                service?.startForeground(currentForegroundServiceNotificationId, callNotification)
+
+                val coreService = service
+                if (coreService != null) {
+                    Compatibility.startForegroundService(
+                        coreService,
+                        currentForegroundServiceNotificationId,
+                        callNotification
+                    )
+                } else {
+                    Log.w("[Notifications Manager] No Service found, can't start it as foreground")
+                    currentForegroundServiceNotificationId = 0
+                }
             } catch (e: Exception) {
                 Log.e("[Notifications Manager] Foreground service wasn't allowed! $e")
                 currentForegroundServiceNotificationId = 0
