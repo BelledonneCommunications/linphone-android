@@ -89,6 +89,7 @@
 
         <LinearLayout
             android:id="@+id/background"
+            android:background="@drawable/chat_bubble_outgoing_full"
             backgroundImage="@{data.backgroundRes, default=@drawable/chat_bubble_outgoing_full}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -171,7 +172,7 @@
                 android:longClickable="true"
                 android:onClick="@{clickListener}"
                 android:onLongClick="@{contextMenuClickListener}"
-                android:text="@{data.text}"
+                android:text="@{data.text, default=`Lorem Ipsum: dolor sit amet`}"
                 android:textColor="@color/dark_grey_color"
                 android:textSize="@{data.isTextEmoji ? @dimen/chat_message_emoji_font_size : @dimen/chat_message_text_font_size, default=@dimen/chat_message_text_font_size}"
                 android:textStyle="normal"
@@ -196,6 +197,25 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:onClick="@{() -> data.showReactionsList()}"
+            android:id="@+id/reactions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/chat_bubble_outgoing_full"
+            backgroundImage="@{data.backgroundRes, default=@drawable/chat_bubble_outgoing_full}"
+            android:padding="2dp"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_below="@id/background"
+            android:layout_alignLeft="@{data.chatMessage.outgoing || selectionListViewModel.isEditionEnabled ? 0 : @id/background}"
+            android:layout_alignRight="@{data.chatMessage.outgoing || selectionListViewModel.isEditionEnabled ? @id/background : 0}"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            entries="@{data.reactions}"
+            layout="@{@layout/chat_message_reaction}" />
+
         <TextView
             android:id="@+id/time"
             android:layout_width="wrap_content"
@@ -206,7 +226,7 @@
             android:layout_marginTop="7dp"
             android:fontFamily="sans-serif"
             android:lineSpacingExtra="0sp"
-            android:text="@{data.chatMessage.outgoing ? data.time : data.time + ` - ` + (data.contact.name ?? data.displayName)}"
+            android:text="@{data.chatMessage.outgoing ? data.time : data.time + ` - ` + (data.contact.name ?? data.displayName), default=`07/11 13:19 - John Doe`}"
             android:textColor="@color/chat_bubble_text_color"
             android:textSize="13sp"
             android:textStyle="normal"

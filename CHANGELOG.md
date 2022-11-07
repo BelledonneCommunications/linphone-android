@@ -10,6 +10,11 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [5.2.0] - Unreleased
+
+### Added
+- Chat messages emoji "reactions"
+
 ## [5.1.0] - Unreleased
 
 ### Added
@@ -34,7 +39,20 @@ Group changes to describe their impact on the project, as follows:
 ### Fixed
 - Messages not marked as reply in basic chat room if sending more than 1 content
 
-## [5.0.10] - 2023-01-04
+## [5.0.11] - 2023-05-09
+
+### Fixed
+- Wrong call displayed when hanging up a call while an incoming one is ringing
+- Crash related to call history
+- Crash due to wrongly format string
+- Add/remove missing listener on FriendLists created after Core has been created
+
+### Changed
+- Improved GSM call interruption
+- Updated translations
+
+## [5.0.10] - 2023-04-04
+
 ### Fixed
 - Plain copy of encrypted files (when VFS is enabled) not cleaned
 - Avatar display issue if contact's "initials" contains more than 1 emoji or an emoji + a character

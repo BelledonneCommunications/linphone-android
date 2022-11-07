@@ -521,5 +521,7 @@ interface OnContentClickedListener {
 
     fun onCallConference(address: String, subject: String?)
 
+    fun onShowReactionsList(chatMessage: ChatMessage)
+
     fun onError(messageId: Int)
 }

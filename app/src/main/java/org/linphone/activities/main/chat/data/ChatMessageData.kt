@@ -30,6 +30,7 @@ import org.linphone.contact.ContactsUpdatedListenerStub
 import org.linphone.contact.GenericContactData
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatMessageListenerStub
+import org.linphone.core.ChatMessageReaction
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
@@ -71,6 +72,8 @@ class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMes
         MutableLiveData<Event<Boolean>>()
     }
 
+    val reactions = MutableLiveData<ArrayList<String>>()
+
     var hasPreviousMessage = false
     var hasNextMessage = false
 
@@ -84,6 +87,13 @@ class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMes
 
         override fun onEphemeralMessageTimerStarted(message: ChatMessage) {
             updateEphemeralTimer()
+        }
+
+        override fun onNewMessageReaction(message: ChatMessage, reaction: ChatMessageReaction) {
+            Log.i(
+                "[Chat Message Data] New reaction to display [${reaction.body}] from [${reaction.fromAddress.asStringUriOnly()}]"
+            )
+            updateReactionsList()
         }
     }
 
@@ -122,6 +132,8 @@ class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMes
         if (contact.value == null) {
             coreContext.contactsManager.addListener(contactsListener)
         }
+
+        updateReactionsList()
     }
 
     override fun destroy() {
@@ -177,6 +189,10 @@ class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMes
         for (data in contents.value.orEmpty()) {
             data.listener = listener
         }
+    }
+
+    fun showReactionsList() {
+        contentListener?.onShowReactionsList(chatMessage)
     }
 
     private fun updateChatMessageState(state: ChatMessage.State) {
@@ -263,6 +279,23 @@ class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMes
         }
 
         contents.value = list
+    }
+
+    fun updateReactionsList() {
+        val reactionsList = arrayListOf<String>()
+        val allReactions = chatMessage.reactions
+
+        if (allReactions.isNotEmpty()) {
+            for (reaction in allReactions) {
+                val body = reaction.body
+                if (!reactionsList.contains(body)) {
+                    reactionsList.add(body)
+                }
+            }
+            reactionsList.add(allReactions.size.toString())
+        }
+
+        reactions.value = reactionsList
     }
 
     private fun updateEphemeralTimer() {
