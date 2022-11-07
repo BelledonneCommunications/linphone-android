@@ -105,22 +105,27 @@ class TelecomHelper private constructor(context: Context) {
     @SuppressLint("MissingPermission")
     fun findExistingAccount(context: Context): PhoneAccount? {
         if (PermissionHelper.required(context).hasReadPhoneStateOrPhoneNumbersPermission()) {
-            var account: PhoneAccount? = null
-            val phoneAccountHandleList: List<PhoneAccountHandle> =
-                telecomManager.selfManagedPhoneAccounts
-            val connectionService = ComponentName(context, TelecomConnectionService::class.java)
-            for (phoneAccountHandle in phoneAccountHandleList) {
-                val phoneAccount: PhoneAccount = telecomManager.getPhoneAccount(phoneAccountHandle)
-                if (phoneAccountHandle.componentName == connectionService) {
-                    Log.i("[Telecom Helper] Found existing phone account: $phoneAccount")
-                    account = phoneAccount
-                    break
+            try {
+                var account: PhoneAccount? = null
+                val phoneAccountHandleList: List<PhoneAccountHandle> =
+                    telecomManager.selfManagedPhoneAccounts
+                val connectionService = ComponentName(context, TelecomConnectionService::class.java)
+                for (phoneAccountHandle in phoneAccountHandleList) {
+                    val phoneAccount: PhoneAccount =
+                        telecomManager.getPhoneAccount(phoneAccountHandle)
+                    if (phoneAccountHandle.componentName == connectionService) {
+                        Log.i("[Telecom Helper] Found existing phone account: $phoneAccount")
+                        account = phoneAccount
+                        break
+                    }
                 }
+                if (account == null) {
+                    Log.w("[Telecom Helper] Existing phone account not found")
+                }
+                return account
+            } catch (se: SecurityException) {
+                Log.w("[Telecom Helper] Can't check phone accounts: $se")
             }
-            if (account == null) {
-                Log.w("[Telecom Helper] Existing phone account not found")
-            }
-            return account
         } else {
             Log.e("[Telecom Helper] Can't search for existing phone account, missing permission(s)")
         }
