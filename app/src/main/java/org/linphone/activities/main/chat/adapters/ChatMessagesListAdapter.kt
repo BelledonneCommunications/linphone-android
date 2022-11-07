@@ -27,6 +27,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
+import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
@@ -108,6 +109,10 @@ class ChatMessagesListAdapter(
         MutableLiveData<Event<ChatMessage>>()
     }
 
+    val showReactionsListEvent: MutableLiveData<Event<ChatMessage>> by lazy {
+        MutableLiveData<Event<ChatMessage>>()
+    }
+
     val errorEvent: MutableLiveData<Event<Int>> by lazy {
         MutableLiveData<Event<Int>>()
     }
@@ -151,6 +156,10 @@ class ChatMessagesListAdapter(
 
         override fun onCallConference(address: String, subject: String?) {
             callConferenceEvent.value = Event(Pair(address, subject))
+        }
+
+        override fun onShowReactionsList(chatMessage: ChatMessage) {
+            showReactionsListEvent.value = Event(chatMessage)
         }
 
         override fun onError(messageId: Int) {
@@ -363,7 +372,7 @@ class ChatMessagesListAdapter(
                         )
 
                         val itemSize = AppUtils.getDimension(R.dimen.chat_message_popup_item_height).toInt()
-                        var totalSize = itemSize * 7
+                        var totalSize = itemSize * 8
                         if (chatMessage.chatRoom.hasCapability(
                                 ChatRoom.Capabilities.OneToOne.toInt()
                             )
@@ -410,6 +419,13 @@ class ChatMessagesListAdapter(
                         // Elevation is for showing a shadow around the popup
                         popupWindow.elevation = 20f
 
+                        popupView.setEmojiClickListener {
+                            val emoji = it as? TextView
+                            if (emoji != null) {
+                                reactToMessage(emoji.text.toString())
+                                popupWindow.dismiss()
+                            }
+                        }
                         popupView.setResendClickListener {
                             resendMessage()
                             popupWindow.dismiss()
@@ -445,6 +461,17 @@ class ChatMessagesListAdapter(
                         true
                     }
                 }
+            }
+        }
+
+        private fun reactToMessage(reaction: String) {
+            val chatMessage = binding.data?.chatMessage
+            if (chatMessage != null) {
+                Log.i(
+                    "[Chat Message Data] Reacting to message [$chatMessage] with [$reaction] emoji"
+                )
+                val reactionMessage = chatMessage.createReaction(reaction)
+                reactionMessage.send()
             }
         }
 

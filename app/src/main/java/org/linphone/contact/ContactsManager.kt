@@ -218,6 +218,16 @@ class ContactsManager(private val context: Context) {
     }
 
     @Synchronized
+    fun isAddressMyself(address: Address): Boolean {
+        for (friend in localFriends) {
+            if (friend.address?.weakEqual(address) == true) {
+                return true
+            }
+        }
+        return false
+    }
+
+    @Synchronized
     fun addListener(listener: ContactsUpdatedListener) {
         contactsUpdatedListeners.add(listener)
     }

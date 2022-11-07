@@ -89,4 +89,6 @@
     <dimen name="chat_room_emoji_picker_height">290dp</dimen>
     <dimen name="chat_message_text_font_size">15sp</dimen>
     <dimen name="chat_message_emoji_font_size">45sp</dimen>
+    <dimen name="chat_message_emoji_reaction_font_size">20sp</dimen>
+    <dimen name="chat_message_emoji_reactions_count_font_size">14sp</dimen>
 </resources>

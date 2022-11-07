@@ -5,6 +5,9 @@
     <data>
         <import type="android.view.View" />
         <variable
+            name="emojiClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="resendClickListener"
             type="View.OnClickListener" />
         <variable
@@ -50,6 +53,77 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="?attr/backgroundColor">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chat_message_popup_item_height">
+
+            <TextView
+                style="@style/chat_message_emoji_reaction_font"
+                android:onClick="@{emojiClickListener}"
+                android:id="@+id/love"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/emoji_love"
+                app:layout_constraintEnd_toStartOf="@id/thumbs_up"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <TextView
+                style="@style/chat_message_emoji_reaction_font"
+                android:onClick="@{emojiClickListener}"
+                android:id="@+id/thumbs_up"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/emoji_thumbs_up"
+                app:layout_constraintEnd_toStartOf="@id/laughing"
+                app:layout_constraintStart_toEndOf="@id/love"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <TextView
+                style="@style/chat_message_emoji_reaction_font"
+                android:onClick="@{emojiClickListener}"
+                android:id="@+id/laughing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/emoji_laughing"
+                app:layout_constraintEnd_toStartOf="@id/surprised"
+                app:layout_constraintStart_toEndOf="@id/thumbs_up"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <TextView
+                style="@style/chat_message_emoji_reaction_font"
+                android:onClick="@{emojiClickListener}"
+                android:id="@+id/surprised"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/emoji_surprised"
+                app:layout_constraintEnd_toStartOf="@id/tear"
+                app:layout_constraintStart_toEndOf="@id/laughing"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <TextView
+                style="@style/chat_message_emoji_reaction_font"
+                android:onClick="@{emojiClickListener}"
+                android:id="@+id/tear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/emoji_tear"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/surprised"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:layout_width="match_parent"

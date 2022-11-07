@@ -234,6 +234,7 @@
     <string name="chat_message_abort_removal">Abort</string>
     <string name="chat_message_download_already_in_progress">Please wait for first download to finish before starting a new one</string>
     <string name="chat_message_voice_recording_received_notification">You have received a voice message</string>
+    <string name="chat_message_voice_recording_notification_short_desc">voice message</string>
     <string name="chat_message_voice_recording">Voice message</string>
     <string name="chat_room_presence_online">Online</string>
     <string name="chat_room_presence_last_seen_online_today">Online today at</string>
@@ -241,6 +242,20 @@
     <string name="chat_room_presence_last_seen_online">Online on</string>
     <string name="chat_room_presence_away">Away</string>
     <string name="chat_room_presence_do_not_disturb">Do not disturb</string>
+
+    <!-- Chat reactions -->
+    <string name="chat_message_reaction_received">%s has reacted by %s to: %s</string>
+    <string name="emoji_love" translatable="false">❤️</string>
+    <string name="emoji_thumbs_up" translatable="false">👍</string>
+    <string name="emoji_laughing" translatable="false">😂</string>
+    <string name="emoji_surprised" translatable="false">😮</string>
+    <string name="emoji_tear" translatable="false">😢</string>
+    <plurals name="chat_message_reactions_count" translatable="false">
+        <item quantity="one">@string/chat_message_one_reaction</item>
+        <item quantity="other">@string/chat_message_many_reactions</item>
+    </plurals>
+    <string name="chat_message_one_reaction">%s reaction</string>
+    <string name="chat_message_many_reactions">%s reactions</string>
 
     <!-- Recordings -->
     <string name="recordings_empty_list">No recordings</string>
@@ -308,6 +323,7 @@
     <string name="conference_info_removed">Meeting info has been deleted</string>
     <string name="conference_empty">You are currently alone in this group call</string>
     <string name="conference_invitation_received_notification">You have been invited to a meeting</string>
+    <string name="conference_invitation_notification_short_desc">meeting invitation</string>
     <string name="conference_invitation">Meeting invitation</string>
     <string name="conference_low_bandwidth">Low bandwidth detected, disabling video</string>
     <string name="conference_first_to_join">You\'re the first to join the group call</string>

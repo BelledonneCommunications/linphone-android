@@ -309,5 +309,32 @@ class LinphoneUtils {
 
             return null
         }
+
+        fun getTextDescribingMessage(message: ChatMessage): String {
+            // If message contains text, then use that
+            var text = message.contents.find { content -> content.isText }?.utf8Text ?: ""
+
+            if (text.isEmpty()) {
+                val firstContent = message.contents.firstOrNull()
+                if (firstContent?.isIcalendar == true) {
+                    text = AppUtils.getString(
+                        R.string.conference_invitation_notification_short_desc
+                    )
+                } else if (firstContent?.isVoiceRecording == true) {
+                    text = AppUtils.getString(
+                        R.string.chat_message_voice_recording_notification_short_desc
+                    )
+                } else {
+                    for (content in message.contents) {
+                        if (text.isNotEmpty()) {
+                            text += ", "
+                        }
+                        text += content.name
+                    }
+                }
+            }
+
+            return text
+        }
     }
 }
