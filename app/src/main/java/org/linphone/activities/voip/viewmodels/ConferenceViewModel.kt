@@ -87,11 +87,6 @@ class ConferenceViewModel : ViewModel() {
         override fun onParticipantRemoved(conference: Conference, participant: Participant) {
             Log.i("[Conference] Participant removed: ${participant.address.asStringUriOnly()}")
             updateParticipantsList(conference)
-
-            if (conferenceParticipants.value.orEmpty().isEmpty()) {
-                speakingParticipant.value?.videoEnabled?.value = false
-                allParticipantsLeftEvent.value = Event(true)
-            }
         }
 
         override fun onParticipantDeviceAdded(
@@ -115,8 +110,15 @@ class ConferenceViewModel : ViewModel() {
             Log.i("[Conference] Participant device removed: ${participantDevice.address.asStringUriOnly()}")
             removeParticipantDevice(participantDevice)
 
-            if (conferenceParticipantDevices.value.orEmpty().size == 2) {
-                secondParticipantJoinedEvent.value = Event(true)
+            when (conferenceParticipantDevices.value.orEmpty().size) {
+                1 -> {
+                    speakingParticipant.value?.videoEnabled?.value = false
+                    allParticipantsLeftEvent.value = Event(true)
+                }
+                2 -> {
+                    secondParticipantJoinedEvent.value = Event(true)
+                }
+                else -> {}
             }
         }
 
@@ -428,8 +430,11 @@ class ConferenceViewModel : ViewModel() {
         val devices = arrayListOf<ConferenceParticipantDeviceData>()
 
         val participantsList = conference.participantList
-        val activelySpeakingParticipantDevice = conference.activeSpeakerParticipantDevice
         Log.i("[Conference] Conference has ${participantsList.size} participants")
+
+        val activelySpeakingParticipantDevice = conference.activeSpeakerParticipantDevice
+        var foundActivelySpeakingParticipantDevice = false
+
         for (participant in participantsList) {
             val participantDevices = participant.devices
             Log.i("[Conference] Participant found: ${participant.address.asStringUriOnly()} with ${participantDevices.size} device(s)")
@@ -442,8 +447,14 @@ class ConferenceViewModel : ViewModel() {
                 if (activelySpeakingParticipantDevice == device) {
                     Log.i("[Conference] Actively speaking participant device found: ${device.name} (${device.address.asStringUriOnly()})")
                     speakingParticipant.value = deviceData
+                    foundActivelySpeakingParticipantDevice = true
                 }
             }
+        }
+
+        if (!foundActivelySpeakingParticipantDevice && devices.isNotEmpty()) {
+            Log.w("[Conference] Actively speaking participant device not found, using first participant device available")
+            speakingParticipant.value = devices.first()
         }
 
         for (device in conference.me.devices) {
@@ -485,22 +496,33 @@ class ConferenceViewModel : ViewModel() {
 
     private fun removeParticipantDevice(device: ParticipantDevice) {
         val devices = arrayListOf<ConferenceParticipantDeviceData>()
+        var removedDeviceWasActiveSpeaker = false
 
         for (participantDevice in conferenceParticipantDevices.value.orEmpty()) {
             if (participantDevice.participantDevice.address.asStringUriOnly() != device.address.asStringUriOnly()) {
                 devices.add(participantDevice)
             } else {
+                if (speakingParticipant.value == participantDevice) {
+                    Log.w("[Conference] Removed participant device was the actively speaking participant device")
+                    removedDeviceWasActiveSpeaker = true
+                }
                 participantDevice.destroy()
             }
         }
-        if (devices.size == conferenceParticipantDevices.value.orEmpty().size) {
+
+        val devicesCount = devices.size
+        if (devicesCount == conferenceParticipantDevices.value.orEmpty().size) {
             Log.e("[Conference] Failed to remove participant device: ${device.name} (${device.address.asStringUriOnly()})")
-        } else {
-            Log.i("[Conference] Participant device removed: ${device.name} (${device.address.asStringUriOnly()})")
+        }
+
+        if (removedDeviceWasActiveSpeaker && devicesCount > 1) {
+            Log.w("[Conference] Updating actively speaking participant device using first one available")
+            // Using second device as first is ourselves
+            speakingParticipant.value = devices[1]
         }
 
         conferenceParticipantDevices.value = devices
-        moreThanTwoParticipants.value = devices.size > 2
+        moreThanTwoParticipants.value = devicesCount > 2
     }
 
     private fun sortDevicesDataList(devices: List<ConferenceParticipantDeviceData>): ArrayList<ConferenceParticipantDeviceData> {

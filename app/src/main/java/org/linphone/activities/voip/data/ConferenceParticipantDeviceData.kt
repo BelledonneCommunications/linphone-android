@@ -122,6 +122,7 @@ class ConferenceParticipantDeviceData(
 
         val state = participantDevice.state
         isJoining.value = state == ParticipantDeviceState.Joining || state == ParticipantDeviceState.Alerting
+        Log.i("[Conference Participant Device] State for participant [${participantDevice.address.asStringUriOnly()}] is $state")
 
         videoEnabled.value = isVideoAvailableAndSendReceive()
         videoEnabled.addSource(videoAvailable) {
