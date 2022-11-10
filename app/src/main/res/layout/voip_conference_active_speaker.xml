@@ -129,7 +129,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/miniatures"
             android:layout_marginTop="@{controlsViewModel.fullScreenMode ? @dimen/margin_0dp : @dimen/voip_active_speaker_top_margin, default=@dimen/voip_active_speaker_top_margin}"
-            android:background="@drawable/shape_remote_background"
+            android:background="@{!conferenceViewModel.speakingParticipant.isInConference ? @drawable/shape_remote_paused_background : @drawable/shape_remote_background, default=@drawable/shape_remote_background}"
             android:onClick="@{() -> controlsViewModel.toggleFullScreen()}"/>
 
         <ImageView
@@ -140,6 +140,23 @@
             android:contentDescription="@null"
             coilVoipContact="@{conferenceViewModel.speakingParticipant}"
             android:background="@drawable/generated_avatar_bg"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintBottom_toBottomOf="@id/active_speaker_background"
+            app:layout_constraintEnd_toEndOf="@id/active_speaker_background"
+            app:layout_constraintHeight_max="@dimen/voip_contact_avatar_max_size"
+            app:layout_constraintStart_toStartOf="@id/active_speaker_background"
+            app:layout_constraintTop_toTopOf="@id/active_speaker_background"
+            app:layout_constraintWidth_max="@dimen/voip_contact_avatar_max_size" />
+
+        <ImageView
+            android:id="@+id/speaking_participant_paused"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/shape_button_background"
+            android:contentDescription="@string/content_description_participant_is_paused"
+            android:src="@drawable/icon_pause"
+            android:visibility="@{conferenceViewModel.speakingParticipant.isInConference ? View.GONE : View.VISIBLE, default=gone}"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintBottom_toBottomOf="@id/active_speaker_background"
             app:layout_constraintEnd_toEndOf="@id/active_speaker_background"
@@ -162,7 +179,7 @@
             android:id="@+id/conference_active_speaker_remote_video"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:visibility="@{!conferenceViewModel.isConferenceLocallyPaused &amp;&amp; conferenceViewModel.speakingParticipant.videoEnabled ? View.VISIBLE : View.GONE}"
+            android:visibility="@{!conferenceViewModel.isConferenceLocallyPaused &amp;&amp; conferenceViewModel.speakingParticipant.videoEnabled &amp;&amp; conferenceViewModel.speakingParticipant.isInConference ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@id/active_speaker_background"
             app:layout_constraintEnd_toEndOf="@id/active_speaker_background"
             app:layout_constraintStart_toStartOf="@id/active_speaker_background"
