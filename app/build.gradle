@@ -6,7 +6,7 @@ plugins {
 }
 
 def appVersionName = "4.7.0"
-def appVersionCode = 40702
+def appVersionCode = 40703
 
 static def getPackageName() {
     return "org.linphone"
@@ -229,7 +229,7 @@ dependencies {
     // https://github.com/Baseflow/PhotoView/blob/master/LICENSE Apache v2.0
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
 
-    implementation platform('com.google.firebase:firebase-bom:31.0.1')
+    implementation platform('com.google.firebase:firebase-bom:31.0.3')
     if (crashlyticsEnabled) {
         implementation 'com.google.firebase:firebase-crashlytics-ndk'
     } else {
