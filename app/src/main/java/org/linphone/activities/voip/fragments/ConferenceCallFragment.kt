@@ -269,12 +269,12 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
 
     private fun switchToFullScreenIfPossible(conference: Conference) {
         if (corePreferences.enableFullScreenWhenJoiningVideoConference) {
-            if (conference.currentParams.isVideoEnabled && conferenceViewModel.conferenceCreationPending.value == false) {
+            if (conference.currentParams.isVideoEnabled) {
                 when {
                     conference.me.devices.isEmpty() -> {
                         Log.w("[Conference Call] Conference has video enabled but either our device hasn't joined yet")
                     }
-                    conference.me.devices.find { it.getStreamAvailability(StreamType.Video) } != null -> {
+                    conference.me.devices.find { it.isInConference && it.getStreamAvailability(StreamType.Video) } != null -> {
                         Log.i("[Conference Call] Conference has video enabled & our device has video enabled, enabling full screen mode")
                         controlsViewModel.fullScreenMode.value = true
                     }
