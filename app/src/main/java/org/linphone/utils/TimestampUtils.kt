@@ -64,7 +64,11 @@ class TimestampUtils {
 
             val calendar = Calendar.getInstance()
             calendar.timeInMillis = if (timestampInSecs) date * 1000 else date
-            return SimpleDateFormat(pattern, Locale.getDefault()).format(calendar.time)
+
+            // See https://github.com/material-components/material-components-android/issues/882
+            val dateFormatter = SimpleDateFormat(pattern, Locale.getDefault())
+            dateFormatter.timeZone = TimeZone.getTimeZone("UTC")
+            return dateFormatter.format(calendar.time)
         }
 
         fun timeToString(hour: Int, minutes: Int): String {
