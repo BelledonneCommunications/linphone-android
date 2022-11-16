@@ -232,10 +232,10 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
             chatMessage.userData = events.value.orEmpty().size
 
             val existingEvent = events.value.orEmpty().find { data ->
-                data.eventLog == eventLog
+                data.eventLog.type == EventLog.Type.ConferenceChatMessage && data.eventLog.chatMessage?.messageId == chatMessage.messageId
             }
             if (existingEvent != null) {
-                Log.w("[Chat Messages] Found already present chat message, don't add it it's probably the result of an auto download")
+                Log.w("[Chat Messages] Found already present chat message, don't add it it's probably the result of an auto download or an aggregated message received before but notified after the conversation was displayed")
                 return
             }
 
