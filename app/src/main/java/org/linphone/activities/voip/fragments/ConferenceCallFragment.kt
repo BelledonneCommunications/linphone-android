@@ -81,6 +81,15 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
 
         binding.statsViewModel = statsViewModel
 
+        conferenceViewModel.reloadConferenceFragmentEvent.observe(
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                Log.i("[Conference Call] Reloading fragment after toggling video ON while in AUDIO_ONLY layout")
+                refreshConferenceFragment()
+            }
+        }
+
         conferenceViewModel.conferenceDisplayMode.observe(
             viewLifecycleOwner
         ) { displayMode ->
@@ -101,6 +110,16 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
                     coreContext.core.nativeVideoWindowId = null
                 }
             }
+
+            when (displayMode) {
+                ConferenceDisplayMode.AUDIO_ONLY -> {
+                    controlsViewModel.fullScreenMode.value = false
+                }
+                else -> {
+                    val conference = conferenceViewModel.conference.value
+                    if (conference != null) switchToFullScreenIfPossible(conference)
+                }
+            }
         }
 
         conferenceViewModel.conferenceParticipantDevices.observe(
@@ -111,7 +130,7 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
                 it.size > conferenceViewModel.maxParticipantsForMosaicLayout
             ) {
                 Log.w("[Conference Call] More than ${conferenceViewModel.maxParticipantsForMosaicLayout} participants (${it.size}), forcing active speaker layout")
-                conferenceViewModel.changeLayout(ConferenceDisplayMode.ACTIVE_SPEAKER)
+                conferenceViewModel.changeLayout(ConferenceDisplayMode.ACTIVE_SPEAKER, false)
                 refreshConferenceFragment()
                 // Can't use SnackBar whilst changing fragment
                 Toast.makeText(requireContext(), R.string.conference_too_many_participants_for_mosaic_layout, Toast.LENGTH_LONG).show()
@@ -146,20 +165,6 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
             if (!creationPending) {
                 val conference = conferenceViewModel.conference.value
                 if (conference != null) switchToFullScreenIfPossible(conference)
-            }
-        }
-
-        conferenceViewModel.conferenceDisplayMode.observe(
-            viewLifecycleOwner
-        ) { layout ->
-            when (layout) {
-                ConferenceDisplayMode.AUDIO_ONLY -> {
-                    controlsViewModel.fullScreenMode.value = false
-                }
-                else -> {
-                    val conference = conferenceViewModel.conference.value
-                    if (conference != null) switchToFullScreenIfPossible(conference)
-                }
             }
         }
 
@@ -272,14 +277,14 @@ class ConferenceCallFragment : GenericFragment<VoipConferenceCallFragmentBinding
             if (conference.currentParams.isVideoEnabled) {
                 when {
                     conference.me.devices.isEmpty() -> {
-                        Log.w("[Conference Call] Conference has video enabled but either our device hasn't joined yet")
+                        Log.i("[Conference Call] Conference has video enabled but our device hasn't joined yet")
                     }
                     conference.me.devices.find { it.isInConference && it.getStreamAvailability(StreamType.Video) } != null -> {
                         Log.i("[Conference Call] Conference has video enabled & our device has video enabled, enabling full screen mode")
                         controlsViewModel.fullScreenMode.value = true
                     }
                     else -> {
-                        Log.w("[Conference Call] Conference has video enabled but our device video is disabled")
+                        Log.i("[Conference Call] Conference has video enabled but our device video is disabled")
                     }
                 }
             }

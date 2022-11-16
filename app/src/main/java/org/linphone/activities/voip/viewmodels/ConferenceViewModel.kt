@@ -78,6 +78,12 @@ class ConferenceViewModel : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    private var waitForNextStreamsRunningToUpdateLayout = false
+
+    val reloadConferenceFragmentEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     private val conferenceListener = object : ConferenceListenerStub() {
         override fun onParticipantAdded(conference: Conference, participant: Participant) {
             Log.i("[Conference] Participant added: ${participant.address.asStringUriOnly()}")
@@ -218,6 +224,18 @@ class ConferenceViewModel : ViewModel() {
                 }
             }
         }
+
+        override fun onCallStateChanged(
+            core: Core,
+            call: Call,
+            state: Call.State?,
+            message: String
+        ) {
+            if (state == Call.State.StreamsRunning && waitForNextStreamsRunningToUpdateLayout) {
+                waitForNextStreamsRunningToUpdateLayout = false
+                reloadConferenceFragmentEvent.value = Event(true)
+            }
+        }
     }
 
     init {
@@ -340,7 +358,14 @@ class ConferenceViewModel : ViewModel() {
         }
     }
 
-    fun changeLayout(layout: ConferenceDisplayMode) {
+    fun switchLayoutFromAudioOnlyToActiveSpeaker() {
+        if (conferenceDisplayMode.value == ConferenceDisplayMode.AUDIO_ONLY) {
+            changeLayout(ConferenceDisplayMode.ACTIVE_SPEAKER, true)
+            waitForNextStreamsRunningToUpdateLayout = true
+        }
+    }
+
+    fun changeLayout(layout: ConferenceDisplayMode, forceSendingVideo: Boolean) {
         Log.i("[Conference] Trying to change conference layout to $layout")
         val conference = conference.value
         if (conference != null) {
@@ -353,6 +378,7 @@ class ConferenceViewModel : ViewModel() {
                 }
 
                 params.isVideoEnabled = layout != ConferenceDisplayMode.AUDIO_ONLY
+                if (forceSendingVideo) params.videoDirection = MediaDirection.SendRecv
                 params.conferenceVideoLayout = when (layout) {
                     ConferenceDisplayMode.GRID -> ConferenceLayout.Grid
                     else -> ConferenceLayout.ActiveSpeaker

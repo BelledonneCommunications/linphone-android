@@ -79,7 +79,7 @@
                     android:drawableEnd="@drawable/icon_conference_layout_grid"
                     android:drawableTint="?attr/voipDrawableColor"
                     android:enabled="@{conferenceViewModel.conferenceParticipantDevices.size() > conferenceViewModel.maxParticipantsForMosaicLayout ? false : true}"
-                    android:onClickListener="@{() -> conferenceViewModel.changeLayout(ConferenceDisplayMode.GRID)}"
+                    android:onClickListener="@{() -> conferenceViewModel.changeLayout(ConferenceDisplayMode.GRID, false)}"
                     android:text="@string/conference_display_mode_mosaic" />
 
                 <View
@@ -97,7 +97,7 @@
                     android:checked="@{conferenceViewModel.conferenceDisplayMode == ConferenceDisplayMode.ACTIVE_SPEAKER}"
                     android:drawableEnd="@drawable/icon_conference_layout_active_speaker"
                     android:drawableTint="?attr/voipDrawableColor"
-                    android:onClickListener="@{() -> conferenceViewModel.changeLayout(ConferenceDisplayMode.ACTIVE_SPEAKER)}"
+                    android:onClickListener="@{() -> conferenceViewModel.changeLayout(ConferenceDisplayMode.ACTIVE_SPEAKER, false)}"
                     android:text="@string/conference_display_mode_active_speaker" />
 
                 <View
@@ -115,7 +115,7 @@
                     android:checked="@{conferenceViewModel.conferenceDisplayMode == ConferenceDisplayMode.AUDIO_ONLY}"
                     android:drawableEnd="@drawable/icon_conference_layout_audio_only"
                     android:drawableTint="?attr/voipDrawableColor"
-                    android:onClickListener="@{() -> conferenceViewModel.changeLayout(ConferenceDisplayMode.AUDIO_ONLY)}"
+                    android:onClickListener="@{() -> conferenceViewModel.changeLayout(ConferenceDisplayMode.AUDIO_ONLY, false)}"
                     android:text="@string/conference_display_mode_audio_only" />
 
                 <View
