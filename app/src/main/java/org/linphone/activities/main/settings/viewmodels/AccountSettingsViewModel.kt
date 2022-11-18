@@ -406,6 +406,7 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
         }
     }
     val linkPhoneNumberEvent = MutableLiveData<Event<Boolean>>()
+    val hideLinkPhoneNumber = MutableLiveData<Boolean>()
 
     val conferenceFactoryUriListener = object : SettingListenerStub() {
         override fun onTextValueChanged(newValue: String) {
@@ -495,6 +496,8 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
         conferenceFactoryUri.value = params.conferenceFactoryUri
         audioVideoConferenceFactoryUri.value = params.audioVideoConferenceFactoryAddress?.asStringUriOnly()
         limeServerUrl.value = params.limeServerUrl
+
+        hideLinkPhoneNumber.value = corePreferences.hideLinkPhoneNumber || params.identityAddress?.domain != corePreferences.defaultDomain
     }
 
     private fun initTransportList() {
