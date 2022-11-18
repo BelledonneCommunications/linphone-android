@@ -379,6 +379,12 @@ class CorePreferences constructor(private val context: Context) {
             config.setString("assistant", "xmlrpc_url", value)
         }
 
+    var hideLinkPhoneNumber: Boolean
+        get() = config.getBool("app", "hide_link_phone_number", false)
+        set(value) {
+            config.setBool("app", "hide_link_phone_number", value)
+        }
+
     /* Dialog related */
 
     var limeSecurityPopupEnabled: Boolean

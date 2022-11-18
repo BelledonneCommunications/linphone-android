@@ -130,7 +130,8 @@
                 <include
                     layout="@layout/settings_widget_basic"
                     linphone:title="@{@string/account_settings_link_phone_number_title}"
-                    linphone:listener="@{viewModel.linkPhoneNumberListener}"/>
+                    linphone:listener="@{viewModel.linkPhoneNumberListener}"
+                    android:visibility="@{viewModel.hideLinkPhoneNumber ? View.GONE : View.VISIBLE}"/>
 
                 <include
                     layout="@layout/settings_widget_basic"
