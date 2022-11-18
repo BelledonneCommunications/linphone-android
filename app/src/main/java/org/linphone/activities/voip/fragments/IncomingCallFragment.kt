@@ -81,4 +81,15 @@ class IncomingCallFragment : GenericFragment<VoipCallIncomingFragmentBinding>() 
             coreContext.core.nativeVideoWindowId = binding.remoteVideoSurface
         }
     }
+
+    // We don't want the proximity sensor to turn screen OFF in this fragment
+    override fun onResume() {
+        super.onResume()
+        controlsViewModel.forceDisableProximitySensor.value = true
+    }
+
+    override fun onPause() {
+        controlsViewModel.forceDisableProximitySensor.value = false
+        super.onPause()
+    }
 }

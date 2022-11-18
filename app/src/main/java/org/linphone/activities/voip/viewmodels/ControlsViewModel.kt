@@ -75,6 +75,8 @@ class ControlsViewModel : ViewModel() {
 
     val proximitySensorEnabled = MediatorLiveData<Boolean>()
 
+    val forceDisableProximitySensor = MutableLiveData<Boolean>()
+
     val showTakeSnapshotButton = MutableLiveData<Boolean>()
 
     val goToConferenceParticipantsListEvent: MutableLiveData<Event<Boolean>> by lazy {
@@ -199,6 +201,7 @@ class ControlsViewModel : ViewModel() {
         extraButtonsMenuTranslateY.value = AppUtils.getDimension(R.dimen.voip_call_extra_buttons_translate_y)
         audioRoutesMenuTranslateY.value = AppUtils.getDimension(R.dimen.voip_audio_routes_menu_translate_y)
         audioRoutesSelected.value = false
+        forceDisableProximitySensor.value = false
 
         nonEarpieceOutputAudioDevice.value = coreContext.core.outputAudioDevice?.type != AudioDevice.Type.Earpiece
         proximitySensorEnabled.value = shouldProximitySensorBeEnabled()
@@ -206,6 +209,9 @@ class ControlsViewModel : ViewModel() {
             proximitySensorEnabled.value = shouldProximitySensorBeEnabled()
         }
         proximitySensorEnabled.addSource(nonEarpieceOutputAudioDevice) {
+            proximitySensorEnabled.value = shouldProximitySensorBeEnabled()
+        }
+        proximitySensorEnabled.addSource(forceDisableProximitySensor) {
             proximitySensorEnabled.value = shouldProximitySensorBeEnabled()
         }
 
@@ -448,6 +454,6 @@ class ControlsViewModel : ViewModel() {
     }
 
     private fun shouldProximitySensorBeEnabled(): Boolean {
-        return !(isVideoEnabled.value ?: false) && !(nonEarpieceOutputAudioDevice.value ?: false)
+        return forceDisableProximitySensor.value == false && !(isVideoEnabled.value ?: false) && !(nonEarpieceOutputAudioDevice.value ?: false)
     }
 }
