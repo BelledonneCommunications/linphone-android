@@ -105,6 +105,8 @@ class CallsViewModel : ViewModel() {
             if (currentCall != null && currentCallData.value?.call != currentCall) {
                 updateCurrentCallData(currentCall)
             } else if (currentCall == null && core.callsNb > 0) {
+                updateCurrentCallData(null)
+            } else if (currentCallData.value == null) {
                 updateCurrentCallData(currentCall)
             }
 
