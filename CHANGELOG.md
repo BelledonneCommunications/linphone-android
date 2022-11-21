@@ -44,10 +44,12 @@ Group changes to describe their impact on the project, as follows:
 - Incoming call screen not being showed up to user (& screen staying off) when using app in Samsung secure folder
 - One to one chat room creation process waiting indefinitely if chat room already exists
 - Contact edition (SIP addresses & phone numbers) not working due to original value being lost in Friend parsing
+- Automatically start call recording
 - "Blinking" in some views when presence is being received
 - Trying to keep the preferred driver (OpenSLES / AAudio) when switching device
 - Issues when storing presence in native contacts + potentially duplicated SIP addresses in contact details
 - Chat room scroll position lost when going into sub-view
+- Trim user input to remove any space at end of string due to keyboard auto completion
 - No longer makes requests to our LIME server (end-to-end encryption keys server) for non sip.linphone.org accounts
 - Fixed incoming call/notification not ringing if Do not Disturb mode is enabled except for favorite contacts
 
