@@ -83,7 +83,7 @@ open class ContactsSelectionViewModel : MessageNotifierViewModel() {
     }
 
     fun applyFilter() {
-        val filterValue = filter.value.orEmpty()
+        val filterValue = filter.value.orEmpty().trim()
 
         if (previousFilter.isNotEmpty() && (
             previousFilter.length > filterValue.length ||
@@ -97,7 +97,7 @@ open class ContactsSelectionViewModel : MessageNotifierViewModel() {
         val domain = if (sipContactsSelected.value == true) coreContext.core.defaultAccount?.params?.domain ?: "" else ""
         searchResultsPending = true
         fastFetchJob?.cancel()
-        coreContext.contactsManager.magicSearch.getContactsListAsync(filter.value.orEmpty(), domain, MagicSearchSource.All.toInt(), MagicSearchAggregation.None)
+        coreContext.contactsManager.magicSearch.getContactsListAsync(filterValue, domain, MagicSearchSource.All.toInt(), MagicSearchAggregation.None)
 
         val spinnerDelay = corePreferences.delayBeforeShowingContactsSearchSpinner.toLong()
         fastFetchJob = viewModelScope.launch {
