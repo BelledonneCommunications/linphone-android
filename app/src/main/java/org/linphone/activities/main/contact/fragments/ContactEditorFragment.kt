@@ -30,6 +30,7 @@ import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
 import java.io.File
 import kotlinx.coroutines.launch
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.GenericFragment
@@ -55,8 +56,9 @@ class ContactEditorFragment : GenericFragment<ContactEditorFragmentBinding>(), S
         binding.lifecycleOwner = viewLifecycleOwner
 
         val contact = sharedViewModel.selectedContact.value
-        // TODO: FIXME: contact can be const! Find a way to get it not-const!
-        data = ContactEditorData(contact)
+        val contactRefKey = contact?.refKey
+        val friend = if (contactRefKey != null) coreContext.core.getFriendByRefKey(contactRefKey) else null
+        data = ContactEditorData(friend ?: contact)
         binding.viewModel = data
 
         useMaterialSharedAxisXForwardAnimation = sharedViewModel.isSlidingPaneSlideable.value == false
