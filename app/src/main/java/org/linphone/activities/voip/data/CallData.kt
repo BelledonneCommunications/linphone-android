@@ -156,12 +156,12 @@ open class CallData(val call: Call) : GenericContactData(call.remoteAddress) {
     }
 
     fun toggleRecording() {
-        if (call.isRecording) {
+        if (call.params.isRecording) {
             call.stopRecording()
         } else {
             call.startRecording()
         }
-        isRecording.value = call.isRecording
+        isRecording.value = call.params.isRecording
     }
 
     fun showContextMenu(anchor: View) {
@@ -202,6 +202,7 @@ open class CallData(val call: Call) : GenericContactData(call.remoteAddress) {
     }
 
     private fun update() {
+        isRecording.value = call.params.isRecording
         isPaused.value = isCallPaused()
         isRemotelyPaused.value = isCallRemotelyPaused()
         canBePaused.value = canCallBePaused()

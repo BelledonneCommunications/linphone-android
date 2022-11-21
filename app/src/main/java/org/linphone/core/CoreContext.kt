@@ -197,22 +197,24 @@ class CoreContext(
                     AudioRouteUtils.routeAudioToBluetooth(call)
                 }
             } else if (state == Call.State.Connected) {
-                if (corePreferences.automaticallyStartCallRecording) {
-                    Log.i("[Context] We were asked to start the call recording automatically")
-                    call.startRecording()
-                }
                 onCallStarted()
             } else if (state == Call.State.StreamsRunning) {
-                // Do not automatically route audio to bluetooth after first call
-                if (core.callsNb == 1) {
-                    // Only try to route bluetooth / headphone / headset when the call is in StreamsRunning for the first time
-                    if (previousCallState == Call.State.Connected) {
+                if (previousCallState == Call.State.Connected) {
+                    // Do not automatically route audio to bluetooth after first call
+                    if (core.callsNb == 1) {
+                        // Only try to route bluetooth / headphone / headset when the call is in StreamsRunning for the first time
                         Log.i("[Context] First call going into StreamsRunning state for the first time, trying to route audio to headset or bluetooth if available")
                         if (AudioRouteUtils.isHeadsetAudioRouteAvailable()) {
                             AudioRouteUtils.routeAudioToHeadset(call)
                         } else if (corePreferences.routeAudioToBluetoothIfAvailable && AudioRouteUtils.isBluetoothAudioRouteAvailable()) {
                             AudioRouteUtils.routeAudioToBluetooth(call)
                         }
+                    }
+
+                    // Only start call recording when the call is in StreamsRunning for the first time
+                    if (corePreferences.automaticallyStartCallRecording && !call.params.isRecording) {
+                        Log.i("[Context] We were asked to start the call recording automatically")
+                        call.startRecording()
                     }
                 }
             } else if (state == Call.State.End || state == Call.State.Error || state == Call.State.Released) {
