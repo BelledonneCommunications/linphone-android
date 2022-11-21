@@ -240,6 +240,7 @@ class ConferenceViewModel : ViewModel() {
 
     init {
         coreContext.core.addListener(listener)
+        conferenceExists.value = false
 
         conferenceParticipants.value = arrayListOf()
         conferenceParticipantDevices.value = arrayListOf()
@@ -360,8 +361,11 @@ class ConferenceViewModel : ViewModel() {
 
     fun switchLayoutFromAudioOnlyToActiveSpeaker() {
         if (conferenceDisplayMode.value == ConferenceDisplayMode.AUDIO_ONLY) {
+            Log.i("[Conference] Trying to switch from AUDIO_ONLY to ACTIVE_SPEAKER and toggle video ON")
             changeLayout(ConferenceDisplayMode.ACTIVE_SPEAKER, true)
             waitForNextStreamsRunningToUpdateLayout = true
+        } else {
+            Log.w("[Conference] Can't switch from AUDIO_ONLY to ACTIVE_SPEAKER as current display mode isn't AUDIO_ONLY but ${conferenceDisplayMode.value}")
         }
     }
 
