@@ -12,7 +12,7 @@
             type="android.view.View.OnClickListener"/>
         <variable
             name="viewModel"
-            type="org.linphone.activities.main.contact.viewmodels.ContactEditorViewModel" />
+            type="org.linphone.activities.main.contact.data.ContactEditorData" />
     </data>
 
     <RelativeLayout
