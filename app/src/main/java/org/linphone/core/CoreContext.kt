@@ -647,7 +647,7 @@ class CoreContext(
     }
 
     fun startCall(to: String) {
-        var stringAddress = to
+        var stringAddress = to.trim()
         if (android.util.Patterns.PHONE.matcher(to).matches()) {
             val contact = contactsManager.findContactByPhoneNumber(to)
             val alias = contact?.getContactForPhoneNumberOrAddress(to)
