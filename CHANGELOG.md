@@ -43,6 +43,7 @@ Group changes to describe their impact on the project, as follows:
 - Show service notification sooner to prevent crash if Core creation takes too long
 - Incoming call screen not being showed up to user (& screen staying off) when using app in Samsung secure folder
 - One to one chat room creation process waiting indefinitely if chat room already exists
+- Contact edition (SIP addresses & phone numbers) not working due to original value being lost in Friend parsing
 - "Blinking" in some views when presence is being received
 - Trying to keep the preferred driver (OpenSLES / AAudio) when switching device
 - Issues when storing presence in native contacts + potentially duplicated SIP addresses in contact details

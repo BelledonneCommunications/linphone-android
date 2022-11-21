@@ -27,7 +27,6 @@ import android.os.Parcelable
 import android.provider.MediaStore
 import android.view.View
 import androidx.core.content.FileProvider
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import java.io.File
 import kotlinx.coroutines.launch
@@ -35,6 +34,7 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.MainActivity
+import org.linphone.activities.main.contact.data.ContactEditorData
 import org.linphone.activities.main.contact.data.NumberOrAddressEditorData
 import org.linphone.activities.main.contact.viewmodels.*
 import org.linphone.activities.navigateToContact
@@ -44,7 +44,7 @@ import org.linphone.utils.FileUtils
 import org.linphone.utils.PermissionHelper
 
 class ContactEditorFragment : GenericFragment<ContactEditorFragmentBinding>(), SyncAccountPickerFragment.SyncAccountPickedListener {
-    private lateinit var viewModel: ContactEditorViewModel
+    private lateinit var data: ContactEditorData
     private var temporaryPicturePath: File? = null
 
     override fun getLayoutId(): Int = R.layout.contact_editor_fragment
@@ -54,11 +54,10 @@ class ContactEditorFragment : GenericFragment<ContactEditorFragmentBinding>(), S
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        viewModel = ViewModelProvider(
-            this,
-            ContactEditorViewModelFactory(sharedViewModel.selectedContact.value)
-        )[ContactEditorViewModel::class.java]
-        binding.viewModel = viewModel
+        val contact = sharedViewModel.selectedContact.value
+        // TODO: FIXME: contact can be const! Find a way to get it not-const!
+        data = ContactEditorData(contact)
+        binding.viewModel = data
 
         useMaterialSharedAxisXForwardAnimation = sharedViewModel.isSlidingPaneSlideable.value == false
 
@@ -67,10 +66,10 @@ class ContactEditorFragment : GenericFragment<ContactEditorFragmentBinding>(), S
         }
 
         binding.setSaveChangesClickListener {
-            viewModel.syncAccountName = null
-            viewModel.syncAccountType = null
+            data.syncAccountName = null
+            data.syncAccountType = null
 
-            if (viewModel.c == null && corePreferences.showNewContactAccountDialog) {
+            if (data.friend == null && corePreferences.showNewContactAccountDialog) {
                 Log.i("[Contact Editor] New contact, ask user where to store it")
                 SyncAccountPickerFragment(this).show(childFragmentManager, "SyncAccountPicker")
             } else {
@@ -85,9 +84,9 @@ class ContactEditorFragment : GenericFragment<ContactEditorFragmentBinding>(), S
             newSipUri.newValue.value = sipUri
 
             val list = arrayListOf<NumberOrAddressEditorData>()
-            list.addAll(viewModel.addresses.value.orEmpty())
+            list.addAll(data.addresses.value.orEmpty())
             list.add(newSipUri)
-            viewModel.addresses.value = list
+            data.addresses.value = list
         }
 
         if (!PermissionHelper.required(requireContext()).hasWriteContactsPermission()) {
@@ -98,8 +97,8 @@ class ContactEditorFragment : GenericFragment<ContactEditorFragmentBinding>(), S
 
     override fun onSyncAccountClicked(name: String?, type: String?) {
         Log.i("[Contact Editor] Using account $name / $type")
-        viewModel.syncAccountName = name
-        viewModel.syncAccountType = type
+        data.syncAccountName = name
+        data.syncAccountType = type
         saveContact()
     }
 
@@ -122,19 +121,19 @@ class ContactEditorFragment : GenericFragment<ContactEditorFragmentBinding>(), S
     }
 
     @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
             lifecycleScope.launch {
-                val contactImageFilePath = FileUtils.getFilePathFromPickerIntent(data, temporaryPicturePath)
+                val contactImageFilePath = FileUtils.getFilePathFromPickerIntent(intent, temporaryPicturePath)
                 if (contactImageFilePath != null) {
-                    viewModel.setPictureFromPath(contactImageFilePath)
+                    data.setPictureFromPath(contactImageFilePath)
                 }
             }
         }
     }
 
     private fun saveContact() {
-        val savedContact = viewModel.save()
+        val savedContact = data.save()
         val id = savedContact.refKey
         if (id != null) {
             Log.i("[Contact Editor] Displaying contact $savedContact")

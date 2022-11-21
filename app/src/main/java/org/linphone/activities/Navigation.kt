@@ -506,13 +506,15 @@ internal fun MasterContactsFragment.clearDisplayedContact() {
 }
 
 internal fun ContactEditorFragment.navigateToContact(id: String) {
-    val bundle = Bundle()
-    bundle.putString("id", id)
-    findNavController().navigate(
-        R.id.action_contactEditorFragment_to_detailContactFragment,
-        bundle,
-        popupTo(R.id.contactEditorFragment, true)
-    )
+    if (findNavController().currentDestination?.id == R.id.contactEditorFragment) {
+        val bundle = Bundle()
+        bundle.putString("id", id)
+        findNavController().navigate(
+            R.id.action_contactEditorFragment_to_detailContactFragment,
+            bundle,
+            popupTo(R.id.contactEditorFragment, true)
+        )
+    }
 }
 
 internal fun DetailContactFragment.navigateToChatRoom(args: Bundle?) {
