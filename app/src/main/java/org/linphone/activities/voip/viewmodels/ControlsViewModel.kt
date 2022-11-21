@@ -286,6 +286,7 @@ class ControlsViewModel : ViewModel() {
 
     fun toggleVideo() {
         if (!PermissionHelper.get().hasCameraPermission()) {
+            Log.w("[Call Controls] Camera permission isn't granted, asking it before toggling video")
             askPermissionEvent.value = Event(Manifest.permission.CAMERA)
             return
         }
@@ -294,8 +295,10 @@ class ControlsViewModel : ViewModel() {
         val currentCall = core.currentCall
         if (currentCall != null) {
             val state = currentCall.state
-            if (state == Call.State.End || state == Call.State.Released || state == Call.State.Error)
+            if (state == Call.State.End || state == Call.State.Released || state == Call.State.Error) {
+                Log.e("[Call Controls] Current call state is $state, aborting video toggle")
                 return
+            }
 
             isVideoUpdateInProgress.value = true
             val params = core.createCallParams(currentCall)
@@ -311,9 +314,12 @@ class ControlsViewModel : ViewModel() {
                     }
                 }
             } else {
-                params?.isVideoEnabled = !currentCall.currentParams.isVideoEnabled
+                params?.isVideoEnabled = params?.isVideoEnabled == false
+                Log.i("[Call Controls] Updating call with video enabled set to ${params?.isVideoEnabled}")
             }
             currentCall.update(params)
+        } else {
+            Log.e("[Call Controls] Can't toggle video, no current call found!")
         }
     }
 

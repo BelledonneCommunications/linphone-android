@@ -278,6 +278,7 @@
                 android:visibility="@{controlsViewModel.fullScreenMode || controlsViewModel.pipMode ? View.GONE : View.VISIBLE}"
                 app:callsViewModel="@{callsViewModel}"
                 app:controlsViewModel="@{controlsViewModel}"
+                app:conferenceViewModel="@{conferenceViewModel}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

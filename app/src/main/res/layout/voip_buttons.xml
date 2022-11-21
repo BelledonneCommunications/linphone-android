@@ -97,7 +97,7 @@
             android:background="@drawable/button_background_reverse"
             android:contentDescription="@{controlsViewModel.isVideoEnabled &amp;&amp; controlsViewModel.isSendingVideo ? @string/content_description_disable_video : @string/content_description_enable_video}"
             android:enabled="@{controlsViewModel.isVideoAvailable &amp;&amp; !controlsViewModel.isVideoUpdateInProgress}"
-            android:onClick="@{() -> conferenceViewModel.conferenceDisplayMode != ConferenceDisplayMode.AUDIO_ONLY ? controlsViewModel.toggleVideo() : conferenceViewModel.switchLayoutFromAudioOnlyToActiveSpeaker()}"
+            android:onClick="@{() -> (!conferenceViewModel.conferenceExists || conferenceViewModel.conferenceDisplayMode != ConferenceDisplayMode.AUDIO_ONLY) ? controlsViewModel.toggleVideo() : conferenceViewModel.switchLayoutFromAudioOnlyToActiveSpeaker()}"
             android:padding="5dp"
             android:selected="@{controlsViewModel.isVideoEnabled &amp;&amp; controlsViewModel.isSendingVideo}"
             android:src="@drawable/icon_toggle_camera"
