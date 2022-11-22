@@ -127,8 +127,10 @@ class RecordingData(val path: String, private val recordingListener: RecordingLi
         scope.launch {
             withContext(Dispatchers.IO) {
                 for (tick in tickerChannel) {
-                    if (player.state == Player.State.Playing) {
-                        updatePosition()
+                    withContext(Dispatchers.Main) {
+                        if (player.state == Player.State.Playing) {
+                            updatePosition()
+                        }
                     }
                 }
             }
