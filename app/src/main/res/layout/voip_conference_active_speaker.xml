@@ -304,10 +304,10 @@
 
         <ImageView
             android:id="@+id/switch_camera"
-            android:layout_width="@dimen/conference_miniature_switch_camera_icon_size"
-            android:layout_height="@dimen/conference_miniature_switch_camera_icon_size"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:padding="10dp"
             android:contentDescription="@string/content_description_switch_camera"
             android:onClick="@{() -> controlsViewModel.switchCamera()}"
             android:src="@drawable/icon_call_camera_switch"
@@ -331,7 +331,7 @@
             android:id="@+id/local_participant_muted"
             android:layout_width="@dimen/voip_conference_participant_mic_muted_icon_size_active_speaker"
             android:layout_height="@dimen/voip_conference_participant_mic_muted_icon_size_active_speaker"
-            android:layout_margin="5dp"
+            android:layout_margin="10dp"
             android:background="@drawable/shape_toggle_pressed_background"
             android:contentDescription="@string/content_description_conference_participant_mic_muted"
             android:padding="2dp"
