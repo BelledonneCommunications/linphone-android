@@ -21,6 +21,7 @@ package org.linphone.compatibility
 
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
+import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.os.Build
@@ -48,6 +49,10 @@ class Api25Compatibility {
                 name = Build.MANUFACTURER + " " + Build.MODEL
             }
             return name
+        }
+
+        fun isInPictureInPictureMode(activity: Activity): Boolean {
+            return activity.isInPictureInPictureMode
         }
     }
 }

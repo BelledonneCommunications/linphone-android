@@ -81,6 +81,10 @@ class CallActivity : ProximitySensorActivity() {
 
         statsViewModel = ViewModelProvider(navControllerStoreOwner)[StatisticsListViewModel::class.java]
 
+        val isInPipMode = Compatibility.isInPictureInPictureMode(this)
+        Log.i("[Call Activity] onPostCreate: is in PiP mode? $isInPipMode")
+        controlsViewModel.pipMode.value = isInPipMode
+
         controlsViewModel.askPermissionEvent.observe(
             this
         ) {
@@ -193,12 +197,13 @@ class CallActivity : ProximitySensorActivity() {
         isInPictureInPictureMode: Boolean,
         newConfig: Configuration
     ) {
-        Log.i("[Call Activity] Is in PiP mode? $isInPictureInPictureMode")
+        super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
+
+        Log.i("[Call Activity] onPictureInPictureModeChanged: is in PiP mode? $isInPictureInPictureMode")
         if (::controlsViewModel.isInitialized) {
             // To hide UI except for TextureViews
             controlsViewModel.pipMode.value = isInPictureInPictureMode
         }
-        super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
     }
 
     override fun onResume() {
