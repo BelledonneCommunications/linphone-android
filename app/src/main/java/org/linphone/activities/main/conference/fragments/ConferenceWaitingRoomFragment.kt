@@ -132,10 +132,16 @@ class ConferenceWaitingRoomFragment : GenericFragment<ConferenceWaitingRoomFragm
         super.onResume()
 
         coreContext.core.nativePreviewWindowId = binding.localPreviewVideoSurface
-        coreContext.core.isVideoPreviewEnabled = viewModel.isVideoEnabled.value == true
+        val enablePreview = viewModel.isVideoEnabled.value == true
+        if (enablePreview) {
+            Log.i("[Conference Waiting Room] Fragment is being resumed, enabling video preview")
+        }
+        coreContext.core.isVideoPreviewEnabled = enablePreview
     }
 
     override fun onPause() {
+        Log.i("[Conference Waiting Room] Fragment is being paused, disabling video preview")
+        coreContext.core.isVideoPreviewEnabled = false
         coreContext.core.nativePreviewWindowId = null
 
         super.onPause()

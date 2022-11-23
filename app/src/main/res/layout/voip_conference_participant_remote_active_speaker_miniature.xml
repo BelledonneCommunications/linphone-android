@@ -94,7 +94,7 @@
         <ImageView
             android:layout_width="@dimen/voip_conference_participant_mic_muted_icon_size_active_speaker"
             android:layout_height="@dimen/voip_conference_participant_mic_muted_icon_size_active_speaker"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/mute_mic_miniature_margin"
             android:background="@drawable/shape_toggle_pressed_background"
             android:contentDescription="@string/content_description_conference_participant_mic_muted"
             android:padding="2dp"

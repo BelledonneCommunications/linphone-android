@@ -257,7 +257,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/hinge_bottom"
-            android:layout_marginTop="@{controlsViewModel.fullScreenMode ? @dimen/margin_0dp : @dimen/voip_active_speaker_top_margin, default=@dimen/voip_active_speaker_top_margin}"
+            android:layout_marginTop="@{controlsViewModel.fullScreenMode  ? @dimen/margin_0dp : @dimen/voip_active_speaker_top_margin, default=@dimen/voip_active_speaker_top_margin}"
             android:background="@drawable/shape_me_background"
             android:onClick="@{() -> controlsViewModel.toggleFullScreen()}"/>
 
@@ -306,7 +306,7 @@
             android:id="@+id/switch_camera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_margin="@{conferenceViewModel.twoOrMoreParticipants ? @dimen/margin_0dp : @dimen/voip_active_speaker_top_margin, default=@dimen/voip_active_speaker_top_margin}"
             android:padding="10dp"
             android:contentDescription="@string/content_description_switch_camera"
             android:onClick="@{() -> controlsViewModel.switchCamera()}"
@@ -331,7 +331,7 @@
             android:id="@+id/local_participant_muted"
             android:layout_width="@dimen/voip_conference_participant_mic_muted_icon_size_active_speaker"
             android:layout_height="@dimen/voip_conference_participant_mic_muted_icon_size_active_speaker"
-            android:layout_margin="10dp"
+            android:layout_margin="@{conferenceViewModel.twoOrMoreParticipants ? @dimen/mute_mic_miniature_margin : @dimen/mute_mic_grid_margin, default=@dimen/mute_mic_grid_margin}"
             android:background="@drawable/shape_toggle_pressed_background"
             android:contentDescription="@string/content_description_conference_participant_mic_muted"
             android:padding="2dp"
