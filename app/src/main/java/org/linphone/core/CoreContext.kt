@@ -213,8 +213,10 @@ class CoreContext(
 
                     // Only start call recording when the call is in StreamsRunning for the first time
                     if (corePreferences.automaticallyStartCallRecording && !call.params.isRecording) {
-                        Log.i("[Context] We were asked to start the call recording automatically")
-                        call.startRecording()
+                        if (call.conference == null) { // TODO: FIXME: We disabled conference recording for now
+                            Log.i("[Context] We were asked to start the call recording automatically")
+                            call.startRecording()
+                        }
                     }
                 }
             } else if (state == Call.State.End || state == Call.State.Error || state == Call.State.Released) {

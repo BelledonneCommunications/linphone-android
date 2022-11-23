@@ -56,7 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="@{controlsViewModel.fullScreenMode || controlsViewModel.pipMode ? View.GONE : View.VISIBLE}"
-            app:constraint_referenced_ids="remote_name,active_conference_timer,toggle_conference_recording,toggle_pause_conference" />
+            app:constraint_referenced_ids="remote_name,active_conference_timer,toggle_pause_conference" />
 
         <TextView
             android:id="@+id/remote_name"
@@ -106,6 +106,7 @@
             android:padding="7dp"
             android:selected="@{conferenceViewModel.isRecording}"
             android:src="@drawable/icon_call_record"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/active_conference_timer"
             app:layout_constraintEnd_toStartOf="@id/toggle_pause_conference"
             app:layout_constraintTop_toTopOf="@id/remote_name" />
