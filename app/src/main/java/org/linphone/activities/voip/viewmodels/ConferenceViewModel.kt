@@ -53,6 +53,7 @@ class ConferenceViewModel : ViewModel() {
 
     val maxParticipantsForMosaicLayout = corePreferences.maxConferenceParticipantsForMosaicLayout
 
+    val twoOrMoreParticipants = MutableLiveData<Boolean>()
     val moreThanTwoParticipants = MutableLiveData<Boolean>()
 
     val speakingParticipant = MutableLiveData<ConferenceParticipantDeviceData>()
@@ -495,6 +496,7 @@ class ConferenceViewModel : ViewModel() {
         }
 
         conferenceParticipantDevices.value = devices
+        twoOrMoreParticipants.value = devices.size >= 2
         moreThanTwoParticipants.value = devices.size > 2
     }
 
@@ -521,6 +523,7 @@ class ConferenceViewModel : ViewModel() {
         }
 
         conferenceParticipantDevices.value = sortedDevices
+        twoOrMoreParticipants.value = sortedDevices.size >= 2
         moreThanTwoParticipants.value = sortedDevices.size > 2
     }
 
@@ -552,6 +555,7 @@ class ConferenceViewModel : ViewModel() {
         }
 
         conferenceParticipantDevices.value = devices
+        twoOrMoreParticipants.value = devicesCount >= 2
         moreThanTwoParticipants.value = devicesCount > 2
     }
 
