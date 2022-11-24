@@ -23,6 +23,7 @@
             android:id="@+id/participant_avatar"
             android:layout_width="@dimen/voip_conference_active_speaker_miniature_avatar_size"
             android:layout_height="@dimen/voip_conference_active_speaker_miniature_avatar_size"
+            android:background="@drawable/generated_avatar_bg"
             android:visibility="@{data.isInConference || data.isJoining ? View.VISIBLE : View.GONE}"
             android:contentDescription="@null"
             coilVoipContact="@{data}"
