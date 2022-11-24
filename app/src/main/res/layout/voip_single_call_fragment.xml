@@ -142,6 +142,7 @@
                 android:layout_height="0dp"
                 android:layout_margin="20dp"
                 android:contentDescription="@null"
+                android:background="@drawable/generated_avatar_bg"
                 coilVoipContact="@{callsViewModel.currentCallData}"
                 app:layout_constraintBottom_toBottomOf="@id/background"
                 app:layout_constraintEnd_toEndOf="@id/background"
