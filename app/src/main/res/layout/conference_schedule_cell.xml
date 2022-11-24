@@ -148,6 +148,7 @@
                     android:maxLines="2"
                     android:ellipsize="end"
                     android:text="@{data.participantsShort, default=`Daryl Martin`}"
+                    android:visibility="@{data.isConferenceCancelled ? View.INVISIBLE : View.VISIBLE}"
                     app:drawableStartCompat="@drawable/icon_schedule_participants" />
 
                 <ImageView
@@ -188,6 +189,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_alignParentStart="true"
                     android:contentDescription="@string/content_description_conference_participants"
+                    android:visibility="@{data.isConferenceCancelled ? View.GONE : View.VISIBLE}"
                     android:src="@drawable/icon_schedule_participants"/>
 
                 <TextView
@@ -200,6 +202,7 @@
                     android:layout_toEndOf="@id/participants_icon"
                     android:background="@color/transparent_color"
                     android:drawablePadding="5dp"
+                    android:visibility="@{data.isConferenceCancelled ? View.GONE : View.VISIBLE}"
                     android:text="@{data.participantsExpanded, default=`Daryl Martin\nMartin Pecheur`}"
                     tools:ignore="LabelFor" />
 
