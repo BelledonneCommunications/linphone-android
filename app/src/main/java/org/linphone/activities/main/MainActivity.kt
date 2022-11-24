@@ -164,7 +164,10 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
 
-        if (intent != null) handleIntentParams(intent)
+        if (intent != null) {
+            Log.d("[Main Activity] Found new intent")
+            handleIntentParams(intent)
+        }
     }
 
     override fun onResume() {
@@ -212,7 +215,10 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
         initOverlay()
 
-        if (intent != null) handleIntentParams(intent)
+        if (intent != null) {
+            Log.d("[Main Activity] Found post create intent")
+            handleIntentParams(intent)
+        }
     }
 
     override fun onDestroy() {
@@ -252,17 +258,10 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     }
 
     private fun handleIntentParams(intent: Intent) {
+        Log.i("[Main Activity] Handling intent with action [${intent.action}], type [${intent.type}] and data [${intent.data}]")
+
         when (intent.action) {
-            Intent.ACTION_MAIN -> {
-                val core = coreContext.core
-                val call = core.currentCall ?: core.calls.firstOrNull()
-                if (call != null) {
-                    Log.i("[Main Activity] Launcher clicked while there is at least one active call, go to CallActivity")
-                    val callIntent = Intent(this, org.linphone.activities.voip.CallActivity::class.java)
-                    callIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-                    startActivity(callIntent)
-                }
-            }
+            Intent.ACTION_MAIN -> handleMainIntent(intent)
             Intent.ACTION_SEND, Intent.ACTION_SENDTO -> {
                 if (intent.type == "text/plain") {
                     handleSendText(intent)
@@ -307,40 +306,52 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                     handleLocusOrShortcut(locus)
                 }
             }
-            else -> {
-                when {
-                    intent.hasExtra("ContactId") -> {
-                        val id = intent.getStringExtra("ContactId")
-                        Log.i("[Main Activity] Found contact ID in extras: $id")
-                        navigateToContact(id)
-                    }
-                    intent.hasExtra("Chat") -> {
-                        if (corePreferences.disableChat) return
-
-                        if (intent.hasExtra("RemoteSipUri") && intent.hasExtra("LocalSipUri")) {
-                            val peerAddress = intent.getStringExtra("RemoteSipUri")
-                            val localAddress = intent.getStringExtra("LocalSipUri")
-                            Log.i("[Main Activity] Found chat room intent extra: local SIP URI=[$localAddress], peer SIP URI=[$peerAddress]")
-                            navigateToChatRoom(localAddress, peerAddress)
-                        } else {
-                            Log.i("[Main Activity] Found chat intent extra, go to chat rooms list")
-                            navigateToChatRooms()
-                        }
-                    }
-                    intent.hasExtra("Dialer") -> {
-                        Log.i("[Main Activity] Found dialer intent extra, go to dialer")
-                        val args = Bundle()
-                        args.putBoolean("Transfer", intent.getBooleanExtra("Transfer", false))
-                        navigateToDialer(args)
-                    }
-                }
-            }
+            else -> handleMainIntent(intent)
         }
 
         // Prevent this intent to be processed again
         intent.action = null
         intent.data = null
         intent.extras?.clear()
+    }
+
+    private fun handleMainIntent(intent: Intent) {
+        when {
+            intent.hasExtra("ContactId") -> {
+                val id = intent.getStringExtra("ContactId")
+                Log.i("[Main Activity] Found contact ID in extras: $id")
+                navigateToContact(id)
+            }
+            intent.hasExtra("Chat") -> {
+                if (corePreferences.disableChat) return
+
+                if (intent.hasExtra("RemoteSipUri") && intent.hasExtra("LocalSipUri")) {
+                    val peerAddress = intent.getStringExtra("RemoteSipUri")
+                    val localAddress = intent.getStringExtra("LocalSipUri")
+                    Log.i("[Main Activity] Found chat room intent extra: local SIP URI=[$localAddress], peer SIP URI=[$peerAddress]")
+                    navigateToChatRoom(localAddress, peerAddress)
+                } else {
+                    Log.i("[Main Activity] Found chat intent extra, go to chat rooms list")
+                    navigateToChatRooms()
+                }
+            }
+            intent.hasExtra("Dialer") -> {
+                Log.i("[Main Activity] Found dialer intent extra, go to dialer")
+                val args = Bundle()
+                args.putBoolean("Transfer", intent.getBooleanExtra("Transfer", false))
+                navigateToDialer(args)
+            }
+            else -> {
+                val core = coreContext.core
+                val call = core.currentCall ?: core.calls.firstOrNull()
+                if (call != null) {
+                    Log.i("[Main Activity] Launcher clicked while there is at least one active call, go to CallActivity")
+                    val callIntent = Intent(this, org.linphone.activities.voip.CallActivity::class.java)
+                    callIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+                    startActivity(callIntent)
+                }
+            }
+        }
     }
 
     private fun handleTelOrSipUri(uri: Uri) {
