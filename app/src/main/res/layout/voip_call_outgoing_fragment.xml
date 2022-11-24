@@ -59,6 +59,7 @@
             android:layout_height="0dp"
             android:layout_margin="10dp"
             android:contentDescription="@null"
+            android:background="@drawable/generated_avatar_bg"
             android:visibility="@{callsViewModel.currentCallData.isConferenceCall ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toTopOf="@id/conference_avatar"
             app:layout_constraintEnd_toEndOf="parent"

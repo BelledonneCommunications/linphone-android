@@ -70,11 +70,12 @@
 
         <ImageView
             android:id="@+id/avatar"
-            coilVoipContactAlt="@{callsViewModel.currentCallData}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="10dp"
             android:contentDescription="@null"
+            android:background="@drawable/generated_avatar_bg"
+            coilVoipContactAlt="@{callsViewModel.currentCallData}"
             app:layout_constraintBottom_toTopOf="@id/caller_name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_max="@dimen/voip_contact_avatar_max_size"
