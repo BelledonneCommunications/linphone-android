@@ -31,6 +31,7 @@ import android.graphics.BitmapFactory
 import android.media.AudioAttributes
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.telecom.CallAudioState
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.widget.RemoteViews
@@ -317,9 +318,10 @@ class Api26Compatibility {
         }
 
         fun changeAudioRouteForTelecomManager(connection: NativeCallWrapper, route: Int): Boolean {
-            Log.i("[Telecom Helper] Changing audio route [$route] on connection ${connection.callId}")
+            Log.i("[Telecom Helper] Changing audio route [${routeToString(route)}] on connection [${connection.callId}] with state [${connection.stateAsString()}]")
 
             val audioState = connection.callAudioState
+            Log.i("[Telecom Helper] Current audio route is ${routeToString(audioState.route)}")
             if (audioState != null && audioState.route == route) {
                 Log.w("[Telecom Helper] Connection is already using this route")
                 return false
@@ -348,6 +350,21 @@ class Api26Compatibility {
 
         fun startForegroundService(context: Context, intent: Intent) {
             context.startForegroundService(intent)
+        }
+
+        fun hasTelecomManagerFeature(context: Context): Boolean {
+            return context.packageManager.hasSystemFeature(PackageManager.FEATURE_CONNECTION_SERVICE)
+        }
+
+        private fun routeToString(route: Int): String {
+            return when (route) {
+                CallAudioState.ROUTE_BLUETOOTH -> "BLUETOOTH"
+                CallAudioState.ROUTE_EARPIECE -> "EARPIECE"
+                CallAudioState.ROUTE_SPEAKER -> "SPEAKER"
+                CallAudioState.ROUTE_WIRED_HEADSET -> "WIRED_HEADSET"
+                CallAudioState.ROUTE_WIRED_OR_EARPIECE -> "WIRED_OR_EARPIECE"
+                else -> "Unknown: $route"
+            }
         }
     }
 }

@@ -282,7 +282,7 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
         Log.i("[Dialer] Telecom Manager permissions granted")
         if (!TelecomHelper.exists()) {
             Log.i("[Dialer] Creating Telecom Helper")
-            if (requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_CONNECTION_SERVICE)) {
+            if (Compatibility.hasTelecomManagerFeature(requireContext())) {
                 TelecomHelper.create(requireContext())
             } else {
                 Log.e("[Dialer] Telecom Helper can't be created, device doesn't support connection service!")
