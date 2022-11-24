@@ -409,5 +409,14 @@ class Compatibility {
             }
             return Api23Compatibility.getImeFlagsForSecureChatRoom()
         }
+
+        fun hasTelecomManagerFeature(context: Context): Boolean {
+            if (Version.sdkAboveOrEqual(Version.API33_ANDROID_13_TIRAMISU)) {
+                return Api33Compatibility.hasTelecomManagerFeature(context)
+            } else if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
+                return Api26Compatibility.hasTelecomManagerFeature(context)
+            }
+            return false
+        }
     }
 }

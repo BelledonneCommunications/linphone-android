@@ -89,18 +89,14 @@ class CallSettingsFragment : GenericSettingFragment<SettingsCallFragmentBinding>
             viewLifecycleOwner
         ) {
             it.consume {
-                if (requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_CONNECTION_SERVICE)) {
+                if (Compatibility.hasTelecomManagerFeature(requireContext())) {
                     if (!Compatibility.hasTelecomManagerPermissions(requireContext())) {
                         Compatibility.requestTelecomManagerPermissions(requireActivity(), 1)
                     } else if (!TelecomHelper.exists()) {
                         corePreferences.useTelecomManager = true
                         Log.w("[Telecom Helper] Doesn't exists yet, creating it")
-                        if (requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_CONNECTION_SERVICE)) {
-                            TelecomHelper.create(requireContext())
-                            updateTelecomManagerAccount()
-                        } else {
-                            Log.e("[Telecom Helper] Telecom Helper can't be created, device doesn't support connection service")
-                        }
+                        TelecomHelper.create(requireContext())
+                        updateTelecomManagerAccount()
                     }
                 } else {
                     Log.e("[Telecom Helper] Telecom Helper can't be created, device doesn't support connection service!")
@@ -139,7 +135,7 @@ class CallSettingsFragment : GenericSettingFragment<SettingsCallFragmentBinding>
         } else if (requestCode == 1) {
             if (!TelecomHelper.exists()) {
                 Log.w("[Telecom Helper] Doesn't exists yet, creating it")
-                if (requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_CONNECTION_SERVICE)) {
+                if (Compatibility.hasTelecomManagerFeature(requireContext())) {
                     TelecomHelper.create(requireContext())
                 } else {
                     Log.e("[Telecom Helper] Telecom Helper can't be created, device doesn't support connection service")
@@ -179,7 +175,7 @@ class CallSettingsFragment : GenericSettingFragment<SettingsCallFragmentBinding>
             }
         }
 
-        if (requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_CONNECTION_SERVICE)) {
+        if (Compatibility.hasTelecomManagerFeature(requireContext())) {
             TelecomHelper.create(requireContext())
             updateTelecomManagerAccount()
         } else {

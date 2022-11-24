@@ -22,6 +22,7 @@ package org.linphone.compatibility
 import android.Manifest
 import android.annotation.TargetApi
 import android.content.Context
+import android.content.pm.PackageManager
 import androidx.fragment.app.Fragment
 
 @TargetApi(33)
@@ -56,6 +57,10 @@ class Api33Compatibility {
             return Compatibility.hasPermission(context, Manifest.permission.READ_MEDIA_IMAGES) ||
                 Compatibility.hasPermission(context, Manifest.permission.READ_MEDIA_VIDEO) ||
                 Compatibility.hasPermission(context, Manifest.permission.READ_MEDIA_AUDIO)
+        }
+
+        fun hasTelecomManagerFeature(context: Context): Boolean {
+            return context.packageManager.hasSystemFeature(PackageManager.FEATURE_TELECOM)
         }
     }
 }

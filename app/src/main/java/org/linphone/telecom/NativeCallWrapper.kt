@@ -126,7 +126,7 @@ class NativeCallWrapper(var callId: String) : Connection() {
     }
 
     fun stateAsString(): String {
-        return intStateToString(state)
+        return stateToString(state)
     }
 
     private fun getCall(): Call? {
