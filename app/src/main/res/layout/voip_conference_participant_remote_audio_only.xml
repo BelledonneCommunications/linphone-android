@@ -48,6 +48,7 @@
             android:layout_height="@dimen/voip_conference_audio_only_participant_avatar_size"
             android:layout_marginStart="10dp"
             android:contentDescription="@null"
+            android:background="@drawable/generated_avatar_bg"
             android:visibility="@{data.isInConference || data.isJoining ? View.VISIBLE : View.GONE}"
             coilVoipContact="@{data}"
             app:layout_constraintBottom_toBottomOf="parent"
