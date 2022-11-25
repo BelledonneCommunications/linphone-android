@@ -14,7 +14,7 @@ static def getPackageName() {
 
 def firebaseEnabled = new File(projectDir.absolutePath +'/google-services.json').exists()
 
-def crashlyticsEnabled = new File(projectDir.absolutePath +'/google-services.json').exists() && new File(LinphoneSdkBuildDir + '/libs/').exists() && new File(LinphoneSdkBuildDir + '/libs-debug/').exists()
+def crashlyticsEnabled = false//new File(projectDir.absolutePath +'/google-services.json').exists() && new File(LinphoneSdkBuildDir + '/libs/').exists() && new File(LinphoneSdkBuildDir + '/libs-debug/').exists()
 
 
 if (firebaseEnabled) {

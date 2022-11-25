@@ -698,8 +698,10 @@ fun setConstraintLayoutEndMargin(view: View, margins: Float) {
 }
 
 @BindingAdapter("android:onTouch")
-fun View.setTouchListener(listener: View.OnTouchListener) {
-    setOnTouchListener(listener)
+fun View.setTouchListener(listener: View.OnTouchListener?) {
+    if (listener != null) {
+        setOnTouchListener(listener)
+    }
 }
 
 @BindingAdapter("entries")
