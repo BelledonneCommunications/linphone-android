@@ -130,7 +130,11 @@ abstract class GenericFragment<T : ViewDataBinding> : Fragment() {
     }
 
     protected fun goBack() {
-        requireActivity().onBackPressedDispatcher.onBackPressed()
+        try {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        } catch (ise: IllegalStateException) {
+            Log.e("[Generic Fragment] ${getFragmentRealClassName()} can't go back: $ise")
+        }
     }
 
     private fun setupBackPressCallback() {
