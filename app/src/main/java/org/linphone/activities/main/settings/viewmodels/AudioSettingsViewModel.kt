@@ -222,7 +222,7 @@ class AudioSettingsViewModel : GenericSettingsViewModel() {
             if (audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityRecord)) {
                 labels.add(audioDevice.id)
                 values.add(audioDevice)
-                if (audioDevice.id == default.id) {
+                if (audioDevice.id == default?.id) {
                     inputAudioDeviceIndex.value = index
                 }
                 index += 1
@@ -242,7 +242,7 @@ class AudioSettingsViewModel : GenericSettingsViewModel() {
             if (audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
                 labels.add(audioDevice.id)
                 values.add(audioDevice)
-                if (audioDevice.id == default.id) {
+                if (audioDevice.id == default?.id) {
                     outputAudioDeviceIndex.value = index
                 }
                 index += 1
