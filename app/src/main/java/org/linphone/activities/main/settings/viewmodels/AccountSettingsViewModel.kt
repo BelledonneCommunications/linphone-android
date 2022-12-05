@@ -312,19 +312,14 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
     val stunServerListener = object : SettingListenerStub() {
         override fun onTextValueChanged(newValue: String) {
             val params = account.params.clone()
-            if (params.natPolicy == null) {
-                Log.w("[Account Settings] No NAT Policy object in account params yet")
-                val natPolicy = core.createNatPolicy()
-                natPolicy.stunServer = newValue
-                natPolicy.isStunEnabled = newValue.isNotEmpty()
-                params.natPolicy = natPolicy
-            } else {
-                params.natPolicy?.stunServer = newValue
-                params.natPolicy?.isStunEnabled = newValue.isNotEmpty()
-            }
+            val natPolicy = params.natPolicy
+            val newNatPolicy = natPolicy?.clone() ?: core.createNatPolicy()
+            newNatPolicy.stunServer = newValue
+            newNatPolicy.isStunEnabled = newValue.isNotEmpty()
+            params.natPolicy = newNatPolicy
+            account.params = params
             if (newValue.isEmpty()) ice.value = false
             stunServer.value = newValue
-            account.params = params
         }
     }
     val stunServer = MutableLiveData<String>()
@@ -332,7 +327,10 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
     val iceListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
             val params = account.params.clone()
-            params.natPolicy?.isIceEnabled = newValue
+            val natPolicy = params.natPolicy
+            val newNatPolicy = natPolicy?.clone() ?: core.createNatPolicy()
+            newNatPolicy.isIceEnabled = newValue
+            params.natPolicy = newNatPolicy
             account.params = params
         }
     }
