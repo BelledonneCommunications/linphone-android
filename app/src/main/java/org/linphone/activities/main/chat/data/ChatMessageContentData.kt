@@ -330,7 +330,20 @@ class ChatMessageContentData(
             conferenceDuration.value = TimestampUtils.durationToString(hours.toInt(), remainMinutes)
             showDuration.value = minutes > 0
 
-            conferenceParticipantCount.value = String.format(AppUtils.getString(R.string.conference_invite_participants_count), conferenceInfo.participants.size + 1) // +1 for organizer
+            // Check if organizer is part of participants list
+            var participantsCount = conferenceInfo.participants.size
+            val organizer = conferenceInfo.organizer
+            var organizerFound = false
+            if (organizer != null) {
+                for (participant in conferenceInfo.participants) {
+                    if (participant.weakEqual(organizer)) {
+                        organizerFound = true
+                        break
+                    }
+                }
+            }
+            if (!organizerFound) participantsCount += 1 // +1 for organizer
+            conferenceParticipantCount.value = String.format(AppUtils.getString(R.string.conference_invite_participants_count), participantsCount)
         } else if (conferenceInfo == null) {
             if (content.filePath != null) {
                 try {
