@@ -46,9 +46,9 @@ class AudioRouteUtils {
             else
                 AudioDevice.Capabilities.CapabilityRecord
             val preferredDriver = if (output) {
-                coreContext.core.defaultOutputAudioDevice.driverName
+                coreContext.core.defaultOutputAudioDevice?.driverName
             } else {
-                coreContext.core.defaultInputAudioDevice.driverName
+                coreContext.core.defaultInputAudioDevice?.driverName
             }
 
             val extendedAudioDevices = coreContext.core.extendedAudioDevices
