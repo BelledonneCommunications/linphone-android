@@ -29,6 +29,7 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.navigation.navGraphViewModels
 import androidx.window.layout.FoldingFeature
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.*
 import org.linphone.activities.main.MainActivity
@@ -78,12 +79,21 @@ class SingleCallFragment : GenericVideoPreviewFragment<VoipSingleCallFragmentBin
 
         callsViewModel.currentCallData.observe(
             viewLifecycleOwner
-        ) {
-            if (it != null) {
+        ) { callData ->
+            if (callData != null) {
+                val call = callData.call
+
                 val timer = binding.root.findViewById<Chronometer>(R.id.active_call_timer)
                 timer.base =
-                    SystemClock.elapsedRealtime() - (1000 * it.call.duration) // Linphone timestamps are in seconds
+                    SystemClock.elapsedRealtime() - (1000 * call.duration) // Linphone timestamps are in seconds
                 timer.start()
+
+                if (corePreferences.enableFullScreenWhenJoiningVideoCall) {
+                    if (call.currentParams.isVideoEnabled) {
+                        Log.i("[Single Call] Call params have video enabled, enabling full screen mode")
+                        controlsViewModel.fullScreenMode.value = true
+                    }
+                }
             }
         }
 
