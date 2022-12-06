@@ -197,7 +197,7 @@
                 android:layout_margin="10dp"
                 android:background="@drawable/button_toggle_background"
                 android:contentDescription="@string/content_description_take_screenshot"
-                android:onClick="@{() -> callsViewModel.takeSnapshot()}"
+                android:onClick="@{() -> controlsViewModel.takeSnapshot()}"
                 android:enabled="@{!callsViewModel.currentCallData.isPaused &amp;&amp; !callsViewModel.currentCallData.isRemotelyPaused}"
                 android:src="@drawable/icon_call_screenshot"
                 android:visibility="@{!controlsViewModel.showTakeSnapshotButton || controlsViewModel.fullScreenMode || controlsViewModel.pipMode ? View.GONE : View.VISIBLE}"

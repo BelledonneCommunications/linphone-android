@@ -20,6 +20,7 @@
 package org.linphone.activities.voip.data
 
 import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import java.util.*
@@ -30,6 +31,7 @@ import org.linphone.compatibility.Compatibility
 import org.linphone.contact.GenericContactData
 import org.linphone.core.*
 import org.linphone.core.tools.Log
+import org.linphone.utils.AppUtils
 import org.linphone.utils.LinphoneUtils
 
 open class CallData(val call: Call) : GenericContactData(call.remoteAddress) {
@@ -94,11 +96,13 @@ open class CallData(val call: Call) : GenericContactData(call.remoteAddress) {
             content.filePath = filePath
             content.type = "image"
             content.subtype = "jpeg"
-            content.name = filePath.substring(filePath.indexOf("/") + 1)
+            content.name = filePath.substring(filePath.lastIndexOf("/") + 1)
 
             scope.launch {
                 if (Compatibility.addImageToMediaStore(coreContext.context, content)) {
-                    Log.i("[Call] Adding snapshot ${content.name} to Media Store terminated")
+                    Log.i("[Call] Added snapshot ${content.name} to Media Store")
+                    val message = String.format(AppUtils.getString(R.string.call_screenshot_taken), content.name)
+                    Toast.makeText(coreContext.context, message, Toast.LENGTH_SHORT).show()
                 } else {
                     Log.e("[Call] Something went wrong while copying file to Media Store...")
                 }

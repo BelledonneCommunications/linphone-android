@@ -31,10 +31,8 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.*
 import org.linphone.core.tools.Log
-import org.linphone.utils.AppUtils
-import org.linphone.utils.AudioRouteUtils
+import org.linphone.utils.*
 import org.linphone.utils.Event
-import org.linphone.utils.PermissionHelper
 
 class ControlsViewModel : ViewModel() {
     val isSpeakerSelected = MutableLiveData<Boolean>()
@@ -325,6 +323,22 @@ class ControlsViewModel : ViewModel() {
 
     fun switchCamera() {
         coreContext.switchCamera()
+    }
+
+    fun takeSnapshot() {
+        if (!PermissionHelper.get().hasWriteExternalStoragePermission()) {
+            askPermissionEvent.value = Event(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        } else {
+            val currentCall = coreContext.core.currentCall
+            if (currentCall != null && currentCall.currentParams.isVideoEnabled) {
+                val fileName = System.currentTimeMillis().toString() + ".jpeg"
+                val fullPath = FileUtils.getFileStoragePath(fileName).absolutePath
+                Log.i("[Call Controls] Snapshot will be save under $fullPath")
+                currentCall.takeVideoSnapshot(fullPath)
+            } else {
+                Log.e("[Call Controls] Current call doesn't have video, can't take snapshot")
+            }
+        }
     }
 
     fun showExtraButtons() {
