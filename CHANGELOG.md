@@ -10,7 +10,7 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
-## [4.7.0] - Unreleased
+## [5.0.0] - 2022-12-06
 
 ### Added
 - Post Quantum encryption when using ZRTP
