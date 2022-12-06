@@ -755,4 +755,5 @@
     <string name="conference_scheduled_cancelled_by_me">Vous avez annulé la conférence</string>
     <string name="conference_schedule_send_updated_invite_chat">Envoyer la mise à jour par &appName;</string>
     <string name="conference_schedule_send_updated_invite_email">Envoyer la mise à jour par courriel</string>
+    <string name="call_screenshot_taken">Capture sauvegardée : %s</string>
 </resources>

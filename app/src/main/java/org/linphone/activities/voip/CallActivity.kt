@@ -129,15 +129,6 @@ class CallActivity : ProximitySensorActivity() {
             }
         }
 
-        callsViewModel.askWriteExternalStoragePermissionEvent.observe(
-            this
-        ) {
-            it.consume {
-                Log.i("[Call Activity] Asking for WRITE_EXTERNAL_STORAGE permission to take snapshot")
-                requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
-            }
-        }
-
         callsViewModel.currentCallData.observe(
             this
         ) { callData ->
@@ -302,12 +293,11 @@ class CallActivity : ProximitySensorActivity() {
                     Compatibility.BLUETOOTH_CONNECT -> if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
                         Log.i("[Call Activity] BLUETOOTH_CONNECT permission has been granted")
                     }
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE -> if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                        Log.i("[Call Activity] WRITE_EXTERNAL_STORAGE permission has been granted, taking snapshot")
+                        controlsViewModel.takeSnapshot()
+                    }
                 }
-            }
-        } else if (requestCode == 1) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.i("[Call Activity] WRITE_EXTERNAL_STORAGE permission has been granted, taking snapshot")
-                callsViewModel.takeSnapshot()
             }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)

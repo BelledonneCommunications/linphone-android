@@ -351,6 +351,7 @@
     <string name="call_remotely_paused_title">Call has been paused by remote.</string>
     <string name="call_locally_paused_title">You have paused the call.</string>
     <string name="call_locally_paused_subtitle">Click on play button to resume it.</string>
+    <string name="call_screenshot_taken">Snapshot taken: %s</string>
 
     <!-- Call stats -->
     <string name="call_stats_audio">Audio</string>
