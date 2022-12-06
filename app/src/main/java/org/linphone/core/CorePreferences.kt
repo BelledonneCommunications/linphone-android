@@ -359,6 +359,12 @@ class CorePreferences constructor(private val context: Context) {
             config.setBool("audio", "android_pause_calls_when_audio_focus_lost", value)
         }
 
+    var enableFullScreenWhenJoiningVideoCall: Boolean
+        get() = config.getBool("app", "enter_video_call_enable_full_screen_mode", false)
+        set(value) {
+            config.setBool("app", "enter_video_call_enable_full_screen_mode", value)
+        }
+
     var enableFullScreenWhenJoiningVideoConference: Boolean
         get() = config.getBool("app", "enter_video_conference_enable_full_screen_mode", true)
         set(value) {
