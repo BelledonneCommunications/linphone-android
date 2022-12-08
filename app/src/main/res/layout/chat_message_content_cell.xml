@@ -90,20 +90,20 @@
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="@{data.downloadProgressInt > 0 ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{data.fileTransferProgress ? View.VISIBLE : View.GONE, default=gone}"
             android:max="100"
             android:layout_centerInParent="true"
             app:trackColor="?attr/backgroundColor"
-            android:progress="@{data.downloadProgressInt, default=50}"
+            android:progress="@{data.fileTransferProgressInt, default=50}"
             android:background="@drawable/background_round_secondary_color" />
 
         <TextView
-            android:visibility="@{data.downloadProgressInt > 0 ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{data.fileTransferProgress ? View.VISIBLE : View.GONE, default=gone}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             style="@style/file_transfer_progress_font"
-            android:text="@{data.downloadProgressString, default=`50%`}"/>
+            android:text="@{data.fileTransferProgressInt + `%`, default=`50%`}"/>
 
     </RelativeLayout>
 

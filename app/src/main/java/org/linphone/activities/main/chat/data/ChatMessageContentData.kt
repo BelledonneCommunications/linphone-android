@@ -66,9 +66,8 @@ class ChatMessageContentData(
     val filePath = MutableLiveData<String>()
 
     val downloadable = MutableLiveData<Boolean>()
-    val downloadEnabled = MutableLiveData<Boolean>()
-    val downloadProgressInt = MutableLiveData<Int>()
-    val downloadProgressString = MutableLiveData<String>()
+    val fileTransferProgress = MutableLiveData<Boolean>()
+    val fileTransferProgressInt = MutableLiveData<Int>()
     val downloadLabel = MutableLiveData<Spannable>()
 
     val voiceRecordDuration = MutableLiveData<Int>()
@@ -118,18 +117,18 @@ class ChatMessageContentData(
             total: Int
         ) {
             if (c.filePath == getContent().filePath) {
-                val percent = offset * 100 / total
-                Log.d("[Content] Download progress is: $offset / $total ($percent%)")
-
-                downloadProgressInt.value = percent
-                downloadProgressString.value = "$percent%"
+                if (fileTransferProgress.value == false) {
+                    fileTransferProgress.value = true
+                }
+                val percent = ((offset * 100.0) / total).toInt() // Conversion from int to double and back to int is required
+                Log.d("[Content] Transfer progress is: $offset / $total -> $percent%")
+                fileTransferProgressInt.value = percent
             }
         }
 
         override fun onMsgStateChanged(message: ChatMessage, state: ChatMessage.State) {
-            downloadEnabled.value = state != ChatMessage.State.FileTransferInProgress
-
             if (state == ChatMessage.State.FileTransferDone || state == ChatMessage.State.FileTransferError) {
+                fileTransferProgress.value = false
                 updateContent()
 
                 if (state == ChatMessage.State.FileTransferDone) {
@@ -149,6 +148,8 @@ class ChatMessageContentData(
         isVoiceRecordPlaying.value = false
         voiceRecordDuration.value = 0
         voiceRecordPlayingPosition.value = 0
+        fileTransferProgress.value = false
+        fileTransferProgressInt.value = 0
 
         updateContent()
         chatMessage.addListener(chatMessageListener)
@@ -191,7 +192,6 @@ class ChatMessageContentData(
                 Log.w("[Content] File path already set [$filePath] using it (auto download that failed probably)")
             }
 
-            downloadEnabled.value = false
             if (!chatMessage.downloadContent(content)) {
                 Log.e("[Content] Failed to start content download!")
             }
@@ -303,9 +303,6 @@ class ChatMessageContentData(
         }
 
         isGenericFile.value = !isPdf.value!! && !isAudio.value!! && !isVideo.value!! && !isImage.value!! && !isVoiceRecording.value!! && !isConferenceSchedule.value!!
-        downloadEnabled.value = !chatMessage.isFileTransferInProgress
-        downloadProgressInt.value = 0
-        downloadProgressString.value = "0%"
     }
 
     private fun parseConferenceInvite(content: Content) {

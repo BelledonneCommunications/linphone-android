@@ -38,8 +38,6 @@ class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMes
 
     val sendInProgress = MutableLiveData<Boolean>()
 
-    val transferInProgress = MutableLiveData<Boolean>()
-
     val showImdn = MutableLiveData<Boolean>()
 
     val imdnIcon = MutableLiveData<Int>()
@@ -157,18 +155,21 @@ class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMes
     }
 
     private fun updateChatMessageState(state: ChatMessage.State) {
-        transferInProgress.value = state == ChatMessage.State.FileTransferInProgress
-
-        sendInProgress.value = state == ChatMessage.State.InProgress || state == ChatMessage.State.FileTransferInProgress
+        sendInProgress.value = when (state) {
+            ChatMessage.State.InProgress, ChatMessage.State.FileTransferInProgress, ChatMessage.State.FileTransferDone -> true
+            else -> false
+        }
 
         showImdn.value = when (state) {
-            ChatMessage.State.DeliveredToUser, ChatMessage.State.Displayed, ChatMessage.State.NotDelivered -> true
+            ChatMessage.State.DeliveredToUser, ChatMessage.State.Displayed,
+            ChatMessage.State.NotDelivered, ChatMessage.State.FileTransferError -> true
             else -> false
         }
 
         imdnIcon.value = when (state) {
             ChatMessage.State.DeliveredToUser -> R.drawable.chat_delivered
             ChatMessage.State.Displayed -> R.drawable.chat_read
+            ChatMessage.State.FileTransferError, ChatMessage.State.NotDelivered -> R.drawable.chat_error
             else -> R.drawable.chat_error
         }
 
