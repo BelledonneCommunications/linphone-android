@@ -206,7 +206,7 @@
             android:layout_alignBottom="@id/background"
             android:layout_toRightOf="@id/background"
             android:indeterminateTint="?attr/accentColor"
-            android:visibility="@{data.transferInProgress || data.sendInProgress ? View.VISIBLE : View.GONE}" />
+            android:visibility="@{data.sendInProgress ? View.VISIBLE : View.GONE}" />
 
     </RelativeLayout>
 
