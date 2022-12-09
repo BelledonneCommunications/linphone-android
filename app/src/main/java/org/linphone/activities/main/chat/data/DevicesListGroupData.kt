@@ -28,10 +28,8 @@ import org.linphone.core.Participant
 import org.linphone.utils.LinphoneUtils
 
 class DevicesListGroupData(private val participant: Participant) : GenericContactData(participant.address) {
-    private val device = if (participant.devices.isEmpty()) null else participant.devices.first()
-
     val securityLevelIcon: Int by lazy {
-        when (device?.securityLevel) {
+        when (participant.securityLevel) {
             ChatRoomSecurityLevel.Safe -> R.drawable.security_2_indicator
             ChatRoomSecurityLevel.Encrypted -> R.drawable.security_1_indicator
             else -> R.drawable.security_alert_indicator
@@ -39,7 +37,7 @@ class DevicesListGroupData(private val participant: Participant) : GenericContac
     }
 
     val securityLevelContentDescription: Int by lazy {
-        when (device?.securityLevel) {
+        when (participant.securityLevel) {
             ChatRoomSecurityLevel.Safe -> R.string.content_description_security_level_safe
             ChatRoomSecurityLevel.Encrypted -> R.string.content_description_security_level_encrypted
             else -> R.string.content_description_security_level_unsafe
@@ -68,6 +66,11 @@ class DevicesListGroupData(private val participant: Participant) : GenericContac
     }
 
     fun onClick() {
-        if (device?.address != null) coreContext.startCall(device.address, forceZRTP = true)
+        val device = if (participant.devices.isEmpty()) null else participant.devices.first()
+        if (device?.address != null) {
+            coreContext.startCall(device.address, forceZRTP = true)
+        } else {
+            coreContext.startCall(participant.address, forceZRTP = true)
+        }
     }
 }
