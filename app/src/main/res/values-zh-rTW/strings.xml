@@ -766,4 +766,5 @@
     <string name="zrtp_dialog_explanation">為了增加安全性，您可以與對方確認下列代碼是否相符。</string>
     <string name="zrtp_dialog_later_button_label">稍後</string>
     <string name="zrtp_dialog_correct_button_label">確認正確</string>
+    <string name="call_screenshot_taken">已拍攝擷圖：%s</string>
 </resources>
