@@ -383,7 +383,17 @@ class ConferenceViewModel : ViewModel() {
                 }
 
                 params.isVideoEnabled = layout != ConferenceDisplayMode.AUDIO_ONLY
-                if (forceSendingVideo) params.videoDirection = MediaDirection.SendRecv
+                if (forceSendingVideo) {
+                    Log.w("[Conference] Forcing video direction to SendRecv")
+                    params.videoDirection = MediaDirection.SendRecv
+                } else {
+                    if (conferenceDisplayMode.value == ConferenceDisplayMode.AUDIO_ONLY) {
+                        // Previous layout was audio only, make sure video isn't sent without user consent when switching layout
+                        params.videoDirection = MediaDirection.RecvOnly
+                    }
+                    Log.i("[Conference] Video direction is ${params.videoDirection}")
+                }
+
                 params.conferenceVideoLayout = when (layout) {
                     ConferenceDisplayMode.GRID -> ConferenceLayout.Grid
                     else -> ConferenceLayout.ActiveSpeaker
@@ -404,7 +414,7 @@ class ConferenceViewModel : ViewModel() {
     private fun updateConferenceLayout(conference: Conference) {
         val call = conference.call
         if (call == null) {
-            Log.e("[Conference] Conference call is null!")
+            Log.e("[Conference] Call is null!")
             return
         }
 
@@ -421,7 +431,7 @@ class ConferenceViewModel : ViewModel() {
         val list = sortDevicesDataList(conferenceParticipantDevices.value.orEmpty())
         conferenceParticipantDevices.value = list
 
-        Log.i("[Conference] Conference current layout is: ${conferenceDisplayMode.value}")
+        Log.i("[Conference] Current layout is [${conferenceDisplayMode.value}], video direction is [${params.videoDirection}]")
     }
 
     private fun terminateConference(conference: Conference) {
