@@ -51,6 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"
             style="@style/conference_invite_desc_font"
             android:maxLines="2"
             android:ellipsize="end"
@@ -59,8 +60,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:drawablePadding="5dp"
+            android:layout_marginBottom="2dp"
+            android:visibility="@{data.isConferenceCancelled ? View.GONE : View.VISIBLE}"
             style="@style/conference_invite_dat_time_font"
             android:text="@{data.conferenceParticipantCount, default=`3 participants`}"
             app:drawableStartCompat="@drawable/icon_schedule_participants"/>
@@ -68,8 +70,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
             android:drawablePadding="5dp"
+            android:layout_marginBottom="2dp"
             style="@style/conference_invite_dat_time_font"
             android:text="@{data.conferenceDate, default=`Mon. October 9th, 2021`}"
             app:drawableStartCompat="@drawable/icon_schedule_date" />
@@ -78,7 +80,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawablePadding="5dp"
-            android:layout_marginTop="2dp"
             style="@style/conference_invite_dat_time_font"
             android:text="@{data.conferenceTime + (data.showDuration ? ` (` + data.conferenceDuration + `)` : ``), default=`5:35 PM (2h)`}"
             app:drawableStartCompat="@drawable/icon_schedule_time" />
