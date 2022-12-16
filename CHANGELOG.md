@@ -10,6 +10,16 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [5.0.1] - 2022-12-16
+
+### Changed
+- File transfer progress indication & error status improvements
+
+### Fixed
+- Wrong LIME status for participant that has multiple devices
+- No longer sends video when switching from audio only to another conference layout
+- SIP URI regex pattern to prevent HTTP URLs containing '@' to be handled as SIP URI
+
 ## [5.0.0] - 2022-12-06
 
 ### Added
