@@ -522,6 +522,13 @@ class CorePreferences constructor(private val context: Context) {
             "sip:videoconference-factory@sip.linphone.org"
         )!!
 
+    val limeServerUrl: String
+        get() = config.getString(
+            "app",
+            "default_lime_server_url",
+            "https://lime.linphone.org/lime-server/lime-server.php"
+        )!!
+
     val checkUpdateAvailableInterval: Int
         get() = config.getInt("app", "version_check_interval", 86400000)
 
