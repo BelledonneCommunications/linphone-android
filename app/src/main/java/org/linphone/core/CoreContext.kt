@@ -453,10 +453,16 @@ class CoreContext(
                     Log.i("[Context] CPIM allowed in basic chat rooms for account ${params.identityAddress?.asString()}")
                 }
 
-                if (account.params.limeServerUrl == null && limeServerUrl.isNotEmpty()) {
-                    params.limeServerUrl = limeServerUrl
-                    paramsChanged = true
-                    Log.i("[Context] Moving Core's LIME X3DH server URL [$limeServerUrl] on account ${params.identityAddress?.asString()}")
+                if (account.params.limeServerUrl.isNullOrEmpty()) {
+                    if (limeServerUrl.isNotEmpty()) {
+                        params.limeServerUrl = limeServerUrl
+                        paramsChanged = true
+                        Log.i("[Context] Moving Core's LIME X3DH server URL [$limeServerUrl] on account ${params.identityAddress?.asString()}")
+                    } else {
+                        params.limeServerUrl = corePreferences.limeServerUrl
+                        paramsChanged = true
+                        Log.w("[Context] Linphone account [${params.identityAddress?.asString()}] didn't have a LIME X3DH server URL, setting one: ${corePreferences.limeServerUrl}")
+                    }
                 }
 
                 if (paramsChanged) {
