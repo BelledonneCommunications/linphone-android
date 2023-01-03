@@ -321,11 +321,13 @@ class Api26Compatibility {
             Log.i("[Telecom Helper] Changing audio route [${routeToString(route)}] on connection [${connection.callId}] with state [${connection.stateAsString()}]")
 
             val audioState = connection.callAudioState
-            Log.i("[Telecom Helper] Current audio route is ${routeToString(audioState.route)}")
-            if (audioState != null && audioState.route == route) {
-                Log.w("[Telecom Helper] Connection is already using this route")
-                return false
-            } else if (audioState == null) {
+            if (audioState != null) {
+                Log.i("[Telecom Helper] Current audio route is ${routeToString(audioState.route)}")
+                if (audioState.route == route) {
+                    Log.w("[Telecom Helper] Connection is already using this route")
+                    return false
+                }
+            } else {
                 Log.w("[Telecom Helper] Failed to retrieve connection's call audio state!")
                 return false
             }
