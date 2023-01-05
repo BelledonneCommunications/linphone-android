@@ -68,7 +68,9 @@ class PhoneAccountLinkingFragment : AbstractPhoneFragment<AssistantPhoneAccountL
         }
 
         binding.setSelectCountryClickListener {
-            CountryPickerFragment(viewModel).show(childFragmentManager, "CountryPicker")
+            val countryPickerFragment = CountryPickerFragment()
+            countryPickerFragment.listener = viewModel
+            countryPickerFragment.show(childFragmentManager, "CountryPicker")
         }
 
         viewModel.goToSmsValidationEvent.observe(
