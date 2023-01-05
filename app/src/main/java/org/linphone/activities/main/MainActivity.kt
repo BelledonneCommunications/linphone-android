@@ -278,16 +278,18 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             }
             Intent.ACTION_VIEW -> {
                 val uri = intent.data
-                if (intent.type == AppUtils.getString(R.string.linphone_address_mime_type)) {
-                    if (uri != null) {
-                        val contactId = coreContext.contactsManager.getAndroidContactIdFromUri(uri)
+                if (uri != null) {
+                    if (
+                        intent.type == AppUtils.getString(R.string.linphone_address_mime_type) &&
+                        PermissionHelper.get().hasReadContactsPermission()
+                    ) {
+                        val contactId =
+                            coreContext.contactsManager.getAndroidContactIdFromUri(uri)
                         if (contactId != null) {
                             Log.i("[Main Activity] Found contact URI parameter in intent: $uri")
                             navigateToContact(contactId)
                         }
-                    }
-                } else {
-                    if (uri != null) {
+                    } else {
                         handleTelOrSipUri(uri)
                     }
                 }
