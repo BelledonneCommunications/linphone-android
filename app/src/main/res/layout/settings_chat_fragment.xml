@@ -98,7 +98,7 @@
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/chat_settings_downloaded_media_public_title}"
-                    linphone:enabled="@{!viewModel.vfs &amp;&amp; viewModel.autoDownloadIndex != 1}"
+                    linphone:enabled="@{!viewModel.vfs}"
                     linphone:subtitle="@{@string/chat_settings_downloaded_media_public_summary}"
                     linphone:listener="@{viewModel.downloadedMediaPublicListener}"
                     linphone:checked="@={viewModel.downloadedMediaPublic}"/>

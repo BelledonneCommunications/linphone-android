@@ -838,6 +838,7 @@ class CoreContext(
     /* Coroutine related */
 
     private fun exportFileInMessage(message: ChatMessage) {
+        // Only do it if auto download feature isn't disabled, otherwise it's done in the user-initiated download process
         if (core.maxSizeForAutoDownloadIncomingFiles != -1) {
             var hasFile = false
             for (content in message.contents) {
@@ -869,6 +870,7 @@ class CoreContext(
         if (PermissionHelper.get().hasWriteExternalStoragePermission()) {
             for (content in message.contents) {
                 if (content.isFile && content.filePath != null && content.userData == null) {
+                    Log.i("[Context] Trying to export file [${content.name}] to MediaStore")
                     addContentToMediaStore(content)
                 }
             }
