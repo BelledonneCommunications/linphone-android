@@ -891,22 +891,25 @@ class CoreContext(
 
         if (PermissionHelper.get().hasWriteExternalStoragePermission()) {
             coroutineScope.launch {
-                when (content.type) {
-                    "image" -> {
+                val filePath = content.filePath.orEmpty()
+                Log.i("[Context] Trying to export file [$filePath] through Media Store API")
+
+                when {
+                    FileUtils.isExtensionImage(filePath) -> {
                         if (Compatibility.addImageToMediaStore(context, content)) {
                             Log.i("[Context] Adding image ${content.name} to Media Store terminated")
                         } else {
                             Log.e("[Context] Something went wrong while copying file to Media Store...")
                         }
                     }
-                    "video" -> {
+                    FileUtils.isExtensionVideo(filePath) -> {
                         if (Compatibility.addVideoToMediaStore(context, content)) {
                             Log.i("[Context] Adding video ${content.name} to Media Store terminated")
                         } else {
                             Log.e("[Context] Something went wrong while copying file to Media Store...")
                         }
                     }
-                    "audio" -> {
+                    FileUtils.isExtensionAudio(filePath) -> {
                         if (Compatibility.addAudioToMediaStore(context, content)) {
                             Log.i("[Context] Adding audio ${content.name} to Media Store terminated")
                         } else {
@@ -914,7 +917,7 @@ class CoreContext(
                         }
                     }
                     else -> {
-                        Log.w("[Context] File ${content.name} isn't either an image, an audio file or a video, can't add it to the Media Store")
+                        Log.w("[Context] File [$filePath] isn't either an image, an audio file or a video [${content.type}/${content.subtype}], can't add it to the Media Store")
                     }
                 }
             }
