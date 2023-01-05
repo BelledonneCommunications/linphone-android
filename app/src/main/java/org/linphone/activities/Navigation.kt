@@ -48,6 +48,7 @@ import org.linphone.activities.main.settings.fragments.*
 import org.linphone.activities.main.sidemenu.fragments.SideMenuFragment
 import org.linphone.activities.voip.CallActivity
 import org.linphone.activities.voip.fragments.*
+import org.linphone.core.tools.Log
 
 internal fun Fragment.findMasterNavController(): NavController {
     return parentFragment?.parentFragment?.findNavController() ?: findNavController()
@@ -158,6 +159,11 @@ internal fun TabsFragment.navigateToChatRooms() {
 /* Dialer related */
 
 internal fun DialerFragment.navigateToContacts(uriToAdd: String?) {
+    if (uriToAdd.isNullOrEmpty()) {
+        Log.e("[Navigation] SIP URI to add to contact is null or empty!")
+        return
+    }
+
     val deepLink = "linphone-android://contact/new/$uriToAdd"
     findNavController().navigate(
         Uri.parse(deepLink),
@@ -299,6 +305,11 @@ internal fun MasterChatRoomsFragment.clearDisplayedChatRoom() {
 }
 
 internal fun DetailChatRoomFragment.navigateToContacts(sipUriToAdd: String) {
+    if (sipUriToAdd.isEmpty()) {
+        Log.e("[Navigation] SIP URI to add to contact is empty!")
+        return
+    }
+
     val deepLink = "linphone-android://contact/new/$sipUriToAdd"
     findMasterNavController().navigate(Uri.parse(deepLink))
 }
@@ -606,6 +617,11 @@ internal fun MasterCallLogsFragment.navigateToConferenceWaitingRoom(
 }
 
 internal fun DetailCallLogFragment.navigateToContacts(sipUriToAdd: String) {
+    if (sipUriToAdd.isEmpty()) {
+        Log.e("[Navigation] SIP URI to add to contact is empty!")
+        return
+    }
+
     val deepLink = "linphone-android://contact/new/$sipUriToAdd"
     findMasterNavController().navigate(Uri.parse(deepLink))
 }
