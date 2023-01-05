@@ -29,10 +29,12 @@ import org.linphone.activities.assistant.adapters.CountryPickerAdapter
 import org.linphone.core.DialPlan
 import org.linphone.databinding.AssistantCountryPickerFragmentBinding
 
-class CountryPickerFragment(private val listener: CountryPickedListener) : DialogFragment() {
+class CountryPickerFragment() : DialogFragment() {
     private var _binding: AssistantCountryPickerFragmentBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: CountryPickerAdapter
+
+    var listener: CountryPickedListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +59,7 @@ class CountryPickerFragment(private val listener: CountryPickedListener) : Dialo
         binding.countryList.setOnItemClickListener { _, _, position, _ ->
             if (position >= 0 && position < adapter.count) {
                 val dialPlan = adapter.getItem(position)
-                listener.onCountryClicked(dialPlan)
+                listener?.onCountryClicked(dialPlan)
             }
             dismiss()
         }
