@@ -86,9 +86,11 @@ class TopBarFragment : GenericFragment<FileViewerTopBarFragmentBinding>() {
         lifecycleScope.launch {
             var mediaStoreFilePath = ""
             if (PermissionHelper.get().hasWriteExternalStoragePermission()) {
-                Log.i("[File Viewer] Exporting image through Media Store API")
-                when (content.type) {
-                    "image" -> {
+                val filePath = content.filePath.orEmpty()
+                Log.i("[File Viewer] Trying to export file [$filePath] through Media Store API")
+
+                when {
+                    FileUtils.isExtensionImage(filePath) -> {
                         val export = lifecycleScope.async {
                             Compatibility.addImageToMediaStore(requireContext(), content)
                         }
@@ -99,7 +101,7 @@ class TopBarFragment : GenericFragment<FileViewerTopBarFragmentBinding>() {
                             Log.e("[File Viewer] Something went wrong while copying file to Media Store...")
                         }
                     }
-                    "video" -> {
+                    FileUtils.isExtensionVideo(filePath) -> {
                         val export = lifecycleScope.async {
                             Compatibility.addVideoToMediaStore(requireContext(), content)
                         }
@@ -110,7 +112,7 @@ class TopBarFragment : GenericFragment<FileViewerTopBarFragmentBinding>() {
                             Log.e("[File Viewer] Something went wrong while copying file to Media Store...")
                         }
                     }
-                    "audio" -> {
+                    FileUtils.isExtensionAudio(filePath) -> {
                         val export = lifecycleScope.async {
                             Compatibility.addAudioToMediaStore(requireContext(), content)
                         }
