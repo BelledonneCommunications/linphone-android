@@ -247,4 +247,6 @@
     <string name="conference">Konferenz</string>
     <string name="conference_schedule_subject_title">Betreff</string>
     <string name="conference_schedule_description_title">Beschreibung hinzufügen</string>
+    <string name="call_action_transfer_call">Anruf weiterleiten</string>
+    <string name="call_context_action_transfer">Anruf weiterleiten</string>
 </resources>
