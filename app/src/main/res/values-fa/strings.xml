@@ -2,7 +2,7 @@
 <!DOCTYPE resources [
 <!ENTITY appName "Linphone">
 ]>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="sync_account_name">&appName; مخاطبین</string>
     <string name="logs_upload_failure">گزارش‌ها آپلود نشد!</string>
     <string name="logs_url_copied_to_clipboard">نشانی وب گزارش‌ها در کلیپ‌بورد کپی شد</string>
@@ -181,4 +181,47 @@
     <string name="recordings_export">ارسال ضبط با استفاده از…</string>
     <string name="conference_schedule_later">آیا می خواهید جلسه ای را برای بعد تعیین کنید؟</string>
     <string name="conference_schedule_description_title">توضیحات اضافه کنید</string>
+    <string name="conference_schedule_description_hint">توضیحات</string>
+    <string name="conference_schedule_date">تاریخ</string>
+    <string name="conference_schedule_time">زمان</string>
+    <string name="conference_schedule_duration">مدت زمان</string>
+    <string name="conference_schedule_send_invite_chat">ارسال دعوت از طریق &appName;</string>
+    <string name="conference_schedule_send_invite_email">ارسال دعوت نامه از طریق ایمیل</string>
+    <string name="conference_schedule_send_updated_invite_email">ارسال به روز رسانی از طریق ایمیل</string>
+    <string name="conference_schedule_participants_list">لیست شرکت کنندگان</string>
+    <string name="conference_schedule_summary">اطلاعات جلسه</string>
+    <string name="conference_group_call_summary">اطلاعات تماس گروهی</string>
+    <string name="conference_schedule_edit">ویرایش جلسه</string>
+    <string name="conference_schedule_info_not_sent_to_participant">اطلاعات جلسه برای شرکت‌کننده ارسال نشد</string>
+    <string name="conference_paused_title">شما در حال حاضر خارج از جلسه هستید.</string>
+    <string name="conference_invite_title">دعوت به جلسه:</string>
+    <string name="conference_update_title">جلسه به روز شد:</string>
+    <string name="conference_cancel_title">جلسه لغو شد:</string>
+    <string name="conference_description_title">توضیحات</string>
+    <string name="conference_display_mode_mosaic">حالت موزاییکی</string>
+    <string name="conference_display_mode_active_speaker">حالت بلندگوی فعال</string>
+    <string name="conference_display_mode_audio_only">حالت فقط صدا</string>
+    <string name="conference_waiting_room_start_call">شروع</string>
+    <string name="conference_waiting_room_cancel_call">لغو</string>
+    <string name="conference_scheduled">جلسات</string>
+    <string name="conference_participant_paused">(متوقف شد)</string>
+    <string name="conference_no_schedule">هنوز جلسه ای برنامه ریزی نشده است.</string>
+    <string name="conference_schedule_organizer">برگزارکننده:</string>
+    <string name="conference_schedule_timezone">منطقه زمانی</string>
+    <string name="conference_schedule_send_updated_invite_chat">ارسال بروزرسانی از طریق &appName;</string>
+    <string name="conference_schedule_encryption">آیا می خواهید جلسه را رمزگذاری کنید؟</string>
+    <string name="conference_schedule_send_invite_chat_summary">دعوتنامه از طریق حساب &appName; ارسال خواهد شد</string>
+    <string name="conference_organizer">تنظیم کننده</string>
+    <string name="conference_schedule_start">جلسه را برنامه ریزی کنید</string>
+    <string name="conference_group_call_create">تماس گروهی را شروع کنید</string>
+    <string name="conference_schedule_address_copied_to_clipboard">آدرس جلسه در کلیپ بورد کپی شد</string>
+    <string name="conference_paused_subtitle">بر روی دکمه پخش کلیک کنید تا دوباره به آن بپیوندید.</string>
+    <string name="conference_default_title">تماس گروهی از راه دور</string>
+    <string name="conference_local_title">تماس گروهی محلی</string>
+    <string name="conference_invite_join">پیوستن</string>
+    <string name="conference_invite_participants_count" tools:ignore="PluralsCandidate">%d شرکت کنندگان</string>
+    <string name="conference_waiting_room_video_disabled">ویدیو در حال حاضر غیرفعال است</string>
+    <string name="conference_layout_too_many_participants_for_mosaic">شما نمی توانید طرح تماس گروهی را تغییر دهید زیرا تعداد شرکت کنندگان بسیار زیاد است</string>
+    <string name="conference_too_many_participants_for_mosaic_layout">تعداد شرکت‌کنندگان زیادی برای طرح‌بندی موزاییک وجود دارد، لذا به حالت بلندگوی فعال تغییر داده خواهد شد</string>
+    <string name="conference_no_terminated_schedule">هنوز جلسه به اتمام نرسیده است.</string>
 </resources>
