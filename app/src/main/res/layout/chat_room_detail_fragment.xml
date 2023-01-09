@@ -207,9 +207,12 @@
                     android:onClick="@{attachFileClickListener}"
                     android:enabled="@{chatSendingViewModel.attachFileEnabled}"
                     android:contentDescription="@string/content_description_attach_file"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
+                    android:layout_width="@dimen/chat_message_sending_icons_size"
+                    android:layout_height="@dimen/chat_message_sending_icons_size"
+                    android:paddingTop="@dimen/chat_message_sending_icons_margin"
+                    android:paddingBottom="@dimen/chat_message_sending_icons_margin"
+                    android:layout_marginStart="@dimen/chat_message_sending_icons_margin"
+                    android:layout_marginEnd="@dimen/chat_message_sending_icons_margin"
                     android:src="@drawable/chat_file" />
 
                 <ImageView
@@ -218,11 +221,12 @@
                     android:onClick="@{() -> chatSendingViewModel.toggleVoiceRecording()}"
                     android:selected="@{chatSendingViewModel.isVoiceRecording}"
                     android:contentDescription="@string/content_description_voice_recording"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:paddingRight="10dp"
+                    android:layout_width="@dimen/chat_message_sending_icons_size"
+                    android:layout_height="@dimen/chat_message_sending_icons_size"
+                    android:paddingTop="@dimen/chat_message_sending_icons_margin"
+                    android:paddingBottom="@dimen/chat_message_sending_icons_margin"
+                    android:layout_marginStart="@dimen/chat_message_sending_icons_margin"
+                    android:layout_marginEnd="@dimen/chat_message_sending_icons_margin"
                     android:src="@drawable/record_audio_message" />
 
                 <org.linphone.activities.main.chat.views.RichEditText
@@ -252,9 +256,12 @@
                         android:onClick="@{() -> chatSendingViewModel.sendMessage()}"
                         android:enabled="@{chatSendingViewModel.sendMessageEnabled}"
                         android:contentDescription="@string/content_description_send_message"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
+                        android:layout_width="@dimen/chat_message_sending_icons_size"
+                        android:layout_height="@dimen/chat_message_sending_icons_size"
+                        android:paddingTop="@dimen/chat_message_sending_icons_margin"
+                        android:paddingBottom="@dimen/chat_message_sending_icons_margin"
+                        android:layout_marginStart="@dimen/chat_message_sending_icons_margin"
+                        android:layout_marginEnd="@dimen/chat_message_sending_icons_margin"
                         android:src="@drawable/chat_send_message" />
 
                     <ImageView
