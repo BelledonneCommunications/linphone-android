@@ -80,6 +80,6 @@
     <dimen name="conference_waiting_room_buttons_max_width">250dp</dimen>
     <dimen name="mute_mic_miniature_margin">5dp</dimen>
     <dimen name="mute_mic_grid_margin">10dp</dimen>
-    <dimen name="chat_message_sending_icons_size">40dp</dimen>
+    <dimen name="chat_message_sending_icons_size">35dp</dimen>
     <dimen name="chat_message_sending_icons_margin">5dp</dimen>
 </resources>
