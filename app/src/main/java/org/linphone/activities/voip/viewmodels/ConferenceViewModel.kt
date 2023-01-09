@@ -185,8 +185,11 @@ class ConferenceViewModel : ViewModel() {
             val device = conferenceParticipantDevices.value.orEmpty().find {
                 it.participantDevice.address.weakEqual(participantDevice.address)
             }
+
             if (device != null && device != speakingParticipant.value) {
                 Log.i("[Conference] Found actively speaking participant device")
+                speakingParticipant.value?.isActiveSpeaker?.value = false
+                device.isActiveSpeaker.value = true
                 speakingParticipant.value = device!!
             } else if (device == null) {
                 Log.w("[Conference] Participant device [${participantDevice.address.asStringUriOnly()}] is the active speaker but couldn't find it in devices list")
@@ -488,6 +491,7 @@ class ConferenceViewModel : ViewModel() {
                 if (activelySpeakingParticipantDevice == device) {
                     Log.i("[Conference] Actively speaking participant device found: ${device.name} (${device.address.asStringUriOnly()})")
                     speakingParticipant.value = deviceData
+                    deviceData.isActiveSpeaker.value = true
                     foundActivelySpeakingParticipantDevice = true
                 }
             }
@@ -495,7 +499,9 @@ class ConferenceViewModel : ViewModel() {
 
         if (!foundActivelySpeakingParticipantDevice && devices.isNotEmpty()) {
             Log.w("[Conference] Actively speaking participant device not found, using first participant device available")
-            speakingParticipant.value = devices.first()
+            val deviceData = devices.first()
+            speakingParticipant.value = deviceData
+            deviceData.isActiveSpeaker.value = true
         }
 
         for (device in conference.me.devices) {
@@ -530,6 +536,7 @@ class ConferenceViewModel : ViewModel() {
 
         if (speakingParticipant.value == null) {
             speakingParticipant.value = deviceData
+            deviceData.isActiveSpeaker.value = true
         }
 
         conferenceParticipantDevices.value = sortedDevices
@@ -561,7 +568,9 @@ class ConferenceViewModel : ViewModel() {
         if (removedDeviceWasActiveSpeaker && devicesCount > 1) {
             Log.w("[Conference] Updating actively speaking participant device using first one available")
             // Using second device as first is ourselves
-            speakingParticipant.value = devices[1]
+            val deviceData = devices[1]
+            speakingParticipant.value = deviceData
+            deviceData.isActiveSpeaker.value = true
         }
 
         conferenceParticipantDevices.value = devices
