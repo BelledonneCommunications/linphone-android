@@ -29,7 +29,11 @@ import org.linphone.core.tools.Log
 
 class GridBoxLayout : GridLayout {
     companion object {
-        private val placementMatrix = arrayOf(intArrayOf(1, 2, 3, 4, 5, 6), intArrayOf(1, 1, 2, 2, 3, 3), intArrayOf(1, 1, 1, 2, 2, 2), intArrayOf(1, 1, 1, 1, 2, 2), intArrayOf(1, 1, 1, 1, 1, 2), intArrayOf(1, 1, 1, 1, 1, 1))
+        private val placementMatrix = arrayOf(
+            intArrayOf(1, 2, 3, 4, 5, 6), intArrayOf(1, 1, 2, 2, 3, 3),
+            intArrayOf(1, 1, 1, 2, 2, 2), intArrayOf(1, 1, 1, 1, 2, 2),
+            intArrayOf(1, 1, 1, 1, 1, 2), intArrayOf(1, 1, 1, 1, 1, 1)
+        )
     }
 
     constructor(context: Context) : this(context, null)
