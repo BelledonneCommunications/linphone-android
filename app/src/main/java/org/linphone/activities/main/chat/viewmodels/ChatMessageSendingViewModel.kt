@@ -142,6 +142,32 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         } else {
             recorderParams.fileFormat = RecorderFileFormat.Wav
         }
+
+        // In case no headphones/headset/hearing aid/bluetooth is connected, use microphone
+        // If none are available, default one will be used
+        var bluetoothAudioDevice: AudioDevice? = null
+        var headsetAudioDevice: AudioDevice? = null
+        var builtinMicrophone: AudioDevice? = null
+        for (device in coreContext.core.audioDevices) {
+            if (device.hasCapability(AudioDevice.Capabilities.CapabilityRecord)) {
+                when (device.type) {
+                    AudioDevice.Type.Bluetooth -> {
+                        bluetoothAudioDevice = device
+                    }
+                    AudioDevice.Type.Headset, AudioDevice.Type.HearingAid, AudioDevice.Type.Headphones -> {
+                        headsetAudioDevice = device
+                    }
+                    AudioDevice.Type.Microphone -> {
+                        builtinMicrophone = device
+                    }
+                    else -> {}
+                }
+            }
+        }
+        Log.i("[Chat Message Sending] Found headset/headphones/hearingAid [${headsetAudioDevice?.id}], bluetooth [${bluetoothAudioDevice?.id}] and builtin microphone [${builtinMicrophone?.id}]")
+        recorderParams.audioDevice = headsetAudioDevice ?: bluetoothAudioDevice ?: builtinMicrophone
+        Log.i("[Chat Message Sending] Using device ${recorderParams.audioDevice?.id} to make the voice message recording")
+
         recorder = coreContext.core.createRecorder(recorderParams)
     }
 
@@ -287,14 +313,14 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
     }
 
     private fun tickerFlowRecording() = flow {
-        while (recorder.state == RecorderState.Running) {
+        while (isVoiceRecording.value == true) {
             emit(Unit)
             delay(100)
         }
     }
 
     private fun tickerFlowPlaying() = flow {
-        while (voiceRecordingPlayer.state == Player.State.Playing) {
+        while (isPlayingVoiceRecording.value == true) {
             emit(Unit)
             delay(100)
         }
@@ -353,14 +379,15 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         isVoiceRecording.value = true
         sendMessageEnabled.value = true
 
+        val maxVoiceRecordDuration = corePreferences.voiceRecordingMaxDuration
         tickerFlowRecording().onEach {
-            val duration = recorder.duration
-            voiceRecordingDuration.postValue(recorder.duration % voiceRecordingProgressBarMax)
-            formattedDuration.postValue(SimpleDateFormat("mm:ss", Locale.getDefault()).format(duration)) // duration is in ms
+            withContext(Dispatchers.Main) {
+                val duration = recorder.duration
+                voiceRecordingDuration.value = recorder.duration % voiceRecordingProgressBarMax
+                formattedDuration.value = SimpleDateFormat("mm:ss", Locale.getDefault()).format(duration) // duration is in ms
 
-            if (duration >= corePreferences.voiceRecordingMaxDuration) {
-                withContext(Dispatchers.Main) {
-                    Log.w("[Chat Message Sending] Max duration for voice recording exceeded (${corePreferences.voiceRecordingMaxDuration}ms), stopping.")
+                if (duration >= maxVoiceRecordDuration) {
+                    Log.w("[Chat Message Sending] Max duration for voice recording exceeded (${maxVoiceRecordDuration}ms), stopping.")
                     stopVoiceRecording()
                 }
             }
@@ -435,7 +462,9 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         isPlayingVoiceRecording.value = true
 
         tickerFlowPlaying().onEach {
-            voiceRecordPlayingPosition.postValue(voiceRecordingPlayer.currentPosition)
+            withContext(Dispatchers.Main) {
+                voiceRecordPlayingPosition.value = voiceRecordingPlayer.currentPosition
+            }
         }.launchIn(scope)
     }
 
@@ -456,30 +485,36 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
 
     private fun initVoiceRecordPlayer() {
         Log.i("[Chat Message Sending] Creating player for voice record")
-        // In case no headphones/headset is connected, use speaker sound card to play recordings, otherwise use earpiece
+        // In case no headphones/headset/hearing aid/bluetooth is connected, use speaker sound card to play recordings, otherwise use earpiece
         // If none are available, default one will be used
         var headphonesCard: String? = null
+        var bluetoothCard: String? = null
         var speakerCard: String? = null
         var earpieceCard: String? = null
         for (device in coreContext.core.audioDevices) {
             if (device.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
                 when (device.type) {
+                    AudioDevice.Type.Headphones, AudioDevice.Type.Headset, AudioDevice.Type.HearingAid -> {
+                        headphonesCard = device.id
+                    }
+                    AudioDevice.Type.Bluetooth -> {
+                        bluetoothCard = device.id
+                    }
                     AudioDevice.Type.Speaker -> {
                         speakerCard = device.id
                     }
                     AudioDevice.Type.Earpiece -> {
                         earpieceCard = device.id
                     }
-                    AudioDevice.Type.Headphones, AudioDevice.Type.Headset -> {
-                        headphonesCard = device.id
-                    }
                     else -> {}
                 }
             }
         }
-        Log.i("[Chat Message Sending] Found headset/headphones sound card [$headphonesCard], speaker sound card [$speakerCard] and earpiece sound card [$earpieceCard]")
+        Log.i("[Chat Message Sending] Found headset/headphones/hearingAid sound card [$headphonesCard], bluetooth sound card [$bluetoothCard], speaker sound card [$speakerCard] and earpiece sound card [$earpieceCard]")
+        val playbackSoundCard = headphonesCard ?: bluetoothCard ?: speakerCard ?: earpieceCard
+        Log.i("[Chat Message Sending] Using device $playbackSoundCard to make the voice message playback")
 
-        val localPlayer = coreContext.core.createLocalPlayer(headphonesCard ?: speakerCard ?: earpieceCard, null, null)
+        val localPlayer = coreContext.core.createLocalPlayer(playbackSoundCard, null, null)
         if (localPlayer != null) {
             voiceRecordingPlayer = localPlayer
         } else {
