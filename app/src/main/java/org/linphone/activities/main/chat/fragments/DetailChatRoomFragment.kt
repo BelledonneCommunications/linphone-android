@@ -29,6 +29,7 @@ import android.os.Parcelable
 import android.provider.MediaStore
 import android.view.*
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import android.webkit.MimeTypeMap
 import android.widget.PopupWindow
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
@@ -457,20 +458,23 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                     if (corePreferences.useInAppFileViewerForNonEncryptedFiles || content.isFileEncrypted) {
                         val preventScreenshots =
                             viewModel.chatRoom.currentParams.isEncryptionEnabled
+
+                        val extension = FileUtils.getExtensionFromFileName(path)
+                        val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
                         when {
-                            FileUtils.isExtensionImage(path) -> navigateToImageFileViewer(
+                            FileUtils.isMimeImage(mime) -> navigateToImageFileViewer(
                                 preventScreenshots
                             )
-                            FileUtils.isExtensionVideo(path) -> navigateToVideoFileViewer(
+                            FileUtils.isMimeVideo(mime) -> navigateToVideoFileViewer(
                                 preventScreenshots
                             )
-                            FileUtils.isExtensionAudio(path) -> navigateToAudioFileViewer(
+                            FileUtils.isMimeAudio(mime) -> navigateToAudioFileViewer(
                                 preventScreenshots
                             )
-                            FileUtils.isExtensionPdf(path) -> navigateToPdfFileViewer(
+                            FileUtils.isMimePdf(mime) -> navigateToPdfFileViewer(
                                 preventScreenshots
                             )
-                            FileUtils.isPlainTextFile(path) -> navigateToTextFileViewer(
+                            FileUtils.isMimePlainText(mime) -> navigateToTextFileViewer(
                                 preventScreenshots
                             )
                             else -> {

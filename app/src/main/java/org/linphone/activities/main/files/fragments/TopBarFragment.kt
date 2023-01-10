@@ -21,6 +21,7 @@ package org.linphone.activities.main.files.fragments
 
 import android.os.Bundle
 import android.view.View
+import android.webkit.MimeTypeMap
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -89,8 +90,10 @@ class TopBarFragment : GenericFragment<FileViewerTopBarFragmentBinding>() {
                 val filePath = content.filePath.orEmpty()
                 Log.i("[File Viewer] Trying to export file [$filePath] through Media Store API")
 
+                val extension = FileUtils.getExtensionFromFileName(filePath)
+                val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
                 when {
-                    FileUtils.isExtensionImage(filePath) -> {
+                    FileUtils.isMimeImage(mime) -> {
                         val export = lifecycleScope.async {
                             Compatibility.addImageToMediaStore(requireContext(), content)
                         }
@@ -101,7 +104,7 @@ class TopBarFragment : GenericFragment<FileViewerTopBarFragmentBinding>() {
                             Log.e("[File Viewer] Something went wrong while copying file to Media Store...")
                         }
                     }
-                    FileUtils.isExtensionVideo(filePath) -> {
+                    FileUtils.isMimeVideo(mime) -> {
                         val export = lifecycleScope.async {
                             Compatibility.addVideoToMediaStore(requireContext(), content)
                         }
@@ -112,7 +115,7 @@ class TopBarFragment : GenericFragment<FileViewerTopBarFragmentBinding>() {
                             Log.e("[File Viewer] Something went wrong while copying file to Media Store...")
                         }
                     }
-                    FileUtils.isExtensionAudio(filePath) -> {
+                    FileUtils.isMimeAudio(mime) -> {
                         val export = lifecycleScope.async {
                             Compatibility.addAudioToMediaStore(requireContext(), content)
                         }
