@@ -228,7 +228,7 @@ dependencies {
     // https://github.com/Baseflow/PhotoView/blob/master/LICENSE Apache v2.0
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
 
-    implementation platform('com.google.firebase:firebase-bom:31.0.3')
+    implementation platform('com.google.firebase:firebase-bom:31.1.1')
     if (crashlyticsEnabled) {
         implementation 'com.google.firebase:firebase-crashlytics-ndk'
     } else {
