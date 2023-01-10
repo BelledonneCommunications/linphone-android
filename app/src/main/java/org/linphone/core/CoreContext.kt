@@ -31,6 +31,7 @@ import android.telephony.TelephonyManager
 import android.util.Base64
 import android.util.Pair
 import android.view.*
+import android.webkit.MimeTypeMap
 import androidx.emoji.bundled.BundledEmojiCompatConfig
 import androidx.emoji.text.EmojiCompat
 import androidx.lifecycle.*
@@ -894,22 +895,24 @@ class CoreContext(
                 val filePath = content.filePath.orEmpty()
                 Log.i("[Context] Trying to export file [$filePath] through Media Store API")
 
+                val extension = FileUtils.getExtensionFromFileName(filePath)
+                val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
                 when {
-                    FileUtils.isExtensionImage(filePath) -> {
+                    FileUtils.isMimeImage(mime) -> {
                         if (Compatibility.addImageToMediaStore(context, content)) {
                             Log.i("[Context] Successfully exported image [${content.name}] to Media Store")
                         } else {
                             Log.e("[Context] Something went wrong while copying file to Media Store...")
                         }
                     }
-                    FileUtils.isExtensionVideo(filePath) -> {
+                    FileUtils.isMimeVideo(mime) -> {
                         if (Compatibility.addVideoToMediaStore(context, content)) {
                             Log.i("[Context] Successfully exported video [${content.name}] to Media Store")
                         } else {
                             Log.e("[Context] Something went wrong while copying file to Media Store...")
                         }
                     }
-                    FileUtils.isExtensionAudio(filePath) -> {
+                    FileUtils.isMimeAudio(mime) -> {
                         if (Compatibility.addAudioToMediaStore(context, content)) {
                             Log.i("[Context] Successfully exported audio [${content.name}] to Media Store")
                         } else {

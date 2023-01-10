@@ -23,6 +23,7 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.UnderlineSpan
+import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.media.AudioFocusRequestCompat
@@ -259,12 +260,23 @@ class ChatMessageContentData(
             isConferenceSchedule.value = isConferenceIcs
 
             if (path.isNotEmpty()) {
-                Log.i("[Content] Found displayable content: $path")
                 filePath.value = path
-                isImage.value = FileUtils.isExtensionImage(path)
-                isVideo.value = FileUtils.isExtensionVideo(path) && !isVoiceRecord
-                isAudio.value = FileUtils.isExtensionAudio(path) && !isVoiceRecord
-                isPdf.value = FileUtils.isExtensionPdf(path)
+                val extension = FileUtils.getExtensionFromFileName(path)
+                val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+                isImage.value = FileUtils.isMimeImage(mime)
+                isVideo.value = FileUtils.isMimeVideo(mime) && !isVoiceRecord
+                isAudio.value = FileUtils.isMimeAudio(mime) && !isVoiceRecord
+                isPdf.value = FileUtils.isMimePdf(mime)
+                val type = when {
+                    isImage.value == true -> "image"
+                    isVideo.value == true -> "video"
+                    isAudio.value == true -> "audio"
+                    isPdf.value == true -> "pdf"
+                    isVoiceRecord -> "voice recording"
+                    isConferenceIcs -> "conference invitation"
+                    else -> "unknown"
+                }
+                Log.i("[Content] Extension for file [$path] is [$extension], deduced type from MIME is [$type]")
 
                 if (isVoiceRecord) {
                     val duration = content.fileDuration // duration is in ms
@@ -288,10 +300,12 @@ class ChatMessageContentData(
             }
         } else if (content.isFileTransfer) {
             downloadable.value = true
-            isImage.value = FileUtils.isExtensionImage(fileName.value!!)
-            isVideo.value = FileUtils.isExtensionVideo(fileName.value!!)
-            isAudio.value = FileUtils.isExtensionAudio(fileName.value!!)
-            isPdf.value = FileUtils.isExtensionPdf(fileName.value!!)
+            val extension = FileUtils.getExtensionFromFileName(fileName.value!!)
+            val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+            isImage.value = FileUtils.isMimeImage(mime)
+            isVideo.value = FileUtils.isMimeVideo(mime)
+            isAudio.value = FileUtils.isMimeAudio(mime)
+            isPdf.value = FileUtils.isMimePdf(mime)
             isVoiceRecording.value = false
             isConferenceSchedule.value = false
         } else if (content.isIcalendar) {
