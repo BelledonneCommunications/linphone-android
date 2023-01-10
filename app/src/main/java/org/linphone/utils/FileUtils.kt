@@ -66,37 +66,39 @@ class FileUtils {
                 }
             }
 
-            return extension
+            return extension.lowercase(Locale.getDefault())
         }
 
-        fun isPlainTextFile(path: String): Boolean {
-            val extension = getExtensionFromFileName(path).lowercase(Locale.getDefault())
-            val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+        fun isMimePlainText(type: String?): Boolean {
             return type?.startsWith("text/plain") ?: false
         }
 
-        fun isExtensionPdf(path: String): Boolean {
-            val extension = getExtensionFromFileName(path).lowercase(Locale.getDefault())
-            val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+        fun isMimePdf(type: String?): Boolean {
             return type?.startsWith("application/pdf") ?: false
         }
 
-        fun isExtensionImage(path: String): Boolean {
-            val extension = getExtensionFromFileName(path).lowercase(Locale.getDefault())
-            val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+        fun isMimeImage(type: String?): Boolean {
             return type?.startsWith("image/") ?: false
         }
 
-        fun isExtensionVideo(path: String): Boolean {
-            val extension = getExtensionFromFileName(path).lowercase(Locale.getDefault())
-            val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+        fun isMimeVideo(type: String?): Boolean {
             return type?.startsWith("video/") ?: false
         }
 
-        fun isExtensionAudio(path: String): Boolean {
-            val extension = getExtensionFromFileName(path).lowercase(Locale.getDefault())
-            val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+        fun isMimeAudio(type: String?): Boolean {
             return type?.startsWith("audio/") ?: false
+        }
+
+        fun isExtensionImage(path: String): Boolean {
+            val extension = getExtensionFromFileName(path)
+            val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+            return isMimeImage(type)
+        }
+
+        fun isExtensionVideo(path: String): Boolean {
+            val extension = getExtensionFromFileName(path)
+            val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+            return isMimeVideo(type)
         }
 
         fun clearExistingPlainFiles() {

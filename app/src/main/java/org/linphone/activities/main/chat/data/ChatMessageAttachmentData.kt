@@ -19,6 +19,7 @@
  */
 package org.linphone.activities.main.chat.data
 
+import android.webkit.MimeTypeMap
 import org.linphone.utils.FileUtils
 
 class ChatMessageAttachmentData(
@@ -26,10 +27,19 @@ class ChatMessageAttachmentData(
     private val deleteCallback: (attachment: ChatMessageAttachmentData) -> Unit
 ) {
     val fileName: String = FileUtils.getNameFromFilePath(path)
-    val isImage: Boolean = FileUtils.isExtensionImage(path)
-    val isVideo: Boolean = FileUtils.isExtensionVideo(path)
-    val isAudio: Boolean = FileUtils.isExtensionAudio(path)
-    val isPdf: Boolean = FileUtils.isExtensionPdf(path)
+    val isImage: Boolean
+    val isVideo: Boolean
+    val isAudio: Boolean
+    val isPdf: Boolean
+
+    init {
+        val extension = FileUtils.getExtensionFromFileName(path)
+        val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+        isImage = FileUtils.isMimeImage(mime)
+        isVideo = FileUtils.isMimeVideo(mime)
+        isAudio = FileUtils.isMimeAudio(mime)
+        isPdf = FileUtils.isMimePdf(mime)
+    }
 
     fun delete() {
         deleteCallback(this)

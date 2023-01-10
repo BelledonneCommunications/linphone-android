@@ -326,11 +326,22 @@ fun loadImageWithCoil(imageView: ImageView, path: String?) {
         if (corePreferences.vfsEnabled && path.endsWith(FileUtils.VFS_PLAIN_FILE_EXTENSION)) {
             imageView.load(path) {
                 diskCachePolicy(CachePolicy.DISABLED)
+                listener(
+                    onError = { _, result ->
+                        Log.e("[Data Binding] [Coil] Error loading [$path]: ${result.throwable}")
+                    }
+                )
             }
         } else {
-            imageView.load(path)
+            imageView.load(path) {
+                listener(
+                    onError = { _, result ->
+                        Log.e("[Data Binding] [Coil] Error loading [$path]: ${result.throwable}")
+                    }
+                )
+            }
         }
-    } else {
+    } else if (path != null) {
         Log.w("[Data Binding] [Coil] Can't load $path")
     }
 }
@@ -466,8 +477,8 @@ fun loadAvatarWithCoil(imageView: ImageView, path: String?) {
         imageView.load(path) {
             transformations(CircleCropTransformation())
             listener(
-                onError = { _, _ ->
-                    Log.w("[Data Binding] [Coil] Can't load $path")
+                onError = { _, result ->
+                    Log.e("[Data Binding] [Coil] Error loading [$path]: ${result.throwable}")
                     imageView.visibility = View.GONE
                 },
                 onSuccess = { _, _ ->
