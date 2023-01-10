@@ -897,21 +897,21 @@ class CoreContext(
                 when {
                     FileUtils.isExtensionImage(filePath) -> {
                         if (Compatibility.addImageToMediaStore(context, content)) {
-                            Log.i("[Context] Adding image ${content.name} to Media Store terminated")
+                            Log.i("[Context] Successfully exported image [${content.name}] to Media Store")
                         } else {
                             Log.e("[Context] Something went wrong while copying file to Media Store...")
                         }
                     }
                     FileUtils.isExtensionVideo(filePath) -> {
                         if (Compatibility.addVideoToMediaStore(context, content)) {
-                            Log.i("[Context] Adding video ${content.name} to Media Store terminated")
+                            Log.i("[Context] Successfully exported video [${content.name}] to Media Store")
                         } else {
                             Log.e("[Context] Something went wrong while copying file to Media Store...")
                         }
                     }
                     FileUtils.isExtensionAudio(filePath) -> {
                         if (Compatibility.addAudioToMediaStore(context, content)) {
-                            Log.i("[Context] Adding audio ${content.name} to Media Store terminated")
+                            Log.i("[Context] Successfully exported audio [${content.name}] to Media Store")
                         } else {
                             Log.e("[Context] Something went wrong while copying file to Media Store...")
                         }
