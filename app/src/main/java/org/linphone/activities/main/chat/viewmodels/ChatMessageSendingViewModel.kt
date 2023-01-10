@@ -101,7 +101,7 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         EditorInfo.IME_FLAG_NO_EXTRACT_UI
     }
 
-    private val recorder: Recorder
+    private lateinit var recorder: Recorder
 
     private var voiceRecordAudioFocusRequest: AudioFocusRequestCompat? = null
 
@@ -135,47 +135,15 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         attachFileEnabled.value = true
         sendMessageEnabled.value = false
         updateChatRoomReadOnlyState()
-
-        val recorderParams = coreContext.core.createRecorderParams()
-        if (corePreferences.voiceMessagesFormatMkv) {
-            recorderParams.fileFormat = RecorderFileFormat.Mkv
-        } else {
-            recorderParams.fileFormat = RecorderFileFormat.Wav
-        }
-
-        // In case no headphones/headset/hearing aid/bluetooth is connected, use microphone
-        // If none are available, default one will be used
-        var bluetoothAudioDevice: AudioDevice? = null
-        var headsetAudioDevice: AudioDevice? = null
-        var builtinMicrophone: AudioDevice? = null
-        for (device in coreContext.core.audioDevices) {
-            if (device.hasCapability(AudioDevice.Capabilities.CapabilityRecord)) {
-                when (device.type) {
-                    AudioDevice.Type.Bluetooth -> {
-                        bluetoothAudioDevice = device
-                    }
-                    AudioDevice.Type.Headset, AudioDevice.Type.HearingAid, AudioDevice.Type.Headphones -> {
-                        headsetAudioDevice = device
-                    }
-                    AudioDevice.Type.Microphone -> {
-                        builtinMicrophone = device
-                    }
-                    else -> {}
-                }
-            }
-        }
-        Log.i("[Chat Message Sending] Found headset/headphones/hearingAid [${headsetAudioDevice?.id}], bluetooth [${bluetoothAudioDevice?.id}] and builtin microphone [${builtinMicrophone?.id}]")
-        recorderParams.audioDevice = headsetAudioDevice ?: bluetoothAudioDevice ?: builtinMicrophone
-        Log.i("[Chat Message Sending] Using device ${recorderParams.audioDevice?.id} to make the voice message recording")
-
-        recorder = coreContext.core.createRecorder(recorderParams)
     }
 
     override fun onCleared() {
         pendingChatMessageToReplyTo.value?.destroy()
 
-        if (recorder.state != RecorderState.Closed) {
-            recorder.close()
+        if (this::recorder.isInitialized) {
+            if (recorder.state != RecorderState.Closed) {
+                recorder.close()
+            }
         }
 
         if (this::voiceRecordingPlayer.isInitialized) {
@@ -332,6 +300,10 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
             return
         }
 
+        if (!this::recorder.isInitialized) {
+            initVoiceMessageRecorder()
+        }
+
         if (isVoiceRecording.value == true) {
             stopVoiceRecording()
         } else {
@@ -481,6 +453,43 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         }
 
         isPlayingVoiceRecording.value = false
+    }
+
+    private fun initVoiceMessageRecorder() {
+        Log.i("[Chat Message Sending] Creating recorder for voice message")
+        val recorderParams = coreContext.core.createRecorderParams()
+        if (corePreferences.voiceMessagesFormatMkv) {
+            recorderParams.fileFormat = RecorderFileFormat.Mkv
+        } else {
+            recorderParams.fileFormat = RecorderFileFormat.Wav
+        }
+
+        // In case no headphones/headset/hearing aid/bluetooth is connected, use microphone
+        // If none are available, default one will be used
+        var bluetoothAudioDevice: AudioDevice? = null
+        var headsetAudioDevice: AudioDevice? = null
+        var builtinMicrophone: AudioDevice? = null
+        for (device in coreContext.core.audioDevices) {
+            if (device.hasCapability(AudioDevice.Capabilities.CapabilityRecord)) {
+                when (device.type) {
+                    AudioDevice.Type.Bluetooth -> {
+                        bluetoothAudioDevice = device
+                    }
+                    AudioDevice.Type.Headset, AudioDevice.Type.HearingAid, AudioDevice.Type.Headphones -> {
+                        headsetAudioDevice = device
+                    }
+                    AudioDevice.Type.Microphone -> {
+                        builtinMicrophone = device
+                    }
+                    else -> {}
+                }
+            }
+        }
+        Log.i("[Chat Message Sending] Found headset/headphones/hearingAid [${headsetAudioDevice?.id}], bluetooth [${bluetoothAudioDevice?.id}] and builtin microphone [${builtinMicrophone?.id}]")
+        recorderParams.audioDevice = headsetAudioDevice ?: bluetoothAudioDevice ?: builtinMicrophone
+        Log.i("[Chat Message Sending] Using device ${recorderParams.audioDevice?.id} to make the voice message recording")
+
+        recorder = coreContext.core.createRecorder(recorderParams)
     }
 
     private fun initVoiceRecordPlayer() {
