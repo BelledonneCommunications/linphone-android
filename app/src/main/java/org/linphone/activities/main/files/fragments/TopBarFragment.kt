@@ -95,7 +95,7 @@ class TopBarFragment : GenericFragment<FileViewerTopBarFragmentBinding>() {
                             Compatibility.addImageToMediaStore(requireContext(), content)
                         }
                         if (export.await()) {
-                            Log.i("[File Viewer] Adding image ${content.name} to Media Store terminated: ${content.userData}")
+                            Log.i("[File Viewer] Successfully exported image [${content.name}] to Media Store: ${content.userData}")
                             mediaStoreFilePath = content.userData.toString()
                         } else {
                             Log.e("[File Viewer] Something went wrong while copying file to Media Store...")
@@ -106,7 +106,7 @@ class TopBarFragment : GenericFragment<FileViewerTopBarFragmentBinding>() {
                             Compatibility.addVideoToMediaStore(requireContext(), content)
                         }
                         if (export.await()) {
-                            Log.i("[File Viewer] Adding video ${content.name} to Media Store terminated: ${content.userData}")
+                            Log.i("[File Viewer] Successfully exported video [${content.name}] to Media Store: ${content.userData}")
                             mediaStoreFilePath = content.userData.toString()
                         } else {
                             Log.e("[File Viewer] Something went wrong while copying file to Media Store...")
@@ -117,14 +117,14 @@ class TopBarFragment : GenericFragment<FileViewerTopBarFragmentBinding>() {
                             Compatibility.addAudioToMediaStore(requireContext(), content)
                         }
                         if (export.await()) {
-                            Log.i("[File Viewer] Adding audio ${content.name} to Media Store terminated: ${content.userData}")
+                            Log.i("[File Viewer] Successfully exported audio [${content.name}] to Media Store: ${content.userData}")
                             mediaStoreFilePath = content.userData.toString()
                         } else {
                             Log.e("[File Viewer] Something went wrong while copying file to Media Store...")
                         }
                     }
                     else -> {
-                        Log.w("[File Viewer] File ${content.name} isn't either an image, an audio file or a video, can't add it to the Media Store")
+                        Log.w("[File Viewer] File [${content.name}] isn't either an image, an audio file or a video, can't add it to the Media Store")
                     }
                 }
             } else {
@@ -142,7 +142,7 @@ class TopBarFragment : GenericFragment<FileViewerTopBarFragmentBinding>() {
                         if (!FileUtils.openFileInThirdPartyApp(requireActivity(), plainFilePath)) {
                             (requireActivity() as SnackBarActivity).showSnackBar(R.string.chat_message_no_app_found_to_handle_file_mime_type)
                             if (plainFilePath != content.filePath.orEmpty()) {
-                                Log.i("[File Viewer] No app to open plain file path: $plainFilePath, destroying it")
+                                Log.i("[File Viewer] No app to open plain file path [$plainFilePath], destroying it")
                                 FileUtils.deleteFile(plainFilePath)
                             }
                             plainFilePath = ""
