@@ -19,6 +19,7 @@
  */
 package org.linphone.notifications
 
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -278,6 +279,7 @@ class NotificationsManager(private val context: Context) {
         coreContext.core.removeListener(listener)
     }
 
+    @SuppressLint("MissingPermission")
     private fun notify(id: Int, notification: Notification, tag: String? = null) {
         if (!PermissionHelper.get().hasPostNotificationsPermission()) {
             Log.w("[Notifications Manager] Can't notify [$id] with tag [$tag], POST_NOTIFICATIONS permission isn't granted!")
@@ -952,7 +954,9 @@ class NotificationsManager(private val context: Context) {
             R.drawable.call_hangup,
             context.getString(R.string.incoming_call_notification_hangup_action_label),
             getCallDeclinePendingIntent(notifiable)
-        ).build()
+        )
+            .setShowsUserInterface(false)
+            .build()
     }
 
     private fun getReplyMessageAction(notifiable: Notifiable): NotificationCompat.Action {
@@ -981,6 +985,7 @@ class NotificationsManager(private val context: Context) {
         )
             .addRemoteInput(remoteInput)
             .setAllowGeneratedReplies(true)
+            .setShowsUserInterface(false)
             .setSemanticAction(NotificationCompat.Action.SEMANTIC_ACTION_REPLY)
             .build()
     }
@@ -1007,6 +1012,7 @@ class NotificationsManager(private val context: Context) {
             context.getString(R.string.received_chat_notification_mark_as_read_label),
             markAsReadPendingIntent
         )
+            .setShowsUserInterface(false)
             .setSemanticAction(NotificationCompat.Action.SEMANTIC_ACTION_MARK_AS_READ)
             .build()
     }
