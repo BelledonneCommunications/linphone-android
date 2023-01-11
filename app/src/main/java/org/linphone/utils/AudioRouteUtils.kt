@@ -250,5 +250,61 @@ class AudioRouteUtils {
             }
             return false
         }
+
+        fun getAudioPlaybackDeviceIdForCallRecordingOrVoiceMessage(): String? {
+            // In case no headphones/headset/hearing aid/bluetooth is connected, use speaker sound card to play recordings, otherwise use earpiece
+            // If none are available, default one will be used
+            var headphonesCard: String? = null
+            var bluetoothCard: String? = null
+            var speakerCard: String? = null
+            var earpieceCard: String? = null
+            for (device in coreContext.core.audioDevices) {
+                if (device.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
+                    when (device.type) {
+                        AudioDevice.Type.Headphones, AudioDevice.Type.Headset, AudioDevice.Type.HearingAid -> {
+                            headphonesCard = device.id
+                        }
+                        AudioDevice.Type.Bluetooth -> {
+                            bluetoothCard = device.id
+                        }
+                        AudioDevice.Type.Speaker -> {
+                            speakerCard = device.id
+                        }
+                        AudioDevice.Type.Earpiece -> {
+                            earpieceCard = device.id
+                        }
+                        else -> {}
+                    }
+                }
+            }
+            Log.i("[Audio Route Helper] Found headset/headphones/hearingAid sound card [$headphonesCard], bluetooth sound card [$bluetoothCard], speaker sound card [$speakerCard] and earpiece sound card [$earpieceCard]")
+            return headphonesCard ?: bluetoothCard ?: speakerCard ?: earpieceCard
+        }
+
+        fun getAudioRecordingDeviceForVoiceMessage(): AudioDevice? {
+            // In case no headphones/headset/hearing aid/bluetooth is connected, use microphone
+            // If none are available, default one will be used
+            var bluetoothAudioDevice: AudioDevice? = null
+            var headsetAudioDevice: AudioDevice? = null
+            var builtinMicrophone: AudioDevice? = null
+            for (device in coreContext.core.audioDevices) {
+                if (device.hasCapability(AudioDevice.Capabilities.CapabilityRecord)) {
+                    when (device.type) {
+                        AudioDevice.Type.Bluetooth -> {
+                            bluetoothAudioDevice = device
+                        }
+                        AudioDevice.Type.Headset, AudioDevice.Type.HearingAid, AudioDevice.Type.Headphones -> {
+                            headsetAudioDevice = device
+                        }
+                        AudioDevice.Type.Microphone -> {
+                            builtinMicrophone = device
+                        }
+                        else -> {}
+                    }
+                }
+            }
+            Log.i("[Audio Route Helper] Found headset/headphones/hearingAid [${headsetAudioDevice?.id}], bluetooth [${bluetoothAudioDevice?.id}] and builtin microphone [${builtinMicrophone?.id}]")
+            return headsetAudioDevice ?: bluetoothAudioDevice ?: builtinMicrophone
+        }
     }
 }
