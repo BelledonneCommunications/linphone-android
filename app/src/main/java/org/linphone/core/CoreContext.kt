@@ -32,8 +32,6 @@ import android.util.Base64
 import android.util.Pair
 import android.view.*
 import android.webkit.MimeTypeMap
-import androidx.emoji.bundled.BundledEmojiCompatConfig
-import androidx.emoji.text.EmojiCompat
 import androidx.lifecycle.*
 import androidx.loader.app.LoaderManager
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -341,7 +339,6 @@ class CoreContext(
 
         notificationsManager.onCoreReady()
 
-        EmojiCompat.init(BundledEmojiCompatConfig(context))
         collator.strength = Collator.NO_DECOMPOSITION
 
         if (corePreferences.vfsEnabled) {
