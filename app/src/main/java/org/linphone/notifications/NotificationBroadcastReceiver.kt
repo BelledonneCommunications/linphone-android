@@ -76,7 +76,6 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
             return
         }
 
-        room.markAsRead()
         if (intent.action == NotificationsManager.INTENT_REPLY_NOTIF_ACTION) {
             val reply = getMessageText(intent)?.toString()
             if (reply == null) {
@@ -90,6 +89,7 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
             msg.send()
             Log.i("[Notification Broadcast Receiver] Reply sent for notif id $notificationId")
         } else {
+            room.markAsRead()
             if (!coreContext.notificationsManager.dismissChatNotification(room)) {
                 Log.w("[Notification Broadcast Receiver] Notifications Manager failed to cancel notification")
                 val notificationManager = context.getSystemService(NotificationManager::class.java)

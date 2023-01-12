@@ -480,19 +480,18 @@ class NotificationsManager(private val context: Context) {
     }
 
     fun getPerson(friend: Friend?, displayName: String, picture: Bitmap?): Person {
-        return if (friend != null) {
-            friend.getPerson()
-        } else {
-            val builder = Person.Builder().setName(displayName)
-            val userIcon =
-                if (picture != null) {
-                    IconCompat.createWithAdaptiveBitmap(picture)
-                } else {
-                    coreContext.contactsManager.contactAvatar
-                }
-            if (userIcon != null) builder.setIcon(userIcon)
-            builder.build()
-        }
+        return friend?.getPerson()
+            ?: Person.Builder()
+                .setName(displayName)
+                .setIcon(
+                    if (picture != null) {
+                        IconCompat.createWithAdaptiveBitmap(picture)
+                    } else {
+                        coreContext.contactsManager.contactAvatar
+                    }
+                )
+                .setKey(displayName)
+                .build()
     }
 
     fun displayIncomingCallNotification(call: Call, useAsForeground: Boolean) {
@@ -665,32 +664,9 @@ class NotificationsManager(private val context: Context) {
         )
 
         val id = LinphoneUtils.getChatRoomId(room.localAddress, room.peerAddress)
-        val notification = createMessageNotification(notifiable, pendingIntent, bubbleIntent, id)
+        val me = coreContext.contactsManager.getMePerson(room.localAddress)
+        val notification = createMessageNotification(notifiable, pendingIntent, bubbleIntent, id, me)
         notify(notifiable.notificationId, notification, CHAT_TAG)
-    }
-
-    private fun createChatNotifiable(room: ChatRoom, message: ChatMessage): Notifiable {
-        val notifiable = getNotifiableForRoom(room)
-        if (notifiable.messages.isNotEmpty() || room.unreadMessagesCount == 1) {
-            val friend = coreContext.contactsManager.findContactByAddress(message.fromAddress)
-            val notifiableMessage = getNotifiableMessage(message, friend)
-            notifiable.messages.add(notifiableMessage)
-        } else {
-            for (chatMessage in room.unreadHistory) {
-                val friend = coreContext.contactsManager.findContactByAddress(chatMessage.fromAddress)
-                val notifiableMessage = getNotifiableMessage(chatMessage, friend)
-                notifiable.messages.add(notifiableMessage)
-            }
-        }
-
-        if (room.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
-            notifiable.isGroup = false
-        } else {
-            notifiable.isGroup = true
-            notifiable.groupTitle = room.subject
-        }
-
-        return notifiable
     }
 
     private fun createChatNotifiable(room: ChatRoom, messages: Array<out ChatMessage>): Notifiable {
@@ -699,7 +675,7 @@ class NotificationsManager(private val context: Context) {
         for (message in messages) {
             if (message.isRead || message.isOutgoing) continue
             val friend = coreContext.contactsManager.findContactByAddress(message.fromAddress)
-            val notifiableMessage = getNotifiableMessage(message, friend)
+            val notifiableMessage = getNotifiableMessage(message, friend, notifiable)
             notifiable.messages.add(notifiableMessage)
         }
 
@@ -727,7 +703,7 @@ class NotificationsManager(private val context: Context) {
         return notifiable
     }
 
-    private fun getNotifiableMessage(message: ChatMessage, friend: Friend?): NotifiableMessage {
+    private fun getNotifiableMessage(message: ChatMessage, friend: Friend?, notifiable: Notifiable): NotifiableMessage {
         val roundPicture = ImageUtils.getRoundBitmapFromUri(context, friend?.getThumbnailUri())
         val displayName = friend?.name ?: LinphoneUtils.getDisplayName(message.fromAddress)
         var text = ""
@@ -752,7 +728,7 @@ class NotificationsManager(private val context: Context) {
             text,
             friend,
             displayName,
-            message.time,
+            message.time * 1000, /* Linphone timestamps are in seconds */
             senderAvatar = roundPicture,
             isOutgoing = message.isOutgoing
         )
@@ -784,10 +760,11 @@ class NotificationsManager(private val context: Context) {
         Log.i("[Notifications Manager] Updating message notification with reply for notification ${notifiable.notificationId}")
 
         val text = message.contents.find { content -> content.isText }?.utf8Text ?: ""
+        val senderAddress = message.fromAddress
         val reply = NotifiableMessage(
             text,
             null,
-            notifiable.myself ?: LinphoneUtils.getDisplayName(message.fromAddress),
+            notifiable.myself ?: LinphoneUtils.getDisplayName(senderAddress),
             System.currentTimeMillis(),
             isOutgoing = true
         )
@@ -836,38 +813,43 @@ class NotificationsManager(private val context: Context) {
         notifiable: Notifiable,
         pendingIntent: PendingIntent,
         bubbleIntent: PendingIntent,
-        id: String
+        id: String,
+        me: Person
     ): Notification {
-        val me = Person.Builder().setName(notifiable.myself).build()
         val style = NotificationCompat.MessagingStyle(me)
-        val largeIcon: Bitmap? = notifiable.messages.lastOrNull()?.senderAvatar
+        val allPersons = arrayListOf<Person>()
 
+        var lastPersonAvatar: Bitmap? = null
         var lastPerson: Person? = null
         for (message in notifiable.messages) {
             val friend = message.friend
-            val person = getPerson(friend, message.sender, message.senderAvatar)
+            val person = if (message.isOutgoing)
+                me
+            else
+                getPerson(friend, message.sender, message.senderAvatar)
 
-            // We don't want to see our own avatar
             if (!message.isOutgoing) {
+                // We don't want to see our own avatar
                 lastPerson = person
+                lastPersonAvatar = message.senderAvatar
+
+                if (allPersons.find { it.key == person.key } == null) {
+                    allPersons.add(person)
+                }
             }
 
-            val msg = if (!corePreferences.hideChatMessageContentInNotification) {
-                NotificationCompat.MessagingStyle.Message(message.message, message.time, person)
-            } else {
+            val msg = if (corePreferences.hideChatMessageContentInNotification) {
                 NotificationCompat.MessagingStyle.Message(AppUtils.getString(R.string.chat_message_notification_hidden_content), message.time, person)
-            }
-
-            if (message.filePath != null && !corePreferences.hideChatMessageContentInNotification) {
-                msg.setData(message.fileMime, message.filePath)
+            } else {
+                val tmp = NotificationCompat.MessagingStyle.Message(message.message, message.time, person)
+                if (message.filePath != null) tmp.setData(message.fileMime, message.filePath)
+                tmp
             }
 
             style.addMessage(msg)
         }
 
-        if (notifiable.isGroup) {
-            style.conversationTitle = notifiable.groupTitle
-        }
+        style.conversationTitle = if (notifiable.isGroup) notifiable.groupTitle else lastPerson?.name
         style.isGroupConversation = notifiable.isGroup
 
         val icon = lastPerson?.icon ?: coreContext.contactsManager.contactAvatar
@@ -875,11 +857,12 @@ class NotificationsManager(private val context: Context) {
             .setDesiredHeightResId(R.dimen.chat_message_bubble_desired_height)
             .build()
 
+        val largeIcon = if (notifiable.isGroup) coreContext.contactsManager.groupBitmap else lastPersonAvatar
         val notificationBuilder = NotificationCompat.Builder(context, context.getString(R.string.notification_channel_chat_id))
-            .addPerson(lastPerson)
             .setSmallIcon(R.drawable.topbar_chat_notification)
             .setAutoCancel(true)
             .setLargeIcon(largeIcon)
+            .setColor(ContextCompat.getColor(context, R.color.primary_color))
             .setCategory(NotificationCompat.CATEGORY_MESSAGE)
             .setGroup(CHAT_NOTIFICATIONS_GROUP)
             .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
@@ -887,11 +870,14 @@ class NotificationsManager(private val context: Context) {
             .setWhen(System.currentTimeMillis())
             .setShowWhen(true)
             .setStyle(style)
-            .setColor(ContextCompat.getColor(context, R.color.primary_color))
             .addAction(getReplyMessageAction(notifiable))
             .addAction(getMarkMessageAsReadAction(notifiable))
             .setShortcutId(id)
             .setLocusId(LocusIdCompat(id))
+
+        for (person in allPersons) {
+            notificationBuilder.addPerson(person)
+        }
 
         if (!corePreferences.preventInterfaceFromShowingUp) {
             notificationBuilder.setContentIntent(pendingIntent)

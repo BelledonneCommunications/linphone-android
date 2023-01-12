@@ -26,6 +26,7 @@ import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.provider.ContactsContract
@@ -41,6 +42,7 @@ import org.linphone.R
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.ImageUtils
+import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.PermissionHelper
 
 interface ContactsUpdatedListener {
@@ -70,6 +72,7 @@ class ContactsManager(private val context: Context) {
 
     val contactAvatar: IconCompat
     val groupAvatar: IconCompat
+    val groupBitmap: Bitmap
 
     private val localFriends = arrayListOf<Friend>()
 
@@ -93,6 +96,7 @@ class ContactsManager(private val context: Context) {
 
         contactAvatar = IconCompat.createWithResource(context, R.drawable.voip_single_contact_avatar_alt)
         groupAvatar = IconCompat.createWithResource(context, R.drawable.voip_multiple_contacts_avatar_alt)
+        groupBitmap = BitmapFactory.decodeResource(context.resources, R.drawable.voip_multiple_contacts_avatar_alt)
 
         val core = coreContext.core
         for (list in core.friendsLists) {
@@ -120,7 +124,7 @@ class ContactsManager(private val context: Context) {
 
         for (account in coreContext.core.accountList) {
             val friend = coreContext.core.createFriend()
-            friend.name = account.params.identityAddress?.displayName ?: account.params.identityAddress?.username
+            friend.name = LinphoneUtils.getDisplayName(account.params.identityAddress)
 
             val address = account.params.identityAddress ?: continue
             friend.address = address
@@ -135,6 +139,17 @@ class ContactsManager(private val context: Context) {
             Log.i("[Contacts Manager] Local contact created for account [${address.asString()}] and picture [${friend.photo}]")
             localFriends.add(friend)
         }
+    }
+
+    @Synchronized
+    fun getMePerson(localAddress: Address): Person {
+        val friend = localFriends.find { localFriend ->
+            localFriend.addresses.find { address ->
+                address.weakEqual(localAddress)
+            } != null
+        }
+        return friend?.getPerson()
+            ?: Person.Builder().setName(LinphoneUtils.getDisplayName(localAddress)).build()
     }
 
     @Synchronized
@@ -381,14 +396,13 @@ fun Friend.getPerson(): Person {
             coreContext.context,
             getThumbnailUri()
         )
-    val icon =
+    personBuilder.setIcon(
         if (bm == null) {
             coreContext.contactsManager.contactAvatar
         } else IconCompat.createWithAdaptiveBitmap(bm)
-    if (icon != null) {
-        personBuilder.setIcon(icon)
-    }
+    )
 
+    personBuilder.setKey(refKey)
     personBuilder.setUri(nativeUri)
     personBuilder.setImportant(starred)
     return personBuilder.build()
