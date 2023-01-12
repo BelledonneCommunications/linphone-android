@@ -28,7 +28,7 @@ import android.os.Bundle
 import android.text.format.Formatter.formatShortFileSize
 import android.util.TypedValue
 import androidx.core.content.res.ResourcesCompat
-import androidx.emoji.text.EmojiCompat
+import androidx.emoji2.text.EmojiCompat
 import androidx.media.AudioAttributesCompat
 import androidx.media.AudioFocusRequestCompat
 import androidx.media.AudioManagerCompat
