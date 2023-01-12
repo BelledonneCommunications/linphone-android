@@ -196,6 +196,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.0'
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.core:core-splashscreen:1.0.0'
+    implementation 'androidx.emoji2:emoji2:1.2.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
     implementation 'androidx.media:media:1.6.0'
     implementation "androidx.security:security-crypto-ktx:1.1.0-alpha03"
@@ -214,9 +215,6 @@ dependencies {
     implementation 'com.google.android.material:material:1.7.0'
     // https://github.com/google/flexbox-layout/blob/main/LICENSE Apache v2.0
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
-
-    implementation 'androidx.emoji:emoji:1.1.0'
-    implementation 'androidx.emoji:emoji-bundled:1.1.0'
 
     // https://github.com/coil-kt/coil/blob/main/LICENSE.txt Apache v2.0
     def coil_version = "2.2.2"
