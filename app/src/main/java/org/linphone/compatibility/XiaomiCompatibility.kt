@@ -69,7 +69,7 @@ class XiaomiCompatibility {
                 contact = null
                 displayName = conferenceInfo.subject ?: context.getString(R.string.conference)
                 address = LinphoneUtils.getDisplayableAddress(conferenceInfo.organizer)
-                roundPicture = BitmapFactory.decodeResource(context.resources, R.drawable.voip_multiple_contacts_avatar_alt)
+                roundPicture = coreContext.contactsManager.groupBitmap
                 info = context.getString(R.string.incoming_group_call_notification_title)
                 Log.i("[Notifications Manager] Displaying incoming group call notification with subject $displayName and remote contact address $remoteContact")
             }
