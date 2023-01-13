@@ -46,7 +46,7 @@
     <string name="contact_invite_friend">Uitnodigen</string>
     <string name="no_contact">Geen contacten in uw adresboek.</string>
     <string name="no_sip_contact">Geen SIP contact in uw adresboek.</string>
-    <string name="contact_filter_hint">Zoek een contact</string>
+    <string name="contact_filter_hint">Contacten zoeken</string>
     <string name="contact_last_name">Achternaam</string>
     <string name="contact_first_name">Voornaam</string>
     <string name="contact_organization">Organisatie</string>
@@ -61,7 +61,7 @@
     <string name="debug_popup_enable_logs">Logs inschakelen</string>
     <string name="debug_popup_disable_logs">Logs uitschakelen</string>
     <string name="debug_popup_send_logs">Logs verzenden</string>
-    <string name="debug_popup_show_config_file">Toon configuratiebestand</string>
+    <string name="debug_popup_show_config_file">Bekijk configuratiebestand</string>
     <string name="no_chat_history">Geen conversaties</string>
     <string name="chat_remote_is_composing">Tegenpartij is aan het schrijven…</string>
     <string name="chat_event_conference_created">U hebt deelgenomen aan de groep</string>
@@ -123,4 +123,22 @@
     <string name="content_description_incoming_call">Inkomende oproep</string>
     <string name="content_description_outgoing_call">Uitgaande oproep</string>
     <string name="content_description_security_level_encrypted">Versleuteld</string>
+    <string name="service_name">&appName; Service</string>
+    <string name="transport_tls">TLS</string>
+    <string name="dialer_transfer_succeded">Oproep wordt doorgeschakeld</string>
+    <string name="logs_reset_complete">Logs werden gewist</string>
+    <string name="dialer_transfer_failed">Kan oproep niet doorschakelen</string>
+    <string name="chat_security_event_lime_identity_key_changed">LIME identiteitssleutel gewijzigd voor %s</string>
+    <string name="chat_security_event_man_in_the_middle_detected">Man-in-the-middle aanval gedetecteerd voor %s</string>
+    <string name="transport_tcp">TCP</string>
+    <string name="logs_upload_failure">Uploaden van logs mislukt!</string>
+    <string name="about_weblate_translation">Help ons &appName; vertalen</string>
+    <string name="no_conference_call_history">Geen vergaderoproep in jouw historiek</string>
+    <string name="contact_cant_be_deleted">Deze contact kan niet verwijderd worden</string>
+    <string name="contacts_ldap_query_more_results_available">Meer resultaten zijn beschikbaar, verfijn jouw zoekopdracht</string>
+    <string name="chat_security_event_security_level_downgraded">Beveiligingsniveau verminderd door %s</string>
+    <string name="sip_addresses">SIP adressen</string>
+    <string name="email">Email</string>
+    <string name="transport_udp">UDP</string>
+    <string name="contact_send_sms_invite_text">Hallo, doe mee met &appName;! Je kan gratis downloaden op %s</string>
 </resources>
