@@ -231,6 +231,8 @@
     <string name="chat_message_removal_info">Message will be deleted</string>
     <string name="chat_message_abort_removal">Abort</string>
     <string name="chat_message_download_already_in_progress">Please wait for first download to finish before starting a new one</string>
+    <string name="chat_message_voice_recording_received_notification">You have received a voice message</string>
+    <string name="chat_message_voice_recording">Voice message</string>
 
     <!-- Recordings -->
     <string name="recordings_empty_list">No recordings</string>

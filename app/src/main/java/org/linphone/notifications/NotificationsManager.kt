@@ -708,9 +708,11 @@ class NotificationsManager(private val context: Context) {
         val displayName = friend?.name ?: LinphoneUtils.getDisplayName(message.fromAddress)
         var text = ""
 
-        val isConferenceInvite = message.contents.firstOrNull()?.isIcalendar ?: false
-        text = if (isConferenceInvite) {
+        val firstContent = message.contents.firstOrNull()
+        text = if (firstContent?.isIcalendar == true) {
             AppUtils.getString(R.string.conference_invitation_received_notification)
+        } else if (firstContent?.isVoiceRecording == true) {
+            AppUtils.getString(R.string.chat_message_voice_recording_received_notification)
         } else {
             message.contents.find { content -> content.isText }?.utf8Text ?: ""
         }

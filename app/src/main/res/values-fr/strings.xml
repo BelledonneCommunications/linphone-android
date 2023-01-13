@@ -756,4 +756,6 @@
     <string name="conference_schedule_send_updated_invite_chat">Envoyer la mise à jour par &appName;</string>
     <string name="conference_schedule_send_updated_invite_email">Envoyer la mise à jour par courriel</string>
     <string name="call_screenshot_taken">Capture sauvegardée : %s</string>
+    <string name="chat_message_voice_recording_received_notification">Vous avez reçu un message vocal</string>
+    <string name="chat_message_voice_recording">Message vocal</string>
 </resources>
