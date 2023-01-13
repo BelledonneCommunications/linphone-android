@@ -165,6 +165,10 @@ class ChatRoomData(private val chatRoom: ChatRoom) : ContactDataInterface {
                 val body = AppUtils.getString(R.string.conference_invitation)
                 builder.append(body)
                 builder.setSpan(StyleSpan(Typeface.ITALIC), builder.length - body.length, builder.length, 0)
+            } else if (content.isVoiceRecording) {
+                val body = AppUtils.getString(R.string.chat_message_voice_recording)
+                builder.append(body)
+                builder.setSpan(StyleSpan(Typeface.ITALIC), builder.length - body.length, builder.length, 0)
             } else if (content.isFile || content.isFileTransfer) {
                 builder.append(content.name + " ")
             } else if (content.isText) {
