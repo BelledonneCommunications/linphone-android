@@ -10,6 +10,20 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [5.0.3] - 2023-01-13
+
+### Added
+- Voice message recording/playback will use bluetooth/headset/headphones/hearing aid device if available
+- Chat message notifications are now compatible with Android Auto
+
+### Changed
+- In video conference, when in active speaker layout, currently speaking participant miniature will be hidden
+- Attach file, voice recording and send message icons are now a bit bigger
+- Updated Firebase BoM, gradle & some dependencies
+
+### Fixed
+- ANR happening sometimes during voice message playback
+
 ## [5.0.2] - 2023-01-05
 
 ### Changed
