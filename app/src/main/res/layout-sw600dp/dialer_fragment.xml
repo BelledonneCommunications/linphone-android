@@ -96,7 +96,7 @@
                     android:backgroundTint="@color/transparent_color"
                     android:ellipsize="start"
                     android:hint="@string/dialer_address_bar_hint"
-                    android:inputType="textEmailAddress|textUri"
+                    android:inputType="textEmailAddress|textUri|textNoSuggestions"
                     android:paddingLeft="20dp"
                     android:paddingRight="5dp"
                     android:textColorHint="@color/light_grey_color" />
