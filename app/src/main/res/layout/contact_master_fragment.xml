@@ -133,7 +133,7 @@
                 android:layout_height="40dp"
                 android:layout_below="@id/top_bar"
                 android:layout_margin="10dp"
-                android:inputType="textPersonName"
+                android:inputType="textPersonName|textNoSuggestions"
                 android:drawableLeft="@drawable/search"
                 android:drawablePadding="10dp"
                 android:background="@color/transparent_color"
