@@ -177,8 +177,7 @@ android {
 
             if (crashlyticsEnabled) {
                 firebaseCrashlytics {
-                    nativeSymbolUploadEnabled true
-                    unstrippedNativeLibsDir file(LinphoneSdkBuildDir + '/libs-debug/').toString()
+                    nativeSymbolUploadEnabled false
                 }
             }
         }
@@ -264,9 +263,6 @@ project.tasks['preBuild'].dependsOn 'ktlintFormat'
 
 if (crashlyticsEnabled) {
     afterEvaluate {
-        assembleDebug.finalizedBy(uploadCrashlyticsSymbolFileDebug)
-        packageDebugBundle.finalizedBy(uploadCrashlyticsSymbolFileDebug)
-
         assembleReleaseWithCrashlytics.finalizedBy(uploadCrashlyticsSymbolFileReleaseWithCrashlytics)
         packageReleaseWithCrashlytics.finalizedBy(uploadCrashlyticsSymbolFileReleaseWithCrashlytics)
     }
