@@ -767,4 +767,6 @@
     <string name="zrtp_dialog_later_button_label">稍後</string>
     <string name="zrtp_dialog_correct_button_label">確認正確</string>
     <string name="call_screenshot_taken">已拍攝擷圖：%s</string>
+    <string name="chat_message_voice_recording">語音訊息</string>
+    <string name="chat_message_voice_recording_received_notification">您收到一通語音訊息</string>
 </resources>
