@@ -64,7 +64,7 @@
                 android:text="@={viewModel.filter}"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:inputType="textPersonName"
+                android:inputType="textPersonName|textNoSuggestions"
                 android:layout_margin="10dp"
                 android:drawableLeft="@drawable/search"
                 android:drawablePadding="10dp"
