@@ -184,7 +184,7 @@ class FileUtils {
                             filePath = dataUri.toString()
                             Log.i("[File Utils] Using data URI $filePath")
                         }
-                        filePath = cleanFilePath(filePath)
+                        filePath = copyToLocalStorage(filePath)
                         if (filePath != null) list.add(filePath)
                     }
                     return list
@@ -201,13 +201,13 @@ class FileUtils {
                         filePath = temporaryImageFilePath.absolutePath
                         Log.i("[File Utils] Data URI is null, using $filePath")
                     }
-                    filePath = cleanFilePath(filePath)
+                    filePath = copyToLocalStorage(filePath)
                     if (filePath != null) return arrayListOf(filePath)
                 }
             } else if (temporaryImageFilePath?.exists() == true) {
                 filePath = temporaryImageFilePath.absolutePath
                 Log.i("[File Utils] Data is null, using $filePath")
-                filePath = cleanFilePath(filePath)
+                filePath = copyToLocalStorage(filePath)
                 if (filePath != null) return arrayListOf(filePath)
             }
             return arrayListOf()
@@ -237,10 +237,10 @@ class FileUtils {
                 filePath = temporaryImageFilePath.absolutePath
                 Log.i("[File Utils] Data is null, using $filePath")
             }
-            return cleanFilePath(filePath)
+            return copyToLocalStorage(filePath)
         }
 
-        private suspend fun cleanFilePath(filePath: String?): String? {
+        suspend fun copyToLocalStorage(filePath: String?): String? {
             if (filePath != null) {
                 val uriToParse = Uri.parse(filePath)
                 if (filePath.startsWith("content://com.android.contacts/contacts/lookup/")) {

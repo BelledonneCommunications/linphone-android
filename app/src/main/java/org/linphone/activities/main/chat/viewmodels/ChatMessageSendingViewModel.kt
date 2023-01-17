@@ -140,6 +140,10 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
     override fun onCleared() {
         pendingChatMessageToReplyTo.value?.destroy()
 
+        for (pendingAttachment in attachments.value.orEmpty()) {
+            removeAttachment(pendingAttachment)
+        }
+
         if (this::recorder.isInitialized) {
             if (recorder.state != RecorderState.Closed) {
                 recorder.close()
@@ -191,6 +195,10 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         list.addAll(attachments.value.orEmpty())
         list.remove(attachment)
         attachments.value = list
+
+        val pathToDelete = attachment.path
+        Log.i("[Chat Message Sending] Attachment is being removed, delete local copy [$pathToDelete]")
+        FileUtils.deleteFile(pathToDelete)
 
         sendMessageEnabled.value = textToSend.value.orEmpty().trim().isNotEmpty() || list.isNotEmpty() || isPendingVoiceRecord.value == true
         if (!corePreferences.allowMultipleFilesAndTextInSameMessage) {
