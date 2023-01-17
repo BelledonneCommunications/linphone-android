@@ -695,9 +695,18 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             chatSendingViewModel.textToSend.value = textToShare
         }
         if (filesToShare?.isNotEmpty() == true) {
-            for (path in filesToShare) {
-                Log.i("[Chat Room] Found $path file to share")
-                chatSendingViewModel.addAttachment(path)
+            lifecycleScope.launch {
+                withContext(Dispatchers.Main) {
+                    chatSendingViewModel.attachingFileInProgress.value = true
+                    for (filePath in filesToShare) {
+                        val path = FileUtils.copyToLocalStorage(filePath)
+                        Log.i("[Chat Room] Found [$filePath] file to share, matching path is [$path]")
+                        if (path != null) {
+                            chatSendingViewModel.addAttachment(path)
+                        }
+                    }
+                    chatSendingViewModel.attachingFileInProgress.value = false
+                }
             }
         }
 
@@ -710,7 +719,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                     withContext(Dispatchers.Main) {
                         chatSendingViewModel.attachingFileInProgress.value = true
                         val path = FileUtils.getFilePath(requireContext(), uri)
-                        Log.i("[Chat Room] Rich content URI: $uri matching path is: $path")
+                        Log.i("[Chat Room] Rich content URI [$uri] matching path is [$path]")
                         if (path != null) {
                             chatSendingViewModel.addAttachment(path)
                         }
@@ -821,6 +830,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                             chatSendingViewModel.temporaryFileUploadPath
                         )
                     ) {
+                        Log.i("[Chat Room] Found [$fileToUploadPath] file from intent")
                         chatSendingViewModel.addAttachment(fileToUploadPath)
                     }
                     chatSendingViewModel.attachingFileInProgress.value = false
