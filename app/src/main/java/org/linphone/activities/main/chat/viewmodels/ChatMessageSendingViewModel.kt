@@ -62,6 +62,8 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
 
     val sendMessageEnabled = MutableLiveData<Boolean>()
 
+    val attachingFileInProgress = MutableLiveData<Boolean>()
+
     val isReadOnly = MutableLiveData<Boolean>()
 
     var textToSend = MutableLiveData<String>()

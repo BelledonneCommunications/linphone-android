@@ -708,11 +708,13 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 Log.i("[Chat Room] Found rich content URI: $uri")
                 lifecycleScope.launch {
                     withContext(Dispatchers.Main) {
+                        chatSendingViewModel.attachingFileInProgress.value = true
                         val path = FileUtils.getFilePath(requireContext(), uri)
                         Log.i("[Chat Room] Rich content URI: $uri matching path is: $path")
                         if (path != null) {
                             chatSendingViewModel.addAttachment(path)
                         }
+                        chatSendingViewModel.attachingFileInProgress.value = false
                     }
                 }
             }
@@ -811,13 +813,17 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
             lifecycleScope.launch {
-                for (
-                    fileToUploadPath in FileUtils.getFilesPathFromPickerIntent(
-                        data,
-                        chatSendingViewModel.temporaryFileUploadPath
-                    )
-                ) {
-                    chatSendingViewModel.addAttachment(fileToUploadPath)
+                withContext(Dispatchers.Main) {
+                    chatSendingViewModel.attachingFileInProgress.value = true
+                    for (
+                        fileToUploadPath in FileUtils.getFilesPathFromPickerIntent(
+                            data,
+                            chatSendingViewModel.temporaryFileUploadPath
+                        )
+                    ) {
+                        chatSendingViewModel.addAttachment(fileToUploadPath)
+                    }
+                    chatSendingViewModel.attachingFileInProgress.value = false
                 }
             }
         }
