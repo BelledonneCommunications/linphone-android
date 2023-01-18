@@ -10,6 +10,17 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [5.0.4] - 2023-01-18
+
+### Added
+- Show a progress bar while importing files to the chat sending area
+
+### Changed
+- Prevent keyboard from auto-replacing some user input such as username, breaking SIP URIs unknowingly
+
+### Fixed
+- Prevent copy of files that weren't sent in chat to be kept in app local folder
+
 ## [5.0.3] - 2023-01-13
 
 ### Added
