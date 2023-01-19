@@ -10,6 +10,11 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [5.0.5] - 2023-01-19
+
+### Fixed
+- Issue with how replies where added to chat message notification from reply action
+
 ## [5.0.4] - 2023-01-18
 
 ### Added
