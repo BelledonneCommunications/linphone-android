@@ -675,7 +675,7 @@ class NotificationsManager(private val context: Context) {
         for (message in messages) {
             if (message.isRead || message.isOutgoing) continue
             val friend = coreContext.contactsManager.findContactByAddress(message.fromAddress)
-            val notifiableMessage = getNotifiableMessage(message, friend, notifiable)
+            val notifiableMessage = getNotifiableMessage(message, friend)
             notifiable.messages.add(notifiableMessage)
         }
 
@@ -703,7 +703,7 @@ class NotificationsManager(private val context: Context) {
         return notifiable
     }
 
-    private fun getNotifiableMessage(message: ChatMessage, friend: Friend?, notifiable: Notifiable): NotifiableMessage {
+    private fun getNotifiableMessage(message: ChatMessage, friend: Friend?): NotifiableMessage {
         val roundPicture = ImageUtils.getRoundBitmapFromUri(context, friend?.getThumbnailUri())
         val displayName = friend?.name ?: LinphoneUtils.getDisplayName(message.fromAddress)
         var text = ""
@@ -823,10 +823,7 @@ class NotificationsManager(private val context: Context) {
         var lastPerson: Person? = null
         for (message in notifiable.messages) {
             val friend = message.friend
-            val person = if (message.isOutgoing)
-                me
-            else
-                getPerson(friend, message.sender, message.senderAvatar)
+            val person = getPerson(friend, message.sender, message.senderAvatar)
 
             if (!message.isOutgoing) {
                 // We don't want to see our own avatar
@@ -838,15 +835,19 @@ class NotificationsManager(private val context: Context) {
                 }
             }
 
+            val senderPerson = if (message.isOutgoing) null else person // Use null for ourselves
             val msg = if (corePreferences.hideChatMessageContentInNotification) {
-                NotificationCompat.MessagingStyle.Message(AppUtils.getString(R.string.chat_message_notification_hidden_content), message.time, person)
+                NotificationCompat.MessagingStyle.Message(AppUtils.getString(R.string.chat_message_notification_hidden_content), message.time, senderPerson)
             } else {
-                val tmp = NotificationCompat.MessagingStyle.Message(message.message, message.time, person)
+                val tmp = NotificationCompat.MessagingStyle.Message(message.message, message.time, senderPerson)
                 if (message.filePath != null) tmp.setData(message.fileMime, message.filePath)
                 tmp
             }
 
             style.addMessage(msg)
+            if (message.isOutgoing) {
+                style.addHistoricMessage(msg)
+            }
         }
 
         style.conversationTitle = if (notifiable.isGroup) notifiable.groupTitle else lastPerson?.name
