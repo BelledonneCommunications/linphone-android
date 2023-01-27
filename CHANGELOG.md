@@ -10,6 +10,28 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [5.1.0] - Unreleased
+
+### Changed
+- Replaced voice recordings file name by localized placeholder text, like for video conferences invitations
+- Removed jetifier as it is not needed
+
+## [5.0.5] - 2023-01-19
+
+### Fixed
+- Issue with how replies where added to chat message notification from reply action
+
+## [5.0.4] - 2023-01-18
+
+### Added
+- Show a progress bar while importing files to the chat sending area
+
+### Changed
+- Prevent keyboard from auto-replacing some user input such as username, breaking SIP URIs unknowingly
+
+### Fixed
+- Prevent copy of files that weren't sent in chat to be kept in app local folder
+
 ## [5.0.3] - 2023-01-13
 
 ### Added
