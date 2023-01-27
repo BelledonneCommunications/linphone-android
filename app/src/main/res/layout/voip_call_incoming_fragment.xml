@@ -53,6 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
+            android:visibility="@{callsViewModel.currentCallData.isConferenceCall ? View.GONE : View.VISIBLE, default=visible}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/incoming_call_title" />
@@ -180,12 +181,39 @@
 
         </androidx.core.widget.NestedScrollView>
 
+        <TextView
+            android:id="@+id/early_media_caller_name"
+            style="@style/call_header_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{callsViewModel.currentCallData.contact.name ?? callsViewModel.currentCallData.displayName, default=`Bilbo Baggins`}"
+            app:layout_constraintBottom_toTopOf="@id/early_media_sipAddress"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/early_media_sipAddress"
+            style="@style/call_header_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="@{callsViewModel.currentCallData.displayableAddress, default=`sip:bilbo.baggins@sip.linphone.org`}"
+            app:layout_constraintBottom_toTopOf="@id/buttons"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
         <androidx.constraintlayout.widget.Group
             android:id="@+id/single_call_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="@{callsViewModel.currentCallData.isConferenceCall ? View.GONE : View.VISIBLE, default=visible}"
-            app:constraint_referenced_ids="incoming_call_timer, avatar, caller_name, sipAddress" />
+            android:visibility="@{callsViewModel.currentCallData.isConferenceCall || controlsViewModel.isIncomingEarlyMediaVideo ? View.GONE : View.VISIBLE, default=visible}"
+            app:constraint_referenced_ids="avatar, caller_name, sipAddress" />
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/conference_group"
@@ -193,6 +221,13 @@
             android:layout_height="wrap_content"
             android:visibility="@{callsViewModel.currentCallData.isConferenceCall ? View.VISIBLE : View.GONE, default=gone}"
             app:constraint_referenced_ids="incoming_conference_subject, conference_avatar, participants_count, participants_list" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/single_call_early_media_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{controlsViewModel.isIncomingEarlyMediaVideo ? View.VISIBLE : View.GONE, default=gone}"
+            app:constraint_referenced_ids="early_media_caller_name, early_media_sipAddress" />
 
         <include
             android:id="@+id/buttons"
