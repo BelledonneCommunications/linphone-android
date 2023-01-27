@@ -55,6 +55,8 @@ class ControlsViewModel : ViewModel() {
 
     val isOutgoingEarlyMedia = MutableLiveData<Boolean>()
 
+    val isIncomingEarlyMediaVideo = MutableLiveData<Boolean>()
+
     val showExtras = MutableLiveData<Boolean>()
 
     val fullScreenMode = MutableLiveData<Boolean>()
@@ -113,8 +115,9 @@ class ControlsViewModel : ViewModel() {
             message: String
         ) {
             Log.i("[Call Controls] State changed: $state")
-
             isOutgoingEarlyMedia.value = state == Call.State.OutgoingEarlyMedia
+            isIncomingEarlyMediaVideo.value = state == Call.State.IncomingEarlyMedia && call.remoteParams?.isVideoEnabled == true
+
             if (state == Call.State.StreamsRunning) {
                 if (!call.currentParams.isVideoEnabled && fullScreenMode.value == true) {
                     fullScreenMode.value = false
@@ -212,6 +215,12 @@ class ControlsViewModel : ViewModel() {
         proximitySensorEnabled.addSource(forceDisableProximitySensor) {
             proximitySensorEnabled.value = shouldProximitySensorBeEnabled()
         }
+
+        val currentCall = coreContext.core.currentCall ?: coreContext.core.calls.firstOrNull()
+        val state = currentCall?.state ?: Call.State.Idle
+        Log.i("[Call Controls] Current state is: $state")
+        isOutgoingEarlyMedia.value = state == Call.State.OutgoingEarlyMedia
+        isIncomingEarlyMediaVideo.value = state == Call.State.IncomingEarlyMedia && currentCall?.remoteParams?.isVideoEnabled == true
 
         updateUI()
 
