@@ -41,6 +41,7 @@ import org.linphone.activities.voip.viewmodels.ControlsViewModel
 import org.linphone.activities.voip.viewmodels.StatisticsListViewModel
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.Call
+import org.linphone.core.GlobalState
 import org.linphone.core.tools.Log
 import org.linphone.databinding.VoipActivityBinding
 import org.linphone.mediastream.Version
@@ -240,8 +241,10 @@ class CallActivity : ProximitySensorActivity() {
     }
 
     override fun onDestroy() {
-        coreContext.core.nativeVideoWindowId = null
-        coreContext.core.nativePreviewWindowId = null
+        if (coreContext.core.globalState != GlobalState.Off) {
+            coreContext.core.nativeVideoWindowId = null
+            coreContext.core.nativePreviewWindowId = null
+        }
 
         super.onDestroy()
     }
