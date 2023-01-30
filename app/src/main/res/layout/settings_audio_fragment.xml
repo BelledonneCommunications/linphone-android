@@ -80,6 +80,7 @@
 
                 <include
                     layout="@layout/settings_widget_basic"
+                    android:visibility="@{viewModel.showEchoTester ? View.VISIBLE : View.GONE, default=gone}"
                     linphone:title="@{@string/audio_settings_echo_tester_title}"
                     linphone:subtitle="@{viewModel.echoTesterStatus}"
                     linphone:listener="@{viewModel.echoTesterListener}"/>
