@@ -78,6 +78,7 @@ class AudioSettingsViewModel : GenericSettingsViewModel() {
     }
     private var echoTesterIsRunning = false
     val echoTesterStatus = MutableLiveData<String>()
+    val showEchoTester = MutableLiveData<Boolean>()
 
     val adaptiveRateControlListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
@@ -161,6 +162,8 @@ class AudioSettingsViewModel : GenericSettingsViewModel() {
             prefs.getString(R.string.audio_settings_echo_canceller_calibration_summary)
         }
         echoTesterStatus.value = prefs.getString(R.string.audio_settings_echo_tester_summary)
+        showEchoTester.value = prefs.debugLogs // Don't show echo tester unless debug mode is enabled, may confuse user over what it should be used for
+
         preferBluetoothDevices.value = prefs.routeAudioToBluetoothIfAvailable
         initInputAudioDevicesList()
         initOutputAudioDevicesList()
