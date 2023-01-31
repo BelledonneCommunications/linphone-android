@@ -322,7 +322,7 @@
                 android:enabled="@{chatSendingViewModel.sendMessageEnabled}"
                 android:padding="5dp"
                 android:src="@drawable/ephemeral_messages"
-                android:visibility="@{chatSendingViewModel.isReadOnly &amp;&amp; viewModel.chatRoom.isEphemeralEnabled() ? View.VISIBLE : View.GONE, default=gone}"
+                android:visibility="@{!chatSendingViewModel.isReadOnly &amp;&amp; viewModel.chatRoom.isEphemeralEnabled() ? View.VISIBLE : View.GONE, default=gone}"
                 app:layout_constraintBottom_toBottomOf="@id/send_message"
                 app:layout_constraintEnd_toEndOf="@id/send_message" />
 
