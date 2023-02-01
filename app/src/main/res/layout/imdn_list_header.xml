@@ -2,6 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
+        <import type="androidx.core.content.ContextCompat"/>
         <variable
             name="title"
             type="Integer" />
@@ -27,7 +28,7 @@
 
             <TextView
                 android:text="@{title, default=@string/chat_message_imdn_displayed}"
-                android:textColor="@{textColor}"
+                android:textColor="@{ContextCompat.getColor(context,textColor)}"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 android:layout_width="wrap_content"
