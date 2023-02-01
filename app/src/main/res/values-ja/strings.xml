@@ -710,4 +710,9 @@
     <string name="content_description_call_quality_4">とても良い</string>
     <string name="content_description_call_not_secured">通話は保護されていません</string>
     <string name="content_description_call_security_pending">通話のセキュリティは保留されています</string>
+    <string name="content_description_contact_can_do_encryption">連絡先は暗号化された会話で招待できます</string>
+    <string name="content_description_start_chat">会話に参加する</string>
+    <string name="content_description_start_encrypted_chat">暗号化された会話に参加する</string>
+    <string name="content_description_menu_dialer">ダイヤラ</string>
+    <string name="content_description_dialer_erase">最後の文字を削除</string>
 </resources>
