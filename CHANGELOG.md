@@ -10,6 +10,20 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [5.0.6] - Unreleased
+
+### Fixed
+- Wrong country displayed in assistant after picking it in the list if another country has the same international prefix (such as +1)
+- SIP URI clickable pattern missing '~'
+- Crash that happens sometimes when CallActivity is destroyed
+- Missing ephemeral icon next to send message icon
+- Headers colors in IMDN details
+- Pixel issue in call quality indicator 2 icon
+
+### Changed
+- Improved incoming call layout when receiving early-media video
+- Hidden "Echo Tester" setting unless in debug mode as it can mislead user and isn't useful for end user
+
 ## [5.0.5] - 2023-01-19
 
 ### Fixed
