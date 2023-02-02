@@ -191,7 +191,7 @@ class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMes
                 val spannable = Spannable.Factory.getInstance().newSpannable(content.utf8Text?.trim())
                 text.value = PatternClickableSpan()
                     .add(
-                        Pattern.compile("(?:<?sips?:)?[a-zA-Z0-9+_.\\-]+(?:@([a-zA-Z0-9+_.\\-;=]+))+(>)?"),
+                        Pattern.compile("(?:<?sips?:)?[a-zA-Z0-9+_.\\-]+(?:@([a-zA-Z0-9+_.\\-;=~]+))+(>)?"),
                         object : PatternClickableSpan.SpannableClickedListener {
                             override fun onSpanClicked(text: String) {
                                 Log.i("[Chat Message Data] Clicked on SIP URI: $text")
