@@ -60,6 +60,8 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
 
     val attachFileEnabled = MutableLiveData<Boolean>()
 
+    val attachFilePending = MutableLiveData<Boolean>()
+
     val sendMessageEnabled = MutableLiveData<Boolean>()
 
     val attachingFileInProgress = MutableLiveData<Boolean>()
