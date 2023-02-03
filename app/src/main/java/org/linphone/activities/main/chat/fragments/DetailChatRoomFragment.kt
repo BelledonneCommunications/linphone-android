@@ -820,6 +820,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        chatSendingViewModel.attachFilePending.value = false
         if (resultCode == Activity.RESULT_OK) {
             lifecycleScope.launch {
                 withContext(Dispatchers.Main) {
@@ -1126,6 +1127,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
     }
 
     private fun pickFile() {
+        chatSendingViewModel.attachFilePending.value = true
         val intentsList = ArrayList<Intent>()
 
         val pickerIntent = Intent(Intent.ACTION_GET_CONTENT)
