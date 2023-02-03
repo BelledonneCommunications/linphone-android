@@ -246,7 +246,7 @@
                 android:layout_marginStart="@dimen/chat_message_sending_icons_margin"
                 android:layout_marginEnd="@dimen/chat_message_sending_icons_margin"
                 android:contentDescription="@string/content_description_attach_file"
-                android:enabled="@{chatSendingViewModel.attachFileEnabled}"
+                android:enabled="@{chatSendingViewModel.attachFileEnabled &amp;&amp; !chatSendingViewModel.attachFilePending}"
                 android:onClick="@{attachFileClickListener}"
                 android:paddingTop="@dimen/chat_message_sending_icons_margin"
                 android:paddingBottom="@dimen/chat_message_sending_icons_margin"
