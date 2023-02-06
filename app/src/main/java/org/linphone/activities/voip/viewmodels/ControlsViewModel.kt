@@ -483,6 +483,16 @@ class ControlsViewModel : ViewModel() {
     }
 
     private fun shouldProximitySensorBeEnabled(): Boolean {
-        return forceDisableProximitySensor.value == false && !(isVideoEnabled.value ?: false) && !(nonEarpieceOutputAudioDevice.value ?: false)
+        if (forceDisableProximitySensor.value == true) {
+            Log.i("[Call Controls] Forcing proximity sensor to be disabled (usually in incoming/outgoing call fragments)")
+        } else if (isVideoEnabled.value == true) {
+            Log.i("[Call Controls] Active call current params says video is enabled, proximity sensor will be disabled")
+        } else if (nonEarpieceOutputAudioDevice.value == true) {
+            Log.i("[Call Controls] Current audio route is not earpiece, proximity sensor will be disabled")
+        }
+
+        return forceDisableProximitySensor.value == false &&
+            !(isVideoEnabled.value ?: false) &&
+            !(nonEarpieceOutputAudioDevice.value ?: false)
     }
 }

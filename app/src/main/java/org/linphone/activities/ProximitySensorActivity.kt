@@ -23,7 +23,6 @@ import android.content.Context
 import android.os.Bundle
 import android.os.PowerManager
 import android.os.PowerManager.RELEASE_FLAG_WAIT_FOR_NO_PROXIMITY
-import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.tools.Log
 
 abstract class ProximitySensorActivity : GenericActivity() {
@@ -44,15 +43,6 @@ abstract class ProximitySensorActivity : GenericActivity() {
         )
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        if (coreContext.core.callsNb > 0) {
-            val videoEnabled = coreContext.core.currentCall?.currentParams?.isVideoEnabled ?: false
-            enableProximitySensor(!videoEnabled)
-        }
-    }
-
     override fun onPause() {
         enableProximitySensor(false)
 
@@ -68,7 +58,7 @@ abstract class ProximitySensorActivity : GenericActivity() {
     protected fun enableProximitySensor(enable: Boolean) {
         if (enable) {
             if (!proximitySensorEnabled) {
-                Log.i("[Proximity Sensor Activity] Enabling proximity sensor turning off screen")
+                Log.i("[Proximity Sensor Activity] Enabling proximity sensor (turning screen OFF when wake lock is acquired)")
                 if (!proximityWakeLock.isHeld) {
                     Log.i("[Proximity Sensor Activity] Acquiring PROXIMITY_SCREEN_OFF_WAKE_LOCK")
                     proximityWakeLock.acquire()
@@ -77,9 +67,9 @@ abstract class ProximitySensorActivity : GenericActivity() {
             }
         } else {
             if (proximitySensorEnabled) {
-                Log.i("[Proximity Sensor Activity] Disabling proximity sensor turning off screen")
+                Log.i("[Proximity Sensor Activity] Disabling proximity sensor (turning screen ON when wake lock is released)")
                 if (proximityWakeLock.isHeld) {
-                    Log.i("[Proximity Sensor Activity] Releasing PROXIMITY_SCREEN_OFF_WAKE_LOCK")
+                    Log.i("[Proximity Sensor Activity] Asking to release PROXIMITY_SCREEN_OFF_WAKE_LOCK next time sensor detects no proximity")
                     proximityWakeLock.release(RELEASE_FLAG_WAIT_FOR_NO_PROXIMITY)
                 }
                 proximitySensorEnabled = false

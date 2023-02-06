@@ -111,7 +111,7 @@
                 android:id="@+id/stubbed_paused_conference"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginBottom="5dp"
+                android:layout_marginBottom="2dp"
                 android:layout="@layout/voip_conference_paused"
                 android:visibility="@{conferenceViewModel.isConferenceLocallyPaused ? View.VISIBLE : View.GONE, default=gone}"
                 app:conferenceViewModel="@{conferenceViewModel}"
