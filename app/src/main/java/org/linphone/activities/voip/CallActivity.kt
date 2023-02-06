@@ -104,6 +104,7 @@ class CallActivity : ProximitySensorActivity() {
         controlsViewModel.proximitySensorEnabled.observe(
             this
         ) { enabled ->
+            Log.i("[Call Activity] ${if (enabled) "Enabling" else "Disabling"} proximity sensor (if possible)")
             enableProximitySensor(enabled)
         }
 
