@@ -19,6 +19,7 @@
  */
 package org.linphone.core
 
+import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -126,6 +127,8 @@ class CoreContext(
     private var callOverlay: View? = null
     private var previousCallState = Call.State.Idle
     private lateinit var phoneStateListener: PhoneStateInterface
+
+    private val activityMonitor = ActivityMonitor()
 
     private val listener: CoreListenerStub = object : CoreListenerStub() {
         override fun onGlobalStateChanged(core: Core, state: GlobalState, message: String) {
@@ -309,6 +312,8 @@ class CoreContext(
 
         stopped = false
         _lifecycleRegistry.currentState = Lifecycle.State.CREATED
+
+        (context as Application).registerActivityLifecycleCallbacks(activityMonitor)
         Log.i("[Context] Ready")
     }
 
@@ -374,6 +379,24 @@ class CoreContext(
         stopped = true
         _lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
         loggingService.removeListener(loggingServiceListener)
+
+        (context as Application).unregisterActivityLifecycleCallbacks(activityMonitor)
+    }
+
+    fun onForeground() {
+        // If presence publish is disabled and we call core.setConsolidatedPresence, it will enabled it!
+        if (core.defaultAccount?.params?.isPublishEnabled == true) {
+            Log.i("[Context] App is in foreground, setting consolidated presence to Online")
+            core.consolidatedPresence = ConsolidatedPresence.Online
+        }
+    }
+
+    fun onBackground() {
+        // If presence publish is disabled and we call core.setConsolidatedPresence, it will enabled it!
+        if (core.defaultAccount?.params?.isPublishEnabled == true) {
+            Log.i("[Context] App is in background, setting consolidated presence to Busy")
+            core.consolidatedPresence = ConsolidatedPresence.Busy
+        }
     }
 
     private fun configureCore() {
@@ -411,10 +434,29 @@ class CoreContext(
 
         computeUserAgent()
 
+        val fiveOneMigrationRequired = core.config.getBool("app", "migration_5.1", true)
+        core.config.setBool("app", "migration_5.1", false)
+
         for (account in core.accountList) {
             if (account.params.identityAddress?.domain == corePreferences.defaultDomain) {
                 var paramsChanged = false
                 val params = account.params.clone()
+
+                if (fiveOneMigrationRequired) {
+                    val newExpire = 2629800 // 1 month
+                    if (account.params.expires != newExpire) {
+                        Log.i("[Context] Updating expire on proxy config ${params.identityAddress?.asString()} from ${account.params.expires} to newExpire")
+                        params.expires = newExpire
+                        paramsChanged = true
+                    }
+
+                    // Enable presence publish/subscribe for new feature
+                    if (!account.params.isPublishEnabled) {
+                        Log.i("[Context] Enabling presence publish on proxy config ${params.identityAddress?.asString()}")
+                        params.isPublishEnabled = true
+                        paramsChanged = true
+                    }
+                }
 
                 // Ensure conference factory URI is set on sip.linphone.org proxy configs
                 if (account.params.conferenceFactoryUri == null) {

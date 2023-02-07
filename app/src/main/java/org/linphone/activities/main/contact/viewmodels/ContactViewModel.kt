@@ -54,6 +54,7 @@ class ContactViewModel(friend: Friend, async: Boolean = false) : MessageNotifier
     override val contact: MutableLiveData<Friend> = MutableLiveData<Friend>()
     override val displayName: MutableLiveData<String> = MutableLiveData<String>()
     override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
+    override val presenceStatus: MutableLiveData<ConsolidatedPresence> = MutableLiveData<ConsolidatedPresence>()
     override val coroutineScope: CoroutineScope = viewModelScope
 
     var fullName = ""
@@ -142,10 +143,16 @@ class ContactViewModel(friend: Friend, async: Boolean = false) : MessageNotifier
             contact.postValue(friend)
             displayName.postValue(friend.name)
             isNativeContact.postValue(friend.refKey != null)
+            presenceStatus.postValue(friend.consolidatedPresence)
         } else {
             contact.value = friend
             displayName.value = friend.name
             isNativeContact.value = friend.refKey != null
+            presenceStatus.value = friend.consolidatedPresence
+        }
+
+        friend.addListener {
+            presenceStatus.value = it.consolidatedPresence
         }
     }
 

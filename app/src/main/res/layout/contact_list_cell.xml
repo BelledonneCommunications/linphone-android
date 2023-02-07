@@ -3,6 +3,7 @@
 
     <data>
         <import type="android.view.View"/>
+        <import type="org.linphone.core.ConsolidatedPresence"/>
         <variable
             name="clickListener"
             type="android.view.View.OnClickListener"/>
@@ -42,6 +43,17 @@
             android:background="@drawable/generated_avatar_bg"
             android:src="@drawable/voip_single_contact_avatar"
             android:contentDescription="@null" />
+
+        <ImageView
+            android:layout_width="@dimen/contact_presence_badge_size"
+            android:layout_height="@dimen/contact_presence_badge_size"
+            android:layout_alignBottom="@id/avatar"
+            android:layout_marginStart="25dp"
+            android:adjustViewBounds="true"
+            android:background="@drawable/led_background"
+            android:padding="2dp"
+            android:src="@{viewModel.presenceStatus == ConsolidatedPresence.Online ? @drawable/led_online : @drawable/led_away, default=@drawable/led_online}"
+            android:visibility="@{viewModel.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE, default=gone}" />
 
         <LinearLayout
             android:id="@+id/right"

@@ -29,6 +29,7 @@ class ContactSelectionData(private val searchResult: SearchResult) : ContactData
     override val contact: MutableLiveData<Friend> = MutableLiveData<Friend>()
     override val displayName: MutableLiveData<String> = MutableLiveData<String>()
     override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
+    override val presenceStatus: MutableLiveData<ConsolidatedPresence> = MutableLiveData<ConsolidatedPresence>()
     override val coroutineScope: CoroutineScope = coreContext.coroutineScope
 
     val isDisabled: MutableLiveData<Boolean> by lazy {
@@ -57,6 +58,7 @@ class ContactSelectionData(private val searchResult: SearchResult) : ContactData
     init {
         isDisabled.value = false
         isSelected.value = false
+        presenceStatus.value = ConsolidatedPresence.Offline
         searchMatchingContact()
     }
 
@@ -65,14 +67,31 @@ class ContactSelectionData(private val searchResult: SearchResult) : ContactData
         if (friend != null) {
             contact.value = friend!!
             displayName.value = friend.name
+            presenceStatus.value = friend.consolidatedPresence
+            friend.addListener {
+                presenceStatus.value = it.consolidatedPresence
+            }
         } else {
             val address = searchResult.address
             if (address != null) {
-                contact.value = coreContext.contactsManager.findContactByAddress(address)
+                val found = coreContext.contactsManager.findContactByAddress(address)
+                if (found != null) {
+                    contact.value = found!!
+                    presenceStatus.value = found.consolidatedPresence
+                    found.addListener {
+                        presenceStatus.value = it.consolidatedPresence
+                    }
+                }
                 displayName.value = LinphoneUtils.getDisplayName(address)
             } else if (searchResult.phoneNumber != null) {
-                contact.value =
-                    coreContext.contactsManager.findContactByPhoneNumber(searchResult.phoneNumber.orEmpty())
+                val found = coreContext.contactsManager.findContactByPhoneNumber(searchResult.phoneNumber.orEmpty())
+                if (found != null) {
+                    contact.value = found!!
+                    presenceStatus.value = found.consolidatedPresence
+                    found.addListener {
+                        presenceStatus.value = it.consolidatedPresence
+                    }
+                }
                 displayName.value = searchResult.phoneNumber.orEmpty()
             }
         }

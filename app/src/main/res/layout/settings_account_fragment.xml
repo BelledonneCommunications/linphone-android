@@ -128,6 +128,12 @@
                     linphone:enabled="@{!viewModel.isDefault}"/>
 
                 <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/account_setting_publish_presence_title}"
+                    linphone:listener="@{viewModel.publishPresenceListener}"
+                    linphone:checked="@={viewModel.publishPresence}"/>
+
+                <include
                     layout="@layout/settings_widget_basic"
                     linphone:title="@{@string/account_settings_link_phone_number_title}"
                     linphone:listener="@{viewModel.linkPhoneNumberListener}"

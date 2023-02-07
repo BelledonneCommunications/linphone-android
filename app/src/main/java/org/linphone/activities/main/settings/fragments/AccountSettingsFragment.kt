@@ -92,6 +92,14 @@ class AccountSettingsFragment : GenericSettingFragment<SettingsAccountFragmentBi
             }
         }
 
+        viewModel.publishPresenceToggledEvent.observe(
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                sharedViewModel.publishPresenceToggled.value = true
+            }
+        }
+
         view.doOnPreDraw {
             // Notifies fragment is ready to be drawn
             sharedViewModel.accountSettingsFragmentOpenedEvent.value = Event(true)

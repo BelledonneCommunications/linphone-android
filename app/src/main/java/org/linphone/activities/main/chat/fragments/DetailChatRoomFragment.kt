@@ -595,12 +595,6 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             }
         }
 
-        binding.setTitleClickListener {
-            binding.sipUri.visibility = if (!viewModel.oneToOneChatRoom ||
-                binding.sipUri.visibility == View.VISIBLE
-            ) View.GONE else View.VISIBLE
-        }
-
         binding.setMenuClickListener {
             showPopupMenu(chatRoom)
         }

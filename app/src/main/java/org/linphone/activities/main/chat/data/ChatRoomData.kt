@@ -43,6 +43,7 @@ class ChatRoomData(private val chatRoom: ChatRoom) : ContactDataInterface {
     override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
     override val showGroupChatAvatar: Boolean
         get() = conferenceChatRoom && !oneToOneChatRoom
+    override val presenceStatus: MutableLiveData<ConsolidatedPresence> = MutableLiveData<ConsolidatedPresence>()
     override val coroutineScope: CoroutineScope = coreContext.coroutineScope
 
     val unreadMessagesCount = MutableLiveData<Int>()
@@ -79,6 +80,7 @@ class ChatRoomData(private val chatRoom: ChatRoom) : ContactDataInterface {
 
     init {
         unreadMessagesCount.value = chatRoom.unreadMessagesCount
+        presenceStatus.value = ConsolidatedPresence.Offline
 
         subject.value = chatRoom.subject
         updateSecurityIcon()
@@ -135,7 +137,14 @@ class ChatRoomData(private val chatRoom: ChatRoom) : ContactDataInterface {
             }
         }
         if (remoteAddress != null) {
-            contact.value = coreContext.contactsManager.findContactByAddress(remoteAddress)
+            val friend = coreContext.contactsManager.findContactByAddress(remoteAddress)
+            if (friend != null) {
+                contact.value = friend!!
+                presenceStatus.value = friend.consolidatedPresence
+                friend.addListener {
+                    presenceStatus.value = it.consolidatedPresence
+                }
+            }
         }
     }
 

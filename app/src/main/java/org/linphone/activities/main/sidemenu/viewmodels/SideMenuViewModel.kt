@@ -43,6 +43,8 @@ class SideMenuViewModel : ViewModel() {
 
     val accounts = MutableLiveData<ArrayList<AccountSettingsViewModel>>()
 
+    val presenceStatus = MutableLiveData<ConsolidatedPresence>()
+
     lateinit var accountsSettingsListener: SettingListenerStub
 
     private val listener: CoreListenerStub = object : CoreListenerStub() {
@@ -69,6 +71,7 @@ class SideMenuViewModel : ViewModel() {
             LinphoneUtils.isRemoteConferencingAvailable()
         coreContext.core.addListener(listener)
         updateAccountsList()
+        refreshConsolidatedPresence()
     }
 
     override fun onCleared() {
@@ -76,6 +79,10 @@ class SideMenuViewModel : ViewModel() {
         accounts.value.orEmpty().forEach(AccountSettingsViewModel::destroy)
         coreContext.core.removeListener(listener)
         super.onCleared()
+    }
+
+    fun refreshConsolidatedPresence() {
+        presenceStatus.value = coreContext.core.consolidatedPresence
     }
 
     fun updateAccountsList() {

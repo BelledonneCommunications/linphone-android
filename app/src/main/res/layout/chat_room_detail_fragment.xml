@@ -5,9 +5,7 @@
 
     <data>
         <import type="android.view.View"/>
-        <variable
-            name="titleClickListener"
-            type="android.view.View.OnClickListener"/>
+        <import type="org.linphone.core.ConsolidatedPresence"/>
         <variable
             name="menuClickListener"
             type="android.view.View.OnClickListener"/>
@@ -77,7 +75,6 @@
                 android:paddingEnd="5dp">
 
                 <org.linphone.views.MarqueeTextView
-                    android:onClick="@{titleClickListener}"
                     android:text="@{viewModel.oneToOneChatRoom ? (viewModel.contact.name ?? viewModel.displayName) : viewModel.subject, default=`Lorem Ipsum Dolor Sit Amet`}"
                     style="@style/toolbar_small_title_font"
                     android:layout_width="wrap_content"
@@ -86,17 +83,17 @@
 
                 <org.linphone.views.MarqueeTextView
                     android:text="@{viewModel.participants, default=`John Doe`}"
-                    android:visibility="@{viewModel.oneToOneChatRoom ? View.GONE : View.VISIBLE}"
+                    android:visibility="@{viewModel.oneToOneChatRoom ? View.GONE : View.VISIBLE, default=gone}"
                     style="@style/toolbar_small_title_font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:singleLine="true" />
 
                 <org.linphone.views.MarqueeTextView
-                    android:id="@+id/sip_uri"
-                    android:text="@{viewModel.peerSipUri, default=`sip:john.doe@sip.linphone.org`}"
-                    android:visibility="gone"
-                    style="@style/sip_uri_small_font"
+                    android:id="@+id/last_seen_at"
+                    android:text="@{viewModel.lastPresenceInfo, default=`Online`}"
+                    android:visibility="@{viewModel.oneToOneChatRoom &amp;&amp; viewModel.presenceStatus != ConsolidatedPresence.Offline ? View.VISIBLE : View.GONE}"
+                    style="@style/chat_last_seen_at_font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:singleLine="true" />

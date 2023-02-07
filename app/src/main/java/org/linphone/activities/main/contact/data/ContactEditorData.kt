@@ -32,6 +32,7 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.contact.*
 import org.linphone.core.ChatRoomSecurityLevel
+import org.linphone.core.ConsolidatedPresence
 import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
@@ -42,6 +43,7 @@ class ContactEditorData(val friend: Friend?) : ContactDataInterface {
     override val contact: MutableLiveData<Friend> = MutableLiveData<Friend>()
     override val displayName: MutableLiveData<String> = MutableLiveData<String>()
     override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
+    override val presenceStatus: MutableLiveData<ConsolidatedPresence> = MutableLiveData<ConsolidatedPresence>()
     override val coroutineScope: CoroutineScope = coreContext.coroutineScope
 
     val firstName = MutableLiveData<String>()
@@ -66,8 +68,13 @@ class ContactEditorData(val friend: Friend?) : ContactDataInterface {
         if (friend != null) {
             contact.value = friend!!
             displayName.value = friend.name ?: ""
+            presenceStatus.value = friend.consolidatedPresence
+            friend.addListener {
+                presenceStatus.value = it.consolidatedPresence
+            }
         } else {
             displayName.value = ""
+            presenceStatus.value = ConsolidatedPresence.Offline
         }
 
         organization.value = friend?.organization ?: ""
