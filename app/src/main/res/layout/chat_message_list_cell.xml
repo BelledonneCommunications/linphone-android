@@ -7,6 +7,7 @@
         <import type="android.view.View" />
         <import type="android.view.Gravity" />
         <import type="com.google.android.flexbox.JustifyContent" />
+        <import type="org.linphone.core.ConsolidatedPresence"/>
         <variable
             name="contextMenuClickListener"
             type="android.view.View.OnLongClickListener" />
@@ -74,6 +75,18 @@
             android:src="@drawable/voip_single_contact_avatar"
             android:gravity="center"
             android:visibility="@{data.chatMessage.outgoing || selectionListViewModel.isEditionEnabled ? View.GONE : (data.hideAvatar ? View.INVISIBLE : View.VISIBLE)}" />
+
+        <ImageView
+            android:layout_width="@dimen/contact_presence_badge_size"
+            android:layout_height="@dimen/contact_presence_badge_size"
+            android:layout_alignBottom="@id/avatar"
+            android:layout_marginStart="35dp"
+            android:adjustViewBounds="true"
+            android:background="@drawable/led_background"
+            android:padding="2dp"
+            android:contentDescription="@{data.presenceStatus == ConsolidatedPresence.Online ? @string/content_description_presence_online : @string/content_description_presence_offline}"
+            android:src="@{data.presenceStatus == ConsolidatedPresence.Online ? @drawable/led_online : @drawable/led_away, default=@drawable/led_online}"
+            android:visibility="@{data.chatMessage.outgoing || selectionListViewModel.isEditionEnabled || data.hideAvatar || data.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE, default=gone}" />
 
         <LinearLayout
             android:id="@+id/background"

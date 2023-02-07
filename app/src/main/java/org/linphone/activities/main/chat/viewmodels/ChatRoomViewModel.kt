@@ -35,6 +35,7 @@ import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.TimestampUtils
 
 class ChatRoomViewModelFactory(private val chatRoom: ChatRoom) :
     ViewModelProvider.NewInstanceFactory() {
@@ -51,6 +52,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
     override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
     override val showGroupChatAvatar: Boolean
         get() = conferenceChatRoom && !oneToOneChatRoom
+    override val presenceStatus: MutableLiveData<ConsolidatedPresence> = MutableLiveData<ConsolidatedPresence>()
     override val coroutineScope: CoroutineScope = viewModelScope
 
     val subject = MutableLiveData<String>()
@@ -67,7 +69,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
 
     val securityLevelContentDescription = MutableLiveData<Int>()
 
-    val peerSipUri = MutableLiveData<String>()
+    val lastPresenceInfo = MutableLiveData<String>()
 
     val ephemeralEnabled = MutableLiveData<Boolean>()
 
@@ -230,6 +232,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
     }
 
     fun contactLookup() {
+        presenceStatus.value = ConsolidatedPresence.Offline
         displayName.value = when {
             basicChatRoom -> LinphoneUtils.getDisplayName(
                 chatRoom.peerAddress
@@ -304,7 +307,42 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
     private fun searchMatchingContact() {
         val remoteAddress = getRemoteAddress()
         if (remoteAddress != null) {
-            contact.value = coreContext.contactsManager.findContactByAddress(remoteAddress)
+            val friend = coreContext.contactsManager.findContactByAddress(remoteAddress)
+            if (friend != null) {
+                contact.value = friend!!
+                presenceStatus.value = friend.consolidatedPresence
+                computeLastSeenLabel(friend)
+                friend.addListener {
+                    presenceStatus.value = it.consolidatedPresence
+                    computeLastSeenLabel(friend)
+                }
+            }
+        }
+    }
+
+    private fun computeLastSeenLabel(friend: Friend) {
+        if (friend.consolidatedPresence == ConsolidatedPresence.Online) {
+            lastPresenceInfo.value = AppUtils.getString(R.string.chat_room_presence_online)
+            return
+        }
+
+        val timestamp = friend.presenceModel?.timestamp ?: -1
+        lastPresenceInfo.value = when {
+            TimestampUtils.isToday(timestamp) -> {
+                val time = TimestampUtils.timeToString(timestamp, timestampInSecs = true)
+                val text = AppUtils.getString(R.string.chat_room_presence_last_seen_online_today)
+                "$text $time"
+            }
+            TimestampUtils.isYesterday(timestamp) -> {
+                val time = TimestampUtils.timeToString(timestamp, timestampInSecs = true)
+                val text = AppUtils.getString(R.string.chat_room_presence_last_seen_online_yesterday)
+                "$text $time"
+            }
+            else -> {
+                val date = TimestampUtils.toString(timestamp, onlyDate = true, shortDate = false, hideYear = true)
+                val text = AppUtils.getString(R.string.chat_room_presence_last_seen_online)
+                "$text $date"
+            }
         }
     }
 
@@ -354,12 +392,6 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
 
     private fun updateParticipants() {
         val participants = chatRoom.participants
-        peerSipUri.value = if (oneToOneChatRoom && !basicChatRoom) {
-            participants.firstOrNull()?.address?.asStringUriOnly()
-                ?: chatRoom.peerAddress.asStringUriOnly()
-        } else {
-            chatRoom.peerAddress.asStringUriOnly()
-        }
 
         oneParticipantOneDevice = oneToOneChatRoom &&
             chatRoom.me?.devices?.size == 1 &&

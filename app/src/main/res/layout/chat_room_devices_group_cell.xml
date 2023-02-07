@@ -4,6 +4,7 @@
 
     <data>
         <import type="android.view.View"/>
+        <import type="org.linphone.core.ConsolidatedPresence"/>
         <variable
             name="data"
             type="org.linphone.activities.main.chat.data.DevicesListGroupData" />
@@ -29,6 +30,7 @@
                 android:layout_centerVertical="true">
 
                 <ImageView
+                    android:id="@+id/avatar_icon"
                     coilContact="@{data}"
                     android:layout_width="@dimen/contact_avatar_size"
                     android:layout_height="@dimen/contact_avatar_size"
@@ -37,6 +39,18 @@
                     android:background="@drawable/generated_avatar_bg"
                     android:src="@drawable/voip_single_contact_avatar"
                     android:contentDescription="@null" />
+
+                <ImageView
+                    android:layout_width="@dimen/contact_presence_badge_size"
+                    android:layout_height="@dimen/contact_presence_badge_size"
+                    android:layout_alignBottom="@id/avatar_icon"
+                    android:layout_marginStart="25dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/led_background"
+                    android:padding="2dp"
+                    android:contentDescription="@{data.presenceStatus == ConsolidatedPresence.Online ? @string/content_description_presence_online : @string/content_description_presence_offline}"
+                    android:src="@{data.presenceStatus == ConsolidatedPresence.Online ? @drawable/led_online : @drawable/led_away, default=@drawable/led_online}"
+                    android:visibility="@{data.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE, default=gone}" />
 
                 <ImageView
                     android:layout_width="20dp"

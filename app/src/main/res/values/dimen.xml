@@ -82,4 +82,6 @@
     <dimen name="mute_mic_grid_margin">10dp</dimen>
     <dimen name="chat_message_sending_icons_size">35dp</dimen>
     <dimen name="chat_message_sending_icons_margin">5dp</dimen>
+    <dimen name="contact_presence_badge_size">12dp</dimen>
+    <dimen name="contact_presence_big_badge_size">25dp</dimen>
 </resources>

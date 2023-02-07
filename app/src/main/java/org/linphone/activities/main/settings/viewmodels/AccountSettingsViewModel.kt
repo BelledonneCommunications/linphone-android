@@ -74,6 +74,10 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
         MutableLiveData<Event<Boolean>>()
     }
 
+    val publishPresenceToggledEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     val displayUsernameInsteadOfIdentity = corePreferences.replaceSipUriByUsername
 
     private var accountToDelete: Account? = null
@@ -436,6 +440,16 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
     }
     val limeServerUrl = MutableLiveData<String>()
 
+    val publishPresenceListener = object : SettingListenerStub() {
+        override fun onBoolValueChanged(newValue: Boolean) {
+            val params = account.params.clone()
+            params.isPublishEnabled = newValue
+            account.params = params
+            publishPresenceToggledEvent.value = Event(true)
+        }
+    }
+    val publishPresence = MutableLiveData<Boolean>()
+
     init {
         update()
         account.addListener(listener)
@@ -496,6 +510,7 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
         limeServerUrl.value = params.limeServerUrl
 
         hideLinkPhoneNumber.value = corePreferences.hideLinkPhoneNumber || params.identityAddress?.domain != corePreferences.defaultDomain
+        publishPresence.value = params.isPublishEnabled
     }
 
     private fun initTransportList() {

@@ -74,6 +74,12 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
             viewModel.updateAccountsList()
         }
 
+        sharedViewModel.publishPresenceToggled.observe(
+            viewLifecycleOwner
+        ) {
+            viewModel.refreshConsolidatedPresence()
+        }
+
         viewModel.accountsSettingsListener = object : SettingListenerStub() {
             override fun onAccountClicked(identity: String) {
                 val args = Bundle()

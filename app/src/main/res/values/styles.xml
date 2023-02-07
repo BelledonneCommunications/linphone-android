@@ -422,6 +422,11 @@
 
     <!-- UI various fonts -->
 
+    <style name="chat_last_seen_at_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/primaryTextColor</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
     <style name="accent_colored_title_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">?attr/accentColor</item>
         <item name="android:textAllCaps">true</item>

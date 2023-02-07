@@ -233,6 +233,10 @@
     <string name="chat_message_download_already_in_progress">Please wait for first download to finish before starting a new one</string>
     <string name="chat_message_voice_recording_received_notification">You have received a voice message</string>
     <string name="chat_message_voice_recording">Voice message</string>
+    <string name="chat_room_presence_online">Online</string>
+    <string name="chat_room_presence_last_seen_online_today">Online today at</string>
+    <string name="chat_room_presence_last_seen_online_yesterday">Online yesterday at</string>
+    <string name="chat_room_presence_last_seen_online">Online on</string>
 
     <!-- Recordings -->
     <string name="recordings_empty_list">No recordings</string>
@@ -702,6 +706,7 @@
     <string name="account_setting_conference_factory_address">Conference factory URI</string>
     <string name="account_setting_audio_video_conference_factory_address">Audio/video conference factory URI</string>
     <string name="account_setting_end_to_end_encryption_keys_server_url">E2E encryption keys server URL</string>
+    <string name="account_setting_publish_presence_title">Publish presence information</string>
 
     <!-- Conferences settings -->
     <string name="conferences_settings_layout_title">Default layout</string>
@@ -890,4 +895,6 @@
     <string name="content_description_toggle_conference_info_details">Toggle meeting information details visibility</string>
     <string name="content_description_conference_participants">Group call participants</string>
     <string name="content_description_recording_export">Export recording</string>
+    <string name="content_description_presence_online">User is online</string>
+    <string name="content_description_presence_offline">User is offline</string>
 </resources>

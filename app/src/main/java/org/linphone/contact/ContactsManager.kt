@@ -281,7 +281,7 @@ class ContactsManager(private val context: Context) {
 
     @Synchronized
     private fun refreshContactOnPresenceReceived(friend: Friend) {
-        Log.d("[Contacts Manager] Received presence information for contact $friend")
+        Log.d("[Contacts Manager] Received presence information for contact [${friend.name}]: [${friend.consolidatedPresence}]")
         if (corePreferences.storePresenceInNativeContact && PermissionHelper.get().hasWriteContactsPermission()) {
             if (friend.refKey != null) {
                 Log.i("[Contacts Manager] Storing presence in native contact ${friend.refKey}")
