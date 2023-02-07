@@ -20,6 +20,7 @@ dependencyResolutionManagement {
                 includeGroup "org.linphone"
             }
         }
+        mavenCentral()
     }
 }
 include ':app'
