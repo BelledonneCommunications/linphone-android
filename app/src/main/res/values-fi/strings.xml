@@ -1,2 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<!DOCTYPE resources [
+<!ENTITY appName "Linphone">
+]>
+<resources>
+    <string name="service_description">Tämä vaaditaan, jotta voit vastaanottaa puheluita, kun sovellus on käynnissä taustalla</string>
+    <string name="sync_account_name">&appName; yhteystiedot</string>
+    <string name="about_privacy_policy">Katso tietosuojaselosteemme</string>
+    <string name="about_weblate_translation">Auta kääntämään &appName;</string>
+    <string name="logs_reset_complete">Logit on tyhjennetty</string>
+    <string name="logs_url_copied_to_clipboard">Logien URL-osoite kopioitu leikepöydälle</string>
+    <string name="phone_number">Puhelinnumero</string>
+    <string name="phone_numbers">Puhelinnumerot</string>
+    <string name="select_your_country">Valitse maasi</string>
+    <string name="international_prefix">Etuliite</string>
+    <string name="assistant_choose_country">Valitse maa</string>
+    <string name="username">Käyttäjätunnus</string>
+    <string name="password">Salasana</string>
+    <string name="domain">Verkkotunnus</string>
+    <string name="sip_address">SIP osoite</string>
+    <string name="sip_addresses">SIP osoitteet</string>
+    <string name="cancel">Peruuta</string>
+    <plurals name="days">
+        <item quantity="one">%d päivä</item>
+        <item quantity="other">%d päivät</item>
+    </plurals>
+    <string name="today">Tänään</string>
+    <string name="yesterday">Eilen</string>
+    <string name="transport_udp">UDP</string>
+    <string name="app_description"><i>libre</i> SIP asiakasohjelmisto</string>
+    <string name="status_connected">Yhdistetty</string>
+    <string name="status_not_connected">Ei yhteyttä</string>
+    <string name="status_in_progress">Muodostetaan yhteyttä</string>
+    <string name="status_error">Yhteys epäonnistui</string>
+    <string name="about">Tietoja</string>
+    <string name="assistant">Avustaja</string>
+    <string name="transport_tcp">TCP</string>
+    <string name="transport_tls">TLS</string>
+    <string name="recordings">Tallenteet</string>
+    <string name="settings">Asetukset</string>
+    <string name="assistant_choose_country_title">Maa tai etuliite</string>
+    <string name="history_calls_list">Puhelut</string>
+    <string name="no_call_history">Ei puheluita</string>
+    <string name="no_conference_call_history">Ei ryhmäpuheluita</string>
+    <string name="history_delete_one_dialog">Haluatko poistaa tämän tietueen\?</string>
+    <string name="history_delete_many_dialog">Haluatko poistaa nämä tietueet\?</string>
+    <string name="contact_invite_friend">Kutsu</string>
+    <string name="no_contact">Ei yhteystietoja osoitekirjassasi.</string>
+    <string name="no_sip_contact">Ei SIP-yhteystietoja osoitekirjassasi.</string>
+    <string name="contact_send_sms_invite_text">Hei, liity kanssani käyttämään&appName;:a! Voit ladata sen ilmaiseksi täältä: %s</string>
+    <string name="contact_last_name">Sukunimi</string>
+    <string name="contact_first_name">Etunimi</string>
+    <string name="contact_organization">Organisaatio</string>
+    <string name="service_name">&appName; palvelu</string>
+    <string name="service_auto_start_description">&appName; on käynnistetty automaattisesti</string>
+    <string name="logs_upload_failure">Logien lähetys epäonnistui!</string>
+    <string name="email">Sähköposti</string>
+    <string name="share_uploaded_logs_link">Jaa linkki logeihin käyttäen…</string>
+    <string name="no_account_configured">Tiliä ei ole asetettu</string>
+    <string name="quit">Lopeta</string>
+    <string name="no_missed_call_history">Ei vastaamattomia puheluita</string>
+    <string name="contact_filter_hint">Hae yhteystiedoistasi</string>
+</resources>
