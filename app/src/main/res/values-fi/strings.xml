@@ -52,4 +52,30 @@
     <string name="app_description"><i>libre</i> SIP asiakasohjelmisto</string>
     <string name="history_calls_list">Puhelut</string>
     <string name="no_conference_call_history">Ei ryhmäpuheluita</string>
+    <string name="contact_invite_friend">Kutsu</string>
+    <string name="no_contact">Yhteystietoa ei löydy osoitekirjastasi.</string>
+    <string name="no_sip_contact">SIP yhteystietoa ei löydy osoitekirjastasi.</string>
+    <string name="contact_filter_hint">Hae yhteystietoa</string>
+    <string name="contact_send_sms_invite_text">Hei, tule mukaan käyttämään &appName;:a! Voit ladata sen ilmaiseksi täältä: %s</string>
+    <string name="contact_last_name">Sukunimi</string>
+    <string name="contact_first_name">Etunimi</string>
+    <string name="contact_organization">Organisaatio</string>
+    <string name="contact_choose_existing_or_new_to_add_number">Valitse yhteystieto tai luo uusi</string>
+    <string name="contact_editor_write_permission_denied">Yhteystietojen muokkausoikeudet puuttuu, muokkaus epäonnistui</string>
+    <string name="contact_delete_one_dialog">Haluatko poistaa valitun yhteystiedon\?
+\nSe poistetaan myös laitteesi osoitekirjasta</string>
+    <string name="dialer_transfer_succeded">Soittoa siirretään</string>
+    <string name="dialer_transfer_failed">Soitonsiirto epäonnistui</string>
+    <string name="no_chat_history">Ei keskusteluja</string>
+    <string name="chat_remote_is_composing">Keskustelukumppani kirjoittaa…</string>
+    <string name="chat_event_conference_created">Liityit ryhmään</string>
+    <string name="chat_event_conference_destroyed">Lähdit ryhmästä</string>
+    <string name="chat_event_participant_added">%s liittyi</string>
+    <string name="chat_event_device_added">uusi laite: %s</string>
+    <string name="chat_event_device_removed">laite poistettu: %s</string>
+    <string name="chat_event_subject_changed">uusi aihe: %s</string>
+    <string name="chat_event_admin_set">%s on ylläpitäjä</string>
+    <string name="debug_popup_send_logs">Lähetä logit</string>
+    <string name="debug_popup_show_config_file">Näytä konfiguraatiotiedosto</string>
+    <string name="chat_event_participant_removed">%s poistui</string>
 </resources>
