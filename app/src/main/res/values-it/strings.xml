@@ -143,4 +143,37 @@
 \nVerrà rimosso anche dalla rubrica del dispositivo</string>
     <string name="assistant_error_invalid_credentials">L\'account non esiste o la password non corrisponde</string>
     <string name="account_settings_password_summary">Devi reinserire la tua password se modifichi il tuo nome utente e/o il dominio</string>
+    <string name="settings_tunnel_title">Tunnel</string>
+    <string name="assistant_link_phone_number_skip">Salta</string>
+    <string name="assistant_remote_provisioning_title">Recupera la configurazione remota</string>
+    <string name="assistant_remote_provisioning_desc">Fornisci l\'URL di configurazione</string>
+    <string name="assistant_remote_provisioning_url">URL</string>
+    <string name="assistant_fetch_apply">Recupera e applica</string>
+    <string name="assistant_launch_qrcode">Codice QR</string>
+    <string name="settings_default_account_subtitle">Account predefinito</string>
+    <string name="settings_call_title">Chiamata</string>
+    <string name="settings_chat_title">Conversazione</string>
+    <string name="settings_network_title">Rete</string>
+    <string name="settings_contacts_title">Contatti</string>
+    <string name="settings_conferences_title">Riunioni</string>
+    <string name="settings_primary_account_display_name_title">Nome visualizzato</string>
+    <string name="settings_primary_account_username_title">Nome utente</string>
+    <string name="audio_settings_echo_cancellation_title">Cancellazione dell\'eco</string>
+    <string name="audio_settings_echo_cancellation_summary">Rimuove l\'eco sentita dall\'altra parte</string>
+    <string name="audio_settings_echo_canceller_calibration_summary">Clicca per iniziare la calibrazione del cancellatore di eco</string>
+    <string name="audio_settings_echo_cancellation_calibration_started">Calibrazione del cancellatore di eco iniziata</string>
+    <string name="audio_settings_echo_cancellation_calibration_value">Calibrato in %s ms</string>
+    <string name="audio_settings_echo_cancellation_calibration_failed">Calibrazione fallita</string>
+    <string name="audio_settings_echo_cancellation_calibration_no_echo">Nessuna eco rilevata</string>
+    <string name="audio_settings_echo_tester_title">Test dell\'eco</string>
+    <string name="audio_settings_adaptive_rate_control_title">Controllo adattivo della velocità</string>
+    <string name="audio_settings_input_device_title">Dispositivo predefinito di ingresso audio</string>
+    <string name="settings_list_title">Preferenze</string>
+    <string name="assistant_create_account_part_2">Abbiamo inviato un SMS con un codice di verifica al tuo numero di cellulare:</string>
+    <string name="assistant_create_account_part_3">Per completare la verifica del tuo numero di telefono, inserisci il codice a 4 cifre qui sotto:
+\n</string>
+    <string name="settings_primary_account_title">Account primario</string>
+    <string name="audio_settings_echo_canceller_calibration_title">Calibrazione del cancellatore di eco</string>
+    <string name="audio_settings_echo_tester_summary">Clicca per iniziate il test dell\'eco</string>
+    <string name="audio_settings_input_device_summary">Le modifiche avranno effetto a partire dalla prossima chiamata</string>
 </resources>
