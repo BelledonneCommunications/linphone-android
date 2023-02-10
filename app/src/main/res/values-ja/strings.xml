@@ -209,7 +209,7 @@
     <string name="conference_schedule_later">後で会議を予約しますか？</string>
     <string name="conference_schedule_subject_hint">会議主題</string>
     <string name="conference_group_call_subject_hint">グループ通話主題</string>
-    <string name="conference_schedule_send_invite_chat_summary">招待状は &amp;appName; アカウントから送信されます</string>
+    <string name="conference_schedule_send_invite_chat_summary">招待状は &appName; アカウントから送信されます</string>
     <string name="conference_schedule_encryption">この会議を暗号化しますか？</string>
     <string name="conference_paused_subtitle">再生ボタンをクリックすると、再び会議に参加できます。</string>
     <string name="conference_default_title">リモートグループ通話</string>
@@ -304,7 +304,7 @@
     <string name="assistant_welcome_title">ようこそ</string>
     <string name="assistant_welcome_desc">このアシスタントはSIPアカウントの設定と使用を支援します。</string>
     <string name="assistant_create_account">アカウントを作成</string>
-    <string name="assistant_login_linphone">&amp;appName; を使用する</string>
+    <string name="assistant_login_linphone">&appName; を使用する</string>
     <string name="assistant_login_generic">SIPアカウントを使用する</string>
     <string name="assistant_remote_provisioning">リモート設定を取得する</string>
     <string name="assistant_ec_calibration">エコーキャンセラーの調整中</string>
@@ -312,7 +312,7 @@
     <string name="assistant_phone_number_link_info_content">"
 \nアカウントを電話番号に紐付けることで、あなたの友人があなたを見つけやすくなります
 \n
-\nアドレス帳に &amp;appName; を使用している人が表示され、あなたの友人も &amp;appName; であなたと連絡を取れることがわかります。
+\nアドレス帳に &appName; を使用している人が表示され、あなたの友人も &appName; であなたと連絡を取れることがわかります。
 \n"</string>
     <string name="assistant_privacy_policy">プライバシーポリシー</string>
     <string name="assistant_read_and_agree_terms">Belledonne Communicationの%1$sと%2$sに同意します</string>
@@ -330,7 +330,7 @@
     <string name="assistant_error_invalid_email_address">Eメールアドレスが無効です</string>
     <string name="assistant_error_username_too_long">ユーザー名が長すぎます</string>
     <string name="assistant_error_invalid_credentials">アカウントが存在しないかパスワードが一致しません</string>
-    <string name="assistant_linphone_account">&amp;appName; アカウントを使用する</string>
+    <string name="assistant_linphone_account">&appName; アカウントを使用する</string>
     <string name="assistant_create_account_part_1">国番号を確認し、電話番号を入力してください</string>
     <string name="assistant_login_with_username">電話番号の代わりにユーザー名とパスワードを使用する</string>
     <string name="assistant_login_forgotten_password">パスワードを忘れた場合</string>
@@ -339,7 +339,7 @@
     <string name="assistant_continue_even_if_credentials_invalid">続ける</string>
     <string name="assistant_generic_account">SIPアカウントを使用する</string>
     <string name="assistant_finish">設定完了</string>
-    <string name="assistant_create_account_part_email">&amp;appName; アカウントのユーザー名とEメール、パスワードを入力してください</string>
+    <string name="assistant_create_account_part_email">&appName; アカウントのユーザー名とEメール、パスワードを入力してください</string>
     <string name="assistant_display_name_optional">表示名（オプション）</string>
     <string name="assistant_validate_account_1">アカウントが作成されました。メールを確認してアカウントを検証してください:</string>
     <string name="assistant_login_desc">ユーザー名とパスワード、SIPドメインを入力してください</string>
@@ -385,10 +385,10 @@
     <string name="call_error_network_unreachable">ネットワークに接続できません</string>
     <string name="call_video_update_requested_dialog">通信相手が映像を次のように切り替えようとしています</string>
     <string name="call_action_participants_list">参加者リスト</string>
-    <string name="assistant_linphone_login_desc">&amp;appName; アカウントのユーザー名とパスワードを入力してください</string>
+    <string name="assistant_linphone_login_desc">&appName; アカウントのユーザー名とパスワードを入力してください</string>
     <string name="content_description_recording_export">録音をエクスポート</string>
     <string name="audio_settings_input_device_summary">変更は次回の通話から適用されます</string>
-    <string name="assistant_phone_number_link_info_content_already_account">電話番号は1つの &amp;appName; アカウントでのみ使用できます。
+    <string name="assistant_phone_number_link_info_content_already_account">電話番号は1つの &appName; アカウントでのみ使用できます。
 \n
 \n既に他のアカウントに番号を紐付けているものの、このアカウントを使用したい場合、今すぐ紐付けることで番号が自動的にこのアカウントに移動されます。</string>
     <string name="chat_settings_downloaded_media_public_summary">一時的なメッセージのファイルは、自動ダウンロード機能ではダウンロードしません</string>
@@ -528,10 +528,10 @@
     <string name="account_settings_apply_prefix_for_calls_summary">数値が入力されている場合は、プレフィックスが番号に適用されます</string>
     <string name="account_setting_audio_video_conference_factory_address">音声・映像会議室URI</string>
     <string name="conferences_settings_layout_title">標準のレイアウト</string>
-    <string name="notification_channel_service_name">&amp;appName; サービス通知</string>
-    <string name="notification_channel_missed_call_name">&amp;appName; 不在着信通知</string>
-    <string name="notification_channel_incoming_call_name">&amp;appName; 着信通知</string>
-    <string name="notification_channel_chat_name">&amp;appName; インスタントメッセージ通知</string>
+    <string name="notification_channel_service_name">&appName; サービス通知</string>
+    <string name="notification_channel_missed_call_name">&appName; 不在着信通知</string>
+    <string name="notification_channel_incoming_call_name">&appName; 着信通知</string>
+    <string name="notification_channel_chat_name">&appName; インスタントメッセージ通知</string>
     <string name="incoming_call_notification_title">着信</string>
     <string name="incoming_group_call_notification_title">グループ通話の着信</string>
     <string name="incoming_call_notification_hangup_action_label">電話を切る</string>
@@ -559,7 +559,7 @@
     <string name="chat_settings_hide_notification_content_summary">送信者の名前のみ表示する</string>
     <string name="chat_settings_file_sharing_url_title">共有サーバーのURL</string>
     <string name="chat_settings_file_sharing_url_summary">何をしているのかわからない場合は編集しないでください！</string>
-    <string name="contacts_settings_native_presence_summary">&amp;appName; の連絡先からAndroid標準の連絡先に情報のショートカットを挿入します</string>
+    <string name="contacts_settings_native_presence_summary">&appName; の連絡先からAndroid標準の連絡先に情報のショートカットを挿入します</string>
     <string name="contacts_settings_show_organization_title">連絡先の組織を表示</string>
     <string name="contacts_settings_launcher_shortcuts_summary">チャットルームのショートカットがある場合は置き換えられます</string>
     <string name="contacts_settings_show_new_contact_account_dialog_summary">ローカルへの連絡先の保存が無効な場合</string>
@@ -658,7 +658,7 @@
     <string name="content_description_delivery_status">メッセージの送信状況</string>
     <string name="content_description_forward_message">この会話のメッセージを転送する</string>
     <string name="content_description_ephemeral_message">メッセージは一時的なものです</string>
-    <string name="content_description_linphone_user">連絡先は &amp;appName; ユーザーです</string>
+    <string name="content_description_linphone_user">連絡先は &appName; ユーザーです</string>
     <string name="content_description_contact_selected">連絡先が選択されています</string>
     <string name="content_description_e2e_encryption_disabled">エンドツーエンドの暗号化が無効になっています</string>
     <string name="content_description_e2e_encryption_enabled">エンドツーエンドの暗号化が有効になっています</string>
