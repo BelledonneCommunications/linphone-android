@@ -181,7 +181,7 @@ class AudioRouteUtils {
                 coreContext.core.outputAudioDevice
 
             if (audioDevice == null) return false
-            Log.i("[Audio Route Helper] Playback audio currently in use is [${audioDevice.deviceName} (${audioDevice.driverName}) ${audioDevice.type}]")
+            Log.i("[Audio Route Helper] Playback audio device currently in use is [${audioDevice.deviceName} (${audioDevice.driverName}) ${audioDevice.type}]")
             return audioDevice.type == AudioDevice.Type.Speaker
         }
 
