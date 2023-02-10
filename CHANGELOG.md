@@ -16,6 +16,7 @@ Group changes to describe their impact on the project, as follows:
 - Wrong country displayed in assistant after picking it in the list if another country has the same international prefix (such as +1)
 - SIP URI clickable pattern missing '~'
 - Crash that happens sometimes when CallActivity is destroyed
+- Pressing send message button while recording a voice message not sending it
 - Missing ephemeral icon next to send message icon
 - Headers colors in IMDN details
 - Pixel issue in call quality indicator 2 icon

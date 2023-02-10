@@ -213,6 +213,10 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
             stopVoiceRecordPlayer()
         }
 
+        if (isVoiceRecording.value == true) {
+            stopVoiceRecorder()
+        }
+
         val pendingMessageToReplyTo = pendingChatMessageToReplyTo.value
         val message: ChatMessage = if (isPendingAnswer.value == true && pendingMessageToReplyTo != null)
             chatRoom.createReplyMessage(pendingMessageToReplyTo.chatMessage)
@@ -403,7 +407,7 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         }
     }
 
-    fun stopVoiceRecording() {
+    private fun stopVoiceRecorder() {
         if (recorder.state == RecorderState.Running) {
             Log.i("[Chat Message Sending] Pausing / closing voice recorder")
             recorder.pause()
@@ -418,6 +422,11 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         }
 
         isVoiceRecording.value = false
+    }
+
+    fun stopVoiceRecording() {
+        stopVoiceRecorder()
+
         if (corePreferences.sendVoiceRecordingRightAway) {
             Log.i("[Chat Message Sending] Sending voice recording right away")
             sendMessage()
