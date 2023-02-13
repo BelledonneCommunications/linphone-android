@@ -159,7 +159,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="@{chatSendingViewModel.isReadOnly ? View.GONE : View.VISIBLE}"
-                app:constraint_referenced_ids="voice_recording_separator, attached_files, attach_file, voice_record, message, send_message" />
+                app:constraint_referenced_ids="attached_files, attach_file, voice_record, message, send_message" />
 
             <ViewStub
                 android:id="@+id/stubbed_message_to_reply_to"
