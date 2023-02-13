@@ -34,48 +34,49 @@
             android:layout_marginRight="10dp"
             android:src="@drawable/delete" />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_centerVertical="true"
-            android:gravity="center_vertical"
             android:layout_toRightOf="@id/cancel_recording"
             android:layout_toLeftOf="@id/play_pause_stop"
             android:background="@drawable/chat_message_voice_recording_background">
 
             <org.linphone.views.VoiceRecordProgressBar
                 android:visibility="@{viewModel.isVoiceRecording ? View.GONE : View.VISIBLE}"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_width="match_parent"
                 android:layout_height="@dimen/progress_bar_height"
                 style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                 android:progress="@{viewModel.voiceRecordPlayingPosition}"
                 android:secondaryProgress="@{viewModel.voiceRecordPlayingPosition}"
                 app:max="@{viewModel.voiceRecordingDuration}"
                 app:progressDrawable="@drawable/chat_message_audio_record_progress"
-                app:secondaryProgressTint="@{@color/green_color}"/>
+                app:secondaryProgressTint="@{@color/green_color}"
+                app:primaryRightMargin="50dp"/>
 
             <ProgressBar
                 android:visibility="@{viewModel.isVoiceRecording ? View.VISIBLE : View.GONE}"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_width="match_parent"
                 android:layout_height="@dimen/progress_bar_height"
+                android:layout_toLeftOf="@id/duration"
                 style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                 android:progressDrawable="@drawable/chat_message_audio_record_preview_progress"
                 android:max="@{viewModel.voiceRecordingProgressBarMax}"
                 android:progress="@{viewModel.voiceRecordingDuration}"/>
 
             <TextView
+                android:id="@+id/duration"
                 android:text="@{viewModel.formattedDuration, default=`00:00`}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
                 android:textColor="@color/light_primary_text_color"
                 android:textSize="15sp" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/play_pause_stop"
