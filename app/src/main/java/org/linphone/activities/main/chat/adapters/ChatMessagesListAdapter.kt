@@ -32,6 +32,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import kotlin.math.abs
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.main.adapters.SelectionListAdapter
@@ -280,7 +281,7 @@ class ChatMessagesListAdapter(
                         if (previousItem.eventLog.type == EventLog.Type.ConferenceChatMessage) {
                             val previousMessage = previousItem.eventLog.chatMessage
                             if (previousMessage != null && previousMessage.fromAddress.weakEqual(chatMessage.fromAddress)) {
-                                if (chatMessage.time - previousMessage.time < MAX_TIME_TO_GROUP_MESSAGES) {
+                                if (abs(chatMessage.time - previousMessage.time) < MAX_TIME_TO_GROUP_MESSAGES) {
                                     hasPrevious = true
                                 }
                             }
@@ -292,7 +293,7 @@ class ChatMessagesListAdapter(
                         if (nextItem.eventLog.type == EventLog.Type.ConferenceChatMessage) {
                             val nextMessage = nextItem.eventLog.chatMessage
                             if (nextMessage != null && nextMessage.fromAddress.weakEqual(chatMessage.fromAddress)) {
-                                if (nextMessage.time - chatMessage.time < MAX_TIME_TO_GROUP_MESSAGES) {
+                                if (abs(nextMessage.time - chatMessage.time) < MAX_TIME_TO_GROUP_MESSAGES) {
                                     hasNext = true
                                 }
                             }
