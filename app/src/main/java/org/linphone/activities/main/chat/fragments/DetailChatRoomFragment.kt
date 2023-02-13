@@ -646,7 +646,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             }
         }
 
-        binding.setVoiceRecordingTouchListener { _, event ->
+        binding.setVoiceRecordingTouchListener { view, event ->
             if (corePreferences.holdToRecordVoiceMessage) {
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
@@ -663,14 +663,14 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                             Log.i("[Chat Room] Voice recording button has been released, stop recording")
                             chatSendingViewModel.stopVoiceRecording()
                         }
+                        view.performClick()
                     }
                 }
-                true
             }
             false
         }
 
-        binding.message.setControlEnterListener(object : RichEditTextSendListener {
+        binding.footer.message.setControlEnterListener(object : RichEditTextSendListener {
             override fun onControlEnterPressedAndReleased() {
                 Log.i("[Chat Room] Detected left control + enter key presses, sending message")
                 chatSendingViewModel.sendMessage()
