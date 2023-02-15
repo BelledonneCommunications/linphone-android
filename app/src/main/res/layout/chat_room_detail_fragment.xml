@@ -122,7 +122,7 @@
                 android:layout_weight="0.2"
                 android:background="?attr/button_background_drawable"
                 android:padding="7dp"
-                android:enabled="@{viewModel.groupCallAvailable}"
+                android:enabled="@{viewModel.groupCallAvailable &amp;&amp; !chatSendingViewModel.isReadOnly}"
                 android:visibility="@{viewModel.oneToOneChatRoom ? View.GONE : View.VISIBLE}"
                 android:src="@drawable/icon_video_conf_new" />
 

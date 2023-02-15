@@ -936,6 +936,10 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             LayoutInflater.from(context),
             R.layout.chat_room_menu, null, false
         )
+        val readOnly = chatRoom.isReadOnly
+        popupView.ephemeralEnabled = !readOnly
+        popupView.devicesEnabled = !readOnly
+        popupView.meetingEnabled = !readOnly
 
         val itemSize = AppUtils.getDimension(R.dimen.chat_room_popup_item_height).toInt()
         var totalSize = itemSize * 8

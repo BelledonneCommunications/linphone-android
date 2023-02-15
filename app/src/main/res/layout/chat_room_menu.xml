@@ -55,6 +55,15 @@
         <variable
             name="goToContactHidden"
             type="Boolean" />
+        <variable
+            name="devicesEnabled"
+            type="Boolean" />
+        <variable
+            name="ephemeralEnabled"
+            type="Boolean" />
+        <variable
+            name="meetingEnabled"
+            type="Boolean" />
     </data>
 
     <LinearLayout
@@ -99,6 +108,7 @@
             android:visibility="@{devicesHidden ? View.GONE : View.VISIBLE}"
             android:background="@drawable/menu_background"
             android:onClick="@{devicesListener}"
+            android:enabled="@{devicesEnabled}"
             style="@style/popup_item_font"
             android:text="@string/chat_room_context_menu_participants_devices"
             app:drawableRightCompat="@drawable/chat_room_menu_devices" />
@@ -109,6 +119,7 @@
             android:visibility="@{ephemeralHidden ? View.GONE : View.VISIBLE}"
             android:background="@drawable/menu_background"
             android:onClick="@{ephemeralListener}"
+            android:enabled="@{ephemeralEnabled}"
             style="@style/popup_item_font"
             android:text="@string/chat_message_context_menu_ephemeral_messages"
             app:drawableRightCompat="@drawable/chat_room_menu_ephemeral" />
@@ -119,6 +130,7 @@
             android:visibility="@{meetingHidden ? View.GONE : View.VISIBLE}"
             android:background="@drawable/menu_background"
             android:onClick="@{meetingListener}"
+            android:enabled="@{meetingEnabled}"
             style="@style/popup_item_font"
             android:text="@string/conference_schedule_title"
             app:drawableRightCompat="@drawable/chat_room_menu_meeting" />
