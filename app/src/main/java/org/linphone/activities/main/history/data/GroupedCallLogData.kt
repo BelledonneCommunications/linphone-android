@@ -27,10 +27,18 @@ class GroupedCallLogData(callLog: CallLog) {
     val callLogs = arrayListOf(callLog)
     val lastCallLogViewModel: CallLogViewModel
         get() {
-            return CallLogViewModel(lastCallLog)
+            if (::_lastCallLogViewModel.isInitialized) {
+                return _lastCallLogViewModel
+            }
+            _lastCallLogViewModel = CallLogViewModel(lastCallLog)
+            return _lastCallLogViewModel
         }
 
+    private lateinit var _lastCallLogViewModel: CallLogViewModel
+
     fun destroy() {
-        lastCallLogViewModel.destroy()
+        if (::_lastCallLogViewModel.isInitialized) {
+            lastCallLogViewModel
+        }
     }
 }
