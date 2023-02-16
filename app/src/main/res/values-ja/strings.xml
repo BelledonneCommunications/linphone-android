@@ -198,24 +198,24 @@
     <string name="chat_security_event_lime_identity_key_changed">LIME 識別キーが %s で変更されました</string>
     <string name="chat_security_event_man_in_the_middle_detected">中間者攻撃が %s で検出されました</string>
     <string name="chat_security_event_participant_max_count_exceeded">最大参加者数が %s を超えました</string>
-    <string name="chat_room_devices_fragment_title">会話のデバイス</string>
+    <string name="chat_room_devices_fragment_title">会話で利用中のデバイス</string>
     <string name="chat_room_group_info_title">情報</string>
     <string name="chat_message_imdn_displayed">読む</string>
-    <string name="chat_room_context_menu_participants_devices">会話のデバイス</string>
-    <string name="chat_room_ephemeral_messages_desc">このメッセージは双方で開封された後、選択された時間が経過すると削除されます。</string>
+    <string name="chat_room_context_menu_participants_devices">会話で利用中のデバイス</string>
+    <string name="chat_room_ephemeral_messages_desc">このメッセージは双方が開封した後、指定された時間が経過すると削除されます。</string>
     <string name="chat_room_ephemeral_message_disabled">無効</string>
     <string name="chat_message_cant_open_file_in_app_dialog_message">テキストとして開く、もしくはサードパーティーのアプリにエクスポート（暗号化されません）しますか？</string>
     <string name="chat_message_download_already_in_progress">新しいダウンロードを開始する前に、最初のダウンロードが完了するまでお待ちください</string>
     <string name="conference_schedule_later">後で会議を予約しますか？</string>
-    <string name="conference_schedule_subject_hint">会議主題</string>
-    <string name="conference_group_call_subject_hint">グループ通話主題</string>
+    <string name="conference_schedule_subject_hint">会議の主題</string>
+    <string name="conference_group_call_subject_hint">グループ通話の主題</string>
     <string name="conference_schedule_send_invite_chat_summary">招待状は &appName; アカウントから送信されます</string>
     <string name="conference_schedule_encryption">この会議を暗号化しますか？</string>
     <string name="conference_paused_subtitle">再生ボタンをクリックすると、再び会議に参加できます。</string>
     <string name="conference_default_title">リモートグループ通話</string>
     <string name="conference_paused_title">あなたは現在会議に参加しています。</string>
     <string name="conference_local_title">ローカルグループ通話</string>
-    <string name="conference_invite_title">会議名:</string>
+    <string name="conference_invite_title">会議への招待:</string>
     <string name="conference_scheduled">会議</string>
     <string name="conference_layout_too_many_participants_for_mosaic">参加者が多すぎるため、グループ通話のレイアウトを変更できません</string>
     <string name="conference_too_many_participants_for_mosaic_layout">モザイクレイアウトでは参加者が多すぎるため、アクティブスピーカーに切り替えます</string>
@@ -239,7 +239,7 @@
     <string name="conference_participants_title">参加者 (%d)</string>
     <string name="conference_start_group_call_dialog_title">グループ通話</string>
     <string name="conference_start_group_call_dialog_message">グループ通話を開始しますか？
-\nこのグループの全員が会議に参加するための通話を受け取ります。</string>
+\nこのグループの全員が会議の電話を受け取ります。</string>
     <string name="conference_start_group_call_dialog_ok_button">開始</string>
     <string name="conference_scheduled_terminated_filter">終了済み</string>
     <string name="conference_scheduled_future_filter">予定済み</string>
