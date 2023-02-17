@@ -10,7 +10,7 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
-## [5.0.6] - Unreleased
+## [5.0.6] - 2023-02-17
 
 ### Fixed
 - Wrong country displayed in assistant after picking it in the list if another country has the same international prefix (such as +1)
@@ -23,6 +23,7 @@ Group changes to describe their impact on the project, as follows:
 
 ### Changed
 - Improved incoming call layout when receiving early-media video
+- Disable some actions in left chat rooms
 - Hidden "Echo Tester" setting unless in debug mode as it can mislead user and isn't useful for end user
 
 ## [5.0.5] - 2023-01-19
