@@ -544,7 +544,7 @@
     <string name="call_settings_ringtones_title">着信音</string>
     <string name="call_settings_use_telecom_manager_summary">特別な権限が必要です</string>
     <string name="call_settings_overlay_title">オーバーレイでの着信通知</string>
-    <string name="call_settings_system_wide_overlay_title">アプリ外にオーバーレイを表示する</string>
+    <string name="call_settings_system_wide_overlay_title">アプリ外でオーバーレイ表示する</string>
     <string name="assistant_remote_provisioning_desc">設定用URLを入力してください</string>
     <string name="chat_settings_auto_download_title">受信したファイルの自動ダウンロードポリシー</string>
     <string name="chat_settings_auto_download_summary">受信したチャットメッセージに添付されたファイルをダウンロードするかどうかについて</string>
@@ -557,7 +557,7 @@
     <string name="chat_settings_auto_download_never">ダウンロードしない</string>
     <string name="chat_settings_hide_notification_content_title">通知上ではメッセージの内容を隠す</string>
     <string name="chat_settings_hide_notification_content_summary">送信者の名前のみ表示する</string>
-    <string name="chat_settings_file_sharing_url_title">共有サーバーのURL</string>
+    <string name="chat_settings_file_sharing_url_title">共有サーバーURL</string>
     <string name="chat_settings_file_sharing_url_summary">何をしているのかわからない場合は編集しないでください！</string>
     <string name="contacts_settings_native_presence_summary">&appName; の連絡先からAndroid標準の連絡先に情報のショートカットを挿入します</string>
     <string name="contacts_settings_show_organization_title">連絡先の組織を表示</string>
@@ -765,4 +765,5 @@
     <string name="content_description_participant_is_paused">参加者が一時的にグループ通話から退出しました</string>
     <string name="content_description_toggle_conference_info_details">会議情報の詳細の可視性をトグルする</string>
     <string name="content_description_conference_participants">グループ通話の参加者</string>
+    <string name="content_description_toggle_layout_menu">グループ通話のレイアウトメニュー切り替え</string>
 </resources>
