@@ -92,7 +92,7 @@
     <string name="content_descripton_scroll_to_bottom">Posun na konec nebo na první nepřečtenou zprávu</string>
     <string name="service_description">Toto je nutné pro příjem hovorů na pozadí</string>
     <string name="sync_account_name">&appName; kontakty</string>
-    <string name="service_name">&appName; služba</string>
+    <string name="service_name">&amp;appName; Služba</string>
     <string name="logs_upload_failure">Odeslání logu selhalo!</string>
     <string name="logs_reset_complete">Log byl odstraněn</string>
     <string name="logs_url_copied_to_clipboard">URL adresa logu byla zkopírována do schránky</string>
@@ -124,7 +124,7 @@
     <string name="status_error">Připojení selhalo</string>
     <string name="no_account_configured">Nebyl nastaven žádný účet</string>
     <string name="about">Informace o</string>
-    <string name="assistant">Asistent</string>
+    <string name="assistant">Průvodce</string>
     <string name="recordings">Nahrávky</string>
     <string name="settings">Nastavení</string>
     <string name="quit">Ukončit</string>
@@ -225,12 +225,12 @@
     <string name="conference_description_title">Popis</string>
     <string name="conference_invite_join">Připojit se</string>
     <string name="conference_display_mode_mosaic">Režim mozaiky</string>
-    <string name="conference_display_mode_active_speaker">Režim aktivního reproduktoru</string>
+    <string name="conference_display_mode_active_speaker">Režim právě hovořícího</string>
     <string name="conference_display_mode_audio_only">Pouze režim zvuku</string>
     <string name="conference_waiting_room_start_call">Zahájit</string>
     <string name="conference_waiting_room_cancel_call">Zrušit</string>
     <string name="conference_scheduled">Schůzky</string>
-    <string name="conference_too_many_participants_for_mosaic_layout">Pro mozaikové uspořádání je připojeno příliš mnoho účastníků, přepínám na aktivní reproduktor</string>
+    <string name="conference_too_many_participants_for_mosaic_layout">Pro mozaikové uspořádání je připojeno příliš mnoho účastníků, přepínám na režim právě hovořícího</string>
     <string name="conference_participant_paused">(pozastaveno)</string>
     <string name="conference_no_schedule">Zatím nebyla naplánována žádná schůzka.</string>
     <string name="conference_no_terminated_schedule">Zatím nebyla zrušena žádná schůzka.</string>
@@ -380,8 +380,8 @@
     <string name="call_settings_auto_answer_delay_summary">v milisekundách</string>
     <string name="call_settings_incoming_timeout_summary">v sekundách</string>
     <string name="call_settings_redirect_to_voice_mail_declined_calls_title">Přesměrování odmítnutých hovorů na URI hlasové schránky</string>
-    <string name="call_settings_accept_early_media_title">Přijmout včasná média</string>
-    <string name="call_settings_ring_during_early_media_title">Vyzvánění při příchozích časných médiích</string>
+    <string name="call_settings_accept_early_media_title">Přijímat early media</string>
+    <string name="call_settings_ring_during_early_media_title">Vyzvánět při příchozích early media</string>
     <string name="call_settings_remote_recording_title">Upozornění na nahrávání hovoru protistranou</string>
     <string name="chat_settings_mark_as_read_notif_dismissal_title">Označit jako přečtený po přečtení notifikace</string>
     <string name="chat_settings_file_sharing_url_title">Adresa URL sdíleného serveru</string>
@@ -421,7 +421,7 @@
     <string name="contacts_settings_ldap_auth_method_simple">Jednoduché</string>
     <string name="contacts_settings_ldap_tls_title">Použít TLS</string>
     <string name="contacts_settings_ldap_cert_check_title">Zkontrolovat certifikáty</string>
-    <string name="contacts_settings_ldap_cert_check_auto">Automatický</string>
+    <string name="contacts_settings_ldap_cert_check_auto">Automaticky</string>
     <string name="contacts_settings_ldap_cert_check_disabled">Zakázáno</string>
     <string name="contacts_settings_ldap_cert_check_enabled">Povoleno</string>
     <string name="contacts_settings_ldap_search_title">Hledat</string>
@@ -515,7 +515,7 @@
     <string name="dialog_delete">Smazat</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_accept">Přijmout</string>
-    <string name="dialog_call">Volat</string>
+    <string name="dialog_call">Hovor</string>
     <string name="operation_in_progress_wait">Operace probíhá, vyčkejte prosím</string>
     <string name="dialog_default_delete_one">Opravdu chcete tuto položku odstranit\?</string>
     <string name="dialog_default_delete_many">Jste si jisti, že chcete svůj výběr odstranit\?</string>
@@ -595,7 +595,7 @@
     <string name="content_description_create_one_to_one_chat_room">Vytvořit konverzaci jeden na jednoho</string>
     <string name="content_description_security_level_unsafe">Nebezpečné</string>
     <string name="content_description_security_level_safe">Bezpečné</string>
-    <string name="content_description_security_level_encrypted">Šifrované</string>
+    <string name="content_description_security_level_encrypted">Šifrováno</string>
     <string name="content_description_call_quality_4">Nejlepší kvalita hovoru</string>
     <string name="content_description_call_not_secured">Hovor není zabezpečený</string>
     <string name="content_description_call_secured">Hovor je zabezpečený</string>
@@ -632,7 +632,7 @@
     <string name="no_call_history">Žádný hovor v historii</string>
     <string name="no_missed_call_history">Žádný zmeškaný hovor v historii</string>
     <string name="contact_invite_friend">Pozvat</string>
-    <string name="no_sip_contact">V adresáři SIP nemáte žádný kontakt.</string>
+    <string name="no_sip_contact">V adresáři nemáte žádný SIP kontakt.</string>
     <string name="contact_choose_existing_or_new_to_add_number">Vyberte kontakt nebo vytvořte nový</string>
     <string name="contact_editor_write_permission_denied">Oprávnění k úpravě kontaktů odepřeno, kontakt nelze upravit</string>
     <string name="contact_delete_one_dialog">Chcete tento kontakt odstranit\?
@@ -668,7 +668,7 @@
     <string name="chat_message_context_menu_turn_off_notifications">Zakázat oznámení</string>
     <string name="chat_message_context_menu_turn_on_notifications">Povolit oznámení</string>
     <string name="chat_room_ephemeral_messages_desc">Tato zpráva bude po přečtení a uplynutí zvoleného časového limitu na obou stranách smazána.</string>
-    <string name="chat_room_ephemeral_message_disabled">Vypnuto</string>
+    <string name="chat_room_ephemeral_message_disabled">Zakázáno</string>
     <string name="chat_room_ephemeral_message_one_hour">1 hodina</string>
     <string name="chat_room_ephemeral_message_one_week">1 týden</string>
     <plurals name="chat_room_remote_composing">
@@ -745,7 +745,7 @@
 \n"</string>
     <string name="assistant_general_terms">podmínky používání</string>
     <string name="assistant_read_and_agree_terms">Přijímám %1$s a %2$s společnosti Belledonne Communications</string>
-    <string name="assistant_generic_account_warning">Některé funkce vyžadují účet &amp;appName;, například skupinové zprávy nebo efemérní zprávy.
+    <string name="assistant_generic_account_warning">Některé funkce vyžadují účet &amp;appName;, například skupinové zprávy nebo mizející zprávy.
 \n
 \nTyto funkce jsou při registraci účtu SIP třetí strany skryté.
 \n
