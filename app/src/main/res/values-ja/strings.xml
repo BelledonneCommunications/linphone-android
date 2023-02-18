@@ -20,7 +20,7 @@
     <string name="no_missed_call_history">不在着信の履歴がありません</string>
     <string name="history_delete_many_dialog">これらの記録を削除しますか？</string>
     <string name="contact_invite_friend">招待</string>
-    <string name="no_sip_contact">アドレス帳にSIPの連絡先がありません</string>
+    <string name="no_sip_contact">アドレス帳にSIPの連絡先がありません。</string>
     <string name="contact_filter_hint">連絡先を検索</string>
     <string name="contact_last_name">名字</string>
     <string name="contact_organization">組織</string>
@@ -64,7 +64,7 @@
     <string name="no_call_history">着信の履歴がありません</string>
     <string name="no_conference_call_history">会議の履歴がありません</string>
     <string name="history_delete_one_dialog">この記録を削除しますか？</string>
-    <string name="no_contact">アドレス帳に連絡先がありません</string>
+    <string name="no_contact">アドレス帳に連絡先がありません。</string>
     <string name="contact_send_sms_invite_text">こんにちは！&appName; で参加しましょう！%s から無料でダウンロードできます</string>
     <string name="contact_first_name">名前</string>
     <string name="contact_choose_existing_or_new_to_add_number">連絡先を選択、または新規作成</string>
@@ -344,7 +344,7 @@
     <string name="assistant_validate_account_1">アカウントが作成されました。メールを確認してアカウントを検証してください:</string>
     <string name="assistant_login_desc">ユーザー名とパスワード、SIPドメインを入力してください</string>
     <string name="assistant_confirm_password">パスワードを確認</string>
-    <string name="assistant_create_account_part_2">あなたの電話番号宛に認証コードを記載したSMSで送信しました:</string>
+    <string name="assistant_create_account_part_2">あなたの電話番号宛に認証コードを記載したSMSを送信しました:</string>
     <string name="assistant_use_username_instead_or_phone_number">ユーザー名を使用する（オプション）</string>
     <string name="assistant_validate_account_2">確認後、ここに戻ってボタンをクリックしてください。</string>
     <string name="assistant_create_account_part_3">電話番号の認証を完了するには、以下に4桁のコードを入力してください:
@@ -662,7 +662,7 @@
     <string name="content_description_contact_selected">連絡先が選択されています</string>
     <string name="content_description_e2e_encryption_disabled">エンドツーエンドの暗号化が無効になっています</string>
     <string name="content_description_e2e_encryption_enabled">エンドツーエンドの暗号化が有効になっています</string>
-    <string name="content_description_show_sip_contacts">SIPの連絡先飲みを表示</string>
+    <string name="content_description_show_sip_contacts">SIPの連絡先のみを表示</string>
     <string name="content_description_start_call">通話を開始</string>
     <string name="content_description_show_chat_room_menu">チャットルームメニューを表示</string>
     <string name="content_description_attach_file">メッセージにファイルを添付する</string>
@@ -757,4 +757,12 @@
     <string name="content_description_export">サードパーティのアプリでファイルを開く</string>
     <string name="content_description_cancel_voice_recording">音声の録音を取り消す</string>
     <string name="content_descripton_scroll_to_bottom">下部もしくは最初の未読メッセージに移動する</string>
+    <string name="content_description_enter_edition_mode">エディションモードへ移行</string>
+    <string name="content_description_exit_edition_mode">エディションモードを終了</string>
+    <string name="content_description_call_context_menu">通話メニューを開く</string>
+    <string name="content_description_go_to_chat_rooms_list">会話一覧へ移動</string>
+    <string name="content_description_conference_participant_mic_muted">参加者のマイクはミュートされています</string>
+    <string name="content_description_participant_is_paused">参加者が一時的にグループ通話から退出しました</string>
+    <string name="content_description_toggle_conference_info_details">会議情報の詳細の可視性をトグルする</string>
+    <string name="content_description_conference_participants">グループ通話の参加者</string>
 </resources>
