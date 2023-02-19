@@ -363,7 +363,7 @@
     <string name="audio_settings_output_device_summary">変更は次回の通話から適用されます</string>
     <string name="audio_settings_prefer_bluetooth_devices_title">Bluetoothデバイスがある場合はそのデバイスに音声を接続する</string>
     <string name="audio_settings_codec_bitrate_title">コーデックのビットレート制限</string>
-    <string name="audio_settings_playback_gain_summary">(in decibels)</string>
+    <string name="audio_settings_playback_gain_summary">(デシベル)</string>
     <string name="audio_settings_codecs_title">コーデック</string>
     <string name="video_settings_enable_title">映像を有効にする</string>
     <string name="video_settings_tablet_preview_title">ダイヤラーにカメラのプレビューを表示</string>
@@ -377,7 +377,7 @@
     <string name="video_settings_preferred_fps_title">FPSを優先する</string>
     <string name="assistant_remote_provisioning_url">URL</string>
     <string name="audio_settings_microphone_gain_title">Microphone gain</string>
-    <string name="audio_settings_microphone_gain_summary">(in decibels)</string>
+    <string name="audio_settings_microphone_gain_summary">(デシベル)</string>
     <string name="audio_settings_playback_gain_title">Playback gain</string>
     <string name="audio_settings_input_device_title">デフォルトの音声入力デバイス</string>
     <string name="assistant_general_terms">利用規約</string>
@@ -435,7 +435,7 @@
     <string name="audio_settings_echo_cancellation_calibration_no_echo">エコーが検出されませんでした</string>
     <string name="video_settings_bandwidth_limit_title">帯域幅制限</string>
     <string name="video_settings_codecs_title">コーデック</string>
-    <string name="video_settings_bandwidth_limit_summary">in kbits/s</string>
+    <string name="video_settings_bandwidth_limit_summary">キロビット/秒</string>
     <string name="call_settings_vibrate_title">着信時にバイブレーションを鳴らす</string>
     <string name="call_settings_encryption_title">メディアの暗号化</string>
     <string name="call_settings_media_encryption_none">なし</string>
@@ -459,7 +459,7 @@
     <string name="chat_settings_mark_as_read_notif_dismissal_title">通知の却下時に既読としてマークする</string>
     <string name="chat_settings_auto_download_under_size">指定された最大サイズよりも小さい場合</string>
     <string name="chat_settings_auto_download_max_size_title">最大サイズ</string>
-    <string name="chat_settings_auto_download_max_size_summary">in bytes</string>
+    <string name="chat_settings_auto_download_max_size_summary">バイト</string>
     <string name="chat_settings_use_in_app_file_viewer_summary">サードパーティのアプリでのエクスポートは引き続き可能です</string>
     <string name="chat_settings_auto_download_voice_recordings">受信した録音音声を自動でダウンロードする</string>
     <string name="network_settings_wifi_only_title">WiFiのみを使用する</string>
