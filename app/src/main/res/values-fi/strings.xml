@@ -223,7 +223,7 @@
     <string name="chat_message_cant_open_file_in_app_dialog_message">Haluatko avata tekstinä tai lähettää sen (salaamattomana) kolmannen osapuolen sovellukselle\?</string>
     <string name="chat_message_download_already_in_progress">Ennen uutta latausta, odota edellisen päättymistä</string>
     <string name="conference_schedule_subject_hint">Kokouksen aihe</string>
-    <string name="conference_schedule_send_invite_chat">Lähetä kutsu käyttäen &amp;appName;</string>
+    <string name="conference_schedule_send_invite_chat">Lähetä kutsu käyttäen &appName;</string>
     <string name="conference_schedule_encryption">Haluatko salata kokouksen\?</string>
     <string name="conference_schedule_address_copied_to_clipboard">Kokouksen osoite kopioitu leikepöydälle</string>
     <string name="conference_paused_subtitle">Paina toistopainiketta liittyäksesi takaisin.</string>
