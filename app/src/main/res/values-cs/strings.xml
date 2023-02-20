@@ -92,7 +92,7 @@
     <string name="content_descripton_scroll_to_bottom">Posun na konec nebo na první nepřečtenou zprávu</string>
     <string name="service_description">Toto je nutné pro příjem hovorů na pozadí</string>
     <string name="sync_account_name">&appName; kontakty</string>
-    <string name="service_name">&amp;appName; Služba</string>
+    <string name="service_name">&appName; Služba</string>
     <string name="logs_upload_failure">Odeslání logu selhalo!</string>
     <string name="logs_reset_complete">Log byl odstraněn</string>
     <string name="logs_url_copied_to_clipboard">URL adresa logu byla zkopírována do schránky</string>
@@ -544,7 +544,7 @@
     <string name="content_description_downloaded_file_transfer">Přiložený soubor</string>
     <string name="content_description_delivery_status">Stav doručení zprávy</string>
     <string name="content_description_forward_message">Předat zprávu v této konverzaci</string>
-    <string name="content_description_linphone_user">Kontakt je uživatelem &amp;appName;</string>
+    <string name="content_description_linphone_user">Kontakt je uživatelem &appName;</string>
     <string name="content_description_contact_selected">Kontakt je vybrán</string>
     <string name="content_description_e2e_encryption_enabled">Koncové šifrování je povoleno</string>
     <string name="content_description_show_sip_contacts">Zobrazit seznam pouze s kontakty SIP</string>
@@ -622,9 +622,9 @@
     <string name="content_description_toggle_conference_info_details">Přepnout viditelnost podrobností o schůzce</string>
     <string name="content_description_conference_participants">Účastníci skupinového hovoru</string>
     <string name="content_description_recording_export">Exportovat záznam</string>
-    <string name="service_auto_start_description">&amp;appName; byla automaticky spuštěna</string>
+    <string name="service_auto_start_description">&appName; byla automaticky spuštěna</string>
     <string name="about_privacy_policy">Navštivte naše zásady ochrany osobních údajů</string>
-    <string name="about_weblate_translation">Pomozte nám přeložit &amp;appName;</string>
+    <string name="about_weblate_translation">Pomozte nám přeložit &appName;</string>
     <string name="phone_number">Telefonní číslo</string>
     <string name="assistant_choose_country">Vyberte zemi</string>
     <string name="share_uploaded_logs_link">Sdílet odkaz na log pomocí…</string>
@@ -692,7 +692,7 @@
     <string name="conference_schedule_duration">Trvání</string>
     <string name="conference_schedule_send_invite_email">Poslat pozvánku e-mailem</string>
     <string name="conference_schedule_send_updated_invite_email">Poslat aktualizaci e-mailem</string>
-    <string name="conference_schedule_send_invite_chat_summary">Pozvánka bude odeslána z mého &amp;appName; účtu</string>
+    <string name="conference_schedule_send_invite_chat_summary">Pozvánka bude odeslána z mého &appName; účtu</string>
     <string name="conference_schedule_summary">Informace o schůzce</string>
     <string name="conference_schedule_address_copied_to_clipboard">Adresa schůzky zkopírovaná do schránky</string>
     <string name="conference_schedule_info_not_sent_to_participant">Nepodařilo se odeslat informace o schůzce účastníkovi</string>
@@ -741,11 +741,11 @@
     <string name="assistant_phone_number_link_info_content">"
 \nPřátelé vás snáze najdou, pokud svůj účet propojíte s telefonním číslem.
 \n
-\nV adresáři uvidíte, kdo používá &amp;appName;, a vaši přátelé budou vědět, že vás mohou zastihnout i na &amp;appName;.
+\nV adresáři uvidíte, kdo používá &appName;, a vaši přátelé budou vědět, že vás mohou zastihnout i na &appName;.
 \n"</string>
     <string name="assistant_general_terms">podmínky používání</string>
     <string name="assistant_read_and_agree_terms">Přijímám %1$s a %2$s společnosti Belledonne Communications</string>
-    <string name="assistant_generic_account_warning">Některé funkce vyžadují účet &amp;appName;, například skupinové zprávy nebo mizející zprávy.
+    <string name="assistant_generic_account_warning">Některé funkce vyžadují účet &appName;, například skupinové zprávy nebo mizející zprávy.
 \n
 \nTyto funkce jsou při registraci účtu SIP třetí strany skryté.
 \n
@@ -757,7 +757,7 @@
     <string name="assistant_login_with_username">Místo telefonního čísla použijte své uživatelské jméno a heslo</string>
     <string name="assistant_continue_even_if_credentials_invalid">Pokračovat</string>
     <string name="assistant_generic_account">Použít SIP účet</string>
-    <string name="assistant_create_account_part_email">Zadejte prosím uživatelské jméno, e-mail a heslo pro svůj &amp;appName; účet</string>
+    <string name="assistant_create_account_part_email">Zadejte prosím uživatelské jméno, e-mail a heslo pro svůj &appName; účet</string>
     <string name="assistant_create_account_part_2">Na vaše telefonní číslo jsme vám zaslali SMS s ověřovacím kódem:</string>
     <string name="assistant_link_phone_number">Se svým telefonním číslem spojíte následující uživatelské jméno:</string>
     <string name="assistant_remote_provisioning_desc">Uveďte prosím adresu URL vaší konfigurace</string>
