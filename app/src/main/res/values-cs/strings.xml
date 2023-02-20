@@ -365,7 +365,7 @@
     <string name="call_settings_ringtones_title">Vyzváněcí tón</string>
     <string name="call_settings_vibrate_title">Vibrovat během vyzvánění příchozího hovoru</string>
     <string name="call_settings_encryption_title">Šifrování médií</string>
-    <string name="call_settings_media_encryption_zrtp_post_quantum">"Post kvantové  ZRTP"</string>
+    <string name="call_settings_media_encryption_zrtp_post_quantum">Post kvantové ZRTP</string>
     <string name="call_settings_media_encryption_srtp">SRTP</string>
     <string name="call_settings_media_encryption_zrtp">ZRTP</string>
     <string name="call_settings_media_encryption_dtls">DTLS-SRTP</string>
