@@ -620,7 +620,7 @@
     <string name="video_settings_tablet_preview_title">Zobrazit náhled z kamery na číselníku</string>
     <string name="video_settings_automatically_accept_summary">Vždy přijímat požadavky na video</string>
     <string name="video_settings_preferred_fps_title">Předvolba FPS</string>
-    <string name="call_settings_media_encryption_zrtp_post_quantum">"Post kvantové  ZRTP"</string>
+    <string name="call_settings_media_encryption_zrtp_post_quantum">Post kvantové ZRTP</string>
     <string name="call_settings_auto_start_summary">Volání se spustí automaticky, pokud je spuštěno z jiné aplikace</string>
     <string name="call_settings_pause_calls_lost_audio_focus_title">Pozastavení hovorů při ztrátě zaměření zvuku</string>
     <string name="chat_settings_mark_as_read_notif_dismissal_title">Označit jako přečtený po přečtení notifikace</string>
