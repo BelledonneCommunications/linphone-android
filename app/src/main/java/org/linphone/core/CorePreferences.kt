@@ -470,6 +470,10 @@ class CorePreferences constructor(private val context: Context) {
     val forceEndToEndEncryptedChat: Boolean
         get() = config.getBool("app", "force_lime_chat_rooms", false)
 
+    // Turning this ON will show the secure chat button even if there is no LIME capability in presence (or no presence)
+    val allowEndToEndEncryptedChatWithoutPresence: Boolean
+        get() = config.getBool("app", "allow_lime_friend_without_capability", false)
+
     // This will prevent UI from showing up, except for the launcher & the foreground service notification
     val preventInterfaceFromShowingUp: Boolean
         get() = config.getBool("app", "keep_app_invisible", false)
