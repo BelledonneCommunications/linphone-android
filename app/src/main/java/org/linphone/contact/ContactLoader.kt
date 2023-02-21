@@ -59,7 +59,8 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
-        Log.i("[Contacts Loader] Loader created")
+        val lastFetch = coreContext.contactsManager.latestContactFetch
+        Log.i("[Contacts Loader] Loader created, ${if (lastFetch.isEmpty()) "first fetch" else "last fetch happened at [$lastFetch]"}")
         coreContext.contactsManager.fetchInProgress.value = true
 
         val mimeType = ContactsContract.Data.MIMETYPE
@@ -267,8 +268,11 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                             friends.clear()
                             Log.i("[Contacts Loader] Friends added")
 
-                            fl.updateSubscriptions()
-                            Log.i("[Contacts Loader] Subscription(s) updated")
+                            // Only update subscriptions when default account is registered or anytime if it isn't the first contacts fetch
+                            if (core.defaultAccount?.state == RegistrationState.Ok || coreContext.contactsManager.latestContactFetch.isNotEmpty()) {
+                                Log.i("[Contacts Loader] Updating friend list [$fl] subscriptions")
+                                fl.updateSubscriptions()
+                            }
 
                             coreContext.contactsManager.fetchFinished()
                         }
