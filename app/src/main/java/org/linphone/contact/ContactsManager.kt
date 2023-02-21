@@ -44,6 +44,7 @@ import org.linphone.core.tools.Log
 import org.linphone.utils.ImageUtils
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.PermissionHelper
+import org.linphone.utils.TimestampUtils
 
 interface ContactsUpdatedListener {
     fun onContactsUpdated()
@@ -111,7 +112,7 @@ class ContactsManager(private val context: Context) {
 
     fun fetchFinished() {
         Log.i("[Contacts Manager] Contacts loader have finished")
-        latestContactFetch = System.currentTimeMillis().toString()
+        latestContactFetch = TimestampUtils.timeToString(System.currentTimeMillis(), false)
         updateLocalContacts()
         fetchInProgress.value = false
         notifyListeners()
