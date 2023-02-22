@@ -70,17 +70,17 @@ class ConferenceParticipantDeviceData(
 
         override fun onStateChanged(
             participantDevice: ParticipantDevice,
-            state: ParticipantDeviceState
+            state: ParticipantDevice.State
         ) {
             Log.i(
                 "[Conference Participant Device] Participant [${participantDevice.address.asStringUriOnly()}] state has changed: $state"
             )
             when (state) {
-                ParticipantDeviceState.Joining, ParticipantDeviceState.Alerting -> isJoining.value = true
-                ParticipantDeviceState.OnHold -> {
+                ParticipantDevice.State.Joining, ParticipantDevice.State.Alerting -> isJoining.value = true
+                ParticipantDevice.State.OnHold -> {
                     isInConference.value = false
                 }
-                ParticipantDeviceState.Present -> {
+                ParticipantDevice.State.Present -> {
                     isJoining.value = false
                     isInConference.value = true
                     updateWindowId(textureView)
@@ -135,7 +135,7 @@ class ConferenceParticipantDeviceData(
         isInConference.value = participantDevice.isInConference
 
         val state = participantDevice.state
-        isJoining.value = state == ParticipantDeviceState.Joining || state == ParticipantDeviceState.Alerting
+        isJoining.value = state == ParticipantDevice.State.Joining || state == ParticipantDevice.State.Alerting
         Log.i(
             "[Conference Participant Device] State for participant [${participantDevice.address.asStringUriOnly()}] is $state"
         )

@@ -95,13 +95,13 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
         }
 
         override fun onConferenceJoined(chatRoom: ChatRoom, eventLog: EventLog) {
-            if (!chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
+            if (!chatRoom.hasCapability(ChatRoom.Capabilities.OneToOne.toInt())) {
                 addEvent(eventLog)
             }
         }
 
         override fun onConferenceLeft(chatRoom: ChatRoom, eventLog: EventLog) {
-            if (!chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
+            if (!chatRoom.hasCapability(ChatRoom.Capabilities.OneToOne.toInt())) {
                 addEvent(eventLog)
             }
         }

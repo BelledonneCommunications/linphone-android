@@ -25,7 +25,7 @@ import kotlinx.coroutines.CoroutineScope
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.activities.main.viewmodels.MessageNotifierViewModel
 import org.linphone.core.Address
-import org.linphone.core.ChatRoomSecurityLevel
+import org.linphone.core.ChatRoom.SecurityLevel
 import org.linphone.core.ConsolidatedPresence
 import org.linphone.core.Friend
 import org.linphone.utils.LinphoneUtils
@@ -35,7 +35,7 @@ interface ContactDataInterface {
 
     val displayName: MutableLiveData<String>
 
-    val securityLevel: MutableLiveData<ChatRoomSecurityLevel>
+    val securityLevel: MutableLiveData<SecurityLevel>
 
     val showGroupChatAvatar: Boolean
         get() = false
@@ -48,12 +48,12 @@ interface ContactDataInterface {
 open class GenericContactData(private val sipAddress: Address) : ContactDataInterface {
     final override val contact: MutableLiveData<Friend> = MutableLiveData<Friend>()
     final override val displayName: MutableLiveData<String> = MutableLiveData<String>()
-    final override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
+    final override val securityLevel: MutableLiveData<SecurityLevel> = MutableLiveData<SecurityLevel>()
     final override val presenceStatus: MutableLiveData<ConsolidatedPresence> = MutableLiveData<ConsolidatedPresence>()
     final override val coroutineScope: CoroutineScope = coreContext.coroutineScope
 
     init {
-        securityLevel.value = ChatRoomSecurityLevel.ClearText
+        securityLevel.value = SecurityLevel.ClearText
         presenceStatus.value = ConsolidatedPresence.Offline
         contactLookup()
     }
@@ -78,12 +78,12 @@ open class GenericContactData(private val sipAddress: Address) : ContactDataInte
 abstract class GenericContactViewModel(private val sipAddress: Address) : MessageNotifierViewModel(), ContactDataInterface {
     final override val contact: MutableLiveData<Friend> = MutableLiveData<Friend>()
     final override val displayName: MutableLiveData<String> = MutableLiveData<String>()
-    final override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
+    final override val securityLevel: MutableLiveData<SecurityLevel> = MutableLiveData<SecurityLevel>()
     final override val presenceStatus: MutableLiveData<ConsolidatedPresence> = MutableLiveData<ConsolidatedPresence>()
     final override val coroutineScope: CoroutineScope = viewModelScope
 
     init {
-        securityLevel.value = ChatRoomSecurityLevel.ClearText
+        securityLevel.value = SecurityLevel.ClearText
         presenceStatus.value = ConsolidatedPresence.Offline
         contactLookup()
     }

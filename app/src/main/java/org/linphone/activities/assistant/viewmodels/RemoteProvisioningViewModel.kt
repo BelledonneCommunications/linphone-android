@@ -23,7 +23,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.core.ConfiguringState
+import org.linphone.core.Config
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
@@ -38,13 +38,17 @@ class RemoteProvisioningViewModel : ViewModel() {
     val fetchSuccessfulEvent = MutableLiveData<Event<Boolean>>()
 
     private val listener = object : CoreListenerStub() {
-        override fun onConfiguringStatus(core: Core, status: ConfiguringState, message: String?) {
+        override fun onConfiguringStatus(
+            core: Core,
+            status: Config.ConfiguringState,
+            message: String?
+        ) {
             fetchInProgress.value = false
             when (status) {
-                ConfiguringState.Successful -> {
+                Config.ConfiguringState.Successful -> {
                     fetchSuccessfulEvent.value = Event(true)
                 }
-                ConfiguringState.Failed -> {
+                Config.ConfiguringState.Failed -> {
                     fetchSuccessfulEvent.value = Event(false)
                 }
                 else -> {}

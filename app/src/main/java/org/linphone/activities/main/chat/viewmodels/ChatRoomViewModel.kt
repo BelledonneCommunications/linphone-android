@@ -49,7 +49,7 @@ class ChatRoomViewModelFactory(private val chatRoom: ChatRoom) :
 class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterface {
     override val contact: MutableLiveData<Friend> = MutableLiveData<Friend>()
     override val displayName: MutableLiveData<String> = MutableLiveData<String>()
-    override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
+    override val securityLevel: MutableLiveData<ChatRoom.SecurityLevel> = MutableLiveData<ChatRoom.SecurityLevel>()
     override val showGroupChatAvatar: Boolean
         get() = conferenceChatRoom && !oneToOneChatRoom
     override val presenceStatus: MutableLiveData<ConsolidatedPresence> = MutableLiveData<ConsolidatedPresence>()
@@ -74,23 +74,23 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
     val ephemeralEnabled = MutableLiveData<Boolean>()
 
     val basicChatRoom: Boolean by lazy {
-        chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt())
+        chatRoom.hasCapability(ChatRoom.Capabilities.Basic.toInt())
     }
 
     val oneToOneChatRoom: Boolean by lazy {
-        chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())
+        chatRoom.hasCapability(ChatRoom.Capabilities.OneToOne.toInt())
     }
 
     private val conferenceChatRoom: Boolean by lazy {
-        chatRoom.hasCapability(ChatRoomCapabilities.Conference.toInt())
+        chatRoom.hasCapability(ChatRoom.Capabilities.Conference.toInt())
     }
 
     val encryptedChatRoom: Boolean by lazy {
-        chatRoom.hasCapability(ChatRoomCapabilities.Encrypted.toInt())
+        chatRoom.hasCapability(ChatRoom.Capabilities.Encrypted.toInt())
     }
 
     val ephemeralChatRoom: Boolean by lazy {
-        chatRoom.hasCapability(ChatRoomCapabilities.Ephemeral.toInt())
+        chatRoom.hasCapability(ChatRoom.Capabilities.Ephemeral.toInt())
     }
 
     val meAdmin: MutableLiveData<Boolean> by lazy {
@@ -387,13 +387,13 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         securityLevel.value = level
 
         securityLevelIcon.value = when (level) {
-            ChatRoomSecurityLevel.Safe -> R.drawable.security_2_indicator
-            ChatRoomSecurityLevel.Encrypted -> R.drawable.security_1_indicator
+            ChatRoom.SecurityLevel.Safe -> R.drawable.security_2_indicator
+            ChatRoom.SecurityLevel.Encrypted -> R.drawable.security_1_indicator
             else -> R.drawable.security_alert_indicator
         }
         securityLevelContentDescription.value = when (level) {
-            ChatRoomSecurityLevel.Safe -> R.string.content_description_security_level_safe
-            ChatRoomSecurityLevel.Encrypted -> R.string.content_description_security_level_encrypted
+            ChatRoom.SecurityLevel.Safe -> R.string.content_description_security_level_safe
+            ChatRoom.SecurityLevel.Encrypted -> R.string.content_description_security_level_encrypted
             else -> R.string.content_description_security_level_unsafe
         }
     }

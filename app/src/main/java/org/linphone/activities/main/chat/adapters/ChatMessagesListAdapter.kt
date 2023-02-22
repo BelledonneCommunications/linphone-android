@@ -365,7 +365,7 @@ class ChatMessagesListAdapter(
                         val itemSize = AppUtils.getDimension(R.dimen.chat_message_popup_item_height).toInt()
                         var totalSize = itemSize * 7
                         if (chatMessage.chatRoom.hasCapability(
-                                ChatRoomCapabilities.OneToOne.toInt()
+                                ChatRoom.Capabilities.OneToOne.toInt()
                             )
                         ) {
                             // No message id

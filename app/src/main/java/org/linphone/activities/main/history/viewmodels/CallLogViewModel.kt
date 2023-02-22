@@ -110,7 +110,7 @@ class CallLogViewModel(val callLog: CallLog, private val isRelated: Boolean = fa
         corePreferences.allowEndToEndEncryptedChatWithoutPresence || (
             contact.value?.getPresenceModelForUriOrTel(
                 peerSipUri
-            )?.hasCapability(FriendCapability.LimeX3Dh) ?: false
+            )?.hasCapability(Friend.Capability.LimeX3Dh) ?: false
             )
         )
 

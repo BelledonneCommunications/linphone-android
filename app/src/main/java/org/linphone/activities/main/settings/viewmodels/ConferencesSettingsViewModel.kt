@@ -22,12 +22,12 @@ package org.linphone.activities.main.settings.viewmodels
 import androidx.lifecycle.MutableLiveData
 import org.linphone.R
 import org.linphone.activities.main.settings.SettingListenerStub
-import org.linphone.core.ConferenceLayout
+import org.linphone.core.Conference.Layout
 
 class ConferencesSettingsViewModel : GenericSettingsViewModel() {
     val layoutListener = object : SettingListenerStub() {
         override fun onListValueChanged(position: Int) {
-            core.defaultConferenceLayout = ConferenceLayout.fromInt(layoutValues[position])
+            core.defaultConferenceLayout = Layout.fromInt(layoutValues[position])
             layoutIndex.value = position
         }
     }
@@ -43,10 +43,10 @@ class ConferencesSettingsViewModel : GenericSettingsViewModel() {
         val labels = arrayListOf<String>()
 
         labels.add(prefs.getString(R.string.conference_display_mode_active_speaker))
-        layoutValues.add(ConferenceLayout.ActiveSpeaker.toInt())
+        layoutValues.add(Layout.ActiveSpeaker.toInt())
 
         labels.add(prefs.getString(R.string.conference_display_mode_mosaic))
-        layoutValues.add(ConferenceLayout.Grid.toInt())
+        layoutValues.add(Layout.Grid.toInt())
 
         layoutLabels.value = labels
         layoutIndex.value = layoutValues.indexOf(core.defaultConferenceLayout.toInt())

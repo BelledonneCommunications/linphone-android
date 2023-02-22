@@ -133,11 +133,11 @@ class LinphoneUtils {
 
             val params = core.createDefaultChatRoomParams()
             params.isGroupEnabled = false
-            params.backend = ChatRoomBackend.Basic
+            params.backend = ChatRoom.Backend.Basic
             if (isSecured) {
                 params.subject = AppUtils.getString(R.string.chat_room_dummy_subject)
                 params.isEncryptionEnabled = true
-                params.backend = ChatRoomBackend.FlexisipChat
+                params.backend = ChatRoom.Backend.FlexisipChat
             }
 
             val participants = arrayOf(participant)
@@ -159,10 +159,10 @@ class LinphoneUtils {
             val chatRoomParams = coreContext.core.createDefaultChatRoomParams()
             chatRoomParams.isGroupEnabled = false
             if (isEndToEndEncryptedChatAvailable()) {
-                chatRoomParams.backend = ChatRoomBackend.FlexisipChat
+                chatRoomParams.backend = ChatRoom.Backend.FlexisipChat
                 chatRoomParams.isEncryptionEnabled = true
             } else {
-                chatRoomParams.backend = ChatRoomBackend.Basic
+                chatRoomParams.backend = ChatRoom.Backend.Basic
                 chatRoomParams.isEncryptionEnabled = false
             }
             chatRoomParams.subject = "Meeting invitation" // Won't be used

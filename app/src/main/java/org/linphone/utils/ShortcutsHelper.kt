@@ -36,7 +36,7 @@ import org.linphone.activities.main.MainActivity
 import org.linphone.contact.getPerson
 import org.linphone.core.Address
 import org.linphone.core.ChatRoom
-import org.linphone.core.ChatRoomCapabilities
+import org.linphone.core.ChatRoom.Capabilities
 import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.mediastream.Version
@@ -62,7 +62,7 @@ class ShortcutsHelper(val context: Context) {
                 }
 
                 val addresses: ArrayList<Address> = arrayListOf(room.peerAddress)
-                if (!room.hasCapability(ChatRoomCapabilities.Basic.toInt())) {
+                if (!room.hasCapability(Capabilities.Basic.toInt())) {
                     addresses.clear()
                     for (participant in room.participants) {
                         addresses.add(participant.address)
@@ -169,7 +169,7 @@ class ShortcutsHelper(val context: Context) {
                 val personsList = arrayListOf<Person>()
                 val subject: String
                 val icon: IconCompat
-                if (chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt())) {
+                if (chatRoom.hasCapability(Capabilities.Basic.toInt())) {
                     val contact =
                         coreContext.contactsManager.findContactByAddress(chatRoom.peerAddress)
                     val person = contact?.getPerson()
@@ -179,7 +179,7 @@ class ShortcutsHelper(val context: Context) {
 
                     icon = person?.icon ?: coreContext.contactsManager.contactAvatar
                     subject = contact?.name ?: LinphoneUtils.getDisplayName(chatRoom.peerAddress)
-                } else if (chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) && chatRoom.participants.isNotEmpty()) {
+                } else if (chatRoom.hasCapability(Capabilities.OneToOne.toInt()) && chatRoom.participants.isNotEmpty()) {
                     val address = chatRoom.participants.first().address
                     val contact =
                         coreContext.contactsManager.findContactByAddress(address)

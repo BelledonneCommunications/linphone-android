@@ -38,7 +38,6 @@ import org.linphone.activities.navigateToChatRoom
 import org.linphone.activities.navigateToChatRoomCreation
 import org.linphone.core.Address
 import org.linphone.core.ChatRoom
-import org.linphone.core.ChatRoomCapabilities
 import org.linphone.databinding.ChatRoomGroupInfoFragmentBinding
 import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
@@ -68,7 +67,7 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
 
         adapter = GroupInfoParticipantsAdapter(
             viewLifecycleOwner,
-            chatRoom?.hasCapability(ChatRoomCapabilities.Encrypted.toInt()) ?: (viewModel.isEncrypted.value == true)
+            chatRoom?.hasCapability(ChatRoom.Capabilities.Encrypted.toInt()) ?: (viewModel.isEncrypted.value == true)
         )
         binding.participants.adapter = adapter
 

@@ -30,7 +30,7 @@ import androidx.recyclerview.widget.RecyclerView
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Address
-import org.linphone.core.FriendCapability
+import org.linphone.core.Friend.Capability
 import org.linphone.core.SearchResult
 import org.linphone.databinding.ContactSelectionCellBinding
 import org.linphone.utils.Event
@@ -121,12 +121,12 @@ class ContactsSelectionAdapter(
             ) ?: false
             val limeCheck = !securityEnabled || (
                 securityEnabled && searchResult.hasCapability(
-                    FriendCapability.LimeX3Dh
+                    Capability.LimeX3Dh
                 )
                 )
             val groupCheck = !groupCapabilityRequired || (
                 groupCapabilityRequired && searchResult.hasCapability(
-                    FriendCapability.GroupChat
+                    Capability.GroupChat
                 )
                 )
             val disabled = if (searchResult.friend != null) !limeCheck || !groupCheck || isMyself else false // Generated entry from search filter

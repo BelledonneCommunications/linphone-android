@@ -792,7 +792,7 @@ class NotificationsManager(private val context: Context) {
             notifiable.messages.add(notifiableMessage)
         }
 
-        if (room.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
+        if (room.hasCapability(ChatRoom.Capabilities.OneToOne.toInt())) {
             notifiable.isGroup = false
         } else {
             notifiable.isGroup = true

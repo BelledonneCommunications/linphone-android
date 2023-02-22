@@ -1058,7 +1058,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 }
 
                 if (viewModel.ephemeralChatRoom) {
-                    if (chatRoom.currentParams.ephemeralMode == ChatRoomEphemeralMode.AdminManaged) {
+                    if (chatRoom.currentParams.ephemeralMode == ChatRoom.EphemeralMode.AdminManaged) {
                         if (chatRoom.me?.isAdmin == false) {
                             Log.w(
                                 "[Chat Room] Hiding ephemeral menu as mode is admin managed and we aren't admin"

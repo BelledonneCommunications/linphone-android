@@ -27,9 +27,6 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.core.Ldap
-import org.linphone.core.LdapAuthMethod
-import org.linphone.core.LdapCertVerificationMode
-import org.linphone.core.LdapDebugLevel
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
 
@@ -102,7 +99,7 @@ class LdapSettingsViewModel(private val ldap: Ldap, val index: String) : Generic
     val ldapAuthMethodListener = object : SettingListenerStub() {
         override fun onListValueChanged(position: Int) {
             val params = ldap.params.clone()
-            params.authMethod = LdapAuthMethod.fromInt(ldapAuthMethodValues[position])
+            params.authMethod = Ldap.AuthMethod.fromInt(ldapAuthMethodValues[position])
             ldap.params = params
             ldapAuthMethodIndex.value = position
         }
@@ -123,7 +120,7 @@ class LdapSettingsViewModel(private val ldap: Ldap, val index: String) : Generic
     val ldapCertCheckListener = object : SettingListenerStub() {
         override fun onListValueChanged(position: Int) {
             val params = ldap.params.clone()
-            params.serverCertificatesVerificationMode = LdapCertVerificationMode.fromInt(
+            params.serverCertificatesVerificationMode = Ldap.CertVerificationMode.fromInt(
                 ldapCertCheckValues[position]
             )
             ldap.params = params
@@ -238,7 +235,7 @@ class LdapSettingsViewModel(private val ldap: Ldap, val index: String) : Generic
     val ldapDebugListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
             val params = ldap.params.clone()
-            params.debugLevel = if (newValue) LdapDebugLevel.Verbose else LdapDebugLevel.Off
+            params.debugLevel = if (newValue) Ldap.DebugLevel.Verbose else Ldap.DebugLevel.Off
             ldap.params = params
         }
     }
@@ -261,7 +258,7 @@ class LdapSettingsViewModel(private val ldap: Ldap, val index: String) : Generic
         ldapNameAttribute.value = params.nameAttribute
         ldapSipAttribute.value = params.sipAttribute
         ldapSipDomain.value = params.sipDomain
-        ldapDebug.value = params.debugLevel == LdapDebugLevel.Verbose
+        ldapDebug.value = params.debugLevel == Ldap.DebugLevel.Verbose
 
         initAuthMethodList()
         initTlsCertCheckList()
@@ -271,10 +268,10 @@ class LdapSettingsViewModel(private val ldap: Ldap, val index: String) : Generic
         val labels = arrayListOf<String>()
 
         labels.add(prefs.getString(R.string.contacts_settings_ldap_auth_method_anonymous))
-        ldapAuthMethodValues.add(LdapAuthMethod.Anonymous.toInt())
+        ldapAuthMethodValues.add(Ldap.AuthMethod.Anonymous.toInt())
 
         labels.add(prefs.getString(R.string.contacts_settings_ldap_auth_method_simple))
-        ldapAuthMethodValues.add(LdapAuthMethod.Simple.toInt())
+        ldapAuthMethodValues.add(Ldap.AuthMethod.Simple.toInt())
 
         ldapAuthMethodLabels.value = labels
         ldapAuthMethodIndex.value = ldapAuthMethodValues.indexOf(ldap.params.authMethod.toInt())
@@ -284,13 +281,13 @@ class LdapSettingsViewModel(private val ldap: Ldap, val index: String) : Generic
         val labels = arrayListOf<String>()
 
         labels.add(prefs.getString(R.string.contacts_settings_ldap_cert_check_auto))
-        ldapCertCheckValues.add(LdapCertVerificationMode.Default.toInt())
+        ldapCertCheckValues.add(Ldap.CertVerificationMode.Default.toInt())
 
         labels.add(prefs.getString(R.string.contacts_settings_ldap_cert_check_disabled))
-        ldapCertCheckValues.add(LdapCertVerificationMode.Disabled.toInt())
+        ldapCertCheckValues.add(Ldap.CertVerificationMode.Disabled.toInt())
 
         labels.add(prefs.getString(R.string.contacts_settings_ldap_cert_check_enabled))
-        ldapCertCheckValues.add(LdapCertVerificationMode.Enabled.toInt())
+        ldapCertCheckValues.add(Ldap.CertVerificationMode.Enabled.toInt())
 
         ldapCertCheckLabels.value = labels
         ldapCertCheckIndex.value = ldapCertCheckValues.indexOf(

@@ -100,8 +100,8 @@ open class ContactsSelectionViewModel : MessageNotifierViewModel() {
         coreContext.contactsManager.magicSearch.getContactsListAsync(
             filterValue,
             domain,
-            MagicSearchSource.All.toInt(),
-            MagicSearchAggregation.None
+            MagicSearch.Source.All.toInt(),
+            MagicSearch.Aggregation.None
         )
 
         val spinnerDelay = corePreferences.delayBeforeShowingContactsSearchSpinner.toLong()
