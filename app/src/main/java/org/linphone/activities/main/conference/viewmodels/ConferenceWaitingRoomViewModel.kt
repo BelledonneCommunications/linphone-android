@@ -337,7 +337,7 @@ class ConferenceWaitingRoomViewModel : MessageNotifierViewModel() {
     fun setMosaicLayout() {
         Log.i("[Conference Waiting Room] Set default layout to Mosaic")
 
-        callParams.conferenceVideoLayout = ConferenceLayout.Grid
+        callParams.conferenceVideoLayout = Conference.Layout.Grid
         callParams.isVideoEnabled = isVideoAvailableInCore()
 
         updateLayout()
@@ -350,7 +350,7 @@ class ConferenceWaitingRoomViewModel : MessageNotifierViewModel() {
     fun setActiveSpeakerLayout() {
         Log.i("[Conference Waiting Room] Set default layout to ActiveSpeaker")
 
-        callParams.conferenceVideoLayout = ConferenceLayout.ActiveSpeaker
+        callParams.conferenceVideoLayout = Conference.Layout.ActiveSpeaker
         callParams.isVideoEnabled = isVideoAvailableInCore()
 
         updateLayout()
@@ -437,7 +437,7 @@ class ConferenceWaitingRoomViewModel : MessageNotifierViewModel() {
             selectedLayout.value = ConferenceDisplayMode.AUDIO_ONLY
         } else {
             selectedLayout.value = when (callParams.conferenceVideoLayout) {
-                ConferenceLayout.Grid -> ConferenceDisplayMode.GRID
+                Conference.Layout.Grid -> ConferenceDisplayMode.GRID
                 else -> ConferenceDisplayMode.ACTIVE_SPEAKER
             }
         }

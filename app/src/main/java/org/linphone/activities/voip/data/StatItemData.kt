@@ -85,7 +85,7 @@ class StatItemData(val type: StatType) {
             StatType.DOWNLOAD_BW -> "${stats.downloadBandwidth} kbits/s"
             StatType.UPLOAD_BW -> "${stats.uploadBandwidth} kbits/s"
             StatType.ICE -> stats.iceState.toString()
-            StatType.IP_FAM -> if (stats.ipFamilyOfRemote == AddressFamily.Inet6) "IPv6" else "IPv4"
+            StatType.IP_FAM -> if (stats.ipFamilyOfRemote == Address.Family.Inet6) "IPv6" else "IPv4"
             StatType.SENDER_LOSS -> DecimalFormat("##.##%").format(stats.senderLossRate)
             StatType.RECEIVER_LOSS -> DecimalFormat("##.##%").format(stats.receiverLossRate)
             StatType.JITTER -> DecimalFormat("##.## ms").format(stats.jitterBufferSizeMs)

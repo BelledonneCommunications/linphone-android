@@ -42,7 +42,7 @@ import org.linphone.utils.TimestampUtils
 class ChatRoomData(val chatRoom: ChatRoom) : ContactDataInterface {
     override val contact: MutableLiveData<Friend> = MutableLiveData<Friend>()
     override val displayName: MutableLiveData<String> = MutableLiveData<String>()
-    override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
+    override val securityLevel: MutableLiveData<ChatRoom.SecurityLevel> = MutableLiveData<ChatRoom.SecurityLevel>()
     override val showGroupChatAvatar: Boolean
         get() = !oneToOneChatRoom
     override val presenceStatus: MutableLiveData<ConsolidatedPresence> = MutableLiveData<ConsolidatedPresence>()
@@ -71,15 +71,15 @@ class ChatRoomData(val chatRoom: ChatRoom) : ContactDataInterface {
     val notificationsMuted = MutableLiveData<Boolean>()
 
     private val basicChatRoom: Boolean by lazy {
-        chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt())
+        chatRoom.hasCapability(ChatRoom.Capabilities.Basic.toInt())
     }
 
     val oneToOneChatRoom: Boolean by lazy {
-        chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())
+        chatRoom.hasCapability(ChatRoom.Capabilities.OneToOne.toInt())
     }
 
     val encryptedChatRoom: Boolean by lazy {
-        chatRoom.hasCapability(ChatRoomCapabilities.Encrypted.toInt())
+        chatRoom.hasCapability(ChatRoom.Capabilities.Encrypted.toInt())
     }
 
     val contactNewlyFoundEvent: MutableLiveData<Event<Boolean>> by lazy {
@@ -131,13 +131,13 @@ class ChatRoomData(val chatRoom: ChatRoom) : ContactDataInterface {
         securityLevel.value = level
 
         securityLevelIcon.value = when (level) {
-            ChatRoomSecurityLevel.Safe -> R.drawable.security_2_indicator
-            ChatRoomSecurityLevel.Encrypted -> R.drawable.security_1_indicator
+            ChatRoom.SecurityLevel.Safe -> R.drawable.security_2_indicator
+            ChatRoom.SecurityLevel.Encrypted -> R.drawable.security_1_indicator
             else -> R.drawable.security_alert_indicator
         }
         securityLevelContentDescription.value = when (level) {
-            ChatRoomSecurityLevel.Safe -> R.string.content_description_security_level_safe
-            ChatRoomSecurityLevel.Encrypted -> R.string.content_description_security_level_encrypted
+            ChatRoom.SecurityLevel.Safe -> R.string.content_description_security_level_safe
+            ChatRoom.SecurityLevel.Encrypted -> R.string.content_description_security_level_encrypted
             else -> R.string.content_description_security_level_unsafe
         }
     }

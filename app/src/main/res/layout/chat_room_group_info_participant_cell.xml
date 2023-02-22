@@ -4,7 +4,7 @@
 
     <data>
         <import type="android.view.View"/>
-        <import type="org.linphone.core.ChatRoomSecurityLevel"/>
+        <import type="org.linphone.core.ChatRoom.SecurityLevel"/>
         <import type="org.linphone.core.ConsolidatedPresence"/>
         <variable
             name="removeClickListener"
@@ -59,7 +59,7 @@
                 android:layout_alignParentEnd="true"
                 android:contentDescription="@string/content_description_contact_can_do_encryption"
                 android:src="@drawable/security_toggle_icon_green"
-                android:visibility="@{isEncrypted &amp;&amp; data.securityLevel == ChatRoomSecurityLevel.ClearText ? View.VISIBLE : View.GONE, default=gone}" />
+                android:visibility="@{isEncrypted &amp;&amp; data.securityLevel == SecurityLevel.ClearText ? View.VISIBLE : View.GONE, default=gone}" />
 
             <ImageView
                 android:layout_width="20dp"
@@ -68,7 +68,7 @@
                 android:layout_alignParentEnd="true"
                 android:contentDescription="@{data.securityLevelContentDescription}"
                 android:src="@{data.securityLevelIcon, default=@drawable/security_alert_indicator}"
-                android:visibility="@{isEncrypted &amp;&amp; data.securityLevel != ChatRoomSecurityLevel.ClearText ? View.VISIBLE : View.GONE, default=gone}" />
+                android:visibility="@{isEncrypted &amp;&amp; data.securityLevel != SecurityLevel.ClearText ? View.VISIBLE : View.GONE, default=gone}" />
 
         </RelativeLayout>
 

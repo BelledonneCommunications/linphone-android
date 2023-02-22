@@ -94,15 +94,15 @@ class ChatRoomCreationViewModel : ContactsSelectionViewModel() {
 
         val encrypted = secureChatMandatory || isEncrypted.value == true
         val params: ChatRoomParams = coreContext.core.createDefaultChatRoomParams()
-        params.backend = ChatRoomBackend.Basic
+        params.backend = ChatRoom.Backend.Basic
         params.isGroupEnabled = false
         if (encrypted) {
             params.isEncryptionEnabled = true
-            params.backend = ChatRoomBackend.FlexisipChat
+            params.backend = ChatRoom.Backend.FlexisipChat
             params.ephemeralMode = if (corePreferences.useEphemeralPerDeviceMode) {
-                ChatRoomEphemeralMode.DeviceManaged
+                ChatRoom.EphemeralMode.DeviceManaged
             } else {
-                ChatRoomEphemeralMode.AdminManaged
+                ChatRoom.EphemeralMode.AdminManaged
             }
             params.ephemeralLifetime = 0 // Make sure ephemeral is disabled by default
             Log.i(
