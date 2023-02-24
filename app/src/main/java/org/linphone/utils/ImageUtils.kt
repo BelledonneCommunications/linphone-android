@@ -22,12 +22,24 @@ package org.linphone.utils
 import android.content.Context
 import android.graphics.*
 import android.net.Uri
+import android.util.Base64
 import java.io.FileNotFoundException
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 
 class ImageUtils {
     companion object {
+        private const val BASE64_REGEX = "^data:image\\/(gif|png|jpeg|bmp|webp|svg\\+xml)(;charset=utf-8)?;base64,[A-Za-z0-9+\\/]+={0,2}\$"
+
+        fun isBase64(source: String): Boolean {
+            return source.matches(Regex(BASE64_REGEX))
+        }
+
+        fun getBase64ImageFromString(base64: String): ByteArray? {
+            val substring = base64.substring(base64.indexOf(",") + 1)
+            return Base64.decode(substring, Base64.DEFAULT)
+        }
+
         fun getRoundBitmapFromUri(
             context: Context,
             fromPictureUri: Uri?

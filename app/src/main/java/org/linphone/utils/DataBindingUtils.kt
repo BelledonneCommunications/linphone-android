@@ -372,8 +372,13 @@ private suspend fun loadContactPictureWithCoil(
     } else {
         val displayName = contact.contact.value?.name ?: contact.displayName.value.orEmpty()
         val source = contact.contact.value?.getPictureUri(useThumbnail)
+        val sourceStr = source.toString()
+        val base64 = if (ImageUtils.isBase64(sourceStr)) {
+            Log.d("[Coil] Picture URI is base64 encoded")
+            ImageUtils.getBase64ImageFromString(sourceStr)
+        } else null
 
-        imageView.load(source) {
+        imageView.load(base64 ?: source) {
             transformations(CircleCropTransformation())
             error(
                 if (displayName.isEmpty() || AppUtils.getInitials(displayName) == "+") {
