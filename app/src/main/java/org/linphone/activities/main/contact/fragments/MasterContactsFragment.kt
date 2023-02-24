@@ -237,8 +237,10 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
                 val contact = coreContext.contactsManager.findContactById(id)
                 if (contact != null) {
                     contactIdToDisplay = null
-                    Log.i("[Contacts] Found matching contact $contact after callback")
+                    Log.i("[Contacts] Found matching contact [$contact] after callback")
                     adapter.selectedContactEvent.value = Event(contact)
+                } else {
+                    Log.w("[Contacts] No contact found matching id [$id] after callback")
                 }
             }
             adapter.submitList(it)
@@ -285,28 +287,30 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
         arguments?.clear()
 
         if (id != null) {
-            Log.i("[Contacts] Found contact id parameter in arguments: $id")
+            Log.i("[Contacts] Found contact id parameter in arguments [$id]")
             val contact = coreContext.contactsManager.findContactById(id)
             if (contact != null) {
-                Log.i("[Contacts] Found matching contact $contact")
+                Log.i("[Contacts] Found matching contact [${contact.name}]")
                 adapter.selectedContactEvent.value = Event(contact)
             } else {
                 Log.w("[Contacts] Matching contact not found yet, waiting for contacts updated callback")
                 contactIdToDisplay = id
             }
         } else if (sipUri != null) {
-            Log.i("[Contacts] Found sipUri parameter in arguments: $sipUri")
+            Log.i("[Contacts] Found sipUri parameter in arguments [$sipUri]")
             sipUriToAdd = sipUri
             (activity as MainActivity).showSnackBar(R.string.contact_choose_existing_or_new_to_add_number)
             editOnClick = true
         } else if (addressString != null) {
             val address = Factory.instance().createAddress(addressString)
             if (address != null) {
-                Log.i("[Contacts] Found friend native pointer parameter in arguments: ${address.asStringUriOnly()}")
+                Log.i("[Contacts] Found friend SIP address parameter in arguments [${address.asStringUriOnly()}]")
                 val contact = coreContext.contactsManager.findContactByAddress(address)
                 if (contact != null) {
                     Log.i("[Contacts] Found matching contact $contact")
                     adapter.selectedContactEvent.value = Event(contact)
+                } else {
+                    Log.w("[Contacts] No matching contact found for SIP address [${address.asStringUriOnly()}]")
                 }
             }
         }
