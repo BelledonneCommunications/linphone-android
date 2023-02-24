@@ -21,15 +21,15 @@
 package org.linphone.activities.assistant.viewmodels
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.*
 import org.linphone.activities.assistant.fragments.CountryPickerFragment
 import org.linphone.core.AccountCreator
 import org.linphone.core.DialPlan
 import org.linphone.core.tools.Log
 import org.linphone.utils.PhoneNumberUtils
 
-abstract class AbstractPhoneViewModel(val accountCreator: AccountCreator) :
-    ViewModel(),
+abstract class AbstractPhoneViewModel(accountCreator: AccountCreator) :
+    AbstractPushTokenViewModel(accountCreator),
     CountryPickerFragment.CountryPickedListener {
 
     val prefix = MutableLiveData<String>()
@@ -71,7 +71,7 @@ abstract class AbstractPhoneViewModel(val accountCreator: AccountCreator) :
     }
 
     private fun getCountryNameFromPrefix(prefix: String?) {
-        if (prefix != null && prefix.isNotEmpty()) {
+        if (!prefix.isNullOrEmpty()) {
             val countryCode = if (prefix.first() == '+') prefix.substring(1) else prefix
             val dialPlan = PhoneNumberUtils.getDialPlanFromCountryCallingPrefix(countryCode)
             Log.i("[Assistant] Found dial plan $dialPlan from country code: $countryCode")

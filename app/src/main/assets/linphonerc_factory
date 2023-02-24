@@ -42,11 +42,11 @@ activation_code_length=4
 prefer_basic_chat_room=1
 record_aware=1
 
-[assistant]
-xmlrpc_url=https://subscribe.linphone.org:444/wizard.php
-
 [account_creator]
-backend=0
+backend=1
+# 1 means FlexiAPI, 0 is XMLRPC
+url=https://subscribe.linphone.org/api/
+# replace above URL by https://staging-subscribe.linphone.org/api/ for testing
 
 [lime]
 lime_update_threshold=86400

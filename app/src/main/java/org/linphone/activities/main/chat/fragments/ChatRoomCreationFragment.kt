@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.activities.GenericActivity
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.chat.viewmodels.ChatRoomCreationViewModel
 import org.linphone.activities.main.fragments.SecureFragment
@@ -74,7 +75,7 @@ class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>
             AppUtils.getDividerDecoration(requireContext(), layoutManager)
         )
 
-        binding.back.visibility = if (resources.getBoolean(R.bool.isTablet)) View.INVISIBLE else View.VISIBLE
+        binding.back.visibility = if ((requireActivity() as GenericActivity).isTablet()) View.INVISIBLE else View.VISIBLE
 
         binding.setAllContactsToggleClickListener {
             viewModel.sipContactsSelected.value = false

@@ -38,6 +38,7 @@ import org.linphone.BuildConfig
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.activities.GenericActivity
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.dialer.viewmodels.DialerViewModel
 import org.linphone.activities.main.fragments.SecureFragment
@@ -213,7 +214,7 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
     override fun onResume() {
         super.onResume()
 
-        if (resources.getBoolean(R.bool.isTablet)) {
+        if ((requireActivity() as GenericActivity).isTablet()) {
             coreContext.core.nativePreviewWindowId = binding.videoPreviewWindow
         }
 

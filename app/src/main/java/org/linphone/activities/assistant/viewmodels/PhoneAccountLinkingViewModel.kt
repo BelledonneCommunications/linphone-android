@@ -120,18 +120,28 @@ class PhoneAccountLinkingViewModel(accountCreator: AccountCreator) : AbstractPho
         super.onCleared()
     }
 
-    fun link() {
+    override fun onFlexiApiTokenReceived() {
         accountCreator.setPhoneNumber(phoneNumber.value, prefix.value)
         accountCreator.username = username.value
-        Log.i("[Assistant] [Phone Account Linking] Phone number is ${accountCreator.phoneNumber}")
+        Log.i("[Phone Account Linking] Phone number is ${accountCreator.phoneNumber}")
 
-        waitForServerAnswer.value = true
         val status: AccountCreator.Status = accountCreator.isAliasUsed
         Log.i("[Phone Account Linking] isAliasUsed returned $status")
         if (status != AccountCreator.Status.RequestOk) {
             waitForServerAnswer.value = false
             onErrorEvent.value = Event("Error: ${status.name}")
         }
+    }
+
+    override fun onFlexiApiTokenRequestError() {
+        Log.e("[Phone Account Linking] Failed to get an auth token from FlexiAPI")
+        waitForServerAnswer.value = false
+    }
+
+    fun link() {
+        Log.i("[Phone Account Linking] Requesting an auth token from FlexiAPI")
+        waitForServerAnswer.value = true
+        requestFlexiApiToken()
     }
 
     fun skip() {

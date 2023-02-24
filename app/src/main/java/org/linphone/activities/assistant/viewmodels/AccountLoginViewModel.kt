@@ -19,12 +19,13 @@
  */
 package org.linphone.activities.assistant.viewmodels
 
+import android.content.pm.PackageManager
 import androidx.lifecycle.*
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.R
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
+import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.PhoneNumberUtils
 
 class AccountLoginViewModelFactory(private val accountCreator: AccountCreator) :
@@ -50,6 +51,8 @@ class AccountLoginViewModel(accountCreator: AccountCreator) : AbstractPhoneViewM
     val waitForServerAnswer = MutableLiveData<Boolean>()
 
     val displayName = MutableLiveData<String>()
+
+    val forceLoginUsingUsernameAndPassword = MutableLiveData<Boolean>()
 
     val leaveAssistantEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
@@ -84,17 +87,16 @@ class AccountLoginViewModel(accountCreator: AccountCreator) : AbstractPhoneViewM
         }
     }
 
-    private var proxyConfigToCheck: ProxyConfig? = null
+    private var accountToCheck: Account? = null
 
     private val coreListener = object : CoreListenerStub() {
-        @Deprecated("Deprecated in Java")
-        override fun onRegistrationStateChanged(
+        override fun onAccountRegistrationStateChanged(
             core: Core,
-            cfg: ProxyConfig,
-            state: RegistrationState,
+            account: Account,
+            state: RegistrationState?,
             message: String
         ) {
-            if (cfg == proxyConfigToCheck) {
+            if (account == accountToCheck) {
                 Log.i("[Assistant] [Account Login] Registration state is $state: $message")
                 if (state == RegistrationState.Ok) {
                     waitForServerAnswer.value = false
@@ -112,7 +114,12 @@ class AccountLoginViewModel(accountCreator: AccountCreator) : AbstractPhoneViewM
     init {
         accountCreator.addListener(listener)
 
-        loginWithUsernamePassword.value = coreContext.context.resources.getBoolean(R.bool.isTablet)
+        val pushAvailable = LinphoneUtils.isPushNotificationAvailable()
+        val deviceHasTelephonyFeature = coreContext.context.packageManager.hasSystemFeature(
+            PackageManager.FEATURE_TELEPHONY
+        )
+        loginWithUsernamePassword.value = !deviceHasTelephonyFeature || !pushAvailable
+        forceLoginUsingUsernameAndPassword.value = !pushAvailable
 
         loginEnabled.value = false
         loginEnabled.addSource(prefix) {
@@ -140,76 +147,105 @@ class AccountLoginViewModel(accountCreator: AccountCreator) : AbstractPhoneViewM
         super.onCleared()
     }
 
+    override fun onFlexiApiTokenReceived() {
+        Log.i("[Assistant] [Account Login] Using FlexiAPI auth token [${accountCreator.token}]")
+        loginWithPhoneNumber()
+    }
+
+    override fun onFlexiApiTokenRequestError() {
+        Log.e("[Assistant] [Account Login] Failed to get an auth token from FlexiAPI")
+        waitForServerAnswer.value = false
+        onErrorEvent.value = Event("Error: Failed to get an auth token from account manager server")
+    }
+
     fun removeInvalidProxyConfig() {
-        val cfg = proxyConfigToCheck
-        cfg ?: return
-        val authInfo = cfg.findAuthInfo()
+        val account = accountToCheck
+        account ?: return
+        val authInfo = account.findAuthInfo()
         if (authInfo != null) coreContext.core.removeAuthInfo(authInfo)
-        coreContext.core.removeProxyConfig(cfg)
-        proxyConfigToCheck = null
+        coreContext.core.removeAccount(account)
+        accountToCheck = null
     }
 
     fun continueEvenIfInvalidCredentials() {
         leaveAssistantEvent.value = Event(true)
     }
 
+    private fun loginWithUsername() {
+        val result = accountCreator.setUsername(username.value)
+        if (result != AccountCreator.UsernameStatus.Ok) {
+            Log.e(
+                "[Assistant] [Account Login] Error [${result.name}] setting the username: ${username.value}"
+            )
+            usernameError.value = result.name
+            return
+        }
+        Log.i("[Assistant] [Account Login] Username is ${accountCreator.username}")
+
+        val result2 = accountCreator.setPassword(password.value)
+        if (result2 != AccountCreator.PasswordStatus.Ok) {
+            Log.e("[Assistant] [Account Login] Error [${result2.name}] setting the password")
+            passwordError.value = result2.name
+            return
+        }
+
+        waitForServerAnswer.value = true
+        coreContext.core.addListener(coreListener)
+        if (!createAccountAndAuthInfo()) {
+            waitForServerAnswer.value = false
+            coreContext.core.removeListener(coreListener)
+            onErrorEvent.value = Event("Error: Failed to create account object")
+        }
+    }
+
+    private fun loginWithPhoneNumber() {
+        val result = AccountCreator.PhoneNumberStatus.fromInt(
+            accountCreator.setPhoneNumber(phoneNumber.value, prefix.value)
+        )
+        if (result != AccountCreator.PhoneNumberStatus.Ok) {
+            Log.e(
+                "[Assistant] [Account Login] Error [$result] setting the phone number: ${phoneNumber.value} with prefix: ${prefix.value}"
+            )
+            phoneNumberError.value = result.name
+            return
+        }
+        Log.i("[Assistant] [Account Login] Phone number is ${accountCreator.phoneNumber}")
+
+        val result2 = accountCreator.setUsername(accountCreator.phoneNumber)
+        if (result2 != AccountCreator.UsernameStatus.Ok) {
+            Log.e(
+                "[Assistant] [Account Login] Error [${result2.name}] setting the username: ${accountCreator.phoneNumber}"
+            )
+            usernameError.value = result2.name
+            return
+        }
+        Log.i("[Assistant] [Account Login] Username is ${accountCreator.username}")
+
+        waitForServerAnswer.value = true
+        val status = accountCreator.recoverAccount()
+        Log.i("[Assistant] [Account Login] Recover account returned $status")
+        if (status != AccountCreator.Status.RequestOk) {
+            waitForServerAnswer.value = false
+            onErrorEvent.value = Event("Error: ${status.name}")
+        }
+    }
+
     fun login() {
         accountCreator.displayName = displayName.value
 
         if (loginWithUsernamePassword.value == true) {
-            val result = accountCreator.setUsername(username.value)
-            if (result != AccountCreator.UsernameStatus.Ok) {
-                Log.e(
-                    "[Assistant] [Account Login] Error [${result.name}] setting the username: ${username.value}"
-                )
-                usernameError.value = result.name
-                return
-            }
-            Log.i("[Assistant] [Account Login] Username is ${accountCreator.username}")
-
-            val result2 = accountCreator.setPassword(password.value)
-            if (result2 != AccountCreator.PasswordStatus.Ok) {
-                Log.e("[Assistant] [Account Login] Error [${result2.name}] setting the password")
-                passwordError.value = result2.name
-                return
-            }
-
-            waitForServerAnswer.value = true
-            coreContext.core.addListener(coreListener)
-            if (!createProxyConfig()) {
-                waitForServerAnswer.value = false
-                coreContext.core.removeListener(coreListener)
-                onErrorEvent.value = Event("Error: Failed to create account object")
-            }
+            loginWithUsername()
         } else {
-            val result = AccountCreator.PhoneNumberStatus.fromInt(
-                accountCreator.setPhoneNumber(phoneNumber.value, prefix.value)
-            )
-            if (result != AccountCreator.PhoneNumberStatus.Ok) {
-                Log.e(
-                    "[Assistant] [Account Login] Error [$result] setting the phone number: ${phoneNumber.value} with prefix: ${prefix.value}"
+            val token = accountCreator.token.orEmpty()
+            if (token.isNotEmpty()) {
+                Log.i(
+                    "[Assistant] [Account Login] We already have an auth token from FlexiAPI [$token], continue"
                 )
-                phoneNumberError.value = result.name
-                return
-            }
-            Log.i("[Assistant] [Account Login] Phone number is ${accountCreator.phoneNumber}")
-
-            val result2 = accountCreator.setUsername(accountCreator.phoneNumber)
-            if (result2 != AccountCreator.UsernameStatus.Ok) {
-                Log.e(
-                    "[Assistant] [Account Login] Error [${result2.name}] setting the username: ${accountCreator.phoneNumber}"
-                )
-                usernameError.value = result2.name
-                return
-            }
-            Log.i("[Assistant] [Account Login] Username is ${accountCreator.username}")
-
-            waitForServerAnswer.value = true
-            val status = accountCreator.recoverAccount()
-            Log.i("[Assistant] [Account Login] Recover account returned $status")
-            if (status != AccountCreator.Status.RequestOk) {
-                waitForServerAnswer.value = false
-                onErrorEvent.value = Event("Error: ${status.name}")
+                onFlexiApiTokenReceived()
+            } else {
+                Log.i("[Assistant] [Account Login] Requesting an auth token from FlexiAPI")
+                waitForServerAnswer.value = true
+                requestFlexiApiToken()
             }
         }
     }
@@ -222,33 +258,33 @@ class AccountLoginViewModel(accountCreator: AccountCreator) : AbstractPhoneViewM
         }
     }
 
-    private fun createProxyConfig(): Boolean {
-        val proxyConfig: ProxyConfig? = accountCreator.createProxyConfig()
-        proxyConfigToCheck = proxyConfig
+    private fun createAccountAndAuthInfo(): Boolean {
+        val account = accountCreator.createAccountInCore()
+        accountToCheck = account
 
-        if (proxyConfig == null) {
-            Log.e("[Assistant] [Account Login] Account creator couldn't create proxy config")
+        if (account == null) {
+            Log.e("[Assistant] [Account Login] Account creator couldn't create account")
             onErrorEvent.value = Event("Error: Failed to create account object")
             return false
         }
 
-        proxyConfig.isPushNotificationAllowed = true
+        val params = account.params.clone()
+        params.pushNotificationAllowed = true
 
-        if (proxyConfig.dialPrefix.isNullOrEmpty()) {
+        if (params.internationalPrefix.isNullOrEmpty()) {
             val dialPlan = PhoneNumberUtils.getDialPlanForCurrentCountry(coreContext.context)
             if (dialPlan != null) {
                 Log.i(
                     "[Assistant] [Account Login] Found dial plan country ${dialPlan.country} with international prefix ${dialPlan.countryCallingCode}"
                 )
-                proxyConfig.edit()
-                proxyConfig.dialPrefix = dialPlan.countryCallingCode
-                proxyConfig.done()
+                params.internationalPrefix = dialPlan.countryCallingCode
             } else {
                 Log.w("[Assistant] [Account Login] Failed to find dial plan")
             }
         }
 
-        Log.i("[Assistant] [Account Login] Proxy config created")
+        account.params = params
+        Log.i("[Assistant] [Account Login] Account created")
         return true
     }
 }

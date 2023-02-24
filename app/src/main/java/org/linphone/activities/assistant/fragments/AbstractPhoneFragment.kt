@@ -28,6 +28,7 @@ import org.linphone.activities.GenericFragment
 import org.linphone.activities.assistant.viewmodels.AbstractPhoneViewModel
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
+import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.PermissionHelper
 import org.linphone.utils.PhoneNumberUtils
 
@@ -55,7 +56,8 @@ abstract class AbstractPhoneFragment<T : ViewDataBinding> : GenericFragment<T>()
     }
 
     protected fun checkPermissions() {
-        if (!resources.getBoolean(R.bool.isTablet)) {
+        // Only ask for phone number related permission on devices that have TELEPHONY feature && if push notifications are available
+        if (requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY) && LinphoneUtils.isPushNotificationAvailable()) {
             if (!PermissionHelper.get().hasReadPhoneStateOrPhoneNumbersPermission()) {
                 Log.i("[Assistant] Asking for READ_PHONE_STATE/READ_PHONE_NUMBERS permission")
                 Compatibility.requestReadPhoneStateOrNumbersPermission(

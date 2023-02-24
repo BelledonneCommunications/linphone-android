@@ -1057,6 +1057,16 @@ internal fun WelcomeFragment.navigateToPhoneAccountCreation() {
     }
 }
 
+internal fun WelcomeFragment.navigateToNoPushWarning() {
+    if (findNavController().currentDestination?.id == R.id.welcomeFragment) {
+        findNavController().navigate(
+            R.id.action_welcomeFragment_to_noPushWarningFragment,
+            null,
+            popupTo()
+        )
+    }
+}
+
 internal fun WelcomeFragment.navigateToAccountLogin() {
     if (findNavController().currentDestination?.id == R.id.welcomeFragment) {
         findNavController().navigate(

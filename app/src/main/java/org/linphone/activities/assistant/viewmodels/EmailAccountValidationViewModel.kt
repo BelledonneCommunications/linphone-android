@@ -22,11 +22,12 @@ package org.linphone.activities.assistant.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import org.linphone.LinphoneApplication
+import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
 import org.linphone.core.AccountCreator
 import org.linphone.core.AccountCreatorListenerStub
-import org.linphone.core.ProxyConfig
 import org.linphone.core.tools.Log
+import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.PhoneNumberUtils
 
@@ -61,14 +62,16 @@ class EmailAccountValidationViewModel(val accountCreator: AccountCreator) : View
 
             when (status) {
                 AccountCreator.Status.AccountActivated -> {
-                    if (createProxyConfig()) {
+                    if (createAccountAndAuthInfo()) {
                         leaveAssistantEvent.value = Event(true)
                     } else {
                         onErrorEvent.value = Event("Error: ${status.name}")
                     }
                 }
                 AccountCreator.Status.AccountNotActivated -> {
-                    onErrorEvent.value = Event("Error: ${status.name}")
+                    onErrorEvent.value = Event(
+                        AppUtils.getString(R.string.assistant_create_email_account_not_validated)
+                    )
                 }
                 else -> {
                     onErrorEvent.value = Event("Error: ${status.name}")
@@ -97,34 +100,33 @@ class EmailAccountValidationViewModel(val accountCreator: AccountCreator) : View
         }
     }
 
-    private fun createProxyConfig(): Boolean {
-        val proxyConfig: ProxyConfig? = accountCreator.createProxyConfig()
+    private fun createAccountAndAuthInfo(): Boolean {
+        val account = accountCreator.createAccountInCore()
 
-        if (proxyConfig == null) {
-            Log.e("[Assistant] [Account Validation] Account creator couldn't create proxy config")
+        if (account == null) {
+            Log.e("[Assistant] [Account Validation] Account creator couldn't create account")
             onErrorEvent.value = Event("Error: Failed to create account object")
             return false
         }
 
-        proxyConfig.isPushNotificationAllowed = true
+        val params = account.params.clone()
+        params.pushNotificationAllowed = true
 
-        if (proxyConfig.dialPrefix.isNullOrEmpty()) {
-            val dialPlan = PhoneNumberUtils.getDialPlanForCurrentCountry(
-                LinphoneApplication.coreContext.context
-            )
+        if (params.internationalPrefix.isNullOrEmpty()) {
+            val dialPlan = PhoneNumberUtils.getDialPlanForCurrentCountry(coreContext.context)
             if (dialPlan != null) {
                 Log.i(
                     "[Assistant] [Account Validation] Found dial plan country ${dialPlan.country} with international prefix ${dialPlan.countryCallingCode}"
                 )
-                proxyConfig.edit()
-                proxyConfig.dialPrefix = dialPlan.countryCallingCode
-                proxyConfig.done()
+                params.internationalPrefix = dialPlan.countryCallingCode
             } else {
                 Log.w("[Assistant] [Account Validation] Failed to find dial plan")
             }
         }
 
-        Log.i("[Assistant] [Account Validation] Proxy config created")
+        account.params = params
+
+        Log.i("[Assistant] [Account Validation] Account created")
         return true
     }
 }
