@@ -164,7 +164,7 @@
                 </RadioGroup>
 
                 <TextView
-                    android:onClick="@{() -> viewModel.createProxyConfig()}"
+                    android:onClick="@{() -> viewModel.createAccountAndAuthInfo()}"
                     android:enabled="@{viewModel.loginEnabled, default=false}"
                     android:text="@string/assistant_login"
                     android:background="@drawable/assistant_button"

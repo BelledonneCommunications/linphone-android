@@ -72,6 +72,36 @@ class PhoneAccountCreationViewModel(accountCreator: AccountCreator) : AbstractPh
             when (status) {
                 AccountCreator.Status.AccountExist, AccountCreator.Status.AccountExistWithAlias -> {
                     waitForServerAnswer.value = false
+                    usernameError.value = AppUtils.getString(
+                        R.string.assistant_error_username_already_exists
+                    )
+                }
+                AccountCreator.Status.AccountNotExist -> {
+                    waitForServerAnswer.value = false
+                    checkPhoneNumber()
+                }
+                else -> {
+                    waitForServerAnswer.value = false
+                    onErrorEvent.value = Event("Error: ${status.name}")
+                }
+            }
+        }
+
+        override fun onIsAliasUsed(
+            creator: AccountCreator,
+            status: AccountCreator.Status,
+            response: String?
+        ) {
+            Log.i("[Phone Account Creation] onIsAliasUsed status is $status")
+            when (status) {
+                AccountCreator.Status.AliasExist -> {
+                    waitForServerAnswer.value = false
+                    phoneNumberError.value = AppUtils.getString(
+                        R.string.assistant_error_phone_number_already_exists
+                    )
+                }
+                AccountCreator.Status.AliasIsAccount -> {
+                    waitForServerAnswer.value = false
                     if (useUsername.value == true) {
                         usernameError.value = AppUtils.getString(
                             R.string.assistant_error_username_already_exists
@@ -82,7 +112,7 @@ class PhoneAccountCreationViewModel(accountCreator: AccountCreator) : AbstractPh
                         )
                     }
                 }
-                AccountCreator.Status.AccountNotExist -> {
+                AccountCreator.Status.AliasNotExist -> {
                     val createAccountStatus = creator.createAccount()
                     Log.i("[Phone Account Creation] createAccount returned $createAccountStatus")
                     if (createAccountStatus != AccountCreator.Status.RequestOk) {
@@ -150,21 +180,59 @@ class PhoneAccountCreationViewModel(accountCreator: AccountCreator) : AbstractPh
         super.onCleared()
     }
 
-    fun create() {
+    override fun onFlexiApiTokenReceived() {
+        Log.i("[Phone Account Creation] Using FlexiAPI auth token [${accountCreator.token}]")
         accountCreator.displayName = displayName.value
         accountCreator.setPhoneNumber(phoneNumber.value, prefix.value)
+
         if (useUsername.value == true) {
             accountCreator.username = username.value
         } else {
             accountCreator.username = accountCreator.phoneNumber
         }
 
-        waitForServerAnswer.value = true
+        if (useUsername.value == true) {
+            checkUsername()
+        } else {
+            checkPhoneNumber()
+        }
+    }
+
+    override fun onFlexiApiTokenRequestError() {
+        Log.e("[Phone Account Creation] Failed to get an auth token from FlexiAPI")
+        waitForServerAnswer.value = false
+        onErrorEvent.value = Event("Error: Failed to get an auth token from account manager server")
+    }
+
+    private fun checkUsername() {
         val status = accountCreator.isAccountExist
         Log.i("[Phone Account Creation] isAccountExist returned $status")
         if (status != AccountCreator.Status.RequestOk) {
             waitForServerAnswer.value = false
             onErrorEvent.value = Event("Error: ${status.name}")
+        }
+    }
+
+    private fun checkPhoneNumber() {
+        val status = accountCreator.isAliasUsed
+        Log.i("[Phone Account Creation] isAliasUsed returned $status")
+        if (status != AccountCreator.Status.RequestOk) {
+            waitForServerAnswer.value = false
+            onErrorEvent.value = Event("Error: ${status.name}")
+        }
+    }
+
+    fun create() {
+        val token = accountCreator.token.orEmpty()
+        if (token.isNotEmpty()) {
+            Log.i(
+                "[Phone Account Creation] We already have an auth token from FlexiAPI [$token], continue"
+            )
+            onFlexiApiTokenReceived()
+        } else {
+            Log.i("[Phone Account Creation] Requesting an auth token from FlexiAPI")
+            waitForServerAnswer.value = true
+            requestFlexiApiToken()
         }
     }
 

@@ -410,6 +410,8 @@
     <string name="assistant_generic_account_warning">Some features require a &appName; account, such as group messaging or ephemeral messaging.\n\nThese features are hidden when you register with a third party SIP account.\n\nTo enable it in a commercial project, please contact us.</string>
     <string name="assistant_generic_account_warning_contact_link" translatable="false">https://www.linphone.org/contact</string>
     <string name="assistant_generic_account_warning_continue_button_text">I understand</string>
+    <string name="assistant_alternative_way_create_account">To create an account using your email:</string>
+    <string name="assistant_no_push_warning">Your device doesn\'t seem to be able to receive push notifications.\n\nAs we now require them for the account creation process, you won\'t be able to create an account inside the app, but you can create it on our website:</string>
 
     <!-- Assistant errors -->
     <string name="assistant_error_phone_number_invalid_characters">Only digits are expected here</string>
@@ -424,7 +426,7 @@
     <!-- Assistant login -->
     <string name="assistant_linphone_account">Use your &appName; account</string>
     <string name="assistant_create_account_part_1">Please confirm your country code and enter your phone number</string>
-    <string name="assistant_linphone_login_desc">Please enter your username and password of &appName; account</string>
+    <string name="assistant_linphone_login_desc">Please enter your &appName; account username and password</string>
     <string name="assistant_login_with_username">Use your username and password instead of your phone number</string>
     <string name="assistant_login_forgotten_password">Forgot your password?</string>
     <string name="assistant_forgotten_password_link" translatable="false">https://subscribe.linphone.org/</string>
@@ -448,6 +450,7 @@
     <string name="assistant_create_account_part_3">To complete your phone number verification, please enter the 4 digit code below:\n</string>
     <string name="assistant_link_phone_number">You will link with your phone number the following username:</string>
     <string name="assistant_link_phone_number_skip">Skip</string>
+    <string name="assistant_create_email_account_not_validated">Your account has not been activated yet, please click on the link you received by email</string>
 
     <!-- Assistant link -->
     <string name="assistant_link_account">Link account</string>
@@ -575,7 +578,7 @@
     <string name="chat_settings_launcher_shortcuts_title">Create shortcuts to chat rooms in launcher</string>
     <string name="chat_settings_launcher_shortcuts_summary">Will be replaced by contacts shortcuts if enabled</string>
     <string name="chat_settings_hide_empty_rooms_title">Hide empty chat rooms</string>
-    <string name="chat_settings_hide_rooms_removed_proxies_title">Hide chat rooms from removed proxy configs</string>
+    <string name="chat_settings_hide_rooms_removed_proxies_title">Hide chat rooms from removed accounts</string>
     <string name="chat_settings_hide_rooms_removed_proxies_summary">If you are missing chat rooms, try to uncheck this setting</string>
     <string name="chat_settings_go_to_android_notification_settings">Android notification settings</string>
     <string name="chat_settings_use_in_app_file_viewer_title">Always open files inside this app</string>
@@ -691,7 +694,7 @@
     <string name="account_settings_delete_title">Delete</string>
     <string name="account_settings_advanced_title">Advanced</string>
     <string name="account_settings_push_notification_title">Allow push notification</string>
-    <string name="account_settings_push_notification_summary">Proxy config won\'t unregister</string>
+    <string name="account_settings_push_notification_summary">Account won\'t unregister</string>
     <string name="account_settings_transport_title">Transport</string>
     <string name="account_settings_transport_udp">UDP</string>
     <string name="account_settings_transport_tcp">TCP</string>

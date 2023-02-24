@@ -44,7 +44,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="@string/assistant_create_account"
-                    android:paddingTop="10dp"
+                    android:layout_marginTop="10dp"
                     android:textAllCaps="true" />
 
                 <TextView
@@ -53,7 +53,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:layout_gravity="top"
-                    android:paddingTop="20dp"
+                    android:layout_marginTop="10dp"
                     android:text="@string/assistant_create_account_part_1" />
 
                 <RelativeLayout
@@ -65,8 +65,8 @@
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/phone_number_label"
-                        android:text="@string/phone_number"
+                        android:id="@+id/select_country_label"
+                        android:text="@string/select_your_country"
                         style="@style/assistant_input_field_header_font"
                         android:textAllCaps="true"
                         android:layout_width="match_parent"
@@ -76,7 +76,9 @@
                         android:onClick="@{infoClickListener}"
                         android:contentDescription="@string/content_description_phone_number_use"
                         android:src="@drawable/info"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignTop="@id/select_country_label"
+                        android:layout_above="@id/select_country"
                         android:layout_width="20dp"
                         android:layout_height="20dp"/>
 
@@ -92,7 +94,7 @@
                         android:padding="10dp"
                         android:layout_marginTop="5dp"
                         android:gravity="center"
-                        android:layout_below="@id/phone_number_label"/>
+                        android:layout_below="@id/select_country_label"/>
 
                     <LinearLayout
                         android:orientation="vertical"
@@ -216,6 +218,35 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="20dp"
                     android:padding="10dp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="?attr/dividerColor" />
+
+                <TextView
+                    style="@style/standard_small_text_font"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_gravity="top"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/assistant_alternative_way_create_account" />
+
+                <TextView
+                    android:textColor="?attr/accentColor"
+                    android:textSize="16sp"
+                    android:textColorLink="@color/primary_color"
+                    android:autoLink="web"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_gravity="top"
+                    android:paddingTop="5dp"
+                    android:text="@string/assistant_forgotten_password_link" />
 
             </LinearLayout>
 

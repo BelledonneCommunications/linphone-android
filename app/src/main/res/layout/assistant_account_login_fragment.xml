@@ -84,9 +84,9 @@
                         android:onClick="@{infoClickListener}"
                         android:contentDescription="@string/content_description_phone_number_use"
                         android:src="@drawable/info"
-                        android:layout_marginTop="10dp"
-                        android:layout_below="@id/phone_number_desc"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignTop="@id/select_country_label"
+                        android:layout_above="@id/select_country"
                         android:layout_width="20dp"
                         android:layout_height="20dp"/>
 
@@ -222,7 +222,8 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center"
-                    android:paddingTop="10dp">
+                    android:paddingTop="10dp"
+                    android:visibility="@{viewModel.forceLoginUsingUsernameAndPassword ? View.GONE : View.VISIBLE}">
 
                     <com.google.android.material.switchmaterial.SwitchMaterial
                         android:checked="@={viewModel.loginWithUsernamePassword}"

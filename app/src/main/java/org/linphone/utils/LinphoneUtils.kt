@@ -274,6 +274,20 @@ class LinphoneUtils {
             return true // Legacy behavior
         }
 
+        fun isPushNotificationAvailable(): Boolean {
+            val core = coreContext.core
+            if (!core.isPushNotificationAvailable) {
+                return false
+            }
+
+            val pushConfig = core.pushNotificationConfig ?: return false
+            if (pushConfig.provider.isNullOrEmpty()) return false
+            if (pushConfig.param.isNullOrEmpty()) return false
+            if (pushConfig.prid.isNullOrEmpty()) return false
+
+            return true
+        }
+
         fun hashPassword(
             userId: String,
             password: String,

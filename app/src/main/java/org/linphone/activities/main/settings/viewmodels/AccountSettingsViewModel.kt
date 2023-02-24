@@ -31,6 +31,7 @@ import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
+import org.linphone.utils.LinphoneUtils
 
 class AccountSettingsViewModelFactory(private val identity: String) :
     ViewModelProvider.NewInstanceFactory() {
@@ -408,7 +409,7 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
         override fun onTextValueChanged(newValue: String) {
             val params = account.params.clone()
             Log.i(
-                "[Account Settings] Forcing conference factory on proxy config ${params.identityAddress?.asString()} to value: $newValue"
+                "[Account Settings] Forcing conference factory on account ${params.identityAddress?.asString()} to value: $newValue"
             )
             params.conferenceFactoryUri = newValue
             account.params = params
@@ -421,7 +422,7 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
             val params = account.params.clone()
             val uri = coreContext.core.interpretUrl(newValue, false)
             Log.i(
-                "[Account Settings] Forcing audio/video conference factory on proxy config ${params.identityAddress?.asString()} to value: $newValue"
+                "[Account Settings] Forcing audio/video conference factory on account ${params.identityAddress?.asString()} to value: $newValue"
             )
             params.audioVideoConferenceFactoryAddress = uri
             account.params = params
@@ -500,7 +501,7 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
         domain.value = params.identityAddress?.domain
         disable.value = !params.isRegisterEnabled
         pushNotification.value = params.pushNotificationAllowed
-        pushNotificationsAvailable.value = core.isPushNotificationAvailable
+        pushNotificationsAvailable.value = LinphoneUtils.isPushNotificationAvailable()
         proxy.value = params.serverAddress?.asStringUriOnly()
         outboundProxy.value = params.isOutboundProxyEnabled
         stunServer.value = params.natPolicy?.stunServer

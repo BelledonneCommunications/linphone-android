@@ -80,8 +80,8 @@
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/phone_number_label"
-                        android:text="@string/phone_number"
+                        android:id="@+id/select_country_label"
+                        android:text="@string/select_your_country"
                         style="@style/assistant_input_field_header_font"
                         android:textAllCaps="true"
                         android:layout_width="match_parent"
@@ -91,7 +91,9 @@
                         android:onClick="@{infoClickListener}"
                         android:contentDescription="@string/content_description_phone_number_use"
                         android:src="@drawable/info"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignTop="@id/select_country_label"
+                        android:layout_above="@id/select_country"
                         android:layout_width="20dp"
                         android:layout_height="20dp"/>
 
@@ -107,7 +109,7 @@
                         android:padding="10dp"
                         android:layout_marginTop="5dp"
                         android:gravity="center"
-                        android:layout_below="@id/phone_number_label"/>
+                        android:layout_below="@id/select_country_label"/>
 
                     <LinearLayout
                         android:orientation="horizontal"

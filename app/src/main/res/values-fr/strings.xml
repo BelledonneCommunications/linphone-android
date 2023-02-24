@@ -176,7 +176,7 @@
     <string name="assistant_phone_number_link_info_content_already_account">Vous ne pouvez associer votre numéro qu\'à un seul compte &appName;.\n\nSi vous avez déjà associé votre numéro à un autre compte mais préférez utiliser ce compte-ci, suivez la procédure d\'association et votre numéro sera automatiquement transféré à ce compte.</string>
     <string name="assistant_error_phone_number_invalid_characters">Entrez uniquement des chiffres</string>
     <string name="assistant_error_username_already_exists">Ce nom d\'utilisateur est déjà utilisé</string>
-    <string name="assistant_error_phone_number_already_exists">Ce nom d\'utilisateur est déjà pris</string>
+    <string name="assistant_error_phone_number_already_exists">Ce numéro de téléphone est déjà utilisé</string>
     <string name="assistant_error_username_invalid_characters">Caractères invalides</string>
     <string name="assistant_error_passwords_dont_match">Les mots de passe ne correspondent pas</string>
     <string name="assistant_error_invalid_email_address">L\'adresse email est invalide</string>
@@ -782,4 +782,7 @@
     <string name="settings_password_protection_dialog_invalid_input">Le mot de passe est invalide !</string>
     <string name="account_setting_disable_bundle_mode_title">Désactiver le mode bundle</string>
     <string name="account_setting_disable_bundle_mode_summary"></string>
+    <string name="assistant_alternative_way_create_account">Pour créer un compte avec votre email :</string>
+    <string name="assistant_no_push_warning">Votre périphérique ne semble pas supporter les notifications \'push\'.\n\nVous ne pourrez donc pas créer des comptes dans l\'application mais vous pouvez toujours le faire sur notre site internet :</string>
+    <string name="assistant_create_email_account_not_validated">Votre compte n\'est pas activé, veuillez cliquer sur le lien que vous avez reçu par courriel</string>
 </resources>

@@ -501,7 +501,7 @@ class CoreContext(
                     val newExpire = 2629800 // 1 month
                     if (account.params.expires != newExpire) {
                         Log.i(
-                            "[Context] Updating expire on proxy config ${params.identityAddress?.asString()} from ${account.params.expires} to newExpire"
+                            "[Context] Updating expire on account ${params.identityAddress?.asString()} from ${account.params.expires} to newExpire"
                         )
                         params.expires = newExpire
                         paramsChanged = true
@@ -510,7 +510,7 @@ class CoreContext(
                     // Enable presence publish/subscribe for new feature
                     if (!account.params.isPublishEnabled) {
                         Log.i(
-                            "[Context] Enabling presence publish on proxy config ${params.identityAddress?.asString()}"
+                            "[Context] Enabling presence publish on account ${params.identityAddress?.asString()}"
                         )
                         params.isPublishEnabled = true
                         params.publishExpires = 120
@@ -518,23 +518,23 @@ class CoreContext(
                     }
                 }
 
-                // Ensure conference factory URI is set on sip.linphone.org proxy configs
+                // Ensure conference factory URI is set on sip.linphone.org accounts
                 if (account.params.conferenceFactoryUri == null) {
                     val uri = corePreferences.conferenceServerUri
                     Log.i(
-                        "[Context] Setting conference factory on proxy config ${params.identityAddress?.asString()} to default value: $uri"
+                        "[Context] Setting conference factory on account ${params.identityAddress?.asString()} to default value: $uri"
                     )
                     params.conferenceFactoryUri = uri
                     paramsChanged = true
                 }
 
-                // Ensure audio/video conference factory URI is set on sip.linphone.org proxy configs
+                // Ensure audio/video conference factory URI is set on sip.linphone.org accounts
                 if (account.params.audioVideoConferenceFactoryAddress == null) {
                     val uri = corePreferences.audioVideoConferenceServerUri
                     val address = core.interpretUrl(uri, false)
                     if (address != null) {
                         Log.i(
-                            "[Context] Setting audio/video conference factory on proxy config ${params.identityAddress?.asString()} to default value: $uri"
+                            "[Context] Setting audio/video conference factory on account ${params.identityAddress?.asString()} to default value: $uri"
                         )
                         params.audioVideoConferenceFactoryAddress = address
                         paramsChanged = true
@@ -546,7 +546,7 @@ class CoreContext(
                 // Enable Bundle mode by default
                 if (!account.params.isRtpBundleEnabled) {
                     Log.i(
-                        "[Context] Enabling RTP bundle mode on proxy config ${params.identityAddress?.asString()}"
+                        "[Context] Enabling RTP bundle mode on account ${params.identityAddress?.asString()}"
                     )
                     params.isRtpBundleEnabled = true
                     paramsChanged = true

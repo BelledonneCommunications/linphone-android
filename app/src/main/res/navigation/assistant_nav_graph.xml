@@ -24,6 +24,9 @@
         <action
             android:id="@+id/action_welcomeFragment_to_remoteProvisioningFragment"
             app:destination="@id/remoteProvisioningFragment" />
+        <action
+            android:id="@+id/action_welcomeFragment_to_noPushWarningFragment"
+            app:destination="@id/noPushWarningFragment" />
     </fragment>
     <fragment
         android:id="@+id/accountLoginFragment"
@@ -162,4 +165,9 @@
             android:id="@+id/action_phoneAccountLinkingFragment_to_echoCancellerCalibrationFragment"
             app:destination="@id/echoCancellerCalibrationFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/noPushWarningFragment"
+        android:name="org.linphone.activities.assistant.fragments.NoPushWarningFragment"
+        android:label="NoPushWarningFragment"
+        tools:layout="@layout/assistant_no_push_warning_fragment"/>
 </navigation>

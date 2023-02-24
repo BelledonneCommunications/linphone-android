@@ -24,7 +24,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.core.AccountCreator
 import org.linphone.core.AccountCreatorListenerStub
-import org.linphone.core.ProxyConfig
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
 
@@ -66,7 +65,7 @@ class PhoneAccountValidationViewModel(val accountCreator: AccountCreator) : View
             waitForServerAnswer.value = false
 
             if (status == AccountCreator.Status.RequestOk) {
-                if (createProxyConfig()) {
+                if (createAccountAndAuthInfo()) {
                     leaveAssistantEvent.value = Event(true)
                 } else {
                     onErrorEvent.value = Event("Error: Failed to create account object")
@@ -103,7 +102,7 @@ class PhoneAccountValidationViewModel(val accountCreator: AccountCreator) : View
             waitForServerAnswer.value = false
 
             if (status == AccountCreator.Status.AccountActivated) {
-                if (createProxyConfig()) {
+                if (createAccountAndAuthInfo()) {
                     leaveAssistantEvent.value = Event(true)
                 } else {
                     onErrorEvent.value = Event("Error: Failed to create account object")
@@ -143,18 +142,21 @@ class PhoneAccountValidationViewModel(val accountCreator: AccountCreator) : View
         }
     }
 
-    private fun createProxyConfig(): Boolean {
-        val proxyConfig: ProxyConfig? = accountCreator.createProxyConfig()
+    private fun createAccountAndAuthInfo(): Boolean {
+        val account = accountCreator.createAccountInCore()
 
-        if (proxyConfig == null) {
+        if (account == null) {
             Log.e(
-                "[Assistant] [Phone Account Validation] Account creator couldn't create proxy config"
+                "[Assistant] [Phone Account Validation] Account creator couldn't create account"
             )
             return false
         }
 
-        proxyConfig.isPushNotificationAllowed = true
-        Log.i("[Assistant] [Phone Account Validation] Proxy config created")
+        val params = account.params.clone()
+        params.pushNotificationAllowed = true
+        account.params = params
+
+        Log.i("[Assistant] [Phone Account Validation] Account created")
         return true
     }
 }
