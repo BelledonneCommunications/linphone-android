@@ -1061,15 +1061,15 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             popupWindow.dismiss()
             val contactId = viewModel.contact.value?.refKey
             if (contactId != null) {
-                Log.i("[Chat Room] Displaying contact $contactId")
-                navigateToContact(contactId)
+                Log.i("[Chat Room] Displaying native contact [$contactId]")
+                navigateToNativeContact(contactId)
             } else {
                 val copy = viewModel.getRemoteAddress()?.clone()
                 if (copy != null) {
                     copy.clean()
                     val address = copy.asStringUriOnly()
-                    Log.i("[Chat Room] Displaying friend with address $address")
-                    navigateToContact(address)
+                    Log.i("[Chat Room] Displaying friend with address [$address]")
+                    navigateToFriend(address)
                 }
             }
         }
