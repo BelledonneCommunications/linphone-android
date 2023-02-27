@@ -16,6 +16,15 @@ Group changes to describe their impact on the project, as follows:
 - Replaced voice recordings file name by localized placeholder text, like for video conferences invitations
 - Removed jetifier as it is not needed
 
+## [5.0.7] - 2023-02-27
+
+### Fixed
+- Fixed navigating to a contact that doesn't have a native ID, but using it's SIP address instead
+- Fixed account creator resolved country name & create button not enabled
+
+### Changed
+- Updated translations
+
 ## [5.0.6] - Unreleased
 
 ### Fixed
