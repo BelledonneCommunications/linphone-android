@@ -49,7 +49,7 @@ abstract class AbstractPhoneViewModel(val accountCreator: AccountCreator) :
     }
 
     fun isPhoneNumberOk(): Boolean {
-        return countryName.value.orEmpty().isNotEmpty() && phoneNumber.value.orEmpty().isNotEmpty() && phoneNumberError.value.orEmpty().isEmpty()
+        return prefix.value.orEmpty().isNotEmpty() && phoneNumber.value.orEmpty().isNotEmpty() && phoneNumberError.value.orEmpty().isEmpty()
     }
 
     fun updateFromPhoneNumberAndOrDialPlan(number: String?, dialPlan: DialPlan?) {
@@ -57,6 +57,7 @@ abstract class AbstractPhoneViewModel(val accountCreator: AccountCreator) :
         if (dialPlan != null) {
             Log.i("[Assistant] Found prefix from dial plan: ${dialPlan.countryCallingCode}")
             prefix.value = internationalPrefix
+            getCountryNameFromPrefix(internationalPrefix)
         }
 
         if (number != null) {
@@ -69,16 +70,12 @@ abstract class AbstractPhoneViewModel(val accountCreator: AccountCreator) :
         }
     }
 
-    private fun getCountryNameFromPrefix(prefix: String?): MutableLiveData<String> {
-        val country = MutableLiveData<String>()
-        country.value = ""
-
+    private fun getCountryNameFromPrefix(prefix: String?) {
         if (prefix != null && prefix.isNotEmpty()) {
             val countryCode = if (prefix.first() == '+') prefix.substring(1) else prefix
             val dialPlan = PhoneNumberUtils.getDialPlanFromCountryCallingPrefix(countryCode)
             Log.i("[Assistant] Found dial plan $dialPlan from country code: $countryCode")
-            country.value = dialPlan?.country
+            countryName.value = dialPlan?.country
         }
-        return country
     }
 }
