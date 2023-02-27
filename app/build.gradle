@@ -199,7 +199,7 @@ dependencies {
     implementation 'androidx.emoji2:emoji2:1.2.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
     implementation 'androidx.media:media:1.6.0'
-    implementation "androidx.security:security-crypto-ktx:1.1.0-alpha04"
+    implementation "androidx.security:security-crypto-ktx:1.1.0-alpha05"
     implementation "androidx.window:window:1.0.0"
     implementation 'androidx.core:core-ktx:1.9.0'
 
