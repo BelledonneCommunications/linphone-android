@@ -441,7 +441,7 @@
     <string name="advanced_settings_background_mode_title">Režim na pozadí</string>
     <string name="advanced_settings_auto_start_title">Spuštění při startu systému</string>
     <string name="advanced_settings_dark_mode_title">Tmavé téma</string>
-    <string name="advanced_settings_dark_mode_label_auto">Automatický</string>
+    <string name="advanced_settings_dark_mode_label_auto">Automaticky</string>
     <string name="advanced_settings_dark_mode_label_no">Ne</string>
     <string name="advanced_settings_dark_mode_label_yes">Ano</string>
     <string name="advanced_settings_animations_title">Animace</string>
@@ -479,7 +479,7 @@
     <string name="account_settings_advanced_title">Pokročilé</string>
     <string name="account_settings_push_notification_title">Povolit push notifikace</string>
     <string name="account_settings_push_notification_summary">Konfigurace proxy serveru nejde odregistrovat</string>
-    <string name="account_settings_transport_title">Přenést</string>
+    <string name="account_settings_transport_title">Přenos</string>
     <string name="account_settings_transport_udp">UDP</string>
     <string name="account_settings_transport_tcp">TCP</string>
     <string name="account_settings_transport_dtls">DTLS</string>
@@ -775,4 +775,11 @@
     <string name="call_settings_media_encryption_none">Žádné</string>
     <string name="call_settings_use_telecom_manager_title">Vylepšení interakce se zařízeními Bluetooth</string>
     <string name="call_settings_rfc2833_dtmf_title">Odesílání DTMF v pásmu (RFC 2833)</string>
+    <string name="chat_room_presence_online">Online</string>
+    <string name="chat_room_presence_last_seen_online_today">Online dnes v</string>
+    <string name="chat_room_presence_last_seen_online_yesterday">Online včera v</string>
+    <string name="chat_room_presence_last_seen_online">Online naposledy</string>
+    <string name="account_setting_publish_presence_title">Zveřejňovat informace o přítomnosti</string>
+    <string name="content_description_presence_online">Uživatel je online</string>
+    <string name="content_description_presence_offline">Uživatel je offline</string>
 </resources>
