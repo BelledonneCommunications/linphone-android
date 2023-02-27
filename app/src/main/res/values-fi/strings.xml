@@ -228,4 +228,6 @@
     <string name="conference_schedule_send_invite_chat_summary">Kutsu lähetetään &amp;appName; tililtäni</string>
     <string name="conference_schedule_info_not_sent_to_participant">Kokouksen tietojen lähetys osallistujalle epäonnistui</string>
     <string name="conference_cancel_title">Kokous on peruttu:</string>
+    <string name="conference_info_removed">Kokouksen tiedot ovat poistettu</string>
+    <string name="conference_empty">Olet ainoa osallistuja ryhmäpuhelussa</string>
 </resources>
