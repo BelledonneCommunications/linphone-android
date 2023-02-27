@@ -228,4 +228,6 @@
     <string name="conference_schedule_address_copied_to_clipboard">Kokouksen osoite kopioitu leikepöydälle</string>
     <string name="conference_paused_subtitle">Paina toistopainiketta liittyäksesi takaisin.</string>
     <string name="conference_update_title">Kokousta on päivitetty:</string>
+    <string name="conference_info_removed">Kokouksen tiedot ovat poistettu</string>
+    <string name="conference_empty">Olet ainoa osallistuja ryhmäpuhelussa</string>
 </resources>
