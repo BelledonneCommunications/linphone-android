@@ -570,20 +570,20 @@
     <string name="call_stats_zrtp_auth_tag_algo">Autentizační algoritmus:</string>
     <string name="assistant_welcome_desc">Tento průvodce vám pomůže nakonfigurovat a používat účet SIP.</string>
     <string name="assistant_create_account">Vytvořit účet</string>
-    <string name="assistant_login_linphone">Použít &amp;appName; účet</string>
+    <string name="assistant_login_linphone">Použít &appName; účet</string>
     <string name="assistant_login_generic">Použít SIP účet</string>
     <string name="assistant_phone_number_info_title">K čemu bude moje telefonní číslo použito\?</string>
     <string name="assistant_phone_number_link_info_content">"
 \nPřátelé vás snáze najdou, pokud svůj účet propojíte s telefonním číslem.
 \n
-\nV adresáři uvidíte, kdo používá &amp;appName;, a vaši přátelé budou vědět, že vás mohou zastihnout i na &amp;appName;.
+\nV adresáři uvidíte, kdo používá &appName;, a vaši přátelé budou vědět, že vás mohou zastihnout i na &appName;.
 \n"</string>
-    <string name="assistant_phone_number_link_info_content_already_account">Své telefonní číslo můžete používat pouze s jedním účtem &amp;appName;.
+    <string name="assistant_phone_number_link_info_content_already_account">Své telefonní číslo můžete používat pouze s jedním účtem &appName;.
 \n
 \nPokud jste již své číslo propojili s jiným účtem, ale raději používáte tento účet, jednoduše jej nyní propojte a vaše číslo bude automaticky přesunuto na tento účet.</string>
     <string name="assistant_general_terms">podmínky používání</string>
     <string name="assistant_read_and_agree_terms">Přijímám %1$s a %2$s společnosti Belledonne Communications</string>
-    <string name="assistant_generic_account_warning">Některé funkce vyžadují účet &amp;appName;, například skupinové zprávy nebo mizející zprávy.
+    <string name="assistant_generic_account_warning">Některé funkce vyžadují účet &appName;, například skupinové zprávy nebo mizející zprávy.
 \n
 \nTyto funkce jsou při registraci účtu SIP třetí strany skryté.
 \n
@@ -653,7 +653,7 @@
     <string name="account_settings_user_id_summary">Zadejte ověřovací ID, pokud se liší od uživatelského jména (nepovinné)</string>
     <string name="account_settings_domain_title">Doména</string>
     <string name="account_settings_display_name_title">Zobrazované jméno</string>
-    <string name="assistant_create_account_part_email">Zadejte prosím uživatelské jméno, e-mail a heslo pro svůj &amp;appName; účet</string>
+    <string name="assistant_create_account_part_email">Zadejte prosím uživatelské jméno, e-mail a heslo pro svůj &appName; účet</string>
     <string name="assistant_link_phone_number">Se svým telefonním číslem spojíte následující uživatelské jméno:</string>
     <string name="assistant_remote_provisioning_desc">Uveďte prosím adresu URL vaší konfigurace</string>
     <string name="settings_primary_account_title">Hlavní účet</string>
@@ -663,7 +663,7 @@
     <string name="assistant_create_account_part_2">Na vaše telefonní číslo jsme vám zaslali SMS s ověřovacím kódem:</string>
     <string name="assistant_launch_qrcode">QR kód</string>
     <string name="video_settings_automatically_accept_title">Přijímat příchozí požadavky na video</string>
-    <string name="contacts_settings_native_presence_summary">Vložení informačních zkratek z kontaktu &amp;appName; do nativních kontaktů systému Android</string>
+    <string name="contacts_settings_native_presence_summary">Vložení informačních zkratek z kontaktu &appName; do nativních kontaktů systému Android</string>
     <string name="chat_settings_use_in_app_file_viewer_summary">I nadále je budete moci exportovat v aplikacích třetích stran</string>
     <string name="tunnel_settings_dual_port_summary">Vyžadováno v duálním režimu</string>
     <string name="account_settings_password_summary">Pokud upravíte své uživatelské jméno a/nebo doménu, musíte heslo zadat znovu</string>
@@ -671,8 +671,8 @@
     <string name="account_settings_outbound_proxy_title">Odchozí proxy server</string>
     <string name="account_settings_apply_prefix_for_calls_title">Použít předčíslí pro odchozí hovory a chat</string>
     <string name="account_setting_end_to_end_encryption_keys_server_url">Adresa URL serveru šifrovacích klíčů E2E</string>
-    <string name="notification_channel_service_name">&amp;appName; oznámení služby</string>
-    <string name="notification_channel_incoming_call_name">&amp;appName; oznámení o příchozích hovorech</string>
+    <string name="notification_channel_service_name">&appName; oznámení služby</string>
+    <string name="notification_channel_incoming_call_name">&appName; oznámení o příchozích hovorech</string>
     <string name="received_chat_notification_reply_label">Odpovědět</string>
     <string name="missed_call_notification_title">Zmeškaný hovor</string>
     <string name="missed_calls_notification_body" tools:ignore="PluralsCandidate">%d zmeškaných hovorů</string>
@@ -753,7 +753,7 @@
     <string name="audio_settings_prefer_bluetooth_devices_title">Směrovat zvuk do zařízení Bluetooth, pokud existuje</string>
     <string name="account_settings_domain_summary">Příklad: sip.domena.cz pokud je tvůj účet honza@sip.domena.cz</string>
     <string name="account_settings_transport_dtls">DTLS</string>
-    <string name="notification_channel_missed_call_name">&amp;appName; oznámení o zmeškaných hovorech</string>
+    <string name="notification_channel_missed_call_name">&appName; oznámení o zmeškaných hovorech</string>
     <string name="zrtp_dialog_explanation">Chcete-li zvýšit úroveň zabezpečení, můžete si u druhé strany ověřit následující kódy.</string>
     <string name="dialog_update_available">K dispozici je aktualizace</string>
     <string name="content_description_phone_number_use">Ukažte, k čemu se bude vaše telefonní číslo používat</string>

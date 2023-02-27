@@ -224,8 +224,8 @@
         <item quantity="other">%1$d lukematonta viestiä</item>
     </plurals>
     <string name="conference_schedule_later">Haluatko ajastaa kokouksen toiseen ajankohtaan\?</string>
-    <string name="conference_schedule_send_invite_chat">Lähetä kutsu käyttäen &amp;appName;</string>
-    <string name="conference_schedule_send_invite_chat_summary">Kutsu lähetetään &amp;appName; tililtäni</string>
+    <string name="conference_schedule_send_invite_chat">Lähetä kutsu käyttäen &appName;</string>
+    <string name="conference_schedule_send_invite_chat_summary">Kutsu lähetetään &appName; tililtäni</string>
     <string name="conference_schedule_info_not_sent_to_participant">Kokouksen tietojen lähetys osallistujalle epäonnistui</string>
     <string name="conference_cancel_title">Kokous on peruttu:</string>
     <string name="conference_info_removed">Kokouksen tiedot ovat poistettu</string>

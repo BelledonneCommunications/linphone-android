@@ -295,7 +295,7 @@
     <string name="call_stats_zrtp_cipher_algo">暗号化のアルゴリズム:</string>
     <string name="call_stats_zrtp_sas_algo">SASアルゴリズム:</string>
     <string name="assistant_create_account">アカウントを作成</string>
-    <string name="assistant_login_linphone">&amp;appName; を使用する</string>
+    <string name="assistant_login_linphone">&appName; を使用する</string>
     <string name="assistant_login_generic">SIPアカウントを使用する</string>
     <string name="assistant_remote_provisioning">リモート設定を取得する</string>
     <string name="call_remotely_paused_title">リモートで通話が一時停止されました。</string>
@@ -321,7 +321,7 @@
     <string name="assistant_launch_qrcode">QRコード</string>
     <string name="assistant_general_terms">利用規約</string>
     <string name="assistant_read_and_agree_terms">Belledonne Communicationの%1$sと%2$sに同意します</string>
-    <string name="assistant_linphone_account">&amp;appName; アカウントを使用する</string>
+    <string name="assistant_linphone_account">&appName; アカウントを使用する</string>
     <string name="assistant_login">ログイン</string>
     <string name="assistant_continue_even_if_credentials_invalid">続ける</string>
     <string name="assistant_login_desc">ユーザー名とパスワード、SIPドメインを入力してください</string>
@@ -459,8 +459,8 @@
     <string name="account_setting_conference_factory_address">会議室URI</string>
     <string name="account_setting_end_to_end_encryption_keys_server_url">E2E暗号化キーサーバーURL</string>
     <string name="conferences_settings_layout_title">標準のレイアウト</string>
-    <string name="notification_channel_service_name">&amp;appName; サービス通知</string>
-    <string name="notification_channel_incoming_call_name">&amp;appName; 着信通知</string>
+    <string name="notification_channel_service_name">&appName; サービス通知</string>
+    <string name="notification_channel_incoming_call_name">&appName; 着信通知</string>
     <string name="incoming_call_notification_title">着信</string>
     <string name="incoming_call_notification_hangup_action_label">電話を切る</string>
     <string name="missed_call_notification_title">不在着信</string>
@@ -475,7 +475,7 @@
     <string name="content_description_add_phone_number_field">電話番号欄を追加</string>
     <string name="content_description_go_back">戻る</string>
     <string name="account_setting_audio_video_conference_factory_address">音声・映像会議室URI</string>
-    <string name="notification_channel_missed_call_name">&amp;appName; 不在着信通知</string>
+    <string name="notification_channel_missed_call_name">&appName; 不在着信通知</string>
     <string name="incoming_group_call_notification_title">グループ通話の着信</string>
     <string name="received_chat_notification_reply_label">返信</string>
     <string name="missed_call_notification_body">%s からの不在着信</string>
@@ -494,7 +494,7 @@
     <string name="content_description_forward_message">この会話のメッセージを転送する</string>
     <string name="content_description_answer_call">通話に応答する</string>
     <string name="content_description_use_speaker">音声出力にスピーカーを使用する</string>
-    <string name="content_description_linphone_user">連絡先は &amp;appName; ユーザーです</string>
+    <string name="content_description_linphone_user">連絡先は &appName; ユーザーです</string>
     <string name="content_description_contact_selected">連絡先が選択されています</string>
     <string name="content_description_e2e_encryption_enabled">エンドツーエンドの暗号化が有効になっています</string>
     <string name="content_description_show_sip_contacts">SIPの連絡先のみを表示</string>
@@ -526,8 +526,8 @@
     <string name="content_description_call_quality_0">とても低い</string>
     <string name="content_description_call_quality_2">そこそこ</string>
     <string name="content_description_call_quality_4">とても良い</string>
-    <string name="service_name">&amp;appName; サービス</string>
-    <string name="service_auto_start_description">&amp;appName; が自動的に起動されました</string>
+    <string name="service_name">&appName; サービス</string>
+    <string name="service_auto_start_description">&appName; が自動的に起動されました</string>
     <string name="logs_reset_complete">ログが削除されました</string>
     <string name="assistant_choose_country_title">国名またはプレフィックス番号</string>
     <string name="status_in_progress">接続中</string>
@@ -622,7 +622,7 @@
     <string name="chat_settings_use_in_app_file_viewer_summary">サードパーティのアプリでのエクスポートは引き続き可能です</string>
     <string name="chat_settings_auto_download_voice_recordings">受信した録音音声を自動でダウンロードする</string>
     <string name="network_settings_sip_port_title">SIPで使用するポート</string>
-    <string name="contacts_settings_native_presence_summary">&amp;appName; の連絡先からAndroid標準の連絡先に情報のショートカットを挿入します</string>
+    <string name="contacts_settings_native_presence_summary">&appName; の連絡先からAndroid標準の連絡先に情報のショートカットを挿入します</string>
     <string name="contacts_settings_show_organization_title">連絡先の組織を表示</string>
     <string name="contacts_settings_launcher_shortcuts_summary">チャットルームのショートカットがある場合は置き換えられます</string>
     <string name="chat_settings_launcher_shortcuts_summary">有効にすると連絡先ショートカットに置き換えられます</string>
@@ -684,7 +684,7 @@
     <string name="chat_security_event_lime_identity_key_changed">LIME 識別キーが %s で変更されました</string>
     <string name="chat_security_event_participant_max_count_exceeded">最大参加者数が %s を超えました</string>
     <string name="chat_room_context_menu_participants_devices">会話で利用中のデバイス</string>
-    <string name="conference_schedule_send_invite_chat_summary">招待状は &amp;appName; アカウントから送信されます</string>
+    <string name="conference_schedule_send_invite_chat_summary">招待状は &appName; アカウントから送信されます</string>
     <string name="conference_schedule_start">会議を予約</string>
     <string name="conference_default_title">リモートグループ通話</string>
     <string name="conference_local_title">ローカルグループ通話</string>
