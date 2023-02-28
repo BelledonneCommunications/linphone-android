@@ -12,7 +12,11 @@ Group changes to describe their impact on the project, as follows:
 
 ## [5.1.0] - Unreleased
 
+### Added
+- Showing short term presence for contacts whom publish it + added setting to disable it (enabled by default for sip.linphone.org accounts)
+
 ### Changed
+- Account EXPIRES is now set to 1 month instead of 1 year for sip.linphone.org accounts
 - Replaced voice recordings file name by localized placeholder text, like for video conferences invitations
 - Removed jetifier as it is not needed
 
@@ -25,7 +29,7 @@ Group changes to describe their impact on the project, as follows:
 ### Changed
 - Updated translations
 
-## [5.0.6] - Unreleased
+## [5.0.6] - 2023-02-17
 
 ### Fixed
 - Wrong country displayed in assistant after picking it in the list if another country has the same international prefix (such as +1)

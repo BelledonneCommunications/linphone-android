@@ -454,6 +454,7 @@ class CoreContext(
                     if (!account.params.isPublishEnabled) {
                         Log.i("[Context] Enabling presence publish on proxy config ${params.identityAddress?.asString()}")
                         params.isPublishEnabled = true
+                        params.publishExpires = 120
                         paramsChanged = true
                     }
                 }

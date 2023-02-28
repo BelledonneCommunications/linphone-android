@@ -4,6 +4,7 @@
     <entry name="avpf" overwrite="true">0</entry>
     <entry name="dial_escape_plus" overwrite="true">0</entry>
     <entry name="publish" overwrite="true">0</entry>
+    <entry name="publish_expires" overwrite="true">-1</entry>
     <entry name="quality_reporting_collector" overwrite="true"></entry>
     <entry name="quality_reporting_enabled" overwrite="true">0</entry>
     <entry name="quality_reporting_interval" overwrite="true">0</entry>
