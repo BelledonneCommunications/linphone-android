@@ -33,7 +33,7 @@ import org.linphone.core.tools.Log
 class NotificationBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         Log.i("[Notification Broadcast Receiver] Ensuring Core exists")
-        ensureCoreExists(context, false)
+        ensureCoreExists(context.applicationContext, false)
 
         val notificationId = intent.getIntExtra(NotificationsManager.INTENT_NOTIF_ID, 0)
         Log.i("[Notification Broadcast Receiver] Got notification broadcast for ID [$notificationId]")
