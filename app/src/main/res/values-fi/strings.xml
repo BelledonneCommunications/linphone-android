@@ -287,7 +287,7 @@
     <string name="call_stats_audio">Ääni</string>
     <string name="call_stats_video">Video</string>
     <string name="call_stats_codec">Koodekki:</string>
-    <string name="call_stats_ip"></string>
+    <string name="call_stats_ip">IP perhe:</string>
     <string name="call_stats_download">Vastaanottonopeus:</string>
     <string name="call_stats_estimated_download">Arvioitu vastaanottonopeus:</string>
     <string name="call_stats_ice">ICE yhteys:</string>
@@ -314,4 +314,68 @@
     <string name="assistant_phone_number_info_title">Mihin puhelinnumeroani käytetään\?</string>
     <string name="assistant_general_terms">käyttöehdot</string>
     <string name="assistant_privacy_policy">tietosuojaseloste</string>
+    <string name="assistant_phone_number_link_info_content_already_account">Voit käyttää puhelinnumeroasi vain yhden &amp;appName; tilin kanssa.
+\n
+\nJos olet jo yhdistänyt puhelinnumerosi toiseen tiliin, mutta haluaisit käyttää tätä sen sijaan, yhdistä se nyt ja numerosi siirretään automaattisesti tähän tiliin.</string>
+    <string name="assistant_validate_account_1">Tilisi on luotu. Tarkista sähköpostisi vahvistaaksesi tilin luonnin:</string>
+    <string name="assistant_create_account_part_3">Vahvistaaksesi puhelinnumerosi, syötä nelinumeroinen koodi alle:
+\n</string>
+    <string name="video_settings_camera_device_title">Kamera</string>
+    <string name="call_settings_vibrate_title">Värinä tuleville puheluille</string>
+    <string name="call_settings_auto_start_summary">Puhelu alkaa automaattisesti, mikäli käynnistetty toisesta sovelluksesta</string>
+    <string name="call_settings_remote_recording_title">Saa ilmoitus, kun kumppanisi aloittaa puhelun tallennuksen</string>
+    <string name="contacts_settings_friendlist_subscribe_title">Kaverilistan tilaus</string>
+    <string name="call_error_declined">Puhelu peruutettiin</string>
+    <string name="assistant_phone_number_link_info_content">"
+\nYstäväsi löytävät sinut helpommin jos yhdistät puhelinnumeron tiliisi
+\n
+\nNäet osoitekirjastasi kuka käyttää &amp;appName; ja ystäväsi tietävät myös, että voivat ottaa yhteyttä käyttäen &amp;appName;.
+\n"</string>
+    <string name="assistant_read_and_agree_terms">Hyväksyn Belledonne Communications:n %1$:n ja %2$:n</string>
+    <string name="assistant_generic_account_warning_continue_button_text">Ymmärrän</string>
+    <string name="assistant_error_phone_number_invalid_characters">Vain numerot ovat sallittuja</string>
+    <string name="assistant_error_username_already_exists">Käyttäjätunnus on jo käytössä</string>
+    <string name="assistant_error_phone_number_already_exists">Tämä numero on jo yhdistetty toiseen tiliin</string>
+    <string name="assistant_error_username_invalid_characters">Ei-hyväksyttyjä merkkejä löytyi</string>
+    <string name="assistant_error_passwords_dont_match">Salasanat eivät täsmää</string>
+    <string name="assistant_error_invalid_email_address">Sähköpostiosoite ei kelpaa</string>
+    <string name="assistant_error_username_too_long">Käyttäjätunnus on liian pitkä</string>
+    <string name="assistant_error_invalid_credentials">Tiliä ei löydy tai salasana on väärin</string>
+    <string name="assistant_linphone_account">Käytä &amp;appName tiliä</string>
+    <string name="assistant_create_account_part_1">Vahvista maakoodi ja syötä puhelinnumerosi</string>
+    <string name="assistant_linphone_login_desc">Syötä käyttäjätunnus ja salasana &amp;appName tilillesi</string>
+    <string name="assistant_login_with_username">Käytä käyttäjätunnusta ja salasanaa puhelinnumerosi sijasta</string>
+    <string name="assistant_login_forgotten_password">Unohditko salasanasi\?</string>
+    <string name="assistant_login">Kirjaudu</string>
+    <string name="assistant_finish">Päätä asetukset</string>
+    <string name="assistant_confirmation_code">Vahvistuskoodi</string>
+    <string name="assistant_continue_even_if_credentials_invalid">Jatka</string>
+    <string name="assistant_generic_account">Käytä SIP tiliä</string>
+    <string name="assistant_login_desc">Syötä käyttäjätunnus ja salasana SIP toimialueellesi</string>
+    <string name="assistant_create_account_part_email">Syötä käyttäjätunnus, sähköpostiosoite ja salasana &amp;appName tilillesi</string>
+    <string name="assistant_confirm_password">Salasanan vahvistus</string>
+    <string name="assistant_validate_account_2">Kun olet valmis, palaa tänne ja paina painiketta.</string>
+    <string name="assistant_use_username_instead_or_phone_number">Käytä käyttäjätunnusta (valinnainen)</string>
+    <string name="assistant_create_account_part_2">Olemme lähettäneet vahvistuskoodin tekstiviestillä antamaasi puhelinnumeroon:</string>
+    <string name="call_settings_ringtones_title">Soittoääni</string>
+    <string name="call_settings_encryption_title">Median salaus</string>
+    <string name="call_settings_media_encryption_none">Ei mitään</string>
+    <string name="call_settings_media_encryption_srtp">SRTP</string>
+    <string name="call_settings_media_encryption_zrtp">ZRTP</string>
+    <string name="call_settings_media_encryption_dtls">DTLS-SRTP</string>
+    <string name="call_settings_media_encryption_zrtp_post_quantum"></string>
+    <string name="call_settings_encryption_mandatory_title">Median salaus pakollinen</string>
+    <string name="call_settings_auto_start_title">Aloita puhelu välittömästi</string>
+    <string name="call_settings_auto_answer_title">Automaattivastaus tuleville puheluille</string>
+    <string name="call_settings_auto_answer_delay_title">Automaattivastauksen aika</string>
+    <string name="call_settings_auto_answer_delay_summary">millisekunneissa</string>
+    <string name="call_settings_incoming_timeout_title">Sisään tulevan puhelun aikakatkaisu</string>
+    <string name="call_settings_incoming_timeout_summary">sekunneissa</string>
+    <string name="call_settings_voice_mail_uri_title">Puhepostin URI</string>
+    <string name="call_settings_go_to_android_notification_settings">Android ilmoitusasetukset</string>
+    <string name="call_settings_auto_start_recording_title">Puhelun tallennus automaattisesti</string>
+    <string name="network_settings_wifi_only_title">Käytä vain WiFi:ä</string>
+    <string name="network_settings_allow_ipv6_title">Salli IPv6</string>
+    <string name="network_settings_random_ports_title">Käytä satunnaisia portteja</string>
+    <string name="network_settings_sip_port_title">Käytettävä SIP portti</string>
 </resources>
