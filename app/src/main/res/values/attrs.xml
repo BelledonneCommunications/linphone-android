@@ -19,6 +19,7 @@
         <attr name="dividerColor" format="color"/>
 
         <attr name="drawableTintColor" format="color"/>
+        <attr name="drawableBackgroundColor" format="color" />
         <attr name="drawableTintDisabledColor" format="color"/>
         <attr name="drawableTintOverColor" format="color"/>
         <attr name="drawableTintColor2" format="color"/>

@@ -41,6 +41,7 @@
         <item name="dividerColor">@color/light_grey_color</item>
 
         <item name="drawableTintColor">@color/dark_grey_color</item>
+        <item name="drawableBackgroundColor">@color/chat_bubble_file_background_color</item>
         <item name="drawableTintDisabledColor">@color/disabled_color</item>
         <item name="drawableTintOverColor">@color/primary_color</item>
         <item name="drawableTintColor2">@color/white_color</item>
