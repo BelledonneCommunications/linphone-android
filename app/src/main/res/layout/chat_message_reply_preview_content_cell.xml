@@ -63,22 +63,26 @@
             android:maxWidth="@dimen/chat_message_content_preview_max_width"
             android:maxLines="3"
             android:ellipsize="end"
+            android:background="@drawable/chat_bubble_reply_file_background"
             android:text="@{data.conferenceSubject, default=`Lorem Ipsum`}"
-            android:textColor="@color/light_primary_text_color"
+            android:textColor="?attr/primaryTextColor"
             android:drawablePadding="5dp"
             android:padding="5dp"
-            android:drawableTop="@drawable/icon_meeting_schedule"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true"
+            app:drawableTopCompat="@drawable/icon_meeting_schedule" />
 
         <ImageView
             android:layout_width="@dimen/chat_message_small_bubble_file_size"
             android:layout_height="@dimen/chat_message_small_bubble_file_size"
-            android:layout_margin="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
             android:background="@drawable/chat_bubble_reply_file_background"
-            android:padding="10dp"
             android:contentDescription="@{data.fileName}"
-            android:visibility="@{data.downloadable || data.pdf || data.audio || data.genericFile ? View.VISIBLE : View.GONE}"
-            android:src="@{data.video ? @drawable/file_video : (data.image ? @drawable/file_picture : (data.pdf ? @drawable/file_pdf : (data.audio ? @drawable/file_audio : @drawable/file))), default=@drawable/file}" />
+            android:padding="10dp"
+            android:src="@{data.video ? @drawable/file_video : (data.image ? @drawable/file_picture : (data.pdf ? @drawable/file_pdf : (data.audio ? @drawable/file_audio : @drawable/file))), default=@drawable/file}"
+            android:visibility="@{data.downloadable || data.pdf || data.audio || data.genericFile ? View.VISIBLE : View.GONE}" />
 
     </RelativeLayout>
 
