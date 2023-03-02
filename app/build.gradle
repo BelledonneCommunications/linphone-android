@@ -13,16 +13,12 @@ static def getPackageName() {
     return "org.linphone"
 }
 
-def firebaseEnabled = new File(projectDir.absolutePath +'/google-services.json').exists()
+def firebaseAvailable = new File(projectDir.absolutePath +'/google-services.json').exists()
 
-def crashlyticsEnabled = new File(projectDir.absolutePath +'/google-services.json').exists() && new File(LinphoneSdkBuildDir + '/libs/').exists() && new File(LinphoneSdkBuildDir + '/libs-debug/').exists()
+def crashlyticsAvailable = new File(projectDir.absolutePath +'/google-services.json').exists() && new File(LinphoneSdkBuildDir + '/libs/').exists() && new File(LinphoneSdkBuildDir + '/libs-debug/').exists()
 
-if (firebaseEnabled) {
+if (firebaseAvailable) {
     apply plugin: 'com.google.gms.google-services'
-}
-
-if (crashlyticsEnabled) {
-    apply plugin: 'com.google.firebase.crashlytics'
 }
 
 def gitBranch = new ByteArrayOutputStream()
@@ -98,7 +94,7 @@ android {
         }
 
         var enableFirebaseService = "false"
-        if (firebaseEnabled) {
+        if (firebaseAvailable) {
             enableFirebaseService = "true"
         }
         // See https://developer.android.com/studio/releases/gradle-plugin#3-6-0-behavior for why extractNativeLibs is set to true in debug flavor
@@ -141,7 +137,7 @@ android {
             resValue "string", "file_provider", getPackageName() + ".fileprovider"
             resValue "string", "linphone_address_mime_type", "vnd.android.cursor.item/vnd." + getPackageName() + ".provider.sip_address"
 
-            if (!firebaseEnabled) {
+            if (!firebaseAvailable) {
                 resValue "string", "gcm_defaultSenderId", "none"
             }
 
@@ -151,9 +147,11 @@ android {
         releaseWithCrashlytics {
             initWith release
 
-            resValue "bool", "crashlytics_enabled", crashlyticsEnabled.toString()
+            resValue "bool", "crashlytics_enabled", crashlyticsAvailable.toString()
 
-            if (crashlyticsEnabled) {
+            if (crashlyticsAvailable) {
+                apply plugin: 'com.google.firebase.crashlytics'
+
                 firebaseCrashlytics {
                     nativeSymbolUploadEnabled true
                     unstrippedNativeLibsDir file(LinphoneSdkBuildDir + '/libs-debug/').toString()
@@ -170,13 +168,15 @@ android {
             resValue "string", "sync_account_type", getPackageName() + ".sync"
             resValue "string", "file_provider", getPackageName() + ".debug.fileprovider"
             resValue "string", "linphone_address_mime_type", "vnd.android.cursor.item/vnd." + getPackageName() + ".provider.sip_address"
-            resValue "bool", "crashlytics_enabled", crashlyticsEnabled.toString()
+            resValue "bool", "crashlytics_enabled", crashlyticsAvailable.toString()
 
-            if (!firebaseEnabled) {
+            if (!firebaseAvailable) {
                 resValue "string", "gcm_defaultSenderId", "none"
             }
 
-            if (crashlyticsEnabled) {
+            if (crashlyticsAvailable) {
+                apply plugin: 'com.google.firebase.crashlytics'
+
                 firebaseCrashlytics {
                     nativeSymbolUploadEnabled false
                 }
@@ -228,12 +228,14 @@ dependencies {
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
 
     implementation platform('com.google.firebase:firebase-bom:31.1.1')
-    if (crashlyticsEnabled) {
-        implementation 'com.google.firebase:firebase-crashlytics-ndk'
+    if (crashlyticsAvailable) {
+        debugImplementation 'com.google.firebase:firebase-crashlytics-ndk'
+        releaseWithCrashlyticsImplementation 'com.google.firebase:firebase-crashlytics-ndk'
+        releaseCompileOnly 'com.google.firebase:firebase-crashlytics-ndk'
     } else {
         compileOnly 'com.google.firebase:firebase-crashlytics-ndk'
     }
-    if (firebaseEnabled) {
+    if (firebaseAvailable) {
         implementation 'com.google.firebase:firebase-messaging'
     }
 
@@ -263,7 +265,7 @@ ktlint {
 
 project.tasks['preBuild'].dependsOn 'ktlintFormat'
 
-if (crashlyticsEnabled) {
+if (crashlyticsAvailable) {
     afterEvaluate {
         assembleReleaseWithCrashlytics.finalizedBy(uploadCrashlyticsSymbolFileReleaseWithCrashlytics)
         packageReleaseWithCrashlytics.finalizedBy(uploadCrashlyticsSymbolFileReleaseWithCrashlytics)
