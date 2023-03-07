@@ -17,7 +17,7 @@
     <string name="chat_message_cant_open_file_in_app_dialog_title">このファイルを表示することができません。</string>
     <string name="chat_message_cant_open_file_in_app_dialog_message">テキストとして開く、もしくはサードパーティーのアプリにエクスポート（暗号化されません）しますか？</string>
     <string name="conference_group_call_title">グループ通話を開始</string>
-    <string name="conference_schedule_description_title">説明を追加</string>
+    <string name="conference_schedule_description_title">概要を追加</string>
     <string name="conference_schedule_summary">会議情報</string>
     <string name="conference_schedule_address_copied_to_clipboard">会議のアドレスをクリップボードにコピーしました</string>
     <plurals name="chat_room_unread_messages_event">
@@ -57,7 +57,7 @@
     <string name="assistant_linphone_login_desc">&appName; アカウントのユーザー名とパスワードを入力してください</string>
     <string name="assistant_create_account_part_email">&appName; アカウントのユーザー名とEメール、パスワードを入力してください</string>
     <string name="audio_settings_echo_cancellation_calibration_no_echo">エコーが検出されませんでした</string>
-    <string name="video_settings_initiate_call_summary">常に映像の要求を送信する</string>
+    <string name="video_settings_initiate_call_summary">常に映像の要求を送信します</string>
     <string name="call_settings_rfc2833_dtmf_title">帯域内のDTMFを送信（RFC 2833）</string>
     <string name="call_settings_auto_start_recording_title">通話の録音を自動で開始</string>
     <string name="chat_settings_downloaded_media_public_title">ダウンロードしたメディアを公開する</string>
@@ -96,7 +96,7 @@
     <string name="content_description_delete_selection">選択したアイテムを削除</string>
     <string name="content_description_missed_call">不在着信</string>
     <string name="content_description_call_not_secured">通話は保護されていません</string>
-    <string name="service_description">バックグラウンド動作を許可します</string>
+    <string name="service_description">バックグラウンドでの動作が許可されています</string>
     <string name="about_privacy_policy">プライバシーポリシー</string>
     <string name="logs_upload_failure">ログのアップロードに失敗しました！</string>
     <string name="logs_url_copied_to_clipboard">ログのURLをクリップボードにコピーしました</string>
@@ -244,12 +244,12 @@
     <string name="conference_schedule_participants_list">参加者リスト</string>
     <string name="conference_group_call_summary">グループ通話情報</string>
     <string name="conference_schedule_info_not_sent_to_participant">参加者への会議の情報の送信に失敗しました</string>
-    <string name="conference_description_title">説明</string>
+    <string name="conference_description_title">概要</string>
     <string name="conference_invite_participants_count" tools:ignore="PluralsCandidate">%d 人の参加者</string>
     <string name="conference_display_mode_mosaic">モザイクモード</string>
     <string name="conference_waiting_room_cancel_call">キャンセル</string>
     <string name="conference_waiting_room_video_disabled">映像は現在無効です</string>
-    <string name="conference_schedule_description_hint">説明</string>
+    <string name="conference_schedule_description_hint">概要</string>
     <string name="conference_invite_title">会議への招待:</string>
     <string name="conference_waiting_room_start_call">開始</string>
     <string name="conference_scheduled">会議</string>
@@ -345,7 +345,7 @@
     <string name="audio_settings_codecs_title">コーデック</string>
     <string name="video_settings_enable_title">映像を有効にする</string>
     <string name="video_settings_initiate_call_title">ビデオ通話で開始する</string>
-    <string name="video_settings_automatically_accept_summary">常に映像の要求を許可する</string>
+    <string name="video_settings_automatically_accept_summary">常に映像の要求を許可します</string>
     <string name="video_settings_video_size_title">映像のサイズを優先する</string>
     <string name="video_settings_video_preset_title">映像のプリセット</string>
     <string name="video_settings_bandwidth_limit_title">帯域幅制限</string>
@@ -573,7 +573,7 @@
     <string name="call_stats_capture_filter">キャプチャーのフィルター:</string>
     <string name="assistant_welcome_desc">このアシスタントはSIPアカウントの設定と使用を支援します。</string>
     <string name="assistant_ec_calibration">エコーキャンセラーの調整中</string>
-    <string name="assistant_generic_account_warning">グループ会議や暗号化メッセージなどの一部の機能は %1$s を要求します。
+    <string name="assistant_generic_account_warning">グループ会議や暗号化メッセージなどの一部の機能は &amp;appName; アカウントを要求します。
 \n
 \n これらの機能は、サードパーティのSIPアカウントに登録すると非表示になります。
 \n
@@ -596,7 +596,7 @@
     <string name="settings_conferences_title">会議</string>
     <string name="settings_primary_account_title">プライマリーアカウント</string>
     <string name="audio_settings_echo_cancellation_title">エコーキャンセラー</string>
-    <string name="audio_settings_echo_cancellation_summary">相手側に聞こえるエコーを除去する</string>
+    <string name="audio_settings_echo_cancellation_summary">相手側に聞こえるエコーを除去します</string>
     <string name="audio_settings_echo_cancellation_calibration_value">%s ミリ秒で調整済み</string>
     <string name="video_settings_tablet_preview_title">ダイヤラーにカメラのプレビューを表示</string>
     <string name="video_settings_preferred_fps_title">FPSを優先する</string>
@@ -606,7 +606,7 @@
     <string name="call_settings_auto_answer_delay_title">自動応答の時間</string>
     <string name="call_settings_incoming_timeout_summary">秒</string>
     <string name="call_settings_voice_mail_uri_title">音声メールURI</string>
-    <string name="call_settings_redirect_to_voice_mail_declined_calls_title">リダイレクトにより音声メールURIへの通話が拒否されました</string>
+    <string name="call_settings_redirect_to_voice_mail_declined_calls_title">断られた電話をボイスメールURIにリダイレクトする</string>
     <string name="call_settings_pause_calls_lost_audio_focus_title">音声のフォーカスが失われたときに通話を一時停止する</string>
     <string name="call_settings_remote_recording_title">通信相手との通話が録音されるときに通知されます</string>
     <string name="chat_settings_mark_as_read_notif_dismissal_title">通知の却下時に既読としてマークする</string>
@@ -746,4 +746,14 @@
     <string name="content_description_edit_conference">会議を編集</string>
     <string name="content_description_hide_statistics">通話の統計情報を非表示にする</string>
     <string name="content_description_toggle_conference_info_details">会議情報の詳細の可視性をトグルする</string>
+    <string name="content_descripton_scroll_to_bottom">下部もしくは未読メッセージの先頭に移動する</string>
+    <string name="content_description_security_level_unsafe">安全ではありません</string>
+    <string name="chat_message_imdn_displayed">既読</string>
+    <string name="call_stats_zrtp_hash_algo">ハッシュアルゴリズム:</string>
+    <string name="settings_tunnel_title">トンネル</string>
+    <string name="call_settings_ring_during_early_media_title">アーリーメディアの着信時に通知する</string>
+    <string name="incoming_call_notification_answer_action_label">応答</string>
+    <string name="dialog_zrtp_local_sas">次のように入力:</string>
+    <string name="content_description_security_level_safe">安全です</string>
+    <string name="content_description_call_secured">通話は保護されています</string>
 </resources>
