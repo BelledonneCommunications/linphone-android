@@ -326,7 +326,7 @@
     <string name="advanced_settings_background_mode_title">Režim na pozadí</string>
     <string name="contacts_settings_ldap_request_delay_subtitle">V milisekundách</string>
     <string name="advanced_settings_auto_start_title">Spuštění při startu systému</string>
-    <string name="advanced_settings_dark_mode_label_auto">Automatický</string>
+    <string name="advanced_settings_dark_mode_label_auto">Automaticky</string>
     <string name="advanced_settings_dark_mode_label_yes">Ano</string>
     <string name="advanced_settings_animations_title">Animace</string>
     <string name="advanced_settings_dark_mode_label_no">Ne</string>
@@ -357,7 +357,7 @@
     <string name="account_settings_push_notification_title">Povolit push notifikace</string>
     <string name="account_settings_push_notification_summary">Konfigurace proxy serveru nejde odregistrovat</string>
     <string name="account_settings_manage_title">Správa</string>
-    <string name="account_settings_transport_title">Přenést</string>
+    <string name="account_settings_transport_title">Přenos</string>
     <string name="account_settings_transport_udp">UDP</string>
     <string name="account_settings_transport_tls">TLS</string>
     <string name="account_settings_advanced_title">Pokročilé</string>
