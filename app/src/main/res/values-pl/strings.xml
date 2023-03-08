@@ -2,7 +2,7 @@
 <!DOCTYPE resources [
 <!ENTITY appName "Linphone">
 ]>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="no_account_configured">Nie skonfigurowano konta</string>
     <string name="chat_message_cant_open_file_in_app_dialog_message">Czy chcesz otworzyć go jako tekst lub wyeksportować (niezaszyfrowany) do aplikacji innej firmy, jeśli jest dostępna\?</string>
     <string name="conference_schedule_title">Zaplanować spotkanie</string>
@@ -24,8 +24,8 @@
     <plurals name="days">
         <item quantity="one">%d dzień</item>
         <item quantity="few">%d dni</item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="many"/>
+        <item quantity="other"/>
     </plurals>
     <string name="share_uploaded_logs_link">Udostępnij link logów używając…</string>
     <string name="today">Dzisiaj</string>
@@ -161,8 +161,8 @@
     <plurals name="chat_room_unread_messages_event">
         <item quantity="one">%1$d nieprzeczytana wiadomość</item>
         <item quantity="few">%1$d nieprzeczytanych wiadomości</item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="many"/>
+        <item quantity="other"/>
     </plurals>
     <string name="chat_message_removal_info">Wiadomość zostanie usunięta</string>
     <string name="chat_message_abort_removal">Przerwij</string>
@@ -185,4 +185,99 @@
     <string name="conference_schedule_send_invite_chat">Wyślij zaproszenie przez &appName;</string>
     <string name="conference_schedule_send_updated_invite_chat">Wyślij aktualizację przez &appName;</string>
     <string name="conference_schedule_send_invite_email">Wyślij zaproszenie e-mailem</string>
+    <string name="service_description">Jest to wymagane do odbierania połączeń w tle</string>
+    <string name="about_weblate_translation">Pomóż nam przetłumaczyć &appName;</string>
+    <string name="logs_url_copied_to_clipboard">Adres URL dzienników skopiowany do schowka</string>
+    <string name="conference_start_group_call_dialog_message">Czy chcesz rozpocząć połączenie grupowe\?
+\nWszyscy w tej grupie otrzymają wezwanie do dołączenia do spotkania.</string>
+    <string name="service_name">Usługi &appName;</string>
+    <string name="service_auto_start_description">&appName; została uruchomiona automatycznie</string>
+    <string name="sync_account_name">kontakty &appName;</string>
+    <string name="about_privacy_policy">Odwiedź naszą politykę prywatności</string>
+    <string name="logs_reset_complete">Logi zostały wyczyszczone</string>
+    <string name="transport">Transport</string>
+    <string name="conference_schedule_send_updated_invite_email">Wyślij aktualizację e-mailem</string>
+    <string name="conference_schedule_encryption">Czy chcesz zaszyfrować spotkanie\?</string>
+    <string name="conference_schedule_send_invite_chat_summary">Zaproszenie zostanie wysłane z mojego konta &appName;</string>
+    <string name="conference_schedule_participants_list">Lista uczestników</string>
+    <string name="conference_organizer">Organizator</string>
+    <string name="conference_schedule_summary">Informacje o spotkaniu</string>
+    <string name="conference_group_call_summary">Informacje o połączeniu grupowym</string>
+    <string name="conference_schedule_start">Zaplanowane spotkanie</string>
+    <string name="conference_schedule_edit">Edytuj spotkanie</string>
+    <string name="conference_group_call_create">Rozpocznij połączenie grupowe</string>
+    <string name="conference_schedule_address_copied_to_clipboard">Adres spotkania został skopiowany do schowka</string>
+    <string name="conference_schedule_info_not_sent_to_participant">Nie udało się wysłać informacji o spotkaniu do uczestnika</string>
+    <string name="conference_paused_title">Obecnie jesteś poza spotkaniem.</string>
+    <string name="conference_paused_subtitle">Kliknij przycisk odtwarzania, aby ponownie do niego dołączyć.</string>
+    <string name="conference_default_title">Zdalne połączenie grupowe</string>
+    <string name="conference_local_title">Lokalna rozmowa grupowa</string>
+    <string name="conference_invite_title">Zaproszenie na spotkanie:</string>
+    <string name="conference_update_title">Spotkanie zostało zaktualizowane:</string>
+    <string name="conference_cancel_title">Spotkanie zostało odwołane:</string>
+    <string name="conference_description_title">Opis</string>
+    <string name="conference_invite_join">Dołącz</string>
+    <string name="conference_invite_participants_count" tools:ignore="PluralsCandidate">%d uczestników</string>
+    <string name="conference_display_mode_mosaic">Tryb mozaiki</string>
+    <string name="conference_display_mode_active_speaker">Aktywny tryb głośnika</string>
+    <string name="conference_display_mode_audio_only">Tylko tryb audio</string>
+    <string name="conference_waiting_room_start_call">Start</string>
+    <string name="conference_waiting_room_cancel_call">Anuluj</string>
+    <string name="conference_waiting_room_video_disabled">Wideo jest obecnie wyłączone</string>
+    <string name="conference_scheduled">Spotkania</string>
+    <string name="conference_layout_too_many_participants_for_mosaic">Nie możesz zmienić układu rozmowy grupowej, ponieważ jest zbyt wielu uczestników</string>
+    <string name="conference_too_many_participants_for_mosaic_layout">Jest zbyt wielu uczestników do układu mozaikowego, przełączam na aktywny głośnik</string>
+    <string name="conference_participant_paused">(pauza)</string>
+    <string name="conference_no_schedule">Nie ma jeszcze zaplanowanego spotkania.</string>
+    <string name="conference_no_terminated_schedule">Żadne spotkanie nie zostało jeszcze zakończone.</string>
+    <string name="conference_schedule_organizer">Organizator:</string>
+    <string name="conference_go_to_chat">Pokój rozmów</string>
+    <string name="conference_creation_failed">Nie udało się utworzyć spotkania</string>
+    <string name="conference_admin_set">%s jest teraz administratorem</string>
+    <string name="conference_admin_unset">%s nie jest już administratorem</string>
+    <string name="conference_schedule_info_created">Spotkanie zostało zaplanowane</string>
+    <string name="conference_info_removed">Informacje o spotkaniu zostały usunięte</string>
+    <string name="conference_empty">Obecnie jesteś sam w tej rozmowie grupowej</string>
+    <string name="conference_invitation_received_notification">Zaproszono Cię na spotkanie</string>
+    <string name="conference_invitation">Zaproszenie na spotkanie</string>
+    <string name="conference_low_bandwidth">Wykryto niską przepustowość, wyłączenie wideo</string>
+    <string name="conference_first_to_join">Jesteś pierwszą osobą, która dołącza do rozmowy grupowej</string>
+    <string name="conference_last_user">Wszyscy pozostali uczestnicy opuścili połączenie grupowe</string>
+    <string name="conference_incoming_title">Przychodzące połączenie grupowe</string>
+    <string name="conference_participants_title">Uczestnicy (%d)</string>
+    <string name="conference_start_group_call_dialog_title">Połączenie grupowe</string>
+    <string name="conference_start_group_call_dialog_ok_button">Start</string>
+    <string name="conference_scheduled_terminated_filter">Zakończony</string>
+    <string name="conference_scheduled_future_filter">Zaplanowany</string>
+    <string name="conference_scheduled_delete_one_dialog">Czy chcesz usunąć to spotkanie\?</string>
+    <string name="conference_scheduled_delete_many_dialog">Czy chcesz usunąć te spotkania\?</string>
+    <string name="conference_scheduled_cancelled_by_organizer">Konferencja została odwołana przez organizatora</string>
+    <string name="conference_scheduled_cancelled_by_me">Odwołałeś konferencję</string>
+    <string name="call_incoming_title">Połączenie przychodzące</string>
+    <string name="call_outgoing_title">Połączenie wychodzące</string>
+    <string name="call_notification_paused">Połączenie wstrzymane</string>
+    <string name="call_notification_outgoing">Połączenie wychodzące</string>
+    <string name="call_notification_active">Uruchomienie połączenia</string>
+    <string name="settings_advanced_title">Zaawansowany</string>
+    <string name="settings_conferences_title">Spotkania</string>
+    <string name="settings_primary_account_title">Główne konto</string>
+    <string name="settings_primary_account_display_name_title">Wyświetlana nazwa</string>
+    <string name="settings_primary_account_username_title">Nazwa użytkownika</string>
+    <string name="audio_settings_echo_cancellation_title">Redukcja szumów</string>
+    <string name="audio_settings_echo_cancellation_summary">Usuwa echo słyszane przez drugi koniec</string>
+    <string name="audio_settings_echo_canceller_calibration_title">Kalibracja tłumika echa</string>
+    <string name="advanced_settings_dark_mode_label_no">Nie</string>
+    <string name="advanced_settings_dark_mode_label_yes">Tak</string>
+    <string name="advanced_settings_device_name_title">Nazwa urządzenia</string>
+    <string name="advanced_settings_android_title">Android</string>
+    <string name="advanced_settings_disable_fragment_security_summary">Zezwalaj na przechwytywanie/nagrywanie ekranu w wrażliwych widokach</string>
+    <string name="tunnel_settings_hostname_url_title">Nazwa hosta</string>
+    <string name="tunnel_settings_port_title">Port</string>
+    <string name="tunnel_settings_dual_mode_title">Włączony tryb podwójny</string>
+    <string name="tunnel_settings_dual_mode_summary">Użyje jednego serwera do wysyłania, a drugiego do pobierania</string>
+    <string name="account_settings_password_title">Hasło</string>
+    <string name="account_settings_transport_tcp">TCP</string>
+    <string name="account_settings_delete_title">Usuń</string>
+    <string name="received_chat_notification_reply_label">Odpowiedź</string>
+    <string name="received_chat_notification_mark_as_read_label">Oznacz jako przeczytane</string>
 </resources>
