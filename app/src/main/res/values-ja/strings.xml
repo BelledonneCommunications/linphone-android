@@ -3,7 +3,7 @@
 <!ENTITY appName "Linphone">
 ]>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="service_description">バックグラウンド動作を許可します</string>
+    <string name="service_description">バックグラウンドでの動作が許可されています</string>
     <string name="sync_account_name">&appName; の連絡先</string>
     <string name="logs_upload_failure">ログのアップロードに失敗しました！</string>
     <string name="phone_number">電話番号</string>
@@ -156,8 +156,8 @@
     <string name="conference_group_call_title">グループ通話を開始</string>
     <string name="conference_schedule_subject_title">件名</string>
     <string name="conference_schedule_mandatory_field">必須</string>
-    <string name="conference_schedule_description_title">説明を追加</string>
-    <string name="conference_schedule_description_hint">説明</string>
+    <string name="conference_schedule_description_title">概要を追加</string>
+    <string name="conference_schedule_description_hint">概要</string>
     <string name="conference_schedule_date">日付</string>
     <string name="conference_schedule_time">時間</string>
     <string name="conference_schedule_timezone">タイムゾーン</string>
@@ -179,7 +179,7 @@
     <string name="conference_invite_join">参加</string>
     <string name="conference_invite_participants_count" tools:ignore="PluralsCandidate">%d 人の参加者</string>
     <string name="conference_cancel_title">会議がキャンセルされました:</string>
-    <string name="conference_description_title">説明</string>
+    <string name="conference_description_title">概要</string>
     <string name="conference_display_mode_mosaic">モザイクモード</string>
     <string name="conference_display_mode_audio_only">音声のみモード</string>
     <string name="conference_waiting_room_start_call">開始</string>
@@ -200,7 +200,7 @@
     <string name="chat_security_event_participant_max_count_exceeded">最大参加者数が %s を超えました</string>
     <string name="chat_room_devices_fragment_title">会話で利用中のデバイス</string>
     <string name="chat_room_group_info_title">情報</string>
-    <string name="chat_message_imdn_displayed">読む</string>
+    <string name="chat_message_imdn_displayed">既読</string>
     <string name="chat_room_context_menu_participants_devices">会話で利用中のデバイス</string>
     <string name="chat_room_ephemeral_messages_desc">このメッセージは双方が開封した後、指定された時間が経過すると削除されます。</string>
     <string name="chat_room_ephemeral_message_disabled">無効</string>
@@ -316,7 +316,7 @@
 \n"</string>
     <string name="assistant_privacy_policy">プライバシーポリシー</string>
     <string name="assistant_read_and_agree_terms">Belledonne Communicationの%1$sと%2$sに同意します</string>
-    <string name="assistant_generic_account_warning">グループ会議や暗号化メッセージなどの一部の機能は %1$s を要求します。
+    <string name="assistant_generic_account_warning">グループ会議や暗号化メッセージなどの一部の機能は &amp;appName; アカウントを要求します。
 \n
 \n これらの機能は、サードパーティのSIPアカウントに登録すると非表示になります。
 \n
@@ -368,9 +368,9 @@
     <string name="video_settings_enable_title">映像を有効にする</string>
     <string name="video_settings_tablet_preview_title">ダイヤラーにカメラのプレビューを表示</string>
     <string name="video_settings_initiate_call_title">ビデオ通話で開始する</string>
-    <string name="video_settings_initiate_call_summary">常に映像の要求を送信する</string>
+    <string name="video_settings_initiate_call_summary">常に映像の要求を送信します</string>
     <string name="video_settings_automatically_accept_title">映像の要求を受け付ける</string>
-    <string name="video_settings_automatically_accept_summary">常に映像の要求を許可する</string>
+    <string name="video_settings_automatically_accept_summary">常に映像の要求を許可します</string>
     <string name="video_settings_camera_device_title">カメラ</string>
     <string name="video_settings_video_size_title">映像のサイズを優先する</string>
     <string name="video_settings_video_preset_title">映像のプリセット</string>
@@ -426,7 +426,7 @@
     <string name="settings_primary_account_display_name_title">表示名</string>
     <string name="settings_primary_account_username_title">ユーザー名</string>
     <string name="audio_settings_echo_cancellation_title">エコーキャンセラー</string>
-    <string name="audio_settings_echo_cancellation_summary">相手側に聞こえるエコーを除去する</string>
+    <string name="audio_settings_echo_cancellation_summary">相手側に聞こえるエコーを除去します</string>
     <string name="audio_settings_echo_canceller_calibration_title">エコーキャンセラーの調整</string>
     <string name="audio_settings_echo_canceller_calibration_summary">クリックしてエコーキャンセラーの調整を開始</string>
     <string name="audio_settings_echo_cancellation_calibration_started">エコーキャンセラーの調整を開始しました</string>
@@ -453,7 +453,7 @@
     <string name="call_settings_auto_answer_delay_summary">ミリ秒</string>
     <string name="call_settings_incoming_timeout_summary">秒</string>
     <string name="call_settings_voice_mail_uri_title">音声メールURI</string>
-    <string name="call_settings_redirect_to_voice_mail_declined_calls_title">リダイレクトにより音声メールURIへの通話が拒否されました</string>
+    <string name="call_settings_redirect_to_voice_mail_declined_calls_title">断られた電話をボイスメールURIにリダイレクトする</string>
     <string name="call_settings_ring_during_early_media_title">アーリーメディアの着信時に通知する</string>
     <string name="call_settings_remote_recording_title">通信相手との通話が録音されるときに通知されます</string>
     <string name="chat_settings_mark_as_read_notif_dismissal_title">通知の却下時に既読としてマークする</string>
@@ -603,7 +603,7 @@
     <string name="account_settings_expires_summary">秒</string>
     <string name="account_settings_expires_title">期限切れ</string>
     <string name="account_setting_end_to_end_encryption_keys_server_url">E2E暗号化キーサーバーURL</string>
-    <string name="incoming_call_notification_answer_action_label">回答</string>
+    <string name="incoming_call_notification_answer_action_label">応答</string>
     <string name="dialog_do_not_ask_again">次からは表示しない</string>
     <string name="dialog_cancel">キャンセル</string>
     <string name="dialog_delete">削除</string>
@@ -756,7 +756,7 @@
     <string name="content_description_hide_numpad">数字パッドを非表示</string>
     <string name="content_description_export">サードパーティのアプリでファイルを開く</string>
     <string name="content_description_cancel_voice_recording">音声の録音を取り消す</string>
-    <string name="content_descripton_scroll_to_bottom">下部もしくは最初の未読メッセージに移動する</string>
+    <string name="content_descripton_scroll_to_bottom">下部もしくは未読メッセージの先頭に移動する</string>
     <string name="content_description_enter_edition_mode">エディションモードへ移行</string>
     <string name="content_description_exit_edition_mode">エディションモードを終了</string>
     <string name="content_description_call_context_menu">通話メニューを開く</string>
@@ -766,4 +766,9 @@
     <string name="content_description_toggle_conference_info_details">会議情報の詳細の可視性をトグルする</string>
     <string name="content_description_conference_participants">グループ通話の参加者</string>
     <string name="content_description_toggle_layout_menu">グループ通話のレイアウトメニュー表示の切り替え</string>
+    <string name="chat_room_presence_online">オンライン</string>
+    <string name="account_setting_publish_presence_title">プレゼンス情報を公開する</string>
+    <string name="dialog_zrtp_local_sas">次のように入力:</string>
+    <string name="content_description_presence_online">ユーザーはオンラインです</string>
+    <string name="content_description_presence_offline">ユーザーはオフラインです</string>
 </resources>
