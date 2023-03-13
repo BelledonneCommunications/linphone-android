@@ -71,15 +71,14 @@ class CoreContext(
     useAutoStartDescription: Boolean = false
 ) :
     LifecycleOwner, ViewModelStoreOwner {
+
     private val _lifecycleRegistry = LifecycleRegistry(this)
-    override fun getLifecycle(): Lifecycle {
-        return _lifecycleRegistry
-    }
+    override val lifecycle: Lifecycle
+        get() = _lifecycleRegistry
 
     private val _viewModelStore = ViewModelStore()
-    override fun getViewModelStore(): ViewModelStore {
-        return _viewModelStore
-    }
+    override val viewModelStore: ViewModelStore
+        get() = _viewModelStore
 
     private val contactLoader = ContactLoader()
 
