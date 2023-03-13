@@ -19,16 +19,20 @@
  */
 package org.linphone.activities.main.settings.fragments
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.main.settings.viewmodels.AccountSettingsViewModel
 import org.linphone.activities.main.settings.viewmodels.AccountSettingsViewModelFactory
+import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.navigateToPhoneLinking
 import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsAccountFragmentBinding
+import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 
 class AccountSettingsFragment : GenericSettingFragment<SettingsAccountFragmentBinding>() {
@@ -97,6 +101,40 @@ class AccountSettingsFragment : GenericSettingFragment<SettingsAccountFragmentBi
         ) {
             it.consume {
                 sharedViewModel.publishPresenceToggled.value = true
+            }
+        }
+
+        viewModel.deleteAccountRequiredEvent.observe(
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                val defaultDomainAccount = viewModel.account.params.identityAddress?.domain == corePreferences.defaultDomain
+                Log.i("[Account Settings] User clicked on delete account, showing confirmation dialog for ${if (defaultDomainAccount) "default domain account" else "third party account"}")
+                val dialogViewModel = if (defaultDomainAccount) {
+                    DialogViewModel(getString(R.string.account_setting_delete_sip_linphone_org_confirmation_dialog), getString(R.string.account_setting_delete_dialog_title))
+                } else {
+                    DialogViewModel(getString(R.string.account_setting_delete_generic_confirmation_dialog), getString(R.string.account_setting_delete_dialog_title))
+                }
+                val dialog: Dialog = DialogUtils.getDialog(requireContext(), dialogViewModel)
+
+                dialogViewModel.showIcon = true
+                dialogViewModel.iconResource = R.drawable.dialog_delete_icon
+                dialogViewModel.showSubscribeLinphoneOrgLink = defaultDomainAccount
+
+                dialogViewModel.showCancelButton {
+                    Log.i("[Account Settings] User cancelled account removal")
+                    dialog.dismiss()
+                }
+
+                dialogViewModel.showDeleteButton(
+                    {
+                        viewModel.startDeleteAccount()
+                        dialog.dismiss()
+                    },
+                    getString(R.string.dialog_delete)
+                )
+
+                dialog.show()
             }
         }
 

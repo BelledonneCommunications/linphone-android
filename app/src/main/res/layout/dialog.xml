@@ -43,6 +43,17 @@
             android:gravity="center"
             android:text="@{viewModel.message, default=Message}"/>
 
+        <TextView
+            android:textColor="?attr/accentColor"
+            android:textSize="16sp"
+            android:textColorLink="@color/primary_color"
+            android:autoLink="web"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/assistant_forgotten_password_link"
+            android:visibility="@{viewModel.showSubscribeLinphoneOrgLink ? View.VISIBLE : View.GONE}" />
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -707,6 +707,9 @@
     <string name="account_setting_audio_video_conference_factory_address">Audio/video conference factory URI</string>
     <string name="account_setting_end_to_end_encryption_keys_server_url">E2E encryption keys server URL</string>
     <string name="account_setting_publish_presence_title">Publish presence information</string>
+    <string name="account_setting_delete_dialog_title">Do you want to delete your account?</string>
+    <string name="account_setting_delete_generic_confirmation_dialog">Your account will only be deleted locally.\nTo delete it permanently, go on your SIP provider website.</string>
+    <string name="account_setting_delete_sip_linphone_org_confirmation_dialog">Your account will only be deleted locally.\nTo delete it permanently, go to our account management platform:</string>
 
     <!-- Conferences settings -->
     <string name="conferences_settings_layout_title">Default layout</string>

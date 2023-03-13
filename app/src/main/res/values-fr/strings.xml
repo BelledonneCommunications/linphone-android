@@ -765,4 +765,7 @@
     <string name="chat_room_presence_last_seen_online_today">En ligne aujourd\'hui à</string>
     <string name="chat_room_presence_last_seen_online_yesterday">En ligne hier à</string>
     <string name="chat_room_presence_last_seen_online">En ligne le</string>
+    <string name="account_setting_delete_dialog_title">Voulez-vous supprimer votre compte ?</string>
+    <string name="account_setting_delete_generic_confirmation_dialog">Votre compte sera supprimé localement.\nPour le supprimer de manière définitive, rendez-vous sur le site internet de votre fournisseur SIP.</string>
+    <string name="account_setting_delete_sip_linphone_org_confirmation_dialog">Votre compte sera supprimé localement.\nPour le supprimer de manière définitive, rendez-vous sur notre plateforme de gestion des comptes :</string>
 </resources>

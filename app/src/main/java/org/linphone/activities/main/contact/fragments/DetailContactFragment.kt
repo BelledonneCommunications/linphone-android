@@ -162,6 +162,8 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
 
     private fun confirmContactRemoval() {
         val dialogViewModel = DialogViewModel(getString(R.string.contact_delete_one_dialog))
+        dialogViewModel.showIcon = true
+        dialogViewModel.iconResource = R.drawable.dialog_delete_icon
         val dialog: Dialog = DialogUtils.getDialog(requireContext(), dialogViewModel)
 
         dialogViewModel.showCancelButton {

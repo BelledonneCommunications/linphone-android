@@ -191,6 +191,8 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
 
             override fun onRightToLeftSwipe(viewHolder: RecyclerView.ViewHolder) {
                 val viewModel = DialogViewModel(getString(R.string.chat_room_delete_one_dialog))
+                viewModel.showIcon = true
+                viewModel.iconResource = R.drawable.dialog_delete_icon
                 val dialog: Dialog = DialogUtils.getDialog(requireContext(), viewModel)
 
                 val index = viewHolder.bindingAdapterPosition

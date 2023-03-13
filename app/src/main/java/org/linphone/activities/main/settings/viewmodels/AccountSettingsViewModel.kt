@@ -89,7 +89,7 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
             message: String
         ) {
             if (state == RegistrationState.Cleared && account == accountToDelete) {
-                Log.i("[Account Settings] Account to remove registration is now cleared")
+                Log.i("[Account Settings] Account to remove ([${account.params.identityAddress?.asStringUriOnly()}]) registration is now cleared, removing it")
                 waitForUnregister.value = false
                 deleteAccount(account)
             } else {
@@ -236,35 +236,16 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
         }
 
         core.removeAccount(account)
+        accountToDelete = null
         accountRemovedEvent.value = Event(true)
     }
 
+    val deleteAccountRequiredEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
     val deleteListener = object : SettingListenerStub() {
         override fun onClicked() {
-            accountToDelete = account
-
-            val registered = account.state == RegistrationState.Ok
-            waitForUnregister.value = registered
-
-            if (core.defaultAccount == account) {
-                Log.i("[Account Settings] Account was default, let's look for a replacement")
-                for (accountIterator in core.accountList) {
-                    if (account != accountIterator) {
-                        core.defaultAccount = accountIterator
-                        Log.i("[Account Settings] New default account is $accountIterator")
-                        break
-                    }
-                }
-            }
-
-            val params = account.params.clone()
-            params.isRegisterEnabled = false
-            account.params = params
-
-            if (!registered) {
-                Log.w("[Account Settings] Account isn't registered, don't unregister before removing it")
-                deleteAccount(account)
-            }
+            deleteAccountRequiredEvent.value = Event(true)
         }
     }
 
@@ -526,5 +507,35 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
 
         transportLabels.value = labels
         transportIndex.value = account.params.transport.toInt()
+    }
+
+    fun startDeleteAccount() {
+        Log.i("[Account Settings] Starting to delete account [${account.params.identityAddress?.asStringUriOnly()}]")
+        accountToDelete = account
+
+        val registered = account.state == RegistrationState.Ok
+        waitForUnregister.value = registered
+
+        if (core.defaultAccount == account) {
+            Log.i("[Account Settings] Account was default, let's look for a replacement")
+            for (accountIterator in core.accountList) {
+                if (account != accountIterator) {
+                    core.defaultAccount = accountIterator
+                    Log.i("[Account Settings] New default account is [${accountIterator.params.identityAddress?.asStringUriOnly()}]")
+                    break
+                }
+            }
+        }
+
+        val params = account.params.clone()
+        params.isRegisterEnabled = false
+        account.params = params
+
+        if (!registered) {
+            Log.w("[Account Settings] Account isn't registered, don't unregister before removing it")
+            deleteAccount(account)
+        } else {
+            Log.i("[Account Settings] Waiting for account registration to be cleared before removing it")
+        }
     }
 }
