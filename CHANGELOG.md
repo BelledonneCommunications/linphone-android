@@ -14,6 +14,7 @@ Group changes to describe their impact on the project, as follows:
 
 ### Added
 - Showing short term presence for contacts whom publish it + added setting to disable it (enabled by default for sip.linphone.org accounts)
+- Confirmation dialog before removing account
 
 ### Changed
 - Account EXPIRES is now set to 1 month instead of 1 year for sip.linphone.org accounts
