@@ -339,9 +339,15 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             }
             intent.hasExtra("Dialer") -> {
                 Log.i("[Main Activity] Found dialer intent extra, go to dialer")
-                val args = Bundle()
-                args.putBoolean("Transfer", intent.getBooleanExtra("Transfer", false))
-                navigateToDialer(args)
+                val isTransfer = intent.getBooleanExtra("Transfer", false)
+                sharedViewModel.pendingCallTransfer = isTransfer
+                navigateToDialer()
+            }
+            intent.hasExtra("Contacts") -> {
+                Log.i("[Main Activity] Found contacts intent extra, go to contacts list")
+                val isTransfer = intent.getBooleanExtra("Transfer", false)
+                sharedViewModel.pendingCallTransfer = isTransfer
+                navigateToContacts()
             }
             else -> {
                 val core = coreContext.core

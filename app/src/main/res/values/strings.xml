@@ -348,6 +348,7 @@
     <string name="call_action_statistics">Call statistics</string>
     <string name="call_action_add_call">Start new call</string>
     <string name="call_action_transfer_call">Transfer call</string>
+    <string name="call_action_attended_transfer_call">Attended transfer</string>
     <string name="call_context_action_resume">Resume call</string>
     <string name="call_context_action_pause">Pause call</string>
     <string name="call_context_action_transfer">Transfer call</string>

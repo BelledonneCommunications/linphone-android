@@ -31,7 +31,6 @@ import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.transition.MaterialSharedAxis
@@ -152,8 +151,8 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
         viewModel.onMessageToNotifyEvent.observe(
             viewLifecycleOwner
         ) {
-            it.consume { id ->
-                Toast.makeText(requireContext(), id, Toast.LENGTH_SHORT).show()
+            it.consume { resourceId ->
+                (requireActivity() as MainActivity).showSnackBar(resourceId)
             }
         }
 
@@ -162,18 +161,21 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
             return
         }
 
-        if (arguments?.containsKey("Transfer") == true) {
-            sharedViewModel.pendingCallTransfer = arguments?.getBoolean("Transfer") ?: false
-            Log.i("[Dialer] Is pending call transfer: ${sharedViewModel.pendingCallTransfer}")
-        }
-
         if (arguments?.containsKey("URI") == true) {
             val address = arguments?.getString("URI") ?: ""
             Log.i("[Dialer] Found URI to call: $address")
             val skipAutoCall = arguments?.getBoolean("SkipAutoCallStart") ?: false
 
-            if (corePreferences.callRightAway && !skipAutoCall) {
-                Log.i("[Dialer] Call right away setting is enabled, start the call to $address")
+            if (corePreferences.skipDialerForNewCallAndTransfer) {
+                if (sharedViewModel.pendingCallTransfer) {
+                    Log.i("[Dialer] We were asked to skip dialer so starting new call to [$address] now")
+                    viewModel.transferCallTo(address)
+                } else {
+                    Log.i("[Dialer] We were asked to skip dialer so starting transfer to [$address] now")
+                    viewModel.directCall(address)
+                }
+            } else if (corePreferences.callRightAway && !skipAutoCall) {
+                Log.i("[Dialer] Call right away setting is enabled, start the call to [$address]")
                 viewModel.directCall(address)
             } else {
                 sharedViewModel.dialerUri = address
@@ -183,6 +185,8 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
 
         Log.i("[Dialer] Pending call transfer mode = ${sharedViewModel.pendingCallTransfer}")
         viewModel.transferVisibility.value = sharedViewModel.pendingCallTransfer
+
+        viewModel.autoInitiateVideoCalls.value = coreContext.core.videoActivationPolicy.automaticallyInitiate
 
         checkForUpdate()
 

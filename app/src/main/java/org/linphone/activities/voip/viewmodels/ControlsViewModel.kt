@@ -79,6 +79,8 @@ class ControlsViewModel : ViewModel() {
 
     val showTakeSnapshotButton = MutableLiveData<Boolean>()
 
+    val attendedTransfer = MutableLiveData<Boolean>()
+
     val goToConferenceParticipantsListEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -117,6 +119,7 @@ class ControlsViewModel : ViewModel() {
             Log.i("[Call Controls] State changed: $state")
             isOutgoingEarlyMedia.value = state == Call.State.OutgoingEarlyMedia
             isIncomingEarlyMediaVideo.value = state == Call.State.IncomingEarlyMedia && call.remoteParams?.isVideoEnabled == true
+            attendedTransfer.value = core.callsNb > 1
 
             if (state == Call.State.StreamsRunning) {
                 if (!call.currentParams.isVideoEnabled && fullScreenMode.value == true) {
@@ -412,7 +415,44 @@ class ControlsViewModel : ViewModel() {
         goToConferenceLayoutSettingsEvent.value = Event(true)
     }
 
-    fun goToDialerForCallTransfer() {
+    fun transferCall() {
+        // In case there is more than 1 call, transfer will be attended instead of blind
+        if (coreContext.core.callsNb > 1) {
+            attendedTransfer()
+        } else {
+            goToDialerForCallTransfer()
+        }
+    }
+
+    private fun attendedTransfer() {
+        val core = coreContext.core
+        val currentCall = core.currentCall
+
+        if (currentCall == null) {
+            Log.e("[Call Controls] Can't do an attended transfer without a current call")
+            return
+        }
+        if (core.callsNb <= 1) {
+            Log.e("[Call Controls] Need at least two calls to do an attended transfer")
+            return
+        }
+
+        val callToTransferTo = core.calls.findLast {
+            it.state == Call.State.Paused
+        }
+        if (callToTransferTo == null) {
+            Log.e("[Call Controls] Couldn't find a call in Paused state to transfer current call to")
+            return
+        }
+
+        Log.i("[Call Controls] Doing an attended transfer between active call [${currentCall.remoteAddress.asStringUriOnly()}] and paused call [${callToTransferTo.remoteAddress.asStringUriOnly()}]")
+        val result = callToTransferTo.transferToAnother(currentCall)
+        if (result != 0) {
+            Log.e("[Call Controls] Attended transfer failed!")
+        }
+    }
+
+    private fun goToDialerForCallTransfer() {
         goToDialerEvent.value = Event(true)
     }
 
