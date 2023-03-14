@@ -103,6 +103,10 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         EditorInfo.IME_FLAG_NO_EXTRACT_UI
     }
 
+    val isEmojiPickerOpen = MutableLiveData<Boolean>()
+
+    val isEmojiPickerVisible = MutableLiveData<Boolean>()
+
     private lateinit var recorder: Recorder
 
     private var voiceRecordAudioFocusRequest: AudioFocusRequestCompat? = null
@@ -136,6 +140,8 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
 
         attachFileEnabled.value = true
         sendMessageEnabled.value = false
+        isEmojiPickerOpen.value = false
+        isEmojiPickerVisible.value = corePreferences.showEmojiPickerButton
         updateChatRoomReadOnlyState()
     }
 
@@ -206,6 +212,10 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         if (!corePreferences.allowMultipleFilesAndTextInSameMessage) {
             attachFileEnabled.value = list.isEmpty()
         }
+    }
+
+    fun toggleEmojiPicker() {
+        isEmojiPickerOpen.value = isEmojiPickerOpen.value == false
     }
 
     fun sendMessage() {

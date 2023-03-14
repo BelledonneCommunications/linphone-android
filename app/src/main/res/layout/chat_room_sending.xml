@@ -110,10 +110,20 @@
 
         </HorizontalScrollView>
 
+        <androidx.emoji2.emojipicker.EmojiPickerView
+            android:id="@+id/emoji_picker"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/chat_room_emoji_picker_height"
+            android:visibility="@{chatSendingViewModel.isEmojiPickerOpen ? View.VISIBLE : View.GONE, default=gone}"
+            app:emojiPickedListener="@{(emoji) -> message.getText().insert(message.getSelectionStart(), emoji.emoji)}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/attached_files" />
+
         <ImageView
             android:id="@+id/attach_file"
             android:layout_width="@dimen/chat_message_sending_icons_size"
-            android:layout_height="@dimen/chat_message_sending_icons_size"
+            android:layout_height="0dp"
             android:layout_marginStart="@dimen/chat_message_sending_icons_margin"
             android:layout_marginEnd="@dimen/chat_message_sending_icons_margin"
             android:contentDescription="@string/content_description_attach_file"
@@ -129,7 +139,7 @@
         <ImageView
             android:id="@+id/voice_record"
             android:layout_width="@dimen/chat_message_sending_icons_size"
-            android:layout_height="@dimen/chat_message_sending_icons_size"
+            android:layout_height="0dp"
             android:layout_marginStart="@dimen/chat_message_sending_icons_margin"
             android:layout_marginEnd="@dimen/chat_message_sending_icons_margin"
             android:contentDescription="@string/content_description_voice_recording"
@@ -147,13 +157,12 @@
             android:id="@+id/message"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/attached_files"
+            android:layout_below="@id/emoji_picker"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="@dimen/chat_message_sending_icons_margin"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="@dimen/chat_message_sending_icons_margin"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/resizable_text_field"
+            android:background="@color/header_background_color"
             android:hint="@{chatSendingViewModel.isPendingAnswer ? @string/chat_room_sending_reply_hint : @string/chat_room_sending_message_hint}"
             android:imeOptions="@{chatSendingViewModel.imeFlags}"
             android:inputType="textShortMessage|textMultiLine|textAutoComplete|textAutoCorrect|textCapSentences"
@@ -163,14 +172,38 @@
             android:textColor="@color/black_color"
             android:textCursorDrawable="@null"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/send_message"
+            app:layout_constraintEnd_toStartOf="@id/message_right_barrier"
             app:layout_constraintStart_toEndOf="@id/voice_record"
-            app:layout_constraintTop_toBottomOf="@id/attached_files" />
+            app:layout_constraintTop_toBottomOf="@id/emoji_picker" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/message_right_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="left"
+            app:constraint_referenced_ids="send_message, emoji_picker_toggle"/>
+
+        <ImageView
+            android:id="@+id/emoji_picker_toggle"
+            android:layout_width="@dimen/chat_message_sending_icons_size"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/chat_message_sending_icons_margin"
+            android:onClick="@{() -> chatSendingViewModel.toggleEmojiPicker()}"
+            android:paddingTop="@dimen/chat_message_sending_icons_margin"
+            android:paddingBottom="@dimen/chat_message_sending_icons_margin"
+            android:layout_marginEnd="@dimen/chat_message_sending_icons_margin"
+            android:src="@drawable/emoji"
+            android:background="@color/header_background_color"
+            android:selected="@{chatSendingViewModel.isEmojiPickerOpen}"
+            android:visibility="@{chatSendingViewModel.isEmojiPickerVisible ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@id/message"
+            app:layout_constraintEnd_toStartOf="@id/send_message"
+            app:layout_constraintTop_toTopOf="@id/message" />
 
         <ImageView
             android:id="@+id/send_message"
             android:layout_width="@dimen/chat_message_sending_icons_size"
-            android:layout_height="@dimen/chat_message_sending_icons_size"
+            android:layout_height="0dp"
             android:layout_marginStart="@dimen/chat_message_sending_icons_margin"
             android:layout_marginEnd="@dimen/chat_message_sending_icons_margin"
             android:contentDescription="@string/content_description_send_message"
@@ -205,10 +238,10 @@
             android:clickable="true"
             android:focusable="true"
             android:visibility="@{chatSendingViewModel.attachingFileInProgress ? View.VISIBLE : View.GONE, default=gone}"
-            app:layout_constraintBottom_toBottomOf="@id/attached_files"
+            app:layout_constraintBottom_toBottomOf="@id/emoji_picker"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/attached_files" />
+            app:layout_constraintTop_toTopOf="@id/emoji_picker" />
 
         <ProgressBar
             android:id="@+id/attaching_files_in_progress"
@@ -221,7 +254,7 @@
             app:layout_constraintBottom_toTopOf="@id/attaching_files_in_progress_label"
             app:layout_constraintEnd_toEndOf="@id/attaching_files_in_progress_background"
             app:layout_constraintStart_toStartOf="@id/attaching_files_in_progress_background"
-            app:layout_constraintTop_toBottomOf="@id/attached_files" />
+            app:layout_constraintTop_toBottomOf="@id/emoji_picker" />
 
         <TextView
             android:id="@+id/attaching_files_in_progress_label"
@@ -232,7 +265,7 @@
             android:textColor="@color/primary_color"
             android:textStyle="bold"
             android:visibility="@{chatSendingViewModel.attachingFileInProgress ? View.VISIBLE : View.GONE, default=gone}"
-            app:layout_constraintBottom_toTopOf="@id/attached_files"
+            app:layout_constraintBottom_toTopOf="@id/emoji_picker"
             app:layout_constraintEnd_toEndOf="@id/attaching_files_in_progress_background"
             app:layout_constraintStart_toStartOf="@id/attaching_files_in_progress_background"
             app:layout_constraintTop_toBottomOf="@id/attaching_files_in_progress" />

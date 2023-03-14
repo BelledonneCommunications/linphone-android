@@ -45,6 +45,18 @@ import org.linphone.core.tools.Log
  */
 class AppUtils {
     companion object {
+        var emojiCompat: EmojiCompat? = null
+            get() = initEmojiCompat()
+
+        private fun initEmojiCompat(): EmojiCompat? {
+            return try {
+                EmojiCompat.get()
+            } catch (ise: IllegalStateException) {
+                Log.e("[App Utils] Can't get EmojiCompat: $ise")
+                null
+            }
+        }
+
         fun getString(id: Int): String {
             return coreContext.context.getString(id)
         }
@@ -68,16 +80,10 @@ class AppUtils {
             var initials = ""
             var characters = 0
 
-            val emoji = try {
-                EmojiCompat.get()
-            } catch (ise: IllegalStateException) {
-                Log.e("[App Utils] Can't get EmojiCompat: $ise")
-                null
-            }
-
             for (i in split.indices) {
                 if (split[i].isNotEmpty()) {
                     try {
+                        val emoji = emojiCompat
                         if (emoji?.hasEmojiGlyph(split[i]) == true) {
                             val glyph = emoji.process(split[i])
                             if (characters > 0) { // Limit initial to 1 emoji only
@@ -98,6 +104,19 @@ class AppUtils {
                 }
             }
             return initials
+        }
+
+        fun isTextOnlyContainingEmoji(text: String): Boolean {
+            val emoji = emojiCompat
+            emoji ?: return false
+
+            for (split in text.split(" ")) {
+                // We only check the first and last chars of the split for commodity
+                if (emoji.getEmojiStart(split, 0) == -1 || emoji.getEmojiEnd(split, split.length - 1) == -1) {
+                    return false
+                }
+            }
+            return true
         }
 
         fun pixelsToDp(pixels: Float): Float {

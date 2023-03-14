@@ -86,4 +86,7 @@
     <dimen name="contact_presence_big_badge_size">25dp</dimen>
     <dimen name="contact_presence_badge_padding">1dp</dimen>
     <dimen name="contact_presence_big_badge_padding">2dp</dimen>
+    <dimen name="chat_room_emoji_picker_height">290dp</dimen>
+    <dimen name="chat_message_text_font_size">15sp</dimen>
+    <dimen name="chat_message_emoji_font_size">45sp</dimen>
 </resources>
