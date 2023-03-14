@@ -56,6 +56,8 @@ class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMes
 
     val text = MutableLiveData<Spannable>()
 
+    val isTextEmoji = MutableLiveData<Boolean>()
+
     val replyData = MutableLiveData<ChatMessageData>()
 
     val isDisplayed = MutableLiveData<Boolean>()
@@ -188,7 +190,8 @@ class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMes
                 data.listener = contentListener
                 list.add(data)
             } else if (content.isText) {
-                val spannable = Spannable.Factory.getInstance().newSpannable(content.utf8Text?.trim())
+                val textContent = content.utf8Text.orEmpty().trim()
+                val spannable = Spannable.Factory.getInstance().newSpannable(textContent)
                 text.value = PatternClickableSpan()
                     .add(
                         Pattern.compile("(?:<?sips?:)?[a-zA-Z0-9+_.\\-]+(?:@([a-zA-Z0-9+_.\\-;=~]+))+(>)?"),
@@ -217,6 +220,7 @@ class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMes
                             }
                         }
                     ).build(spannable)
+                isTextEmoji.value = AppUtils.isTextOnlyContainingEmoji(textContent)
             } else {
                 Log.e("[Chat Message Data] Unexpected content with type: ${content.type}/${content.subtype}")
             }

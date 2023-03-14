@@ -498,6 +498,9 @@ class CorePreferences constructor(private val context: Context) {
     val allowEndToEndEncryptedChatWithoutPresence: Boolean
         get() = config.getBool("app", "allow_lime_friend_without_capability", false)
 
+    val showEmojiPickerButton: Boolean
+        get() = config.getBool("app", "show_emoji_picker", true)
+
     // This will prevent UI from showing up, except for the launcher & the foreground service notification
     val preventInterfaceFromShowingUp: Boolean
         get() = config.getBool("app", "keep_app_invisible", false)

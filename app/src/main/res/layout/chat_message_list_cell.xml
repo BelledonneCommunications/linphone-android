@@ -173,7 +173,7 @@
                 android:onLongClick="@{contextMenuClickListener}"
                 android:text="@{data.text}"
                 android:textColor="@color/dark_grey_color"
-                android:textSize="15sp"
+                android:textSize="@{data.isTextEmoji ? @dimen/chat_message_emoji_font_size : @dimen/chat_message_text_font_size, default=@dimen/chat_message_text_font_size}"
                 android:textStyle="normal"
                 android:visibility="@{data.text.length > 0 ? View.VISIBLE : View.GONE}" />
 

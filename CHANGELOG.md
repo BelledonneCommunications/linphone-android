@@ -16,6 +16,7 @@ Group changes to describe their impact on the project, as follows:
 - Showing short term presence for contacts whom publish it + added setting to disable it (enabled by default for sip.linphone.org accounts)
 - Confirmation dialog before removing account
 - Attended transfer instead of blind transfer if there is more than 1 call
+- Added emoji picker in chat room, and increase size of text if it only contains emojis
 - Added hidden setting to disable video completely
 - Added hidden setting to prevent adding / editing / removing native contacts
 - Added hidden setting to protect settings access using account password
