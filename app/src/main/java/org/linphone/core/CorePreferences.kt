@@ -317,6 +317,13 @@ class CorePreferences constructor(private val context: Context) {
             config.setBool("app", "call_right_away", value)
         }
 
+    // Will send user to contacts list directly
+    var skipDialerForNewCallAndTransfer: Boolean
+        get() = config.getBool("app", "skip_dialer_for_new_call_and_transfer", false)
+        set(value) {
+            config.setBool("app", "skip_dialer_for_new_call_and_transfer", value)
+        }
+
     var automaticallyStartCallRecording: Boolean
         get() = config.getBool("app", "auto_start_call_record", false)
         set(value) {

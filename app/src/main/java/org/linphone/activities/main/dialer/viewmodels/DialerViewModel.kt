@@ -98,6 +98,13 @@ class DialerViewModel : LogsUploadViewModel() {
             atLeastOneCall.value = core.callsNb > 0
         }
 
+        override fun onTransferStateChanged(core: Core, transfered: Call, callState: Call.State) {
+            if (callState == Call.State.OutgoingProgress) {
+                // Will work for both blind & attended transfer
+                onMessageToNotifyEvent.value = Event(org.linphone.R.string.dialer_transfer_succeded)
+            }
+        }
+
         override fun onNetworkReachable(core: Core, reachable: Boolean) {
             val address = addressWaitingNetworkToBeCalled.orEmpty()
             if (reachable && address.isNotEmpty()) {
@@ -207,18 +214,18 @@ class DialerViewModel : LogsUploadViewModel() {
     fun transferCall(): Boolean {
         val addressToCall = enteredUri.value.orEmpty()
         return if (addressToCall.isNotEmpty()) {
-            onMessageToNotifyEvent.value = Event(
-                if (coreContext.transferCallTo(addressToCall)) {
-                    org.linphone.R.string.dialer_transfer_succeded
-                } else {
-                    org.linphone.R.string.dialer_transfer_failed
-                }
-            )
+            transferCallTo(addressToCall)
             eraseAll()
             true
         } else {
             setLastOutgoingCallAddress()
             false
+        }
+    }
+
+    fun transferCallTo(addressToCall: String) {
+        if (!coreContext.transferCallTo(addressToCall)) {
+            onMessageToNotifyEvent.value = Event(org.linphone.R.string.dialer_transfer_failed)
         }
     }
 

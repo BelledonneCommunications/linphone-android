@@ -161,7 +161,11 @@ class SingleCallFragment : GenericVideoPreviewFragment<VoipSingleCallFragmentBin
             it.consume { isCallTransfer ->
                 val intent = Intent()
                 intent.setClass(requireContext(), MainActivity::class.java)
-                intent.putExtra("Dialer", true)
+                if (corePreferences.skipDialerForNewCallAndTransfer) {
+                    intent.putExtra("Contacts", true)
+                } else {
+                    intent.putExtra("Dialer", true)
+                }
                 intent.putExtra("Transfer", isCallTransfer)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
