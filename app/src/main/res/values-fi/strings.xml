@@ -312,9 +312,9 @@
     <string name="assistant_phone_number_link_info_content">"
 \nYstäväsi löytävät sinut helpommin jos yhdistät puhelinnumeron tiliisi
 \n
-\nNäet osoitekirjastasi kuka käyttää &amp;appName; ja ystäväsi tietävät myös, että voivat ottaa yhteyttä käyttäen &amp;appName;.
+\nNäet osoitekirjastasi kuka käyttää &appName; ja ystäväsi tietävät myös, että voivat ottaa yhteyttä käyttäen &appName;.
 \n"</string>
-    <string name="assistant_phone_number_link_info_content_already_account">Voit käyttää puhelinnumeroasi vain yhden &amp;appName; tilin kanssa.
+    <string name="assistant_phone_number_link_info_content_already_account">Voit käyttää puhelinnumeroasi vain yhden &appName; tilin kanssa.
 \n
 \nJos olet jo yhdistänyt puhelinnumerosi toiseen tiliin, mutta haluaisit käyttää tätä sen sijaan, yhdistä se nyt ja numerosi siirretään automaattisesti tähän tiliin.</string>
     <string name="call_stats_capture_filter">Tallennuksen suodatin:</string>
@@ -326,7 +326,7 @@
     <string name="call_stats_zrtp_sas_algo">SAS algoritmi:</string>
     <string name="assistant_welcome_title">Tervetuloa</string>
     <string name="assistant_create_account">Luo tili</string>
-    <string name="assistant_login_linphone">Käytä &amp;appName; tiliä</string>
+    <string name="assistant_login_linphone">Käytä &appName; tiliä</string>
     <string name="assistant_login_generic">Käytä SIP tiliä</string>
     <string name="assistant_remote_provisioning">Nouda konfiguraatio palvelimelta</string>
     <string name="assistant_ec_calibration">Kaiunpoiston kalibrointi käynnissä</string>
@@ -342,10 +342,10 @@
     <string name="assistant_error_invalid_email_address">Sähköpostiosoite ei kelpaa</string>
     <string name="assistant_error_username_too_long">Käyttäjätunnus on liian pitkä</string>
     <string name="assistant_error_invalid_credentials">Tiliä ei löydy tai salasana on väärin</string>
-    <string name="assistant_linphone_account">Käytä &amp;appName tiliä</string>
+    <string name="assistant_linphone_account">Käytä &appName; tiliä</string>
     <string name="assistant_create_account_part_1">Vahvista maakoodi ja syötä puhelinnumerosi</string>
     <string name="assistant_privacy_policy">tietosuojaseloste</string>
-    <string name="assistant_linphone_login_desc">Syötä käyttäjätunnus ja salasana &amp;appName tilillesi</string>
+    <string name="assistant_linphone_login_desc">Syötä käyttäjätunnus ja salasana &appName; tilillesi</string>
     <string name="assistant_login_with_username">Käytä käyttäjätunnusta ja salasanaa puhelinnumerosi sijasta</string>
     <string name="assistant_login_forgotten_password">Unohditko salasanasi\?</string>
     <string name="assistant_login">Kirjaudu</string>
@@ -354,7 +354,7 @@
     <string name="assistant_continue_even_if_credentials_invalid">Jatka</string>
     <string name="assistant_generic_account">Käytä SIP tiliä</string>
     <string name="assistant_login_desc">Syötä käyttäjätunnus ja salasana SIP toimialueellesi</string>
-    <string name="assistant_create_account_part_email">Syötä käyttäjätunnus, sähköpostiosoite ja salasana &amp;appName tilillesi</string>
+    <string name="assistant_create_account_part_email">Syötä käyttäjätunnus, sähköpostiosoite ja salasana &appName; tilillesi</string>
     <string name="assistant_confirm_password">Salasanan vahvistus</string>
     <string name="assistant_validate_account_1">Tilisi on luotu. Tarkista sähköpostisi vahvistaaksesi tilin luonnin:</string>
     <string name="assistant_validate_account_2">Kun olet valmis, palaa tänne ja paina painiketta.</string>

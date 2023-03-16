@@ -316,7 +316,7 @@
 \n"</string>
     <string name="assistant_privacy_policy">プライバシーポリシー</string>
     <string name="assistant_read_and_agree_terms">Belledonne Communicationの%1$sと%2$sに同意します</string>
-    <string name="assistant_generic_account_warning">グループ会議や暗号化メッセージなどの一部の機能は &amp;appName; アカウントを要求します。
+    <string name="assistant_generic_account_warning">グループ会議や暗号化メッセージなどの一部の機能は &appName; アカウントを要求します。
 \n
 \n これらの機能は、サードパーティのSIPアカウントに登録すると非表示になります。
 \n
