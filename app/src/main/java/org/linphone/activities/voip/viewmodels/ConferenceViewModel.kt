@@ -198,7 +198,7 @@ class ConferenceViewModel : ViewModel() {
 
         override fun onStateChanged(conference: Conference, state: Conference.State) {
             Log.i("[Conference] State changed: $state")
-            isVideoConference.value = conference.currentParams.isVideoEnabled
+            isVideoConference.value = conference.currentParams.isVideoEnabled && !corePreferences.disableVideo
 
             when (state) {
                 Conference.State.Created -> {
@@ -340,7 +340,7 @@ class ConferenceViewModel : ViewModel() {
 
         isConferenceLocallyPaused.value = !conference.isIn
         isMeAdmin.value = conference.me.isAdmin
-        isVideoConference.value = conference.currentParams.isVideoEnabled
+        isVideoConference.value = conference.currentParams.isVideoEnabled && !corePreferences.disableVideo
         subject.value = LinphoneUtils.getConferenceSubject(conference)
 
         updateConferenceLayout(conference)

@@ -133,6 +133,18 @@ class CoreContext(
         override fun onGlobalStateChanged(core: Core, state: GlobalState, message: String) {
             Log.i("[Context] Global state changed [$state]")
             if (state == GlobalState.On) {
+                if (corePreferences.disableVideo) {
+                    // if video has been disabled, don't forget to tell the Core to disable it as well
+                    Log.w("[Context] Video has been disabled in app, disabling it as well in the Core")
+                    core.isVideoCaptureEnabled = false
+                    core.isVideoDisplayEnabled = false
+
+                    val videoPolicy = core.videoActivationPolicy
+                    videoPolicy.automaticallyInitiate = false
+                    videoPolicy.automaticallyAccept = false
+                    core.videoActivationPolicy = videoPolicy
+                }
+
                 fetchContacts()
             }
         }
@@ -789,7 +801,7 @@ class CoreContext(
     }
 
     fun showSwitchCameraButton(): Boolean {
-        return core.videoDevicesList.size > 2 // Count StaticImage camera
+        return !corePreferences.disableVideo && core.videoDevicesList.size > 2 // Count StaticImage camera
     }
 
     fun createCallOverlay() {

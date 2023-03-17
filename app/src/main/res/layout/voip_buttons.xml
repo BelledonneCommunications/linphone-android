@@ -100,6 +100,7 @@
             android:onClick="@{() -> (!conferenceViewModel.conferenceExists || conferenceViewModel.conferenceDisplayMode != ConferenceDisplayMode.AUDIO_ONLY) ? controlsViewModel.toggleVideo() : conferenceViewModel.switchLayoutFromAudioOnlyToActiveSpeaker()}"
             android:padding="5dp"
             android:selected="@{controlsViewModel.isVideoEnabled &amp;&amp; controlsViewModel.isSendingVideo}"
+            android:visibility="@{controlsViewModel.hideVideo ? View.GONE : View.VISIBLE}"
             android:src="@drawable/icon_toggle_camera"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="W,1:1"

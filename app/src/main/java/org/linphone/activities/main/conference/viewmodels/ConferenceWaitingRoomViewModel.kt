@@ -103,6 +103,8 @@ class ConferenceWaitingRoomViewModel : MessageNotifierViewModel() {
         }
     }
 
+    val hideVideo = corePreferences.disableVideo
+
     private val callParams: CallParams = coreContext.core.createCallParams(null)!!
 
     private val listener: CoreListenerStub = object : CoreListenerStub() {

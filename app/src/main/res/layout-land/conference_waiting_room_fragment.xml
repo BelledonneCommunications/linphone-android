@@ -284,6 +284,7 @@
                 android:onClick="@{() -> viewModel.toggleVideo()}"
                 android:padding="5dp"
                 android:selected="@{viewModel.isVideoEnabled}"
+                android:visibility="@{viewModel.hideVideo ? View.GONE : View.VISIBLE}"
                 android:src="@drawable/icon_toggle_camera"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="W,1:1"
