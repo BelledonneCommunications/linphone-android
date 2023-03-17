@@ -288,6 +288,7 @@
                 android:onClick="@{() -> viewModel.toggleVideo()}"
                 android:padding="5dp"
                 android:selected="@{viewModel.isVideoEnabled}"
+                android:visibility="@{viewModel.hideVideo ? View.GONE : View.VISIBLE}"
                 android:src="@drawable/icon_toggle_camera"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="W,1:1"
@@ -304,6 +305,7 @@
                 android:padding="10dp"
                 android:selected="@{viewModel.layoutMenuSelected}"
                 android:src="@{viewModel.selectedLayout == ConferenceDisplayMode.ACTIVE_SPEAKER ? @drawable/icon_conference_layout_active_speaker : viewModel.selectedLayout == ConferenceDisplayMode.AUDIO_ONLY ? @drawable/icon_conference_layout_audio_only : @drawable/icon_conference_layout_grid, default=@drawable/icon_conference_layout_grid}"
+                android:visibility="@{viewModel.hideVideo ? View.GONE : View.VISIBLE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="W,1:1"
                 app:layout_constraintEnd_toEndOf="parent" />

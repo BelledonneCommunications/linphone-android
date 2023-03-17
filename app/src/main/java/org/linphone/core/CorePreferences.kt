@@ -30,6 +30,7 @@ import java.security.KeyStoreException
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
+import org.linphone.utils.LinphoneUtils
 
 class CorePreferences constructor(private val context: Context) {
     private var _config: Config? = null
@@ -474,6 +475,10 @@ class CorePreferences constructor(private val context: Context) {
     val disableChat: Boolean
         get() = config.getBool("app", "disable_chat_feature", false)
 
+    // Will disable video feature completely
+    val disableVideo: Boolean
+        get() = config.getBool("app", "disable_video_feature", false)
+
     val forceEndToEndEncryptedChat: Boolean
         get() = config.getBool("app", "force_lime_chat_rooms", false)
 
@@ -572,7 +577,7 @@ class CorePreferences constructor(private val context: Context) {
         get() = config.getBool("app", "side_menu_recordings", true)
 
     val showScheduledConferencesInSideMenu: Boolean
-        get() = config.getBool("app", "side_menu_conferences", true)
+        get() = config.getBool("app", "side_menu_conferences", LinphoneUtils.isRemoteConferencingAvailable())
 
     val showAboutInSideMenu: Boolean
         get() = config.getBool("app", "side_menu_about", true)
@@ -595,13 +600,13 @@ class CorePreferences constructor(private val context: Context) {
         get() = config.getBool("app", "settings_audio", true)
 
     val showVideoSettings: Boolean
-        get() = config.getBool("app", "settings_video", true)
+        get() = config.getBool("app", "settings_video", !disableVideo)
 
     val showCallSettings: Boolean
         get() = config.getBool("app", "settings_call", true)
 
     val showChatSettings: Boolean
-        get() = config.getBool("app", "settings_chat", true)
+        get() = config.getBool("app", "settings_chat", !disableChat)
 
     val showNetworkSettings: Boolean
         get() = config.getBool("app", "settings_network", true)
@@ -613,7 +618,7 @@ class CorePreferences constructor(private val context: Context) {
         get() = config.getBool("app", "settings_advanced", true)
 
     val showConferencesSettings: Boolean
-        get() = config.getBool("app", "settings_conferences", true)
+        get() = config.getBool("app", "settings_conferences", LinphoneUtils.isRemoteConferencingAvailable())
 
     /* Assets stuff */
 

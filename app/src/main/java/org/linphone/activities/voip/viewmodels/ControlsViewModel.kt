@@ -107,6 +107,8 @@ class ControlsViewModel : ViewModel() {
 
     val foldingState = MutableLiveData<FoldingFeature>()
 
+    val hideVideo = corePreferences.disableVideo
+
     private val nonEarpieceOutputAudioDevice = MutableLiveData<Boolean>()
 
     private val listener: CoreListenerStub = object : CoreListenerStub() {
