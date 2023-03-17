@@ -781,4 +781,10 @@
     <string name="account_setting_publish_presence_title">Zveřejňovat informace o přítomnosti</string>
     <string name="content_description_presence_online">Uživatel je online</string>
     <string name="content_description_presence_offline">Uživatel je offline</string>
+    <string name="call_action_attended_transfer_call">Přepojení hovoru s ohlášením</string>
+    <string name="account_setting_delete_generic_confirmation_dialog">Váš účet bude smazán pouze lokálně.
+\nChcete-li jej odstranit trvale, přejděte na webové stránky poskytovatele SIP.</string>
+    <string name="account_setting_delete_dialog_title">Chcete svůj účet smazat\?</string>
+    <string name="account_setting_delete_sip_linphone_org_confirmation_dialog">Váš účet bude smazán pouze lokálně.
+\nChcete-li jej odstranit trvale, přejděte na naši platformu pro správu účtů:</string>
 </resources>
