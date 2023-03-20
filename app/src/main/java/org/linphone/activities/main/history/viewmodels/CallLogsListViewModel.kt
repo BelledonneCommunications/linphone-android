@@ -127,7 +127,7 @@ class CallLogsListViewModel : ViewModel() {
                         )
                     ) {
                         previousCallLogGroup.callLogs.add(callLog)
-                        previousCallLogGroup.lastCallLog = callLog
+                        previousCallLogGroup.updateLastCallLog(callLog)
                     } else {
                         list.add(previousCallLogGroup)
                         previousCallLogGroup = GroupedCallLogData(callLog)
