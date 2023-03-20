@@ -952,6 +952,11 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 popupView.addToContactsHidden = true
             } else {
                 popupView.goToContactHidden = true
+
+                if (corePreferences.readOnlyNativeContacts) {
+                    popupView.addToContactsHidden = true
+                    totalSize -= itemSize
+                }
             }
 
             popupView.meetingHidden = true

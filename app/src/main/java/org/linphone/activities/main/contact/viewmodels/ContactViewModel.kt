@@ -79,6 +79,8 @@ class ContactViewModel(friend: Friend, async: Boolean = false) : MessageNotifier
 
     val isNativeContact = MutableLiveData<Boolean>()
 
+    val readOnlyNativeAddressBook = MutableLiveData<Boolean>()
+
     private val chatRoomListener = object : ChatRoomListenerStub() {
         override fun onStateChanged(chatRoom: ChatRoom, state: ChatRoom.State) {
             if (state == ChatRoom.State.Created) {
@@ -144,11 +146,13 @@ class ContactViewModel(friend: Friend, async: Boolean = false) : MessageNotifier
             displayName.postValue(friend.name)
             isNativeContact.postValue(friend.refKey != null)
             presenceStatus.postValue(friend.consolidatedPresence)
+            readOnlyNativeAddressBook.postValue(corePreferences.readOnlyNativeContacts)
         } else {
             contact.value = friend
             displayName.value = friend.name
             isNativeContact.value = friend.refKey != null
             presenceStatus.value = friend.consolidatedPresence
+            readOnlyNativeAddressBook.value = corePreferences.readOnlyNativeContacts
         }
 
         friend.addListener {

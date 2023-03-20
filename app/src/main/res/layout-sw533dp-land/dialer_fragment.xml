@@ -122,7 +122,7 @@
 
                 <ImageView
                     android:onClick="@{newContactClickListener}"
-                    android:visibility="@{viewModel.scheduleConferenceAvailable ? View.GONE : View.VISIBLE, default=gone}"
+                    android:visibility="@{viewModel.scheduleConferenceAvailable || viewModel.hideAddContactButton ? View.GONE : View.VISIBLE, default=gone}"
                     android:enabled="@{viewModel.enteredUri.length() > 0}"
                     android:contentDescription="@string/content_description_add_contact"
                     android:layout_width="match_parent"
