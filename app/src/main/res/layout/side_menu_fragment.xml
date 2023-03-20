@@ -63,7 +63,10 @@
                 android:id="@+id/avatar_border"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_margin="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
                 android:adjustViewBounds="true"
                 android:contentDescription="@null"
                 android:src="@drawable/avatar_border"
@@ -78,7 +81,7 @@
                 android:background="@drawable/led_background"
                 android:padding="2dp"
                 android:src="@{viewModel.presenceStatus == ConsolidatedPresence.Online ? @drawable/led_online : @drawable/led_away, default=@drawable/led_online}"
-                android:visibility="@{viewModel.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE, default=gone}" />
+                android:visibility="@{!viewModel.defaultAccountFound || viewModel.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE, default=gone}" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
