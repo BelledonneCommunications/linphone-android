@@ -10,6 +10,15 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [5.0.8] - 2023-03-20
+
+### Fixed
+- Trying to prevent crash in call history
+- Color icon in dark mode in chat for files & replies
+
+### Changed
+- Updated translations
+
 ## [5.0.7] - 2023-02-27
 
 ### Fixed

@@ -158,7 +158,7 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
                             val deletedCallGroup = adapter.currentList[index]
                             listViewModel.deleteCallLogGroup(deletedCallGroup)
                             if (!binding.slidingPane.isSlideable &&
-                                deletedCallGroup.lastCallLog.callId == sharedViewModel.selectedCallLogGroup.value?.lastCallLog?.callId
+                                deletedCallGroup.lastCallLogId == sharedViewModel.selectedCallLogGroup.value?.lastCallLogId
                             ) {
                                 Log.i("[History] Currently displayed history has been deleted, removing detail fragment")
                                 clearDisplayedCallHistory()
@@ -280,7 +280,7 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
             val callLogGroup = adapter.currentList[index]
             list.add(callLogGroup)
 
-            if (callLogGroup.lastCallLog.callId == sharedViewModel.selectedCallLogGroup.value?.lastCallLog?.callId) {
+            if (callLogGroup.lastCallLogId == sharedViewModel.selectedCallLogGroup.value?.lastCallLogId) {
                 closeSlidingPane = true
             }
         }
