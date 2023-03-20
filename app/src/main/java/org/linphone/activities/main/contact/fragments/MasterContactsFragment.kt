@@ -197,8 +197,11 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
                 dialog.show()
             }
         }
-        RecyclerViewSwipeUtils(ItemTouchHelper.LEFT, swipeConfiguration, swipeListener)
-            .attachToRecyclerView(binding.contactsList)
+
+        if (!corePreferences.readOnlyNativeContacts) {
+            RecyclerViewSwipeUtils(ItemTouchHelper.LEFT, swipeConfiguration, swipeListener)
+                .attachToRecyclerView(binding.contactsList)
+        }
 
         // Divider between items
         binding.contactsList.addItemDecoration(AppUtils.getDividerDecoration(requireContext(), layoutManager))

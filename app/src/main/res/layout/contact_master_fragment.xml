@@ -103,7 +103,7 @@
                     android:background="?attr/button_background_drawable"
                     android:padding="15dp"
                     android:src="@drawable/contact_add"
-                    android:visibility="@{viewModel.nativeAddressBookEnabled ? View.VISIBLE : View.GONE}"/>
+                    android:visibility="@{viewModel.nativeAddressBookEnabled &amp;&amp; !viewModel.readOnlyNativeAddressBook ? View.VISIBLE : View.INVISIBLE}"/>
 
                 <ImageView
                     android:onClick="@{editClickListener}"
@@ -114,7 +114,8 @@
                     android:layout_weight="0.2"
                     android:background="?attr/button_background_drawable"
                     android:padding="15dp"
-                    android:src="@drawable/delete" />
+                    android:src="@drawable/delete"
+                    android:visibility="@{viewModel.readOnlyNativeAddressBook ? View.INVISIBLE : View.VISIBLE}" />
 
             </LinearLayout>
 

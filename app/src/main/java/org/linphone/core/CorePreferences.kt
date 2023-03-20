@@ -471,6 +471,10 @@ class CorePreferences constructor(private val context: Context) {
     val hideStaticImageCamera: Boolean
         get() = config.getBool("app", "hide_static_image_camera", true)
 
+    // Will prevent user adding contact and editing / removing existing contacts
+    val readOnlyNativeContacts: Boolean
+        get() = config.getBool("app", "read_only_native_address_book", false)
+
     // Will disable chat feature completely
     val disableChat: Boolean
         get() = config.getBool("app", "disable_chat_feature", false)

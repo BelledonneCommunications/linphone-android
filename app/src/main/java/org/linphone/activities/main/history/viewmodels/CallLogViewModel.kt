@@ -122,6 +122,8 @@ class CallLogViewModel(val callLog: CallLog, private val isRelated: Boolean = fa
     val conferenceTime = MutableLiveData<String>()
     val conferenceDate = MutableLiveData<String>()
 
+    val readOnlyNativeAddressBook = MutableLiveData<Boolean>()
+
     override val showGroupChatAvatar: Boolean
         get() = isConferenceCallLog
 
@@ -140,6 +142,7 @@ class CallLogViewModel(val callLog: CallLog, private val isRelated: Boolean = fa
 
     init {
         waitForChatRoomCreation.value = false
+        readOnlyNativeAddressBook.value = corePreferences.readOnlyNativeContacts
 
         if (!isRelated) {
             val conferenceInfo = callLog.conferenceInfo

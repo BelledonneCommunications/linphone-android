@@ -49,6 +49,8 @@ class DialerViewModel : LogsUploadViewModel() {
 
     val scheduleConferenceAvailable = MutableLiveData<Boolean>()
 
+    val hideAddContactButton = MutableLiveData<Boolean>()
+
     val updateAvailableEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
     }
@@ -152,6 +154,7 @@ class DialerViewModel : LogsUploadViewModel() {
         enteredUri.value = ""
         atLeastOneCall.value = coreContext.core.callsNb > 0
         transferVisibility.value = false
+        hideAddContactButton.value = corePreferences.readOnlyNativeContacts
 
         showSwitchCamera.value = coreContext.showSwitchCameraButton()
         scheduleConferenceAvailable.value = LinphoneUtils.isRemoteConferencingAvailable()

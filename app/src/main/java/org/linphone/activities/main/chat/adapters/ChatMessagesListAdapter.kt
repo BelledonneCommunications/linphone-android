@@ -34,6 +34,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import kotlin.math.abs
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.activities.main.adapters.SelectionListAdapter
 import org.linphone.activities.main.chat.data.ChatMessageData
@@ -327,7 +328,8 @@ class ChatMessagesListAdapter(
                         }
                         if (chatMessage.isOutgoing ||
                             chatMessageViewModel.contact.value != null ||
-                            advancedContextMenuOptionsDisabled
+                            advancedContextMenuOptionsDisabled ||
+                            corePreferences.readOnlyNativeContacts
                         ) {
                             popupView.addToContactsHidden = true
                             totalSize -= itemSize
