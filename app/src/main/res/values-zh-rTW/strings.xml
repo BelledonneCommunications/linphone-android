@@ -775,4 +775,10 @@
     <string name="chat_room_presence_last_seen_online_yesterday">上線時間：昨天</string>
     <string name="chat_room_presence_last_seen_online">上線時間：</string>
     <string name="account_setting_publish_presence_title">發布上線資訊</string>
+    <string name="account_setting_delete_dialog_title">您確定要刪除帳號嗎？</string>
+    <string name="account_setting_delete_generic_confirmation_dialog">將只會刪除您本機上的帳號。
+\n若要永久刪除，請到您的 SIP 服務業者網站刪除。</string>
+    <string name="account_setting_delete_sip_linphone_org_confirmation_dialog">將只會刪除您本機上的帳號。
+\n若要永久刪除，請到帳號管理平台刪除：</string>
+    <string name="call_action_attended_transfer_call">保留轉接</string>
 </resources>
