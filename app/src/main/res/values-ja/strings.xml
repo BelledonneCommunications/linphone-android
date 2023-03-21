@@ -87,9 +87,9 @@
     <string name="chat_event_device_removed">デバイス（ %s ）を削除しました</string>
     <string name="chat_event_admin_set">%s は管理者です</string>
     <string name="chat_security_event_security_level_downgraded">セキュリティレベルは %s のため低下しました</string>
-    <string name="chat_event_ephemeral_disabled">一時的なメッセージを無効にしました</string>
-    <string name="chat_event_ephemeral_enabled">一時的なメッセージを有効にしました: %s</string>
-    <string name="chat_event_ephemeral_lifetime_changed">一時的なメッセージの有効期限: %s</string>
+    <string name="chat_event_ephemeral_disabled">期限付きメッセージを無効にしました</string>
+    <string name="chat_event_ephemeral_enabled">期限付きメッセージを有効にしました: %s</string>
+    <string name="chat_event_ephemeral_lifetime_changed">期限付きメッセージの有効期限: %s</string>
     <string name="chat_message_download_file">ダウンロード</string>
     <string name="chat_message_pick_file_dialog">ソースを選択</string>
     <string name="chat_room_group_info_subject_hint">グループ名</string>
@@ -119,10 +119,10 @@
     <string name="chat_message_context_menu_delete_messages">メッセージを削除</string>
     <string name="chat_room_context_menu_group_info">グループ情報</string>
     <string name="chat_room_context_menu_go_to_contact">連絡先を開く</string>
-    <string name="chat_message_context_menu_ephemeral_messages">一時的なメッセージ</string>
+    <string name="chat_message_context_menu_ephemeral_messages">期限付きメッセージ</string>
     <string name="chat_message_context_menu_turn_off_notifications">通知を無効にする</string>
     <string name="chat_message_context_menu_turn_on_notifications">通知を有効にする</string>
-    <string name="chat_room_ephemeral_fragment_title">一時的なメッセージ</string>
+    <string name="chat_room_ephemeral_fragment_title">期限付きメッセージ</string>
     <string name="chat_room_ephemeral_message_one_minute">1分</string>
     <string name="chat_room_ephemeral_message_one_hour">1時間</string>
     <string name="chat_room_ephemeral_message_one_day">1日</string>
@@ -145,7 +145,7 @@
     <string name="chat_message_cant_open_file_in_app_dialog_open_as_text_button">テキストとして開く</string>
     <string name="chat_message_voice_recording_playback_low_volume">メディアボリュームが低いため、高くする必要があります</string>
     <plurals name="chat_room_unread_messages_event">
-        <item quantity="other">%1$d はメッセージを読んでいません</item>
+        <item quantity="other">%1$d件のメッセージを読んでいません</item>
     </plurals>
     <string name="chat_message_removal_info">メッセージは削除されます</string>
     <string name="chat_message_abort_removal">中止</string>
@@ -391,8 +391,8 @@
     <string name="assistant_phone_number_link_info_content_already_account">電話番号は1つの &appName; アカウントでのみ使用できます。
 \n
 \n既に他のアカウントに番号を紐付けているものの、このアカウントを使用したい場合、今すぐ紐付けることで番号が自動的にこのアカウントに移動されます。</string>
-    <string name="chat_settings_downloaded_media_public_summary">一時的なメッセージのファイルは、自動ダウンロード機能ではダウンロードしません</string>
-    <string name="contacts_settings_friendlist_subscribe_title">フレンドリストを定期購読</string>
+    <string name="chat_settings_downloaded_media_public_summary">期限付きメッセージのファイルは、自動ダウンロード機能ではダウンロードしません</string>
+    <string name="contacts_settings_friendlist_subscribe_title">友達リストを定期購読</string>
     <string name="contacts_settings_launcher_shortcuts_title">ホーム画面に連絡先へのショートカットを作成</string>
     <string name="contacts_settings_show_new_contact_account_dialog_title">新しく作成された連絡先を保存するアカウントを常に尋ねる</string>
     <string name="advanced_settings_go_to_power_manager_settings">電源管理設定</string>
@@ -731,8 +731,8 @@
     <string name="content_description_transfer_call">現在の通話を他人に転送する</string>
     <string name="content_description_remove_contact_from_selection">選択した項目から連絡先を削除</string>
     <string name="content_description_toggle_participant_devices_list">参加者のデバイスの表示を切り替える</string>
-    <string name="content_description_ephemeral_duration_selected">一時的の期間を選択しました</string>
-    <string name="content_description_ephemeral_duration_change">選択した値から一時的の期間を変更しました</string>
+    <string name="content_description_ephemeral_duration_selected">期限付きメッセージの期間を選択しました</string>
+    <string name="content_description_ephemeral_duration_change">選択した値から期限付きメッセージの期間を変更しました</string>
     <string name="content_description_create_chat_room">チャットルームを作成</string>
     <string name="content_description_add_participants">参加者を追加</string>
     <string name="content_description_security_level_unsafe">安全ではありません</string>
@@ -770,4 +770,10 @@
     <string name="dialog_zrtp_local_sas">次のように入力:</string>
     <string name="content_description_presence_online">ユーザーはオンラインです</string>
     <string name="content_description_presence_offline">ユーザーはオフラインです</string>
+    <string name="account_setting_delete_generic_confirmation_dialog">アカウントはローカルでのみ削除されます。
+\n永久に削除するには、SIPプロバイダーのウェブサイトから行ってください。</string>
+    <string name="account_setting_delete_sip_linphone_org_confirmation_dialog">アカウントは、ローカルでのみ削除されます。
+\n永久に削除するには、アカウント管理プラットフォームへアクセスしてください:</string>
+    <string name="account_setting_delete_dialog_title">アカウントを削除しますか？</string>
+    <string name="contacts_settings_native_presence_title">標準の連絡先に情報を追加する</string>
 </resources>
