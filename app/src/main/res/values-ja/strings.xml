@@ -10,7 +10,7 @@
     <string name="chat_message_imdn_delivered">送信済み</string>
     <string name="chat_message_forward_confirmation_dialog">このルームにメッセージを転送しますか？</string>
     <string name="chat_message_context_menu_delete_messages">メッセージを削除</string>
-    <string name="chat_event_ephemeral_disabled">一時的なメッセージを無効にしました</string>
+    <string name="chat_event_ephemeral_disabled">期限付きメッセージを無効にしました</string>
     <string name="chat_room_group_info_you_are_now_admin">あなたは現在管理者です</string>
     <string name="chat_message_context_menu_add_to_contacts">連絡先に追加</string>
     <string name="chat_room_removal_failed_snack">チャットルームの削除に失敗しました</string>
@@ -21,7 +21,7 @@
     <string name="conference_schedule_summary">会議情報</string>
     <string name="conference_schedule_address_copied_to_clipboard">会議のアドレスをクリップボードにコピーしました</string>
     <plurals name="chat_room_unread_messages_event">
-        <item quantity="other">%1$d はメッセージを読んでいません</item>
+        <item quantity="other">%1$d件のメッセージを読んでいません</item>
     </plurals>
     <string name="conference_schedule_send_updated_invite_email">Eメールで更新を送信</string>
     <string name="conference_display_mode_audio_only">音声のみモード</string>
@@ -159,8 +159,8 @@
     <string name="chat_event_conference_destroyed">グループから退出しました</string>
     <string name="chat_event_participant_added">%s が参加しました</string>
     <string name="chat_event_admin_set">%s は管理者です</string>
-    <string name="chat_event_ephemeral_enabled">一時的なメッセージを有効にしました: %s</string>
-    <string name="chat_event_ephemeral_lifetime_changed">一時的なメッセージの有効期限: %s</string>
+    <string name="chat_event_ephemeral_enabled">期限付きメッセージを有効にしました: %s</string>
+    <string name="chat_event_ephemeral_lifetime_changed">期限付きメッセージの有効期限: %s</string>
     <string name="chat_message_pick_file_dialog">ソースを選択</string>
     <string name="debug_popup_title">デバッグ</string>
     <string name="chat_event_conference_created">グループに参加しました</string>
@@ -189,7 +189,7 @@
     <string name="chat_room_file_not_found">ファイルが見つかりませんでした</string>
     <string name="chat_room_context_menu_go_to_contact">連絡先を開く</string>
     <string name="chat_message_context_menu_turn_on_notifications">通知を有効にする</string>
-    <string name="chat_room_ephemeral_fragment_title">一時的なメッセージ</string>
+    <string name="chat_room_ephemeral_fragment_title">期限付きメッセージ</string>
     <string name="chat_room_ephemeral_message_disabled">無効</string>
     <string name="chat_room_ephemeral_message_one_minute">1分</string>
     <string name="chat_room_ephemeral_message_one_hour">1時間</string>
@@ -212,7 +212,7 @@
     <string name="recordings_empty_list">録音がありません</string>
     <string name="conference">会議</string>
     <string name="chat_room_choose_conversation_for_message_forward">メッセージの転送先の会話を選択または作成する</string>
-    <string name="chat_message_context_menu_ephemeral_messages">一時的なメッセージ</string>
+    <string name="chat_message_context_menu_ephemeral_messages">期限付きメッセージ</string>
     <plurals name="chat_room_remote_composing">
         <item quantity="other">%s が入力中…</item>
     </plurals>
@@ -234,7 +234,7 @@
     <string name="conference_organizer">主催者</string>
     <string name="conference_schedule_edit">会議を編集</string>
     <string name="conference_group_call_create">グループ通話を開始</string>
-    <string name="conference_paused_title">あなたは現在会議に参加しています。</string>
+    <string name="conference_paused_title">あなたは現在会議から外れています。</string>
     <string name="conference_paused_subtitle">再生ボタンをクリックすると、再び会議に参加できます。</string>
     <string name="conference_update_title">会議が更新されました:</string>
     <string name="conference_cancel_title">会議がキャンセルされました:</string>
@@ -614,7 +614,7 @@
     <string name="chat_settings_file_sharing_url_summary">何をしているのかわからない場合は編集しないでください！</string>
     <string name="chat_settings_auto_download_always">常にダウンロード</string>
     <string name="chat_settings_auto_download_never">ダウンロードしない</string>
-    <string name="chat_settings_downloaded_media_public_summary">一時的なメッセージのファイルは、自動ダウンロード機能ではダウンロードしません</string>
+    <string name="chat_settings_downloaded_media_public_summary">期限付きメッセージのファイルは、自動ダウンロード機能ではダウンロードしません</string>
     <string name="chat_settings_hide_notification_content_title">通知上ではメッセージの内容を隠す</string>
     <string name="call_settings_system_wide_overlay_title">アプリ外でオーバーレイ表示する</string>
     <string name="chat_settings_launcher_shortcuts_title">ホーム画面にチャットルームのショートカットを作成</string>
@@ -697,7 +697,7 @@
     <string name="call_settings_auto_answer_delay_summary">ミリ秒</string>
     <string name="chat_settings_auto_download_max_size_summary">バイト</string>
     <string name="call_settings_sipinfo_dtmf_title">帯域外のDTMFを送信（SIP INFO）</string>
-    <string name="contacts_settings_friendlist_subscribe_title">フレンドリストを定期購読</string>
+    <string name="contacts_settings_friendlist_subscribe_title">友達リストを定期購読</string>
     <string name="contacts_settings_ldap_auth_method_anonymous">匿名</string>
     <string name="contacts_settings_ldap_auth_method_simple">シンプル</string>
     <string name="contacts_settings_ldap_request_delay_title">2つのリクエスト間の遅延</string>
@@ -756,4 +756,10 @@
     <string name="dialog_zrtp_local_sas">次のように入力:</string>
     <string name="content_description_security_level_safe">安全です</string>
     <string name="content_description_call_secured">通話は保護されています</string>
+    <string name="contacts_settings_native_presence_title">標準の連絡先に情報を追加する</string>
+    <string name="contacts_settings_ldap_minimum_characters_title">クエリ開始時の最小文字数</string>
+    <string name="content_description_ephemeral_duration_selected">期限付きメッセージの期間を選択しました</string>
+    <string name="content_description_ephemeral_duration_change">選択した値から期限付きメッセージの期間を変更しました</string>
+    <string name="content_description_enter_edition_mode">エディションモードへ移行</string>
+    <string name="content_description_exit_edition_mode">エディションモードを終了</string>
 </resources>
