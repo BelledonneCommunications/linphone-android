@@ -445,9 +445,7 @@ class CoreContext(
 
         computeUserAgent()
 
-        val fiveOneMigrationRequired = core.config.getBool("app", "migration_5.1", true)
-        core.config.setBool("app", "migration_5.1", false)
-
+        val fiveOneMigrationRequired = core.config.getBool("app", "migration_5.1_required", true)
         for (account in core.accountList) {
             if (account.params.identityAddress?.domain == corePreferences.defaultDomain) {
                 var paramsChanged = false
@@ -523,6 +521,7 @@ class CoreContext(
                 }
             }
         }
+        core.config.setBool("app", "migration_5.1_required", false)
 
         Log.i("[Context] Core configured")
     }
