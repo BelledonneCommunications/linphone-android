@@ -49,6 +49,6 @@ xmlrpc_url=https://subscribe.linphone.org:444/wizard.php
 backend=0
 
 [lime]
-lime_update_threshold=-1
+lime_update_threshold=86400
 
 ## End of factory rc
