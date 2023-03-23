@@ -446,6 +446,10 @@ class CoreContext(
         computeUserAgent()
 
         val fiveOneMigrationRequired = core.config.getBool("app", "migration_5.1_required", true)
+        if (fiveOneMigrationRequired) {
+            core.config.setBool("sip", "update_presence_model_timestamp_before_publish_expires_refresh", true)
+        }
+
         for (account in core.accountList) {
             if (account.params.identityAddress?.domain == corePreferences.defaultDomain) {
                 var paramsChanged = false
