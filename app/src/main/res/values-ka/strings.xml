@@ -757,4 +757,17 @@
     <string name="content_description_conference_participant_mic_muted">მონაწილეს მიკროფონი აქვს გათიშული</string>
     <string name="content_description_toggle_conference_info_details">შეხვედრის ინფორმაციის დეტალების ჩვენების გადართვა</string>
     <string name="content_description_recording_export">ჩანაწერის ექსპორტირება</string>
+    <string name="conference_cancel_title">შეხვედრა გაუქმდა:</string>
+    <string name="conference_scheduled_delete_many_dialog">გსურთ ამ შეხვედრების წაშლა\?</string>
+    <string name="conference_schedule_send_updated_invite_chat">&amp;appName;-ს მეშვეობით განახლების გაგზავნა</string>
+    <string name="conference_schedule_send_updated_invite_email">განახლების გაგზავნა ელ. ფოსტის მეშვეობით</string>
+    <string name="conference_schedule_edit">შეხვედრის რედაქტირება</string>
+    <string name="conference_update_title">შეხვედრა განახლდა:</string>
+    <string name="conference_scheduled_cancelled_by_organizer">კონფერენცია გაუქმდა შემქმნელის მიერ</string>
+    <string name="call_screenshot_taken">ეკრანის ანაბეჭდი იქნა გადაღებული: %s</string>
+    <string name="account_setting_end_to_end_encryption_keys_server_url">E2E დაშიფრვის გასაღებების სერვერის URL</string>
+    <string name="zrtp_dialog_explanation">უსაფრთხოების დონის გასაზრდელად, შეგიძლიათ თქვენს მოკავშირესთან შეამოწმოთ შემდეგი კოდები.</string>
+    <string name="conference_scheduled_cancelled_by_me">თქვენ გააუქმეთ კონფერენცია</string>
+    <string name="zrtp_dialog_correct_button_label">შესწორება</string>
+    <string name="zrtp_dialog_later_button_label">მოგვიანებით</string>
 </resources>
