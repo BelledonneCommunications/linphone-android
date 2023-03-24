@@ -760,11 +760,13 @@
     <string name="chat_message_voice_recording">Message vocal</string>
     <string name="content_description_presence_online">La personne est en ligne</string>
     <string name="content_description_presence_offline">La personne est hors ligne</string>
+    <string name="content_description_presence_do_not_disturb">La personne souhaite ne pas être dérangée</string>
     <string name="account_setting_publish_presence_title">Publier la présence</string>
     <string name="chat_room_presence_online">En ligne</string>
     <string name="chat_room_presence_last_seen_online_today">En ligne aujourd\'hui à</string>
     <string name="chat_room_presence_last_seen_online_yesterday">En ligne hier à</string>
     <string name="chat_room_presence_last_seen_online">En ligne le</string>
+    <string name="chat_room_presence_do_not_disturb">Ne pas déranger</string>
     <string name="account_setting_delete_dialog_title">Voulez-vous supprimer votre compte ?</string>
     <string name="account_setting_delete_generic_confirmation_dialog">Votre compte sera supprimé localement.\nPour le supprimer de manière définitive, rendez-vous sur le site internet de votre fournisseur SIP.</string>
     <string name="account_setting_delete_sip_linphone_org_confirmation_dialog">Votre compte sera supprimé localement.\nPour le supprimer de manière définitive, rendez-vous sur notre plateforme de gestion des comptes :</string>

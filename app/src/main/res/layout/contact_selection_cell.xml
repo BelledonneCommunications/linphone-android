@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <import type="android.view.View"/>
@@ -50,8 +51,7 @@
                     android:adjustViewBounds="true"
                     android:background="@drawable/led_background"
                     android:padding="2dp"
-                    android:contentDescription="@{data.presenceStatus == ConsolidatedPresence.Online ? @string/content_description_presence_online : @string/content_description_presence_offline}"
-                    android:src="@{data.presenceStatus == ConsolidatedPresence.Online ? @drawable/led_online : @drawable/led_away, default=@drawable/led_online}"
+                    app:presenceIcon="@{data.presenceStatus}"
                     android:visibility="@{data.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE, default=gone}" />
 
                 <ImageView

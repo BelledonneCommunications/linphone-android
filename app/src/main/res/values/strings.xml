@@ -237,6 +237,7 @@
     <string name="chat_room_presence_last_seen_online_today">Online today at</string>
     <string name="chat_room_presence_last_seen_online_yesterday">Online yesterday at</string>
     <string name="chat_room_presence_last_seen_online">Online on</string>
+    <string name="chat_room_presence_do_not_disturb">Do not disturb</string>
 
     <!-- Recordings -->
     <string name="recordings_empty_list">No recordings</string>
@@ -901,4 +902,5 @@
     <string name="content_description_recording_export">Export recording</string>
     <string name="content_description_presence_online">User is online</string>
     <string name="content_description_presence_offline">User is offline</string>
+    <string name="content_description_presence_do_not_disturb">User is asking not to be disturbed</string>
 </resources>
