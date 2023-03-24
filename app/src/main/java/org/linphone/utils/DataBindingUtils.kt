@@ -52,6 +52,7 @@ import org.linphone.activities.voip.views.ScrollDotsView
 import org.linphone.contact.ContactAvatarGenerator
 import org.linphone.contact.ContactDataInterface
 import org.linphone.contact.getPictureUri
+import org.linphone.core.ConsolidatedPresence
 import org.linphone.core.tools.Log
 import org.linphone.views.VoiceRecordProgressBar
 
@@ -772,4 +773,22 @@ fun ScrollDotsView.setItems(count: Int) {
 @BindingAdapter("selectedDot")
 fun ScrollDotsView.setSelectedIndex(index: Int) {
     setSelectedDot(index)
+}
+
+@BindingAdapter("presenceIcon")
+fun ImageView.setPresenceIcon(presence: ConsolidatedPresence) {
+    val icon = when (presence) {
+        ConsolidatedPresence.Online -> R.drawable.led_online
+        ConsolidatedPresence.DoNotDisturb -> R.drawable.led_do_not_disturb
+        ConsolidatedPresence.Busy -> R.drawable.led_away
+        else -> R.drawable.led_not_registered
+    }
+    setImageResource(icon)
+
+    val contentDescription = when (presence) {
+        ConsolidatedPresence.Online -> AppUtils.getString(R.string.content_description_presence_online)
+        ConsolidatedPresence.DoNotDisturb -> AppUtils.getString(R.string.content_description_presence_do_not_disturb)
+        else -> AppUtils.getString(R.string.content_description_presence_offline)
+    }
+    setContentDescription(contentDescription)
 }

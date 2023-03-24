@@ -324,6 +324,9 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         if (friend.consolidatedPresence == ConsolidatedPresence.Online) {
             lastPresenceInfo.value = AppUtils.getString(R.string.chat_room_presence_online)
             return
+        } else if (friend.consolidatedPresence == ConsolidatedPresence.DoNotDisturb) {
+            lastPresenceInfo.value = AppUtils.getString(R.string.chat_room_presence_do_not_disturb)
+            return
         }
 
         val timestamp = friend.presenceModel?.timestamp ?: -1
