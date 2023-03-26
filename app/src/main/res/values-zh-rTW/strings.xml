@@ -781,4 +781,6 @@
     <string name="account_setting_delete_sip_linphone_org_confirmation_dialog">將只會刪除您本機上的帳號。
 \n若要永久刪除，請到帳號管理平台刪除：</string>
     <string name="call_action_attended_transfer_call">保留轉接</string>
+    <string name="chat_room_presence_do_not_disturb">勿干擾</string>
+    <string name="content_description_presence_do_not_disturb">使用者要求勿干擾</string>
 </resources>
