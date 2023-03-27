@@ -33,7 +33,7 @@
 
         <ImageView
             android:id="@+id/status_led"
-            android:background="@drawable/led_background"
+            android:background="@drawable/status_led_background"
             android:src="@{viewModel.registrationStatusDrawable, default=@drawable/led_not_registered}"
             android:onClick="@{refreshClickListener}"
             android:contentDescription="@{viewModel.registrationStatusText}"
