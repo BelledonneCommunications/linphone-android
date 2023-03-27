@@ -137,6 +137,7 @@
 
     <!-- Chat -->
     <string name="no_chat_history">No conversations</string>
+    <string name="chat_room_last_message_sender_format">%s:</string>
     <string name="chat_remote_is_composing">Remote is writing&#8230;</string>
     <string name="chat_event_conference_created">You have joined the group</string>
     <string name="chat_event_conference_destroyed">You have left the group</string>

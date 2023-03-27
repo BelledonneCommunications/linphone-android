@@ -771,4 +771,5 @@
     <string name="account_setting_delete_generic_confirmation_dialog">Votre compte sera supprimé localement.\nPour le supprimer de manière définitive, rendez-vous sur le site internet de votre fournisseur SIP.</string>
     <string name="account_setting_delete_sip_linphone_org_confirmation_dialog">Votre compte sera supprimé localement.\nPour le supprimer de manière définitive, rendez-vous sur notre plateforme de gestion des comptes :</string>
     <string name="call_action_attended_transfer_call">Transfert supervisé</string>
+    <string name="chat_room_last_message_sender_format">%s :</string>
 </resources>
