@@ -79,7 +79,7 @@
                 android:layout_marginStart="45dp"
                 android:adjustViewBounds="true"
                 android:background="@drawable/led_background"
-                android:padding="2dp"
+                android:padding="@dimen/contact_presence_badge_padding"
                 app:presenceIcon="@{viewModel.presenceStatus}"
                 android:visibility="@{!viewModel.defaultAccountFound || viewModel.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE, default=gone}" />
 
@@ -128,7 +128,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="10dp"
-                android:padding="2dp" />
+                android:padding="@dimen/contact_presence_badge_padding" />
 
             <View
                 android:layout_width="match_parent"

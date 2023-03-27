@@ -35,7 +35,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/settings_margin"
-            android:padding="2dp" />
+            android:padding="@dimen/contact_presence_badge_padding" />
 
         <View
             android:layout_width="match_parent"

@@ -47,7 +47,7 @@
                     android:layout_marginStart="25dp"
                     android:adjustViewBounds="true"
                     android:background="@drawable/led_background"
-                    android:padding="2dp"
+                    android:padding="@dimen/contact_presence_badge_padding"
                     app:presenceIcon="@{data.presenceStatus}"
                     android:visibility="@{data.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE, default=gone}" />
 
