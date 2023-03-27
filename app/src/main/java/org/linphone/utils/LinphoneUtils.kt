@@ -229,6 +229,10 @@ class LinphoneUtils {
                 chatRoom1.peerAddress.weakEqual(chatRoom2.peerAddress)
         }
 
+        fun getChatRoomId(room: ChatRoom): String {
+            return getChatRoomId(room.localAddress, room.peerAddress)
+        }
+
         fun getChatRoomId(localAddress: Address, remoteAddress: Address): String {
             val localSipUri = localAddress.clone()
             localSipUri.clean()

@@ -192,7 +192,7 @@ class NotificationsManager(private val context: Context) {
                     dismissChatNotification(chatRoom)
                 }
             } else {
-                val notificationId = chatRoom.creationTime.toInt()
+                val notificationId = getNotificationIdForChat(chatRoom)
                 if (chatBubbleNotifications.contains(notificationId)) {
                     Log.i("[Notifications Manager] Chat room [$chatRoom] has been marked as read but no notifiable found, not removing notification because of a chat bubble")
                 } else {
@@ -635,7 +635,7 @@ class NotificationsManager(private val context: Context) {
     /* Chat related */
 
     private fun getNotificationIdForChat(chatRoom: ChatRoom): Int {
-        return chatRoom.creationTime.toInt()
+        return LinphoneUtils.getChatRoomId(chatRoom).hashCode()
     }
 
     private fun displayChatNotifiable(room: ChatRoom, notifiable: Notifiable) {
@@ -784,7 +784,7 @@ class NotificationsManager(private val context: Context) {
             cancel(notifiable.notificationId, CHAT_TAG)
             return true
         } else {
-            val previousNotificationId = previousChatNotifications.find { id -> id == room.creationTime.toInt() }
+            val previousNotificationId = previousChatNotifications.find { id -> id == getNotificationIdForChat(room) }
             if (previousNotificationId != null) {
                 if (chatBubbleNotifications.contains(previousNotificationId)) {
                     Log.i("[Notifications Manager] Found previous notification with same ID [$previousNotificationId] but not cancelling it as it's ID is in chat bubbles list")
@@ -799,7 +799,7 @@ class NotificationsManager(private val context: Context) {
     }
 
     fun changeDismissNotificationUponReadForChatRoom(chatRoom: ChatRoom, dismiss: Boolean) {
-        val notificationId = chatRoom.creationTime.toInt()
+        val notificationId = getNotificationIdForChat(chatRoom)
         if (dismiss) {
             Log.i("[Notifications Manager] Allow notification with id [$notificationId] to be dismissed when chat room will be marked as read, used for chat bubble")
             chatBubbleNotifications.add(notificationId)
