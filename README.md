@@ -169,6 +169,10 @@ We no longer use transifex for the translation process, instead we have deployed
 
 Due to the full app rewrite we can't re-use previous translations, so we'll be very happy if you want to contribute.
 
+<a href="https://weblate.linphone.org/engage/linphone/?utm_source=widget">
+<img src="https://weblate.linphone.org/widgets/linphone/-/linphone-android/multi-auto.svg" alt="Translation status" />
+</a>
+
 # CONTRIBUTIONS
 
 In order to submit a patch for inclusion in linphone's source code:
