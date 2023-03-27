@@ -60,6 +60,10 @@ class ChatRoomData(private val chatRoom: ChatRoom) : ContactDataInterface {
 
     val lastMessageText = MutableLiveData<SpannableStringBuilder>()
 
+    val showLastMessageImdnIcon = MutableLiveData<Boolean>()
+
+    val lastMessageImdnIcon = MutableLiveData<Int>()
+
     val notificationsMuted = MutableLiveData<Boolean>()
 
     private val basicChatRoom: Boolean by lazy {
@@ -160,14 +164,26 @@ class ChatRoomData(private val chatRoom: ChatRoom) : ContactDataInterface {
         val builder = SpannableStringBuilder()
         if (msg == null) {
             lastMessageText.value = builder
+            showLastMessageImdnIcon.value = false
             return
         }
 
-        val sender: String =
-            coreContext.contactsManager.findContactByAddress(msg.fromAddress)?.name
-                ?: LinphoneUtils.getDisplayName(msg.fromAddress)
-        builder.append(sender)
-        builder.append(": ")
+        if (msg.isOutgoing && msg.state != ChatMessage.State.Displayed) {
+            msg.addListener(object : ChatMessageListenerStub() {
+                override fun onMsgStateChanged(message: ChatMessage, state: ChatMessage.State) {
+                    computeLastMessageImdnIcon(message)
+                }
+            })
+        }
+        computeLastMessageImdnIcon(msg)
+
+        if (!chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
+            val sender: String =
+                coreContext.contactsManager.findContactByAddress(msg.fromAddress)?.name
+                    ?: LinphoneUtils.getDisplayName(msg.fromAddress)
+            builder.append(coreContext.context.getString(R.string.chat_room_last_message_sender_format, sender))
+            builder.append(" ")
+        }
 
         for (content in msg.contents) {
             if (content.isIcalendar) {
@@ -187,6 +203,25 @@ class ChatRoomData(private val chatRoom: ChatRoom) : ContactDataInterface {
 
         builder.trim()
         lastMessageText.value = builder
+    }
+
+    private fun computeLastMessageImdnIcon(msg: ChatMessage) {
+        val state = msg.state
+        showLastMessageImdnIcon.value = if (msg.isOutgoing) {
+            when (state) {
+                ChatMessage.State.DeliveredToUser, ChatMessage.State.Displayed,
+                ChatMessage.State.NotDelivered, ChatMessage.State.FileTransferError -> true
+                else -> false
+            }
+        } else {
+            false
+        }
+        lastMessageImdnIcon.value = when (state) {
+            ChatMessage.State.DeliveredToUser -> R.drawable.chat_delivered
+            ChatMessage.State.Displayed -> R.drawable.chat_read
+            ChatMessage.State.FileTransferError, ChatMessage.State.NotDelivered -> R.drawable.chat_error
+            else -> R.drawable.chat_error
+        }
     }
 
     private fun areNotificationsMuted(): Boolean {
