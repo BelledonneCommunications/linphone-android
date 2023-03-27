@@ -156,7 +156,9 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
         _adapter = ChatRoomsListAdapter(listSelectionViewModel, viewLifecycleOwner)
         // SubmitList is done on a background thread
         // We need this adapter data observer to know when to scroll
+        adapter.setHasStableIds(true)
         adapter.registerAdapterDataObserver(observer)
+
         binding.chatList.setHasFixedSize(true)
         binding.chatList.adapter = adapter
 

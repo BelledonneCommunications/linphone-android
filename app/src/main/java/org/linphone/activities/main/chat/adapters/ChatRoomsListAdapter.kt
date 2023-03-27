@@ -33,6 +33,7 @@ import org.linphone.activities.main.viewmodels.ListTopBarViewModel
 import org.linphone.core.ChatRoom
 import org.linphone.databinding.ChatRoomListCellBinding
 import org.linphone.utils.Event
+import org.linphone.utils.LinphoneUtils
 
 class ChatRoomsListAdapter(
     selectionVM: ListTopBarViewModel,
@@ -54,6 +55,11 @@ class ChatRoomsListAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         (holder as ViewHolder).bind(getItem(position))
+    }
+
+    override fun getItemId(position: Int): Long {
+        val room = getItem(position)
+        return LinphoneUtils.getChatRoomId(room).hashCode().toLong()
     }
 
     fun forwardPending(pending: Boolean) {
