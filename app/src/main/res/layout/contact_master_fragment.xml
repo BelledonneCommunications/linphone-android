@@ -43,7 +43,8 @@
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.2">
+                    android:layout_weight="0.2"
+                    android:visibility="@{viewModel.onlyShowSipContactsList ? View.GONE : View.VISIBLE}">
 
                     <ImageView
                         android:onClick="@{allContactsToggleClickListener}"
@@ -67,7 +68,8 @@
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.2">
+                    android:layout_weight="0.2"
+                    android:visibility="@{viewModel.hideSipContactsList ? View.GONE : View.VISIBLE}">
 
                     <ImageView
                         android:onClick="@{sipContactsToggleClickListener}"
@@ -88,6 +90,12 @@
                         android:background="?attr/accentColor" />
 
                 </RelativeLayout>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.2"
+                    android:visibility="@{viewModel.onlyShowSipContactsList || viewModel.hideSipContactsList ? View.VISIBLE : View.GONE}" />
 
                 <View
                     android:layout_width="0dp"

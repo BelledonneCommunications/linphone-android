@@ -42,6 +42,10 @@ class ContactsListViewModel : ViewModel() {
 
     val readOnlyNativeAddressBook = MutableLiveData<Boolean>()
 
+    val hideSipContactsList = MutableLiveData<Boolean>()
+
+    val onlyShowSipContactsList = MutableLiveData<Boolean>()
+
     val fetchInProgress = MutableLiveData<Boolean>()
     private var searchResultsPending: Boolean = false
     private var fastFetchJob: Job? = null
@@ -78,6 +82,15 @@ class ContactsListViewModel : ViewModel() {
         sipContactsSelected.value = coreContext.contactsManager.shouldDisplaySipContactsList()
         nativeAddressBookEnabled.value = corePreferences.enableNativeAddressBookIntegration
         readOnlyNativeAddressBook.value = corePreferences.readOnlyNativeContacts
+
+        onlyShowSipContactsList.value = corePreferences.onlyShowSipContactsList
+        hideSipContactsList.value = corePreferences.hideSipContactsList
+        if (onlyShowSipContactsList.value == true) {
+            sipContactsSelected.value = true
+        }
+        if (hideSipContactsList.value == true) {
+            sipContactsSelected.value = false
+        }
 
         coreContext.contactsManager.addListener(contactsUpdatedListener)
         coreContext.contactsManager.magicSearch.addListener(magicSearchListener)

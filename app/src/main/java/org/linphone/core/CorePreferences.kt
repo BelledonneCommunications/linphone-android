@@ -475,6 +475,14 @@ class CorePreferences constructor(private val context: Context) {
     val readOnlyNativeContacts: Boolean
         get() = config.getBool("app", "read_only_native_address_book", false)
 
+    // Will hide the contacts selector to allow listing all contacts, even those without a SIP address
+    val onlyShowSipContactsList: Boolean
+        get() = config.getBool("app", "only_show_sip_contacts_list", false)
+
+    // Will hide the SIP contacts selector, leaving only the all contacts list
+    val hideSipContactsList: Boolean
+        get() = config.getBool("app", "hide_sip_contacts_list", false)
+
     // Will disable chat feature completely
     val disableChat: Boolean
         get() = config.getBool("app", "disable_chat_feature", false)
