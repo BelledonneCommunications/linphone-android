@@ -510,6 +510,9 @@ class CorePreferences constructor(private val context: Context) {
     val showContactInviteBySms: Boolean
         get() = config.getBool("app", "show_invite_contact_by_sms", true)
 
+    val autoRemoteProvisioningOnConfigUriHandler: Boolean
+        get() = config.getBool("app", "auto_apply_provisioning_config_uri_scheme", false)
+
     /* Default values related */
 
     val echoCancellerCalibration: Int

@@ -53,6 +53,7 @@ import org.linphone.R
 import org.linphone.activities.*
 import org.linphone.activities.assistant.AssistantActivity
 import org.linphone.activities.main.viewmodels.CallOverlayViewModel
+import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.navigateToDialer
 import org.linphone.compatibility.Compatibility
@@ -290,7 +291,19 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                             navigateToContact(contactId)
                         }
                     } else {
-                        handleTelOrSipUri(uri)
+                        val stringUri = uri.toString()
+                        if (stringUri.startsWith("linphone-config:")) {
+                            val remoteConfigUri = stringUri.substring("linphone-config:".length)
+                            if (corePreferences.autoRemoteProvisioningOnConfigUriHandler) {
+                                Log.w("[Main Activity] Remote provisioning URL set to [$remoteConfigUri], restarting Core now")
+                                applyRemoteProvisioning(remoteConfigUri)
+                            } else {
+                                Log.i("[Main Activity] Remote provisioning URL found [$remoteConfigUri], asking for user validation")
+                                showAcceptRemoteConfigurationDialog(remoteConfigUri)
+                            }
+                        } else {
+                            handleTelOrSipUri(uri)
+                        }
                     }
                 }
             }
@@ -544,5 +557,35 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         callOverlay.setOnClickListener {
             coreContext.onCallOverlayClick()
         }
+    }
+
+    private fun applyRemoteProvisioning(remoteConfigUri: String) {
+        coreContext.core.provisioningUri = remoteConfigUri
+        coreContext.core.stop()
+        coreContext.core.start()
+    }
+
+    private fun showAcceptRemoteConfigurationDialog(remoteConfigUri: String) {
+        val dialogViewModel = DialogViewModel(remoteConfigUri, getString(R.string.dialog_apply_remote_provisioning_title))
+        val dialog = DialogUtils.getDialog(this, dialogViewModel)
+
+        dialogViewModel.showCancelButton {
+            Log.i("[Main Activity] User cancelled remote provisioning config")
+            dialog.dismiss()
+        }
+
+        val okLabel = getString(
+            R.string.dialog_apply_remote_provisioning_button
+        )
+        dialogViewModel.showOkButton(
+            {
+                Log.w("[Main Activity] Remote provisioning URL set to [$remoteConfigUri], restarting Core now")
+                applyRemoteProvisioning(remoteConfigUri)
+                dialog.dismiss()
+            },
+            okLabel
+        )
+
+        dialog.show()
     }
 }
