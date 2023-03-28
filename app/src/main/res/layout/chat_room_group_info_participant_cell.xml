@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <import type="android.view.View"/>
@@ -15,7 +16,7 @@
             type="Boolean" />
     </data>
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_margin="5dp">
@@ -24,7 +25,9 @@
             android:id="@+id/avatar"
             android:layout_width="45dp"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 coilContact="@{data}"
@@ -33,133 +36,111 @@
                 android:layout_alignParentStart="true"
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/generated_avatar_bg"
-                android:src="@drawable/voip_single_contact_avatar"
-                android:contentDescription="@null" />
+                android:contentDescription="@null"
+                android:src="@drawable/voip_single_contact_avatar" />
 
             <ImageView
-                android:visibility="@{isEncrypted &amp;&amp; data.securityLevel == ChatRoomSecurityLevel.ClearText ? View.VISIBLE : View.GONE, default=gone}"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
                 android:contentDescription="@string/content_description_contact_can_do_encryption"
-                android:src="@drawable/security_toggle_icon_green" />
+                android:src="@drawable/security_toggle_icon_green"
+                android:visibility="@{isEncrypted &amp;&amp; data.securityLevel == ChatRoomSecurityLevel.ClearText ? View.VISIBLE : View.GONE, default=gone}" />
 
             <ImageView
-                android:visibility="@{isEncrypted &amp;&amp; data.securityLevel != ChatRoomSecurityLevel.ClearText ? View.VISIBLE : View.GONE, default=gone}"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
                 android:contentDescription="@{data.securityLevelContentDescription}"
-                android:src="@{data.securityLevelIcon, default=@drawable/security_alert_indicator}" />
+                android:src="@{data.securityLevelIcon, default=@drawable/security_alert_indicator}"
+                android:visibility="@{isEncrypted &amp;&amp; data.securityLevel != ChatRoomSecurityLevel.ClearText ? View.VISIBLE : View.GONE, default=gone}" />
 
         </RelativeLayout>
 
         <ImageView
-            android:onClick="@{removeClickListener}"
-            android:visibility="@{data.showAdminControls ? View.VISIBLE : View.GONE}"
-            android:contentDescription="@string/content_description_remove_contact_from_chat_room"
             android:id="@+id/delete"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
+            android:layout_height="0dp"
+            android:contentDescription="@string/content_description_remove_contact_from_chat_room"
+            android:onClick="@{removeClickListener}"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
-            android:src="@drawable/chat_group_delete" />
+            android:src="@drawable/chat_group_delete"
+            android:visibility="@{data.showAdminControls ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
-            android:id="@+id/adminLayout"
+        <TextView
+            android:id="@+id/isAdmin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/delete"
-            android:visibility="@{data.showAdminControls &amp;&amp; data.canBeSetAdmin ? View.VISIBLE : View.GONE}">
+            android:contentDescription="@string/content_description_contact_is_admin"
+            android:enabled="@{data.showAdminControls &amp;&amp; data.canBeSetAdmin}"
+            android:onClick="@{() -> data.unSetAdmin()}"
+            android:text="@string/chat_room_group_info_admin"
+            android:textColor="?attr/primaryTextColor"
+            android:textStyle="bold"
+            android:padding="10dp"
+            android:visibility="@{data.admin ? View.VISIBLE : View.GONE, default=gone}"
+            android:drawablePadding="5dp"
+            app:drawableStartCompat="@drawable/check_selected"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/delete"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <LinearLayout
-                android:id="@+id/isAdminLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
-                android:onClick="@{() -> data.unSetAdmin()}"
-                android:visibility="@{data.admin ? View.VISIBLE : View.GONE}">
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_gravity="center"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="@string/content_description_contact_is_admin"
-                    android:paddingRight="5dp"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/check_selected" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/chat_room_group_info_admin"
-                    android:textColor="?attr/primaryTextColor"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/isNotAdminLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
-                android:onClick="@{() -> data.setAdmin()}"
-                android:visibility="@{data.admin ? View.GONE : View.VISIBLE}">
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_gravity="center"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="@string/content_description_contact_is_not_admin"
-                    android:paddingRight="5dp"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/check_unselected" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/chat_room_group_info_admin"
-                    android:textColor="?attr/primarySubtextLightColor" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/isNotAdmin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:layout_toLeftOf="@id/adminLayout"
-            android:layout_toRightOf="@id/avatar"
-            android:orientation="vertical">
+            android:contentDescription="@string/content_description_contact_is_not_admin"
+            android:enabled="@{data.showAdminControls &amp;&amp; data.canBeSetAdmin}"
+            android:onClick="@{() -> data.setAdmin()}"
+            android:text="@string/chat_room_group_info_admin"
+            android:textColor="?attr/primarySubtextLightColor"
+            android:padding="10dp"
+            android:visibility="@{data.admin ? View.GONE : (data.showAdminControls &amp;&amp; data.canBeSetAdmin ? View.VISIBLE : View.GONE), default=gone}"
+            app:drawableStartCompat="@drawable/check_unselected"
+            android:drawablePadding="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/isAdmin"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <org.linphone.views.MarqueeTextView
-                android:text="@{data.contact.name ?? data.displayName}"
-                style="@style/contact_name_list_cell_font"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:singleLine="true" />
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/admin_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="left"
+            app:constraint_referenced_ids="isAdmin, isNotAdmin" />
 
-            <org.linphone.views.MarqueeTextView
-                android:text="@{data.sipUri}"
-                android:id="@+id/sipUri"
-                style="@style/sip_uri_small_font"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:singleLine="true" />
+        <org.linphone.views.MarqueeTextView
+            android:id="@+id/display_name"
+            style="@style/contact_name_list_cell_font"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:singleLine="true"
+            android:layout_marginStart="5dp"
+            android:text="@{data.contact.name ?? data.displayName, default=`John Doe`}"
+            app:layout_constraintBottom_toTopOf="@+id/sipUri"
+            app:layout_constraintEnd_toStartOf="@id/admin_barrier"
+            app:layout_constraintStart_toEndOf="@id/avatar"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        </LinearLayout>
+        <org.linphone.views.MarqueeTextView
+            android:id="@+id/sipUri"
+            style="@style/sip_uri_small_font"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:singleLine="true"
+            android:layout_marginStart="5dp"
+            android:text="@{data.sipUri, default=`sip:john@sip.example.org`}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/admin_barrier"
+            app:layout_constraintStart_toEndOf="@id/avatar"
+            app:layout_constraintTop_toBottomOf="@+id/display_name" />
 
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
