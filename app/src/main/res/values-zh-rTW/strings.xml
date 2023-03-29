@@ -783,4 +783,7 @@
     <string name="call_action_attended_transfer_call">保留轉接</string>
     <string name="chat_room_presence_do_not_disturb">勿干擾</string>
     <string name="content_description_presence_do_not_disturb">使用者要求勿干擾</string>
+    <string name="dialog_apply_remote_provisioning_button">套用</string>
+    <string name="dialog_apply_remote_provisioning_title">您確認要從這個網址下載套用設定資訊嗎？</string>
+    <string name="chat_room_last_message_sender_format">%s：</string>
 </resources>
