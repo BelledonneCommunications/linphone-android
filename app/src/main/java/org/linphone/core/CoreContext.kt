@@ -467,6 +467,13 @@ class CoreContext(
                     Log.i("[Context] Account params have been updated, apply changes")
                     account.params = params
                 }
+            } else {
+                if (account.params.limeServerUrl == corePreferences.limeServerUrl) {
+                    Log.w("[Context] Found linphone LIME X3DH server URL for third party account, removing it")
+                    val params = account.params.clone()
+                    params.limeServerUrl = null
+                    account.params = params
+                }
             }
         }
 
