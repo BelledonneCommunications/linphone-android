@@ -505,14 +505,17 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             viewLifecycleOwner
         ) {
             it.consume { url ->
+                val uri = Uri.parse(url)
                 val browserIntent = Intent(
                     Intent.ACTION_VIEW,
-                    Uri.parse(url)
+                    uri
                 )
                 try {
                     startActivity(browserIntent)
                 } catch (se: SecurityException) {
-                    Log.e("[Chat Room] Failed to start browser intent, $se")
+                    Log.e("[Chat Room] Failed to start browser intent from uri [$uri]: $se")
+                } catch (anfe: ActivityNotFoundException) {
+                    Log.e("[Chat Room] Failed to find app matching intent from uri [$uri]: $anfe")
                 }
             }
         }
