@@ -10,6 +10,17 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [5.0.9] - 2023-03-30
+
+### Fixed
+- Admin weren't visible for non admin users in group chat rooms
+- LIME update threshold wasn't set, causing a request to be made after each REGISTER
+
+### Changed
+- Now SDK automatically handles TextureView's listener, removed it from app
+- Bumped license year to 2023
+- Force remove LIME X3DH server URL for third party accounts
+
 ## [5.0.8] - 2023-03-20
 
 ### Fixed
