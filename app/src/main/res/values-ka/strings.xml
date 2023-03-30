@@ -759,7 +759,7 @@
     <string name="content_description_recording_export">ჩანაწერის ექსპორტირება</string>
     <string name="conference_cancel_title">შეხვედრა გაუქმდა:</string>
     <string name="conference_scheduled_delete_many_dialog">გსურთ ამ შეხვედრების წაშლა\?</string>
-    <string name="conference_schedule_send_updated_invite_chat">&amp;appName;-ს მეშვეობით განახლების გაგზავნა</string>
+    <string name="conference_schedule_send_updated_invite_chat">&appName;-ს მეშვეობით განახლების გაგზავნა</string>
     <string name="conference_schedule_send_updated_invite_email">განახლების გაგზავნა ელ. ფოსტის მეშვეობით</string>
     <string name="conference_schedule_edit">შეხვედრის რედაქტირება</string>
     <string name="conference_update_title">შეხვედრა განახლდა:</string>
