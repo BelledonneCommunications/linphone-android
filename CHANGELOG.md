@@ -14,6 +14,7 @@ Group changes to describe their impact on the project, as follows:
 
 ### Fixed
 - Admin weren't visible for non admin users in group chat rooms
+- Crash when clicking on URI in chat if not matching app is found on Android to handle it
 - LIME update threshold wasn't set, causing a request to be made after each REGISTER
 
 ### Changed
