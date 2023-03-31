@@ -521,6 +521,9 @@ class CorePreferences constructor(private val context: Context) {
     val autoRemoteProvisioningOnConfigUriHandler: Boolean
         get() = config.getBool("app", "auto_apply_provisioning_config_uri_handler", false)
 
+    val askForAccountPasswordToAccessSettings: Boolean
+        get() = config.getBool("app", "require_password_to_access_settings", false)
+
     /* Default values related */
 
     val echoCancellerCalibration: Int

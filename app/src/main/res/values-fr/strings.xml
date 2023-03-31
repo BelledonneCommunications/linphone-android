@@ -774,4 +774,9 @@
     <string name="chat_room_last_message_sender_format">%s :</string>
     <string name="dialog_apply_remote_provisioning_title">Voulez-vous télécharger et appliquer la configuration depuis cette adresse ?</string>
     <string name="dialog_apply_remote_provisioning_button">Appliquer</string>
+    <string name="error_unexpected">Erreur inattendue…</string>
+    <string name="settings_password_protection_dialog_title">Merci de saisir votre mot de passe ci-dessous pour accéder aux paramètres</string>
+    <string name="settings_password_protection_dialog_input_hint">Mot de passe</string>
+    <string name="settings_password_protection_dialog_ok_label">Valider</string>
+    <string name="settings_password_protection_dialog_invalid_input">Le mot de passe est invalide !</string>
 </resources>
