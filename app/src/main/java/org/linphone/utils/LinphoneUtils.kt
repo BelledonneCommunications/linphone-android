@@ -224,11 +224,6 @@ class LinphoneUtils {
                 )
         }
 
-        fun areChatRoomsTheSame(chatRoom1: ChatRoom, chatRoom2: ChatRoom): Boolean {
-            return chatRoom1.localAddress.weakEqual(chatRoom2.localAddress) &&
-                chatRoom1.peerAddress.weakEqual(chatRoom2.peerAddress)
-        }
-
         fun getChatRoomId(room: ChatRoom): String {
             return getChatRoomId(room.localAddress, room.peerAddress)
         }

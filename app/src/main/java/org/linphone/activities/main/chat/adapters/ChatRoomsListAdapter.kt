@@ -33,12 +33,11 @@ import org.linphone.activities.main.viewmodels.ListTopBarViewModel
 import org.linphone.core.ChatRoom
 import org.linphone.databinding.ChatRoomListCellBinding
 import org.linphone.utils.Event
-import org.linphone.utils.LinphoneUtils
 
 class ChatRoomsListAdapter(
     selectionVM: ListTopBarViewModel,
     private val viewLifecycleOwner: LifecycleOwner
-) : SelectionListAdapter<ChatRoom, RecyclerView.ViewHolder>(selectionVM, ChatRoomDiffCallback()) {
+) : SelectionListAdapter<ChatRoomData, RecyclerView.ViewHolder>(selectionVM, ChatRoomDiffCallback()) {
     val selectedChatRoomEvent: MutableLiveData<Event<ChatRoom>> by lazy {
         MutableLiveData<Event<ChatRoom>>()
     }
@@ -57,11 +56,6 @@ class ChatRoomsListAdapter(
         (holder as ViewHolder).bind(getItem(position))
     }
 
-    override fun getItemId(position: Int): Long {
-        val room = getItem(position)
-        return LinphoneUtils.getChatRoomId(room).hashCode().toLong()
-    }
-
     fun forwardPending(pending: Boolean) {
         isForwardPending = pending
         notifyItemRangeChanged(0, itemCount)
@@ -70,9 +64,10 @@ class ChatRoomsListAdapter(
     inner class ViewHolder(
         private val binding: ChatRoomListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(chatRoom: ChatRoom) {
+        fun bind(chatRoomData: ChatRoomData) {
             with(binding) {
-                data = ChatRoomData(chatRoom)
+                chatRoomData.update()
+                data = chatRoomData
 
                 lifecycleOwner = viewLifecycleOwner
 
@@ -90,7 +85,7 @@ class ChatRoomsListAdapter(
                     if (selectionViewModel.isEditionEnabled.value == true) {
                         selectionViewModel.onToggleSelect(bindingAdapterPosition)
                     } else {
-                        selectedChatRoomEvent.value = Event(chatRoom)
+                        selectedChatRoomEvent.value = Event(chatRoomData.chatRoom)
                     }
                 }
 
@@ -109,17 +104,17 @@ class ChatRoomsListAdapter(
     }
 }
 
-private class ChatRoomDiffCallback : DiffUtil.ItemCallback<ChatRoom>() {
+private class ChatRoomDiffCallback : DiffUtil.ItemCallback<ChatRoomData>() {
     override fun areItemsTheSame(
-        oldItem: ChatRoom,
-        newItem: ChatRoom
+        oldItem: ChatRoomData,
+        newItem: ChatRoomData
     ): Boolean {
-        return oldItem == newItem
+        return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(
-        oldItem: ChatRoom,
-        newItem: ChatRoom
+        oldItem: ChatRoomData,
+        newItem: ChatRoomData
     ): Boolean {
         return false // To force redraw
     }

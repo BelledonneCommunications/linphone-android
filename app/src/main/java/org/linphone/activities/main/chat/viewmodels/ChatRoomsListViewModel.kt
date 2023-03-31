@@ -22,16 +22,16 @@ package org.linphone.activities.main.chat.viewmodels
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.activities.main.chat.data.ChatRoomData
 import org.linphone.activities.main.viewmodels.MessageNotifierViewModel
 import org.linphone.compatibility.Compatibility
-import org.linphone.contact.ContactsUpdatedListenerStub
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
 class ChatRoomsListViewModel : MessageNotifierViewModel() {
-    val chatRooms = MutableLiveData<ArrayList<ChatRoom>>()
+    val chatRooms = MutableLiveData<ArrayList<ChatRoomData>>()
 
     val fileSharingPending = MutableLiveData<Boolean>()
 
@@ -45,10 +45,31 @@ class ChatRoomsListViewModel : MessageNotifierViewModel() {
         MutableLiveData<Event<Int>>()
     }
 
+    private val chatRoomListener = object : ChatRoomListenerStub() {
+        override fun onStateChanged(chatRoom: ChatRoom, newState: ChatRoom.State) {
+            if (newState == ChatRoom.State.Deleted) {
+                Log.i("[Chat Rooms] Chat room [${LinphoneUtils.getChatRoomId(chatRoom)}] is in Deleted state, removing it from list")
+                val list = arrayListOf<ChatRoomData>()
+                val id = LinphoneUtils.getChatRoomId(chatRoom)
+                for (data in chatRooms.value.orEmpty()) {
+                    if (data.id != id) {
+                        list.add(data)
+                    }
+                }
+                chatRooms.value = list
+            }
+        }
+    }
+
     private val listener: CoreListenerStub = object : CoreListenerStub() {
         override fun onChatRoomStateChanged(core: Core, chatRoom: ChatRoom, state: ChatRoom.State) {
             if (state == ChatRoom.State.Created) {
-                updateChatRooms()
+                Log.i("[Chat Rooms] Chat room [${LinphoneUtils.getChatRoomId(chatRoom)}] is in Created state, adding it to list")
+                val data = ChatRoomData(chatRoom)
+                val list = arrayListOf<ChatRoomData>()
+                list.add(data)
+                list.addAll(chatRooms.value.orEmpty())
+                chatRooms.value = list
             } else if (state == ChatRoom.State.TerminationFailed) {
                 Log.e("[Chat Rooms] Group chat room removal for address ${chatRoom.peerAddress.asStringUriOnly()} has failed !")
                 onMessageToNotifyEvent.value = Event(R.string.chat_room_removal_failed_snack)
@@ -80,31 +101,15 @@ class ChatRoomsListViewModel : MessageNotifierViewModel() {
         }
     }
 
-    private val chatRoomListener = object : ChatRoomListenerStub() {
-        override fun onStateChanged(chatRoom: ChatRoom, newState: ChatRoom.State) {
-            if (newState == ChatRoom.State.Deleted) {
-                updateChatRooms()
-            }
-        }
-    }
-
-    private val contactsListener = object : ContactsUpdatedListenerStub() {
-        override fun onContactsUpdated() {
-            updateChatRooms()
-        }
-    }
-
     private var chatRoomsToDeleteCount = 0
 
     init {
         groupChatAvailable.value = LinphoneUtils.isGroupChatAvailable()
         updateChatRooms()
         coreContext.core.addListener(listener)
-        coreContext.contactsManager.addListener(contactsListener)
     }
 
     override fun onCleared() {
-        coreContext.contactsManager.removeListener(contactsListener)
         coreContext.core.removeListener(listener)
 
         super.onCleared()
@@ -139,8 +144,12 @@ class ChatRoomsListViewModel : MessageNotifierViewModel() {
     }
 
     fun updateChatRooms() {
-        val list = arrayListOf<ChatRoom>()
-        list.addAll(coreContext.core.chatRooms)
+        chatRooms.value.orEmpty().forEach(ChatRoomData::destroy)
+
+        val list = arrayListOf<ChatRoomData>()
+        for (chatRoom in coreContext.core.chatRooms) {
+            list.add(ChatRoomData(chatRoom))
+        }
         chatRooms.value = list
     }
 
@@ -151,15 +160,16 @@ class ChatRoomsListViewModel : MessageNotifierViewModel() {
     }
 
     private fun reorderChatRooms() {
-        val list = arrayListOf<ChatRoom>()
+        val list = arrayListOf<ChatRoomData>()
         list.addAll(chatRooms.value.orEmpty())
-        list.sortByDescending { chatRoom -> chatRoom.lastUpdateTime }
+        list.sortByDescending { data -> data.chatRoom.lastUpdateTime }
         chatRooms.value = list
     }
 
     private fun findChatRoomIndex(chatRoom: ChatRoom): Int {
-        for ((index, cr) in chatRooms.value.orEmpty().withIndex()) {
-            if (LinphoneUtils.areChatRoomsTheSame(cr, chatRoom)) {
+        val id = LinphoneUtils.getChatRoomId(chatRoom)
+        for ((index, data) in chatRooms.value.orEmpty().withIndex()) {
+            if (id == data.id) {
                 return index
             }
         }

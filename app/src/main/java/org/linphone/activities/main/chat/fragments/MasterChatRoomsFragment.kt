@@ -156,7 +156,6 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
         _adapter = ChatRoomsListAdapter(listSelectionViewModel, viewLifecycleOwner)
         // SubmitList is done on a background thread
         // We need this adapter data observer to know when to scroll
-        adapter.setHasStableIds(true)
         adapter.registerAdapterDataObserver(observer)
 
         binding.chatList.setHasFixedSize(true)
@@ -185,9 +184,8 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
                 if (index < 0 || index >= adapter.currentList.size) {
                     Log.e("[Chat] Index is out of bound, can't mark chat room as read")
                 } else {
-                    val chatRoom = adapter.currentList[viewHolder.bindingAdapterPosition]
-                    chatRoom.markAsRead()
-                    adapter.notifyItemChanged(viewHolder.bindingAdapterPosition)
+                    val data = adapter.currentList[viewHolder.bindingAdapterPosition]
+                    data.markAsRead()
                 }
             }
 
@@ -209,7 +207,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
                     viewModel.showDeleteButton(
                         {
                             val deletedChatRoom =
-                                adapter.currentList[index]
+                                adapter.currentList[index].chatRoom
                             listViewModel.deleteChatRoom(deletedChatRoom)
                             if (!binding.slidingPane.isSlideable &&
                                 deletedChatRoom == sharedViewModel.selectedChatRoom.value
@@ -382,7 +380,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
         val list = ArrayList<ChatRoom>()
         var closeSlidingPane = false
         for (index in indexesOfItemToDelete) {
-            val chatRoom = adapter.currentList[index]
+            val chatRoom = adapter.currentList[index].chatRoom
             list.add(chatRoom)
 
             if (chatRoom == sharedViewModel.selectedChatRoom.value) {
