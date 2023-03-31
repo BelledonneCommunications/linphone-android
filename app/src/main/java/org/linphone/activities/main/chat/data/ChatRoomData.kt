@@ -31,13 +31,14 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.contact.ContactDataInterface
+import org.linphone.contact.ContactsUpdatedListenerStub
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.TimestampUtils
 
-class ChatRoomData(private val chatRoom: ChatRoom) : ContactDataInterface {
+class ChatRoomData(val chatRoom: ChatRoom) : ContactDataInterface {
     override val contact: MutableLiveData<Friend> = MutableLiveData<Friend>()
     override val displayName: MutableLiveData<String> = MutableLiveData<String>()
     override val securityLevel: MutableLiveData<ChatRoomSecurityLevel> = MutableLiveData<ChatRoomSecurityLevel>()
@@ -45,6 +46,8 @@ class ChatRoomData(private val chatRoom: ChatRoom) : ContactDataInterface {
         get() = conferenceChatRoom && !oneToOneChatRoom
     override val presenceStatus: MutableLiveData<ConsolidatedPresence> = MutableLiveData<ConsolidatedPresence>()
     override val coroutineScope: CoroutineScope = coreContext.coroutineScope
+
+    val id = LinphoneUtils.getChatRoomId(chatRoom)
 
     val unreadMessagesCount = MutableLiveData<Int>()
 
@@ -82,7 +85,26 @@ class ChatRoomData(private val chatRoom: ChatRoom) : ContactDataInterface {
         chatRoom.hasCapability(ChatRoomCapabilities.Encrypted.toInt())
     }
 
+    private val contactsListener = object : ContactsUpdatedListenerStub() {
+        override fun onContactsUpdated() {
+            if (oneToOneChatRoom && contact.value == null) {
+                searchMatchingContact()
+                if (contact.value != null) {
+                    formatLastMessage(chatRoom.lastMessageInHistory)
+                }
+            }
+        }
+    }
+
     init {
+        coreContext.contactsManager.addListener(contactsListener)
+    }
+
+    fun destroy() {
+        coreContext.contactsManager.removeListener(contactsListener)
+    }
+
+    fun update() {
         unreadMessagesCount.value = chatRoom.unreadMessagesCount
         presenceStatus.value = ConsolidatedPresence.Offline
 
@@ -94,6 +116,11 @@ class ChatRoomData(private val chatRoom: ChatRoom) : ContactDataInterface {
         formatLastMessage(chatRoom.lastMessageInHistory)
 
         notificationsMuted.value = areNotificationsMuted()
+    }
+
+    fun markAsRead() {
+        chatRoom.markAsRead()
+        unreadMessagesCount.value = 0
     }
 
     private fun updateSecurityIcon() {
@@ -133,8 +160,9 @@ class ChatRoomData(private val chatRoom: ChatRoom) : ContactDataInterface {
         val remoteAddress = if (basicChatRoom) {
             chatRoom.peerAddress
         } else {
-            if (chatRoom.participants.isNotEmpty()) {
-                chatRoom.participants[0].address
+            val participants = chatRoom.participants
+            if (participants.isNotEmpty()) {
+                participants.first().address
             } else {
                 Log.e("[Chat Room] ${chatRoom.peerAddress} doesn't have any participant (state ${chatRoom.state})!")
                 null
