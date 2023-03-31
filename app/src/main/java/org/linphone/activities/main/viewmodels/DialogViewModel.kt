@@ -46,6 +46,14 @@ class DialogViewModel(val message: String, val title: String = "") : ViewModel()
 
     val dismissEvent = MutableLiveData<Event<Boolean>>()
 
+    var password: String = ""
+
+    var passwordTitle: String = ""
+
+    var passwordSubtitle: String = ""
+
+    var showPassword: Boolean = false
+
     init {
         doNotAskAgain.value = false
         showTitle = title.isNotEmpty()

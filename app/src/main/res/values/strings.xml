@@ -51,6 +51,7 @@
     <string name="share_uploaded_logs_link">Share logs link using…</string>
 
     <!-- Errors -->
+    <string name="error_unexpected">Unexpected error…</string>
 
     <!-- Date & Time -->
     <string name="today">Today</string>
@@ -475,6 +476,10 @@
     <string name="settings_primary_account_title">Primary Account</string>
     <string name="settings_primary_account_display_name_title">Display Name</string>
     <string name="settings_primary_account_username_title">Username</string>
+    <string name="settings_password_protection_dialog_title">Please input your password below to access the settings</string>
+    <string name="settings_password_protection_dialog_input_hint">Password</string>
+    <string name="settings_password_protection_dialog_ok_label">Validate</string>
+    <string name="settings_password_protection_dialog_invalid_input">Invalid password!</string>
 
     <!-- Audio settings -->
     <string name="audio_settings_echo_cancellation_title">Echo cancellation</string>

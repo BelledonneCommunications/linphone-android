@@ -24,9 +24,12 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.telephony.TelephonyManager.*
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import okhttp3.internal.and
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -256,6 +259,28 @@ class LinphoneUtils {
             }
 
             return true // Legacy behavior
+        }
+
+        fun hashPassword(
+            userId: String,
+            password: String,
+            realm: String,
+            algorithm: String = "MD5"
+        ): String? {
+            val input = "$userId:$realm:$password"
+            try {
+                val digestEngine = MessageDigest.getInstance(algorithm)
+                val digest = digestEngine.digest(input.toByteArray())
+                val hexString = StringBuffer()
+                for (i in digest.indices) {
+                    hexString.append(Integer.toHexString(digest[i].and(0xFF)))
+                }
+                return hexString.toString()
+            } catch (nsae: NoSuchAlgorithmException) {
+                Log.e("[Side Menu] Can't compute hash using [$algorithm] algorithm!")
+            }
+
+            return null
         }
     }
 }
