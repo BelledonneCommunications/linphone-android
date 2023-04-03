@@ -79,7 +79,12 @@ class AppUtils {
                 if (split[i].isNotEmpty()) {
                     try {
                         if (emoji?.hasEmojiGlyph(split[i]) == true) {
-                            initials += emoji.process(split[i])
+                            val glyph = emoji.process(split[i])
+                            if (characters > 0) { // Limit initial to 1 emoji only
+                                initials = ""
+                            }
+                            initials += glyph
+                            break // Limit initial to 1 emoji only
                         } else {
                             initials += split[i][0]
                         }
