@@ -24,6 +24,9 @@ Group changes to describe their impact on the project, as follows:
 - Replaced voice recordings file name by localized placeholder text, like for video conferences invitations
 - Removed jetifier as it is not needed
 
+### Fixed
+- Plain copy of encrypted files (when VFS is enabled) not cleaned
+
 ## [5.0.8] - 2023-03-20
 
 ### Fixed
