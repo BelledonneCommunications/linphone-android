@@ -209,7 +209,7 @@ class ChatMessageContentData(
     private fun deletePlainFilePath() {
         val path = filePath.value.orEmpty()
         if (path.isNotEmpty() && isFileEncrypted) {
-            Log.i("[Content] Deleting file used for preview: $path")
+            Log.i("[Content] [VFS] Deleting file used for preview: $path")
             FileUtils.deleteFile(path)
             filePath.value = ""
         }
@@ -247,7 +247,7 @@ class ChatMessageContentData(
 
         if (content.isFile || (content.isFileTransfer && chatMessage.isOutgoing)) {
             val path = if (isFileEncrypted) {
-                Log.i("[Content] Content is encrypted, requesting plain file path")
+                Log.i("[Content] [VFS] Content is encrypted, requesting plain file path for file [${content.filePath}]")
                 content.exportPlainFile()
             } else {
                 content.filePath ?: ""

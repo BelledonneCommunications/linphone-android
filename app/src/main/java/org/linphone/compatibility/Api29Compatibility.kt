@@ -125,7 +125,7 @@ class Api29Compatibility {
             val isContentEncrypted = content.isFileEncrypted
             val filePath = if (content.isFileEncrypted) {
                 val plainFilePath = content.exportPlainFile().orEmpty()
-                Log.w("[Media Store] Content is encrypted, plain file path is: $plainFilePath")
+                Log.i("[Media Store] [VFS] Content is encrypted, plain file path is: $plainFilePath")
                 plainFilePath
             } else content.filePath
 

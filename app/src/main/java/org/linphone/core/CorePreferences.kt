@@ -661,6 +661,9 @@ class CorePreferences constructor(private val context: Context) {
     val staticPicturePath: String
         get() = context.filesDir.absolutePath + "/share/images/nowebcamcif.jpg"
 
+    val vfsCachePath: String
+        get() = context.cacheDir.absolutePath + "/evfs/"
+
     fun copyAssetsFromPackage() {
         copy("linphonerc_default", configPath)
         copy("linphonerc_factory", factoryConfigPath, true)
