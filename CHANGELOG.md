@@ -27,6 +27,18 @@ Group changes to describe their impact on the project, as follows:
 ### Fixed
 - Plain copy of encrypted files (when VFS is enabled) not cleaned
 
+## [5.0.9] - 2023-03-30
+
+### Fixed
+- Admin weren't visible for non admin users in group chat rooms
+- Crash when clicking on URI in chat if not matching app is found on Android to handle it
+- LIME update threshold wasn't set, causing a request to be made after each REGISTER
+
+### Changed
+- Now SDK automatically handles TextureView's listener, removed it from app
+- Bumped license year to 2023
+- Force remove LIME X3DH server URL for third party accounts
+
 ## [5.0.8] - 2023-03-20
 
 ### Fixed
