@@ -22,6 +22,9 @@ Group changes to describe their impact on the project, as follows:
 - Bumped license year to 2023
 - Force remove LIME X3DH server URL for third party accounts
 
+### Fixed
+- Plain copy of encrypted files (when VFS is enabled) not cleaned
+
 ## [5.0.8] - 2023-03-20
 
 ### Fixed

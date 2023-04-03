@@ -323,12 +323,12 @@ fun loadRoundImageWithCoil(imageView: ImageView, path: String?) {
 @BindingAdapter("coil")
 fun loadImageWithCoil(imageView: ImageView, path: String?) {
     if (path != null && path.isNotEmpty() && FileUtils.isExtensionImage(path)) {
-        if (corePreferences.vfsEnabled && path.endsWith(FileUtils.VFS_PLAIN_FILE_EXTENSION)) {
+        if (corePreferences.vfsEnabled && path.startsWith(corePreferences.vfsCachePath)) {
             imageView.load(path) {
                 diskCachePolicy(CachePolicy.DISABLED)
                 listener(
                     onError = { _, result ->
-                        Log.e("[Data Binding] [Coil] Error loading [$path]: ${result.throwable}")
+                        Log.e("[Data Binding] [VFS] [Coil] Error loading [$path]: ${result.throwable}")
                     }
                 )
             }

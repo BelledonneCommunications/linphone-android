@@ -33,7 +33,7 @@ open class FileViewerViewModel(val content: Content) : ViewModel() {
 
     init {
         filePath = if (deleteAfterUse) {
-            Log.i("[File Viewer] Content is encrypted, requesting plain file path")
+            Log.i("[File Viewer] [VFS] Content is encrypted, requesting plain file path for file [${content.filePath}]")
             content.exportPlainFile()
         } else {
             content.filePath.orEmpty()
@@ -42,7 +42,7 @@ open class FileViewerViewModel(val content: Content) : ViewModel() {
 
     override fun onCleared() {
         if (deleteAfterUse) {
-            Log.i("[File Viewer] Deleting temporary plain file: $filePath")
+            Log.i("[File Viewer] [VFS] Deleting temporary plain file [$filePath]")
             FileUtils.deleteFile(filePath)
         }
 

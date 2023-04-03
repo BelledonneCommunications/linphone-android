@@ -342,6 +342,10 @@ class CoreContext(
         collator.strength = Collator.NO_DECOMPOSITION
 
         if (corePreferences.vfsEnabled) {
+            val notClearedCount = FileUtils.countFilesInDirectory(corePreferences.vfsCachePath)
+            if (notClearedCount != 0) {
+                Log.w("[Context] [VFS] There are [$notClearedCount] plain files not cleared from previous app lifetime, removing them now")
+            }
             FileUtils.clearExistingPlainFiles()
         }
 
