@@ -82,16 +82,28 @@ class SingleCallFragment : GenericVideoPreviewFragment<VoipSingleCallFragmentBin
         ) { callData ->
             if (callData != null) {
                 val call = callData.call
+                when (val callState = call.state) {
+                    Call.State.IncomingReceived, Call.State.IncomingEarlyMedia -> {
+                        Log.i("[Single Call] New current call is in [$callState] state, switching to IncomingCall fragment")
+                        navigateToIncomingCall()
+                    }
+                    Call.State.OutgoingInit, Call.State.OutgoingProgress, Call.State.OutgoingRinging, Call.State.OutgoingEarlyMedia -> {
+                        Log.i("[Single Call] New current call is in [$callState] state, switching to OutgoingCall fragment")
+                        navigateToOutgoingCall()
+                    }
+                    else -> {
+                        Log.i("[Single Call] New current call is in [$callState] state, updating call UI")
+                        val timer = binding.root.findViewById<Chronometer>(R.id.active_call_timer)
+                        timer.base =
+                            SystemClock.elapsedRealtime() - (1000 * call.duration) // Linphone timestamps are in seconds
+                        timer.start()
 
-                val timer = binding.root.findViewById<Chronometer>(R.id.active_call_timer)
-                timer.base =
-                    SystemClock.elapsedRealtime() - (1000 * call.duration) // Linphone timestamps are in seconds
-                timer.start()
-
-                if (corePreferences.enableFullScreenWhenJoiningVideoCall) {
-                    if (call.currentParams.isVideoEnabled) {
-                        Log.i("[Single Call] Call params have video enabled, enabling full screen mode")
-                        controlsViewModel.fullScreenMode.value = true
+                        if (corePreferences.enableFullScreenWhenJoiningVideoCall) {
+                            if (call.currentParams.isVideoEnabled) {
+                                Log.i("[Single Call] Call params have video enabled, enabling full screen mode")
+                                controlsViewModel.fullScreenMode.value = true
+                            }
+                        }
                     }
                 }
             }
