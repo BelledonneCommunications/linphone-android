@@ -138,8 +138,9 @@ class CallsViewModel : ViewModel() {
     init {
         coreContext.core.addListener(listener)
 
-        val currentCall = coreContext.core.currentCall
+        val currentCall = coreContext.core.currentCall ?: coreContext.core.calls.firstOrNull()
         if (currentCall != null) {
+            Log.i("[Calls] Initializing ViewModel using call [${currentCall.remoteAddress.asStringUriOnly()}] as current")
             currentCallData.value?.destroy()
 
             val viewModel = CallData(currentCall)
@@ -223,14 +224,12 @@ class CallsViewModel : ViewModel() {
         Log.i("[Calls] Removing call with ID ${call.callLog.callId} from calls list")
 
         val calls = arrayListOf<CallData>()
-        calls.addAll(callsData.value.orEmpty())
-
-        val data = calls.find { it.call == call }
-        if (data == null) {
-            Log.w("[Calls] Data for call to remove wasn't found")
-        } else {
-            data.destroy()
-            calls.remove(data)
+        for (data in callsData.value.orEmpty()) {
+            if (data.call == call) {
+                data.destroy()
+            } else {
+                calls.add(data)
+            }
         }
 
         callsData.value = calls
@@ -239,8 +238,6 @@ class CallsViewModel : ViewModel() {
     private fun updateCurrentCallData(currentCall: Call?) {
         var callToUse = currentCall
         if (currentCall == null) {
-            Log.i("[Calls] Current call is now null")
-
             if (coreContext.core.callsNb == 1) {
                 // Make sure the current call data is matching the only call
                 val firstData = callsData.value?.firstOrNull()

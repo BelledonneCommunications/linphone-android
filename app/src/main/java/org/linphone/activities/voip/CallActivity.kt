@@ -134,11 +134,12 @@ class CallActivity : ProximitySensorActivity() {
         callsViewModel.currentCallData.observe(
             this
         ) { callData ->
-            if (callData.call.conference == null) {
-                Log.i("[Call Activity] Current call isn't linked to a conference, changing fragment")
+            val call = callData.call
+            if (call.conference == null) {
+                Log.i("[Call Activity] Current call isn't linked to a conference, switching to SingleCall fragment")
                 navigateToActiveCall()
             } else {
-                Log.i("[Call Activity] Current call is linked to a conference, changing fragment")
+                Log.i("[Call Activity] Current call is linked to a conference, switching to ConferenceCall fragment")
                 navigateToConferenceCall()
             }
         }
@@ -156,10 +157,10 @@ class CallActivity : ProximitySensorActivity() {
             this
         ) { exists ->
             if (exists) {
-                Log.i("[Call Activity] Found active conference, changing fragment")
+                Log.i("[Call Activity] Found active conference, changing  switching to ConferenceCall fragment")
                 navigateToConferenceCall()
             } else if (coreContext.core.callsNb > 0) {
-                Log.i("[Call Activity] Conference no longer exists, changing fragment")
+                Log.i("[Call Activity] Conference no longer exists, switching to SingleCall fragment")
                 navigateToActiveCall()
             }
         }
