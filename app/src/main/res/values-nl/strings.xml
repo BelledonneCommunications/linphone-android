@@ -123,4 +123,5 @@
     <string name="content_description_incoming_call">Inkomende oproep</string>
     <string name="content_description_outgoing_call">Uitgaande oproep</string>
     <string name="content_description_security_level_encrypted">Versleuteld</string>
+    <string name="about_weblate_translation">Help ons &appName; vertalen</string>
 </resources>
