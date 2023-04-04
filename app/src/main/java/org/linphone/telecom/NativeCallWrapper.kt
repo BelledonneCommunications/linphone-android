@@ -63,13 +63,23 @@ class NativeCallWrapper(var callId: String) : Connection() {
 
     override fun onHold() {
         Log.i("[Connection] Pausing telecom call with id: $callId")
-        getCall()?.pause() ?: selfDestroy()
+        getCall()?.let { call ->
+            if (call.conference != null)
+                call.conference?.leave()
+            else
+                call.pause()
+        } ?: selfDestroy()
         setOnHold()
     }
 
     override fun onUnhold() {
         Log.i("[Connection] Resuming telecom call with id: $callId")
-        getCall()?.resume() ?: selfDestroy()
+        getCall()?.let { call ->
+            if (call.conference != null)
+                call.conference?.enter()
+            else
+                call.resume()
+        } ?: selfDestroy()
         setActive()
     }
 
