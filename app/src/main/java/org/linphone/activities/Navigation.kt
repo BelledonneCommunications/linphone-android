@@ -957,6 +957,26 @@ internal fun SingleCallFragment.navigateToConferenceLayout() {
     }
 }
 
+internal fun SingleCallFragment.navigateToIncomingCall() {
+    if (findNavController().currentDestination?.id == R.id.singleCallFragment) {
+        findNavController().navigate(
+            R.id.action_global_incomingCallFragment,
+            null,
+            popupTo(R.id.singleCallFragment, true)
+        )
+    }
+}
+
+internal fun SingleCallFragment.navigateToOutgoingCall() {
+    if (findNavController().currentDestination?.id == R.id.singleCallFragment) {
+        findNavController().navigate(
+            R.id.action_global_outgoingCallFragment,
+            null,
+            popupTo(R.id.singleCallFragment, true)
+        )
+    }
+}
+
 internal fun ConferenceCallFragment.navigateToCallsList() {
     if (findNavController().currentDestination?.id == R.id.conferenceCallFragment) {
         findNavController().navigate(

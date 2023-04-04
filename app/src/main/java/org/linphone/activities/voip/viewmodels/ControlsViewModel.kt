@@ -243,7 +243,10 @@ class ControlsViewModel : ViewModel() {
     }
 
     fun answer() {
-        val currentCall = coreContext.core.currentCall
+        val currentCall = coreContext.core.currentCall ?: coreContext.core.calls.find {
+            call ->
+            call.state == Call.State.IncomingReceived || call.state == Call.State.IncomingEarlyMedia
+        }
         if (currentCall != null) {
             coreContext.answerCall(currentCall)
         } else {
