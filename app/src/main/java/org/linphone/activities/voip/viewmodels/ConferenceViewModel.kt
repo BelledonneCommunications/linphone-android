@@ -239,6 +239,13 @@ class ConferenceViewModel : ViewModel() {
                 waitForNextStreamsRunningToUpdateLayout = false
                 reloadConferenceFragmentEvent.value = Event(true)
             }
+            if (state == Call.State.StreamsRunning && call.conference?.isIn == true) {
+                isConferenceLocallyPaused.value = false
+                conferenceParticipantDevices.value?.forEach {
+                    if (it.isMe)
+                        it.isInConference.value = true
+                }
+            }
         }
     }
 
