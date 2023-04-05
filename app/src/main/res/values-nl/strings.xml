@@ -124,4 +124,22 @@
     <string name="content_description_outgoing_call">Uitgaande oproep</string>
     <string name="content_description_security_level_encrypted">Versleuteld</string>
     <string name="about_weblate_translation">Help ons &appName; vertalen</string>
+    <string name="logs_upload_failure">Versturen van logs mislukt!</string>
+    <string name="logs_reset_complete">Logs zijn geleegd</string>
+    <string name="email">E-mail</string>
+    <string name="sip_addresses">SIP addressen</string>
+    <string name="transport_udp">UDP</string>
+    <string name="transport_tcp">TCP</string>
+    <string name="no_conference_call_history">Geen conferentie in de geschiedenis</string>
+    <string name="dialer_transfer_succeded">Oproep wordt doorgeschakeld</string>
+    <string name="dialer_transfer_failed">Kan oproep niet doorschakelen</string>
+    <string name="chat_security_event_lime_identity_key_changed">LIME identiteitssleutel gewijzigd voor %s</string>
+    <string name="chat_security_event_man_in_the_middle_detected">Man-in-the-middle aanval gedetecteerd voor %s</string>
+    <string name="chat_security_event_security_level_downgraded">Beveiligingsniveau verminderd door %s</string>
+    <string name="chat_event_ephemeral_disabled">Je hebt vluchtige berichten uitgeschakeld</string>
+    <string name="transport_tls">TLS</string>
+    <string name="contact_send_sms_invite_text">Hallo, \u0020doe mee met &appName;! Je kan het gratis downloaden van %s</string>
+    <string name="contact_cant_be_deleted">Deze contact kan niet verwijderd worden</string>
+    <string name="contacts_ldap_query_more_results_available">Meer resultaten zijn beschikbaar, verfijn jouw zoekopdracht</string>
+    <string name="chat_event_ephemeral_enabled">Je hebt vluchtige berichten ingeschakeld: %s</string>
 </resources>
