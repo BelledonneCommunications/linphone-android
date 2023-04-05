@@ -786,4 +786,9 @@
     <string name="dialog_apply_remote_provisioning_button">套用</string>
     <string name="dialog_apply_remote_provisioning_title">您確認要從這個網址下載套用設定資訊嗎？</string>
     <string name="chat_room_last_message_sender_format">%s：</string>
+    <string name="settings_password_protection_dialog_input_hint">密碼</string>
+    <string name="settings_password_protection_dialog_ok_label">驗證</string>
+    <string name="settings_password_protection_dialog_invalid_input">密碼不正確！</string>
+    <string name="error_unexpected">發生未預期的錯誤…</string>
+    <string name="settings_password_protection_dialog_title">請在下方輸入密碼，來存取設定內容</string>
 </resources>
