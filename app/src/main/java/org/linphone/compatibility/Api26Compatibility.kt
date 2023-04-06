@@ -346,7 +346,7 @@ class Api26Compatibility {
         }
 
         fun getImeFlagsForSecureChatRoom(): Int {
-            return EditorInfo.IME_FLAG_NO_EXTRACT_UI or EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING
+            return EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING
         }
 
         fun startForegroundService(context: Context, intent: Intent) {

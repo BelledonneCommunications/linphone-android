@@ -138,7 +138,7 @@ class Api23Compatibility {
         }
 
         fun getImeFlagsForSecureChatRoom(): Int {
-            return EditorInfo.IME_FLAG_NO_EXTRACT_UI
+            return EditorInfo.IME_NULL
         }
 
         suspend fun addImageToMediaStore(context: Context, content: Content): Boolean {
