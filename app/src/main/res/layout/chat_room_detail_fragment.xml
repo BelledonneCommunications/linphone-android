@@ -145,18 +145,6 @@
             android:layout_alignTop="@id/top_bar"
             tools:layout="@layout/list_edit_top_bar_fragment" />
 
-        <include
-            android:id="@+id/footer"
-            layout="@layout/chat_room_sending"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            app:viewModel="@{viewModel}"
-            app:chatSendingViewModel="@{chatSendingViewModel}"
-            app:attachFileClickListener="@{attachFileClickListener}"
-            app:voiceRecordingTouchListener="@{voiceRecordingTouchListener}"
-            app:cancelReplyToClickListener="@{cancelReplyToClickListener}"/>
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/chat_messages_list"
             android:layout_width="match_parent"
@@ -196,9 +184,21 @@
             android:src="@{viewModel.securityLevelIcon, default=@drawable/security_alert_indicator}"
             android:visibility="@{viewModel.encryptedChatRoom ? View.VISIBLE : View.GONE}" />
 
+        <include
+            android:id="@+id/footer"
+            layout="@layout/chat_room_sending"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            app:viewModel="@{viewModel}"
+            app:chatSendingViewModel="@{chatSendingViewModel}"
+            app:attachFileClickListener="@{attachFileClickListener}"
+            app:voiceRecordingTouchListener="@{voiceRecordingTouchListener}"
+            app:cancelReplyToClickListener="@{cancelReplyToClickListener}"/>
+
         <RelativeLayout
             android:onClick="@{scrollToBottomClickListener}"
-            android:visibility="@{viewModel.isUserScrollingUp ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{viewModel.isUserScrollingUp &amp;&amp; !chatSendingViewModel.isEmojiPickerOpen ? View.VISIBLE : View.GONE, default=gone}"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginEnd="5dp"

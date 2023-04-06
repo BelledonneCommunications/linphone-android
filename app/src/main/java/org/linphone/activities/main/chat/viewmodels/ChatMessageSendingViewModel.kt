@@ -100,7 +100,7 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         // IME_FLAG_NO_PERSONALIZED_LEARNING is only available on Android 8 and newer
         Compatibility.getImeFlagsForSecureChatRoom()
     } else {
-        EditorInfo.IME_FLAG_NO_EXTRACT_UI
+        EditorInfo.IME_NULL
     }
 
     val isEmojiPickerOpen = MutableLiveData<Boolean>()
