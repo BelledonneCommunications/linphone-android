@@ -45,15 +45,15 @@ import org.linphone.core.tools.Log
  */
 class AppUtils {
     companion object {
-        var emojiCompat: EmojiCompat? = null
+        private val emojiCompat: EmojiCompat?
             get() = initEmojiCompat()
 
         private fun initEmojiCompat(): EmojiCompat? {
             return try {
                 EmojiCompat.get()
             } catch (ise: IllegalStateException) {
-                Log.e("[App Utils] Can't get EmojiCompat: $ise")
-                null
+                Log.w("[App Utils] EmojiCompat.get() triggered IllegalStateException [$ise], trying manual init")
+                EmojiCompat.init(coreContext.context)
             }
         }
 

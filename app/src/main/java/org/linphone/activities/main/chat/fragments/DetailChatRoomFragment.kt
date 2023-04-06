@@ -330,6 +330,14 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             }
         }
 
+        chatSendingViewModel.requestKeyboardHidingEvent.observe(
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                (requireActivity() as MainActivity).hideKeyboard()
+            }
+        }
+
         listViewModel.events.observe(
             viewLifecycleOwner
         ) { events ->

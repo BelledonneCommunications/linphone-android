@@ -107,6 +107,10 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
 
     val isEmojiPickerVisible = MutableLiveData<Boolean>()
 
+    val requestKeyboardHidingEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     private lateinit var recorder: Recorder
 
     private var voiceRecordAudioFocusRequest: AudioFocusRequestCompat? = null
@@ -216,6 +220,9 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
 
     fun toggleEmojiPicker() {
         isEmojiPickerOpen.value = isEmojiPickerOpen.value == false
+        if (isEmojiPickerOpen.value == true) {
+            requestKeyboardHidingEvent.value = Event(true)
+        }
     }
 
     fun sendMessage() {
