@@ -33,6 +33,9 @@ import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.Guideline
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.doOnLayout
 import androidx.databinding.*
 import androidx.emoji2.emojipicker.EmojiPickerView
 import androidx.emoji2.emojipicker.EmojiViewItem
@@ -67,7 +70,27 @@ fun View.hideKeyboard() {
         val imm =
             context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(windowToken, 0)
-    } catch (e: Exception) {}
+    } catch (_: Exception) {}
+}
+
+fun View.addKeyboardInsetListener(lambda: (visible: Boolean) -> Unit) {
+    doOnLayout {
+        var isKeyboardVisible = ViewCompat.getRootWindowInsets(this)?.isVisible(WindowInsetsCompat.Type.ime()) == true
+
+        lambda(isKeyboardVisible)
+
+        ViewCompat.setOnApplyWindowInsetsListener(
+            this
+        ) { view, insets ->
+            val keyboardVisibilityChanged = ViewCompat.getRootWindowInsets(view)
+                ?.isVisible(WindowInsetsCompat.Type.ime()) == true
+            if (keyboardVisibilityChanged != isKeyboardVisible) {
+                isKeyboardVisible = keyboardVisibilityChanged
+                lambda(isKeyboardVisible)
+            }
+            insets
+        }
+    }
 }
 
 @BindingAdapter("android:src")

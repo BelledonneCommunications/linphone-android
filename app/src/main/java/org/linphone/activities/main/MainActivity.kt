@@ -30,8 +30,6 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.StringRes
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnAttach
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentContainerView
@@ -205,10 +203,8 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         registerComponentCallbacks(componentCallbacks)
         findNavController(R.id.nav_host_fragment).addOnDestinationChangedListener(this)
 
-        binding.rootCoordinatorLayout.viewTreeObserver.addOnGlobalLayoutListener {
+        binding.rootCoordinatorLayout.addKeyboardInsetListener { keyboardVisible ->
             val portraitOrientation = resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
-            val keyboardVisible = ViewCompat.getRootWindowInsets(binding.rootCoordinatorLayout)
-                ?.isVisible(WindowInsetsCompat.Type.ime()) == true
             Log.d("[Tabs Fragment] Keyboard is ${if (keyboardVisible) "visible" else "invisible"}")
             shouldTabsBeVisibleDueToOrientationAndKeyboard = !portraitOrientation || !keyboardVisible
             updateTabsFragmentVisibility()

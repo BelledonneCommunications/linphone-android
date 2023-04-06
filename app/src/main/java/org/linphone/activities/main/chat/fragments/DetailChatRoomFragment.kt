@@ -190,6 +190,12 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             sharedViewModel.chatRoomFragmentOpenedEvent.value = Event(true)
         }
 
+        binding.root.addKeyboardInsetListener { keyboardVisible ->
+            if (keyboardVisible && chatSendingViewModel.isEmojiPickerOpen.value == true) {
+                chatSendingViewModel.isEmojiPickerOpen.value = false
+            }
+        }
+
         Compatibility.setLocusIdInContentCaptureSession(binding.root, chatRoom)
 
         isSecure = chatRoom.currentParams.isEncryptionEnabled
