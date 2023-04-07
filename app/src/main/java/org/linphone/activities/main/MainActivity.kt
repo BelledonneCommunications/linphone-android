@@ -205,7 +205,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
         binding.rootCoordinatorLayout.addKeyboardInsetListener { keyboardVisible ->
             val portraitOrientation = resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
-            Log.d("[Tabs Fragment] Keyboard is ${if (keyboardVisible) "visible" else "invisible"}")
+            Log.i("[Main Activity] Keyboard is ${if (keyboardVisible) "visible" else "invisible"}, orientation is ${if (portraitOrientation) "portrait" else "landscape"}")
             shouldTabsBeVisibleDueToOrientationAndKeyboard = !portraitOrientation || !keyboardVisible
             updateTabsFragmentVisibility()
         }

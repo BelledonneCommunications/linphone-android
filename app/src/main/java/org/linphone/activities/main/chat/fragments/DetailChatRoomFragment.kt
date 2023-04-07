@@ -192,6 +192,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
         binding.root.addKeyboardInsetListener { keyboardVisible ->
             if (keyboardVisible && chatSendingViewModel.isEmojiPickerOpen.value == true) {
+                Log.d("[Chat Room] Emoji picker is opened, closing it because keyboard is now visible")
                 chatSendingViewModel.isEmojiPickerOpen.value = false
             }
         }

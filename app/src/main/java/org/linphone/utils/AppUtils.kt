@@ -87,6 +87,7 @@ class AppUtils {
                         if (emoji?.hasEmojiGlyph(split[i]) == true) {
                             val glyph = emoji.process(split[i])
                             if (characters > 0) { // Limit initial to 1 emoji only
+                                Log.d("[App Utils] We limit initials to one emoji only")
                                 initials = ""
                             }
                             initials += glyph
@@ -113,17 +114,20 @@ class AppUtils {
             try {
                 for (split in text.split(" ")) {
                     // We only check the first and last chars of the split for commodity
-                    if (emoji.getEmojiStart(split, 0) == -1
-                        || emoji.getEmojiEnd(split,split.length - 1) == -1)
-                    {
+                    if (emoji.getEmojiStart(split, 0) == -1 ||
+                        emoji.getEmojiEnd(split, split.length - 1) == -1
+                    ) {
+                        Log.d("[App Utils] Found a non-emoji character in [$text]")
                         return false
                     }
                 }
             } catch (npe: NullPointerException) {
+                Log.e("[App Utils] Can't check emoji presence in text due to NPE in EmojiCompat library, assuming there is none")
                 // This can happen in EmojiCompat library, mProcessor can be null (https://issuetracker.google.com/issues/277182750)
                 return false
             }
 
+            Log.d("[App Utils] It seems text [$text] only contains emoji(s)")
             return true
         }
 
