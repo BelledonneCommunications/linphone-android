@@ -132,6 +132,7 @@
             android:paddingTop="@dimen/chat_message_sending_icons_margin"
             android:paddingBottom="@dimen/chat_message_sending_icons_margin"
             android:src="@drawable/chat_file"
+            app:layout_constraintHeight_max="@dimen/chat_message_sending_icons_size"
             app:layout_constraintBottom_toBottomOf="@id/message"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/message" />
@@ -149,6 +150,7 @@
             android:paddingBottom="@dimen/chat_message_sending_icons_margin"
             android:selected="@{chatSendingViewModel.isVoiceRecording}"
             android:src="@drawable/record_audio_message"
+            app:layout_constraintHeight_max="@dimen/chat_message_sending_icons_size"
             app:layout_constraintBottom_toBottomOf="@id/message"
             app:layout_constraintStart_toEndOf="@id/attach_file"
             app:layout_constraintTop_toTopOf="@id/message" />
@@ -183,19 +185,29 @@
             app:barrierDirection="left"
             app:constraint_referenced_ids="send_message, emoji_picker_toggle"/>
 
+        <View
+            android:id="@+id/emoji_picker_bg"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/header_background_color"
+            app:layout_constraintBottom_toBottomOf="@id/message"
+            app:layout_constraintStart_toStartOf="@id/emoji_picker_toggle"
+            app:layout_constraintEnd_toEndOf="@id/emoji_picker_toggle"
+            app:layout_constraintTop_toTopOf="@id/message" />
+
         <ImageView
             android:id="@+id/emoji_picker_toggle"
             android:layout_width="@dimen/chat_message_sending_icons_size"
             android:layout_height="0dp"
             android:layout_marginStart="@dimen/chat_message_sending_icons_margin"
+            android:layout_marginEnd="@dimen/chat_message_sending_icons_margin"
             android:onClick="@{() -> chatSendingViewModel.toggleEmojiPicker()}"
             android:paddingTop="@dimen/chat_message_sending_icons_margin"
             android:paddingBottom="@dimen/chat_message_sending_icons_margin"
-            android:layout_marginEnd="@dimen/chat_message_sending_icons_margin"
             android:src="@drawable/emoji"
-            android:background="@color/header_background_color"
             android:selected="@{chatSendingViewModel.isEmojiPickerOpen}"
             android:visibility="@{chatSendingViewModel.isEmojiPickerVisible ? View.VISIBLE : View.GONE}"
+            app:layout_constraintHeight_max="@dimen/chat_message_sending_icons_size"
             app:layout_constraintBottom_toBottomOf="@id/message"
             app:layout_constraintEnd_toStartOf="@id/send_message"
             app:layout_constraintTop_toTopOf="@id/message" />
@@ -212,6 +224,7 @@
             android:paddingTop="@dimen/chat_message_sending_icons_margin"
             android:paddingBottom="@dimen/chat_message_sending_icons_margin"
             android:src="@drawable/chat_send_message"
+            app:layout_constraintHeight_max="@dimen/chat_message_sending_icons_size"
             app:layout_constraintBottom_toBottomOf="@id/message"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/message" />
