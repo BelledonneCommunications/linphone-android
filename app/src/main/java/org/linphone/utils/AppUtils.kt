@@ -110,12 +110,20 @@ class AppUtils {
             val emoji = emojiCompat
             emoji ?: return false
 
-            for (split in text.split(" ")) {
-                // We only check the first and last chars of the split for commodity
-                if (emoji.getEmojiStart(split, 0) == -1 || emoji.getEmojiEnd(split, split.length - 1) == -1) {
-                    return false
+            try {
+                for (split in text.split(" ")) {
+                    // We only check the first and last chars of the split for commodity
+                    if (emoji.getEmojiStart(split, 0) == -1
+                        || emoji.getEmojiEnd(split,split.length - 1) == -1)
+                    {
+                        return false
+                    }
                 }
+            } catch (npe: NullPointerException) {
+                // This can happen in EmojiCompat library, mProcessor can be null (https://issuetracker.google.com/issues/277182750)
+                return false
             }
+
             return true
         }
 
