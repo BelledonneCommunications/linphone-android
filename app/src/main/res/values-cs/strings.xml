@@ -787,4 +787,14 @@
     <string name="account_setting_delete_dialog_title">Chcete svůj účet smazat\?</string>
     <string name="account_setting_delete_sip_linphone_org_confirmation_dialog">Váš účet bude smazán pouze lokálně.
 \nChcete-li jej odstranit trvale, přejděte na naši platformu pro správu účtů:</string>
+    <string name="dialog_apply_remote_provisioning_button">Použít</string>
+    <string name="dialog_apply_remote_provisioning_title">Chcete stáhnout a použít konfiguraci z této adresy URL\?</string>
+    <string name="error_unexpected">Neočekávaná chyba…</string>
+    <string name="settings_password_protection_dialog_title">Pro přístup k nastavení zadejte níže své heslo</string>
+    <string name="settings_password_protection_dialog_input_hint">Heslo</string>
+    <string name="settings_password_protection_dialog_ok_label">Ověřit</string>
+    <string name="settings_password_protection_dialog_invalid_input">Nesprávné heslo!</string>
+    <string name="content_description_presence_do_not_disturb">Uživatel si nepřeje být vyrušován</string>
+    <string name="chat_room_last_message_sender_format">%s:</string>
+    <string name="chat_room_presence_do_not_disturb">Nerušit</string>
 </resources>
