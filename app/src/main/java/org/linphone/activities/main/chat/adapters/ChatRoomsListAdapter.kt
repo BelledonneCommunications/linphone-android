@@ -31,6 +31,7 @@ import org.linphone.activities.main.adapters.SelectionListAdapter
 import org.linphone.activities.main.chat.data.ChatRoomData
 import org.linphone.activities.main.viewmodels.ListTopBarViewModel
 import org.linphone.core.ChatRoom
+import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatRoomListCellBinding
 import org.linphone.utils.Event
 
@@ -68,6 +69,19 @@ class ChatRoomsListAdapter(
             with(binding) {
                 chatRoomData.update()
                 data = chatRoomData
+
+                chatRoomData.contactNewlyFoundEvent.observe(viewLifecycleOwner) {
+                    it.consume {
+                        // Post to prevent IllegalStateException: Cannot call this method while RecyclerView is computing a layout or scrolling
+                        binding.root.post {
+                            try {
+                                notifyItemChanged(bindingAdapterPosition)
+                            } catch (e: Exception) {
+                                Log.e("[Chat Rooms Adapter] Can't notify item [$bindingAdapterPosition] has changed: $e")
+                            }
+                        }
+                    }
+                }
 
                 lifecycleOwner = viewLifecycleOwner
 

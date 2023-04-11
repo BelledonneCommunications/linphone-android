@@ -35,6 +35,7 @@ import org.linphone.contact.ContactsUpdatedListenerStub
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
+import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.TimestampUtils
 
@@ -81,12 +82,16 @@ class ChatRoomData(val chatRoom: ChatRoom) : ContactDataInterface {
         chatRoom.hasCapability(ChatRoomCapabilities.Encrypted.toInt())
     }
 
+    val contactNewlyFoundEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     private val contactsListener = object : ContactsUpdatedListenerStub() {
         override fun onContactsUpdated() {
-            if (oneToOneChatRoom && contact.value == null) {
+            if (contact.value == null && oneToOneChatRoom) {
                 searchMatchingContact()
             }
-            if (!oneToOneChatRoom && contact.value != null) {
+            if (!oneToOneChatRoom) {
                 formatLastMessage(chatRoom.lastMessageInHistory)
             }
         }
@@ -161,10 +166,16 @@ class ChatRoomData(val chatRoom: ChatRoom) : ContactDataInterface {
         if (remoteAddress != null) {
             val friend = coreContext.contactsManager.findContactByAddress(remoteAddress)
             if (friend != null) {
+                val newlyFound = contact.value == null
+
                 contact.value = friend!!
                 presenceStatus.value = friend.consolidatedPresence
                 friend.addListener {
                     presenceStatus.value = it.consolidatedPresence
+                }
+
+                if (newlyFound) {
+                    contactNewlyFoundEvent.value = Event(true)
                 }
             } else {
                 displayName.value = LinphoneUtils.getDisplayName(remoteAddress)
@@ -198,7 +209,7 @@ class ChatRoomData(val chatRoom: ChatRoom) : ContactDataInterface {
         }
         computeLastMessageImdnIcon(msg)
 
-        if (!chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
+        if (!oneToOneChatRoom) {
             val sender: String =
                 coreContext.contactsManager.findContactByAddress(msg.fromAddress)?.name
                     ?: LinphoneUtils.getDisplayName(msg.fromAddress)
