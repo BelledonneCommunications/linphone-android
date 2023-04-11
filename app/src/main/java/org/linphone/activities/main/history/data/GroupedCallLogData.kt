@@ -27,6 +27,7 @@ class GroupedCallLogData(callLog: CallLog) {
 
     var lastCallLog: CallLog = callLog
     var lastCallLogId: String? = callLog.callId
+    var lastCallLogStartTimestamp: Long = callLog.startDate
     val lastCallLogViewModel: CallLogViewModel
         get() {
             if (::_lastCallLogViewModel.isInitialized) {
@@ -47,5 +48,6 @@ class GroupedCallLogData(callLog: CallLog) {
     fun updateLastCallLog(callLog: CallLog) {
         lastCallLog = callLog
         lastCallLogId = callLog.callId
+        lastCallLogStartTimestamp = callLog.startDate
     }
 }
