@@ -225,6 +225,14 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         }
     }
 
+    private fun createChatMessage(): ChatMessage {
+        val pendingMessageToReplyTo = pendingChatMessageToReplyTo.value
+        return if (isPendingAnswer.value == true && pendingMessageToReplyTo != null)
+            chatRoom.createReplyMessage(pendingMessageToReplyTo.chatMessage)
+        else
+            chatRoom.createEmptyMessage()
+    }
+
     fun sendMessage() {
         if (!isPlayerClosed()) {
             stopVoiceRecordPlayer()
@@ -234,11 +242,7 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
             stopVoiceRecorder()
         }
 
-        val pendingMessageToReplyTo = pendingChatMessageToReplyTo.value
-        val message: ChatMessage = if (isPendingAnswer.value == true && pendingMessageToReplyTo != null)
-            chatRoom.createReplyMessage(pendingMessageToReplyTo.chatMessage)
-        else
-            chatRoom.createEmptyMessage()
+        val message = createChatMessage()
         val isBasicChatRoom: Boolean = chatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt())
 
         var voiceRecord = false
@@ -259,7 +263,8 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         val toSend = textToSend.value.orEmpty().trim()
         if (toSend.isNotEmpty()) {
             if (voiceRecord && isBasicChatRoom) {
-                val textMessage: ChatMessage = chatRoom.createMessageFromUtf8(toSend)
+                val textMessage = createChatMessage()
+                textMessage.addUtf8TextContent(toSend)
                 textMessage.send()
             } else {
                 message.addUtf8TextContent(toSend)
@@ -282,7 +287,8 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
             // Do not send file in the same message as the text in a BasicChatRoom
             // and don't send multiple files in the same message if setting says so
             if (isBasicChatRoom or (corePreferences.preventMoreThanOneFilePerMessage and (fileContent or voiceRecord))) {
-                val fileMessage: ChatMessage = chatRoom.createFileTransferMessage(content)
+                val fileMessage = createChatMessage()
+                fileMessage.addFileContent(content)
                 fileMessage.send()
             } else {
                 message.addFileContent(content)
