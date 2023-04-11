@@ -20,6 +20,7 @@ Group changes to describe their impact on the project, as follows:
 - Added hidden setting to disable video completely
 - Added hidden setting to prevent adding / editing / removing native contacts
 - Added hidden setting to protect settings access using account password
+- SIP URI in call can be selected using long press
 
 ### Changed
 - Account EXPIRES is now set to 1 month instead of 1 year for sip.linphone.org accounts
