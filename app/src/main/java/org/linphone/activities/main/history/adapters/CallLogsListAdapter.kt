@@ -110,17 +110,17 @@ class CallLogsListAdapter(
     override fun displayHeaderForPosition(position: Int): Boolean {
         if (position >= itemCount) return false
         val callLogGroup = getItem(position)
-        val date = callLogGroup.lastCallLog.startDate
+        val date = callLogGroup.lastCallLogStartTimestamp
         val previousPosition = position - 1
         return if (previousPosition >= 0) {
-            val previousItemDate = getItem(previousPosition).lastCallLog.startDate
+            val previousItemDate = getItem(previousPosition).lastCallLogStartTimestamp
             !TimestampUtils.isSameDay(date, previousItemDate)
         } else true
     }
 
     override fun getHeaderViewForPosition(context: Context, position: Int): View {
         val callLog = getItem(position)
-        val date = formatDate(context, callLog.lastCallLog.startDate)
+        val date = formatDate(context, callLog.lastCallLogStartTimestamp)
         val binding: GenericListHeaderBinding = DataBindingUtil.inflate(
             LayoutInflater.from(context),
             R.layout.generic_list_header, null, false

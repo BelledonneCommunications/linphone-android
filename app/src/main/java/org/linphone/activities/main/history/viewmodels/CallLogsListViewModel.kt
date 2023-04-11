@@ -122,7 +122,7 @@ class CallLogsListViewModel : ViewModel() {
                     previousCallLogGroup.lastCallLog.remoteAddress.equal(callLog.remoteAddress)
                 ) {
                     if (TimestampUtils.isSameDay(
-                            previousCallLogGroup.lastCallLog.startDate,
+                            previousCallLogGroup.lastCallLogStartTimestamp,
                             callLog.startDate
                         )
                     ) {
