@@ -79,12 +79,12 @@ class AppUtils {
             val split = displayName.uppercase(Locale.getDefault()).split(" ")
             var initials = ""
             var characters = 0
+            val emoji = emojiCompat
 
             for (i in split.indices) {
                 if (split[i].isNotEmpty()) {
                     try {
-                        val emoji = emojiCompat
-                        if (emoji?.hasEmojiGlyph(split[i]) == true) {
+                        if (emoji?.loadState == EmojiCompat.LOAD_STATE_SUCCEEDED && emoji.hasEmojiGlyph(split[i])) {
                             val glyph = emoji.process(split[i])
                             if (characters > 0) { // Limit initial to 1 emoji only
                                 Log.d("[App Utils] We limit initials to one emoji only")
@@ -110,6 +110,11 @@ class AppUtils {
         fun isTextOnlyContainingEmoji(text: String): Boolean {
             val emoji = emojiCompat
             emoji ?: return false
+
+            if (emoji.loadState != EmojiCompat.LOAD_STATE_SUCCEEDED) {
+                Log.w("[App Utils] Can't check emoji presence in text due to EmojiCompat library not loaded yet [${emoji.loadState}]")
+                return false
+            }
 
             try {
                 for (split in text.split(" ")) {
