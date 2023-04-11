@@ -30,6 +30,7 @@ Group changes to describe their impact on the project, as follows:
 ### Fixed
 - Plain copy of encrypted files (when VFS is enabled) not cleaned
 - Avatar display issue if contact's "initials" contains more than 1 emoji or an emoji + a character
+- Messages not marked as reply in basic chat room if sending more than 1 content
 
 ## [5.0.9] - 2023-03-30
 
