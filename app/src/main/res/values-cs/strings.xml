@@ -331,7 +331,6 @@
     <string name="settings_conferences_title">Schůzky</string>
     <string name="settings_primary_account_title">Hlavní účet</string>
     <string name="settings_primary_account_display_name_title">Zobrazované jméno</string>
-    <string name="audio_settings_echo_cancellation_title">Rušení ozvěny</string>
     <string name="audio_settings_echo_cancellation_summary">Odstraňuje ozvěnu slyšitelnou druhou stranou</string>
     <string name="audio_settings_echo_canceller_calibration_title">Kalibrace potlačování ozvěny</string>
     <string name="audio_settings_echo_cancellation_calibration_started">Zahájeno kalibrace potlačování ozvěny</string>

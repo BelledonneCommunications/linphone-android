@@ -252,7 +252,6 @@
     <string name="video_settings_automatically_accept_title">接受视频通话请求</string>
     <string name="audio_settings_microphone_gain_title">麦克风增益调节</string>
     <string name="audio_settings_codecs_title">编解码器</string>
-    <string name="audio_settings_echo_cancellation_title">回声消除</string>
     <string name="audio_settings_echo_cancellation_calibration_value">在%s毫秒内校准</string>
     <string name="assistant_remote_provisioning_wrong_format">不明的URL网址格式，无法下载配置资源…</string>
     <string name="audio_settings_input_device_summary">更改将从下一次通话开始生效</string>

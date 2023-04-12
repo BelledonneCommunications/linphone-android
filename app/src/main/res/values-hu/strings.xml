@@ -379,7 +379,6 @@
     <string name="chat_event_ephemeral_lifetime_changed">Elmúló üzenetek lejárati dátuma: %s</string>
     <string name="chat_room_ephemeral_messages_desc">Ez az üzenet mindkét félnél törlődik, miután elolvasta és a kiválasztott időt túllépte.</string>
     <string name="chat_message_cant_open_file_in_app_dialog_message">Szeretné megnyitni szövegként, vagy exportálni (titkosítatlanul) egy harmadik fél alkalmazásába, ha elérhető\?</string>
-    <string name="audio_settings_echo_cancellation_title">Visszhangkioltás</string>
     <string name="assistant_ec_calibration">Visszhangkioltás beállítása folyamatban van</string>
     <string name="content_description_e2e_encryption_enabled">Végpontok közötti titkosítás engedélyezve</string>
     <string name="audio_settings_echo_canceller_calibration_summary">Kattintson a visszhangkioltás beállításának megkezdéséhez</string>

@@ -377,7 +377,6 @@
     <string name="settings_chat_title">Chatear</string>
     <string name="settings_network_title">Red</string>
     <string name="settings_advanced_title">Avanzado</string>
-    <string name="audio_settings_echo_cancellation_title">Cancelación de eco</string>
     <string name="audio_settings_echo_cancellation_summary">Elimina el eco que se escucha por el otro extremo</string>
     <string name="audio_settings_echo_canceller_calibration_summary">Pulse para iniciar la calibración del cancelador de eco</string>
     <string name="audio_settings_echo_cancellation_calibration_started">Se inició la calibración del cancelador de eco</string>

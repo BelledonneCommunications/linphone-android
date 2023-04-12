@@ -67,16 +67,16 @@
 
                 <include
                     layout="@layout/settings_widget_switch"
-                    linphone:title="@{@string/audio_settings_echo_cancellation_title}"
+                    linphone:title="@{@string/audio_settings_software_echo_cancellation_title}"
                     linphone:subtitle="@{@string/audio_settings_echo_cancellation_summary}"
-                    linphone:listener="@{viewModel.echoCancellationListener}"
-                    linphone:checked="@={viewModel.echoCancellation}"/>
+                    linphone:listener="@{viewModel.softwareEchoCancellerListener}"
+                    linphone:checked="@={viewModel.softwareEchoCanceller}"/>
 
                 <include
                     layout="@layout/settings_widget_basic"
                     linphone:title="@{@string/audio_settings_echo_canceller_calibration_title}"
-                    linphone:subtitle="@{viewModel.echoCalibration}"
-                    linphone:listener="@{viewModel.echoCancellerCalibrationListener}"/>
+                    linphone:subtitle="@{viewModel.softwareEchoCalibration}"
+                    linphone:listener="@{viewModel.softwareEchoCancellerCalibrationListener}"/>
 
                 <include
                     layout="@layout/settings_widget_basic"

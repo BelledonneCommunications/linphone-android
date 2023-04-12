@@ -210,7 +210,6 @@
     <string name="settings_advanced_title">Дополнительно</string>
     <string name="settings_primary_account_display_name_title">Отображаемое имя</string>
     <string name="settings_primary_account_username_title">Имя пользователя</string>
-    <string name="audio_settings_echo_cancellation_title">Эхоподавление</string>
     <string name="audio_settings_echo_canceller_calibration_title">Калибровка эхоподавления</string>
     <string name="audio_settings_echo_cancellation_calibration_started">Калибровка эхоподавления началась</string>
     <string name="audio_settings_echo_cancellation_calibration_failed">Калибровка не удалась</string>

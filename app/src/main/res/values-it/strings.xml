@@ -165,7 +165,6 @@
     <string name="conference_start_group_call_dialog_message">Vuoi iniziare una chiamata di gruppo\?
 \nOgnuno in questo gruppo riceverà una chiamata per unirsi alla riunione.</string>
     <string name="settings_network_title">Rete</string>
-    <string name="audio_settings_echo_cancellation_title">Cancellazione dell\'eco</string>
     <string name="audio_settings_echo_cancellation_summary">Rimuove l\'eco sentita dall\'altra parte</string>
     <string name="audio_settings_echo_tester_summary">Clicca per iniziate il test dell\'eco</string>
     <string name="settings_list_title">Preferenze</string>
