@@ -529,9 +529,6 @@ class CorePreferences constructor(private val context: Context) {
 
     /* Default values related */
 
-    val echoCancellerCalibration: Int
-        get() = config.getInt("sound", "ec_delay", -1)
-
     val defaultDomain: String
         get() = config.getString("app", "default_domain", "sip.linphone.org")!!
 

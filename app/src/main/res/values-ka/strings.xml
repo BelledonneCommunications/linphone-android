@@ -522,7 +522,6 @@
     <string name="settings_list_title">პარამეტრები</string>
     <string name="settings_tunnel_title">გვირაბი</string>
     <string name="settings_primary_account_title">მთავარი ანგარიში</string>
-    <string name="audio_settings_echo_cancellation_title">ექოს გაუქმება</string>
     <string name="audio_settings_echo_canceller_calibration_summary">დააჭირეთ ექოს გაუქმების კალიბრირებისთვის</string>
     <string name="audio_settings_echo_cancellation_calibration_started">ექოს გაუქმების კალიბრირება დაიწყო</string>
     <string name="audio_settings_echo_cancellation_calibration_failed">კალიბრირება ვერ მოხერხდა</string>

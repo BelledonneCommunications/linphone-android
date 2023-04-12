@@ -425,7 +425,6 @@
     <string name="settings_primary_account_title">プライマリーアカウント</string>
     <string name="settings_primary_account_display_name_title">表示名</string>
     <string name="settings_primary_account_username_title">ユーザー名</string>
-    <string name="audio_settings_echo_cancellation_title">エコーキャンセラー</string>
     <string name="audio_settings_echo_cancellation_summary">相手側に聞こえるエコーを除去します</string>
     <string name="audio_settings_echo_canceller_calibration_title">エコーキャンセラーの調整</string>
     <string name="audio_settings_echo_canceller_calibration_summary">クリックしてエコーキャンセラーの調整を開始</string>

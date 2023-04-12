@@ -482,7 +482,7 @@
     <string name="settings_password_protection_dialog_invalid_input">Invalid password!</string>
 
     <!-- Audio settings -->
-    <string name="audio_settings_echo_cancellation_title">Echo cancellation</string>
+    <string name="audio_settings_software_echo_cancellation_title">Software echo cancellation</string>
     <string name="audio_settings_echo_cancellation_summary">Removes the echo heard by other end</string>
     <string name="audio_settings_echo_canceller_calibration_title">Echo canceller calibration</string>
     <string name="audio_settings_echo_canceller_calibration_summary">Click to start echo canceller calibration</string>

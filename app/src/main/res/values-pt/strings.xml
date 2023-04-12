@@ -218,7 +218,6 @@
     <string name="settings_primary_account_title">Conta principal</string>
     <string name="settings_primary_account_display_name_title">Nome de exibição</string>
     <string name="settings_primary_account_username_title">Nome de utilizador</string>
-    <string name="audio_settings_echo_cancellation_title">Cancelamento do eco</string>
     <string name="audio_settings_echo_cancellation_summary">Remove o eco ouvido pelo outro lado</string>
     <string name="audio_settings_echo_canceller_calibration_summary">Clique para iniciar a calibração do cancelador de eco</string>
     <string name="audio_settings_echo_cancellation_calibration_value">Calibrado em %s ms</string>

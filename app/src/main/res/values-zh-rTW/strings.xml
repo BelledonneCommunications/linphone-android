@@ -234,7 +234,6 @@
     <string name="video_settings_initiate_call_summary">總是發送視訊請求</string>
     <string name="video_settings_bandwidth_limit_summary">kbits/s</string>
     <string name="call_settings_encryption_mandatory_title">強制加密媒體</string>
-    <string name="audio_settings_echo_cancellation_title">回音消除</string>
     <string name="audio_settings_echo_cancellation_summary">刪除另一端聽到的回音</string>
     <string name="audio_settings_echo_canceller_calibration_title">校正回音消除功能</string>
     <string name="audio_settings_echo_canceller_calibration_summary">點擊此處即可校正回音消除功能</string>

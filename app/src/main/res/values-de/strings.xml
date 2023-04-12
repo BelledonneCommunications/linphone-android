@@ -161,7 +161,6 @@
     <string name="settings_advanced_title">Erweitert</string>
     <string name="settings_primary_account_title">Primäres Konto</string>
     <string name="settings_primary_account_username_title">Benutzername</string>
-    <string name="audio_settings_echo_cancellation_title">Echounterdrückung</string>
     <string name="audio_settings_echo_cancellation_summary">Entfernt das Echo das am anderen Ende gehört wird</string>
     <string name="audio_settings_echo_canceller_calibration_title">Echounterdrückung kalibrieren</string>
     <string name="audio_settings_microphone_gain_summary">(in Dezibel)</string>
