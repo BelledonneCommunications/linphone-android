@@ -429,9 +429,6 @@ class CoreContext(
             core.config.setInt("misc", "conference_layout", 1)
         }
 
-        // TODO FIXME REMOVE
-        core.config.setInt("sound", "ec_delay", 250)
-
         // Now LIME server URL is set on accounts
         val limeServerUrl = core.limeX3DhServerUrl.orEmpty()
         if (limeServerUrl.isNotEmpty()) {
