@@ -791,4 +791,5 @@
     <string name="settings_password_protection_dialog_invalid_input">密碼不正確！</string>
     <string name="error_unexpected">發生未預期的錯誤…</string>
     <string name="settings_password_protection_dialog_title">請在下方輸入密碼，來存取設定內容</string>
+    <string name="audio_settings_software_echo_cancellation_title">軟體迴音消除</string>
 </resources>
