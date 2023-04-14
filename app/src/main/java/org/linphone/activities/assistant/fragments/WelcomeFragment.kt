@@ -107,7 +107,12 @@ class WelcomeFragment : GenericFragment<AssistantWelcomeFragmentBinding>() {
                     }
                 }
             }
-            spannable.setSpan(clickableSpan, termsMatcher.start(0), termsMatcher.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            spannable.setSpan(
+                clickableSpan,
+                termsMatcher.start(0),
+                termsMatcher.end(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
         }
 
         val policyMatcher = Pattern.compile(privacy).matcher(label)
@@ -125,7 +130,12 @@ class WelcomeFragment : GenericFragment<AssistantWelcomeFragmentBinding>() {
                     }
                 }
             }
-            spannable.setSpan(clickableSpan, policyMatcher.start(0), policyMatcher.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            spannable.setSpan(
+                clickableSpan,
+                policyMatcher.start(0),
+                policyMatcher.end(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
         }
 
         binding.termsAndPrivacy.text = spannable

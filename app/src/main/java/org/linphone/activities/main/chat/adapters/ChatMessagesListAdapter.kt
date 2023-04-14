@@ -55,7 +55,10 @@ import org.linphone.utils.HeaderAdapter
 class ChatMessagesListAdapter(
     selectionVM: ListTopBarViewModel,
     private val viewLifecycleOwner: LifecycleOwner
-) : SelectionListAdapter<EventLogData, RecyclerView.ViewHolder>(selectionVM, ChatMessageDiffCallback()),
+) : SelectionListAdapter<EventLogData, RecyclerView.ViewHolder>(
+    selectionVM,
+    ChatMessageDiffCallback()
+),
     HeaderAdapter {
     companion object {
         const val MAX_TIME_TO_GROUP_MESSAGES = 60 // 1 minute
@@ -116,7 +119,9 @@ class ChatMessagesListAdapter(
 
         override fun onWebUrlClicked(url: String) {
             if (popup?.isShowing == true) {
-                Log.w("[Chat Message Data] Long press that displayed context menu detected, aborting click on URL [$url]")
+                Log.w(
+                    "[Chat Message Data] Long press that displayed context menu detected, aborting click on URL [$url]"
+                )
                 return
             }
             urlClickEvent.value = Event(url)
@@ -124,7 +129,9 @@ class ChatMessagesListAdapter(
 
         override fun onSipAddressClicked(sipUri: String) {
             if (popup?.isShowing == true) {
-                Log.w("[Chat Message Data] Long press that displayed context menu detected, aborting click on SIP URI [$sipUri]")
+                Log.w(
+                    "[Chat Message Data] Long press that displayed context menu detected, aborting click on SIP URI [$sipUri]"
+                )
                 return
             }
             sipUriClickedEvent.value = Event(sipUri)
@@ -155,7 +162,9 @@ class ChatMessagesListAdapter(
     private fun createChatMessageViewHolder(parent: ViewGroup): ChatMessageViewHolder {
         val binding: ChatMessageListCellBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
-            R.layout.chat_message_list_cell, parent, false
+            R.layout.chat_message_list_cell,
+            parent,
+            false
         )
         return ChatMessageViewHolder(binding)
     }
@@ -163,7 +172,9 @@ class ChatMessagesListAdapter(
     private fun createEventViewHolder(parent: ViewGroup): EventViewHolder {
         val binding: ChatEventListCellBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
-            R.layout.chat_event_list_cell, parent, false
+            R.layout.chat_event_list_cell,
+            parent,
+            false
         )
         return EventViewHolder(binding)
     }
@@ -199,9 +210,14 @@ class ChatMessagesListAdapter(
     override fun getHeaderViewForPosition(context: Context, position: Int): View {
         val binding: ChatUnreadMessagesListHeaderBinding = DataBindingUtil.inflate(
             LayoutInflater.from(context),
-            R.layout.chat_unread_messages_list_header, null, false
+            R.layout.chat_unread_messages_list_header,
+            null,
+            false
         )
-        binding.title = AppUtils.getStringWithPlural(R.plurals.chat_room_unread_messages_event, unreadMessagesCount)
+        binding.title = AppUtils.getStringWithPlural(
+            R.plurals.chat_room_unread_messages_event,
+            unreadMessagesCount
+        )
         binding.executePendingBindings()
         return binding.root
     }
@@ -281,7 +297,10 @@ class ChatMessagesListAdapter(
                         val previousItem = getItem(bindingAdapterPosition - 1)
                         if (previousItem.eventLog.type == EventLog.Type.ConferenceChatMessage) {
                             val previousMessage = previousItem.eventLog.chatMessage
-                            if (previousMessage != null && previousMessage.fromAddress.weakEqual(chatMessage.fromAddress)) {
+                            if (previousMessage != null && previousMessage.fromAddress.weakEqual(
+                                    chatMessage.fromAddress
+                                )
+                            ) {
                                 if (abs(chatMessage.time - previousMessage.time) < MAX_TIME_TO_GROUP_MESSAGES) {
                                     hasPrevious = true
                                 }
@@ -293,7 +312,10 @@ class ChatMessagesListAdapter(
                         val nextItem = getItem(bindingAdapterPosition + 1)
                         if (nextItem.eventLog.type == EventLog.Type.ConferenceChatMessage) {
                             val nextMessage = nextItem.eventLog.chatMessage
-                            if (nextMessage != null && nextMessage.fromAddress.weakEqual(chatMessage.fromAddress)) {
+                            if (nextMessage != null && nextMessage.fromAddress.weakEqual(
+                                    chatMessage.fromAddress
+                                )
+                            ) {
                                 if (abs(nextMessage.time - chatMessage.time) < MAX_TIME_TO_GROUP_MESSAGES) {
                                     hasNext = true
                                 }
@@ -308,12 +330,17 @@ class ChatMessagesListAdapter(
                     setContextMenuClickListener {
                         val popupView: ChatMessageLongPressMenuBindingImpl = DataBindingUtil.inflate(
                             LayoutInflater.from(root.context),
-                            R.layout.chat_message_long_press_menu, null, false
+                            R.layout.chat_message_long_press_menu,
+                            null,
+                            false
                         )
 
                         val itemSize = AppUtils.getDimension(R.dimen.chat_message_popup_item_height).toInt()
                         var totalSize = itemSize * 7
-                        if (chatMessage.chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
+                        if (chatMessage.chatRoom.hasCapability(
+                                ChatRoomCapabilities.OneToOne.toInt()
+                            )
+                        ) {
                             // No message id
                             popupView.imdnHidden = true
                             totalSize -= itemSize
@@ -497,7 +524,9 @@ private class ChatMessageDiffCallback : DiffUtil.ItemCallback<EventLogData>() {
 
             oldData.time.value == newData.time.value &&
                 oldData.isOutgoing == newData.isOutgoing
-        } else oldItem.notifyId == newItem.notifyId
+        } else {
+            oldItem.notifyId == newItem.notifyId
+        }
     }
 
     override fun areContentsTheSame(

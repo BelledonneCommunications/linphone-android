@@ -53,6 +53,7 @@ class RecyclerViewSwipeConfiguration {
     val iconMargin = 16f
 
     val actionTextSizeUnit = TypedValue.COMPLEX_UNIT_SP
+
     // At least CROSSCALL Action-X3 device doesn't have SANS_SERIF typeface...
     val actionTextFont: Typeface? = Typeface.SANS_SERIF
     val actionTextSize = 14f
@@ -120,10 +121,12 @@ private class RecyclerViewSwipeUtilsCallback(
                 )
 
                 @Suppress("DEPRECATION")
-                if (configuration.leftToRightAction.iconTint != 0) icon.setColorFilter(
-                    configuration.leftToRightAction.iconTint,
-                    PorterDuff.Mode.SRC_IN
-                )
+                if (configuration.leftToRightAction.iconTint != 0) {
+                    icon.setColorFilter(
+                        configuration.leftToRightAction.iconTint,
+                        PorterDuff.Mode.SRC_IN
+                    )
+                }
                 icon.draw(canvas)
             }
         }
@@ -208,10 +211,12 @@ private class RecyclerViewSwipeUtilsCallback(
                 )
 
                 @Suppress("DEPRECATION")
-                if (configuration.rightToLeftAction.iconTint != 0) icon.setColorFilter(
-                    configuration.rightToLeftAction.iconTint,
-                    PorterDuff.Mode.SRC_IN
-                )
+                if (configuration.rightToLeftAction.iconTint != 0) {
+                    icon.setColorFilter(
+                        configuration.rightToLeftAction.iconTint,
+                        PorterDuff.Mode.SRC_IN
+                    )
+                }
                 icon.draw(canvas)
             }
         }

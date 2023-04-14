@@ -51,7 +51,10 @@ class GenericAccountLoginFragment : GenericFragment<AssistantGenericAccountLogin
             ViewModelProvider(this)[SharedAssistantViewModel::class.java]
         }
 
-        viewModel = ViewModelProvider(this, GenericLoginViewModelFactory(sharedAssistantViewModel.getAccountCreator(true)))[GenericLoginViewModel::class.java]
+        viewModel = ViewModelProvider(
+            this,
+            GenericLoginViewModelFactory(sharedAssistantViewModel.getAccountCreator(true))
+        )[GenericLoginViewModel::class.java]
         binding.viewModel = viewModel
 
         viewModel.leaveAssistantEvent.observe(

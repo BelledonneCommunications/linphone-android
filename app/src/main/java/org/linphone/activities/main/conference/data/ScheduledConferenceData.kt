@@ -54,7 +54,12 @@ class ScheduledConferenceData(val conferenceInfo: ConferenceInfo, private val is
         description.value = conferenceInfo.description
 
         time.value = TimestampUtils.timeToString(conferenceInfo.dateTime)
-        date.value = TimestampUtils.toString(conferenceInfo.dateTime, onlyDate = true, shortDate = false, hideYear = false)
+        date.value = TimestampUtils.toString(
+            conferenceInfo.dateTime,
+            onlyDate = true,
+            shortDate = false,
+            hideYear = false
+        )
         isConferenceCancelled.value = conferenceInfo.state == State.Cancelled
 
         val minutes = conferenceInfo.duration
@@ -72,13 +77,16 @@ class ScheduledConferenceData(val conferenceInfo: ConferenceInfo, private val is
             canEdit.value = localAccount != null
 
             val contact = coreContext.contactsManager.findContactByAddress(organizerAddress)
-            organizer.value = if (contact != null)
+            organizer.value = if (contact != null) {
                 contact.name
-            else
+            } else {
                 LinphoneUtils.getDisplayName(conferenceInfo.organizer)
+            }
         } else {
             canEdit.value = false
-            Log.e("[Scheduled Conference] No organizer SIP URI found for: ${conferenceInfo.uri?.asStringUriOnly()}")
+            Log.e(
+                "[Scheduled Conference] No organizer SIP URI found for: ${conferenceInfo.uri?.asStringUriOnly()}"
+            )
         }
 
         computeBackgroundResId()
@@ -88,7 +96,9 @@ class ScheduledConferenceData(val conferenceInfo: ConferenceInfo, private val is
     fun destroy() {}
 
     fun delete() {
-        Log.w("[Scheduled Conference] Deleting conference info with URI: ${conferenceInfo.uri?.asStringUriOnly()}")
+        Log.w(
+            "[Scheduled Conference] Deleting conference info with URI: ${conferenceInfo.uri?.asStringUriOnly()}"
+        )
         coreContext.core.deleteConferenceInformation(conferenceInfo)
     }
 
@@ -134,7 +144,13 @@ class ScheduledConferenceData(val conferenceInfo: ConferenceInfo, private val is
 
         for (participant in conferenceInfo.participants) {
             val contact = coreContext.contactsManager.findContactByAddress(participant)
-            val name = if (contact != null) contact.name else LinphoneUtils.getDisplayName(participant)
+            val name = if (contact != null) {
+                contact.name
+            } else {
+                LinphoneUtils.getDisplayName(
+                    participant
+                )
+            }
             val address = participant.asStringUriOnly()
             participantsListShort += "$name, "
             participantsListExpanded += "$name ($address)\n"

@@ -29,7 +29,9 @@ import org.linphone.activities.main.files.viewmodels.PdfFileViewModel
 class PdfPagesListAdapter(private val pdfViewModel: PdfFileViewModel) : RecyclerView.Adapter<PdfPagesListAdapter.PdfPageViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PdfPageViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(
-            R.layout.file_pdf_viewer_cell, parent, false
+            R.layout.file_pdf_viewer_cell,
+            parent,
+            false
         )
         return PdfPageViewHolder(view)
     }

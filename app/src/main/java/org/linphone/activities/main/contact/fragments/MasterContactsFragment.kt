@@ -115,7 +115,9 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
                     val navHostFragment =
                         childFragmentManager.findFragmentById(R.id.contacts_nav_container) as NavHostFragment
                     if (navHostFragment.navController.currentDestination?.id == R.id.emptyContactFragment) {
-                        Log.i("[Contacts] Foldable device has been folded, closing side pane with empty fragment")
+                        Log.i(
+                            "[Contacts] Foldable device has been folded, closing side pane with empty fragment"
+                        )
                         binding.slidingPane.closePane()
                     }
                 }
@@ -184,7 +186,9 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
                                 if (!binding.slidingPane.isSlideable &&
                                     deletedContact == sharedViewModel.selectedContact.value
                                 ) {
-                                    Log.i("[Contacts] Currently displayed contact has been deleted, removing detail fragment")
+                                    Log.i(
+                                        "[Contacts] Currently displayed contact has been deleted, removing detail fragment"
+                                    )
                                     clearDisplayedContact()
                                 }
                             }
@@ -204,7 +208,9 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
         }
 
         // Divider between items
-        binding.contactsList.addItemDecoration(AppUtils.getDividerDecoration(requireContext(), layoutManager))
+        binding.contactsList.addItemDecoration(
+            AppUtils.getDividerDecoration(requireContext(), layoutManager)
+        )
 
         // Displays the first letter header
         val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
@@ -255,7 +261,9 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
             viewLifecycleOwner
         ) {
             it.consume {
-                (requireActivity() as SnackBarActivity).showSnackBar(R.string.contacts_ldap_query_more_results_available)
+                (requireActivity() as SnackBarActivity).showSnackBar(
+                    R.string.contacts_ldap_query_more_results_available
+                )
             }
         }
 
@@ -298,24 +306,32 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
                 Log.i("[Contacts] Found matching contact [${contact.name}]")
                 adapter.selectedContactEvent.value = Event(contact)
             } else {
-                Log.w("[Contacts] Matching contact not found yet, waiting for contacts updated callback")
+                Log.w(
+                    "[Contacts] Matching contact not found yet, waiting for contacts updated callback"
+                )
                 contactIdToDisplay = id
             }
         } else if (sipUri != null) {
             Log.i("[Contacts] Found sipUri parameter in arguments [$sipUri]")
             sipUriToAdd = sipUri
-            (activity as MainActivity).showSnackBar(R.string.contact_choose_existing_or_new_to_add_number)
+            (activity as MainActivity).showSnackBar(
+                R.string.contact_choose_existing_or_new_to_add_number
+            )
             editOnClick = true
         } else if (addressString != null) {
             val address = Factory.instance().createAddress(addressString)
             if (address != null) {
-                Log.i("[Contacts] Found friend SIP address parameter in arguments [${address.asStringUriOnly()}]")
+                Log.i(
+                    "[Contacts] Found friend SIP address parameter in arguments [${address.asStringUriOnly()}]"
+                )
                 val contact = coreContext.contactsManager.findContactByAddress(address)
                 if (contact != null) {
                     Log.i("[Contacts] Found matching contact $contact")
                     adapter.selectedContactEvent.value = Event(contact)
                 } else {
-                    Log.w("[Contacts] No matching contact found for SIP address [${address.asStringUriOnly()}]")
+                    Log.w(
+                        "[Contacts] No matching contact found for SIP address [${address.asStringUriOnly()}]"
+                    )
                 }
             }
         }
@@ -344,7 +360,9 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
         listViewModel.deleteContacts(list)
 
         if (!binding.slidingPane.isSlideable && closeSlidingPane) {
-            Log.i("[Contacts] Currently displayed contact has been deleted, removing detail fragment")
+            Log.i(
+                "[Contacts] Currently displayed contact has been deleted, removing detail fragment"
+            )
             clearDisplayedContact()
         }
     }

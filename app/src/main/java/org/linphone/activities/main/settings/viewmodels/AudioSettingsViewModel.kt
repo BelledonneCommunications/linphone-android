@@ -44,7 +44,9 @@ class AudioSettingsViewModel : GenericSettingsViewModel() {
             core.isEchoCancellationEnabled = newValue
             if (!newValue) {
                 core.resetEchoCancellationCalibration()
-                softwareEchoCalibration.value = prefs.getString(R.string.audio_settings_echo_canceller_calibration_summary)
+                softwareEchoCalibration.value = prefs.getString(
+                    R.string.audio_settings_echo_canceller_calibration_summary
+                )
             }
         }
     }
@@ -161,7 +163,9 @@ class AudioSettingsViewModel : GenericSettingsViewModel() {
         softwareEchoCanceller.value = core.isEchoCancellationEnabled
         adaptiveRateControl.value = core.isAdaptiveRateControlEnabled
         softwareEchoCalibration.value = if (core.echoCancellationCalibration > 0) {
-            prefs.getString(R.string.audio_settings_echo_cancellation_calibration_value).format(core.echoCancellationCalibration)
+            prefs.getString(R.string.audio_settings_echo_cancellation_calibration_value).format(
+                core.echoCancellationCalibration
+            )
         } else {
             prefs.getString(R.string.audio_settings_echo_canceller_calibration_summary)
         }
@@ -183,7 +187,9 @@ class AudioSettingsViewModel : GenericSettingsViewModel() {
 
         core.addListener(listener)
         core.startEchoCancellerCalibration()
-        softwareEchoCalibration.value = prefs.getString(R.string.audio_settings_echo_cancellation_calibration_started)
+        softwareEchoCalibration.value = prefs.getString(
+            R.string.audio_settings_echo_cancellation_calibration_started
+        )
     }
 
     fun echoCancellerCalibrationFinished(status: EcCalibratorStatus, delay: Int) {
@@ -191,31 +197,43 @@ class AudioSettingsViewModel : GenericSettingsViewModel() {
 
         when (status) {
             EcCalibratorStatus.DoneNoEcho -> {
-                softwareEchoCalibration.value = prefs.getString(R.string.audio_settings_echo_cancellation_calibration_no_echo)
+                softwareEchoCalibration.value = prefs.getString(
+                    R.string.audio_settings_echo_cancellation_calibration_no_echo
+                )
                 softwareEchoCanceller.value = false
             }
             EcCalibratorStatus.Done -> {
-                softwareEchoCalibration.value = prefs.getString(R.string.audio_settings_echo_cancellation_calibration_value).format(delay)
+                softwareEchoCalibration.value = prefs.getString(
+                    R.string.audio_settings_echo_cancellation_calibration_value
+                ).format(delay)
                 softwareEchoCanceller.value = true
             }
             EcCalibratorStatus.Failed -> {
-                softwareEchoCalibration.value = prefs.getString(R.string.audio_settings_echo_cancellation_calibration_failed)
+                softwareEchoCalibration.value = prefs.getString(
+                    R.string.audio_settings_echo_cancellation_calibration_failed
+                )
             }
             EcCalibratorStatus.InProgress -> { // We should never get here but still
-                softwareEchoCalibration.value = prefs.getString(R.string.audio_settings_echo_cancellation_calibration_started)
+                softwareEchoCalibration.value = prefs.getString(
+                    R.string.audio_settings_echo_cancellation_calibration_started
+                )
             }
         }
     }
 
     fun startEchoTester() {
         echoTesterIsRunning = true
-        echoTesterStatus.value = prefs.getString(R.string.audio_settings_echo_tester_summary_is_running)
+        echoTesterStatus.value = prefs.getString(
+            R.string.audio_settings_echo_tester_summary_is_running
+        )
         core.startEchoTester(0)
     }
 
     fun stopEchoTester() {
         echoTesterIsRunning = false
-        echoTesterStatus.value = prefs.getString(R.string.audio_settings_echo_tester_summary_is_stopped)
+        echoTesterStatus.value = prefs.getString(
+            R.string.audio_settings_echo_tester_summary_is_stopped
+        )
         core.stopEchoTester()
     }
 

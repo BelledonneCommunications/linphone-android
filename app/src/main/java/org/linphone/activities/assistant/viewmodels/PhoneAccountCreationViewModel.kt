@@ -41,7 +41,9 @@ class PhoneAccountCreationViewModelFactory(private val accountCreator: AccountCr
     }
 }
 
-class PhoneAccountCreationViewModel(accountCreator: AccountCreator) : AbstractPhoneViewModel(accountCreator) {
+class PhoneAccountCreationViewModel(accountCreator: AccountCreator) : AbstractPhoneViewModel(
+    accountCreator
+) {
     val username = MutableLiveData<String>()
     val useUsername = MutableLiveData<Boolean>()
     val usernameError = MutableLiveData<String>()
@@ -71,9 +73,13 @@ class PhoneAccountCreationViewModel(accountCreator: AccountCreator) : AbstractPh
                 AccountCreator.Status.AccountExist, AccountCreator.Status.AccountExistWithAlias -> {
                     waitForServerAnswer.value = false
                     if (useUsername.value == true) {
-                        usernameError.value = AppUtils.getString(R.string.assistant_error_username_already_exists)
+                        usernameError.value = AppUtils.getString(
+                            R.string.assistant_error_username_already_exists
+                        )
                     } else {
-                        phoneNumberError.value = AppUtils.getString(R.string.assistant_error_phone_number_already_exists)
+                        phoneNumberError.value = AppUtils.getString(
+                            R.string.assistant_error_phone_number_already_exists
+                        )
                     }
                 }
                 AccountCreator.Status.AccountNotExist -> {
@@ -103,7 +109,9 @@ class PhoneAccountCreationViewModel(accountCreator: AccountCreator) : AbstractPh
                     goToSmsValidationEvent.value = Event(true)
                 }
                 AccountCreator.Status.AccountExistWithAlias -> {
-                    phoneNumberError.value = AppUtils.getString(R.string.assistant_error_phone_number_already_exists)
+                    phoneNumberError.value = AppUtils.getString(
+                        R.string.assistant_error_phone_number_already_exists
+                    )
                 }
                 else -> {
                     onErrorEvent.value = Event("Error: ${status.name}")
@@ -161,7 +169,11 @@ class PhoneAccountCreationViewModel(accountCreator: AccountCreator) : AbstractPh
     }
 
     private fun isCreateButtonEnabled(): Boolean {
-        val usernameRegexp = corePreferences.config.getString("assistant", "username_regex", "^[a-z0-9+_.\\-]*\$")
+        val usernameRegexp = corePreferences.config.getString(
+            "assistant",
+            "username_regex",
+            "^[a-z0-9+_.\\-]*\$"
+        )
         return isPhoneNumberOk() && usernameRegexp != null &&
             (
                 useUsername.value == false ||

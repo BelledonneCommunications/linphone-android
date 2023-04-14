@@ -68,7 +68,9 @@ class AccountSettingsFragment : GenericSettingFragment<SettingsAccountFragmentBi
             it.consume {
                 val authInfo = viewModel.account.findAuthInfo()
                 if (authInfo == null) {
-                    Log.e("[Account Settings] Failed to find auth info for account ${viewModel.account}")
+                    Log.e(
+                        "[Account Settings] Failed to find auth info for account ${viewModel.account}"
+                    )
                 } else {
                     val args = Bundle()
                     args.putString("Username", authInfo.username)
@@ -109,11 +111,21 @@ class AccountSettingsFragment : GenericSettingFragment<SettingsAccountFragmentBi
         ) {
             it.consume {
                 val defaultDomainAccount = viewModel.account.params.identityAddress?.domain == corePreferences.defaultDomain
-                Log.i("[Account Settings] User clicked on delete account, showing confirmation dialog for ${if (defaultDomainAccount) "default domain account" else "third party account"}")
+                Log.i(
+                    "[Account Settings] User clicked on delete account, showing confirmation dialog for ${if (defaultDomainAccount) "default domain account" else "third party account"}"
+                )
                 val dialogViewModel = if (defaultDomainAccount) {
-                    DialogViewModel(getString(R.string.account_setting_delete_sip_linphone_org_confirmation_dialog), getString(R.string.account_setting_delete_dialog_title))
+                    DialogViewModel(
+                        getString(
+                            R.string.account_setting_delete_sip_linphone_org_confirmation_dialog
+                        ),
+                        getString(R.string.account_setting_delete_dialog_title)
+                    )
                 } else {
-                    DialogViewModel(getString(R.string.account_setting_delete_generic_confirmation_dialog), getString(R.string.account_setting_delete_dialog_title))
+                    DialogViewModel(
+                        getString(R.string.account_setting_delete_generic_confirmation_dialog),
+                        getString(R.string.account_setting_delete_dialog_title)
+                    )
                 }
                 val dialog: Dialog = DialogUtils.getDialog(requireContext(), dialogViewModel)
 

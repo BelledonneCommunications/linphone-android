@@ -205,7 +205,9 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
         binding.rootCoordinatorLayout.addKeyboardInsetListener { keyboardVisible ->
             val portraitOrientation = resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
-            Log.i("[Main Activity] Keyboard is ${if (keyboardVisible) "visible" else "invisible"}, orientation is ${if (portraitOrientation) "portrait" else "landscape"}")
+            Log.i(
+                "[Main Activity] Keyboard is ${if (keyboardVisible) "visible" else "invisible"}, orientation is ${if (portraitOrientation) "portrait" else "landscape"}"
+            )
             shouldTabsBeVisibleDueToOrientationAndKeyboard = !portraitOrientation || !keyboardVisible
             updateTabsFragmentVisibility()
         }
@@ -255,7 +257,9 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     }
 
     private fun handleIntentParams(intent: Intent) {
-        Log.i("[Main Activity] Handling intent with action [${intent.action}], type [${intent.type}] and data [${intent.data}]")
+        Log.i(
+            "[Main Activity] Handling intent with action [${intent.action}], type [${intent.type}] and data [${intent.data}]"
+        )
 
         when (intent.action) {
             Intent.ACTION_MAIN -> handleMainIntent(intent)
@@ -291,10 +295,14 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                         if (stringUri.startsWith("linphone-config:")) {
                             val remoteConfigUri = stringUri.substring("linphone-config:".length)
                             if (corePreferences.autoRemoteProvisioningOnConfigUriHandler) {
-                                Log.w("[Main Activity] Remote provisioning URL set to [$remoteConfigUri], restarting Core now")
+                                Log.w(
+                                    "[Main Activity] Remote provisioning URL set to [$remoteConfigUri], restarting Core now"
+                                )
                                 applyRemoteProvisioning(remoteConfigUri)
                             } else {
-                                Log.i("[Main Activity] Remote provisioning URL found [$remoteConfigUri], asking for user validation")
+                                Log.i(
+                                    "[Main Activity] Remote provisioning URL found [$remoteConfigUri], asking for user validation"
+                                )
                                 showAcceptRemoteConfigurationDialog(remoteConfigUri)
                             }
                         } else {
@@ -339,7 +347,9 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                 if (intent.hasExtra("RemoteSipUri") && intent.hasExtra("LocalSipUri")) {
                     val peerAddress = intent.getStringExtra("RemoteSipUri")
                     val localAddress = intent.getStringExtra("LocalSipUri")
-                    Log.i("[Main Activity] Found chat room intent extra: local SIP URI=[$localAddress], peer SIP URI=[$peerAddress]")
+                    Log.i(
+                        "[Main Activity] Found chat room intent extra: local SIP URI=[$localAddress], peer SIP URI=[$peerAddress]"
+                    )
                     navigateToChatRoom(localAddress, peerAddress)
                 } else {
                     Log.i("[Main Activity] Found chat intent extra, go to chat rooms list")
@@ -362,9 +372,16 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                 val core = coreContext.core
                 val call = core.currentCall ?: core.calls.firstOrNull()
                 if (call != null) {
-                    Log.i("[Main Activity] Launcher clicked while there is at least one active call, go to CallActivity")
-                    val callIntent = Intent(this, org.linphone.activities.voip.CallActivity::class.java)
-                    callIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+                    Log.i(
+                        "[Main Activity] Launcher clicked while there is at least one active call, go to CallActivity"
+                    )
+                    val callIntent = Intent(
+                        this,
+                        org.linphone.activities.voip.CallActivity::class.java
+                    )
+                    callIntent.addFlags(
+                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+                    )
                     startActivity(callIntent)
                 }
             }
@@ -391,7 +408,10 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             }
         }
 
-        val address = coreContext.core.interpretUrl(addressToCall, LinphoneUtils.applyInternationalPrefix())
+        val address = coreContext.core.interpretUrl(
+            addressToCall,
+            LinphoneUtils.applyInternationalPrefix()
+        )
         if (address != null) {
             addressToCall = address.asStringUriOnly()
         }
@@ -490,8 +510,13 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
             val localAddress =
                 coreContext.core.defaultAccount?.params?.identityAddress?.asStringUriOnly()
-            val peerAddress = coreContext.core.interpretUrl(addressToIM, LinphoneUtils.applyInternationalPrefix())?.asStringUriOnly()
-            Log.i("[Main Activity] Navigating to chat room with local [$localAddress] and peer [$peerAddress] addresses")
+            val peerAddress = coreContext.core.interpretUrl(
+                addressToIM,
+                LinphoneUtils.applyInternationalPrefix()
+            )?.asStringUriOnly()
+            Log.i(
+                "[Main Activity] Navigating to chat room with local [$localAddress] and peer [$peerAddress] addresses"
+            )
             navigateToChatRoom(localAddress, peerAddress)
         } else {
             val shortcutId = intent.getStringExtra("android.intent.extra.shortcut.ID") // Intent.EXTRA_SHORTCUT_ID
@@ -510,10 +535,14 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         if (split.size == 2) {
             val localAddress = split[0]
             val peerAddress = split[1]
-            Log.i("[Main Activity] Navigating to chat room with local [$localAddress] and peer [$peerAddress] addresses, computed from shortcut/locus id")
+            Log.i(
+                "[Main Activity] Navigating to chat room with local [$localAddress] and peer [$peerAddress] addresses, computed from shortcut/locus id"
+            )
             navigateToChatRoom(localAddress, peerAddress)
         } else {
-            Log.e("[Main Activity] Failed to parse shortcut/locus id: $id, going to chat rooms list")
+            Log.e(
+                "[Main Activity] Failed to parse shortcut/locus id: $id, going to chat rooms list"
+            )
             navigateToChatRooms()
         }
     }
@@ -562,7 +591,10 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     }
 
     private fun showAcceptRemoteConfigurationDialog(remoteConfigUri: String) {
-        val dialogViewModel = DialogViewModel(remoteConfigUri, getString(R.string.dialog_apply_remote_provisioning_title))
+        val dialogViewModel = DialogViewModel(
+            remoteConfigUri,
+            getString(R.string.dialog_apply_remote_provisioning_title)
+        )
         val dialog = DialogUtils.getDialog(this, dialogViewModel)
 
         dialogViewModel.showCancelButton {
@@ -575,7 +607,9 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         )
         dialogViewModel.showOkButton(
             {
-                Log.w("[Main Activity] Remote provisioning URL set to [$remoteConfigUri], restarting Core now")
+                Log.w(
+                    "[Main Activity] Remote provisioning URL set to [$remoteConfigUri], restarting Core now"
+                )
                 applyRemoteProvisioning(remoteConfigUri)
                 dialog.dismiss()
             },

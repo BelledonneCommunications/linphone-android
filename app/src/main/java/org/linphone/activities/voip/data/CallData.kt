@@ -101,7 +101,10 @@ open class CallData(val call: Call) : GenericContactData(call.remoteAddress) {
             scope.launch {
                 if (Compatibility.addImageToMediaStore(coreContext.context, content)) {
                     Log.i("[Call] Added snapshot ${content.name} to Media Store")
-                    val message = String.format(AppUtils.getString(R.string.call_screenshot_taken), content.name)
+                    val message = String.format(
+                        AppUtils.getString(R.string.call_screenshot_taken),
+                        content.name
+                    )
                     Toast.makeText(coreContext.context, message, Toast.LENGTH_SHORT).show()
                 } else {
                     Log.e("[Call] Something went wrong while copying file to Media Store...")
@@ -188,7 +191,9 @@ open class CallData(val call: Call) : GenericContactData(call.remoteAddress) {
             Call.State.PausedByRemote -> {
                 val conference = call.conference
                 if (conference != null && conference.me.isFocus) {
-                    Log.w("[Call] State is paused by remote but we are the focus of the conference, so considering call as active")
+                    Log.w(
+                        "[Call] State is paused by remote but we are the focus of the conference, so considering call as active"
+                    )
                     false
                 } else {
                     true
@@ -237,7 +242,9 @@ open class CallData(val call: Call) : GenericContactData(call.remoteAddress) {
         if (conference != null) {
             Log.d("[Call] Found conference attached to call")
             remoteConferenceSubject.value = LinphoneUtils.getConferenceSubject(conference)
-            Log.d("[Call] Found conference related to this call with subject [${remoteConferenceSubject.value}]")
+            Log.d(
+                "[Call] Found conference related to this call with subject [${remoteConferenceSubject.value}]"
+            )
 
             val participantsList = arrayListOf<ConferenceInfoParticipantData>()
             for (participant in conference.participantList) {
@@ -246,12 +253,23 @@ open class CallData(val call: Call) : GenericContactData(call.remoteAddress) {
             }
 
             conferenceParticipants.value = participantsList
-            conferenceParticipantsCountLabel.value = coreContext.context.getString(R.string.conference_participants_title, participantsList.size)
+            conferenceParticipantsCountLabel.value = coreContext.context.getString(
+                R.string.conference_participants_title,
+                participantsList.size
+            )
         } else {
             val conferenceAddress = LinphoneUtils.getConferenceAddress(call)
-            val conferenceInfo = if (conferenceAddress != null) coreContext.core.findConferenceInformationFromUri(conferenceAddress) else null
+            val conferenceInfo = if (conferenceAddress != null) {
+                coreContext.core.findConferenceInformationFromUri(
+                    conferenceAddress
+                )
+            } else {
+                null
+            }
             if (conferenceInfo != null) {
-                Log.d("[Call] Found matching conference info with subject: ${conferenceInfo.subject}")
+                Log.d(
+                    "[Call] Found matching conference info with subject: ${conferenceInfo.subject}"
+                )
                 remoteConferenceSubject.value = conferenceInfo.subject
 
                 val participantsList = arrayListOf<ConferenceInfoParticipantData>()
@@ -271,7 +289,10 @@ open class CallData(val call: Call) : GenericContactData(call.remoteAddress) {
                 }
 
                 conferenceParticipants.value = participantsList
-                conferenceParticipantsCountLabel.value = coreContext.context.getString(R.string.conference_participants_title, participantsList.size)
+                conferenceParticipantsCountLabel.value = coreContext.context.getString(
+                    R.string.conference_participants_title,
+                    participantsList.size
+                )
             }
         }
     }

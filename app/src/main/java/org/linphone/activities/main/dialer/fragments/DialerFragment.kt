@@ -93,13 +93,19 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
         }
 
         binding.setNewContactClickListener {
-            sharedViewModel.updateDialerAnimationsBasedOnDestination.value = Event(R.id.masterContactsFragment)
-            sharedViewModel.updateContactsAnimationsBasedOnDestination.value = Event(R.id.dialerFragment)
+            sharedViewModel.updateDialerAnimationsBasedOnDestination.value = Event(
+                R.id.masterContactsFragment
+            )
+            sharedViewModel.updateContactsAnimationsBasedOnDestination.value = Event(
+                R.id.dialerFragment
+            )
             navigateToContacts(viewModel.enteredUri.value)
         }
 
         binding.setNewConferenceClickListener {
-            sharedViewModel.updateDialerAnimationsBasedOnDestination.value = Event(R.id.conferenceSchedulingFragment)
+            sharedViewModel.updateDialerAnimationsBasedOnDestination.value = Event(
+                R.id.conferenceSchedulingFragment
+            )
             navigateToConferenceScheduling()
         }
 
@@ -157,7 +163,9 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
         }
 
         if (corePreferences.firstStart) {
-            Log.w("[Dialer] First start detected, wait for assistant to be finished to check for update & request permissions")
+            Log.w(
+                "[Dialer] First start detected, wait for assistant to be finished to check for update & request permissions"
+            )
             return
         }
 
@@ -168,10 +176,14 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
 
             if (corePreferences.skipDialerForNewCallAndTransfer) {
                 if (sharedViewModel.pendingCallTransfer) {
-                    Log.i("[Dialer] We were asked to skip dialer so starting new call to [$address] now")
+                    Log.i(
+                        "[Dialer] We were asked to skip dialer so starting new call to [$address] now"
+                    )
                     viewModel.transferCallTo(address)
                 } else {
-                    Log.i("[Dialer] We were asked to skip dialer so starting transfer to [$address] now")
+                    Log.i(
+                        "[Dialer] We were asked to skip dialer so starting transfer to [$address] now"
+                    )
                     viewModel.directCall(address)
                 }
             } else if (corePreferences.callRightAway && !skipAutoCall) {
@@ -289,7 +301,9 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
             if (Compatibility.hasTelecomManagerFeature(requireContext())) {
                 TelecomHelper.create(requireContext())
             } else {
-                Log.e("[Dialer] Telecom Helper can't be created, device doesn't support connection service!")
+                Log.e(
+                    "[Dialer] Telecom Helper can't be created, device doesn't support connection service!"
+                )
                 return
             }
         } else {

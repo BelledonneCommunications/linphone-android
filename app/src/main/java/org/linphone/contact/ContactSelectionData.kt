@@ -41,7 +41,9 @@ class ContactSelectionData(private val searchResult: SearchResult) : ContactData
     }
 
     val isLinphoneUser: Boolean by lazy {
-        searchResult.friend?.getPresenceModelForUriOrTel(searchResult.phoneNumber ?: searchResult.address?.asStringUriOnly() ?: "")?.basicStatus == PresenceBasicStatus.Open
+        searchResult.friend?.getPresenceModelForUriOrTel(
+            searchResult.phoneNumber ?: searchResult.address?.asStringUriOnly() ?: ""
+        )?.basicStatus == PresenceBasicStatus.Open
     }
 
     val sipUri: String by lazy {
@@ -84,7 +86,9 @@ class ContactSelectionData(private val searchResult: SearchResult) : ContactData
                 }
                 displayName.value = LinphoneUtils.getDisplayName(address)
             } else if (searchResult.phoneNumber != null) {
-                val found = coreContext.contactsManager.findContactByPhoneNumber(searchResult.phoneNumber.orEmpty())
+                val found = coreContext.contactsManager.findContactByPhoneNumber(
+                    searchResult.phoneNumber.orEmpty()
+                )
                 if (found != null) {
                     contact.value = found!!
                     presenceStatus.value = found.consolidatedPresence

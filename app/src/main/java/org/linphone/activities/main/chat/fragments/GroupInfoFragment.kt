@@ -76,7 +76,9 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
         binding.participants.layoutManager = layoutManager
 
         // Divider between items
-        binding.participants.addItemDecoration(AppUtils.getDividerDecoration(requireContext(), layoutManager))
+        binding.participants.addItemDecoration(
+            AppUtils.getDividerDecoration(requireContext(), layoutManager)
+        )
 
         viewModel.participants.observe(
             viewLifecycleOwner
@@ -148,7 +150,9 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
         }
 
         binding.setLeaveClickListener {
-            val dialogViewModel = DialogViewModel(getString(R.string.chat_room_group_info_leave_dialog_message))
+            val dialogViewModel = DialogViewModel(
+                getString(R.string.chat_room_group_info_leave_dialog_message)
+            )
             val dialog: Dialog = DialogUtils.getDialog(requireContext(), dialogViewModel)
 
             dialogViewModel.showDeleteButton(
@@ -190,7 +194,11 @@ class GroupInfoFragment : SecureFragment<ChatRoomGroupInfoFragmentBinding>() {
                 } else {
                     list.add(
                         GroupInfoParticipantData(
-                            GroupChatRoomMember(address, false, hasLimeX3DHCapability = viewModel.isEncrypted.value == true)
+                            GroupChatRoomMember(
+                                address,
+                                false,
+                                hasLimeX3DHCapability = viewModel.isEncrypted.value == true
+                            )
                         )
                     )
                 }

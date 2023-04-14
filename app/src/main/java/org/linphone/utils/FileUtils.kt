@@ -100,7 +100,9 @@ class FileUtils {
             val dir = File(corePreferences.vfsCachePath)
             if (dir.exists()) {
                 for (file in dir.listFiles().orEmpty()) {
-                    Log.w("[File Utils] [VFS] Found forgotten plain file [${file.path}], deleting it")
+                    Log.w(
+                        "[File Utils] [VFS] Found forgotten plain file [${file.path}], deleting it"
+                    )
                     deleteFile(file.path)
                 }
             }
@@ -119,7 +121,11 @@ class FileUtils {
             }
 
             val returnPath: File = path ?: coreContext.context.filesDir
-            if (path == null) Log.w("[File Utils] Couldn't get external storage path, using internal")
+            if (path == null) {
+                Log.w(
+                    "[File Utils] Couldn't get external storage path, using internal"
+                )
+            }
 
             return returnPath
         }
@@ -230,7 +236,9 @@ class FileUtils {
                     filePath.startsWith("file://")
                 ) {
                     val result = getFilePath(coreContext.context, uriToParse)
-                    Log.i("[File Utils] Path was using a content or file scheme, real path is: $result")
+                    Log.i(
+                        "[File Utils] Path was using a content or file scheme, real path is: $result"
+                    )
                     if (result == null) {
                         Log.e("[File Utils] Failed to get access to file $uriToParse")
                     }
@@ -304,10 +312,14 @@ class FileUtils {
                             if (displayName != null) {
                                 name = displayName
                             } else {
-                                Log.e("[File Utils] Failed to get the display name for URI $uri, returned value is null")
+                                Log.e(
+                                    "[File Utils] Failed to get the display name for URI $uri, returned value is null"
+                                )
                             }
                         } catch (e: CursorIndexOutOfBoundsException) {
-                            Log.e("[File Utils] Failed to get the display name for URI $uri, exception is $e")
+                            Log.e(
+                                "[File Utils] Failed to get the display name for URI $uri, exception is $e"
+                            )
                         }
                     } else {
                         Log.e("[File Utils] Couldn't get DISPLAY_NAME column index for URI: $uri")
@@ -463,7 +475,9 @@ class FileUtils {
                 } else {
                     "file/$extension"
                 }
-                Log.w("[File Viewer] Can't get MIME type from extension: $extension, will use $type")
+                Log.w(
+                    "[File Viewer] Can't get MIME type from extension: $extension, will use $type"
+                )
             }
 
             intent.setDataAndType(contentUri, type)

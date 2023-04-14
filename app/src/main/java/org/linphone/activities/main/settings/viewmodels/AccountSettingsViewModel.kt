@@ -89,7 +89,9 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
             message: String
         ) {
             if (state == RegistrationState.Cleared && account == accountToDelete) {
-                Log.i("[Account Settings] Account to remove ([${account.params.identityAddress?.asStringUriOnly()}]) registration is now cleared, removing it")
+                Log.i(
+                    "[Account Settings] Account to remove ([${account.params.identityAddress?.asStringUriOnly()}]) registration is now cleared, removing it"
+                )
                 waitForUnregister.value = false
                 deleteAccount(account)
             } else {
@@ -121,7 +123,9 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
                     params.identityAddress = newIdentityAddress
                     account.params = params
                 } else {
-                    Log.e("[Account Settings] Failed to create identity address sip:$newValue@$domain")
+                    Log.e(
+                        "[Account Settings] Failed to create identity address sip:$newValue@$domain"
+                    )
                 }
             }
         }
@@ -157,10 +161,19 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
                 val identity = params.identityAddress
                 if (identity != null && identity.username != null) {
                     val newAuthInfo = Factory.instance()
-                        .createAuthInfo(identity.username!!, userId.value, newValue, null, null, identity.domain)
+                        .createAuthInfo(
+                            identity.username!!,
+                            userId.value,
+                            newValue,
+                            null,
+                            null,
+                            identity.domain
+                        )
                     core.addAuthInfo(newAuthInfo)
                 } else {
-                    Log.e("[Account Settings] Failed to find the user's identity, can't create a new auth info")
+                    Log.e(
+                        "[Account Settings] Failed to find the user's identity, can't create a new auth info"
+                    )
                 }
             }
         }
@@ -394,7 +407,9 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
     val conferenceFactoryUriListener = object : SettingListenerStub() {
         override fun onTextValueChanged(newValue: String) {
             val params = account.params.clone()
-            Log.i("[Account Settings] Forcing conference factory on proxy config ${params.identityAddress?.asString()} to value: $newValue")
+            Log.i(
+                "[Account Settings] Forcing conference factory on proxy config ${params.identityAddress?.asString()} to value: $newValue"
+            )
             params.conferenceFactoryUri = newValue
             account.params = params
         }
@@ -405,7 +420,9 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
         override fun onTextValueChanged(newValue: String) {
             val params = account.params.clone()
             val uri = coreContext.core.interpretUrl(newValue, false)
-            Log.i("[Account Settings] Forcing audio/video conference factory on proxy config ${params.identityAddress?.asString()} to value: $newValue")
+            Log.i(
+                "[Account Settings] Forcing audio/video conference factory on proxy config ${params.identityAddress?.asString()} to value: $newValue"
+            )
             params.audioVideoConferenceFactoryAddress = uri
             account.params = params
         }
@@ -510,7 +527,9 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
     }
 
     fun startDeleteAccount() {
-        Log.i("[Account Settings] Starting to delete account [${account.params.identityAddress?.asStringUriOnly()}]")
+        Log.i(
+            "[Account Settings] Starting to delete account [${account.params.identityAddress?.asStringUriOnly()}]"
+        )
         accountToDelete = account
 
         val registered = account.state == RegistrationState.Ok
@@ -521,7 +540,9 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
             for (accountIterator in core.accountList) {
                 if (account != accountIterator) {
                     core.defaultAccount = accountIterator
-                    Log.i("[Account Settings] New default account is [${accountIterator.params.identityAddress?.asStringUriOnly()}]")
+                    Log.i(
+                        "[Account Settings] New default account is [${accountIterator.params.identityAddress?.asStringUriOnly()}]"
+                    )
                     break
                 }
             }
@@ -532,10 +553,14 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
         account.params = params
 
         if (!registered) {
-            Log.w("[Account Settings] Account isn't registered, don't unregister before removing it")
+            Log.w(
+                "[Account Settings] Account isn't registered, don't unregister before removing it"
+            )
             deleteAccount(account)
         } else {
-            Log.i("[Account Settings] Waiting for account registration to be cleared before removing it")
+            Log.i(
+                "[Account Settings] Waiting for account registration to be cleared before removing it"
+            )
         }
     }
 }

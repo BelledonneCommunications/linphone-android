@@ -68,7 +68,9 @@ class ChatRoomCreationViewModel : ContactsSelectionViewModel() {
 
     fun updateEncryption(encrypted: Boolean) {
         if (!encrypted && secureChatMandatory) {
-            Log.w("[Chat Room Creation] Something tries to force plain text chat room even if secureChatMandatory is enabled!")
+            Log.w(
+                "[Chat Room Creation] Something tries to force plain text chat room even if secureChatMandatory is enabled!"
+            )
             return
         }
         isEncrypted.value = encrypted
@@ -79,7 +81,10 @@ class ChatRoomCreationViewModel : ContactsSelectionViewModel() {
         val defaultAccount = coreContext.core.defaultAccount
         var room: ChatRoom?
 
-        val address = searchResult.address ?: coreContext.core.interpretUrl(searchResult.phoneNumber ?: "", LinphoneUtils.applyInternationalPrefix())
+        val address = searchResult.address ?: coreContext.core.interpretUrl(
+            searchResult.phoneNumber ?: "",
+            LinphoneUtils.applyInternationalPrefix()
+        )
         if (address == null) {
             Log.e("[Chat Room Creation] Can't get a valid address from search result $searchResult")
             onMessageToNotifyEvent.value = Event(R.string.chat_room_creation_failed_snack)
@@ -94,12 +99,15 @@ class ChatRoomCreationViewModel : ContactsSelectionViewModel() {
         if (encrypted) {
             params.isEncryptionEnabled = true
             params.backend = ChatRoomBackend.FlexisipChat
-            params.ephemeralMode = if (corePreferences.useEphemeralPerDeviceMode)
+            params.ephemeralMode = if (corePreferences.useEphemeralPerDeviceMode) {
                 ChatRoomEphemeralMode.DeviceManaged
-            else
+            } else {
                 ChatRoomEphemeralMode.AdminManaged
+            }
             params.ephemeralLifetime = 0 // Make sure ephemeral is disabled by default
-            Log.i("[Chat Room Creation] Ephemeral mode is ${params.ephemeralMode}, lifetime is ${params.ephemeralLifetime}")
+            Log.i(
+                "[Chat Room Creation] Ephemeral mode is ${params.ephemeralMode}, lifetime is ${params.ephemeralLifetime}"
+            )
             params.subject = AppUtils.getString(R.string.chat_room_dummy_subject)
         }
 
@@ -108,7 +116,9 @@ class ChatRoomCreationViewModel : ContactsSelectionViewModel() {
 
         room = coreContext.core.searchChatRoom(params, localAddress, null, participants)
         if (room == null) {
-            Log.w("[Chat Room Creation] Couldn't find existing 1-1 chat room with remote ${address.asStringUriOnly()}, encryption=$encrypted and local identity ${localAddress?.asStringUriOnly()}")
+            Log.w(
+                "[Chat Room Creation] Couldn't find existing 1-1 chat room with remote ${address.asStringUriOnly()}, encryption=$encrypted and local identity ${localAddress?.asStringUriOnly()}"
+            )
             room = coreContext.core.createChatRoom(params, localAddress, participants)
 
             if (room != null) {
@@ -119,7 +129,9 @@ class ChatRoomCreationViewModel : ContactsSelectionViewModel() {
                         chatRoomCreatedEvent.value = Event(room)
                         waitForChatRoomCreation.value = false
                     } else {
-                        Log.i("[Chat Room Creation] Chat room creation is pending [$state], waiting for Created state")
+                        Log.i(
+                            "[Chat Room Creation] Chat room creation is pending [$state], waiting for Created state"
+                        )
                         room.addListener(listener)
                     }
                 } else {
@@ -127,11 +139,15 @@ class ChatRoomCreationViewModel : ContactsSelectionViewModel() {
                     waitForChatRoomCreation.value = false
                 }
             } else {
-                Log.e("[Chat Room Creation] Couldn't create chat room with remote ${address.asStringUriOnly()} and local identity ${localAddress?.asStringUriOnly()}")
+                Log.e(
+                    "[Chat Room Creation] Couldn't create chat room with remote ${address.asStringUriOnly()} and local identity ${localAddress?.asStringUriOnly()}"
+                )
                 waitForChatRoomCreation.value = false
             }
         } else {
-            Log.i("[Chat Room Creation] Found existing 1-1 chat room with remote ${address.asStringUriOnly()}, encryption=$encrypted and local identity ${localAddress?.asStringUriOnly()}")
+            Log.i(
+                "[Chat Room Creation] Found existing 1-1 chat room with remote ${address.asStringUriOnly()}, encryption=$encrypted and local identity ${localAddress?.asStringUriOnly()}"
+            )
             chatRoomCreatedEvent.value = Event(room)
             waitForChatRoomCreation.value = false
         }

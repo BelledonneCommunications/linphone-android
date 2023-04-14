@@ -70,7 +70,9 @@ class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>
         binding.contactsList.layoutManager = layoutManager
 
         // Divider between items
-        binding.contactsList.addItemDecoration(AppUtils.getDividerDecoration(requireContext(), layoutManager))
+        binding.contactsList.addItemDecoration(
+            AppUtils.getDividerDecoration(requireContext(), layoutManager)
+        )
 
         binding.back.visibility = if (resources.getBoolean(R.bool.isTablet)) View.INVISIBLE else View.VISIBLE
 

@@ -27,7 +27,9 @@ import org.linphone.core.ChatRoomSecurityLevel
 import org.linphone.core.Participant
 import org.linphone.utils.LinphoneUtils
 
-class DevicesListGroupData(private val participant: Participant) : GenericContactData(participant.address) {
+class DevicesListGroupData(private val participant: Participant) : GenericContactData(
+    participant.address
+) {
     val securityLevelIcon: Int by lazy {
         when (participant.securityLevel) {
             ChatRoomSecurityLevel.Safe -> R.drawable.security_2_indicator

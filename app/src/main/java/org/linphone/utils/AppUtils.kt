@@ -52,7 +52,9 @@ class AppUtils {
             return try {
                 EmojiCompat.get()
             } catch (ise: IllegalStateException) {
-                Log.w("[App Utils] EmojiCompat.get() triggered IllegalStateException [$ise], trying manual init")
+                Log.w(
+                    "[App Utils] EmojiCompat.get() triggered IllegalStateException [$ise], trying manual init"
+                )
                 EmojiCompat.init(coreContext.context)
             }
         }
@@ -84,7 +86,10 @@ class AppUtils {
             for (i in split.indices) {
                 if (split[i].isNotEmpty()) {
                     try {
-                        if (emoji?.loadState == EmojiCompat.LOAD_STATE_SUCCEEDED && emoji.hasEmojiGlyph(split[i])) {
+                        if (emoji?.loadState == EmojiCompat.LOAD_STATE_SUCCEEDED && emoji.hasEmojiGlyph(
+                                split[i]
+                            )
+                        ) {
                             val glyph = emoji.process(split[i])
                             if (characters > 0) { // Limit initial to 1 emoji only
                                 Log.d("[App Utils] We limit initials to one emoji only")
@@ -112,7 +117,9 @@ class AppUtils {
             emoji ?: return false
 
             if (emoji.loadState != EmojiCompat.LOAD_STATE_SUCCEEDED) {
-                Log.w("[App Utils] Can't check emoji presence in text due to EmojiCompat library not loaded yet [${emoji.loadState}]")
+                Log.w(
+                    "[App Utils] Can't check emoji presence in text due to EmojiCompat library not loaded yet [${emoji.loadState}]"
+                )
                 return false
             }
 
@@ -127,7 +134,9 @@ class AppUtils {
                     }
                 }
             } catch (npe: NullPointerException) {
-                Log.e("[App Utils] Can't check emoji presence in text due to NPE in EmojiCompat library, assuming there is none")
+                Log.e(
+                    "[App Utils] Can't check emoji presence in text due to NPE in EmojiCompat library, assuming there is none"
+                )
                 // This can happen in EmojiCompat library, mProcessor can be null (https://issuetracker.google.com/issues/277182750)
                 return false
             }
@@ -164,7 +173,12 @@ class AppUtils {
             intent.type = "text/plain"
 
             try {
-                activity.startActivity(Intent.createChooser(intent, activity.getString(R.string.share_uploaded_logs_link)))
+                activity.startActivity(
+                    Intent.createChooser(
+                        intent,
+                        activity.getString(R.string.share_uploaded_logs_link)
+                    )
+                )
             } catch (ex: ActivityNotFoundException) {
                 Log.e(ex)
             }
@@ -205,7 +219,9 @@ class AppUtils {
                 .build()
 
             val request =
-                AudioFocusRequestCompat.Builder(AudioManagerCompat.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE)
+                AudioFocusRequestCompat.Builder(
+                    AudioManagerCompat.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE
+                )
                     .setAudioAttributes(audioAttrs)
                     .setOnAudioFocusChangeListener { }
                     .build()

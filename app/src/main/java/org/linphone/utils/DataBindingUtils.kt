@@ -75,7 +75,9 @@ fun View.hideKeyboard() {
 
 fun View.addKeyboardInsetListener(lambda: (visible: Boolean) -> Unit) {
     doOnLayout {
-        var isKeyboardVisible = ViewCompat.getRootWindowInsets(this)?.isVisible(WindowInsetsCompat.Type.ime()) == true
+        var isKeyboardVisible = ViewCompat.getRootWindowInsets(this)?.isVisible(
+            WindowInsetsCompat.Type.ime()
+        ) == true
 
         lambda(isKeyboardVisible)
 
@@ -354,7 +356,9 @@ fun loadImageWithCoil(imageView: ImageView, path: String?) {
                 diskCachePolicy(CachePolicy.DISABLED)
                 listener(
                     onError = { _, result ->
-                        Log.e("[Data Binding] [VFS] [Coil] Error loading [$path]: ${result.throwable}")
+                        Log.e(
+                            "[Data Binding] [VFS] [Coil] Error loading [$path]: ${result.throwable}"
+                        )
                     }
                 )
             }
@@ -394,7 +398,9 @@ private suspend fun loadContactPictureWithCoil(
             imageView.load(R.drawable.icon_single_contact_avatar)
         }
     } else if (contact.showGroupChatAvatar) {
-        imageView.load(AppCompatResources.getDrawable(context, R.drawable.icon_multiple_contacts_avatar))
+        imageView.load(
+            AppCompatResources.getDrawable(context, R.drawable.icon_multiple_contacts_avatar)
+        )
     } else {
         val displayName = contact.contact.value?.name ?: contact.displayName.value.orEmpty()
         val source = contact.contact.value?.getPictureUri(useThumbnail)
@@ -402,7 +408,9 @@ private suspend fun loadContactPictureWithCoil(
         val base64 = if (ImageUtils.isBase64(sourceStr)) {
             Log.d("[Coil] Picture URI is base64 encoded")
             ImageUtils.getBase64ImageFromString(sourceStr)
-        } else null
+        } else {
+            null
+        }
 
         imageView.load(base64 ?: source) {
             transformations(CircleCropTransformation())
@@ -451,8 +459,11 @@ fun loadBigContactPictureWithCoil(imageView: ImageView, contact: ContactDataInte
     coroutineScope.launch {
         withContext(Dispatchers.Main) {
             loadContactPictureWithCoil(
-                imageView, contact, false,
-                R.dimen.contact_avatar_big_size, R.dimen.contact_avatar_text_big_size
+                imageView,
+                contact,
+                false,
+                R.dimen.contact_avatar_big_size,
+                R.dimen.contact_avatar_text_big_size
             )
         }
     }
@@ -464,9 +475,13 @@ fun loadVoipContactPictureWithCoilAlt(imageView: ImageView, contact: ContactData
     coroutineScope.launch {
         withContext(Dispatchers.Main) {
             loadContactPictureWithCoil(
-                imageView, contact, false,
-                R.dimen.voip_contact_avatar_max_size, R.dimen.voip_contact_avatar_text_size,
-                R.attr.voipParticipantBackgroundColor, R.color.white_color
+                imageView,
+                contact,
+                false,
+                R.dimen.voip_contact_avatar_max_size,
+                R.dimen.voip_contact_avatar_text_size,
+                R.attr.voipParticipantBackgroundColor,
+                R.color.white_color
             )
         }
     }
@@ -478,9 +493,13 @@ fun loadVoipContactPictureWithCoil(imageView: ImageView, contact: ContactDataInt
     coroutineScope.launch {
         withContext(Dispatchers.Main) {
             loadContactPictureWithCoil(
-                imageView, contact, false,
-                R.dimen.voip_contact_avatar_max_size, R.dimen.voip_contact_avatar_text_size,
-                R.attr.voipBackgroundColor, R.color.white_color
+                imageView,
+                contact,
+                false,
+                R.dimen.voip_contact_avatar_max_size,
+                R.dimen.voip_contact_avatar_text_size,
+                R.attr.voipBackgroundColor,
+                R.color.white_color
             )
         }
     }
@@ -492,9 +511,13 @@ fun loadSelfAvatarWithCoil(imageView: ImageView, contact: ContactDataInterface?)
     coroutineScope.launch {
         withContext(Dispatchers.Main) {
             loadContactPictureWithCoil(
-                imageView, contact, false,
-                R.dimen.voip_contact_avatar_max_size, R.dimen.voip_contact_avatar_text_size,
-                R.attr.voipBackgroundColor, R.color.white_color,
+                imageView,
+                contact,
+                false,
+                R.dimen.voip_contact_avatar_max_size,
+                R.dimen.voip_contact_avatar_text_size,
+                R.attr.voipBackgroundColor,
+                R.color.white_color,
                 corePreferences.defaultAccountAvatarPath
             )
         }
@@ -539,7 +562,9 @@ fun addPhoneNumberEditTextValidation(editText: EditText, enabled: Boolean) {
             when {
                 s?.matches(Regex("\\d+")) == false ->
                     editText.error =
-                        editText.context.getString(R.string.assistant_error_phone_number_invalid_characters)
+                        editText.context.getString(
+                            R.string.assistant_error_phone_number_invalid_characters
+                        )
             }
         }
 
@@ -580,7 +605,9 @@ fun addUsernameEditTextValidation(editText: EditText, enabled: Boolean) {
             when {
                 s?.matches(Regex(usernameRegexp)) == false ->
                     editText.error =
-                        editText.context.getString(R.string.assistant_error_username_invalid_characters)
+                        editText.context.getString(
+                            R.string.assistant_error_username_invalid_characters
+                        )
                 (s?.length ?: 0) > usernameMaxLength -> {
                     editText.error =
                         editText.context.getString(R.string.assistant_error_username_too_long)
@@ -638,7 +665,9 @@ fun addPasswordConfirmationEditTextValidation(password: EditText, passwordConfir
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             if (passwordConfirmation.text == null || s == null || passwordConfirmation.text.toString() != s.toString()) {
                 passwordConfirmation.error =
-                    passwordConfirmation.context.getString(R.string.assistant_error_passwords_dont_match)
+                    passwordConfirmation.context.getString(
+                        R.string.assistant_error_passwords_dont_match
+                    )
             } else {
                 passwordConfirmation.error = null // To clear other edit text field error
             }
@@ -653,7 +682,9 @@ fun addPasswordConfirmationEditTextValidation(password: EditText, passwordConfir
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             if (password.text == null || s == null || password.text.toString() != s.toString()) {
                 passwordConfirmation.error =
-                    passwordConfirmation.context.getString(R.string.assistant_error_passwords_dont_match)
+                    passwordConfirmation.context.getString(
+                        R.string.assistant_error_passwords_dont_match
+                    )
             }
         }
     })
@@ -811,8 +842,12 @@ fun ImageView.setPresenceIcon(presence: ConsolidatedPresence) {
     setImageResource(icon)
 
     val contentDescription = when (presence) {
-        ConsolidatedPresence.Online -> AppUtils.getString(R.string.content_description_presence_online)
-        ConsolidatedPresence.DoNotDisturb -> AppUtils.getString(R.string.content_description_presence_do_not_disturb)
+        ConsolidatedPresence.Online -> AppUtils.getString(
+            R.string.content_description_presence_online
+        )
+        ConsolidatedPresence.DoNotDisturb -> AppUtils.getString(
+            R.string.content_description_presence_do_not_disturb
+        )
         else -> AppUtils.getString(R.string.content_description_presence_offline)
     }
     setContentDescription(contentDescription)

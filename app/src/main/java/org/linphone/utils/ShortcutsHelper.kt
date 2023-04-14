@@ -81,9 +81,14 @@ class ShortcutsHelper(val context: Context) {
                             coreContext.contactsManager.findContactByAddress(address)
 
                         if (contact != null && contact.refKey != null) {
-                            val shortcut: ShortcutInfoCompat? = createContactShortcut(context, contact)
+                            val shortcut: ShortcutInfoCompat? = createContactShortcut(
+                                context,
+                                contact
+                            )
                             if (shortcut != null) {
-                                Log.i("[Shortcut Helper] Creating launcher shortcut for ${shortcut.shortLabel}")
+                                Log.i(
+                                    "[Shortcut Helper] Creating launcher shortcut for ${shortcut.shortLabel}"
+                                )
                                 shortcuts.add(shortcut)
                                 count += 1
                             }
@@ -117,7 +122,9 @@ class ShortcutsHelper(val context: Context) {
                     .setIntent(intent)
                     .build()
             } catch (e: Exception) {
-                Log.e("[Shortcuts Helper] createContactShortcut for contact [${contact.name}] exception: $e")
+                Log.e(
+                    "[Shortcuts Helper] createContactShortcut for contact [${contact.name}] exception: $e"
+                )
             }
 
             return null

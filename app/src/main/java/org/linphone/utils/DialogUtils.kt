@@ -39,11 +39,18 @@ class DialogUtils {
             val dialog = Dialog(context)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
 
-            val binding: DialogBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.dialog, null, false)
+            val binding: DialogBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.dialog,
+                null,
+                false
+            )
             binding.viewModel = viewModel
             dialog.setContentView(binding.root)
 
-            val d: Drawable = ColorDrawable(ContextCompat.getColor(dialog.context, R.color.dark_grey_color))
+            val d: Drawable = ColorDrawable(
+                ContextCompat.getColor(dialog.context, R.color.dark_grey_color)
+            )
             d.alpha = 200
             dialog.window
                 ?.setLayout(
@@ -58,11 +65,18 @@ class DialogUtils {
             val dialog = Dialog(context, R.style.AppTheme)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
 
-            val binding: VoipDialogBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.voip_dialog, null, false)
+            val binding: VoipDialogBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.voip_dialog,
+                null,
+                false
+            )
             binding.viewModel = viewModel
             dialog.setContentView(binding.root)
 
-            val d: Drawable = ColorDrawable(ContextCompat.getColor(dialog.context, R.color.voip_dark_gray))
+            val d: Drawable = ColorDrawable(
+                ContextCompat.getColor(dialog.context, R.color.voip_dark_gray)
+            )
             d.alpha = 166
             dialog.window
                 ?.setLayout(

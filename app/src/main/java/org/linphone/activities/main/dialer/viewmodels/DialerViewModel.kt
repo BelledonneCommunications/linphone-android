@@ -112,7 +112,9 @@ class DialerViewModel : LogsUploadViewModel() {
             if (reachable && address.isNotEmpty()) {
                 val now = System.currentTimeMillis()
                 if (now - timeAtWitchWeTriedToCall > 1000) {
-                    Log.e("[Dialer] More than 1 second has passed waiting for network, abort auto call to $address")
+                    Log.e(
+                        "[Dialer] More than 1 second has passed waiting for network, abort auto call to $address"
+                    )
                     enteredUri.value = address
                 } else {
                     Log.i("[Dialer] Network is available, continue auto call to $address")
@@ -198,7 +200,9 @@ class DialerViewModel : LogsUploadViewModel() {
         if (coreContext.core.isNetworkReachable) {
             coreContext.startCall(to)
         } else {
-            Log.w("[Dialer] Network isnt't reachable at the time, wait for network to start call (happens mainly when app is cold started)")
+            Log.w(
+                "[Dialer] Network isnt't reachable at the time, wait for network to start call (happens mainly when app is cold started)"
+            )
             timeAtWitchWeTriedToCall = System.currentTimeMillis()
             addressWaitingNetworkToBeCalled = to
         }

@@ -33,7 +33,8 @@ class Api25Compatibility {
         @SuppressLint("MissingPermission")
         fun getDeviceName(context: Context): String {
             var name = Settings.Global.getString(
-                context.contentResolver, Settings.Global.DEVICE_NAME
+                context.contentResolver,
+                Settings.Global.DEVICE_NAME
             )
             if (name == null) {
                 val adapter = BluetoothAdapter.getDefaultAdapter()

@@ -19,7 +19,11 @@ class SyncAccountAdapter : BaseAdapter() {
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val view: View = convertView ?: LayoutInflater.from(parent.context).inflate(R.layout.contact_sync_account_picker_cell, parent, false)
+        val view: View = convertView ?: LayoutInflater.from(parent.context).inflate(
+            R.layout.contact_sync_account_picker_cell,
+            parent,
+            false
+        )
         val account = getItem(position)
 
         val icon = view.findViewById<ImageView>(R.id.account_icon)

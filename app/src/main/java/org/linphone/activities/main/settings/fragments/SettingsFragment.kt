@@ -80,7 +80,9 @@ class SettingsFragment : SecureFragment<SettingsFragmentBinding>() {
                     val navHostFragment =
                         childFragmentManager.findFragmentById(R.id.settings_nav_container) as NavHostFragment
                     if (navHostFragment.navController.currentDestination?.id == R.id.emptySettingsFragment) {
-                        Log.i("[Settings] Foldable device has been folded, closing side pane with empty fragment")
+                        Log.i(
+                            "[Settings] Foldable device has been folded, closing side pane with empty fragment"
+                        )
                         binding.slidingPane.closePane()
                     }
                 }

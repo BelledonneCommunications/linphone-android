@@ -74,7 +74,9 @@ class EmailAccountCreationViewModel(val accountCreator: AccountCreator) : ViewMo
             when (status) {
                 AccountCreator.Status.AccountExist, AccountCreator.Status.AccountExistWithAlias -> {
                     waitForServerAnswer.value = false
-                    usernameError.value = AppUtils.getString(R.string.assistant_error_username_already_exists)
+                    usernameError.value = AppUtils.getString(
+                        R.string.assistant_error_username_already_exists
+                    )
                 }
                 AccountCreator.Status.AccountNotExist -> {
                     val createAccountStatus = creator.createAccount()

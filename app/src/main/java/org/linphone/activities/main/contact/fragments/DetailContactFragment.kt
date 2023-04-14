@@ -88,7 +88,9 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
         ) {
             it.consume { address ->
                 if (coreContext.core.callsNb > 0) {
-                    Log.i("[Contact] Starting dialer with pre-filled URI ${address.asStringUriOnly()}, is transfer? ${sharedViewModel.pendingCallTransfer}")
+                    Log.i(
+                        "[Contact] Starting dialer with pre-filled URI ${address.asStringUriOnly()}, is transfer? ${sharedViewModel.pendingCallTransfer}"
+                    )
                     sharedViewModel.updateContactsAnimationsBasedOnDestination.value =
                         Event(R.id.dialerFragment)
                     sharedViewModel.updateDialerAnimationsBasedOnDestination.value =
@@ -186,7 +188,9 @@ class DetailContactFragment : GenericFragment<ContactDetailFragmentBinding>() {
         val smsIntent = Intent(Intent.ACTION_SENDTO)
         smsIntent.putExtra("address", number)
         smsIntent.data = Uri.parse("smsto:$number")
-        val text = getString(R.string.contact_send_sms_invite_text).format(getString(R.string.contact_send_sms_invite_download_link))
+        val text = getString(R.string.contact_send_sms_invite_text).format(
+            getString(R.string.contact_send_sms_invite_download_link)
+        )
         smsIntent.putExtra("sms_body", text)
         startActivity(smsIntent)
     }

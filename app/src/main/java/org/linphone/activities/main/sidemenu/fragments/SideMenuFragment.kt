@@ -142,7 +142,10 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
             lifecycleScope.launch {
-                val contactImageFilePath = FileUtils.getFilePathFromPickerIntent(data, temporaryPicturePath)
+                val contactImageFilePath = FileUtils.getFilePathFromPickerIntent(
+                    data,
+                    temporaryPicturePath
+                )
                 if (contactImageFilePath != null) {
                     viewModel.setPictureFromPath(contactImageFilePath)
                 }
@@ -176,7 +179,10 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
 
         val chooserIntent =
             Intent.createChooser(galleryIntent, getString(R.string.chat_message_pick_file_dialog))
-        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(arrayOf<Parcelable>()))
+        chooserIntent.putExtra(
+            Intent.EXTRA_INITIAL_INTENTS,
+            cameraIntents.toArray(arrayOf<Parcelable>())
+        )
 
         startActivityForResult(chooserIntent, 0)
     }
@@ -186,11 +192,15 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
         goToAccountSettings: Boolean = false,
         accountIdentity: String = ""
     ) {
-        val dialogViewModel = DialogViewModel(getString(R.string.settings_password_protection_dialog_title))
+        val dialogViewModel = DialogViewModel(
+            getString(R.string.settings_password_protection_dialog_title)
+        )
         dialogViewModel.showIcon = true
         dialogViewModel.iconResource = R.drawable.security_toggle_icon_green
         dialogViewModel.showPassword = true
-        dialogViewModel.passwordTitle = getString(R.string.settings_password_protection_dialog_input_hint)
+        dialogViewModel.passwordTitle = getString(
+            R.string.settings_password_protection_dialog_input_hint
+        )
         val dialog = DialogUtils.getDialog(requireContext(), dialogViewModel)
 
         dialogViewModel.showCancelButton {
@@ -206,13 +216,19 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
                 } else {
                     val authInfo = defaultAccount.findAuthInfo()
                     if (authInfo == null) {
-                        Log.e("[Side Menu] No auth info found for account [${defaultAccount.params.identityAddress?.asString()}], can't check password input!")
+                        Log.e(
+                            "[Side Menu] No auth info found for account [${defaultAccount.params.identityAddress?.asString()}], can't check password input!"
+                        )
                         (requireActivity() as MainActivity).showSnackBar(R.string.error_unexpected)
                     } else {
                         val expectedHash = authInfo.ha1
                         if (expectedHash == null) {
-                            Log.e("[Side Menu] No ha1 found in auth info, can't check password input!")
-                            (requireActivity() as MainActivity).showSnackBar(R.string.error_unexpected)
+                            Log.e(
+                                "[Side Menu] No ha1 found in auth info, can't check password input!"
+                            )
+                            (requireActivity() as MainActivity).showSnackBar(
+                                R.string.error_unexpected
+                            )
                         } else {
                             val hashAlgorithm = authInfo.algorithm ?: "MD5"
                             val userId = (authInfo.userid ?: authInfo.username).orEmpty()
@@ -225,8 +241,12 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
                                 hashAlgorithm
                             )
                             if (computedHash != expectedHash) {
-                                Log.e("[Side Menu] Computed hash [$computedHash] using userId [$userId], realm [$realm] and algorithm [$hashAlgorithm] doesn't match expected hash!")
-                                (requireActivity() as MainActivity).showSnackBar(R.string.settings_password_protection_dialog_invalid_input)
+                                Log.e(
+                                    "[Side Menu] Computed hash [$computedHash] using userId [$userId], realm [$realm] and algorithm [$hashAlgorithm] doesn't match expected hash!"
+                                )
+                                (requireActivity() as MainActivity).showSnackBar(
+                                    R.string.settings_password_protection_dialog_invalid_input
+                                )
                             } else {
                                 if (goToSettings) {
                                     navigateToSettings()

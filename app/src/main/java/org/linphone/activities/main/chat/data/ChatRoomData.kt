@@ -158,7 +158,9 @@ class ChatRoomData(val chatRoom: ChatRoom) : ContactDataInterface {
             if (participants.isNotEmpty()) {
                 participants.first().address
             } else {
-                Log.e("[Chat Room] ${chatRoom.peerAddress} doesn't have any participant (state ${chatRoom.state})!")
+                Log.e(
+                    "[Chat Room] ${chatRoom.peerAddress} doesn't have any participant (state ${chatRoom.state})!"
+                )
                 null
             }
         }
@@ -213,7 +215,9 @@ class ChatRoomData(val chatRoom: ChatRoom) : ContactDataInterface {
             val sender: String =
                 coreContext.contactsManager.findContactByAddress(msg.fromAddress)?.name
                     ?: LinphoneUtils.getDisplayName(msg.fromAddress)
-            builder.append(coreContext.context.getString(R.string.chat_room_last_message_sender_format, sender))
+            builder.append(
+                coreContext.context.getString(R.string.chat_room_last_message_sender_format, sender)
+            )
             builder.append(" ")
         }
 
@@ -221,12 +225,22 @@ class ChatRoomData(val chatRoom: ChatRoom) : ContactDataInterface {
             if (content.isIcalendar) {
                 val body = AppUtils.getString(R.string.conference_invitation)
                 builder.append(body)
-                builder.setSpan(StyleSpan(Typeface.ITALIC), builder.length - body.length, builder.length, 0)
+                builder.setSpan(
+                    StyleSpan(Typeface.ITALIC),
+                    builder.length - body.length,
+                    builder.length,
+                    0
+                )
                 break
             } else if (content.isVoiceRecording) {
                 val body = AppUtils.getString(R.string.chat_message_voice_recording)
                 builder.append(body)
-                builder.setSpan(StyleSpan(Typeface.ITALIC), builder.length - body.length, builder.length, 0)
+                builder.setSpan(
+                    StyleSpan(Typeface.ITALIC),
+                    builder.length - body.length,
+                    builder.length,
+                    0
+                )
                 break
             } else if (content.isFile || content.isFileTransfer) {
                 builder.append(content.name + " ")

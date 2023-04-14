@@ -99,7 +99,9 @@ class CallSettingsFragment : GenericSettingFragment<SettingsCallFragmentBinding>
                         updateTelecomManagerAccount()
                     }
                 } else {
-                    Log.e("[Telecom Helper] Telecom Helper can't be created, device doesn't support connection service!")
+                    Log.e(
+                        "[Telecom Helper] Telecom Helper can't be created, device doesn't support connection service!"
+                    )
                 }
             }
         }
@@ -138,7 +140,9 @@ class CallSettingsFragment : GenericSettingFragment<SettingsCallFragmentBinding>
                 if (Compatibility.hasTelecomManagerFeature(requireContext())) {
                     TelecomHelper.create(requireContext())
                 } else {
-                    Log.e("[Telecom Helper] Telecom Helper can't be created, device doesn't support connection service")
+                    Log.e(
+                        "[Telecom Helper] Telecom Helper can't be created, device doesn't support connection service"
+                    )
                 }
             }
             updateTelecomManagerAccount()
@@ -168,7 +172,9 @@ class CallSettingsFragment : GenericSettingFragment<SettingsCallFragmentBinding>
         for (index in grantResults.indices) {
             val result = grantResults[index]
             if (result != PackageManager.PERMISSION_GRANTED) {
-                Log.w("[Call Settings] ${permissions[index]} permission denied but required for telecom manager")
+                Log.w(
+                    "[Call Settings] ${permissions[index]} permission denied but required for telecom manager"
+                )
                 viewModel.useTelecomManager.value = false
                 corePreferences.useTelecomManager = false
                 return
@@ -179,7 +185,9 @@ class CallSettingsFragment : GenericSettingFragment<SettingsCallFragmentBinding>
             TelecomHelper.create(requireContext())
             updateTelecomManagerAccount()
         } else {
-            Log.e("[Telecom Helper] Telecom Helper can't be created, device doesn't support connection service")
+            Log.e(
+                "[Telecom Helper] Telecom Helper can't be created, device doesn't support connection service"
+            )
         }
     }
 }

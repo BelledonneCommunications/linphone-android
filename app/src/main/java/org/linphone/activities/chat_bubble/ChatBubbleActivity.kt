@@ -77,11 +77,15 @@ class ChatBubbleActivity : GenericActivity() {
         var chatRoom: ChatRoom? = null
 
         if (localSipUri != null && remoteSipUri != null) {
-            Log.i("[Chat Bubble] Found local [$localSipUri] & remote [$remoteSipUri] addresses in arguments")
+            Log.i(
+                "[Chat Bubble] Found local [$localSipUri] & remote [$remoteSipUri] addresses in arguments"
+            )
             val localAddress = Factory.instance().createAddress(localSipUri)
             val remoteSipAddress = Factory.instance().createAddress(remoteSipUri)
             chatRoom = coreContext.core.searchChatRoom(
-                null, localAddress, remoteSipAddress,
+                null,
+                localAddress,
+                remoteSipAddress,
                 arrayOfNulls(
                     0
                 )
@@ -155,7 +159,10 @@ class ChatBubbleActivity : GenericActivity() {
 
         binding.setOpenAppClickListener {
             coreContext.notificationsManager.currentlyDisplayedChatRoomAddress = null
-            coreContext.notificationsManager.changeDismissNotificationUponReadForChatRoom(viewModel.chatRoom, false)
+            coreContext.notificationsManager.changeDismissNotificationUponReadForChatRoom(
+                viewModel.chatRoom,
+                false
+            )
 
             val intent = Intent(this, MainActivity::class.java)
             intent.putExtra("RemoteSipUri", remoteSipUri)
@@ -181,7 +188,10 @@ class ChatBubbleActivity : GenericActivity() {
         viewModel.chatRoom.addListener(listener)
 
         // Workaround for the removed notification when a chat room is marked as read
-        coreContext.notificationsManager.changeDismissNotificationUponReadForChatRoom(viewModel.chatRoom, true)
+        coreContext.notificationsManager.changeDismissNotificationUponReadForChatRoom(
+            viewModel.chatRoom,
+            true
+        )
         viewModel.chatRoom.markAsRead()
 
         val peerAddress = viewModel.chatRoom.peerAddress.asStringUriOnly()
@@ -199,7 +209,10 @@ class ChatBubbleActivity : GenericActivity() {
         viewModel.chatRoom.removeListener(listener)
 
         coreContext.notificationsManager.currentlyDisplayedChatRoomAddress = null
-        coreContext.notificationsManager.changeDismissNotificationUponReadForChatRoom(viewModel.chatRoom, false)
+        coreContext.notificationsManager.changeDismissNotificationUponReadForChatRoom(
+            viewModel.chatRoom,
+            false
+        )
 
         super.onPause()
     }

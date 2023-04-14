@@ -99,7 +99,9 @@ class GroupInfoViewModel(val chatRoom: ChatRoom?) : MessageNotifierViewModel() {
         subject.value = chatRoom?.subject
         isMeAdmin.value = chatRoom == null || (chatRoom.me?.isAdmin == true && !chatRoom.isReadOnly)
         canLeaveGroup.value = chatRoom != null && !chatRoom.isReadOnly
-        isEncrypted.value = corePreferences.forceEndToEndEncryptedChat || chatRoom?.hasCapability(ChatRoomCapabilities.Encrypted.toInt()) == true
+        isEncrypted.value = corePreferences.forceEndToEndEncryptedChat || chatRoom?.hasCapability(
+            ChatRoomCapabilities.Encrypted.toInt()
+        ) == true
 
         if (chatRoom != null) updateParticipants()
 
@@ -120,13 +122,16 @@ class GroupInfoViewModel(val chatRoom: ChatRoom?) : MessageNotifierViewModel() {
         params.isEncryptionEnabled = corePreferences.forceEndToEndEncryptedChat || isEncrypted.value == true
         params.isGroupEnabled = true
         if (params.isEncryptionEnabled) {
-            params.ephemeralMode = if (corePreferences.useEphemeralPerDeviceMode)
+            params.ephemeralMode = if (corePreferences.useEphemeralPerDeviceMode) {
                 ChatRoomEphemeralMode.DeviceManaged
-            else
+            } else {
                 ChatRoomEphemeralMode.AdminManaged
+            }
         }
         params.ephemeralLifetime = 0 // Make sure ephemeral is disabled by default
-        Log.i("[Chat Room Group Info] Ephemeral mode is ${params.ephemeralMode}, lifetime is ${params.ephemeralLifetime}")
+        Log.i(
+            "[Chat Room Group Info] Ephemeral mode is ${params.ephemeralMode}, lifetime is ${params.ephemeralLifetime}"
+        )
         params.subject = subject.value
 
         val addresses = arrayOfNulls<Address>(participants.value.orEmpty().size)
@@ -137,7 +142,11 @@ class GroupInfoViewModel(val chatRoom: ChatRoom?) : MessageNotifierViewModel() {
             index += 1
         }
 
-        val chatRoom: ChatRoom? = coreContext.core.createChatRoom(params, coreContext.core.defaultAccount?.params?.identityAddress, addresses)
+        val chatRoom: ChatRoom? = coreContext.core.createChatRoom(
+            params,
+            coreContext.core.defaultAccount?.params?.identityAddress,
+            addresses
+        )
         chatRoom?.addListener(listener)
         if (chatRoom == null) {
             Log.e("[Chat Room Group Info] Couldn't create chat room!")
@@ -162,7 +171,9 @@ class GroupInfoViewModel(val chatRoom: ChatRoom?) : MessageNotifierViewModel() {
                     participant.address.weakEqual(member.participant.address)
                 }
                 if (member == null) {
-                    Log.w("[Chat Room Group Info] Participant ${participant.address.asStringUriOnly()} will be removed from group")
+                    Log.w(
+                        "[Chat Room Group Info] Participant ${participant.address.asStringUriOnly()} will be removed from group"
+                    )
                     participantsToRemove.add(participant)
                 }
             }
@@ -180,12 +191,19 @@ class GroupInfoViewModel(val chatRoom: ChatRoom?) : MessageNotifierViewModel() {
                     // Participant found, check if admin status needs to be updated
                     if (member.participant.isAdmin != participant.isAdmin) {
                         if (chatRoom.me?.isAdmin == true) {
-                            Log.i("[Chat Room Group Info] Participant ${member.sipUri} will be admin? ${member.isAdmin}")
-                            chatRoom.setParticipantAdminStatus(participant, member.participant.isAdmin)
+                            Log.i(
+                                "[Chat Room Group Info] Participant ${member.sipUri} will be admin? ${member.isAdmin}"
+                            )
+                            chatRoom.setParticipantAdminStatus(
+                                participant,
+                                member.participant.isAdmin
+                            )
                         }
                     }
                 } else {
-                    Log.i("[Chat Room Group Info] Participant ${member.sipUri} will be added to group")
+                    Log.i(
+                        "[Chat Room Group Info] Participant ${member.sipUri} will be added to group"
+                    )
                     participantsToAdd.add(member.participant.address)
                 }
             }
@@ -223,7 +241,12 @@ class GroupInfoViewModel(val chatRoom: ChatRoom?) : MessageNotifierViewModel() {
             for (participant in chatRoom.participants) {
                 list.add(
                     GroupInfoParticipantData(
-                        GroupChatRoomMember(participant.address, participant.isAdmin, participant.securityLevel, canBeSetAdmin = true)
+                        GroupChatRoomMember(
+                            participant.address,
+                            participant.isAdmin,
+                            participant.securityLevel,
+                            canBeSetAdmin = true
+                        )
                     )
                 )
             }

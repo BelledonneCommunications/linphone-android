@@ -41,7 +41,10 @@ class TabsViewModel : ViewModel() {
     val chatUnreadCountTranslateY = MutableLiveData<Float>()
 
     private val bounceAnimator: ValueAnimator by lazy {
-        ValueAnimator.ofFloat(AppUtils.getDimension(R.dimen.tabs_fragment_unread_count_bounce_offset), 0f).apply {
+        ValueAnimator.ofFloat(
+            AppUtils.getDimension(R.dimen.tabs_fragment_unread_count_bounce_offset),
+            0f
+        ).apply {
             addUpdateListener {
                 val value = it.animatedValue as Float
                 historyMissedCountTranslateY.value = -value

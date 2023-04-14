@@ -114,16 +114,23 @@ class ScrollDotsView : View {
         context.theme.obtainStyledAttributes(
             attrs,
             R.styleable.ScrollDot,
-            defStyleAttr, 0
+            defStyleAttr,
+            0
         ).apply {
             try {
                 radius = getDimension(R.styleable.ScrollDot_dotRadius, 5f)
 
                 count = getInt(R.styleable.ScrollDot_dotCount, 1)
 
-                val color = getColor(R.styleable.ScrollDot_dotColor, context.resources.getColor(R.color.voip_gray_dots))
+                val color = getColor(
+                    R.styleable.ScrollDot_dotColor,
+                    context.resources.getColor(R.color.voip_gray_dots)
+                )
                 dotPaint.color = color
-                val selectedColor = getColor(R.styleable.ScrollDot_selectedDotColor, context.resources.getColor(R.color.voip_dark_gray))
+                val selectedColor = getColor(
+                    R.styleable.ScrollDot_selectedDotColor,
+                    context.resources.getColor(R.color.voip_dark_gray)
+                )
                 selectedDotPaint.color = selectedColor
 
                 selected = getInt(R.styleable.ScrollDot_selectedDot, 1)
@@ -153,11 +160,15 @@ class ScrollDotsView : View {
         screenWidth = screenRect.width().toFloat()
         screenHeight = screenRect.height().toFloat()
 
-        val marginBetweenItems = context.resources.getDimension(R.dimen.voip_active_speaker_miniature_margin)
+        val marginBetweenItems = context.resources.getDimension(
+            R.dimen.voip_active_speaker_miniature_margin
+        )
         itemWidth = context.resources.getDimension(R.dimen.voip_active_speaker_miniature_size) + marginBetweenItems
         itemHeight = context.resources.getDimension(R.dimen.voip_active_speaker_miniature_size) + marginBetweenItems
 
-        Log.d("[Scroll Dots] Screen size is $screenWidth/$screenHeight and item size is $itemWidth/$itemHeight")
+        Log.d(
+            "[Scroll Dots] Screen size is $screenWidth/$screenHeight and item size is $itemWidth/$itemHeight"
+        )
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -229,12 +240,16 @@ class ScrollDotsView : View {
         if (isHorizontal) {
             val itemsPerScreen = (screenWidth / itemWidth)
             val dots = ceil(items.toDouble() / itemsPerScreen).toInt()
-            Log.d("[Scroll Dots] Calculated $count for $items items ($itemsPerScreen items fit in screen width), given that screen width is $screenWidth and item width is $itemWidth")
+            Log.d(
+                "[Scroll Dots] Calculated $count for $items items ($itemsPerScreen items fit in screen width), given that screen width is $screenWidth and item width is $itemWidth"
+            )
             setDotCount(dots)
         } else {
             val itemsPerScreen = (screenHeight / itemHeight)
             val dots = ceil(items.toDouble() / itemsPerScreen).toInt()
-            Log.d("[Scroll Dots] Calculated $count for $items items ($itemsPerScreen items fit in screen height), given that screen height is $screenHeight and item height is $itemHeight")
+            Log.d(
+                "[Scroll Dots] Calculated $count for $items items ($itemsPerScreen items fit in screen height), given that screen height is $screenHeight and item height is $itemHeight"
+            )
             setDotCount(dots)
         }
     }

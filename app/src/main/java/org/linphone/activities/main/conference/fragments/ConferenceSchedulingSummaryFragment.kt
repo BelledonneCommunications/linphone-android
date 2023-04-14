@@ -31,7 +31,9 @@ import org.linphone.activities.navigateToScheduledConferences
 import org.linphone.databinding.ConferenceSchedulingSummaryFragmentBinding
 
 class ConferenceSchedulingSummaryFragment : GenericFragment<ConferenceSchedulingSummaryFragmentBinding>() {
-    private val viewModel: ConferenceSchedulingViewModel by navGraphViewModels(R.id.conference_scheduling_nav_graph)
+    private val viewModel: ConferenceSchedulingViewModel by navGraphViewModels(
+        R.id.conference_scheduling_nav_graph
+    )
 
     override fun getLayoutId(): Int = R.layout.conference_scheduling_summary_fragment
 
@@ -47,7 +49,9 @@ class ConferenceSchedulingSummaryFragment : GenericFragment<ConferenceScheduling
         ) {
             it.consume {
                 if (viewModel.scheduleForLater.value == true) {
-                    (requireActivity() as MainActivity).showSnackBar(R.string.conference_schedule_info_created)
+                    (requireActivity() as MainActivity).showSnackBar(
+                        R.string.conference_schedule_info_created
+                    )
                     navigateToScheduledConferences()
                 } else {
                     navigateToDialer()

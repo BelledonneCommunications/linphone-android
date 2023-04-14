@@ -53,7 +53,9 @@ class AudioSettingsFragment : GenericSettingFragment<SettingsAudioFragmentBindin
             viewLifecycleOwner
         ) {
             it.consume {
-                Log.i("[Audio Settings] Asking for RECORD_AUDIO permission for echo canceller calibration")
+                Log.i(
+                    "[Audio Settings] Asking for RECORD_AUDIO permission for echo canceller calibration"
+                )
                 requestPermissions(arrayOf(android.Manifest.permission.RECORD_AUDIO), 1)
             }
         }
@@ -97,7 +99,12 @@ class AudioSettingsFragment : GenericSettingFragment<SettingsAudioFragmentBindin
     private fun initAudioCodecsList() {
         val list = arrayListOf<ViewDataBinding>()
         for (payload in coreContext.core.audioPayloadTypes) {
-            val binding = DataBindingUtil.inflate<ViewDataBinding>(LayoutInflater.from(requireContext()), R.layout.settings_widget_switch, null, false)
+            val binding = DataBindingUtil.inflate<ViewDataBinding>(
+                LayoutInflater.from(requireContext()),
+                R.layout.settings_widget_switch,
+                null,
+                false
+            )
             binding.setVariable(BR.title, payload.mimeType)
             binding.setVariable(BR.subtitle, "${payload.clockRate} Hz")
             binding.setVariable(BR.checked, payload.enabled())

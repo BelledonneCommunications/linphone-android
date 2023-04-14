@@ -42,7 +42,11 @@ import org.linphone.utils.HeaderAdapter
 class ContactsListAdapter(
     selectionVM: ListTopBarViewModel,
     private val viewLifecycleOwner: LifecycleOwner
-) : SelectionListAdapter<ContactViewModel, RecyclerView.ViewHolder>(selectionVM, ContactDiffCallback()), HeaderAdapter {
+) : SelectionListAdapter<ContactViewModel, RecyclerView.ViewHolder>(
+    selectionVM,
+    ContactDiffCallback()
+),
+    HeaderAdapter {
     val selectedContactEvent: MutableLiveData<Event<Friend>> by lazy {
         MutableLiveData<Event<Friend>>()
     }
@@ -50,7 +54,9 @@ class ContactsListAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding: ContactListCellBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
-            R.layout.contact_list_cell, parent, false
+            R.layout.contact_list_cell,
+            parent,
+            false
         )
         return ViewHolder(binding)
     }
@@ -108,7 +114,9 @@ class ContactsListAdapter(
         return if (previousPosition >= 0) {
             val previousItemFirstLetter = getItem(previousPosition).fullName.firstOrNull().toString()
             !firstLetter.equals(previousItemFirstLetter, ignoreCase = true)
-        } else true
+        } else {
+            true
+        }
     }
 
     override fun getHeaderViewForPosition(context: Context, position: Int): View {
@@ -116,7 +124,9 @@ class ContactsListAdapter(
         val firstLetter = AppUtils.getInitials(contact.fullName, 1)
         val binding: GenericListHeaderBinding = DataBindingUtil.inflate(
             LayoutInflater.from(context),
-            R.layout.generic_list_header, null, false
+            R.layout.generic_list_header,
+            null,
+            false
         )
         binding.title = firstLetter
         binding.executePendingBindings()

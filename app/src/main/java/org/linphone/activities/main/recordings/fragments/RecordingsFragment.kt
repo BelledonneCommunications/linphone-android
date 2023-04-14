@@ -66,7 +66,9 @@ class RecordingsFragment : MasterFragment<RecordingsFragmentBinding, RecordingsL
         binding.recordingsList.layoutManager = layoutManager
 
         // Divider between items
-        binding.recordingsList.addItemDecoration(AppUtils.getDividerDecoration(requireContext(), layoutManager))
+        binding.recordingsList.addItemDecoration(
+            AppUtils.getDividerDecoration(requireContext(), layoutManager)
+        )
 
         // Displays the first letter header
         val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
@@ -90,7 +92,9 @@ class RecordingsFragment : MasterFragment<RecordingsFragmentBinding, RecordingsL
                 intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.recordings_export))
 
                 try {
-                    requireActivity().startActivity(Intent.createChooser(intent, getString(R.string.recordings_export)))
+                    requireActivity().startActivity(
+                        Intent.createChooser(intent, getString(R.string.recordings_export))
+                    )
                 } catch (anfe: ActivityNotFoundException) {
                     Log.e(anfe)
                 }
@@ -136,7 +140,9 @@ class RecordingsFragment : MasterFragment<RecordingsFragmentBinding, RecordingsL
         if (this::viewModel.isInitialized) {
             viewModel.updateRecordingsList()
         } else {
-            Log.e("[Recordings] Fragment resuming but viewModel lateinit property isn't initialized!")
+            Log.e(
+                "[Recordings] Fragment resuming but viewModel lateinit property isn't initialized!"
+            )
         }
         super.onResume()
     }

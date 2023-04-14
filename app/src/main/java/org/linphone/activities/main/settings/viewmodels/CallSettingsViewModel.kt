@@ -291,7 +291,9 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
         }
         if (core.mediaEncryptionSupported(MediaEncryption.ZRTP)) {
             if (core.postQuantumAvailable) {
-                labels.add(prefs.getString(R.string.call_settings_media_encryption_zrtp_post_quantum))
+                labels.add(
+                    prefs.getString(R.string.call_settings_media_encryption_zrtp_post_quantum)
+                )
             } else {
                 labels.add(prefs.getString(R.string.call_settings_media_encryption_zrtp))
             }

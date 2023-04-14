@@ -35,7 +35,9 @@ class PhoneAccountLinkingViewModelFactory(private val accountCreator: AccountCre
     }
 }
 
-class PhoneAccountLinkingViewModel(accountCreator: AccountCreator) : AbstractPhoneViewModel(accountCreator) {
+class PhoneAccountLinkingViewModel(accountCreator: AccountCreator) : AbstractPhoneViewModel(
+    accountCreator
+) {
     val username = MutableLiveData<String>()
 
     val allowSkip = MutableLiveData<Boolean>()

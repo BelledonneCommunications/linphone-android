@@ -38,7 +38,9 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.ConferenceSchedulingFragmentBinding
 
 class ConferenceSchedulingFragment : GenericFragment<ConferenceSchedulingFragmentBinding>() {
-    private val viewModel: ConferenceSchedulingViewModel by navGraphViewModels(R.id.conference_scheduling_nav_graph)
+    private val viewModel: ConferenceSchedulingViewModel by navGraphViewModels(
+        R.id.conference_scheduling_nav_graph
+    )
 
     override fun getLayoutId(): Int = R.layout.conference_scheduling_fragment
 
@@ -53,7 +55,9 @@ class ConferenceSchedulingFragment : GenericFragment<ConferenceSchedulingFragmen
             viewLifecycleOwner
         ) {
             it.consume { participants ->
-                Log.i("[Conference Scheduling] Found participants (${participants.size}) to pre-populate for meeting schedule")
+                Log.i(
+                    "[Conference Scheduling] Found participants (${participants.size}) to pre-populate for meeting schedule"
+                )
                 viewModel.prePopulateParticipantsList(participants, true)
             }
         }
@@ -64,12 +68,18 @@ class ConferenceSchedulingFragment : GenericFragment<ConferenceSchedulingFragmen
             it.consume { address ->
                 val conferenceAddress = Factory.instance().createAddress(address)
                 if (conferenceAddress != null) {
-                    Log.i("[Conference Scheduling] Trying to edit conference info using address: $address")
-                    val conferenceInfo = coreContext.core.findConferenceInformationFromUri(conferenceAddress)
+                    Log.i(
+                        "[Conference Scheduling] Trying to edit conference info using address: $address"
+                    )
+                    val conferenceInfo = coreContext.core.findConferenceInformationFromUri(
+                        conferenceAddress
+                    )
                     if (conferenceInfo != null) {
                         viewModel.populateFromConferenceInfo(conferenceInfo)
                     } else {
-                        Log.e("[Conference Scheduling] Failed to find ConferenceInfo matching address: $address")
+                        Log.e(
+                            "[Conference Scheduling] Failed to find ConferenceInfo matching address: $address"
+                        )
                     }
                 } else {
                     Log.e("[Conference Scheduling] Failed to parse conference address: $address")

@@ -99,7 +99,9 @@ class CallsListFragment : GenericVideoPreviewFragment<VoipCallsListFragmentBindi
     private fun showCallMenu(anchor: View, callData: CallData) {
         val popupView: VoipCallContextMenuBindingImpl = DataBindingUtil.inflate(
             LayoutInflater.from(requireContext()),
-            R.layout.voip_call_context_menu, null, false
+            R.layout.voip_call_context_menu,
+            null,
+            false
         )
 
         val itemSize = AppUtils.getDimension(R.dimen.voip_call_context_menu_item_height).toInt()

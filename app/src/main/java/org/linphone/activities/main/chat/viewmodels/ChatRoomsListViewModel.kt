@@ -48,7 +48,9 @@ class ChatRoomsListViewModel : MessageNotifierViewModel() {
     private val chatRoomListener = object : ChatRoomListenerStub() {
         override fun onStateChanged(chatRoom: ChatRoom, newState: ChatRoom.State) {
             if (newState == ChatRoom.State.Deleted) {
-                Log.i("[Chat Rooms] Chat room [${LinphoneUtils.getChatRoomId(chatRoom)}] is in Deleted state, removing it from list")
+                Log.i(
+                    "[Chat Rooms] Chat room [${LinphoneUtils.getChatRoomId(chatRoom)}] is in Deleted state, removing it from list"
+                )
                 val list = arrayListOf<ChatRoomData>()
                 val id = LinphoneUtils.getChatRoomId(chatRoom)
                 for (data in chatRooms.value.orEmpty()) {
@@ -64,14 +66,18 @@ class ChatRoomsListViewModel : MessageNotifierViewModel() {
     private val listener: CoreListenerStub = object : CoreListenerStub() {
         override fun onChatRoomStateChanged(core: Core, chatRoom: ChatRoom, state: ChatRoom.State) {
             if (state == ChatRoom.State.Created) {
-                Log.i("[Chat Rooms] Chat room [${LinphoneUtils.getChatRoomId(chatRoom)}] is in Created state, adding it to list")
+                Log.i(
+                    "[Chat Rooms] Chat room [${LinphoneUtils.getChatRoomId(chatRoom)}] is in Created state, adding it to list"
+                )
                 val data = ChatRoomData(chatRoom)
                 val list = arrayListOf<ChatRoomData>()
                 list.add(data)
                 list.addAll(chatRooms.value.orEmpty())
                 chatRooms.value = list
             } else if (state == ChatRoom.State.TerminationFailed) {
-                Log.e("[Chat Rooms] Group chat room removal for address ${chatRoom.peerAddress.asStringUriOnly()} has failed !")
+                Log.e(
+                    "[Chat Rooms] Group chat room removal for address ${chatRoom.peerAddress.asStringUriOnly()} has failed !"
+                )
                 onMessageToNotifyEvent.value = Event(R.string.chat_room_removal_failed_snack)
             }
         }
@@ -155,8 +161,11 @@ class ChatRoomsListViewModel : MessageNotifierViewModel() {
 
     fun notifyChatRoomUpdate(chatRoom: ChatRoom) {
         val index = findChatRoomIndex(chatRoom)
-        if (index == -1) updateChatRooms()
-        else chatRoomIndexUpdatedEvent.value = Event(index)
+        if (index == -1) {
+            updateChatRooms()
+        } else {
+            chatRoomIndexUpdatedEvent.value = Event(index)
+        }
     }
 
     private fun reorderChatRooms() {

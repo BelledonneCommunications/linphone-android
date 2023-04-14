@@ -209,7 +209,9 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         attachments.value = list
 
         val pathToDelete = attachment.path
-        Log.i("[Chat Message Sending] Attachment is being removed, delete local copy [$pathToDelete]")
+        Log.i(
+            "[Chat Message Sending] Attachment is being removed, delete local copy [$pathToDelete]"
+        )
         FileUtils.deleteFile(pathToDelete)
 
         sendMessageEnabled.value = textToSend.value.orEmpty().trim().isNotEmpty() || list.isNotEmpty() || isPendingVoiceRecord.value == true
@@ -227,10 +229,11 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
 
     private fun createChatMessage(): ChatMessage {
         val pendingMessageToReplyTo = pendingChatMessageToReplyTo.value
-        return if (isPendingAnswer.value == true && pendingMessageToReplyTo != null)
+        return if (isPendingAnswer.value == true && pendingMessageToReplyTo != null) {
             chatRoom.createReplyMessage(pendingMessageToReplyTo.chatMessage)
-        else
+        } else {
             chatRoom.createEmptyMessage()
+        }
     }
 
     fun sendMessage() {
@@ -249,7 +252,9 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         if (isPendingVoiceRecord.value == true && recorder.file != null) {
             val content = recorder.createContent()
             if (content != null) {
-                Log.i("[Chat Message Sending] Voice recording content created, file name is ${content.name} and duration is ${content.fileDuration}")
+                Log.i(
+                    "[Chat Message Sending] Voice recording content created, file name is ${content.name} and duration is ${content.fileDuration}"
+                )
                 message.addContent(content)
                 voiceRecord = true
             } else {
@@ -373,7 +378,9 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
                 }
                 val tempFileName = "voice-recording-${System.currentTimeMillis()}.$extension"
                 val file = FileUtils.getFileStoragePath(tempFileName)
-                Log.w("[Chat Message Sending] Recorder is closed, starting recording in ${file.absoluteFile}")
+                Log.w(
+                    "[Chat Message Sending] Recorder is closed, starting recording in ${file.absoluteFile}"
+                )
                 recorder.open(file.absolutePath)
                 recorder.start()
             }
@@ -393,10 +400,14 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
             withContext(Dispatchers.Main) {
                 val duration = recorder.duration
                 voiceRecordingDuration.value = recorder.duration % voiceRecordingProgressBarMax
-                formattedDuration.value = SimpleDateFormat("mm:ss", Locale.getDefault()).format(duration) // duration is in ms
+                formattedDuration.value = SimpleDateFormat("mm:ss", Locale.getDefault()).format(
+                    duration
+                ) // duration is in ms
 
                 if (duration >= maxVoiceRecordDuration) {
-                    Log.w("[Chat Message Sending] Max duration for voice recording exceeded (${maxVoiceRecordDuration}ms), stopping.")
+                    Log.w(
+                        "[Chat Message Sending] Max duration for voice recording exceeded (${maxVoiceRecordDuration}ms), stopping."
+                    )
                     stopVoiceRecording()
                 }
             }
@@ -463,7 +474,11 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         }
 
         if (AppUtils.isMediaVolumeLow(coreContext.context)) {
-            Toast.makeText(coreContext.context, R.string.chat_message_voice_recording_playback_low_volume, Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                coreContext.context,
+                R.string.chat_message_voice_recording_playback_low_volume,
+                Toast.LENGTH_LONG
+            ).show()
         }
 
         if (voiceRecordAudioFocusRequest == null) {
@@ -508,7 +523,9 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
 
         val recordingAudioDevice = AudioRouteUtils.getAudioRecordingDeviceForVoiceMessage()
         recorderParams.audioDevice = recordingAudioDevice
-        Log.i("[Chat Message Sending] Using device ${recorderParams.audioDevice?.id} to make the voice message recording")
+        Log.i(
+            "[Chat Message Sending] Using device ${recorderParams.audioDevice?.id} to make the voice message recording"
+        )
 
         recorder = coreContext.core.createRecorder(recorderParams)
     }
@@ -517,7 +534,9 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         Log.i("[Chat Message Sending] Creating player for voice record")
 
         val playbackSoundCard = AudioRouteUtils.getAudioPlaybackDeviceIdForCallRecordingOrVoiceMessage()
-        Log.i("[Chat Message Sending] Using device $playbackSoundCard to make the voice message playback")
+        Log.i(
+            "[Chat Message Sending] Using device $playbackSoundCard to make the voice message playback"
+        )
 
         val localPlayer = coreContext.core.createLocalPlayer(playbackSoundCard, null, null)
         if (localPlayer != null) {
@@ -559,6 +578,10 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
     }
 
     private fun updateChatRoomReadOnlyState() {
-        isReadOnly.value = chatRoom.isReadOnly || (chatRoom.hasCapability(ChatRoomCapabilities.Conference.toInt()) && chatRoom.participants.isEmpty())
+        isReadOnly.value = chatRoom.isReadOnly || (
+            chatRoom.hasCapability(
+                ChatRoomCapabilities.Conference.toInt()
+            ) && chatRoom.participants.isEmpty()
+            )
     }
 }

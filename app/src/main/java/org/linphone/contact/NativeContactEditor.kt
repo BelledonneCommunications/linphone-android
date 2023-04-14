@@ -103,7 +103,9 @@ class NativeContactEditor(val friend: Friend) {
                 if (rawId == null) {
                     try {
                         rawId = cursor.getString(cursor.getColumnIndexOrThrow(RawContacts._ID))
-                        Log.d("[Native Contact Editor] Found raw id $rawId for native contact with id ${friend.refKey}")
+                        Log.d(
+                            "[Native Contact Editor] Found raw id $rawId for native contact with id ${friend.refKey}"
+                        )
                     } catch (iae: IllegalArgumentException) {
                         Log.e("[Native Contact Editor] Exception: $iae")
                     }
@@ -136,10 +138,12 @@ class NativeContactEditor(val friend: Friend) {
             CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE
         )
             .withValue(
-                CommonDataKinds.StructuredName.GIVEN_NAME, firstName
+                CommonDataKinds.StructuredName.GIVEN_NAME,
+                firstName
             )
             .withValue(
-                CommonDataKinds.StructuredName.FAMILY_NAME, lastName
+                CommonDataKinds.StructuredName.FAMILY_NAME,
+                lastName
             )
         addChanges(builder.build())
         return this
@@ -172,7 +176,8 @@ class NativeContactEditor(val friend: Friend) {
             CommonDataKinds.Organization.CONTENT_ITEM_TYPE
         )
             .withValue(
-                CommonDataKinds.Organization.COMPANY, value
+                CommonDataKinds.Organization.COMPANY,
+                value
             )
 
         addChanges(builder.build())
@@ -210,7 +215,9 @@ class NativeContactEditor(val friend: Friend) {
             }
         }
 
-        Log.i("[Native Contact Editor] $addCount numbers added, $removeCount numbers removed and $editCount numbers updated")
+        Log.i(
+            "[Native Contact Editor] $addCount numbers added, $removeCount numbers removed and $editCount numbers updated"
+        )
         return this
     }
 
@@ -245,7 +252,9 @@ class NativeContactEditor(val friend: Friend) {
             }
         }
 
-        Log.i("[Native Contact Editor] $addCount addresses added, $removeCount addresses removed and $editCount addresses updated")
+        Log.i(
+            "[Native Contact Editor] $addCount addresses added, $removeCount addresses removed and $editCount addresses updated"
+        )
         return this
     }
 
@@ -273,7 +282,9 @@ class NativeContactEditor(val friend: Friend) {
                         if (accountType == AppUtils.getString(R.string.sync_account_type) && syncAccountRawId == null) {
                             syncAccountRawId =
                                 cursor.getString(cursor.getColumnIndexOrThrow(RawContacts._ID))
-                            Log.d("[Native Contact Editor] Found linphone raw id $syncAccountRawId for native contact with id ${friend.refKey}")
+                            Log.d(
+                                "[Native Contact Editor] Found linphone raw id $syncAccountRawId for native contact with id ${friend.refKey}"
+                            )
                         }
                     } catch (iae: IllegalArgumentException) {
                         Log.e("[Native Contact Editor] Exception: $iae")
@@ -292,7 +303,9 @@ class NativeContactEditor(val friend: Friend) {
                 .build()
             addChanges(insert)
             val update =
-                ContentProviderOperation.newUpdate(ContactsContract.AggregationExceptions.CONTENT_URI)
+                ContentProviderOperation.newUpdate(
+                    ContactsContract.AggregationExceptions.CONTENT_URI
+                )
                     .withValue(
                         ContactsContract.AggregationExceptions.TYPE,
                         ContactsContract.AggregationExceptions.TYPE_KEEP_TOGETHER
@@ -308,7 +321,9 @@ class NativeContactEditor(val friend: Friend) {
         }
 
         if (syncAccountRawId == null) {
-            Log.e("[Native Contact Editor] Can't add presence to contact in Linphone sync account, no raw id")
+            Log.e(
+                "[Native Contact Editor] Can't add presence to contact in Linphone sync account, no raw id"
+            )
             return this
         }
 
@@ -328,7 +343,9 @@ class NativeContactEditor(val friend: Friend) {
                         Log.i("[Native Contact Editor] Result is $uri")
                         if (uri != null && updateSyncAccountRawId && syncAccountRawId == null) {
                             syncAccountRawId = ContentUris.parseId(uri).toString()
-                            Log.i("[Native Contact Editor] Sync account raw id is $syncAccountRawId")
+                            Log.i(
+                                "[Native Contact Editor] Sync account raw id is $syncAccountRawId"
+                            )
                         }
                     }
                 }
@@ -480,22 +497,34 @@ class NativeContactEditor(val friend: Friend) {
                 } catch (iae: IllegalArgumentException) {
                     Log.e("[Native Contact Editor] Exception: $iae")
                 }
-            } else null
-        } else null
+            } else {
+                null
+            }
+        } else {
+            null
+        }
         cursor?.close()
 
         val address = if (sipAddress.endsWith(";user=phone")) {
             sipAddress.substring(0, sipAddress.length - ";user=phone".length)
-        } else sipAddress
+        } else {
+            sipAddress
+        }
 
         if (count == 0) {
-            Log.i("[Native Contact Editor] No existing presence information found for this phone number ($phoneNumber) & SIP address ($address), let's add it")
+            Log.i(
+                "[Native Contact Editor] No existing presence information found for this phone number ($phoneNumber) & SIP address ($address), let's add it"
+            )
             addPresenceLinphoneSipAddressForPhoneNumber(address, phoneNumber)
         } else {
             if (data1 != null && data1 == address) {
-                Log.d("[Native Contact Editor] There is already an entry for this phone number and SIP address, skipping")
+                Log.d(
+                    "[Native Contact Editor] There is already an entry for this phone number and SIP address, skipping"
+                )
             } else {
-                Log.w("[Native Contact Editor] There is already an entry for this phone number ($phoneNumber) but not for the same SIP address ($data1 != $address)")
+                Log.w(
+                    "[Native Contact Editor] There is already an entry for this phone number ($phoneNumber) but not for the same SIP address ($data1 != $address)"
+                )
                 updatePresenceLinphoneSipAddressForPhoneNumber(address, phoneNumber)
             }
         }

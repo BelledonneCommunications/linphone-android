@@ -68,7 +68,9 @@ class ImdnViewModel(private val chatMessage: ChatMessage) : ViewModel() {
         for (participant in chatMessage.getParticipantsByImdnState(ChatMessage.State.Displayed)) {
             list.add(ImdnParticipantData(participant))
         }
-        for (participant in chatMessage.getParticipantsByImdnState(ChatMessage.State.DeliveredToUser)) {
+        for (participant in chatMessage.getParticipantsByImdnState(
+            ChatMessage.State.DeliveredToUser
+        )) {
             list.add(ImdnParticipantData(participant))
         }
         for (participant in chatMessage.getParticipantsByImdnState(ChatMessage.State.Delivered)) {

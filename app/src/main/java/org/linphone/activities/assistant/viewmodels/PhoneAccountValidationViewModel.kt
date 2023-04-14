@@ -125,7 +125,9 @@ class PhoneAccountValidationViewModel(val accountCreator: AccountCreator) : View
 
     fun finish() {
         accountCreator.activationCode = code.value.orEmpty()
-        Log.i("[Assistant] [Phone Account Validation] Phone number is ${accountCreator.phoneNumber} and activation code is ${accountCreator.activationCode}")
+        Log.i(
+            "[Assistant] [Phone Account Validation] Phone number is ${accountCreator.phoneNumber} and activation code is ${accountCreator.activationCode}"
+        )
         waitForServerAnswer.value = true
 
         val status = when {
@@ -145,7 +147,9 @@ class PhoneAccountValidationViewModel(val accountCreator: AccountCreator) : View
         val proxyConfig: ProxyConfig? = accountCreator.createProxyConfig()
 
         if (proxyConfig == null) {
-            Log.e("[Assistant] [Phone Account Validation] Account creator couldn't create proxy config")
+            Log.e(
+                "[Assistant] [Phone Account Validation] Account creator couldn't create proxy config"
+            )
             return false
         }
 

@@ -168,9 +168,13 @@ class Api23Compatibility {
             val isContentEncrypted = content.isFileEncrypted
             val filePath = if (content.isFileEncrypted) {
                 val plainFilePath = content.exportPlainFile().orEmpty()
-                Log.i("[Media Store] [VFS] Content is encrypted, plain file path is: $plainFilePath")
+                Log.i(
+                    "[Media Store] [VFS] Content is encrypted, plain file path is: $plainFilePath"
+                )
                 plainFilePath
-            } else content.filePath
+            } else {
+                content.filePath
+            }
 
             if (filePath.isNullOrEmpty()) {
                 Log.e("[Media Store] Content doesn't have a file path!")
@@ -193,7 +197,9 @@ class Api23Compatibility {
                 isAudio -> "audio"
                 else -> "unexpected"
             }
-            Log.i("[Media Store] Adding $type [$filePath] to Media Store with name [$fileName] and MIME [$mime], asking to be stored in: $relativePath")
+            Log.i(
+                "[Media Store] Adding $type [$filePath] to Media Store with name [$fileName] and MIME [$mime], asking to be stored in: $relativePath"
+            )
 
             val mediaStoreFilePath = when {
                 isImage -> {

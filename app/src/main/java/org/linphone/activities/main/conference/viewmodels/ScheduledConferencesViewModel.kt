@@ -52,7 +52,9 @@ class ScheduledConferencesViewModel : ViewModel() {
         ) {
             Log.i("[Scheduled Conferences] Conference scheduler state is $state")
             if (state == ConferenceScheduler.State.Ready) {
-                Log.i("[Scheduled Conferences] Conference ${conferenceScheduler.info?.subject} cancelled")
+                Log.i(
+                    "[Scheduled Conferences] Conference ${conferenceScheduler.info?.subject} cancelled"
+                )
                 val chatRoomParams = LinphoneUtils.getConferenceInvitationsChatRoomParams()
                 conferenceScheduler.sendInvitations(chatRoomParams) // Send cancel ICS
             }
@@ -64,10 +66,14 @@ class ScheduledConferencesViewModel : ViewModel() {
         ) {
             if (failedInvitations?.isNotEmpty() == true) {
                 for (address in failedInvitations) {
-                    Log.e("[Scheduled Conferences] Conference cancelled ICS wasn't sent to participant ${address.asStringUriOnly()}")
+                    Log.e(
+                        "[Scheduled Conferences] Conference cancelled ICS wasn't sent to participant ${address.asStringUriOnly()}"
+                    )
                 }
             } else {
-                Log.i("[Scheduled Conferences] Conference cancelled ICS successfully sent to all participants")
+                Log.i(
+                    "[Scheduled Conferences] Conference cancelled ICS successfully sent to all participants"
+                )
             }
         }
     }
@@ -139,7 +145,9 @@ class ScheduledConferencesViewModel : ViewModel() {
             }
         } else {
             val oneHourAgo = now - 7200 // Show all conferences from 2 hours ago and forward
-            for (conferenceInfo in coreContext.core.getConferenceInformationListAfterTime(oneHourAgo)) {
+            for (conferenceInfo in coreContext.core.getConferenceInformationListAfterTime(
+                oneHourAgo
+            )) {
                 if (conferenceInfo.duration == 0) continue // This isn't a scheduled conference, don't display it
                 val data = ScheduledConferenceData(conferenceInfo, false)
                 conferencesList.add(data)

@@ -51,7 +51,11 @@ class VoiceRecordProgressBar : View {
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle) {
+    constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(
+        context,
+        attrs,
+        defStyle
+    ) {
         max = 100
         progress = 0
         secondaryProgress = 0
@@ -63,7 +67,8 @@ class VoiceRecordProgressBar : View {
         context.theme.obtainStyledAttributes(
             attrs,
             R.styleable.VoiceRecordProgressBar,
-            0, 0
+            0,
+            0
         ).apply {
 
             try {
@@ -71,8 +76,12 @@ class VoiceRecordProgressBar : View {
                 if (drawable != null) {
                     setProgressDrawable(drawable)
                 }
-                setPrimaryLeftMargin(getDimension(R.styleable.VoiceRecordProgressBar_primaryLeftMargin, 0f))
-                setPrimaryRightMargin(getDimension(R.styleable.VoiceRecordProgressBar_primaryRightMargin, 0f))
+                setPrimaryLeftMargin(
+                    getDimension(R.styleable.VoiceRecordProgressBar_primaryLeftMargin, 0f)
+                )
+                setPrimaryRightMargin(
+                    getDimension(R.styleable.VoiceRecordProgressBar_primaryRightMargin, 0f)
+                )
                 setMax(getInteger(R.styleable.VoiceRecordProgressBar_max, 100))
             } finally {
                 recycle()
@@ -111,8 +120,10 @@ class VoiceRecordProgressBar : View {
             val scrollX: Int = scrollX + paddingLeft
             val scrollY: Int = scrollY + paddingTop
             invalidate(
-                dirty.left + scrollX, dirty.top + scrollY,
-                dirty.right + scrollX, dirty.bottom + scrollY
+                dirty.left + scrollX,
+                dirty.top + scrollY,
+                dirty.right + scrollX,
+                dirty.bottom + scrollY
             )
         } else {
             super.invalidateDrawable(drawable)
@@ -209,7 +220,9 @@ class VoiceRecordProgressBar : View {
         val drawable = progressDrawable
         if (drawable != null) {
             if (drawable is LayerDrawable) {
-                val secondaryProgressDrawable = drawable.findDrawableByLayerId(android.R.id.secondaryProgress)
+                val secondaryProgressDrawable = drawable.findDrawableByLayerId(
+                    android.R.id.secondaryProgress
+                )
                 secondaryProgressDrawable?.setTint(color)
             }
         }
@@ -307,7 +320,12 @@ class VoiceRecordProgressBar : View {
                 if (i != 1) {
                     canvas.translate(primaryLeftMargin, 0f)
                     drawableLayer.draw(canvas)
-                    drawableLayer.setBounds(0, 0, width - primaryRightMargin.toInt() - primaryLeftMargin.toInt(), height)
+                    drawableLayer.setBounds(
+                        0,
+                        0,
+                        width - primaryRightMargin.toInt() - primaryLeftMargin.toInt(),
+                        height
+                    )
                     canvas.translate(-primaryLeftMargin, 0f)
                 } else {
                     drawableLayer.draw(canvas)

@@ -82,7 +82,9 @@ class ScheduledConferencesFragment : MasterFragment<ConferencesScheduledFragment
             override fun onRightToLeftSwipe(viewHolder: RecyclerView.ViewHolder) {
                 val index = viewHolder.bindingAdapterPosition
                 if (index < 0 || index >= adapter.currentList.size) {
-                    Log.e("[Scheduled Conferences] Index is out of bound, can't delete conference info")
+                    Log.e(
+                        "[Scheduled Conferences] Index is out of bound, can't delete conference info"
+                    )
                 } else {
                     val deletedConfInfo = adapter.currentList[index]
                     showConfInfoDeleteConfirmationDialog(deletedConfInfo, index)
@@ -111,7 +113,9 @@ class ScheduledConferencesFragment : MasterFragment<ConferencesScheduledFragment
                 val clip = ClipData.newPlainText("Conference address", address)
                 clipboard.setPrimaryClip(clip)
 
-                (activity as MainActivity).showSnackBar(R.string.conference_schedule_address_copied_to_clipboard)
+                (activity as MainActivity).showSnackBar(
+                    R.string.conference_schedule_address_copied_to_clipboard
+                )
             }
         }
 

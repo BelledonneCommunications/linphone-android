@@ -62,12 +62,16 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
             copy.clean()
             val address = copy.asStringUriOnly()
             Log.i("[History] Creating contact with SIP URI [$address]")
-            sharedViewModel.updateContactsAnimationsBasedOnDestination.value = Event(R.id.masterCallLogsFragment)
+            sharedViewModel.updateContactsAnimationsBasedOnDestination.value = Event(
+                R.id.masterCallLogsFragment
+            )
             navigateToContacts(address)
         }
 
         binding.setContactClickListener {
-            sharedViewModel.updateContactsAnimationsBasedOnDestination.value = Event(R.id.masterCallLogsFragment)
+            sharedViewModel.updateContactsAnimationsBasedOnDestination.value = Event(
+                R.id.masterCallLogsFragment
+            )
             val contactId = viewModel.contact.value?.refKey
             if (contactId != null) {
                 Log.i("[History] Displaying native contact [$contactId]")
@@ -90,7 +94,9 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
                 address.clean()
 
                 if (coreContext.core.callsNb > 0) {
-                    Log.i("[History] Starting dialer with pre-filled URI [${address.asStringUriOnly()}], is transfer? ${sharedViewModel.pendingCallTransfer}")
+                    Log.i(
+                        "[History] Starting dialer with pre-filled URI [${address.asStringUriOnly()}], is transfer? ${sharedViewModel.pendingCallTransfer}"
+                    )
                     sharedViewModel.updateDialerAnimationsBasedOnDestination.value =
                         Event(R.id.masterCallLogsFragment)
 
@@ -104,7 +110,9 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
                     navigateToDialer(args)
                 } else {
                     val localAddress = callLog.localAddress
-                    Log.i("[History] Starting call to ${address.asStringUriOnly()} with local address ${localAddress.asStringUriOnly()}")
+                    Log.i(
+                        "[History] Starting call to ${address.asStringUriOnly()} with local address ${localAddress.asStringUriOnly()}"
+                    )
                     coreContext.startCall(address, localAddress = localAddress)
                 }
             }

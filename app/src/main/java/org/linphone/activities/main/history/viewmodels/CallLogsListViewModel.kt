@@ -153,7 +153,11 @@ class CallLogsListViewModel : ViewModel() {
 
         callLogs.value = when (filter.value) {
             CallLogsFilter.MISSED -> computeCallLogs(allCallLogs, missed = true, conference = false)
-            CallLogsFilter.CONFERENCE -> computeCallLogs(allCallLogs, missed = false, conference = true)
+            CallLogsFilter.CONFERENCE -> computeCallLogs(
+                allCallLogs,
+                missed = false,
+                conference = true
+            )
             else -> computeCallLogs(allCallLogs, missed = false, conference = false)
         }
     }

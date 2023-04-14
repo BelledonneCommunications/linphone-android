@@ -52,7 +52,10 @@ class PhoneAccountValidationFragment : GenericFragment<AssistantPhoneAccountVali
             ViewModelProvider(this)[SharedAssistantViewModel::class.java]
         }
 
-        viewModel = ViewModelProvider(this, PhoneAccountValidationViewModelFactory(sharedAssistantViewModel.getAccountCreator()))[PhoneAccountValidationViewModel::class.java]
+        viewModel = ViewModelProvider(
+            this,
+            PhoneAccountValidationViewModelFactory(sharedAssistantViewModel.getAccountCreator())
+        )[PhoneAccountValidationViewModel::class.java]
         binding.viewModel = viewModel
 
         viewModel.phoneNumber.value = arguments?.getString("PhoneNumber")
@@ -106,7 +109,9 @@ class PhoneAccountValidationFragment : GenericFragment<AssistantPhoneAccountVali
             if (data != null && data.itemCount > 0) {
                 val clip = data.getItemAt(0).text.toString()
                 if (clip.length == 4) {
-                    Log.i("[Assistant] [Phone Account Validation] Found 4 digits as primary clip in clipboard, using it and clear it")
+                    Log.i(
+                        "[Assistant] [Phone Account Validation] Found 4 digits as primary clip in clipboard, using it and clear it"
+                    )
                     viewModel.code.value = clip
                     clipboard.clearPrimaryClip()
                 }
