@@ -48,7 +48,10 @@ class ImageUtils {
             if (fromPictureUri != null) {
                 bm = try {
                     // We make a copy to ensure Bitmap will be Software and not Hardware, required for shortcuts
-                    Compatibility.getBitmapFromUri(context, fromPictureUri).copy(Bitmap.Config.ARGB_8888, true)
+                    Compatibility.getBitmapFromUri(context, fromPictureUri).copy(
+                        Bitmap.Config.ARGB_8888,
+                        true
+                    )
                 } catch (fnfe: FileNotFoundException) {
                     return null
                 } catch (e: Exception) {
@@ -70,7 +73,13 @@ class ImageUtils {
             val matrix = Matrix()
             matrix.postRotate(angle)
             val rotatedBitmap = Bitmap.createBitmap(
-                source, 0, 0, source.width, source.height, matrix, true
+                source,
+                0,
+                0,
+                source.width,
+                source.height,
+                matrix,
+                true
             )
             source.recycle()
             return rotatedBitmap

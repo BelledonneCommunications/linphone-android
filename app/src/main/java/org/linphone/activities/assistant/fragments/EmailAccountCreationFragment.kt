@@ -46,7 +46,10 @@ class EmailAccountCreationFragment : GenericFragment<AssistantEmailAccountCreati
             ViewModelProvider(this)[SharedAssistantViewModel::class.java]
         }
 
-        viewModel = ViewModelProvider(this, EmailAccountCreationViewModelFactory(sharedAssistantViewModel.getAccountCreator()))[EmailAccountCreationViewModel::class.java]
+        viewModel = ViewModelProvider(
+            this,
+            EmailAccountCreationViewModelFactory(sharedAssistantViewModel.getAccountCreator())
+        )[EmailAccountCreationViewModel::class.java]
         binding.viewModel = viewModel
 
         viewModel.goToEmailValidationEvent.observe(

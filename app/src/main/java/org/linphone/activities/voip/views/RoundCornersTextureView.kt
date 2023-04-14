@@ -60,13 +60,19 @@ class RoundCornersTextureView : CaptureTextureView {
         ).apply {
             try {
                 mAlignTopRight = getBoolean(R.styleable.RoundCornersTextureView_alignTopRight, true)
-                val mode = getInteger(R.styleable.RoundCornersTextureView_displayMode, DisplayMode.BLACK_BARS.ordinal)
+                val mode = getInteger(
+                    R.styleable.RoundCornersTextureView_displayMode,
+                    DisplayMode.BLACK_BARS.ordinal
+                )
                 mDisplayMode = when (mode) {
                     1 -> DisplayMode.OCCUPY_ALL_SPACE
                     2 -> DisplayMode.HYBRID
                     else -> DisplayMode.BLACK_BARS
                 }
-                mRadius = getFloat(R.styleable.RoundCornersTextureView_radius, context.resources.getDimension(R.dimen.voip_round_corners_texture_view_radius))
+                mRadius = getFloat(
+                    R.styleable.RoundCornersTextureView_radius,
+                    context.resources.getDimension(R.dimen.voip_round_corners_texture_view_radius)
+                )
             } finally {
                 recycle()
             }

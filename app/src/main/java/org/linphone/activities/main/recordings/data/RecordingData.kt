@@ -174,13 +174,18 @@ class RecordingData(val path: String, private val recordingListener: RecordingLi
         Log.i("[Recording] Using device $playbackSoundCard to make the call recording playback")
 
         val localPlayer = coreContext.core.createLocalPlayer(playbackSoundCard, null, null)
-        if (localPlayer != null) player = localPlayer
-        else Log.e("[Recording] Couldn't create local player!")
+        if (localPlayer != null) {
+            player = localPlayer
+        } else {
+            Log.e("[Recording] Couldn't create local player!")
+        }
         player.addListener(listener)
 
         player.open(path)
         duration.value = player.duration
-        formattedDuration.value = SimpleDateFormat("mm:ss", Locale.getDefault()).format(player.duration) // is already in milliseconds
+        formattedDuration.value = SimpleDateFormat("mm:ss", Locale.getDefault()).format(
+            player.duration
+        ) // is already in milliseconds
         formattedDate.value = DateFormat.getTimeInstance(DateFormat.SHORT).format(date)
     }
 

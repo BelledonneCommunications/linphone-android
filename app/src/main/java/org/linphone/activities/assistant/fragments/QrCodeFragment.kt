@@ -67,7 +67,10 @@ class QrCodeFragment : GenericFragment<AssistantQrCodeFragmentBinding>() {
 
         if (!PermissionHelper.required(requireContext()).hasCameraPermission()) {
             Log.i("[QR Code] Asking for CAMERA permission")
-            requestPermissions(arrayOf(android.Manifest.permission.CAMERA), CAMERA_PERMISSION_REQUEST_CODE)
+            requestPermissions(
+                arrayOf(android.Manifest.permission.CAMERA),
+                CAMERA_PERMISSION_REQUEST_CODE
+            )
         }
     }
 

@@ -70,7 +70,9 @@ class ConferenceLayoutFragment : GenericVideoPreviewFragment<VoipConferenceLayou
         }
 
         binding.setDismissDialogClickListener {
-            val dialog = binding.root.findViewById<ConstraintLayout>(R.id.too_many_participants_dialog)
+            val dialog = binding.root.findViewById<ConstraintLayout>(
+                R.id.too_many_participants_dialog
+            )
             dialog?.visibility = View.GONE
         }
     }

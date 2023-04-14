@@ -85,7 +85,9 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 if (viewModel.isUserScrollingUp.value == false) {
                     scrollToFirstUnreadMessageOrBottom(false)
                 } else {
-                    Log.d("[Chat Room] User has scrolled up manually in the messages history, don't scroll to the newly added message at the bottom & don't mark the chat room as read")
+                    Log.d(
+                        "[Chat Room] User has scrolled up manually in the messages history, don't scroll to the newly added message at the bottom & don't mark the chat room as read"
+                    )
                 }
             }
         }
@@ -106,7 +108,9 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                     Log.i("[Chat Room] Messages have been displayed, scrolling to first unread")
                     val notAllMessagesDisplayed = scrollToFirstUnreadMessageOrBottom(false)
                     if (notAllMessagesDisplayed) {
-                        Log.w("[Chat Room] More unread messages than the screen can display, do not mark chat room as read now, wait for user to scroll to bottom")
+                        Log.w(
+                            "[Chat Room] More unread messages than the screen can display, do not mark chat room as read now, wait for user to scroll to bottom"
+                        )
                     } else {
                         // Consider user as scrolled to the end when marking chat room as read
                         viewModel.isUserScrollingUp.value = false
@@ -138,10 +142,14 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             if (chatRoom != null) {
                 outState.putString("LocalSipUri", chatRoom.localAddress.asStringUriOnly())
                 outState.putString("RemoteSipUri", chatRoom.peerAddress.asStringUriOnly())
-                Log.i("[Chat Room] Saving current chat room local & remote addresses in save instance state")
+                Log.i(
+                    "[Chat Room] Saving current chat room local & remote addresses in save instance state"
+                )
             }
         } else {
-            Log.w("[Chat Room] Can't save instance state, sharedViewModel hasn't been initialized yet")
+            Log.w(
+                "[Chat Room] Can't save instance state, sharedViewModel hasn't been initialized yet"
+            )
         }
         super.onSaveInstanceState(outState)
     }
@@ -155,8 +163,12 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
         useMaterialSharedAxisXForwardAnimation = sharedViewModel.isSlidingPaneSlideable.value == false
 
-        val localSipUri = arguments?.getString("LocalSipUri") ?: savedInstanceState?.getString("LocalSipUri")
-        val remoteSipUri = arguments?.getString("RemoteSipUri") ?: savedInstanceState?.getString("RemoteSipUri")
+        val localSipUri = arguments?.getString("LocalSipUri") ?: savedInstanceState?.getString(
+            "LocalSipUri"
+        )
+        val remoteSipUri = arguments?.getString("RemoteSipUri") ?: savedInstanceState?.getString(
+            "RemoteSipUri"
+        )
 
         val textToShare = arguments?.getString("TextToShare")
         val filesToShare = arguments?.getStringArrayList("FilesToShare")
@@ -166,12 +178,16 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         }
         arguments?.clear()
         if (localSipUri != null && remoteSipUri != null) {
-            Log.i("[Chat Room] Found local [$localSipUri] & remote [$remoteSipUri] addresses in arguments or saved instance state")
+            Log.i(
+                "[Chat Room] Found local [$localSipUri] & remote [$remoteSipUri] addresses in arguments or saved instance state"
+            )
 
             val localAddress = Factory.instance().createAddress(localSipUri)
             val remoteSipAddress = Factory.instance().createAddress(remoteSipUri)
             sharedViewModel.selectedChatRoom.value = coreContext.core.searchChatRoom(
-                null, localAddress, remoteSipAddress,
+                null,
+                localAddress,
+                remoteSipAddress,
                 arrayOfNulls(
                     0
                 )
@@ -192,7 +208,9 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
         binding.root.addKeyboardInsetListener { keyboardVisible ->
             if (keyboardVisible && chatSendingViewModel.isEmojiPickerOpen.value == true) {
-                Log.d("[Chat Room] Emoji picker is opened, closing it because keyboard is now visible")
+                Log.d(
+                    "[Chat Room] Emoji picker is opened, closing it because keyboard is now visible"
+                )
                 chatSendingViewModel.isEmojiPickerOpen.value = false
             }
         }
@@ -275,12 +293,18 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 }
             }
         }
-        RecyclerViewSwipeUtils(ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT, swipeConfiguration, swipeListener)
+        RecyclerViewSwipeUtils(
+            ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT,
+            swipeConfiguration,
+            swipeListener
+        )
             .attachToRecyclerView(binding.chatMessagesList)
 
         chatScrollListener = object : ChatScrollListener(layoutManager) {
             override fun onLoadMore(totalItemsCount: Int) {
-                Log.i("[Chat Room] User has scrolled up far enough, load more items from history (currently there are $totalItemsCount messages displayed)")
+                Log.i(
+                    "[Chat Room] User has scrolled up far enough, load more items from history (currently there are $totalItemsCount messages displayed)"
+                )
                 listViewModel.loadMoreData(totalItemsCount)
             }
 
@@ -295,7 +319,9 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 if (viewModel.unreadMessagesCount.value != 0 &&
                     coreContext.notificationsManager.currentlyDisplayedChatRoomAddress == peerAddress
                 ) {
-                    Log.i("[Chat Room] User has scrolled to the latest message, mark chat room as read")
+                    Log.i(
+                        "[Chat Room] User has scrolled to the latest message, mark chat room as read"
+                    )
                     viewModel.chatRoom.markAsRead()
                 }
             }
@@ -447,7 +473,9 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
                 if (path.isNotEmpty() && !File(path).exists()) {
                     Log.e("[Chat Room] File not found: $path")
-                    (requireActivity() as MainActivity).showSnackBar(R.string.chat_room_file_not_found)
+                    (requireActivity() as MainActivity).showSnackBar(
+                        R.string.chat_room_file_not_found
+                    )
                 } else {
                     if (path.isEmpty()) {
                         val name = content.name
@@ -456,14 +484,18 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                             FileUtils.writeIntoFile(content.buffer, file)
                             path = file.absolutePath
                             content.filePath = path
-                            Log.i("[Chat Room] Content file path was empty, created file from buffer at $path")
+                            Log.i(
+                                "[Chat Room] Content file path was empty, created file from buffer at $path"
+                            )
                         } else if (content.isIcalendar) {
                             val name = "conference.ics"
                             val file = FileUtils.getFileStoragePath(name)
                             FileUtils.writeIntoFile(content.buffer, file)
                             path = file.absolutePath
                             content.filePath = path
-                            Log.i("[Chat Room] Content file path was empty, created conference.ics from buffer at $path")
+                            Log.i(
+                                "[Chat Room] Content file path was empty, created conference.ics from buffer at $path"
+                            )
                         }
                     }
 
@@ -494,7 +526,9 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                             )
                             else -> {
                                 if (content.isFileEncrypted) {
-                                    Log.w("[Chat Room] File is encrypted and can't be opened in one of our viewers...")
+                                    Log.w(
+                                        "[Chat Room] File is encrypted and can't be opened in one of our viewers..."
+                                    )
                                     showDialogForUserConsentBeforeExportingFileInThirdPartyApp(
                                         content
                                     )
@@ -570,7 +604,9 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                     val eventLog = events.find { eventLog ->
                         if (eventLog.eventLog.type == EventLog.Type.ConferenceChatMessage) {
                             (eventLog.data as ChatMessageData).chatMessage.messageId == chatMessage.messageId
-                        } else false
+                        } else {
+                            false
+                        }
                     }
                     index = events.indexOf(eventLog)
                     if (index == -1) {
@@ -632,7 +668,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 alertDialog.setMessage(message)
 
                 alertDialog.setNeutralButton(R.string.chat_message_context_menu_copy_text) {
-                    _, _ ->
+                        _, _ ->
                     val clipboard: ClipboardManager =
                         coreContext.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                     val clip = ClipData.newPlainText("Chat room info", message)
@@ -662,17 +698,25 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             if (corePreferences.holdToRecordVoiceMessage) {
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
-                        Log.i("[Chat Room] Start recording voice message as long as recording button is held")
+                        Log.i(
+                            "[Chat Room] Start recording voice message as long as recording button is held"
+                        )
                         chatSendingViewModel.startVoiceRecording()
                     }
                     MotionEvent.ACTION_UP -> {
                         val voiceRecordingDuration = chatSendingViewModel.voiceRecordingDuration.value ?: 0
                         if (voiceRecordingDuration < 1000) {
-                            Log.w("[Chat Room] Voice recording button has been held for less than a second, considering miss click")
+                            Log.w(
+                                "[Chat Room] Voice recording button has been held for less than a second, considering miss click"
+                            )
                             chatSendingViewModel.cancelVoiceRecording()
-                            (activity as MainActivity).showSnackBar(R.string.chat_message_voice_recording_hold_to_record)
+                            (activity as MainActivity).showSnackBar(
+                                R.string.chat_message_voice_recording_hold_to_record
+                            )
                         } else {
-                            Log.i("[Chat Room] Voice recording button has been released, stop recording")
+                            Log.i(
+                                "[Chat Room] Voice recording button has been released, stop recording"
+                            )
                             chatSendingViewModel.stopVoiceRecording()
                         }
                         view.performClick()
@@ -712,7 +756,9 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                     chatSendingViewModel.attachingFileInProgress.value = true
                     for (filePath in filesToShare) {
                         val path = FileUtils.copyToLocalStorage(filePath)
-                        Log.i("[Chat Room] Found [$filePath] file to share, matching path is [$path]")
+                        Log.i(
+                            "[Chat Room] Found [$filePath] file to share, matching path is [$path]"
+                        )
                         if (path != null) {
                             chatSendingViewModel.addAttachment(path)
                         }
@@ -806,7 +852,9 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 .viewTreeObserver
                 .addOnGlobalLayoutListener(globalLayoutLayout)
         } else {
-            Log.e("[Chat Room] Fragment resuming but viewModel lateinit property isn't initialized!")
+            Log.e(
+                "[Chat Room] Fragment resuming but viewModel lateinit property isn't initialized!"
+            )
         }
     }
 
@@ -838,10 +886,10 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 withContext(Dispatchers.Main) {
                     chatSendingViewModel.attachingFileInProgress.value = true
                     for (
-                        fileToUploadPath in FileUtils.getFilesPathFromPickerIntent(
-                            data,
-                            chatSendingViewModel.temporaryFileUploadPath
-                        )
+                    fileToUploadPath in FileUtils.getFilesPathFromPickerIntent(
+                        data,
+                        chatSendingViewModel.temporaryFileUploadPath
+                    )
                     ) {
                         Log.i("[Chat Room] Found [$fileToUploadPath] file from intent")
                         chatSendingViewModel.addAttachment(fileToUploadPath)
@@ -867,9 +915,13 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 dialog.dismiss()
             }
 
-            val okLabel = if (viewModel.oneParticipantOneDevice) getString(R.string.dialog_call) else getString(
-                R.string.dialog_ok
-            )
+            val okLabel = if (viewModel.oneParticipantOneDevice) {
+                getString(R.string.dialog_call)
+            } else {
+                getString(
+                    R.string.dialog_ok
+                )
+            }
             dialogViewModel.showOkButton(
                 { doNotAskAgain ->
                     if (doNotAskAgain) corePreferences.limeSecurityPopupEnabled = false
@@ -921,7 +973,9 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
     }
 
     private fun showForwardConfirmationDialog(chatMessage: ChatMessage) {
-        val viewModel = DialogViewModel(getString(R.string.chat_message_forward_confirmation_dialog))
+        val viewModel = DialogViewModel(
+            getString(R.string.chat_message_forward_confirmation_dialog)
+        )
         viewModel.iconResource = R.drawable.forward_message_default
         viewModel.showIcon = true
         val dialog: Dialog = DialogUtils.getDialog(requireContext(), viewModel)
@@ -946,7 +1000,9 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
     private fun showPopupMenu(chatRoom: ChatRoom) {
         val popupView: ChatRoomMenuBindingImpl = DataBindingUtil.inflate(
             LayoutInflater.from(context),
-            R.layout.chat_room_menu, null, false
+            R.layout.chat_room_menu,
+            null,
+            false
         )
         val readOnly = chatRoom.isReadOnly
         popupView.ephemeralEnabled = !readOnly
@@ -1014,7 +1070,9 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 if (viewModel.ephemeralChatRoom) {
                     if (chatRoom.currentParams.ephemeralMode == ChatRoomEphemeralMode.AdminManaged) {
                         if (chatRoom.me?.isAdmin == false) {
-                            Log.w("[Chat Room] Hiding ephemeral menu as mode is admin managed and we aren't admin")
+                            Log.w(
+                                "[Chat Room] Hiding ephemeral menu as mode is admin managed and we aren't admin"
+                            )
                             popupView.ephemeralHidden = true
                             totalSize -= itemSize
                         }
@@ -1117,7 +1175,9 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             R.string.chat_message_removal_info,
             R.string.chat_message_abort_removal
         ) {
-            Log.i("[Chat Room] Canceled message/event deletion task: $task for message/event at position $position")
+            Log.i(
+                "[Chat Room] Canceled message/event deletion task: $task for message/event at position $position"
+            )
             adapter.notifyItemRangeChanged(position, adapter.itemCount - position)
             task.cancel()
         }
@@ -1136,7 +1196,9 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 adapter.itemCount - 1
             }
 
-            Log.i("[Chat Room] Scrolling to position $indexToScrollTo, first unread message is at $firstUnreadMessagePosition")
+            Log.i(
+                "[Chat Room] Scrolling to position $indexToScrollTo, first unread message is at $firstUnreadMessagePosition"
+            )
             scrollTo(indexToScrollTo, smooth)
 
             if (firstUnreadMessagePosition == 0) {
@@ -1219,7 +1281,9 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             {
                 dialog.dismiss()
                 lifecycleScope.launch {
-                    Log.i("[Chat Room] [VFS] Content is encrypted, requesting plain file path for file [${content.filePath}]")
+                    Log.i(
+                        "[Chat Room] [VFS] Content is encrypted, requesting plain file path for file [${content.filePath}]"
+                    )
                     val plainFilePath = content.exportPlainFile()
                     if (!FileUtils.openFileInThirdPartyApp(requireActivity(), plainFilePath)) {
                         showDialogToSuggestOpeningFileAsText()
@@ -1245,7 +1309,10 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
     }
 
     private fun showGroupCallDialog() {
-        val dialogViewModel = DialogViewModel(getString(R.string.conference_start_group_call_dialog_message), getString(R.string.conference_start_group_call_dialog_title))
+        val dialogViewModel = DialogViewModel(
+            getString(R.string.conference_start_group_call_dialog_message),
+            getString(R.string.conference_start_group_call_dialog_title)
+        )
         val dialog: Dialog = DialogUtils.getDialog(requireContext(), dialogViewModel)
 
         dialogViewModel.iconResource = R.drawable.icon_video_conf_incoming

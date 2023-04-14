@@ -58,7 +58,10 @@ abstract class AbstractPhoneFragment<T : ViewDataBinding> : GenericFragment<T>()
         if (!resources.getBoolean(R.bool.isTablet)) {
             if (!PermissionHelper.get().hasReadPhoneStateOrPhoneNumbersPermission()) {
                 Log.i("[Assistant] Asking for READ_PHONE_STATE/READ_PHONE_NUMBERS permission")
-                Compatibility.requestReadPhoneStateOrNumbersPermission(this, READ_PHONE_STATE_PERMISSION_REQUEST_CODE)
+                Compatibility.requestReadPhoneStateOrNumbersPermission(
+                    this,
+                    READ_PHONE_STATE_PERMISSION_REQUEST_CODE
+                )
             } else {
                 updateFromDeviceInfo()
             }

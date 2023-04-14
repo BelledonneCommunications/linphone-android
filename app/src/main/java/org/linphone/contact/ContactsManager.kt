@@ -95,9 +95,18 @@ class ContactsManager(private val context: Context) {
     init {
         initSyncAccount()
 
-        contactAvatar = IconCompat.createWithResource(context, R.drawable.voip_single_contact_avatar_alt)
-        groupAvatar = IconCompat.createWithResource(context, R.drawable.voip_multiple_contacts_avatar_alt)
-        groupBitmap = BitmapFactory.decodeResource(context.resources, R.drawable.voip_multiple_contacts_avatar_alt)
+        contactAvatar = IconCompat.createWithResource(
+            context,
+            R.drawable.voip_single_contact_avatar_alt
+        )
+        groupAvatar = IconCompat.createWithResource(
+            context,
+            R.drawable.voip_multiple_contacts_avatar_alt
+        )
+        groupBitmap = BitmapFactory.decodeResource(
+            context.resources,
+            R.drawable.voip_multiple_contacts_avatar_alt
+        )
 
         val core = coreContext.core
         for (list in core.friendsLists) {
@@ -137,7 +146,9 @@ class ContactsManager(private val context: Context) {
                 friend.photo = parsedUri
             }
 
-            Log.i("[Contacts Manager] Local contact created for account [${address.asString()}] and picture [${friend.photo}]")
+            Log.i(
+                "[Contacts Manager] Local contact created for account [${address.asString()}] and picture [${friend.photo}]"
+            )
             localFriends.add(friend)
         }
     }
@@ -229,7 +240,9 @@ class ContactsManager(private val context: Context) {
 
     private fun initSyncAccount() {
         val accountManager = context.getSystemService(Context.ACCOUNT_SERVICE) as AccountManager
-        val accounts = accountManager.getAccountsByType(context.getString(R.string.sync_account_type))
+        val accounts = accountManager.getAccountsByType(
+            context.getString(R.string.sync_account_type)
+        )
         if (accounts.isEmpty()) {
             val newAccount = Account(
                 context.getString(R.string.sync_account_name),
@@ -245,7 +258,9 @@ class ContactsManager(private val context: Context) {
             }
         } else {
             for (account in accounts) {
-                Log.i("[Contacts Manager] Found account with name [${account.name}] and type [${account.type}]")
+                Log.i(
+                    "[Contacts Manager] Found account with name [${account.name}] and type [${account.type}]"
+                )
             }
         }
     }
@@ -259,14 +274,25 @@ class ContactsManager(private val context: Context) {
 
         for (syncAdapter in syncAdapters) {
             if (syncAdapter.authority == "com.android.contacts" && syncAdapter.isUserVisible) {
-                if (syncAdapter.supportsUploading() || syncAdapter.accountType == context.getString(R.string.sync_account_type)) {
-                    Log.i("[Contacts Manager] Found sync adapter for com.android.contacts authority: ${syncAdapter.accountType}")
+                if (syncAdapter.supportsUploading() || syncAdapter.accountType == context.getString(
+                        R.string.sync_account_type
+                    )
+                ) {
+                    Log.i(
+                        "[Contacts Manager] Found sync adapter for com.android.contacts authority: ${syncAdapter.accountType}"
+                    )
                     val accounts = accountManager.getAccountsByType(syncAdapter.accountType)
                     for (account in accounts) {
-                        Log.i("[Contacts Manager] Found account for account type ${syncAdapter.accountType}: ${account.name}")
+                        Log.i(
+                            "[Contacts Manager] Found account for account type ${syncAdapter.accountType}: ${account.name}"
+                        )
                         for (authenticator in authenticators) {
                             if (authenticator.type == account.type) {
-                                val drawable = packageManager.getDrawable(authenticator.packageName, authenticator.smallIconId, null)
+                                val drawable = packageManager.getDrawable(
+                                    authenticator.packageName,
+                                    authenticator.smallIconId,
+                                    null
+                                )
                                 val triple = Triple(account.name, account.type, drawable)
                                 available.add(triple)
                             }
@@ -281,7 +307,9 @@ class ContactsManager(private val context: Context) {
 
     @Synchronized
     private fun refreshContactOnPresenceReceived(friend: Friend) {
-        Log.d("[Contacts Manager] Received presence information for contact [${friend.name}]: [${friend.consolidatedPresence}]")
+        Log.d(
+            "[Contacts Manager] Received presence information for contact [${friend.name}]: [${friend.consolidatedPresence}]"
+        )
         if (corePreferences.storePresenceInNativeContact && PermissionHelper.get().hasWriteContactsPermission()) {
             if (friend.refKey != null) {
                 Log.i("[Contacts Manager] Storing presence in native contact ${friend.refKey}")
@@ -296,7 +324,9 @@ class ContactsManager(private val context: Context) {
         for (phoneNumber in friend.phoneNumbers) {
             val sipAddress = friend.getContactForPhoneNumberOrAddress(phoneNumber)
             if (sipAddress != null) {
-                Log.d("[Contacts Manager] Found presence information to store in native contact $friend under Linphone sync account")
+                Log.d(
+                    "[Contacts Manager] Found presence information to store in native contact $friend under Linphone sync account"
+                )
                 contactEditor.setPresenceInformation(
                     phoneNumber,
                     sipAddress
@@ -400,7 +430,9 @@ fun Friend.getPerson(): Person {
     personBuilder.setIcon(
         if (bm == null) {
             coreContext.contactsManager.contactAvatar
-        } else IconCompat.createWithAdaptiveBitmap(bm)
+        } else {
+            IconCompat.createWithAdaptiveBitmap(bm)
+        }
     )
 
     personBuilder.setKey(refKey)

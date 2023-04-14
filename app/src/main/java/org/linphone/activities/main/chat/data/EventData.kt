@@ -65,28 +65,60 @@ class EventData(private val eventLog: EventLog) : GenericContactData(
         val context: Context = coreContext.context
 
         text.value = when (eventLog.type) {
-            EventLog.Type.ConferenceCreated -> context.getString(R.string.chat_event_conference_created)
-            EventLog.Type.ConferenceTerminated -> context.getString(R.string.chat_event_conference_destroyed)
-            EventLog.Type.ConferenceParticipantAdded -> context.getString(R.string.chat_event_participant_added).format(getName())
-            EventLog.Type.ConferenceParticipantRemoved -> context.getString(R.string.chat_event_participant_removed).format(getName())
-            EventLog.Type.ConferenceSubjectChanged -> context.getString(R.string.chat_event_subject_changed).format(eventLog.subject)
-            EventLog.Type.ConferenceParticipantSetAdmin -> context.getString(R.string.chat_event_admin_set).format(getName())
-            EventLog.Type.ConferenceParticipantUnsetAdmin -> context.getString(R.string.chat_event_admin_unset).format(getName())
-            EventLog.Type.ConferenceParticipantDeviceAdded -> context.getString(R.string.chat_event_device_added).format(getName())
-            EventLog.Type.ConferenceParticipantDeviceRemoved -> context.getString(R.string.chat_event_device_removed).format(getName())
+            EventLog.Type.ConferenceCreated -> context.getString(
+                R.string.chat_event_conference_created
+            )
+            EventLog.Type.ConferenceTerminated -> context.getString(
+                R.string.chat_event_conference_destroyed
+            )
+            EventLog.Type.ConferenceParticipantAdded -> context.getString(
+                R.string.chat_event_participant_added
+            ).format(getName())
+            EventLog.Type.ConferenceParticipantRemoved -> context.getString(
+                R.string.chat_event_participant_removed
+            ).format(getName())
+            EventLog.Type.ConferenceSubjectChanged -> context.getString(
+                R.string.chat_event_subject_changed
+            ).format(eventLog.subject)
+            EventLog.Type.ConferenceParticipantSetAdmin -> context.getString(
+                R.string.chat_event_admin_set
+            ).format(getName())
+            EventLog.Type.ConferenceParticipantUnsetAdmin -> context.getString(
+                R.string.chat_event_admin_unset
+            ).format(getName())
+            EventLog.Type.ConferenceParticipantDeviceAdded -> context.getString(
+                R.string.chat_event_device_added
+            ).format(getName())
+            EventLog.Type.ConferenceParticipantDeviceRemoved -> context.getString(
+                R.string.chat_event_device_removed
+            ).format(getName())
             EventLog.Type.ConferenceSecurityEvent -> {
                 val name = getName()
                 when (eventLog.securityEventType) {
-                    EventLog.SecurityEventType.EncryptionIdentityKeyChanged -> context.getString(R.string.chat_security_event_lime_identity_key_changed).format(name)
-                    EventLog.SecurityEventType.ManInTheMiddleDetected -> context.getString(R.string.chat_security_event_man_in_the_middle_detected).format(name)
-                    EventLog.SecurityEventType.SecurityLevelDowngraded -> context.getString(R.string.chat_security_event_security_level_downgraded).format(name)
-                    EventLog.SecurityEventType.ParticipantMaxDeviceCountExceeded -> context.getString(R.string.chat_security_event_participant_max_count_exceeded).format(name)
+                    EventLog.SecurityEventType.EncryptionIdentityKeyChanged -> context.getString(
+                        R.string.chat_security_event_lime_identity_key_changed
+                    ).format(name)
+                    EventLog.SecurityEventType.ManInTheMiddleDetected -> context.getString(
+                        R.string.chat_security_event_man_in_the_middle_detected
+                    ).format(name)
+                    EventLog.SecurityEventType.SecurityLevelDowngraded -> context.getString(
+                        R.string.chat_security_event_security_level_downgraded
+                    ).format(name)
+                    EventLog.SecurityEventType.ParticipantMaxDeviceCountExceeded -> context.getString(
+                        R.string.chat_security_event_participant_max_count_exceeded
+                    ).format(name)
                     else -> "Unexpected security event for $name: ${eventLog.securityEventType}"
                 }
             }
-            EventLog.Type.ConferenceEphemeralMessageDisabled -> context.getString(R.string.chat_event_ephemeral_disabled)
-            EventLog.Type.ConferenceEphemeralMessageEnabled -> context.getString(R.string.chat_event_ephemeral_enabled).format(formatEphemeralExpiration(context, eventLog.ephemeralMessageLifetime))
-            EventLog.Type.ConferenceEphemeralMessageLifetimeChanged -> context.getString(R.string.chat_event_ephemeral_lifetime_changed).format(formatEphemeralExpiration(context, eventLog.ephemeralMessageLifetime))
+            EventLog.Type.ConferenceEphemeralMessageDisabled -> context.getString(
+                R.string.chat_event_ephemeral_disabled
+            )
+            EventLog.Type.ConferenceEphemeralMessageEnabled -> context.getString(
+                R.string.chat_event_ephemeral_enabled
+            ).format(formatEphemeralExpiration(context, eventLog.ephemeralMessageLifetime))
+            EventLog.Type.ConferenceEphemeralMessageLifetimeChanged -> context.getString(
+                R.string.chat_event_ephemeral_lifetime_changed
+            ).format(formatEphemeralExpiration(context, eventLog.ephemeralMessageLifetime))
             else -> "Unexpected event: ${eventLog.type}"
         }
     }

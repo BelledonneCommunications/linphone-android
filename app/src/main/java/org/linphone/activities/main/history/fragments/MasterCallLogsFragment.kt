@@ -105,7 +105,9 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
                     val navHostFragment =
                         childFragmentManager.findFragmentById(R.id.history_nav_container) as NavHostFragment
                     if (navHostFragment.navController.currentDestination?.id == R.id.emptyCallHistoryFragment) {
-                        Log.i("[History] Foldable device has been folded, closing side pane with empty fragment")
+                        Log.i(
+                            "[History] Foldable device has been folded, closing side pane with empty fragment"
+                        )
                         binding.slidingPane.closePane()
                     }
                 }
@@ -162,7 +164,9 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
                             if (!binding.slidingPane.isSlideable &&
                                 deletedCallGroup.lastCallLogId == sharedViewModel.selectedCallLogGroup.value?.lastCallLogId
                             ) {
-                                Log.i("[History] Currently displayed history has been deleted, removing detail fragment")
+                                Log.i(
+                                    "[History] Currently displayed history has been deleted, removing detail fragment"
+                                )
                                 clearDisplayedCallHistory()
                             }
                             dialog.dismiss()
@@ -178,7 +182,9 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
             .attachToRecyclerView(binding.callLogsList)
 
         // Divider between items
-        binding.callLogsList.addItemDecoration(AppUtils.getDividerDecoration(requireContext(), layoutManager))
+        binding.callLogsList.addItemDecoration(
+            AppUtils.getDividerDecoration(requireContext(), layoutManager)
+        )
 
         // Displays formatted date header
         val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
@@ -212,7 +218,7 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
         }
 
         adapter.startCallToEvent.observe(
-            viewLifecycleOwner,
+            viewLifecycleOwner
         ) {
             it.consume { callLogGroup ->
                 val callLog = callLogGroup.lastCallLog
@@ -244,8 +250,12 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
                     }
                     coreContext.core.callsNb > 0 -> {
                         val cleanAddress = LinphoneUtils.getCleanedAddress(callLog.remoteAddress)
-                        Log.i("[History] Starting dialer with pre-filled URI ${cleanAddress.asStringUriOnly()}, is transfer? ${sharedViewModel.pendingCallTransfer}")
-                        sharedViewModel.updateDialerAnimationsBasedOnDestination.value = Event(R.id.masterCallLogsFragment)
+                        Log.i(
+                            "[History] Starting dialer with pre-filled URI ${cleanAddress.asStringUriOnly()}, is transfer? ${sharedViewModel.pendingCallTransfer}"
+                        )
+                        sharedViewModel.updateDialerAnimationsBasedOnDestination.value = Event(
+                            R.id.masterCallLogsFragment
+                        )
                         val args = Bundle()
                         args.putString("URI", cleanAddress.asStringUriOnly())
                         args.putBoolean("Transfer", sharedViewModel.pendingCallTransfer)
@@ -255,7 +265,9 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
                     else -> {
                         val cleanAddress = LinphoneUtils.getCleanedAddress(callLog.remoteAddress)
                         val localAddress = callLogGroup.lastCallLog.localAddress
-                        Log.i("[History] Starting call to ${cleanAddress.asStringUriOnly()} with local address ${localAddress.asStringUriOnly()}")
+                        Log.i(
+                            "[History] Starting call to ${cleanAddress.asStringUriOnly()} with local address ${localAddress.asStringUriOnly()}"
+                        )
                         coreContext.startCall(cleanAddress, localAddress = localAddress)
                     }
                 }
@@ -289,7 +301,9 @@ class MasterCallLogsFragment : MasterFragment<HistoryMasterFragmentBinding, Call
         listViewModel.deleteCallLogGroups(list)
 
         if (!binding.slidingPane.isSlideable && closeSlidingPane) {
-            Log.i("[History] Currently displayed history has been deleted, removing detail fragment")
+            Log.i(
+                "[History] Currently displayed history has been deleted, removing detail fragment"
+            )
             clearDisplayedCallHistory()
         }
     }

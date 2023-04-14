@@ -72,7 +72,9 @@ class TimestampUtils {
         }
 
         fun timeToString(hour: Int, minutes: Int): String {
-            val use24hFormat = android.text.format.DateFormat.is24HourFormat(LinphoneApplication.coreContext.context)
+            val use24hFormat = android.text.format.DateFormat.is24HourFormat(
+                LinphoneApplication.coreContext.context
+            )
             val calendar = Calendar.getInstance()
             calendar.set(Calendar.HOUR_OF_DAY, hour)
             calendar.set(Calendar.MINUTE, minutes)
@@ -85,7 +87,9 @@ class TimestampUtils {
         }
 
         fun timeToString(time: Long, timestampInSecs: Boolean = true): String {
-            val use24hFormat = android.text.format.DateFormat.is24HourFormat(LinphoneApplication.coreContext.context)
+            val use24hFormat = android.text.format.DateFormat.is24HourFormat(
+                LinphoneApplication.coreContext.context
+            )
             val calendar = Calendar.getInstance()
             calendar.timeInMillis = if (timestampInSecs) time * 1000 else time
 
@@ -129,14 +133,20 @@ class TimestampUtils {
                 if (onlyDate) {
                     DateFormat.getDateInstance(if (shortDate) DateFormat.SHORT else DateFormat.FULL)
                 } else {
-                    DateFormat.getDateTimeInstance(if (shortDate) DateFormat.SHORT else DateFormat.MEDIUM, DateFormat.SHORT)
+                    DateFormat.getDateTimeInstance(
+                        if (shortDate) DateFormat.SHORT else DateFormat.MEDIUM,
+                        DateFormat.SHORT
+                    )
                 }
             } as SimpleDateFormat
 
             if (hideYear || isSameYear(timestamp, timestampInSecs)) {
                 // Remove the year part of the format
                 dateFormat.applyPattern(
-                    dateFormat.toPattern().replace("/?y+/?|,?\\s?y+\\s?".toRegex(), if (shortDate) "" else " ")
+                    dateFormat.toPattern().replace(
+                        "/?y+/?|,?\\s?y+\\s?".toRegex(),
+                        if (shortDate) "" else " "
+                    )
                 )
             }
 

@@ -116,7 +116,9 @@ class ContactEditorFragment : GenericFragment<ContactEditorFragmentBinding>(), S
                 Log.i("[Contact Editor] WRITE_CONTACTS permission granted")
             } else {
                 Log.w("[Contact Editor] WRITE_CONTACTS permission denied")
-                (activity as MainActivity).showSnackBar(R.string.contact_editor_write_permission_denied)
+                (activity as MainActivity).showSnackBar(
+                    R.string.contact_editor_write_permission_denied
+                )
                 goBack()
             }
         }
@@ -126,7 +128,10 @@ class ContactEditorFragment : GenericFragment<ContactEditorFragmentBinding>(), S
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
             lifecycleScope.launch {
-                val contactImageFilePath = FileUtils.getFilePathFromPickerIntent(intent, temporaryPicturePath)
+                val contactImageFilePath = FileUtils.getFilePathFromPickerIntent(
+                    intent,
+                    temporaryPicturePath
+                )
                 if (contactImageFilePath != null) {
                     data.setPictureFromPath(contactImageFilePath)
                 }
@@ -171,7 +176,10 @@ class ContactEditorFragment : GenericFragment<ContactEditorFragmentBinding>(), S
 
         val chooserIntent =
             Intent.createChooser(galleryIntent, getString(R.string.chat_message_pick_file_dialog))
-        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(arrayOf<Parcelable>()))
+        chooserIntent.putExtra(
+            Intent.EXTRA_INITIAL_INTENTS,
+            cameraIntents.toArray(arrayOf<Parcelable>())
+        )
 
         startActivityForResult(chooserIntent, 0)
     }

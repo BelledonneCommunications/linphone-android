@@ -37,7 +37,9 @@ import org.linphone.utils.AppUtils
 import org.linphone.utils.PermissionHelper
 
 class ConferenceSchedulingParticipantsListFragment : GenericFragment<ConferenceSchedulingParticipantsListFragmentBinding>() {
-    private val viewModel: ConferenceSchedulingViewModel by navGraphViewModels(R.id.conference_scheduling_nav_graph)
+    private val viewModel: ConferenceSchedulingViewModel by navGraphViewModels(
+        R.id.conference_scheduling_nav_graph
+    )
     private lateinit var adapter: ContactsSelectionAdapter
 
     override fun getLayoutId(): Int = R.layout.conference_scheduling_participants_list_fragment
@@ -57,7 +59,9 @@ class ConferenceSchedulingParticipantsListFragment : GenericFragment<ConferenceS
         binding.contactsList.layoutManager = layoutManager
 
         // Divider between items
-        binding.contactsList.addItemDecoration(AppUtils.getDividerDecoration(requireContext(), layoutManager))
+        binding.contactsList.addItemDecoration(
+            AppUtils.getDividerDecoration(requireContext(), layoutManager)
+        )
 
         binding.setNextClickListener {
             navigateToSummary()

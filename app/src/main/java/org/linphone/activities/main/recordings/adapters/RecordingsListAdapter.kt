@@ -39,7 +39,11 @@ import org.linphone.utils.*
 class RecordingsListAdapter(
     selectionVM: ListTopBarViewModel,
     private val viewLifecycleOwner: LifecycleOwner
-) : SelectionListAdapter<RecordingData, RecyclerView.ViewHolder>(selectionVM, RecordingDiffCallback()), HeaderAdapter {
+) : SelectionListAdapter<RecordingData, RecyclerView.ViewHolder>(
+    selectionVM,
+    RecordingDiffCallback()
+),
+    HeaderAdapter {
 
     private lateinit var videoSurface: TextureView
 
@@ -50,7 +54,9 @@ class RecordingsListAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val binding: RecordingListCellBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
-            R.layout.recording_list_cell, parent, false
+            R.layout.recording_list_cell,
+            parent,
+            false
         )
         return ViewHolder(binding)
     }
@@ -104,7 +110,9 @@ class RecordingsListAdapter(
         return if (previousPosition >= 0) {
             val previousItemDate = getItem(previousPosition).date
             !TimestampUtils.isSameDay(date, previousItemDate)
-        } else true
+        } else {
+            true
+        }
     }
 
     override fun getHeaderViewForPosition(context: Context, position: Int): View {
@@ -112,7 +120,9 @@ class RecordingsListAdapter(
         val date = formatDate(context, recording.date.time)
         val binding: GenericListHeaderBinding = DataBindingUtil.inflate(
             LayoutInflater.from(context),
-            R.layout.generic_list_header, null, false
+            R.layout.generic_list_header,
+            null,
+            false
         )
         binding.title = date
         binding.executePendingBindings()
@@ -126,7 +136,13 @@ class RecordingsListAdapter(
         } else if (TimestampUtils.isYesterday(date, false)) {
             return context.getString(R.string.yesterday)
         }
-        return TimestampUtils.toString(date, onlyDate = true, timestampInSecs = false, shortDate = false, hideYear = false)
+        return TimestampUtils.toString(
+            date,
+            onlyDate = true,
+            timestampInSecs = false,
+            shortDate = false,
+            hideYear = false
+        )
     }
 }
 

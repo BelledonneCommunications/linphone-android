@@ -89,7 +89,9 @@ class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMes
         if (chatMessage.isReply) {
             val reply = chatMessage.replyMessage
             if (reply != null) {
-                Log.i("[Chat Message Data] Message is a reply of message id [${chatMessage.replyMessageId}] sent by [${chatMessage.replyMessageSenderAddress?.asStringUriOnly()}]")
+                Log.i(
+                    "[Chat Message Data] Message is a reply of message id [${chatMessage.replyMessageId}] sent by [${chatMessage.replyMessageSenderAddress?.asStringUriOnly()}]"
+                )
                 replyData.value = ChatMessageData(reply)
             }
         }
@@ -194,7 +196,9 @@ class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMes
                 val spannable = Spannable.Factory.getInstance().newSpannable(textContent)
                 text.value = PatternClickableSpan()
                     .add(
-                        Pattern.compile("(?:<?sips?:)?[a-zA-Z0-9+_.\\-]+(?:@([a-zA-Z0-9+_.\\-;=~]+))+(>)?"),
+                        Pattern.compile(
+                            "(?:<?sips?:)?[a-zA-Z0-9+_.\\-]+(?:@([a-zA-Z0-9+_.\\-;=~]+))+(>)?"
+                        ),
                         object : PatternClickableSpan.SpannableClickedListener {
                             override fun onSpanClicked(text: String) {
                                 Log.i("[Chat Message Data] Clicked on SIP URI: $text")
@@ -222,7 +226,9 @@ class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMes
                     ).build(spannable)
                 isTextEmoji.value = AppUtils.isTextOnlyContainingEmoji(textContent)
             } else {
-                Log.e("[Chat Message Data] Unexpected content with type: ${content.type}/${content.subtype}")
+                Log.e(
+                    "[Chat Message Data] Unexpected content with type: ${content.type}/${content.subtype}"
+                )
             }
         }
 
@@ -257,7 +263,12 @@ class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMes
         val days = seconds / 86400
         return when {
             days >= 1L -> AppUtils.getStringWithPlural(R.plurals.days, days.toInt())
-            else -> String.format("%02d:%02d:%02d", seconds / 3600, (seconds % 3600) / 60, (seconds % 60))
+            else -> String.format(
+                "%02d:%02d:%02d",
+                seconds / 3600,
+                (seconds % 3600) / 60,
+                (seconds % 60)
+            )
         }
     }
 }

@@ -84,7 +84,9 @@ class ImdnFragment : SecureFragment<ChatRoomImdnFragmentBinding>() {
         binding.participantsList.layoutManager = layoutManager
 
         // Divider between items
-        binding.participantsList.addItemDecoration(AppUtils.getDividerDecoration(requireContext(), layoutManager))
+        binding.participantsList.addItemDecoration(
+            AppUtils.getDividerDecoration(requireContext(), layoutManager)
+        )
 
         // Displays state header
         val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)

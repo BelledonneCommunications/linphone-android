@@ -82,7 +82,9 @@ class ConferenceSchedulingViewModel : ContactsSelectionViewModel() {
             Log.i("[Conference Creation] Conference scheduler state is $state")
             if (state == ConferenceScheduler.State.Ready) {
                 val conferenceAddress = conferenceScheduler.info?.uri
-                Log.i("[Conference Creation] Conference info created, address will be ${conferenceAddress?.asStringUriOnly()}")
+                Log.i(
+                    "[Conference Creation] Conference info created, address will be ${conferenceAddress?.asStringUriOnly()}"
+                )
                 conferenceAddress ?: return
 
                 address.value = conferenceAddress!!
@@ -110,11 +112,17 @@ class ConferenceSchedulingViewModel : ContactsSelectionViewModel() {
 
             if (failedInvitations?.isNotEmpty() == true) {
                 for (address in failedInvitations) {
-                    Log.e("[Conference Creation] Conference information wasn't sent to participant ${address.asStringUriOnly()}")
+                    Log.e(
+                        "[Conference Creation] Conference information wasn't sent to participant ${address.asStringUriOnly()}"
+                    )
                 }
-                onMessageToNotifyEvent.value = Event(R.string.conference_schedule_info_not_sent_to_participant)
+                onMessageToNotifyEvent.value = Event(
+                    R.string.conference_schedule_info_not_sent_to_participant
+                )
             } else {
-                Log.i("[Conference Creation] Conference information successfully sent to all participants")
+                Log.i(
+                    "[Conference Creation] Conference information successfully sent to all participants"
+                )
             }
 
             val conferenceAddress = conferenceScheduler.info?.uri
@@ -313,7 +321,9 @@ class ConferenceSchedulingViewModel : ContactsSelectionViewModel() {
     }
 
     private fun getConferenceStartTimestamp(): Long {
-        val calendar = Calendar.getInstance(TimeZone.getTimeZone(timeZone.value?.id ?: TimeZone.getDefault().id))
+        val calendar = Calendar.getInstance(
+            TimeZone.getTimeZone(timeZone.value?.id ?: TimeZone.getDefault().id)
+        )
         calendar.timeInMillis = dateTimestamp
         calendar.set(Calendar.HOUR_OF_DAY, hour)
         calendar.set(Calendar.MINUTE, minutes)

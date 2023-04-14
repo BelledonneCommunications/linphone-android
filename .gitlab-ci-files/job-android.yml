@@ -2,15 +2,15 @@ job-android:
 
   stage: build
   tags: [ "docker-android" ]
-  image: gitlab.linphone.org:4567/bc/public/linphone-android/bc-dev-android:20220609_android_33
+  image: gitlab.linphone.org:4567/bc/public/linphone-android/bc-dev-android:20230414_bullseye_jdk_17_cleaned
 
   before_script:
     - if ! [ -z ${SCP_PRIVATE_KEY+x} ]; then eval $(ssh-agent -s); fi
     - if ! [ -z ${SCP_PRIVATE_KEY+x} ]; then echo "$SCP_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null; fi
-    - echo "$ANDROID_SETTINGS_GRADLE" > settings.gradle
+    - if ! [ -z ${ANDROID_SETTINGS_GRADLE+x} ]; then echo "$ANDROID_SETTINGS_GRADLE" > settings.gradle; fi
+    - git config --global --add safe.directory /builds/BC/public/linphone-android
 
   script:
-    - sdkmanager
     - scp -oStrictHostKeyChecking=no $DEPLOY_SERVER:$ANDROID_KEYSTORE_PATH app/
     - scp -oStrictHostKeyChecking=no $DEPLOY_SERVER:$ANDROID_GOOGLE_SERVICES_PATH app/
     - echo storePassword=$ANDROID_KEYSTORE_PASSWORD > keystore.properties

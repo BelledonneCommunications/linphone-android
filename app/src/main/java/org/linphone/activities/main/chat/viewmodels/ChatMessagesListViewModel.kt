@@ -107,7 +107,9 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
         }
 
         override fun onEphemeralMessageDeleted(chatRoom: ChatRoom, eventLog: EventLog) {
-            Log.i("[Chat Messages] An ephemeral chat message has expired, removing it from event list")
+            Log.i(
+                "[Chat Messages] An ephemeral chat message has expired, removing it from event list"
+            )
             deleteEvent(eventLog)
         }
 
@@ -163,7 +165,10 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
                 upperBound = maxSize
             }
 
-            val history: Array<EventLog> = chatRoom.getHistoryRangeEvents(totalItemsCount, upperBound)
+            val history: Array<EventLog> = chatRoom.getHistoryRangeEvents(
+                totalItemsCount,
+                upperBound
+            )
             val list = arrayListOf<EventLogData>()
             for (eventLog in history) {
                 list.add(EventLogData(eventLog))
@@ -187,7 +192,9 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
         val list = arrayListOf<EventLogData>()
         val unreadCount = chatRoom.unreadMessagesCount
         var loadCount = max(MESSAGES_PER_PAGE, unreadCount)
-        Log.i("[Chat Messages] $unreadCount unread messages in this chat room, loading $loadCount from history")
+        Log.i(
+            "[Chat Messages] $unreadCount unread messages in this chat room, loading $loadCount from history"
+        )
 
         val history = chatRoom.getHistoryEvents(loadCount)
         var messageCount = 0
@@ -200,8 +207,13 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
 
         // Load enough events to have at least all unread messages
         while (unreadCount > 0 && messageCount < unreadCount) {
-            Log.w("[Chat Messages] There is only $messageCount messages in the last $loadCount events, loading $MESSAGES_PER_PAGE more")
-            val moreHistory = chatRoom.getHistoryRangeEvents(loadCount, loadCount + MESSAGES_PER_PAGE)
+            Log.w(
+                "[Chat Messages] There is only $messageCount messages in the last $loadCount events, loading $MESSAGES_PER_PAGE more"
+            )
+            val moreHistory = chatRoom.getHistoryRangeEvents(
+                loadCount,
+                loadCount + MESSAGES_PER_PAGE
+            )
             loadCount += MESSAGES_PER_PAGE
             for (eventLog in moreHistory) {
                 list.add(EventLogData(eventLog))
@@ -235,14 +247,18 @@ class ChatMessagesListViewModel(private val chatRoom: ChatRoom) : ViewModel() {
                 data.eventLog.type == EventLog.Type.ConferenceChatMessage && data.eventLog.chatMessage?.messageId == chatMessage.messageId
             }
             if (existingEvent != null) {
-                Log.w("[Chat Messages] Found already present chat message, don't add it it's probably the result of an auto download or an aggregated message received before but notified after the conversation was displayed")
+                Log.w(
+                    "[Chat Messages] Found already present chat message, don't add it it's probably the result of an auto download or an aggregated message received before but notified after the conversation was displayed"
+                )
                 return
             }
 
             if (!PermissionHelper.get().hasWriteExternalStoragePermission()) {
                 for (content in chatMessage.contents) {
                     if (content.isFileTransfer) {
-                        Log.i("[Chat Messages] Android < 10 detected and WRITE_EXTERNAL_STORAGE permission isn't granted yet")
+                        Log.i(
+                            "[Chat Messages] Android < 10 detected and WRITE_EXTERNAL_STORAGE permission isn't granted yet"
+                        )
                         requestWriteExternalStoragePermissionEvent.value = Event(true)
                     }
                 }

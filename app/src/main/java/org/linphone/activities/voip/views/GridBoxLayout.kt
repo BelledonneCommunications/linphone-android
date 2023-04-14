@@ -30,9 +30,12 @@ import org.linphone.core.tools.Log
 class GridBoxLayout : GridLayout {
     companion object {
         private val placementMatrix = arrayOf(
-            intArrayOf(1, 2, 3, 4, 5, 6), intArrayOf(1, 1, 2, 2, 3, 3),
-            intArrayOf(1, 1, 1, 2, 2, 2), intArrayOf(1, 1, 1, 1, 2, 2),
-            intArrayOf(1, 1, 1, 1, 1, 2), intArrayOf(1, 1, 1, 1, 1, 1)
+            intArrayOf(1, 2, 3, 4, 5, 6),
+            intArrayOf(1, 1, 2, 2, 3, 3),
+            intArrayOf(1, 1, 1, 2, 2, 2),
+            intArrayOf(1, 1, 1, 1, 2, 2),
+            intArrayOf(1, 1, 1, 1, 1, 2),
+            intArrayOf(1, 1, 1, 1, 1, 1)
         )
     }
 
@@ -72,7 +75,9 @@ class GridBoxLayout : GridLayout {
         val maxChild = placementMatrix[0].size
         if (childCount > maxChild) {
             val maxMosaicParticipants = corePreferences.maxConferenceParticipantsForMosaicLayout
-            Log.e("[GridBoxLayout] $childCount children but placementMatrix only knows how to display $maxChild (max allowed participants for grid layout in settings is $maxMosaicParticipants)")
+            Log.e(
+                "[GridBoxLayout] $childCount children but placementMatrix only knows how to display $maxChild (max allowed participants for grid layout in settings is $maxMosaicParticipants)"
+            )
             return
         }
 
@@ -102,8 +107,15 @@ class GridBoxLayout : GridLayout {
         }
 
         if (centerContent) {
-            setPadding((availableSize.first - (columnCount * cellSize)) / 2, (availableSize.second - (rowCount * cellSize)) / 2, (availableSize.first - (columnCount * cellSize)) / 2, (availableSize.second - (rowCount * cellSize)) / 2)
+            setPadding(
+                (availableSize.first - (columnCount * cellSize)) / 2,
+                (availableSize.second - (rowCount * cellSize)) / 2,
+                (availableSize.first - (columnCount * cellSize)) / 2,
+                (availableSize.second - (rowCount * cellSize)) / 2
+            )
         }
-        Log.d("[GridBoxLayout] cellsize=$cellSize columns=$columnCount rows=$rowCount availablesize=$availableSize")
+        Log.d(
+            "[GridBoxLayout] cellsize=$cellSize columns=$columnCount rows=$rowCount availablesize=$availableSize"
+        )
     }
 }

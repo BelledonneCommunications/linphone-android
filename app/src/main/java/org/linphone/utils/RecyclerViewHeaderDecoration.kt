@@ -50,13 +50,24 @@ class RecyclerViewHeaderDecoration(private val context: Context, private val ada
 
     private fun measureHeaderView(view: View, parent: ViewGroup) {
         if (view.layoutParams == null) {
-            view.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            view.layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
         }
 
         val widthSpec = View.MeasureSpec.makeMeasureSpec(parent.width, View.MeasureSpec.EXACTLY)
         val heightSpec = View.MeasureSpec.makeMeasureSpec(parent.height, View.MeasureSpec.EXACTLY)
-        val childWidth = ViewGroup.getChildMeasureSpec(widthSpec, parent.paddingLeft + parent.paddingRight, view.layoutParams.width)
-        val childHeight = ViewGroup.getChildMeasureSpec(heightSpec, parent.paddingTop + parent.paddingBottom, view.layoutParams.height)
+        val childWidth = ViewGroup.getChildMeasureSpec(
+            widthSpec,
+            parent.paddingLeft + parent.paddingRight,
+            view.layoutParams.width
+        )
+        val childHeight = ViewGroup.getChildMeasureSpec(
+            heightSpec,
+            parent.paddingTop + parent.paddingBottom,
+            view.layoutParams.height
+        )
 
         view.measure(childWidth, childHeight)
         view.layout(0, 0, view.measuredWidth, view.measuredHeight)
@@ -68,7 +79,10 @@ class RecyclerViewHeaderDecoration(private val context: Context, private val ada
             val position = parent.getChildAdapterPosition(child)
             if (position != RecyclerView.NO_POSITION && adapter.displayHeaderForPosition(position)) {
                 canvas.save()
-                val headerView: View = headers.get(position) ?: adapter.getHeaderViewForPosition(context, position)
+                val headerView: View = headers.get(position) ?: adapter.getHeaderViewForPosition(
+                    context,
+                    position
+                )
                 canvas.translate(0f, child.y - headerView.height)
                 headerView.draw(canvas)
                 canvas.restore()

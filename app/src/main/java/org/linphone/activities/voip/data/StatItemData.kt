@@ -65,8 +65,20 @@ class StatItemData(val type: StatType) {
         val payloadType = if (stats.type == StreamType.Audio) call.currentParams.usedAudioPayloadType else call.currentParams.usedVideoPayloadType
         payloadType ?: return
         value.value = when (type) {
-            StatType.CAPTURE -> if (stats.type == StreamType.Audio) audioDeviceToString(call.inputAudioDevice) else call.core.videoDevice
-            StatType.PLAYBACK -> if (stats.type == StreamType.Audio) audioDeviceToString(call.outputAudioDevice) else call.core.videoDisplayFilter
+            StatType.CAPTURE -> if (stats.type == StreamType.Audio) {
+                audioDeviceToString(
+                    call.inputAudioDevice
+                )
+            } else {
+                call.core.videoDevice
+            }
+            StatType.PLAYBACK -> if (stats.type == StreamType.Audio) {
+                audioDeviceToString(
+                    call.outputAudioDevice
+                )
+            } else {
+                call.core.videoDisplayFilter
+            }
             StatType.PAYLOAD -> "${payloadType.mimeType}/${payloadType.clockRate / 1000} kHz"
             StatType.ENCODER -> call.core.mediastreamerFactory.getDecoderText(payloadType.mimeType)
             StatType.DECODER -> call.core.mediastreamerFactory.getEncoderText(payloadType.mimeType)
@@ -86,14 +98,22 @@ class StatItemData(val type: StatType) {
                 when (call.currentParams.mediaEncryption) {
                     MediaEncryption.ZRTP -> {
                         if (stats.isZrtpKeyAgreementAlgoPostQuantum) {
-                            AppUtils.getString(R.string.call_settings_media_encryption_zrtp_post_quantum)
+                            AppUtils.getString(
+                                R.string.call_settings_media_encryption_zrtp_post_quantum
+                            )
                         } else {
                             AppUtils.getString(R.string.call_settings_media_encryption_zrtp)
                         }
                     }
-                    MediaEncryption.DTLS -> AppUtils.getString(R.string.call_settings_media_encryption_dtls)
-                    MediaEncryption.SRTP -> AppUtils.getString(R.string.call_settings_media_encryption_srtp)
-                    MediaEncryption.None -> AppUtils.getString(R.string.call_settings_media_encryption_none)
+                    MediaEncryption.DTLS -> AppUtils.getString(
+                        R.string.call_settings_media_encryption_dtls
+                    )
+                    MediaEncryption.SRTP -> AppUtils.getString(
+                        R.string.call_settings_media_encryption_srtp
+                    )
+                    MediaEncryption.None -> AppUtils.getString(
+                        R.string.call_settings_media_encryption_none
+                    )
                     else -> "Unexpected!"
                 }
             }

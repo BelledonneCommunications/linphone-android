@@ -76,7 +76,12 @@ class VideoSettingsFragment : GenericSettingFragment<SettingsVideoFragmentBindin
     private fun initVideoCodecsList() {
         val list = arrayListOf<ViewDataBinding>()
         for (payload in coreContext.core.videoPayloadTypes) {
-            val binding = DataBindingUtil.inflate<ViewDataBinding>(LayoutInflater.from(requireContext()), R.layout.settings_widget_switch_and_text, null, false)
+            val binding = DataBindingUtil.inflate<ViewDataBinding>(
+                LayoutInflater.from(requireContext()),
+                R.layout.settings_widget_switch_and_text,
+                null,
+                false
+            )
             binding.setVariable(BR.switch_title, payload.mimeType)
             binding.setVariable(BR.switch_subtitle, "")
             binding.setVariable(BR.text_title, "recv-fmtp")

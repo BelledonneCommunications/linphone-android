@@ -55,7 +55,9 @@ class CorePreferences constructor(private val context: Context) {
         ).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build()
         try {
             EncryptedSharedPreferences.create(
-                context, encryptedSharedPreferencesFile, masterKey,
+                context,
+                encryptedSharedPreferencesFile,
+                masterKey,
                 EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
                 EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
             )
@@ -89,12 +91,18 @@ class CorePreferences constructor(private val context: Context) {
         }
 
     fun chatRoomMuted(id: String): Boolean {
-        val sharedPreferences: SharedPreferences = coreContext.context.getSharedPreferences("notifications", Context.MODE_PRIVATE)
+        val sharedPreferences: SharedPreferences = coreContext.context.getSharedPreferences(
+            "notifications",
+            Context.MODE_PRIVATE
+        )
         return sharedPreferences.getBoolean(id, false)
     }
 
     fun muteChatRoom(id: String, mute: Boolean) {
-        val sharedPreferences: SharedPreferences = coreContext.context.getSharedPreferences("notifications", Context.MODE_PRIVATE)
+        val sharedPreferences: SharedPreferences = coreContext.context.getSharedPreferences(
+            "notifications",
+            Context.MODE_PRIVATE
+        )
         val editor = sharedPreferences.edit()
         editor.putBoolean(id, mute)
         editor.apply()
@@ -595,7 +603,11 @@ class CorePreferences constructor(private val context: Context) {
         get() = config.getBool("app", "side_menu_recordings", true)
 
     val showScheduledConferencesInSideMenu: Boolean
-        get() = config.getBool("app", "side_menu_conferences", LinphoneUtils.isRemoteConferencingAvailable())
+        get() = config.getBool(
+            "app",
+            "side_menu_conferences",
+            LinphoneUtils.isRemoteConferencingAvailable()
+        )
 
     val showAboutInSideMenu: Boolean
         get() = config.getBool("app", "side_menu_about", true)
@@ -636,7 +648,11 @@ class CorePreferences constructor(private val context: Context) {
         get() = config.getBool("app", "settings_advanced", true)
 
     val showConferencesSettings: Boolean
-        get() = config.getBool("app", "settings_conferences", LinphoneUtils.isRemoteConferencingAvailable())
+        get() = config.getBool(
+            "app",
+            "settings_conferences",
+            LinphoneUtils.isRemoteConferencingAvailable()
+        )
 
     /* Assets stuff */
 
@@ -673,8 +689,14 @@ class CorePreferences constructor(private val context: Context) {
         copy("assistant_linphone_default_values", linphoneDefaultValuesPath, true)
         copy("assistant_default_values", defaultValuesPath, true)
 
-        move(context.filesDir.absolutePath + "/linphone-log-history.db", context.filesDir.absolutePath + "/call-history.db")
-        move(context.filesDir.absolutePath + "/zrtp_secrets", context.filesDir.absolutePath + "/zrtp-secrets.db")
+        move(
+            context.filesDir.absolutePath + "/linphone-log-history.db",
+            context.filesDir.absolutePath + "/call-history.db"
+        )
+        move(
+            context.filesDir.absolutePath + "/zrtp_secrets",
+            context.filesDir.absolutePath + "/zrtp-secrets.db"
+        )
     }
 
     fun getString(resource: Int): String {
@@ -685,11 +707,17 @@ class CorePreferences constructor(private val context: Context) {
         val outFile = File(to)
         if (outFile.exists()) {
             if (!overrideIfExists) {
-                android.util.Log.i(context.getString(org.linphone.R.string.app_name), "[Preferences] File $to already exists")
+                android.util.Log.i(
+                    context.getString(org.linphone.R.string.app_name),
+                    "[Preferences] File $to already exists"
+                )
                 return
             }
         }
-        android.util.Log.i(context.getString(org.linphone.R.string.app_name), "[Preferences] Overriding $to by $from asset")
+        android.util.Log.i(
+            context.getString(org.linphone.R.string.app_name),
+            "[Preferences] Overriding $to by $from asset"
+        )
 
         val outStream = FileOutputStream(outFile)
         val inFile = context.assets.open(from)
@@ -711,7 +739,10 @@ class CorePreferences constructor(private val context: Context) {
         val outFile = File(to)
         if (inFile.exists()) {
             if (outFile.exists() && !overrideIfExists) {
-                android.util.Log.w(context.getString(org.linphone.R.string.app_name), "[Preferences] Can't move [$from] to [$to], destination file already exists")
+                android.util.Log.w(
+                    context.getString(org.linphone.R.string.app_name),
+                    "[Preferences] Can't move [$from] to [$to], destination file already exists"
+                )
             } else {
                 val inStream = FileInputStream(inFile)
                 val outStream = FileOutputStream(outFile)
@@ -727,10 +758,16 @@ class CorePreferences constructor(private val context: Context) {
                 outStream.close()
 
                 inFile.delete()
-                android.util.Log.i(context.getString(org.linphone.R.string.app_name), "[Preferences] Successfully moved [$from] to [$to]")
+                android.util.Log.i(
+                    context.getString(org.linphone.R.string.app_name),
+                    "[Preferences] Successfully moved [$from] to [$to]"
+                )
             }
         } else {
-            android.util.Log.w(context.getString(org.linphone.R.string.app_name), "[Preferences] Can't move [$from] to [$to], source file doesn't exists")
+            android.util.Log.w(
+                context.getString(org.linphone.R.string.app_name),
+                "[Preferences] Can't move [$from] to [$to], source file doesn't exists"
+            )
         }
     }
 }

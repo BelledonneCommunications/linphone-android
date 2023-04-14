@@ -77,7 +77,9 @@ abstract class SecureFragment<T : ViewDataBinding> : GenericFragment<T>() {
         if ((enable && flags and WindowManager.LayoutParams.FLAG_SECURE != 0) ||
             (!enable && flags and WindowManager.LayoutParams.FLAG_SECURE == 0)
         ) {
-            Log.d("[Secure Fragment] Secure flag is already ${if (enable) "enabled" else "disabled"}, skipping...")
+            Log.d(
+                "[Secure Fragment] Secure flag is already ${if (enable) "enabled" else "disabled"}, skipping..."
+            )
             return
         }
 

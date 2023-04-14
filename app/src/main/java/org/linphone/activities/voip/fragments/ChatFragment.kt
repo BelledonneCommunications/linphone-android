@@ -95,11 +95,18 @@ class ChatFragment : GenericFragment<VoipChatFragmentBinding>() {
         val remoteSipUri = arguments?.getString("RemoteSipUri")
         var chatRoom: ChatRoom? = null
         if (localSipUri != null && remoteSipUri != null) {
-            Log.i("[Chat] Found local [$localSipUri] & remote [$remoteSipUri] addresses in arguments")
+            Log.i(
+                "[Chat] Found local [$localSipUri] & remote [$remoteSipUri] addresses in arguments"
+            )
 
             val localAddress = Factory.instance().createAddress(localSipUri)
             val remoteSipAddress = Factory.instance().createAddress(remoteSipUri)
-            chatRoom = coreContext.core.searchChatRoom(null, localAddress, remoteSipAddress, arrayOfNulls(0))
+            chatRoom = coreContext.core.searchChatRoom(
+                null,
+                localAddress,
+                remoteSipAddress,
+                arrayOfNulls(0)
+            )
         }
         chatRoom ?: return
 
@@ -184,10 +191,10 @@ class ChatFragment : GenericFragment<VoipChatFragmentBinding>() {
         if (resultCode == Activity.RESULT_OK) {
             lifecycleScope.launch {
                 for (
-                    fileToUploadPath in FileUtils.getFilesPathFromPickerIntent(
-                        data,
-                        chatSendingViewModel.temporaryFileUploadPath
-                    )
+                fileToUploadPath in FileUtils.getFilesPathFromPickerIntent(
+                    data,
+                    chatSendingViewModel.temporaryFileUploadPath
+                )
                 ) {
                     chatSendingViewModel.addAttachment(fileToUploadPath)
                 }

@@ -36,7 +36,9 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
         ensureCoreExists(context.applicationContext, false)
 
         val notificationId = intent.getIntExtra(NotificationsManager.INTENT_NOTIF_ID, 0)
-        Log.i("[Notification Broadcast Receiver] Got notification broadcast for ID [$notificationId]")
+        Log.i(
+            "[Notification Broadcast Receiver] Got notification broadcast for ID [$notificationId]"
+        )
 
         if (intent.action == NotificationsManager.INTENT_REPLY_NOTIF_ACTION || intent.action == NotificationsManager.INTENT_MARK_AS_READ_ACTION) {
             handleChatIntent(context, intent, notificationId)
@@ -48,31 +50,41 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
     private fun handleChatIntent(context: Context, intent: Intent, notificationId: Int) {
         val remoteSipAddress = intent.getStringExtra(NotificationsManager.INTENT_REMOTE_ADDRESS)
         if (remoteSipAddress == null) {
-            Log.e("[Notification Broadcast Receiver] Remote SIP address is null for notification id $notificationId")
+            Log.e(
+                "[Notification Broadcast Receiver] Remote SIP address is null for notification id $notificationId"
+            )
             return
         }
         val core: Core = coreContext.core
 
         val remoteAddress = core.interpretUrl(remoteSipAddress, false)
         if (remoteAddress == null) {
-            Log.e("[Notification Broadcast Receiver] Couldn't interpret remote address $remoteSipAddress")
+            Log.e(
+                "[Notification Broadcast Receiver] Couldn't interpret remote address $remoteSipAddress"
+            )
             return
         }
 
         val localIdentity = intent.getStringExtra(NotificationsManager.INTENT_LOCAL_IDENTITY)
         if (localIdentity == null) {
-            Log.e("[Notification Broadcast Receiver] Local identity is null for notification id $notificationId")
+            Log.e(
+                "[Notification Broadcast Receiver] Local identity is null for notification id $notificationId"
+            )
             return
         }
         val localAddress = core.interpretUrl(localIdentity, false)
         if (localAddress == null) {
-            Log.e("[Notification Broadcast Receiver] Couldn't interpret local address $localIdentity")
+            Log.e(
+                "[Notification Broadcast Receiver] Couldn't interpret local address $localIdentity"
+            )
             return
         }
 
         val room = core.searchChatRoom(null, localAddress, remoteAddress, arrayOfNulls(0))
         if (room == null) {
-            Log.e("[Notification Broadcast Receiver] Couldn't find chat room for remote address $remoteSipAddress and local address $localIdentity")
+            Log.e(
+                "[Notification Broadcast Receiver] Couldn't find chat room for remote address $remoteSipAddress and local address $localIdentity"
+            )
             return
         }
 
@@ -91,7 +103,9 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
         } else {
             room.markAsRead()
             if (!coreContext.notificationsManager.dismissChatNotification(room)) {
-                Log.w("[Notification Broadcast Receiver] Notifications Manager failed to cancel notification")
+                Log.w(
+                    "[Notification Broadcast Receiver] Notifications Manager failed to cancel notification"
+                )
                 val notificationManager = context.getSystemService(NotificationManager::class.java)
                 notificationManager.cancel(NotificationsManager.CHAT_TAG, notificationId)
             }
@@ -110,7 +124,9 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
         val remoteAddress = core.interpretUrl(remoteSipAddress, false)
         val call = if (remoteAddress != null) core.getCallByRemoteAddress2(remoteAddress) else null
         if (call == null) {
-            Log.e("[Notification Broadcast Receiver] Couldn't find call from remote address $remoteSipAddress")
+            Log.e(
+                "[Notification Broadcast Receiver] Couldn't find call from remote address $remoteSipAddress"
+            )
             return
         }
 

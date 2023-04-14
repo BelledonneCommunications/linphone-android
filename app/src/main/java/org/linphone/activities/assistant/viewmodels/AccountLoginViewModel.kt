@@ -159,7 +159,9 @@ class AccountLoginViewModel(accountCreator: AccountCreator) : AbstractPhoneViewM
         if (loginWithUsernamePassword.value == true) {
             val result = accountCreator.setUsername(username.value)
             if (result != AccountCreator.UsernameStatus.Ok) {
-                Log.e("[Assistant] [Account Login] Error [${result.name}] setting the username: ${username.value}")
+                Log.e(
+                    "[Assistant] [Account Login] Error [${result.name}] setting the username: ${username.value}"
+                )
                 usernameError.value = result.name
                 return
             }
@@ -180,9 +182,13 @@ class AccountLoginViewModel(accountCreator: AccountCreator) : AbstractPhoneViewM
                 onErrorEvent.value = Event("Error: Failed to create account object")
             }
         } else {
-            val result = AccountCreator.PhoneNumberStatus.fromInt(accountCreator.setPhoneNumber(phoneNumber.value, prefix.value))
+            val result = AccountCreator.PhoneNumberStatus.fromInt(
+                accountCreator.setPhoneNumber(phoneNumber.value, prefix.value)
+            )
             if (result != AccountCreator.PhoneNumberStatus.Ok) {
-                Log.e("[Assistant] [Account Login] Error [$result] setting the phone number: ${phoneNumber.value} with prefix: ${prefix.value}")
+                Log.e(
+                    "[Assistant] [Account Login] Error [$result] setting the phone number: ${phoneNumber.value} with prefix: ${prefix.value}"
+                )
                 phoneNumberError.value = result.name
                 return
             }
@@ -190,7 +196,9 @@ class AccountLoginViewModel(accountCreator: AccountCreator) : AbstractPhoneViewM
 
             val result2 = accountCreator.setUsername(accountCreator.phoneNumber)
             if (result2 != AccountCreator.UsernameStatus.Ok) {
-                Log.e("[Assistant] [Account Login] Error [${result2.name}] setting the username: ${accountCreator.phoneNumber}")
+                Log.e(
+                    "[Assistant] [Account Login] Error [${result2.name}] setting the username: ${accountCreator.phoneNumber}"
+                )
                 usernameError.value = result2.name
                 return
             }
@@ -229,7 +237,9 @@ class AccountLoginViewModel(accountCreator: AccountCreator) : AbstractPhoneViewM
         if (proxyConfig.dialPrefix.isNullOrEmpty()) {
             val dialPlan = PhoneNumberUtils.getDialPlanForCurrentCountry(coreContext.context)
             if (dialPlan != null) {
-                Log.i("[Assistant] [Account Login] Found dial plan country ${dialPlan.country} with international prefix ${dialPlan.countryCallingCode}")
+                Log.i(
+                    "[Assistant] [Account Login] Found dial plan country ${dialPlan.country} with international prefix ${dialPlan.countryCallingCode}"
+                )
                 proxyConfig.edit()
                 proxyConfig.dialPrefix = dialPlan.countryCallingCode
                 proxyConfig.done()

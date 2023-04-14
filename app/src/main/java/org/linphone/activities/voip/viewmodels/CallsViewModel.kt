@@ -108,7 +108,9 @@ class CallsViewModel : ViewModel() {
             if (state == Call.State.End || state == Call.State.Released || state == Call.State.Error) {
                 removeCallFromList(call)
                 if (core.callsNb > 0) {
-                    Log.i("[Calls] Call has ended but there are still at least one other existing call")
+                    Log.i(
+                        "[Calls] Call has ended but there are still at least one other existing call"
+                    )
                     callEndedEvent.value = Event(call)
                 }
             } else if (call.state == Call.State.UpdatedByRemote) {
@@ -140,7 +142,9 @@ class CallsViewModel : ViewModel() {
 
         val currentCall = coreContext.core.currentCall ?: coreContext.core.calls.firstOrNull()
         if (currentCall != null) {
-            Log.i("[Calls] Initializing ViewModel using call [${currentCall.remoteAddress.asStringUriOnly()}] as current")
+            Log.i(
+                "[Calls] Initializing ViewModel using call [${currentCall.remoteAddress.asStringUriOnly()}] as current"
+            )
             currentCallData.value?.destroy()
 
             val viewModel = CallData(currentCall)
@@ -242,7 +246,9 @@ class CallsViewModel : ViewModel() {
                 // Make sure the current call data is matching the only call
                 val firstData = callsData.value?.firstOrNull()
                 if (firstData != null && currentCallData.value != firstData) {
-                    Log.i("[Calls] Only one call in Core and the current call data doesn't match it, updating it")
+                    Log.i(
+                        "[Calls] Only one call in Core and the current call data doesn't match it, updating it"
+                    )
                     currentCallData.value = firstData!!
                 }
                 return
@@ -252,7 +258,9 @@ class CallsViewModel : ViewModel() {
                 call.state != Call.State.Error && call.state != Call.State.End && call.state != Call.State.Released
             }
             if (firstCall != null && currentCallData.value?.call != firstCall) {
-                Log.i("[Calls] Using [${firstCall.remoteAddress.asStringUriOnly()}] call as \"current\" call")
+                Log.i(
+                    "[Calls] Using [${firstCall.remoteAddress.asStringUriOnly()}] call as \"current\" call"
+                )
                 callToUse = firstCall
             }
         }
@@ -265,14 +273,18 @@ class CallsViewModel : ViewModel() {
         var found = false
         for (callData in callsData.value.orEmpty()) {
             if (callData.call == callToUse) {
-                Log.i("[Calls] Updating current call to: ${callData.call.remoteAddress.asStringUriOnly()}")
+                Log.i(
+                    "[Calls] Updating current call to: ${callData.call.remoteAddress.asStringUriOnly()}"
+                )
                 currentCallData.value = callData
                 found = true
                 break
             }
         }
         if (!found) {
-            Log.w("[Calls] Call with ID [${callToUse.callLog.callId}] not found in calls data list, shouldn't happen!")
+            Log.w(
+                "[Calls] Call with ID [${callToUse.callLog.callId}] not found in calls data list, shouldn't happen!"
+            )
             val viewModel = CallData(callToUse)
             currentCallData.value = viewModel
         }

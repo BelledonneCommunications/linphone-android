@@ -46,7 +46,9 @@ class GroupInfoParticipantsAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding: ChatRoomGroupInfoParticipantCellBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
-            R.layout.chat_room_group_info_participant_cell, parent, false
+            R.layout.chat_room_group_info_participant_cell,
+            parent,
+            false
         )
         return ViewHolder(binding)
     }

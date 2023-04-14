@@ -48,7 +48,9 @@ class ConferenceParticipantsViewModel(val conference: Conference) : ContactsSele
                 participant.address.weakEqual(address)
             }
             if (participant == null) {
-                Log.i("[Conference Participants] Participant ${address.asStringUriOnly()} will be added to group")
+                Log.i(
+                    "[Conference Participants] Participant ${address.asStringUriOnly()} will be added to group"
+                )
                 conference.addParticipant(address)
             }
         }
@@ -59,7 +61,9 @@ class ConferenceParticipantsViewModel(val conference: Conference) : ContactsSele
                 participant.address.weakEqual(address)
             }
             if (member == null) {
-                Log.w("[Conference Participants] Participant ${participant.address.asStringUriOnly()} will be removed from conference")
+                Log.w(
+                    "[Conference Participants] Participant ${participant.address.asStringUriOnly()} will be removed from conference"
+                )
                 conference.removeParticipant(participant)
             }
         }

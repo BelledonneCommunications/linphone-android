@@ -95,12 +95,16 @@ class Api29Compatibility {
             val notificationManager: NotificationManager =
                 context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             val bubblesAllowed = notificationManager.areBubblesAllowed()
-            Log.i("[Notifications Manager] Bubbles notifications are ${if (bubblesAllowed) "allowed" else "forbidden"}")
+            Log.i(
+                "[Notifications Manager] Bubbles notifications are ${if (bubblesAllowed) "allowed" else "forbidden"}"
+            )
             return bubblesAllowed
         }
 
         fun getBitmapFromUri(context: Context, uri: Uri): Bitmap {
-            return ImageDecoder.decodeBitmap(ImageDecoder.createSource(context.contentResolver, uri))
+            return ImageDecoder.decodeBitmap(
+                ImageDecoder.createSource(context.contentResolver, uri)
+            )
         }
 
         suspend fun addImageToMediaStore(context: Context, content: Content): Boolean {
@@ -125,9 +129,13 @@ class Api29Compatibility {
             val isContentEncrypted = content.isFileEncrypted
             val filePath = if (content.isFileEncrypted) {
                 val plainFilePath = content.exportPlainFile().orEmpty()
-                Log.i("[Media Store] [VFS] Content is encrypted, plain file path is: $plainFilePath")
+                Log.i(
+                    "[Media Store] [VFS] Content is encrypted, plain file path is: $plainFilePath"
+                )
                 plainFilePath
-            } else content.filePath
+            } else {
+                content.filePath
+            }
 
             if (filePath.isNullOrEmpty()) {
                 Log.e("[Media Store] Content doesn't have a file path!")
@@ -150,7 +158,9 @@ class Api29Compatibility {
                 isAudio -> "audio"
                 else -> "unexpected"
             }
-            Log.i("[Media Store] Adding $type [$filePath] to Media Store with name [$fileName] and MIME [$mime], asking to be stored in: $relativePath")
+            Log.i(
+                "[Media Store] Adding $type [$filePath] to Media Store with name [$fileName] and MIME [$mime], asking to be stored in: $relativePath"
+            )
 
             val mediaStoreFilePath = when {
                 isImage -> {
@@ -160,8 +170,16 @@ class Api29Compatibility {
                         put(MediaStore.Images.Media.RELATIVE_PATH, relativePath)
                         put(MediaStore.Images.Media.IS_PENDING, 1)
                     }
-                    val collection = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
-                    addContentValuesToCollection(context, filePath, collection, values, MediaStore.Images.Media.IS_PENDING)
+                    val collection = MediaStore.Images.Media.getContentUri(
+                        MediaStore.VOLUME_EXTERNAL_PRIMARY
+                    )
+                    addContentValuesToCollection(
+                        context,
+                        filePath,
+                        collection,
+                        values,
+                        MediaStore.Images.Media.IS_PENDING
+                    )
                 }
                 isVideo -> {
                     val values = ContentValues().apply {
@@ -171,8 +189,16 @@ class Api29Compatibility {
                         put(MediaStore.Video.Media.RELATIVE_PATH, relativePath)
                         put(MediaStore.Video.Media.IS_PENDING, 1)
                     }
-                    val collection = MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
-                    addContentValuesToCollection(context, filePath, collection, values, MediaStore.Video.Media.IS_PENDING)
+                    val collection = MediaStore.Video.Media.getContentUri(
+                        MediaStore.VOLUME_EXTERNAL_PRIMARY
+                    )
+                    addContentValuesToCollection(
+                        context,
+                        filePath,
+                        collection,
+                        values,
+                        MediaStore.Video.Media.IS_PENDING
+                    )
                 }
                 isAudio -> {
                     val values = ContentValues().apply {
@@ -182,8 +208,16 @@ class Api29Compatibility {
                         put(MediaStore.Audio.Media.RELATIVE_PATH, relativePath)
                         put(MediaStore.Audio.Media.IS_PENDING, 1)
                     }
-                    val collection = MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
-                    addContentValuesToCollection(context, filePath, collection, values, MediaStore.Audio.Media.IS_PENDING)
+                    val collection = MediaStore.Audio.Media.getContentUri(
+                        MediaStore.VOLUME_EXTERNAL_PRIMARY
+                    )
+                    addContentValuesToCollection(
+                        context,
+                        filePath,
+                        collection,
+                        values,
+                        MediaStore.Audio.Media.IS_PENDING
+                    )
                 }
                 else -> ""
             }

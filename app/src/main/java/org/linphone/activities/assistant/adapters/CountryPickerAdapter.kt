@@ -41,7 +41,11 @@ class CountryPickerAdapter : BaseAdapter(), Filterable {
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val view: View = convertView ?: LayoutInflater.from(parent.context).inflate(R.layout.assistant_country_picker_cell, parent, false)
+        val view: View = convertView ?: LayoutInflater.from(parent.context).inflate(
+            R.layout.assistant_country_picker_cell,
+            parent,
+            false
+        )
         val dialPlan: DialPlan = countries[position]
 
         val name = view.findViewById<TextView>(R.id.country_name)

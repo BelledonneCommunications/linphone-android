@@ -109,9 +109,13 @@ class EmailAccountValidationViewModel(val accountCreator: AccountCreator) : View
         proxyConfig.isPushNotificationAllowed = true
 
         if (proxyConfig.dialPrefix.isNullOrEmpty()) {
-            val dialPlan = PhoneNumberUtils.getDialPlanForCurrentCountry(LinphoneApplication.coreContext.context)
+            val dialPlan = PhoneNumberUtils.getDialPlanForCurrentCountry(
+                LinphoneApplication.coreContext.context
+            )
             if (dialPlan != null) {
-                Log.i("[Assistant] [Account Validation] Found dial plan country ${dialPlan.country} with international prefix ${dialPlan.countryCallingCode}")
+                Log.i(
+                    "[Assistant] [Account Validation] Found dial plan country ${dialPlan.country} with international prefix ${dialPlan.countryCallingCode}"
+                )
                 proxyConfig.edit()
                 proxyConfig.dialPrefix = dialPlan.countryCallingCode
                 proxyConfig.done()

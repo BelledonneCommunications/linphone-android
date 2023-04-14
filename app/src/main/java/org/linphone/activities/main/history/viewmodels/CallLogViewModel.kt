@@ -35,7 +35,9 @@ import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.TimestampUtils
 
-class CallLogViewModel(val callLog: CallLog, private val isRelated: Boolean = false) : GenericContactViewModel(callLog.remoteAddress) {
+class CallLogViewModel(val callLog: CallLog, private val isRelated: Boolean = false) : GenericContactViewModel(
+    callLog.remoteAddress
+) {
     val peerSipUri: String by lazy {
         LinphoneUtils.getDisplayableAddress(callLog.remoteAddress)
     }
@@ -77,7 +79,10 @@ class CallLogViewModel(val callLog: CallLog, private val isRelated: Boolean = fa
     }
 
     val duration: String by lazy {
-        val dateFormat = SimpleDateFormat(if (callLog.duration >= 3600) "HH:mm:ss" else "mm:ss", Locale.getDefault())
+        val dateFormat = SimpleDateFormat(
+            if (callLog.duration >= 3600) "HH:mm:ss" else "mm:ss",
+            Locale.getDefault()
+        )
         val cal = Calendar.getInstance()
         cal[0, 0, 0, 0, 0] = callLog.duration
         dateFormat.format(cal.time)
@@ -101,14 +106,25 @@ class CallLogViewModel(val callLog: CallLog, private val isRelated: Boolean = fa
 
     val hidePlainChat = corePreferences.forceEndToEndEncryptedChat
 
-    val secureChatAllowed = LinphoneUtils.isEndToEndEncryptedChatAvailable() && (corePreferences.allowEndToEndEncryptedChatWithoutPresence || (contact.value?.getPresenceModelForUriOrTel(peerSipUri)?.hasCapability(FriendCapability.LimeX3Dh) ?: false))
+    val secureChatAllowed = LinphoneUtils.isEndToEndEncryptedChatAvailable() && (
+        corePreferences.allowEndToEndEncryptedChatWithoutPresence || (
+            contact.value?.getPresenceModelForUriOrTel(
+                peerSipUri
+            )?.hasCapability(FriendCapability.LimeX3Dh) ?: false
+            )
+        )
 
     val relatedCallLogs = MutableLiveData<ArrayList<CallLogViewModel>>()
 
     private val listener = object : CoreListenerStub() {
         override fun onCallLogUpdated(core: Core, log: CallLog) {
-            if (callLog.remoteAddress.weakEqual(log.remoteAddress) && callLog.localAddress.weakEqual(log.localAddress)) {
-                Log.i("[History Detail] New call log for ${callLog.remoteAddress.asStringUriOnly()} with local address ${callLog.localAddress.asStringUriOnly()}")
+            if (callLog.remoteAddress.weakEqual(log.remoteAddress) && callLog.localAddress.weakEqual(
+                    log.localAddress
+                )
+            ) {
+                Log.i(
+                    "[History Detail] New call log for ${callLog.remoteAddress.asStringUriOnly()} with local address ${callLog.localAddress.asStringUriOnly()}"
+                )
                 addRelatedCallLogs(arrayListOf(log))
             }
         }
@@ -161,11 +177,21 @@ class CallLogViewModel(val callLog: CallLog, private val isRelated: Boolean = fa
                 val organizer = conferenceInfo.organizer
                 if (organizer != null) {
                     organizerParticipantData.value =
-                        ConferenceSchedulingParticipantData(organizer, showLimeBadge = false, showDivider = false)
+                        ConferenceSchedulingParticipantData(
+                            organizer,
+                            showLimeBadge = false,
+                            showDivider = false
+                        )
                 }
                 val list = arrayListOf<ConferenceSchedulingParticipantData>()
                 for (participant in conferenceInfo.participants) {
-                    list.add(ConferenceSchedulingParticipantData(participant, showLimeBadge = false, showDivider = true))
+                    list.add(
+                        ConferenceSchedulingParticipantData(
+                            participant,
+                            showLimeBadge = false,
+                            showDivider = true
+                        )
+                    )
                 }
                 conferenceParticipantsData.value = list
             }
@@ -205,7 +231,9 @@ class CallLogViewModel(val callLog: CallLog, private val isRelated: Boolean = fa
             }
         } else {
             waitForChatRoomCreation.value = false
-            Log.e("[History Detail] Couldn't create chat room with address ${callLog.remoteAddress}")
+            Log.e(
+                "[History Detail] Couldn't create chat room with address ${callLog.remoteAddress}"
+            )
             onMessageToNotifyEvent.value = Event(R.string.chat_room_creation_failed_snack)
         }
     }

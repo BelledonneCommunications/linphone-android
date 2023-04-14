@@ -136,14 +136,15 @@ abstract class MasterFragment<T : ViewDataBinding, U : SelectionListAdapter<*, *
     abstract fun deleteItems(indexesOfItemToDelete: ArrayList<Int>)
 
     class SlidingPaneBackPressedCallback(private val slidingPaneLayout: SlidingPaneLayout) :
-        OnBackPressedCallback
-        (
+        OnBackPressedCallback(
             slidingPaneLayout.isSlideable && slidingPaneLayout.isOpen
         ),
         SlidingPaneLayout.PanelSlideListener {
 
         init {
-            Log.d("[Master Fragment] SlidingPane isSlideable = ${slidingPaneLayout.isSlideable}, isOpen = ${slidingPaneLayout.isOpen}")
+            Log.d(
+                "[Master Fragment] SlidingPane isSlideable = ${slidingPaneLayout.isSlideable}, isOpen = ${slidingPaneLayout.isOpen}"
+            )
             slidingPaneLayout.addPanelSlideListener(this)
         }
 

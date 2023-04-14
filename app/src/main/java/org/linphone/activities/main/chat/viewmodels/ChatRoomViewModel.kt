@@ -111,7 +111,10 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
     private var addressToCall: Address? = null
 
     private val bounceAnimator: ValueAnimator by lazy {
-        ValueAnimator.ofFloat(AppUtils.getDimension(R.dimen.tabs_fragment_unread_count_bounce_offset), 0f).apply {
+        ValueAnimator.ofFloat(
+            AppUtils.getDimension(R.dimen.tabs_fragment_unread_count_bounce_offset),
+            0f
+        ).apply {
             addUpdateListener {
                 val value = it.animatedValue as Float
                 chatUnreadCountTranslateY.value = value
@@ -265,11 +268,11 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
         val localAddress = chatRoom.localAddress.clone()
         localAddress.clean() // Remove GRUU
         val addresses = Array(chatRoom.participants.size) {
-            index ->
+                index ->
             chatRoom.participants[index].address
         }
         val localAccount = coreContext.core.accountList.find {
-            account ->
+                account ->
             account.params.identityAddress?.weakEqual(localAddress) ?: false
         }
 
@@ -298,7 +301,9 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
             if (chatRoom.participants.isNotEmpty()) {
                 chatRoom.participants[0].address
             } else {
-                Log.e("[Chat Room] ${chatRoom.peerAddress} doesn't have any participant (state ${chatRoom.state})!")
+                Log.e(
+                    "[Chat Room] ${chatRoom.peerAddress} doesn't have any participant (state ${chatRoom.state})!"
+                )
                 null
             }
         }
@@ -338,11 +343,18 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
             }
             TimestampUtils.isYesterday(timestamp) -> {
                 val time = TimestampUtils.timeToString(timestamp, timestampInSecs = true)
-                val text = AppUtils.getString(R.string.chat_room_presence_last_seen_online_yesterday)
+                val text = AppUtils.getString(
+                    R.string.chat_room_presence_last_seen_online_yesterday
+                )
                 "$text $time"
             }
             else -> {
-                val date = TimestampUtils.toString(timestamp, onlyDate = true, shortDate = false, hideYear = true)
+                val date = TimestampUtils.toString(
+                    timestamp,
+                    onlyDate = true,
+                    shortDate = false,
+                    hideYear = true
+                )
                 val text = AppUtils.getString(R.string.chat_room_presence_last_seen_online)
                 "$text $date"
             }
@@ -390,7 +402,11 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
             composing += if (composing.isNotEmpty()) ", " else ""
             composing += contact?.name ?: LinphoneUtils.getDisplayName(address)
         }
-        composingList.value = AppUtils.getStringWithPlural(R.plurals.chat_room_remote_composing, chatRoom.composingAddresses.size, composing)
+        composingList.value = AppUtils.getStringWithPlural(
+            R.plurals.chat_room_remote_composing,
+            chatRoom.composingAddresses.size,
+            composing
+        )
     }
 
     private fun updateParticipants() {
@@ -400,10 +416,11 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
             chatRoom.me?.devices?.size == 1 &&
             participants.firstOrNull()?.devices?.size == 1
 
-        addressToCall = if (basicChatRoom)
+        addressToCall = if (basicChatRoom) {
             chatRoom.peerAddress
-        else
+        } else {
             participants.firstOrNull()?.address
+        }
 
         onlyParticipantOnlyDeviceAddress = participants.firstOrNull()?.devices?.firstOrNull()?.address
     }
@@ -411,7 +428,8 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
     private fun updateUnreadMessageCount() {
         val count = chatRoom.unreadMessagesCount
         unreadMessagesCount.value = count
-        if (count > 0 && corePreferences.enableAnimations) bounceAnimator.start()
-        else if (count == 0 && bounceAnimator.isStarted) bounceAnimator.end()
+        if (count > 0 && corePreferences.enableAnimations) {
+            bounceAnimator.start()
+        } else if (count == 0 && bounceAnimator.isStarted) bounceAnimator.end()
     }
 }

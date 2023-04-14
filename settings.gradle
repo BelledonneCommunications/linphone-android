@@ -20,6 +20,8 @@ dependencyResolutionManagement {
                 includeGroup "org.linphone"
             }
         }
+
+        // For "org.jlleitschuh.gradle:ktlint-gradle"
         mavenCentral()
     }
 }

@@ -123,8 +123,15 @@ class ContactsListViewModel : ViewModel() {
         val aggregation = MagicSearchAggregation.Friend
         searchResultsPending = true
         fastFetchJob?.cancel()
-        Log.i("[Contacts] Asking Magic search for contacts matching filter [$filterValue], domain [$domain] and in sources [$filter]")
-        coreContext.contactsManager.magicSearch.getContactsListAsync(filterValue, domain, filter, aggregation)
+        Log.i(
+            "[Contacts] Asking Magic search for contacts matching filter [$filterValue], domain [$domain] and in sources [$filter]"
+        )
+        coreContext.contactsManager.magicSearch.getContactsListAsync(
+            filterValue,
+            domain,
+            filter,
+            aggregation
+        )
 
         val spinnerDelay = corePreferences.delayBeforeShowingContactsSearchSpinner.toLong()
         fastFetchJob = viewModelScope.launch {
@@ -154,7 +161,9 @@ class ContactsListViewModel : ViewModel() {
                         ContactViewModel(friend, true)
                     } else {
                         Log.w("[Contacts] SearchResult [$result] has no Friend!")
-                        val fakeFriend = coreContext.contactsManager.createFriendFromSearchResult(result)
+                        val fakeFriend = coreContext.contactsManager.createFriendFromSearchResult(
+                            result
+                        )
                         ContactViewModel(fakeFriend, true)
                     }
 

@@ -62,7 +62,8 @@ class RichEditText : AppCompatEditText {
 
     private fun initReceiveContentListener() {
         ViewCompat.setOnReceiveContentListener(
-            this, RichContentReceiver.MIME_TYPES,
+            this,
+            RichContentReceiver.MIME_TYPES,
             RichContentReceiver { uri ->
                 Log.i("[Rich Edit Text] Received URI: $uri")
                 val activity = context as Activity

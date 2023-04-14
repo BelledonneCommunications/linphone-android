@@ -26,7 +26,10 @@ import android.os.Bundle
 import android.os.IBinder
 
 // Below classes are required to be able to use our own contact MIME type entry...
-class DummySyncAdapter(context: Context, autoInit: Boolean) : AbstractThreadedSyncAdapter(context, autoInit) {
+class DummySyncAdapter(context: Context, autoInit: Boolean) : AbstractThreadedSyncAdapter(
+    context,
+    autoInit
+) {
     override fun onPerformSync(
         account: Account?,
         extras: Bundle?,

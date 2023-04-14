@@ -123,7 +123,9 @@ class LdapSettingsViewModel(private val ldap: Ldap, val index: String) : Generic
     val ldapCertCheckListener = object : SettingListenerStub() {
         override fun onListValueChanged(position: Int) {
             val params = ldap.params.clone()
-            params.serverCertificatesVerificationMode = LdapCertVerificationMode.fromInt(ldapCertCheckValues[position])
+            params.serverCertificatesVerificationMode = LdapCertVerificationMode.fromInt(
+                ldapCertCheckValues[position]
+            )
             ldap.params = params
             ldapCertCheckIndex.value = position
         }
@@ -291,6 +293,8 @@ class LdapSettingsViewModel(private val ldap: Ldap, val index: String) : Generic
         ldapCertCheckValues.add(LdapCertVerificationMode.Enabled.toInt())
 
         ldapCertCheckLabels.value = labels
-        ldapCertCheckIndex.value = ldapCertCheckValues.indexOf(ldap.params.serverCertificatesVerificationMode.toInt())
+        ldapCertCheckIndex.value = ldapCertCheckValues.indexOf(
+            ldap.params.serverCertificatesVerificationMode.toInt()
+        )
     }
 }

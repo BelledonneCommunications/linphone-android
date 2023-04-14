@@ -26,7 +26,9 @@ import org.linphone.contact.GenericContactData
 import org.linphone.core.ChatRoomSecurityLevel
 import org.linphone.utils.LinphoneUtils
 
-class GroupInfoParticipantData(val participant: GroupChatRoomMember) : GenericContactData(participant.address) {
+class GroupInfoParticipantData(val participant: GroupChatRoomMember) : GenericContactData(
+    participant.address
+) {
     val sipUri: String get() = LinphoneUtils.getDisplayableAddress(participant.address)
 
     val isAdmin = MutableLiveData<Boolean>()

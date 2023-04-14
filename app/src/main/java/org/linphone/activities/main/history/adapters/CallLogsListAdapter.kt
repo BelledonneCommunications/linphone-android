@@ -39,7 +39,11 @@ import org.linphone.utils.*
 class CallLogsListAdapter(
     selectionVM: ListTopBarViewModel,
     private val viewLifecycleOwner: LifecycleOwner
-) : SelectionListAdapter<GroupedCallLogData, RecyclerView.ViewHolder>(selectionVM, CallLogDiffCallback()), HeaderAdapter {
+) : SelectionListAdapter<GroupedCallLogData, RecyclerView.ViewHolder>(
+    selectionVM,
+    CallLogDiffCallback()
+),
+    HeaderAdapter {
     val selectedCallLogEvent: MutableLiveData<Event<GroupedCallLogData>> by lazy {
         MutableLiveData<Event<GroupedCallLogData>>()
     }
@@ -51,7 +55,9 @@ class CallLogsListAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val binding: HistoryListCellBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
-            R.layout.history_list_cell, parent, false
+            R.layout.history_list_cell,
+            parent,
+            false
         )
         return ViewHolder(binding)
     }
@@ -115,7 +121,9 @@ class CallLogsListAdapter(
         return if (previousPosition >= 0) {
             val previousItemDate = getItem(previousPosition).lastCallLogStartTimestamp
             !TimestampUtils.isSameDay(date, previousItemDate)
-        } else true
+        } else {
+            true
+        }
     }
 
     override fun getHeaderViewForPosition(context: Context, position: Int): View {
@@ -123,7 +131,9 @@ class CallLogsListAdapter(
         val date = formatDate(context, callLog.lastCallLogStartTimestamp)
         val binding: GenericListHeaderBinding = DataBindingUtil.inflate(
             LayoutInflater.from(context),
-            R.layout.generic_list_header, null, false
+            R.layout.generic_list_header,
+            null,
+            false
         )
         binding.title = date
         binding.executePendingBindings()

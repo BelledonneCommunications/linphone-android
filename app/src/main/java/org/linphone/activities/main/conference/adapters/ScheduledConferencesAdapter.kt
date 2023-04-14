@@ -41,7 +41,10 @@ import org.linphone.utils.TimestampUtils
 class ScheduledConferencesAdapter(
     selectionVM: ListTopBarViewModel,
     private val viewLifecycleOwner: LifecycleOwner
-) : SelectionListAdapter<ScheduledConferenceData, RecyclerView.ViewHolder>(selectionVM, ConferenceInfoDiffCallback()),
+) : SelectionListAdapter<ScheduledConferenceData, RecyclerView.ViewHolder>(
+    selectionVM,
+    ConferenceInfoDiffCallback()
+),
     HeaderAdapter {
     val copyAddressToClipboardEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
@@ -62,7 +65,9 @@ class ScheduledConferencesAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduledConferencesAdapter.ViewHolder {
         val binding: ConferenceScheduleCellBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
-            R.layout.conference_schedule_cell, parent, false
+            R.layout.conference_schedule_cell,
+            parent,
+            false
         )
         return ViewHolder(binding)
     }
@@ -77,15 +82,22 @@ class ScheduledConferencesAdapter(
         val previousPosition = position - 1
         return if (previousPosition >= 0) {
             val previousItem = getItem(previousPosition)
-            !TimestampUtils.isSameDay(previousItem.conferenceInfo.dateTime, conferenceInfo.conferenceInfo.dateTime)
-        } else true
+            !TimestampUtils.isSameDay(
+                previousItem.conferenceInfo.dateTime,
+                conferenceInfo.conferenceInfo.dateTime
+            )
+        } else {
+            true
+        }
     }
 
     override fun getHeaderViewForPosition(context: Context, position: Int): View {
         val data = getItem(position)
         val binding: ConferenceScheduleListHeaderBinding = DataBindingUtil.inflate(
             LayoutInflater.from(context),
-            R.layout.conference_schedule_list_header, null, false
+            R.layout.conference_schedule_list_header,
+            null,
+            false
         )
         binding.title = formatDate(context, data.conferenceInfo.dateTime)
         binding.executePendingBindings()
@@ -143,7 +155,9 @@ class ScheduledConferencesAdapter(
                 setJoinConferenceClickListener {
                     val address = conferenceData.conferenceInfo.uri
                     if (address != null) {
-                        joinConferenceEvent.value = Event(Pair(address.asStringUriOnly(), conferenceData.conferenceInfo.subject))
+                        joinConferenceEvent.value = Event(
+                            Pair(address.asStringUriOnly(), conferenceData.conferenceInfo.subject)
+                        )
                     }
                 }
 

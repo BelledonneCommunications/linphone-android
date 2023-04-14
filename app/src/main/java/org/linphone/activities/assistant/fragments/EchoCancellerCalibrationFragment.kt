@@ -57,7 +57,10 @@ class EchoCancellerCalibrationFragment : GenericFragment<AssistantEchoCancellerC
 
         if (!PermissionHelper.required(requireContext()).hasRecordAudioPermission()) {
             Log.i("[Echo Canceller Calibration] Asking for RECORD_AUDIO permission")
-            requestPermissions(arrayOf(android.Manifest.permission.RECORD_AUDIO), RECORD_AUDIO_PERMISSION_REQUEST_CODE)
+            requestPermissions(
+                arrayOf(android.Manifest.permission.RECORD_AUDIO),
+                RECORD_AUDIO_PERMISSION_REQUEST_CODE
+            )
         } else {
             viewModel.startEchoCancellerCalibration()
         }

@@ -48,7 +48,9 @@ class ChatRoomsListAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding: ChatRoomListCellBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
-            R.layout.chat_room_list_cell, parent, false
+            R.layout.chat_room_list_cell,
+            parent,
+            false
         )
         return ViewHolder(binding)
     }
@@ -77,7 +79,9 @@ class ChatRoomsListAdapter(
                             try {
                                 notifyItemChanged(bindingAdapterPosition)
                             } catch (e: Exception) {
-                                Log.e("[Chat Rooms Adapter] Can't notify item [$bindingAdapterPosition] has changed: $e")
+                                Log.e(
+                                    "[Chat Rooms Adapter] Can't notify item [$bindingAdapterPosition] has changed: $e"
+                                )
                             }
                         }
                     }

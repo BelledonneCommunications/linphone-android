@@ -74,7 +74,9 @@ abstract class GenericFragment<T : ViewDataBinding> : Fragment() {
                 if (!navController.popBackStack()) {
                     Log.d("[Generic Fragment] ${getFragmentRealClassName()} couldn't pop")
                     if (!navController.navigateUp()) {
-                        Log.d("[Generic Fragment] ${getFragmentRealClassName()} couldn't navigate up")
+                        Log.d(
+                            "[Generic Fragment] ${getFragmentRealClassName()} couldn't navigate up"
+                        )
                         // Disable this callback & start a new back press event
                         isEnabled = false
                         goBack()
@@ -98,7 +100,9 @@ abstract class GenericFragment<T : ViewDataBinding> : Fragment() {
         }
 
         sharedViewModel.isSlidingPaneSlideable.observe(viewLifecycleOwner) {
-            Log.d("[Generic Fragment] ${getFragmentRealClassName()} shared main VM sliding pane has changed")
+            Log.d(
+                "[Generic Fragment] ${getFragmentRealClassName()} shared main VM sliding pane has changed"
+            )
             onBackPressedCallback.isEnabled = backPressedCallBackEnabled()
         }
 
@@ -151,7 +155,10 @@ abstract class GenericFragment<T : ViewDataBinding> : Fragment() {
             onBackPressedCallback.isEnabled = false
         }
 
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            onBackPressedCallback
+        )
     }
 
     private fun backPressedCallBackEnabled(): Boolean {
@@ -161,9 +168,13 @@ abstract class GenericFragment<T : ViewDataBinding> : Fragment() {
         if (findNavController().graph.id == R.id.main_nav_graph_xml) return false
 
         val isSlidingPaneFlat = sharedViewModel.isSlidingPaneSlideable.value == false
-        Log.d("[Generic Fragment] ${getFragmentRealClassName()} isSlidingPaneFlat ? $isSlidingPaneFlat")
+        Log.d(
+            "[Generic Fragment] ${getFragmentRealClassName()} isSlidingPaneFlat ? $isSlidingPaneFlat"
+        )
         val isPreviousFragmentEmpty = findNavController().previousBackStackEntry?.destination?.id in emptyFragmentsIds
-        Log.d("[Generic Fragment] ${getFragmentRealClassName()} isPreviousFragmentEmpty ? $isPreviousFragmentEmpty")
+        Log.d(
+            "[Generic Fragment] ${getFragmentRealClassName()} isPreviousFragmentEmpty ? $isPreviousFragmentEmpty"
+        )
         val popBackStack = isSlidingPaneFlat || !isPreviousFragmentEmpty
         Log.d("[Generic Fragment] ${getFragmentRealClassName()} popBackStack ? $popBackStack")
         return popBackStack

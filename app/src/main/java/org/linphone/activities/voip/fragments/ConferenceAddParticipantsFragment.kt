@@ -68,7 +68,9 @@ class ConferenceAddParticipantsFragment : GenericFragment<VoipConferenceParticip
         binding.contactsList.layoutManager = layoutManager
 
         // Divider between items
-        binding.contactsList.addItemDecoration(AppUtils.getDividerDecoration(requireContext(), layoutManager))
+        binding.contactsList.addItemDecoration(
+            AppUtils.getDividerDecoration(requireContext(), layoutManager)
+        )
 
         binding.setApplyClickListener {
             viewModel.applyChanges()

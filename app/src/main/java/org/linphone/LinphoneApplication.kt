@@ -38,6 +38,7 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
     companion object {
         @SuppressLint("StaticFieldLeak")
         lateinit var corePreferences: CorePreferences
+
         @SuppressLint("StaticFieldLeak")
         lateinit var coreContext: CoreContext
 
@@ -59,7 +60,10 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
                 CoreContext.activateVFS()
             }
 
-            val config = Factory.instance().createConfigWithFactory(corePreferences.configPath, corePreferences.factoryConfigPath)
+            val config = Factory.instance().createConfigWithFactory(
+                corePreferences.configPath,
+                corePreferences.factoryConfigPath
+            )
             corePreferences.config = config
 
             val appName = context.getString(R.string.app_name)
@@ -83,8 +87,15 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
                 return false
             }
 
-            Log.i("[Application] Core context is being created ${if (pushReceived) "from push" else ""}")
-            coreContext = CoreContext(context, corePreferences.config, service, useAutoStartDescription)
+            Log.i(
+                "[Application] Core context is being created ${if (pushReceived) "from push" else ""}"
+            )
+            coreContext = CoreContext(
+                context,
+                corePreferences.config,
+                service,
+                useAutoStartDescription
+            )
             coreContext.start()
             return true
         }

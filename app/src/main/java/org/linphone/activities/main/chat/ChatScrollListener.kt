@@ -26,6 +26,7 @@ internal abstract class ChatScrollListener(private val mLayoutManager: LinearLay
     RecyclerView.OnScrollListener() {
     // The total number of items in the data set after the last load
     private var previousTotalItemCount = 0
+
     // True if we are still waiting for the last set of data to load.
     private var loading = true
 

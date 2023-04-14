@@ -55,10 +55,25 @@ class XiaomiCompatibility {
             val info: String
 
             val remoteContact = call.remoteContact
-            val conferenceAddress = if (remoteContact != null) coreContext.core.interpretUrl(remoteContact, false) else null
-            val conferenceInfo = if (conferenceAddress != null) coreContext.core.findConferenceInformationFromUri(conferenceAddress) else null
+            val conferenceAddress = if (remoteContact != null) {
+                coreContext.core.interpretUrl(
+                    remoteContact,
+                    false
+                )
+            } else {
+                null
+            }
+            val conferenceInfo = if (conferenceAddress != null) {
+                coreContext.core.findConferenceInformationFromUri(
+                    conferenceAddress
+                )
+            } else {
+                null
+            }
             if (conferenceInfo == null) {
-                Log.i("[Notifications Manager] No conference info found for remote contact address $remoteContact")
+                Log.i(
+                    "[Notifications Manager] No conference info found for remote contact address $remoteContact"
+                )
                 contact = coreContext.contactsManager.findContactByAddress(call.remoteAddress)
                 roundPicture =
                     ImageUtils.getRoundBitmapFromUri(context, contact?.getThumbnailUri())
@@ -71,13 +86,23 @@ class XiaomiCompatibility {
                 address = LinphoneUtils.getDisplayableAddress(conferenceInfo.organizer)
                 roundPicture = coreContext.contactsManager.groupBitmap
                 info = context.getString(R.string.incoming_group_call_notification_title)
-                Log.i("[Notifications Manager] Displaying incoming group call notification with subject $displayName and remote contact address $remoteContact")
+                Log.i(
+                    "[Notifications Manager] Displaying incoming group call notification with subject $displayName and remote contact address $remoteContact"
+                )
             }
 
-            val builder = NotificationCompat.Builder(context, context.getString(R.string.notification_channel_incoming_call_id))
+            val builder = NotificationCompat.Builder(
+                context,
+                context.getString(R.string.notification_channel_incoming_call_id)
+            )
                 .addPerson(notificationsManager.getPerson(contact, displayName, roundPicture))
                 .setSmallIcon(R.drawable.topbar_call_notification)
-                .setLargeIcon(roundPicture ?: BitmapFactory.decodeResource(context.resources, R.drawable.voip_single_contact_avatar_alt))
+                .setLargeIcon(
+                    roundPicture ?: BitmapFactory.decodeResource(
+                        context.resources,
+                        R.drawable.voip_single_contact_avatar_alt
+                    )
+                )
                 .setContentTitle(displayName)
                 .setContentText(address)
                 .setSubText(info)

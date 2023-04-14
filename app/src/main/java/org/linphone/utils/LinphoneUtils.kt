@@ -80,10 +80,11 @@ class LinphoneUtils {
         fun getConferenceAddress(call: Call): Address? {
             val remoteContact = call.remoteContact
             val conferenceAddress = if (call.dir == Call.Dir.Incoming) {
-                if (remoteContact != null)
+                if (remoteContact != null) {
                     coreContext.core.interpretUrl(remoteContact, false)
-                else
+                } else {
                     null
+                }
             } else {
                 call.remoteAddress
             }
@@ -92,7 +93,9 @@ class LinphoneUtils {
 
         fun getConferenceSubject(conference: Conference): String? {
             return if (conference.subject.isNullOrEmpty()) {
-                val conferenceInfo = coreContext.core.findConferenceInformationFromUri(conference.conferenceAddress)
+                val conferenceInfo = coreContext.core.findConferenceInformationFromUri(
+                    conference.conferenceAddress
+                )
                 if (conferenceInfo != null) {
                     conferenceInfo.subject
                 } else {
@@ -139,8 +142,17 @@ class LinphoneUtils {
 
             val participants = arrayOf(participant)
 
-            return core.searchChatRoom(params, defaultAccount?.params?.identityAddress, null, participants)
-                ?: core.createChatRoom(params, defaultAccount?.params?.identityAddress, participants)
+            return core.searchChatRoom(
+                params,
+                defaultAccount?.params?.identityAddress,
+                null,
+                participants
+            )
+                ?: core.createChatRoom(
+                    params,
+                    defaultAccount?.params?.identityAddress,
+                    participants
+                )
         }
 
         fun getConferenceInvitationsChatRoomParams(): ChatRoomParams {
@@ -189,10 +201,11 @@ class LinphoneUtils {
                 RECORDING_DATE_PATTERN,
                 Locale.getDefault()
             )
-            val fileName = if (subject.isNullOrEmpty())
+            val fileName = if (subject.isNullOrEmpty()) {
                 "conference_${dateFormat.format(Date())}.mkv"
-            else
+            } else {
                 "${subject}_${dateFormat.format(Date())}.mkv"
+            }
             return FileUtils.getFileStoragePath(fileName).absolutePath
         }
 

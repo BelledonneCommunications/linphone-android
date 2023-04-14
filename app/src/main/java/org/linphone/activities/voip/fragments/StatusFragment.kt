@@ -107,7 +107,10 @@ class StatusFragment : GenericFragment<VoipStatusFragmentBinding>() {
             }
         }
 
-        val viewModel = DialogViewModel(getString(R.string.zrtp_dialog_explanation), getString(R.string.zrtp_dialog_title))
+        val viewModel = DialogViewModel(
+            getString(R.string.zrtp_dialog_explanation),
+            getString(R.string.zrtp_dialog_title)
+        )
         viewModel.showZrtp = true
         viewModel.zrtpReadSas = toRead.uppercase(Locale.getDefault())
         viewModel.zrtpListenSas = toListen.uppercase(Locale.getDefault())

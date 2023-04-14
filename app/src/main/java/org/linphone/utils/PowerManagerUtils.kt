@@ -117,7 +117,8 @@ class PowerManagerUtils {
             Intent()
                 .setComponent(
                     ComponentName(
-                        "com.asus.mobilemanager", "com.asus.mobilemanager.MainActivity"
+                        "com.asus.mobilemanager",
+                        "com.asus.mobilemanager.MainActivity"
                     )
                 ),
             Intent()

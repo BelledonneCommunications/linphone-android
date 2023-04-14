@@ -41,7 +41,9 @@ class ImdnAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding: ChatRoomImdnParticipantCellBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
-            R.layout.chat_room_imdn_participant_cell, parent, false
+            R.layout.chat_room_imdn_participant_cell,
+            parent,
+            false
         )
         return ViewHolder(binding)
     }
@@ -70,14 +72,18 @@ class ImdnAdapter(
         val previousPosition = position - 1
         return if (previousPosition >= 0) {
             getItem(previousPosition).imdnState.state != participantImdnState.imdnState.state
-        } else true
+        } else {
+            true
+        }
     }
 
     override fun getHeaderViewForPosition(context: Context, position: Int): View {
         val participantImdnState = getItem(position).imdnState
         val binding: ImdnListHeaderBinding = DataBindingUtil.inflate(
             LayoutInflater.from(context),
-            R.layout.imdn_list_header, null, false
+            R.layout.imdn_list_header,
+            null,
+            false
         )
         when (participantImdnState.state) {
             ChatMessage.State.Displayed -> {

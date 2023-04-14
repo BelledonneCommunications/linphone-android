@@ -113,7 +113,9 @@ class AdvancedSettingsFragment : GenericSettingFragment<SettingsAdvancedFragment
             }
         }
 
-        viewModel.powerManagerSettingsVisibility.value = PowerManagerUtils.getDevicePowerManagerIntent(requireContext()) != null
+        viewModel.powerManagerSettingsVisibility.value = PowerManagerUtils.getDevicePowerManagerIntent(
+            requireContext()
+        ) != null
         viewModel.goToPowerManagerSettingsEvent.observe(
             viewLifecycleOwner
         ) {

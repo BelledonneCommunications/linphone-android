@@ -165,7 +165,10 @@ class ControlsViewModel : ViewModel() {
 
     val extraButtonsMenuTranslateY = MutableLiveData<Float>()
     private val extraButtonsMenuAnimator: ValueAnimator by lazy {
-        ValueAnimator.ofFloat(AppUtils.getDimension(R.dimen.voip_call_extra_buttons_translate_y), 0f).apply {
+        ValueAnimator.ofFloat(
+            AppUtils.getDimension(R.dimen.voip_call_extra_buttons_translate_y),
+            0f
+        ).apply {
             addUpdateListener {
                 val value = it.animatedValue as Float
                 extraButtonsMenuTranslateY.value = value
@@ -204,8 +207,12 @@ class ControlsViewModel : ViewModel() {
         coreContext.core.addListener(listener)
 
         fullScreenMode.value = false
-        extraButtonsMenuTranslateY.value = AppUtils.getDimension(R.dimen.voip_call_extra_buttons_translate_y)
-        audioRoutesMenuTranslateY.value = AppUtils.getDimension(R.dimen.voip_audio_routes_menu_translate_y)
+        extraButtonsMenuTranslateY.value = AppUtils.getDimension(
+            R.dimen.voip_call_extra_buttons_translate_y
+        )
+        audioRoutesMenuTranslateY.value = AppUtils.getDimension(
+            R.dimen.voip_audio_routes_menu_translate_y
+        )
         audioRoutesSelected.value = false
         forceDisableProximitySensor.value = false
 
@@ -249,7 +256,7 @@ class ControlsViewModel : ViewModel() {
 
     fun answer() {
         val currentCall = coreContext.core.currentCall ?: coreContext.core.calls.find {
-            call ->
+                call ->
             call.state == Call.State.IncomingReceived || call.state == Call.State.IncomingEarlyMedia
         }
         if (currentCall != null) {
@@ -301,7 +308,9 @@ class ControlsViewModel : ViewModel() {
 
     fun toggleVideo() {
         if (!PermissionHelper.get().hasCameraPermission()) {
-            Log.w("[Call Controls] Camera permission isn't granted, asking it before toggling video")
+            Log.w(
+                "[Call Controls] Camera permission isn't granted, asking it before toggling video"
+            )
             askPermissionEvent.value = Event(Manifest.permission.CAMERA)
             return
         }
@@ -330,7 +339,9 @@ class ControlsViewModel : ViewModel() {
                 }
             } else {
                 params?.isVideoEnabled = params?.isVideoEnabled == false
-                Log.i("[Call Controls] Updating call with video enabled set to ${params?.isVideoEnabled}")
+                Log.i(
+                    "[Call Controls] Updating call with video enabled set to ${params?.isVideoEnabled}"
+                )
             }
             currentCall.update(params)
         } else {
@@ -366,7 +377,9 @@ class ControlsViewModel : ViewModel() {
     fun hideExtraButtons(skipAnimation: Boolean) {
         // Animation must be skipped when called from Fragment's onPause() !
         if (skipAnimation) {
-            extraButtonsMenuTranslateY.value = AppUtils.getDimension(R.dimen.voip_call_extra_buttons_translate_y)
+            extraButtonsMenuTranslateY.value = AppUtils.getDimension(
+                R.dimen.voip_call_extra_buttons_translate_y
+            )
         } else {
             extraButtonsMenuAnimator.reverse()
         }
@@ -446,11 +459,15 @@ class ControlsViewModel : ViewModel() {
             it.state == Call.State.Paused
         }
         if (callToTransferTo == null) {
-            Log.e("[Call Controls] Couldn't find a call in Paused state to transfer current call to")
+            Log.e(
+                "[Call Controls] Couldn't find a call in Paused state to transfer current call to"
+            )
             return
         }
 
-        Log.i("[Call Controls] Doing an attended transfer between active call [${currentCall.remoteAddress.asStringUriOnly()}] and paused call [${callToTransferTo.remoteAddress.asStringUriOnly()}]")
+        Log.i(
+            "[Call Controls] Doing an attended transfer between active call [${currentCall.remoteAddress.asStringUriOnly()}] and paused call [${callToTransferTo.remoteAddress.asStringUriOnly()}]"
+        )
         val result = callToTransferTo.transferToAnother(currentCall)
         if (result != 0) {
             Log.e("[Call Controls] Attended transfer failed!")
@@ -509,7 +526,9 @@ class ControlsViewModel : ViewModel() {
                 if (!AudioRouteUtils.isHeadsetAudioRouteAvailable() &&
                     !AudioRouteUtils.isBluetoothAudioRouteCurrentlyUsed()
                 ) {
-                    Log.i("[Call Controls] Video enabled and no wired headset not bluetooth in use, routing audio to speaker")
+                    Log.i(
+                        "[Call Controls] Video enabled and no wired headset not bluetooth in use, routing audio to speaker"
+                    )
                     AudioRouteUtils.routeAudioToSpeaker()
                 }
             }
@@ -529,11 +548,17 @@ class ControlsViewModel : ViewModel() {
 
     private fun shouldProximitySensorBeEnabled(): Boolean {
         if (forceDisableProximitySensor.value == true) {
-            Log.i("[Call Controls] Forcing proximity sensor to be disabled (usually in incoming/outgoing call fragments)")
+            Log.i(
+                "[Call Controls] Forcing proximity sensor to be disabled (usually in incoming/outgoing call fragments)"
+            )
         } else if (isVideoEnabled.value == true) {
-            Log.i("[Call Controls] Active call current params says video is enabled, proximity sensor will be disabled")
+            Log.i(
+                "[Call Controls] Active call current params says video is enabled, proximity sensor will be disabled"
+            )
         } else if (nonEarpieceOutputAudioDevice.value == true) {
-            Log.i("[Call Controls] Current audio route is not earpiece, proximity sensor will be disabled")
+            Log.i(
+                "[Call Controls] Current audio route is not earpiece, proximity sensor will be disabled"
+            )
         }
 
         return forceDisableProximitySensor.value == false &&
