@@ -776,4 +776,16 @@
 \n永久に削除するには、アカウント管理プラットフォームへアクセスしてください:</string>
     <string name="account_setting_delete_dialog_title">アカウントを削除しますか？</string>
     <string name="contacts_settings_native_presence_title">標準の連絡先に情報を追加する</string>
+    <string name="dialog_apply_remote_provisioning_button">適用</string>
+    <string name="error_unexpected">予期せぬエラー…</string>
+    <string name="settings_password_protection_dialog_title">設定にアクセスするにはパスワードを入力してください</string>
+    <string name="settings_password_protection_dialog_input_hint">パスワード</string>
+    <string name="settings_password_protection_dialog_ok_label">確認</string>
+    <string name="settings_password_protection_dialog_invalid_input">無効なパスワードです！</string>
+    <string name="audio_settings_software_echo_cancellation_title">ソフトウェアエコーキャンセラー</string>
+    <string name="dialog_apply_remote_provisioning_title">このURLから設定をダウンロードして適用しますか？</string>
+    <string name="chat_room_last_message_sender_format">%s:</string>
+    <string name="chat_room_presence_last_seen_online_today">今日オンラインでした -</string>
+    <string name="chat_room_presence_last_seen_online_yesterday">昨日オンラインでした -</string>
+    <string name="chat_room_presence_last_seen_online">オンラインでした -</string>
 </resources>
