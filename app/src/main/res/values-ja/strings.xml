@@ -762,4 +762,6 @@
     <string name="content_description_ephemeral_duration_change">選択した値から期限付きメッセージの期間を変更しました</string>
     <string name="content_description_enter_edition_mode">エディションモードへ移行</string>
     <string name="content_description_exit_edition_mode">エディションモードを終了</string>
+    <string name="content_description_chat_message_video_attachment">添付ビデオ</string>
+    <string name="content_description_chat_message_meeting_attachment">添付会議</string>
 </resources>
