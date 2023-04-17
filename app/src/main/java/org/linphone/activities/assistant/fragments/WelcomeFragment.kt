@@ -28,6 +28,7 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import java.util.UnknownFormatConversionException
 import java.util.regex.Pattern
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -85,11 +86,16 @@ class WelcomeFragment : GenericFragment<AssistantWelcomeFragmentBinding>() {
         val terms = getString(R.string.assistant_general_terms)
         val privacy = getString(R.string.assistant_privacy_policy)
 
-        val label = getString(
-            R.string.assistant_read_and_agree_terms,
-            terms,
-            privacy
-        )
+        val label = try {
+            getString(
+                R.string.assistant_read_and_agree_terms,
+                terms,
+                privacy
+            )
+        } catch (e: UnknownFormatConversionException) {
+            Log.e("[Welcome] Wrong R.string.assistant_read_and_agree_terms format!")
+            "I accept Belledonne Communications' terms of use and privacy policy"
+        }
         val spannable = SpannableString(label)
 
         val termsMatcher = Pattern.compile(terms).matcher(label)
