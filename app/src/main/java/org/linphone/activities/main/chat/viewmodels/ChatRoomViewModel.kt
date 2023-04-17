@@ -334,30 +334,37 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
             return
         }
 
-        val timestamp = friend.presenceModel?.timestamp ?: -1
-        lastPresenceInfo.value = when {
-            TimestampUtils.isToday(timestamp) -> {
-                val time = TimestampUtils.timeToString(timestamp, timestampInSecs = true)
-                val text = AppUtils.getString(R.string.chat_room_presence_last_seen_online_today)
-                "$text $time"
+        val timestamp = friend.presenceModel?.latestActivityTimestamp ?: -1L
+        lastPresenceInfo.value = if (timestamp != -1L) {
+            when {
+                TimestampUtils.isToday(timestamp) -> {
+                    val time = TimestampUtils.timeToString(timestamp, timestampInSecs = true)
+                    val text =
+                        AppUtils.getString(R.string.chat_room_presence_last_seen_online_today)
+                    "$text $time"
+                }
+
+                TimestampUtils.isYesterday(timestamp) -> {
+                    val time = TimestampUtils.timeToString(timestamp, timestampInSecs = true)
+                    val text = AppUtils.getString(
+                        R.string.chat_room_presence_last_seen_online_yesterday
+                    )
+                    "$text $time"
+                }
+
+                else -> {
+                    val date = TimestampUtils.toString(
+                        timestamp,
+                        onlyDate = true,
+                        shortDate = false,
+                        hideYear = true
+                    )
+                    val text = AppUtils.getString(R.string.chat_room_presence_last_seen_online)
+                    "$text $date"
+                }
             }
-            TimestampUtils.isYesterday(timestamp) -> {
-                val time = TimestampUtils.timeToString(timestamp, timestampInSecs = true)
-                val text = AppUtils.getString(
-                    R.string.chat_room_presence_last_seen_online_yesterday
-                )
-                "$text $time"
-            }
-            else -> {
-                val date = TimestampUtils.toString(
-                    timestamp,
-                    onlyDate = true,
-                    shortDate = false,
-                    hideYear = true
-                )
-                val text = AppUtils.getString(R.string.chat_room_presence_last_seen_online)
-                "$text $date"
-            }
+        } else {
+            AppUtils.getString(R.string.chat_room_presence_away)
         }
     }
 
