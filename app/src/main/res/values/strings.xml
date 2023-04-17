@@ -239,6 +239,7 @@
     <string name="chat_room_presence_last_seen_online_today">Online today at</string>
     <string name="chat_room_presence_last_seen_online_yesterday">Online yesterday at</string>
     <string name="chat_room_presence_last_seen_online">Online on</string>
+    <string name="chat_room_presence_away">Away</string>
     <string name="chat_room_presence_do_not_disturb">Do not disturb</string>
 
     <!-- Recordings -->
