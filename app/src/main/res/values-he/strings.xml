@@ -225,7 +225,7 @@
     <string name="assistant_remote_provisioning">קבל הגדרות מרחוק</string>
     <string name="assistant_ec_calibration">מכייל ביטול הד</string>
     <string name="assistant_phone_number_info_title">למה מספר הטלפון שלי ישמש\?</string>
-    <string name="assistant_read_and_agree_terms">אני מסכים ל%1$ ו %2$ של \"Belledonne Communications\"</string>
+    <string name="assistant_read_and_agree_terms">אני מסכים ל%2$s ו %1$s של \"Belledonne Communications\"</string>
     <string name="assistant_error_phone_number_invalid_characters">מותר מספרים בלבד</string>
     <string name="assistant_error_username_already_exists">משתמש בשימוש</string>
     <string name="assistant_error_phone_number_already_exists">כבר קיים חשבון המשתמש במספר זה</string>

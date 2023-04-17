@@ -26,11 +26,15 @@ Group changes to describe their impact on the project, as follows:
 - Account EXPIRES is now set to 1 month instead of 1 year for sip.linphone.org accounts
 - Replaced voice recordings file name by localized placeholder text, like for video conferences invitations
 - Removed jetifier as it is not needed
+- Switched from gradle 7.5 to 8.0, requires JDK 17 (instead of 11)
 
+### Fixed
+- Messages not marked as reply in basic chat room if sending more than 1 content
+
+## [5.0.10] - 2023-01-04
 ### Fixed
 - Plain copy of encrypted files (when VFS is enabled) not cleaned
 - Avatar display issue if contact's "initials" contains more than 1 emoji or an emoji + a character
-- Messages not marked as reply in basic chat room if sending more than 1 content
 
 ## [5.0.9] - 2023-03-30
 

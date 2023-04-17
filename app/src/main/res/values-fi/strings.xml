@@ -332,7 +332,7 @@
     <string name="assistant_ec_calibration">Kaiunpoiston kalibrointi käynnissä</string>
     <string name="assistant_phone_number_info_title">Mihin puhelinnumeroani käytetään\?</string>
     <string name="assistant_general_terms">käyttöehdot</string>
-    <string name="assistant_read_and_agree_terms">Hyväksyn Belledonne Communications:n %1$:n ja %2$:n</string>
+    <string name="assistant_read_and_agree_terms">Hyväksyn Belledonne Communications %1$s ja %2$s</string>
     <string name="assistant_generic_account_warning_continue_button_text">Ymmärrän</string>
     <string name="assistant_error_phone_number_invalid_characters">Vain numerot ovat sallittuja</string>
     <string name="assistant_error_username_already_exists">Käyttäjätunnus on jo käytössä</string>
