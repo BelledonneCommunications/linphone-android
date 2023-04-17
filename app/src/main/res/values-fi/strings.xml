@@ -331,7 +331,7 @@
 \n
 \nNäet osoitekirjastasi kuka käyttää &appName; ja ystäväsi tietävät myös, että voivat ottaa yhteyttä käyttäen &appName;.
 \n"</string>
-    <string name="assistant_read_and_agree_terms">Hyväksyn Belledonne Communications:n %1$:n ja %2$:n</string>
+    <string name="assistant_read_and_agree_terms">Hyväksyn Belledonne Communications:n %1$s:n ja %2$s:n</string>
     <string name="assistant_generic_account_warning_continue_button_text">Ymmärrän</string>
     <string name="assistant_error_phone_number_invalid_characters">Vain numerot ovat sallittuja</string>
     <string name="assistant_error_username_already_exists">Käyttäjätunnus on jo käytössä</string>
