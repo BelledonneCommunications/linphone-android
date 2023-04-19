@@ -14,6 +14,6 @@
     </item>
     <item>
         <bitmap android:src="@drawable/emoji_default"
-            android:tint="?attr/drawableTintColor"/>
+            android:tint="@color/dark_grey_color"/>
     </item>
 </selector>
