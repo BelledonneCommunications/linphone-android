@@ -750,8 +750,13 @@ class CoreContext(
                 call.redirectTo(voiceMailAddress)
             }
         } else {
-            Log.i("[Context] Declining call $call")
-            call.decline(Reason.Declined)
+            val reason = if (core.callsNb > 1) {
+                Reason.Busy
+            } else {
+                Reason.Declined
+            }
+            Log.i("[Context] Declining call [$call] with reason [$reason]")
+            call.decline(reason)
         }
     }
 
