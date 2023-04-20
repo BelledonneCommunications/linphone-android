@@ -99,8 +99,8 @@ class CoreContext(
     }
 
     val sdkVersion: String by lazy {
-        val sdkVersion = context.getString(R.string.linphone_sdk_version)
-        val sdkBranch = context.getString(R.string.linphone_sdk_branch)
+        val sdkVersion = context.getString(org.linphone.core.R.string.linphone_sdk_version)
+        val sdkBranch = context.getString(org.linphone.core.R.string.linphone_sdk_branch)
         val sdkBuildType = org.linphone.core.BuildConfig.BUILD_TYPE
         "$sdkVersion ($sdkBranch, $sdkBuildType)"
     }
@@ -587,8 +587,8 @@ class CoreContext(
         val appName: String = context.resources.getString(R.string.user_agent_app_name)
         val androidVersion = BuildConfig.VERSION_NAME
         val userAgent = "$appName/$androidVersion ($deviceName) LinphoneSDK"
-        val sdkVersion = context.getString(R.string.linphone_sdk_version)
-        val sdkBranch = context.getString(R.string.linphone_sdk_branch)
+        val sdkVersion = context.getString(org.linphone.core.R.string.linphone_sdk_version)
+        val sdkBranch = context.getString(org.linphone.core.R.string.linphone_sdk_branch)
         val sdkUserAgent = "$sdkVersion ($sdkBranch)"
         core.setUserAgent(userAgent, sdkUserAgent)
     }
