@@ -797,4 +797,6 @@
     <string name="content_description_presence_do_not_disturb">Uživatel si nepřeje být vyrušován</string>
     <string name="chat_room_last_message_sender_format">%s:</string>
     <string name="chat_room_presence_do_not_disturb">Nerušit</string>
+    <string name="chat_room_presence_away">Pryč</string>
+    <string name="audio_settings_software_echo_cancellation_title">Softwarové potlačení ozvěny</string>
 </resources>
