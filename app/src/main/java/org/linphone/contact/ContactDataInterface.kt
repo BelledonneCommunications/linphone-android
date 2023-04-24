@@ -61,7 +61,7 @@ open class GenericContactData(private val sipAddress: Address) : ContactDataInte
     open fun destroy() {
     }
 
-    private fun contactLookup() {
+    protected fun contactLookup() {
         displayName.value = LinphoneUtils.getDisplayName(sipAddress)
 
         val friend = coreContext.contactsManager.findContactByAddress(sipAddress)
@@ -88,7 +88,7 @@ abstract class GenericContactViewModel(private val sipAddress: Address) : Messag
         contactLookup()
     }
 
-    private fun contactLookup() {
+    protected fun contactLookup() {
         displayName.value = LinphoneUtils.getDisplayName(sipAddress)
         val friend = coreContext.contactsManager.findContactByAddress(sipAddress)
         if (friend != null) {

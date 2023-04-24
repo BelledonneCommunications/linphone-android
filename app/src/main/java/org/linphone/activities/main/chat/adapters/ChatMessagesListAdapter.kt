@@ -260,11 +260,26 @@ class ChatMessagesListAdapter(
         fun bind(eventLog: EventLogData) {
             with(binding) {
                 if (eventLog.eventLog.type == EventLog.Type.ConferenceChatMessage) {
-                    val chatMessageViewModel = eventLog.data as ChatMessageData
-                    chatMessageViewModel.setContentClickListener(contentClickedListener)
+                    val chatMessageData = eventLog.data as ChatMessageData
+                    chatMessageData.setContentClickListener(contentClickedListener)
 
-                    val chatMessage = chatMessageViewModel.chatMessage
-                    data = chatMessageViewModel
+                    val chatMessage = chatMessageData.chatMessage
+                    data = chatMessageData
+
+                    chatMessageData.contactNewlyFoundEvent.observe(viewLifecycleOwner) {
+                        it.consume {
+                            // Post to prevent IllegalStateException: Cannot call this method while RecyclerView is computing a layout or scrolling
+                            binding.root.post {
+                                try {
+                                    notifyItemChanged(bindingAdapterPosition)
+                                } catch (e: Exception) {
+                                    Log.e(
+                                        "[Chat Messages Adapter] Can't notify item [$bindingAdapterPosition] has changed: $e"
+                                    )
+                                }
+                            }
+                        }
+                    }
 
                     lifecycleOwner = viewLifecycleOwner
 
@@ -283,7 +298,7 @@ class ChatMessagesListAdapter(
                     }
 
                     setReplyClickListener {
-                        val reply = chatMessageViewModel.replyData.value?.chatMessage
+                        val reply = chatMessageData.replyData.value?.chatMessage
                         if (reply != null) {
                             scrollToChatMessageEvent.value = Event(reply)
                         }
@@ -323,7 +338,7 @@ class ChatMessagesListAdapter(
                         }
                     }
 
-                    chatMessageViewModel.updateBubbleBackground(hasPrevious, hasNext)
+                    chatMessageData.updateBubbleBackground(hasPrevious, hasNext)
 
                     executePendingBindings()
 
@@ -354,7 +369,7 @@ class ChatMessagesListAdapter(
                             totalSize -= itemSize
                         }
                         if (chatMessage.isOutgoing ||
-                            chatMessageViewModel.contact.value != null ||
+                            chatMessageData.contact.value != null ||
                             advancedContextMenuOptionsDisabled ||
                             corePreferences.readOnlyNativeContacts
                         ) {

@@ -24,12 +24,15 @@ import android.text.Spannable
 import android.util.Patterns
 import androidx.lifecycle.MutableLiveData
 import java.util.regex.Pattern
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.contact.ContactsUpdatedListenerStub
 import org.linphone.contact.GenericContactData
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatMessageListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
+import org.linphone.utils.Event
 import org.linphone.utils.PatternClickableSpan
 import org.linphone.utils.TimestampUtils
 
@@ -64,6 +67,10 @@ class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMes
 
     val isOutgoing = chatMessage.isOutgoing
 
+    val contactNewlyFoundEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     var hasPreviousMessage = false
     var hasNextMessage = false
 
@@ -77,6 +84,16 @@ class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMes
 
         override fun onEphemeralMessageTimerStarted(message: ChatMessage) {
             updateEphemeralTimer()
+        }
+    }
+
+    private val contactsListener = object : ContactsUpdatedListenerStub() {
+        override fun onContactsUpdated() {
+            contactLookup()
+            if (contact.value != null) {
+                coreContext.contactsManager.removeListener(this)
+                contactNewlyFoundEvent.value = Event(true)
+            }
         }
     }
 
@@ -101,6 +118,10 @@ class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMes
 
         updateChatMessageState(chatMessage.state)
         updateContentsList()
+
+        if (contact.value == null) {
+            coreContext.contactsManager.addListener(contactsListener)
+        }
     }
 
     override fun destroy() {
