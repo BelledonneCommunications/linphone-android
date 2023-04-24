@@ -260,8 +260,9 @@ class ConferenceViewModel : ViewModel() {
             if (state == Call.State.StreamsRunning && call.conference?.isIn == true) {
                 isConferenceLocallyPaused.value = false
                 conferenceParticipantDevices.value?.forEach {
-                    if (it.isMe)
+                    if (it.isMe) {
                         it.isInConference.value = true
+                    }
                 }
             }
         }
