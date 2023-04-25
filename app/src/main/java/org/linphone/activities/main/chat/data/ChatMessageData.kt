@@ -218,11 +218,29 @@ class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMes
                 text.value = PatternClickableSpan()
                     .add(
                         Pattern.compile(
-                            "(?:<?sips?:)?[a-zA-Z0-9+_.\\-]+(?:@([a-zA-Z0-9+_.\\-;=~]+))+(>)?"
+                            "(?:<?sips?:)[a-zA-Z0-9+_.\\-]+(?:@([a-zA-Z0-9+_.\\-;=~]+))+(>)?"
                         ),
                         object : PatternClickableSpan.SpannableClickedListener {
                             override fun onSpanClicked(text: String) {
                                 Log.i("[Chat Message Data] Clicked on SIP URI: $text")
+                                contentListener?.onSipAddressClicked(text)
+                            }
+                        }
+                    )
+                    .add(
+                        Patterns.EMAIL_ADDRESS,
+                        object : PatternClickableSpan.SpannableClickedListener {
+                            override fun onSpanClicked(text: String) {
+                                Log.i("[Chat Message Data] Clicked on email address: $text")
+                                contentListener?.onEmailAddressClicked(text)
+                            }
+                        }
+                    )
+                    .add(
+                        Patterns.PHONE,
+                        object : PatternClickableSpan.SpannableClickedListener {
+                            override fun onSpanClicked(text: String) {
+                                Log.i("[Chat Message Data] Clicked on phone number: $text")
                                 contentListener?.onSipAddressClicked(text)
                             }
                         }
@@ -233,15 +251,6 @@ class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMes
                             override fun onSpanClicked(text: String) {
                                 Log.i("[Chat Message Data] Clicked on web URL: $text")
                                 contentListener?.onWebUrlClicked(text)
-                            }
-                        }
-                    )
-                    .add(
-                        Patterns.PHONE,
-                        object : PatternClickableSpan.SpannableClickedListener {
-                            override fun onSpanClicked(text: String) {
-                                Log.i("[Chat Message Data] Clicked on phone number: $text")
-                                contentListener?.onSipAddressClicked(text)
                             }
                         }
                     ).build(spannable)

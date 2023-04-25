@@ -124,7 +124,8 @@ class ChatMessagesListAdapter(
                 )
                 return
             }
-            urlClickEvent.value = Event(url)
+            val urlWithScheme = if (!url.startsWith("http")) "http://$url" else url
+            urlClickEvent.value = Event(urlWithScheme)
         }
 
         override fun onSipAddressClicked(sipUri: String) {
@@ -135,6 +136,17 @@ class ChatMessagesListAdapter(
                 return
             }
             sipUriClickedEvent.value = Event(sipUri)
+        }
+
+        override fun onEmailAddressClicked(email: String) {
+            if (popup?.isShowing == true) {
+                Log.w(
+                    "[Chat Message Data] Long press that displayed context menu detected, aborting click on email address [$email]"
+                )
+                return
+            }
+            val urlWithScheme = if (!email.startsWith("mailto:")) "mailto:$email" else email
+            urlClickEvent.value = Event(urlWithScheme)
         }
 
         override fun onCallConference(address: String, subject: String?) {
