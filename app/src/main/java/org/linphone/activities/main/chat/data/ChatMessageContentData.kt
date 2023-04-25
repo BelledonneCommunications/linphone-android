@@ -515,6 +515,8 @@ interface OnContentClickedListener {
 
     fun onSipAddressClicked(sipUri: String)
 
+    fun onEmailAddressClicked(email: String)
+
     fun onWebUrlClicked(url: String)
 
     fun onCallConference(address: String, subject: String?)
