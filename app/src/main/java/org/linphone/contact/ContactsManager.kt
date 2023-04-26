@@ -91,6 +91,16 @@ class ContactsManager(private val context: Context) {
         }
     }
 
+    private val coreListener: CoreListenerStub = object : CoreListenerStub() {
+        override fun onFriendListCreated(core: Core, friendList: FriendList) {
+            friendList.addListener(friendListListener)
+        }
+
+        override fun onFriendListRemoved(core: Core, friendList: FriendList) {
+            friendList.removeListener(friendListListener)
+        }
+    }
+
     init {
         initSyncAccount()
 
@@ -99,6 +109,7 @@ class ContactsManager(private val context: Context) {
         groupBitmap = BitmapFactory.decodeResource(context.resources, R.drawable.voip_multiple_contacts_avatar_alt)
 
         val core = coreContext.core
+        core.addListener(coreListener)
         for (list in core.friendsLists) {
             list.addListener(friendListListener)
         }
@@ -224,6 +235,7 @@ class ContactsManager(private val context: Context) {
     fun destroy() {
         val core = coreContext.core
         for (list in core.friendsLists) list.removeListener(friendListListener)
+        core.removeListener(coreListener)
     }
 
     private fun initSyncAccount() {
