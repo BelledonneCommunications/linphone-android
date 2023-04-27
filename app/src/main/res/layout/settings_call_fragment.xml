@@ -84,7 +84,8 @@
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/call_settings_vibrate_title}"
                     linphone:listener="@{viewModel.vibrateOnIncomingCallListener}"
-                    linphone:checked="@={viewModel.vibrateOnIncomingCall}"/>
+                    linphone:checked="@={viewModel.vibrateOnIncomingCall}"
+                    android:visibility="@{viewModel.canVibrate ? View.VISIBLE : View.GONE}"/>
 
                 <include
                     layout="@layout/settings_widget_list"

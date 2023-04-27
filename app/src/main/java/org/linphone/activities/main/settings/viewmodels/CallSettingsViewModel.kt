@@ -19,10 +19,11 @@
  */
 package org.linphone.activities.main.settings.viewmodels
 
+import android.os.Vibrator
 import androidx.lifecycle.MutableLiveData
 import java.io.File
 import java.util.*
-import kotlin.collections.ArrayList
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.main.settings.SettingListenerStub
 import org.linphone.core.MediaEncryption
@@ -60,6 +61,7 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
         }
     }
     val vibrateOnIncomingCall = MutableLiveData<Boolean>()
+    val canVibrate = MutableLiveData<Boolean>()
 
     val encryptionListener = object : SettingListenerStub() {
         override fun onListValueChanged(position: Int) {
@@ -233,6 +235,11 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
         showRingtonesList.value = prefs.showAllRingtones
 
         vibrateOnIncomingCall.value = core.isVibrationOnIncomingCallEnabled
+        val vibrator = coreContext.context.getSystemService(Vibrator::class.java)
+        canVibrate.value = vibrator.hasVibrator()
+        if (canVibrate.value == false) {
+            Log.w("[Call Settings] Device doesn't seem to have a vibrator, hiding related setting")
+        }
 
         initEncryptionList()
         encryptionMandatory.value = core.isMediaEncryptionMandatory
