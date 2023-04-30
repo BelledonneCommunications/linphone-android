@@ -5,7 +5,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="service_name">&appName; Služba</string>
     <string name="service_auto_start_description">&appName; byla automaticky spuštěna</string>
-    <string name="service_description">Toto je nutné pro příjem hovorů na pozadí</string>
+    <string name="service_description">Umožňuje příjem hovorů na pozadí</string>
     <string name="sync_account_name">&appName; kontakty</string>
     <string name="about_privacy_policy">Navštivte naše zásady ochrany osobních údajů</string>
     <string name="logs_reset_complete">Log byl odstraněn</string>
@@ -58,7 +58,7 @@
     <string name="debug_popup_title">Ladění</string>
     <string name="debug_popup_enable_logs">Povolit logování</string>
     <string name="debug_popup_disable_logs">Zakázat logování</string>
-    <string name="debug_popup_send_logs">Odeslat logy</string>
+    <string name="debug_popup_send_logs">Odeslat log</string>
     <string name="debug_popup_show_config_file">Zobrazit konfigurační soubor</string>
     <string name="dialer_transfer_succeded">Hovor se přepojuje</string>
     <string name="dialer_transfer_failed">Hovor nelze přepojit</string>
@@ -279,7 +279,7 @@
     <string name="chat_settings_auto_download_under_size">Pokud je menší než daná maximální velikost</string>
     <string name="chat_settings_auto_download_max_size_title">Maximální velikost</string>
     <string name="chat_settings_auto_download_max_size_summary">v bajtech</string>
-    <string name="chat_settings_downloaded_media_public_title">Zpřístupnění stažených médií</string>
+    <string name="chat_settings_downloaded_media_public_title">Zpřístupnit stažená média</string>
     <string name="chat_settings_hide_notification_content_title">Skrytí obsahu zpráv v oznámeních</string>
     <string name="chat_settings_launcher_shortcuts_title">Vytvoření zástupců chatovacích místností ve spouštěči</string>
     <string name="chat_settings_hide_notification_content_summary">Zobrazí se pouze jméno odesílatele</string>
@@ -288,7 +288,7 @@
     <string name="chat_settings_hide_rooms_removed_proxies_title">Skrýt chatovací místnosti z odstraněných konfigurací proxy serverů</string>
     <string name="chat_settings_hide_rooms_removed_proxies_summary">Pokud vám chybí chatovací místnosti, zkuste zrušit zaškrtnutí tohoto nastavení</string>
     <string name="chat_settings_go_to_android_notification_settings">Nastavení oznámení systému Android</string>
-    <string name="network_settings_wifi_only_title">Používejte pouze na Wi-Fi</string>
+    <string name="network_settings_wifi_only_title">Používat jen na Wi-Fi</string>
     <string name="network_settings_allow_ipv6_title">Povolit IPv6</string>
     <string name="network_settings_sip_port_title">SIP port</string>
     <string name="contacts_settings_friendlist_subscribe_title">Přihlášení do seznamu přátel</string>
@@ -320,7 +320,7 @@
     <string name="contacts_settings_ldap_sip_attribute_title">Atributy SIP</string>
     <string name="contacts_settings_ldap_sip_domain_title">Doména</string>
     <string name="contacts_settings_ldap_misc_title">Různé</string>
-    <string name="advanced_settings_debug_mode_title">Ladící logy</string>
+    <string name="advanced_settings_debug_mode_title">Logování</string>
     <string name="contacts_settings_ldap_name_attribute_title">Atributy názvu</string>
     <string name="contacts_settings_ldap_debug_title">Ladění</string>
     <string name="advanced_settings_background_mode_title">Režim na pozadí</string>
@@ -337,7 +337,7 @@
     <string name="advanced_settings_android_title">Android</string>
     <string name="advanced_settings_go_to_power_manager_settings">Nastavení správce napájení</string>
     <string name="advanced_settings_vfs_title">Šifrovat vše</string>
-    <string name="advanced_settings_send_debug_logs_title">Odeslat logy</string>
+    <string name="advanced_settings_send_debug_logs_title">Odeslat log</string>
     <string name="advanced_settings_other_title">Další nastavení</string>
     <string name="advanced_settings_disable_fragment_security_summary">Povolení snímání/nahrávání obrazovky v citlivých zobrazeních</string>
     <string name="tunnel_settings_hostname_url_title">Jméno hostitele</string>
@@ -625,7 +625,7 @@
     <string name="call_settings_pause_calls_lost_audio_focus_title">Pozastavení hovorů při ztrátě zaměření zvuku</string>
     <string name="chat_settings_mark_as_read_notif_dismissal_title">Označit jako přečtený po přečtení notifikace</string>
     <string name="chat_settings_auto_download_summary">Zda se mají soubory připojené v přijatých zprávách chatu stahovat automaticky, nebo ne</string>
-    <string name="chat_settings_downloaded_media_public_summary">Se soubory v mizejících zprávách takto nebude nakládáno, toto nefunguje s funkcí automatického stahování</string>
+    <string name="chat_settings_downloaded_media_public_summary">Automatické stahování nefunguje u souborů v mizejích zprávách</string>
     <string name="chat_settings_use_in_app_file_viewer_title">Vždy otevírejte soubory v této aplikaci</string>
     <string name="chat_settings_auto_download_voice_recordings">Automatické stahování příchozích hlasových nahrávek</string>
     <string name="contacts_settings_native_presence_title">Informace o přítomnosti v původním kontaktu</string>
@@ -642,7 +642,7 @@
     <string name="advanced_settings_go_to_battery_optimization_settings">Nastavení optimalizace baterie</string>
     <string name="advanced_settings_go_to_android_app_settings">Nastavení aplikace Android</string>
     <string name="advanced_settings_vfs_summary">Jakmile je jednou povoleno, nelze již vypnout!</string>
-    <string name="advanced_settings_reset_debug_logs_title">Reset logů</string>
+    <string name="advanced_settings_reset_debug_logs_title">Resetovat log</string>
     <string name="advanced_settings_debug_title">Nastavení ladění</string>
     <string name="advanced_settings_disable_fragment_security_title">Vypnutí zabezpečeného režimu uživatelského rozhraní</string>
     <string name="tunnel_settings_port_title">Port</string>
