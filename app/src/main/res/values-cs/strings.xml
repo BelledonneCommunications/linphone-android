@@ -19,7 +19,7 @@
     <string name="tunnel_settings_port_title">Port</string>
     <string name="chat_settings_auto_download_max_size_summary">v bajtech</string>
     <string name="tunnel_settings_dual_mode_summary">Bude používat jeden server pro nahrávání a druhý pro stahování</string>
-    <string name="chat_settings_downloaded_media_public_summary">Se soubory v mizejících zprávách takto nebude nakládáno, toto nefunguje s funkcí automatického stahování</string>
+    <string name="chat_settings_downloaded_media_public_summary">Automatické stahování nefunguje u souborů v mizejích zprávách</string>
     <string name="tunnel_settings_auto_mode">Automaticky</string>
     <string name="chat_settings_hide_rooms_removed_proxies_title">Skrýt chatovací místnosti z odstraněných konfigurací proxy serverů</string>
     <string name="account_settings_user_name_title">Uživatelské jméno</string>
@@ -90,7 +90,7 @@
     <string name="content_description_open_app">Otevřít konverzaci v aplikaci místo bubliny</string>
     <string name="content_description_stop_voice_recording">Zastavit nahrávání hlasu</string>
     <string name="content_descripton_scroll_to_bottom">Posun na konec nebo na první nepřečtenou zprávu</string>
-    <string name="service_description">Toto je nutné pro příjem hovorů na pozadí</string>
+    <string name="service_description">Umožňuje příjem hovorů na pozadí</string>
     <string name="sync_account_name">&appName; kontakty</string>
     <string name="service_name">&appName; Služba</string>
     <string name="logs_upload_failure">Odeslání logu selhalo!</string>
@@ -144,7 +144,7 @@
     <string name="contact_cant_be_deleted">Kontakt nemůže být smazán</string>
     <string name="debug_popup_title">Ladění</string>
     <string name="debug_popup_enable_logs">Povolit logování</string>
-    <string name="debug_popup_send_logs">Odeslat logy</string>
+    <string name="debug_popup_send_logs">Odeslat log</string>
     <string name="debug_popup_show_config_file">Zobrazit konfigurační soubor</string>
     <string name="dialer_transfer_succeded">Hovor se přepojuje</string>
     <string name="dialer_transfer_failed">Hovor nelze přepojit</string>
@@ -390,7 +390,7 @@
     <string name="chat_settings_auto_download_never">Nikdy</string>
     <string name="chat_settings_auto_download_under_size">Pokud je menší než daná maximální velikost</string>
     <string name="chat_settings_auto_download_max_size_title">Maximální velikost</string>
-    <string name="chat_settings_downloaded_media_public_title">Zpřístupnění stažených médií</string>
+    <string name="chat_settings_downloaded_media_public_title">Zpřístupnit stažená média</string>
     <string name="chat_settings_hide_notification_content_title">Skrytí obsahu zpráv v oznámeních</string>
     <string name="chat_settings_hide_notification_content_summary">Zobrazí se pouze jméno odesílatele</string>
     <string name="chat_settings_launcher_shortcuts_title">Vytvoření zástupců chatovacích místností ve spouštěči</string>
@@ -400,7 +400,7 @@
     <string name="chat_settings_use_in_app_file_viewer_title">Vždy otevírejte soubory v této aplikaci</string>
     <string name="chat_settings_use_in_app_file_viewer_summary">I nadále je budete moci exportovat v aplikacích třetích stran</string>
     <string name="chat_settings_auto_download_voice_recordings">Automatické stahování příchozích hlasových nahrávek</string>
-    <string name="network_settings_wifi_only_title">Používejte pouze na Wi-Fi</string>
+    <string name="network_settings_wifi_only_title">Používat jen na Wi-Fi</string>
     <string name="network_settings_allow_ipv6_title">Povolit IPv6</string>
     <string name="network_settings_random_ports_title">Použít náhodné porty</string>
     <string name="network_settings_sip_port_title">SIP port</string>
@@ -436,7 +436,7 @@
     <string name="contacts_settings_ldap_sip_domain_title">Doména</string>
     <string name="contacts_settings_ldap_misc_title">Různé</string>
     <string name="contacts_settings_ldap_debug_title">Ladění</string>
-    <string name="advanced_settings_debug_mode_title">Ladící logy</string>
+    <string name="advanced_settings_debug_mode_title">Logování</string>
     <string name="advanced_settings_background_mode_title">Režim na pozadí</string>
     <string name="advanced_settings_auto_start_title">Spuštění při startu systému</string>
     <string name="advanced_settings_dark_mode_title">Tmavé téma</string>
@@ -452,8 +452,8 @@
     <string name="advanced_settings_go_to_power_manager_settings">Nastavení správce napájení</string>
     <string name="tunnel_settings_hostname_url_title">Jméno hostitele</string>
     <string name="advanced_settings_vfs_summary">Jakmile je jednou povoleno, nelze již vypnout!</string>
-    <string name="advanced_settings_send_debug_logs_title">Odeslat logy</string>
-    <string name="advanced_settings_reset_debug_logs_title">Reset logů</string>
+    <string name="advanced_settings_send_debug_logs_title">Odeslat log</string>
+    <string name="advanced_settings_reset_debug_logs_title">Resetovat log</string>
     <string name="advanced_settings_debug_title">Nastavení ladění</string>
     <string name="advanced_settings_disable_fragment_security_title">Vypnutí zabezpečeného režimu uživatelského rozhraní</string>
     <string name="tunnel_settings_dual_mode_title">Duální režim je zapnutý</string>
