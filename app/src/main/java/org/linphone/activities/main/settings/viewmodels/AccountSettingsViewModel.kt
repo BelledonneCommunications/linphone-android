@@ -448,6 +448,15 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
     }
     val publishPresence = MutableLiveData<Boolean>()
 
+    val disableBundleModeListener = object : SettingListenerStub() {
+        override fun onBoolValueChanged(newValue: Boolean) {
+            val params = account.params.clone()
+            params.isRtpBundleEnabled = !newValue
+            account.params = params
+        }
+    }
+    val disableBundleMode = MutableLiveData<Boolean>()
+
     init {
         update()
         account.addListener(listener)
@@ -509,6 +518,7 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
 
         hideLinkPhoneNumber.value = corePreferences.hideLinkPhoneNumber || params.identityAddress?.domain != corePreferences.defaultDomain
         publishPresence.value = params.isPublishEnabled
+        disableBundleMode.value = !params.isRtpBundleEnabled
     }
 
     private fun initTransportList() {
