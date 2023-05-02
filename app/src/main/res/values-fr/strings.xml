@@ -780,4 +780,6 @@
     <string name="settings_password_protection_dialog_input_hint">Mot de passe</string>
     <string name="settings_password_protection_dialog_ok_label">Valider</string>
     <string name="settings_password_protection_dialog_invalid_input">Le mot de passe est invalide !</string>
+    <string name="account_setting_disable_bundle_mode_title">Désactiver le mode bundle</string>
+    <string name="account_setting_disable_bundle_mode_summary"></string>
 </resources>
