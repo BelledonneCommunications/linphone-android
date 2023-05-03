@@ -165,6 +165,12 @@ class CoreContext(
             }
         }
 
+        override fun onAuthenticationRequested(core: Core, authInfo: AuthInfo, method: AuthMethod) {
+            Log.w(
+                "[Context] Authentication requested for account [${authInfo.username}@${authInfo.domain}] with realm [${authInfo.realm}] using method [$method]"
+            )
+        }
+
         override fun onPushNotificationReceived(core: Core, payload: String?) {
             Log.i("[Context] Push notification received: $payload")
         }

@@ -82,7 +82,7 @@
     <string name="contact_new_choose_sync_account">Choisissez où enregistrer le contact</string>
     <string name="contact_local_sync_account">Enregistrer localement</string>
     <string name="chat_event_participant_removed">%s a quitté le groupe</string>
-    <string name="debug_popup_title">Activer les traces de débogage</string>
+    <string name="debug_popup_title">Débogage</string>
     <string name="debug_popup_enable_logs">Activer les traces</string>
     <string name="debug_popup_disable_logs">Désactiver les traces</string>
     <string name="debug_popup_send_logs">Envoyer les traces</string>
