@@ -55,7 +55,9 @@ class ContactSelectionData(private val searchResult: SearchResult) : ContactData
     }
 
     val hasLimeX3DHCapability: Boolean
-        get() = searchResult.hasCapability(FriendCapability.LimeX3Dh)
+        get() = LinphoneUtils.isEndToEndEncryptedChatAvailable() && searchResult.hasCapability(
+            FriendCapability.LimeX3Dh
+        )
 
     init {
         isDisabled.value = false
