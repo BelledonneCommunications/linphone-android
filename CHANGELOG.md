@@ -26,6 +26,7 @@ Group changes to describe their impact on the project, as follows:
 - Account EXPIRES is now set to 1 month instead of 1 year for sip.linphone.org accounts
 - Replaced voice recordings file name by localized placeholder text, like for video conferences invitations
 - Decline incoming calls with Busy reason if there is at least another active call
+- Open keyboard when replying to a message if no text / file / voice record is pending
 - Removed jetifier as it is not needed
 - Switched from gradle 7.5 to 8.0, requires JDK 17 (instead of 11)
 

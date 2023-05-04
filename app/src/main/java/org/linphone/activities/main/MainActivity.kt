@@ -20,6 +20,7 @@
 package org.linphone.activities.main
 
 import android.content.ComponentCallbacks2
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.net.Uri
@@ -28,6 +29,7 @@ import android.os.Parcelable
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.annotation.StringRes
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.doOnAttach
@@ -246,6 +248,16 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
     fun hideKeyboard() {
         currentFocus?.hideKeyboard()
+    }
+
+    fun showKeyboard() {
+        // Requires a text field to have the focus
+        if (currentFocus != null) {
+            (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+                .showSoftInput(currentFocus, 0)
+        } else {
+            Log.w("[Main Activity] Can't show the keyboard, no focused view")
+        }
     }
 
     fun hideStatusFragment(hide: Boolean) {
