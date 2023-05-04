@@ -42,7 +42,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.File
-import java.lang.IllegalArgumentException
 import kotlinx.coroutines.*
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -57,9 +56,6 @@ import org.linphone.activities.main.chat.viewmodels.*
 import org.linphone.activities.main.chat.views.RichEditTextSendListener
 import org.linphone.activities.main.fragments.MasterFragment
 import org.linphone.activities.main.viewmodels.DialogViewModel
-import org.linphone.activities.navigateToContacts
-import org.linphone.activities.navigateToImageFileViewer
-import org.linphone.activities.navigateToImdn
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.*
 import org.linphone.core.tools.Log
@@ -274,10 +270,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                     val chatMessageEventLog = adapter.currentList[index]
                     val chatMessage = chatMessageEventLog.eventLog.chatMessage
                     if (chatMessage != null) {
-                        chatSendingViewModel.pendingChatMessageToReplyTo.value?.destroy()
-                        chatSendingViewModel.pendingChatMessageToReplyTo.value =
-                            ChatMessageData(chatMessage)
-                        chatSendingViewModel.isPendingAnswer.value = true
+                        replyToChatMessage(chatMessage)
                     }
                 }
             }
@@ -437,10 +430,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             viewLifecycleOwner
         ) {
             it.consume { chatMessage ->
-                chatSendingViewModel.pendingChatMessageToReplyTo.value?.destroy()
-                chatSendingViewModel.pendingChatMessageToReplyTo.value =
-                    ChatMessageData(chatMessage)
-                chatSendingViewModel.isPendingAnswer.value = true
+                replyToChatMessage(chatMessage)
             }
         }
 
@@ -1342,6 +1332,19 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             }
         } catch (iae: IllegalArgumentException) {
             Log.e("[Chat Room] Can't scroll to position $position")
+        }
+    }
+
+    private fun replyToChatMessage(chatMessage: ChatMessage) {
+        chatSendingViewModel.pendingChatMessageToReplyTo.value?.destroy()
+        chatSendingViewModel.pendingChatMessageToReplyTo.value =
+            ChatMessageData(chatMessage)
+        chatSendingViewModel.isPendingAnswer.value = true
+
+        if (chatSendingViewModel.sendMessageEnabled.value == false) {
+            // Open keyboard
+            binding.footer.message.requestFocus()
+            (requireActivity() as MainActivity).showKeyboard()
         }
     }
 }
