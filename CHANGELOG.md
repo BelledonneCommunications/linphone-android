@@ -25,7 +25,6 @@ Group changes to describe their impact on the project, as follows:
 ### Changed
 - Switched Account Creator backend from XMLRPC to FlexiAPI, it now requires to be able to receive a push notification
 - Email account creation form is now only available if TELEPHONY feature is not available, not related to screen size anymore
-- Account EXPIRES is now set to 1 month instead of 1 year for sip.linphone.org accounts
 - Replaced voice recordings file name by localized placeholder text, like for video conferences invitations
 - Decline incoming calls with Busy reason if there is at least another active call
 - Open keyboard when replying to a message if no text / file / voice record is pending

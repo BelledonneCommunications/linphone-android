@@ -498,7 +498,7 @@ class CoreContext(
                 val params = account.params.clone()
 
                 if (fiveOneMigrationRequired) {
-                    val newExpire = 2629800 // 1 month
+                    val newExpire = 31536000 // 1 year
                     if (account.params.expires != newExpire) {
                         Log.i(
                             "[Context] Updating expire on account ${params.identityAddress?.asString()} from ${account.params.expires} to newExpire"
