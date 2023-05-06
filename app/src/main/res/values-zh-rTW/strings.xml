@@ -330,7 +330,7 @@
     <string name="chat_settings_launcher_shortcuts_title">在主畫面中放置聊天室捷徑</string>
     <string name="chat_settings_launcher_shortcuts_summary">如果啟用，將取代為聯絡人捷徑</string>
     <string name="chat_settings_hide_empty_rooms_title">隱藏空的聊天室</string>
-    <string name="chat_settings_hide_rooms_removed_proxies_title">於代理伺服器設定中隱藏聊天室名稱</string>
+    <string name="chat_settings_hide_rooms_removed_proxies_title">於移除的帳號中隱藏聊天室</string>
     <string name="chat_settings_hide_rooms_removed_proxies_summary">若您有一些聊天室不見了，可嘗試取消此選項</string>
     <string name="chat_settings_go_to_android_notification_settings">Android 通知設定</string>
     <string name="network_settings_wifi_only_title">只使用 Wi-Fi</string>
@@ -383,7 +383,7 @@
     <string name="account_settings_link_phone_number_title">連結您的帳號</string>
     <string name="account_settings_delete_title">刪除</string>
     <string name="account_settings_advanced_title">進階</string>
-    <string name="account_settings_push_notification_summary">於代理伺服器設定不取消註冊</string>
+    <string name="account_settings_push_notification_summary">帳號不取消註冊</string>
     <string name="account_settings_transport_title">傳輸方式</string>
     <string name="account_settings_transport_udp">UDP</string>
     <string name="account_settings_transport_tcp">TCP</string>
@@ -794,4 +794,9 @@
     <string name="audio_settings_software_echo_cancellation_title">軟體迴音消除</string>
     <string name="chat_room_presence_away">離開</string>
     <string name="account_setting_disable_bundle_mode_title">關閉 bundle mode</string>
+    <string name="assistant_alternative_way_create_account">若要使用電子郵件地址來註冊帳號：</string>
+    <string name="assistant_no_push_warning">您的裝置看來無法接收推送通知。
+\n
+\n現在起註冊帳號時就必須使用此功能，您無法直接於程式中註冊帳號，但還是可以在網頁中註冊：</string>
+    <string name="assistant_create_email_account_not_validated">您的帳號尚未啟用，請點擊收到的確認信件中的連結</string>
 </resources>
