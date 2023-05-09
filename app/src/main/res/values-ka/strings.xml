@@ -760,7 +760,7 @@
     <string name="conference_schedule_edit">შეხვედრის რედაქტირება</string>
     <string name="conference_update_title">შეხვედრა განახლდა:</string>
     <string name="conference_cancel_title">შეხვედრა გაუქმდა:</string>
-    <string name="conference_schedule_send_updated_invite_chat">&amp;appName;-ს მეშვეობით განახლების გაგზავნა</string>
+    <string name="conference_schedule_send_updated_invite_chat">&appName;-ს მეშვეობით განახლების გაგზავნა</string>
     <string name="account_setting_delete_dialog_title">გსურთ თქვენი ანგარიშის წაშლა\?</string>
     <string name="account_setting_delete_generic_confirmation_dialog">თქვენი ანგარიში წაიშლება მხოლოდ ლოკალურად.
 \nმისი მუდმივად წასაშლელად, გადადით თქვენი SIP მიმწოდებლის ვებსაიტზე.</string>
