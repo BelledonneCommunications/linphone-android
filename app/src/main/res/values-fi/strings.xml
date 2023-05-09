@@ -419,7 +419,6 @@
     <string name="settings_primary_account_title">Päätili</string>
     <string name="settings_primary_account_display_name_title">Näytettävä nimi</string>
     <string name="settings_primary_account_username_title">Käyttäjätunnus</string>
-    <string name="audio_settings_echo_cancellation_title">Kaiunpoisto</string>
     <string name="audio_settings_echo_cancellation_summary">Poistaa vastaanottajan kuuleman kaiun</string>
     <string name="audio_settings_echo_canceller_calibration_title">Kaiunpoiston kalibrointi</string>
     <string name="audio_settings_echo_canceller_calibration_summary">Paina ja aloit kaiunpoiston kalibrointi</string>
