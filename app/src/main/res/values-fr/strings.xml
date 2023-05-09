@@ -785,4 +785,7 @@
     <string name="assistant_alternative_way_create_account">Pour créer un compte avec votre email :</string>
     <string name="assistant_no_push_warning">Votre périphérique ne semble pas supporter les notifications \'push\'.\n\nVous ne pourrez donc pas créer des comptes dans l\'application mais vous pouvez toujours le faire sur notre site internet :</string>
     <string name="assistant_create_email_account_not_validated">Votre compte n\'est pas activé, veuillez cliquer sur le lien que vous avez reçu par courriel</string>
+    <string name="dialog_authentication_required_title">Authentification requise</string>
+    <string name="dialog_authentication_required_message">La connexion a échouée car l\'authentification est manquante ou invalide pour le compte\n%s.\n\nVous pouvez fournir le mot de passe à nouveau ou vérifier la configuration de votre compte dans les paramètres.</string>
+    <string name="dialog_authentication_required_change_password_label">Confirmer</string>
 </resources>
