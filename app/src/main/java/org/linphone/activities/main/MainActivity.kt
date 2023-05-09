@@ -58,6 +58,7 @@ import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.navigateToDialer
 import org.linphone.compatibility.Compatibility
 import org.linphone.contact.ContactsUpdatedListenerStub
+import org.linphone.core.AuthInfo
 import org.linphone.core.CorePreferences
 import org.linphone.core.tools.Log
 import org.linphone.databinding.MainActivityBinding
@@ -140,6 +141,14 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         ) {
             it.consume { message ->
                 showSnackBar(message)
+            }
+        }
+
+        coreContext.authenticationRequestedEvent.observe(
+            this
+        ) {
+            it.consume { authInfo ->
+                showAuthenticationRequestedDialog(authInfo)
             }
         }
 
@@ -626,6 +635,45 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                 dialog.dismiss()
             },
             okLabel
+        )
+
+        dialog.show()
+    }
+
+    private fun showAuthenticationRequestedDialog(
+        authInfo: AuthInfo
+    ) {
+        val identity = "${authInfo.username}@${authInfo.domain}"
+        Log.i("[Main Activity] Showing authentication required dialog for account [$identity]")
+
+        val dialogViewModel = DialogViewModel(
+            getString(R.string.dialog_authentication_required_message, identity),
+            getString(R.string.dialog_authentication_required_title)
+        )
+        dialogViewModel.showPassword = true
+        dialogViewModel.passwordTitle = getString(
+            R.string.settings_password_protection_dialog_input_hint
+        )
+        val dialog = DialogUtils.getDialog(this, dialogViewModel)
+
+        dialogViewModel.showCancelButton {
+            dialog.dismiss()
+        }
+
+        dialogViewModel.showOkButton(
+            {
+                Log.i(
+                    "[Main Activity] Updating password for account [$identity] using auth info [$authInfo]"
+                )
+                val newPassword = dialogViewModel.password
+                authInfo.password = newPassword
+                coreContext.core.addAuthInfo(authInfo)
+
+                coreContext.core.refreshRegisters()
+
+                dialog.dismiss()
+            },
+            getString(R.string.dialog_authentication_required_change_password_label)
         )
 
         dialog.show()
