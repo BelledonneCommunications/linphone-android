@@ -68,11 +68,9 @@ abstract class GenericVideoPreviewFragment<T : ViewDataBinding> : GenericFragmen
     }
 
     protected fun setupLocalViewPreview(localVideoPreview: TextureView, switchCamera: ImageView?) {
-        if (coreContext.core.currentCall?.currentParams?.isVideoEnabled == true) {
-            videoPreviewTextureView = localVideoPreview
-            switchCameraImageView = switchCamera
-            videoPreviewTextureView.setOnTouchListener(previewTouchListener)
-        }
+        videoPreviewTextureView = localVideoPreview
+        switchCameraImageView = switchCamera
+        videoPreviewTextureView.setOnTouchListener(previewTouchListener)
     }
 
     override fun onResume() {
