@@ -799,4 +799,9 @@
 \n
 \n現在起註冊帳號時就必須使用此功能，您無法直接於程式中註冊帳號，但還是可以在網頁中註冊：</string>
     <string name="assistant_create_email_account_not_validated">您的帳號尚未啟用，請點擊收到的確認信件中的連結</string>
+    <string name="dialog_authentication_required_title">需要驗證</string>
+    <string name="dialog_authentication_required_message">由於缺少帳號 %s 的驗證資訊，或是驗證資訊無效，連線失敗。
+\n
+\n您可以再次輸入密碼，或是到設定畫面中確認帳號設定。</string>
+    <string name="dialog_authentication_required_change_password_label">確認</string>
 </resources>
