@@ -317,7 +317,11 @@ class NotificationsManager(private val context: Context) {
         }
 
         Log.i("[Notifications Manager] Notifying [$id] with tag [$tag]")
-        notificationManager.notify(tag, id, notification)
+        try {
+            notificationManager.notify(tag, id, notification)
+        } catch (iae: IllegalArgumentException) {
+            Log.e("[Notifications Manager] Exception occurred: $iae")
+        }
     }
 
     fun cancel(id: Int, tag: String? = null) {
