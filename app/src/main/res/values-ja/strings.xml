@@ -353,12 +353,12 @@
     <string name="audio_settings_echo_tester_summary_is_running">エコーテストを実行中です</string>
     <string name="audio_settings_input_device_title">デフォルトの音声入力デバイス</string>
     <string name="audio_settings_prefer_bluetooth_devices_title">Bluetoothデバイスがある場合はそのデバイスに音声を接続する</string>
-    <string name="audio_settings_microphone_gain_title">Microphone gain</string>
+    <string name="audio_settings_microphone_gain_title">マイクゲイン</string>
     <string name="video_settings_codecs_title">コーデック</string>
     <string name="audio_settings_output_device_title">デフォルトの音声出力デバイス</string>
     <string name="video_settings_camera_device_title">カメラ</string>
     <string name="audio_settings_echo_tester_summary">クリックしてエコーテストを開始</string>
-    <string name="audio_settings_playback_gain_title">Playback gain</string>
+    <string name="audio_settings_playback_gain_title">プレイバックゲイン</string>
     <string name="call_settings_media_encryption_none">なし</string>
     <string name="call_settings_media_encryption_srtp">SRTP</string>
     <string name="call_settings_media_encryption_dtls">DTLS-SRTP</string>
@@ -690,7 +690,7 @@
     <string name="conference_local_title">ローカルグループ通話</string>
     <string name="conference_schedule_later">後で会議を予約しますか？</string>
     <string name="assistant_phone_number_info_title">電話番号の使用目的について</string>
-    <string name="call_stats_jitter_buffer">Jitter buffer:</string>
+    <string name="call_stats_jitter_buffer">ジッターバッファー:</string>
     <string name="audio_settings_playback_gain_summary">(デシベル)</string>
     <string name="audio_settings_microphone_gain_summary">(デシベル)</string>
     <string name="video_settings_bandwidth_limit_summary">キロビット/秒</string>
