@@ -290,7 +290,7 @@
     <string name="call_stats_video_fps_received">受信した映像のFPS:</string>
     <string name="call_stats_sender_loss_rate">送信側の損失率:</string>
     <string name="call_stats_receiver_loss_rate">受信側の損失率:</string>
-    <string name="call_stats_jitter_buffer">Jitter buffer:</string>
+    <string name="call_stats_jitter_buffer">ジッターバッファー:</string>
     <string name="call_stats_encoder_name">エンコーダー:</string>
     <string name="call_stats_decoder_name">デコーダー:</string>
     <string name="call_stats_player_filter">プレーヤーのフィルター:</string>
@@ -376,9 +376,9 @@
     <string name="video_settings_video_preset_title">映像のプリセット</string>
     <string name="video_settings_preferred_fps_title">FPSを優先する</string>
     <string name="assistant_remote_provisioning_url">URL</string>
-    <string name="audio_settings_microphone_gain_title">Microphone gain</string>
+    <string name="audio_settings_microphone_gain_title">マイクゲイン</string>
     <string name="audio_settings_microphone_gain_summary">(デシベル)</string>
-    <string name="audio_settings_playback_gain_title">Playback gain</string>
+    <string name="audio_settings_playback_gain_title">プレイバックゲイン</string>
     <string name="audio_settings_input_device_title">デフォルトの音声入力デバイス</string>
     <string name="assistant_general_terms">利用規約</string>
     <string name="conference_scheduled_cancelled_by_me">会議をキャンセルしました</string>
@@ -406,7 +406,7 @@
     <string name="content_description_switch_camera">前面カメラと背面カメラの切り替え</string>
     <string name="content_description_enable_mic_mute">マイクをミュートにする</string>
     <string name="chat_settings_launcher_shortcuts_title">ホーム画面にチャットルームのショートカットを作成</string>
-    <string name="chat_settings_hide_rooms_removed_proxies_title">削除されたプロキシ設定からチャットルームを非表示にする</string>
+    <string name="chat_settings_hide_rooms_removed_proxies_title">削除されたアカウントからチャットルームを非表示にする</string>
     <string name="assistant_link_account">アカウントを紐付ける</string>
     <string name="assistant_remote_provisioning_wrong_format">URLの形式が不明なため、設定をダウンロードできません…</string>
     <string name="assistant_fetch_apply">取得して適用</string>
@@ -788,4 +788,9 @@
     <string name="chat_room_presence_last_seen_online_today">今日オンラインでした -</string>
     <string name="chat_room_presence_last_seen_online_yesterday">昨日オンラインでした -</string>
     <string name="chat_room_presence_last_seen_online">オンラインでした -</string>
+    <string name="assistant_alternative_way_create_account">Eメールを使用してアカウントを作成:</string>
+    <string name="assistant_no_push_warning">このデバイスではプッシュ通知を受信することができません。
+\n
+\nアカウント作成時にプッシュ通知の受信が必須となったため、このアプリ内ではアカウントを作成することができませんが、当社のWebサイト上で作成することができます:</string>
+    <string name="assistant_create_email_account_not_validated">アカウントがアクティベートされていません。受信したEメールのリンクを開いてください</string>
 </resources>
