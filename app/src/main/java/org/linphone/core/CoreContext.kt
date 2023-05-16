@@ -436,18 +436,22 @@ class CoreContext(
     }
 
     fun onForeground() {
-        // If presence publish is disabled and we call core.setConsolidatedPresence, it will enabled it!
-        if (core.defaultAccount?.params?.isPublishEnabled == true) {
-            Log.i("[Context] App is in foreground, setting consolidated presence to Online")
+        // We can't rely on defaultAccount?.params?.isPublishEnabled
+        // as it will be modified by the SDK when changing the presence status
+        if (corePreferences.publishPresence) {
+            Log.i("[Context] App is in foreground, PUBLISHING presence as Online")
             core.consolidatedPresence = ConsolidatedPresence.Online
         }
     }
 
     fun onBackground() {
-        // If presence publish is disabled and we call core.setConsolidatedPresence, it will enabled it!
-        if (core.defaultAccount?.params?.isPublishEnabled == true) {
-            Log.i("[Context] App is in background, setting consolidated presence to Busy")
-            core.consolidatedPresence = ConsolidatedPresence.Busy
+        // We can't rely on defaultAccount?.params?.isPublishEnabled
+        // as it will be modified by the SDK when changing the presence status
+        if (corePreferences.publishPresence) {
+            Log.i("[Context] App is in background, un-PUBLISHING presence info")
+            // We don't use ConsolidatedPresence.Busy but Offline to do an unsubscribe,
+            // Flexisip will handle the Busy status depending on other devices
+            core.consolidatedPresence = ConsolidatedPresence.Offline
         }
     }
 
