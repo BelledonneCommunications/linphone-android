@@ -75,11 +75,12 @@ class ChatMessageReactionsListData(private val chatMessage: ChatMessage) {
         for (reaction in chatMessage.reactions) {
             val body = reaction.body
             val count = if (reactionsMap.containsKey(body)) {
-                reactionsMap[body] ?: 1
+                reactionsMap[body] ?: 0
             } else {
-                1
+                0
             }
-            reactionsMap[body] = count
+            // getOrDefault isn't available for API 23 :'(
+            reactionsMap[body] = count + 1
             reactionsList.add(reaction)
         }
         reactions.value = reactionsList
