@@ -23,7 +23,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.navGraphViewModels
-import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.voip.ConferenceDisplayMode
 import org.linphone.activities.voip.viewmodels.ConferenceViewModel
@@ -44,8 +43,6 @@ class ConferenceLayoutFragment : GenericVideoPreviewFragment<VoipConferenceLayou
         binding.conferenceViewModel = conferenceViewModel
 
         binding.controlsViewModel = controlsViewModel
-
-        setupLocalViewPreview(binding.localPreviewVideoSurface, binding.switchCamera)
 
         binding.setCancelClickListener {
             goBack()
@@ -84,7 +81,13 @@ class ConferenceLayoutFragment : GenericVideoPreviewFragment<VoipConferenceLayou
             showTooManyParticipantsForMosaicLayoutDialog()
         }
 
-        coreContext.core.nativePreviewWindowId = binding.localPreviewVideoSurface
+        setupLocalVideoPreview(binding.localPreviewVideoSurface, binding.switchCamera)
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        cleanUpLocalVideoPreview(binding.localPreviewVideoSurface)
     }
 
     private fun showTooManyParticipantsForMosaicLayoutDialog() {

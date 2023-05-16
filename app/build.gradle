@@ -247,7 +247,7 @@ dependencies {
     implementation 'org.linphone:linphone-sdk-android:5.2+'
 
     // Only enable leak canary prior to release
-    //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
+    // debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
 }
 
 task generateContactsXml(type: Copy) {

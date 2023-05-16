@@ -67,8 +67,6 @@ class SingleCallFragment : GenericVideoPreviewFragment<VoipSingleCallFragmentBin
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        setupLocalViewPreview(binding.localPreviewVideoSurface, binding.switchCamera)
-
         binding.controlsViewModel = controlsViewModel
 
         binding.callsViewModel = callsViewModel
@@ -193,15 +191,20 @@ class SingleCallFragment : GenericVideoPreviewFragment<VoipSingleCallFragmentBin
                 startActivity(intent)
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
 
         coreContext.core.nativeVideoWindowId = binding.remoteVideoSurface
-        coreContext.core.nativePreviewWindowId = binding.localPreviewVideoSurface
+        setupLocalVideoPreview(binding.localPreviewVideoSurface, binding.switchCamera)
     }
 
     override fun onPause() {
         super.onPause()
 
         controlsViewModel.hideExtraButtons(true)
+        cleanUpLocalVideoPreview(binding.localPreviewVideoSurface)
     }
 
     private fun showCallVideoUpdateDialog(call: Call) {

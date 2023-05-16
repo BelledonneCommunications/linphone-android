@@ -34,7 +34,6 @@ abstract class GenericVideoPreviewFragment<T : ViewDataBinding> : GenericFragmen
     private var switchY: Float = 0f
 
     private var switchCameraImageView: ImageView? = null
-    private lateinit var videoPreviewTextureView: TextureView
 
     private val previewTouchListener = View.OnTouchListener { view, event ->
         when (event.action) {
@@ -67,17 +66,13 @@ abstract class GenericVideoPreviewFragment<T : ViewDataBinding> : GenericFragmen
         }
     }
 
-    protected fun setupLocalViewPreview(localVideoPreview: TextureView, switchCamera: ImageView?) {
-        videoPreviewTextureView = localVideoPreview
+    protected fun setupLocalVideoPreview(localVideoPreview: TextureView, switchCamera: ImageView?) {
         switchCameraImageView = switchCamera
-        videoPreviewTextureView.setOnTouchListener(previewTouchListener)
+        localVideoPreview.setOnTouchListener(previewTouchListener)
+        coreContext.core.nativePreviewWindowId = localVideoPreview
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        if (::videoPreviewTextureView.isInitialized) {
-            coreContext.core.nativePreviewWindowId = videoPreviewTextureView
-        }
+    protected fun cleanUpLocalVideoPreview(localVideoPreview: TextureView) {
+        localVideoPreview.setOnTouchListener(null)
     }
 }
