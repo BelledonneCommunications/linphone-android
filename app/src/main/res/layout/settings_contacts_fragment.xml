@@ -73,6 +73,12 @@
 
                 <include
                     layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/account_setting_publish_presence_title}"
+                    linphone:listener="@{viewModel.publishPresenceListener}"
+                    linphone:checked="@={viewModel.publishPresence}"/>
+
+                <include
+                    layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/contacts_settings_show_new_contact_account_dialog_title}"
                     linphone:subtitle="@{@string/contacts_settings_show_new_contact_account_dialog_summary}"
                     linphone:listener="@{viewModel.showNewContactAccountDialogListener}"

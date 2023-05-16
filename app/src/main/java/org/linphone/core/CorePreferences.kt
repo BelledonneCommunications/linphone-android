@@ -280,6 +280,12 @@ class CorePreferences constructor(private val context: Context) {
             config.setBool("app", "contact_shortcuts", value)
         }
 
+    var publishPresence: Boolean
+        get() = config.getBool("app", "publish_presence", true)
+        set(value) {
+            config.setBool("app", "publish_presence", value)
+        }
+
     /* Call */
 
     var sendEarlyMedia: Boolean
