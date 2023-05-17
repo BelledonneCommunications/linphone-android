@@ -799,4 +799,9 @@
 \n
 \n現在起註冊帳號時就必須使用此功能，您無法直接於程式中註冊帳號，但還是可以在網頁中註冊：</string>
     <string name="assistant_create_email_account_not_validated">您的帳號尚未啟用，請點擊收到的確認信件中的連結</string>
+    <string name="chat_message_one_reaction">%s 反應</string>
+    <string name="chat_message_many_reactions">%s 反應</string>
+    <string name="chat_message_voice_recording_notification_short_desc">語音訊息</string>
+    <string name="chat_message_reaction_received">%s 已由 %s 回覆給：%s</string>
+    <string name="conference_invitation_notification_short_desc">會議邀請</string>
 </resources>
