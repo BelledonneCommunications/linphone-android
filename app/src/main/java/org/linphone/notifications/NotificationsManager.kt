@@ -320,7 +320,14 @@ class NotificationsManager(private val context: Context) {
         try {
             notificationManager.notify(tag, id, notification)
         } catch (iae: IllegalArgumentException) {
-            Log.e("[Notifications Manager] Exception occurred: $iae")
+            if (service == null && tag == null) {
+                // We can't notify using CallStyle if there isn't a foreground service running
+                Log.w(
+                    "[Notifications Manager] Foreground service hasn't started yet, can't display a CallStyle notification until then: $iae"
+                )
+            } else {
+                Log.e("[Notifications Manager] Exception occurred: $iae")
+            }
         }
     }
 
