@@ -35,7 +35,6 @@ import androidx.core.app.Person
 import androidx.core.graphics.drawable.IconCompat
 import androidx.lifecycle.MutableLiveData
 import java.io.IOException
-import kotlinx.coroutines.*
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -378,7 +377,7 @@ fun Friend.getContactForPhoneNumberOrAddress(value: String): String? {
     return null
 }
 
-fun Friend.hasPresence(): Boolean {
+fun Friend.hasLongTermPresence(): Boolean {
     for (address in addresses) {
         val presenceModel = getPresenceModelForUriOrTel(address.asStringUriOnly())
         if (presenceModel != null && presenceModel.basicStatus == PresenceBasicStatus.Open) return true
