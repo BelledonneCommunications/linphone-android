@@ -106,7 +106,7 @@ class VideoSettingsViewModel : GenericSettingsViewModel() {
             try {
                 core.downloadBandwidth = newValue.toInt()
                 core.uploadBandwidth = newValue.toInt()
-            } catch (nfe: NumberFormatException) {
+            } catch (_: NumberFormatException) {
             }
         }
     }

@@ -62,7 +62,8 @@
             app:presenceIcon="@{data.presenceStatus}"
             android:visibility="@{data.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE, default=gone}"
             app:layout_constraintStart_toStartOf="@id/avatar"
-            app:layout_constraintBottom_toBottomOf="@id/avatar"/>
+            app:layout_constraintBottom_toBottomOf="@id/avatar"
+            tools:ignore="ContentDescription"/>
 
         <ImageView
             android:id="@+id/securityLevel"

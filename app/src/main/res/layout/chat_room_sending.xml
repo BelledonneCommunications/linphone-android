@@ -205,6 +205,7 @@
             android:paddingTop="@dimen/chat_message_sending_icons_margin"
             android:paddingBottom="@dimen/chat_message_sending_icons_margin"
             android:src="@drawable/emoji"
+            android:contentDescription="@string/content_description_emoji_picker"
             android:selected="@{chatSendingViewModel.isEmojiPickerOpen}"
             android:visibility="@{chatSendingViewModel.isEmojiPickerVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintHeight_max="@dimen/chat_message_sending_icons_size"

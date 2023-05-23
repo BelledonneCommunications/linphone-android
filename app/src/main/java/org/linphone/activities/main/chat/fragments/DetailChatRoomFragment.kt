@@ -469,7 +469,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 } else {
                     if (path.isEmpty()) {
                         val name = content.name
-                        if (name != null && name.isNotEmpty()) {
+                        if (!name.isNullOrEmpty()) {
                             val file = FileUtils.getFileStoragePath(name)
                             FileUtils.writeIntoFile(content.buffer, file)
                             path = file.absolutePath
@@ -834,7 +834,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             if (_adapter != null) {
                 try {
                     adapter.registerAdapterDataObserver(observer)
-                } catch (ise: IllegalStateException) {}
+                } catch (_: IllegalStateException) {}
             }
 
             // Wait for items to be displayed
@@ -859,7 +859,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         if (_adapter != null) {
             try {
                 adapter.unregisterAdapterDataObserver(observer)
-            } catch (ise: IllegalStateException) {}
+            } catch (_: IllegalStateException) {}
         }
 
         // Conversation isn't visible anymore, any new message received in it will trigger a notification

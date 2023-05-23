@@ -51,7 +51,7 @@ class LinphoneUtils {
                 }
                 val localDisplayName = account?.params?.identityAddress?.displayName
                 // Do not return an empty local display name
-                if (localDisplayName != null && localDisplayName.isNotEmpty()) {
+                if (!localDisplayName.isNullOrEmpty()) {
                     return localDisplayName
                 }
             }
@@ -179,7 +179,7 @@ class LinphoneUtils {
         fun deleteFilesAttachedToChatMessage(chatMessage: ChatMessage) {
             for (content in chatMessage.contents) {
                 val filePath = content.filePath
-                if (filePath != null && filePath.isNotEmpty()) {
+                if (!filePath.isNullOrEmpty()) {
                     Log.i("[Linphone Utils] Deleting file $filePath")
                     FileUtils.deleteFile(filePath)
                 }

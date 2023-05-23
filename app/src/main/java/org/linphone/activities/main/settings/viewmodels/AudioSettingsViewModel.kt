@@ -141,7 +141,7 @@ class AudioSettingsViewModel : GenericSettingsViewModel() {
         override fun onTextValueChanged(newValue: String) {
             try {
                 core.micGainDb = newValue.toFloat()
-            } catch (nfe: NumberFormatException) {
+            } catch (_: NumberFormatException) {
             }
         }
     }
@@ -151,7 +151,7 @@ class AudioSettingsViewModel : GenericSettingsViewModel() {
         override fun onTextValueChanged(newValue: String) {
             try {
                 core.playbackGainDb = newValue.toFloat()
-            } catch (nfe: NumberFormatException) {
+            } catch (_: NumberFormatException) {
             }
         }
     }

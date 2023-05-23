@@ -23,6 +23,7 @@ import android.app.Activity
 import android.app.Notification
 import android.app.PendingIntent
 import android.app.Service
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -454,6 +455,12 @@ class Compatibility {
                 return Api26Compatibility.hasTelecomManagerFeature(context)
             }
             return false
+        }
+
+        fun clearClipboard(clipboard: ClipboardManager) {
+            if (Version.sdkAboveOrEqual(Version.API28_PIE_90)) {
+                Api28Compatibility.clearClipboard(clipboard)
+            }
         }
     }
 }

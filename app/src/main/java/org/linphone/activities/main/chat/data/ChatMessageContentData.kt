@@ -83,7 +83,6 @@ class ChatMessageContentData(
     val conferenceDate = MutableLiveData<String>()
     val conferenceTime = MutableLiveData<String>()
     val conferenceDuration = MutableLiveData<String>()
-    var conferenceAddress = MutableLiveData<String>()
     val showDuration = MutableLiveData<Boolean>()
 
     val isAlone: Boolean
@@ -106,6 +105,8 @@ class ChatMessageContentData(
         Log.i("[Voice Recording] End of file reached")
         stopVoiceRecording()
     }
+
+    private var conferenceAddress: String? = null
 
     private fun getContent(): Content {
         return chatMessage.contents[contentIndex]
@@ -342,9 +343,9 @@ class ChatMessageContentData(
         val conferenceInfo = Factory.instance().createConferenceInfoFromIcalendarContent(content)
         val conferenceUri = conferenceInfo?.uri?.asStringUriOnly()
         if (conferenceInfo != null && conferenceUri != null) {
-            conferenceAddress.value = conferenceUri!!
+            conferenceAddress = conferenceUri!!
             Log.i(
-                "[Content] Created conference info from ICS with address ${conferenceAddress.value}"
+                "[Content] Created conference info from ICS with address $conferenceAddress"
             )
             conferenceSubject.value = conferenceInfo.subject
             conferenceDescription.value = conferenceInfo.description
@@ -407,7 +408,7 @@ class ChatMessageContentData(
     }
 
     fun callConferenceAddress() {
-        val address = conferenceAddress.value
+        val address = conferenceAddress
         if (address == null) {
             Log.e("[Content] Can't call null conference address!")
             return

@@ -50,7 +50,7 @@ abstract class SecureFragment<T : ViewDataBinding> : GenericFragment<T>() {
 
     override fun onResume() {
         if (isSecure) {
-            enableSecureMode(isSecure)
+            enableSecureMode(true)
         } else {
             // This is a workaround to prevent a small blink showing the previous secured screen
             lifecycleScope.launch {

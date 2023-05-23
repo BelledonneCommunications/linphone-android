@@ -21,7 +21,6 @@
 package org.linphone.activities.assistant.viewmodels
 
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.*
 import org.linphone.activities.assistant.fragments.CountryPickerFragment
 import org.linphone.core.AccountCreator
 import org.linphone.core.DialPlan

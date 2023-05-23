@@ -107,7 +107,8 @@
                         android:background="@drawable/led_background"
                         android:padding="@dimen/contact_presence_big_badge_padding"
                         app:presenceIcon="@{viewModel.presenceStatus}"
-                        android:visibility="@{viewModel.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE, default=gone}" />
+                        android:visibility="@{viewModel.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE, default=gone}"
+                        bind:ignore="ContentDescription" />
 
                 </RelativeLayout>
 

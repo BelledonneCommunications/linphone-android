@@ -536,7 +536,7 @@ class ControlsViewModel : ViewModel() {
 
         isVideoEnabled.value = enabled
         showTakeSnapshotButton.value = enabled && corePreferences.showScreenshotButton
-        var isVideoBeingSent = if (coreContext.core.currentCall?.conference != null) {
+        val isVideoBeingSent = if (coreContext.core.currentCall?.conference != null) {
             val videoDirection = coreContext.core.currentCall?.currentParams?.videoDirection
             videoDirection == MediaDirection.SendRecv || videoDirection == MediaDirection.SendOnly
         } else {
