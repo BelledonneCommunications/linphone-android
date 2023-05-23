@@ -33,6 +33,7 @@ Group changes to describe their impact on the project, as follows:
 
 ### Fixed
 - Messages not marked as reply in basic chat room if sending more than 1 content
+- Chat message video attachment display when failing to get a preview picture
 
 ## [5.0.12] - 2023-05-23
 
