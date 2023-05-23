@@ -339,7 +339,7 @@ fun setImageViewScaleType(imageView: ImageView, scaleType: ImageView.ScaleType) 
 
 @BindingAdapter("coilRounded")
 fun loadRoundImageWithCoil(imageView: ImageView, path: String?) {
-    if (path != null && path.isNotEmpty() && FileUtils.isExtensionImage(path)) {
+    if (!path.isNullOrEmpty() && FileUtils.isExtensionImage(path)) {
         imageView.load(path) {
             transformations(CircleCropTransformation())
         }
@@ -350,7 +350,7 @@ fun loadRoundImageWithCoil(imageView: ImageView, path: String?) {
 
 @BindingAdapter("coil")
 fun loadImageWithCoil(imageView: ImageView, path: String?) {
-    if (path != null && path.isNotEmpty() && FileUtils.isExtensionImage(path)) {
+    if (!path.isNullOrEmpty() && FileUtils.isExtensionImage(path)) {
         if (corePreferences.vfsEnabled && path.startsWith(corePreferences.vfsCachePath)) {
             imageView.load(path) {
                 diskCachePolicy(CachePolicy.DISABLED)
@@ -547,9 +547,23 @@ fun loadAvatarWithCoil(imageView: ImageView, path: String?) {
 
 @BindingAdapter("coilVideoPreview")
 fun loadVideoPreview(imageView: ImageView, path: String?) {
-    if (path != null && path.isNotEmpty() && FileUtils.isExtensionVideo(path)) {
+    if (!path.isNullOrEmpty() && FileUtils.isExtensionVideo(path)) {
         imageView.load(path) {
             videoFrameMillis(0)
+            listener(
+                onError = { _, result ->
+                    Log.e(
+                        "[Data Binding] [Coil] Error getting preview picture from video? [$path]: ${result.throwable}"
+                    )
+                },
+                onSuccess = { _, _ ->
+                    // Display "play" button above video preview
+                    LayoutInflater.from(imageView.context).inflate(
+                        R.layout.video_play_button,
+                        imageView.parent as ViewGroup
+                    )
+                }
+            )
         }
     }
 }
