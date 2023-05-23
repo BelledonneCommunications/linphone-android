@@ -72,7 +72,7 @@
                 android:src="@drawable/linphone_logo_tinted"
                 android:layout_marginRight="10dp"
                 android:contentDescription="@string/content_description_linphone_user"
-                android:visibility="@{viewModel.hasPresence() ? View.VISIBLE : View.GONE}" />
+                android:visibility="@{viewModel.hasLongTermPresence ? View.VISIBLE : View.GONE, default=gone}" />
 
             <CheckBox
                 android:onClick="@{() -> selectionListViewModel.onToggleSelect(position)}"

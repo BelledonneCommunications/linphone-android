@@ -34,7 +34,7 @@ import org.linphone.activities.main.contact.data.ContactNumberOrAddressData
 import org.linphone.activities.main.viewmodels.MessageNotifierViewModel
 import org.linphone.contact.ContactDataInterface
 import org.linphone.contact.ContactsUpdatedListenerStub
-import org.linphone.contact.hasPresence
+import org.linphone.contact.hasLongTermPresence
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
@@ -80,6 +80,8 @@ class ContactViewModel(friend: Friend, async: Boolean = false) : MessageNotifier
     val isNativeContact = MutableLiveData<Boolean>()
 
     val readOnlyNativeAddressBook = MutableLiveData<Boolean>()
+
+    val hasLongTermPresence = MutableLiveData<Boolean>()
 
     private val chatRoomListener = object : ChatRoomListenerStub() {
         override fun onStateChanged(chatRoom: ChatRoom, state: ChatRoom.State) {
@@ -147,16 +149,19 @@ class ContactViewModel(friend: Friend, async: Boolean = false) : MessageNotifier
             isNativeContact.postValue(friend.refKey != null)
             presenceStatus.postValue(friend.consolidatedPresence)
             readOnlyNativeAddressBook.postValue(corePreferences.readOnlyNativeContacts)
+            hasLongTermPresence.postValue(friend.hasLongTermPresence())
         } else {
             contact.value = friend
             displayName.value = friend.name
             isNativeContact.value = friend.refKey != null
             presenceStatus.value = friend.consolidatedPresence
             readOnlyNativeAddressBook.value = corePreferences.readOnlyNativeContacts
+            hasLongTermPresence.value = friend.hasLongTermPresence()
         }
 
         friend.addListener {
             presenceStatus.value = it.consolidatedPresence
+            hasLongTermPresence.value = it.hasLongTermPresence()
         }
     }
 
@@ -268,9 +273,5 @@ class ContactViewModel(friend: Friend, async: Boolean = false) : MessageNotifier
             list.add(noa)
         }
         numbersAndAddresses.postValue(list)
-    }
-
-    fun hasPresence(): Boolean {
-        return contact.value?.hasPresence() ?: false
     }
 }
