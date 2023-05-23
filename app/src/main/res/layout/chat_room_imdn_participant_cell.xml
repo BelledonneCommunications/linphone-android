@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View"/>
@@ -37,7 +38,8 @@
             android:background="@drawable/led_background"
             android:padding="@dimen/contact_presence_badge_padding"
             app:presenceIcon="@{data.presenceStatus}"
-            android:visibility="@{data.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE, default=gone}" />
+            android:visibility="@{data.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE, default=gone}"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/time"

@@ -598,7 +598,7 @@ fun addPrefixEditTextValidation(editText: EditText, enabled: Boolean) {
 
         @SuppressLint("SetTextI18n")
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            if (s == null || s.isEmpty() || !s.startsWith("+")) {
+            if (s.isNullOrEmpty() || !s.startsWith("+")) {
                 editText.setText("+$s")
             }
         }

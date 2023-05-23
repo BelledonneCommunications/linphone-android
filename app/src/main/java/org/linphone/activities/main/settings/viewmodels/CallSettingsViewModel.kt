@@ -97,7 +97,7 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
                     Log.w("[Call Settings] Disabling Telecom Manager auto-enable")
                     prefs.manuallyDisabledTelecomManager = true
                 }
-                prefs.useTelecomManager = newValue
+                prefs.useTelecomManager = false
             }
         }
     }
@@ -169,7 +169,7 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
         override fun onTextValueChanged(newValue: String) {
             try {
                 prefs.autoAnswerDelay = newValue.toInt()
-            } catch (nfe: NumberFormatException) {
+            } catch (_: NumberFormatException) {
             }
         }
     }
@@ -179,7 +179,7 @@ class CallSettingsViewModel : GenericSettingsViewModel() {
         override fun onTextValueChanged(newValue: String) {
             try {
                 core.incTimeout = newValue.toInt()
-            } catch (nfe: NumberFormatException) {
+            } catch (_: NumberFormatException) {
             }
         }
     }

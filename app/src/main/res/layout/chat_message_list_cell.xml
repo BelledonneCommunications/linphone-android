@@ -85,7 +85,8 @@
             android:background="@drawable/led_background"
             android:padding="2dp"
             app:presenceIcon="@{data.presenceStatus}"
-            android:visibility="@{data.chatMessage.outgoing || selectionListViewModel.isEditionEnabled || data.hideAvatar || data.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE, default=gone}" />
+            android:visibility="@{data.chatMessage.outgoing || selectionListViewModel.isEditionEnabled || data.hideAvatar || data.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE, default=gone}"
+            tools:ignore="ContentDescription" />
 
         <LinearLayout
             android:id="@+id/background"

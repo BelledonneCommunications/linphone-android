@@ -29,7 +29,7 @@ import org.linphone.activities.assistant.adapters.CountryPickerAdapter
 import org.linphone.core.DialPlan
 import org.linphone.databinding.AssistantCountryPickerFragmentBinding
 
-class CountryPickerFragment() : DialogFragment() {
+class CountryPickerFragment : DialogFragment() {
     private var _binding: AssistantCountryPickerFragmentBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: CountryPickerAdapter

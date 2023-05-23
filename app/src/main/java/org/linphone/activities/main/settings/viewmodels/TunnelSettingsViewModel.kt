@@ -43,7 +43,7 @@ class TunnelSettingsViewModel : GenericSettingsViewModel() {
                 val config = getTunnelConfig()
                 config.port = newValue.toInt()
                 updateTunnelConfig(config)
-            } catch (nfe: NumberFormatException) {
+            } catch (_: NumberFormatException) {
             }
         }
     }
@@ -72,7 +72,7 @@ class TunnelSettingsViewModel : GenericSettingsViewModel() {
                 val config = getTunnelConfig()
                 config.port2 = newValue.toInt()
                 updateTunnelConfig(config)
-            } catch (nfe: NumberFormatException) {
+            } catch (_: NumberFormatException) {
             }
         }
     }

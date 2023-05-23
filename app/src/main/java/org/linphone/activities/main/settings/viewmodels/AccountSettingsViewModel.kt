@@ -289,7 +289,7 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
                 account.params = params
                 transportIndex.value = account.params.transport.toInt()
             } else {
-                Log.e("[Account Settings] Couldn't parse address: $address")
+                Log.e("[Account Settings] Couldn't parse address: $newValue")
             }
         }
     }

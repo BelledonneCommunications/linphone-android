@@ -77,12 +77,12 @@ class ContactsSettingsViewModel : GenericSettingsViewModel() {
         override fun onBoolValueChanged(newValue: Boolean) {
             if (newValue) {
                 if (PermissionHelper.get().hasWriteContactsPermission()) {
-                    prefs.storePresenceInNativeContact = newValue
+                    prefs.storePresenceInNativeContact = true
                 } else {
                     askWriteContactsPermissionForPresenceStorageEvent.value = Event(true)
                 }
             } else {
-                prefs.storePresenceInNativeContact = newValue
+                prefs.storePresenceInNativeContact = false
             }
         }
     }

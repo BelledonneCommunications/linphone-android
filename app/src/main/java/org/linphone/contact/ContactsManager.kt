@@ -410,10 +410,12 @@ fun Friend.getPictureUri(thumbnailPreferred: Boolean = false): Uri? {
                 // Check that the URI points to a real file
                 val contentResolver = coreContext.context.contentResolver
                 try {
-                    if (contentResolver.openAssetFileDescriptor(pictureUri, "r") != null) {
+                    val fd = contentResolver.openAssetFileDescriptor(pictureUri, "r")
+                    if (fd != null) {
+                        fd.close()
                         return pictureUri
                     }
-                } catch (ioe: IOException) { }
+                } catch (_: IOException) { }
             }
 
             // Fallback to thumbnail if high res picture isn't available
@@ -421,11 +423,11 @@ fun Friend.getPictureUri(thumbnailPreferred: Boolean = false): Uri? {
                 lookupUri,
                 ContactsContract.Contacts.Photo.CONTENT_DIRECTORY
             )
-        } catch (e: Exception) { }
+        } catch (_: Exception) { }
     } else if (photo != null) {
         try {
             return Uri.parse(photo)
-        } catch (e: Exception) { }
+        } catch (_: Exception) { }
     }
     return null
 }

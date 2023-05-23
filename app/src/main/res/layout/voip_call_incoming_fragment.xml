@@ -120,6 +120,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:src="@drawable/icon_video_conf_incoming"
+            android:contentDescription="@null"
             app:layout_constraintBottom_toTopOf="@id/participants_count"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_max="120dp"
