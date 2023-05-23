@@ -10,6 +10,12 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [5.0.12] - 2023-05-23
+
+### Fixed
+- Crash if notification manager throws an exception
+- Video preview not moving if call was started in audio only
+
 ## [5.0.11] - 2023-05-09
 
 ### Fixed
