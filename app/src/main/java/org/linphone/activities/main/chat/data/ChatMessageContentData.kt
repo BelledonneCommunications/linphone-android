@@ -182,7 +182,7 @@ class ChatMessageContentData(
         val content = getContent()
         val filePath = content.filePath
         if (content.isFileTransfer) {
-            if (filePath == null || filePath.isEmpty()) {
+            if (filePath.isNullOrEmpty()) {
                 val contentName = content.name
                 if (contentName != null) {
                     val file = FileUtils.getFileStoragePath(contentName)

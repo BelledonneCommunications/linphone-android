@@ -34,6 +34,12 @@ Group changes to describe their impact on the project, as follows:
 ### Fixed
 - Messages not marked as reply in basic chat room if sending more than 1 content
 
+## [5.0.12] - 2023-05-23
+
+### Fixed
+- Crash if notification manager throws an exception
+- Video preview not moving if call was started in audio only
+
 ## [5.0.11] - 2023-05-09
 
 ### Fixed
