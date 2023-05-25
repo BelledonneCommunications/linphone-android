@@ -92,8 +92,8 @@ class TopBarFragment : GenericFragment<FileViewerTopBarFragmentBinding>() {
 
                 val extension = FileUtils.getExtensionFromFileName(filePath)
                 val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
-                when {
-                    FileUtils.isMimeImage(mime) -> {
+                when (FileUtils.getMimeType(mime)) {
+                    FileUtils.MimeType.Image -> {
                         val export = lifecycleScope.async {
                             Compatibility.addImageToMediaStore(requireContext(), content)
                         }
@@ -108,7 +108,7 @@ class TopBarFragment : GenericFragment<FileViewerTopBarFragmentBinding>() {
                             )
                         }
                     }
-                    FileUtils.isMimeVideo(mime) -> {
+                    FileUtils.MimeType.Video -> {
                         val export = lifecycleScope.async {
                             Compatibility.addVideoToMediaStore(requireContext(), content)
                         }
@@ -123,7 +123,7 @@ class TopBarFragment : GenericFragment<FileViewerTopBarFragmentBinding>() {
                             )
                         }
                     }
-                    FileUtils.isMimeAudio(mime) -> {
+                    FileUtils.MimeType.Audio -> {
                         val export = lifecycleScope.async {
                             Compatibility.addAudioToMediaStore(requireContext(), content)
                         }
