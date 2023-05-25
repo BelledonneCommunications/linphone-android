@@ -541,6 +541,7 @@
     <string name="content_descripton_scroll_to_bottom">滑動到畫面底部或第一則未讀訊息</string>
     <string name="content_description_copy_conference_address">複製會議地址</string>
     <string name="content_description_toggle_conference_info_details">切換顯示會議詳細資訊</string>
+    <string name="chat_event_ephemeral_enabled">您開啟了「閱後即焚」訊息：%s</string>
     <string name="chat_settings_use_in_app_file_viewer_title">總是在此程式中開啟</string>
     <string name="chat_settings_use_in_app_file_viewer_summary">還是可以匯出到第三方應用程式</string>
     <string name="chat_settings_auto_download_voice_recordings">自動下載收到的錄音檔</string>
