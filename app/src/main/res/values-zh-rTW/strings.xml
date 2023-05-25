@@ -803,4 +803,6 @@
 \n
 \n您可以再次輸入密碼，或是到設定畫面中確認帳號設定。</string>
     <string name="dialog_authentication_required_change_password_label">確認</string>
+    <string name="chat_event_ephemeral_enabled">您開啟了「閱後即焚」訊息：%s</string>
+    <string name="content_description_emoji_picker">切換顯示表情符號選取器</string>
 </resources>
