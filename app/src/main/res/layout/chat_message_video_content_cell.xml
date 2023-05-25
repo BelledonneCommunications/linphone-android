@@ -17,6 +17,8 @@
     </data>
 
     <RelativeLayout
+        android:onClick="@{() -> data.openFile()}"
+        android:onLongClick="@{longClickListener}"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="@{inflatedVisibility}"
@@ -38,8 +40,6 @@
             app:drawableTopCompat="@drawable/file_video" />
 
         <ImageView
-            android:onClick="@{() -> data.openFile()}"
-            android:onLongClick="@{longClickListener}"
             android:contentDescription="@string/content_description_downloaded_file_transfer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

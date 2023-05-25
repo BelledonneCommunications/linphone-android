@@ -17,6 +17,8 @@
     </data>
 
     <RelativeLayout
+        android:onClick="@{() -> data.openFile()}"
+        android:onLongClick="@{longClickListener}"
         android:layout_width="@dimen/chat_message_bubble_file_size"
         android:layout_height="wrap_content"
         android:minHeight="@dimen/chat_message_bubble_file_size"
@@ -34,8 +36,6 @@
             android:drawablePadding="5dp"
             android:ellipsize="middle"
             android:gravity="center"
-            android:onClick="@{() -> data.openFile()}"
-            android:onLongClick="@{longClickListener}"
             android:singleLine="true"
             android:text="@{data.fileName, default=`test.pdf`}"
             android:textAlignment="center"
