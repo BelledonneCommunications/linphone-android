@@ -275,18 +275,26 @@ class ChatMessageContentData(
                 filePath.value = path
                 val extension = FileUtils.getExtensionFromFileName(path)
                 val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
-                isImage.value = FileUtils.isMimeImage(mime)
-                isVideo.value = FileUtils.isMimeVideo(mime) && !isVoiceRecord
-                isAudio.value = FileUtils.isMimeAudio(mime) && !isVoiceRecord
-                isPdf.value = FileUtils.isMimePdf(mime)
-                val type = when {
-                    isImage.value == true -> "image"
-                    isVideo.value == true -> "video"
-                    isAudio.value == true -> "audio"
-                    isPdf.value == true -> "pdf"
-                    isVoiceRecord -> "voice recording"
-                    isConferenceIcs -> "conference invitation"
-                    else -> "unknown"
+                val type = when (FileUtils.getMimeType(mime)) {
+                    FileUtils.MimeType.Image -> {
+                        isImage.value = true
+                        "image"
+                    }
+                    FileUtils.MimeType.Video -> {
+                        isVideo.value = !isVoiceRecord
+                        if (isVoiceRecord) "voice recording" else "video"
+                    }
+                    FileUtils.MimeType.Audio -> {
+                        isAudio.value = !isVoiceRecord
+                        if (isVoiceRecord) "voice recording" else "audio"
+                    }
+                    FileUtils.MimeType.Pdf -> {
+                        isPdf.value = true
+                        "pdf"
+                    }
+                    else -> {
+                        if (isConferenceIcs) "conference invitation" else "unknown"
+                    }
                 }
                 Log.i(
                     "[Content] Extension for file [$path] is [$extension], deduced type from MIME is [$type]"
@@ -311,23 +319,26 @@ class ChatMessageContentData(
                 Log.w(
                     "[Content] Found ${if (content.isFile) "file" else "file transfer"} content with empty path..."
                 )
-                isImage.value = false
-                isVideo.value = false
-                isAudio.value = false
-                isPdf.value = false
-                isVoiceRecording.value = false
-                isConferenceSchedule.value = false
             }
         } else if (content.isFileTransfer) {
             downloadable.value = true
             val extension = FileUtils.getExtensionFromFileName(fileName.value!!)
             val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
-            isImage.value = FileUtils.isMimeImage(mime)
-            isVideo.value = FileUtils.isMimeVideo(mime)
-            isAudio.value = FileUtils.isMimeAudio(mime)
-            isPdf.value = FileUtils.isMimePdf(mime)
-            isVoiceRecording.value = false
-            isConferenceSchedule.value = false
+            when (FileUtils.getMimeType(mime)) {
+                FileUtils.MimeType.Image -> {
+                    isImage.value = true
+                }
+                FileUtils.MimeType.Video -> {
+                    isVideo.value = true
+                }
+                FileUtils.MimeType.Audio -> {
+                    isAudio.value = true
+                }
+                FileUtils.MimeType.Pdf -> {
+                    isPdf.value = true
+                }
+                else -> {}
+            }
         } else if (content.isIcalendar) {
             Log.i("[Content] Found content with icalendar body")
             isConferenceSchedule.value = true

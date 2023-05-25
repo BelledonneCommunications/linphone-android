@@ -1048,8 +1048,8 @@ class CoreContext(
 
                 val extension = FileUtils.getExtensionFromFileName(filePath)
                 val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
-                when {
-                    FileUtils.isMimeImage(mime) -> {
+                when (FileUtils.getMimeType(mime)) {
+                    FileUtils.MimeType.Image -> {
                         if (Compatibility.addImageToMediaStore(context, content)) {
                             Log.i(
                                 "[Context] Successfully exported image [${content.name}] to Media Store"
@@ -1060,7 +1060,7 @@ class CoreContext(
                             )
                         }
                     }
-                    FileUtils.isMimeVideo(mime) -> {
+                    FileUtils.MimeType.Video -> {
                         if (Compatibility.addVideoToMediaStore(context, content)) {
                             Log.i(
                                 "[Context] Successfully exported video [${content.name}] to Media Store"
@@ -1071,7 +1071,7 @@ class CoreContext(
                             )
                         }
                     }
-                    FileUtils.isMimeAudio(mime) -> {
+                    FileUtils.MimeType.Audio -> {
                         if (Compatibility.addAudioToMediaStore(context, content)) {
                             Log.i(
                                 "[Context] Successfully exported audio [${content.name}] to Media Store"
