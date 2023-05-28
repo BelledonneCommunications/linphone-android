@@ -820,4 +820,9 @@
     <string name="contacts_new_contact_wont_be_visible_warning_dialog">Chystáte se vytvořit nový kontakt bez SIP URI ani telefonního čísla, a proto nebude viditelný v seznamu &appName;.
 \n
 \nChcete jej přesto vytvořit\?</string>
+    <string name="chat_message_voice_recording_notification_short_desc">Hlasová zpráva</string>
+    <string name="chat_message_reaction_received">%s reagoval %s na: %s</string>
+    <string name="chat_message_one_reaction">%s reakce</string>
+    <string name="chat_message_many_reactions">%s reakcí</string>
+    <string name="conference_invitation_notification_short_desc">Pozvánka na schůzku</string>
 </resources>
