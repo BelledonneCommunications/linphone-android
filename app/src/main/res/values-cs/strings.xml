@@ -825,4 +825,11 @@
     <string name="chat_message_one_reaction">%s reakce</string>
     <string name="chat_message_many_reactions">%s reakcí</string>
     <string name="conference_invitation_notification_short_desc">Pozvánka na schůzku</string>
+    <string name="assistant_alternative_way_create_account">Vytvoření účtu pomocí e-mailu:</string>
+    <string name="assistant_no_push_warning">Zdá se, že vaše zařízení nemůže přijímat push notifikace.
+\n
+\nProtože je nyní vyžadujeme pro vytvoření účtu, nebudete si moci vytvořit účet v aplikaci, ale můžete si ho vytvořit na našich webových stránkách:</string>
+    <string name="assistant_create_email_account_not_validated">Váš účet ještě nebyl aktivován, klikněte prosím na odkaz, který jste obdrželi e-mailem</string>
+    <string name="account_setting_disable_bundle_mode_title">Vypnout bundle režim</string>
+    <string name="account_setting_disable_bundle_mode_summary">" "</string>
 </resources>
