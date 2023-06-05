@@ -547,7 +547,7 @@ fun loadAvatarWithCoil(imageView: ImageView, path: String?) {
 
 @BindingAdapter("coilVideoPreview")
 fun loadVideoPreview(imageView: ImageView, path: String?) {
-    if (!path.isNullOrEmpty()) {
+    if (!path.isNullOrEmpty() && FileUtils.isExtensionVideo(path)) {
         imageView.load(path) {
             videoFrameMillis(0)
             listener(
