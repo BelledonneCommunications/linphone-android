@@ -91,6 +91,12 @@ class FileUtils {
             return getMimeType(type) == MimeType.Image
         }
 
+        fun isExtensionVideo(path: String): Boolean {
+            val extension = getExtensionFromFileName(path)
+            val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+            return getMimeType(type) == MimeType.Video
+        }
+
         fun clearExistingPlainFiles() {
             val dir = File(corePreferences.vfsCachePath)
             if (dir.exists()) {
