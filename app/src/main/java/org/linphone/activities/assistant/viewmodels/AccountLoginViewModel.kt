@@ -161,10 +161,19 @@ class AccountLoginViewModel(accountCreator: AccountCreator) : AbstractPhoneViewM
     fun removeInvalidProxyConfig() {
         val account = accountToCheck
         account ?: return
+
+        val core = coreContext.core
         val authInfo = account.findAuthInfo()
-        if (authInfo != null) coreContext.core.removeAuthInfo(authInfo)
-        coreContext.core.removeAccount(account)
+        if (authInfo != null) core.removeAuthInfo(authInfo)
+        core.removeAccount(account)
         accountToCheck = null
+
+        // Make sure there is a valid default account
+        val accounts = core.accountList
+        if (accounts.isNotEmpty() && core.defaultAccount == null) {
+            core.defaultAccount = accounts.first()
+            core.refreshRegisters()
+        }
     }
 
     fun continueEvenIfInvalidCredentials() {

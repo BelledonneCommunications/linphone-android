@@ -117,10 +117,6 @@ class CoreContext(
         MutableLiveData<Event<String>>()
     }
 
-    val authenticationRequestedEvent: MutableLiveData<Event<AuthInfo>> by lazy {
-        MutableLiveData<Event<AuthInfo>>()
-    }
-
     val coroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     private val loggingService = Factory.instance().loggingService
@@ -167,13 +163,6 @@ class CoreContext(
             if (state == RegistrationState.Ok && account == core.defaultAccount) {
                 notificationsManager.stopForegroundNotificationIfPossible()
             }
-        }
-
-        override fun onAuthenticationRequested(core: Core, authInfo: AuthInfo, method: AuthMethod) {
-            Log.w(
-                "[Context] Authentication requested for account [${authInfo.username}@${authInfo.domain}] with realm [${authInfo.realm}] using method [$method]"
-            )
-            authenticationRequestedEvent.value = Event(authInfo)
         }
 
         override fun onPushNotificationReceived(core: Core, payload: String?) {

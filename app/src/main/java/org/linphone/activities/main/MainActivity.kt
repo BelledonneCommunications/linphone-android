@@ -35,6 +35,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.doOnAttach
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentContainerView
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -59,6 +60,9 @@ import org.linphone.activities.navigateToDialer
 import org.linphone.compatibility.Compatibility
 import org.linphone.contact.ContactsUpdatedListenerStub
 import org.linphone.core.AuthInfo
+import org.linphone.core.AuthMethod
+import org.linphone.core.Core
+import org.linphone.core.CoreListenerStub
 import org.linphone.core.CorePreferences
 import org.linphone.core.tools.Log
 import org.linphone.databinding.MainActivityBinding
@@ -109,6 +113,19 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     private var shouldTabsBeVisibleDependingOnDestination = true
     private var shouldTabsBeVisibleDueToOrientationAndKeyboard = true
 
+    private val authenticationRequestedEvent: MutableLiveData<Event<AuthInfo>> by lazy {
+        MutableLiveData<Event<AuthInfo>>()
+    }
+
+    private val coreListener: CoreListenerStub = object : CoreListenerStub() {
+        override fun onAuthenticationRequested(core: Core, authInfo: AuthInfo, method: AuthMethod) {
+            Log.w(
+                "[Main Activity] Authentication requested for account [${authInfo.username}@${authInfo.domain}] with realm [${authInfo.realm}] using method [$method]"
+            )
+            authenticationRequestedEvent.value = Event(authInfo)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -144,7 +161,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             }
         }
 
-        coreContext.authenticationRequestedEvent.observe(
+        authenticationRequestedEvent.observe(
             this
         ) {
             it.consume { authInfo ->
@@ -183,9 +200,11 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     override fun onResume() {
         super.onResume()
         coreContext.contactsManager.addListener(listener)
+        coreContext.core.addListener(coreListener)
     }
 
     override fun onPause() {
+        coreContext.core.removeListener(coreListener)
         coreContext.contactsManager.removeListener(listener)
         super.onPause()
     }
