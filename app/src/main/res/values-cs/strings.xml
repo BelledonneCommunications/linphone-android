@@ -812,5 +812,4 @@
     <string name="content_description_emoji_picker">Přepnutí viditelnosti nástroje pro výběr emoji</string>
     <string name="dialog_authentication_required_title">Vyžadováno ověření</string>
     <string name="dialog_authentication_required_change_password_label">Potvrdit</string>
-    <string name="account_setting_disable_bundle_mode_summary">" "</string>
 </resources>

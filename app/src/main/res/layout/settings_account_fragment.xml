@@ -262,7 +262,6 @@
                 <include
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/account_setting_disable_bundle_mode_title}"
-                    linphone:subtitle="@{@string/account_setting_disable_bundle_mode_summary}"
                     linphone:listener="@{viewModel.disableBundleModeListener}"
                     linphone:checked="@={viewModel.disableBundleMode}"/>
 
