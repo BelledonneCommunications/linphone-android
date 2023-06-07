@@ -119,6 +119,10 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
     private val coreListener: CoreListenerStub = object : CoreListenerStub() {
         override fun onAuthenticationRequested(core: Core, authInfo: AuthInfo, method: AuthMethod) {
+            if (authInfo.username == null || authInfo.domain == null || authInfo.realm == null) {
+                return
+            }
+
             Log.w(
                 "[Main Activity] Authentication requested for account [${authInfo.username}@${authInfo.domain}] with realm [${authInfo.realm}] using method [$method]"
             )
