@@ -723,7 +723,6 @@
     <string name="account_setting_delete_generic_confirmation_dialog">Your account will only be deleted locally.\nTo delete it permanently, go on your SIP provider website.</string>
     <string name="account_setting_delete_sip_linphone_org_confirmation_dialog">Your account will only be deleted locally.\nTo delete it permanently, go to our account management platform:</string>
     <string name="account_setting_disable_bundle_mode_title">Disable bundle mode</string>
-    <string name="account_setting_disable_bundle_mode_summary"></string>
 
     <!-- Conferences settings -->
     <string name="conferences_settings_layout_title">Default layout</string>
