@@ -788,4 +788,6 @@
     <string name="dialog_authentication_required_message">La connexion a échouée car l\'authentification est manquante ou invalide pour le compte\n%s.\n\nVous pouvez fournir le mot de passe à nouveau ou vérifier la configuration de votre compte dans les paramètres.</string>
     <string name="dialog_authentication_required_change_password_label">Confirmer</string>
     <string name="content_description_emoji_picker">Change la visibilité du selectionneur d\'emoji</string>
+    <string name="android_14_full_screen_intent_permission_not_granted">Permission requise pour afficher les appels entrant non accordée</string>
+    <string name="android_14_go_to_full_screen_intent_permission_setting">Afficher</string>
 </resources>

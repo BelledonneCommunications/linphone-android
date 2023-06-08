@@ -54,6 +54,11 @@
     <!-- Needed for foreground service
     (https://developer.android.com/guide/components/foreground-services) -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <!-- Needed for Android 14
+    https://developer.android.com/about/versions/14/behavior-changes-14#fgs-types -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CAMERA" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_PHONE_CALL" />
 
     <application
         android:name=".LinphoneApplication"
