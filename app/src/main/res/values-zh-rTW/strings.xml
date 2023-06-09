@@ -805,4 +805,6 @@
     <string name="dialog_authentication_required_change_password_label">確認</string>
     <string name="chat_event_ephemeral_enabled">您開啟了「閱後即焚」訊息：%s</string>
     <string name="content_description_emoji_picker">切換顯示表情符號選取器</string>
+    <string name="android_14_full_screen_intent_permission_not_granted">尚未授予顯示來電的必要權限</string>
+    <string name="android_14_go_to_full_screen_intent_permission_setting">顯示</string>
 </resources>
