@@ -120,6 +120,17 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         }
     }
 
+    private val keyboardVisibilityListener = object : AppUtils.KeyboardVisibilityListener {
+        override fun onKeyboardVisibilityChanged(visible: Boolean) {
+            if (visible && chatSendingViewModel.isEmojiPickerOpen.value == true) {
+                Log.d(
+                    "[Chat Room] Emoji picker is opened, closing it because keyboard is now visible"
+                )
+                chatSendingViewModel.isEmojiPickerOpen.value = false
+            }
+        }
+    }
+
     private lateinit var chatScrollListener: ChatScrollListener
 
     override fun getLayoutId(): Int {
@@ -200,15 +211,6 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         view.doOnPreDraw {
             // Notifies fragment is ready to be drawn
             sharedViewModel.chatRoomFragmentOpenedEvent.value = Event(true)
-        }
-
-        binding.root.addKeyboardInsetListener { keyboardVisible ->
-            if (keyboardVisible && chatSendingViewModel.isEmojiPickerOpen.value == true) {
-                Log.d(
-                    "[Chat Room] Emoji picker is opened, closing it because keyboard is now visible"
-                )
-                chatSendingViewModel.isEmojiPickerOpen.value = false
-            }
         }
 
         Compatibility.setLocusIdInContentCaptureSession(binding.root, chatRoom)
@@ -845,6 +847,10 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 "[Chat Room] Fragment resuming but viewModel lateinit property isn't initialized!"
             )
         }
+
+        (requireActivity() as MainActivity).addKeyboardVisibilityListener(
+            keyboardVisibilityListener
+        )
     }
 
     override fun onPause() {
@@ -863,6 +869,10 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
         // Conversation isn't visible anymore, any new message received in it will trigger a notification
         coreContext.notificationsManager.currentlyDisplayedChatRoomAddress = null
+
+        (requireActivity() as MainActivity).removeKeyboardVisibilityListener(
+            keyboardVisibilityListener
+        )
 
         super.onPause()
     }
