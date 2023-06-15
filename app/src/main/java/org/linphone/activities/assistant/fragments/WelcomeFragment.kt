@@ -28,6 +28,7 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import java.util.UnknownFormatConversionException
 import java.util.regex.Pattern
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -38,7 +39,6 @@ import org.linphone.activities.navigateToEmailAccountCreation
 import org.linphone.activities.navigateToRemoteProvisioning
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantWelcomeFragmentBinding
-import java.util.UnknownFormatConversionException
 
 class WelcomeFragment : GenericFragment<AssistantWelcomeFragmentBinding>() {
     private lateinit var viewModel: WelcomeViewModel
