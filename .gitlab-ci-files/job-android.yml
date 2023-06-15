@@ -2,7 +2,7 @@ job-android:
 
   stage: build
   tags: [ "docker-android" ]
-  image: gitlab.linphone.org:4567/bc/public/linphone-android/bc-dev-android:20220609_android_33
+  image: gitlab.linphone.org:4567/bc/public/linphone-android/bc-dev-android-33:20230615_restore_old_image_for_5.0_builds
 
   before_script:
     - if ! [ -z ${SCP_PRIVATE_KEY+x} ]; then eval $(ssh-agent -s); fi
@@ -10,7 +10,6 @@ job-android:
     - echo "$ANDROID_SETTINGS_GRADLE" > settings.gradle
 
   script:
-    - sdkmanager
     - scp -oStrictHostKeyChecking=no $DEPLOY_SERVER:$ANDROID_KEYSTORE_PATH app/
     - scp -oStrictHostKeyChecking=no $DEPLOY_SERVER:$ANDROID_GOOGLE_SERVICES_PATH app/
     - echo storePassword=$ANDROID_KEYSTORE_PASSWORD > keystore.properties
