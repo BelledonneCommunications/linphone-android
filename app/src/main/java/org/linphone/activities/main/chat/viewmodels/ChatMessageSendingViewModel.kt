@@ -174,6 +174,10 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
 
     fun onTextToSendChanged(value: String) {
         sendMessageEnabled.value = value.trim().isNotEmpty() || attachments.value?.isNotEmpty() == true || isPendingVoiceRecord.value == true
+
+        val showEmojiPicker = value.isEmpty() || AppUtils.isTextOnlyContainingEmoji(value)
+        isEmojiPickerVisible.value = corePreferences.showEmojiPickerButton && showEmojiPicker
+
         if (value.isNotEmpty()) {
             if (attachFileEnabled.value == true && !corePreferences.allowMultipleFilesAndTextInSameMessage) {
                 attachFileEnabled.value = false

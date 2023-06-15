@@ -125,7 +125,6 @@
             android:layout_width="@dimen/chat_message_sending_icons_size"
             android:layout_height="0dp"
             android:layout_marginStart="@dimen/chat_message_sending_icons_margin"
-            android:layout_marginEnd="@dimen/chat_message_sending_icons_margin"
             android:contentDescription="@string/content_description_attach_file"
             android:enabled="@{chatSendingViewModel.attachFileEnabled &amp;&amp; !chatSendingViewModel.attachFilePending}"
             android:onClick="@{attachFileClickListener}"
@@ -142,7 +141,6 @@
             android:layout_width="@dimen/chat_message_sending_icons_size"
             android:layout_height="0dp"
             android:layout_marginStart="@dimen/chat_message_sending_icons_margin"
-            android:layout_marginEnd="@dimen/chat_message_sending_icons_margin"
             android:contentDescription="@string/content_description_voice_recording"
             android:onClick="@{() -> chatSendingViewModel.toggleVoiceRecording()}"
             android:onTouch="@{voiceRecordingTouchListener}"
@@ -162,6 +160,7 @@
             android:layout_below="@id/emoji_picker"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="@dimen/chat_message_sending_icons_margin"
+            android:layout_marginEnd="@{chatSendingViewModel.isEmojiPickerVisible ? @dimen/margin_0dp : @dimen/chat_message_sending_icons_margin}"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:background="@color/header_background_color"
@@ -174,37 +173,20 @@
             android:textColor="@color/black_color"
             android:textCursorDrawable="@null"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/message_right_barrier"
+            app:layout_constraintEnd_toStartOf="@id/emoji_picker_toggle"
             app:layout_constraintStart_toEndOf="@id/voice_record"
             app:layout_constraintTop_toBottomOf="@id/emoji_picker" />
-
-        <androidx.constraintlayout.widget.Barrier
-            android:id="@+id/message_right_barrier"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:barrierDirection="left"
-            app:constraint_referenced_ids="send_message, emoji_picker_toggle"/>
-
-        <View
-            android:id="@+id/emoji_picker_bg"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@color/header_background_color"
-            app:layout_constraintBottom_toBottomOf="@id/message"
-            app:layout_constraintStart_toStartOf="@id/emoji_picker_toggle"
-            app:layout_constraintEnd_toEndOf="@id/emoji_picker_toggle"
-            app:layout_constraintTop_toTopOf="@id/message" />
 
         <ImageView
             android:id="@+id/emoji_picker_toggle"
             android:layout_width="@dimen/chat_message_sending_icons_size"
             android:layout_height="0dp"
-            android:layout_marginStart="@dimen/chat_message_sending_icons_margin"
             android:layout_marginEnd="@dimen/chat_message_sending_icons_margin"
             android:onClick="@{() -> chatSendingViewModel.toggleEmojiPicker()}"
             android:paddingTop="@dimen/chat_message_sending_icons_margin"
             android:paddingBottom="@dimen/chat_message_sending_icons_margin"
             android:src="@drawable/emoji"
+            android:background="@color/header_background_color"
             android:contentDescription="@string/content_description_emoji_picker"
             android:selected="@{chatSendingViewModel.isEmojiPickerOpen}"
             android:visibility="@{chatSendingViewModel.isEmojiPickerVisible ? View.VISIBLE : View.GONE}"
@@ -217,7 +199,6 @@
             android:id="@+id/send_message"
             android:layout_width="@dimen/chat_message_sending_icons_size"
             android:layout_height="0dp"
-            android:layout_marginStart="@dimen/chat_message_sending_icons_margin"
             android:layout_marginEnd="@dimen/chat_message_sending_icons_margin"
             android:contentDescription="@string/content_description_send_message"
             android:enabled="@{chatSendingViewModel.sendMessageEnabled &amp;&amp; !chatSendingViewModel.attachingFileInProgress}"
