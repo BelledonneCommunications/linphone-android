@@ -44,6 +44,10 @@ import org.linphone.core.tools.Log
  * Various utility methods for application
  */
 class AppUtils {
+    interface KeyboardVisibilityListener {
+        fun onKeyboardVisibilityChanged(visible: Boolean)
+    }
+
     companion object {
         private val emojiCompat: EmojiCompat?
             get() = initEmojiCompat()

@@ -130,6 +130,8 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         }
     }
 
+    private val keyboardVisibilityListeners = arrayListOf<AppUtils.KeyboardVisibilityListener>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -237,13 +239,17 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         registerComponentCallbacks(componentCallbacks)
         findNavController(R.id.nav_host_fragment).addOnDestinationChangedListener(this)
 
-        binding.rootCoordinatorLayout.addKeyboardInsetListener { keyboardVisible ->
+        binding.rootCoordinatorLayout.setKeyboardInsetListener { keyboardVisible ->
             val portraitOrientation = resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
             Log.i(
                 "[Main Activity] Keyboard is ${if (keyboardVisible) "visible" else "invisible"}, orientation is ${if (portraitOrientation) "portrait" else "landscape"}"
             )
             shouldTabsBeVisibleDueToOrientationAndKeyboard = !portraitOrientation || !keyboardVisible
             updateTabsFragmentVisibility()
+
+            for (listener in keyboardVisibilityListeners) {
+                listener.onKeyboardVisibilityChanged(keyboardVisible)
+            }
         }
 
         initOverlay()
@@ -276,6 +282,14 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             else -> false
         }
         updateTabsFragmentVisibility()
+    }
+
+    fun addKeyboardVisibilityListener(listener: AppUtils.KeyboardVisibilityListener) {
+        keyboardVisibilityListeners.add(listener)
+    }
+
+    fun removeKeyboardVisibilityListener(listener: AppUtils.KeyboardVisibilityListener) {
+        keyboardVisibilityListeners.remove(listener)
     }
 
     fun hideKeyboard() {

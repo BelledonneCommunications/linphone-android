@@ -73,7 +73,7 @@ fun View.hideKeyboard() {
     } catch (_: Exception) {}
 }
 
-fun View.addKeyboardInsetListener(lambda: (visible: Boolean) -> Unit) {
+fun View.setKeyboardInsetListener(lambda: (visible: Boolean) -> Unit) {
     doOnLayout {
         var isKeyboardVisible = ViewCompat.getRootWindowInsets(this)?.isVisible(
             WindowInsetsCompat.Type.ime()
@@ -81,8 +81,9 @@ fun View.addKeyboardInsetListener(lambda: (visible: Boolean) -> Unit) {
 
         lambda(isKeyboardVisible)
 
+        // See https://issuetracker.google.com/issues/281942480
         ViewCompat.setOnApplyWindowInsetsListener(
-            this
+            rootView
         ) { view, insets ->
             val keyboardVisibilityChanged = ViewCompat.getRootWindowInsets(view)
                 ?.isVisible(WindowInsetsCompat.Type.ime()) == true
@@ -90,7 +91,7 @@ fun View.addKeyboardInsetListener(lambda: (visible: Boolean) -> Unit) {
                 isKeyboardVisible = keyboardVisibilityChanged
                 lambda(isKeyboardVisible)
             }
-            insets
+            ViewCompat.onApplyWindowInsets(view, insets)
         }
     }
 }
