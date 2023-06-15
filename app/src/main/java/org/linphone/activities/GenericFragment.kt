@@ -83,7 +83,9 @@ abstract class GenericFragment<T : ViewDataBinding> : Fragment() {
                     }
                 }
             } catch (ise: IllegalStateException) {
-                Log.e("[Generic Fragment] ${getFragmentRealClassName()} Can't go back: $ise")
+                Log.e(
+                    "[Generic Fragment] ${getFragmentRealClassName()}.handleOnBackPressed() Can't go back: $ise"
+                )
             }
         }
     }
@@ -137,7 +139,8 @@ abstract class GenericFragment<T : ViewDataBinding> : Fragment() {
         try {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         } catch (ise: IllegalStateException) {
-            Log.e("[Generic Fragment] ${getFragmentRealClassName()} can't go back: $ise")
+            Log.w("[Generic Fragment] ${getFragmentRealClassName()}.goBack() can't go back: $ise")
+            onBackPressedCallback.handleOnBackPressed()
         }
     }
 

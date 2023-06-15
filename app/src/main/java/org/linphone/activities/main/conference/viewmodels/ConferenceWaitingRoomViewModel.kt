@@ -398,13 +398,15 @@ class ConferenceWaitingRoomViewModel : MessageNotifierViewModel() {
 
     private fun onAudioDevicesListUpdated() {
         val bluetoothDeviceAvailable = AudioRouteUtils.isBluetoothAudioRouteAvailable()
+        if (!bluetoothDeviceAvailable && audioRoutesEnabled.value == true) {
+            Log.w(
+                "[Conference Waiting Room] Bluetooth device no longer available, switching back to default microphone & earpiece/speaker"
+            )
+        }
         audioRoutesEnabled.value = bluetoothDeviceAvailable
 
         if (!bluetoothDeviceAvailable) {
             audioRoutesSelected.value = false
-            Log.w(
-                "[Conference Waiting Room] Bluetooth device no longer available, switching back to default microphone & earpiece/speaker"
-            )
             if (isBluetoothHeadsetSelected.value == true) {
                 for (audioDevice in coreContext.core.audioDevices) {
                     if (isVideoEnabled.value == true) {
