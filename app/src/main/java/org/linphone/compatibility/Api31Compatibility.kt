@@ -262,6 +262,8 @@ class Api31Compatibility {
                 context.startForegroundService(intent)
             } catch (fssnae: ForegroundServiceStartNotAllowedException) {
                 Log.e("[Api31 Compatibility] Can't start service as foreground! $fssnae")
+            } catch (se: SecurityException) {
+                Log.e("[Api31 Compatibility] Can't start service as foreground! $se")
             }
         }
 
@@ -270,6 +272,8 @@ class Api31Compatibility {
                 service.startForeground(notifId, notif)
             } catch (fssnae: ForegroundServiceStartNotAllowedException) {
                 Log.e("[Api31 Compatibility] Can't start service as foreground! $fssnae")
+            } catch (se: SecurityException) {
+                Log.e("[Api31 Compatibility] Can't start service as foreground! $se")
             }
         }
 
