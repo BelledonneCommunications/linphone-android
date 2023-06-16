@@ -291,11 +291,27 @@ class Compatibility {
             }
         }
 
-        fun startForegroundService(service: Service, notifId: Int, notif: Notification?) {
+        private fun startForegroundService(service: Service, notifId: Int, notif: Notification?) {
             if (Version.sdkAboveOrEqual(Version.API31_ANDROID_12)) {
                 Api31Compatibility.startForegroundService(service, notifId, notif)
             } else {
                 Api23Compatibility.startForegroundService(service, notifId, notif)
+            }
+        }
+
+        fun startCallForegroundService(service: Service, notifId: Int, notif: Notification) {
+            if (Version.sdkAboveOrEqual(Version.API34_ANDROID_14_UPSIDE_DOWN_CAKE)) {
+                Api34Compatibility.startCallForegroundService(service, notifId, notif)
+            } else {
+                startForegroundService(service, notifId, notif)
+            }
+        }
+
+        fun startDataSyncForegroundService(service: Service, notifId: Int, notif: Notification) {
+            if (Version.sdkAboveOrEqual(Version.API34_ANDROID_14_UPSIDE_DOWN_CAKE)) {
+                Api34Compatibility.startDataSyncForegroundService(service, notifId, notif)
+            } else {
+                startForegroundService(service, notifId, notif)
             }
         }
 

@@ -407,24 +407,23 @@ class NotificationsManager(private val context: Context) {
     fun startForeground(coreService: CoreService, useAutoStartDescription: Boolean = true) {
         service = coreService
 
-        if (serviceNotification == null) {
-            createServiceNotification(useAutoStartDescription)
-            if (serviceNotification == null) {
-                Log.e(
-                    "[Notifications Manager] Failed to create service notification, aborting foreground service!"
-                )
-                return
-            }
+        val notification = serviceNotification ?: createServiceNotification(useAutoStartDescription)
+        if (notification == null) {
+            Log.e(
+                "[Notifications Manager] Failed to create service notification, aborting foreground service!"
+            )
+            return
         }
 
         currentForegroundServiceNotificationId = SERVICE_NOTIF_ID
         Log.i(
             "[Notifications Manager] Starting service as foreground [$currentForegroundServiceNotificationId]"
         )
-        Compatibility.startForegroundService(
+
+        Compatibility.startDataSyncForegroundService(
             coreService,
             currentForegroundServiceNotificationId,
-            serviceNotification
+            notification
         )
     }
 
@@ -438,7 +437,7 @@ class NotificationsManager(private val context: Context) {
 
                 val coreService = service
                 if (coreService != null) {
-                    Compatibility.startForegroundService(
+                    Compatibility.startCallForegroundService(
                         coreService,
                         currentForegroundServiceNotificationId,
                         callNotification
@@ -499,11 +498,11 @@ class NotificationsManager(private val context: Context) {
         service = null
     }
 
-    private fun createServiceNotification(useAutoStartDescription: Boolean = false) {
+    private fun createServiceNotification(useAutoStartDescription: Boolean = false): Notification? {
         val serviceChannel = context.getString(R.string.notification_channel_service_id)
         if (Compatibility.getChannelImportance(notificationManager, serviceChannel) == NotificationManagerCompat.IMPORTANCE_NONE) {
             Log.w("[Notifications Manager] Service channel is disabled!")
-            return
+            return null
         }
 
         val pendingIntent = NavDeepLinkBuilder(context)
@@ -535,7 +534,9 @@ class NotificationsManager(private val context: Context) {
             builder.setContentIntent(pendingIntent)
         }
 
-        serviceNotification = builder.build()
+        val notif = builder.build()
+        serviceNotification = notif
+        return notif
     }
 
     /* Call related */
