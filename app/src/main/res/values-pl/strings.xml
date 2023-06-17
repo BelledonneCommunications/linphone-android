@@ -280,4 +280,13 @@
     <string name="account_settings_delete_title">Usuń</string>
     <string name="received_chat_notification_reply_label">Odpowiedź</string>
     <string name="received_chat_notification_mark_as_read_label">Oznacz jako przeczytane</string>
+    <string name="missed_call_notification_title">Nieodebrane połączenie</string>
+    <string name="missed_call_notification_body">Nieodebrane połączenie od %s</string>
+    <string name="missed_calls_notification_body" tools:ignore="PluralsCandidate">%d nieodebranych połączeń</string>
+    <string name="dialog_do_not_ask_again">Nie pokazuj ponownie</string>
+    <string name="dialog_cancel">Anuluj</string>
+    <string name="dialog_delete">Usuń</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_accept">Akceptuj</string>
+    <string name="dialog_decline">Odrzuć</string>
 </resources>
