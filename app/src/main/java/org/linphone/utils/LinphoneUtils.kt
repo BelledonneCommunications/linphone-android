@@ -288,6 +288,11 @@ class LinphoneUtils {
             return true
         }
 
+        fun isFileTransferAvailable(): Boolean {
+            val core = coreContext.core
+            return core.fileTransferServer.orEmpty().isNotEmpty()
+        }
+
         fun hashPassword(
             userId: String,
             password: String,

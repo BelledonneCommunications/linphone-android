@@ -107,6 +107,8 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
 
     val isEmojiPickerVisible = MutableLiveData<Boolean>()
 
+    val isFileTransferAvailable = MutableLiveData<Boolean>()
+
     val requestKeyboardHidingEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -146,6 +148,7 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         sendMessageEnabled.value = false
         isEmojiPickerOpen.value = false
         isEmojiPickerVisible.value = corePreferences.showEmojiPickerButton
+        isFileTransferAvailable.value = LinphoneUtils.isFileTransferAvailable()
         updateChatRoomReadOnlyState()
     }
 
