@@ -245,7 +245,7 @@
     <string name="call_stats_zrtp_sas_algo">SAS алгоритъм:</string>
     <string name="assistant_welcome_title">Добре дошли</string>
     <string name="assistant_create_account">Създаване на акаунт</string>
-    <string name="assistant_login_linphone">Използване на &amp;appName; акаунт</string>
+    <string name="assistant_login_linphone">Използване на &appName; акаунт</string>
     <string name="assistant_login_generic">Използване на SIP акаунт</string>
     <string name="assistant_remote_provisioning">Изтегляне на настройки от мрежата</string>
     <string name="assistant_ec_calibration">Калибрира се настройката за заглушаване на ехо</string>
@@ -456,7 +456,7 @@
     <string name="account_settings_transport_dtls">DTLS</string>
     <string name="account_settings_avpf_title">AVPF</string>
     <string name="account_setting_disable_bundle_mode_title">Деактивирайте пакетния режим</string>
-    <string name="notification_channel_incoming_call_name">&amp;appName; известия за входящи обаждания</string>
+    <string name="notification_channel_incoming_call_name">&appName; известия за входящи обаждания</string>
     <string name="incoming_call_notification_title">Входящо обаждане</string>
     <string name="incoming_group_call_notification_title">Входящо групово обаждане</string>
     <string name="incoming_call_notification_hangup_action_label">Прекратяване</string>
@@ -590,9 +590,9 @@
     <string name="content_description_presence_online">Потребителя е на линия</string>
     <string name="content_description_presence_offline">Потребителя не е на линия</string>
     <string name="content_description_emoji_picker">Превключване на менюто с emoji</string>
-    <string name="service_name">&amp;appName; услуга</string>
-    <string name="service_auto_start_description">&amp;appName; бе стартирано автоматично</string>
-    <string name="about_weblate_translation">Помогнете да преведем &amp;appName; на различни езици</string>
+    <string name="service_name">&appName; услуга</string>
+    <string name="service_auto_start_description">&appName; бе стартирано автоматично</string>
+    <string name="about_weblate_translation">Помогнете да преведем &appName; на различни езици</string>
     <string name="logs_upload_failure">Неуспешно качване на логове!</string>
     <string name="logs_url_copied_to_clipboard">Адреса на логовете бе копиран в клипборда</string>
     <string name="phone_number">Телефонен номер</string>
@@ -614,7 +614,7 @@
     <string name="quit">Напускане</string>
     <string name="no_missed_call_history">Няма изпуснати обаждания</string>
     <string name="history_delete_many_dialog">Желаете ли да изтриете тези записи\?</string>
-    <string name="contact_send_sms_invite_text">Здравейте, свържете се с мен чрез &amp;appName;! Може да изтеглите безплатното приложение от %s</string>
+    <string name="contact_send_sms_invite_text">Здравейте, свържете се с мен чрез &appName;! Може да изтеглите безплатното приложение от %s</string>
     <string name="contact_editor_write_permission_denied">Няма разрешение да се добавят или редактират контакти</string>
     <string name="contact_delete_one_dialog">Желаете ли да изтриете този контакт\?
 \nСъщия ще бъде премахнат от адресната книга на вашето устройство</string>
@@ -653,8 +653,8 @@
     <string name="conference_schedule_later">Желаете ли да насрочите среща за по-късно\?</string>
     <string name="conference_schedule_subject_hint">Тема на срещата</string>
     <string name="conference_schedule_duration">Времетраене</string>
-    <string name="conference_schedule_send_updated_invite_chat">Изпратете актуализация чрез &amp;appName;</string>
-    <string name="conference_schedule_send_invite_chat_summary">Поканата ще бъде изпратена чрез моят &amp;appName; акаунт</string>
+    <string name="conference_schedule_send_updated_invite_chat">Изпратете актуализация чрез &appName;</string>
+    <string name="conference_schedule_send_invite_chat_summary">Поканата ще бъде изпратена чрез моят &appName; акаунт</string>
     <string name="conference_schedule_edit">Редактиране на среща</string>
     <string name="conference_schedule_address_copied_to_clipboard">Адреса на срещата бе копиран в клипборда</string>
     <string name="conference_schedule_info_not_sent_to_participant">Неуспешно изпращане на информация за срещата до участник</string>
@@ -699,12 +699,12 @@
     <string name="assistant_phone_number_link_info_content">"
 \nВашите приятели ще ви открият по-лесно ако свържете телефонен номер с вашия акаунт
 \n
-\nЩе може да видите в вашата адресна книга кой използва &amp;appName; и вашите приятели ще узнаят, че мога да ви се обадят чрез &amp;appName;
+\nЩе може да видите в вашата адресна книга кой използва &appName; и вашите приятели ще узнаят, че мога да ви се обадят чрез &appName;
 \n"</string>
     <string name="assistant_phone_number_link_info_content_already_account">Вашите приятели ще ви открият по-лесно ако свържете телефонен номер с вашия акаунт
 \n
-\nЩе може да видите в вашата адресна книга кой използва &amp;appName; и вашите приятели ще узнаят, че мога да ви се обадят чрез &amp;appName;.</string>
-    <string name="assistant_generic_account_warning">Някои от опциите като групов чат и краткотрайни съобщения изискват &amp;appName; акаунт.
+\nЩе може да видите в вашата адресна книга кой използва &appName; и вашите приятели ще узнаят, че мога да ви се обадят чрез &appName;.</string>
+    <string name="assistant_generic_account_warning">Някои от опциите като групов чат и краткотрайни съобщения изискват &appName; акаунт.
 \n
 \nТези опции са скрити ако се регистрирате със SIP акаунт от друг доставчик.
 \n
@@ -712,14 +712,14 @@
     <string name="assistant_no_push_warning">Изглежда, че вашето устройство не може да получава известия.
 \n
 \nИзвестията са необходими за да откриете нов акаунт чрез това приложение. За да продължите, моля посетете нашата страница:</string>
-    <string name="assistant_linphone_account">Използвайте вашия &amp;appName; акаунт</string>
+    <string name="assistant_linphone_account">Използвайте вашия &appName; акаунт</string>
     <string name="assistant_create_account_part_1">Моля потвърдете кода на вашата държава и въведете вашия телефонен номер</string>
-    <string name="assistant_linphone_login_desc">Моля въведете вашето &amp;appName; потребителско име и парола</string>
+    <string name="assistant_linphone_login_desc">Моля въведете вашето &appName; потребителско име и парола</string>
     <string name="assistant_login">Вписване</string>
     <string name="assistant_finish">Завършване</string>
     <string name="assistant_generic_account">Използване на SIP акаунт</string>
     <string name="assistant_login_desc">Моля въведете потребителско име и парола на вашия SIP домейн</string>
-    <string name="assistant_create_account_part_email">Моля въведете потребителско име, имейл адрес и парола за вашия &amp;appName; акаунт</string>
+    <string name="assistant_create_account_part_email">Моля въведете потребителско име, имейл адрес и парола за вашия &appName; акаунт</string>
     <string name="assistant_validate_account_1">Вашия акаунт беше създаден успешно. Моля проверете пощенската си кутия за да потвърдите регистрацията:</string>
     <string name="assistant_use_username_instead_or_phone_number">Използвайте потребителско име (незадължително)</string>
     <string name="assistant_create_account_part_2">До вашия телефонен номер бе изпратен SMS с код за потвърждение:</string>
@@ -761,7 +761,7 @@
     <string name="chat_settings_auto_download_voice_recordings">Автоматично изтегляне на входящи гласови съобщения</string>
     <string name="network_settings_allow_ipv6_title">Позволяване на IPv6</string>
     <string name="contacts_settings_friendlist_subscribe_title">Абониране към списъка с приятели</string>
-    <string name="contacts_settings_native_presence_summary">Добавяне на информационни връзки от &amp;appName; контактите към тези на Андроид</string>
+    <string name="contacts_settings_native_presence_summary">Добавяне на информационни връзки от &appName; контактите към тези на Андроид</string>
     <string name="contacts_settings_show_new_contact_account_dialog_title">Винаги да се пита в кой акаунт да се съхраняват нови контакти</string>
     <string name="contacts_settings_ldap_auth_method_anonymous">Анонимен</string>
     <string name="contacts_settings_ldap_search_base_title">База на търсене</string>
@@ -790,9 +790,9 @@
     <string name="account_setting_delete_sip_linphone_org_confirmation_dialog">Вашият акаунт ще бъде изтрит локално.
 \nЗа да го заличите за постоянно, посетете нашата платформа за управление:</string>
     <string name="conferences_settings_layout_title">Оформление по подразбиране</string>
-    <string name="notification_channel_service_name">&amp;appName; известия за услуга</string>
-    <string name="notification_channel_missed_call_name">&amp;appName; известия за пропуснати обаждания</string>
-    <string name="notification_channel_chat_name">&amp;appName; известия за текстови съобщения</string>
+    <string name="notification_channel_service_name">&appName; известия за услуга</string>
+    <string name="notification_channel_missed_call_name">&appName; известия за пропуснати обаждания</string>
+    <string name="notification_channel_chat_name">&appName; известия за текстови съобщения</string>
     <string name="missed_call_notification_body">Пропуснато обаждане от %s</string>
     <string name="zrtp_dialog_explanation">За да повишите нивото на сигурност, проверете следните кодове с вашия кореспондент.</string>
     <string name="dialog_lime_security_message">Съобщенията при разговори с висока сигурност са шифровани от \"край до край\". Възможно е да се повиши нивото на сигурност на разговора когато участниците извършат автентикация. За да извършите същото, обадете се на вашия контакт и следвайте процеса за автентикация.</string>
@@ -806,7 +806,7 @@
     <string name="content_description_toggle_audio_menu">Показване или скриване на звуковото меню</string>
     <string name="content_description_use_speaker">Използване на тон колони за звук</string>
     <string name="content_description_remove_pending_file_transfer">Премахване на файловия трансфер</string>
-    <string name="content_description_linphone_user">Контакта е потребител на &amp;appName;</string>
+    <string name="content_description_linphone_user">Контакта е потребител на &appName;</string>
     <string name="content_description_e2e_encryption_enabled">Шифроване от \"край до край\" е включено</string>
     <string name="content_description_continue_chat_room_creation">Към крайната стъпка при създаване на стая</string>
     <string name="content_description_send_message">Изпращане на съобщение</string>
