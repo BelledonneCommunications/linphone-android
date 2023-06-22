@@ -4,10 +4,12 @@
 
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
+    <color name="red_danger">#DD5F5F</color>
 
     <color name="gray_1">#6C7A87</color>
     <color name="gray_2">#F9F9F9</color>
     <color name="gray_3">#EEF6F8</color>
     <color name="gray_4">#949494</color>
     <color name="gray_5">#4E4E4E</color>
+    <color name="separator">#E5E5EA</color>
 </resources>

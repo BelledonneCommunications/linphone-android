@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.conversations
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -32,10 +33,20 @@ import org.linphone.utils.LinphoneUtils
 
 class ConversationMenuDialogFragment(
     private val chatRoom: ChatRoom,
-    private val mutedCallback: ((Boolean) -> Unit)? = null
+    private val onDismiss: (() -> Unit)? = null
 ) : BottomSheetDialogFragment() {
     companion object {
         const val TAG = "ConversationMenuDialogFragment"
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        onDismiss?.invoke()
+        super.onCancel(dialog)
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        onDismiss?.invoke()
+        super.onDismiss(dialog)
     }
 
     override fun onCreateView(
@@ -47,7 +58,7 @@ class ConversationMenuDialogFragment(
 
         val id = LinphoneUtils.getChatRoomId(chatRoom)
         view.isMuted = corePreferences.chatRoomMuted(id)
-        view.isRead = chatRoom.unreadMessagesCount == 0 // FIXME: danger?
+        view.isRead = chatRoom.unreadMessagesCount == 0
 
         view.setMarkAsReadClickListener {
             coreContext.postOnCoreThread { core ->
@@ -56,15 +67,9 @@ class ConversationMenuDialogFragment(
             dismiss()
         }
 
-        view.setCallClickListener {
-            // TODO
-            dismiss()
-        }
-
         view.setMuteClickListener {
             coreContext.postOnCoreThread { core ->
                 corePreferences.muteChatRoom(id, true)
-                mutedCallback?.invoke(true)
             }
             dismiss()
         }
@@ -72,7 +77,6 @@ class ConversationMenuDialogFragment(
         view.setUnMuteClickListener {
             coreContext.postOnCoreThread { core ->
                 corePreferences.muteChatRoom(id, false)
-                mutedCallback?.invoke(false)
             }
             dismiss()
         }

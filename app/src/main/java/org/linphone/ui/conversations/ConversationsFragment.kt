@@ -27,6 +27,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
 import org.linphone.databinding.ConversationsFragmentBinding
 
@@ -36,6 +37,26 @@ class ConversationsFragment : Fragment() {
         R.id.conversationsFragment
     )
     private lateinit var adapter: ConversationsListAdapter
+
+    private val observer = object : RecyclerView.AdapterDataObserver() {
+        override fun onChanged() {
+            scrollToTop()
+        }
+        override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+            if (positionStart == 0 && itemCount == 1) {
+                scrollToTop()
+            }
+        }
+        override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
+            scrollToTop()
+        }
+    }
+
+    override fun onDestroyView() {
+        binding.conversationsList.adapter = null
+        adapter.unregisterAdapterDataObserver(observer)
+        super.onDestroyView()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,6 +80,7 @@ class ConversationsFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
 
         adapter = ConversationsListAdapter(viewLifecycleOwner)
+        adapter.registerAdapterDataObserver(observer)
         binding.conversationsList.setHasFixedSize(true)
         binding.conversationsList.adapter = adapter
 
@@ -66,10 +88,10 @@ class ConversationsFragment : Fragment() {
             it.consume { data ->
             }
         }
-        adapter.chatRoomMenuClickedEvent.observe(viewLifecycleOwner) {
+        adapter.chatRoomLongClickedEvent.observe(viewLifecycleOwner) {
             it.consume { data ->
-                val modalBottomSheet = ConversationMenuDialogFragment(data.chatRoom) { muted ->
-                    data.isMuted.postValue(muted)
+                val modalBottomSheet = ConversationMenuDialogFragment(data.chatRoom) {
+                    adapter.resetSelection()
                 }
                 modalBottomSheet.show(parentFragmentManager, ConversationMenuDialogFragment.TAG)
             }
@@ -89,5 +111,9 @@ class ConversationsFragment : Fragment() {
                 adapter.notifyItemChanged(index)
             }
         }
+    }
+
+    private fun scrollToTop() {
+        binding.conversationsList.scrollToPosition(0)
     }
 }

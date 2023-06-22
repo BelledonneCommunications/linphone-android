@@ -8,13 +8,13 @@
             name="markAsReadClickListener"
             type="View.OnClickListener" />
         <variable
-            name="callClickListener"
-            type="View.OnClickListener" />
-        <variable
             name="muteClickListener"
             type="View.OnClickListener" />
         <variable
             name="unMuteClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="callClickListener"
             type="View.OnClickListener" />
         <variable
             name="deleteClickListener"
@@ -27,13 +27,109 @@
             type="Boolean" />
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:background="@color/separator">
 
+        <TextView
+            android:id="@+id/mark_as_read"
+            android:onClick="@{markAsReadClickListener}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Marquer comme lu"
+            android:padding="20dp"
+            android:visibility="@{isRead ? View.GONE : View.VISIBLE}"
+            android:textSize="17sp"
+            android:textColor="@color/gray_1"
+            android:gravity="center"
+            android:background="@color/gray_2"
+            android:layout_marginBottom="1dp"
+            app:layout_constraintBottom_toTopOf="@id/mute"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
+        <TextView
+            android:id="@+id/mute"
+            android:onClick="@{muteClickListener}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mettre en sourdine"
+            android:padding="20dp"
+            android:visibility="@{isMuted ? View.GONE : View.VISIBLE}"
+            android:textSize="17sp"
+            android:textColor="@color/gray_1"
+            android:gravity="center"
+            android:background="@color/gray_2"
+            android:layout_marginBottom="1dp"
+            app:layout_constraintBottom_toTopOf="@id/unmute"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/unmute"
+            android:onClick="@{unMuteClickListener}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Enlever la sourdine"
+            android:padding="20dp"
+            android:visibility="@{isMuted ? View.VISIBLE : View.GONE, default=gone}"
+            android:textSize="17sp"
+            android:textColor="@color/gray_1"
+            android:gravity="center"
+            android:background="@color/gray_2"
+            android:layout_marginBottom="1dp"
+            app:layout_constraintBottom_toTopOf="@id/call"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/call"
+            android:onClick="@{callClickListener}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Appeler"
+            android:padding="20dp"
+            android:textSize="17sp"
+            android:textColor="@color/gray_1"
+            android:gravity="center"
+            android:background="@color/gray_2"
+            android:layout_marginBottom="1dp"
+            app:layout_constraintBottom_toTopOf="@id/delete"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/delete"
+            android:onClick="@{deleteClickListener}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Supprimer la conversation"
+            android:padding="20dp"
+            android:textSize="17sp"
+            android:textColor="@color/red_danger"
+            android:gravity="center"
+            android:background="@color/gray_2"
+            android:layout_marginBottom="1dp"
+            app:layout_constraintBottom_toTopOf="@id/leave"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <TextView
+            android:id="@+id/leave"
+            android:onClick="@{deleteClickListener}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Quitter la conversation"
+            android:padding="20dp"
+            android:textSize="17sp"
+            android:textColor="@color/gray_1"
+            android:gravity="center"
+            android:background="@color/gray_2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

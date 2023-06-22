@@ -138,6 +138,11 @@ class ChatRoomData(val chatRoom: ChatRoom) {
         chatRoomDataListener?.onClicked()
     }
 
+    fun onLongClicked(): Boolean {
+        chatRoomDataListener?.onLongClicked()
+        return true
+    }
+
     private fun computeLastMessageImdnIcon(message: ChatMessage) {
         val state = message.state
         showLastMessageImdnIcon.postValue(
@@ -209,4 +214,6 @@ class ChatRoomData(val chatRoom: ChatRoom) {
 
 abstract class ChatRoomDataListener {
     abstract fun onClicked()
+
+    abstract fun onLongClicked()
 }

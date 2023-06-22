@@ -34,9 +34,15 @@ import org.linphone.utils.Event
 class ConversationsListAdapter(
     private val viewLifecycleOwner: LifecycleOwner
 ) : ListAdapter<ChatRoomData, RecyclerView.ViewHolder>(ConversationDiffCallback()) {
-    val chatRoomClickedEvent = MutableLiveData<Event<ChatRoomData>>()
+    val chatRoomClickedEvent: MutableLiveData<Event<ChatRoomData>> by lazy {
+        MutableLiveData<Event<ChatRoomData>>()
+    }
 
-    val chatRoomMenuClickedEvent = MutableLiveData<Event<ChatRoomData>>()
+    val chatRoomLongClickedEvent: MutableLiveData<Event<ChatRoomData>> by lazy {
+        MutableLiveData<Event<ChatRoomData>>()
+    }
+
+    var selectedAdapterPosition = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val binding: ChatRoomListCellBinding = DataBindingUtil.inflate(
@@ -52,6 +58,11 @@ class ConversationsListAdapter(
         (holder as ViewHolder).bind(getItem(position))
     }
 
+    fun resetSelection() {
+        notifyItemChanged(selectedAdapterPosition)
+        selectedAdapterPosition = -1
+    }
+
     inner class ViewHolder(
         val binding: ChatRoomListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
@@ -62,9 +73,17 @@ class ConversationsListAdapter(
                 lifecycleOwner = viewLifecycleOwner
                 executePendingBindings()
 
+                binding.root.isSelected = bindingAdapterPosition == selectedAdapterPosition
+
                 chatRoomData.chatRoomDataListener = object : ChatRoomDataListener() {
                     override fun onClicked() {
                         chatRoomClickedEvent.value = Event(chatRoomData)
+                    }
+
+                    override fun onLongClicked() {
+                        selectedAdapterPosition = bindingAdapterPosition
+                        binding.root.isSelected = true
+                        chatRoomLongClickedEvent.value = Event(chatRoomData)
                     }
                 }
             }
