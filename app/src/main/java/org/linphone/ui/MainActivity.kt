@@ -19,21 +19,29 @@
  */
 package org.linphone.ui
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.loader.app.LoaderManager
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationBarView
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.contacts.ContactLoader
 import org.linphone.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+    companion object {
+        private const val CONTACTS_PERMISSION_REQUEST = 0
+    }
+
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
 
@@ -45,6 +53,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, true)
         super.onCreate(savedInstanceState)
+
+        if (checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+            val manager = LoaderManager.getInstance(this)
+            manager.restartLoader(0, null, ContactLoader())
+        }
 
         while (!coreContext.isReady()) {
             Thread.sleep(20)
@@ -75,6 +88,26 @@ class MainActivity : AppCompatActivity() {
             .addOnDestinationChangedListener(onNavDestinationChangedListener)
 
         getNavBar()?.setupWithNavController(binding.mainNavHostFragment.findNavController())
+
+        if (checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(
+                arrayOf(Manifest.permission.READ_CONTACTS),
+                CONTACTS_PERMISSION_REQUEST
+            )
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == CONTACTS_PERMISSION_REQUEST && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            val manager = LoaderManager.getInstance(this)
+            manager.restartLoader(0, null, ContactLoader())
+        }
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private fun getNavBar(): NavigationBarView? {

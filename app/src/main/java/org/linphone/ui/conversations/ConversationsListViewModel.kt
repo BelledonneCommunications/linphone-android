@@ -27,7 +27,9 @@ import org.linphone.core.ChatMessage
 import org.linphone.core.ChatRoom
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
+import org.linphone.core.tools.Log
 import org.linphone.utils.Event
+import org.linphone.utils.LinphoneUtils
 
 class ConversationsListViewModel : ViewModel() {
     val chatRoomsList = MutableLiveData<ArrayList<ChatRoomData>>()
@@ -40,25 +42,42 @@ class ConversationsListViewModel : ViewModel() {
             chatRoom: ChatRoom,
             state: ChatRoom.State?
         ) {
-            if (state == ChatRoom.State.Created || state == ChatRoom.State.Instantiated || state == ChatRoom.State.Deleted) {
-                updateChatRoomsList()
+            Log.i(
+                "[Conversations List] Chat room [${LinphoneUtils.getChatRoomId(chatRoom)}] state changed [$state]"
+            )
+            when (state) {
+                ChatRoom.State.Created -> {
+                    addChatRoomToList(chatRoom)
+                }
+                ChatRoom.State.Deleted -> {
+                    removeChatRoomFromList(chatRoom)
+                }
+                else -> {}
             }
         }
 
-        override fun onChatRoomRead(core: Core, chatRoom: ChatRoom) {
-            updateChatRoomsList()
+        override fun onMessageSent(core: Core, chatRoom: ChatRoom, message: ChatMessage) {
+            onChatRoomMessageEvent(chatRoom)
         }
 
         override fun onMessagesReceived(
             core: Core,
-            room: ChatRoom,
+            chatRoom: ChatRoom,
             messages: Array<out ChatMessage>
         ) {
-            reorderChatRoomsList()
+            onChatRoomMessageEvent(chatRoom)
         }
 
-        override fun onMessageSent(core: Core, chatRoom: ChatRoom, message: ChatMessage) {
-            reorderChatRoomsList()
+        override fun onChatRoomRead(core: Core, chatRoom: ChatRoom) {
+            notifyChatRoomUpdate(chatRoom)
+        }
+
+        override fun onChatRoomEphemeralMessageDeleted(core: Core, chatRoom: ChatRoom) {
+            notifyChatRoomUpdate(chatRoom)
+        }
+
+        override fun onChatRoomSubjectChanged(core: Core, chatRoom: ChatRoom) {
+            notifyChatRoomUpdate(chatRoom)
         }
     }
 
@@ -76,7 +95,62 @@ class ConversationsListViewModel : ViewModel() {
         super.onCleared()
     }
 
+    private fun addChatRoomToList(chatRoom: ChatRoom) {
+        coreContext.postOnCoreThread { core ->
+            val list = arrayListOf<ChatRoomData>()
+
+            val data = ChatRoomData(chatRoom)
+            list.add(data)
+            list.addAll(chatRoomsList.value.orEmpty())
+
+            chatRoomsList.postValue(list)
+        }
+    }
+
+    private fun removeChatRoomFromList(chatRoom: ChatRoom) {
+        coreContext.postOnCoreThread { core ->
+            val list = arrayListOf<ChatRoomData>()
+
+            for (data in chatRoomsList.value.orEmpty()) {
+                if (LinphoneUtils.getChatRoomId(chatRoom) != LinphoneUtils.getChatRoomId(
+                        data.chatRoom
+                    )
+                ) {
+                    list.add(data)
+                }
+            }
+
+            chatRoomsList.postValue(list)
+        }
+    }
+
+    private fun findChatRoomIndex(chatRoom: ChatRoom): Int {
+        val id = LinphoneUtils.getChatRoomId(chatRoom)
+        for ((index, data) in chatRoomsList.value.orEmpty().withIndex()) {
+            if (id == data.id) {
+                return index
+            }
+        }
+        return -1
+    }
+
+    private fun notifyChatRoomUpdate(chatRoom: ChatRoom) {
+        when (val index = findChatRoomIndex(chatRoom)) {
+            -1 -> updateChatRoomsList()
+            else -> notifyItemChangedEvent.postValue(Event(index))
+        }
+    }
+
+    private fun onChatRoomMessageEvent(chatRoom: ChatRoom) {
+        when (findChatRoomIndex(chatRoom)) {
+            -1 -> updateChatRoomsList()
+            0 -> notifyItemChangedEvent.postValue(Event(0))
+            else -> reorderChatRoomsList()
+        }
+    }
+
     private fun updateChatRoomsList() {
+        Log.i("[Conversations List] Updating chat rooms list")
         coreContext.postOnCoreThread { core ->
             chatRoomsList.value.orEmpty().forEach(ChatRoomData::onCleared)
 
@@ -90,6 +164,7 @@ class ConversationsListViewModel : ViewModel() {
     }
 
     private fun reorderChatRoomsList() {
+        Log.i("[Conversations List] Re-ordering chat rooms list")
         coreContext.postOnCoreThread { core ->
             val list = arrayListOf<ChatRoomData>()
             list.addAll(chatRoomsList.value.orEmpty())

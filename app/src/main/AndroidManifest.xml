@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- To be able to display contacts list & match calling/called numbers -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
     <application
         android:name=".LinphoneApplication"
         android:allowBackup="true"

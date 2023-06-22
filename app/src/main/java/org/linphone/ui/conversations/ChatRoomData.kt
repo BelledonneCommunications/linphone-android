@@ -92,6 +92,27 @@ class ChatRoomData(val chatRoom: ChatRoom) {
     }
 
     init {
+        coreContext.postOnCoreThread { core ->
+            chatRoom.addListener(chatRoomListener)
+        }
+    }
+
+    fun onCleared() {
+        coreContext.postOnCoreThread { core ->
+            chatRoom.removeListener(chatRoomListener)
+        }
+    }
+
+    fun onClicked() {
+        chatRoomDataListener?.onClicked()
+    }
+
+    fun onLongClicked(): Boolean {
+        chatRoomDataListener?.onLongClicked()
+        return true
+    }
+
+    fun update() {
         if (chatRoom.hasCapability(ChatRoom.Capabilities.Basic.toInt())) {
             val remoteAddress = chatRoom.peerAddress
             val friend = chatRoom.core.findFriend(remoteAddress)
@@ -122,25 +143,6 @@ class ChatRoomData(val chatRoom: ChatRoom) {
         isSecureVerified.postValue(chatRoom.securityLevel == ChatRoom.SecurityLevel.Safe)
         isEphemeral.postValue(chatRoom.isEphemeralEnabled)
         isMuted.postValue(areNotificationsMuted())
-
-        coreContext.postOnCoreThread { core ->
-            chatRoom.addListener(chatRoomListener)
-        }
-    }
-
-    fun onCleared() {
-        coreContext.postOnCoreThread { core ->
-            chatRoom.removeListener(chatRoomListener)
-        }
-    }
-
-    fun onClicked() {
-        chatRoomDataListener?.onClicked()
-    }
-
-    fun onLongClicked(): Boolean {
-        chatRoomDataListener?.onLongClicked()
-        return true
     }
 
     private fun computeLastMessageImdnIcon(message: ChatMessage) {
