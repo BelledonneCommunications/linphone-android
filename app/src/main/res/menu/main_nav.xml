@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/conversationsFragment"
+        android:enabled="true"
+        android:icon="@drawable/chat"
+        android:title="Conversations"/>
+    <item
+        android:id="@+id/contactsFragment"
+        android:enabled="true"
+        android:title="Contacts"/>
+    <item
+        android:id="@+id/meetingsFragment"
+        android:enabled="true"
+        android:title="Réunions"/>
+    <item
+        android:id="@+id/historyFragment"
+        android:enabled="true"
+        android:title="Historique"/>
+</menu>

@@ -1,0 +1,94 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'org.jlleitschuh.gradle.ktlint' version '11.3.1'
+    id 'org.jetbrains.kotlin.android'
+}
+
+static def getPackageName() {
+    return "org.linphone"
+}
+
+android {
+    namespace 'org.linphone'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId getPackageName()
+        minSdk 27
+        targetSdk 34
+        versionCode 60000
+        versionName "6.0.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        debug {
+            resValue "string", "file_provider", getPackageName() + ".fileprovider"
+        }
+
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            resValue "string", "file_provider", getPackageName() + ".fileprovider"
+        }
+    }
+    compileOptions {
+        sourceCompatibility = 17
+        targetCompatibility = 17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
+    buildFeatures {
+        dataBinding true
+    }
+}
+
+dependencies {
+    implementation 'androidx.core:core-ktx:1.10.1'
+    implementation 'androidx.appcompat:appcompat:1.7.0-alpha02'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.6.0'
+    implementation 'androidx.gridlayout:gridlayout:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.3.1-rc01'
+    implementation 'androidx.core:core-ktx:+'
+    implementation 'androidx.core:core-ktx:+'
+
+    def nav_version = "2.6.0"
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
+    def emoji_version = "1.4.0-beta05"
+    implementation "androidx.emoji2:emoji2:$emoji_version"
+    implementation "androidx.emoji2:emoji2-emojipicker:$emoji_version"
+
+    // https://github.com/material-components/material-components-android/blob/master/LICENSE Apache v2.0
+    implementation 'com.google.android.material:material:1.9.0'
+
+    // https://github.com/google/flexbox-layout/blob/main/LICENSE Apache v2.0
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
+
+    // https://github.com/coil-kt/coil/blob/main/LICENSE.txt Apache v2.0
+    def coil_version = "2.4.0"
+    implementation("io.coil-kt:coil:$coil_version")
+    implementation("io.coil-kt:coil-gif:$coil_version")
+    implementation("io.coil-kt:coil-svg:$coil_version")
+    implementation("io.coil-kt:coil-video:$coil_version")
+
+    implementation platform('com.google.firebase:firebase-bom:30.3.2')
+    implementation 'com.google.firebase:firebase-messaging'
+
+    implementation 'org.linphone:linphone-sdk-android:5.3+'
+}
+
+ktlint {
+    android = true
+    ignoreFailures = true
+}
+
+project.tasks['preBuild'].dependsOn 'ktlintFormat'
