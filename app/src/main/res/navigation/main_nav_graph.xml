@@ -12,7 +12,10 @@
         tools:layout="@layout/conversations_fragment">
         <action
             android:id="@+id/action_conversationsFragment_to_newConversationFragment"
-            app:destination="@id/newConversationFragment" />
+            app:destination="@id/newConversationFragment"
+            app:enterAnim="@anim/slide_in"
+            app:launchSingleTop="true"
+            app:popExitAnim="@anim/slide_out" />
     </fragment>
 
     <fragment

@@ -23,6 +23,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -31,7 +33,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
 import org.linphone.databinding.ConversationsFragmentBinding
-import org.linphone.ui.MainActivity
 
 class ConversationsFragment : Fragment() {
     private lateinit var binding: ConversationsFragmentBinding
@@ -54,6 +55,10 @@ class ConversationsFragment : Fragment() {
         override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
             scrollToTop()
         }
+    }
+
+    override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
+        return AnimationUtils.loadAnimation(activity, R.anim.hold)
     }
 
     override fun onDestroyView() {
@@ -107,7 +112,6 @@ class ConversationsFragment : Fragment() {
 
             (view.parent as? ViewGroup)?.doOnPreDraw {
                 startPostponedEnterTransition()
-                (requireActivity() as MainActivity).showNavBar()
             }
         }
 

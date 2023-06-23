@@ -30,7 +30,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.R
 import org.linphone.contacts.ContactsSelectionAdapter
 import org.linphone.databinding.NewConversationFragmentBinding
-import org.linphone.ui.MainActivity
 
 class NewConversationFragment : Fragment() {
     private lateinit var binding: NewConversationFragmentBinding
@@ -70,7 +69,6 @@ class NewConversationFragment : Fragment() {
 
             (view.parent as? ViewGroup)?.doOnPreDraw {
                 startPostponedEnterTransition()
-                (requireActivity() as MainActivity).hideNavBar()
             }
         }
 
