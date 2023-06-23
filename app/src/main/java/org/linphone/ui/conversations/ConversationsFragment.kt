@@ -93,6 +93,7 @@ class ConversationsFragment : Fragment() {
             it.consume { data ->
             }
         }
+
         adapter.chatRoomLongClickedEvent.observe(viewLifecycleOwner) {
             it.consume { data ->
                 val modalBottomSheet = ConversationMenuDialogFragment(data.chatRoom) {

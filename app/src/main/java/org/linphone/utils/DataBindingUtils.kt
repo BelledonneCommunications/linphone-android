@@ -22,6 +22,10 @@ package org.linphone.utils
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import coil.load
+import coil.transform.CircleCropTransformation
+import org.linphone.R
+import org.linphone.contacts.ContactData
 
 /**
  * This file contains all the data binding necessary for the app
@@ -35,4 +39,14 @@ fun ImageView.setSourceImageResource(resource: Int) {
 @BindingAdapter("android:textStyle")
 fun TextView.setTypeface(typeface: Int) {
     this.setTypeface(null, typeface)
+}
+
+@BindingAdapter("coilContact")
+fun loadContactPictureWithCoil(imageView: ImageView, contact: ContactData?) {
+    contact ?: return
+
+    imageView.load(contact.avatar) {
+        transformations(CircleCropTransformation())
+        error(R.drawable.contact_avatar)
+    }
 }

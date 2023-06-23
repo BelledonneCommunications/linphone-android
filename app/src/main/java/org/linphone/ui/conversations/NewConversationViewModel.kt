@@ -22,13 +22,14 @@ package org.linphone.ui.conversations
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.contacts.ContactData
 import org.linphone.core.MagicSearch
 import org.linphone.core.MagicSearchListenerStub
 import org.linphone.core.SearchResult
 import org.linphone.core.tools.Log
 
 class NewConversationViewModel : ViewModel() {
-    val contactsList = MutableLiveData<ArrayList<SearchResult>>()
+    val contactsList = MutableLiveData<ArrayList<ContactData>>()
 
     val filter = MutableLiveData<String>()
     private var previousFilter = "NotSet"
@@ -80,8 +81,16 @@ class NewConversationViewModel : ViewModel() {
 
     private fun processMagicSearchResults(results: Array<SearchResult>) {
         Log.i("[New Conversation ViewModel] [${results.size}] matching results")
-        val list = arrayListOf<SearchResult>()
-        list.addAll(results)
+        contactsList.value.orEmpty().forEach(ContactData::onDestroy)
+
+        val list = arrayListOf<ContactData>()
+        for (searchResult in results) {
+            val friend = searchResult.friend
+            if (friend != null) {
+                val data = ContactData(friend)
+                list.add(data)
+            }
+        }
         contactsList.postValue(list)
     }
 }

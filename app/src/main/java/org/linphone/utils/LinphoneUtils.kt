@@ -19,9 +19,14 @@
  */
 package org.linphone.utils
 
+import android.content.ContentUris
+import android.net.Uri
+import android.provider.ContactsContract
+import java.io.IOException
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Address
 import org.linphone.core.ChatRoom
+import org.linphone.core.Friend
 
 class LinphoneUtils {
     companion object {
@@ -51,6 +56,43 @@ class LinphoneUtils {
             }
             // Do not return an empty display name
             return address.displayName ?: address.username ?: address.asString()
+        }
+
+        fun Friend.getPictureUri(thumbnailPreferred: Boolean = false): Uri? {
+            val refKey = refKey
+            if (refKey != null) {
+                try {
+                    val lookupUri = ContentUris.withAppendedId(
+                        ContactsContract.Contacts.CONTENT_URI,
+                        refKey.toLong()
+                    )
+
+                    if (!thumbnailPreferred) {
+                        val pictureUri = Uri.withAppendedPath(
+                            lookupUri,
+                            ContactsContract.Contacts.Photo.DISPLAY_PHOTO
+                        )
+                        // Check that the URI points to a real file
+                        val contentResolver = coreContext.context.contentResolver
+                        try {
+                            if (contentResolver.openAssetFileDescriptor(pictureUri, "r") != null) {
+                                return pictureUri
+                            }
+                        } catch (ioe: IOException) { }
+                    }
+
+                    // Fallback to thumbnail if high res picture isn't available
+                    return Uri.withAppendedPath(
+                        lookupUri,
+                        ContactsContract.Contacts.Photo.CONTENT_DIRECTORY
+                    )
+                } catch (e: Exception) { }
+            } else if (photo != null) {
+                try {
+                    return Uri.parse(photo)
+                } catch (e: Exception) { }
+            }
+            return null
         }
     }
 }

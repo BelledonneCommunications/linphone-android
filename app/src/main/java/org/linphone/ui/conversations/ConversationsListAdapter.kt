@@ -68,7 +68,6 @@ class ConversationsListAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(chatRoomData: ChatRoomData) {
             with(binding) {
-                chatRoomData.update()
                 data = chatRoomData
 
                 lifecycleOwner = viewLifecycleOwner
@@ -98,6 +97,6 @@ private class ConversationDiffCallback : DiffUtil.ItemCallback<ChatRoomData>() {
     }
 
     override fun areContentsTheSame(oldItem: ChatRoomData, newItem: ChatRoomData): Boolean {
-        return false
+        return true
     }
 }

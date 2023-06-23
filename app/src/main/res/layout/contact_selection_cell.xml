@@ -7,7 +7,7 @@
         <import type="org.linphone.core.ConsolidatedPresence"/>
         <variable
             name="data"
-            type="org.linphone.contacts.ContactSelectionData" />
+            type="org.linphone.contacts.ContactData" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,11 +17,13 @@
         <ImageView
             android:id="@+id/avatar"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="36dp"
             android:src="@drawable/contact_avatar"
+            coilContact="@{data}"
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
+            android:adjustViewBounds="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -34,6 +36,8 @@
             android:text="@{data.name, default=`John Doe`}"
             android:textColor="@color/black"
             android:textSize="14sp"
+            android:maxLines="1"
+            android:ellipsize="end"
             app:layout_constraintBottom_toBottomOf="@id/avatar"
             app:layout_constraintStart_toEndOf="@id/avatar"
             app:layout_constraintTop_toTopOf="parent" />

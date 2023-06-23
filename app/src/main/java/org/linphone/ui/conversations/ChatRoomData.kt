@@ -19,11 +19,12 @@
  */
 package org.linphone.ui.conversations
 
-import android.text.SpannableStringBuilder
 import androidx.lifecycle.MutableLiveData
+import java.lang.StringBuilder
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.contacts.ContactData
 import org.linphone.core.*
 import org.linphone.core.tools.Log
 import org.linphone.utils.LinphoneUtils
@@ -36,7 +37,7 @@ class ChatRoomData(val chatRoom: ChatRoom) {
 
     val subject = MutableLiveData<String>()
 
-    val lastMessage = MutableLiveData<SpannableStringBuilder>()
+    val lastMessage = MutableLiveData<String>()
 
     val unreadChatCount = MutableLiveData<Int>()
 
@@ -55,6 +56,8 @@ class ChatRoomData(val chatRoom: ChatRoom) {
     val showLastMessageImdnIcon = MutableLiveData<Boolean>()
 
     val lastMessageImdnIcon = MutableLiveData<Int>()
+
+    val contactData = MutableLiveData<ContactData>()
 
     var chatRoomDataListener: ChatRoomDataListener? = null
 
@@ -92,9 +95,46 @@ class ChatRoomData(val chatRoom: ChatRoom) {
     }
 
     init {
-        coreContext.postOnCoreThread { core ->
-            chatRoom.addListener(chatRoomListener)
+        chatRoom.addListener(chatRoomListener)
+
+        if (chatRoom.hasCapability(ChatRoom.Capabilities.Basic.toInt())) {
+            val remoteAddress = chatRoom.peerAddress
+            val friend = chatRoom.core.findFriend(remoteAddress)
+            if (friend != null) {
+                contactData.postValue(ContactData(friend))
+            }
+            contactName.postValue(friend?.name ?: LinphoneUtils.getDisplayName(remoteAddress))
+        } else {
+            if (chatRoom.hasCapability(ChatRoom.Capabilities.OneToOne.toInt())) {
+                val first = chatRoom.participants.firstOrNull()
+                if (first != null) {
+                    val remoteAddress = first.address
+                    val friend = chatRoom.core.findFriend(remoteAddress)
+                    if (friend != null) {
+                        contactData.postValue(ContactData(friend))
+                    }
+                    contactName.postValue(
+                        friend?.name ?: LinphoneUtils.getDisplayName(remoteAddress)
+                    )
+                } else {
+                    Log.e("[Chat Room Data] No participant in the chat room!")
+                }
+            }
         }
+        subject.postValue(
+            chatRoom.subject ?: LinphoneUtils.getDisplayName(chatRoom.peerAddress)
+        )
+
+        lastMessageImdnIcon.postValue(R.drawable.imdn_sent)
+        showLastMessageImdnIcon.postValue(false)
+        computeLastMessage()
+
+        unreadChatCount.postValue(chatRoom.unreadMessagesCount)
+        isComposing.postValue(chatRoom.isRemoteComposing)
+        isSecure.postValue(chatRoom.securityLevel == ChatRoom.SecurityLevel.Encrypted)
+        isSecureVerified.postValue(chatRoom.securityLevel == ChatRoom.SecurityLevel.Safe)
+        isEphemeral.postValue(chatRoom.isEphemeralEnabled)
+        isMuted.postValue(areNotificationsMuted())
     }
 
     fun onCleared() {
@@ -110,39 +150,6 @@ class ChatRoomData(val chatRoom: ChatRoom) {
     fun onLongClicked(): Boolean {
         chatRoomDataListener?.onLongClicked()
         return true
-    }
-
-    fun update() {
-        if (chatRoom.hasCapability(ChatRoom.Capabilities.Basic.toInt())) {
-            val remoteAddress = chatRoom.peerAddress
-            val friend = chatRoom.core.findFriend(remoteAddress)
-            contactName.postValue(friend?.name ?: LinphoneUtils.getDisplayName(remoteAddress))
-        } else {
-            if (chatRoom.hasCapability(ChatRoom.Capabilities.OneToOne.toInt())) {
-                val first = chatRoom.participants.firstOrNull()
-                if (first != null) {
-                    val remoteAddress = first.address
-                    val friend = chatRoom.core.findFriend(remoteAddress)
-                    contactName.postValue(
-                        friend?.name ?: LinphoneUtils.getDisplayName(remoteAddress)
-                    )
-                } else {
-                    Log.e("[Chat Room Data] No participant in the chat room!")
-                }
-            }
-        }
-        subject.postValue(chatRoom.subject ?: LinphoneUtils.getDisplayName(chatRoom.peerAddress))
-
-        lastMessageImdnIcon.postValue(R.drawable.imdn_sent)
-        showLastMessageImdnIcon.postValue(false)
-        computeLastMessage()
-
-        unreadChatCount.postValue(chatRoom.unreadMessagesCount)
-        isComposing.postValue(chatRoom.isRemoteComposing)
-        isSecure.postValue(chatRoom.securityLevel == ChatRoom.SecurityLevel.Encrypted)
-        isSecureVerified.postValue(chatRoom.securityLevel == ChatRoom.SecurityLevel.Safe)
-        isEphemeral.postValue(chatRoom.isEphemeralEnabled)
-        isMuted.postValue(areNotificationsMuted())
     }
 
     private fun computeLastMessageImdnIcon(message: ChatMessage) {
@@ -174,7 +181,7 @@ class ChatRoomData(val chatRoom: ChatRoom) {
         val lastUpdateTime = chatRoom.lastUpdateTime
         lastUpdate.postValue(TimestampUtils.toString(lastUpdateTime, true))
 
-        val builder = SpannableStringBuilder()
+        val builder = StringBuilder()
 
         val message = chatRoom.lastMessageInHistory
         if (message != null) {
@@ -185,6 +192,10 @@ class ChatRoomData(val chatRoom: ChatRoom) {
                 message.addListener(object : ChatMessageListenerStub() {
                     override fun onMsgStateChanged(message: ChatMessage, state: ChatMessage.State) {
                         computeLastMessageImdnIcon(message)
+
+                        if (state == ChatMessage.State.Displayed) {
+                            message.removeListener(this)
+                        }
                     }
                 })
             }
@@ -206,7 +217,12 @@ class ChatRoomData(val chatRoom: ChatRoom) {
             builder.trim()
         }
 
-        lastMessage.postValue(builder)
+        val text = builder.toString()
+        if (text.length > 128) { // This brings a huge performance improvement when scrolling
+            lastMessage.postValue(text.substring(0, 128))
+        } else {
+            lastMessage.postValue(text)
+        }
     }
 
     private fun areNotificationsMuted(): Boolean {

@@ -23,39 +23,47 @@
         <ImageView
             android:id="@+id/avatar"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="36dp"
             android:src="@{data.isOneToOne ? @drawable/contact_avatar : @drawable/group_avatar, default=@drawable/contact_avatar}"
+            coilContact="@{data.contactData}"
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
+            android:adjustViewBounds="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/title"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:text="@{data.isOneToOne ? data.contactName : data.subject, default=`John Doe`}"
             android:textColor="#000000"
             android:textSize="14sp"
             android:textStyle="@{data.unreadChatCount > 0 ? Typeface.BOLD : Typeface.NORMAL, default=normal}"
+            android:maxLines="1"
+            android:ellipsize="end"
             app:layout_constraintBottom_toTopOf="@id/subtitle"
             app:layout_constraintStart_toEndOf="@id/avatar"
+            app:layout_constraintEnd_toStartOf="@id/date_time"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/subtitle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:text="@{data.isComposing ? `... est en train d'écrire` : data.lastMessage, default=`Lorem Ipsum`}"
             android:textColor="@{data.unreadChatCount > 0 ? @color/black : @color/gray_4, default=@color/gray_4}"
             android:textSize="14sp"
             android:textStyle="@{data.unreadChatCount > 0 ? Typeface.BOLD : Typeface.NORMAL, default=normal}"
+            android:maxLines="1"
+            android:ellipsize="end"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/avatar"
+            app:layout_constraintEnd_toStartOf="@id/end_subtitle_barrier"
             app:layout_constraintTop_toBottomOf="@id/title" />
 
         <TextView
@@ -69,6 +77,13 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/title"
             app:layout_constraintBottom_toBottomOf="@id/title" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/end_subtitle_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="imdn, unread"
+            app:barrierDirection="left" />
 
         <ImageView
             android:id="@+id/imdn"

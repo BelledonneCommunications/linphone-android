@@ -27,12 +27,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
-import org.linphone.core.SearchResult
 import org.linphone.databinding.ContactSelectionCellBinding
 
 class ContactsSelectionAdapter(
     private val viewLifecycleOwner: LifecycleOwner
-) : ListAdapter<SearchResult, RecyclerView.ViewHolder>(SearchResultDiffCallback()) {
+) : ListAdapter<ContactData, RecyclerView.ViewHolder>(ContactDataDiffCallback()) {
     init {
     }
 
@@ -53,10 +52,9 @@ class ContactsSelectionAdapter(
     inner class ViewHolder(
         private val binding: ContactSelectionCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(searchResult: SearchResult) {
+        fun bind(contactData: ContactData) {
             with(binding) {
-                val searchResultViewModel = ContactSelectionData(searchResult)
-                data = searchResultViewModel
+                data = contactData
 
                 lifecycleOwner = viewLifecycleOwner
 
@@ -66,20 +64,18 @@ class ContactsSelectionAdapter(
     }
 }
 
-private class SearchResultDiffCallback : DiffUtil.ItemCallback<SearchResult>() {
+private class ContactDataDiffCallback : DiffUtil.ItemCallback<ContactData>() {
     override fun areItemsTheSame(
-        oldItem: SearchResult,
-        newItem: SearchResult
+        oldItem: ContactData,
+        newItem: ContactData
     ): Boolean {
-        val oldAddress = oldItem.address
-        val newAddress = newItem.address
-        return if (oldAddress != null && newAddress != null) oldAddress.weakEqual(newAddress) else false
+        return oldItem.friend.refKey == newItem.friend.refKey
     }
 
     override fun areContentsTheSame(
-        oldItem: SearchResult,
-        newItem: SearchResult
+        oldItem: ContactData,
+        newItem: ContactData
     ): Boolean {
-        return newItem.friend != null
+        return true
     }
 }
