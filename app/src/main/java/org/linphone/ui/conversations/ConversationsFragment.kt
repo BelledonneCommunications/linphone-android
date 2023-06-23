@@ -23,13 +23,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
 import org.linphone.databinding.ConversationsFragmentBinding
+import org.linphone.ui.MainActivity
 
 class ConversationsFragment : Fragment() {
     private lateinit var binding: ConversationsFragmentBinding
@@ -42,11 +44,13 @@ class ConversationsFragment : Fragment() {
         override fun onChanged() {
             scrollToTop()
         }
+
         override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
             if (positionStart == 0 && itemCount == 1) {
                 scrollToTop()
             }
         }
+
         override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
             scrollToTop()
         }
@@ -64,13 +68,6 @@ class ConversationsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = ConversationsFragmentBinding.inflate(layoutInflater)
-
-        val window = requireActivity().window
-        window.statusBarColor = ContextCompat.getColor(
-            requireContext(),
-            R.color.gray_1
-        )
-
         return binding.root
     }
 
@@ -78,6 +75,9 @@ class ConversationsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = listViewModel
+
+        postponeEnterTransition()
 
         adapter = ConversationsListAdapter(viewLifecycleOwner)
         adapter.registerAdapterDataObserver(observer)
@@ -104,6 +104,11 @@ class ConversationsFragment : Fragment() {
             viewLifecycleOwner
         ) {
             adapter.submitList(it)
+
+            (view.parent as? ViewGroup)?.doOnPreDraw {
+                startPostponedEnterTransition()
+                (requireActivity() as MainActivity).showNavBar()
+            }
         }
 
         listViewModel.notifyItemChangedEvent.observe(viewLifecycleOwner) {
@@ -111,6 +116,16 @@ class ConversationsFragment : Fragment() {
                 adapter.notifyItemChanged(index)
             }
         }
+
+        binding.setOnNewConversationClicked {
+            goToNewConversation()
+        }
+    }
+
+    private fun goToNewConversation() {
+        findNavController().navigate(
+            R.id.action_conversationsFragment_to_newConversationFragment
+        )
     }
 
     private fun scrollToTop() {

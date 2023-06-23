@@ -9,6 +9,16 @@
         android:id="@+id/conversationsFragment"
         android:name="org.linphone.ui.conversations.ConversationsFragment"
         android:label="ConversationsFragment"
-        tools:layout="@layout/conversations_fragment"/>
+        tools:layout="@layout/conversations_fragment">
+        <action
+            android:id="@+id/action_conversationsFragment_to_newConversationFragment"
+            app:destination="@id/newConversationFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/newConversationFragment"
+        android:name="org.linphone.ui.conversations.NewConversationFragment"
+        android:label="NewConversationFragment"
+        tools:layout="@layout/new_conversation_fragment" />
 
 </navigation>

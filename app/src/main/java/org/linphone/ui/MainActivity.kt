@@ -24,11 +24,11 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.loader.app.LoaderManager
-import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationBarView
@@ -45,14 +45,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
 
-    private val onNavDestinationChangedListener =
-        NavController.OnDestinationChangedListener { _, destination, _ ->
-            binding.mainNavView?.visibility = View.VISIBLE
-        }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, true)
         super.onCreate(savedInstanceState)
+
+        window.statusBarColor = ContextCompat.getColor(
+            this,
+            R.color.primary_color
+        )
 
         if (checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
             val manager = LoaderManager.getInstance(this)
@@ -84,9 +84,6 @@ class MainActivity : AppCompatActivity() {
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
 
-        binding.mainNavHostFragment.findNavController()
-            .addOnDestinationChangedListener(onNavDestinationChangedListener)
-
         getNavBar()?.setupWithNavController(binding.mainNavHostFragment.findNavController())
 
         if (checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
@@ -112,5 +109,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun getNavBar(): NavigationBarView? {
         return binding.mainNavView ?: binding.mainNavRail
+    }
+
+    fun hideNavBar() {
+        binding.mainNavView?.visibility = View.GONE
+    }
+
+    fun showNavBar() {
+        binding.mainNavView?.visibility = View.VISIBLE
     }
 }

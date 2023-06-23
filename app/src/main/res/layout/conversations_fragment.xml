@@ -9,10 +9,7 @@
             name="viewModel"
             type="org.linphone.ui.conversations.ConversationsListViewModel" />
         <variable
-            name="backClickListener"
-            type="View.OnClickListener" />
-        <variable
-            name="menuClickListener"
+            name="onNewConversationClicked"
             type="View.OnClickListener" />
     </data>
 
@@ -22,8 +19,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/gray_1">
+            android:layout_height="match_parent">
 
             <TextView
                 android:id="@+id/title"
@@ -70,6 +66,7 @@
                 android:background="@drawable/shape_search_round_background"
                 android:hint="Rechercher un contact, une conversation..."
                 android:textSize="14sp"
+                android:inputType="textPersonName|textNoSuggestions"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title" />
@@ -116,6 +113,7 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/new_conversation"
+            android:onClick="@{onNewConversationClicked}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
