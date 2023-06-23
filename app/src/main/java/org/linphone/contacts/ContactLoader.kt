@@ -258,6 +258,7 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
 
                     fl.updateSubscriptions()
                     Log.i("[Contacts Loader] Subscription(s) updated")
+                    coreContext.contactsManager.onContactsLoaded()
                 }
             } catch (sde: StaleDataException) {
                 Log.e("[Contacts Loader] State Data Exception: $sde")

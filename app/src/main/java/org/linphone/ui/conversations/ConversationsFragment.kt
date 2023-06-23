@@ -91,6 +91,9 @@ class ConversationsFragment : Fragment() {
 
         adapter.chatRoomClickedEvent.observe(viewLifecycleOwner) {
             it.consume { data ->
+                findNavController().navigate(
+                    R.id.action_conversationsFragment_to_conversationFragment
+                )
             }
         }
 
@@ -123,14 +126,10 @@ class ConversationsFragment : Fragment() {
         }
 
         binding.setOnNewConversationClicked {
-            goToNewConversation()
+            findNavController().navigate(
+                R.id.action_conversationsFragment_to_newConversationFragment
+            )
         }
-    }
-
-    private fun goToNewConversation() {
-        findNavController().navigate(
-            R.id.action_conversationsFragment_to_newConversationFragment
-        )
     }
 
     private fun scrollToTop() {

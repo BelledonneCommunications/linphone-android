@@ -65,6 +65,14 @@ class ChatRoomData(val chatRoom: ChatRoom) {
         chatRoom.hasCapability(ChatRoom.Capabilities.OneToOne.toInt())
     }
 
+    private val coreListener = object : CoreListenerStub() {
+        override fun onChatRoomRead(core: Core, chatRoom: ChatRoom) {
+            if (chatRoom == this@ChatRoomData.chatRoom) {
+                unreadChatCount.postValue(chatRoom.unreadMessagesCount)
+            }
+        }
+    }
+
     private val chatRoomListener = object : ChatRoomListenerStub() {
         override fun onIsComposingReceived(
             chatRoom: ChatRoom,
@@ -96,7 +104,42 @@ class ChatRoomData(val chatRoom: ChatRoom) {
 
     init {
         chatRoom.addListener(chatRoomListener)
+        coreContext.core.addListener(coreListener)
 
+        lastMessageImdnIcon.postValue(R.drawable.imdn_sent)
+        showLastMessageImdnIcon.postValue(false)
+
+        contactLookup()
+        subject.postValue(
+            chatRoom.subject ?: LinphoneUtils.getDisplayName(chatRoom.peerAddress)
+        )
+        computeLastMessage()
+
+        unreadChatCount.postValue(chatRoom.unreadMessagesCount)
+        isComposing.postValue(chatRoom.isRemoteComposing)
+        isSecure.postValue(chatRoom.securityLevel == ChatRoom.SecurityLevel.Encrypted)
+        isSecureVerified.postValue(chatRoom.securityLevel == ChatRoom.SecurityLevel.Safe)
+        isEphemeral.postValue(chatRoom.isEphemeralEnabled)
+        isMuted.postValue(areNotificationsMuted())
+    }
+
+    fun onCleared() {
+        coreContext.postOnCoreThread { core ->
+            chatRoom.removeListener(chatRoomListener)
+            core.removeListener(coreListener)
+        }
+    }
+
+    fun onClicked() {
+        chatRoomDataListener?.onClicked()
+    }
+
+    fun onLongClicked(): Boolean {
+        chatRoomDataListener?.onLongClicked()
+        return true
+    }
+
+    fun contactLookup() {
         if (chatRoom.hasCapability(ChatRoom.Capabilities.Basic.toInt())) {
             val remoteAddress = chatRoom.peerAddress
             val friend = chatRoom.core.findFriend(remoteAddress)
@@ -121,35 +164,7 @@ class ChatRoomData(val chatRoom: ChatRoom) {
                 }
             }
         }
-        subject.postValue(
-            chatRoom.subject ?: LinphoneUtils.getDisplayName(chatRoom.peerAddress)
-        )
-
-        lastMessageImdnIcon.postValue(R.drawable.imdn_sent)
-        showLastMessageImdnIcon.postValue(false)
         computeLastMessage()
-
-        unreadChatCount.postValue(chatRoom.unreadMessagesCount)
-        isComposing.postValue(chatRoom.isRemoteComposing)
-        isSecure.postValue(chatRoom.securityLevel == ChatRoom.SecurityLevel.Encrypted)
-        isSecureVerified.postValue(chatRoom.securityLevel == ChatRoom.SecurityLevel.Safe)
-        isEphemeral.postValue(chatRoom.isEphemeralEnabled)
-        isMuted.postValue(areNotificationsMuted())
-    }
-
-    fun onCleared() {
-        coreContext.postOnCoreThread { core ->
-            chatRoom.removeListener(chatRoomListener)
-        }
-    }
-
-    fun onClicked() {
-        chatRoomDataListener?.onClicked()
-    }
-
-    fun onLongClicked(): Boolean {
-        chatRoomDataListener?.onLongClicked()
-        return true
     }
 
     private fun computeLastMessageImdnIcon(message: ChatMessage) {

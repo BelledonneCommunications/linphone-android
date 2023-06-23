@@ -14,14 +14,28 @@
             android:id="@+id/action_conversationsFragment_to_newConversationFragment"
             app:destination="@id/newConversationFragment"
             app:enterAnim="@anim/slide_in"
-            app:launchSingleTop="true"
             app:popExitAnim="@anim/slide_out" />
+        <action
+            android:id="@+id/action_conversationsFragment_to_conversationFragment"
+            app:destination="@id/conversationFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_right"  />
     </fragment>
 
     <fragment
         android:id="@+id/newConversationFragment"
         android:name="org.linphone.ui.conversations.NewConversationFragment"
         android:label="NewConversationFragment"
-        tools:layout="@layout/new_conversation_fragment" />
+        tools:layout="@layout/new_conversation_fragment" >
+        <action
+            android:id="@+id/action_newConversationFragment_to_conversationFragment"
+            app:destination="@id/conversationFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/conversationFragment"
+        android:name="org.linphone.ui.conversations.ConversationFragment"
+        android:label="ConversationFragment"
+        tools:layout="@layout/conversation_fragment" />
 
 </navigation>

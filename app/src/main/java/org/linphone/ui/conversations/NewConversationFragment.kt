@@ -27,6 +27,7 @@ import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.contacts.ContactsSelectionAdapter
 import org.linphone.databinding.NewConversationFragmentBinding
@@ -75,7 +76,10 @@ class NewConversationFragment : Fragment() {
         viewModel.filter.observe(
             viewLifecycleOwner
         ) {
-            viewModel.applyFilter(it.orEmpty().trim())
+            val filter = it.orEmpty().trim()
+            coreContext.postOnCoreThread {
+                viewModel.applyFilter(filter)
+            }
         }
 
         binding.setCancelClickListener {

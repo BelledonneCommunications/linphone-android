@@ -27,11 +27,13 @@ import android.os.Looper
 import java.util.*
 import org.linphone.BuildConfig
 import org.linphone.LinphoneApplication.Companion.corePreferences
-import org.linphone.R
+import org.linphone.contacts.ContactsManager
 import org.linphone.core.tools.Log
 
 class CoreContext(val context: Context) : HandlerThread("Core Thread") {
     lateinit var core: Core
+
+    val contactsManager = ContactsManager()
 
     @SuppressLint("HandlerLeak")
     private lateinit var coreThread: Handler
@@ -69,11 +71,14 @@ class CoreContext(val context: Context) : HandlerThread("Core Thread") {
         computeUserAgent()
         core.start()
 
+        contactsManager.onCoreStarted()
+
         Looper.loop()
     }
 
     override fun destroy() {
         core.stop()
+        contactsManager.onCoreStopped()
 
         quitSafely()
     }

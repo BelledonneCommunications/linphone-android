@@ -23,6 +23,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.contacts.ContactData
+import org.linphone.contacts.ContactsListener
 import org.linphone.core.MagicSearch
 import org.linphone.core.MagicSearchListenerStub
 import org.linphone.core.SearchResult
@@ -46,13 +47,25 @@ class NewConversationViewModel : ViewModel() {
         }
     }
 
+    private val contactsListener = object : ContactsListener {
+        override fun onContactsLoaded() {
+            applyFilter(filter.value.orEmpty().trim())
+        }
+    }
+
     init {
-        magicSearch.addListener(magicSearchListener)
-        applyFilter("")
+        coreContext.postOnCoreThread {
+            magicSearch.addListener(magicSearchListener)
+            coreContext.contactsManager.addListener(contactsListener)
+            applyFilter("")
+        }
     }
 
     override fun onCleared() {
-        magicSearch.removeListener(magicSearchListener)
+        coreContext.postOnCoreThread {
+            coreContext.contactsManager.removeListener(contactsListener)
+            magicSearch.removeListener(magicSearchListener)
+        }
         super.onCleared()
     }
 
@@ -63,20 +76,16 @@ class NewConversationViewModel : ViewModel() {
                 (previousFilter.length == filterValue.length && previousFilter != filterValue)
             )
         ) {
-            coreContext.postOnCoreThread { core ->
-                magicSearch.resetSearchCache()
-            }
+            magicSearch.resetSearchCache()
         }
         previousFilter = filterValue
 
-        coreContext.postOnCoreThread { core ->
-            magicSearch.getContactsListAsync(
-                filterValue,
-                "",
-                MagicSearch.Source.Friends.toInt(),
-                MagicSearch.Aggregation.Friend
-            )
-        }
+        magicSearch.getContactsListAsync(
+            filterValue,
+            "",
+            MagicSearch.Source.Friends.toInt(),
+            MagicSearch.Aggregation.Friend
+        )
     }
 
     private fun processMagicSearchResults(results: Array<SearchResult>) {

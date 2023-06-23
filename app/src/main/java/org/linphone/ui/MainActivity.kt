@@ -27,13 +27,11 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import androidx.loader.app.LoaderManager
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationBarView
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
-import org.linphone.contacts.ContactLoader
 import org.linphone.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -54,8 +52,7 @@ class MainActivity : AppCompatActivity() {
         )
 
         if (checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            val manager = LoaderManager.getInstance(this)
-            manager.restartLoader(0, null, ContactLoader())
+            coreContext.contactsManager.loadContacts(this)
         }
 
         while (!coreContext.isReady()) {
@@ -99,8 +96,7 @@ class MainActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         if (requestCode == CONTACTS_PERMISSION_REQUEST && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            val manager = LoaderManager.getInstance(this)
-            manager.restartLoader(0, null, ContactLoader())
+            coreContext.contactsManager.loadContacts(this)
         }
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
