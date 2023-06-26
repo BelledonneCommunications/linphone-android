@@ -25,6 +25,8 @@ import android.text.method.LinkMovementMethod
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
 import kotlin.math.ceil
+import kotlin.math.max
+import kotlin.math.round
 
 /**
  * The purpose of this class is to have a TextView declared with wrap_content as width that won't
@@ -52,10 +54,12 @@ class MultiLineWrapContentWidthTextView : AppCompatTextView {
 
         if (layout != null && layout.lineCount >= 2) {
             val maxLineWidth = ceil(getMaxLineWidth(layout)).toInt()
-            val uselessPaddingWidth = layout.width - maxLineWidth
-            val width = measuredWidth - uselessPaddingWidth
-            val height = measuredHeight
-            setMeasuredDimension(width, height)
+            if (maxLineWidth < measuredWidth) {
+                super.onMeasure(
+                    MeasureSpec.makeMeasureSpec(maxLineWidth, MeasureSpec.getMode(widthSpec)),
+                    heightSpec
+                )
+            }
         }
     }
 
@@ -63,10 +67,8 @@ class MultiLineWrapContentWidthTextView : AppCompatTextView {
         var maxWidth = 0.0f
         val lines = layout.lineCount
         for (i in 0 until lines) {
-            if (layout.getLineWidth(i) > maxWidth) {
-                maxWidth = layout.getLineWidth(i)
-            }
+            maxWidth = max(maxWidth, layout.getLineWidth(i))
         }
-        return maxWidth
+        return round(maxWidth)
     }
 }

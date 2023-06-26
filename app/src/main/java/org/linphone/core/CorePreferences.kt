@@ -53,6 +53,7 @@ class CorePreferences constructor(private val context: Context) {
             context,
             MasterKey.DEFAULT_MASTER_KEY_ALIAS
         ).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build()
+
         try {
             EncryptedSharedPreferences.create(
                 context,
