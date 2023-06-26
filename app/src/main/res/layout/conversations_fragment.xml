@@ -91,7 +91,7 @@
                 android:layout_marginTop="10dp"
                 android:text="Récents"
                 android:textSize="14sp"
-                android:textColor="@color/gray_1"
+                android:textColor="@color/blue_filter"
                 android:drawablePadding="5dp"
                 app:layout_constraintStart_toEndOf="@id/sort_by_label"
                 app:layout_constraintTop_toBottomOf="@id/search_bar"

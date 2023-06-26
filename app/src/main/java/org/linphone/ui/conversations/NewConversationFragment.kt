@@ -23,8 +23,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -38,6 +41,14 @@ class NewConversationFragment : Fragment() {
     private val viewModel: NewConversationViewModel by navGraphViewModels(
         R.id.conversationsFragment
     )
+
+    override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
+        if (findNavController().currentDestination?.id == R.id.conversationFragment) {
+            // Holds fragment in place while created conversation fragment slides over it
+            return AnimationUtils.loadAnimation(activity, R.anim.hold)
+        }
+        return super.onCreateAnimation(transit, enter, nextAnim)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -84,6 +95,16 @@ class NewConversationFragment : Fragment() {
 
         binding.setCancelClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
+
+        viewModel.goToChatRoom.observe(viewLifecycleOwner) {
+            it.consume {
+                if (findNavController().currentDestination?.id == R.id.newConversationFragment) {
+                    findNavController().navigate(
+                        R.id.action_newConversationFragment_to_conversationFragment
+                    )
+                }
+            }
         }
     }
 }

@@ -22,6 +22,7 @@ package org.linphone.ui
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
@@ -104,5 +105,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun getNavBar(): NavigationBarView? {
         return binding.mainNavView ?: binding.mainNavRail
+    }
+
+    fun hideNavBar() {
+        getNavBar()?.visibility = View.GONE
+    }
+
+    fun showNavBar() {
+        getNavBar()?.visibility = View.VISIBLE
     }
 }

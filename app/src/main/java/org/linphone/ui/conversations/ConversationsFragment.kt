@@ -25,6 +25,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -33,6 +34,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
 import org.linphone.databinding.ConversationsFragmentBinding
+import org.linphone.ui.MainActivity
 
 class ConversationsFragment : Fragment() {
     private lateinit var binding: ConversationsFragmentBinding
@@ -58,6 +60,7 @@ class ConversationsFragment : Fragment() {
     }
 
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
+        // Holds fragment in place while new fragment slides over it
         return AnimationUtils.loadAnimation(activity, R.anim.hold)
     }
 
@@ -91,9 +94,17 @@ class ConversationsFragment : Fragment() {
 
         adapter.chatRoomClickedEvent.observe(viewLifecycleOwner) {
             it.consume { data ->
-                findNavController().navigate(
-                    R.id.action_conversationsFragment_to_conversationFragment
-                )
+                val bundle = bundleOf()
+                bundle.putString("localSipUri", data.localSipUri)
+                bundle.putString("remoteSipUri", data.remoteSipUri)
+
+                if (findNavController().currentDestination?.id == R.id.conversationsFragment) {
+                    (requireActivity() as MainActivity).hideNavBar()
+                    findNavController().navigate(
+                        R.id.action_conversationsFragment_to_conversationFragment,
+                        bundle
+                    )
+                }
             }
         }
 
@@ -126,10 +137,18 @@ class ConversationsFragment : Fragment() {
         }
 
         binding.setOnNewConversationClicked {
-            findNavController().navigate(
-                R.id.action_conversationsFragment_to_newConversationFragment
-            )
+            if (findNavController().currentDestination?.id == R.id.conversationsFragment) {
+                (requireActivity() as MainActivity).hideNavBar()
+                findNavController().navigate(
+                    R.id.action_conversationsFragment_to_newConversationFragment
+                )
+            }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (requireActivity() as MainActivity).showNavBar()
     }
 
     private fun scrollToTop() {

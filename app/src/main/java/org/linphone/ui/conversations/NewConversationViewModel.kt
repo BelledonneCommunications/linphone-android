@@ -28,9 +28,16 @@ import org.linphone.core.MagicSearch
 import org.linphone.core.MagicSearchListenerStub
 import org.linphone.core.SearchResult
 import org.linphone.core.tools.Log
+import org.linphone.utils.Event
 
 class NewConversationViewModel : ViewModel() {
     val contactsList = MutableLiveData<ArrayList<ContactData>>()
+
+    val groupEnabled = MutableLiveData<Boolean>()
+
+    val goToChatRoom: MutableLiveData<Event<Pair<String, String>>> by lazy {
+        MutableLiveData<Event<Pair<String, String>>>()
+    }
 
     val filter = MutableLiveData<String>()
     private var previousFilter = "NotSet"
@@ -56,16 +63,16 @@ class NewConversationViewModel : ViewModel() {
     init {
         coreContext.postOnCoreThread {
             magicSearch.addListener(magicSearchListener)
-            coreContext.contactsManager.addListener(contactsListener)
             applyFilter("")
         }
+        coreContext.contactsManager.addListener(contactsListener)
     }
 
     override fun onCleared() {
         coreContext.postOnCoreThread {
-            coreContext.contactsManager.removeListener(contactsListener)
             magicSearch.removeListener(magicSearchListener)
         }
+        coreContext.contactsManager.removeListener(contactsListener)
         super.onCleared()
     }
 
@@ -86,6 +93,14 @@ class NewConversationViewModel : ViewModel() {
             MagicSearch.Source.Friends.toInt(),
             MagicSearch.Aggregation.Friend
         )
+    }
+
+    fun createGroup() {
+        goToChatRoom.value = Event(Pair("", ""))
+    }
+
+    fun enableGroupSelection() {
+        groupEnabled.value = true
     }
 
     private fun processMagicSearchResults(results: Array<SearchResult>) {

@@ -5,6 +5,8 @@
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
     <color name="red_danger">#DD5F5F</color>
+    <color name="green_online">#4FAE80</color>
+    <color name="blue_filter">#09C5F4</color>
 
     <color name="gray_1">#6C7A87</color>
     <color name="gray_2">#F9F9F9</color>
@@ -12,5 +14,6 @@
     <color name="gray_4">#949494</color>
     <color name="gray_5">#4E4E4E</color>
     <color name="gray_6">#EDEDED</color>
+    <color name="gray_7">#F9F9F9</color>
     <color name="separator">#E5E5EA</color>
 </resources>

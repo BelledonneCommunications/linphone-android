@@ -32,6 +32,8 @@ import org.linphone.utils.TimestampUtils
 
 class ChatRoomData(val chatRoom: ChatRoom) {
     val id = LinphoneUtils.getChatRoomId(chatRoom)
+    val localSipUri = chatRoom.localAddress.asString()
+    val remoteSipUri = chatRoom.peerAddress.asString()
 
     val contactName = MutableLiveData<String>()
 

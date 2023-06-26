@@ -54,6 +54,7 @@ class ConversationMenuDialogFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        // TODO FIXME: use a viewmodel and use core thread
         val view = ChatRoomMenuBinding.inflate(layoutInflater)
 
         val id = LinphoneUtils.getChatRoomId(chatRoom)

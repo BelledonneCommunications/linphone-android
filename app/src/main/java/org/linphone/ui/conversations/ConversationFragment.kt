@@ -24,10 +24,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.navGraphViewModels
+import org.linphone.R
 import org.linphone.databinding.ConversationFragmentBinding
 
 class ConversationFragment : Fragment() {
     private lateinit var binding: ConversationFragmentBinding
+    private val viewModel: ConversationViewModel by navGraphViewModels(
+        R.id.conversationFragment
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,5 +47,23 @@ class ConversationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = viewModel
+
+        val localSipUri = arguments?.getString("localSipUri")
+            ?: savedInstanceState?.getString("localSipUri")
+        val remoteSipUri = arguments?.getString("remoteSipUri")
+            ?: savedInstanceState?.getString("remoteSipUri")
+        if (localSipUri != null && remoteSipUri != null) {
+            viewModel.loadChatRoom(localSipUri, remoteSipUri)
+        } else {
+            // Chat room not found, going back
+
+            // TODO FIXME : show error
+        }
+        arguments?.clear()
+
+        binding.setBackClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
     }
 }
