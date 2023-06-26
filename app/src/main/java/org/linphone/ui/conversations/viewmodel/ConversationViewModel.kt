@@ -17,20 +17,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.conversations
+package org.linphone.ui.conversations.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.contacts.ContactData
 import org.linphone.contacts.ContactsListener
+import org.linphone.core.Address
 import org.linphone.core.ChatRoom
+import org.linphone.core.ChatRoomListenerStub
+import org.linphone.core.EventLog
 import org.linphone.core.Factory
 import org.linphone.core.tools.Log
+import org.linphone.ui.conversations.data.EventLogData
 import org.linphone.utils.LinphoneUtils
 
 class ConversationViewModel : ViewModel() {
     private lateinit var chatRoom: ChatRoom
+
+    val events = MutableLiveData<ArrayList<EventLogData>>()
 
     val contactName = MutableLiveData<String>()
 
@@ -38,11 +44,42 @@ class ConversationViewModel : ViewModel() {
 
     val subject = MutableLiveData<String>()
 
+    val isComposing = MutableLiveData<Boolean>()
+
     val isOneToOne = MutableLiveData<Boolean>()
 
     private val contactsListener = object : ContactsListener {
         override fun onContactsLoaded() {
             contactLookup()
+            events.value.orEmpty().forEach(EventLogData::contactLookup)
+        }
+    }
+
+    private val chatRoomListener = object : ChatRoomListenerStub() {
+        override fun onIsComposingReceived(
+            chatRoom: ChatRoom,
+            remoteAddress: Address,
+            composing: Boolean
+        ) {
+            isComposing.postValue(composing)
+        }
+
+        override fun onChatMessagesReceived(chatRoom: ChatRoom, eventLogs: Array<out EventLog>) {
+            for (eventLog in eventLogs) {
+                addChatMessageEventLog(eventLog)
+            }
+        }
+
+        override fun onChatMessageSending(chatRoom: ChatRoom, eventLog: EventLog) {
+            val position = events.value.orEmpty().size
+
+            if (eventLog.type == EventLog.Type.ConferenceChatMessage) {
+                val chatMessage = eventLog.chatMessage
+                chatMessage ?: return
+                chatMessage.userData = position
+            }
+
+            addChatMessageEventLog(eventLog)
         }
     }
 
@@ -52,6 +89,12 @@ class ConversationViewModel : ViewModel() {
 
     override fun onCleared() {
         coreContext.contactsManager.removeListener(contactsListener)
+        coreContext.postOnCoreThread {
+            if (::chatRoom.isInitialized) {
+                chatRoom.removeListener(chatRoomListener)
+            }
+            events.value.orEmpty().forEach(EventLogData::destroy)
+        }
     }
 
     fun loadChatRoom(localSipUri: String, remoteSipUri: String) {
@@ -69,10 +112,21 @@ class ConversationViewModel : ViewModel() {
             )
             if (found != null) {
                 chatRoom = found
+                chatRoom.addListener(chatRoomListener)
 
                 isOneToOne.postValue(chatRoom.hasCapability(ChatRoom.Capabilities.OneToOne.toInt()))
                 subject.postValue(chatRoom.subject)
+                isComposing.postValue(chatRoom.isRemoteComposing)
                 contactLookup()
+
+                val list = arrayListOf<EventLogData>()
+                list.addAll(events.value.orEmpty())
+
+                for (eventLog in chatRoom.getHistoryEvents(0)) {
+                    list.add(EventLogData(eventLog))
+                }
+
+                events.postValue(list)
             }
         }
     }
@@ -102,5 +156,37 @@ class ConversationViewModel : ViewModel() {
                 }
             }
         }
+    }
+
+    private fun addEvent(eventLog: EventLog) {
+        val list = arrayListOf<EventLogData>()
+        list.addAll(events.value.orEmpty())
+
+        val found = list.find { data -> data.eventLog == eventLog }
+        if (found == null) {
+            list.add(EventLogData(eventLog))
+        }
+
+        events.postValue(list)
+    }
+
+    private fun addChatMessageEventLog(eventLog: EventLog) {
+        if (eventLog.type == EventLog.Type.ConferenceChatMessage) {
+            val chatMessage = eventLog.chatMessage
+            chatMessage ?: return
+            chatMessage.userData = events.value.orEmpty().size
+
+            val existingEvent = events.value.orEmpty().find { data ->
+                data.eventLog.type == EventLog.Type.ConferenceChatMessage && data.eventLog.chatMessage?.messageId == chatMessage.messageId
+            }
+            if (existingEvent != null) {
+                Log.w(
+                    "[Chat Messages] Found already present chat message, don't add it it's probably the result of an auto download or an aggregated message received before but notified after the conversation was displayed"
+                )
+                return
+            }
+        }
+
+        addEvent(eventLog)
     }
 }

@@ -6,11 +6,11 @@
     <data>
         <import type="android.view.View" />
         <variable
-            name="viewModel"
-            type="org.linphone.ui.conversations.ConversationsListViewModel" />
-        <variable
             name="onNewConversationClicked"
             type="View.OnClickListener" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.conversations.viewmodel.ConversationsListViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

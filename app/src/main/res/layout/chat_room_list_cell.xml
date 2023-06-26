@@ -8,7 +8,7 @@
         <import type="android.graphics.Typeface" />
         <variable
             name="data"
-            type="org.linphone.ui.conversations.ChatRoomData" />
+            type="org.linphone.ui.conversations.data.ChatRoomData" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

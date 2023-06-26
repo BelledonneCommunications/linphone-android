@@ -34,6 +34,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.contacts.ContactsSelectionAdapter
 import org.linphone.databinding.NewConversationFragmentBinding
+import org.linphone.ui.conversations.viewmodel.NewConversationViewModel
 
 class NewConversationFragment : Fragment() {
     private lateinit var binding: NewConversationFragmentBinding

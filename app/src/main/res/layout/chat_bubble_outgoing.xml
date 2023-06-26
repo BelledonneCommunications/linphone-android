@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="data"
+            type="org.linphone.ui.conversations.data.ChatMessageData" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/shape_sent_message_bubble_background"
+            app:layout_constraintStart_toStartOf="@id/start_barrier"
+            app:layout_constraintTop_toTopOf="@id/text"
+            app:layout_constraintEnd_toEndOf="@id/text"
+            app:layout_constraintBottom_toBottomOf="@id/timestamp"/>
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/start_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:constraint_referenced_ids="text, imdn_status"
+            app:barrierDirection="left" />
+
+        <org.linphone.ui.conversations.view.MultiLineWrapContentWidthTextView
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{data.text, default=`Lorem Ipsum`}"
+            android:textSize="14sp"
+            android:textColor="#D9000000"
+            android:paddingTop="5dp"
+            android:paddingEnd="10dp"
+            android:paddingStart="10dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:gravity="end"
+            app:layout_constraintBottom_toTopOf="@id/timestamp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/timestamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{data.time, default=`15h42`}"
+            android:textSize="12sp"
+            android:textColor="#73000000"
+            android:layout_marginEnd="18dp"
+            android:paddingBottom="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageView
+            android:id="@+id/imdn_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@{data.imdnIcon, default=@drawable/imdn_read}"
+            android:layout_marginEnd="8dp"
+            android:paddingStart="10dp"
+            app:layout_constraintEnd_toStartOf="@id/timestamp"
+            app:layout_constraintBottom_toBottomOf="@id/timestamp"
+            app:layout_constraintTop_toTopOf="@id/timestamp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

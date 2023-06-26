@@ -7,6 +7,8 @@
     <color name="red_danger">#DD5F5F</color>
     <color name="green_online">#4FAE80</color>
     <color name="blue_filter">#09C5F4</color>
+    <color name="blue_outgoing_message">#DFECF2</color>
+    <color name="gray_incoming_message">#F4F4F7</color>
 
     <color name="gray_1">#6C7A87</color>
     <color name="gray_2">#F9F9F9</color>

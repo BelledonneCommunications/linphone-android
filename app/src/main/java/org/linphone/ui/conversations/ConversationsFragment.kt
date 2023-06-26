@@ -35,6 +35,8 @@ import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
 import org.linphone.databinding.ConversationsFragmentBinding
 import org.linphone.ui.MainActivity
+import org.linphone.ui.conversations.adapter.ConversationsListAdapter
+import org.linphone.ui.conversations.viewmodel.ConversationsListViewModel
 
 class ConversationsFragment : Fragment() {
     private lateinit var binding: ConversationsFragmentBinding

@@ -10,7 +10,7 @@
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.conversations.ConversationViewModel" />
+            type="org.linphone.ui.conversations.viewmodel.ConversationViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -102,15 +102,34 @@
             app:layout_constraintBottom_toBottomOf="@id/back"
             app:layout_constraintEnd_toStartOf="@id/video_call" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/messages_list"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            app:layout_constraintTop_toBottomOf="@id/back"
+            app:layout_constraintBottom_toTopOf="@id/messages_bottom_barrier"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/messages_bottom_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="composing_text, bottom_background"
+            app:barrierDirection="top" />
+
         <TextView
             android:id="@+id/composing_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="... est en train d’écrire..."
+            android:text="... est en train d’écrire"
             android:textSize="12sp"
             android:textColor="#73000000"
             android:layout_marginStart="10dp"
             android:layout_marginBottom="15dp"
+            android:visibility="@{viewModel.isComposing ? View.VISIBLE : View.GONE}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toTopOf="@id/bottom_background" />
 

@@ -43,10 +43,12 @@ fun TextView.setTypeface(typeface: Int) {
 
 @BindingAdapter("coilContact")
 fun loadContactPictureWithCoil(imageView: ImageView, contact: ContactData?) {
-    contact ?: return
-
-    imageView.load(contact.avatar) {
-        transformations(CircleCropTransformation())
-        error(R.drawable.contact_avatar)
+    if (contact == null) {
+        imageView.load(R.drawable.contact_avatar)
+    } else {
+        imageView.load(contact.avatar) {
+            transformations(CircleCropTransformation())
+            error(R.drawable.contact_avatar)
+        }
     }
 }

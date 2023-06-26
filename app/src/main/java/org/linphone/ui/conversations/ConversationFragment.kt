@@ -23,16 +23,26 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.navigation.navGraphViewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.R
 import org.linphone.databinding.ConversationFragmentBinding
+import org.linphone.ui.conversations.adapter.ChatEventLogsListAdapter
+import org.linphone.ui.conversations.viewmodel.ConversationViewModel
 
 class ConversationFragment : Fragment() {
     private lateinit var binding: ConversationFragmentBinding
     private val viewModel: ConversationViewModel by navGraphViewModels(
         R.id.conversationFragment
     )
+    private lateinit var adapter: ChatEventLogsListAdapter
+
+    override fun onDestroyView() {
+        binding.messagesList.adapter = null
+        super.onDestroyView()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,10 +67,32 @@ class ConversationFragment : Fragment() {
             viewModel.loadChatRoom(localSipUri, remoteSipUri)
         } else {
             // Chat room not found, going back
-
             // TODO FIXME : show error
+            (view.parent as? ViewGroup)?.doOnPreDraw {
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
         }
         arguments?.clear()
+
+        postponeEnterTransition()
+
+        adapter = ChatEventLogsListAdapter(viewLifecycleOwner)
+        binding.messagesList.setHasFixedSize(false)
+        binding.messagesList.adapter = adapter
+
+        val layoutManager = LinearLayoutManager(requireContext())
+        binding.messagesList.layoutManager = layoutManager
+
+        viewModel.events.observe(
+            viewLifecycleOwner
+        ) {
+            adapter.submitList(it)
+
+            (view.parent as? ViewGroup)?.doOnPreDraw {
+                startPostponedEnterTransition()
+                binding.messagesList.scrollToPosition(adapter.itemCount - 1)
+            }
+        }
 
         binding.setBackClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
