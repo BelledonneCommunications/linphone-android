@@ -26,10 +26,15 @@ import android.widget.ImageView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import java.io.File
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Content
 import org.linphone.core.tools.Log
+import org.linphone.utils.Event
 
 class PdfFileViewModelFactory(private val content: Content) :
     ViewModelProvider.NewInstanceFactory() {
@@ -43,45 +48,67 @@ class PdfFileViewModelFactory(private val content: Content) :
 class PdfFileViewModel(content: Content) : FileViewerViewModel(content) {
     val operationInProgress = MutableLiveData<Boolean>()
 
-    private val pdfRenderer: PdfRenderer
+    val rendererReady = MutableLiveData<Event<Boolean>>()
+
+    private lateinit var pdfRenderer: PdfRenderer
 
     init {
         operationInProgress.value = false
 
-        val input = ParcelFileDescriptor.open(File(filePath), ParcelFileDescriptor.MODE_READ_ONLY)
-        pdfRenderer = PdfRenderer(input)
-        Log.i("[PDF Viewer] ${pdfRenderer.pageCount} pages in file $filePath")
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val input = ParcelFileDescriptor.open(
+                    File(filePath),
+                    ParcelFileDescriptor.MODE_READ_ONLY
+                )
+                pdfRenderer = PdfRenderer(input)
+                Log.i("[PDF Viewer] ${pdfRenderer.pageCount} pages in file $filePath")
+                rendererReady.postValue(Event(true))
+            }
+        }
     }
 
     override fun onCleared() {
-        pdfRenderer.close()
+        if (this::pdfRenderer.isInitialized) {
+            pdfRenderer.close()
+        }
         super.onCleared()
     }
 
     fun getPagesCount(): Int {
-        return pdfRenderer.pageCount
+        if (this::pdfRenderer.isInitialized) {
+            return pdfRenderer.pageCount
+        }
+        return 0
     }
 
     fun loadPdfPageInto(index: Int, view: ImageView) {
-        try {
-            operationInProgress.value = true
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                try {
+                    operationInProgress.postValue(true)
 
-            val page: PdfRenderer.Page = pdfRenderer.openPage(index)
-            val width = if (coreContext.screenWidth <= coreContext.screenHeight) coreContext.screenWidth else coreContext.screenHeight
-            val bm = Bitmap.createBitmap(
-                width.toInt(),
-                (width / page.width * page.height).toInt(),
-                Bitmap.Config.ARGB_8888
-            )
-            page.render(bm, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
-            page.close()
+                    val page: PdfRenderer.Page = pdfRenderer.openPage(index)
+                    val width =
+                        if (coreContext.screenWidth <= coreContext.screenHeight) coreContext.screenWidth else coreContext.screenHeight
+                    val bm = Bitmap.createBitmap(
+                        width.toInt(),
+                        (width / page.width * page.height).toInt(),
+                        Bitmap.Config.ARGB_8888
+                    )
+                    page.render(bm, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+                    page.close()
 
-            view.setImageBitmap(bm)
+                    withContext(Dispatchers.Main) {
+                        view.setImageBitmap(bm)
+                    }
 
-            operationInProgress.value = false
-        } catch (e: Exception) {
-            Log.e("[PDF Viewer] Exception: $e")
-            operationInProgress.value = false
+                    operationInProgress.postValue(false)
+                } catch (e: Exception) {
+                    Log.e("[PDF Viewer] Exception: $e")
+                    operationInProgress.postValue(false)
+                }
+            }
         }
     }
 }
