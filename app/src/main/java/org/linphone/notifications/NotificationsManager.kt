@@ -179,7 +179,23 @@ class NotificationsManager(private val context: Context) {
                 }
             }
 
-            val notifiable = createChatNotifiable(room, messages)
+            var allOutgoing = true
+            for (message in messages) {
+                if (!message.isOutgoing) {
+                    allOutgoing = false
+                    break
+                }
+            }
+
+            val notifiable = getNotifiableForRoom(room)
+            val updated = updateChatNotifiableWithMessages(notifiable, room, messages)
+            if (!updated) {
+                Log.w(
+                    "[Notifications Manager] No changes made to notifiable, do not display it again"
+                )
+                return
+            }
+
             if (notifiable.messages.isNotEmpty()) {
                 displayChatNotifiable(room, notifiable)
             } else {
@@ -794,14 +810,18 @@ class NotificationsManager(private val context: Context) {
         notify(notifiable.notificationId, notification, CHAT_TAG)
     }
 
-    private fun createChatNotifiable(room: ChatRoom, messages: Array<out ChatMessage>): Notifiable {
-        val notifiable = getNotifiableForRoom(room)
-
+    private fun updateChatNotifiableWithMessages(
+        notifiable: Notifiable,
+        room: ChatRoom,
+        messages: Array<out ChatMessage>
+    ): Boolean {
+        var updated = false
         for (message in messages) {
             if (message.isRead || message.isOutgoing) continue
             val friend = coreContext.contactsManager.findContactByAddress(message.fromAddress)
             val notifiableMessage = getNotifiableMessage(message, friend)
             notifiable.messages.add(notifiableMessage)
+            updated = true
         }
 
         if (room.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
@@ -810,8 +830,7 @@ class NotificationsManager(private val context: Context) {
             notifiable.isGroup = true
             notifiable.groupTitle = room.subject
         }
-
-        return notifiable
+        return updated
     }
 
     private fun getNotifiableForRoom(room: ChatRoom): Notifiable {
