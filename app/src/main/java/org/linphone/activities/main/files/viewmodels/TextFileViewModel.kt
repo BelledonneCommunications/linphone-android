@@ -47,17 +47,10 @@ class TextFileViewModel(content: Content) : FileViewerViewModel(content) {
     val text = MutableLiveData<String>()
 
     init {
-        operationInProgress.value = false
-
-        openFile()
-    }
-
-    private fun openFile() {
-        operationInProgress.value = true
-
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 try {
+                    operationInProgress.postValue(true)
                     val br = BufferedReader(FileReader(filePath))
                     var line: String?
                     val textBuilder = StringBuilder()
