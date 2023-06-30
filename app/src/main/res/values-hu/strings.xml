@@ -582,4 +582,25 @@
     <string name="about_weblate_translation">Segítsen nekünk a &appName; fordításában</string>
     <string name="assistant_generic_account_warning_continue_button_text">Megértettem</string>
     <string name="assistant_generic_account_warning">Egyes szolgáltatásokhoz egy &appName; fiók kellene, például csoportos üzeneteket vagy elmúló üzeneteket.\n\nEzek a szolgáltatások el vannak rejtve, ha külső SIP-fiókkal regisztrál.\n\nHa engedélyezni szeretné egy kereskedelmi projektben, vegye fel velünk a kapcsolatot.</string>
+    <string name="contact_cant_be_deleted">Ez a Névjegy nem törölhető</string>
+    <string name="dialer_transfer_succeded">A hívás továbbítva</string>
+    <string name="dialer_transfer_failed">A hívás nem átirányítható</string>
+    <string name="chat_message_context_menu_turn_on_notifications">Értesítések engedélyezése</string>
+    <string name="chat_message_download_already_in_progress">Kérem várjon a letöltéssel amíg az előző befejeződik</string>
+    <string name="chat_message_voice_recording_received_notification">A hangüzenetet rögzítettük</string>
+    <string name="chat_message_voice_recording">Hangüzenet</string>
+    <string name="chat_room_presence_online">Elérhető</string>
+    <string name="chat_room_presence_last_seen_online_today">A mai napon elérhető</string>
+    <string name="chat_room_presence_last_seen_online_yesterday">Tegnap elérhető</string>
+    <string name="chat_room_presence_last_seen_online">Elrhető a</string>
+    <string name="chat_room_presence_away">Elfoglalt</string>
+    <string name="chat_room_presence_do_not_disturb">Ne zavarj</string>
+    <string name="recordings_export">A felvétel exportálása a …</string>
+    <string name="conference">Értekezlet</string>
+    <string name="conference_schedule_title">Értekezlet ütemezése</string>
+    <string name="conference_group_call_title">Csoportos hívás indítása</string>
+    <string name="no_conference_call_history">Nincs értekezlet hívás az ön előzményeiben</string>
+    <string name="contacts_ldap_query_more_results_available">További találatok érhetők el, finomítsa a keresést</string>
+    <string name="chat_room_context_menu_go_to_contact">Menj a Névjegyhez</string>
+    <string name="chat_message_context_menu_turn_off_notifications">Értesítések letiltása</string>
 </resources>
