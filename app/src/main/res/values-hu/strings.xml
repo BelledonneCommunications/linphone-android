@@ -603,4 +603,8 @@
     <string name="contacts_ldap_query_more_results_available">További találatok érhetők el, finomítsa a keresést</string>
     <string name="chat_room_context_menu_go_to_contact">Menj a Névjegyhez</string>
     <string name="chat_message_context_menu_turn_off_notifications">Értesítések letiltása</string>
+    <string name="chat_message_voice_recording_notification_short_desc">Hangüzenet</string>
+    <string name="chat_message_reaction_received">Reakciók</string>
+    <string name="chat_message_one_reaction">Reakjció</string>
+    <string name="chat_message_many_reactions">reakciók</string>
 </resources>
