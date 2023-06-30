@@ -808,4 +808,9 @@
     <string name="contacts_new_contact_wont_be_visible_warning_dialog">SIP URIも電話番号もない新しい連絡先を作成しようとしており、&appName;には表示されません。
 \n
 \n本当に作成しますか？</string>
+    <string name="chat_message_voice_recording_notification_short_desc">音声メッセージ</string>
+    <string name="chat_message_reaction_received">%sは%sにより反応しました: %s</string>
+    <string name="chat_message_many_reactions">%s リアクション</string>
+    <string name="chat_message_one_reaction">%s リアクション</string>
+    <string name="conference_invitation_notification_short_desc">会議の招待状</string>
 </resources>
