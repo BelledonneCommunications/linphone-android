@@ -68,6 +68,7 @@
             android:layout_centerInParent="true"
             android:gravity="center"
             android:onClick="@{() -> controlsViewModel.goToChat()}"
+            android:visibility="@{controlsViewModel.chatDisabled ? View.INVISIBLE : View.VISIBLE}"
             android:text="@string/call_action_chat"
             app:drawableTopCompat="@drawable/icon_call_chat"
             app:layout_constraintBottom_toTopOf="@id/calls"
@@ -86,7 +87,7 @@
             android:gravity="center"
             android:text="@{String.valueOf(callsViewModel.currentCallUnreadChatMessageCount), default=1}"
             android:translationY="@{controlsViewModel.bouncyCounterTranslateY}"
-            android:visibility="@{callsViewModel.currentCallUnreadChatMessageCount == 0 ? View.GONE : View.VISIBLE}"
+            android:visibility="@{callsViewModel.currentCallUnreadChatMessageCount == 0 || controlsViewModel.chatDisabled ? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toEndOf="@id/chat"
             app:layout_constraintStart_toStartOf="@id/chat"
             app:layout_constraintTop_toTopOf="@id/chat" />
