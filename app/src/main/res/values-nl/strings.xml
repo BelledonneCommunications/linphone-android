@@ -138,7 +138,14 @@
     <string name="contacts_ldap_query_more_results_available">Meer resultaten zijn beschikbaar, verfijn jouw zoekopdracht</string>
     <string name="chat_security_event_security_level_downgraded">Beveiligingsniveau verminderd door %s</string>
     <string name="sip_addresses">SIP adressen</string>
-    <string name="email">Email</string>
+    <string name="email">E-mail</string>
     <string name="transport_udp">UDP</string>
     <string name="contact_send_sms_invite_text">Hallo, doe mee met &appName;! Je kan gratis downloaden op %s</string>
+    <string name="assistant_create_account">Account aanmaken</string>
+    <string name="chat_message_replied">Antwoord</string>
+    <string name="chat_message_context_menu_forward">Doorsturen</string>
+    <string name="chat_message_context_menu_delete">Verwijderen</string>
+    <string name="chat_room_last_message_sender_format">%s:</string>
+    <string name="chat_message_download_file">Downloaden</string>
+    <string name="assistant_display_name_optional">Gebruikersnaam (optioneel)</string>
 </resources>
