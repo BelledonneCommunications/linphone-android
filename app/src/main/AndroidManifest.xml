@@ -175,7 +175,7 @@
         <service
             android:name=".core.CoreService"
             android:exported="false"
-            android:foregroundServiceType="phoneCall|camera|microphone"
+            android:foregroundServiceType="phoneCall|camera|microphone|dataSync"
             android:stopWithTask="false"
             android:label="@string/app_name" />
 
