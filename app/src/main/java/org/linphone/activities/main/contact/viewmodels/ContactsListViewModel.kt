@@ -119,17 +119,17 @@ class ContactsListViewModel : ViewModel() {
         previousFilter = filterValue
 
         val domain = if (sipContactsSelected.value == true) coreContext.core.defaultAccount?.params?.domain ?: "" else ""
-        val filter = MagicSearchSource.Friends.toInt() or MagicSearchSource.LdapServers.toInt()
+        val sources = MagicSearchSource.Friends.toInt() or MagicSearchSource.LdapServers.toInt()
         val aggregation = MagicSearchAggregation.Friend
         searchResultsPending = true
         fastFetchJob?.cancel()
         Log.i(
-            "[Contacts] Asking Magic search for contacts matching filter [$filterValue], domain [$domain] and in sources [$filter]"
+            "[Contacts] Asking Magic search for contacts matching filter [$filterValue], domain [$domain] and in sources [$sources]"
         )
         coreContext.contactsManager.magicSearch.getContactsListAsync(
             filterValue,
             domain,
-            filter,
+            sources,
             aggregation
         )
 
