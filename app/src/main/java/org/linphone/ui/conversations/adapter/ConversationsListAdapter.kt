@@ -54,7 +54,6 @@ class ConversationsListAdapter(
                 data = chatRoomData
 
                 lifecycleOwner = viewLifecycleOwner
-                executePendingBindings()
 
                 binding.root.isSelected = bindingAdapterPosition == selectedAdapterPosition
 
@@ -69,6 +68,8 @@ class ConversationsListAdapter(
                         chatRoomLongClickedEvent.value = Event(chatRoomData)
                     }
                 }
+
+                executePendingBindings()
             }
         }
     }
@@ -80,6 +81,6 @@ private class ConversationDiffCallback : DiffUtil.ItemCallback<ChatRoomData>() {
     }
 
     override fun areContentsTheSame(oldItem: ChatRoomData, newItem: ChatRoomData): Boolean {
-        return true
+        return false
     }
 }

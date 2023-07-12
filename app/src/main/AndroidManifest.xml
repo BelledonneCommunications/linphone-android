@@ -29,6 +29,16 @@
 
         </activity>
 
+        <!-- Services -->
+
+        <service android:name="org.linphone.core.tools.firebase.FirebaseMessaging"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
         <!-- Receivers -->
 
         <receiver android:name=".core.CorePushReceiver"

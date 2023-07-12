@@ -95,8 +95,12 @@ class ConversationsListViewModel : ViewModel() {
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
         }
+
         coreContext.contactsManager.addListener(contactsListener)
-        updateChatRoomsList()
+
+        coreContext.postOnCoreThread { core ->
+            updateChatRoomsList()
+        }
     }
 
     override fun onCleared() {
@@ -108,32 +112,35 @@ class ConversationsListViewModel : ViewModel() {
     }
 
     private fun addChatRoomToList(chatRoom: ChatRoom) {
-        coreContext.postOnCoreThread { core ->
-            val list = arrayListOf<ChatRoomData>()
-
-            val data = ChatRoomData(chatRoom)
-            list.add(data)
-            list.addAll(chatRoomsList.value.orEmpty())
-
-            chatRoomsList.postValue(list)
+        val index = findChatRoomIndex(chatRoom)
+        if (index != -1) {
+            Log.w("[Conversations List] Chat room already exists in list, do not add it again")
+            return
         }
+
+        val list = arrayListOf<ChatRoomData>()
+
+        val data = ChatRoomData(chatRoom)
+        list.add(data)
+        list.addAll(chatRoomsList.value.orEmpty())
+        list.sortByDescending { data -> data.chatRoom.lastUpdateTime }
+
+        chatRoomsList.postValue(list)
     }
 
     private fun removeChatRoomFromList(chatRoom: ChatRoom) {
-        coreContext.postOnCoreThread { core ->
-            val list = arrayListOf<ChatRoomData>()
+        val list = arrayListOf<ChatRoomData>()
 
-            for (data in chatRoomsList.value.orEmpty()) {
-                if (LinphoneUtils.getChatRoomId(chatRoom) != LinphoneUtils.getChatRoomId(
-                        data.chatRoom
-                    )
-                ) {
-                    list.add(data)
-                }
+        for (data in chatRoomsList.value.orEmpty()) {
+            if (LinphoneUtils.getChatRoomId(chatRoom) != LinphoneUtils.getChatRoomId(
+                    data.chatRoom
+                )
+            ) {
+                list.add(data)
             }
-
-            chatRoomsList.postValue(list)
         }
+
+        chatRoomsList.postValue(list)
     }
 
     private fun findChatRoomIndex(chatRoom: ChatRoom): Int {
@@ -163,25 +170,21 @@ class ConversationsListViewModel : ViewModel() {
 
     private fun updateChatRoomsList() {
         Log.i("[Conversations List] Updating chat rooms list")
-        coreContext.postOnCoreThread { core ->
-            chatRoomsList.value.orEmpty().forEach(ChatRoomData::onCleared)
+        chatRoomsList.value.orEmpty().forEach(ChatRoomData::onCleared)
 
-            val list = arrayListOf<ChatRoomData>()
-            val chatRooms = core.chatRooms
-            for (chatRoom in chatRooms) {
-                list.add(ChatRoomData(chatRoom))
-            }
-            chatRoomsList.postValue(list)
+        val list = arrayListOf<ChatRoomData>()
+        val chatRooms = coreContext.core.chatRooms
+        for (chatRoom in chatRooms) {
+            list.add(ChatRoomData(chatRoom))
         }
+        chatRoomsList.postValue(list)
     }
 
     private fun reorderChatRoomsList() {
         Log.i("[Conversations List] Re-ordering chat rooms list")
-        coreContext.postOnCoreThread { core ->
-            val list = arrayListOf<ChatRoomData>()
-            list.addAll(chatRoomsList.value.orEmpty())
-            list.sortByDescending { data -> data.chatRoom.lastUpdateTime }
-            chatRoomsList.postValue(list)
-        }
+        val list = arrayListOf<ChatRoomData>()
+        list.addAll(chatRoomsList.value.orEmpty())
+        list.sortByDescending { data -> data.chatRoom.lastUpdateTime }
+        chatRoomsList.postValue(list)
     }
 }

@@ -37,8 +37,4 @@ max_calls=10
 history_max_size=100
 conference_layout=1
 
-[in-app-purchase]
-server_url=https://subscribe.linphone.org:444/inapp.php
-purchasable_items_ids=test_account_subscription
-
 ## End of default rc
