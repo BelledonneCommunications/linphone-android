@@ -32,8 +32,11 @@ import org.linphone.utils.TimestampUtils
 
 class ChatRoomData(val chatRoom: ChatRoom) {
     val id = LinphoneUtils.getChatRoomId(chatRoom)
+
     val localSipUri = chatRoom.localAddress.asString()
     val remoteSipUri = chatRoom.peerAddress.asString()
+
+    val isOneToOne = chatRoom.hasCapability(ChatRoom.Capabilities.OneToOne.toInt())
 
     val contactName = MutableLiveData<String>()
 
@@ -62,10 +65,6 @@ class ChatRoomData(val chatRoom: ChatRoom) {
     val contactData = MutableLiveData<ContactData>()
 
     var chatRoomDataListener: ChatRoomDataListener? = null
-
-    val isOneToOne: Boolean by lazy {
-        chatRoom.hasCapability(ChatRoom.Capabilities.OneToOne.toInt())
-    }
 
     private val coreListener = object : CoreListenerStub() {
         override fun onChatRoomRead(core: Core, chatRoom: ChatRoom) {
