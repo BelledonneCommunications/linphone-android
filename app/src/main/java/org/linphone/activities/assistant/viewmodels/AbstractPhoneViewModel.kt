@@ -69,7 +69,7 @@ abstract class AbstractPhoneViewModel(accountCreator: AccountCreator) :
         }
     }
 
-    private fun getCountryNameFromPrefix(prefix: String?) {
+    fun getCountryNameFromPrefix(prefix: String?) {
         if (!prefix.isNullOrEmpty()) {
             val countryCode = if (prefix.first() == '+') prefix.substring(1) else prefix
             val dialPlan = PhoneNumberUtils.getDialPlanFromCountryCallingPrefix(countryCode)

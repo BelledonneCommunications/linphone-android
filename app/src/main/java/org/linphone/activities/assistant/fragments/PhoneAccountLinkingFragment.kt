@@ -73,6 +73,10 @@ class PhoneAccountLinkingFragment : AbstractPhoneFragment<AssistantPhoneAccountL
             countryPickerFragment.show(childFragmentManager, "CountryPicker")
         }
 
+        viewModel.prefix.observe(viewLifecycleOwner) { internationalPrefix ->
+            viewModel.getCountryNameFromPrefix(internationalPrefix)
+        }
+
         viewModel.goToSmsValidationEvent.observe(
             viewLifecycleOwner
         ) {
