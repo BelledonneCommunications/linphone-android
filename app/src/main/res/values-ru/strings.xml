@@ -773,7 +773,7 @@
     <string name="account_setting_disable_bundle_mode_title">Отключить режим объединения</string>
     <string name="assistant_alternative_way_create_account">Чтобы создать учетную запись с помощью электронной почты:</string>
     <string name="zrtp_dialog_explanation">Для повышения уровня безопасности вы можете уточнить следующие коды у своего собеседника.</string>
-    <string name="chat_room_last_message_sender_format">This should be translatable=false . See other languages</string>
+    <string name="chat_room_last_message_sender_format">%s:</string>
     <string name="content_description_emoji_picker">Переключить видимость выбора эмодзи</string>
     <string name="zrtp_dialog_later_button_label">Позже</string>
     <string name="zrtp_dialog_correct_button_label">Верно</string>
