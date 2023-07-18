@@ -22,15 +22,10 @@ package org.linphone.ui
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
-import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.navigation.NavigationBarView
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.databinding.ActivityMainBinding
@@ -41,7 +36,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var viewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, true)
@@ -62,26 +56,10 @@ class MainActivity : AppCompatActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
-
-        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
-        binding.viewModel = viewModel
-
-        viewModel.unreadMessagesCount.observe(this) { count ->
-            if (count > 0) {
-                getNavBar()?.getOrCreateBadge(R.id.conversationsFragment)?.apply {
-                    isVisible = true
-                    number = count
-                }
-            } else {
-                getNavBar()?.removeBadge(R.id.conversationsFragment)
-            }
-        }
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-
-        getNavBar()?.setupWithNavController(binding.mainNavHostFragment.findNavController())
 
         if (checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(
@@ -101,17 +79,5 @@ class MainActivity : AppCompatActivity() {
         }
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    }
-
-    private fun getNavBar(): NavigationBarView? {
-        return binding.mainNavView ?: binding.mainNavRail
-    }
-
-    fun hideNavBar() {
-        getNavBar()?.visibility = View.GONE
-    }
-
-    fun showNavBar() {
-        getNavBar()?.visibility = View.VISIBLE
     }
 }

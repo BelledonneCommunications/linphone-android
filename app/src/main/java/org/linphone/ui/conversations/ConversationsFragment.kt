@@ -34,7 +34,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
 import org.linphone.databinding.ConversationsFragmentBinding
-import org.linphone.ui.MainActivity
 import org.linphone.ui.conversations.adapter.ConversationsListAdapter
 import org.linphone.ui.conversations.viewmodel.ConversationsListViewModel
 
@@ -101,7 +100,6 @@ class ConversationsFragment : Fragment() {
                 bundle.putString("remoteSipUri", data.remoteSipUri)
 
                 if (findNavController().currentDestination?.id == R.id.conversationsFragment) {
-                    (requireActivity() as MainActivity).hideNavBar()
                     findNavController().navigate(
                         R.id.action_conversationsFragment_to_conversationFragment,
                         bundle
@@ -140,17 +138,11 @@ class ConversationsFragment : Fragment() {
 
         binding.setOnNewConversationClicked {
             if (findNavController().currentDestination?.id == R.id.conversationsFragment) {
-                (requireActivity() as MainActivity).hideNavBar()
                 findNavController().navigate(
                     R.id.action_conversationsFragment_to_newConversationFragment
                 )
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        (requireActivity() as MainActivity).showNavBar()
     }
 
     private fun scrollToTop() {

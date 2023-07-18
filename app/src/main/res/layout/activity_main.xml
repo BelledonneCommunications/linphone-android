@@ -6,9 +6,6 @@
 
     <data>
         <import type="android.view.View" />
-        <variable
-            name="viewModel"
-            type="org.linphone.ui.MainViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -28,18 +25,8 @@
                 android:layout_height="0dp"
                 app:defaultNavHost="true"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/main_nav_view"
-                app:navGraph="@navigation/main_nav_graph"/>
-
-            <com.google.android.material.bottomnavigation.BottomNavigationView
-                android:id="@+id/main_nav_view"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:menu="@menu/main_nav" />
+                app:navGraph="@navigation/main_nav_graph"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
