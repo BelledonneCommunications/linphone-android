@@ -57,7 +57,7 @@ class EmailAccountValidationViewModel(val accountCreator: AccountCreator) : View
             status: AccountCreator.Status,
             response: String?
         ) {
-            Log.i("[Account Validation] onIsAccountActivated status is $status")
+            Log.i("[Assistant] [Account Validation] onIsAccountActivated status is $status")
             waitForServerAnswer.value = false
 
             when (status) {

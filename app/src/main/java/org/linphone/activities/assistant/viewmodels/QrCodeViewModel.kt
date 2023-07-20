@@ -34,7 +34,7 @@ class QrCodeViewModel : ViewModel() {
 
     private val listener = object : CoreListenerStub() {
         override fun onQrcodeFound(core: Core, result: String?) {
-            Log.i("[QR Code] Found [$result]")
+            Log.i("[Assistant] [QR Code] Found [$result]")
             if (result != null) qrCodeFoundEvent.postValue(Event(result))
         }
     }
@@ -54,7 +54,7 @@ class QrCodeViewModel : ViewModel() {
 
         for (camera in coreContext.core.videoDevicesList) {
             if (camera.contains("Back")) {
-                Log.i("[QR Code] Found back facing camera: $camera")
+                Log.i("[Assistant] [QR Code] Found back facing camera: $camera")
                 coreContext.core.videoDevice = camera
                 return
             }
@@ -62,7 +62,7 @@ class QrCodeViewModel : ViewModel() {
 
         val first = coreContext.core.videoDevicesList.firstOrNull()
         if (first != null) {
-            Log.i("[QR Code] Using first camera found: $first")
+            Log.i("[Assistant] [QR Code] Using first camera found: $first")
             coreContext.core.videoDevice = first
         }
     }

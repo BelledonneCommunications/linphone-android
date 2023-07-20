@@ -46,7 +46,7 @@ class AccountLoginViewModel(accountCreator: AccountCreator) : AbstractPhoneViewM
     val password = MutableLiveData<String>()
     val passwordError = MutableLiveData<String>()
 
-    val loginEnabled: MediatorLiveData<Boolean> = MediatorLiveData()
+    val loginEnabled = MediatorLiveData<Boolean>()
 
     val waitForServerAnswer = MutableLiveData<Boolean>()
 
@@ -140,6 +140,9 @@ class AccountLoginViewModel(accountCreator: AccountCreator) : AbstractPhoneViewM
         loginEnabled.addSource(phoneNumberError) {
             loginEnabled.value = isLoginButtonEnabled()
         }
+        loginEnabled.addSource(prefixError) {
+            loginEnabled.value = isLoginButtonEnabled()
+        }
     }
 
     override fun onCleared() {
@@ -149,6 +152,7 @@ class AccountLoginViewModel(accountCreator: AccountCreator) : AbstractPhoneViewM
 
     override fun onFlexiApiTokenReceived() {
         Log.i("[Assistant] [Account Login] Using FlexiAPI auth token [${accountCreator.token}]")
+        waitForServerAnswer.value = false
         loginWithPhoneNumber()
     }
 
