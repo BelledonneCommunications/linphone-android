@@ -73,7 +73,7 @@ class RemoteProvisioningViewModel : ViewModel() {
     fun fetchAndApply() {
         val url = urlToFetch.value.orEmpty()
         coreContext.core.provisioningUri = url
-        Log.w("[Remote Provisioning] Url set to [$url], restarting Core")
+        Log.w("[Assistant] [Remote Provisioning] Url set to [$url], restarting Core")
         fetchInProgress.value = true
         coreContext.core.stop()
         coreContext.core.start()

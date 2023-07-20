@@ -51,16 +51,16 @@ class EchoCancellerCalibrationViewModel : ViewModel() {
         coreContext.core.removeListener(listener)
         when (status) {
             EcCalibratorStatus.DoneNoEcho -> {
-                Log.i("[Echo Canceller Calibration] Done, no echo")
+                Log.i("[Assistant] [Echo Canceller Calibration] Done, no echo")
             }
             EcCalibratorStatus.Done -> {
-                Log.i("[Echo Canceller Calibration] Done, delay is ${delay}ms")
+                Log.i("[Assistant] [Echo Canceller Calibration] Done, delay is ${delay}ms")
             }
             EcCalibratorStatus.Failed -> {
-                Log.w("[Echo Canceller Calibration] Failed")
+                Log.w("[Assistant] [Echo Canceller Calibration] Failed")
             }
             EcCalibratorStatus.InProgress -> {
-                Log.i("[Echo Canceller Calibration] In progress")
+                Log.i("[Assistant] [Echo Canceller Calibration] In progress")
             }
         }
         echoCalibrationTerminated.value = Event(true)

@@ -32,6 +32,7 @@ abstract class AbstractPhoneViewModel(accountCreator: AccountCreator) :
     CountryPickerFragment.CountryPickedListener {
 
     val prefix = MutableLiveData<String>()
+    val prefixError = MutableLiveData<String>()
 
     val phoneNumber = MutableLiveData<String>()
     val phoneNumberError = MutableLiveData<String>()
@@ -48,7 +49,10 @@ abstract class AbstractPhoneViewModel(accountCreator: AccountCreator) :
     }
 
     fun isPhoneNumberOk(): Boolean {
-        return prefix.value.orEmpty().isNotEmpty() && phoneNumber.value.orEmpty().isNotEmpty() && phoneNumberError.value.orEmpty().isEmpty()
+        return prefix.value.orEmpty().length > 1 && // Not just '+' character
+            prefixError.value.orEmpty().isEmpty() &&
+            phoneNumber.value.orEmpty().isNotEmpty() &&
+            phoneNumberError.value.orEmpty().isEmpty()
     }
 
     fun updateFromPhoneNumberAndOrDialPlan(number: String?, dialPlan: DialPlan?) {

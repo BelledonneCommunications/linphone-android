@@ -593,7 +593,17 @@ fun addPhoneNumberEditTextValidation(editText: EditText, enabled: Boolean) {
 fun addPrefixEditTextValidation(editText: EditText, enabled: Boolean) {
     if (!enabled) return
     editText.addTextChangedListener(object : TextWatcher {
-        override fun afterTextChanged(s: Editable?) {}
+        override fun afterTextChanged(s: Editable?) {
+            val dialPlan = PhoneNumberUtils.getDialPlanFromCountryCallingPrefix(
+                s.toString().substring(1)
+            )
+            if (dialPlan == null) {
+                editText.error =
+                    editText.context.getString(
+                        R.string.assistant_error_invalid_international_prefix
+                    )
+            }
+        }
 
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 

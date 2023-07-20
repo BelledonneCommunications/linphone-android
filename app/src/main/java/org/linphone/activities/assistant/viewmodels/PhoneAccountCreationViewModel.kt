@@ -68,7 +68,7 @@ class PhoneAccountCreationViewModel(accountCreator: AccountCreator) : AbstractPh
             status: AccountCreator.Status,
             response: String?
         ) {
-            Log.i("[Phone Account Creation] onIsAccountExist status is $status")
+            Log.i("[Assistant] [Phone Account Creation] onIsAccountExist status is $status")
             when (status) {
                 AccountCreator.Status.AccountExist, AccountCreator.Status.AccountExistWithAlias -> {
                     waitForServerAnswer.value = false
@@ -92,7 +92,7 @@ class PhoneAccountCreationViewModel(accountCreator: AccountCreator) : AbstractPh
             status: AccountCreator.Status,
             response: String?
         ) {
-            Log.i("[Phone Account Creation] onIsAliasUsed status is $status")
+            Log.i("[Assistant] [Phone Account Creation] onIsAliasUsed status is $status")
             when (status) {
                 AccountCreator.Status.AliasExist -> {
                     waitForServerAnswer.value = false
@@ -114,7 +114,9 @@ class PhoneAccountCreationViewModel(accountCreator: AccountCreator) : AbstractPh
                 }
                 AccountCreator.Status.AliasNotExist -> {
                     val createAccountStatus = creator.createAccount()
-                    Log.i("[Phone Account Creation] createAccount returned $createAccountStatus")
+                    Log.i(
+                        "[Assistant] [Phone Account Creation] createAccount returned $createAccountStatus"
+                    )
                     if (createAccountStatus != AccountCreator.Status.RequestOk) {
                         waitForServerAnswer.value = false
                         onErrorEvent.value = Event("Error: ${status.name}")
@@ -132,7 +134,7 @@ class PhoneAccountCreationViewModel(accountCreator: AccountCreator) : AbstractPh
             status: AccountCreator.Status,
             response: String?
         ) {
-            Log.i("[Phone Account Creation] onCreateAccount status is $status")
+            Log.i("[Assistant] [Phone Account Creation] onCreateAccount status is $status")
             waitForServerAnswer.value = false
             when (status) {
                 AccountCreator.Status.AccountCreated -> {
@@ -173,6 +175,9 @@ class PhoneAccountCreationViewModel(accountCreator: AccountCreator) : AbstractPh
         createEnabled.addSource(phoneNumberError) {
             createEnabled.value = isCreateButtonEnabled()
         }
+        createEnabled.addSource(prefixError) {
+            createEnabled.value = isCreateButtonEnabled()
+        }
     }
 
     override fun onCleared() {
@@ -181,9 +186,22 @@ class PhoneAccountCreationViewModel(accountCreator: AccountCreator) : AbstractPh
     }
 
     override fun onFlexiApiTokenReceived() {
-        Log.i("[Phone Account Creation] Using FlexiAPI auth token [${accountCreator.token}]")
+        Log.i(
+            "[Assistant] [Phone Account Creation] Using FlexiAPI auth token [${accountCreator.token}]"
+        )
         accountCreator.displayName = displayName.value
-        accountCreator.setPhoneNumber(phoneNumber.value, prefix.value)
+
+        val result = AccountCreator.PhoneNumberStatus.fromInt(
+            accountCreator.setPhoneNumber(phoneNumber.value, prefix.value)
+        )
+        if (result != AccountCreator.PhoneNumberStatus.Ok) {
+            Log.e(
+                "[Assistant] [Phone Account Creation] Error [$result] setting the phone number: ${phoneNumber.value} with prefix: ${prefix.value}"
+            )
+            phoneNumberError.value = result.name
+            return
+        }
+        Log.i("[Assistant] [Phone Account Creation] Phone number is ${accountCreator.phoneNumber}")
 
         if (useUsername.value == true) {
             accountCreator.username = username.value
@@ -199,14 +217,14 @@ class PhoneAccountCreationViewModel(accountCreator: AccountCreator) : AbstractPh
     }
 
     override fun onFlexiApiTokenRequestError() {
-        Log.e("[Phone Account Creation] Failed to get an auth token from FlexiAPI")
+        Log.e("[Assistant] [Phone Account Creation] Failed to get an auth token from FlexiAPI")
         waitForServerAnswer.value = false
         onErrorEvent.value = Event("Error: Failed to get an auth token from account manager server")
     }
 
     private fun checkUsername() {
         val status = accountCreator.isAccountExist
-        Log.i("[Phone Account Creation] isAccountExist returned $status")
+        Log.i("[Assistant] [Phone Account Creation] isAccountExist returned $status")
         if (status != AccountCreator.Status.RequestOk) {
             waitForServerAnswer.value = false
             onErrorEvent.value = Event("Error: ${status.name}")
@@ -215,7 +233,7 @@ class PhoneAccountCreationViewModel(accountCreator: AccountCreator) : AbstractPh
 
     private fun checkPhoneNumber() {
         val status = accountCreator.isAliasUsed
-        Log.i("[Phone Account Creation] isAliasUsed returned $status")
+        Log.i("[Assistant] [Phone Account Creation] isAliasUsed returned $status")
         if (status != AccountCreator.Status.RequestOk) {
             waitForServerAnswer.value = false
             onErrorEvent.value = Event("Error: ${status.name}")
@@ -226,11 +244,11 @@ class PhoneAccountCreationViewModel(accountCreator: AccountCreator) : AbstractPh
         val token = accountCreator.token.orEmpty()
         if (token.isNotEmpty()) {
             Log.i(
-                "[Phone Account Creation] We already have an auth token from FlexiAPI [$token], continue"
+                "[Assistant] [Phone Account Creation] We already have an auth token from FlexiAPI [$token], continue"
             )
             onFlexiApiTokenReceived()
         } else {
-            Log.i("[Phone Account Creation] Requesting an auth token from FlexiAPI")
+            Log.i("[Assistant] [Phone Account Creation] Requesting an auth token from FlexiAPI")
             waitForServerAnswer.value = true
             requestFlexiApiToken()
         }
