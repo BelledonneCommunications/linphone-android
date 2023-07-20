@@ -742,7 +742,7 @@
     <string name="incoming_group_call_notification_title">Входящий групповой звонок</string>
     <string name="chat_room_context_menu_go_to_contact">Перейти к контакту</string>
     <string name="chat_message_context_menu_turn_off_notifications">Отключить уведомления</string>
-    <string name="conference_schedule_send_updated_invite_chat">Отправить обновление через &amp;appName;</string>
+    <string name="conference_schedule_send_updated_invite_chat">Отправить обновление через &appName;</string>
     <string name="conference_schedule_send_updated_invite_email">Отправить обновление по электронной почте</string>
     <string name="call_stats_media_encryption">Шифрование медиа:</string>
     <string name="call_stats_zrtp_key_agreement_algo">Алгоритм согласования ключей:</string>
