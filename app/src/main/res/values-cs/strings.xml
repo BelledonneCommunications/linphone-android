@@ -814,4 +814,5 @@
     <string name="dialog_authentication_required_change_password_label">Potvrdit</string>
     <string name="android_14_full_screen_intent_permission_not_granted">Povolení vyžadované pro zobrazení příchozích hovorů zatím nebylo uděleno</string>
     <string name="android_14_go_to_full_screen_intent_permission_setting">Zobrazit</string>
+    <string name="assistant_error_invalid_international_prefix">Špatná mezinárodní předvolba</string>
 </resources>
