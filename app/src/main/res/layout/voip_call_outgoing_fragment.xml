@@ -67,7 +67,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/outgoing_call_timer"
             app:layout_constraintVertical_chainStyle="packed"
-            app:layout_constraintWidth_max="@dimen/voip_contact_avatar_max_size" />
+            app:layout_constraintWidth_max="@dimen/voip_contact_avatar_max_size"
+            app:layout_constraintDimensionRatio="1:1" />
 
         <ImageView
             android:id="@+id/conference_avatar"
