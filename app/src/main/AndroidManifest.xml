@@ -69,7 +69,6 @@
         android:label="${appLabel}"
         android:localeConfig="@xml/locales_config"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:extractNativeLibs="${extractNativeLibs}"
         android:theme="@style/AppTheme"
         android:allowNativeHeapPointerTagging="false">
 
