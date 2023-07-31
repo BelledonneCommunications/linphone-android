@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View" />
         <variable
             name="onNewConversationClicked"
+            type="View.OnClickListener" />
+        <variable
+            name="onContactsClicked"
             type="View.OnClickListener" />
         <variable
             name="viewModel"
@@ -15,7 +18,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/primary_color">
 
         <TextView
             android:id="@+id/title"
@@ -106,8 +110,9 @@
             app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar" />
 
         <include
+            bind:onContactsClicked="@{onContactsClicked}"
             android:id="@+id/bottom_nav_bar"
-            layout="@layout/bottom_nav_bar"
+            layout="@layout/bottom_nav_bar_conversations"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"

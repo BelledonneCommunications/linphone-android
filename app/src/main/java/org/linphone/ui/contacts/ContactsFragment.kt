@@ -26,8 +26,10 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
+import androidx.transition.AutoTransition
 import org.linphone.R
 import org.linphone.databinding.ContactsFragmentBinding
 import org.linphone.ui.contacts.viewmodel.ContactsListViewModel
@@ -52,6 +54,7 @@ class ContactsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = ContactsFragmentBinding.inflate(layoutInflater)
+        sharedElementEnterTransition = AutoTransition()
         return binding.root
     }
 
@@ -73,9 +76,11 @@ class ContactsFragment : Fragment() {
 
         binding.setOnConversationsClicked {
             if (findNavController().currentDestination?.id == R.id.contactsFragment) {
-                findNavController().navigate(
-                    R.id.action_contactsFragment_to_conversationsFragment
+                val extras = FragmentNavigatorExtras(
+                    binding.bottomNavBar.root to "bottom_nav_bar"
                 )
+                val action = ContactsFragmentDirections.actionContactsFragmentToConversationsFragment()
+                findNavController().navigate(action, extras)
             }
         }
 

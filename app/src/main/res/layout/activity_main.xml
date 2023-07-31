@@ -8,6 +8,7 @@
         <import type="android.view.View" />
     </data>
 
+    <!-- Background color here is mandatory for transparency effect on child views -->
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

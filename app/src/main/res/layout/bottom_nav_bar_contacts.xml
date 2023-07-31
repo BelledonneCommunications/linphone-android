@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="onConversationsClicked"
+            type="View.OnClickListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:transitionName="bottom_nav_bar"
+        android:id="@+id/bottom_nav_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/contacts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:drawableTop="@drawable/contacts"
+            android:drawablePadding="10dp"
+            android:text="Contacts"
+            android:textSize="11sp"
+            android:textColor="@color/gray_9"
+            android:drawableTint="@color/primary_color"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/calls"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/calls"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:drawableTop="@drawable/calls"
+            android:drawablePadding="10dp"
+            android:text="Calls"
+            android:textSize="11sp"
+            android:textColor="@color/gray_9"
+            android:drawableTint="@color/gray_9"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/conversations"
+            app:layout_constraintStart_toEndOf="@id/contacts"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:onClick="@{onConversationsClicked}"
+            android:id="@+id/conversations"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:drawableTop="@drawable/conversations"
+            android:drawablePadding="10dp"
+            android:text="Conversations"
+            android:textSize="11sp"
+            android:textColor="@color/gray_9"
+            android:drawableTint="@color/gray_9"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/meetings"
+            app:layout_constraintStart_toEndOf="@id/calls"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/meetings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:drawableTop="@drawable/meetings"
+            android:drawablePadding="10dp"
+            android:text="Meetings"
+            android:textSize="11sp"
+            android:textColor="@color/gray_9"
+            android:drawableTint="@color/gray_9"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/conversations"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
