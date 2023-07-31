@@ -21,11 +21,16 @@ package org.linphone.ui.contacts.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import org.linphone.utils.Event
 
 class ContactsListViewModel : ViewModel() {
     val searchBarVisible = MutableLiveData<Boolean>()
 
     val searchFilter = MutableLiveData<String>()
+
+    val focusSearchBarEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
 
     init {
         searchBarVisible.value = false
@@ -33,10 +38,12 @@ class ContactsListViewModel : ViewModel() {
 
     fun openSearchBar() {
         searchBarVisible.value = true
+        focusSearchBarEvent.value = Event(true)
     }
 
     fun closeSearchBar() {
         searchBarVisible.value = false
+        focusSearchBarEvent.value = Event(false)
     }
 
     fun clearFilter() {

@@ -25,13 +25,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:constraint_referenced_ids="avatar, title, search_toggle"
-            android:visibility="@{viewModel.searchBarVisible ? View.INVISIBLE : View.VISIBLE}" />
+            android:visibility="@{viewModel.searchBarVisible ? View.GONE : View.VISIBLE, default=gone}" />
 
         <androidx.constraintlayout.widget.Group
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:constraint_referenced_ids="cancel_search, search, clear_field"
-            android:visibility="@{viewModel.searchBarVisible ? View.VISIBLE : View.INVISIBLE, default=gone}" />
+            android:visibility="@{viewModel.searchBarVisible ? View.VISIBLE : View.GONE}" />
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/background_barrier"
@@ -92,23 +92,23 @@
             app:layout_constraintTop_toTopOf="@id/search"
             app:tint="@color/white" />
 
-        <EditText
+        <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/search"
             android:layout_width="0dp"
             android:layout_height="35dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="10dp"
-            android:hint="Search contact"
-            android:focusedByDefault="true"
-            android:text="@={viewModel.searchFilter}"
             android:gravity="center_vertical"
+            android:textColor="@color/gray_6"
             android:textStyle="bold"
             android:textSize="16sp"
             android:textCursorDrawable="@null"
-            android:textColor="@color/gray_6"
-            android:textColorHint="@color/gray_6"
+            android:text="@={viewModel.searchFilter}"
+            android:hint="Search contact"
             android:background="@android:color/transparent"
-            android:visibility="@{viewModel.searchBarVisible ? View.VISIBLE : View.GONE, default=visible}"
+            app:hintTextColor="@color/gray_6"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp"
             app:layout_constraintEnd_toStartOf="@id/clear_field"
             app:layout_constraintStart_toEndOf="@id/cancel_search"
             app:layout_constraintTop_toTopOf="parent" />
@@ -130,7 +130,7 @@
             android:id="@+id/background"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="17dp"
             android:src="@drawable/shape_white_background"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

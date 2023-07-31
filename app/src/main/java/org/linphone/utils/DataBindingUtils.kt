@@ -19,8 +19,14 @@
  */
 package org.linphone.utils
 
+import android.content.Context
+import android.view.Window
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatEditText
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.BindingAdapter
 import coil.load
 import coil.transform.CircleCropTransformation
@@ -30,6 +36,18 @@ import org.linphone.contacts.ContactData
 /**
  * This file contains all the data binding necessary for the app
  */
+
+fun AppCompatEditText.showKeyboard(window: Window) {
+    this.requestFocus()
+    /*val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)*/
+    WindowCompat.getInsetsController(window, this).show(WindowInsetsCompat.Type.ime())
+}
+
+fun AppCompatEditText.hideKeyboard() {
+    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.hideSoftInputFromWindow(this.windowToken, 0)
+}
 
 @BindingAdapter("android:src")
 fun ImageView.setSourceImageResource(resource: Int) {
