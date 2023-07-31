@@ -9,13 +9,13 @@ plugins {
 def appVersionName = "5.1.0"
 def appVersionCode = 50092
 
-static def getPackageName() {
-    return "org.linphone"
-}
+def packageName = "org.linphone"
 
 def firebaseAvailable = new File(projectDir.absolutePath +'/google-services.json').exists()
 
 def crashlyticsAvailable = new File(projectDir.absolutePath +'/google-services.json').exists() && new File(LinphoneSdkBuildDir + '/libs/').exists() && new File(LinphoneSdkBuildDir + '/libs-debug/').exists()
+
+def extractNativeLibs = false
 
 if (firebaseAvailable) {
     apply plugin: 'com.google.gms.google-services'
@@ -89,7 +89,7 @@ android {
         targetSdkVersion 34
         versionCode appVersionCode
         versionName "${project.version}"
-        applicationId getPackageName()
+        applicationId packageName
     }
 
     applicationVariants.all { variant ->
@@ -101,19 +101,19 @@ android {
         if (firebaseAvailable) {
             enableFirebaseService = "true"
         }
+
         // See https://developer.android.com/studio/releases/gradle-plugin#3-6-0-behavior for why extractNativeLibs is set to true in debug flavor
         if (variant.buildType.name == "release" || variant.buildType.name == "releaseWithCrashlytics") {
-            variant.getMergedFlavor().manifestPlaceholders = [linphone_address_mime_type: "vnd.android.cursor.item/vnd." + getPackageName() + ".provider.sip_address",
-                                                              linphone_file_provider: getPackageName() + ".fileprovider",
+            variant.getMergedFlavor().manifestPlaceholders = [linphone_address_mime_type: "vnd.android.cursor.item/vnd." + packageName + ".provider.sip_address",
+                                                              linphone_file_provider: packageName + ".fileprovider",
                                                               appLabel: "@string/app_name",
-                                                              firebaseServiceEnabled: enableFirebaseService,
-                                                              extractNativeLibs: "false"]
+                                                              firebaseServiceEnabled: enableFirebaseService]
         } else {
-            variant.getMergedFlavor().manifestPlaceholders = [linphone_address_mime_type: "vnd.android.cursor.item/vnd." + getPackageName() + ".provider.sip_address",
-                                                              linphone_file_provider: getPackageName() + ".debug.fileprovider",
+            variant.getMergedFlavor().manifestPlaceholders = [linphone_address_mime_type: "vnd.android.cursor.item/vnd." + packageName + ".provider.sip_address",
+                                                              linphone_file_provider: packageName + ".debug.fileprovider",
                                                               appLabel: "@string/app_name_debug",
-                                                              firebaseServiceEnabled: enableFirebaseService,
-                                                              extractNativeLibs: "true"]
+                                                              firebaseServiceEnabled: enableFirebaseService]
+            extractNativeLibs = true
         }
     }
 
@@ -137,9 +137,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
             resValue "string", "linphone_app_branch", gitBranch.toString().trim()
-            resValue "string", "sync_account_type", getPackageName() + ".sync"
-            resValue "string", "file_provider", getPackageName() + ".fileprovider"
-            resValue "string", "linphone_address_mime_type", "vnd.android.cursor.item/vnd." + getPackageName() + ".provider.sip_address"
+            resValue "string", "sync_account_type", packageName + ".sync"
+            resValue "string", "file_provider", packageName + ".fileprovider"
+            resValue "string", "linphone_address_mime_type", "vnd.android.cursor.item/vnd." + packageName + ".provider.sip_address"
 
             if (!firebaseAvailable) {
                 resValue "string", "gcm_defaultSenderId", "none"
@@ -169,9 +169,9 @@ android {
             jniDebuggable true
 
             resValue "string", "linphone_app_branch", gitBranch.toString().trim()
-            resValue "string", "sync_account_type", getPackageName() + ".sync"
-            resValue "string", "file_provider", getPackageName() + ".debug.fileprovider"
-            resValue "string", "linphone_address_mime_type", "vnd.android.cursor.item/vnd." + getPackageName() + ".provider.sip_address"
+            resValue "string", "sync_account_type", packageName + ".sync"
+            resValue "string", "file_provider", packageName + ".debug.fileprovider"
+            resValue "string", "linphone_address_mime_type", "vnd.android.cursor.item/vnd." + packageName + ".provider.sip_address"
             resValue "bool", "crashlytics_enabled", crashlyticsAvailable.toString()
 
             if (!firebaseAvailable) {
@@ -193,6 +193,11 @@ android {
     }
 
     namespace 'org.linphone'
+    packagingOptions {
+        jniLibs {
+            useLegacyPackaging extractNativeLibs
+        }
+    }
 }
 
 dependencies {
@@ -205,7 +210,7 @@ dependencies {
     implementation "androidx.security:security-crypto-ktx:1.1.0-alpha06"
     implementation "androidx.window:window:1.1.0"
 
-    def emoji_version = "1.4.0-beta05"
+    def emoji_version = "1.4.0-rc01"
     implementation "androidx.emoji2:emoji2:$emoji_version"
     implementation "androidx.emoji2:emoji2-emojipicker:$emoji_version"
 
@@ -216,7 +221,7 @@ dependencies {
     implementation "androidx.slidingpanelayout:slidingpanelayout:1.2.0"
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation "androidx.gridlayout:gridlayout:1.0.0"
-    implementation 'androidx.recyclerview:recyclerview:1.3.0'
+    implementation 'androidx.recyclerview:recyclerview:1.3.1'
     implementation 'androidx.drawerlayout:drawerlayout:1.2.0'
 
     // https://github.com/material-components/material-components-android/blob/master/LICENSE Apache v2.0
@@ -259,7 +264,7 @@ task generateContactsXml(type: Copy) {
     filter {
         line -> line
                 .replaceAll('%%AUTO_GENERATED%%', 'This file has been automatically generated, do not edit or commit !')
-                .replaceAll('%%PACKAGE_NAME%%', getPackageName())
+                .replaceAll('%%PACKAGE_NAME%%', packageName)
 
     }
 }
