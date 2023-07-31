@@ -51,6 +51,22 @@
         android:id="@+id/contactsFragment"
         android:name="org.linphone.ui.contacts.ContactsFragment"
         android:label="ContactsFragment"
-        tools:layout="@layout/contacts_fragment" />
+        tools:layout="@layout/contacts_fragment">
+        <action
+            android:id="@+id/action_contactsFragment_to_newContactFragment"
+            app:destination="@id/newContactFragment"
+            app:enterAnim="@anim/slide_in"
+            app:popExitAnim="@anim/slide_out" />
+        <action
+            android:id="@+id/action_contactsFragment_to_conversationsFragment"
+            app:destination="@id/conversationsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+    <fragment
+        android:id="@+id/newContactFragment"
+        android:name="org.linphone.ui.contacts.NewContactFragment"
+        android:label="NewContactFragment"
+        tools:layout="@layout/new_contact_fragment" />
 
 </navigation>

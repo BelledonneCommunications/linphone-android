@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View" />
         <variable
             name="onNewContactClicked"
+            type="View.OnClickListener" />
+        <variable
+            name="onConversationsClicked"
             type="View.OnClickListener" />
         <variable
             name="viewModel"
@@ -160,6 +163,7 @@
             app:layout_constraintTop_toBottomOf="@id/no_contacts_image" />
 
         <include
+            bind:onConversationsClicked="@{onConversationsClicked}"
             android:id="@+id/bottom_nav_bar"
             layout="@layout/bottom_nav_bar"
             android:layout_width="0dp"

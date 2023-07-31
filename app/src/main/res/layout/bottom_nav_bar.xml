@@ -5,6 +5,9 @@
 
     <data>
         <import type="android.view.View" />
+        <variable
+            name="onConversationsClicked"
+            type="View.OnClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -47,6 +50,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:onClick="@{onConversationsClicked}"
             android:id="@+id/conversations"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -61,8 +61,13 @@ class ConversationsFragment : Fragment() {
     }
 
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
-        // Holds fragment in place while new fragment slides over it
-        return AnimationUtils.loadAnimation(activity, R.anim.hold)
+        if (findNavController().currentDestination?.id == R.id.newConversationFragment ||
+            findNavController().currentDestination?.id == R.id.conversationFragment
+        ) {
+            // Holds fragment in place while (new) conversation fragment slides over it
+            return AnimationUtils.loadAnimation(activity, R.anim.hold)
+        }
+        return super.onCreateAnimation(transit, enter, nextAnim)
     }
 
     override fun onDestroyView() {

@@ -13,103 +13,106 @@
             type="org.linphone.ui.conversations.viewmodel.ConversationsListViewModel" />
     </data>
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Conversations"
+            android:textSize="20sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:layout_margin="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/menu"
+            android:layout_marginStart="22dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/title"
+            app:layout_constraintBottom_toBottomOf="@id/title"/>
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/shape_white_background"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <EditText
+            android:id="@+id/search_bar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:padding="10dp"
+            android:drawableStart="@drawable/search"
+            android:drawablePadding="10dp"
+            android:background="@drawable/shape_search_round_background"
+            android:hint="Rechercher un contact, une conversation..."
+            android:textSize="14sp"
+            android:inputType="textPersonName|textNoSuggestions"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title" />
 
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Conversations"
-                android:textSize="20sp"
-                android:textColor="#FFFFFF"
-                android:textStyle="bold"
-                android:layout_margin="20dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+        <TextView
+            android:id="@+id/sort_by_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:text="Trier par"
+            android:textSize="12sp"
+            android:textColor="@color/gray_5"
+            app:layout_constraintStart_toStartOf="@id/search_bar"
+            app:layout_constraintTop_toTopOf="@id/sort_by"
+            app:layout_constraintBottom_toBottomOf="@id/sort_by"/>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/menu"
-                android:layout_marginStart="22dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/title"
-                app:layout_constraintBottom_toBottomOf="@id/title"/>
+        <TextView
+            android:id="@+id/sort_by"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:text="Récents"
+            android:textSize="14sp"
+            android:textColor="@color/blue_filter"
+            android:drawablePadding="5dp"
+            app:layout_constraintStart_toEndOf="@id/sort_by_label"
+            app:layout_constraintTop_toBottomOf="@id/search_bar"
+            app:drawableEndCompat="@drawable/spinner" />
 
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/shape_white_background"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/title"
-                app:layout_constraintBottom_toBottomOf="parent" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/conversationsList"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sort_by"
+            app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar" />
 
-            <EditText
-                android:id="@+id/search_bar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:layout_marginStart="30dp"
-                android:layout_marginEnd="30dp"
-                android:padding="10dp"
-                android:drawableStart="@drawable/search"
-                android:drawablePadding="10dp"
-                android:background="@drawable/shape_search_round_background"
-                android:hint="Rechercher un contact, une conversation..."
-                android:textSize="14sp"
-                android:inputType="textPersonName|textNoSuggestions"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/title" />
-
-            <TextView
-                android:id="@+id/sort_by_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:text="Trier par"
-                android:textSize="12sp"
-                android:textColor="@color/gray_5"
-                app:layout_constraintStart_toStartOf="@id/search_bar"
-                app:layout_constraintTop_toTopOf="@id/sort_by"
-                app:layout_constraintBottom_toBottomOf="@id/sort_by"/>
-
-            <TextView
-                android:id="@+id/sort_by"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:text="Récents"
-                android:textSize="14sp"
-                android:textColor="@color/blue_filter"
-                android:drawablePadding="5dp"
-                app:layout_constraintStart_toEndOf="@id/sort_by_label"
-                app:layout_constraintTop_toBottomOf="@id/search_bar"
-                app:drawableEndCompat="@drawable/spinner" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/conversationsList"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/sort_by"
-                app:layout_constraintBottom_toBottomOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <include
+            android:id="@+id/bottom_nav_bar"
+            layout="@layout/bottom_nav_bar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/new_conversation"
@@ -120,8 +123,10 @@
             android:layout_margin="16dp"
             android:src="@drawable/add"
             app:tint="@color/primary_color"
-            app:backgroundTint="@color/white" />
+            app:backgroundTint="@color/white"
+            app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

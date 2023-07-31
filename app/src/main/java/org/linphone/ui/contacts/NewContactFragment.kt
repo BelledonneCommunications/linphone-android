@@ -24,25 +24,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.navGraphViewModels
-import org.linphone.R
-import org.linphone.databinding.ContactsFragmentBinding
-import org.linphone.ui.contacts.viewmodel.ContactsListViewModel
+import org.linphone.databinding.NewContactFragmentBinding
 
-class ContactsFragment : Fragment() {
-    private lateinit var binding: ContactsFragmentBinding
-    private val listViewModel: ContactsListViewModel by navGraphViewModels(
-        R.id.contactsFragment
-    )
+class NewContactFragment : Fragment() {
+    private lateinit var binding: NewContactFragmentBinding
 
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
-        if (findNavController().currentDestination?.id == R.id.newContactFragment) {
-            // Holds fragment in place while new contact fragment slides over it
+        /*if (findNavController().currentDestination?.id == R.id.contactFragment) {
+            // Holds fragment in place while created contact fragment slides over it
             return AnimationUtils.loadAnimation(activity, R.anim.hold)
-        }
+        }*/
         return super.onCreateAnimation(transit, enter, nextAnim)
     }
 
@@ -51,7 +43,7 @@ class ContactsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = ContactsFragmentBinding.inflate(layoutInflater)
+        binding = NewContactFragmentBinding.inflate(layoutInflater)
         return binding.root
     }
 
@@ -59,24 +51,11 @@ class ContactsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.viewModel = listViewModel
 
         // postponeEnterTransition()
 
-        binding.setOnNewContactClicked {
-            if (findNavController().currentDestination?.id == R.id.contactsFragment) {
-                findNavController().navigate(
-                    R.id.action_contactsFragment_to_newContactFragment
-                )
-            }
-        }
-
-        binding.setOnConversationsClicked {
-            if (findNavController().currentDestination?.id == R.id.contactsFragment) {
-                findNavController().navigate(
-                    R.id.action_contactsFragment_to_conversationsFragment
-                )
-            }
+        binding.setCancelClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
         /*(view.parent as? ViewGroup)?.doOnPreDraw {
