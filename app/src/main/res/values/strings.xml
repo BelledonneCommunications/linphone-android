@@ -49,6 +49,8 @@
         <item quantity="other">%d days</item>
     </plurals>
     <string name="share_uploaded_logs_link">Share logs link using…</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
     <!-- Errors -->
     <string name="error_unexpected">Unexpected error…</string>
@@ -114,6 +116,7 @@
     <string name="contact_local_sync_account">Store locally</string>
     <string name="contact_cant_be_deleted">This contact can\'t be deleted</string>
     <string name="contacts_ldap_query_more_results_available">More results are available, refine your search</string>
+    <string name="contacts_new_contact_wont_be_visible_warning_dialog">You are about to create a new contact without a SIP URI nor a phone number, thus it won\'t be visible in &appName;.\n\nDo you want to create it anyway?</string>
 
     <!-- Dialer -->
     <string name="dialer_address_bar_hint">Enter a number or an address</string>
