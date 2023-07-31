@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav_graph"
-    app:startDestination="@id/conversationsFragment">
+    app:startDestination="@id/contactsFragment">
 
     <fragment
         android:id="@+id/conversationsFragment"
@@ -47,5 +47,10 @@
             android:name="remoteSipUri"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/contactsFragment"
+        android:name="org.linphone.ui.contacts.ContactsFragment"
+        android:label="ContactsFragment"
+        tools:layout="@layout/contacts_fragment" />
 
 </navigation>
