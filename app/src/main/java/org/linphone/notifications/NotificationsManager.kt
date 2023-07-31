@@ -285,7 +285,7 @@ class NotificationsManager(private val context: Context) {
                 Log.w(
                     "[Notifications Manager] Found existing call? notification [${notification.id}], cancelling it"
                 )
-                manager.cancel(notification.tag, notification.id)
+                manager.cancel(notification.id)
             } else if (notification.tag == CHAT_TAG) {
                 Log.i(
                     "[Notifications Manager] Found existing chat notification [${notification.id}]"
