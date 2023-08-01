@@ -26,7 +26,10 @@ import android.content.Intent
 import android.database.CursorIndexOutOfBoundsException
 import android.net.Uri
 import android.os.Environment
+import android.os.ParcelFileDescriptor
+import android.os.Process.myUid
 import android.provider.OpenableColumns
+import android.system.Os.fstat
 import android.webkit.MimeTypeMap
 import androidx.core.content.FileProvider
 import java.io.*
@@ -269,6 +272,21 @@ class FileUtils {
         suspend fun getFilePath(context: Context, uri: Uri): String? {
             var result: String? = null
             val name: String = getNameFromUri(uri, context)
+
+            try {
+                if (fstat(
+                        ParcelFileDescriptor.open(
+                                File(uri.path),
+                                ParcelFileDescriptor.MODE_READ_ONLY
+                            ).fileDescriptor
+                    ).st_uid != myUid()
+                ) {
+                    Log.e("[File Utils] File descriptor UID different from our, denying copy!")
+                    return result
+                }
+            } catch (e: Exception) {
+                Log.e("[File Utils] Can't check file ownership: ", e)
+            }
 
             try {
                 val localFile: File = createFile(name)
