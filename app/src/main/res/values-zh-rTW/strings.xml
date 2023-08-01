@@ -808,4 +808,9 @@
     <string name="android_14_full_screen_intent_permission_not_granted">尚未授予顯示來電的必要權限</string>
     <string name="android_14_go_to_full_screen_intent_permission_setting">顯示</string>
     <string name="assistant_error_invalid_international_prefix">國際冠碼錯誤</string>
+    <string name="yes">是</string>
+    <string name="no">否</string>
+    <string name="contacts_new_contact_wont_be_visible_warning_dialog">您要建立的聯絡人不含 SIP URI 或電話號碼，不會在 &amp;appName; 出現。
+\n
+\n還是要建立這位聯絡人嗎？</string>
 </resources>
