@@ -815,4 +815,9 @@
     <string name="android_14_full_screen_intent_permission_not_granted">Povolení vyžadované pro zobrazení příchozích hovorů zatím nebylo uděleno</string>
     <string name="android_14_go_to_full_screen_intent_permission_setting">Zobrazit</string>
     <string name="assistant_error_invalid_international_prefix">Špatná mezinárodní předvolba</string>
+    <string name="yes">Ano</string>
+    <string name="no">Ne</string>
+    <string name="contacts_new_contact_wont_be_visible_warning_dialog">Chystáte se vytvořit nový kontakt bez SIP URI ani telefonního čísla, a proto nebude viditelný v seznamu &amp;appName;.
+\n
+\nChcete jej přesto vytvořit\?</string>
 </resources>
