@@ -389,7 +389,12 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         // Prevent this intent to be processed again
         intent.action = null
         intent.data = null
-        intent.extras?.clear()
+        val extras = intent.extras
+        if (extras != null) {
+            for (key in extras.keySet()) {
+                intent.removeExtra(key)
+            }
+        }
     }
 
     private fun handleMainIntent(intent: Intent) {
