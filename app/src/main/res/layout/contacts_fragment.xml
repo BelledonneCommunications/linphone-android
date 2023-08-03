@@ -28,7 +28,7 @@
             android:id="@+id/top_bar"
             bind:viewModel="@{viewModel}"
             bind:onAvatarClickListener="@{onAvatarClickListener}"
-            layout="@layout/main_fragment_top_bar" />
+            layout="@layout/top_search_bar" />
 
         <ImageView
             android:id="@+id/background"
@@ -66,8 +66,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/no_contacts_image" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/contactsList"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/background"
+            app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar" />
+
         <include
             bind:onConversationsClicked="@{onConversationsClicked}"
+            android:visibility="@{viewModel.bottomNavBarVisible ? View.VISIBLE : View.GONE}"
             android:id="@+id/bottom_nav_bar"
             layout="@layout/bottom_nav_bar_contacts"
             android:layout_width="0dp"

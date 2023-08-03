@@ -19,6 +19,14 @@
  */
 package org.linphone.ui.contacts.viewmodel
 
+import androidx.lifecycle.MutableLiveData
 import org.linphone.ui.TopBarViewModel
 
-class ContactsListViewModel : TopBarViewModel()
+class ContactsListViewModel : TopBarViewModel() {
+    val bottomNavBarVisible = MutableLiveData<Boolean>()
+
+    init {
+        title.value = "Contacts"
+        bottomNavBarVisible.value = true
+    }
+}

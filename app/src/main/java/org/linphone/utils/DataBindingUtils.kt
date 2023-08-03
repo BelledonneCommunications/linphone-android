@@ -20,12 +20,15 @@
 package org.linphone.utils
 
 import android.content.Context
+import android.view.View
 import android.view.Window
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.doOnLayout
 import androidx.databinding.BindingAdapter
 import coil.load
 import coil.transform.CircleCropTransformation
@@ -47,6 +50,29 @@ fun TextInputLayout.showKeyboard(window: Window) {
 fun TextInputLayout.hideKeyboard() {
     val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.hideSoftInputFromWindow(this.windowToken, 0)
+}
+
+fun View.setKeyboardInsetListener(lambda: (visible: Boolean) -> Unit) {
+    doOnLayout {
+        var isKeyboardVisible = ViewCompat.getRootWindowInsets(this)?.isVisible(
+            WindowInsetsCompat.Type.ime()
+        ) == true
+
+        lambda(isKeyboardVisible)
+
+        // See https://issuetracker.google.com/issues/281942480
+        ViewCompat.setOnApplyWindowInsetsListener(
+            rootView
+        ) { view, insets ->
+            val keyboardVisibilityChanged = ViewCompat.getRootWindowInsets(view)
+                ?.isVisible(WindowInsetsCompat.Type.ime()) == true
+            if (keyboardVisibilityChanged != isKeyboardVisible) {
+                isKeyboardVisible = keyboardVisibilityChanged
+                lambda(isKeyboardVisible)
+            }
+            ViewCompat.onApplyWindowInsets(view, insets)
+        }
+    }
 }
 
 @BindingAdapter("android:src")

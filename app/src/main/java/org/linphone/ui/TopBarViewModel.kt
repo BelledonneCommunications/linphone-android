@@ -24,6 +24,8 @@ import androidx.lifecycle.ViewModel
 import org.linphone.utils.Event
 
 open class TopBarViewModel : ViewModel() {
+    val title = MutableLiveData<String>()
+
     val searchBarVisible = MutableLiveData<Boolean>()
 
     val searchFilter = MutableLiveData<String>()

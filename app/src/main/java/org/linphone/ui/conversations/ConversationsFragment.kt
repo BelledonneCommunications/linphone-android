@@ -38,6 +38,8 @@ import org.linphone.R
 import org.linphone.databinding.ConversationsFragmentBinding
 import org.linphone.ui.conversations.adapter.ConversationsListAdapter
 import org.linphone.ui.conversations.viewmodel.ConversationsListViewModel
+import org.linphone.utils.hideKeyboard
+import org.linphone.utils.showKeyboard
 
 class ConversationsFragment : Fragment() {
     private lateinit var binding: ConversationsFragmentBinding
@@ -141,6 +143,17 @@ class ConversationsFragment : Fragment() {
         listViewModel.notifyItemChangedEvent.observe(viewLifecycleOwner) {
             it.consume { index ->
                 adapter.notifyItemChanged(index)
+            }
+        }
+
+        listViewModel.focusSearchBarEvent.observe(viewLifecycleOwner) {
+            it.consume { show ->
+                if (show) {
+                    // To automatically open keyboard
+                    binding.topBar.search.showKeyboard(requireActivity().window)
+                } else {
+                    binding.topBar.search.hideKeyboard()
+                }
             }
         }
 

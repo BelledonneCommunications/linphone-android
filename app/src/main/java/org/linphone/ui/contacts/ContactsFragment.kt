@@ -35,6 +35,7 @@ import org.linphone.databinding.ContactsFragmentBinding
 import org.linphone.ui.MainActivity
 import org.linphone.ui.contacts.viewmodel.ContactsListViewModel
 import org.linphone.utils.hideKeyboard
+import org.linphone.utils.setKeyboardInsetListener
 import org.linphone.utils.showKeyboard
 
 class ContactsFragment : Fragment() {
@@ -67,6 +68,11 @@ class ContactsFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = listViewModel
 
+        binding.root.setKeyboardInsetListener { keyboardVisible ->
+            // val portraitOrientation = resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
+            listViewModel.bottomNavBarVisible.value = !keyboardVisible
+        }
+
         // postponeEnterTransition()
 
         binding.setOnNewContactClicked {
@@ -92,8 +98,8 @@ class ContactsFragment : Fragment() {
         }
 
         listViewModel.focusSearchBarEvent.observe(viewLifecycleOwner) {
-            it.consume { take ->
-                if (take) {
+            it.consume { show ->
+                if (show) {
                     // To automatically open keyboard
                     binding.topBar.search.showKeyboard(requireActivity().window)
                 } else {
