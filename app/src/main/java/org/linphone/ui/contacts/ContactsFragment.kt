@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.contacts
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -69,8 +70,8 @@ class ContactsFragment : Fragment() {
         binding.viewModel = listViewModel
 
         binding.root.setKeyboardInsetListener { keyboardVisible ->
-            // val portraitOrientation = resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
-            listViewModel.bottomNavBarVisible.value = !keyboardVisible
+            val portraitOrientation = resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
+            listViewModel.bottomNavBarVisible.value = !portraitOrientation || !keyboardVisible
         }
 
         // postponeEnterTransition()
