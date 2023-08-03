@@ -22,14 +22,68 @@ package org.linphone.utils
 import android.content.ContentUris
 import android.net.Uri
 import android.provider.ContactsContract
+import androidx.emoji2.text.EmojiCompat
 import java.io.IOException
+import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Address
 import org.linphone.core.ChatRoom
 import org.linphone.core.Friend
+import org.linphone.core.tools.Log
 
 class LinphoneUtils {
     companion object {
+        private val emojiCompat: EmojiCompat?
+            get() = initEmojiCompat()
+
+        private fun initEmojiCompat(): EmojiCompat? {
+            return try {
+                EmojiCompat.get()
+            } catch (ise: IllegalStateException) {
+                Log.w(
+                    "[App Utils] EmojiCompat.get() triggered IllegalStateException [$ise], trying manual init"
+                )
+                EmojiCompat.init(coreContext.context)
+            }
+        }
+
+        fun getInitials(displayName: String, limit: Int = 2): String {
+            if (displayName.isEmpty()) return ""
+
+            val split = displayName.uppercase(Locale.getDefault()).split(" ")
+            var initials = ""
+            var characters = 0
+            val emoji = emojiCompat
+
+            for (i in split.indices) {
+                if (split[i].isNotEmpty()) {
+                    try {
+                        if (emoji?.loadState == EmojiCompat.LOAD_STATE_SUCCEEDED && emoji.hasEmojiGlyph(
+                                split[i]
+                            )
+                        ) {
+                            val glyph = emoji.process(split[i])
+                            if (characters > 0) { // Limit initial to 1 emoji only
+                                Log.d("[App Utils] We limit initials to one emoji only")
+                                initials = ""
+                            }
+                            initials += glyph
+                            break // Limit initial to 1 emoji only
+                        } else {
+                            initials += split[i][0]
+                        }
+                    } catch (ise: IllegalStateException) {
+                        Log.e("[App Utils] Can't call hasEmojiGlyph: $ise")
+                        initials += split[i][0]
+                    }
+
+                    characters += 1
+                    if (characters >= limit) break
+                }
+            }
+            return initials
+        }
+
         private fun getChatRoomId(localAddress: Address, remoteAddress: Address): String {
             val localSipUri = localAddress.clone()
             localSipUri.clean()

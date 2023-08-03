@@ -26,9 +26,12 @@ import androidx.lifecycle.MutableLiveData
 import org.linphone.core.ConsolidatedPresence
 import org.linphone.core.Friend
 import org.linphone.core.FriendListenerStub
+import org.linphone.utils.LinphoneUtils
 
 class ContactModel(val friend: Friend) {
     val id = friend.refKey
+
+    val initials = LinphoneUtils.getInitials(friend.name.orEmpty())
 
     val presenceStatus = MutableLiveData<ConsolidatedPresence>()
 
@@ -43,6 +46,7 @@ class ContactModel(val friend: Friend) {
     }
 
     init {
+        // Core thread
         name.postValue(friend.name)
         presenceStatus.postValue(friend.consolidatedPresence)
 
@@ -52,10 +56,12 @@ class ContactModel(val friend: Friend) {
     }
 
     fun destroy() {
+        // Core thread
         friend.removeListener(friendListener)
     }
 
     private fun getAvatarUri(): Uri? {
+        // Core thread
         val refKey = friend.refKey
         if (refKey != null) {
             val lookupUri = ContentUris.withAppendedId(

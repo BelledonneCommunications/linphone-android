@@ -18,16 +18,26 @@
         android:layout_marginBottom="5dp"
         android:background="@drawable/cell_background">
 
-        <ImageView
+        <io.getstream.avatarview.AvatarView
             android:id="@+id/avatar"
-            android:layout_width="wrap_content"
+            android:layout_width="36dp"
             android:layout_height="36dp"
-            android:src="@{@drawable/contact_avatar}"
-            contactAvatar="@{model}"
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:adjustViewBounds="true"
+            contactAvatar="@{model}"
+            app:avatarViewPlaceholder="@drawable/contact_avatar"
+            app:avatarViewInitialsBackgroundColor="@color/blue_outgoing_message"
+            app:avatarViewInitialsTextColor="@color/gray_9"
+            app:avatarViewInitialsTextSize="16sp"
+            app:avatarViewInitialsTextStyle="bold"
+            app:avatarViewShape="circle"
+            app:avatarViewIndicatorEnabled="true"
+            app:avatarViewIndicatorBorderColor="@color/white"
+            app:avatarViewIndicatorSizeCriteria="6"
+            app:avatarViewIndicatorBorderSizeCriteria="8"
+            app:avatarViewIndicatorPosition="bottomRight"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -40,6 +50,15 @@
             android:layout_marginStart="10dp"
             app:layout_constraintStart_toEndOf="@id/avatar"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginEnd="10dp"
+            android:background="@color/blue_outgoing_message"
+            app:layout_constraintStart_toStartOf="@id/name"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -80,6 +80,8 @@ dependencies {
     implementation("io.coil-kt:coil-gif:$coil_version")
     implementation("io.coil-kt:coil-svg:$coil_version")
     implementation("io.coil-kt:coil-video:$coil_version")
+    // https://github.com/GetStream/avatarview-android/blob/main/LICENSE Apache v2.0
+    implementation "io.getstream:avatarview-coil:1.0.7"
 
     implementation platform('com.google.firebase:firebase-bom:30.3.2')
     implementation 'com.google.firebase:firebase-messaging'

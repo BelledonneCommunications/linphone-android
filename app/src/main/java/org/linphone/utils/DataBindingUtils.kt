@@ -32,8 +32,12 @@ import androidx.core.view.doOnLayout
 import androidx.databinding.BindingAdapter
 import coil.load
 import coil.transform.CircleCropTransformation
+import io.getstream.avatarview.AvatarView
+import io.getstream.avatarview.coil.loadImage
 import org.linphone.R
 import org.linphone.contacts.ContactData
+import org.linphone.core.ConsolidatedPresence
+import org.linphone.core.tools.Log
 import org.linphone.ui.contacts.model.ContactModel
 
 /**
@@ -105,13 +109,28 @@ fun loadContactPictureWithCoil2(imageView: ImageView, contact: ContactData?) {
 }
 
 @BindingAdapter("contactAvatar")
-fun loadContactPictureWithCoil(imageView: ImageView, contact: ContactModel?) {
+fun AvatarView.loadContactPicture(contact: ContactModel?) {
     if (contact == null) {
-        imageView.load(R.drawable.contact_avatar)
+        loadImage(R.drawable.contact_avatar)
     } else {
-        imageView.load(contact.avatar) {
-            transformations(CircleCropTransformation())
-            error(R.drawable.contact_avatar)
+        indicatorColor = when (contact.presenceStatus.value) {
+            ConsolidatedPresence.Online -> R.color.green_online
+            else -> R.color.blue_outgoing_message
         }
+        indicatorEnabled = true
+
+        val uri = contact.avatar
+        Log.i("[Data binding Utils] Loading URI [$uri]")
+        loadImage(
+            data = uri,
+            onStart = {
+                // Use initials as placeholder
+                avatarInitials = contact.initials
+            },
+            onSuccess = { _, _ ->
+                // If loading is successful, remove initials otherwise image won't be visible
+                avatarInitials = ""
+            }
+        )
     }
 }
