@@ -35,12 +35,29 @@ class ContactsListAdapter(
         selectedAdapterPosition = -1
     }
 
+    fun showHeaderForPosition(position: Int): Boolean {
+        if (position >= itemCount) return false
+
+        val contact = getItem(position)
+        val firstLetter = contact.name.value?.get(0).toString()
+        val previousPosition = position - 1
+
+        return if (previousPosition >= 0) {
+            val previousItemFirstLetter = getItem(previousPosition).name.value?.get(0).toString()
+            !firstLetter.equals(previousItemFirstLetter, ignoreCase = true)
+        } else {
+            true
+        }
+    }
+
     inner class ViewHolder(
         val binding: ContactListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(contactModel: ContactModel) {
             with(binding) {
                 model = contactModel
+                firstLetter = contactModel.name.value?.get(0).toString()
+                showFirstLetter = showHeaderForPosition(bindingAdapterPosition)
 
                 lifecycleOwner = viewLifecycleOwner
 
