@@ -19,6 +19,6 @@
  */
 package org.linphone.ui.contacts.viewmodel
 
-import androidx.lifecycle.ViewModel
+import org.linphone.ui.TopBarViewModel
 
-class ContactsListViewModel : ViewModel()
+class ContactsListViewModel : TopBarViewModel()

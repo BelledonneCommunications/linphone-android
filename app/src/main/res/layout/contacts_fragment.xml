@@ -6,6 +6,9 @@
     <data>
         <import type="android.view.View" />
         <variable
+            name="onAvatarClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="onNewContactClicked"
             type="View.OnClickListener" />
         <variable
@@ -21,15 +24,22 @@
         android:layout_height="match_parent"
         android:background="@color/primary_color">
 
+        <include
+            android:id="@+id/top_bar"
+            bind:viewModel="@{viewModel}"
+            bind:onAvatarClickListener="@{onAvatarClickListener}"
+            layout="@layout/main_fragment_top_bar" />
+
         <ImageView
             android:id="@+id/background"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginTop="17dp"
             android:src="@drawable/shape_white_background"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/top_bar" />
 
         <ImageView
             android:id="@+id/no_contacts_image"
