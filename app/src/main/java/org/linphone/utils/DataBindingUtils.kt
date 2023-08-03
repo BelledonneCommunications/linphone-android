@@ -32,22 +32,22 @@ import androidx.core.view.doOnLayout
 import androidx.databinding.BindingAdapter
 import coil.load
 import coil.transform.CircleCropTransformation
-import com.google.android.material.textfield.TextInputLayout
 import org.linphone.R
 import org.linphone.contacts.ContactData
+import org.linphone.ui.contacts.model.ContactModel
 
 /**
  * This file contains all the data binding necessary for the app
  */
 
-fun TextInputLayout.showKeyboard(window: Window) {
+fun View.showKeyboard(window: Window) {
     this.requestFocus()
     /*val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)*/
     WindowCompat.getInsetsController(window, this).show(WindowInsetsCompat.Type.ime())
 }
 
-fun TextInputLayout.hideKeyboard() {
+fun View.hideKeyboard() {
     val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.hideSoftInputFromWindow(this.windowToken, 0)
 }
@@ -93,7 +93,19 @@ fun AppCompatTextView.setDrawableTint(color: Int) {
 }
 
 @BindingAdapter("coilContact")
-fun loadContactPictureWithCoil(imageView: ImageView, contact: ContactData?) {
+fun loadContactPictureWithCoil2(imageView: ImageView, contact: ContactData?) {
+    if (contact == null) {
+        imageView.load(R.drawable.contact_avatar)
+    } else {
+        imageView.load(contact.avatar) {
+            transformations(CircleCropTransformation())
+            error(R.drawable.contact_avatar)
+        }
+    }
+}
+
+@BindingAdapter("contactAvatar")
+fun loadContactPictureWithCoil(imageView: ImageView, contact: ContactModel?) {
     if (contact == null) {
         imageView.load(R.drawable.contact_avatar)
     } else {

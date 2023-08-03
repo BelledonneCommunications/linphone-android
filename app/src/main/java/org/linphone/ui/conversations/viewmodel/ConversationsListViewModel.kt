@@ -27,6 +27,7 @@ import org.linphone.core.ChatMessage
 import org.linphone.core.ChatRoom
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
+import org.linphone.core.SearchResult
 import org.linphone.core.tools.Log
 import org.linphone.ui.TopBarViewModel
 import org.linphone.ui.conversations.data.ChatRoomData
@@ -111,6 +112,10 @@ class ConversationsListViewModel : TopBarViewModel() {
             core.removeListener(coreListener)
         }
         super.onCleared()
+    }
+
+    override fun processMagicSearchResults(results: Array<SearchResult>) {
+        TODO("Not yet implemented")
     }
 
     private fun addChatRoomToList(chatRoom: ChatRoom) {

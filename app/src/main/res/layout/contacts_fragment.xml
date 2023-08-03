@@ -29,6 +29,12 @@
             android:layout_height="match_parent"
             android:background="@color/primary_color">
 
+            <androidx.constraintlayout.widget.Group
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="no_contacts_image, no_contacts_label"
+                android:visibility="@{viewModel.contactsList.empty ? View.VISIBLE : View.GONE}" />
+
             <include
                 android:id="@+id/top_bar"
                 bind:viewModel="@{viewModel}"
