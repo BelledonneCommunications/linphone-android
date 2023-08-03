@@ -17,8 +17,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.contacts.viewmodel
+package org.linphone.ui
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import org.linphone.utils.Event
 
-class ContactsListViewModel : ViewModel()
+class MainActivityViewModel : ViewModel() {
+    val searchBarVisible = MutableLiveData<Boolean>()
+
+    val searchFilter = MutableLiveData<String>()
+
+    val focusSearchBarEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
+    init {
+        searchBarVisible.value = false
+    }
+
+    fun openSearchBar() {
+        searchBarVisible.value = true
+        focusSearchBarEvent.value = Event(true)
+    }
+
+    fun closeSearchBar() {
+        searchBarVisible.value = false
+        focusSearchBarEvent.value = Event(false)
+    }
+
+    fun clearFilter() {
+        searchFilter.value = ""
+    }
+}

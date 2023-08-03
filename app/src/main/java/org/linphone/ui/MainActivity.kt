@@ -22,20 +22,25 @@ package org.linphone.ui
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.view.Gravity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
-import org.linphone.databinding.ActivityMainBinding
+import org.linphone.databinding.MainActivityBinding
+import org.linphone.utils.hideKeyboard
+import org.linphone.utils.showKeyboard
 
 class MainActivity : AppCompatActivity() {
     companion object {
         private const val CONTACTS_PERMISSION_REQUEST = 0
     }
 
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var viewModel: MainActivityViewModel
+    private lateinit var binding: MainActivityBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, true)
@@ -54,8 +59,30 @@ class MainActivity : AppCompatActivity() {
             Thread.sleep(20)
         }
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.main_activity)
         binding.lifecycleOwner = this
+
+        viewModel = ViewModelProvider(this)[MainActivityViewModel::class.java]
+        binding.viewModel = viewModel
+
+        binding.setAvatarClickListener {
+            if (binding.sideMenu.isDrawerOpen(Gravity.LEFT)) {
+                binding.sideMenu.closeDrawer(binding.sideMenuContent, true)
+            } else {
+                binding.sideMenu.openDrawer(binding.sideMenuContent, true)
+            }
+        }
+
+        viewModel.focusSearchBarEvent.observe(this) {
+            it.consume { take ->
+                if (take) {
+                    // To automatically open keyboard
+                    binding.search.showKeyboard(window)
+                } else {
+                    binding.search.hideKeyboard()
+                }
+            }
+        }
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {

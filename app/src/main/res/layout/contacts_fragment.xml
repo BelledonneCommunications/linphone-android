@@ -21,121 +21,15 @@
         android:layout_height="match_parent"
         android:background="@color/primary_color">
 
-        <androidx.constraintlayout.widget.Group
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:constraint_referenced_ids="avatar, title, search_toggle"
-            android:visibility="@{viewModel.searchBarVisible ? View.GONE : View.VISIBLE, default=gone}" />
-
-        <androidx.constraintlayout.widget.Group
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:constraint_referenced_ids="cancel_search, search, clear_field"
-            android:visibility="@{viewModel.searchBarVisible ? View.VISIBLE : View.GONE}" />
-
-        <androidx.constraintlayout.widget.Barrier
-            android:id="@+id/background_barrier"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:constraint_referenced_ids="title, search"
-            app:barrierDirection="bottom" />
-
-        <ImageView
-            android:id="@+id/avatar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:src="@drawable/contact_avatar"
-            app:layout_constraintBottom_toBottomOf="@id/title"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/title" />
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="0dp"
-            android:layout_height="35dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="10dp"
-            android:gravity="center_vertical"
-            android:text="Contacts"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@id/search_toggle"
-            app:layout_constraintStart_toEndOf="@id/avatar"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/search_toggle"
-            android:onClick="@{() -> viewModel.openSearchBar()}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="6dp"
-            android:layout_marginEnd="9dp"
-            android:src="@drawable/search"
-            app:layout_constraintBottom_toBottomOf="@id/title"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/title"
-            app:tint="@color/white" />
-
-        <ImageView
-            android:id="@+id/cancel_search"
-            android:onClick="@{() -> viewModel.closeSearchBar()}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:layout_marginStart="5dp"
-            android:src="@drawable/back"
-            app:layout_constraintBottom_toBottomOf="@id/search"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/search"
-            app:tint="@color/white" />
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/search"
-            android:layout_width="0dp"
-            android:layout_height="35dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="10dp"
-            android:gravity="center_vertical"
-            android:textColor="@color/gray_6"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:textCursorDrawable="@null"
-            android:text="@={viewModel.searchFilter}"
-            android:hint="Search contact"
-            android:background="@android:color/transparent"
-            app:hintTextColor="@color/gray_6"
-            app:boxStrokeWidth="0dp"
-            app:boxStrokeWidthFocused="0dp"
-            app:layout_constraintEnd_toStartOf="@id/clear_field"
-            app:layout_constraintStart_toEndOf="@id/cancel_search"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/clear_field"
-            android:onClick="@{() -> viewModel.clearFilter()}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="6dp"
-            android:layout_marginEnd="9dp"
-            android:src="@drawable/close"
-            app:layout_constraintBottom_toBottomOf="@id/search"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/search"
-            app:tint="@color/white" />
-
         <ImageView
             android:id="@+id/background"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="17dp"
             android:src="@drawable/shape_white_background"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/background_barrier" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/no_contacts_image"

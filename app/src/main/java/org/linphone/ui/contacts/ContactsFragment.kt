@@ -33,8 +33,6 @@ import androidx.transition.AutoTransition
 import org.linphone.R
 import org.linphone.databinding.ContactsFragmentBinding
 import org.linphone.ui.contacts.viewmodel.ContactsListViewModel
-import org.linphone.utils.hideKeyboard
-import org.linphone.utils.showKeyboard
 
 class ContactsFragment : Fragment() {
     private lateinit var binding: ContactsFragmentBinding
@@ -83,17 +81,6 @@ class ContactsFragment : Fragment() {
                 )
                 val action = ContactsFragmentDirections.actionContactsFragmentToConversationsFragment()
                 findNavController().navigate(action, extras)
-            }
-        }
-
-        listViewModel.focusSearchBarEvent.observe(viewLifecycleOwner) {
-            it.consume { take ->
-                if (take) {
-                    // To automatically open keyboard
-                    binding.search.showKeyboard(requireActivity().window)
-                } else {
-                    binding.search.hideKeyboard()
-                }
             }
         }
 
