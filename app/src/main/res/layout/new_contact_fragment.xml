@@ -28,7 +28,7 @@
             app:layout_constraintTop_toTopOf="@id/title"
             app:tint="@color/white" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="35dp"

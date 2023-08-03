@@ -27,7 +27,7 @@
             app:layout_constraintTop_toTopOf="@id/event_text"
             app:layout_constraintBottom_toBottomOf="@id/event_text"/>
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/event_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

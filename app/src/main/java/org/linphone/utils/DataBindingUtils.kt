@@ -24,7 +24,7 @@ import android.view.View
 import android.view.Window
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
-import android.widget.TextView
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -81,8 +81,15 @@ fun ImageView.setSourceImageResource(resource: Int) {
 }
 
 @BindingAdapter("android:textStyle")
-fun TextView.setTypeface(typeface: Int) {
+fun AppCompatTextView.setTypeface(typeface: Int) {
     this.setTypeface(null, typeface)
+}
+
+@BindingAdapter("android:drawableTint")
+fun AppCompatTextView.setDrawableTint(color: Int) {
+    for (drawable in compoundDrawablesRelative) {
+        drawable?.setTint(color)
+    }
 }
 
 @BindingAdapter("coilContact")

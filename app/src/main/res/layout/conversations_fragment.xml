@@ -76,8 +76,9 @@
 
         <include
             bind:onContactsClicked="@{onContactsClicked}"
+            bind:conversationsSelected="@{true}"
             android:id="@+id/bottom_nav_bar"
-            layout="@layout/bottom_nav_bar_conversations"
+            layout="@layout/bottom_nav_bar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"

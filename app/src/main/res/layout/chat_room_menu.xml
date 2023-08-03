@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:background="@color/separator">
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/mark_as_read"
             android:onClick="@{markAsReadClickListener}"
             android:layout_width="match_parent"
@@ -49,7 +49,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/mute"
             android:onClick="@{muteClickListener}"
             android:layout_width="match_parent"
@@ -66,7 +66,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/unmute"
             android:onClick="@{unMuteClickListener}"
             android:layout_width="match_parent"
@@ -83,7 +83,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/call"
             android:onClick="@{callClickListener}"
             android:layout_width="match_parent"
@@ -99,7 +99,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/delete"
             android:onClick="@{deleteClickListener}"
             android:layout_width="match_parent"
@@ -115,7 +115,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/leave"
             android:onClick="@{deleteClickListener}"
             android:layout_width="0dp"

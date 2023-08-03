@@ -5,9 +5,25 @@
 
     <data>
         <import type="android.view.View" />
+        <import type="android.graphics.Typeface" />
+        <variable
+            name="onContactsClicked"
+            type="View.OnClickListener" />
         <variable
             name="onConversationsClicked"
             type="View.OnClickListener" />
+        <variable
+            name="contactsSelected"
+            type="Boolean" />
+        <variable
+            name="callsSelected"
+            type="Boolean" />
+        <variable
+            name="conversationsSelected"
+            type="Boolean" />
+        <variable
+            name="meetingsSelected"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,7 +32,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
+            android:onClick="@{onContactsClicked}"
             android:id="@+id/contacts"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -28,14 +45,14 @@
             android:textSize="11sp"
             android:gravity="center"
             android:textColor="@color/gray_9"
-            android:drawableTint="@color/primary_color"
-            android:textStyle="bold"
+            android:drawableTint="@{contactsSelected ? @color/primary_color : @color/gray_9, default=@color/gray_9}"
+            android:textStyle="@{contactsSelected ? Typeface.BOLD : Typeface.NORMAL}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/calls"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/calls"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -48,13 +65,14 @@
             android:textSize="11sp"
             android:gravity="center"
             android:textColor="@color/gray_9"
-            android:drawableTint="@color/gray_9"
+            android:drawableTint="@{callsSelected ? @color/primary_color : @color/gray_9, default=@color/gray_9}"
+            android:textStyle="@{callsSelected ? Typeface.BOLD : Typeface.NORMAL}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/conversations"
             app:layout_constraintStart_toEndOf="@id/contacts"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{onConversationsClicked}"
             android:id="@+id/conversations"
             android:layout_width="0dp"
@@ -68,13 +86,14 @@
             android:textSize="11sp"
             android:gravity="center"
             android:textColor="@color/gray_9"
-            android:drawableTint="@color/gray_9"
+            android:drawableTint="@{conversationsSelected ? @color/primary_color : @color/gray_9, default=@color/gray_9}"
+            android:textStyle="@{conversationsSelected ? Typeface.BOLD : Typeface.NORMAL}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/meetings"
             app:layout_constraintStart_toEndOf="@id/calls"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/meetings"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -87,7 +106,8 @@
             android:textSize="11sp"
             android:gravity="center"
             android:textColor="@color/gray_9"
-            android:drawableTint="@color/gray_9"
+            android:drawableTint="@{meetingsSelected ? @color/primary_color : @color/gray_9, default=@color/gray_9}"
+            android:textStyle="@{meetingsSelected ? Typeface.BOLD : Typeface.NORMAL}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/conversations"
