@@ -5,16 +5,9 @@
 
     <data>
         <import type="android.view.View" />
-        <import type="android.graphics.Typeface" />
         <variable
             name="model"
             type="org.linphone.ui.contacts.model.ContactModel" />
-        <variable
-            name="first_letter"
-            type="String" />
-        <variable
-            name="show_first_letter"
-            type="Boolean" />
         <variable
             name="onClickListener"
             type="View.OnClickListener" />
@@ -26,31 +19,16 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:onClick="@{onClickListener}"
         android:onLongClick="@{onLongClickListener}"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:background="@drawable/cell_background">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/header"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{first_letter, default=`A`}"
-            android:visibility="@{show_first_letter ? View.VISIBLE : View.INVISIBLE, default=invisible}"
-            android:textColor="@color/gray_10"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_marginStart="16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
         <io.getstream.avatarview.AvatarView
             android:id="@+id/avatar"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginStart="12dp"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:adjustViewBounds="true"
@@ -67,30 +45,21 @@
             app:avatarViewIndicatorSizeCriteria="7"
             app:avatarViewIndicatorBorderSizeCriteria="8"
             app:avatarViewIndicatorPosition="bottomRight"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/header"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@{model.name, default=`John Doe`}"
             android:textSize="14sp"
             android:textColor="@color/gray_9"
             android:layout_marginStart="10dp"
-            app:layout_constraintStart_toEndOf="@id/avatar"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginEnd="10dp"
-            android:background="@color/blue_outgoing_message"
-            app:layout_constraintStart_toStartOf="@id/name"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/avatar"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
