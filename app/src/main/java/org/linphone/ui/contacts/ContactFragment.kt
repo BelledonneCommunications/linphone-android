@@ -23,12 +23,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
-import androidx.transition.AutoTransition
-import org.linphone.R
+import androidx.transition.ChangeBounds
+import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactFragmentBinding
 
 class ContactFragment : Fragment() {
@@ -38,7 +37,7 @@ class ContactFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sharedElementEnterTransition = AutoTransition()
+        sharedElementEnterTransition = ChangeBounds()
     }
 
     override fun onCreateView(
@@ -53,22 +52,22 @@ class ContactFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        postponeEnterTransition()
+
         binding.lifecycleOwner = viewLifecycleOwner
 
         val model = args.contact
         binding.model = model
-        ViewCompat.setTransitionName(binding.avatar, "transition-avatar-${model.id}")
-        ViewCompat.setTransitionName(binding.name, "transition-name-${model.id}")
+        Log.i("[Contact] Model ID is [${model.id}]")
+        binding.avatar.transitionName = "transition-avatar-${model.id}"
+        binding.name.transitionName = "transition-name-${model.id}"
 
         binding.setBackClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
-    }
 
-    override fun onResume() {
-        super.onResume()
-
-        val window = requireActivity().window
-        window.statusBarColor = ContextCompat.getColor(requireActivity(), R.color.white)
+        (view.parent as? ViewGroup)?.doOnPreDraw {
+            startPostponedEnterTransition()
+        }
     }
 }

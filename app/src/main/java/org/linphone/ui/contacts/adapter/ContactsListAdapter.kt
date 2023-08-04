@@ -2,7 +2,6 @@ package org.linphone.ui.contacts.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
@@ -10,6 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
+import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactListCellBinding
 import org.linphone.ui.contacts.model.ContactModel
 import org.linphone.utils.Event
@@ -73,8 +73,9 @@ class ContactsListAdapter(
                 lifecycleOwner = viewLifecycleOwner
 
                 binding.root.isSelected = bindingAdapterPosition == selectedAdapterPosition
-                ViewCompat.setTransitionName(binding.avatar, "transition-avatar-${contactModel.id}")
-                ViewCompat.setTransitionName(binding.name, "transition-name-${contactModel.id}")
+                Log.i("[Contacts List] Model ID is [${contactModel.id}]")
+                binding.avatar.transitionName = "transition-avatar-${contactModel.id}"
+                binding.name.transitionName = "transition-name-${contactModel.id}"
 
                 binding.setOnClickListener {
                     contactClickedEvent.value = Event(Pair(binding, contactModel))

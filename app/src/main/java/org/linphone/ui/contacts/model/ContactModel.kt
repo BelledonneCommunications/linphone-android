@@ -38,8 +38,6 @@ class ContactModel(val friend: Friend) : Serializable {
 
     val name = MutableLiveData<String>()
 
-    val avatar = getAvatarUri()
-
     private val friendListener = object : FriendListenerStub() {
         override fun onPresenceReceived(fr: Friend) {
             presenceStatus.postValue(fr.consolidatedPresence)
@@ -61,7 +59,7 @@ class ContactModel(val friend: Friend) : Serializable {
         friend.removeListener(friendListener)
     }
 
-    private fun getAvatarUri(): Uri? {
+    fun getAvatarUri(): Uri? {
         // Core thread
         val refKey = friend.refKey
         if (refKey != null) {

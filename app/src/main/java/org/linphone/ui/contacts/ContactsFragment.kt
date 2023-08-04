@@ -28,20 +28,18 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import androidx.transition.AutoTransition
 import org.linphone.R
+import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactsFragmentBinding
 import org.linphone.ui.MainActivity
 import org.linphone.ui.contacts.adapter.ContactsListAdapter
 import org.linphone.ui.contacts.viewmodel.ContactsListViewModel
-import org.linphone.utils.SlidingPaneBackPressedCallback
 import org.linphone.utils.hideKeyboard
 import org.linphone.utils.setKeyboardInsetListener
 import org.linphone.utils.showKeyboard
@@ -84,15 +82,6 @@ class ContactsFragment : Fragment() {
             listViewModel.bottomNavBarVisible.value = !portraitOrientation || !keyboardVisible
         }
 
-        binding.root.doOnPreDraw {
-            val slidingPane = binding.slidingPaneLayout
-            requireActivity().onBackPressedDispatcher.addCallback(
-                viewLifecycleOwner,
-                SlidingPaneBackPressedCallback(slidingPane)
-            )
-            slidingPane.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
-        }
-
         adapter = ContactsListAdapter(viewLifecycleOwner)
         binding.contactsList.setHasFixedSize(true)
         binding.contactsList.adapter = adapter
@@ -112,17 +101,19 @@ class ContactsFragment : Fragment() {
                 val model = pair.second
 
                 if (findNavController().currentDestination?.id == R.id.contactsFragment) {
-                    val navHostFragment =
-                        childFragmentManager.findFragmentById(R.id.contacts_nav_container) as NavHostFragment
                     val extras = FragmentNavigatorExtras(
                         b.avatar to "transition-avatar-${model.id}",
                         b.name to "transition-name-${model.id}"
                     )
+                    Log.i("[Contacts List] Model ID is [${model.id}]")
                     val action = ContactFragmentDirections.actionGlobalContactFragment(model)
-                    navHostFragment.navController.navigate(action, extras)
 
-                    if (!binding.slidingPaneLayout.isOpen) {
-                        binding.slidingPaneLayout.openPane()
+                    val navHostFragment =
+                        childFragmentManager.findFragmentById(R.id.contacts_nav_container) as NavHostFragment?
+                    if (navHostFragment != null) {
+                        navHostFragment.navController.navigate(action, extras)
+                    } else {
+                        findNavController().navigate(action, extras)
                     }
                 }
             }

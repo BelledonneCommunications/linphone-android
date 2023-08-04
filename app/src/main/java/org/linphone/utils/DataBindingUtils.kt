@@ -119,7 +119,7 @@ fun AvatarView.loadContactPicture(contact: ContactModel?) {
         }
         indicatorEnabled = true
 
-        val uri = contact.avatar
+        val uri = contact.getAvatarUri()
         Log.i("[Data binding Utils] Loading URI [$uri]")
         loadImage(
             data = uri,
