@@ -27,8 +27,8 @@ import org.linphone.core.Friend
 import org.linphone.core.MagicSearch
 import org.linphone.core.SearchResult
 import org.linphone.core.tools.Log
-import org.linphone.ui.TopBarViewModel
 import org.linphone.ui.contacts.model.ContactModel
+import org.linphone.ui.viewmodel.TopBarViewModel
 
 class ContactsListViewModel : TopBarViewModel() {
     val bottomNavBarVisible = MutableLiveData<Boolean>()

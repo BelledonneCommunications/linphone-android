@@ -11,7 +11,7 @@
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.TopBarViewModel" />
+            type="org.linphone.ui.viewmodel.TopBarViewModel" />
     </data>
 
     <!-- Background color here is mandatory for transparency effect on child views -->

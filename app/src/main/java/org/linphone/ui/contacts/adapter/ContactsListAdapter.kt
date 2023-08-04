@@ -18,8 +18,8 @@ class ContactsListAdapter(
 ) : ListAdapter<ContactModel, RecyclerView.ViewHolder>(ContactDiffCallback()) {
     var selectedAdapterPosition = -1
 
-    val contactClickedEvent: MutableLiveData<Event<Pair<ContactListCellBinding, ContactModel>>> by lazy {
-        MutableLiveData<Event<Pair<ContactListCellBinding, ContactModel>>>()
+    val contactClickedEvent: MutableLiveData<Event<ContactModel>> by lazy {
+        MutableLiveData<Event<ContactModel>>()
     }
 
     val contactLongClickedEvent: MutableLiveData<Event<ContactModel>> by lazy {
@@ -74,7 +74,7 @@ class ContactsListAdapter(
                 binding.root.isSelected = bindingAdapterPosition == selectedAdapterPosition
 
                 binding.setOnClickListener {
-                    contactClickedEvent.value = Event(Pair(binding, contactModel))
+                    contactClickedEvent.value = Event(contactModel)
                 }
 
                 binding.setOnLongClickListener {

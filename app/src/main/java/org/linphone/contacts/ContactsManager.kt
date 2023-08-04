@@ -21,6 +21,7 @@ package org.linphone.contacts
 
 import androidx.loader.app.LoaderManager
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.core.Friend
 import org.linphone.ui.MainActivity
 
 class ContactsManager {
@@ -53,6 +54,10 @@ class ContactsManager {
                 listener.onContactsLoaded()
             }
         }
+    }
+
+    fun findContactById(id: String): Friend? {
+        return coreContext.core.defaultFriendList?.findFriendByRefKey(id)
     }
 
     fun onCoreStarted() {

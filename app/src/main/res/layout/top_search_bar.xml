@@ -10,7 +10,7 @@
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.TopBarViewModel" />
+            type="org.linphone.ui.viewmodel.TopBarViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -53,7 +53,7 @@
             android:layout_width="0dp"
             android:layout_height="35dp"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:gravity="center_vertical"
             android:text="@{viewModel.title, default=`Title`}"
@@ -95,7 +95,7 @@
             android:id="@+id/search"
             android:layout_width="0dp"
             android:layout_height="35dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:gravity="center_vertical"
             android:textColorHint="@color/gray_6"
             app:hintEnabled="false"

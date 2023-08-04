@@ -8,8 +8,8 @@
             name="backClickListener"
             type="View.OnClickListener" />
         <variable
-            name="model"
-            type="org.linphone.ui.contacts.model.ContactModel" />
+            name="viewModel"
+            type="org.linphone.ui.contacts.viewmodel.ContactViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,6 +24,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="17dp"
             android:onClick="@{backClickListener}"
+            android:visibility="@{viewModel.showBackButton ? View.VISIBLE : View.GONE}"
             android:padding="1dp"
             android:src="@drawable/back"
             app:layout_constraintStart_toStartOf="parent"
@@ -57,7 +58,7 @@
             android:layout_height="72dp"
             android:layout_marginTop="38dp"
             android:adjustViewBounds="true"
-            contactAvatar="@{model}"
+            contactAvatar="@{viewModel.contact}"
             app:avatarViewBorderWidth="0dp"
             app:avatarViewIndicatorBorderColor="@color/white"
             app:avatarViewIndicatorBorderSizeCriteria="8"
@@ -79,7 +80,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="@{model.name, default=`John Doe`}"
+            android:text="@{viewModel.contact.name, default=`John Doe`}"
             android:textColor="@color/gray_8"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"

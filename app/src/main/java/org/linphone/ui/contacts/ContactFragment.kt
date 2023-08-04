@@ -25,12 +25,23 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.navGraphViewModels
 import androidx.transition.ChangeBounds
+import org.linphone.R
 import org.linphone.databinding.ContactFragmentBinding
+import org.linphone.ui.contacts.viewmodel.ContactViewModel
+import org.linphone.ui.viewmodel.SharedMainViewModel
 
 class ContactFragment : Fragment() {
     private lateinit var binding: ContactFragmentBinding
+
+    private lateinit var sharedViewModel: SharedMainViewModel
+
+    private val viewModel: ContactViewModel by navGraphViewModels(
+        R.id.contactFragment
+    )
 
     private val args: ContactFragmentArgs by navArgs()
 
@@ -45,6 +56,11 @@ class ContactFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = ContactFragmentBinding.inflate(layoutInflater)
+
+        sharedViewModel = requireActivity().run {
+            ViewModelProvider(this)[SharedMainViewModel::class.java]
+        }
+
         return binding.root
     }
 
@@ -54,16 +70,23 @@ class ContactFragment : Fragment() {
         postponeEnterTransition()
 
         binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = viewModel
 
-        val model = args.contact
-        binding.model = model
+        val refKey = args.contactRefKey
+        viewModel.findContactByRefKey(refKey)
 
         binding.setBackClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
-        (view.parent as? ViewGroup)?.doOnPreDraw {
-            startPostponedEnterTransition()
+        sharedViewModel.isSlidingPaneSlideable.observe(viewLifecycleOwner) { slideable ->
+            viewModel.showBackButton.value = slideable
+        }
+
+        viewModel.contact.observe(viewLifecycleOwner) {
+            (view.parent as? ViewGroup)?.doOnPreDraw {
+                startPostponedEnterTransition()
+            }
         }
     }
 }

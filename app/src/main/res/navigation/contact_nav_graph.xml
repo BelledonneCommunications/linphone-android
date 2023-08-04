@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/chat_nav_graph"
+    android:id="@+id/contact_nav_graph"
     app:startDestination="@id/emptyFragment">
 
     <fragment
@@ -17,22 +17,11 @@
         android:label="ContactFragment"
         tools:layout="@layout/contact_fragment" >
         <argument
-            android:name="contact"
-            app:argType="org.linphone.ui.contacts.model.ContactModel" />
+            android:name="contactRefKey"
+            app:argType="string" />
     </fragment>
 
     <action android:id="@+id/action_global_contactFragment"
         app:destination="@id/contactFragment"/>
-
-    <fragment
-        android:id="@+id/newContactFragment"
-        android:name="org.linphone.ui.contacts.NewContactFragment"
-        android:label="NewContactFragment"
-        tools:layout="@layout/new_contact_fragment" />
-
-    <action android:id="@+id/action_global_newContactFragment"
-        app:destination="@id/newContactFragment"
-        app:enterAnim="@anim/slide_in"
-        app:popExitAnim="@anim/slide_out"/>
 
 </navigation>

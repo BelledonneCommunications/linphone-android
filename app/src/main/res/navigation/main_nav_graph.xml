@@ -79,11 +79,14 @@
         android:label="ContactFragment"
         tools:layout="@layout/contact_fragment" >
         <argument
-            android:name="contact"
-            app:argType="org.linphone.ui.contacts.model.ContactModel" />
+            android:name="contactRefKey"
+            app:argType="string" />
     </fragment>
 
-    <action android:id="@+id/action_global_contactFragment"
-        app:destination="@id/contactFragment"/>
+    <fragment
+        android:id="@+id/newContactFragment"
+        android:name="org.linphone.ui.contacts.NewContactFragment"
+        android:label="NewContactFragment"
+        tools:layout="@layout/new_contact_fragment" />
 
 </navigation>

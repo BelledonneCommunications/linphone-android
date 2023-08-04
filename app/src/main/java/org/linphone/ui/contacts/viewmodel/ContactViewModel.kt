@@ -17,34 +17,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.utils
+package org.linphone.ui.contacts.viewmodel
 
-import android.view.View
-import androidx.activity.OnBackPressedCallback
-import androidx.slidingpanelayout.widget.SlidingPaneLayout
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.ui.contacts.model.ContactModel
 
-class SlidingPaneBackPressedCallback(private val slidingPaneLayout: SlidingPaneLayout) :
-    OnBackPressedCallback(
-        slidingPaneLayout.isSlideable && slidingPaneLayout.isOpen
-    ),
-    SlidingPaneLayout.PanelSlideListener {
+class ContactViewModel : ViewModel() {
+    val contact = MutableLiveData<ContactModel>()
+
+    val showBackButton = MutableLiveData<Boolean>()
 
     init {
-        slidingPaneLayout.addPanelSlideListener(this)
     }
 
-    override fun handleOnBackPressed() {
-        slidingPaneLayout.hideKeyboard()
-        slidingPaneLayout.closePane()
+    fun findContactByRefKey(refKey: String) {
+        // UI thread
+        coreContext.postOnCoreThread {
+            val friend = coreContext.contactsManager.findContactById(refKey)
+            if (friend != null) {
+                contact.postValue(ContactModel(friend))
+            }
+        }
     }
-
-    override fun onPanelOpened(panel: View) {
-        isEnabled = true
-    }
-
-    override fun onPanelClosed(panel: View) {
-        isEnabled = false
-    }
-
-    override fun onPanelSlide(panel: View, slideOffset: Float) { }
 }

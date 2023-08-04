@@ -29,8 +29,8 @@ import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.SearchResult
 import org.linphone.core.tools.Log
-import org.linphone.ui.TopBarViewModel
 import org.linphone.ui.conversations.data.ChatRoomData
+import org.linphone.ui.viewmodel.TopBarViewModel
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
