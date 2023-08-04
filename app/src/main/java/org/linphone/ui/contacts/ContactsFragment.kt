@@ -95,6 +95,15 @@ class ContactsFragment : Fragment() {
         binding.contactsList.setHasFixedSize(true)
         binding.contactsList.adapter = adapter
 
+        adapter.contactLongClickedEvent.observe(viewLifecycleOwner) {
+            it.consume { model ->
+                val modalBottomSheet = ContactsListMenuDialogFragment(model.friend) {
+                    adapter.resetSelection()
+                }
+                modalBottomSheet.show(parentFragmentManager, ContactsListMenuDialogFragment.TAG)
+            }
+        }
+
         val layoutManager = LinearLayoutManager(requireContext())
         binding.contactsList.layoutManager = layoutManager
 

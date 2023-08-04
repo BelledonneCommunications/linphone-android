@@ -4,17 +4,27 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
 import org.linphone.databinding.ContactListCellBinding
 import org.linphone.ui.contacts.model.ContactModel
+import org.linphone.utils.Event
 
 class ContactsListAdapter(
     private val viewLifecycleOwner: LifecycleOwner
 ) : ListAdapter<ContactModel, RecyclerView.ViewHolder>(ContactDiffCallback()) {
     var selectedAdapterPosition = -1
+
+    val contactClickedEvent: MutableLiveData<Event<ContactModel>> by lazy {
+        MutableLiveData<Event<ContactModel>>()
+    }
+
+    val contactLongClickedEvent: MutableLiveData<Event<ContactModel>> by lazy {
+        MutableLiveData<Event<ContactModel>>()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val binding: ContactListCellBinding = DataBindingUtil.inflate(
@@ -62,6 +72,17 @@ class ContactsListAdapter(
                 lifecycleOwner = viewLifecycleOwner
 
                 binding.root.isSelected = bindingAdapterPosition == selectedAdapterPosition
+
+                binding.setOnClickListener {
+                    contactClickedEvent.value = Event(contactModel)
+                }
+
+                binding.setOnLongClickListener {
+                    selectedAdapterPosition = bindingAdapterPosition
+                    binding.root.isSelected = true
+                    contactLongClickedEvent.value = Event(contactModel)
+                    true
+                }
 
                 executePendingBindings()
             }

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="favoriteClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="shareClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="inviteClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="deleteClickListener"
+            type="View.OnClickListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/separator">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/favorite"
+            android:onClick="@{favoriteClickListener}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Mettre en favoris"
+            android:padding="20dp"
+            android:textSize="17sp"
+            android:textColor="@color/gray_1"
+            android:gravity="center"
+            android:background="@color/gray_2"
+            android:layout_marginBottom="1dp"
+            android:drawableLeft="@drawable/favorite"
+            android:drawablePadding="8dp"
+            app:layout_constraintBottom_toTopOf="@id/share"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/share"
+            android:onClick="@{shareClickListener}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Partager"
+            android:padding="20dp"
+            android:textSize="17sp"
+            android:textColor="@color/gray_1"
+            android:gravity="center"
+            android:background="@color/gray_2"
+            android:layout_marginBottom="1dp"
+            android:drawableLeft="@drawable/share"
+            android:drawablePadding="8dp"
+            app:layout_constraintBottom_toTopOf="@id/invite"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/invite"
+            android:onClick="@{inviteClickListener}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Inviter"
+            android:padding="20dp"
+            android:textSize="17sp"
+            android:textColor="@color/gray_1"
+            android:gravity="center"
+            android:background="@color/gray_2"
+            android:layout_marginBottom="1dp"
+            android:drawableLeft="@drawable/invite"
+            android:drawablePadding="8dp"
+            app:layout_constraintBottom_toTopOf="@id/delete"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/delete"
+            android:onClick="@{deleteClickListener}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Supprimer"
+            android:padding="20dp"
+            android:textSize="17sp"
+            android:textColor="@color/red_danger"
+            android:gravity="center"
+            android:background="@color/gray_2"
+            android:layout_marginBottom="1dp"
+            android:drawableLeft="@drawable/delete"
+            android:drawablePadding="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
