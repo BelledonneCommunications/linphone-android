@@ -27,7 +27,6 @@ import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import androidx.transition.ChangeBounds
-import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactFragmentBinding
 
 class ContactFragment : Fragment() {
@@ -58,9 +57,6 @@ class ContactFragment : Fragment() {
 
         val model = args.contact
         binding.model = model
-        Log.i("[Contact] Model ID is [${model.id}]")
-        binding.avatar.transitionName = "transition-avatar-${model.id}"
-        binding.name.transitionName = "transition-name-${model.id}"
 
         binding.setBackClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()

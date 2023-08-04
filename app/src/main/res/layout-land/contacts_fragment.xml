@@ -19,123 +19,122 @@
             type="org.linphone.ui.contacts.viewmodel.ContactsListViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.slidingpanelayout.widget.SlidingPaneLayout
+        android:id="@+id/sliding_pane_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/primary_color">
+        android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.Group
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:constraint_referenced_ids="no_contacts_image, no_contacts_label"
-            android:visibility="@{viewModel.contactsList.empty ? View.VISIBLE : View.GONE}" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="355dp"
+            android:layout_height="match_parent"
+            android:background="@color/primary_color">
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/separator"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.5"/>
+            <androidx.constraintlayout.widget.Group
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="no_contacts_image, no_contacts_label"
+                android:visibility="@{viewModel.contactsList.empty ? View.VISIBLE : View.GONE}" />
 
-        <include
-            android:id="@+id/top_bar"
-            bind:viewModel="@{viewModel}"
-            bind:onAvatarClickListener="@{onAvatarClickListener}"
-            layout="@layout/top_search_bar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <include
+                android:id="@+id/top_bar"
+                bind:viewModel="@{viewModel}"
+                bind:onAvatarClickListener="@{onAvatarClickListener}"
+                layout="@layout/top_search_bar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/background"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="7dp"
-            android:src="@drawable/shape_white_background"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/separator"
-            app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
-            app:layout_constraintTop_toBottomOf="@id/top_bar" />
+            <ImageView
+                android:id="@+id/background"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="7dp"
+                android:src="@drawable/shape_white_background"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
+                app:layout_constraintTop_toBottomOf="@id/top_bar" />
 
-        <ImageView
-            android:id="@+id/no_contacts_image"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:src="@drawable/illu"
-            android:layout_margin="10dp"
-            app:layout_constraintHeight_max="200dp"
-            app:layout_constraintBottom_toTopOf="@id/no_contacts_label"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="@id/separator"
-            app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
-            app:layout_constraintTop_toBottomOf="@id/background" />
+            <ImageView
+                android:id="@+id/no_contacts_image"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/illu"
+                android:layout_margin="10dp"
+                app:layout_constraintHeight_max="200dp"
+                app:layout_constraintBottom_toTopOf="@id/no_contacts_label"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
+                app:layout_constraintTop_toBottomOf="@id/background" />
 
-        <TextView
-            android:id="@+id/no_contacts_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="No contacts for the moment..."
-            android:textColor="@color/gray_9"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/background"
-            app:layout_constraintEnd_toEndOf="@id/separator"
-            app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
-            app:layout_constraintTop_toBottomOf="@id/no_contacts_image" />
+            <TextView
+                android:id="@+id/no_contacts_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No contacts for the moment..."
+                android:textColor="@color/gray_9"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/background"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
+                app:layout_constraintTop_toBottomOf="@id/no_contacts_image" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/contactsList"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
-            app:layout_constraintEnd_toEndOf="@id/separator"
-            app:layout_constraintTop_toTopOf="@id/background"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/contactsList"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/background"
+                app:layout_constraintBottom_toBottomOf="parent" />
 
-        <include
-            bind:onConversationsClicked="@{onConversationsClicked}"
-            bind:contactsSelected="@{true}"
-            android:visibility="@{viewModel.bottomNavBarVisible ? View.VISIBLE : View.GONE}"
-            android:id="@+id/bottom_nav_bar"
-            layout="@layout/bottom_nav_bar"
-            android:layout_width="75dp"
-            android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            <include
+                bind:onConversationsClicked="@{onConversationsClicked}"
+                bind:contactsSelected="@{true}"
+                android:visibility="@{viewModel.bottomNavBarVisible ? View.VISIBLE : View.GONE}"
+                android:id="@+id/bottom_nav_bar"
+                layout="@layout/bottom_nav_bar"
+                android:layout_width="75dp"
+                android:layout_height="0dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/new_contact"
-            android:onClick="@{onNewContactClicked}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:layout_margin="16dp"
-            android:src="@drawable/add"
-            app:tint="@color/gray_8"
-            app:backgroundTint="@color/white"
-            app:layout_constraintEnd_toEndOf="@id/separator"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/new_contact"
+                android:onClick="@{onNewContactClicked}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|bottom"
+                android:layout_margin="16dp"
+                android:src="@drawable/add"
+                app:tint="@color/gray_8"
+                app:backgroundTint="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/contacts_nav_container"
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_marginTop="7dp"
             app:defaultNavHost="false"
             app:navGraph="@navigation/chat_nav_graph"
-            app:layout_constraintTop_toBottomOf="@id/top_bar"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/separator"
+            app:layout_constraintStart_toEndOf="@id/contactsList"
             app:layout_constraintEnd_toEndOf="parent"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.slidingpanelayout.widget.SlidingPaneLayout>
 
 </layout>

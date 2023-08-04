@@ -24,4 +24,15 @@
     <action android:id="@+id/action_global_contactFragment"
         app:destination="@id/contactFragment"/>
 
+    <fragment
+        android:id="@+id/newContactFragment"
+        android:name="org.linphone.ui.contacts.NewContactFragment"
+        android:label="NewContactFragment"
+        tools:layout="@layout/new_contact_fragment" />
+
+    <action android:id="@+id/action_global_newContactFragment"
+        app:destination="@id/newContactFragment"
+        app:enterAnim="@anim/slide_in"
+        app:popExitAnim="@anim/slide_out"/>
+
 </navigation>

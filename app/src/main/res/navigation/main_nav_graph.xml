@@ -72,12 +72,6 @@
             app:popUpTo="@id/conversationsFragment"
             app:popUpToInclusive="true" />
     </fragment>
-    <fragment
-
-        android:id="@+id/newContactFragment"
-        android:name="org.linphone.ui.contacts.NewContactFragment"
-        android:label="NewContactFragment"
-        tools:layout="@layout/new_contact_fragment" />
 
     <fragment
         android:id="@+id/contactFragment"
