@@ -28,7 +28,9 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -101,6 +103,28 @@ class ContactsFragment : Fragment() {
                     adapter.resetSelection()
                 }
                 modalBottomSheet.show(parentFragmentManager, ContactsListMenuDialogFragment.TAG)
+            }
+        }
+
+        adapter.contactClickedEvent.observe(viewLifecycleOwner) {
+            it.consume { pair ->
+                val b = pair.first
+                val model = pair.second
+
+                if (findNavController().currentDestination?.id == R.id.contactsFragment) {
+                    val navHostFragment =
+                        childFragmentManager.findFragmentById(R.id.contacts_nav_container) as NavHostFragment
+                    val extras = FragmentNavigatorExtras(
+                        b.avatar to "transition-avatar-${model.id}",
+                        b.name to "transition-name-${model.id}"
+                    )
+                    val action = ContactFragmentDirections.actionGlobalContactFragment(model)
+                    navHostFragment.navController.navigate(action, extras)
+
+                    if (!binding.slidingPaneLayout.isOpen) {
+                        binding.slidingPaneLayout.openPane()
+                    }
+                }
             }
         }
 

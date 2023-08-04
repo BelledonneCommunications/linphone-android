@@ -10,4 +10,18 @@
         android:name="org.linphone.ui.EmptyFragment"
         android:label="EmptyFragment"
         tools:layout="@layout/empty_fragment" />
+
+    <fragment
+        android:id="@+id/contactFragment"
+        android:name="org.linphone.ui.contacts.ContactFragment"
+        android:label="ContactFragment"
+        tools:layout="@layout/contact_fragment" >
+        <argument
+            android:name="contact"
+            app:argType="org.linphone.ui.contacts.model.ContactModel" />
+    </fragment>
+
+    <action android:id="@+id/action_global_contactFragment"
+        app:destination="@id/contactFragment"/>
+
 </navigation>

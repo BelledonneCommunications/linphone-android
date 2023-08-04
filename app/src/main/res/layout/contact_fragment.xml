@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="backClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="model"
+            type="org.linphone.ui.contacts.model.ContactModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="7dp"
+            android:onClick="@{backClickListener}"
+            android:padding="1dp"
+            android:src="@drawable/back"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/edit"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="7dp"
+            android:layout_marginEnd="10dp"
+            android:padding="1dp"
+            android:src="@drawable/edit"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/background"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="17dp"
+            android:src="@drawable/shape_gray_background"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edit" />
+
+        <io.getstream.avatarview.AvatarView
+            android:id="@+id/avatar"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_marginTop="38dp"
+            android:adjustViewBounds="true"
+            contactAvatar="@{model}"
+            app:avatarViewBorderWidth="0dp"
+            app:avatarViewIndicatorBorderColor="@color/white"
+            app:avatarViewIndicatorBorderSizeCriteria="8"
+            app:avatarViewIndicatorEnabled="true"
+            app:avatarViewIndicatorPosition="bottomRight"
+            app:avatarViewIndicatorSizeCriteria="7"
+            app:avatarViewInitialsBackgroundColor="@color/blue_outgoing_message"
+            app:avatarViewInitialsTextColor="@color/gray_9"
+            app:avatarViewInitialsTextSize="21sp"
+            app:avatarViewInitialsTextStyle="bold"
+            app:avatarViewPlaceholder="@drawable/contact_avatar"
+            app:avatarViewShape="circle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/background" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@{model.name, default=`John Doe`}"
+            android:textColor="@color/gray_8"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/avatar" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="En ligne"
+            android:textColor="@color/green_online"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/name" />
+
+        <ImageView
+            android:id="@+id/call"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="39dp"
+            android:background="@drawable/shape_button_round"
+            android:padding="16dp"
+            android:src="@drawable/calls"
+            app:tint="@color/gray_1"
+            app:layout_constraintEnd_toStartOf="@id/chat"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/status" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Call"
+            android:textColor="@color/gray_9"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@id/call"
+            app:layout_constraintStart_toStartOf="@id/call"
+            app:layout_constraintEnd_toEndOf="@id/call"/>
+
+        <ImageView
+            android:id="@+id/chat"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="39dp"
+            android:background="@drawable/shape_button_round"
+            android:padding="16dp"
+            android:src="@drawable/chat"
+            app:tint="@color/gray_1"
+            app:layout_constraintEnd_toStartOf="@id/video_call"
+            app:layout_constraintStart_toEndOf="@id/call"
+            app:layout_constraintTop_toBottomOf="@id/status" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Message"
+            android:textColor="@color/gray_9"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@id/chat"
+            app:layout_constraintStart_toStartOf="@id/chat"
+            app:layout_constraintEnd_toEndOf="@id/chat"/>
+
+        <ImageView
+            android:id="@+id/video_call"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="39dp"
+            android:background="@drawable/shape_button_round"
+            android:padding="16dp"
+            android:src="@drawable/video_call"
+            app:tint="@color/gray_1"
+            app:layout_constraintStart_toEndOf="@id/chat"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/status" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Video Call"
+            android:textColor="@color/gray_9"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@id/video_call"
+            app:layout_constraintStart_toStartOf="@id/video_call"
+            app:layout_constraintEnd_toEndOf="@id/video_call"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

@@ -2,6 +2,7 @@ package org.linphone.ui.contacts.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
@@ -18,8 +19,8 @@ class ContactsListAdapter(
 ) : ListAdapter<ContactModel, RecyclerView.ViewHolder>(ContactDiffCallback()) {
     var selectedAdapterPosition = -1
 
-    val contactClickedEvent: MutableLiveData<Event<ContactModel>> by lazy {
-        MutableLiveData<Event<ContactModel>>()
+    val contactClickedEvent: MutableLiveData<Event<Pair<ContactListCellBinding, ContactModel>>> by lazy {
+        MutableLiveData<Event<Pair<ContactListCellBinding, ContactModel>>>()
     }
 
     val contactLongClickedEvent: MutableLiveData<Event<ContactModel>> by lazy {
@@ -72,9 +73,11 @@ class ContactsListAdapter(
                 lifecycleOwner = viewLifecycleOwner
 
                 binding.root.isSelected = bindingAdapterPosition == selectedAdapterPosition
+                ViewCompat.setTransitionName(binding.avatar, "transition-avatar-${contactModel.id}")
+                ViewCompat.setTransitionName(binding.name, "transition-name-${contactModel.id}")
 
                 binding.setOnClickListener {
-                    contactClickedEvent.value = Event(contactModel)
+                    contactClickedEvent.value = Event(Pair(binding, contactModel))
                 }
 
                 binding.setOnLongClickListener {

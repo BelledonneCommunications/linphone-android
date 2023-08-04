@@ -23,12 +23,13 @@ import android.content.ContentUris
 import android.net.Uri
 import android.provider.ContactsContract
 import androidx.lifecycle.MutableLiveData
+import java.io.Serializable
 import org.linphone.core.ConsolidatedPresence
 import org.linphone.core.Friend
 import org.linphone.core.FriendListenerStub
 import org.linphone.utils.LinphoneUtils
 
-class ContactModel(val friend: Friend) {
+class ContactModel(val friend: Friend) : Serializable {
     val id = friend.refKey
 
     val initials = LinphoneUtils.getInitials(friend.name.orEmpty())
