@@ -53,6 +53,7 @@ class ContactsListFragment : Fragment() {
     )
 
     private lateinit var adapter: ContactsListAdapter
+    private lateinit var favouritesAdapter: ContactsListAdapter
 
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
         if (findNavController().currentDestination?.id == R.id.newContactFragment) {
@@ -89,27 +90,22 @@ class ContactsListFragment : Fragment() {
             listViewModel.bottomNavBarVisible.value = !portraitOrientation || !keyboardVisible
         }
 
-        adapter = ContactsListAdapter(viewLifecycleOwner)
+        adapter = ContactsListAdapter(viewLifecycleOwner, false)
         binding.contactsList.setHasFixedSize(true)
         binding.contactsList.adapter = adapter
-
-        adapter.contactLongClickedEvent.observe(viewLifecycleOwner) {
-            it.consume { model ->
-                val modalBottomSheet = ContactsListMenuDialogFragment(model.friend) {
-                    adapter.resetSelection()
-                }
-                modalBottomSheet.show(parentFragmentManager, ContactsListMenuDialogFragment.TAG)
-            }
-        }
-
-        adapter.contactClickedEvent.observe(viewLifecycleOwner) {
-            it.consume { model ->
-                sharedViewModel.showContactEvent.value = Event(model.id ?: "")
-            }
-        }
+        configureAdapter(adapter)
 
         val layoutManager = LinearLayoutManager(requireContext())
         binding.contactsList.layoutManager = layoutManager
+
+        favouritesAdapter = ContactsListAdapter(viewLifecycleOwner, true)
+        binding.favouritesContactsList.setHasFixedSize(true)
+        binding.favouritesContactsList.adapter = favouritesAdapter
+        configureAdapter(favouritesAdapter)
+
+        val favouritesLayoutManager = LinearLayoutManager(requireContext())
+        favouritesLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
+        binding.favouritesContactsList.layoutManager = favouritesLayoutManager
 
         listViewModel.contactsList.observe(
             viewLifecycleOwner
@@ -119,6 +115,12 @@ class ContactsListFragment : Fragment() {
             (view.parent as? ViewGroup)?.doOnPreDraw {
                 startPostponedEnterTransition()
             }
+        }
+
+        listViewModel.favourites.observe(
+            viewLifecycleOwner
+        ) {
+            favouritesAdapter.submitList(it)
         }
 
         listViewModel.focusSearchBarEvent.observe(viewLifecycleOwner) {
@@ -152,6 +154,23 @@ class ContactsListFragment : Fragment() {
 
         binding.setOnAvatarClickListener {
             (requireActivity() as MainActivity).toggleDrawerMenu()
+        }
+    }
+
+    private fun configureAdapter(adapter: ContactsListAdapter) {
+        adapter.contactLongClickedEvent.observe(viewLifecycleOwner) {
+            it.consume { model ->
+                val modalBottomSheet = ContactsListMenuDialogFragment(model.friend) {
+                    adapter.resetSelection()
+                }
+                modalBottomSheet.show(parentFragmentManager, ContactsListMenuDialogFragment.TAG)
+            }
+        }
+
+        adapter.contactClickedEvent.observe(viewLifecycleOwner) {
+            it.consume { model ->
+                sharedViewModel.showContactEvent.value = Event(model.id ?: "")
+            }
         }
     }
 }

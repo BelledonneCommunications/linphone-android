@@ -47,6 +47,10 @@ class LinphoneUtils {
             }
         }
 
+        fun getFirstLetter(displayName: String): String {
+            return getInitials(displayName, 1)
+        }
+
         fun getInitials(displayName: String, limit: Int = 2): String {
             if (displayName.isEmpty()) return ""
 

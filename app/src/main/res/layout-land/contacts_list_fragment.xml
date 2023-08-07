@@ -94,6 +94,53 @@
             app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
             app:layout_constraintTop_toBottomOf="@id/no_contacts_image" />
 
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/favourites_label"
+            android:visibility="@{viewModel.searchFilter.length() == 0 ? View.VISIBLE : View.GONE}"
+            onClickListener="@{() -> viewModel.toggleFavouritesVisibility()}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="20dp"
+            android:text="Favourites"
+            android:drawableEnd="@drawable/collapse"
+            android:drawableTint="@color/gray_9"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/gray_9"
+            app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/background"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/favourites_contacts_list"
+            android:visibility="@{viewModel.showFavourites &amp;&amp; viewModel.searchFilter.length() == 0 ? View.VISIBLE : View.GONE}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
+            app:layout_constraintTop_toBottomOf="@id/favourites_label" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/all_contacts_label"
+            android:visibility="@{viewModel.searchFilter.length() == 0 ? View.VISIBLE : View.GONE}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="16dp"
+            android:text="All contacts"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/gray_9"
+            app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/favourites_contacts_list"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/contactsList"
             android:layout_width="0dp"
@@ -103,7 +150,7 @@
             android:layout_marginEnd="10dp"
             app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/background"
+            app:layout_constraintTop_toBottomOf="@id/all_contacts_label"
             app:layout_constraintBottom_toBottomOf="parent" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton

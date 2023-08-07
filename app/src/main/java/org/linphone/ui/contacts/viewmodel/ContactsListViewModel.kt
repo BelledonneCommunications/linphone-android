@@ -34,6 +34,10 @@ import org.linphone.ui.viewmodel.TopBarViewModel
 class ContactsListViewModel : TopBarViewModel() {
     val contactsList = MutableLiveData<ArrayList<ContactModel>>()
 
+    val favourites = MutableLiveData<ArrayList<ContactModel>>()
+
+    val showFavourites = MutableLiveData<Boolean>()
+
     private var currentFilter = ""
     private var previousFilter = "NotSet"
 
@@ -57,6 +61,7 @@ class ContactsListViewModel : TopBarViewModel() {
     init {
         title.value = "Contacts"
         bottomNavBarVisible.value = true
+        showFavourites.value = true
 
         coreContext.postOnCoreThread { core ->
             coreContext.contactsManager.addListener(contactsListener)
@@ -75,28 +80,48 @@ class ContactsListViewModel : TopBarViewModel() {
         super.onCleared()
     }
 
+    fun toggleFavouritesVisibility() {
+        // UI thread
+        showFavourites.value = showFavourites.value == false
+    }
+
     fun processMagicSearchResults(results: Array<SearchResult>) {
         // Core thread
         Log.i("[Contacts List] Processing ${results.size} results")
         contactsList.value.orEmpty().forEach(ContactModel::destroy)
 
         val list = arrayListOf<ContactModel>()
+        val favouritesList = arrayListOf<ContactModel>()
+        var previousLetter = ""
 
         for (result in results) {
             val friend = result.friend
 
-            val viewModel = if (friend != null) {
+            var currentLetter = ""
+            val model = if (friend != null) {
+                currentLetter = friend.name?.get(0).toString()
                 ContactModel(friend)
             } else {
                 Log.w("[Contacts] SearchResult [$result] has no Friend!")
                 val fakeFriend =
                     createFriendFromSearchResult(result)
+                currentLetter = fakeFriend.name?.get(0).toString()
                 ContactModel(fakeFriend)
             }
 
-            list.add(viewModel)
+            val displayLetter = previousLetter.isEmpty() || currentLetter != previousLetter
+            if (currentLetter != previousLetter) {
+                previousLetter = currentLetter
+            }
+            model.showFirstLetter.postValue(displayLetter)
+
+            list.add(model)
+            if (friend?.starred == true) {
+                favouritesList.add(model)
+            }
         }
 
+        favourites.postValue(favouritesList)
         contactsList.postValue(list)
 
         Log.i("[Contacts] Processed ${results.size} results")

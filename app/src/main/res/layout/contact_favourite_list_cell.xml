@@ -21,16 +21,13 @@
         android:onLongClick="@{onLongClickListener}"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginStart="8dp"
         android:background="@drawable/cell_background">
 
         <io.getstream.avatarview.AvatarView
             android:id="@+id/avatar"
             android:layout_width="72dp"
             android:layout_height="72dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
             android:adjustViewBounds="true"
             contactAvatar="@{model}"
             app:avatarViewPlaceholder="@drawable/contact_avatar"
@@ -53,12 +50,15 @@
             android:id="@+id/name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
             android:text="@{model.name, default=`John Doe`}"
             android:textSize="14sp"
             android:textColor="@color/gray_9"
-            android:layout_marginStart="10dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintStart_toStartOf="@id/avatar"
+            app:layout_constraintEnd_toEndOf="@id/avatar"
             app:layout_constraintTop_toBottomOf="@id/avatar"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

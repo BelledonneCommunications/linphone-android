@@ -37,6 +37,12 @@ class ContactModel(val friend: Friend) {
 
     val name = MutableLiveData<String>()
 
+    val firstLetter: String by lazy {
+        LinphoneUtils.getFirstLetter(friend.name.orEmpty())
+    }
+
+    val showFirstLetter = MutableLiveData<Boolean>()
+
     private val friendListener = object : FriendListenerStub() {
         override fun onPresenceReceived(fr: Friend) {
             presenceStatus.postValue(fr.consolidatedPresence)

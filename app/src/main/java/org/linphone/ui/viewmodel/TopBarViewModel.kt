@@ -52,6 +52,7 @@ abstract class TopBarViewModel : ViewModel() {
 
     fun closeSearchBar() {
         // UI thread
+        clearFilter()
         searchBarVisible.value = false
         focusSearchBarEvent.value = Event(false)
     }

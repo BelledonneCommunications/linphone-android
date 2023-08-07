@@ -116,7 +116,7 @@ fun AvatarView.loadContactPicture(contact: ContactModel?) {
             ConsolidatedPresence.Online -> R.color.green_online
             else -> R.color.blue_outgoing_message
         }
-        indicatorEnabled = true
+        indicatorEnabled = contact.presenceStatus.value != ConsolidatedPresence.Offline
 
         val uri = contact.getAvatarUri()
         loadImage(

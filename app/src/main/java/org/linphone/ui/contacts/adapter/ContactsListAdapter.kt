@@ -9,12 +9,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
+import org.linphone.databinding.ContactFavouriteListCellBinding
 import org.linphone.databinding.ContactListCellBinding
 import org.linphone.ui.contacts.model.ContactModel
 import org.linphone.utils.Event
 
 class ContactsListAdapter(
-    private val viewLifecycleOwner: LifecycleOwner
+    private val viewLifecycleOwner: LifecycleOwner,
+    private val favourites: Boolean
 ) : ListAdapter<ContactModel, RecyclerView.ViewHolder>(ContactDiffCallback()) {
     var selectedAdapterPosition = -1
 
@@ -27,37 +29,36 @@ class ContactsListAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val binding: ContactListCellBinding = DataBindingUtil.inflate(
-            LayoutInflater.from(parent.context),
-            R.layout.contact_list_cell,
-            parent,
-            false
-        )
-        return ViewHolder(binding)
+        if (favourites) {
+            val binding: ContactFavouriteListCellBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(parent.context),
+                R.layout.contact_favourite_list_cell,
+                parent,
+                false
+            )
+            return FavouriteViewHolder(binding)
+        } else {
+            val binding: ContactListCellBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(parent.context),
+                R.layout.contact_list_cell,
+                parent,
+                false
+            )
+            return ViewHolder(binding)
+        }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as ViewHolder).bind(getItem(position))
+        if (favourites) {
+            (holder as FavouriteViewHolder).bind(getItem(position))
+        } else {
+            (holder as ViewHolder).bind(getItem(position))
+        }
     }
 
     fun resetSelection() {
         notifyItemChanged(selectedAdapterPosition)
         selectedAdapterPosition = -1
-    }
-
-    fun showHeaderForPosition(position: Int): Boolean {
-        if (position >= itemCount) return false
-
-        val contact = getItem(position)
-        val firstLetter = contact.name.value?.get(0).toString()
-        val previousPosition = position - 1
-
-        return if (previousPosition >= 0) {
-            val previousItemFirstLetter = getItem(previousPosition).name.value?.get(0).toString()
-            !firstLetter.equals(previousItemFirstLetter, ignoreCase = true)
-        } else {
-            true
-        }
     }
 
     inner class ViewHolder(
@@ -66,8 +67,33 @@ class ContactsListAdapter(
         fun bind(contactModel: ContactModel) {
             with(binding) {
                 model = contactModel
-                firstLetter = contactModel.name.value?.get(0).toString()
-                showFirstLetter = showHeaderForPosition(bindingAdapterPosition)
+
+                lifecycleOwner = viewLifecycleOwner
+
+                binding.root.isSelected = bindingAdapterPosition == selectedAdapterPosition
+
+                binding.setOnClickListener {
+                    contactClickedEvent.value = Event(contactModel)
+                }
+
+                binding.setOnLongClickListener {
+                    selectedAdapterPosition = bindingAdapterPosition
+                    binding.root.isSelected = true
+                    contactLongClickedEvent.value = Event(contactModel)
+                    true
+                }
+
+                executePendingBindings()
+            }
+        }
+    }
+
+    inner class FavouriteViewHolder(
+        val binding: ContactFavouriteListCellBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(contactModel: ContactModel) {
+            with(binding) {
+                model = contactModel
 
                 lifecycleOwner = viewLifecycleOwner
 
@@ -96,6 +122,6 @@ private class ContactDiffCallback : DiffUtil.ItemCallback<ContactModel>() {
     }
 
     override fun areContentsTheSame(oldItem: ContactModel, newItem: ContactModel): Boolean {
-        return true
+        return oldItem.showFirstLetter.value == newItem.showFirstLetter.value
     }
 }
