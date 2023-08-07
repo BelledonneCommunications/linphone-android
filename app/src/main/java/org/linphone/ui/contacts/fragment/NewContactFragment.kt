@@ -24,11 +24,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import org.linphone.databinding.NewContactFragmentBinding
+import org.linphone.ui.fragment.GenericFragment
 
-class NewContactFragment : Fragment() {
+class NewContactFragment : GenericFragment() {
     private lateinit var binding: NewContactFragmentBinding
 
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {

@@ -21,7 +21,9 @@
             app:argType="string" />
     </fragment>
 
-    <action android:id="@+id/action_global_contactFragment"
-        app:destination="@id/contactFragment"/>
+    <action
+        android:id="@+id/action_global_contactFragment"
+        app:destination="@id/contactFragment"
+        app:launchSingleTop="true" />
 
 </navigation>

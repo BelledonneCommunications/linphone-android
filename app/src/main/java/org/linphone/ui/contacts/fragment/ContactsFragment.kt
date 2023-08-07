@@ -24,21 +24,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
-import androidx.transition.AutoTransition
 import org.linphone.R
 import org.linphone.databinding.ContactsFragmentBinding
-import org.linphone.ui.viewmodel.SharedMainViewModel
+import org.linphone.ui.fragment.GenericFragment
 import org.linphone.utils.SlidingPaneBackPressedCallback
 
-class ContactsFragment : Fragment() {
+class ContactsFragment : GenericFragment() {
     private lateinit var binding: ContactsFragmentBinding
-
-    private lateinit var sharedViewModel: SharedMainViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,12 +41,6 @@ class ContactsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = ContactsFragmentBinding.inflate(layoutInflater)
-        sharedElementEnterTransition = AutoTransition()
-
-        sharedViewModel = requireActivity().run {
-            ViewModelProvider(this)[SharedMainViewModel::class.java]
-        }
-
         return binding.root
     }
 
@@ -62,6 +51,7 @@ class ContactsFragment : Fragment() {
 
         binding.root.doOnPreDraw {
             val slidingPane = binding.slidingPaneLayout
+            slidingPane.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
 
             sharedViewModel.isSlidingPaneSlideable.value = slidingPane.isSlideable
 
@@ -69,8 +59,6 @@ class ContactsFragment : Fragment() {
                 viewLifecycleOwner,
                 SlidingPaneBackPressedCallback(slidingPane)
             )
-
-            slidingPane.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
         }
 
         sharedViewModel.closeSlidingPaneEvent.observe(

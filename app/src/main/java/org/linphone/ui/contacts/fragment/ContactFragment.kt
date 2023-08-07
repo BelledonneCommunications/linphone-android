@@ -24,21 +24,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
 import androidx.transition.ChangeBounds
 import org.linphone.R
 import org.linphone.databinding.ContactFragmentBinding
 import org.linphone.ui.contacts.viewmodel.ContactViewModel
-import org.linphone.ui.viewmodel.SharedMainViewModel
+import org.linphone.ui.fragment.GenericFragment
 import org.linphone.utils.Event
 
-class ContactFragment : Fragment() {
+class ContactFragment : GenericFragment() {
     private lateinit var binding: ContactFragmentBinding
-
-    private lateinit var sharedViewModel: SharedMainViewModel
 
     private val viewModel: ContactViewModel by navGraphViewModels(
         R.id.contactFragment
@@ -57,11 +53,6 @@ class ContactFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = ContactFragmentBinding.inflate(layoutInflater)
-
-        sharedViewModel = requireActivity().run {
-            ViewModelProvider(this)[SharedMainViewModel::class.java]
-        }
-
         return binding.root
     }
 

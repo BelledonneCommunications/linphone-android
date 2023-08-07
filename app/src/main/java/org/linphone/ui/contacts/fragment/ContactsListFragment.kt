@@ -27,8 +27,6 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.core.view.doOnPreDraw
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -37,16 +35,14 @@ import org.linphone.databinding.ContactsListFragmentBinding
 import org.linphone.ui.MainActivity
 import org.linphone.ui.contacts.adapter.ContactsListAdapter
 import org.linphone.ui.contacts.viewmodel.ContactsListViewModel
-import org.linphone.ui.viewmodel.SharedMainViewModel
+import org.linphone.ui.fragment.GenericFragment
 import org.linphone.utils.Event
 import org.linphone.utils.hideKeyboard
 import org.linphone.utils.setKeyboardInsetListener
 import org.linphone.utils.showKeyboard
 
-class ContactsListFragment : Fragment() {
+class ContactsListFragment : GenericFragment() {
     private lateinit var binding: ContactsListFragmentBinding
-
-    private lateinit var sharedViewModel: SharedMainViewModel
 
     private val listViewModel: ContactsListViewModel by navGraphViewModels(
         R.id.contactsListFragment
@@ -69,11 +65,6 @@ class ContactsListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = ContactsListFragmentBinding.inflate(layoutInflater)
-
-        sharedViewModel = requireActivity().run {
-            ViewModelProvider(this)[SharedMainViewModel::class.java]
-        }
-
         return binding.root
     }
 
