@@ -810,7 +810,7 @@
     <string name="assistant_error_invalid_international_prefix">國際冠碼錯誤</string>
     <string name="yes">是</string>
     <string name="no">否</string>
-    <string name="contacts_new_contact_wont_be_visible_warning_dialog">您要建立的聯絡人不含 SIP URI 或電話號碼，不會在 &amp;appName; 出現。
+    <string name="contacts_new_contact_wont_be_visible_warning_dialog">您要建立的聯絡人不含 SIP URI 或電話號碼，不會在 &appName; 出現。
 \n
 \n還是要建立這位聯絡人嗎？</string>
 </resources>
