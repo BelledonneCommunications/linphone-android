@@ -471,6 +471,8 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             }
         }
 
+        addressToCall = addressToCall.replace("%40", "@")
+
         val address = coreContext.core.interpretUrl(
             addressToCall,
             LinphoneUtils.applyInternationalPrefix()

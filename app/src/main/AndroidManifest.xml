@@ -126,6 +126,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.DIAL" />
                 <action android:name="android.intent.action.CALL" />
+                <action android:name="android.intent.action.CALL_BUTTON" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="tel" />
@@ -133,12 +134,6 @@
                 <data android:scheme="sips" />
                 <data android:scheme="linphone" />
                 <data android:scheme="sip-linphone" />
-            </intent-filter>
-
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="linphone-config" />
             </intent-filter>
 
