@@ -805,7 +805,7 @@
     <string name="content_description_emoji_picker">絵文字ピッカーの表示を切り替える</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="contacts_new_contact_wont_be_visible_warning_dialog">SIP URIも電話番号もない新しい連絡先を作成しようとしており、&amp;appName;には表示されません。
+    <string name="contacts_new_contact_wont_be_visible_warning_dialog">SIP URIも電話番号もない新しい連絡先を作成しようとしており、&appName;には表示されません。
 \n
 \n本当に作成しますか？</string>
 </resources>

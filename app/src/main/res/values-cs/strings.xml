@@ -817,7 +817,7 @@
     <string name="assistant_error_invalid_international_prefix">Špatná mezinárodní předvolba</string>
     <string name="yes">Ano</string>
     <string name="no">Ne</string>
-    <string name="contacts_new_contact_wont_be_visible_warning_dialog">Chystáte se vytvořit nový kontakt bez SIP URI ani telefonního čísla, a proto nebude viditelný v seznamu &amp;appName;.
+    <string name="contacts_new_contact_wont_be_visible_warning_dialog">Chystáte se vytvořit nový kontakt bez SIP URI ani telefonního čísla, a proto nebude viditelný v seznamu &appName;.
 \n
 \nChcete jej přesto vytvořit\?</string>
 </resources>
