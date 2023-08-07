@@ -21,7 +21,18 @@ package org.linphone.ui.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import org.linphone.utils.Event
 
 class SharedMainViewModel : ViewModel() {
+    /* Sliding Pane & navigation related */
+
     val isSlidingPaneSlideable = MutableLiveData<Boolean>()
+
+    val closeSlidingPaneEvent = MutableLiveData<Event<Boolean>>()
+
+    val navigateToConversationsEvent = MutableLiveData<Event<Boolean>>()
+
+    /* Contacts related */
+
+    val showContactEvent = MutableLiveData<Event<String>>()
 }

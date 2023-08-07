@@ -33,6 +33,7 @@ import org.linphone.R
 import org.linphone.databinding.ContactFragmentBinding
 import org.linphone.ui.contacts.viewmodel.ContactViewModel
 import org.linphone.ui.viewmodel.SharedMainViewModel
+import org.linphone.utils.Event
 
 class ContactFragment : Fragment() {
     private lateinit var binding: ContactFragmentBinding
@@ -76,7 +77,7 @@ class ContactFragment : Fragment() {
         viewModel.findContactByRefKey(refKey)
 
         binding.setBackClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+            sharedViewModel.closeSlidingPaneEvent.value = Event(true)
         }
 
         sharedViewModel.isSlidingPaneSlideable.observe(viewLifecycleOwner) { slideable ->

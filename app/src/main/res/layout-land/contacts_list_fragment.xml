@@ -31,10 +31,27 @@
             android:visibility="@{viewModel.contactsList.empty ? View.VISIBLE : View.GONE}" />
 
         <include
+            bind:onConversationsClicked="@{onConversationsClicked}"
+            bind:contactsSelected="@{true}"
+            android:id="@+id/bottom_nav_bar"
+            android:visibility="@{viewModel.bottomNavBarVisible ? View.VISIBLE : View.GONE}"
+            layout="@layout/bottom_nav_bar"
+            android:layout_width="75dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <include
             android:id="@+id/top_bar"
             bind:viewModel="@{viewModel}"
             bind:onAvatarClickListener="@{onAvatarClickListener}"
-            layout="@layout/top_search_bar" />
+            layout="@layout/top_search_bar"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <ImageView
             android:id="@+id/background"
@@ -44,8 +61,8 @@
             android:src="@drawable/shape_white_background"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/top_bar" />
+            app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
+            app:layout_constraintTop_toBottomOf="@id/top_bar"/>
 
         <ImageView
             android:id="@+id/no_contacts_image"
@@ -57,7 +74,7 @@
             app:layout_constraintBottom_toTopOf="@id/no_contacts_label"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
             app:layout_constraintTop_toBottomOf="@id/background" />
 
         <TextView
@@ -70,7 +87,7 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/background"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
             app:layout_constraintTop_toBottomOf="@id/no_contacts_image" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -80,22 +97,10 @@
             android:layout_marginTop="20dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/background"
             app:layout_constraintBottom_toBottomOf="parent" />
-
-        <include
-            bind:onConversationsClicked="@{onConversationsClicked}"
-            bind:contactsSelected="@{true}"
-            android:id="@+id/bottom_nav_bar"
-            android:visibility="@{viewModel.bottomNavBarVisible ? View.VISIBLE : View.GONE}"
-            layout="@layout/bottom_nav_bar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/new_contact"
@@ -108,7 +113,7 @@
             app:tint="@color/gray_8"
             app:backgroundTint="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar" />
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

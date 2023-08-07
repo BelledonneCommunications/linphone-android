@@ -25,6 +25,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import org.linphone.databinding.NewContactFragmentBinding
 
 class NewContactFragment : Fragment() {
@@ -55,7 +56,7 @@ class NewContactFragment : Fragment() {
         // postponeEnterTransition()
 
         binding.setCancelClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+            findNavController().popBackStack()
         }
 
         /*(view.parent as? ViewGroup)?.doOnPreDraw {

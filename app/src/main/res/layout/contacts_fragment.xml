@@ -1,22 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:bind="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <import type="android.view.View" />
-        <variable
-            name="onAvatarClickListener"
-            type="View.OnClickListener" />
-        <variable
-            name="onNewContactClicked"
-            type="View.OnClickListener" />
-        <variable
-            name="onConversationsClicked"
-            type="View.OnClickListener" />
-        <variable
-            name="viewModel"
-            type="org.linphone.ui.contacts.viewmodel.ContactsListViewModel" />
     </data>
 
     <androidx.slidingpanelayout.widget.SlidingPaneLayout
@@ -29,58 +16,28 @@
             android:layout_height="match_parent"
             android:background="@color/primary_color">
 
-            <include
-                android:id="@+id/top_bar"
-                bind:viewModel="@{viewModel}"
-                bind:onAvatarClickListener="@{onAvatarClickListener}"
-                layout="@layout/top_search_bar" />
-
-            <include
-                android:id="@+id/contacts_view"
-                layout="@layout/contacts_list_fragment"
-                bind:viewModel="@{viewModel}"
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/contacts_left_nav_container"
+                android:name="androidx.navigation.fragment.NavHostFragment"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                app:defaultNavHost="false"
+                app:navGraph="@navigation/contact_left_nav_graph"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/top_bar"
-                app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
-
-            <include
-                bind:onConversationsClicked="@{onConversationsClicked}"
-                bind:contactsSelected="@{true}"
-                android:visibility="@{viewModel.bottomNavBarVisible ? View.VISIBLE : View.GONE}"
-                android:id="@+id/bottom_nav_bar"
-                layout="@layout/bottom_nav_bar"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/new_contact"
-                android:onClick="@{onNewContactClicked}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|bottom"
-                android:layout_margin="16dp"
-                android:src="@drawable/add"
-                app:tint="@color/gray_8"
-                app:backgroundTint="@color/white"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/contacts_nav_container"
+            android:id="@+id/contacts_right_nav_container"
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="300dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             app:defaultNavHost="false"
-            app:navGraph="@navigation/contact_nav_graph"/>
+            app:navGraph="@navigation/contact_right_nav_graph"/>
 
     </androidx.slidingpanelayout.widget.SlidingPaneLayout>
 

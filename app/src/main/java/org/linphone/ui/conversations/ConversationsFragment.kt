@@ -166,11 +166,8 @@ class ConversationsFragment : Fragment() {
 
         binding.setOnContactsClicked {
             if (findNavController().currentDestination?.id == R.id.conversationsFragment) {
-                val extras = FragmentNavigatorExtras(
-                    binding.bottomNavBar.root to "bottom_nav_bar"
-                )
                 val action = ConversationsFragmentDirections.actionConversationsFragmentToContactsFragment()
-                findNavController().navigate(action, extras)
+                findNavController().navigate(action)
             }
         }
     }

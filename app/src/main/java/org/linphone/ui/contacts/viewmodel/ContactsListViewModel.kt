@@ -25,40 +25,57 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.contacts.ContactsListener
 import org.linphone.core.Friend
 import org.linphone.core.MagicSearch
+import org.linphone.core.MagicSearchListenerStub
 import org.linphone.core.SearchResult
 import org.linphone.core.tools.Log
 import org.linphone.ui.contacts.model.ContactModel
 import org.linphone.ui.viewmodel.TopBarViewModel
 
 class ContactsListViewModel : TopBarViewModel() {
-    val bottomNavBarVisible = MutableLiveData<Boolean>()
-
     val contactsList = MutableLiveData<ArrayList<ContactModel>>()
+
+    private var currentFilter = ""
+    private var previousFilter = "NotSet"
+
+    private lateinit var magicSearch: MagicSearch
+
+    private val magicSearchListener = object : MagicSearchListenerStub() {
+        override fun onSearchResultsReceived(magicSearch: MagicSearch) {
+            // Core thread
+            Log.i("[Contacts] Magic search contacts available")
+            processMagicSearchResults(magicSearch.lastSearch)
+        }
+    }
 
     private val contactsListener = object : ContactsListener {
         override fun onContactsLoaded() {
             // Core thread
-            applyFilter()
+            applyFilter(currentFilter)
         }
     }
 
     init {
         title.value = "Contacts"
         bottomNavBarVisible.value = true
-        coreContext.postOnCoreThread {
+
+        coreContext.postOnCoreThread { core ->
             coreContext.contactsManager.addListener(contactsListener)
+            magicSearch = core.createMagicSearch()
+            magicSearch.limitedSearch = false
+            magicSearch.addListener(magicSearchListener)
         }
-        applyFilter()
+        applyFilter(currentFilter)
     }
 
     override fun onCleared() {
         coreContext.postOnCoreThread {
+            magicSearch.removeListener(magicSearchListener)
             coreContext.contactsManager.removeListener(contactsListener)
         }
         super.onCleared()
     }
 
-    override fun processMagicSearchResults(results: Array<SearchResult>) {
+    fun processMagicSearchResults(results: Array<SearchResult>) {
         // Core thread
         Log.i("[Contacts List] Processing ${results.size} results")
         contactsList.value.orEmpty().forEach(ContactModel::destroy)
@@ -85,14 +102,44 @@ class ContactsListViewModel : TopBarViewModel() {
         Log.i("[Contacts] Processed ${results.size} results")
     }
 
-    fun applyFilter() {
+    fun applyFilter(filter: String) {
+        // UI thread
         coreContext.postOnCoreThread {
             applyFilter(
+                filter,
                 "",
                 MagicSearch.Source.Friends.toInt(),
                 MagicSearch.Aggregation.Friend
             )
         }
+    }
+
+    private fun applyFilter(
+        filter: String,
+        domain: String,
+        sources: Int,
+        aggregation: MagicSearch.Aggregation
+    ) {
+        // Core thread
+        if (previousFilter.isNotEmpty() && (
+            previousFilter.length > filter.length ||
+                (previousFilter.length == filter.length && previousFilter != filter)
+            )
+        ) {
+            magicSearch.resetSearchCache()
+        }
+        currentFilter = filter
+        previousFilter = filter
+
+        Log.i(
+            "[Contacts] Asking Magic search for contacts matching filter [$filter], domain [$domain] and in sources [$sources]"
+        )
+        magicSearch.getContactsListAsync(
+            filter,
+            domain,
+            sources,
+            aggregation
+        )
     }
 
     private fun createFriendFromSearchResult(searchResult: SearchResult): Friend {
