@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="landscape_nav_bar_width">75dp</dimen>
+    <dimen name="sliding_pane_left_fragment_width">280dp</dimen>
+    <!-- This value is the result of the above two added together -->
+    <dimen name="sliding_pane_left_fragment_with_nav_width">355dp</dimen>
+    <dimen name="sliding_pane_right_fragment_width">300dp</dimen>
+</resources>

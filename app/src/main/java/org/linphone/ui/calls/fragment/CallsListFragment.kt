@@ -17,24 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.viewmodel
+package org.linphone.ui.calls.fragment
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import org.linphone.utils.Event
+import androidx.fragment.app.Fragment
 
-class SharedMainViewModel : ViewModel() {
-    /* Sliding Pane & navigation related */
-
-    val isSlidingPaneSlideable = MutableLiveData<Boolean>()
-
-    val closeSlidingPaneEvent = MutableLiveData<Event<Boolean>>()
-
-    val navigateToConversationsEvent = MutableLiveData<Event<Boolean>>()
-
-    val navigateToCallsEvent = MutableLiveData<Event<Boolean>>()
-
-    /* Contacts related */
-
-    val showContactEvent = MutableLiveData<Event<String>>()
-}
+class CallsListFragment : Fragment()

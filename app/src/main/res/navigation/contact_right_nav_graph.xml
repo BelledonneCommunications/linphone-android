@@ -7,13 +7,13 @@
 
     <fragment
         android:id="@+id/emptyFragment"
-        android:name="org.linphone.ui.EmptyFragment"
+        android:name="org.linphone.ui.fragment.EmptyFragment"
         android:label="EmptyFragment"
         tools:layout="@layout/empty_fragment" />
 
     <fragment
         android:id="@+id/contactFragment"
-        android:name="org.linphone.ui.contacts.ContactFragment"
+        android:name="org.linphone.ui.contacts.fragment.ContactFragment"
         android:label="ContactFragment"
         tools:layout="@layout/contact_fragment" >
         <argument

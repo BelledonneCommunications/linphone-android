@@ -37,7 +37,6 @@ import io.getstream.avatarview.coil.loadImage
 import org.linphone.R
 import org.linphone.contacts.ContactData
 import org.linphone.core.ConsolidatedPresence
-import org.linphone.core.tools.Log
 import org.linphone.ui.contacts.model.ContactModel
 
 /**
@@ -120,7 +119,6 @@ fun AvatarView.loadContactPicture(contact: ContactModel?) {
         indicatorEnabled = true
 
         val uri = contact.getAvatarUri()
-        Log.i("[Data binding Utils] Loading URI [$uri]")
         loadImage(
             data = uri,
             onStart = {

@@ -27,6 +27,9 @@
             app:launchSingleTop="true"
             app:popUpTo="@id/contactsFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_conversationsFragment_to_callsFragment"
+            app:destination="@id/callsFragment" />
     </fragment>
 
     <fragment
@@ -57,11 +60,27 @@
 
     <fragment
         android:id="@+id/contactsFragment"
-        android:name="org.linphone.ui.contacts.ContactsFragment"
+        android:name="org.linphone.ui.contacts.fragment.ContactsFragment"
         android:label="ContactsFragment"
         tools:layout="@layout/contacts_fragment">
         <action
             android:id="@+id/action_contactsFragment_to_conversationsFragment"
+            app:destination="@id/conversationsFragment" />
+        <action
+            android:id="@+id/action_contactsFragment_to_callsFragment"
+            app:destination="@id/callsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/callsFragment"
+        android:name="org.linphone.ui.calls.fragment.CallsFragment"
+        android:label="CallsFragment"
+        tools:layout="@layout/calls_fragment">
+        <action
+            android:id="@+id/action_callsFragment_to_contactsFragment"
+            app:destination="@id/contactsFragment" />
+        <action
+            android:id="@+id/action_callsFragment_to_conversationsFragment"
             app:destination="@id/conversationsFragment" />
     </fragment>
 

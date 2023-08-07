@@ -10,7 +10,13 @@
             name="onContactsClicked"
             type="View.OnClickListener" />
         <variable
+            name="onCallsClicked"
+            type="View.OnClickListener" />
+        <variable
             name="onConversationsClicked"
+            type="View.OnClickListener" />
+        <variable
+            name="onMeetingsClicked"
             type="View.OnClickListener" />
         <variable
             name="contactsSelected"
@@ -28,7 +34,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottom_nav_bar"
-        android:layout_width="75dp"
+        android:layout_width="@dimen/landscape_nav_bar_width"
         android:layout_height="match_parent"
         android:background="@color/white">
 
@@ -53,6 +59,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:onClick="@{onCallsClicked}"
             android:id="@+id/calls"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -92,6 +99,7 @@
             app:layout_constraintTop_toBottomOf="@id/calls" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:onClick="@{onMeetingsClicked}"
             android:id="@+id/meetings"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

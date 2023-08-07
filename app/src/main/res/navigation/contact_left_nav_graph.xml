@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/contactsListFragment"
-        android:name="org.linphone.ui.contacts.ContactsListFragment"
+        android:name="org.linphone.ui.contacts.fragment.ContactsListFragment"
         android:label="ContactsListFragment"
         tools:layout="@layout/contacts_list_fragment">
         <action
@@ -21,7 +21,7 @@
 
     <fragment
         android:id="@+id/newContactFragment"
-        android:name="org.linphone.ui.contacts.NewContactFragment"
+        android:name="org.linphone.ui.contacts.fragment.NewContactFragment"
         android:label="NewContactFragment"
         tools:layout="@layout/new_contact_fragment"/>
 </navigation>

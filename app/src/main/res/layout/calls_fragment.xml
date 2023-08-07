@@ -12,21 +12,21 @@
         android:layout_height="match_parent">
 
         <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/contacts_left_nav_container"
+            android:id="@+id/calls_left_nav_container"
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="@dimen/sliding_pane_left_fragment_width"
             android:layout_height="match_parent"
             app:defaultNavHost="false"
-            app:navGraph="@navigation/contact_left_nav_graph"/>
+            app:navGraph="@navigation/calls_left_nav_graph"/>
 
         <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/contacts_right_nav_container"
+            android:id="@+id/calls_right_nav_container"
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="@dimen/sliding_pane_right_fragment_width"
             android:layout_height="match_parent"
             android:layout_weight="1"
             app:defaultNavHost="false"
-            app:navGraph="@navigation/contact_right_nav_graph"/>
+            app:navGraph="@navigation/calls_right_nav_graph"/>
 
     </androidx.slidingpanelayout.widget.SlidingPaneLayout>
 

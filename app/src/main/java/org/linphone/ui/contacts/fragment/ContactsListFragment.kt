@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.contacts
+package org.linphone.ui.contacts.fragment
 
 import android.content.res.Configuration
 import android.os.Bundle
@@ -144,6 +144,10 @@ class ContactsListFragment : Fragment() {
 
         binding.setOnConversationsClicked {
             sharedViewModel.navigateToConversationsEvent.value = Event(true)
+        }
+
+        binding.setOnCallsClicked {
+            sharedViewModel.navigateToCallsEvent.value = Event(true)
         }
 
         binding.setOnAvatarClickListener {

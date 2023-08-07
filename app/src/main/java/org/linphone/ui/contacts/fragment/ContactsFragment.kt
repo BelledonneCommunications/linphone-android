@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.contacts
+package org.linphone.ui.contacts.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -103,6 +103,15 @@ class ContactsFragment : Fragment() {
             it.consume {
                 if (findNavController().currentDestination?.id == R.id.contactsFragment) {
                     val action = ContactsFragmentDirections.actionContactsFragmentToConversationsFragment()
+                    findNavController().navigate(action)
+                }
+            }
+        }
+
+        sharedViewModel.navigateToCallsEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                if (findNavController().currentDestination?.id == R.id.contactsFragment) {
+                    val action = ContactsFragmentDirections.actionContactsFragmentToCallsFragment()
                     findNavController().navigate(action)
                 }
             }
