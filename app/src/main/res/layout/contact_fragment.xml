@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View" />
@@ -78,7 +79,7 @@
                     android:id="@+id/avatar"
                     android:layout_width="72dp"
                     android:layout_height="72dp"
-                    android:layout_marginTop="38dp"
+                    android:layout_marginTop="32dp"
                     android:adjustViewBounds="true"
                     contactAvatar="@{viewModel.contact}"
                     app:avatarViewBorderWidth="0dp"
@@ -95,7 +96,7 @@
                     app:avatarViewShape="circle"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/background" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/name"
@@ -294,6 +295,67 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/info_background"/>
 
+                <ImageView
+                    android:id="@+id/trust_background"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="9dp"
+                    android:layout_marginStart="17dp"
+                    android:layout_marginEnd="17dp"
+                    android:src="@drawable/shape_round_white_background"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/trust_label"
+                    app:layout_constraintBottom_toBottomOf="@id/devices"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/trusted_devices_count"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="17dp"
+                    android:layout_marginEnd="17dp"
+                    android:layout_marginTop="20dp"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:text="Nombre d'appareils vérifiés :"
+                    app:layout_constraintStart_toStartOf="@id/trust_background"
+                    app:layout_constraintEnd_toEndOf="@id/trust_background"
+                    app:layout_constraintTop_toTopOf="@id/trust_background" />
+
+                <com.akexorcist.roundcornerprogressbar.TextRoundCornerProgressBar
+                    android:id="@+id/trusted_devices_progress"
+                    android:layout_width="0dp"
+                    android:layout_height="28dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="17dp"
+                    android:layout_marginEnd="17dp"
+                    app:rcBackgroundColor="#EEF6F8"
+                    app:rcBackgroundPadding="2dp"
+                    app:rcMax="100"
+                    app:rcProgress="75"
+                    app:rcProgressColor="#4AA8FF"
+                    app:rcRadius="50dp"
+                    app:rcTextProgress="75%"
+                    app:rcTextProgressColor="@color/white"
+                    app:rcTextPositionPriority="inside"
+                    app:layout_constraintStart_toStartOf="@id/trust_background"
+                    app:layout_constraintEnd_toEndOf="@id/trust_background"
+                    app:layout_constraintTop_toBottomOf="@id/trusted_devices_count"/>
+
+                <LinearLayout
+                    android:id="@+id/devices"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:padding="10dp"
+                    app:entries="@{viewModel.devices}"
+                    app:layout="@{@layout/contact_device_trust_list_cell}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/trusted_devices_progress" />
+
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/actions"
                     android:layout_width="0dp"
@@ -308,7 +370,7 @@
                     android:textColor="@color/gray_9"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/trust_label"/>
+                    app:layout_constraintTop_toBottomOf="@id/trust_background"/>
 
                 <ImageView
                     android:id="@+id/actions_background"

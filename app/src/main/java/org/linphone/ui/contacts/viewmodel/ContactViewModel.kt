@@ -23,15 +23,18 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Address
-import org.linphone.ui.contacts.ContactNumberOrAddressClickListener
-import org.linphone.ui.contacts.ContactNumberOrAddressModel
+import org.linphone.ui.contacts.model.ContactDeviceModel
 import org.linphone.ui.contacts.model.ContactModel
+import org.linphone.ui.contacts.model.ContactNumberOrAddressClickListener
+import org.linphone.ui.contacts.model.ContactNumberOrAddressModel
 import org.linphone.utils.Event
 
 class ContactViewModel : ViewModel() {
     val contact = MutableLiveData<ContactModel>()
 
     val sipAddressesAndPhoneNumbers = MutableLiveData<ArrayList<ContactNumberOrAddressModel>>()
+
+    val devices = MutableLiveData<ArrayList<ContactDeviceModel>>()
 
     val company = MutableLiveData<String>()
 
@@ -63,6 +66,7 @@ class ContactViewModel : ViewModel() {
         }
 
         override fun onLongPress(model: ContactNumberOrAddressModel) {
+            // UI thread
             showLongPressMenuForNumberOrAddress.value = Event(model)
         }
     }
@@ -106,6 +110,15 @@ class ContactViewModel : ViewModel() {
                     addressesAndNumbers.add(data)
                 }
                 sipAddressesAndPhoneNumbers.postValue(addressesAndNumbers)
+
+                val devicesList = arrayListOf<ContactDeviceModel>()
+                // TODO FIXME
+                devicesList.add(ContactDeviceModel("Pixel 6 Pro de Sylvain", true))
+                devicesList.add(ContactDeviceModel("Sylvain Galaxy Tab S9 Pro+ Ultra", true))
+                devicesList.add(ContactDeviceModel("MacBook Pro de Marcel", false))
+                devicesList.add(ContactDeviceModel("sylvain@fedora-linux-38", true))
+                devices.postValue(devicesList)
+
                 contactFoundEvent.postValue(Event(true))
             }
         }
