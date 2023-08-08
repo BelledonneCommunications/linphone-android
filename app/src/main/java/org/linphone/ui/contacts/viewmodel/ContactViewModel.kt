@@ -24,14 +24,14 @@ import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Address
 import org.linphone.ui.contacts.ContactNumberOrAddressClickListener
-import org.linphone.ui.contacts.ContactNumberOrAddressData
+import org.linphone.ui.contacts.ContactNumberOrAddressModel
 import org.linphone.ui.contacts.model.ContactModel
 import org.linphone.utils.Event
 
 class ContactViewModel : ViewModel() {
     val contact = MutableLiveData<ContactModel>()
 
-    val sipAddressesAndPhoneNumbers = MutableLiveData<ArrayList<ContactNumberOrAddressData>>()
+    val sipAddressesAndPhoneNumbers = MutableLiveData<ArrayList<ContactNumberOrAddressModel>>()
 
     val company = MutableLiveData<String>()
 
@@ -43,7 +43,11 @@ class ContactViewModel : ViewModel() {
 
     val showDevicesTrust = MutableLiveData<Boolean>()
 
-    val friendFoundEvent = MutableLiveData<Event<Boolean>>()
+    val contactFoundEvent = MutableLiveData<Event<Boolean>>()
+
+    val showLongPressMenuForNumberOrAddress: MutableLiveData<Event<ContactNumberOrAddressModel>> by lazy {
+        MutableLiveData<Event<ContactNumberOrAddressModel>>()
+    }
 
     val listener = object : ContactNumberOrAddressClickListener {
         override fun onCall(address: Address) {
@@ -57,6 +61,10 @@ class ContactViewModel : ViewModel() {
         override fun onChat(address: Address) {
             // UI thread
         }
+
+        override fun onLongPress(model: ContactNumberOrAddressModel) {
+            showLongPressMenuForNumberOrAddress.value = Event(model)
+        }
     }
 
     init {
@@ -69,15 +77,16 @@ class ContactViewModel : ViewModel() {
         coreContext.postOnCoreThread { core ->
             val friend = coreContext.contactsManager.findContactById(refKey)
             if (friend != null) {
+                contact.postValue(ContactModel(friend))
                 val organization = friend.organization
                 if (!organization.isNullOrEmpty()) {
                     company.postValue(organization)
                     showCompany.postValue(true)
                 }
 
-                val addressesAndNumbers = arrayListOf<ContactNumberOrAddressData>()
+                val addressesAndNumbers = arrayListOf<ContactNumberOrAddressModel>()
                 for (address in friend.addresses) {
-                    val data = ContactNumberOrAddressData(
+                    val data = ContactNumberOrAddressModel(
                         address,
                         address.asStringUriOnly(),
                         listener,
@@ -87,7 +96,7 @@ class ContactViewModel : ViewModel() {
                 }
                 for (number in friend.phoneNumbersWithLabel) {
                     val address = core.interpretUrl(number.phoneNumber, true)
-                    val data = ContactNumberOrAddressData(
+                    val data = ContactNumberOrAddressModel(
                         address,
                         number.phoneNumber,
                         listener,
@@ -97,7 +106,7 @@ class ContactViewModel : ViewModel() {
                     addressesAndNumbers.add(data)
                 }
                 sipAddressesAndPhoneNumbers.postValue(addressesAndNumbers)
-                contact.postValue(ContactModel(friend))
+                contactFoundEvent.postValue(Event(true))
             }
         }
     }

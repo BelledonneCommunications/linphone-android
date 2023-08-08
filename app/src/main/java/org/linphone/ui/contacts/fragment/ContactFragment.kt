@@ -74,10 +74,22 @@ class ContactFragment : GenericFragment() {
             viewModel.showBackButton.value = slideable
         }
 
-        viewModel.contact.observe(viewLifecycleOwner) {
+        viewModel.contactFoundEvent.observe(viewLifecycleOwner) {
             (view.parent as? ViewGroup)?.doOnPreDraw {
                 startPostponedEnterTransition()
-                sharedViewModel.openSlidingPaneEvent.value = Event(true)
+            }
+            sharedViewModel.openSlidingPaneEvent.value = Event(true)
+        }
+
+        viewModel.showLongPressMenuForNumberOrAddress.observe(viewLifecycleOwner) {
+            it.consume { model ->
+                val modalBottomSheet = ContactNumberOrAddressMenuDialogFragment() {
+                    model.selected.value = false
+                }
+                modalBottomSheet.show(
+                    parentFragmentManager,
+                    ContactNumberOrAddressMenuDialogFragment.TAG
+                )
             }
         }
     }

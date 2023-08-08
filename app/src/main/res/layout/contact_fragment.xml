@@ -74,15 +74,6 @@
                     app:constraint_referenced_ids="info_background, company_label, company"
                     android:visibility="@{viewModel.showCompany ? View.VISIBLE : View.GONE}" />
 
-                <ImageView
-                    android:id="@+id/background"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
                 <io.getstream.avatarview.AvatarView
                     android:id="@+id/avatar"
                     android:layout_width="72dp"
@@ -338,7 +329,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="17dp"
                     android:layout_marginEnd="17dp"
-                    android:gravity="left"
                     android:text="Edit"
                     style="@style/context_menu_action_label"
                     android:drawableLeft="@drawable/edit"
@@ -362,7 +352,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="17dp"
                     android:layout_marginEnd="17dp"
-                    android:gravity="left"
                     android:text="Add to favourites"
                     style="@style/context_menu_action_label"
                     android:drawableLeft="@drawable/favorite"
@@ -386,7 +375,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="17dp"
                     android:layout_marginEnd="17dp"
-                    android:gravity="left"
                     android:text="Share"
                     style="@style/context_menu_action_label"
                     android:drawableLeft="@drawable/share"
@@ -410,7 +398,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="17dp"
                     android:layout_marginEnd="17dp"
-                    android:gravity="left"
                     android:text="Invite"
                     style="@style/context_menu_action_label"
                     android:drawableLeft="@drawable/invite"
@@ -434,7 +421,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="17dp"
                     android:layout_marginEnd="17dp"
-                    android:gravity="left"
                     android:text="Delete"
                     style="@style/context_menu_danger_action_label"
                     android:drawableLeft="@drawable/delete"

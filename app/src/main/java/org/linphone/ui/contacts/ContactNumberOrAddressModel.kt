@@ -19,15 +19,18 @@
  */
 package org.linphone.ui.contacts
 
+import androidx.lifecycle.MutableLiveData
 import org.linphone.core.Address
 
-class ContactNumberOrAddressData(
+class ContactNumberOrAddressModel(
     val address: Address?,
     val displayedValue: String,
     private val listener: ContactNumberOrAddressClickListener,
     val isSip: Boolean = true,
     val label: String = ""
 ) {
+    val selected = MutableLiveData<Boolean>()
+
     fun startCall() {
         address ?: return
         listener.onCall(address)
@@ -42,6 +45,12 @@ class ContactNumberOrAddressData(
         address ?: return
         listener.onChat(address)
     }
+
+    fun onLongPress(): Boolean {
+        selected.value = true
+        listener.onLongPress(this)
+        return true
+    }
 }
 
 interface ContactNumberOrAddressClickListener {
@@ -50,4 +59,6 @@ interface ContactNumberOrAddressClickListener {
     fun onVideoCall(address: Address)
 
     fun onChat(address: Address)
+
+    fun onLongPress(model: ContactNumberOrAddressModel)
 }

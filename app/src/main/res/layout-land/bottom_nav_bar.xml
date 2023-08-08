@@ -80,6 +80,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/conversations"
+            android:enabled="false"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:drawableTop="@drawable/conversations"

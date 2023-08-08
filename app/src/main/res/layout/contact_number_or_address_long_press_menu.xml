@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="copyNumberOrAddressClickListener"
+            type="View.OnClickListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/separator">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/copy"
+            android:onClick="@{copyNumberOrAddressClickListener}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Copier le numéro"
+            style="@style/context_menu_action_label"
+            android:background="@color/gray_2"
+            android:layout_marginBottom="1dp"
+            android:drawableLeft="@drawable/copy"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

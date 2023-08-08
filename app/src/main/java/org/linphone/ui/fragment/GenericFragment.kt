@@ -37,11 +37,11 @@ abstract class GenericFragment : Fragment() {
         override fun handleOnBackPressed() {
             try {
                 val navController = findNavController()
-                Log.i("[Generic Fragment] ${getFragmentRealClassName()} handleOnBackPressed")
+                Log.d("[Generic Fragment] ${getFragmentRealClassName()} handleOnBackPressed")
                 if (!navController.popBackStack()) {
-                    Log.i("[Generic Fragment] ${getFragmentRealClassName()} couldn't pop")
+                    Log.d("[Generic Fragment] ${getFragmentRealClassName()} couldn't pop")
                     if (!navController.navigateUp()) {
-                        Log.i(
+                        Log.d(
                             "[Generic Fragment] ${getFragmentRealClassName()} couldn't navigate up"
                         )
                         // Disable this callback & start a new back press event
@@ -65,7 +65,7 @@ abstract class GenericFragment : Fragment() {
         }
 
         sharedViewModel.isSlidingPaneSlideable.observe(viewLifecycleOwner) {
-            Log.i(
+            Log.d(
                 "[Generic Fragment] ${getFragmentRealClassName()} shared main VM sliding pane has changed"
             )
             onBackPressedCallback.isEnabled = backPressedCallBackEnabled()
@@ -94,11 +94,11 @@ abstract class GenericFragment : Fragment() {
     }
 
     private fun setupBackPressCallback() {
-        Log.i("[Generic Fragment] ${getFragmentRealClassName()} setupBackPressCallback")
+        Log.d("[Generic Fragment] ${getFragmentRealClassName()} setupBackPressCallback")
 
         val backButton = view?.findViewById<ImageView>(R.id.back)
         if (backButton != null && backButton.visibility == View.VISIBLE) {
-            Log.i("[Generic Fragment] ${getFragmentRealClassName()} found back button")
+            Log.d("[Generic Fragment] ${getFragmentRealClassName()} found back button")
             // If popping navigation back stack entry would bring us to an "empty" fragment
             // then don't do it if sliding pane layout isn't "flat"
             onBackPressedCallback.isEnabled = backPressedCallBackEnabled()
@@ -120,15 +120,15 @@ abstract class GenericFragment : Fragment() {
         if (findNavController().graph.id == R.id.main_nav_graph) return false
 
         val isSlidingPaneFlat = sharedViewModel.isSlidingPaneSlideable.value == false
-        Log.i(
+        Log.d(
             "[Generic Fragment] ${getFragmentRealClassName()} isSlidingPaneFlat ? $isSlidingPaneFlat"
         )
         val isPreviousFragmentEmpty = findNavController().previousBackStackEntry?.destination?.id == R.id.emptyFragment
-        Log.i(
+        Log.d(
             "[Generic Fragment] ${getFragmentRealClassName()} isPreviousFragmentEmpty ? $isPreviousFragmentEmpty"
         )
         val popBackStack = isSlidingPaneFlat || !isPreviousFragmentEmpty
-        Log.i("[Generic Fragment] ${getFragmentRealClassName()} popBackStack ? $popBackStack")
+        Log.d("[Generic Fragment] ${getFragmentRealClassName()} popBackStack ? $popBackStack")
         return popBackStack
     }
 }

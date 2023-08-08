@@ -85,6 +85,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{onConversationsClicked}"
+            android:enabled="false"
             android:id="@+id/conversations"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
