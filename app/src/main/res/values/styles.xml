@@ -1,4 +1,19 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-
+    <style name="context_menu_action_label">
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColor">@color/gray_1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">20dp</item>
+        <item name="android:drawableTint">@color/gray_9</item>
+        <item name="android:drawablePadding">8dp</item>
+    </style>
+    <style name="context_menu_danger_action_label">
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColor">@color/red_danger</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">20dp</item>
+        <item name="android:drawableTint">@color/red_danger</item>
+        <item name="android:drawablePadding">8dp</item>
+    </style>
 </resources>

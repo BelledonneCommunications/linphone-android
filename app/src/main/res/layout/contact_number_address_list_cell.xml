@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <import type="android.graphics.Typeface" />
+        <variable
+            name="model"
+            type="org.linphone.ui.contacts.ContactNumberOrAddressData" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/cell_background">
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/calls"
+            app:tint="@color/gray_9"
+            android:layout_marginStart="10dp"
+            app:layout_constraintTop_toTopOf="@id/header"
+            app:layout_constraintBottom_toBottomOf="@id/number_or_address"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:text="@{model.sip ? `SIP address` : `Phone (` + model.label + `)`, default=`Phone (Home)`}"
+            android:textColor="@color/gray_9"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintStart_toEndOf="@id/icon"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/number_or_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@{model.displayedValue, default=`sip:johndoe@sip.linphone.org`}"
+            android:textColor="@color/gray_9"
+            android:textSize="14sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintStart_toEndOf="@id/icon"
+            app:layout_constraintTop_toBottomOf="@id/header"/>
+
+        <ImageView
+            android:id="@+id/copy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/copy"
+            app:tint="@color/gray_9"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintTop_toTopOf="@id/header"
+            app:layout_constraintBottom_toBottomOf="@id/number_or_address"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/blue_outgoing_message"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/number_or_address"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

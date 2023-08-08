@@ -64,10 +64,16 @@ class ContactsFragment : GenericFragment() {
         sharedViewModel.closeSlidingPaneEvent.observe(
             viewLifecycleOwner
         ) {
-            it.consume { close ->
-                if (close) {
-                    binding.slidingPaneLayout.closePane()
-                }
+            it.consume {
+                binding.slidingPaneLayout.closePane()
+            }
+        }
+
+        sharedViewModel.openSlidingPaneEvent.observe(
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                binding.slidingPaneLayout.openPane()
             }
         }
 
@@ -80,10 +86,6 @@ class ContactsFragment : GenericFragment() {
                     refKey
                 )
                 navController.navigate(action)
-
-                if (!binding.slidingPaneLayout.isOpen) {
-                    binding.slidingPaneLayout.openPane()
-                }
             }
         }
 

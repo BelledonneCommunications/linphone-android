@@ -30,6 +30,8 @@ class SharedMainViewModel : ViewModel() {
 
     val closeSlidingPaneEvent = MutableLiveData<Event<Boolean>>()
 
+    val openSlidingPaneEvent = MutableLiveData<Event<Boolean>>()
+
     val navigateToConversationsEvent = MutableLiveData<Event<Boolean>>()
 
     val navigateToCallsEvent = MutableLiveData<Event<Boolean>>()

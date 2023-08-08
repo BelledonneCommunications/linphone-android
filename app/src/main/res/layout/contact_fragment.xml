@@ -4,6 +4,7 @@
 
     <data>
         <import type="android.view.View" />
+        <import type="org.linphone.core.ConsolidatedPresence" />
         <variable
             name="backClickListener"
             type="View.OnClickListener" />
@@ -15,7 +16,17 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="@drawable/shape_gray_background">
+
+        <ImageView
+            android:id="@+id/top_bar_background"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/scrollView" />
 
         <ImageView
             android:id="@+id/back"
@@ -41,134 +52,399 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/background"
+        <ScrollView
+            android:id="@+id/scrollView"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="17dp"
-            android:src="@drawable/shape_gray_background"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="22dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edit" />
-
-        <io.getstream.avatarview.AvatarView
-            android:id="@+id/avatar"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:layout_marginTop="38dp"
-            android:adjustViewBounds="true"
-            contactAvatar="@{viewModel.contact}"
-            app:avatarViewBorderWidth="0dp"
-            app:avatarViewIndicatorBorderColor="@color/white"
-            app:avatarViewIndicatorBorderSizeCriteria="8"
-            app:avatarViewIndicatorEnabled="true"
-            app:avatarViewIndicatorPosition="bottomRight"
-            app:avatarViewIndicatorSizeCriteria="7"
-            app:avatarViewInitialsBackgroundColor="@color/blue_outgoing_message"
-            app:avatarViewInitialsTextColor="@color/gray_9"
-            app:avatarViewInitialsTextSize="21sp"
-            app:avatarViewInitialsTextStyle="bold"
-            app:avatarViewPlaceholder="@drawable/contact_avatar"
-            app:avatarViewShape="circle"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/background" />
+            app:layout_constraintTop_toBottomOf="@id/edit"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@{viewModel.contact.name, default=`John Doe`}"
-            android:textColor="@color/gray_8"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/avatar" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="En ligne"
-            android:textColor="@color/green_online"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/name" />
+                <androidx.constraintlayout.widget.Group
+                    android:id="@+id/info_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:constraint_referenced_ids="info_background, company_label, company"
+                    android:visibility="@{viewModel.showCompany ? View.VISIBLE : View.GONE}" />
 
-        <ImageView
-            android:id="@+id/call"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_marginTop="39dp"
-            android:background="@drawable/shape_button_round"
-            android:padding="16dp"
-            android:src="@drawable/calls"
-            app:tint="@color/gray_1"
-            app:layout_constraintEnd_toStartOf="@id/chat"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/status" />
+                <ImageView
+                    android:id="@+id/background"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Call"
-            android:textColor="@color/gray_9"
-            android:textSize="14sp"
-            app:layout_constraintTop_toBottomOf="@id/call"
-            app:layout_constraintStart_toStartOf="@id/call"
-            app:layout_constraintEnd_toEndOf="@id/call"/>
+                <io.getstream.avatarview.AvatarView
+                    android:id="@+id/avatar"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginTop="38dp"
+                    android:adjustViewBounds="true"
+                    contactAvatar="@{viewModel.contact}"
+                    app:avatarViewBorderWidth="0dp"
+                    app:avatarViewIndicatorBorderColor="@color/white"
+                    app:avatarViewIndicatorBorderSizeCriteria="8"
+                    app:avatarViewIndicatorEnabled="true"
+                    app:avatarViewIndicatorPosition="bottomRight"
+                    app:avatarViewIndicatorSizeCriteria="7"
+                    app:avatarViewInitialsBackgroundColor="@color/blue_outgoing_message"
+                    app:avatarViewInitialsTextColor="@color/gray_9"
+                    app:avatarViewInitialsTextSize="21sp"
+                    app:avatarViewInitialsTextStyle="bold"
+                    app:avatarViewPlaceholder="@drawable/contact_avatar"
+                    app:avatarViewShape="circle"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/background" />
 
-        <ImageView
-            android:id="@+id/chat"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_marginTop="39dp"
-            android:background="@drawable/shape_button_round"
-            android:padding="16dp"
-            android:src="@drawable/chat"
-            app:tint="@color/gray_1"
-            app:layout_constraintEnd_toStartOf="@id/video_call"
-            app:layout_constraintStart_toEndOf="@id/call"
-            app:layout_constraintTop_toBottomOf="@id/status" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@{viewModel.contact.name, default=`John Doe`}"
+                    android:textColor="@color/gray_8"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/avatar" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Message"
-            android:textColor="@color/gray_9"
-            android:textSize="14sp"
-            app:layout_constraintTop_toBottomOf="@id/chat"
-            app:layout_constraintStart_toStartOf="@id/chat"
-            app:layout_constraintEnd_toEndOf="@id/chat"/>
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/status"
+                    android:visibility="@{viewModel.contact.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{viewModel.contact.presenceStatus == ConsolidatedPresence.Online ? `En ligne` : `Absent`, default=`En ligne`}"
+                    android:textColor="@{viewModel.contact.presenceStatus == ConsolidatedPresence.Online ? @color/green_online : @color/green_online, default=@color/green_online}"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/name" />
 
-        <ImageView
-            android:id="@+id/video_call"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_marginTop="39dp"
-            android:background="@drawable/shape_button_round"
-            android:padding="16dp"
-            android:src="@drawable/video_call"
-            app:tint="@color/gray_1"
-            app:layout_constraintStart_toEndOf="@id/chat"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/status" />
+                <ImageView
+                    android:id="@+id/call"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="39dp"
+                    android:background="@drawable/shape_button_round"
+                    android:padding="16dp"
+                    android:src="@drawable/calls"
+                    app:tint="@color/gray_1"
+                    app:layout_constraintEnd_toStartOf="@id/chat"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/status" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Video Call"
-            android:textColor="@color/gray_9"
-            android:textSize="14sp"
-            app:layout_constraintTop_toBottomOf="@id/video_call"
-            app:layout_constraintStart_toStartOf="@id/video_call"
-            app:layout_constraintEnd_toEndOf="@id/video_call"/>
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/call_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Call"
+                    android:textColor="@color/gray_9"
+                    android:textSize="14sp"
+                    app:layout_constraintTop_toBottomOf="@id/call"
+                    app:layout_constraintStart_toStartOf="@id/call"
+                    app:layout_constraintEnd_toEndOf="@id/call"/>
+
+                <ImageView
+                    android:id="@+id/chat"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="39dp"
+                    android:background="@drawable/shape_button_round"
+                    android:padding="16dp"
+                    android:src="@drawable/chat"
+                    app:tint="@color/gray_1"
+                    app:layout_constraintEnd_toStartOf="@id/video_call"
+                    app:layout_constraintStart_toEndOf="@id/call"
+                    app:layout_constraintTop_toBottomOf="@id/status" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/chat_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Message"
+                    android:textColor="@color/gray_9"
+                    android:textSize="14sp"
+                    app:layout_constraintTop_toBottomOf="@id/chat"
+                    app:layout_constraintStart_toStartOf="@id/chat"
+                    app:layout_constraintEnd_toEndOf="@id/chat"/>
+
+                <ImageView
+                    android:id="@+id/video_call"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="39dp"
+                    android:background="@drawable/shape_button_round"
+                    android:padding="16dp"
+                    android:src="@drawable/video_call"
+                    app:tint="@color/gray_1"
+                    app:layout_constraintStart_toEndOf="@id/chat"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/status" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/video_call_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Video Call"
+                    android:textColor="@color/gray_9"
+                    android:textSize="14sp"
+                    app:layout_constraintTop_toBottomOf="@id/video_call"
+                    app:layout_constraintStart_toStartOf="@id/video_call"
+                    app:layout_constraintEnd_toEndOf="@id/video_call"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:onClick="@{() -> viewModel.toggleNumbersAndAddressesVisibility()}"
+                    android:id="@+id/numbers_and_addresses_label"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:layout_marginStart="26dp"
+                    android:layout_marginEnd="26dp"
+                    android:layout_marginTop="45dp"
+                    android:text="Numbers &amp; addresses"
+                    android:drawableEnd="@{viewModel.showNumbersAndAddresses ? @drawable/collapse : @drawable/expand, default=@drawable/collapse}"
+                    android:drawableTint="@color/gray_9"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/gray_9"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/call_label"/>
+
+                <LinearLayout
+                    android:id="@+id/numbers_and_addresses"
+                    android:visibility="@{viewModel.showNumbersAndAddresses ? View.VISIBLE : View.GONE}"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="9dp"
+                    android:padding="10dp"
+                    android:background="@drawable/shape_round_white_background"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/numbers_and_addresses_label"
+                    app:entries="@{viewModel.sipAddressesAndPhoneNumbers}"
+                    app:layout="@{@layout/contact_number_address_list_cell}" />
+
+                <ImageView
+                    android:id="@+id/info_background"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginStart="17dp"
+                    android:layout_marginEnd="17dp"
+                    android:src="@drawable/shape_round_white_background"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/numbers_and_addresses"
+                    app:layout_constraintBottom_toBottomOf="@id/company_label"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/company_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:text="Company : "
+                    android:textColor="@color/gray_9"
+                    android:textStyle="bold"
+                    android:textSize="14sp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    app:layout_constraintStart_toStartOf="@id/info_background"
+                    app:layout_constraintTop_toTopOf="@id/info_background"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/company"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:text="@{viewModel.company, default=`Belledonne Comm`}"
+                    android:textColor="@color/gray_9"
+                    android:textSize="14sp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    app:layout_constraintStart_toEndOf="@id/company_label"
+                    app:layout_constraintTop_toTopOf="@id/info_background"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:onClick="@{() -> viewModel.toggleDevicesTrustVisibility()}"
+                    android:id="@+id/trust_label"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:layout_marginStart="26dp"
+                    android:layout_marginEnd="26dp"
+                    android:layout_marginTop="32dp"
+                    android:text="Trust"
+                    android:drawableEnd="@{viewModel.showDevicesTrust ? @drawable/collapse : @drawable/expand, default=@drawable/collapse}"
+                    android:drawableTint="@color/gray_9"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/gray_9"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/info_background"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/actions"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:layout_marginStart="26dp"
+                    android:layout_marginEnd="26dp"
+                    android:layout_marginTop="32dp"
+                    android:text="Other actions"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/gray_9"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/trust_label"/>
+
+                <ImageView
+                    android:id="@+id/actions_background"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="9dp"
+                    android:layout_marginStart="17dp"
+                    android:layout_marginEnd="17dp"
+                    android:src="@drawable/shape_round_white_background"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/actions"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/action_edit"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="17dp"
+                    android:layout_marginEnd="17dp"
+                    android:gravity="left"
+                    android:text="Edit"
+                    style="@style/context_menu_action_label"
+                    android:drawableLeft="@drawable/edit"
+                    app:layout_constraintTop_toTopOf="@id/actions_background"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="17dp"
+                    android:layout_marginEnd="17dp"
+                    android:background="@color/blue_outgoing_message"
+                    app:layout_constraintStart_toStartOf="@id/action_edit"
+                    app:layout_constraintEnd_toEndOf="@id/action_edit"
+                    app:layout_constraintTop_toBottomOf="@+id/action_edit"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/action_favorite"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="17dp"
+                    android:layout_marginEnd="17dp"
+                    android:gravity="left"
+                    android:text="Add to favourites"
+                    style="@style/context_menu_action_label"
+                    android:drawableLeft="@drawable/favorite"
+                    app:layout_constraintTop_toBottomOf="@id/action_edit"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="17dp"
+                    android:layout_marginEnd="17dp"
+                    android:background="@color/blue_outgoing_message"
+                    app:layout_constraintStart_toStartOf="@id/action_favorite"
+                    app:layout_constraintEnd_toEndOf="@id/action_favorite"
+                    app:layout_constraintTop_toBottomOf="@+id/action_favorite"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/action_share"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="17dp"
+                    android:layout_marginEnd="17dp"
+                    android:gravity="left"
+                    android:text="Share"
+                    style="@style/context_menu_action_label"
+                    android:drawableLeft="@drawable/share"
+                    app:layout_constraintTop_toBottomOf="@id/action_favorite"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="17dp"
+                    android:layout_marginEnd="17dp"
+                    android:background="@color/blue_outgoing_message"
+                    app:layout_constraintStart_toStartOf="@id/action_share"
+                    app:layout_constraintEnd_toEndOf="@id/action_share"
+                    app:layout_constraintTop_toBottomOf="@+id/action_share"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/action_invite"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="17dp"
+                    android:layout_marginEnd="17dp"
+                    android:gravity="left"
+                    android:text="Invite"
+                    style="@style/context_menu_action_label"
+                    android:drawableLeft="@drawable/invite"
+                    app:layout_constraintTop_toBottomOf="@id/action_share"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="17dp"
+                    android:layout_marginEnd="17dp"
+                    android:background="@color/blue_outgoing_message"
+                    app:layout_constraintStart_toStartOf="@id/action_invite"
+                    app:layout_constraintEnd_toEndOf="@id/action_invite"
+                    app:layout_constraintTop_toBottomOf="@+id/action_invite"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/action_delete"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="17dp"
+                    android:layout_marginEnd="17dp"
+                    android:gravity="left"
+                    android:text="Delete"
+                    style="@style/context_menu_danger_action_label"
+                    android:drawableLeft="@drawable/delete"
+                    app:layout_constraintTop_toBottomOf="@id/action_invite"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

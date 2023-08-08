@@ -20,7 +20,9 @@
 package org.linphone.utils
 
 import android.content.Context
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.Window
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
@@ -30,18 +32,50 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnLayout
 import androidx.databinding.BindingAdapter
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import coil.load
 import coil.transform.CircleCropTransformation
 import io.getstream.avatarview.AvatarView
 import io.getstream.avatarview.coil.loadImage
+import org.linphone.BR
 import org.linphone.R
 import org.linphone.contacts.ContactData
 import org.linphone.core.ConsolidatedPresence
+import org.linphone.ui.MainActivity
 import org.linphone.ui.contacts.model.ContactModel
 
 /**
  * This file contains all the data binding necessary for the app
  */
+
+@BindingAdapter("entries", "layout")
+fun <T> setEntries(
+    viewGroup: ViewGroup,
+    entries: List<T>?,
+    layoutId: Int
+) {
+    viewGroup.removeAllViews()
+
+    if (entries != null) {
+        val inflater = viewGroup.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        for (entry in entries) {
+            val binding = DataBindingUtil.inflate<ViewDataBinding>(
+                inflater,
+                layoutId,
+                viewGroup,
+                false
+            )
+
+            binding.setVariable(BR.model, entry)
+
+            // This is a bit hacky...
+            binding.lifecycleOwner = viewGroup.context as MainActivity
+
+            viewGroup.addView(binding.root)
+        }
+    }
+}
 
 fun View.showKeyboard(window: Window) {
     this.requestFocus()
