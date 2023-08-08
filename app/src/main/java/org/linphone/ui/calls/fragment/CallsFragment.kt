@@ -24,6 +24,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import org.linphone.R
@@ -79,6 +80,9 @@ class CallsFragment : GenericFragment() {
         sharedViewModel.navigateToConversationsEvent.observe(viewLifecycleOwner) {
             it.consume {
                 if (findNavController().currentDestination?.id == R.id.callsFragment) {
+                    // To prevent any previously seen contact to show up when navigating back to here later
+                    binding.callsRightNavContainer.findNavController().popBackStack()
+
                     val action =
                         CallsFragmentDirections.actionCallsFragmentToConversationsFragment()
                     findNavController().navigate(action)
@@ -89,6 +93,9 @@ class CallsFragment : GenericFragment() {
         sharedViewModel.navigateToContactsEvent.observe(viewLifecycleOwner) {
             it.consume {
                 if (findNavController().currentDestination?.id == R.id.callsFragment) {
+                    // To prevent any previously seen contact to show up when navigating back to here later
+                    binding.callsRightNavContainer.findNavController().popBackStack()
+
                     val action = CallsFragmentDirections.actionCallsFragmentToContactsFragment()
                     findNavController().navigate(action)
                 }

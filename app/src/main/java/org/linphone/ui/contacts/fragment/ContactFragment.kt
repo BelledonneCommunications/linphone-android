@@ -27,6 +27,7 @@ import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.transition.ChangeBounds
+import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactFragmentBinding
 import org.linphone.ui.contacts.viewmodel.ContactViewModel
 import org.linphone.ui.fragment.GenericFragment
@@ -64,6 +65,7 @@ class ContactFragment : GenericFragment() {
         binding.viewModel = viewModel
 
         val refKey = args.contactRefKey
+        Log.i("[Contact Fragment] Looking up for contact with ref key [$refKey]")
         viewModel.findContactByRefKey(refKey)
 
         binding.setBackClickListener {

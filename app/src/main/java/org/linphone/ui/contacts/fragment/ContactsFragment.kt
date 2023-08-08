@@ -28,6 +28,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import org.linphone.R
+import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactsFragmentBinding
 import org.linphone.ui.fragment.GenericFragment
 import org.linphone.utils.SlidingPaneBackPressedCallback
@@ -81,6 +82,7 @@ class ContactsFragment : GenericFragment() {
             viewLifecycleOwner
         ) {
             it.consume { refKey ->
+                Log.i("[Contacts Fragment] Displaying contact with ref key [$refKey]")
                 val navController = binding.contactsRightNavContainer.findNavController()
                 val action = ContactFragmentDirections.actionGlobalContactFragment(
                     refKey
@@ -92,6 +94,9 @@ class ContactsFragment : GenericFragment() {
         sharedViewModel.navigateToConversationsEvent.observe(viewLifecycleOwner) {
             it.consume {
                 if (findNavController().currentDestination?.id == R.id.contactsFragment) {
+                    // To prevent any previously seen contact to show up when navigating back to here later
+                    binding.contactsRightNavContainer.findNavController().popBackStack()
+
                     val action = ContactsFragmentDirections.actionContactsFragmentToConversationsFragment()
                     findNavController().navigate(action)
                 }
@@ -101,6 +106,9 @@ class ContactsFragment : GenericFragment() {
         sharedViewModel.navigateToCallsEvent.observe(viewLifecycleOwner) {
             it.consume {
                 if (findNavController().currentDestination?.id == R.id.contactsFragment) {
+                    // To prevent any previously seen contact to show up when navigating back to here later
+                    binding.contactsRightNavContainer.findNavController().popBackStack()
+
                     val action = ContactsFragmentDirections.actionContactsFragmentToCallsFragment()
                     findNavController().navigate(action)
                 }
