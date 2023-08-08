@@ -33,20 +33,6 @@ import org.linphone.core.tools.Log
 
 class LinphoneUtils {
     companion object {
-        private val emojiCompat: EmojiCompat?
-            get() = initEmojiCompat()
-
-        private fun initEmojiCompat(): EmojiCompat? {
-            return try {
-                EmojiCompat.get()
-            } catch (ise: IllegalStateException) {
-                Log.w(
-                    "[App Utils] EmojiCompat.get() triggered IllegalStateException [$ise], trying manual init"
-                )
-                EmojiCompat.init(coreContext.context)
-            }
-        }
-
         fun getFirstLetter(displayName: String): String {
             return getInitials(displayName, 1)
         }
@@ -57,7 +43,7 @@ class LinphoneUtils {
             val split = displayName.uppercase(Locale.getDefault()).split(" ")
             var initials = ""
             var characters = 0
-            val emoji = emojiCompat
+            val emoji = coreContext.emojiCompat
 
             for (i in split.indices) {
                 if (split[i].isNotEmpty()) {

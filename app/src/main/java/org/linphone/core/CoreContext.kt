@@ -24,6 +24,7 @@ import android.content.Context
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
+import androidx.emoji2.text.EmojiCompat
 import java.util.*
 import org.linphone.BuildConfig
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -33,7 +34,11 @@ import org.linphone.core.tools.Log
 class CoreContext(val context: Context) : HandlerThread("Core Thread") {
     lateinit var core: Core
 
+    lateinit var emojiCompat: EmojiCompat
+
     val contactsManager = ContactsManager()
+
+    private val mainThread = Handler(Looper.getMainLooper())
 
     @SuppressLint("HandlerLeak")
     private lateinit var coreThread: Handler
@@ -42,6 +47,11 @@ class CoreContext(val context: Context) : HandlerThread("Core Thread") {
         override fun onGlobalStateChanged(core: Core, state: GlobalState, message: String) {
             Log.i("[Context] Global state changed: $state")
         }
+    }
+
+    init {
+        EmojiCompat.init(context)
+        emojiCompat = EmojiCompat.get()
     }
 
     override fun run() {
@@ -90,6 +100,12 @@ class CoreContext(val context: Context) : HandlerThread("Core Thread") {
     fun postOnCoreThread(lambda: (core: Core) -> Unit) {
         coreThread.post {
             lambda.invoke(core)
+        }
+    }
+
+    fun postOnMainThread(lambda: () -> Unit) {
+        mainThread.post {
+            lambda.invoke()
         }
     }
 
