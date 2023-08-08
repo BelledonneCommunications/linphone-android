@@ -46,5 +46,7 @@ class SlidingPaneBackPressedCallback(private val slidingPaneLayout: SlidingPaneL
         isEnabled = false
     }
 
-    override fun onPanelSlide(panel: View, slideOffset: Float) { }
+    override fun onPanelSlide(panel: View, slideOffset: Float) {
+        isEnabled = true
+    }
 }

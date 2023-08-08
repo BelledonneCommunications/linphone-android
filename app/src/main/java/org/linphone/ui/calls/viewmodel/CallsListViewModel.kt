@@ -17,28 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.viewmodel
+package org.linphone.ui.calls.viewmodel
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import org.linphone.utils.Event
+import org.linphone.ui.viewmodel.TopBarViewModel
 
-class SharedMainViewModel : ViewModel() {
-    /* Sliding Pane & navigation related */
-
-    val isSlidingPaneSlideable = MutableLiveData<Boolean>()
-
-    val closeSlidingPaneEvent = MutableLiveData<Event<Boolean>>()
-
-    val openSlidingPaneEvent = MutableLiveData<Event<Boolean>>()
-
-    val navigateToConversationsEvent = MutableLiveData<Event<Boolean>>()
-
-    val navigateToCallsEvent = MutableLiveData<Event<Boolean>>()
-
-    val navigateToContactsEvent = MutableLiveData<Event<Boolean>>()
-
-    /* Contacts related */
-
-    val showContactEvent = MutableLiveData<Event<String>>()
+class CallsListViewModel : TopBarViewModel() {
+    init {
+        title.value = "Calls"
+        bottomNavBarVisible.value = true
+    }
 }

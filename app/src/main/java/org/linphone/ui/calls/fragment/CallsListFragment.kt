@@ -19,6 +19,68 @@
  */
 package org.linphone.ui.calls.fragment
 
-import androidx.fragment.app.Fragment
+import android.content.res.Configuration
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
+import org.linphone.R
+import org.linphone.databinding.CallsListFragmentBinding
+import org.linphone.ui.MainActivity
+import org.linphone.ui.calls.viewmodel.CallsListViewModel
+import org.linphone.ui.fragment.GenericFragment
+import org.linphone.utils.Event
+import org.linphone.utils.setKeyboardInsetListener
 
-class CallsListFragment : Fragment()
+class CallsListFragment : GenericFragment() {
+
+    private lateinit var binding: CallsListFragmentBinding
+
+    private val listViewModel: CallsListViewModel by navGraphViewModels(
+        R.id.callsListFragment
+    )
+
+    override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
+        if (findNavController().currentDestination?.id == R.id.newContactFragment) {
+            // Holds fragment in place while new contact fragment slides over it
+            return AnimationUtils.loadAnimation(activity, R.anim.hold)
+        }
+        return super.onCreateAnimation(transit, enter, nextAnim)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = CallsListFragmentBinding.inflate(layoutInflater)
+        return binding.root
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = listViewModel
+
+        binding.root.setKeyboardInsetListener { keyboardVisible ->
+            val portraitOrientation = resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
+            listViewModel.bottomNavBarVisible.value = !portraitOrientation || !keyboardVisible
+        }
+
+        binding.setOnConversationsClicked {
+            sharedViewModel.navigateToConversationsEvent.value = Event(true)
+        }
+
+        binding.setOnContactsClicked {
+            sharedViewModel.navigateToContactsEvent.value = Event(true)
+        }
+
+        binding.setOnAvatarClickListener {
+            (requireActivity() as MainActivity).toggleDrawerMenu()
+        }
+    }
+}

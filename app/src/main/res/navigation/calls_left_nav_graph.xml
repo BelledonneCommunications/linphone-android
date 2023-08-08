@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/calls_left_nav_graph">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/calls_left_nav_graph"
+    app:startDestination="@id/callsListFragment">
+
+    <fragment
+        android:id="@+id/callsListFragment"
+        android:name="org.linphone.ui.calls.fragment.CallsListFragment"
+        android:label="CallsListFragment"
+        tools:layout="@layout/calls_list_fragment"/>
 
 </navigation>

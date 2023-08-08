@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="onAvatarClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="onContactsClicked"
+            type="View.OnClickListener" />
+        <variable
+            name="onConversationsClicked"
+            type="View.OnClickListener" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.calls.viewmodel.CallsListViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/primary_color">
+
+        <include
+            android:id="@+id/top_bar"
+            bind:viewModel="@{viewModel}"
+            bind:onAvatarClickListener="@{onAvatarClickListener}"
+            layout="@layout/top_search_bar" />
+
+        <ImageView
+            android:id="@+id/background"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="7dp"
+            android:src="@drawable/shape_white_background"
+            app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/top_bar" />
+
+        <include
+            bind:onConversationsClicked="@{onConversationsClicked}"
+            bind:onContactsClicked="@{onContactsClicked}"
+            bind:callsSelected="@{true}"
+            android:id="@+id/bottom_nav_bar"
+            android:visibility="@{viewModel.bottomNavBarVisible ? View.VISIBLE : View.GONE}"
+            layout="@layout/bottom_nav_bar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/new_call"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="16dp"
+            android:src="@drawable/add"
+            app:tint="@color/gray_8"
+            app:backgroundTint="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
