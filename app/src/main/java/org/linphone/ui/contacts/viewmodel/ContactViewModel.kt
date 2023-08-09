@@ -77,6 +77,7 @@ class ContactViewModel : ViewModel() {
 
     init {
         showNumbersAndAddresses.value = true
+        showDevicesTrust.value = true
         showCompany.value = false
     }
 

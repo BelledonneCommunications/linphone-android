@@ -69,11 +69,16 @@
                 android:layout_height="wrap_content">
 
                 <androidx.constraintlayout.widget.Group
-                    android:id="@+id/info_group"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:constraint_referenced_ids="info_background, company_label, company"
                     android:visibility="@{viewModel.showCompany ? View.VISIBLE : View.GONE}" />
+
+                <androidx.constraintlayout.widget.Group
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:constraint_referenced_ids="trusted_devices_count, trust_background, trusted_devices_progress, devices, trusted_devices_progress_label"
+                    android:visibility="@{viewModel.showDevicesTrust ? View.VISIBLE : View.GONE}" />
 
                 <io.getstream.avatarview.AvatarView
                     android:id="@+id/avatar"
@@ -328,25 +333,36 @@
                     app:layout_constraintEnd_toEndOf="@id/trust_background"
                     app:layout_constraintTop_toTopOf="@id/trust_background" />
 
-                <com.akexorcist.roundcornerprogressbar.TextRoundCornerProgressBar
+                <com.google.android.material.progressindicator.LinearProgressIndicator
                     android:id="@+id/trusted_devices_progress"
                     android:layout_width="0dp"
                     android:layout_height="28dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginStart="17dp"
                     android:layout_marginEnd="17dp"
-                    app:rcBackgroundColor="#EEF6F8"
-                    app:rcBackgroundPadding="2dp"
-                    app:rcMax="100"
-                    app:rcProgress="75"
-                    app:rcProgressColor="#4AA8FF"
-                    app:rcRadius="50dp"
-                    app:rcTextProgress="75%"
-                    app:rcTextProgressColor="@color/white"
-                    app:rcTextPositionPriority="inside"
+                    app:trackCornerRadius="50dp"
+                    app:trackThickness="22dp"
+                    app:trackColor="@color/gray_3"
+                    app:indicatorColor="@color/trusted_blue"
+                    android:max="100"
+                    android:progress="75"
                     app:layout_constraintStart_toStartOf="@id/trust_background"
                     app:layout_constraintEnd_toEndOf="@id/trust_background"
                     app:layout_constraintTop_toBottomOf="@id/trusted_devices_count"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/trusted_devices_progress_label"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:text="75%"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    app:layout_constraintStart_toStartOf="@id/trusted_devices_progress"
+                    app:layout_constraintEnd_toEndOf="@id/trusted_devices_progress"
+                    app:layout_constraintTop_toTopOf="@id/trusted_devices_progress"
+                    app:layout_constraintBottom_toBottomOf="@id/trusted_devices_progress" />
 
                 <LinearLayout
                     android:id="@+id/devices"
