@@ -15,20 +15,20 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="55dp"
         android:background="@color/primary_color">
 
         <androidx.constraintlayout.widget.Group
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:constraint_referenced_ids="avatar, title, search_toggle"
-            android:visibility="@{viewModel.searchBarVisible ? View.GONE : View.VISIBLE}" />
+            android:visibility="@{viewModel.searchBarVisible ? View.GONE : View.VISIBLE, default=gone}" />
 
         <androidx.constraintlayout.widget.Group
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:constraint_referenced_ids="cancel_search, search, clear_field"
-            android:visibility="@{viewModel.searchBarVisible ? View.VISIBLE : View.GONE, default=gone}" />
+            android:visibility="@{viewModel.searchBarVisible ? View.VISIBLE : View.GONE}" />
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/background_barrier"
@@ -65,9 +65,8 @@
             style="@style/default_text_style_800"
             android:id="@+id/title"
             android:layout_width="0dp"
-            android:layout_height="35dp"
+            android:layout_height="match_parent"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:gravity="center_vertical"
             android:text="@{viewModel.title, default=`Title`}"
@@ -107,8 +106,7 @@
             style="?attr/textInputFilledStyle"
             android:id="@+id/search"
             android:layout_width="0dp"
-            android:layout_height="35dp"
-            android:layout_marginTop="10dp"
+            android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:textColorHint="@color/gray_6"
             app:hintEnabled="false"

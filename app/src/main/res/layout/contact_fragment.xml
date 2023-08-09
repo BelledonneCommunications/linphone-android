@@ -17,38 +17,30 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/shape_gray_background">
-
-        <ImageView
-            android:id="@+id/top_bar_background"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:src="@color/white"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/scrollView" />
+        android:background="@color/white">
 
         <ImageView
             android:id="@+id/back"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="17dp"
+            android:adjustViewBounds="true"
+            android:padding="5dp"
             android:onClick="@{backClickListener}"
             android:visibility="@{viewModel.showBackButton ? View.VISIBLE : View.GONE}"
-            android:padding="1dp"
             android:src="@drawable/back"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@id/edit"
+            app:layout_constraintBottom_toBottomOf="@id/edit"/>
 
         <ImageView
             android:id="@+id/edit"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginTop="17dp"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
-            android:padding="1dp"
+            android:adjustViewBounds="true"
+            android:padding="5dp"
             android:src="@drawable/edit"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -57,8 +49,9 @@
             android:id="@+id/scrollView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="17dp"
-            android:layout_marginBottom="22dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/gray_7"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/edit"

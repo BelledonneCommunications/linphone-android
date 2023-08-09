@@ -34,7 +34,6 @@
             android:id="@+id/background"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="7dp"
             android:src="@drawable/shape_white_background"
             app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar"
             app:layout_constraintEnd_toEndOf="parent"
