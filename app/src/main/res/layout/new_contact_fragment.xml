@@ -39,7 +39,6 @@
             android:text="New contact"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
-            android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@id/save"
             app:layout_constraintStart_toEndOf="@id/back"
             app:layout_constraintTop_toTopOf="parent" />

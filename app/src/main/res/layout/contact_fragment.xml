@@ -104,6 +104,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style"
                     android:id="@+id/name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -116,6 +117,7 @@
                     app:layout_constraintTop_toBottomOf="@id/avatar" />
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style_300"
                     android:id="@+id/status"
                     android:visibility="@{viewModel.contact.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE}"
                     android:layout_width="wrap_content"
@@ -142,13 +144,13 @@
                     app:layout_constraintTop_toBottomOf="@id/status" />
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style"
                     android:onClick="@{() -> viewModel.startAudioCall()}"
                     android:id="@+id/call_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="Call"
-                    android:textColor="@color/gray_9"
                     android:textSize="14sp"
                     app:layout_constraintTop_toBottomOf="@id/call"
                     app:layout_constraintStart_toStartOf="@id/call"
@@ -169,13 +171,13 @@
                     app:layout_constraintTop_toBottomOf="@id/status" />
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style"
                     android:onClick="@{() -> viewModel.sendMessage()}"
                     android:id="@+id/chat_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="Message"
-                    android:textColor="@color/gray_9"
                     android:textSize="14sp"
                     app:layout_constraintTop_toBottomOf="@id/chat"
                     app:layout_constraintStart_toStartOf="@id/chat"
@@ -196,19 +198,20 @@
                     app:layout_constraintTop_toBottomOf="@id/status" />
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style"
                     android:onClick="@{() -> viewModel.startVideoCall()}"
                     android:id="@+id/video_call_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="Video Call"
-                    android:textColor="@color/gray_9"
                     android:textSize="14sp"
                     app:layout_constraintTop_toBottomOf="@id/video_call"
                     app:layout_constraintStart_toStartOf="@id/video_call"
                     app:layout_constraintEnd_toEndOf="@id/video_call"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style_800"
                     android:onClick="@{() -> viewModel.toggleNumbersAndAddressesVisibility()}"
                     android:id="@+id/numbers_and_addresses_label"
                     android:layout_width="0dp"
@@ -221,8 +224,6 @@
                     android:drawableEnd="@{viewModel.showNumbersAndAddresses ? @drawable/collapse : @drawable/expand, default=@drawable/collapse}"
                     android:drawableTint="@color/gray_9"
                     android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/gray_9"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/call_label"/>
@@ -258,6 +259,7 @@
                     app:layout_constraintBottom_toBottomOf="@id/company_label"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style_700"
                     android:id="@+id/company_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -265,8 +267,6 @@
                     android:paddingTop="16dp"
                     android:paddingBottom="16dp"
                     android:text="Company : "
-                    android:textColor="@color/gray_9"
-                    android:textStyle="bold"
                     android:textSize="14sp"
                     android:maxLines="1"
                     android:ellipsize="end"
@@ -274,13 +274,13 @@
                     app:layout_constraintTop_toTopOf="@id/info_background"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style"
                     android:id="@+id/company"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="16dp"
                     android:paddingBottom="16dp"
                     android:text="@{viewModel.company, default=`Belledonne Comm`}"
-                    android:textColor="@color/gray_9"
                     android:textSize="14sp"
                     android:maxLines="1"
                     android:ellipsize="end"
@@ -288,6 +288,7 @@
                     app:layout_constraintTop_toTopOf="@id/info_background"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style_800"
                     android:onClick="@{() -> viewModel.toggleDevicesTrustVisibility()}"
                     android:id="@+id/trust_label"
                     android:layout_width="0dp"
@@ -300,8 +301,6 @@
                     android:drawableEnd="@{viewModel.showDevicesTrust ? @drawable/collapse : @drawable/expand, default=@drawable/collapse}"
                     android:drawableTint="@color/gray_9"
                     android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/gray_9"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/info_background"/>
@@ -320,6 +319,7 @@
                     app:layout_constraintBottom_toBottomOf="@id/devices"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style_700"
                     android:id="@+id/trusted_devices_count"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -327,7 +327,6 @@
                     android:layout_marginEnd="17dp"
                     android:layout_marginTop="20dp"
                     android:textSize="14sp"
-                    android:textStyle="bold"
                     android:text="Nombre d'appareils vérifiés :"
                     app:layout_constraintStart_toStartOf="@id/trust_background"
                     app:layout_constraintEnd_toEndOf="@id/trust_background"
@@ -351,13 +350,13 @@
                     app:layout_constraintTop_toBottomOf="@id/trusted_devices_count"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style_700"
                     android:id="@+id/trusted_devices_progress_label"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:text="75%"
                     android:textColor="@color/white"
                     android:textSize="12sp"
-                    android:textStyle="bold"
                     android:gravity="center"
                     app:layout_constraintStart_toStartOf="@id/trusted_devices_progress"
                     app:layout_constraintEnd_toEndOf="@id/trusted_devices_progress"
@@ -379,6 +378,7 @@
                     app:layout_constraintTop_toBottomOf="@id/trusted_devices_progress" />
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style_800"
                     android:id="@+id/actions"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -388,8 +388,6 @@
                     android:layout_marginTop="32dp"
                     android:text="Other actions"
                     android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/gray_9"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/trust_background"/>
@@ -414,8 +412,8 @@
                     android:layout_marginStart="17dp"
                     android:layout_marginEnd="17dp"
                     android:text="Edit"
-                    style="@style/context_menu_action_label"
-                    android:drawableLeft="@drawable/edit"
+                    style="@style/context_menu_action_label_style"
+                    android:drawableStart="@drawable/edit"
                     app:layout_constraintTop_toTopOf="@id/actions_background"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
@@ -437,8 +435,8 @@
                     android:layout_marginStart="17dp"
                     android:layout_marginEnd="17dp"
                     android:text="Add to favourites"
-                    style="@style/context_menu_action_label"
-                    android:drawableLeft="@drawable/favorite"
+                    style="@style/context_menu_action_label_style"
+                    android:drawableStart="@drawable/favorite"
                     app:layout_constraintTop_toBottomOf="@id/action_edit"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
@@ -460,8 +458,8 @@
                     android:layout_marginStart="17dp"
                     android:layout_marginEnd="17dp"
                     android:text="Share"
-                    style="@style/context_menu_action_label"
-                    android:drawableLeft="@drawable/share"
+                    style="@style/context_menu_action_label_style"
+                    android:drawableStart="@drawable/share"
                     app:layout_constraintTop_toBottomOf="@id/action_favorite"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
@@ -483,8 +481,8 @@
                     android:layout_marginStart="17dp"
                     android:layout_marginEnd="17dp"
                     android:text="Invite"
-                    style="@style/context_menu_action_label"
-                    android:drawableLeft="@drawable/invite"
+                    style="@style/context_menu_action_label_style"
+                    android:drawableStart="@drawable/invite"
                     app:layout_constraintTop_toBottomOf="@id/action_share"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
@@ -506,8 +504,8 @@
                     android:layout_marginStart="17dp"
                     android:layout_marginEnd="17dp"
                     android:text="Delete"
-                    style="@style/context_menu_danger_action_label"
-                    android:drawableLeft="@drawable/delete"
+                    style="@style/context_menu_danger_action_label_style"
+                    android:drawableStart="@drawable/delete"
                     app:layout_constraintTop_toBottomOf="@id/action_invite"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>

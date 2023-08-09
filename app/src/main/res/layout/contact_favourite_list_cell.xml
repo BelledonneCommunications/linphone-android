@@ -47,6 +47,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
             android:id="@+id/name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -54,7 +55,6 @@
             android:gravity="center"
             android:text="@{model.name, default=`John Doe`}"
             android:textSize="14sp"
-            android:textColor="@color/gray_9"
             android:maxLines="1"
             android:ellipsize="end"
             app:layout_constraintStart_toStartOf="@id/avatar"

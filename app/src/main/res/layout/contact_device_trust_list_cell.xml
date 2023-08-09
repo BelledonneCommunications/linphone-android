@@ -26,12 +26,12 @@
             app:barrierDirection="start" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
             android:id="@+id/device_name"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="10dp"
             android:text="@{model.name, default=`Pixel 6 Pro de Sylvain`}"
-            android:textColor="@color/gray_9"
             android:textSize="14sp"
             android:maxLines="1"
             android:ellipsize="end"
@@ -53,6 +53,7 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_600"
             android:id="@+id/verify_device"
             android:visibility="@{model.trusted ? View.GONE : View.VISIBLE}"
             android:layout_width="wrap_content"
@@ -68,7 +69,7 @@
             android:drawablePadding="8dp"
             android:text="Vérifier l'appareil"
             android:textColor="@color/primary_color"
-            android:textSize="12sp"
+            android:textSize="13sp"
             android:maxLines="1"
             android:ellipsize="end"
             app:layout_constraintEnd_toEndOf="parent"

@@ -42,15 +42,14 @@
             app:layout_constraintTop_toTopOf="@id/title" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_800"
             android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:paddingTop="25dp"
             android:text="Which canal do you choose?"
-            android:textColor="@color/gray_9"
             android:textSize="16sp"
-            android:textStyle="bold"
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintBottom_toTopOf="@id/numbers_and_addresses"
             app:layout_constraintStart_toStartOf="@id/dialog_background"

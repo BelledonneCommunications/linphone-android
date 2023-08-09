@@ -62,6 +62,7 @@
             app:layout_constraintTop_toTopOf="@id/title" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_800"
             android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="35dp"
@@ -72,7 +73,6 @@
             android:text="@{viewModel.title, default=`Title`}"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
-            android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@id/search_toggle"
             app:layout_constraintStart_toEndOf="@id/avatar"
             app:layout_constraintTop_toTopOf="parent" />
@@ -125,7 +125,6 @@
                 android:layout_height="match_parent"
                 android:textCursorDrawable="@null"
                 android:textColor="@color/gray_6"
-                android:textStyle="bold"
                 android:textSize="16sp"
                 android:inputType="text"
                 android:paddingVertical="1dp"

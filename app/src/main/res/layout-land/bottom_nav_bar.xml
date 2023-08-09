@@ -39,19 +39,15 @@
         android:background="@color/white">
 
         <androidx.appcompat.widget.AppCompatTextView
+            style="@style/bottom_nav_bar_label_style"
             android:id="@+id/contacts"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:drawableTop="@drawable/contacts"
             android:drawablePadding="10dp"
             android:drawableTint="@{contactsSelected ? @color/primary_color : @color/gray_9, default=@color/gray_9}"
-            android:gravity="center"
             android:onClick="@{onContactsClicked}"
             android:text="Contacts"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:textColor="@color/gray_9"
-            android:textSize="11sp"
             android:textStyle="@{contactsSelected ? Typeface.BOLD : Typeface.NORMAL}"
             app:layout_constraintBottom_toTopOf="@id/calls"
             app:layout_constraintStart_toStartOf="parent"
@@ -59,19 +55,14 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            style="@style/bottom_nav_bar_label_style"
             android:onClick="@{onCallsClicked}"
             android:id="@+id/calls"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:drawableTop="@drawable/calls"
             android:drawablePadding="10dp"
-            android:drawableTint="@{callsSelected ? @color/primary_color : @color/gray_9, default=@color/gray_9}"
-            android:gravity="center"
             android:text="Calls"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:textColor="@color/gray_9"
-            android:textSize="11sp"
             android:textStyle="@{callsSelected ? Typeface.BOLD : Typeface.NORMAL}"
             app:layout_constraintBottom_toTopOf="@id/conversations"
             app:layout_constraintStart_toStartOf="parent"
@@ -79,6 +70,7 @@
             app:layout_constraintTop_toBottomOf="@id/contacts" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            style="@style/bottom_nav_bar_label_style"
             android:id="@+id/conversations"
             android:enabled="false"
             android:layout_width="0dp"
@@ -86,13 +78,8 @@
             android:drawableTop="@drawable/conversations"
             android:drawablePadding="10dp"
             android:drawableTint="@{conversationsSelected ? @color/primary_color : @color/gray_9, default=@color/gray_9}"
-            android:gravity="center"
             android:onClick="@{onConversationsClicked}"
             android:text="Conversations"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:textColor="@color/gray_9"
-            android:textSize="11sp"
             android:textStyle="@{conversationsSelected ? Typeface.BOLD : Typeface.NORMAL}"
             app:layout_constraintBottom_toTopOf="@id/meetings"
             app:layout_constraintStart_toStartOf="parent"
@@ -100,6 +87,7 @@
             app:layout_constraintTop_toBottomOf="@id/calls" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            style="@style/bottom_nav_bar_label_style"
             android:onClick="@{onMeetingsClicked}"
             android:id="@+id/meetings"
             android:layout_width="0dp"
@@ -107,12 +95,7 @@
             android:drawableTop="@drawable/meetings"
             android:drawablePadding="10dp"
             android:drawableTint="@{meetingsSelected ? @color/primary_color : @color/gray_9, default=@color/gray_9}"
-            android:gravity="center"
             android:text="Meetings"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:textColor="@color/gray_9"
-            android:textSize="11sp"
             android:textStyle="@{meetingsSelected ? Typeface.BOLD : Typeface.NORMAL}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
