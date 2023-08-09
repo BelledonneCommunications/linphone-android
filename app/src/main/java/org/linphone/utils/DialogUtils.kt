@@ -30,7 +30,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import org.linphone.R
 import org.linphone.databinding.DialogPickNumberOrAddressBinding
-import org.linphone.ui.contacts.model.NumberOrAddressPickerDialogModel
+import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
 
 class DialogUtils {
     companion object {

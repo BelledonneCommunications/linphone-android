@@ -24,4 +24,8 @@
     <color name="gray_9">#4E6074</color>
     <color name="gray_10">#9AABB5</color>
     <color name="separator">#E5E5EA</color>
+
+    <color name="in_call_black">#070707</color>
+    <color name="in_call_gray">#2E3030</color>
+    <color name="in_call_button_background_gray">#4E4E4E</color>
 </resources>

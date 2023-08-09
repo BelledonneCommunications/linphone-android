@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/callsListFragment"
-        android:name="org.linphone.ui.calls.fragment.CallsListFragment"
+        android:name="org.linphone.ui.main.calls.fragment.CallsListFragment"
         android:label="CallsListFragment"
         tools:layout="@layout/calls_list_fragment"/>
 

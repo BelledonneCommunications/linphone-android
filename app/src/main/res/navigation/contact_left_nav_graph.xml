@@ -8,14 +8,14 @@
 
     <fragment
         android:id="@+id/contactsListFragment"
-        android:name="org.linphone.ui.contacts.fragment.ContactsListFragment"
+        android:name="org.linphone.ui.main.contacts.fragment.ContactsListFragment"
         android:label="ContactsListFragment"
         tools:layout="@layout/contacts_list_fragment">
     </fragment>
 
     <fragment
         android:id="@+id/newContactFragment"
-        android:name="org.linphone.ui.contacts.fragment.NewContactFragment"
+        android:name="org.linphone.ui.main.contacts.fragment.NewContactFragment"
         android:label="NewContactFragment"
         tools:layout="@layout/new_contact_fragment"/>
     <action

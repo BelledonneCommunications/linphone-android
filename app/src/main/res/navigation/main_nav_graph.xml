@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/conversationsFragment"
-        android:name="org.linphone.ui.conversations.ConversationsFragment"
+        android:name="org.linphone.ui.main.conversations.ConversationsFragment"
         android:label="ConversationsFragment"
         tools:layout="@layout/conversations_fragment">
         <action
@@ -34,7 +34,7 @@
 
     <fragment
         android:id="@+id/newConversationFragment"
-        android:name="org.linphone.ui.conversations.NewConversationFragment"
+        android:name="org.linphone.ui.main.conversations.NewConversationFragment"
         android:label="NewConversationFragment"
         tools:layout="@layout/new_conversation_fragment" >
         <action
@@ -47,7 +47,7 @@
 
     <fragment
         android:id="@+id/conversationFragment"
-        android:name="org.linphone.ui.conversations.ConversationFragment"
+        android:name="org.linphone.ui.main.conversations.ConversationFragment"
         android:label="ConversationFragment"
         tools:layout="@layout/conversation_fragment" >
         <argument
@@ -60,7 +60,7 @@
 
     <fragment
         android:id="@+id/contactsFragment"
-        android:name="org.linphone.ui.contacts.fragment.ContactsFragment"
+        android:name="org.linphone.ui.main.contacts.fragment.ContactsFragment"
         android:label="ContactsFragment"
         tools:layout="@layout/contacts_fragment">
         <action
@@ -76,7 +76,7 @@
 
     <fragment
         android:id="@+id/callsFragment"
-        android:name="org.linphone.ui.calls.fragment.CallsFragment"
+        android:name="org.linphone.ui.main.calls.fragment.CallsFragment"
         android:label="CallsFragment"
         tools:layout="@layout/calls_fragment">
         <action

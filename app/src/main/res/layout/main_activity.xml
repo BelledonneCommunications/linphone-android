@@ -5,21 +5,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="android.view.View" />
-        <variable
-            name="avatarClickListener"
-            type="View.OnClickListener" />
-        <variable
-            name="viewModel"
-            type="org.linphone.ui.viewmodel.TopBarViewModel" />
     </data>
 
-    <!-- Background color here is mandatory for transparency effect on child views -->
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/primary_color"
-        tools:context=".ui.MainActivity">
+        tools:context=".ui.main.MainActivity">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -46,7 +37,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@color/white"
-                        android:layout_gravity="left">
+                        android:layout_gravity="start">
 
                         <!-- TODO -->
 

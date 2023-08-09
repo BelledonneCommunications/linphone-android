@@ -81,8 +81,8 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
         }
         Log.i("[Contacts Loader] Load finished, found ${cursor.count} entries in cursor")
 
-        val core = coreContext.core
-        if (core.globalState == GlobalState.Shutdown || core.globalState == GlobalState.Off) {
+        val state = coreContext.core.globalState
+        if (state == GlobalState.Shutdown || state == GlobalState.Off) {
             Log.w("[Contacts Loader] Core is being stopped or already destroyed, abort")
             return
         }

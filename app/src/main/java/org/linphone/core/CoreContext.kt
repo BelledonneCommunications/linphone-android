@@ -21,6 +21,7 @@ package org.linphone.core
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
@@ -30,6 +31,7 @@ import org.linphone.BuildConfig
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.contacts.ContactsManager
 import org.linphone.core.tools.Log
+import org.linphone.ui.voip.VoipActivity
 
 class CoreContext(val context: Context) : HandlerThread("Core Thread") {
     lateinit var core: Core
@@ -46,6 +48,18 @@ class CoreContext(val context: Context) : HandlerThread("Core Thread") {
     private val coreListener = object : CoreListenerStub() {
         override fun onGlobalStateChanged(core: Core, state: GlobalState, message: String) {
             Log.i("[Context] Global state changed: $state")
+        }
+
+        override fun onCallStateChanged(
+            core: Core,
+            call: Call,
+            state: Call.State?,
+            message: String
+        ) {
+            Log.i("[Context] Call state changed [$state]")
+            if (state == Call.State.OutgoingProgress) {
+                showCallActivity()
+            }
         }
     }
 
@@ -107,6 +121,67 @@ class CoreContext(val context: Context) : HandlerThread("Core Thread") {
         mainThread.post {
             lambda.invoke()
         }
+    }
+
+    fun startCall(
+        address: Address,
+        callParams: CallParams? = null,
+        forceZRTP: Boolean = false,
+        localAddress: Address? = null
+    ) {
+        if (!core.isNetworkReachable) {
+            Log.e("[Context] Network unreachable, abort outgoing call")
+            return
+        }
+
+        val params = callParams ?: core.createCallParams(null)
+        if (params == null) {
+            val call = core.inviteAddress(address)
+            Log.w("[Context] Starting call $call without params")
+            return
+        }
+
+        if (forceZRTP) {
+            params.mediaEncryption = MediaEncryption.ZRTP
+        }
+        /*if (LinphoneUtils.checkIfNetworkHasLowBandwidth(context)) {
+            Log.w("[Context] Enabling low bandwidth mode!")
+            params.isLowBandwidthEnabled = true
+        }
+        params.recordFile = LinphoneUtils.getRecordingFilePathForAddress(address)*/
+
+        if (localAddress != null) {
+            val account = core.accountList.find { account ->
+                account.params.identityAddress?.weakEqual(localAddress) ?: false
+            }
+            if (account != null) {
+                params.account = account
+                Log.i(
+                    "[Context] Using account matching address ${localAddress.asStringUriOnly()} as From"
+                )
+            } else {
+                Log.e(
+                    "[Context] Failed to find account matching address ${localAddress.asStringUriOnly()}"
+                )
+            }
+        }
+
+        /*if (corePreferences.sendEarlyMedia) {
+            params.isEarlyMediaSendingEnabled = true
+        }*/
+
+        val call = core.inviteAddressWithParams(address, params)
+        Log.i("[Context] Starting call $call")
+    }
+
+    private fun showCallActivity() {
+        Log.i("[Context] Starting VoIP activity")
+        val intent = Intent(context, VoipActivity::class.java)
+        // This flag is required to start an Activity from a Service context
+        intent.addFlags(
+            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+        )
+        context.startActivity(intent)
     }
 
     private fun computeUserAgent() {

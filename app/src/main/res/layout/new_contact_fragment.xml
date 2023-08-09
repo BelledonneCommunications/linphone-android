@@ -47,13 +47,12 @@
 
         <ImageView
             android:id="@+id/save"
-            android:layout_width="wrap_content"
+            android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginEnd="10dp"
-            android:adjustViewBounds="true"
             android:padding="5dp"
             android:src="@drawable/check"
-            android:drawableTint="@color/primary_color"
+            app:tint="@color/primary_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintTop_toTopOf="@id/title" />

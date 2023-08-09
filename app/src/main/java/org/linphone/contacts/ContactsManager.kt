@@ -22,7 +22,7 @@ package org.linphone.contacts
 import androidx.loader.app.LoaderManager
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Friend
-import org.linphone.ui.MainActivity
+import org.linphone.ui.main.MainActivity
 
 class ContactsManager {
     private val listeners = arrayListOf<ContactsListener>()

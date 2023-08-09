@@ -13,7 +13,7 @@
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.conversations.viewmodel.ConversationsListViewModel" />
+            type="org.linphone.ui.main.conversations.viewmodel.ConversationsListViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

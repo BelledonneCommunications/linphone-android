@@ -8,10 +8,11 @@
         <import type="android.graphics.Typeface" />
         <variable
             name="model"
-            type="org.linphone.ui.contacts.model.ContactNumberOrAddressModel" />
+            type="org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:onClick="@{() -> model.onClicked()}"
         android:onLongClick="@{() -> model.onLongPress()}"
         android:selected="@{model.selected}"
         android:layout_width="match_parent"

@@ -11,7 +11,7 @@
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.contacts.viewmodel.ContactViewModel" />
+            type="org.linphone.ui.main.contacts.viewmodel.ContactViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

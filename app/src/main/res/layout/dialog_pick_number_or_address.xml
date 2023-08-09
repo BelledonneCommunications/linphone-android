@@ -8,7 +8,7 @@
         <import type="android.graphics.Typeface" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.contacts.model.NumberOrAddressPickerDialogModel" />
+            type="org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

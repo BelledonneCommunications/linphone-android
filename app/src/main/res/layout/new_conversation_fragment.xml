@@ -10,7 +10,7 @@
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.conversations.viewmodel.NewConversationViewModel" />
+            type="org.linphone.ui.main.conversations.viewmodel.NewConversationViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

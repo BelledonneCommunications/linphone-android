@@ -42,8 +42,8 @@ import org.linphone.BR
 import org.linphone.R
 import org.linphone.contacts.ContactData
 import org.linphone.core.ConsolidatedPresence
-import org.linphone.ui.MainActivity
-import org.linphone.ui.contacts.model.ContactModel
+import org.linphone.ui.main.MainActivity
+import org.linphone.ui.main.contacts.model.ContactModel
 
 /**
  * This file contains all the data binding necessary for the app

@@ -10,7 +10,7 @@
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.viewmodel.TopBarViewModel" />
+            type="org.linphone.ui.main.viewmodel.TopBarViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

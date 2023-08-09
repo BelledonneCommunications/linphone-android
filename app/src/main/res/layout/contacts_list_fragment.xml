@@ -19,7 +19,7 @@
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.contacts.viewmodel.ContactsListViewModel" />
+            type="org.linphone.ui.main.contacts.viewmodel.ContactsListViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -135,7 +135,7 @@
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/bottom_nav_bar"
-            android:name="org.linphone.ui.fragment.BottomNavBarFragment"
+            android:name="org.linphone.ui.main.fragment.BottomNavBarFragment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:visibility="@{viewModel.bottomNavBarVisible ? View.VISIBLE : View.GONE}"

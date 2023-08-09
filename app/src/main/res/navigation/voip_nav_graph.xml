@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/voip_nav_graph"
+    app:startDestination="@id/outgoingCallFragment">
+
+    <fragment
+        android:id="@+id/outgoingCallFragment"
+        android:name="org.linphone.ui.voip.fragment.OutgoingCallFragment"
+        android:label="OutgoingCallFragment"
+        tools:layout="@layout/voip_outgoing_call_fragment"/>
+
+</navigation>

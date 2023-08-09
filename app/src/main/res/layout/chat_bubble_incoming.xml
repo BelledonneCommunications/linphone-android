@@ -7,7 +7,7 @@
         <import type="android.view.View" />
         <variable
             name="data"
-            type="org.linphone.ui.conversations.data.ChatMessageData" />
+            type="org.linphone.ui.main.conversations.data.ChatMessageData" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -43,7 +43,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
 
-        <org.linphone.ui.conversations.view.MultiLineWrapContentWidthTextView
+        <org.linphone.ui.main.conversations.view.MultiLineWrapContentWidthTextView
             android:id="@+id/text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

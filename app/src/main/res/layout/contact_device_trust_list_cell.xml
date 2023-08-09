@@ -8,7 +8,7 @@
         <import type="android.graphics.Typeface" />
         <variable
             name="model"
-            type="org.linphone.ui.contacts.model.ContactDeviceModel" />
+            type="org.linphone.ui.main.contacts.model.ContactDeviceModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

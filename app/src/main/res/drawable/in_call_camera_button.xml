@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:state_enabled="false"
+        android:drawable="@drawable/camera_disabled"
+        app:tint="@color/gray_5" />
+    <item
+        android:drawable="@drawable/camera_enabled"
+        app:tint="@color/white" />
+</selector>
