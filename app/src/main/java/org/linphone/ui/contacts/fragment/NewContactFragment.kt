@@ -23,7 +23,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
 import androidx.navigation.fragment.findNavController
 import org.linphone.databinding.NewContactFragmentBinding
 import org.linphone.ui.fragment.GenericFragment

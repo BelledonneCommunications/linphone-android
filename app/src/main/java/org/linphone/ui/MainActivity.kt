@@ -27,15 +27,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.databinding.DataBindingUtil
-import androidx.emoji2.text.EmojiCompat
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
-import org.linphone.core.tools.Log
 import org.linphone.databinding.MainActivityBinding
 
 class MainActivity : AppCompatActivity() {
@@ -98,6 +91,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadContacts() {
+        coreContext.contactsManager.loadContacts(this)
+
+        /* TODO: Uncomment later, only fixes a small UI display issue for contacts with emoji in the name
         val emojiCompat = coreContext.emojiCompat
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
@@ -108,13 +104,13 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 Log.i(
-                    "[Main Activity] Emoji compat library loading status is ${emojiCompat.loadState}, loading contacts"
+                    "[Main Activity] Emoji compat library loading status is ${emojiCompat.loadState}, re-loading contacts"
                 )
                 coreContext.postOnMainThread {
                     // Contacts loading must be started from UI thread
                     coreContext.contactsManager.loadContacts(this@MainActivity)
                 }
             }
-        }
+        }*/
     }
 }
