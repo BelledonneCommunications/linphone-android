@@ -11,12 +11,6 @@
         android:name="org.linphone.ui.contacts.fragment.ContactsListFragment"
         android:label="ContactsListFragment"
         tools:layout="@layout/contacts_list_fragment">
-        <action
-            android:id="@+id/action_contactsListFragment_to_newContactFragment"
-            app:destination="@id/newContactFragment"
-            app:enterAnim="@anim/slide_in"
-            app:launchSingleTop="true"
-            app:popExitAnim="@anim/slide_out" />
     </fragment>
 
     <fragment
@@ -24,4 +18,10 @@
         android:name="org.linphone.ui.contacts.fragment.NewContactFragment"
         android:label="NewContactFragment"
         tools:layout="@layout/new_contact_fragment"/>
+    <action
+        android:id="@+id/action_global_newContactFragment"
+        app:destination="@id/newContactFragment"
+        app:enterAnim="@anim/slide_in"
+        app:popExitAnim="@anim/slide_out"
+        app:launchSingleTop="true" />
 </navigation>

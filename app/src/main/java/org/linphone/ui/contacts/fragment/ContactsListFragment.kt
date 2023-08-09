@@ -130,17 +130,7 @@ class ContactsListFragment : GenericFragment() {
         }
 
         binding.setOnNewContactClicked {
-            if (findNavController().currentDestination?.id == R.id.contactsListFragment) {
-                findNavController().navigate(R.id.action_contactsListFragment_to_newContactFragment)
-            }
-        }
-
-        binding.setOnConversationsClicked {
-            sharedViewModel.navigateToConversationsEvent.value = Event(true)
-        }
-
-        binding.setOnCallsClicked {
-            sharedViewModel.navigateToCallsEvent.value = Event(true)
+            findNavController().navigate(R.id.action_global_newContactFragment)
         }
 
         binding.setOnAvatarClickListener {

@@ -115,4 +115,9 @@ class ContactsFragment : GenericFragment() {
             }
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        sharedViewModel.currentlyDisplayedFragment.value = R.id.contactsFragment
+    }
 }

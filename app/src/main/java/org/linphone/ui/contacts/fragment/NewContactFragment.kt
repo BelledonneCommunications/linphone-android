@@ -31,14 +31,6 @@ import org.linphone.ui.fragment.GenericFragment
 class NewContactFragment : GenericFragment() {
     private lateinit var binding: NewContactFragmentBinding
 
-    override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
-        /*if (findNavController().currentDestination?.id == R.id.contactFragment) {
-            // Holds fragment in place while created contact fragment slides over it
-            return AnimationUtils.loadAnimation(activity, R.anim.hold)
-        }*/
-        return super.onCreateAnimation(transit, enter, nextAnim)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -48,19 +40,17 @@ class NewContactFragment : GenericFragment() {
         return binding.root
     }
 
+    override fun goBack() {
+        findNavController().popBackStack()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        // postponeEnterTransition()
-
         binding.setCancelClickListener {
-            findNavController().popBackStack()
+            goBack()
         }
-
-        /*(view.parent as? ViewGroup)?.doOnPreDraw {
-            startPostponedEnterTransition()
-        }*/
     }
 }

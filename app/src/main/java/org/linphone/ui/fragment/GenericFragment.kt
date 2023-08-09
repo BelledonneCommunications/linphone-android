@@ -84,7 +84,7 @@ abstract class GenericFragment : Fragment() {
         return this.javaClass.name
     }
 
-    protected fun goBack() {
+    protected open fun goBack() {
         try {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         } catch (ise: IllegalStateException) {

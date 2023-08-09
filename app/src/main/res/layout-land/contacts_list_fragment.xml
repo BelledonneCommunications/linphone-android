@@ -33,18 +33,16 @@
             app:constraint_referenced_ids="no_contacts_image, no_contacts_label"
             android:visibility="@{viewModel.contactsList.empty ? View.VISIBLE : View.GONE}" />
 
-        <include
-            bind:onConversationsClicked="@{onConversationsClicked}"
-            bind:onCallsClicked="@{onCallsClicked}"
-            bind:contactsSelected="@{true}"
+        <androidx.fragment.app.FragmentContainerView
             android:id="@+id/bottom_nav_bar"
-            android:visibility="@{viewModel.bottomNavBarVisible ? View.VISIBLE : View.GONE}"
-            layout="@layout/bottom_nav_bar"
+            android:name="org.linphone.ui.fragment.BottomNavBarFragment"
             android:layout_width="75dp"
             android:layout_height="0dp"
+            android:visibility="@{viewModel.bottomNavBarVisible ? View.VISIBLE : View.GONE}"
+            bind:layout="@layout/bottom_nav_bar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent" />
 
         <include
             android:id="@+id/top_bar"

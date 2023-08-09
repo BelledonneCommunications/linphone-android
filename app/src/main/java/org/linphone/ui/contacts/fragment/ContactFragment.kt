@@ -56,6 +56,10 @@ class ContactFragment : GenericFragment() {
         return binding.root
     }
 
+    override fun goBack() {
+        sharedViewModel.closeSlidingPaneEvent.value = Event(true)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -71,7 +75,7 @@ class ContactFragment : GenericFragment() {
         viewModel.findContactByRefKey(refKey)
 
         binding.setBackClickListener {
-            sharedViewModel.closeSlidingPaneEvent.value = Event(true)
+            goBack()
         }
 
         sharedViewModel.isSlidingPaneSlideable.observe(viewLifecycleOwner) { slideable ->

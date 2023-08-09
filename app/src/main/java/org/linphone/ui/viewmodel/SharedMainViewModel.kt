@@ -38,6 +38,8 @@ class SharedMainViewModel : ViewModel() {
 
     val navigateToContactsEvent = MutableLiveData<Event<Boolean>>()
 
+    var currentlyDisplayedFragment = MutableLiveData<Int>()
+
     /* Contacts related */
 
     val showContactEvent = MutableLiveData<Event<String>>()

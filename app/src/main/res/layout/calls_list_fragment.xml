@@ -40,18 +40,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/top_bar" />
 
-        <include
-            bind:onConversationsClicked="@{onConversationsClicked}"
-            bind:onContactsClicked="@{onContactsClicked}"
-            bind:callsSelected="@{true}"
+        <androidx.fragment.app.FragmentContainerView
             android:id="@+id/bottom_nav_bar"
-            android:visibility="@{viewModel.bottomNavBarVisible ? View.VISIBLE : View.GONE}"
-            layout="@layout/bottom_nav_bar"
+            android:name="org.linphone.ui.fragment.BottomNavBarFragment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:visibility="@{viewModel.bottomNavBarVisible ? View.VISIBLE : View.GONE}"
+            bind:layout="@layout/bottom_nav_bar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/new_call"

@@ -33,7 +33,6 @@ import org.linphone.databinding.CallsListFragmentBinding
 import org.linphone.ui.MainActivity
 import org.linphone.ui.calls.viewmodel.CallsListViewModel
 import org.linphone.ui.fragment.GenericFragment
-import org.linphone.utils.Event
 import org.linphone.utils.setKeyboardInsetListener
 
 class CallsListFragment : GenericFragment() {
@@ -69,14 +68,6 @@ class CallsListFragment : GenericFragment() {
         binding.root.setKeyboardInsetListener { keyboardVisible ->
             val portraitOrientation = resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
             listViewModel.bottomNavBarVisible.value = !portraitOrientation || !keyboardVisible
-        }
-
-        binding.setOnConversationsClicked {
-            sharedViewModel.navigateToConversationsEvent.value = Event(true)
-        }
-
-        binding.setOnContactsClicked {
-            sharedViewModel.navigateToContactsEvent.value = Event(true)
         }
 
         binding.setOnAvatarClickListener {

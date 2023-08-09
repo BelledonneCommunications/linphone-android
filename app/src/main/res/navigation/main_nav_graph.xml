@@ -14,8 +14,8 @@
             android:id="@+id/action_conversationsFragment_to_newConversationFragment"
             app:destination="@id/newConversationFragment"
             app:enterAnim="@anim/slide_in"
-            app:launchSingleTop="true"
-            app:popExitAnim="@anim/slide_out" />
+            app:popExitAnim="@anim/slide_out"
+            app:launchSingleTop="true" />
         <action
             android:id="@+id/action_conversationsFragment_to_conversationFragment"
             app:destination="@id/conversationFragment"
@@ -24,9 +24,9 @@
         <action
             android:id="@+id/action_conversationsFragment_to_contactsFragment"
             app:destination="@id/contactsFragment"
-            app:launchSingleTop="true"
             app:popUpTo="@id/contactsFragment"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="true"
+            app:launchSingleTop="true" />
         <action
             android:id="@+id/action_conversationsFragment_to_callsFragment"
             app:destination="@id/callsFragment" />
@@ -68,7 +68,10 @@
             app:destination="@id/conversationsFragment" />
         <action
             android:id="@+id/action_contactsFragment_to_callsFragment"
-            app:destination="@id/callsFragment" />
+            app:destination="@id/callsFragment"
+            app:popUpTo="@id/callsFragment"
+            app:popUpToInclusive="true"
+            app:launchSingleTop="true"/>
     </fragment>
 
     <fragment
@@ -78,7 +81,10 @@
         tools:layout="@layout/calls_fragment">
         <action
             android:id="@+id/action_callsFragment_to_contactsFragment"
-            app:destination="@id/contactsFragment" />
+            app:destination="@id/contactsFragment"
+            app:popUpTo="@id/contactsFragment"
+            app:popUpToInclusive="true"
+            app:launchSingleTop="true" />
         <action
             android:id="@+id/action_callsFragment_to_conversationsFragment"
             app:destination="@id/conversationsFragment" />
