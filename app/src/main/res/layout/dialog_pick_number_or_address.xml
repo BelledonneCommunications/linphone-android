@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <import type="android.graphics.Typeface" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.contacts.model.NumberOrAddressPickerDialogModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:onClick="@{() -> viewModel.dismiss()}"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true">
+
+        <ImageView
+            android:id="@+id/dialog_background_shadow"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/shape_orange_shadow"
+            app:layout_constraintBottom_toBottomOf="@id/numbers_and_addresses"
+            app:layout_constraintEnd_toEndOf="@id/dialog_background"
+            app:layout_constraintStart_toStartOf="@id/dialog_background"
+            app:layout_constraintTop_toTopOf="@id/dialog_background" />
+
+        <ImageView
+            android:id="@+id/dialog_background"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="2dp"
+            android:src="@drawable/shape_dialog_background"
+            app:layout_constraintBottom_toBottomOf="@id/numbers_and_addresses"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/title" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:paddingTop="25dp"
+            android:text="Which canal do you choose?"
+            android:textColor="@color/gray_9"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintBottom_toTopOf="@id/numbers_and_addresses"
+            app:layout_constraintStart_toStartOf="@id/dialog_background"
+            app:layout_constraintEnd_toEndOf="@id/dialog_background"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/numbers_and_addresses"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="15dp"
+            android:orientation="vertical"
+            android:paddingBottom="20dp"
+            app:entries="@{viewModel.sipAddressesAndPhoneNumbers}"
+            app:layout="@{@layout/dialog_number_address_list_cell}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/dialog_background"
+            app:layout_constraintEnd_toEndOf="@id/dialog_background"
+            app:layout_constraintTop_toBottomOf="@id/title" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

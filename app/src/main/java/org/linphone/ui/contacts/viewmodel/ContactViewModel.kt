@@ -48,8 +48,12 @@ class ContactViewModel : ViewModel() {
 
     val contactFoundEvent = MutableLiveData<Event<Boolean>>()
 
-    val showLongPressMenuForNumberOrAddress: MutableLiveData<Event<ContactNumberOrAddressModel>> by lazy {
+    val showLongPressMenuForNumberOrAddressEvent: MutableLiveData<Event<ContactNumberOrAddressModel>> by lazy {
         MutableLiveData<Event<ContactNumberOrAddressModel>>()
+    }
+
+    val showNumberOrAddressPickerDialogEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
     }
 
     val listener = object : ContactNumberOrAddressClickListener {
@@ -67,7 +71,7 @@ class ContactViewModel : ViewModel() {
 
         override fun onLongPress(model: ContactNumberOrAddressModel) {
             // UI thread
-            showLongPressMenuForNumberOrAddress.value = Event(model)
+            showLongPressMenuForNumberOrAddressEvent.value = Event(model)
         }
     }
 
@@ -130,5 +134,29 @@ class ContactViewModel : ViewModel() {
 
     fun toggleDevicesTrustVisibility() {
         showDevicesTrust.value = showDevicesTrust.value == false
+    }
+
+    fun startAudioCall() {
+        if (sipAddressesAndPhoneNumbers.value.orEmpty().size == 1) {
+            // TODO
+        } else {
+            showNumberOrAddressPickerDialogEvent.value = Event(true)
+        }
+    }
+
+    fun startVideoCall() {
+        if (sipAddressesAndPhoneNumbers.value.orEmpty().size == 1) {
+            // TODO
+        } else {
+            showNumberOrAddressPickerDialogEvent.value = Event(true)
+        }
+    }
+
+    fun sendMessage() {
+        if (sipAddressesAndPhoneNumbers.value.orEmpty().size == 1) {
+            // TODO
+        } else {
+            showNumberOrAddressPickerDialogEvent.value = Event(true)
+        }
     }
 }

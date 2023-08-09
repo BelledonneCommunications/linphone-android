@@ -29,8 +29,10 @@ import androidx.navigation.fragment.navArgs
 import androidx.transition.ChangeBounds
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactFragmentBinding
+import org.linphone.ui.contacts.model.NumberOrAddressPickerDialogModel
 import org.linphone.ui.contacts.viewmodel.ContactViewModel
 import org.linphone.ui.fragment.GenericFragment
+import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 
 class ContactFragment : GenericFragment() {
@@ -83,7 +85,7 @@ class ContactFragment : GenericFragment() {
             sharedViewModel.openSlidingPaneEvent.value = Event(true)
         }
 
-        viewModel.showLongPressMenuForNumberOrAddress.observe(viewLifecycleOwner) {
+        viewModel.showLongPressMenuForNumberOrAddressEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
                 val modalBottomSheet = ContactNumberOrAddressMenuDialogFragment() {
                     model.selected.value = false
@@ -92,6 +94,21 @@ class ContactFragment : GenericFragment() {
                     parentFragmentManager,
                     ContactNumberOrAddressMenuDialogFragment.TAG
                 )
+            }
+        }
+
+        viewModel.showNumberOrAddressPickerDialogEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                val model = NumberOrAddressPickerDialogModel(viewModel)
+                val dialog = DialogUtils.getNumberOrAddressPickerDialog(requireActivity(), model)
+
+                model.dismissEvent.observe(viewLifecycleOwner) {
+                    it.consume {
+                        dialog.dismiss()
+                    }
+                }
+
+                dialog.show()
             }
         }
     }

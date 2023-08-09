@@ -123,6 +123,7 @@
                     app:layout_constraintTop_toBottomOf="@id/name" />
 
                 <ImageView
+                    android:onClick="@{() -> viewModel.startAudioCall()}"
                     android:id="@+id/call"
                     android:layout_width="56dp"
                     android:layout_height="56dp"
@@ -136,6 +137,7 @@
                     app:layout_constraintTop_toBottomOf="@id/status" />
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    android:onClick="@{() -> viewModel.startAudioCall()}"
                     android:id="@+id/call_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -148,6 +150,7 @@
                     app:layout_constraintEnd_toEndOf="@id/call"/>
 
                 <ImageView
+                    android:onClick="@{() -> viewModel.sendMessage()}"
                     android:id="@+id/chat"
                     android:layout_width="56dp"
                     android:layout_height="56dp"
@@ -161,6 +164,7 @@
                     app:layout_constraintTop_toBottomOf="@id/status" />
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    android:onClick="@{() -> viewModel.sendMessage()}"
                     android:id="@+id/chat_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -173,6 +177,7 @@
                     app:layout_constraintEnd_toEndOf="@id/chat"/>
 
                 <ImageView
+                    android:onClick="@{() -> viewModel.startVideoCall()}"
                     android:id="@+id/video_call"
                     android:layout_width="56dp"
                     android:layout_height="56dp"
@@ -186,6 +191,7 @@
                     app:layout_constraintTop_toBottomOf="@id/status" />
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    android:onClick="@{() -> viewModel.startVideoCall()}"
                     android:id="@+id/video_call_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
