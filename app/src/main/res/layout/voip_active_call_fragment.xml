@@ -39,6 +39,31 @@
             app:layout_constraintStart_toEndOf="@id/call_direction_icon"
             app:layout_constraintTop_toTopOf="parent"/>
 
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_800"
+            android:id="@+id/separator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:text="@string/vertical_separator"
+            app:layout_constraintStart_toEndOf="@id/call_direction_label"
+            app:layout_constraintTop_toTopOf="@id/call_direction_label"
+            app:layout_constraintBottom_toBottomOf="@id/call_direction_label"/>
+
+        <Chronometer
+            style="@style/default_text_style_800"
+            android:id="@+id/chronometer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@id/separator"
+            app:layout_constraintTop_toTopOf="@id/call_direction_label"
+            app:layout_constraintBottom_toBottomOf="@id/call_direction_label"/>
+
         <ImageView
             android:id="@+id/switch_camera"
             android:layout_width="24dp"
@@ -60,18 +85,21 @@
             android:layout_marginTop="17dp"
             android:layout_marginStart="12dp"
             android:layout_marginEnd="12dp"
+            android:layout_marginBottom="@dimen/in_call_main_actions_menu_height"
             app:layout_constraintTop_toBottomOf="@id/call_direction_label"
-            app:layout_constraintBottom_toTopOf="@id/bottom_bar"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
         <include
+            android:id="@+id/blue_toast"
             layout="@layout/toast_blue"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
+            app:layout_constraintWidth_max="@dimen/toast_max_width"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/background"/>
@@ -81,7 +109,7 @@
             android:layout_width="@dimen/avatar_in_call_size"
             android:layout_height="@dimen/avatar_in_call_size"
             app:avatarViewBorderWidth="0dp"
-            app:avatarViewInitials="SB"
+            contactAvatar="@{viewModel.contact}"
             app:avatarViewInitialsBackgroundColor="@color/blue_outgoing_message"
             app:avatarViewInitialsTextColor="@color/gray_9"
             app:avatarViewInitialsTextSize="36sp"
@@ -99,7 +127,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:text="Sylvain Berfini"
+            android:text="@{viewModel.displayedName, default=`John Doe`}"
             android:textColor="@color/white"
             android:textSize="22sp"
             app:layout_constraintTop_toBottomOf="@id/avatar"
@@ -111,7 +139,7 @@
             android:id="@+id/address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="sip:sberfini@sip.linphone.org"
+            android:text="@{viewModel.displayedAddress, default=`sip:johndoe@sip.linphone.org`}"
             android:textColor="@color/white"
             android:textSize="14sp"
             app:layout_constraintTop_toBottomOf="@id/name"
@@ -119,11 +147,12 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
         <include
-            bind:viewModel="@{viewModel}"
             android:id="@+id/bottom_bar"
-            layout="@layout/voip_call_bottom_bar"
+            layout="@layout/voip_call_extra_actions"
+            bind:viewModel="@{viewModel}"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/in_call_all_actions_menu_height"
+            android:translationY="@{viewModel.extraActionsMenuTranslateY}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>

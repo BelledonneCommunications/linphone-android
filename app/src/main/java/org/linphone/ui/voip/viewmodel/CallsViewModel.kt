@@ -22,15 +22,20 @@ package org.linphone.ui.voip.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.core.Call
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
 
 class CallsViewModel : ViewModel() {
-    val noMoreCallEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
-    }
+    val goToActiveCallEvent = MutableLiveData<Event<Boolean>>()
+
+    val showIncomingCallEvent = MutableLiveData<Event<Boolean>>()
+
+    val showOutgoingCallEvent = MutableLiveData<Event<Boolean>>()
+
+    val noMoreCallEvent = MutableLiveData<Event<Boolean>>()
 
     private val coreListener = object : CoreListenerStub() {
         override fun onLastCallEnded(core: Core) {
@@ -38,11 +43,49 @@ class CallsViewModel : ViewModel() {
             Log.i("[Calls ViewModel] No more call, leaving VoIP activity")
             noMoreCallEvent.postValue(Event(true))
         }
+
+        override fun onCallStateChanged(
+            core: Core,
+            call: Call,
+            state: Call.State,
+            message: String
+        ) {
+            // Core thread
+            if (call == core.currentCall || core.currentCall == null) {
+                when (call.state) {
+                    Call.State.Connected -> {
+                        goToActiveCallEvent.postValue(Event(true))
+                    }
+                    else -> {
+                    }
+                }
+            }
+        }
     }
 
     init {
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
+
+            if (core.callsNb > 0) {
+                val currentCall = core.currentCall ?: core.calls.first()
+
+                when (currentCall.state) {
+                    Call.State.Connected, Call.State.StreamsRunning, Call.State.Paused, Call.State.Pausing, Call.State.PausedByRemote, Call.State.UpdatedByRemote, Call.State.Updating -> {
+                        goToActiveCallEvent.postValue(Event(true))
+                    }
+                    Call.State.OutgoingInit, Call.State.OutgoingRinging, Call.State.OutgoingProgress, Call.State.OutgoingEarlyMedia -> {
+                        showOutgoingCallEvent.postValue(Event(true))
+                    }
+                    Call.State.IncomingReceived, Call.State.IncomingEarlyMedia -> {
+                        showIncomingCallEvent.postValue(Event(true))
+                    }
+                    else -> {
+                    }
+                }
+            } else {
+                noMoreCallEvent.postValue(Event(true))
+            }
         }
     }
 

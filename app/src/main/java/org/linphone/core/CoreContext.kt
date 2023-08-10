@@ -59,6 +59,9 @@ class CoreContext(val context: Context) : HandlerThread("Core Thread") {
             Log.i("[Context] Call state changed [$state]")
             if (state == Call.State.OutgoingProgress) {
                 showCallActivity()
+            } else if (state == Call.State.IncomingReceived) {
+                // TODO FIXME : remove when full screen intent notification
+                showCallActivity()
             }
         }
     }

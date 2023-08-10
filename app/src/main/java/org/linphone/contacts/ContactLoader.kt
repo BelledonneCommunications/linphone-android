@@ -48,17 +48,14 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
             ContactsContract.CommonDataKinds.Phone.LABEL,
             ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER
         )
-
-        const val linphoneMime = "vnd.android.cursor.item/vnd.org.linphone.provider.sip_address"
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
         val mimeType = ContactsContract.Data.MIMETYPE
-        val mimeSelection = "$mimeType = ? OR $mimeType = ? OR $mimeType = ? OR $mimeType = ?"
+        val mimeSelection = "$mimeType = ? OR $mimeType = ? OR $mimeType = ?"
 
         val selection = ContactsContract.Data.IN_DEFAULT_DIRECTORY + " == 1 AND ($mimeSelection)"
         val selectionArgs = arrayOf(
-            linphoneMime,
             ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE,
             ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE,
             ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE
@@ -210,7 +207,7 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                                     }
                                 }
                             }
-                            linphoneMime, ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE -> {
+                            ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE -> {
                                 val sipAddress: String? =
                                     cursor.getString(
                                         cursor.getColumnIndexOrThrow(

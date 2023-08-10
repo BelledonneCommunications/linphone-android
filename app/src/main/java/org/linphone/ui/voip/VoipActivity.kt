@@ -25,15 +25,20 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication
 import org.linphone.R
 import org.linphone.databinding.VoipActivityBinding
+import org.linphone.ui.voip.fragment.ActiveCallFragmentDirections
+import org.linphone.ui.voip.fragment.IncomingCallFragmentDirections
+import org.linphone.ui.voip.fragment.OutgoingCallFragmentDirections
 import org.linphone.ui.voip.viewmodel.CallsViewModel
 
 class VoipActivity : AppCompatActivity() {
     private lateinit var binding: VoipActivityBinding
 
-    private lateinit var callViewModel: CallsViewModel
+    private lateinit var callsViewModel: CallsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, true)
@@ -53,11 +58,39 @@ class VoipActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.voip_activity)
         binding.lifecycleOwner = this
 
-        callViewModel = run {
+        callsViewModel = run {
             ViewModelProvider(this)[CallsViewModel::class.java]
         }
 
-        callViewModel.noMoreCallEvent.observe(this) {
+        callsViewModel.showIncomingCallEvent.observe(this) {
+            it.consume {
+                val action = IncomingCallFragmentDirections.actionGlobalIncomingCallFragment()
+                findNavController(R.id.voip_nav_container).navigate(action)
+            }
+        }
+
+        callsViewModel.showOutgoingCallEvent.observe(this) {
+            it.consume {
+                val action = OutgoingCallFragmentDirections.actionGlobalOutgoingCallFragment()
+                findNavController(R.id.voip_nav_container).navigate(action)
+            }
+        }
+
+        callsViewModel.goToActiveCallEvent.observe(this) {
+            it.consume {
+                val navController = findNavController(R.id.voip_nav_container)
+                val action = if (navController.currentDestination?.id == R.id.outgoingCallFragment) {
+                    OutgoingCallFragmentDirections.actionOutgoingCallFragmentToActiveCallFragment()
+                } else if (navController.currentDestination?.id == R.id.outgoingCallFragment) {
+                    IncomingCallFragmentDirections.actionIncomingCallFragmentToActiveCallFragment()
+                } else {
+                    ActiveCallFragmentDirections.actionGlobalActiveCallFragment()
+                }
+                navController.navigate(action)
+            }
+        }
+
+        callsViewModel.noMoreCallEvent.observe(this) {
             it.consume {
                 finish()
             }

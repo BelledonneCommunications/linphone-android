@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Linphone</string>
+
+    <string name="vertical_separator">|</string>
 </resources>

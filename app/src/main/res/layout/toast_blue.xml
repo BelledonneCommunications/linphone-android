@@ -63,7 +63,7 @@
             android:layout_marginStart="8dp"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
-            android:text="@{message, default=`Call is completely secured`}"
+            android:text="@{message, default=`This call can be trusted`}"
             android:textSize="14sp"
             android:textColor="@color/trusted_blue"
             app:layout_constraintBottom_toBottomOf="parent"

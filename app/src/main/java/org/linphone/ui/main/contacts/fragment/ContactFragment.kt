@@ -39,7 +39,7 @@ import org.linphone.ui.main.contacts.viewmodel.ContactViewModel
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
-import org.linphone.utils.slideInToastFromTop
+import org.linphone.utils.slideInToastFromTopForDuration
 
 class ContactFragment : GenericFragment() {
     private lateinit var binding: ContactFragmentBinding
@@ -137,6 +137,6 @@ class ContactFragment : GenericFragment() {
         binding.greenToast.icon.setImageResource(R.drawable.check)
 
         val target = binding.greenToast.root
-        target.slideInToastFromTop(binding.root as ViewGroup, lifecycleScope)
+        target.slideInToastFromTopForDuration(binding.root as ViewGroup, lifecycleScope)
     }
 }

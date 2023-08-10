@@ -8,14 +8,29 @@
         <variable
             name="viewModel"
             type="org.linphone.ui.voip.viewmodel.CallViewModel" />
+        <variable
+            name="showExpandToggle"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
+        android:layout_height="@dimen/in_call_main_actions_menu_height"
+        android:paddingBottom="15dp"
         android:background="@color/in_call_black">
+
+        <ImageView
+            android:onClick="@{() -> viewModel.toggleExpandActionsMenu()}"
+            android:visibility="@{showExpandToggle ? View.VISIBLE : View.INVISIBLE}"
+            android:id="@+id/toggle_expand"
+            android:layout_width="0dp"
+            android:layout_height="24dp"
+            android:layout_marginBottom="15dp"
+            android:src="@{viewModel.isActionsMenuExpanded ? @drawable/expand : @drawable/collapse, default=@drawable/collapse}"
+            app:tint="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/hang_up" />
 
         <ImageView
             android:onClick="@{() -> viewModel.hangUp()}"

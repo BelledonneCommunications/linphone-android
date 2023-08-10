@@ -9,6 +9,50 @@
         android:id="@+id/outgoingCallFragment"
         android:name="org.linphone.ui.voip.fragment.OutgoingCallFragment"
         android:label="OutgoingCallFragment"
-        tools:layout="@layout/voip_outgoing_call_fragment"/>
+        tools:layout="@layout/voip_outgoing_call_fragment">
+        <action
+            android:id="@+id/action_outgoingCallFragment_to_activeCallFragment"
+            app:destination="@id/activeCallFragment"
+            app:popUpTo="@id/outgoingCallFragment"
+            app:popUpToInclusive="true"
+            app:launchSingleTop="true"/>
+    </fragment>
+
+    <action android:id="@+id/action_global_outgoingCallFragment"
+        app:destination="@id/outgoingCallFragment"
+        app:popUpTo="@id/outgoingCallFragment"
+        app:popUpToInclusive="true"
+        app:launchSingleTop="true" />
+
+    <fragment
+        android:id="@+id/incomingCallFragment"
+        android:name="org.linphone.ui.voip.fragment.IncomingCallFragment"
+        android:label="IncomingCallFragment"
+        tools:layout="@layout/voip_incoming_call_fragment">
+        <action
+            android:id="@+id/action_incomingCallFragment_to_activeCallFragment"
+            app:destination="@id/activeCallFragment"
+            app:popUpTo="@id/incomingCallFragment"
+            app:popUpToInclusive="true"
+            app:launchSingleTop="true" />
+    </fragment>
+
+    <action android:id="@+id/action_global_incomingCallFragment"
+        app:destination="@id/incomingCallFragment"
+        app:popUpTo="@id/outgoingCallFragment"
+        app:popUpToInclusive="true"
+        app:launchSingleTop="true"/>
+
+    <fragment
+        android:id="@+id/activeCallFragment"
+        android:name="org.linphone.ui.voip.fragment.ActiveCallFragment"
+        android:label="ActiveCallFragment"
+        tools:layout="@layout/voip_active_call_fragment"/>
+
+    <action android:id="@+id/action_global_activeCallFragment"
+        app:destination="@id/activeCallFragment"
+        app:popUpTo="@id/activeCallFragment"
+        app:popUpToInclusive="true"
+        app:launchSingleTop="true"/>
 
 </navigation>

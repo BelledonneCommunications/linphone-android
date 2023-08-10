@@ -8,16 +8,14 @@ plugins {
     id 'androidx.navigation.safeargs.kotlin'
 }
 
-static def getPackageName() {
-    return "org.linphone"
-}
+def packageName = "org.linphone"
 
 android {
     namespace 'org.linphone'
     compileSdk 34
 
     defaultConfig {
-        applicationId getPackageName()
+        applicationId packageName
         minSdk 27
         targetSdk 34
         versionCode 60000
@@ -28,14 +26,14 @@ android {
 
     buildTypes {
         debug {
-            resValue "string", "file_provider", getPackageName() + ".fileprovider"
+            resValue "string", "file_provider", packageName + ".fileprovider"
         }
 
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
-            resValue "string", "file_provider", getPackageName() + ".fileprovider"
+            resValue "string", "file_provider", packageName + ".fileprovider"
         }
     }
     compileOptions {
