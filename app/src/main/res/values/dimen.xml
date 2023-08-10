@@ -5,4 +5,9 @@
     <!-- This value is the result of the above two added together -->
     <dimen name="sliding_pane_left_fragment_with_nav_width">355dp</dimen>
     <dimen name="sliding_pane_right_fragment_width">300dp</dimen>
+
+    <dimen name="avatar_list_cell_size">45dp</dimen>
+    <dimen name="avatar_favorite_list_cell_size">50dp</dimen>
+    <dimen name="avatar_big_size">72dp</dimen>
+    <dimen name="avatar_in_call_size">120dp</dimen>
 </resources>

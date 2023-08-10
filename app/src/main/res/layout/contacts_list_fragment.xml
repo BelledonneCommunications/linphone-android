@@ -77,7 +77,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_800"
             android:id="@+id/favourites_label"
-            android:visibility="@{viewModel.searchFilter.length() == 0 ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.searchFilter.length() == 0 &amp;&amp; viewModel.favourites.size() > 0 ? View.VISIBLE : View.GONE}"
             onClickListener="@{() -> viewModel.toggleFavouritesVisibility()}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -95,7 +95,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/favourites_contacts_list"
-            android:visibility="@{viewModel.showFavourites &amp;&amp; viewModel.searchFilter.length() == 0 ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.showFavourites &amp;&amp; viewModel.searchFilter.length() == 0 &amp;&amp; viewModel.favourites.size() > 0 ? View.VISIBLE : View.GONE}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
@@ -108,7 +108,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_800"
             android:id="@+id/all_contacts_label"
-            android:visibility="@{viewModel.searchFilter.length() == 0 ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.searchFilter.length() == 0 &amp;&amp; viewModel.favourites.size() > 0 ? View.VISIBLE : View.GONE}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="5dp"

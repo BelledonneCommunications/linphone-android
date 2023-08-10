@@ -75,8 +75,8 @@
 
                 <io.getstream.avatarview.AvatarView
                     android:id="@+id/avatar"
-                    android:layout_width="72dp"
-                    android:layout_height="72dp"
+                    android:layout_width="@dimen/avatar_big_size"
+                    android:layout_height="@dimen/avatar_big_size"
                     android:layout_marginTop="32dp"
                     android:adjustViewBounds="true"
                     contactAvatar="@{viewModel.contact}"

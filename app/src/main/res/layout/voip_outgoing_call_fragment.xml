@@ -66,8 +66,8 @@
 
         <io.getstream.avatarview.AvatarView
             android:id="@+id/avatar"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="@dimen/avatar_in_call_size"
+            android:layout_height="@dimen/avatar_in_call_size"
             app:avatarViewBorderWidth="0dp"
             app:avatarViewInitials="SB"
             app:avatarViewInitialsBackgroundColor="@color/blue_outgoing_message"
