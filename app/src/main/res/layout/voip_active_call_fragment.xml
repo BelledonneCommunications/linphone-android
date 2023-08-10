@@ -21,7 +21,7 @@
             android:layout_height="24dp"
             android:layout_marginStart="10dp"
             android:adjustViewBounds="true"
-            android:src="@drawable/outgoing_call"
+            android:src="@{viewModel.isOutgoing ? @drawable/outgoing_call : @drawable/incoming_call, default=@drawable/outgoing_call}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/call_direction_label"
             app:layout_constraintBottom_toBottomOf="@id/call_direction_label"/>
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="7dp"
-            android:text="Outgoing call"
+            android:text="@{viewModel.isOutgoing ? `Outgoing call` : `Incoming call`, default=`Outgoing call`}"
             android:textColor="@color/white"
             android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@id/call_direction_icon"
@@ -65,6 +65,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
+        <include
+            layout="@layout/toast_blue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/background"/>
+
         <io.getstream.avatarview.AvatarView
             android:id="@+id/avatar"
             android:layout_width="@dimen/avatar_in_call_size"
@@ -81,28 +92,6 @@
             app:layout_constraintStart_toStartOf="@id/background"
             app:layout_constraintTop_toTopOf="@id/background"
             app:layout_constraintBottom_toBottomOf="@id/background"/>
-
-        <com.google.android.material.progressindicator.CircularProgressIndicator
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:indeterminate="true"
-            app:indicatorColor="@color/white"
-            app:layout_constraintBottom_toTopOf="@id/chronometer"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <Chronometer
-            style="@style/default_text_style_300"
-            android:id="@+id/chronometer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="30sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/background"
-            app:layout_constraintBottom_toTopOf="@id/avatar" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_300"

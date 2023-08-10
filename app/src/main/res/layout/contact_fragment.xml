@@ -17,7 +17,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:animateLayoutChanges="true">
 
         <ImageView
             android:id="@+id/back"
@@ -77,7 +78,7 @@
                     android:id="@+id/avatar"
                     android:layout_width="@dimen/avatar_big_size"
                     android:layout_height="@dimen/avatar_big_size"
-                    android:layout_marginTop="32dp"
+                    android:layout_marginTop="8dp"
                     android:adjustViewBounds="true"
                     contactAvatar="@{viewModel.contact}"
                     app:avatarViewBorderWidth="0dp"
@@ -101,7 +102,7 @@
                     android:id="@+id/name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="10dp"
                     android:text="@{viewModel.contact.name, default=`John Doe`}"
                     android:textColor="@color/gray_8"
                     android:textSize="14sp"
@@ -127,7 +128,7 @@
                     android:id="@+id/call"
                     android:layout_width="56dp"
                     android:layout_height="56dp"
-                    android:layout_marginTop="39dp"
+                    android:layout_marginTop="20dp"
                     android:background="@drawable/shape_button_round"
                     android:padding="16dp"
                     android:src="@drawable/calls"
@@ -154,7 +155,7 @@
                     android:id="@+id/chat"
                     android:layout_width="56dp"
                     android:layout_height="56dp"
-                    android:layout_marginTop="39dp"
+                    android:layout_marginTop="20dp"
                     android:background="@drawable/shape_button_round"
                     android:padding="16dp"
                     android:src="@drawable/chat"
@@ -181,7 +182,7 @@
                     android:id="@+id/video_call"
                     android:layout_width="56dp"
                     android:layout_height="56dp"
-                    android:layout_marginTop="39dp"
+                    android:layout_marginTop="20dp"
                     android:background="@drawable/shape_button_round"
                     android:padding="16dp"
                     android:src="@drawable/video_call"
@@ -212,7 +213,7 @@
                     android:padding="5dp"
                     android:layout_marginStart="26dp"
                     android:layout_marginEnd="26dp"
-                    android:layout_marginTop="45dp"
+                    android:layout_marginTop="32dp"
                     android:text="Numbers &amp; addresses"
                     android:drawableEnd="@{viewModel.showNumbersAndAddresses ? @drawable/collapse : @drawable/expand, default=@drawable/collapse}"
                     android:drawableTint="@color/gray_9"
@@ -229,7 +230,7 @@
                     android:orientation="vertical"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginTop="9dp"
+                    android:layout_marginTop="10dp"
                     android:padding="10dp"
                     android:background="@drawable/shape_round_white_background"
                     app:layout_constraintStart_toStartOf="parent"
@@ -242,7 +243,7 @@
                     android:id="@+id/info_background"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:layout_marginTop="32dp"
+                    android:layout_marginTop="16dp"
                     android:layout_marginStart="17dp"
                     android:layout_marginEnd="17dp"
                     android:src="@drawable/shape_round_white_background"
@@ -289,7 +290,7 @@
                     android:padding="5dp"
                     android:layout_marginStart="26dp"
                     android:layout_marginEnd="26dp"
-                    android:layout_marginTop="32dp"
+                    android:layout_marginTop="16dp"
                     android:text="Trust"
                     android:drawableEnd="@{viewModel.showDevicesTrust ? @drawable/collapse : @drawable/expand, default=@drawable/collapse}"
                     android:drawableTint="@color/gray_9"
@@ -302,7 +303,7 @@
                     android:id="@+id/trust_background"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:layout_marginTop="9dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginStart="17dp"
                     android:layout_marginEnd="17dp"
                     android:src="@drawable/shape_round_white_background"
@@ -378,7 +379,7 @@
                     android:padding="5dp"
                     android:layout_marginStart="26dp"
                     android:layout_marginEnd="26dp"
-                    android:layout_marginTop="32dp"
+                    android:layout_marginTop="16dp"
                     android:text="Other actions"
                     android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="parent"
@@ -389,7 +390,7 @@
                     android:id="@+id/actions_background"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:layout_marginTop="9dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginStart="17dp"
                     android:layout_marginEnd="17dp"
                     android:src="@drawable/shape_round_white_background"
@@ -399,13 +400,13 @@
                     app:layout_constraintBottom_toBottomOf="parent" />
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/context_menu_action_label_style"
                     android:id="@+id/action_edit"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="17dp"
                     android:layout_marginEnd="17dp"
                     android:text="Edit"
-                    style="@style/context_menu_action_label_style"
                     android:drawableStart="@drawable/edit"
                     app:layout_constraintTop_toTopOf="@id/actions_background"
                     app:layout_constraintStart_toStartOf="parent"
@@ -422,13 +423,13 @@
                     app:layout_constraintTop_toBottomOf="@+id/action_edit"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/context_menu_action_label_style"
                     android:id="@+id/action_favorite"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="17dp"
                     android:layout_marginEnd="17dp"
                     android:text="Add to favourites"
-                    style="@style/context_menu_action_label_style"
                     android:drawableStart="@drawable/favorite"
                     app:layout_constraintTop_toBottomOf="@id/action_edit"
                     app:layout_constraintStart_toStartOf="parent"
@@ -445,13 +446,13 @@
                     app:layout_constraintTop_toBottomOf="@+id/action_favorite"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/context_menu_action_label_style"
                     android:id="@+id/action_share"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="17dp"
                     android:layout_marginEnd="17dp"
                     android:text="Share"
-                    style="@style/context_menu_action_label_style"
                     android:drawableStart="@drawable/share"
                     app:layout_constraintTop_toBottomOf="@id/action_favorite"
                     app:layout_constraintStart_toStartOf="parent"
@@ -468,13 +469,13 @@
                     app:layout_constraintTop_toBottomOf="@+id/action_share"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/context_menu_action_label_style"
                     android:id="@+id/action_invite"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="17dp"
                     android:layout_marginEnd="17dp"
                     android:text="Invite"
-                    style="@style/context_menu_action_label_style"
                     android:drawableStart="@drawable/invite"
                     app:layout_constraintTop_toBottomOf="@id/action_share"
                     app:layout_constraintStart_toStartOf="parent"
@@ -491,13 +492,13 @@
                     app:layout_constraintTop_toBottomOf="@+id/action_invite"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/context_menu_danger_action_label_style"
                     android:id="@+id/action_delete"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="17dp"
                     android:layout_marginEnd="17dp"
                     android:text="Delete"
-                    style="@style/context_menu_danger_action_label_style"
                     android:drawableStart="@drawable/delete"
                     app:layout_constraintTop_toBottomOf="@id/action_invite"
                     app:layout_constraintStart_toStartOf="parent"
@@ -506,6 +507,19 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </ScrollView>
+
+        <include
+            android:id="@+id/green_toast"
+            android:visibility="gone"
+            layout="@layout/toast_green"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            app:layout_constraintTop_toTopOf="@id/scrollView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

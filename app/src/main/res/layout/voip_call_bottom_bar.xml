@@ -34,7 +34,7 @@
 
         <ImageView
             android:id="@+id/toggle_video"
-            android:enabled="@{viewModel.videoEnabled}"
+            android:enabled="@{viewModel.isVideoEnabled}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"

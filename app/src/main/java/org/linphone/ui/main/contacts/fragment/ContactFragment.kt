@@ -19,14 +19,19 @@
  */
 package org.linphone.ui.main.contacts.fragment
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.transition.ChangeBounds
+import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactFragmentBinding
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
@@ -34,6 +39,7 @@ import org.linphone.ui.main.contacts.viewmodel.ContactViewModel
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
+import org.linphone.utils.slideInToastFromTop
 
 class ContactFragment : GenericFragment() {
     private lateinit var binding: ContactFragmentBinding
@@ -91,9 +97,14 @@ class ContactFragment : GenericFragment() {
 
         viewModel.showLongPressMenuForNumberOrAddressEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
-                val modalBottomSheet = ContactNumberOrAddressMenuDialogFragment() {
+                val modalBottomSheet = ContactNumberOrAddressMenuDialogFragment({
+                    // onDismiss
                     model.selected.value = false
-                }
+                }, {
+                    // onCopyNumberOrAddressToClipboard
+                    copyNumberOrAddressToClipboard(model.displayedValue, model.isSip)
+                })
+
                 modalBottomSheet.show(
                     parentFragmentManager,
                     ContactNumberOrAddressMenuDialogFragment.TAG
@@ -106,8 +117,8 @@ class ContactFragment : GenericFragment() {
                 val model = NumberOrAddressPickerDialogModel(viewModel)
                 val dialog = DialogUtils.getNumberOrAddressPickerDialog(requireActivity(), model)
 
-                model.dismissEvent.observe(viewLifecycleOwner) {
-                    it.consume {
+                model.dismissEvent.observe(viewLifecycleOwner) { event ->
+                    event.consume {
                         dialog.dismiss()
                     }
                 }
@@ -115,5 +126,17 @@ class ContactFragment : GenericFragment() {
                 dialog.show()
             }
         }
+    }
+
+    private fun copyNumberOrAddressToClipboard(value: String, isSip: Boolean) {
+        val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val label = if (isSip) "SIP address" else "Phone number"
+        clipboard.setPrimaryClip(ClipData.newPlainText(label, value))
+
+        binding.greenToast.message.text = "Numéro copié dans le presse-papier"
+        binding.greenToast.icon.setImageResource(R.drawable.check)
+
+        val target = binding.greenToast.root
+        target.slideInToastFromTop(binding.root as ViewGroup, lifecycleScope)
     }
 }

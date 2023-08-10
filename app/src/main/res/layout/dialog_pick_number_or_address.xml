@@ -22,7 +22,7 @@
             android:id="@+id/dialog_background_shadow"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:src="@drawable/shape_orange_shadow"
+            android:src="@drawable/shape_dialog_orange_shadow"
             app:layout_constraintBottom_toBottomOf="@id/numbers_and_addresses"
             app:layout_constraintEnd_toEndOf="@id/dialog_background"
             app:layout_constraintStart_toStartOf="@id/dialog_background"

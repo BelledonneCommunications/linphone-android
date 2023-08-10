@@ -28,7 +28,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.linphone.databinding.ContactNumberOrAddressLongPressMenuBinding
 
 class ContactNumberOrAddressMenuDialogFragment(
-    private val onDismiss: (() -> Unit)? = null
+    private val onDismiss: (() -> Unit)? = null,
+    private val onCopyNumberOrAddressToClipboard: (() -> Unit)? = null
 ) : BottomSheetDialogFragment() {
     companion object {
         const val TAG = "ContactNumberOrAddressMenuDialogFragment"
@@ -50,6 +51,11 @@ class ContactNumberOrAddressMenuDialogFragment(
         savedInstanceState: Bundle?
     ): View {
         val view = ContactNumberOrAddressLongPressMenuBinding.inflate(layoutInflater)
+
+        view.setCopyNumberOrAddressClickListener {
+            onCopyNumberOrAddressToClipboard?.invoke()
+            dismiss()
+        }
 
         return view.root
     }

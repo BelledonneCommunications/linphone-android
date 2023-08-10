@@ -30,12 +30,14 @@ class CallViewModel() : ViewModel() {
         const val TAG = "[Call ViewModel]"
     }
 
-    val videoEnabled = MutableLiveData<Boolean>()
+    val isVideoEnabled = MutableLiveData<Boolean>()
+
+    val isOutgoing = MutableLiveData<Boolean>()
 
     private lateinit var call: Call
 
     init {
-        videoEnabled.value = false
+        isVideoEnabled.value = false
 
         coreContext.postOnCoreThread { core ->
             val currentCall = core.currentCall ?: core.calls.firstOrNull()
@@ -45,10 +47,11 @@ class CallViewModel() : ViewModel() {
                 Log.i("$TAG Found call [$call]")
 
                 if (call.state == Call.State.StreamsRunning) {
-                    videoEnabled.postValue(call.currentParams.isVideoEnabled)
+                    isVideoEnabled.postValue(call.currentParams.isVideoEnabled)
                 } else {
-                    videoEnabled.postValue(call.params.isVideoEnabled)
+                    isVideoEnabled.postValue(call.params.isVideoEnabled)
                 }
+                isOutgoing.postValue(call.dir == Call.Dir.Outgoing)
             } else {
                 Log.e("$TAG Failed to find outgoing call!")
             }
