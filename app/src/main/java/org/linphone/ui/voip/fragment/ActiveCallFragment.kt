@@ -74,13 +74,6 @@ class ActiveCallFragment : GenericFragment() {
             }
         }
 
-        callViewModel.startCallChronometerEvent.observe(viewLifecycleOwner) {
-            it.consume { duration ->
-                binding.chronometer.base = SystemClock.elapsedRealtime() - (1000 * duration)
-                binding.chronometer.start()
-            }
-        }
-
         callViewModel.showZrtpSasDialogEvent.observe(viewLifecycleOwner) {
             it.consume { pair ->
                 val model = ZrtpSasConfirmationDialogModel(pair.first, pair.second)
@@ -101,6 +94,11 @@ class ActiveCallFragment : GenericFragment() {
 
                 dialog.show()
             }
+        }
+
+        callViewModel.callDuration.observe(viewLifecycleOwner) { duration ->
+            binding.chronometer.base = SystemClock.elapsedRealtime() - (1000 * duration)
+            binding.chronometer.start()
         }
     }
 }

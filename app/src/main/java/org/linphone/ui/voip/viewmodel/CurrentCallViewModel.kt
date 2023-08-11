@@ -56,7 +56,7 @@ class CurrentCallViewModel() : ViewModel() {
         MutableLiveData<Event<Pair<String, String>>>()
     }
 
-    val startCallChronometerEvent = MutableLiveData<Event<Int>>()
+    val callDuration = MutableLiveData<Int>()
 
     // Extras actions
 
@@ -241,6 +241,6 @@ class CurrentCallViewModel() : ViewModel() {
         }
 
         updateEncryption()
-        startCallChronometerEvent.postValue(Event(call.duration))
+        callDuration.postValue(call.duration)
     }
 }

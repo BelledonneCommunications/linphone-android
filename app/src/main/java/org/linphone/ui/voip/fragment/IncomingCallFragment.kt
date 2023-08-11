@@ -53,11 +53,9 @@ class IncomingCallFragment : GenericFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = callViewModel
 
-        callViewModel.startCallChronometerEvent.observe(viewLifecycleOwner) {
-            it.consume { duration ->
-                binding.chronometer.base = SystemClock.elapsedRealtime() - (1000 * duration)
-                binding.chronometer.start()
-            }
+        callViewModel.callDuration.observe(viewLifecycleOwner) { duration ->
+            binding.chronometer.base = SystemClock.elapsedRealtime() - (1000 * duration)
+            binding.chronometer.start()
         }
     }
 }
