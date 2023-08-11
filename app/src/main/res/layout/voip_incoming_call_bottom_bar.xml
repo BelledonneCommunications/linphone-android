@@ -29,8 +29,24 @@
             android:paddingBottom="15dp"
             android:src="@drawable/hang_up"
             android:background="@drawable/shape_hang_up_button_background"
+            app:tint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:onClick="@{() -> viewModel.answer()}"
+            android:id="@+id/answer_call"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="30dp"
+            android:padding="15dp"
+            android:src="@drawable/calls"
+            android:background="@drawable/shape_answer_button_background"
+            app:tint="@color/white"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintTop_toTopOf="@id/hang_up"
+            app:layout_constraintBottom_toBottomOf="@id/hang_up"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

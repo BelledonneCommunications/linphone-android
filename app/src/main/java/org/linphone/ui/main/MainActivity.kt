@@ -34,6 +34,8 @@ import org.linphone.databinding.MainActivityBinding
 class MainActivity : AppCompatActivity() {
     companion object {
         private const val CONTACTS_PERMISSION_REQUEST = 0
+        private const val CAMERA_PERMISSION_REQUEST = 1
+        private const val RECORD_AUDIO_PERMISSION_REQUEST = 2
     }
 
     private lateinit var binding: MainActivityBinding
@@ -54,6 +56,8 @@ class MainActivity : AppCompatActivity() {
         if (checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
             loadContacts()
         }
+        checkSelfPermission(Manifest.permission.CAMERA)
+        checkSelfPermission(Manifest.permission.RECORD_AUDIO)
 
         binding = DataBindingUtil.setContentView(this, R.layout.main_activity)
         binding.lifecycleOwner = this
@@ -66,6 +70,18 @@ class MainActivity : AppCompatActivity() {
             requestPermissions(
                 arrayOf(Manifest.permission.READ_CONTACTS),
                 CONTACTS_PERMISSION_REQUEST
+            )
+        }
+        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(
+                arrayOf(Manifest.permission.CAMERA),
+                CAMERA_PERMISSION_REQUEST
+            )
+        }
+        if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(
+                arrayOf(Manifest.permission.RECORD_AUDIO),
+                RECORD_AUDIO_PERMISSION_REQUEST
             )
         }
     }

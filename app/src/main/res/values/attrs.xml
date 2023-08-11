@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RoundCornersTextureView">
+        <attr name="alignTopRight" format="boolean" />
+        <attr name="displayMode" format="enum">
+            <enum name="black_bars" value="0"/>
+            <enum name="occupy_all_space" value="1"/>
+            <enum name="hybrid" value="2"/>
+        </attr>
+        <attr name="radius" format="float" />
+    </declare-styleable>
+</resources>

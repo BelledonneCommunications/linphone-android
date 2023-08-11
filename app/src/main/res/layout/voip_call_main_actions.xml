@@ -44,19 +44,20 @@
             android:paddingBottom="15dp"
             android:src="@drawable/hang_up"
             android:background="@drawable/shape_hang_up_button_background"
+            app:tint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <ImageView
             android:onClick="@{() -> viewModel.toggleVideo()}"
             android:id="@+id/toggle_video"
-            android:enabled="@{viewModel.isVideoEnabled}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:padding="15dp"
-            android:src="@drawable/in_call_camera_button"
+            android:src="@{viewModel.isVideoEnabled() ? @drawable/camera_enabled : @drawable/camera_disabled, default=@drawable/camera_enabled}"
             android:background="@drawable/in_call_button_background"
+            app:tint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/toggle_mute_mic" />
 
@@ -74,6 +75,7 @@
             app:layout_constraintEnd_toStartOf="@id/change_audio_output" />
 
         <ImageView
+            android:onClick="@{() -> viewModel.changeAudioOutputDevice()}"
             android:id="@+id/change_audio_output"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

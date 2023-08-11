@@ -177,6 +177,30 @@ class CoreContext(val context: Context) : HandlerThread("Core Thread") {
         Log.i("[Context] Starting call $call")
     }
 
+    fun switchCamera() {
+        val currentDevice = core.videoDevice
+        Log.i("[Context] Current camera device is $currentDevice")
+
+        for (camera in core.videoDevicesList) {
+            if (camera != currentDevice && camera != "StaticImage: Static picture") {
+                Log.i("[Context] New camera device will be $camera")
+                core.videoDevice = camera
+                break
+            }
+        }
+
+        val call = core.currentCall
+        if (call == null) {
+            Log.w("[Context] Switching camera while not in call")
+            return
+        }
+        call.update(null)
+    }
+
+    fun showSwitchCameraButton(): Boolean {
+        return core.videoDevicesList.size > 2 // Count StaticImage camera
+    }
+
     private fun showCallActivity() {
         Log.i("[Context] Starting VoIP activity")
         val intent = Intent(context, VoipActivity::class.java)

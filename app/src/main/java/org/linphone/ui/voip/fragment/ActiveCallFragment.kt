@@ -22,9 +22,11 @@ package org.linphone.ui.voip.fragment
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.databinding.VoipActiveCallFragmentBinding
 import org.linphone.ui.main.fragment.GenericFragment
@@ -37,6 +39,33 @@ class ActiveCallFragment : GenericFragment() {
     private lateinit var binding: VoipActiveCallFragmentBinding
 
     private lateinit var callViewModel: CurrentCallViewModel
+
+    // For moving video preview purposes
+
+    private var previewX: Float = 0f
+    private var previewY: Float = 0f
+
+    private val previewTouchListener = View.OnTouchListener { view, event ->
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                previewX = view.x - event.rawX
+                previewY = view.y - event.rawY
+                true
+            }
+            MotionEvent.ACTION_MOVE -> {
+                view.animate()
+                    .x(event.rawX + previewX)
+                    .y(event.rawY + previewY)
+                    .setDuration(0)
+                    .start()
+                true
+            }
+            else -> {
+                view.performClick()
+                false
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -100,5 +129,20 @@ class ActiveCallFragment : GenericFragment() {
             binding.chronometer.base = SystemClock.elapsedRealtime() - (1000 * duration)
             binding.chronometer.start()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        coreContext.postOnCoreThread { core ->
+            core.nativeVideoWindowId = binding.remoteVideoSurface
+            coreContext.core.nativePreviewWindowId = binding.localPreviewVideoSurface
+            binding.localPreviewVideoSurface.setOnTouchListener(previewTouchListener)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding.localPreviewVideoSurface.setOnTouchListener(null)
     }
 }

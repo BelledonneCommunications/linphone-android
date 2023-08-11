@@ -27,6 +27,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Call
 import org.linphone.core.CallListenerStub
+import org.linphone.core.MediaDirection
 import org.linphone.core.MediaEncryption
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
@@ -50,13 +51,18 @@ class CurrentCallViewModel() : ViewModel() {
 
     val isMicrophoneMuted = MutableLiveData<Boolean>()
 
+    val fullScreenMode = MutableLiveData<Boolean>()
+
+    // To synchronize chronometers in UI
+    val callDuration = MutableLiveData<Int>()
+
+    // ZRTP related
+
     val isRemoteDeviceTrusted = MutableLiveData<Boolean>()
 
     val showZrtpSasDialogEvent: MutableLiveData<Event<Pair<String, String>>> by lazy {
         MutableLiveData<Event<Pair<String, String>>>()
     }
-
-    val callDuration = MutableLiveData<Int>()
 
     // Extras actions
 
@@ -88,11 +94,20 @@ class CurrentCallViewModel() : ViewModel() {
         override fun onEncryptionChanged(call: Call, on: Boolean, authenticationToken: String?) {
             updateEncryption()
         }
+
+        override fun onStateChanged(call: Call, state: Call.State?, message: String) {
+            if (LinphoneUtils.isCallOutgoing(call.state)) {
+                isVideoEnabled.postValue(call.params.isVideoEnabled)
+            } else {
+                isVideoEnabled.postValue(call.currentParams.isVideoEnabled)
+            }
+        }
     }
 
     init {
         isVideoEnabled.value = false
         isMicrophoneMuted.value = false
+        fullScreenMode.value = false
         isActionsMenuExpanded.value = false
         extraActionsMenuTranslateY.value = extraActionsMenuHeight
 
@@ -116,6 +131,14 @@ class CurrentCallViewModel() : ViewModel() {
             if (::call.isInitialized) {
                 call.removeListener(callListener)
             }
+        }
+    }
+
+    fun answer() {
+        // UI thread
+        coreContext.postOnCoreThread {
+            Log.i("$TAG Answering call [$call]")
+            call.accept()
         }
     }
 
@@ -154,7 +177,38 @@ class CurrentCallViewModel() : ViewModel() {
         // UI thread
         // TODO: check video permission
 
-        // TODO
+        coreContext.postOnCoreThread { core ->
+            if (::call.isInitialized) {
+                val params = core.createCallParams(call)
+                if (call.conference != null) {
+                    if (params?.isVideoEnabled == false) {
+                        params.isVideoEnabled = true
+                        params.videoDirection = MediaDirection.SendRecv
+                    } else {
+                        if (params?.videoDirection == MediaDirection.SendRecv || params?.videoDirection == MediaDirection.SendOnly) {
+                            params.videoDirection = MediaDirection.RecvOnly
+                        } else {
+                            params?.videoDirection = MediaDirection.SendRecv
+                        }
+                    }
+                } else {
+                    params?.isVideoEnabled = params?.isVideoEnabled == false
+                    Log.i(
+                        "$TAG Updating call with video enabled set to ${params?.isVideoEnabled}"
+                    )
+                }
+                call.update(params)
+            }
+        }
+    }
+
+    fun switchCamera() {
+        coreContext.switchCamera()
+    }
+
+    fun toggleFullScreen() {
+        if (fullScreenMode.value == false && isVideoEnabled.value == false) return
+        fullScreenMode.value = fullScreenMode.value != true
     }
 
     fun toggleExpandActionsMenu() {

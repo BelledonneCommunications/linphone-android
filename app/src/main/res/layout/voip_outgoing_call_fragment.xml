@@ -40,13 +40,14 @@
             app:layout_constraintTop_toTopOf="parent"/>
 
         <ImageView
+            android:onClick="@{() -> viewModel.switchCamera()}"
             android:id="@+id/switch_camera"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginEnd="10dp"
             android:adjustViewBounds="true"
             android:src="@drawable/switch_camera"
-            android:enabled="@{viewModel.isVideoEnabled()}"
+            android:visibility="@{viewModel.isVideoEnabled() ? View.VISIBLE : View.GONE}"
             app:layout_constraintTop_toTopOf="@id/call_direction_label"
             app:layout_constraintBottom_toBottomOf="@id/call_direction_label"
             app:layout_constraintEnd_toEndOf="parent"
