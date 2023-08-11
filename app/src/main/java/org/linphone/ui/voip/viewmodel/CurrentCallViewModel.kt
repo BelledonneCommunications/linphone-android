@@ -35,7 +35,7 @@ import org.linphone.utils.LinphoneUtils
 
 class CurrentCallViewModel() : ViewModel() {
     companion object {
-        const val TAG = "[Call ViewModel]"
+        const val TAG = "[Current Call ViewModel]"
     }
 
     val contact = MutableLiveData<ContactAvatarModel>()
