@@ -11,6 +11,8 @@
     <dimen name="avatar_big_size">100dp</dimen>
     <dimen name="avatar_in_call_size">120dp</dimen>
 
+    <dimen name="top_search_bar_height">55dp</dimen>
+
     <dimen name="in_call_main_actions_menu_height">116dp</dimen>
     <dimen name="in_call_extra_actions_menu_height">237dp</dimen>
     <dimen name="in_call_all_actions_menu_height">353dp</dimen> <!-- sum of above two -->

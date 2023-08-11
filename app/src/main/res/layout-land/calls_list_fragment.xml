@@ -29,7 +29,7 @@
             bind:viewModel="@{viewModel}"
             bind:onAvatarClickListener="@{onAvatarClickListener}"
             layout="@layout/top_search_bar"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/top_search_bar_height"
             android:layout_width="0dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"

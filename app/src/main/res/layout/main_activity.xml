@@ -39,7 +39,8 @@
                         android:background="@color/white"
                         android:layout_gravity="start">
 
-                        <!-- TODO -->
+                        <include
+                            layout="@layout/drawer_menu" />
 
                     </RelativeLayout>
 

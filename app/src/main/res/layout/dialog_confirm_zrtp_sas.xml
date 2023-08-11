@@ -171,7 +171,7 @@
             android:paddingBottom="13dp"
             android:paddingTop="13dp"
             android:gravity="center"
-            android:background="@drawable/shape_dialog_red_button_background"
+            android:background="@drawable/shape_red_outlined_button_background"
             android:text="Letters don't match!"
             android:textSize="18sp"
             android:textColor="@color/red_danger"
