@@ -28,13 +28,13 @@ import org.linphone.core.MagicSearch
 import org.linphone.core.MagicSearchListenerStub
 import org.linphone.core.SearchResult
 import org.linphone.core.tools.Log
-import org.linphone.ui.main.contacts.model.ContactModel
+import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.viewmodel.TopBarViewModel
 
 class ContactsListViewModel : TopBarViewModel() {
-    val contactsList = MutableLiveData<ArrayList<ContactModel>>()
+    val contactsList = MutableLiveData<ArrayList<ContactAvatarModel>>()
 
-    val favourites = MutableLiveData<ArrayList<ContactModel>>()
+    val favourites = MutableLiveData<ArrayList<ContactAvatarModel>>()
 
     val showFavourites = MutableLiveData<Boolean>()
 
@@ -88,10 +88,10 @@ class ContactsListViewModel : TopBarViewModel() {
     fun processMagicSearchResults(results: Array<SearchResult>) {
         // Core thread
         Log.i("[Contacts List] Processing ${results.size} results")
-        contactsList.value.orEmpty().forEach(ContactModel::destroy)
+        contactsList.value.orEmpty().forEach(ContactAvatarModel::destroy)
 
-        val list = arrayListOf<ContactModel>()
-        val favouritesList = arrayListOf<ContactModel>()
+        val list = arrayListOf<ContactAvatarModel>()
+        val favouritesList = arrayListOf<ContactAvatarModel>()
         var previousLetter = ""
 
         for (result in results) {
@@ -100,13 +100,13 @@ class ContactsListViewModel : TopBarViewModel() {
             var currentLetter = ""
             val model = if (friend != null) {
                 currentLetter = friend.name?.get(0).toString()
-                ContactModel(friend)
+                ContactAvatarModel(friend)
             } else {
                 Log.w("[Contacts] SearchResult [$result] has no Friend!")
                 val fakeFriend =
                     createFriendFromSearchResult(result)
                 currentLetter = fakeFriend.name?.get(0).toString()
-                ContactModel(fakeFriend)
+                ContactAvatarModel(fakeFriend)
             }
 
             val displayLetter = previousLetter.isEmpty() || currentLetter != previousLetter

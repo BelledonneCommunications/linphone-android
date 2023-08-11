@@ -20,6 +20,7 @@
 package org.linphone.ui.voip.fragment
 
 import android.os.Bundle
+import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,12 +28,15 @@ import androidx.lifecycle.ViewModelProvider
 import org.linphone.R
 import org.linphone.databinding.VoipActiveCallFragmentBinding
 import org.linphone.ui.main.fragment.GenericFragment
-import org.linphone.ui.voip.viewmodel.CallViewModel
+import org.linphone.ui.voip.model.ZrtpSasConfirmationDialogModel
+import org.linphone.ui.voip.viewmodel.CurrentCallViewModel
+import org.linphone.utils.DialogUtils
+import org.linphone.utils.slideInToastFromTop
 
 class ActiveCallFragment : GenericFragment() {
     private lateinit var binding: VoipActiveCallFragmentBinding
 
-    private lateinit var callViewModel: CallViewModel
+    private lateinit var callViewModel: CurrentCallViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,7 +51,7 @@ class ActiveCallFragment : GenericFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         callViewModel = requireActivity().run {
-            ViewModelProvider(this)[CallViewModel::class.java]
+            ViewModelProvider(this)[CurrentCallViewModel::class.java]
         }
 
         binding.lifecycleOwner = viewLifecycleOwner
@@ -60,7 +64,43 @@ class ActiveCallFragment : GenericFragment() {
             }*/
         }
 
-        binding.blueToast.icon.setImageResource(R.drawable.trusted)
-        binding.blueToast.message.text = "This call can be trusted"
+        callViewModel.isRemoteDeviceTrusted.observe(viewLifecycleOwner) { trusted ->
+            if (trusted) {
+                binding.blueToast.message.text = "This call can be trusted"
+                binding.blueToast.icon.setImageResource(R.drawable.trusted)
+                binding.blueToast.root.slideInToastFromTop(binding.root as ViewGroup, true)
+            } else if (binding.blueToast.root.visibility == View.VISIBLE) {
+                binding.blueToast.root.slideInToastFromTop(binding.root as ViewGroup, false)
+            }
+        }
+
+        callViewModel.startCallChronometerEvent.observe(viewLifecycleOwner) {
+            it.consume { duration ->
+                binding.chronometer.base = SystemClock.elapsedRealtime() - (1000 * duration)
+                binding.chronometer.start()
+            }
+        }
+
+        callViewModel.showZrtpSasDialogEvent.observe(viewLifecycleOwner) {
+            it.consume { pair ->
+                val model = ZrtpSasConfirmationDialogModel(pair.first, pair.second)
+                val dialog = DialogUtils.getZrtpSasConfirmationDialog(requireActivity(), model)
+
+                model.dismissEvent.observe(viewLifecycleOwner) { event ->
+                    event.consume {
+                        dialog.dismiss()
+                    }
+                }
+
+                model.trustVerified.observe(viewLifecycleOwner) { event ->
+                    event.consume { verified ->
+                        callViewModel.updateZrtpSas(verified)
+                        dialog.dismiss()
+                    }
+                }
+
+                dialog.show()
+            }
+        }
     }
 }

@@ -7,7 +7,7 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.voip.viewmodel.CallViewModel" />
+            type="org.linphone.ui.voip.viewmodel.CurrentCallViewModel" />
         <variable
             name="showExpandToggle"
             type="Boolean" />
@@ -48,6 +48,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <ImageView
+            android:onClick="@{() -> viewModel.toggleVideo()}"
             android:id="@+id/toggle_video"
             android:enabled="@{viewModel.isVideoEnabled}"
             android:layout_width="wrap_content"
@@ -60,12 +61,13 @@
             app:layout_constraintEnd_toStartOf="@id/toggle_mute_mic" />
 
         <ImageView
+            android:onClick="@{() -> viewModel.toggleMuteMicrophone()}"
             android:id="@+id/toggle_mute_mic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:padding="15dp"
-            android:src="@drawable/microphone"
+            android:src="@{viewModel.isMicrophoneMuted ? @drawable/microphone_muted : @drawable/microphone, default=@drawable/microphone}"
             android:background="@drawable/in_call_button_background"
             app:tint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"

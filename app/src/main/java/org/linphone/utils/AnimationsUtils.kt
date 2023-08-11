@@ -31,6 +31,20 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+fun View.slideInToastFromTop(
+    root: ViewGroup,
+    visible: Boolean
+) {
+    val view = this
+
+    val transition: Transition = Slide(Gravity.TOP)
+    transition.duration = 600
+    transition.addTarget(view)
+
+    TransitionManager.beginDelayedTransition(root, transition)
+    view.visibility = if (visible) View.VISIBLE else View.GONE
+}
+
 fun View.slideInToastFromTopForDuration(
     root: ViewGroup,
     lifecycleScope: LifecycleCoroutineScope,
@@ -54,16 +68,4 @@ fun View.slideInToastFromTopForDuration(
             }
         }
     }
-}
-
-fun View.slideInExtraActionsMenu(
-    root: ViewGroup,
-    visibility: Int
-) {
-    val transition: Transition = Slide(Gravity.BOTTOM)
-    transition.duration = 600
-    transition.addTarget(this)
-
-    TransitionManager.beginDelayedTransition(root, transition)
-    this.translationY = 0f
 }

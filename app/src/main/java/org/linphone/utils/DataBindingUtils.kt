@@ -43,7 +43,7 @@ import org.linphone.R
 import org.linphone.contacts.ContactData
 import org.linphone.core.ConsolidatedPresence
 import org.linphone.ui.main.MainActivity
-import org.linphone.ui.main.contacts.model.ContactModel
+import org.linphone.ui.main.contacts.model.ContactAvatarModel
 
 /**
  * This file contains all the data binding necessary for the app
@@ -142,7 +142,7 @@ fun loadContactPictureWithCoil2(imageView: ImageView, contact: ContactData?) {
 }
 
 @BindingAdapter("contactAvatar")
-fun AvatarView.loadContactPicture(contact: ContactModel?) {
+fun AvatarView.loadContactPicture(contact: ContactAvatarModel?) {
     if (contact == null) {
         loadImage(R.drawable.contact_avatar)
     } else {

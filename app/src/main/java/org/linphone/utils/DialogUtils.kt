@@ -29,8 +29,10 @@ import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import org.linphone.R
+import org.linphone.databinding.DialogConfirmZrtpSasBinding
 import org.linphone.databinding.DialogPickNumberOrAddressBinding
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
+import org.linphone.ui.voip.model.ZrtpSasConfirmationDialogModel
 
 class DialogUtils {
     companion object {
@@ -44,6 +46,34 @@ class DialogUtils {
             val binding: DialogPickNumberOrAddressBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(context),
                 R.layout.dialog_pick_number_or_address,
+                null,
+                false
+            )
+            binding.viewModel = viewModel
+            dialog.setContentView(binding.root)
+
+            val d: Drawable = ColorDrawable(
+                ContextCompat.getColor(dialog.context, R.color.dialog_background)
+            )
+            d.alpha = 100
+            dialog.window
+                ?.setLayout(
+                    WindowManager.LayoutParams.MATCH_PARENT,
+                    WindowManager.LayoutParams.MATCH_PARENT
+                )
+            dialog.window?.setBackgroundDrawable(d)
+            return dialog
+        }
+        fun getZrtpSasConfirmationDialog(
+            context: Context,
+            viewModel: ZrtpSasConfirmationDialogModel
+        ): Dialog {
+            val dialog = Dialog(context)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+
+            val binding: DialogConfirmZrtpSasBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.dialog_confirm_zrtp_sas,
                 null,
                 false
             )

@@ -28,7 +28,7 @@ import org.linphone.core.Friend
 import org.linphone.core.FriendListenerStub
 import org.linphone.utils.LinphoneUtils
 
-class ContactModel(val friend: Friend) {
+class ContactAvatarModel(val friend: Friend) {
     val id = friend.refKey
 
     val initials = LinphoneUtils.getInitials(friend.name.orEmpty())

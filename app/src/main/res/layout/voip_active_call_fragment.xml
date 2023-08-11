@@ -7,7 +7,7 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.voip.viewmodel.CallViewModel" />
+            type="org.linphone.ui.voip.viewmodel.CurrentCallViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -92,7 +92,9 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
         <include
+            android:onClick="@{() -> viewModel.forceShowZrtpSasDialog()}"
             android:id="@+id/blue_toast"
+            android:visibility="gone"
             layout="@layout/toast_blue"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

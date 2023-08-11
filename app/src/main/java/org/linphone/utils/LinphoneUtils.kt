@@ -19,16 +19,12 @@
  */
 package org.linphone.utils
 
-import android.content.ContentUris
-import android.net.Uri
-import android.provider.ContactsContract
 import androidx.emoji2.text.EmojiCompat
-import java.io.IOException
 import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Address
+import org.linphone.core.Call
 import org.linphone.core.ChatRoom
-import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 
 class LinphoneUtils {
@@ -74,18 +70,6 @@ class LinphoneUtils {
             return initials
         }
 
-        private fun getChatRoomId(localAddress: Address, remoteAddress: Address): String {
-            val localSipUri = localAddress.clone()
-            localSipUri.clean()
-            val remoteSipUri = remoteAddress.clone()
-            remoteSipUri.clean()
-            return "${localSipUri.asStringUriOnly()}~${remoteSipUri.asStringUriOnly()}"
-        }
-
-        fun getChatRoomId(chatRoom: ChatRoom): String {
-            return getChatRoomId(chatRoom.localAddress, chatRoom.peerAddress)
-        }
-
         fun getDisplayName(address: Address?): String {
             if (address == null) return "[null]"
             if (address.displayName == null) {
@@ -102,41 +86,23 @@ class LinphoneUtils {
             return address.displayName ?: address.username ?: address.asString()
         }
 
-        fun Friend.getPictureUri(thumbnailPreferred: Boolean = false): Uri? {
-            val refKey = refKey
-            if (refKey != null) {
-                try {
-                    val lookupUri = ContentUris.withAppendedId(
-                        ContactsContract.Contacts.CONTENT_URI,
-                        refKey.toLong()
-                    )
-
-                    if (!thumbnailPreferred) {
-                        val pictureUri = Uri.withAppendedPath(
-                            lookupUri,
-                            ContactsContract.Contacts.Photo.DISPLAY_PHOTO
-                        )
-                        // Check that the URI points to a real file
-                        val contentResolver = coreContext.context.contentResolver
-                        try {
-                            if (contentResolver.openAssetFileDescriptor(pictureUri, "r") != null) {
-                                return pictureUri
-                            }
-                        } catch (ioe: IOException) { }
-                    }
-
-                    // Fallback to thumbnail if high res picture isn't available
-                    return Uri.withAppendedPath(
-                        lookupUri,
-                        ContactsContract.Contacts.Photo.CONTENT_DIRECTORY
-                    )
-                } catch (e: Exception) { }
-            } else if (photo != null) {
-                try {
-                    return Uri.parse(photo)
-                } catch (e: Exception) { }
+        fun isCallOutgoing(callState: Call.State): Boolean {
+            return when (callState) {
+                Call.State.OutgoingInit, Call.State.OutgoingProgress, Call.State.OutgoingRinging, Call.State.OutgoingEarlyMedia -> true
+                else -> false
             }
-            return null
+        }
+
+        private fun getChatRoomId(localAddress: Address, remoteAddress: Address): String {
+            val localSipUri = localAddress.clone()
+            localSipUri.clean()
+            val remoteSipUri = remoteAddress.clone()
+            remoteSipUri.clean()
+            return "${localSipUri.asStringUriOnly()}~${remoteSipUri.asStringUriOnly()}"
+        }
+
+        fun getChatRoomId(chatRoom: ChatRoom): String {
+            return getChatRoomId(chatRoom.localAddress, chatRoom.peerAddress)
         }
     }
 }

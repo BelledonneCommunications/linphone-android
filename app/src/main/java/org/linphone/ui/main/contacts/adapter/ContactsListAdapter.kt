@@ -11,21 +11,21 @@ import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
 import org.linphone.databinding.ContactFavouriteListCellBinding
 import org.linphone.databinding.ContactListCellBinding
-import org.linphone.ui.main.contacts.model.ContactModel
+import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.utils.Event
 
 class ContactsListAdapter(
     private val viewLifecycleOwner: LifecycleOwner,
     private val favourites: Boolean
-) : ListAdapter<ContactModel, RecyclerView.ViewHolder>(ContactDiffCallback()) {
+) : ListAdapter<ContactAvatarModel, RecyclerView.ViewHolder>(ContactDiffCallback()) {
     var selectedAdapterPosition = -1
 
-    val contactClickedEvent: MutableLiveData<Event<ContactModel>> by lazy {
-        MutableLiveData<Event<ContactModel>>()
+    val contactClickedEvent: MutableLiveData<Event<ContactAvatarModel>> by lazy {
+        MutableLiveData<Event<ContactAvatarModel>>()
     }
 
-    val contactLongClickedEvent: MutableLiveData<Event<ContactModel>> by lazy {
-        MutableLiveData<Event<ContactModel>>()
+    val contactLongClickedEvent: MutableLiveData<Event<ContactAvatarModel>> by lazy {
+        MutableLiveData<Event<ContactAvatarModel>>()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -64,7 +64,7 @@ class ContactsListAdapter(
     inner class ViewHolder(
         val binding: ContactListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(contactModel: ContactModel) {
+        fun bind(contactModel: ContactAvatarModel) {
             with(binding) {
                 model = contactModel
 
@@ -91,7 +91,7 @@ class ContactsListAdapter(
     inner class FavouriteViewHolder(
         val binding: ContactFavouriteListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(contactModel: ContactModel) {
+        fun bind(contactModel: ContactAvatarModel) {
             with(binding) {
                 model = contactModel
 
@@ -116,12 +116,12 @@ class ContactsListAdapter(
     }
 }
 
-private class ContactDiffCallback : DiffUtil.ItemCallback<ContactModel>() {
-    override fun areItemsTheSame(oldItem: ContactModel, newItem: ContactModel): Boolean {
+private class ContactDiffCallback : DiffUtil.ItemCallback<ContactAvatarModel>() {
+    override fun areItemsTheSame(oldItem: ContactAvatarModel, newItem: ContactAvatarModel): Boolean {
         return oldItem.id == newItem.id
     }
 
-    override fun areContentsTheSame(oldItem: ContactModel, newItem: ContactModel): Boolean {
+    override fun areContentsTheSame(oldItem: ContactAvatarModel, newItem: ContactAvatarModel): Boolean {
         return oldItem.showFirstLetter.value == newItem.showFirstLetter.value
     }
 }

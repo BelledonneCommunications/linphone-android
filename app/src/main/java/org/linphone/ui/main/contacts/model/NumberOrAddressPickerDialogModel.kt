@@ -31,7 +31,6 @@ class NumberOrAddressPickerDialogModel(viewModel: ContactViewModel) : ViewModel(
 
     init {
         sipAddressesAndPhoneNumbers.value = viewModel.sipAddressesAndPhoneNumbers.value
-        // TODO: set listener
     }
 
     fun dismiss() {

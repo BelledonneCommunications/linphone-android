@@ -23,14 +23,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Address
+import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.contacts.model.ContactDeviceModel
-import org.linphone.ui.main.contacts.model.ContactModel
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressClickListener
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel
 import org.linphone.utils.Event
 
 class ContactViewModel : ViewModel() {
-    val contact = MutableLiveData<ContactModel>()
+    val contact = MutableLiveData<ContactAvatarModel>()
 
     val sipAddressesAndPhoneNumbers = MutableLiveData<ArrayList<ContactNumberOrAddressModel>>()
 
@@ -83,7 +83,7 @@ class ContactViewModel : ViewModel() {
         coreContext.postOnCoreThread { core ->
             val friend = coreContext.contactsManager.findContactById(refKey)
             if (friend != null) {
-                contact.postValue(ContactModel(friend))
+                contact.postValue(ContactAvatarModel(friend))
                 val organization = friend.organization
                 if (!organization.isNullOrEmpty()) {
                     company.postValue(organization)

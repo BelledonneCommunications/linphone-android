@@ -20,18 +20,19 @@
 package org.linphone.ui.voip.fragment
 
 import android.os.Bundle
+import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.databinding.VoipOutgoingCallFragmentBinding
 import org.linphone.ui.main.fragment.GenericFragment
-import org.linphone.ui.voip.viewmodel.CallViewModel
+import org.linphone.ui.voip.viewmodel.CurrentCallViewModel
 
 class OutgoingCallFragment : GenericFragment() {
     private lateinit var binding: VoipOutgoingCallFragmentBinding
 
-    private lateinit var callViewModel: CallViewModel
+    private lateinit var callViewModel: CurrentCallViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,12 +47,17 @@ class OutgoingCallFragment : GenericFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         callViewModel = requireActivity().run {
-            ViewModelProvider(this)[CallViewModel::class.java]
+            ViewModelProvider(this)[CurrentCallViewModel::class.java]
         }
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = callViewModel
 
-        binding.chronometer.start()
+        callViewModel.startCallChronometerEvent.observe(viewLifecycleOwner) {
+            it.consume { duration ->
+                binding.chronometer.base = SystemClock.elapsedRealtime() - (1000 * duration)
+                binding.chronometer.start()
+            }
+        }
     }
 }
