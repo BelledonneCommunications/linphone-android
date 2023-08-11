@@ -20,6 +20,7 @@
 package org.linphone.ui.main
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.Gravity
@@ -27,9 +28,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.databinding.MainActivityBinding
+import org.linphone.ui.assistant.AssistantActivity
+import org.linphone.ui.main.viewmodel.DrawerMenuViewModel
 
 class MainActivity : AppCompatActivity() {
     companion object {
@@ -39,6 +43,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: MainActivityBinding
+    private lateinit var drawerMenuViewModel: DrawerMenuViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, true)
@@ -61,6 +66,17 @@ class MainActivity : AppCompatActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.main_activity)
         binding.lifecycleOwner = this
+
+        drawerMenuViewModel = run {
+            ViewModelProvider(this)[DrawerMenuViewModel::class.java]
+        }
+        binding.drawerMenuViewModel = drawerMenuViewModel
+
+        drawerMenuViewModel.startAssistantEvent.observe(this) {
+            it.consume {
+                startActivity(Intent(baseContext, AssistantActivity::class.java))
+            }
+        }
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {

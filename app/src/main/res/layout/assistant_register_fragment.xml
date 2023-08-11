@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="loginClickListener"
+            type="View.OnClickListener" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+    
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_800"
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="100dp"
+                android:text="Register"
+                android:textSize="20sp"
+                android:textColor="@color/gray_9"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/username_label"
+                style="@style/default_text_style_700"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="48dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="Username*"
+                android:textSize="13sp"
+                android:textColor="@color/gray_9"
+                app:layout_constraintTop_toBottomOf="@id/title"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <androidx.appcompat.widget.AppCompatEditText
+                style="@style/default_text_style"
+                android:id="@+id/username"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="John Doe"
+                android:textSize="14sp"
+                android:textColor="@color/gray_9"
+                android:background="@drawable/shape_edit_text_background"
+                app:layout_constraintTop_toBottomOf="@id/username_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/phone_number_label"
+                style="@style/default_text_style_700"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+                android:text="Phone Number*"
+                android:textSize="13sp"
+                android:textColor="@color/gray_9"
+                app:layout_constraintTop_toBottomOf="@id/username"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <androidx.appcompat.widget.AppCompatEditText
+                style="@style/default_text_style"
+                android:id="@+id/phone_number"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="+33 6 01 02 03 04 05"
+                android:textSize="14sp"
+                android:textColor="@color/gray_9"
+                android:background="@drawable/shape_edit_text_background"
+                app:layout_constraintTop_toBottomOf="@id/phone_number_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/password_label"
+                style="@style/default_text_style_700"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+                android:text="Password*"
+                android:textSize="13sp"
+                android:textColor="@color/gray_9"
+                app:layout_constraintTop_toBottomOf="@id/phone_number"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <androidx.appcompat.widget.AppCompatEditText
+                style="@style/default_text_style"
+                android:id="@+id/password"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="John Doe"
+                android:textSize="14sp"
+                android:textColor="@color/gray_9"
+                android:background="@drawable/shape_edit_text_background"
+                android:inputType="textPassword"
+                android:drawableEnd="@drawable/show_password"
+                android:drawableTint="@color/gray_1"
+                app:layout_constraintTop_toBottomOf="@id/password_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <ImageView
+                android:id="@+id/create_background"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/shape_orange_filled_button_background"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/create"
+                app:layout_constraintBottom_toBottomOf="@id/create" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_600"
+                android:id="@+id/create"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:paddingTop="13dp"
+                android:paddingBottom="13dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="Create"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:gravity="center_vertical"
+                app:layout_constraintTop_toBottomOf="@id/password"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:id="@+id/create_email_account_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="34dp"
+                android:gravity="center"
+                android:text="Create an account with your email on:"
+                android:textSize="14sp"
+                android:textColor="@color/gray_8"
+                app:layout_constraintTop_toBottomOf="@id/create"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <ImageView
+                android:id="@+id/create_email_account_background"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@drawable/shape_orange_outlined_button_background"
+                app:layout_constraintStart_toStartOf="@id/create_email_account"
+                app:layout_constraintEnd_toEndOf="@id/create_email_account"
+                app:layout_constraintTop_toTopOf="@id/create_email_account"
+                app:layout_constraintBottom_toBottomOf="@id/create_email_account" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_600"
+                android:id="@+id/create_email_account"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:text="subscribe.linphone.org"
+                android:textSize="13sp"
+                android:textColor="@color/primary_color"
+                android:gravity="center_vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/create_email_account_label" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:id="@+id/already_an_account"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="13dp"
+                android:paddingBottom="13dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="Already an account?"
+                android:textSize="14sp"
+                android:textColor="@color/gray_8"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/login"
+                app:layout_constraintTop_toTopOf="@id/login"
+                app:layout_constraintBottom_toBottomOf="@id/login"/>
+
+            <ImageView
+                android:id="@+id/login_background"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@drawable/shape_orange_outlined_button_background"
+                app:layout_constraintStart_toStartOf="@id/login"
+                app:layout_constraintEnd_toEndOf="@id/login"
+                app:layout_constraintTop_toTopOf="@id/login"
+                app:layout_constraintBottom_toBottomOf="@id/login" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:onClick="@{loginClickListener}"
+                style="@style/default_text_style_600"
+                android:id="@+id/login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="34dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="20dp"
+                android:paddingTop="13dp"
+                android:paddingBottom="13dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="Login"
+                android:textSize="18sp"
+                android:textColor="@color/primary_color"
+                android:gravity="center_vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/already_an_account"
+                app:layout_constraintTop_toBottomOf="@id/create_email_account"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+</layout>

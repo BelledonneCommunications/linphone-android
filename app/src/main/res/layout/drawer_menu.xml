@@ -5,6 +5,9 @@
 
     <data>
         <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.main.viewmodel.DrawerMenuViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -66,6 +69,7 @@
         </ScrollView>
 
         <ImageView
+            android:onClick="@{() -> viewModel.addAccount()}"
             android:id="@+id/add_account_background"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -78,6 +82,7 @@
             app:layout_constraintBottom_toBottomOf="@id/add_account" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:onClick="@{() -> viewModel.addAccount()}"
             style="@style/default_text_style_600"
             android:id="@+id/add_account"
             android:layout_width="wrap_content"
@@ -85,6 +90,8 @@
             android:layout_marginBottom="30dp"
             android:paddingTop="13dp"
             android:paddingBottom="13dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
             android:text="Add an account"
             android:textSize="18sp"
             android:textColor="@color/primary_color"

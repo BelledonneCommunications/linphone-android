@@ -31,6 +31,11 @@
         </activity>
 
         <activity
+            android:name=".ui.assistant.AssistantActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true" />
+
+        <activity
             android:name=".ui.voip.VoipActivity"
             android:launchMode="singleTask"
             android:turnScreenOn="true"
