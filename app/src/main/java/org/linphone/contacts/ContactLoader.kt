@@ -237,12 +237,15 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                                     friend.organization = organization
                                 }
 
-                                /*val job: String? =
+                                val job: String? =
                                     cursor.getString(
                                         cursor.getColumnIndexOrThrow(
                                             ContactsContract.CommonDataKinds.Organization.TITLE
                                         )
-                                    )*/
+                                    )
+                                if (job != null) {
+                                    friend.jobTitle = job
+                                }
                             }
                         }
 

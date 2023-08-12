@@ -65,8 +65,14 @@
                 <androidx.constraintlayout.widget.Group
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:constraint_referenced_ids="info_background, company_label, company"
-                    android:visibility="@{viewModel.showCompany ? View.VISIBLE : View.GONE}" />
+                    app:constraint_referenced_ids="company_label, company"
+                    android:visibility="@{viewModel.company.length() > 0 ? View.VISIBLE : View.GONE}" />
+
+                <androidx.constraintlayout.widget.Group
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:constraint_referenced_ids="title_label, title"
+                    android:visibility="@{viewModel.title.length() > 0 ? View.VISIBLE : View.GONE}" />
 
                 <androidx.constraintlayout.widget.Group
                     android:layout_width="wrap_content"
@@ -247,10 +253,11 @@
                     android:layout_marginStart="17dp"
                     android:layout_marginEnd="17dp"
                     android:src="@drawable/shape_round_white_background"
+                    android:visibility="@{viewModel.title.length() > 0 || viewModel.company.length() > 0 ? View.VISIBLE : View.GONE}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/numbers_and_addresses"
-                    app:layout_constraintBottom_toBottomOf="@id/company_label"/>
+                    app:layout_constraintBottom_toBottomOf="@id/title_label"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/default_text_style_700"
@@ -258,28 +265,57 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:paddingTop="16dp"
-                    android:paddingBottom="16dp"
-                    android:text="Company : "
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:text="Company :"
                     android:textSize="14sp"
-                    android:maxLines="1"
-                    android:ellipsize="end"
                     app:layout_constraintStart_toStartOf="@id/info_background"
                     app:layout_constraintTop_toTopOf="@id/info_background"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/default_text_style"
                     android:id="@+id/company"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:paddingTop="16dp"
-                    android:paddingBottom="16dp"
+                    android:layout_marginStart="5dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
                     android:text="@{viewModel.company, default=`Belledonne Comm`}"
                     android:textSize="14sp"
                     android:maxLines="1"
                     android:ellipsize="end"
                     app:layout_constraintStart_toEndOf="@id/company_label"
+                    app:layout_constraintEnd_toEndOf="@id/info_background"
                     app:layout_constraintTop_toTopOf="@id/info_background"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style_700"
+                    android:id="@+id/title_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:text="Title :"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="@id/info_background"
+                    app:layout_constraintTop_toBottomOf="@id/company"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style"
+                    android:id="@+id/title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:text="@{viewModel.title, default=`Android developer`}"
+                    android:textSize="14sp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    app:layout_constraintEnd_toEndOf="@id/info_background"
+                    app:layout_constraintStart_toEndOf="@id/title_label"
+                    app:layout_constraintTop_toBottomOf="@id/company"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/default_text_style_800"

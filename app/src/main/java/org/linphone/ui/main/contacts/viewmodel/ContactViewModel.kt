@@ -38,11 +38,11 @@ class ContactViewModel : ViewModel() {
 
     val company = MutableLiveData<String>()
 
+    val title = MutableLiveData<String>()
+
     val showBackButton = MutableLiveData<Boolean>()
 
     val showNumbersAndAddresses = MutableLiveData<Boolean>()
-
-    val showCompany = MutableLiveData<Boolean>()
 
     val showDevicesTrust = MutableLiveData<Boolean>()
 
@@ -74,8 +74,7 @@ class ContactViewModel : ViewModel() {
 
     init {
         showNumbersAndAddresses.value = true
-        showDevicesTrust.value = true
-        showCompany.value = false
+        showDevicesTrust.value = false // TODO FIXME: set it to true when it will work for real
     }
 
     fun findContactByRefKey(refKey: String) {
@@ -84,10 +83,14 @@ class ContactViewModel : ViewModel() {
             val friend = coreContext.contactsManager.findContactById(refKey)
             if (friend != null) {
                 contact.postValue(ContactAvatarModel(friend))
+
                 val organization = friend.organization
                 if (!organization.isNullOrEmpty()) {
                     company.postValue(organization)
-                    showCompany.postValue(true)
+                }
+                val jobTitle = friend.jobTitle
+                if (!jobTitle.isNullOrEmpty()) {
+                    title.postValue(jobTitle)
                 }
 
                 val addressesAndNumbers = arrayListOf<ContactNumberOrAddressModel>()
