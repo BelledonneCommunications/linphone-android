@@ -19,11 +19,28 @@
  */
 package org.linphone.ui.main.calls.viewmodel
 
+import androidx.lifecycle.MutableLiveData
+import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.ui.main.calls.model.CallLogModel
 import org.linphone.ui.main.viewmodel.TopBarViewModel
 
 class CallsListViewModel : TopBarViewModel() {
+    val callLogs = MutableLiveData<ArrayList<CallLogModel>>()
+
     init {
         title.value = "Calls"
         bottomNavBarVisible.value = true
+
+        coreContext.postOnCoreThread { core ->
+            val list = arrayListOf<CallLogModel>()
+
+            // TODO : filter depending on currently selected account
+            for (callLog in core.callLogs) {
+                val model = CallLogModel(callLog)
+                list.add(model)
+            }
+
+            callLogs.postValue(list)
+        }
     }
 }

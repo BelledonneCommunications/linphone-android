@@ -154,7 +154,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
             android:layout_margin="16dp"
-            android:src="@drawable/add"
+            android:src="@drawable/new_contact"
             app:tint="@color/gray_8"
             app:backgroundTint="@color/white"
             app:layout_constraintEnd_toEndOf="parent"

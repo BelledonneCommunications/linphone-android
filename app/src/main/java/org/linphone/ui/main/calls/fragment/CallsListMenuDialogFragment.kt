@@ -19,6 +19,39 @@
  */
 package org.linphone.ui.main.calls.fragment
 
+import android.content.DialogInterface
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import org.linphone.core.CallLog
+import org.linphone.databinding.CallsListLongPressMenuBinding
 
-class CallsListMenuDialogFragment : BottomSheetDialogFragment()
+class CallsListMenuDialogFragment(
+    private val calLog: CallLog,
+    private val onDismiss: (() -> Unit)? = null
+) : BottomSheetDialogFragment() {
+    companion object {
+        const val TAG = "CallsListMenuDialogFragment"
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        onDismiss?.invoke()
+        super.onCancel(dialog)
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        onDismiss?.invoke()
+        super.onDismiss(dialog)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        val view = CallsListLongPressMenuBinding.inflate(layoutInflater)
+        return view.root
+    }
+}

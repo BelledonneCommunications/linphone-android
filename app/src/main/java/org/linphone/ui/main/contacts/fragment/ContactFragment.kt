@@ -30,7 +30,6 @@ import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
-import androidx.transition.ChangeBounds
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactFragmentBinding
@@ -47,11 +46,6 @@ class ContactFragment : GenericFragment() {
     private lateinit var viewModel: ContactViewModel
 
     private val args: ContactFragmentArgs by navArgs()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        sharedElementEnterTransition = ChangeBounds()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

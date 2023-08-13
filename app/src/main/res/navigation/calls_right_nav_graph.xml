@@ -11,4 +11,19 @@
         android:label="EmptyFragment"
         tools:layout="@layout/empty_fragment"/>
 
+    <fragment
+        android:id="@+id/callFragment"
+        android:name="org.linphone.ui.main.calls.fragment.CallFragment"
+        android:label="CallFragment"
+        tools:layout="@layout/call_fragment">
+        <argument
+            android:name="callId"
+            app:argType="string" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_callFragment"
+        app:destination="@id/callFragment"
+        app:launchSingleTop="true" />
+
 </navigation>

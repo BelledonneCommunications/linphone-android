@@ -28,6 +28,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import org.linphone.R
+import org.linphone.core.tools.Log
 import org.linphone.databinding.CallsFragmentBinding
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.SlidingPaneBackPressedCallback
@@ -74,6 +75,19 @@ class CallsFragment : GenericFragment() {
         ) {
             it.consume {
                 binding.slidingPaneLayout.openPane()
+            }
+        }
+
+        sharedViewModel.showCallLogEvent.observe(
+            viewLifecycleOwner
+        ) {
+            it.consume { callId ->
+                Log.i("[Calls Fragment] Displaying call log with call ID [$callId]")
+                val navController = binding.callsRightNavContainer.findNavController()
+                val action = CallFragmentDirections.actionGlobalCallFragment(
+                    callId
+                )
+                navController.navigate(action)
             }
         }
 

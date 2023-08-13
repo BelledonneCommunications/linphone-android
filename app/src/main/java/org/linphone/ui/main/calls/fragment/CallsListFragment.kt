@@ -28,11 +28,15 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.databinding.CallsListFragmentBinding
 import org.linphone.ui.main.MainActivity
+import org.linphone.ui.main.calls.adapter.CallsListAdapter
 import org.linphone.ui.main.calls.viewmodel.CallsListViewModel
 import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.utils.Event
 import org.linphone.utils.setKeyboardInsetListener
 
 class CallsListFragment : GenericFragment() {
@@ -42,6 +46,8 @@ class CallsListFragment : GenericFragment() {
     private val listViewModel: CallsListViewModel by navGraphViewModels(
         R.id.callsListFragment
     )
+
+    private lateinit var adapter: CallsListAdapter
 
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
         if (findNavController().currentDestination?.id == R.id.newContactFragment) {
@@ -65,13 +71,50 @@ class CallsListFragment : GenericFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = listViewModel
 
+        postponeEnterTransition()
+
         binding.root.setKeyboardInsetListener { keyboardVisible ->
             val portraitOrientation = resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
             listViewModel.bottomNavBarVisible.value = !portraitOrientation || !keyboardVisible
         }
 
+        adapter = CallsListAdapter(viewLifecycleOwner)
+        binding.callsList.setHasFixedSize(true)
+        binding.callsList.adapter = adapter
+
+        adapter.callLogLongClickedEvent.observe(viewLifecycleOwner) {
+            it.consume { model ->
+                val modalBottomSheet = CallsListMenuDialogFragment(model.callLog) {
+                    adapter.resetSelection()
+                }
+                modalBottomSheet.show(parentFragmentManager, CallsListMenuDialogFragment.TAG)
+            }
+        }
+
+        adapter.callLogClickedEvent.observe(viewLifecycleOwner) {
+            it.consume { model ->
+                sharedViewModel.showCallLogEvent.value = Event(model.id ?: "")
+            }
+        }
+
+        adapter.callLogCallBackClickedEvent.observe(viewLifecycleOwner) {
+            it.consume { model ->
+                coreContext.postOnCoreThread {
+                    coreContext.startCall(model.address)
+                }
+            }
+        }
+
+        val layoutManager = LinearLayoutManager(requireContext())
+        binding.callsList.layoutManager = layoutManager
+
         binding.setOnAvatarClickListener {
             (requireActivity() as MainActivity).toggleDrawerMenu()
+        }
+
+        listViewModel.callLogs.observe(viewLifecycleOwner) {
+            adapter.submitList(it)
+            startPostponedEnterTransition()
         }
     }
 }

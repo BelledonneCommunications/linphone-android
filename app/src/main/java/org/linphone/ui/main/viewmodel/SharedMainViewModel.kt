@@ -43,4 +43,8 @@ class SharedMainViewModel : ViewModel() {
     /* Contacts related */
 
     val showContactEvent = MutableLiveData<Event<String>>()
+
+    /* Call logs related */
+
+    val showCallLogEvent = MutableLiveData<Event<String>>()
 }

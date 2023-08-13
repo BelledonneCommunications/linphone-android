@@ -132,6 +132,7 @@ class CoreContext(val context: Context) : HandlerThread("Core Thread") {
         forceZRTP: Boolean = false,
         localAddress: Address? = null
     ) {
+        // Core thread
         if (!core.isNetworkReachable) {
             Log.e("[Context] Network unreachable, abort outgoing call")
             return
