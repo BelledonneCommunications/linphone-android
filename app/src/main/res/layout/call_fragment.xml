@@ -193,7 +193,21 @@
                     app:layout_constraintStart_toStartOf="@id/video_call"
                     app:layout_constraintEnd_toEndOf="@id/video_call"/>
 
-
+                <LinearLayout
+                    android:id="@+id/call_history"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="45dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/shape_round_white_background"
+                    android:orientation="vertical"
+                    entries="@{viewModel.historyCallLogs}"
+                    layout="@{@layout/call_history_list_cell}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/call_label"
+                    app:layout_constraintBottom_toBottomOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

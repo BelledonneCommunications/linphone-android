@@ -100,6 +100,16 @@ class TimestampUtils {
             }
         }
 
+        fun durationToString(duration: Int): String {
+            val dateFormat = SimpleDateFormat(
+                if (duration >= 3600) "HH:mm:ss" else "mm:ss",
+                Locale.getDefault()
+            )
+            val cal = Calendar.getInstance()
+            cal[0, 0, 0, 0, 0] = duration
+            return dateFormat.format(cal.time)
+        }
+
         fun durationToString(hours: Int, minutes: Int): String {
             val calendar = Calendar.getInstance()
             calendar.set(Calendar.HOUR_OF_DAY, hours)
