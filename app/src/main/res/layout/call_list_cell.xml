@@ -67,7 +67,7 @@
             android:layout_width="12dp"
             android:layout_height="12dp"
             android:layout_marginBottom="10dp"
-            android:src="@{model.isOutgoing() ? @drawable/outgoing_call : @drawable/incoming_call, default=@drawable/outgoing_call}"
+            android:src="@{model.iconResId, default=@drawable/outgoing_call}"
             app:layout_constraintStart_toStartOf="@id/name"
             app:layout_constraintTop_toBottomOf="@id/name"
             app:layout_constraintBottom_toTopOf="@id/separator" />

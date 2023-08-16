@@ -24,7 +24,7 @@
             android:layout_height="16dp"
             android:layout_marginTop="20dp"
             android:layout_marginStart="2dp"
-            android:src="@{model.isOutgoing() ? @drawable/outgoing_call : @drawable/incoming_call, default=@drawable/outgoing_call}"
+            android:src="@{model.iconResId, default=@drawable/outgoing_call}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -51,6 +51,7 @@
             android:gravity="center"
             android:text="@{model.dateTime, default=`13 aout 2023 | 19:47`}"
             android:textSize="12sp"
+            android:textColor="@{model.isSuccessful ? @color/gray_9 : @color/red_danger, default=@color/gray_9}"
             app:layout_constraintStart_toEndOf="@id/call_status"
             app:layout_constraintTop_toBottomOf="@id/direction_label"
             app:layout_constraintBottom_toTopOf="@id/separator"/>

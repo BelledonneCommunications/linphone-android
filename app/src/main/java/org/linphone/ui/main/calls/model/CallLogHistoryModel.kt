@@ -1,16 +1,24 @@
 package org.linphone.ui.main.calls.model
 
+import androidx.annotation.IntegerRes
 import androidx.lifecycle.MutableLiveData
+import org.linphone.core.Call
 import org.linphone.core.Call.Dir
 import org.linphone.core.CallLog
+import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.TimestampUtils
 
 class CallLogHistoryModel(callLog: CallLog) {
     val isOutgoing = MutableLiveData<Boolean>()
 
+    val isSuccessful = MutableLiveData<Boolean>()
+
     val dateTime = MutableLiveData<String>()
 
     val duration = MutableLiveData<String>()
+
+    @IntegerRes
+    val iconResId = MutableLiveData<Int>()
 
     init {
         // Core thread
@@ -30,5 +38,8 @@ class CallLogHistoryModel(callLog: CallLog) {
         duration.postValue(
             TimestampUtils.durationToString(callLog.duration)
         )
+
+        isSuccessful.postValue(callLog.status == Call.Status.Success)
+        iconResId.postValue(LinphoneUtils.getIconResId(callLog.status, callLog.dir))
     }
 }

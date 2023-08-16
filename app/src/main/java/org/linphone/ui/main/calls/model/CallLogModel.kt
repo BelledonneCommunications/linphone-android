@@ -1,13 +1,15 @@
 package org.linphone.ui.main.calls.model
 
+import androidx.annotation.IntegerRes
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Call.Dir
 import org.linphone.core.CallLog
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
+import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.TimestampUtils
 
-class CallLogModel(val callLog: CallLog) {
+class CallLogModel(private val callLog: CallLog) {
     val id = callLog.callId ?: callLog.refKey
 
     val address = if (callLog.dir == Dir.Outgoing) callLog.remoteAddress else callLog.fromAddress
@@ -17,6 +19,9 @@ class CallLogModel(val callLog: CallLog) {
     val avatarModel: ContactAvatarModel
 
     val isOutgoing = MutableLiveData<Boolean>()
+
+    @IntegerRes
+    val iconResId = MutableLiveData<Int>()
 
     val dateTime = MutableLiveData<String>()
 
@@ -42,6 +47,8 @@ class CallLogModel(val callLog: CallLog) {
             fakeFriend.address = address
             avatarModel = ContactAvatarModel(fakeFriend)
         }
+
+        iconResId.postValue(LinphoneUtils.getIconResId(callLog.status, callLog.dir))
     }
 
     fun delete() {

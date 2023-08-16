@@ -19,11 +19,15 @@
  */
 package org.linphone.utils
 
+import androidx.annotation.IntegerRes
 import androidx.emoji2.text.EmojiCompat
 import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
 import org.linphone.core.Address
 import org.linphone.core.Call
+import org.linphone.core.Call.Dir
+import org.linphone.core.Call.Status
 import org.linphone.core.ChatRoom
 import org.linphone.core.tools.Log
 
@@ -90,6 +94,35 @@ class LinphoneUtils {
             return when (callState) {
                 Call.State.OutgoingInit, Call.State.OutgoingProgress, Call.State.OutgoingRinging, Call.State.OutgoingEarlyMedia -> true
                 else -> false
+            }
+        }
+
+        @IntegerRes
+        fun getIconResId(callStatus: Status, callDir: Dir): Int {
+            return when (callStatus) {
+                Status.Missed -> {
+                    if (callDir == Dir.Outgoing) {
+                        R.drawable.outgoing_call_missed
+                    } else {
+                        R.drawable.incoming_call_missed
+                    }
+                }
+
+                Status.Success -> {
+                    if (callDir == Dir.Outgoing) {
+                        R.drawable.outgoing_call
+                    } else {
+                        R.drawable.incoming_call
+                    }
+                }
+
+                else -> {
+                    if (callDir == Dir.Outgoing) {
+                        R.drawable.outgoing_call_rejected
+                    } else {
+                        R.drawable.incoming_call_rejected
+                    }
+                }
             }
         }
 
