@@ -8,6 +8,10 @@
         <item name="android:fontFamily">@font/noto_sans</item>
         <item name="android:textColor">@color/gray_9</item>
     </style>
+    <style name="default_text_style_500">
+        <item name="android:fontFamily">@font/noto_sans_500</item>
+        <item name="android:textColor">@color/gray_9</item>
+    </style>
     <style name="default_text_style_600">
         <item name="android:fontFamily">@font/noto_sans_600</item>
         <item name="android:textColor">@color/gray_9</item>

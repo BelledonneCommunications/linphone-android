@@ -29,6 +29,15 @@ class DrawerMenuViewModel : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    val closeDrawerEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
+    fun closeDrawerMenu() {
+        // UI thread
+        closeDrawerEvent.value = Event(true)
+    }
+
     fun addAccount() {
         // UI thread
         startAssistantEvent.value = Event(true)

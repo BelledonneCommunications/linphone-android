@@ -4,7 +4,7 @@
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/primary_color</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@color/primary_color</item>
         <!-- Customize your theme here. -->
         <item name="android:windowActivityTransitions">true</item>
     </style>

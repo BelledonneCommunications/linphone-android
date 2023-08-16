@@ -22,9 +22,15 @@ class CallLogModel(val callLog: CallLog) {
         // Core thread
         isOutgoing.postValue(callLog.dir == Dir.Outgoing)
 
-        dateTime.postValue(
-            TimestampUtils.toString(callLog.startDate, shortDate = false, hideYear = false)
-        )
+        val timestamp = callLog.startDate
+        val displayedDate = if (TimestampUtils.isToday(timestamp)) {
+            TimestampUtils.timeToString(timestamp)
+        } else if (TimestampUtils.isYesterday(timestamp)) {
+            "Hier"
+        } else {
+            TimestampUtils.dateToString(timestamp)
+        }
+        dateTime.postValue(displayedDate)
 
         val friend = coreContext.core.findFriend(address)
         if (friend != null) {

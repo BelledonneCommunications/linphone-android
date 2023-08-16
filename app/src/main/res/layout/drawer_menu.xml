@@ -25,6 +25,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:onClick="@{() -> viewModel.closeDrawerMenu()}"
             style="@style/default_text_style_800"
             android:id="@+id/brand_name"
             android:layout_width="0dp"

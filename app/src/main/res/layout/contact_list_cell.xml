@@ -25,11 +25,12 @@
         android:background="@drawable/cell_background">
 
         <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_500"
             android:id="@+id/header"
-            android:layout_width="wrap_content"
+            android:layout_width="18dp"
             android:layout_height="wrap_content"
             android:text="@{model.firstLetter, default=`A`}"
-            android:visibility="@{model.showFirstLetter ? View.VISIBLE : View.INVISIBLE, default=invisible}"
+            android:visibility="@{model.showFirstLetter ? View.VISIBLE : View.INVISIBLE}"
             android:textColor="@color/gray_10"
             android:textSize="20sp"
             android:layout_marginStart="16dp"

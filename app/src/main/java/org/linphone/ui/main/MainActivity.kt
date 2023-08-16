@@ -75,6 +75,13 @@ class MainActivity : AppCompatActivity() {
         drawerMenuViewModel.startAssistantEvent.observe(this) {
             it.consume {
                 startActivity(Intent(baseContext, AssistantActivity::class.java))
+                binding.sideMenu.close()
+            }
+        }
+
+        drawerMenuViewModel.closeDrawerEvent.observe(this) {
+            it.consume {
+                binding.sideMenu.close()
             }
         }
     }
