@@ -32,6 +32,8 @@ import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import org.linphone.R
 import org.linphone.core.tools.Log
@@ -135,8 +137,11 @@ class ContactFragment : GenericFragment() {
         }
 
         viewModel.openLinphoneContactEditor.observe(viewLifecycleOwner) {
-            it.consume {
-                // TODO
+            it.consume { refKey ->
+                val action = ContactFragmentDirections.actionContactFragmentToEditContactFragment(
+                    refKey
+                )
+                findNavController().navigate(action)
             }
         }
     }

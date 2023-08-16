@@ -17,7 +17,7 @@
         android:id="@+id/newContactFragment"
         android:name="org.linphone.ui.main.contacts.fragment.NewContactFragment"
         android:label="NewContactFragment"
-        tools:layout="@layout/new_contact_fragment"/>
+        tools:layout="@layout/contact_new_or_edit_fragment"/>
     <action
         android:id="@+id/action_global_newContactFragment"
         app:destination="@id/newContactFragment"

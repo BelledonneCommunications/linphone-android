@@ -24,18 +24,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
 import org.linphone.R
+import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactNewOrEditFragmentBinding
 import org.linphone.ui.main.contacts.viewmodel.ContactNewOrEditViewModel
 import org.linphone.ui.main.fragment.GenericFragment
 
-class NewContactFragment : GenericFragment() {
+class EditContactFragment : GenericFragment() {
+    companion object {
+        const val TAG = "[Contact Edit Fragment]"
+    }
+
     private lateinit var binding: ContactNewOrEditFragmentBinding
 
     private val viewModel: ContactNewOrEditViewModel by navGraphViewModels(
-        R.id.newContactFragment
+        R.id.editContactFragment
     )
+
+    private val args: EditContactFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,13 +64,31 @@ class NewContactFragment : GenericFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
+        postponeEnterTransition()
+
+        val refKey = args.contactRefKey
+        Log.i("[Contact Edit Fragment] Looking up for contact with ref key [$refKey]")
+        viewModel.findFriendByRefKey(refKey)
+
         binding.setCancelClickListener {
             goBack()
         }
 
         viewModel.saveChangesEvent.observe(viewLifecycleOwner) {
+            it.consume { ok ->
+                if (ok) {
+                    Log.i("$TAG Changes were applied, going back to details page")
+                    goBack()
+                } else {
+                    Log.e("$TAG Changes couldn't be applied!")
+                    // TODO FIXME : show error
+                }
+            }
+        }
+
+        viewModel.friendFoundEvent.observe(viewLifecycleOwner) {
             it.consume {
-                goBack() // TODO FIXME : go to contact detail view
+                startPostponedEnterTransition()
             }
         }
     }

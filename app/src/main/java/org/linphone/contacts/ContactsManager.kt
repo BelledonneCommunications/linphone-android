@@ -28,11 +28,13 @@ class ContactsManager {
     private val listeners = arrayListOf<ContactsListener>()
 
     fun loadContacts(activity: MainActivity) {
+        // UI thread
         val manager = LoaderManager.getInstance(activity)
         manager.restartLoader(0, null, ContactLoader())
     }
 
     fun addListener(listener: ContactsListener) {
+        // UI thread
         if (coreContext.isReady()) {
             coreContext.postOnCoreThread {
                 listeners.add(listener)
@@ -41,6 +43,7 @@ class ContactsManager {
     }
 
     fun removeListener(listener: ContactsListener) {
+        // UI thread
         if (coreContext.isReady()) {
             coreContext.postOnCoreThread {
                 listeners.remove(listener)
@@ -49,6 +52,7 @@ class ContactsManager {
     }
 
     fun onContactsLoaded() {
+        // UI thread
         coreContext.postOnCoreThread {
             for (listener in listeners) {
                 listener.onContactsLoaded()
@@ -57,13 +61,16 @@ class ContactsManager {
     }
 
     fun findContactById(id: String): Friend? {
+        // Core thread
         return coreContext.core.defaultFriendList?.findFriendByRefKey(id)
     }
 
     fun onCoreStarted() {
+        // Core thread
     }
 
     fun onCoreStopped() {
+        // Core thread
     }
 }
 

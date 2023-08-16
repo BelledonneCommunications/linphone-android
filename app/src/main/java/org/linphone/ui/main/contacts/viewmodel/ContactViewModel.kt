@@ -169,7 +169,8 @@ class ContactViewModel : ViewModel() {
         // UI thread
         val uri = contact.value?.friend?.nativeUri
         if (uri != null) {
-            openNativeContactEditor.value = Event(uri)
+            openLinphoneContactEditor.value = Event(contact.value?.id.orEmpty())
+            // TODO FIXME : openNativeContactEditor.value = Event(uri)
         } else {
             openLinphoneContactEditor.value = Event(contact.value?.id.orEmpty())
         }

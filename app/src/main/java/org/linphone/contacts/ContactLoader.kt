@@ -52,10 +52,11 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
         val mimeType = ContactsContract.Data.MIMETYPE
-        val mimeSelection = "$mimeType = ? OR $mimeType = ? OR $mimeType = ?"
+        val mimeSelection = "$mimeType = ? OR $mimeType = ? OR $mimeType = ? OR $mimeType = ?"
 
         val selection = ContactsContract.Data.IN_DEFAULT_DIRECTORY + " == 1 AND ($mimeSelection)"
         val selectionArgs = arrayOf(
+            ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE,
             ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE,
             ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE,
             ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE
@@ -245,6 +246,30 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                                     )
                                 if (job != null) {
                                     friend.jobTitle = job
+                                }
+                            }
+                            ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE -> {
+                                val vCard = friend.vcard
+                                if (vCard != null) {
+                                    val givenName: String? =
+                                        cursor.getString(
+                                            cursor.getColumnIndexOrThrow(
+                                                ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME
+                                            )
+                                        )
+                                    if (!givenName.isNullOrEmpty()) {
+                                        vCard.givenName = givenName
+                                    }
+
+                                    val familyName: String? =
+                                        cursor.getString(
+                                            cursor.getColumnIndexOrThrow(
+                                                ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME
+                                            )
+                                        )
+                                    if (!familyName.isNullOrEmpty()) {
+                                        vCard.familyName = familyName
+                                    }
                                 }
                             }
                         }
