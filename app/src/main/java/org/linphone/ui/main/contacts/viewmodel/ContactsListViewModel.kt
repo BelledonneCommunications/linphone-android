@@ -139,7 +139,7 @@ class ContactsListViewModel : ViewModel() {
             applyFilter(
                 filter,
                 "",
-                MagicSearch.Source.Friends.toInt(),
+                MagicSearch.Source.Friends.toInt() or MagicSearch.Source.LdapServers.toInt(),
                 MagicSearch.Aggregation.Friend
             )
         }

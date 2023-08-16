@@ -112,6 +112,24 @@ class ContactViewModel : ViewModel() {
                     addressesAndNumbers.add(data)
                 }
                 for (number in friend.phoneNumbersWithLabel) {
+                    val presenceModel = friend.getPresenceModelForUriOrTel(number.phoneNumber)
+                    if (presenceModel != null && !presenceModel.contact.isNullOrEmpty()) {
+                        // Show linked SIP address
+                        val contact = presenceModel.contact
+                        if (!contact.isNullOrEmpty()) {
+                            val address = core.interpretUrl(contact, true)
+                            if (address != null) {
+                                val data = ContactNumberOrAddressModel(
+                                    address,
+                                    contact,
+                                    listener,
+                                    true
+                                )
+                                addressesAndNumbers.add(data)
+                            }
+                        }
+                    }
+
                     val address = core.interpretUrl(number.phoneNumber, true)
                     val data = ContactNumberOrAddressModel(
                         address,
