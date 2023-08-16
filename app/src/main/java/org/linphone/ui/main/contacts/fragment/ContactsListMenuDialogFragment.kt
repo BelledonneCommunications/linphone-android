@@ -52,6 +52,27 @@ class ContactsListMenuDialogFragment(
         savedInstanceState: Bundle?
     ): View {
         val view = ContactsListLongPressMenuBinding.inflate(layoutInflater)
+
+        view.setFavoriteClickListener {
+            // TODO
+            dismiss()
+        }
+
+        view.setShareClickListener {
+            // TODO
+            dismiss()
+        }
+
+        view.setInviteClickListener {
+            // TODO
+            dismiss()
+        }
+
+        view.setDeleteClickListener {
+            // TODO
+            dismiss()
+        }
+
         return view.root
     }
 }

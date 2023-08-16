@@ -19,12 +19,16 @@
  */
 package org.linphone.ui.main.calls.fragment
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -35,6 +39,7 @@ import org.linphone.ui.main.calls.adapter.CallsListAdapter
 import org.linphone.ui.main.calls.viewmodel.CallsListViewModel
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.Event
+import org.linphone.utils.slideInToastFromTopForDuration
 
 class CallsListFragment : GenericFragment() {
 
@@ -76,9 +81,13 @@ class CallsListFragment : GenericFragment() {
 
         adapter.callLogLongClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
-                val modalBottomSheet = CallsListMenuDialogFragment(model.callLog) {
+                val modalBottomSheet = CallsListMenuDialogFragment({
+                    // onDismiss
                     adapter.resetSelection()
-                }
+                }, {
+                    // onCopyNumberOrAddressToClipboard
+                    copyNumberOrAddressToClipboard(model.displayedAddress)
+                })
                 modalBottomSheet.show(parentFragmentManager, CallsListMenuDialogFragment.TAG)
             }
         }
@@ -110,5 +119,17 @@ class CallsListFragment : GenericFragment() {
                 listViewModel.applyFilter(filter)
             }
         }
+    }
+
+    private fun copyNumberOrAddressToClipboard(value: String) {
+        val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val label = "SIP address"
+        clipboard.setPrimaryClip(ClipData.newPlainText(label, value))
+
+        binding.greenToast.message = "Numéro copié dans le presse-papier"
+        binding.greenToast.icon = R.drawable.check
+
+        val target = binding.greenToast.root
+        target.slideInToastFromTopForDuration(binding.root as ViewGroup, lifecycleScope)
     }
 }

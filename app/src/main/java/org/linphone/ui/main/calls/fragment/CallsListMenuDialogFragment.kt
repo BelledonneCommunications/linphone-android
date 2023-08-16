@@ -25,12 +25,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import org.linphone.core.CallLog
 import org.linphone.databinding.CallsListLongPressMenuBinding
 
 class CallsListMenuDialogFragment(
-    private val calLog: CallLog,
-    private val onDismiss: (() -> Unit)? = null
+    private val onDismiss: (() -> Unit)? = null,
+    private val onCopyNumberOrAddressToClipboard: (() -> Unit)? = null
 ) : BottomSheetDialogFragment() {
     companion object {
         const val TAG = "CallsListMenuDialogFragment"
@@ -52,6 +51,22 @@ class CallsListMenuDialogFragment(
         savedInstanceState: Bundle?
     ): View {
         val view = CallsListLongPressMenuBinding.inflate(layoutInflater)
+
+        view.setCopyNumberClickListener {
+            onCopyNumberOrAddressToClipboard?.invoke()
+            dismiss()
+        }
+
+        view.setDeleteClickListener {
+            // TODO
+            dismiss()
+        }
+
+        view.setNewContactClickListener {
+            // TODO
+            dismiss()
+        }
+
         return view.root
     }
 }
