@@ -49,6 +49,11 @@ class CallsListAdapter(
         selectedAdapterPosition = -1
     }
 
+    fun deleteSelection() {
+        notifyItemRemoved(selectedAdapterPosition)
+        selectedAdapterPosition = -1
+    }
+
     inner class ViewHolder(
         val binding: CallListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {

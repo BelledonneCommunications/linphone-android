@@ -43,4 +43,11 @@ class CallLogModel(val callLog: CallLog) {
             avatarModel = ContactAvatarModel(fakeFriend)
         }
     }
+
+    fun delete() {
+        // UI thread
+        coreContext.postOnCoreThread { core ->
+            core.removeCallLog(callLog)
+        }
+    }
 }

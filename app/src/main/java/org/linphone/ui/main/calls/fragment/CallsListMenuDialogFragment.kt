@@ -29,7 +29,8 @@ import org.linphone.databinding.CallsListLongPressMenuBinding
 
 class CallsListMenuDialogFragment(
     private val onDismiss: (() -> Unit)? = null,
-    private val onCopyNumberOrAddressToClipboard: (() -> Unit)? = null
+    private val onCopyNumberOrAddressToClipboard: (() -> Unit)? = null,
+    private val onDeleteCallLog: (() -> Unit)? = null
 ) : BottomSheetDialogFragment() {
     companion object {
         const val TAG = "CallsListMenuDialogFragment"
@@ -58,7 +59,7 @@ class CallsListMenuDialogFragment(
         }
 
         view.setDeleteClickListener {
-            // TODO
+            onDeleteCallLog?.invoke()
             dismiss()
         }
 

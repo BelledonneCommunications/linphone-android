@@ -87,6 +87,10 @@ class CallsListFragment : GenericFragment() {
                 }, {
                     // onCopyNumberOrAddressToClipboard
                     copyNumberOrAddressToClipboard(model.displayedAddress)
+                }, {
+                    // onDeleteCallLog
+                    model.delete()
+                    adapter.deleteSelection()
                 })
                 modalBottomSheet.show(parentFragmentManager, CallsListMenuDialogFragment.TAG)
             }
@@ -118,6 +122,10 @@ class CallsListFragment : GenericFragment() {
             it.consume { filter ->
                 listViewModel.applyFilter(filter)
             }
+        }
+
+        binding.setMenuClickListener {
+            // TODO show popup menu with delete all history button
         }
     }
 
