@@ -19,7 +19,7 @@
             android:layout_height="match_parent">
 
             <androidx.drawerlayout.widget.DrawerLayout
-                android:id="@+id/side_menu"
+                android:id="@+id/drawer_menu"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 app:layout_constraintTop_toTopOf="parent"
@@ -35,7 +35,7 @@
 
                     <!-- Side Menu -->
                     <RelativeLayout
-                        android:id="@+id/side_menu_content"
+                        android:id="@+id/drawer_menu_content"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@color/white"

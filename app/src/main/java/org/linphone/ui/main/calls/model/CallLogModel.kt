@@ -12,6 +12,8 @@ class CallLogModel(val callLog: CallLog) {
 
     val address = if (callLog.dir == Dir.Outgoing) callLog.remoteAddress else callLog.fromAddress
 
+    val displayedAddress = address.asStringUriOnly()
+
     val avatarModel: ContactAvatarModel
 
     val isOutgoing = MutableLiveData<Boolean>()

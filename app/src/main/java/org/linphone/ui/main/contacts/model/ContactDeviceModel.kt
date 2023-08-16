@@ -22,4 +22,9 @@ package org.linphone.ui.main.contacts.model
 class ContactDeviceModel(
     val name: String,
     val trusted: Boolean
-)
+) {
+    fun startCallToDevice() {
+        // UI thread
+        // TODO
+    }
+}

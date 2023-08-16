@@ -128,32 +128,21 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
-            <ImageView
-                android:id="@+id/create_background"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:src="@drawable/shape_orange_filled_button_background"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/create"
-                app:layout_constraintBottom_toBottomOf="@id/create" />
-
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style_600"
                 android:id="@+id/create"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:paddingTop="13dp"
                 android:paddingBottom="13dp"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:text="Create"
                 android:textSize="18sp"
-                android:textColor="@color/white"
-                android:gravity="center_vertical"
+                android:textColor="@color/primary_button_label_color"
+                android:gravity="center"
+                android:background="@drawable/primary_button_background"
                 app:layout_constraintTop_toBottomOf="@id/password"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
@@ -172,16 +161,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
-            <ImageView
-                android:id="@+id/create_email_account_background"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:src="@drawable/shape_orange_outlined_button_background"
-                app:layout_constraintStart_toStartOf="@id/create_email_account"
-                app:layout_constraintEnd_toEndOf="@id/create_email_account"
-                app:layout_constraintTop_toTopOf="@id/create_email_account"
-                app:layout_constraintBottom_toBottomOf="@id/create_email_account" />
-
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style_600"
                 android:id="@+id/create_email_account"
@@ -194,8 +173,9 @@
                 android:paddingEnd="12dp"
                 android:text="subscribe.linphone.org"
                 android:textSize="13sp"
-                android:textColor="@color/primary_color"
-                android:gravity="center_vertical"
+                android:textColor="@color/secondary_button_label_color"
+                android:gravity="center"
+                android:background="@drawable/secondary_button_background"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/create_email_account_label" />
@@ -218,16 +198,6 @@
                 app:layout_constraintTop_toTopOf="@id/login"
                 app:layout_constraintBottom_toBottomOf="@id/login"/>
 
-            <ImageView
-                android:id="@+id/login_background"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:src="@drawable/shape_orange_outlined_button_background"
-                app:layout_constraintStart_toStartOf="@id/login"
-                app:layout_constraintEnd_toEndOf="@id/login"
-                app:layout_constraintTop_toTopOf="@id/login"
-                app:layout_constraintBottom_toBottomOf="@id/login" />
-
             <androidx.appcompat.widget.AppCompatTextView
                 android:onClick="@{loginClickListener}"
                 style="@style/default_text_style_600"
@@ -243,8 +213,9 @@
                 android:paddingEnd="20dp"
                 android:text="Login"
                 android:textSize="18sp"
-                android:textColor="@color/primary_color"
-                android:gravity="center_vertical"
+                android:textColor="@color/secondary_button_label_color"
+                android:gravity="center"
+                android:background="@drawable/secondary_button_background"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/already_an_account"
                 app:layout_constraintTop_toBottomOf="@id/create_email_account"

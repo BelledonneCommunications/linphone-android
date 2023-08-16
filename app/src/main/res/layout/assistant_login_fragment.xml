@@ -97,32 +97,23 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
-            <ImageView
-                android:id="@+id/login_background"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:src="@drawable/shape_orange_filled_button_background"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/login"
-                app:layout_constraintBottom_toBottomOf="@id/login" />
-
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style_600"
                 android:id="@+id/login"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:paddingTop="13dp"
                 android:paddingBottom="13dp"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
                 android:text="Login"
                 android:textSize="18sp"
-                android:textColor="@color/white"
-                android:gravity="center_vertical"
+                android:textColor="@color/primary_button_label_color"
+                android:gravity="center"
+                android:background="@drawable/primary_button_background"
                 app:layout_constraintTop_toBottomOf="@id/password"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
@@ -179,65 +170,47 @@
                 app:layout_constraintTop_toTopOf="@id/or"
                 app:layout_constraintBottom_toBottomOf="@id/or"/>
 
-            <ImageView
-                android:id="@+id/scan_qr_code_background"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:src="@drawable/shape_orange_outlined_button_background"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/scan_qr_code"
-                app:layout_constraintBottom_toBottomOf="@id/scan_qr_code" />
-
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style_600"
                 android:id="@+id/scan_qr_code"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="22dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:paddingTop="13dp"
                 android:paddingBottom="13dp"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
                 android:text="Scan QR code"
                 android:textSize="18sp"
-                android:textColor="@color/primary_color"
-                android:gravity="center_vertical"
+                android:textColor="@color/secondary_button_label_color"
+                android:gravity="center"
+                android:background="@drawable/secondary_button_background"
                 android:drawableStart="@drawable/invite"
                 android:drawablePadding="8dp"
-                app:drawableTint="@color/primary_color"
+                app:drawableTint="@color/secondary_button_label_color"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/or" />
 
-            <ImageView
-                android:id="@+id/third_party_sip_account_background"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:src="@drawable/shape_orange_outlined_button_background"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/third_party_sip_account"
-                app:layout_constraintBottom_toBottomOf="@id/third_party_sip_account" />
-
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style_600"
                 android:id="@+id/third_party_sip_account"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:paddingTop="13dp"
                 android:paddingBottom="13dp"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
                 android:text="Use third party SIP account"
                 android:textSize="18sp"
-                android:textColor="@color/primary_color"
-                android:gravity="center_vertical"
+                android:textColor="@color/secondary_button_label_color"
+                android:gravity="center"
+                android:background="@drawable/secondary_button_background"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/scan_qr_code" />
@@ -260,16 +233,6 @@
                 app:layout_constraintTop_toTopOf="@id/register"
                 app:layout_constraintBottom_toBottomOf="@id/register"/>
 
-            <ImageView
-                android:id="@+id/register_background"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:src="@drawable/shape_orange_outlined_button_background"
-                app:layout_constraintStart_toStartOf="@id/register"
-                app:layout_constraintEnd_toEndOf="@id/register"
-                app:layout_constraintTop_toTopOf="@id/register"
-                app:layout_constraintBottom_toBottomOf="@id/register" />
-
             <androidx.appcompat.widget.AppCompatTextView
                 android:onClick="@{registerClickListener}"
                 style="@style/default_text_style_600"
@@ -285,8 +248,9 @@
                 android:paddingEnd="20dp"
                 android:text="Register"
                 android:textSize="18sp"
-                android:textColor="@color/primary_color"
-                android:gravity="center_vertical"
+                android:textColor="@color/secondary_button_label_color"
+                android:gravity="center"
+                android:background="@drawable/secondary_button_background"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/no_account_yet"
                 app:layout_constraintTop_toBottomOf="@id/third_party_sip_account"

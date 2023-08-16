@@ -100,6 +100,18 @@
                     app:layout_constraintTop_toBottomOf="@id/avatar" />
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style"
+                    android:id="@+id/address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{viewModel.callLogModel.displayedAddress, default=`+33601020304`}"
+                    android:textColor="@color/gray_8"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/name" />
+
+                <androidx.appcompat.widget.AppCompatTextView
                     style="@style/default_text_style_300"
                     android:id="@+id/status"
                     android:visibility="@{viewModel.callLogModel.avatarModel.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE}"
@@ -110,7 +122,7 @@
                     android:textSize="14sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/name" />
+                    app:layout_constraintTop_toBottomOf="@id/address" />
 
                 <ImageView
                     android:onClick="@{() -> viewModel.startAudioCall()}"

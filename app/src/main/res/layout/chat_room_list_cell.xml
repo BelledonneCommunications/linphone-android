@@ -101,7 +101,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            android:background="@drawable/conversation_cell_unread_count_background"
+            android:background="@drawable/shape_conversation_cell_unread_count_background"
             android:ellipsize="end"
             android:gravity="center"
             android:singleLine="true"

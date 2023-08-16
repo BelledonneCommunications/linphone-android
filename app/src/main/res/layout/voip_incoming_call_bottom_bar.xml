@@ -13,40 +13,41 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/in_call_black"
         android:paddingTop="15dp"
-        android:paddingBottom="15dp"
-        android:background="@color/in_call_black">
+        android:paddingBottom="15dp">
 
         <ImageView
-            android:onClick="@{() -> viewModel.hangUp()}"
             android:id="@+id/hang_up"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
+            android:background="@drawable/shape_hang_up_button_background"
+            android:onClick="@{() -> viewModel.hangUp()}"
             android:paddingStart="30dp"
-            android:paddingEnd="30dp"
             android:paddingTop="15dp"
+            android:paddingEnd="30dp"
             android:paddingBottom="15dp"
             android:src="@drawable/hang_up"
-            android:background="@drawable/shape_hang_up_button_background"
-            app:tint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintEnd_toStartOf="@id/answer_call"
+            app:layout_constraintStart_toStartOf="parent"
+            app:tint="@color/white" />
 
         <ImageView
-            android:onClick="@{() -> viewModel.answer()}"
             android:id="@+id/answer_call"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginEnd="30dp"
-            android:padding="15dp"
-            android:src="@drawable/calls"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:background="@drawable/shape_answer_button_background"
-            app:tint="@color/white"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintTop_toTopOf="@id/hang_up"
-            app:layout_constraintBottom_toBottomOf="@id/hang_up"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:onClick="@{() -> viewModel.answer()}"
+            android:paddingStart="30dp"
+            android:paddingTop="15dp"
+            android:paddingEnd="30dp"
+            android:paddingBottom="15dp"
+            android:src="@drawable/calls"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/hang_up"
+            app:tint="@color/white" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

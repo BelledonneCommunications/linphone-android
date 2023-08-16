@@ -75,13 +75,13 @@ class MainActivity : AppCompatActivity() {
         drawerMenuViewModel.startAssistantEvent.observe(this) {
             it.consume {
                 startActivity(Intent(baseContext, AssistantActivity::class.java))
-                binding.sideMenu.close()
+                binding.drawerMenu.close()
             }
         }
 
         drawerMenuViewModel.closeDrawerEvent.observe(this) {
             it.consume {
-                binding.sideMenu.close()
+                binding.drawerMenu.close()
             }
         }
     }
@@ -122,10 +122,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun toggleDrawerMenu() {
-        if (binding.sideMenu.isDrawerOpen(Gravity.LEFT)) {
-            binding.sideMenu.closeDrawer(binding.sideMenuContent, true)
+        if (binding.drawerMenu.isDrawerOpen(Gravity.LEFT)) {
+            binding.drawerMenu.closeDrawer(binding.drawerMenuContent, true)
         } else {
-            binding.sideMenu.openDrawer(binding.sideMenuContent, true)
+            binding.drawerMenu.openDrawer(binding.drawerMenuContent, true)
         }
     }
 

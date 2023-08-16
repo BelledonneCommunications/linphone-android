@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="primary_color">#FF5E00</color>
+    <color name="primary_color_disabled">#FFEACB</color>
+    <color name="primary_color_pressed">#B72D00</color>
 
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
@@ -11,6 +13,7 @@
     <color name="gray_incoming_message">#F4F4F7</color>
     <color name="trusted_blue">#4AA8FF</color>
     <color name="warning_orange_background">#FFEACB</color>
+    <color name="warning_orange_pressed_background">#FFB266</color>
     <color name="dialog_background">#22334D</color>
 
     <color name="gray_1">#6C7A87</color>
