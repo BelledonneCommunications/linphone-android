@@ -56,6 +56,14 @@ class ContactViewModel : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    val openNativeContactEditor: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
+
+    val openLinphoneContactEditor: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
+
     val listener = object : ContactNumberOrAddressClickListener {
         override fun onClicked(address: Address?) {
             // UI thread
@@ -130,14 +138,27 @@ class ContactViewModel : ViewModel() {
     }
 
     fun toggleNumbersAndAddressesVisibility() {
+        // UI thread
         showNumbersAndAddresses.value = showNumbersAndAddresses.value == false
     }
 
     fun toggleDevicesTrustVisibility() {
+        // UI thread
         showDevicesTrust.value = showDevicesTrust.value == false
     }
 
+    fun editContact() {
+        // UI thread
+        val uri = contact.value?.friend?.nativeUri
+        if (uri != null) {
+            openNativeContactEditor.value = Event(uri)
+        } else {
+            openLinphoneContactEditor.value = Event(contact.value?.id.orEmpty())
+        }
+    }
+
     fun startAudioCall() {
+        // UI thread
         val numbersAndAddresses = sipAddressesAndPhoneNumbers.value.orEmpty()
         if (numbersAndAddresses.size == 1) {
             val address = numbersAndAddresses.first().address
@@ -154,6 +175,7 @@ class ContactViewModel : ViewModel() {
     }
 
     fun startVideoCall() {
+        // UI thread
         val numbersAndAddresses = sipAddressesAndPhoneNumbers.value.orEmpty()
         if (numbersAndAddresses.size == 1) {
             val address = numbersAndAddresses.first().address
@@ -170,6 +192,7 @@ class ContactViewModel : ViewModel() {
     }
 
     fun sendMessage() {
+        // UI thread
         if (sipAddressesAndPhoneNumbers.value.orEmpty().size == 1) {
             // TODO
         } else {

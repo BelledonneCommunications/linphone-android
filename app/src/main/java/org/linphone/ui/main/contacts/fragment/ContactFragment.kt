@@ -22,7 +22,10 @@ package org.linphone.ui.main.contacts.fragment
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -118,6 +121,22 @@ class ContactFragment : GenericFragment() {
                 }
 
                 dialog.show()
+            }
+        }
+
+        viewModel.openNativeContactEditor.observe(viewLifecycleOwner) {
+            it.consume { uri ->
+                val editIntent = Intent(Intent.ACTION_EDIT).apply {
+                    setDataAndType(Uri.parse(uri), ContactsContract.Contacts.CONTENT_ITEM_TYPE)
+                    putExtra("finishActivityOnSaveCompleted", true)
+                }
+                startActivity(editIntent)
+            }
+        }
+
+        viewModel.openLinphoneContactEditor.observe(viewLifecycleOwner) {
+            it.consume {
+                // TODO
             }
         }
     }
