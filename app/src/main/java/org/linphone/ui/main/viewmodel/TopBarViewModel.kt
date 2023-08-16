@@ -23,7 +23,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.utils.Event
 
-abstract class TopBarViewModel : ViewModel() {
+class TopBarViewModel : ViewModel() {
     val title = MutableLiveData<String>()
 
     val searchBarVisible = MutableLiveData<Boolean>()
@@ -34,7 +34,9 @@ abstract class TopBarViewModel : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
-    val bottomNavBarVisible = MutableLiveData<Boolean>()
+    val openDrawerMenuEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
 
     init {
         searchBarVisible.value = false
@@ -42,6 +44,11 @@ abstract class TopBarViewModel : ViewModel() {
 
     override fun onCleared() {
         super.onCleared()
+    }
+
+    fun openDrawerMenu() {
+        // UI thread
+        openDrawerMenuEvent.value = Event(true)
     }
 
     fun openSearchBar() {

@@ -6,9 +6,6 @@
     <data>
         <import type="android.view.View" />
         <variable
-            name="onAvatarClickListener"
-            type="View.OnClickListener" />
-        <variable
             name="viewModel"
             type="org.linphone.ui.main.viewmodel.TopBarViewModel" />
     </data>
@@ -38,7 +35,7 @@
             app:barrierDirection="bottom" />
 
         <io.getstream.avatarview.AvatarView
-            android:onClick="@{onAvatarClickListener}"
+            android:onClick="@{() -> viewModel.openDrawerMenu()}"
             android:id="@+id/avatar"
             android:layout_width="@dimen/avatar_list_cell_size"
             android:layout_height="@dimen/avatar_list_cell_size"

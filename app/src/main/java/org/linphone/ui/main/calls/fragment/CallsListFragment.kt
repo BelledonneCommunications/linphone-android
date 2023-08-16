@@ -19,7 +19,6 @@
  */
 package org.linphone.ui.main.calls.fragment
 
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -32,12 +31,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.databinding.CallsListFragmentBinding
-import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.calls.adapter.CallsListAdapter
 import org.linphone.ui.main.calls.viewmodel.CallsListViewModel
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.Event
-import org.linphone.utils.setKeyboardInsetListener
 
 class CallsListFragment : GenericFragment() {
 
@@ -73,11 +70,6 @@ class CallsListFragment : GenericFragment() {
 
         postponeEnterTransition()
 
-        binding.root.setKeyboardInsetListener { keyboardVisible ->
-            val portraitOrientation = resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
-            listViewModel.bottomNavBarVisible.value = !portraitOrientation || !keyboardVisible
-        }
-
         adapter = CallsListAdapter(viewLifecycleOwner)
         binding.callsList.setHasFixedSize(true)
         binding.callsList.adapter = adapter
@@ -108,13 +100,15 @@ class CallsListFragment : GenericFragment() {
         val layoutManager = LinearLayoutManager(requireContext())
         binding.callsList.layoutManager = layoutManager
 
-        binding.setOnAvatarClickListener {
-            (requireActivity() as MainActivity).toggleDrawerMenu()
-        }
-
         listViewModel.callLogs.observe(viewLifecycleOwner) {
             adapter.submitList(it)
             startPostponedEnterTransition()
+        }
+
+        sharedViewModel.searchFilter.observe(viewLifecycleOwner) {
+            it.consume { filter ->
+                listViewModel.applyFilter(filter)
+            }
         }
     }
 }

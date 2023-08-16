@@ -40,6 +40,10 @@ class SharedMainViewModel : ViewModel() {
 
     var currentlyDisplayedFragment = MutableLiveData<Int>()
 
+    /* Top bar related */
+
+    val searchFilter = MutableLiveData<Event<String>>()
+
     /* Contacts related */
 
     val showContactEvent = MutableLiveData<Event<String>>()

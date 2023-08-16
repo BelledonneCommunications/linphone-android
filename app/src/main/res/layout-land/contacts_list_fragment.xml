@@ -9,9 +9,6 @@
             name="onNewContactClicked"
             type="View.OnClickListener" />
         <variable
-            name="onAvatarClickListener"
-            type="View.OnClickListener" />
-        <variable
             name="onConversationsClicked"
             type="View.OnClickListener" />
         <variable
@@ -38,22 +35,20 @@
             android:name="org.linphone.ui.main.fragment.BottomNavBarFragment"
             android:layout_width="75dp"
             android:layout_height="0dp"
-            android:visibility="@{viewModel.bottomNavBarVisible ? View.VISIBLE : View.GONE}"
             bind:layout="@layout/bottom_nav_bar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
 
-        <include
+        <androidx.fragment.app.FragmentContainerView
             android:id="@+id/top_bar"
-            bind:viewModel="@{viewModel}"
-            bind:onAvatarClickListener="@{onAvatarClickListener}"
-            layout="@layout/top_search_bar"
-            android:layout_height="@dimen/top_search_bar_height"
+            android:name="org.linphone.ui.main.fragment.TopBarFragment"
             android:layout_width="0dp"
+            android:layout_height="@dimen/top_search_bar_height"
+            bind:layout="@layout/top_search_bar"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <ImageView
             android:id="@+id/background"
@@ -93,7 +88,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_800"
             android:id="@+id/favourites_label"
-            android:visibility="@{viewModel.searchFilter.length() == 0 &amp;&amp; viewModel.favourites.size() > 0 ? View.VISIBLE : View.GONE}"
+            android:visibility="@{!viewModel.isListFiltered &amp;&amp; viewModel.favourites.size() > 0 ? View.VISIBLE : View.GONE}"
             onClickListener="@{() -> viewModel.toggleFavouritesVisibility()}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -110,7 +105,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/favourites_contacts_list"
-            android:visibility="@{viewModel.showFavourites &amp;&amp; viewModel.searchFilter.length() == 0 &amp;&amp; viewModel.favourites.size() > 0 ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.showFavourites &amp;&amp; !viewModel.isListFiltered &amp;&amp; viewModel.favourites.size() > 0 ? View.VISIBLE : View.GONE}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
@@ -123,7 +118,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_800"
             android:id="@+id/all_contacts_label"
-            android:visibility="@{viewModel.searchFilter.length() == 0 &amp;&amp; viewModel.favourites.size() > 0 ? View.VISIBLE : View.GONE}"
+            android:visibility="@{!viewModel.isListFiltered &amp;&amp; viewModel.favourites.size() > 0 ? View.VISIBLE : View.GONE}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"

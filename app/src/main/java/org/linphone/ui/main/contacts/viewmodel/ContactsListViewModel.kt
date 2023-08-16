@@ -20,6 +20,7 @@
 package org.linphone.ui.main.contacts.viewmodel
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import java.util.ArrayList
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.contacts.ContactsListener
@@ -29,14 +30,15 @@ import org.linphone.core.MagicSearchListenerStub
 import org.linphone.core.SearchResult
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
-import org.linphone.ui.main.viewmodel.TopBarViewModel
 
-class ContactsListViewModel : TopBarViewModel() {
+class ContactsListViewModel : ViewModel() {
     val contactsList = MutableLiveData<ArrayList<ContactAvatarModel>>()
 
     val favourites = MutableLiveData<ArrayList<ContactAvatarModel>>()
 
     val showFavourites = MutableLiveData<Boolean>()
+
+    val isListFiltered = MutableLiveData<Boolean>()
 
     private var currentFilter = ""
     private var previousFilter = "NotSet"
@@ -54,13 +56,16 @@ class ContactsListViewModel : TopBarViewModel() {
     private val contactsListener = object : ContactsListener {
         override fun onContactsLoaded() {
             // Core thread
-            applyFilter(currentFilter)
+            applyFilter(
+                currentFilter,
+                "",
+                MagicSearch.Source.Friends.toInt(),
+                MagicSearch.Aggregation.Friend
+            )
         }
     }
 
     init {
-        title.value = "Contacts"
-        bottomNavBarVisible.value = true
         showFavourites.value = true
 
         coreContext.postOnCoreThread { core ->
@@ -129,6 +134,7 @@ class ContactsListViewModel : TopBarViewModel() {
 
     fun applyFilter(filter: String) {
         // UI thread
+        isListFiltered.value = filter.isNotEmpty()
         coreContext.postOnCoreThread {
             applyFilter(
                 filter,

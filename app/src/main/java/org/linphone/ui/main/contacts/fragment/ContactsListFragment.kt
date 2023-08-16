@@ -19,7 +19,6 @@
  */
 package org.linphone.ui.main.contacts.fragment
 
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -32,14 +31,10 @@ import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.R
 import org.linphone.databinding.ContactsListFragmentBinding
-import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.contacts.adapter.ContactsListAdapter
 import org.linphone.ui.main.contacts.viewmodel.ContactsListViewModel
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.Event
-import org.linphone.utils.hideKeyboard
-import org.linphone.utils.setKeyboardInsetListener
-import org.linphone.utils.showKeyboard
 
 class ContactsListFragment : GenericFragment() {
     private lateinit var binding: ContactsListFragmentBinding
@@ -76,11 +71,6 @@ class ContactsListFragment : GenericFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = listViewModel
 
-        binding.root.setKeyboardInsetListener { keyboardVisible ->
-            val portraitOrientation = resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
-            listViewModel.bottomNavBarVisible.value = !portraitOrientation || !keyboardVisible
-        }
-
         adapter = ContactsListAdapter(viewLifecycleOwner, false)
         binding.contactsList.setHasFixedSize(true)
         binding.contactsList.adapter = adapter
@@ -114,27 +104,14 @@ class ContactsListFragment : GenericFragment() {
             favouritesAdapter.submitList(it)
         }
 
-        listViewModel.focusSearchBarEvent.observe(viewLifecycleOwner) {
-            it.consume { show ->
-                if (show) {
-                    // To automatically open keyboard
-                    binding.topBar.search.showKeyboard(requireActivity().window)
-                } else {
-                    binding.topBar.search.hideKeyboard()
-                }
+        sharedViewModel.searchFilter.observe(viewLifecycleOwner) {
+            it.consume { filter ->
+                listViewModel.applyFilter(filter)
             }
-        }
-
-        listViewModel.searchFilter.observe(viewLifecycleOwner) { filter ->
-            listViewModel.applyFilter(filter)
         }
 
         binding.setOnNewContactClicked {
             findNavController().navigate(R.id.action_global_newContactFragment)
-        }
-
-        binding.setOnAvatarClickListener {
-            (requireActivity() as MainActivity).toggleDrawerMenu()
         }
     }
 

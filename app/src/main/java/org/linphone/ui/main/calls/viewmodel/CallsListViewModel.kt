@@ -20,27 +20,56 @@
 package org.linphone.ui.main.calls.viewmodel
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.core.CallLog
+import org.linphone.core.Core
+import org.linphone.core.CoreListenerStub
 import org.linphone.ui.main.calls.model.CallLogModel
-import org.linphone.ui.main.viewmodel.TopBarViewModel
 
-class CallsListViewModel : TopBarViewModel() {
+class CallsListViewModel : ViewModel() {
     val callLogs = MutableLiveData<ArrayList<CallLogModel>>()
 
+    private var currentFilter = ""
+
+    private val coreListener = object : CoreListenerStub() {
+        override fun onCallLogUpdated(core: Core, callLog: CallLog) {
+            computeCallLogsList()
+        }
+    }
+
     init {
-        title.value = "Calls"
-        bottomNavBarVisible.value = true
+        coreContext.postOnCoreThread { core ->
+            core.addListener(coreListener)
+
+            computeCallLogsList()
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
 
         coreContext.postOnCoreThread { core ->
-            val list = arrayListOf<CallLogModel>()
-
-            // TODO : filter depending on currently selected account
-            for (callLog in core.callLogs) {
-                val model = CallLogModel(callLog)
-                list.add(model)
-            }
-
-            callLogs.postValue(list)
+            core.removeListener(coreListener)
         }
+    }
+
+    fun applyFilter(filter: String) {
+        // UI thread
+        currentFilter = filter
+        // TODO
+    }
+
+    private fun computeCallLogsList() {
+        // Core thread
+        val list = arrayListOf<CallLogModel>()
+
+        // TODO : filter depending on currently selected account
+        for (callLog in coreContext.core.callLogs) {
+            val model = CallLogModel(callLog)
+            list.add(model)
+        }
+
+        callLogs.postValue(list)
     }
 }

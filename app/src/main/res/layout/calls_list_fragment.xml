@@ -6,9 +6,6 @@
     <data>
         <import type="android.view.View" />
         <variable
-            name="onAvatarClickListener"
-            type="View.OnClickListener" />
-        <variable
             name="onContactsClicked"
             type="View.OnClickListener" />
         <variable
@@ -24,11 +21,15 @@
         android:layout_height="match_parent"
         android:background="@color/primary_color">
 
-        <include
+        <androidx.fragment.app.FragmentContainerView
             android:id="@+id/top_bar"
-            bind:viewModel="@{viewModel}"
-            bind:onAvatarClickListener="@{onAvatarClickListener}"
-            layout="@layout/top_search_bar" />
+            android:name="org.linphone.ui.main.fragment.TopBarFragment"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/top_search_bar_height"
+            bind:layout="@layout/top_search_bar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <ImageView
             android:id="@+id/background"
@@ -56,7 +57,6 @@
             android:name="org.linphone.ui.main.fragment.BottomNavBarFragment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:visibility="@{viewModel.bottomNavBarVisible ? View.VISIBLE : View.GONE}"
             bind:layout="@layout/bottom_nav_bar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

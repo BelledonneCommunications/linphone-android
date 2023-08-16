@@ -19,7 +19,6 @@
  */
 package org.linphone.ui.main.fragment
 
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,14 +26,18 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.R
-import org.linphone.databinding.BottomNavBarBinding
+import org.linphone.databinding.TopSearchBarBinding
+import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.viewmodel.SharedMainViewModel
+import org.linphone.ui.main.viewmodel.TopBarViewModel
 import org.linphone.utils.Event
-import org.linphone.utils.setKeyboardInsetListener
+import org.linphone.utils.hideKeyboard
+import org.linphone.utils.showKeyboard
 
-class BottomNavBarFragment : Fragment() {
-    private lateinit var binding: BottomNavBarBinding
+class TopBarFragment : Fragment() {
+    private lateinit var binding: TopSearchBarBinding
 
+    private lateinit var viewModel: TopBarViewModel
     private lateinit var sharedViewModel: SharedMainViewModel
 
     override fun onCreateView(
@@ -42,50 +45,60 @@ class BottomNavBarFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = BottomNavBarBinding.inflate(layoutInflater)
+        binding = TopSearchBarBinding.inflate(layoutInflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel = requireActivity().run {
+            ViewModelProvider(this)[TopBarViewModel::class.java]
+        }
+
         sharedViewModel = requireActivity().run {
             ViewModelProvider(this)[SharedMainViewModel::class.java]
         }
 
         binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = viewModel
 
-        binding.root.setKeyboardInsetListener { keyboardVisible ->
-            val portraitOrientation = resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
-            binding.bottomNavBar.visibility = if (!portraitOrientation || !keyboardVisible) View.VISIBLE else View.GONE
-        }
-
-        binding.setOnContactsClicked {
-            if (sharedViewModel.currentlyDisplayedFragment.value != R.id.contactsFragment) {
-                sharedViewModel.navigateToContactsEvent.value = Event(true)
+        viewModel.openDrawerMenuEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                (requireActivity() as MainActivity).toggleDrawerMenu()
             }
         }
 
-        binding.setOnCallsClicked {
-            if (sharedViewModel.currentlyDisplayedFragment.value != R.id.callsFragment) {
-                sharedViewModel.navigateToCallsEvent.value = Event(true)
+        viewModel.focusSearchBarEvent.observe(viewLifecycleOwner) {
+            it.consume { show ->
+                if (show) {
+                    // To automatically open keyboard
+                    binding.search.showKeyboard(requireActivity().window)
+                } else {
+                    binding.search.hideKeyboard()
+                }
             }
         }
 
-        binding.setOnConversationsClicked {
-            if (sharedViewModel.currentlyDisplayedFragment.value != R.id.conversationsFragment) {
-                sharedViewModel.navigateToConversationsEvent.value = Event(true)
-            }
-        }
-
-        binding.setOnMeetingsClicked {
-            // TODO
+        viewModel.searchFilter.observe(viewLifecycleOwner) { filter ->
+            sharedViewModel.searchFilter.value = Event(filter)
         }
 
         sharedViewModel.currentlyDisplayedFragment.observe(viewLifecycleOwner) {
-            binding.contactsSelected = it == R.id.contactsFragment
-            binding.callsSelected = it == R.id.callsFragment
-            binding.conversationsSelected = it == R.id.conversationsFragment
+            binding.title.text = when (it) {
+                R.id.contactsFragment -> {
+                    "Contacts"
+                }
+                R.id.callsFragment -> {
+                    "Calls"
+                }
+                R.id.conversationsFragment -> {
+                    "Conversations"
+                }
+                else -> {
+                    ""
+                }
+            }
         }
     }
 }

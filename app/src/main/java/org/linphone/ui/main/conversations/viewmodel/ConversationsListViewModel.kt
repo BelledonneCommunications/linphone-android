@@ -20,6 +20,7 @@
 package org.linphone.ui.main.conversations.viewmodel
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import java.util.ArrayList
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.contacts.ContactsListener
@@ -29,11 +30,10 @@ import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.conversations.data.ChatRoomData
-import org.linphone.ui.main.viewmodel.TopBarViewModel
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
-class ConversationsListViewModel : TopBarViewModel() {
+class ConversationsListViewModel : ViewModel() {
     val chatRoomsList = MutableLiveData<ArrayList<ChatRoomData>>()
 
     val notifyItemChangedEvent = MutableLiveData<Event<Int>>()
@@ -101,8 +101,6 @@ class ConversationsListViewModel : TopBarViewModel() {
         coreContext.postOnCoreThread { core ->
             updateChatRoomsList()
         }
-
-        title.value = "Conversations"
     }
 
     override fun onCleared() {
