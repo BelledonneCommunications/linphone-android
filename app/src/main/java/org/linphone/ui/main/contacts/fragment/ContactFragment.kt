@@ -127,8 +127,8 @@ class ContactFragment : GenericFragment() {
         val label = if (isSip) "SIP address" else "Phone number"
         clipboard.setPrimaryClip(ClipData.newPlainText(label, value))
 
-        binding.greenToast.message.text = "Numéro copié dans le presse-papier"
-        binding.greenToast.icon.setImageResource(R.drawable.check)
+        binding.greenToast.message = "Numéro copié dans le presse-papier"
+        binding.greenToast.icon = R.drawable.check
 
         val target = binding.greenToast.root
         target.slideInToastFromTopForDuration(binding.root as ViewGroup, lifecycleScope)

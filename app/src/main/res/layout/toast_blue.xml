@@ -25,25 +25,25 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:src="@drawable/shape_toast_blue_shadow"
-            app:layout_constraintBottom_toBottomOf="@id/message"
-            app:layout_constraintEnd_toEndOf="@id/message"
-            app:layout_constraintStart_toStartOf="@id/icon"
-            app:layout_constraintTop_toTopOf="@id/message" />
+            app:layout_constraintBottom_toBottomOf="@id/toast_message"
+            app:layout_constraintEnd_toEndOf="@id/toast_message"
+            app:layout_constraintStart_toStartOf="@id/toast_icon"
+            app:layout_constraintTop_toTopOf="@id/toast_message" />
 
         <ImageView
-            android:id="@+id/icon"
+            android:id="@+id/toast_icon"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:adjustViewBounds="true"
             android:src="@{icon, default=@drawable/trusted}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/message"
+            app:layout_constraintEnd_toStartOf="@id/toast_message"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintHorizontal_chainStyle="packed" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/message"
+            android:id="@+id/toast_message"
             style="@style/default_text_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -55,7 +55,7 @@
             android:textColor="@color/trusted_blue"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/icon"
+            app:layout_constraintStart_toEndOf="@id/toast_icon"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

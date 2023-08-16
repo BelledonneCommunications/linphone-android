@@ -95,8 +95,9 @@ class ActiveCallFragment : GenericFragment() {
 
         callViewModel.isRemoteDeviceTrusted.observe(viewLifecycleOwner) { trusted ->
             if (trusted) {
-                binding.blueToast.message.text = "This call can be trusted"
-                binding.blueToast.icon.setImageResource(R.drawable.trusted)
+                binding.blueToast.message = "This call can be trusted"
+                binding.blueToast.icon = R.drawable.trusted
+
                 binding.blueToast.root.slideInToastFromTop(binding.root as ViewGroup, true)
             } else if (binding.blueToast.root.visibility == View.VISIBLE) {
                 binding.blueToast.root.slideInToastFromTop(binding.root as ViewGroup, false)
