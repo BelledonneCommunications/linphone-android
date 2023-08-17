@@ -122,6 +122,7 @@ private class ContactDiffCallback : DiffUtil.ItemCallback<ContactAvatarModel>() 
     }
 
     override fun areContentsTheSame(oldItem: ContactAvatarModel, newItem: ContactAvatarModel): Boolean {
-        return oldItem.showFirstLetter.value == newItem.showFirstLetter.value
+        return oldItem.showFirstLetter.value == newItem.showFirstLetter.value &&
+            oldItem.presenceStatus.value == newItem.presenceStatus.value
     }
 }

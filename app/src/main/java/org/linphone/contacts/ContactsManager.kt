@@ -21,15 +21,44 @@ package org.linphone.contacts
 
 import androidx.loader.app.LoaderManager
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.core.Core
+import org.linphone.core.CoreListenerStub
 import org.linphone.core.Friend
+import org.linphone.core.FriendList
+import org.linphone.core.FriendListListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.MainActivity
 import org.linphone.utils.LinphoneUtils
 
 class ContactsManager {
+    companion object {
+        const val TAG = "[Contacts Manager]"
+    }
     val localFriends = arrayListOf<Friend>()
 
     private val listeners = arrayListOf<ContactsListener>()
+
+    private val friendListListener: FriendListListenerStub = object : FriendListListenerStub() {
+        override fun onPresenceReceived(list: FriendList, friends: Array<Friend>) {
+            // Core thread
+            Log.i("$TAG Presence received")
+            for (listener in listeners) {
+                listener.onContactsLoaded()
+            }
+        }
+    }
+
+    private val coreListener: CoreListenerStub = object : CoreListenerStub() {
+        override fun onFriendListCreated(core: Core, friendList: FriendList) {
+            // Core thread
+            friendList.addListener(friendListListener)
+        }
+
+        override fun onFriendListRemoved(core: Core, friendList: FriendList) {
+            // Core thread
+            friendList.removeListener(friendListListener)
+        }
+    }
 
     fun loadContacts(activity: MainActivity) {
         // UI thread
@@ -73,7 +102,7 @@ class ContactsManager {
 
     fun updateLocalContacts() {
         // Core thread
-        Log.i("[Contacts Manager] Updating local contact(s)")
+        Log.i("$TAG Updating local contact(s)")
         localFriends.clear()
 
         for (account in coreContext.core.accountList) {
@@ -84,7 +113,7 @@ class ContactsManager {
             friend.address = address
 
             Log.i(
-                "[Contacts Manager] Local contact created for account [${address.asString()}] and picture [${friend.photo}]"
+                "$TAG Local contact created for account [${address.asString()}] and picture [${friend.photo}]"
             )
             localFriends.add(friend)
         }
@@ -92,11 +121,22 @@ class ContactsManager {
 
     fun onCoreStarted() {
         // Core thread
+        val core = coreContext.core
+        core.addListener(coreListener)
+        for (list in core.friendsLists) {
+            list.addListener(friendListListener)
+        }
+
         updateLocalContacts()
     }
 
     fun onCoreStopped() {
         // Core thread
+        val core = coreContext.core
+        core.removeListener(coreListener)
+        for (list in core.friendsLists) {
+            list.removeListener(friendListListener)
+        }
     }
 }
 

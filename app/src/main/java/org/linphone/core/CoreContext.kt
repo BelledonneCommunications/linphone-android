@@ -32,11 +32,12 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.contacts.ContactsManager
 import org.linphone.core.tools.Log
 import org.linphone.ui.voip.VoipActivity
+import org.linphone.utils.LinphoneUtils
 
 class CoreContext(val context: Context) : HandlerThread("Core Thread") {
     lateinit var core: Core
 
-    lateinit var emojiCompat: EmojiCompat
+    val emojiCompat: EmojiCompat
 
     val contactsManager = ContactsManager()
 
@@ -96,6 +97,7 @@ class CoreContext(val context: Context) : HandlerThread("Core Thread") {
         )
 
         computeUserAgent()
+
         core.start()
 
         contactsManager.onCoreStarted()
@@ -213,9 +215,8 @@ class CoreContext(val context: Context) : HandlerThread("Core Thread") {
     }
 
     private fun computeUserAgent() {
-        // TODO FIXME
-        val deviceName: String = "Linphone6"
-        val appName: String = "Linphone Android"
+        val deviceName = LinphoneUtils.getDeviceName(context)
+        val appName = context.getString(org.linphone.R.string.app_name)
         val androidVersion = BuildConfig.VERSION_NAME
         val userAgent = "$appName/$androidVersion ($deviceName) LinphoneSDK"
         val sdkVersion = context.getString(org.linphone.core.R.string.linphone_sdk_version)

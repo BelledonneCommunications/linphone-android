@@ -71,11 +71,6 @@
                     android:adjustViewBounds="true"
                     contactAvatar="@{viewModel.callLogModel.avatarModel}"
                     app:avatarViewBorderWidth="0dp"
-                    app:avatarViewIndicatorBorderColor="@color/white"
-                    app:avatarViewIndicatorBorderSizeCriteria="8"
-                    app:avatarViewIndicatorEnabled="true"
-                    app:avatarViewIndicatorPosition="bottomRight"
-                    app:avatarViewIndicatorSizeCriteria="7"
                     app:avatarViewInitialsBackgroundColor="@color/blue_outgoing_message"
                     app:avatarViewInitialsTextColor="@color/gray_9"
                     app:avatarViewInitialsTextSize="21sp"
@@ -85,6 +80,18 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/presence_badge"
+                    android:layout_width="@dimen/avatar_presence_badge_big_size"
+                    android:layout_height="@dimen/avatar_presence_badge_big_size"
+                    android:layout_marginEnd="@dimen/avatar_presence_badge_big_end_margin"
+                    android:background="@drawable/led_background"
+                    android:padding="@dimen/avatar_presence_badge_big_padding"
+                    app:presenceIcon="@{viewModel.callLogModel.avatarModel.presenceStatus}"
+                    android:visibility="@{viewModel.callLogModel.avatarModel.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintEnd_toEndOf="@id/avatar"
+                    app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/default_text_style"
@@ -118,7 +125,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@{viewModel.callLogModel.avatarModel.presenceStatus == ConsolidatedPresence.Online ? `En ligne` : `Absent`, default=`En ligne`}"
-                    android:textColor="@{viewModel.callLogModel.avatarModel.presenceStatus == ConsolidatedPresence.Online ? @color/green_online : @color/green_online, default=@color/green_online}"
+                    android:textColor="@{viewModel.callLogModel.avatarModel.presenceStatus == ConsolidatedPresence.Online ? @color/green_online : @color/orange_away, default=@color/green_online}"
                     android:textSize="14sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

@@ -81,6 +81,10 @@ class AccountModel(private val account: Account) {
         }
     }
 
+    fun openMenu() {
+        // UI thread
+    }
+
     fun refreshRegister() {
         // UI thread
         coreContext.postOnCoreThread { core ->

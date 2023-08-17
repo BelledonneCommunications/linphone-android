@@ -26,9 +26,14 @@ import androidx.lifecycle.MutableLiveData
 import org.linphone.core.ConsolidatedPresence
 import org.linphone.core.Friend
 import org.linphone.core.FriendListenerStub
+import org.linphone.core.tools.Log
 import org.linphone.utils.LinphoneUtils
 
 class ContactAvatarModel(val friend: Friend) {
+    companion object {
+        const val TAG = "[Contact Avatar Model]"
+    }
+
     val id = friend.refKey
 
     val avatar = MutableLiveData<Uri>()
@@ -47,19 +52,21 @@ class ContactAvatarModel(val friend: Friend) {
 
     private val friendListener = object : FriendListenerStub() {
         override fun onPresenceReceived(fr: Friend) {
+            Log.d(
+                "$TAG Presence received for friend [${fr.name}]: [${friend.consolidatedPresence}]"
+            )
             presenceStatus.postValue(fr.consolidatedPresence)
         }
     }
 
     init {
         // Core thread
-        name.postValue(friend.name)
-        presenceStatus.postValue(friend.consolidatedPresence)
-        avatar.postValue(getAvatarUri())
-
         friend.addListener(friendListener)
 
-        presenceStatus.postValue(ConsolidatedPresence.Offline)
+        name.postValue(friend.name)
+        presenceStatus.postValue(friend.consolidatedPresence)
+        Log.d("$TAG Friend [${friend.name}] presence status is [${friend.consolidatedPresence}]")
+        avatar.postValue(getAvatarUri())
     }
 
     fun destroy() {

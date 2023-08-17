@@ -6,6 +6,7 @@
     <data>
         <import type="android.view.View" />
         <import type="android.graphics.Typeface" />
+        <import type="org.linphone.core.ConsolidatedPresence" />
         <variable
             name="model"
             type="org.linphone.ui.main.contacts.model.ContactAvatarModel" />
@@ -47,21 +48,28 @@
             android:layout_marginBottom="5dp"
             android:adjustViewBounds="true"
             contactAvatar="@{model}"
+            app:avatarViewInitials="SB"
             app:avatarViewPlaceholder="@drawable/contact_avatar"
             app:avatarViewInitialsBackgroundColor="@color/blue_outgoing_message"
             app:avatarViewInitialsTextColor="@color/gray_9"
             app:avatarViewInitialsTextSize="16sp"
             app:avatarViewInitialsTextStyle="bold"
             app:avatarViewShape="circle"
-            app:avatarViewBorderWidth="0dp"
-            app:avatarViewIndicatorEnabled="true"
-            app:avatarViewIndicatorBorderColor="@color/white"
-            app:avatarViewIndicatorSizeCriteria="7"
-            app:avatarViewIndicatorBorderSizeCriteria="8"
-            app:avatarViewIndicatorPosition="bottomRight"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/header"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/presence_badge"
+            android:layout_width="@dimen/avatar_presence_badge_size"
+            android:layout_height="@dimen/avatar_presence_badge_size"
+            android:layout_marginEnd="@dimen/avatar_presence_badge_end_margin"
+            android:background="@drawable/led_background"
+            android:padding="@dimen/avatar_presence_badge_padding"
+            app:presenceIcon="@{model.presenceStatus}"
+            android:visibility="@{model.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE}"
+            app:layout_constraintEnd_toEndOf="@id/avatar"
+            app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"

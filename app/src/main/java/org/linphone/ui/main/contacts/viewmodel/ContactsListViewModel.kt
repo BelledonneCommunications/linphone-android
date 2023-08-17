@@ -32,6 +32,10 @@ import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 
 class ContactsListViewModel : ViewModel() {
+    companion object {
+        const val TAG = "[Contacts List ViewModel]"
+    }
+
     val contactsList = MutableLiveData<ArrayList<ContactAvatarModel>>()
 
     val favourites = MutableLiveData<ArrayList<ContactAvatarModel>>()
@@ -48,7 +52,7 @@ class ContactsListViewModel : ViewModel() {
     private val magicSearchListener = object : MagicSearchListenerStub() {
         override fun onSearchResultsReceived(magicSearch: MagicSearch) {
             // Core thread
-            Log.i("[Contacts] Magic search contacts available")
+            Log.i("$TAG Magic search contacts available")
             processMagicSearchResults(magicSearch.lastSearch)
         }
     }
@@ -56,6 +60,7 @@ class ContactsListViewModel : ViewModel() {
     private val contactsListener = object : ContactsListener {
         override fun onContactsLoaded() {
             // Core thread
+            Log.i("$TAG Contacts have been (re)loaded, updating list")
             applyFilter(
                 currentFilter,
                 "",
@@ -92,7 +97,7 @@ class ContactsListViewModel : ViewModel() {
 
     fun processMagicSearchResults(results: Array<SearchResult>) {
         // Core thread
-        Log.i("[Contacts List] Processing ${results.size} results")
+        Log.i("$TAG Processing ${results.size} results")
         contactsList.value.orEmpty().forEach(ContactAvatarModel::destroy)
 
         val list = arrayListOf<ContactAvatarModel>()
@@ -107,7 +112,7 @@ class ContactsListViewModel : ViewModel() {
                 currentLetter = friend.name?.get(0).toString()
                 ContactAvatarModel(friend)
             } else {
-                Log.w("[Contacts] SearchResult [$result] has no Friend!")
+                Log.w("$TAG SearchResult [$result] has no Friend!")
                 val fakeFriend =
                     createFriendFromSearchResult(result)
                 currentLetter = fakeFriend.name?.get(0).toString()
@@ -129,7 +134,7 @@ class ContactsListViewModel : ViewModel() {
         favourites.postValue(favouritesList)
         contactsList.postValue(list)
 
-        Log.i("[Contacts] Processed ${results.size} results")
+        Log.i("$TAG Processed ${results.size} results")
     }
 
     fun applyFilter(filter: String) {
@@ -163,7 +168,7 @@ class ContactsListViewModel : ViewModel() {
         previousFilter = filter
 
         Log.i(
-            "[Contacts] Asking Magic search for contacts matching filter [$filter], domain [$domain] and in sources [$sources]"
+            "$TAG Asking Magic search for contacts matching filter [$filter], domain [$domain] and in sources [$sources]"
         )
         magicSearch.getContactsListAsync(
             filter,

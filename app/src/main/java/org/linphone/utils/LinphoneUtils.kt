@@ -19,6 +19,10 @@
  */
 package org.linphone.utils
 
+import android.bluetooth.BluetoothAdapter
+import android.content.Context
+import android.os.Build
+import android.provider.Settings
 import androidx.annotation.IntegerRes
 import androidx.emoji2.text.EmojiCompat
 import java.util.Locale
@@ -136,6 +140,27 @@ class LinphoneUtils {
 
         fun getChatRoomId(chatRoom: ChatRoom): String {
             return getChatRoomId(chatRoom.localAddress, chatRoom.peerAddress)
+        }
+
+        fun getDeviceName(context: Context): String {
+            var name = Settings.Global.getString(
+                context.contentResolver,
+                Settings.Global.DEVICE_NAME
+            )
+            if (name == null) {
+                val adapter = BluetoothAdapter.getDefaultAdapter()
+                name = adapter?.name
+            }
+            if (name == null) {
+                name = Settings.Secure.getString(
+                    context.contentResolver,
+                    "bluetooth_name"
+                )
+            }
+            if (name == null) {
+                name = Build.MANUFACTURER + " " + Build.MODEL
+            }
+            return name
         }
     }
 }

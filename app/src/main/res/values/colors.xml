@@ -12,6 +12,8 @@
     <color name="blue_outgoing_message">#DFECF2</color>
     <color name="gray_incoming_message">#F4F4F7</color>
     <color name="trusted_blue">#4AA8FF</color>
+    <color name="orange_away">#FFA645</color>
+    <color name="gray_offline">#E1E1E1</color>
     <color name="warning_orange_background">#FFEACB</color>
     <color name="warning_orange_pressed_background">#FFB266</color>
     <color name="dialog_background">#22334D</color>
