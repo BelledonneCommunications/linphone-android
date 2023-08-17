@@ -24,6 +24,10 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.widget.PopupWindow
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
@@ -31,6 +35,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.core.Account
+import org.linphone.databinding.AccountPopupMenuBinding
 import org.linphone.databinding.MainActivityBinding
 import org.linphone.ui.assistant.AssistantActivity
 import org.linphone.ui.main.viewmodel.DrawerMenuViewModel
@@ -82,6 +88,12 @@ class MainActivity : AppCompatActivity() {
         drawerMenuViewModel.closeDrawerEvent.observe(this) {
             it.consume {
                 binding.drawerMenu.close()
+            }
+        }
+
+        drawerMenuViewModel.showAccountPopupMenuEvent.observe(this) {
+            it.consume { pair ->
+                showAccountPopupMenu(pair.first, pair.second)
             }
         }
     }
@@ -151,5 +163,26 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }*/
+    }
+
+    private fun showAccountPopupMenu(view: View, account: Account) {
+        val popupView: AccountPopupMenuBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(baseContext),
+            R.layout.account_popup_menu,
+            null,
+            false
+        )
+        popupView.setManageProfileClickListener {
+            // TODO: navigate to profile
+        }
+        val popupWindow = PopupWindow(
+            popupView.root,
+            WRAP_CONTENT,
+            WRAP_CONTENT,
+            true
+        )
+        // Elevation is for showing a shadow around the popup
+        popupWindow.elevation = 20f
+        popupWindow.showAsDropDown(view, 0, 0, Gravity.BOTTOM)
     }
 }

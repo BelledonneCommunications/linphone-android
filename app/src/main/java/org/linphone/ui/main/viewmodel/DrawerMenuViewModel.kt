@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.main.viewmodel
 
+import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -38,6 +39,10 @@ class DrawerMenuViewModel : ViewModel() {
 
     val closeDrawerEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
+    }
+
+    val showAccountPopupMenuEvent: MutableLiveData<Event<Pair<View, Account>>> by lazy {
+        MutableLiveData<Event<Pair<View, Account>>>()
     }
 
     private val coreListener = object : CoreListenerStub() {
@@ -83,7 +88,9 @@ class DrawerMenuViewModel : ViewModel() {
 
         val list = arrayListOf<AccountModel>()
         for (account in coreContext.core.accountList) {
-            val model = AccountModel(account)
+            val model = AccountModel(account) { view, account ->
+                showAccountPopupMenuEvent.postValue(Event(Pair(view, account)))
+            }
             list.add(model)
         }
         accounts.postValue(list)

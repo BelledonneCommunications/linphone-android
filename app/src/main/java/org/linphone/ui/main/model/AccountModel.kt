@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.main.model
 
+import android.view.View
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Account
@@ -27,7 +28,10 @@ import org.linphone.core.Friend
 import org.linphone.core.RegistrationState
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 
-class AccountModel(private val account: Account) {
+class AccountModel(
+    private val account: Account,
+    private val onMenuClicked: ((view: View, account: Account) -> Unit)? = null
+) {
     val friend: Friend?
 
     val contact = MutableLiveData<ContactAvatarModel>()
@@ -81,8 +85,9 @@ class AccountModel(private val account: Account) {
         }
     }
 
-    fun openMenu() {
+    fun openMenu(view: View) {
         // UI thread
+        onMenuClicked?.invoke(view, account)
     }
 
     fun refreshRegister() {
