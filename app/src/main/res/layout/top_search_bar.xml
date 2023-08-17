@@ -40,6 +40,7 @@
             android:layout_width="@dimen/avatar_list_cell_size"
             android:layout_height="@dimen/avatar_list_cell_size"
             android:layout_marginStart="15dp"
+            contactAvatar="@{viewModel.account.contact}"
             app:avatarViewBorderColor="@color/trusted_blue"
             app:avatarViewBorderWidth="2dp"
             app:avatarViewIndicatorSizeCriteria="3"
@@ -52,7 +53,6 @@
             app:avatarViewInitialsTextStyle="bold"
             app:avatarViewPlaceholder="@drawable/contact_avatar"
             app:avatarViewShape="circle"
-            app:avatarViewInitials="SB"
             app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/title" />

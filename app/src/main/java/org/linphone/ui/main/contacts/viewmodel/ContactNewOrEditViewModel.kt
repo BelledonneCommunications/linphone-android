@@ -77,6 +77,7 @@ class ContactNewOrEditViewModel() : ViewModel() {
                 friendFoundEvent.postValue(Event(true))
             } else {
                 Log.e("$TAG No friend found using ref key [$refKey]")
+                // TODO : generate unique ref key
             }
         }
     }

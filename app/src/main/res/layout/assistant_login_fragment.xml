@@ -8,6 +8,9 @@
         <variable
             name="registerClickListener"
             type="View.OnClickListener" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.assistant.viewmodel.AssistantViewModel" />
     </data>
 
     <ScrollView
@@ -55,7 +58,7 @@
                 android:layout_marginEnd="16dp"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
-                android:text="John Doe"
+                android:text="@={viewModel.username, default=`johndoe`}"
                 android:textSize="14sp"
                 android:textColor="@color/gray_9"
                 android:background="@drawable/shape_edit_text_background"
@@ -86,7 +89,7 @@
                 android:layout_marginEnd="16dp"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
-                android:text="John Doe"
+                android:text="@={viewModel.password, default=`johndoe`}"
                 android:textSize="14sp"
                 android:textColor="@color/gray_9"
                 android:background="@drawable/shape_edit_text_background"
@@ -98,6 +101,8 @@
                 app:layout_constraintEnd_toEndOf="parent"/>
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:onClick="@{() -> viewModel.login()}"
+                android:enabled="@{viewModel.loginEnabled &amp;&amp; !viewModel.registrationInProgress, default=false}"
                 style="@style/default_text_style_600"
                 android:id="@+id/login"
                 android:layout_width="0dp"

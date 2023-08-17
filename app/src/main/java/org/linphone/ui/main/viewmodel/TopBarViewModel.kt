@@ -21,10 +21,14 @@ package org.linphone.ui.main.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.ui.main.model.AccountModel
 import org.linphone.utils.Event
 
 class TopBarViewModel : ViewModel() {
     val title = MutableLiveData<String>()
+
+    val account = MutableLiveData<AccountModel>()
 
     val searchBarVisible = MutableLiveData<Boolean>()
 
@@ -40,10 +44,21 @@ class TopBarViewModel : ViewModel() {
 
     init {
         searchBarVisible.value = false
+
+        coreContext.postOnCoreThread { core ->
+            if (core.accountList.isNotEmpty()) {
+                val defaultAccount = core.defaultAccount ?: core.accountList.first()
+                account.postValue(AccountModel(defaultAccount))
+            }
+        }
     }
 
     override fun onCleared() {
         super.onCleared()
+
+        coreContext.postOnCoreThread {
+            account.value?.destroy()
+        }
     }
 
     fun openDrawerMenu() {

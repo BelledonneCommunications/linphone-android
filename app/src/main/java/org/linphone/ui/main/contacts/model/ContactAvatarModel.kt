@@ -31,6 +31,8 @@ import org.linphone.utils.LinphoneUtils
 class ContactAvatarModel(val friend: Friend) {
     val id = friend.refKey
 
+    val avatar = MutableLiveData<Uri>()
+
     val initials = LinphoneUtils.getInitials(friend.name.orEmpty())
 
     val presenceStatus = MutableLiveData<ConsolidatedPresence>()
@@ -53,6 +55,7 @@ class ContactAvatarModel(val friend: Friend) {
         // Core thread
         name.postValue(friend.name)
         presenceStatus.postValue(friend.consolidatedPresence)
+        avatar.postValue(getAvatarUri())
 
         friend.addListener(friendListener)
 
@@ -64,8 +67,13 @@ class ContactAvatarModel(val friend: Friend) {
         friend.removeListener(friendListener)
     }
 
-    fun getAvatarUri(): Uri? {
+    private fun getAvatarUri(): Uri? {
         // Core thread
+        val picturePath = friend.photo
+        if (!picturePath.isNullOrEmpty()) {
+            return Uri.parse(picturePath)
+        }
+
         val refKey = friend.refKey
         if (refKey != null) {
             val lookupUri = ContentUris.withAppendedId(

@@ -131,6 +131,7 @@ fun AppCompatTextView.setDrawableTint(color: Int) {
 
 @BindingAdapter("coilContact")
 fun loadContactPictureWithCoil2(imageView: ImageView, contact: ContactData?) {
+    // UI thread !
     if (contact == null) {
         imageView.load(R.drawable.contact_avatar)
     } else {
@@ -143,6 +144,7 @@ fun loadContactPictureWithCoil2(imageView: ImageView, contact: ContactData?) {
 
 @BindingAdapter("contactAvatar")
 fun AvatarView.loadContactPicture(contact: ContactAvatarModel?) {
+    // UI thread !
     if (contact == null) {
         loadImage(R.drawable.contact_avatar)
     } else {
@@ -152,7 +154,7 @@ fun AvatarView.loadContactPicture(contact: ContactAvatarModel?) {
         }
         indicatorEnabled = contact.presenceStatus.value != ConsolidatedPresence.Offline
 
-        val uri = contact.getAvatarUri()
+        val uri = contact.avatar.value
         loadImage(
             data = uri,
             onStart = {

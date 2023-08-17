@@ -24,11 +24,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
+import org.linphone.R
 import org.linphone.databinding.AssistantLoginFragmentBinding
+import org.linphone.ui.assistant.viewmodel.AssistantViewModel
 import org.linphone.ui.main.fragment.GenericFragment
 
 class LoginFragment : GenericFragment() {
     private lateinit var binding: AssistantLoginFragmentBinding
+
+    private val viewModel: AssistantViewModel by navGraphViewModels(
+        R.id.loginFragment
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,10 +54,17 @@ class LoginFragment : GenericFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = viewModel
 
         binding.setRegisterClickListener {
             val action = LoginFragmentDirections.actionLoginFragmentToRegisterFragment()
             findNavController().navigate(action)
+        }
+
+        viewModel.accountLoggedInEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                goBack()
+            }
         }
     }
 }

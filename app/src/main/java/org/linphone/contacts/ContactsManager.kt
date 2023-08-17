@@ -22,9 +22,13 @@ package org.linphone.contacts
 import androidx.loader.app.LoaderManager
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Friend
+import org.linphone.core.tools.Log
 import org.linphone.ui.main.MainActivity
+import org.linphone.utils.LinphoneUtils
 
 class ContactsManager {
+    val localFriends = arrayListOf<Friend>()
+
     private val listeners = arrayListOf<ContactsListener>()
 
     fun loadContacts(activity: MainActivity) {
@@ -54,6 +58,8 @@ class ContactsManager {
     fun onContactsLoaded() {
         // UI thread
         coreContext.postOnCoreThread {
+            updateLocalContacts()
+
             for (listener in listeners) {
                 listener.onContactsLoaded()
             }
@@ -65,8 +71,28 @@ class ContactsManager {
         return coreContext.core.defaultFriendList?.findFriendByRefKey(id)
     }
 
+    fun updateLocalContacts() {
+        // Core thread
+        Log.i("[Contacts Manager] Updating local contact(s)")
+        localFriends.clear()
+
+        for (account in coreContext.core.accountList) {
+            val friend = coreContext.core.createFriend()
+            friend.name = LinphoneUtils.getDisplayName(account.params.identityAddress)
+
+            val address = account.params.identityAddress ?: continue
+            friend.address = address
+
+            Log.i(
+                "[Contacts Manager] Local contact created for account [${address.asString()}] and picture [${friend.photo}]"
+            )
+            localFriends.add(friend)
+        }
+    }
+
     fun onCoreStarted() {
         // Core thread
+        updateLocalContacts()
     }
 
     fun onCoreStopped() {

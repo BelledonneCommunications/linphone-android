@@ -61,8 +61,12 @@ class NewContactFragment : GenericFragment() {
         }
 
         viewModel.saveChangesEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                goBack() // TODO FIXME : go to contact detail view
+            it.consume { ok ->
+                if (ok) {
+                    goBack() // TODO FIXME : go to contact detail view
+                } else {
+                    // TODO : show error
+                }
             }
         }
     }

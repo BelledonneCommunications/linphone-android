@@ -21,9 +21,16 @@ package org.linphone.ui.main.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.core.Account
+import org.linphone.core.Core
+import org.linphone.core.CoreListenerStub
+import org.linphone.core.RegistrationState
+import org.linphone.ui.main.model.AccountModel
 import org.linphone.utils.Event
 
 class DrawerMenuViewModel : ViewModel() {
+    val accounts = MutableLiveData<ArrayList<AccountModel>>()
 
     val startAssistantEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
@@ -31,6 +38,33 @@ class DrawerMenuViewModel : ViewModel() {
 
     val closeDrawerEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
+    }
+
+    private val coreListener = object : CoreListenerStub() {
+        override fun onAccountRegistrationStateChanged(
+            core: Core,
+            account: Account,
+            state: RegistrationState?,
+            message: String
+        ) {
+            // Core thread
+            computeAccountsList()
+        }
+    }
+
+    init {
+        coreContext.postOnCoreThread { core ->
+            core.addListener(coreListener)
+            computeAccountsList()
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+
+        coreContext.postOnCoreThread { core ->
+            core.removeListener(coreListener)
+        }
     }
 
     fun closeDrawerMenu() {
@@ -41,5 +75,17 @@ class DrawerMenuViewModel : ViewModel() {
     fun addAccount() {
         // UI thread
         startAssistantEvent.value = Event(true)
+    }
+
+    private fun computeAccountsList() {
+        // Core thread
+        accounts.value.orEmpty().forEach(AccountModel::destroy)
+
+        val list = arrayListOf<AccountModel>()
+        for (account in coreContext.core.accountList) {
+            val model = AccountModel(account)
+            list.add(model)
+        }
+        accounts.postValue(list)
     }
 }

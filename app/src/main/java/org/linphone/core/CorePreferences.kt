@@ -51,15 +51,22 @@ class CorePreferences constructor(private val context: Context) {
         editor.apply()
     }
 
+    val defaultDomain: String
+        get() = config.getString("app", "default_domain", "sip.linphone.org")!!
+
     val configPath: String
         get() = context.filesDir.absolutePath + "/.linphonerc"
 
     val factoryConfigPath: String
         get() = context.filesDir.absolutePath + "/linphonerc"
 
+    val linphoneDefaultValuesPath: String
+        get() = context.filesDir.absolutePath + "/assistant_linphone_default_values"
+
     fun copyAssetsFromPackage() {
         copy("linphonerc_default", configPath)
         copy("linphonerc_factory", factoryConfigPath, true)
+        copy("assistant_linphone_default_values", linphoneDefaultValuesPath, true)
     }
 
     private fun copy(from: String, to: String, overrideIfExists: Boolean = false) {

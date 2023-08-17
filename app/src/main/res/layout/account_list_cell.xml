@@ -8,17 +8,21 @@
         <import type="android.graphics.Typeface" />
         <variable
             name="model"
-            type="org.linphone.ui.main.contacts.model.ContactAvatarModel" />
-        <variable
-            name="onClickListener"
-            type="View.OnClickListener" />
+            type="org.linphone.ui.main.model.AccountModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:onClick="@{onClickListener}"
+        android:onClick="@{() -> model.setAsDefault()}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/shape_conversation_cell_background">
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/left_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="right"
+            app:constraint_referenced_ids="name, register_status" />
 
         <io.getstream.avatarview.AvatarView
             android:id="@+id/avatar"
@@ -28,8 +32,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:adjustViewBounds="true"
-            contactAvatar="@{model}"
-            app:avatarViewInitials="JD"
+            contactAvatar="@{model.contact}"
             app:avatarViewPlaceholder="@drawable/contact_avatar"
             app:avatarViewInitialsBackgroundColor="@color/blue_outgoing_message"
             app:avatarViewInitialsTextColor="@color/gray_9"
@@ -53,7 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
-            android:text="John Doe"
+            android:text="@{model.contact.name, default=`John Doe`}"
             android:textSize="14sp"
             android:textColor="@color/gray_8"
             android:layout_marginStart="10dp"
@@ -62,6 +65,7 @@
             app:layout_constraintBottom_toTopOf="@id/register_status"/>
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:onClick="@{() -> model.refreshRegister()}"
             style="@style/default_text_style_300"
             android:id="@+id/register_status"
             android:layout_width="wrap_content"
@@ -73,12 +77,28 @@
             android:paddingBottom="4dp"
             android:background="@drawable/shape_chip_gray_background"
             android:gravity="center"
-            android:text="Connected"
-            android:textColor="@color/green_online"
+            android:text="@{model.registrationState, default=`Connected`}"
+            android:textColor="@{model.isConnected ? @color/green_online : model.inError ? @color/red_danger : @color/gray_1, default=@color/green_online}"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="@id/name"
             app:layout_constraintTop_toBottomOf="@id/name"
             app:layout_constraintBottom_toTopOf="@id/separator"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_300"
+            android:visibility="@{model.isDefault ? View.VISIBLE : View.GONE}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Default"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:drawableStart="@drawable/check"
+            android:drawablePadding="3dp"
+            app:drawableTint="@color/primary_color"
+            app:layout_constraintStart_toEndOf="@id/left_barrier"
+            app:layout_constraintEnd_toStartOf="@id/menu"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <ImageView
             android:id="@+id/menu"
