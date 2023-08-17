@@ -10,6 +10,9 @@
             name="backClickListener"
             type="View.OnClickListener" />
         <variable
+            name="menuClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.main.calls.viewmodel.CallLogViewModel" />
     </data>
@@ -35,6 +38,7 @@
             app:layout_constraintBottom_toBottomOf="@id/menu"/>
 
         <ImageView
+            android:onClick="@{menuClickListener}"
             android:id="@+id/menu"
             android:layout_width="24dp"
             android:layout_height="24dp"

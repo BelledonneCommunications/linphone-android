@@ -19,18 +19,28 @@
  */
 package org.linphone.ui.main.calls.fragment
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupWindow
 import androidx.core.view.doOnPreDraw
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
+import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.CallFragmentBinding
+import org.linphone.databinding.CallPopupMenuBinding
 import org.linphone.ui.main.calls.viewmodel.CallLogViewModel
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.Event
+import org.linphone.utils.slideInToastFromTopForDuration
 
 class CallFragment : GenericFragment() {
     private lateinit var binding: CallFragmentBinding
@@ -70,6 +80,10 @@ class CallFragment : GenericFragment() {
             goBack()
         }
 
+        binding.setMenuClickListener {
+            showPopupMenu()
+        }
+
         sharedViewModel.isSlidingPaneSlideable.observe(viewLifecycleOwner) { slideable ->
             viewModel.showBackButton.value = slideable
         }
@@ -80,5 +94,45 @@ class CallFragment : GenericFragment() {
             }
             sharedViewModel.openSlidingPaneEvent.value = Event(true)
         }
+    }
+
+    private fun copyNumberOrAddressToClipboard(value: String) {
+        val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val label = "SIP address"
+        clipboard.setPrimaryClip(ClipData.newPlainText(label, value))
+
+        binding.greenToast.message = "Numéro copié dans le presse-papier"
+        binding.greenToast.icon = R.drawable.check
+
+        val target = binding.greenToast.root
+        target.slideInToastFromTopForDuration(binding.root as ViewGroup, lifecycleScope)
+    }
+
+    private fun showPopupMenu() {
+        val popupView: CallPopupMenuBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(requireContext()),
+            R.layout.call_popup_menu,
+            null,
+            false
+        )
+
+        popupView.setDeleteAllHistoryClickListener {
+            viewModel.deleteHistory()
+        }
+
+        popupView.setCopyNumberClickListener {
+            copyNumberOrAddressToClipboard(viewModel.callLogModel.value?.displayedAddress.orEmpty())
+        }
+
+        val popupWindow = PopupWindow(
+            popupView.root,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            true
+        )
+
+        // Elevation is for showing a shadow around the popup
+        popupWindow.elevation = 20f
+        popupWindow.showAsDropDown(binding.menu, 0, 0, Gravity.BOTTOM)
     }
 }

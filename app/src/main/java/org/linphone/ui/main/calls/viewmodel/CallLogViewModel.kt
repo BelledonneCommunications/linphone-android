@@ -43,7 +43,13 @@ class CallLogViewModel : ViewModel() {
         }
     }
 
+    fun deleteHistory() {
+        // UI thread
+        // TODO
+    }
+
     fun startAudioCall() {
+        // UI thread
         coreContext.postOnCoreThread { core ->
             val params = core.createCallParams(null)
             params?.isVideoEnabled = false
@@ -52,6 +58,7 @@ class CallLogViewModel : ViewModel() {
     }
 
     fun startVideoCall() {
+        // UI thread
         coreContext.postOnCoreThread { core ->
             val params = core.createCallParams(null)
             params?.isVideoEnabled = true
@@ -60,6 +67,7 @@ class CallLogViewModel : ViewModel() {
     }
 
     fun sendMessage() {
+        // UI thread
         // TODO
     }
 }

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <import type="android.graphics.Typeface" />
+        <variable
+            name="copyNumberClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="deleteAllHistoryClickListener"
+            type="View.OnClickListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_round_popup_menu_background">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/add_to_contact"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:gravity="left|center_vertical"
+            android:text="Ajouter aux contats"
+            android:textSize="14sp"
+            android:textColor="@color/gray_1"
+            android:drawableStart="@drawable/add"
+            android:drawablePadding="5dp"
+            app:drawableTint="@color/gray_8"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/go_to_contact"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/go_to_contact"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:gravity="left|center_vertical"
+            android:text="Voir le contact"
+            android:textSize="14sp"
+            android:textColor="@color/gray_1"
+            android:drawableStart="@drawable/contact"
+            android:drawablePadding="5dp"
+            app:drawableTint="@color/gray_8"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/add_to_contact"
+            app:layout_constraintBottom_toTopOf="@id/copy_number"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:onClick="@{copyNumberClickListener}"
+            style="@style/default_text_style"
+            android:id="@+id/copy_number"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:gravity="left|center_vertical"
+            android:text="Copier le numéro"
+            android:textSize="14sp"
+            android:textColor="@color/gray_1"
+            android:drawableStart="@drawable/copy"
+            android:drawablePadding="5dp"
+            app:drawableTint="@color/gray_8"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/go_to_contact"
+            app:layout_constraintBottom_toTopOf="@id/delete_history"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:onClick="@{deleteAllHistoryClickListener}"
+            style="@style/default_text_style"
+            android:id="@+id/delete_history"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:gravity="left|center_vertical"
+            android:text="Delete all history"
+            android:textSize="14sp"
+            android:textColor="@color/red_danger"
+            android:drawableStart="@drawable/delete"
+            android:drawablePadding="5dp"
+            app:drawableTint="@color/red_danger"
+            app:layout_constraintWidth_min="170dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/copy_number"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
