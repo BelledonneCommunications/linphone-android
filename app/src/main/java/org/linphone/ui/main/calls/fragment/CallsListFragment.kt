@@ -58,7 +58,7 @@ class CallsListFragment : GenericFragment() {
     private lateinit var adapter: CallsListAdapter
 
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
-        if (findNavController().currentDestination?.id == R.id.newContactFragment) {
+        if (findNavController().currentDestination?.id == R.id.startCallFragment) {
             // Holds fragment in place while new contact fragment slides over it
             return AnimationUtils.loadAnimation(activity, R.anim.hold)
         }
@@ -132,6 +132,10 @@ class CallsListFragment : GenericFragment() {
 
         binding.setMenuClickListener {
             showPopupMenu()
+        }
+
+        binding.setStartCallClickListener {
+            findNavController().navigate(R.id.action_global_startCallFragment)
         }
     }
 

@@ -15,6 +15,9 @@
             name="menuClickListener"
             type="View.OnClickListener" />
         <variable
+            name="startCallClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.main.calls.viewmodel.CallsListViewModel" />
     </data>
@@ -96,6 +99,7 @@
             app:layout_constraintBottom_toBottomOf="parent" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:onClick="@{startCallClickListener}"
             android:id="@+id/new_call"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
