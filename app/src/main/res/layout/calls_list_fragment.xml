@@ -27,6 +27,12 @@
         android:layout_height="match_parent"
         android:background="@color/primary_color">
 
+        <androidx.constraintlayout.widget.Group
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="no_calls_image, no_calls_label"
+            android:visibility="@{viewModel.callLogs.empty ? View.VISIBLE : View.GONE}" />
+
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/top_bar"
             android:name="org.linphone.ui.main.fragment.TopBarFragment"
@@ -63,6 +69,31 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/top_bar" />
+
+        <ImageView
+            android:id="@+id/no_calls_image"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/illu"
+            android:layout_margin="10dp"
+            app:layout_constraintHeight_max="200dp"
+            app:layout_constraintBottom_toTopOf="@id/no_calls_label"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/background" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_800"
+            android:id="@+id/no_calls_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No calls for the moment..."
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@id/background"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/no_calls_image" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/calls_list"
