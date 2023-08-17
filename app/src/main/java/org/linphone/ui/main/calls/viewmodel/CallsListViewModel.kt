@@ -34,7 +34,7 @@ class CallsListViewModel : ViewModel() {
 
     private val coreListener = object : CoreListenerStub() {
         override fun onCallLogUpdated(core: Core, callLog: CallLog) {
-            computeCallLogsList()
+            computeCallLogsList(currentFilter)
         }
     }
 
@@ -42,7 +42,7 @@ class CallsListViewModel : ViewModel() {
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
 
-            computeCallLogsList()
+            computeCallLogsList(currentFilter)
         }
     }
 
@@ -57,14 +57,18 @@ class CallsListViewModel : ViewModel() {
     fun applyFilter(filter: String) {
         // UI thread
         currentFilter = filter
-        // TODO
+
+        coreContext.postOnCoreThread {
+            computeCallLogsList(currentFilter)
+        }
     }
 
-    private fun computeCallLogsList() {
+    private fun computeCallLogsList(filter: String) {
         // Core thread
         val list = arrayListOf<CallLogModel>()
 
         // TODO : filter depending on currently selected account
+        // TODO : Add support for call logs in magic search
         for (callLog in coreContext.core.callLogs) {
             val model = CallLogModel(callLog)
             list.add(model)

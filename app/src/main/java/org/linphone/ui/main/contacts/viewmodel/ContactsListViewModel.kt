@@ -23,6 +23,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import java.util.ArrayList
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.contacts.ContactsListener
 import org.linphone.core.Friend
 import org.linphone.core.MagicSearch
@@ -46,6 +47,7 @@ class ContactsListViewModel : ViewModel() {
 
     private var currentFilter = ""
     private var previousFilter = "NotSet"
+    private var limitSearchToLinphoneAccounts = true
 
     private lateinit var magicSearch: MagicSearch
 
@@ -63,7 +65,7 @@ class ContactsListViewModel : ViewModel() {
             Log.i("$TAG Contacts have been (re)loaded, updating list")
             applyFilter(
                 currentFilter,
-                "",
+                if (limitSearchToLinphoneAccounts) corePreferences.defaultDomain else "",
                 MagicSearch.Source.Friends.toInt(),
                 MagicSearch.Aggregation.Friend
             )
@@ -143,7 +145,7 @@ class ContactsListViewModel : ViewModel() {
         coreContext.postOnCoreThread {
             applyFilter(
                 filter,
-                "",
+                if (limitSearchToLinphoneAccounts) corePreferences.defaultDomain else "",
                 MagicSearch.Source.Friends.toInt() or MagicSearch.Source.LdapServers.toInt(),
                 MagicSearch.Aggregation.Friend
             )
