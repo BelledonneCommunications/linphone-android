@@ -83,14 +83,18 @@ class ContactAvatarModel(val friend: Friend) {
 
         val refKey = friend.refKey
         if (refKey != null) {
-            val lookupUri = ContentUris.withAppendedId(
-                ContactsContract.Contacts.CONTENT_URI,
-                refKey.toLong()
-            )
-            return Uri.withAppendedPath(
-                lookupUri,
-                ContactsContract.Contacts.Photo.CONTENT_DIRECTORY
-            )
+            try {
+                val lookupUri = ContentUris.withAppendedId(
+                    ContactsContract.Contacts.CONTENT_URI,
+                    refKey.toLong()
+                )
+                return Uri.withAppendedPath(
+                    lookupUri,
+                    ContactsContract.Contacts.Photo.CONTENT_DIRECTORY
+                )
+            } catch (numberFormatException: NumberFormatException) {
+                // Expected for contacts created by Linphone
+            }
         }
 
         return null

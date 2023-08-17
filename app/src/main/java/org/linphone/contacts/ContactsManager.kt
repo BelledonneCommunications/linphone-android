@@ -88,10 +88,14 @@ class ContactsManager {
         // UI thread
         coreContext.postOnCoreThread {
             updateLocalContacts()
+            notifyContactsListChanged()
+        }
+    }
 
-            for (listener in listeners) {
-                listener.onContactsLoaded()
-            }
+    fun notifyContactsListChanged() {
+        // Core thread
+        for (listener in listeners) {
+            listener.onContactsLoaded()
         }
     }
 

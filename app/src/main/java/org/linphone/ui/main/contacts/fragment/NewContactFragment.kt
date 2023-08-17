@@ -29,6 +29,7 @@ import org.linphone.R
 import org.linphone.databinding.ContactNewOrEditFragmentBinding
 import org.linphone.ui.main.contacts.viewmodel.ContactNewOrEditViewModel
 import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.utils.Event
 
 class NewContactFragment : GenericFragment() {
     private lateinit var binding: ContactNewOrEditFragmentBinding
@@ -56,14 +57,17 @@ class NewContactFragment : GenericFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
+        viewModel.findFriendByRefKey("")
+
         binding.setCancelClickListener {
             goBack()
         }
 
         viewModel.saveChangesEvent.observe(viewLifecycleOwner) {
-            it.consume { ok ->
-                if (ok) {
-                    goBack() // TODO FIXME : go to contact detail view
+            it.consume { refKey ->
+                if (refKey.isNotEmpty()) {
+                    goBack()
+                    sharedViewModel.showContactEvent.value = Event(refKey)
                 } else {
                     // TODO : show error
                 }

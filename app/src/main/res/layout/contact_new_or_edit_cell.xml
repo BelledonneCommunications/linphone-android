@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <import type="android.graphics.Typeface" />
+        <variable
+            name="model"
+            type="org.linphone.ui.main.contacts.model.NewOrEditNumberOrAddressModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_700"
+            android:id="@+id/label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="@{model.isSip ? `SIP address` : `Phone number`, default=`SIP address`}"
+            android:textSize="13sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatEditText
+            onValueChanged="@{() -> model.onValueChanged(field.getText().toString())}"
+            style="@style/default_text_style"
+            android:id="@+id/field"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="5dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="@={model.value}"
+            android:textSize="14sp"
+            android:textColor="@color/gray_9"
+            android:background="@drawable/shape_edit_text_background"
+            app:layout_constraintTop_toBottomOf="@id/label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/remove"/>
+
+        <ImageView
+            android:onClick="@{() -> model.remove()}"
+            android:id="@+id/remove"
+            android:visibility="@{model.showRemoveButton ? View.VISIBLE : View.INVISIBLE, default=invisible}"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/close"
+            app:tint="@color/gray_8"
+            app:layout_constraintStart_toEndOf="@id/field"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/field"
+            app:layout_constraintBottom_toBottomOf="@id/field"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

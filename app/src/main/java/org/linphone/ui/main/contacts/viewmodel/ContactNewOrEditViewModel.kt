@@ -25,6 +25,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Friend
 import org.linphone.core.FriendList.Status
 import org.linphone.core.tools.Log
+import org.linphone.ui.main.contacts.model.NewOrEditNumberOrAddressModel
 import org.linphone.utils.Event
 
 class ContactNewOrEditViewModel() : ViewModel() {
@@ -40,12 +41,16 @@ class ContactNewOrEditViewModel() : ViewModel() {
 
     val lastName = MutableLiveData<String>()
 
+    val sipAddresses = MutableLiveData<ArrayList<NewOrEditNumberOrAddressModel>>()
+
+    val phoneNumbers = MutableLiveData<ArrayList<NewOrEditNumberOrAddressModel>>()
+
     val company = MutableLiveData<String>()
 
     val jobTitle = MutableLiveData<String>()
 
-    val saveChangesEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+    val saveChangesEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
     }
 
     val friendFoundEvent = MutableLiveData<Event<Boolean>>()
@@ -61,6 +66,9 @@ class ContactNewOrEditViewModel() : ViewModel() {
             val exists = !friend.refKey.isNullOrEmpty()
             isEdit.postValue(exists)
 
+            val addresses = arrayListOf<NewOrEditNumberOrAddressModel>()
+            val numbers = arrayListOf<NewOrEditNumberOrAddressModel>()
+
             if (exists) {
                 Log.i("$TAG Found friend [$friend] using ref key [$refKey]")
                 val vCard = friend.vcard
@@ -68,17 +76,49 @@ class ContactNewOrEditViewModel() : ViewModel() {
                     firstName.postValue(vCard.givenName)
                     lastName.postValue(vCard.familyName)
                 } else {
-                    // TODO
+                    // TODO ?
+                }
+
+                for (address in friend.addresses) {
+                    addresses.add(
+                        NewOrEditNumberOrAddressModel(address.asStringUriOnly(), true, { }, { model ->
+                            removeModel(model)
+                        })
+                    )
+                }
+                for (number in friend.phoneNumbers) {
+                    numbers.add(
+                        NewOrEditNumberOrAddressModel(number, false, { }, { model ->
+                            removeModel(model)
+                        })
+                    )
                 }
 
                 company.postValue(friend.organization)
                 jobTitle.postValue(friend.jobTitle)
 
                 friendFoundEvent.postValue(Event(true))
-            } else {
+            } else if (refKey.orEmpty().isNotEmpty()) {
                 Log.e("$TAG No friend found using ref key [$refKey]")
-                // TODO : generate unique ref key
             }
+
+            addresses.add(
+                NewOrEditNumberOrAddressModel("", true, {
+                    addNewModel(true)
+                }, { model ->
+                    removeModel(model)
+                })
+            )
+            numbers.add(
+                NewOrEditNumberOrAddressModel("", false, {
+                    addNewModel(false)
+                }, { model ->
+                    removeModel(model)
+                })
+            )
+
+            sipAddresses.postValue(addresses)
+            phoneNumbers.postValue(numbers)
         }
     }
 
@@ -87,26 +127,107 @@ class ContactNewOrEditViewModel() : ViewModel() {
         coreContext.postOnCoreThread { core ->
             var status = Status.OK
 
-            if (::friend.isInitialized) {
-                friend.name = "${firstName.value.orEmpty()} ${lastName.value.orEmpty()}"
-
-                val vCard = friend.vcard
-                if (vCard != null) {
-                    vCard.familyName = lastName.value
-                    vCard.givenName = firstName.value
-                }
-
-                friend.organization = company.value.orEmpty()
-                friend.jobTitle = jobTitle.value.orEmpty()
-
-                if (isEdit.value == false) {
-                    status = core.defaultFriendList?.addFriend(friend) ?: Status.InvalidFriend
-                }
-            } else {
-                status = Status.NonExistentFriend
+            if (!::friend.isInitialized) {
+                friend = core.createFriend()
             }
 
-            saveChangesEvent.postValue(Event(status == Status.OK))
+            if (isEdit.value == true) {
+                friend.edit()
+            }
+
+            friend.name = "${firstName.value.orEmpty()} ${lastName.value.orEmpty()}"
+
+            val vCard = friend.vcard
+            if (vCard != null) {
+                vCard.familyName = lastName.value
+                vCard.givenName = firstName.value
+            }
+
+            friend.organization = company.value.orEmpty()
+            friend.jobTitle = jobTitle.value.orEmpty()
+
+            for (address in friend.addresses) {
+                friend.removeAddress(address)
+            }
+            for (address in sipAddresses.value.orEmpty()) {
+                val data = address.value.value
+                if (!data.isNullOrEmpty()) {
+                    val parsedAddress = core.interpretUrl(data, true)
+                    if (parsedAddress != null) {
+                        friend.addAddress(parsedAddress)
+                    }
+                }
+            }
+
+            for (number in friend.phoneNumbers) {
+                friend.removePhoneNumber(number)
+            }
+            for (number in phoneNumbers.value.orEmpty()) {
+                val data = number.value.value
+                if (!data.isNullOrEmpty()) {
+                    friend.addPhoneNumber(data)
+                }
+            }
+
+            if (isEdit.value == false) {
+                if (friend.vcard?.generateUniqueId() == true) {
+                    friend.refKey = friend.vcard?.uid
+                    Log.i(
+                        "$TAG Newly created friend will have generated ref key [${friend.refKey}]"
+                    )
+                } else {
+                    Log.e("$TAG Failed to generate a ref key using vCard's generateUniqueId()")
+                    // TODO : generate unique ref key
+                }
+                status = core.defaultFriendList?.addFriend(friend) ?: Status.InvalidFriend
+            } else {
+                friend.done()
+            }
+            coreContext.contactsManager.notifyContactsListChanged()
+
+            saveChangesEvent.postValue(
+                Event(if (status == Status.OK) friend.refKey.orEmpty() else "")
+            )
+        }
+    }
+
+    private fun addNewModel(isSip: Boolean) {
+        // UI thread
+        // TODO FIXME: causes focus issues
+        val list = arrayListOf<NewOrEditNumberOrAddressModel>()
+        val source = if (isSip) sipAddresses.value.orEmpty() else phoneNumbers.value.orEmpty()
+
+        list.addAll(source)
+        list.add(
+            NewOrEditNumberOrAddressModel("", isSip, {
+                addNewModel(isSip)
+            }, { model ->
+                removeModel(model)
+            })
+        )
+
+        if (isSip) {
+            sipAddresses.value = list
+        } else {
+            phoneNumbers.value = list
+        }
+    }
+
+    private fun removeModel(model: NewOrEditNumberOrAddressModel) {
+        // UI thread
+        val list = arrayListOf<NewOrEditNumberOrAddressModel>()
+        val source = if (model.isSip) sipAddresses.value.orEmpty() else phoneNumbers.value.orEmpty()
+
+        for (item in source) {
+            if (item != model) {
+                list.add(item)
+            }
+        }
+
+        if (model.isSip) {
+            sipAddresses.value = list
+        } else {
+            phoneNumbers.value = list
         }
     }
 }

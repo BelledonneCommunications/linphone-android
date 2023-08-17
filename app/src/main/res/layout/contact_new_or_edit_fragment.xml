@@ -164,7 +164,29 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
 
-                <!-- TODO SIP address & phone numbers -->
+                <LinearLayout
+                    android:id="@+id/sip_addresses"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp"
+                    android:orientation="vertical"
+                    app:layout_constraintTop_toBottomOf="@id/last_name"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    entries="@{viewModel.sipAddresses}"
+                    layout="@{@layout/contact_new_or_edit_cell}"/>
+
+                <LinearLayout
+                    android:id="@+id/phone_numbers"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp"
+                    android:orientation="vertical"
+                    app:layout_constraintTop_toBottomOf="@id/sip_addresses"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    entries="@{viewModel.phoneNumbers}"
+                    layout="@{@layout/contact_new_or_edit_cell}"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/default_text_style_700"
@@ -178,7 +200,7 @@
                     android:textSize="13sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/last_name"/>
+                    app:layout_constraintTop_toBottomOf="@id/phone_numbers"/>
 
                 <androidx.appcompat.widget.AppCompatEditText
                     style="@style/default_text_style"

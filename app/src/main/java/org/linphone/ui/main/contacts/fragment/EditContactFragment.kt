@@ -75,13 +75,12 @@ class EditContactFragment : GenericFragment() {
         }
 
         viewModel.saveChangesEvent.observe(viewLifecycleOwner) {
-            it.consume { ok ->
-                if (ok) {
+            it.consume { refKey ->
+                if (refKey.isNotEmpty()) {
                     Log.i("$TAG Changes were applied, going back to details page")
                     goBack()
                 } else {
-                    Log.e("$TAG Changes couldn't be applied!")
-                    // TODO FIXME : show error
+                    // TODO : show error
                 }
             }
         }
