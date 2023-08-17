@@ -26,13 +26,15 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.PopupWindow
+import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Account
@@ -40,6 +42,7 @@ import org.linphone.databinding.AccountPopupMenuBinding
 import org.linphone.databinding.MainActivityBinding
 import org.linphone.ui.assistant.AssistantActivity
 import org.linphone.ui.main.viewmodel.DrawerMenuViewModel
+import org.linphone.utils.slideInToastFromTopForDuration
 
 class MainActivity : AppCompatActivity() {
     companion object {
@@ -54,11 +57,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, true)
         super.onCreate(savedInstanceState)
-
-        window.statusBarColor = ContextCompat.getColor(
-            this,
-            R.color.primary_color
-        )
 
         while (!coreContext.isReady()) {
             Thread.sleep(20)
@@ -141,6 +139,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun showGreenToast(message: String, @DrawableRes icon: Int) {
+        binding.greenToast.message = message
+        binding.greenToast.icon = icon
+
+        val target = binding.greenToast.root
+        target.slideInToastFromTopForDuration(binding.root as ViewGroup, lifecycleScope)
+    }
+
     private fun loadContacts() {
         coreContext.contactsManager.loadContacts(this)
 
@@ -172,15 +178,19 @@ class MainActivity : AppCompatActivity() {
             null,
             false
         )
-        popupView.setManageProfileClickListener {
-            // TODO: navigate to profile
-        }
+
         val popupWindow = PopupWindow(
             popupView.root,
             WRAP_CONTENT,
             WRAP_CONTENT,
             true
         )
+
+        popupView.setManageProfileClickListener {
+            // TODO: navigate to profile
+            popupWindow.dismiss()
+        }
+
         // Elevation is for showing a shadow around the popup
         popupWindow.elevation = 20f
         popupWindow.showAsDropDown(view, 0, 0, Gravity.BOTTOM)

@@ -18,6 +18,10 @@ class CallLogViewModel : ViewModel() {
 
     val callLogFoundEvent = MutableLiveData<Event<Boolean>>()
 
+    val historyDeletedEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     private lateinit var address: Address
 
     fun findCallLogByCallId(callId: String) {
@@ -45,7 +49,12 @@ class CallLogViewModel : ViewModel() {
 
     fun deleteHistory() {
         // UI thread
-        // TODO
+        coreContext.postOnCoreThread { core ->
+            for (model in historyCallLogs.value.orEmpty()) {
+                core.removeCallLog(model.callLog)
+            }
+            historyDeletedEvent.postValue(Event(true))
+        }
     }
 
     fun startAudioCall() {

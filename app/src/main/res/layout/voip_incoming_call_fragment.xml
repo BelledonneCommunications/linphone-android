@@ -57,6 +57,7 @@
             android:layout_width="@dimen/avatar_in_call_size"
             android:layout_height="@dimen/avatar_in_call_size"
             app:avatarViewBorderWidth="0dp"
+            android:background="@drawable/shape_button_round"
             contactAvatar="@{viewModel.contact}"
             app:avatarViewInitialsBackgroundColor="@color/blue_outgoing_message"
             app:avatarViewInitialsTextColor="@color/gray_9"

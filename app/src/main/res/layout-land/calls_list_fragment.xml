@@ -31,7 +31,7 @@
             android:id="@+id/top_bar"
             android:name="org.linphone.ui.main.fragment.TopBarFragment"
             android:layout_width="0dp"
-            android:layout_height="@dimen/top_search_bar_height"
+            android:layout_height="@dimen/top_bar_height"
             android:layout_marginEnd="9dp"
             bind:layout="@layout/top_search_bar"
             app:layout_constraintTop_toTopOf="parent"
@@ -74,19 +74,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/top_bar"
             app:layout_constraintBottom_toBottomOf="parent" />
-
-        <include
-            android:id="@+id/green_toast"
-            android:visibility="gone"
-            layout="@layout/toast_green"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            app:layout_constraintTop_toTopOf="@id/background"
-            app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
-            app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/bottom_nav_bar"

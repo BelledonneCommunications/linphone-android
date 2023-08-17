@@ -31,7 +31,6 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.PopupWindow
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -39,13 +38,13 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.databinding.CallsListFragmentBinding
 import org.linphone.databinding.CallsListPopupMenuBinding
+import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.calls.adapter.CallsListAdapter
 import org.linphone.ui.main.calls.model.RemoveAllCallLogsDialogModel
 import org.linphone.ui.main.calls.viewmodel.CallsListViewModel
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
-import org.linphone.utils.slideInToastFromTopForDuration
 
 class CallsListFragment : GenericFragment() {
 
@@ -124,6 +123,21 @@ class CallsListFragment : GenericFragment() {
             startPostponedEnterTransition()
         }
 
+        listViewModel.historyDeletedEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                (requireActivity() as MainActivity).showGreenToast(
+                    "Historique supprimé",
+                    R.drawable.check
+                )
+            }
+        }
+
+        sharedViewModel.forceRefreshCallLogsListEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                listViewModel.applyFilter()
+            }
+        }
+
         sharedViewModel.searchFilter.observe(viewLifecycleOwner) {
             it.consume { filter ->
                 listViewModel.applyFilter(filter)
@@ -144,11 +158,10 @@ class CallsListFragment : GenericFragment() {
         val label = "SIP address"
         clipboard.setPrimaryClip(ClipData.newPlainText(label, value))
 
-        binding.greenToast.message = "Numéro copié dans le presse-papier"
-        binding.greenToast.icon = R.drawable.check
-
-        val target = binding.greenToast.root
-        target.slideInToastFromTopForDuration(binding.root as ViewGroup, lifecycleScope)
+        (requireActivity() as MainActivity).showGreenToast(
+            "Numéro copié dans le presse-papier",
+            R.drawable.check
+        )
     }
 
     private fun showPopupMenu() {

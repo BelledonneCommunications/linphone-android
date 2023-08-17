@@ -26,9 +26,14 @@ import org.linphone.core.CallLog
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.ui.main.calls.model.CallLogModel
+import org.linphone.utils.Event
 
 class CallsListViewModel : ViewModel() {
     val callLogs = MutableLiveData<ArrayList<CallLogModel>>()
+
+    val historyDeletedEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
 
     private var currentFilter = ""
 
@@ -54,7 +59,7 @@ class CallsListViewModel : ViewModel() {
         }
     }
 
-    fun applyFilter(filter: String) {
+    fun applyFilter(filter: String = currentFilter) {
         // UI thread
         currentFilter = filter
 
@@ -69,6 +74,7 @@ class CallsListViewModel : ViewModel() {
             for (callLog in core.callLogs) {
                 core.removeCallLog(callLog)
             }
+            historyDeletedEvent.postValue(Event(true))
             computeCallLogsList(currentFilter)
         }
     }

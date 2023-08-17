@@ -8,7 +8,7 @@ import org.linphone.core.CallLog
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.TimestampUtils
 
-class CallLogHistoryModel(callLog: CallLog) {
+class CallLogHistoryModel(val callLog: CallLog) {
     val isOutgoing = MutableLiveData<Boolean>()
 
     val isSuccessful = MutableLiveData<Boolean>()

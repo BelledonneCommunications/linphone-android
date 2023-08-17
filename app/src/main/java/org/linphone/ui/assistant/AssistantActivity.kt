@@ -21,7 +21,6 @@ package org.linphone.ui.assistant
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.databinding.DataBindingUtil
 import org.linphone.LinphoneApplication
@@ -34,11 +33,6 @@ class AssistantActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, true)
         super.onCreate(savedInstanceState)
-
-        window.statusBarColor = ContextCompat.getColor(
-            this,
-            R.color.primary_color
-        )
 
         while (!LinphoneApplication.coreContext.isReady()) {
             Thread.sleep(20)

@@ -32,6 +32,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:adjustViewBounds="true"
+            android:background="@drawable/shape_button_round"
             contactAvatar="@{model.contact}"
             app:avatarViewPlaceholder="@drawable/contact_avatar"
             app:avatarViewInitialsBackgroundColor="@color/blue_outgoing_message"

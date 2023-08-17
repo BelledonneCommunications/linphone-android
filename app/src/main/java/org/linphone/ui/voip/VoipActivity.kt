@@ -48,7 +48,6 @@ class VoipActivity : AppCompatActivity() {
             this,
             R.color.in_call_black
         )
-        // window.statusBarColor = inCallBlackColor
         window.navigationBarColor = inCallBlackColor
 
         while (!LinphoneApplication.coreContext.isReady()) {

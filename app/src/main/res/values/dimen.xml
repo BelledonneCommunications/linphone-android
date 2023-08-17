@@ -17,7 +17,8 @@
     <dimen name="avatar_presence_badge_big_padding">3dp</dimen>
     <dimen name="avatar_presence_badge_big_end_margin">5dp</dimen>
 
-    <dimen name="top_search_bar_height">55dp</dimen>
+    <dimen name="top_bar_height">55dp</dimen>
+    <dimen name="toast_top_margin">70dp</dimen> <!-- 15dp + top_bar_height -->
 
     <dimen name="in_call_main_actions_menu_height">110dp</dimen>
     <dimen name="in_call_extra_actions_menu_height">235dp</dimen>

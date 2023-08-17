@@ -31,16 +31,15 @@ import android.widget.PopupWindow
 import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.CallFragmentBinding
 import org.linphone.databinding.CallPopupMenuBinding
+import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.calls.viewmodel.CallLogViewModel
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.Event
-import org.linphone.utils.slideInToastFromTopForDuration
 
 class CallFragment : GenericFragment() {
     private lateinit var binding: CallFragmentBinding
@@ -94,6 +93,18 @@ class CallFragment : GenericFragment() {
             }
             sharedViewModel.openSlidingPaneEvent.value = Event(true)
         }
+
+        viewModel.historyDeletedEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                sharedViewModel.forceRefreshCallLogsListEvent.value = Event(true)
+
+                (requireActivity() as MainActivity).showGreenToast(
+                    "Historique supprimé",
+                    R.drawable.check
+                )
+                goBack() // TODO FIXME : issue with tablet when pane can't be closed
+            }
+        }
     }
 
     private fun copyNumberOrAddressToClipboard(value: String) {
@@ -101,11 +112,10 @@ class CallFragment : GenericFragment() {
         val label = "SIP address"
         clipboard.setPrimaryClip(ClipData.newPlainText(label, value))
 
-        binding.greenToast.message = "Numéro copié dans le presse-papier"
-        binding.greenToast.icon = R.drawable.check
-
-        val target = binding.greenToast.root
-        target.slideInToastFromTopForDuration(binding.root as ViewGroup, lifecycleScope)
+        (requireActivity() as MainActivity).showGreenToast(
+            "Numéro copié dans le presse-papier",
+            R.drawable.check
+        )
     }
 
     private fun showPopupMenu() {
@@ -116,20 +126,32 @@ class CallFragment : GenericFragment() {
             false
         )
 
-        popupView.setDeleteAllHistoryClickListener {
-            viewModel.deleteHistory()
-        }
-
-        popupView.setCopyNumberClickListener {
-            copyNumberOrAddressToClipboard(viewModel.callLogModel.value?.displayedAddress.orEmpty())
-        }
-
         val popupWindow = PopupWindow(
             popupView.root,
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT,
             true
         )
+
+        popupView.contactExists = viewModel.callLogModel.value?.friendExists == true
+
+        popupView.setAddToContactsListener {
+            // TODO: go to new contact fragment
+        }
+
+        popupView.setGoToContactListener {
+            // TODO: go to contact fragment
+        }
+
+        popupView.setDeleteAllHistoryClickListener {
+            viewModel.deleteHistory()
+            popupWindow.dismiss()
+        }
+
+        popupView.setCopyNumberClickListener {
+            popupWindow.dismiss()
+            copyNumberOrAddressToClipboard(viewModel.callLogModel.value?.displayedAddress.orEmpty())
+        }
 
         // Elevation is for showing a shadow around the popup
         popupWindow.elevation = 20f

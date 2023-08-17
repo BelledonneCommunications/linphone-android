@@ -31,19 +31,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactFragmentBinding
+import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
 import org.linphone.ui.main.contacts.viewmodel.ContactViewModel
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
-import org.linphone.utils.slideInToastFromTopForDuration
 
 class ContactFragment : GenericFragment() {
     private lateinit var binding: ContactFragmentBinding
@@ -151,10 +150,9 @@ class ContactFragment : GenericFragment() {
         val label = if (isSip) "SIP address" else "Phone number"
         clipboard.setPrimaryClip(ClipData.newPlainText(label, value))
 
-        binding.greenToast.message = "Numéro copié dans le presse-papier"
-        binding.greenToast.icon = R.drawable.check
-
-        val target = binding.greenToast.root
-        target.slideInToastFromTopForDuration(binding.root as ViewGroup, lifecycleScope)
+        (requireActivity() as MainActivity).showGreenToast(
+            "Numéro copié dans le presse-papier",
+            R.drawable.check
+        )
     }
 }

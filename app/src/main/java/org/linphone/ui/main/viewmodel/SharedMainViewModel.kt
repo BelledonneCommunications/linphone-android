@@ -28,27 +28,47 @@ class SharedMainViewModel : ViewModel() {
 
     val isSlidingPaneSlideable = MutableLiveData<Boolean>()
 
-    val closeSlidingPaneEvent = MutableLiveData<Event<Boolean>>()
+    val closeSlidingPaneEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
 
-    val openSlidingPaneEvent = MutableLiveData<Event<Boolean>>()
+    val openSlidingPaneEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
 
-    val navigateToConversationsEvent = MutableLiveData<Event<Boolean>>()
+    val navigateToConversationsEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
 
-    val navigateToCallsEvent = MutableLiveData<Event<Boolean>>()
+    val navigateToCallsEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
 
-    val navigateToContactsEvent = MutableLiveData<Event<Boolean>>()
+    val navigateToContactsEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
 
     var currentlyDisplayedFragment = MutableLiveData<Int>()
 
     /* Top bar related */
 
-    val searchFilter = MutableLiveData<Event<String>>()
+    val searchFilter: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
 
     /* Contacts related */
 
-    val showContactEvent = MutableLiveData<Event<String>>()
+    val showContactEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
 
     /* Call logs related */
 
-    val showCallLogEvent = MutableLiveData<Event<String>>()
+    val showCallLogEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
+
+    val forceRefreshCallLogsListEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
 }

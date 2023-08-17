@@ -7,11 +7,20 @@
         <import type="android.view.View" />
         <import type="android.graphics.Typeface" />
         <variable
+            name="addToContactsListener"
+            type="View.OnClickListener" />
+        <variable
+            name="goToContactListener"
+            type="View.OnClickListener" />
+        <variable
             name="copyNumberClickListener"
             type="View.OnClickListener" />
         <variable
             name="deleteAllHistoryClickListener"
             type="View.OnClickListener" />
+        <variable
+            name="contactExists"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,6 +29,8 @@
         android:background="@drawable/shape_round_popup_menu_background">
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:onClick="@{addToContactsListener}"
+            android:visibility="@{contactExists ? View.GONE : View.VISIBLE}"
             style="@style/default_text_style"
             android:id="@+id/add_to_contact"
             android:layout_width="0dp"
@@ -41,11 +52,13 @@
             app:layout_constraintBottom_toTopOf="@id/go_to_contact"/>
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:onClick="@{goToContactListener}"
+            android:visibility="@{contactExists ? View.VISIBLE : View.GONE}"
             style="@style/default_text_style"
             android:id="@+id/go_to_contact"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="20dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:gravity="left|center_vertical"

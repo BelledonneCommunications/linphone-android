@@ -117,6 +117,8 @@ class AssistantViewModel : ViewModel() {
             accountParams.identityAddress = identityAddress
             newlyCreatedAccount = core.createAccount(accountParams)
 
+            // TODO: set international prefix if detected
+
             registrationInProgress.postValue(true)
             core.addListener(coreListener)
             core.addAccount(newlyCreatedAccount)

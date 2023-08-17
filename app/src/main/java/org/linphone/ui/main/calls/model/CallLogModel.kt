@@ -25,6 +25,8 @@ class CallLogModel(private val callLog: CallLog) {
 
     val dateTime = MutableLiveData<String>()
 
+    var friendExists: Boolean = false
+
     init {
         // Core thread
         isOutgoing.postValue(callLog.dir == Dir.Outgoing)
@@ -42,10 +44,12 @@ class CallLogModel(private val callLog: CallLog) {
         val friend = coreContext.core.findFriend(address)
         if (friend != null) {
             avatarModel = ContactAvatarModel(friend)
+            friendExists = true
         } else {
             val fakeFriend = coreContext.core.createFriend()
             fakeFriend.address = address
             avatarModel = ContactAvatarModel(fakeFriend)
+            friendExists = false
         }
 
         iconResId.postValue(LinphoneUtils.getIconResId(callLog.status, callLog.dir))
