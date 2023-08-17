@@ -48,6 +48,10 @@ class RegisterFragment : GenericFragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
 
+        binding.setBackClickListener {
+            goBack()
+        }
+
         binding.setLoginClickListener {
             goBack()
         }

@@ -56,6 +56,10 @@ class LoginFragment : GenericFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
+        binding.setBackClickListener {
+            goBack()
+        }
+
         binding.setRegisterClickListener {
             val action = LoginFragmentDirections.actionLoginFragmentToRegisterFragment()
             findNavController().navigate(action)

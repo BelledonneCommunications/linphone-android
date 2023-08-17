@@ -6,6 +6,9 @@
     <data>
         <import type="android.view.View" />
         <variable
+            name="backClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="loginClickListener"
             type="View.OnClickListener" />
     </data>
@@ -18,6 +21,18 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+            <ImageView
+                android:onClick="@{backClickListener}"
+                android:id="@+id/back"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginStart="15dp"
+                android:src="@drawable/back"
+                app:tint="@color/gray_1"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
     
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style_800"
