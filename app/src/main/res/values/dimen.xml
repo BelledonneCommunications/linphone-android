@@ -19,10 +19,14 @@
 
     <dimen name="top_search_bar_height">55dp</dimen>
 
-    <dimen name="in_call_main_actions_menu_height">116dp</dimen>
-    <dimen name="in_call_extra_actions_menu_height">237dp</dimen>
-    <dimen name="in_call_all_actions_menu_height">353dp</dimen> <!-- sum of above two -->
+    <dimen name="in_call_main_actions_menu_height">110dp</dimen>
+    <dimen name="in_call_extra_actions_menu_height">235dp</dimen>
+    <dimen name="in_call_all_actions_menu_height">345dp</dimen> <!-- sum of above two -->
     <dimen name="in_call_round_corners_texture_view_radius">20dp</dimen>
 
     <dimen name="toast_max_width">360dp</dimen>
+
+    <dimen name="voip_button_size">55dp</dimen>
+    <dimen name="voip_button_icon_padding">15dp</dimen>
+    <dimen name="voip_extra_button_top_margin">30dp</dimen>
 </resources>

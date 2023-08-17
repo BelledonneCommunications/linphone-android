@@ -20,7 +20,7 @@
         <ImageView
             android:id="@+id/hang_up"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/voip_button_size"
             android:background="@drawable/shape_hang_up_button_background"
             android:onClick="@{() -> viewModel.hangUp()}"
             android:paddingStart="30dp"
@@ -36,7 +36,7 @@
         <ImageView
             android:id="@+id/answer_call"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/voip_button_size"
             android:background="@drawable/shape_answer_button_background"
             android:onClick="@{() -> viewModel.answer()}"
             android:paddingStart="30dp"
