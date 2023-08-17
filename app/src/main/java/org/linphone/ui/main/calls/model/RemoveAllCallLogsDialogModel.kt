@@ -17,22 +17,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.main.contacts.model
+package org.linphone.ui.main.calls.model
 
 import androidx.lifecycle.MutableLiveData
-import org.linphone.ui.main.contacts.viewmodel.ContactViewModel
 import org.linphone.utils.Event
 
-class NumberOrAddressPickerDialogModel(viewModel: ContactViewModel) {
-    val sipAddressesAndPhoneNumbers = MutableLiveData<ArrayList<ContactNumberOrAddressModel>>()
-
+class RemoveAllCallLogsDialogModel() {
     val dismissEvent = MutableLiveData<Event<Boolean>>()
 
-    init {
-        sipAddressesAndPhoneNumbers.value = viewModel.sipAddressesAndPhoneNumbers.value
-    }
+    val confirmRemovalEvent = MutableLiveData<Event<Boolean>>()
 
     fun dismiss() {
+        // UI thread
         dismissEvent.value = Event(true)
+    }
+
+    fun confirmRemoval() {
+        // UI thread
+        confirmRemovalEvent.value = Event(true)
     }
 }

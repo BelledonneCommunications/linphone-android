@@ -5,7 +5,17 @@
         <item name="colorPrimary">@color/primary_color</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/primary_color</item>
+        <!-- https://developer.android.com/guide/topics/display-cutout#best_practices_for_display_cutout_support -->
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
         <!-- Customize your theme here. -->
         <item name="android:windowActivityTransitions">true</item>
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:navigationBarColor">@color/white</item>
+    </style>
+
+    <style name="Theme.LinphoneDialog" parent="Theme.Linphone">
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowBackground">@color/transparent_color</item>
+        <item name="android:navigationBarColor">@color/black</item>
     </style>
 </resources>

@@ -31,6 +31,8 @@ import androidx.databinding.DataBindingUtil
 import org.linphone.R
 import org.linphone.databinding.DialogConfirmZrtpSasBinding
 import org.linphone.databinding.DialogPickNumberOrAddressBinding
+import org.linphone.databinding.DialogRemoveAllCallLogsBinding
+import org.linphone.ui.main.calls.model.RemoveAllCallLogsDialogModel
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
 import org.linphone.ui.voip.model.ZrtpSasConfirmationDialogModel
 
@@ -40,7 +42,7 @@ class DialogUtils {
             context: Context,
             viewModel: NumberOrAddressPickerDialogModel
         ): Dialog {
-            val dialog = Dialog(context)
+            val dialog = Dialog(context, R.style.Theme_LinphoneDialog)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
 
             val binding: DialogPickNumberOrAddressBinding = DataBindingUtil.inflate(
@@ -55,7 +57,7 @@ class DialogUtils {
             val d: Drawable = ColorDrawable(
                 ContextCompat.getColor(dialog.context, R.color.dialog_background)
             )
-            d.alpha = 100
+            d.alpha = 166
             dialog.window
                 ?.setLayout(
                     WindowManager.LayoutParams.MATCH_PARENT,
@@ -64,11 +66,40 @@ class DialogUtils {
             dialog.window?.setBackgroundDrawable(d)
             return dialog
         }
+        fun getRemoveAllCallLogsConfirmationDialog(
+            context: Context,
+            model: RemoveAllCallLogsDialogModel
+        ): Dialog {
+            val dialog = Dialog(context, R.style.Theme_LinphoneDialog)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+
+            val binding: DialogRemoveAllCallLogsBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.dialog_remove_all_call_logs,
+                null,
+                false
+            )
+            binding.viewModel = model
+            dialog.setContentView(binding.root)
+
+            val d: Drawable = ColorDrawable(
+                ContextCompat.getColor(dialog.context, R.color.dialog_background)
+            )
+            d.alpha = 166
+            dialog.window
+                ?.setLayout(
+                    WindowManager.LayoutParams.MATCH_PARENT,
+                    WindowManager.LayoutParams.MATCH_PARENT
+                )
+            dialog.window?.setBackgroundDrawable(d)
+            return dialog
+        }
+
         fun getZrtpSasConfirmationDialog(
             context: Context,
             viewModel: ZrtpSasConfirmationDialogModel
         ): Dialog {
-            val dialog = Dialog(context)
+            val dialog = Dialog(context, R.style.Theme_LinphoneDialog)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
 
             val binding: DialogConfirmZrtpSasBinding = DataBindingUtil.inflate(
@@ -83,7 +114,7 @@ class DialogUtils {
             val d: Drawable = ColorDrawable(
                 ContextCompat.getColor(dialog.context, R.color.dialog_background)
             )
-            d.alpha = 100
+            d.alpha = 166
             dialog.window
                 ?.setLayout(
                     WindowManager.LayoutParams.MATCH_PARENT,

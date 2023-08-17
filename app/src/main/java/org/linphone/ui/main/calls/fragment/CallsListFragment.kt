@@ -23,11 +23,14 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.PopupWindow
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
@@ -35,9 +38,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.databinding.CallsListFragmentBinding
+import org.linphone.databinding.CallsListPopupMenuBinding
 import org.linphone.ui.main.calls.adapter.CallsListAdapter
+import org.linphone.ui.main.calls.model.RemoveAllCallLogsDialogModel
 import org.linphone.ui.main.calls.viewmodel.CallsListViewModel
 import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 import org.linphone.utils.slideInToastFromTopForDuration
 
@@ -125,7 +131,7 @@ class CallsListFragment : GenericFragment() {
         }
 
         binding.setMenuClickListener {
-            // TODO show popup menu with delete all history button
+            showPopupMenu()
         }
     }
 
@@ -139,5 +145,48 @@ class CallsListFragment : GenericFragment() {
 
         val target = binding.greenToast.root
         target.slideInToastFromTopForDuration(binding.root as ViewGroup, lifecycleScope)
+    }
+
+    private fun showPopupMenu() {
+        val popupView: CallsListPopupMenuBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(requireContext()),
+            R.layout.calls_list_popup_menu,
+            null,
+            false
+        )
+        val popupWindow = PopupWindow(
+            popupView.root,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            true
+        )
+
+        popupView.setDeleteAllHistoryClickListener {
+            val model = RemoveAllCallLogsDialogModel()
+            val dialog = DialogUtils.getRemoveAllCallLogsConfirmationDialog(
+                requireActivity(),
+                model
+            )
+
+            model.dismissEvent.observe(viewLifecycleOwner) {
+                it.consume {
+                    dialog.dismiss()
+                }
+            }
+
+            model.confirmRemovalEvent.observe(viewLifecycleOwner) {
+                it.consume {
+                    listViewModel.removeAllCallLogs()
+                    dialog.dismiss()
+                }
+            }
+
+            dialog.show()
+            popupWindow.dismiss()
+        }
+
+        // Elevation is for showing a shadow around the popup
+        popupWindow.elevation = 20f
+        popupWindow.showAsDropDown(binding.menu, 0, 0, Gravity.BOTTOM)
     }
 }

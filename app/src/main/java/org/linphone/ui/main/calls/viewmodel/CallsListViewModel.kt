@@ -63,6 +63,16 @@ class CallsListViewModel : ViewModel() {
         }
     }
 
+    fun removeAllCallLogs() {
+        // UI thread
+        coreContext.postOnCoreThread { core ->
+            for (callLog in core.callLogs) {
+                core.removeCallLog(callLog)
+            }
+            computeCallLogsList(currentFilter)
+        }
+    }
+
     private fun computeCallLogsList(filter: String) {
         // Core thread
         val list = arrayListOf<CallLogModel>()

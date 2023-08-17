@@ -15,7 +15,6 @@
         android:onClick="@{() -> viewModel.dismiss()}"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/in_call_black"
         android:clickable="true"
         android:focusable="true">
 
@@ -39,10 +38,8 @@
             android:src="@drawable/shape_dialog_background"
             app:layout_constraintBottom_toBottomOf="@id/anchor"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/title"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintTop_toTopOf="@id/title" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_800"
