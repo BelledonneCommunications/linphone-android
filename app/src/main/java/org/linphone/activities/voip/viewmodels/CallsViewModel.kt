@@ -180,8 +180,14 @@ class CallsViewModel : ViewModel() {
             return
         }
 
-        val micMuted = currentCallData.value?.call?.microphoneMuted ?: false
-        currentCallData.value?.call?.microphoneMuted = !micMuted
+        val call = currentCallData.value?.call
+        if (call != null && call.conference != null) {
+            val micMuted = call.conference?.microphoneMuted ?: false
+            call.conference?.microphoneMuted = !micMuted
+        } else {
+            val micMuted = call?.microphoneMuted ?: false
+            call?.microphoneMuted = !micMuted
+        }
         updateMicState()
     }
 
