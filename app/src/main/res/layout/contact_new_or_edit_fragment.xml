@@ -67,7 +67,6 @@
             android:id="@+id/scrollView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginBottom="10dp"
             android:background="@color/gray_7"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -257,6 +256,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginTop="5dp"
+                    android:layout_marginBottom="24dp"
                     android:paddingStart="20dp"
                     android:paddingEnd="20dp"
                     android:text="@={viewModel.jobTitle, default=`Android dev`}"
@@ -265,6 +265,7 @@
                     android:maxLines="1"
                     android:background="@drawable/shape_edit_text_background"
                     android:inputType="text"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/job_title_label"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>

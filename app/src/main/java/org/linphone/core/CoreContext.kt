@@ -20,6 +20,7 @@
 package org.linphone.core
 
 import android.annotation.SuppressLint
+import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.os.Handler
@@ -32,14 +33,21 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.contacts.ContactsManager
 import org.linphone.core.tools.Log
 import org.linphone.ui.voip.VoipActivity
+import org.linphone.utils.ActivityMonitor
 import org.linphone.utils.LinphoneUtils
 
 class CoreContext(val context: Context) : HandlerThread("Core Thread") {
+    companion object {
+        const val TAG = "[Core Context]"
+    }
+
     lateinit var core: Core
 
     val emojiCompat: EmojiCompat
 
     val contactsManager = ContactsManager()
+
+    private val activityMonitor = ActivityMonitor()
 
     private val mainThread = Handler(Looper.getMainLooper())
 
@@ -48,7 +56,7 @@ class CoreContext(val context: Context) : HandlerThread("Core Thread") {
 
     private val coreListener = object : CoreListenerStub() {
         override fun onGlobalStateChanged(core: Core, state: GlobalState, message: String) {
-            Log.i("[Context] Global state changed: $state")
+            Log.i("$TAG Global state changed: $state")
         }
 
         override fun onCallStateChanged(
@@ -57,7 +65,7 @@ class CoreContext(val context: Context) : HandlerThread("Core Thread") {
             state: Call.State?,
             message: String
         ) {
-            Log.i("[Context] Call state changed [$state]")
+            Log.i("$TAG Call state changed [$state]")
             if (state == Call.State.OutgoingProgress) {
                 showCallActivity()
             } else if (state == Call.State.IncomingReceived) {
@@ -70,6 +78,8 @@ class CoreContext(val context: Context) : HandlerThread("Core Thread") {
     init {
         EmojiCompat.init(context)
         emojiCompat = EmojiCompat.get()
+
+        (context as Application).registerActivityLifecycleCallbacks(activityMonitor)
     }
 
     override fun run() {
@@ -109,6 +119,10 @@ class CoreContext(val context: Context) : HandlerThread("Core Thread") {
         core.stop()
         contactsManager.onCoreStopped()
 
+        postOnMainThread {
+            (context as Application).unregisterActivityLifecycleCallbacks(activityMonitor)
+        }
+
         quitSafely()
     }
 
@@ -128,6 +142,30 @@ class CoreContext(val context: Context) : HandlerThread("Core Thread") {
         }
     }
 
+    fun onForeground() {
+        postOnCoreThread {
+            // We can't rely on defaultAccount?.params?.isPublishEnabled
+            // as it will be modified by the SDK when changing the presence status
+            if (corePreferences.publishPresence) {
+                Log.i("$TAG App is in foreground, PUBLISHING presence as Online")
+                core.consolidatedPresence = ConsolidatedPresence.Online
+            }
+        }
+    }
+
+    fun onBackground() {
+        postOnCoreThread {
+            // We can't rely on defaultAccount?.params?.isPublishEnabled
+            // as it will be modified by the SDK when changing the presence status
+            if (corePreferences.publishPresence) {
+                Log.i("$TAG App is in background, un-PUBLISHING presence info")
+                // We don't use ConsolidatedPresence.Busy but Offline to do an unsubscribe,
+                // Flexisip will handle the Busy status depending on other devices
+                core.consolidatedPresence = ConsolidatedPresence.Offline
+            }
+        }
+    }
+
     fun startCall(
         address: Address,
         callParams: CallParams? = null,
@@ -136,14 +174,14 @@ class CoreContext(val context: Context) : HandlerThread("Core Thread") {
     ) {
         // Core thread
         if (!core.isNetworkReachable) {
-            Log.e("[Context] Network unreachable, abort outgoing call")
+            Log.e("$TAG Network unreachable, abort outgoing call")
             return
         }
 
         val params = callParams ?: core.createCallParams(null)
         if (params == null) {
             val call = core.inviteAddress(address)
-            Log.w("[Context] Starting call $call without params")
+            Log.w("$TAG Starting call $call without params")
             return
         }
 
@@ -163,11 +201,11 @@ class CoreContext(val context: Context) : HandlerThread("Core Thread") {
             if (account != null) {
                 params.account = account
                 Log.i(
-                    "[Context] Using account matching address ${localAddress.asStringUriOnly()} as From"
+                    "$TAG Using account matching address ${localAddress.asStringUriOnly()} as From"
                 )
             } else {
                 Log.e(
-                    "[Context] Failed to find account matching address ${localAddress.asStringUriOnly()}"
+                    "$TAG Failed to find account matching address ${localAddress.asStringUriOnly()}"
                 )
             }
         }
@@ -177,16 +215,16 @@ class CoreContext(val context: Context) : HandlerThread("Core Thread") {
         }*/
 
         val call = core.inviteAddressWithParams(address, params)
-        Log.i("[Context] Starting call $call")
+        Log.i("$TAG Starting call $call")
     }
 
     fun switchCamera() {
         val currentDevice = core.videoDevice
-        Log.i("[Context] Current camera device is $currentDevice")
+        Log.i("$TAG Current camera device is $currentDevice")
 
         for (camera in core.videoDevicesList) {
             if (camera != currentDevice && camera != "StaticImage: Static picture") {
-                Log.i("[Context] New camera device will be $camera")
+                Log.i("$TAG New camera device will be $camera")
                 core.videoDevice = camera
                 break
             }
@@ -194,7 +232,7 @@ class CoreContext(val context: Context) : HandlerThread("Core Thread") {
 
         val call = core.currentCall
         if (call == null) {
-            Log.w("[Context] Switching camera while not in call")
+            Log.w("$TAG Switching camera while not in call")
             return
         }
         call.update(null)
@@ -205,7 +243,7 @@ class CoreContext(val context: Context) : HandlerThread("Core Thread") {
     }
 
     private fun showCallActivity() {
-        Log.i("[Context] Starting VoIP activity")
+        Log.i("$TAG Starting VoIP activity")
         val intent = Intent(context, VoipActivity::class.java)
         // This flag is required to start an Activity from a Service context
         intent.addFlags(

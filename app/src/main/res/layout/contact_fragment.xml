@@ -73,7 +73,6 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="10dp"
             android:background="@color/gray_7"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -463,7 +462,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/actions"
-                    app:layout_constraintBottom_toBottomOf="parent" />
+                    app:layout_constraintBottom_toBottomOf="@id/action_delete" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:onClick="@{() -> viewModel.editContact()}"
@@ -549,6 +548,15 @@
                     android:text="Delete"
                     android:drawableStart="@drawable/delete"
                     app:layout_constraintTop_toBottomOf="@id/action_share"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <View
+                    android:id="@+id/anchor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/action_delete"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
 

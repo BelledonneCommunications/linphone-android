@@ -51,6 +51,12 @@ class CorePreferences constructor(private val context: Context) {
         editor.apply()
     }
 
+    var publishPresence: Boolean
+        get() = config.getBool("app", "publish_presence", true)
+        set(value) {
+            config.setBool("app", "publish_presence", value)
+        }
+
     val defaultDomain: String
         get() = config.getString("app", "default_domain", "sip.linphone.org")!!
 
