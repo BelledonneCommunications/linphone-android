@@ -291,7 +291,11 @@ class CurrentCallViewModel() : ViewModel() {
             displayedName.postValue(friend.name)
             contact.postValue(ContactAvatarModel(friend))
         } else {
-            displayedName.postValue(LinphoneUtils.getDisplayName(address))
+            val fakeFriend = coreContext.core.createFriend()
+            fakeFriend.name = LinphoneUtils.getDisplayName(address)
+            fakeFriend.addAddress(address)
+            contact.postValue(ContactAvatarModel(fakeFriend))
+            displayedName.postValue(fakeFriend.name)
         }
 
         updateEncryption()

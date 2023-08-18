@@ -46,7 +46,9 @@ class ContactAvatarModel(val friend: Friend) {
 
     val firstLetter: String = LinphoneUtils.getFirstLetter(friend.name.orEmpty())
 
-    val showFirstLetter = MutableLiveData<Boolean>()
+    val firstContactStartingByThatLetter = MutableLiveData<Boolean>()
+
+    val noAlphabet = MutableLiveData<Boolean>()
 
     private val friendListener = object : FriendListenerStub() {
         override fun onPresenceReceived(fr: Friend) {

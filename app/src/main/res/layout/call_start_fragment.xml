@@ -6,8 +6,11 @@
     <data>
         <import type="android.view.View" />
         <variable
-            name="cancelClickListener"
+            name="backClickListener"
             type="View.OnClickListener" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.main.calls.viewmodel.StartCallViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,7 +20,7 @@
 
         <ImageView
             android:id="@+id/back"
-            android:onClick="@{cancelClickListener}"
+            android:onClick="@{backClickListener}"
             android:layout_width="wrap_content"
             android:layout_height="35dp"
             android:layout_marginStart="10dp"
@@ -44,25 +47,114 @@
             app:layout_constraintStart_toEndOf="@id/back"
             app:layout_constraintTop_toTopOf="parent"/>
 
-        <ScrollView
-            android:id="@+id/scrollView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@color/gray_7"
+        <androidx.appcompat.widget.AppCompatEditText
+            style="@style/default_text_style"
+            android:id="@+id/search_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:drawableStart="@drawable/search"
+            android:drawableEnd="@drawable/dialer"
+            android:drawablePadding="10dp"
+            android:drawableTint="@color/gray_9"
+            android:background="@drawable/shape_search_square_background"
+            android:hint="Search contact or history call"
+            android:text="@={viewModel.searchFilter}"
+            android:textSize="14sp"
+            android:inputType="textPersonName|textNoSuggestions"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/title"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/title" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/group_call_icon"
+            android:visibility="@{viewModel.searchFilter.length() > 0 ? View.GONE : View.VISIBLE}"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="40dp"
+            android:padding="10dp"
+            android:src="@drawable/meetings"
+            android:background="@drawable/shape_orange_round"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/search_bar" />
 
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_800"
+            android:id="@+id/group_call_label"
+            android:visibility="@{viewModel.searchFilter.length() > 0 ? View.GONE : View.VISIBLE}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="Create a group call"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:drawableEnd="@drawable/arrow"
+            app:layout_constraintStart_toEndOf="@id/group_call_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/group_call_icon"
+            app:layout_constraintBottom_toBottomOf="@id/group_call_icon"/>
 
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_800"
+            android:id="@+id/all_contacts_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="32dp"
+            android:text="All contacts"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/group_call_icon"
+            app:layout_constraintBottom_toTopOf="@id/contacts_list"/>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/contacts_list"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/all_contacts_label"
+            app:layout_constraintBottom_toTopOf="@id/suggestions_label"/>
 
-        </ScrollView>
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_800"
+            android:id="@+id/suggestions_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="32dp"
+            android:text="Suggestions"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/contacts_list"
+            app:layout_constraintBottom_toTopOf="@id/suggestions_list"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/suggestions_list"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintHeight_max="220dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/suggestions_label"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

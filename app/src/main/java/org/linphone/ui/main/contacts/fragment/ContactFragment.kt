@@ -131,7 +131,9 @@ class ContactFragment : GenericFragment() {
 
         viewModel.showNumberOrAddressPickerDialogEvent.observe(viewLifecycleOwner) {
             it.consume {
-                val model = NumberOrAddressPickerDialogModel(viewModel)
+                val model = NumberOrAddressPickerDialogModel(
+                    viewModel.sipAddressesAndPhoneNumbers.value.orEmpty()
+                )
                 val dialog = DialogUtils.getNumberOrAddressPickerDialog(requireActivity(), model)
 
                 model.dismissEvent.observe(viewLifecycleOwner) { event ->

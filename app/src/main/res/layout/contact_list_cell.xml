@@ -23,6 +23,8 @@
         android:onLongClick="@{onLongClickListener}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="16dp"
         android:background="@drawable/cell_background">
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -30,11 +32,11 @@
             android:id="@+id/header"
             android:layout_width="18dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
             android:text="@{model.firstLetter, default=`A`}"
-            android:visibility="@{model.showFirstLetter ? View.VISIBLE : View.INVISIBLE}"
+            android:visibility="@{model.noAlphabet ? View.GONE : model.firstContactStartingByThatLetter ? View.VISIBLE : View.INVISIBLE}"
             android:textColor="@color/gray_10"
             android:textSize="20sp"
-            android:layout_marginStart="16dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>

@@ -23,12 +23,57 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.doOnPreDraw
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
+import org.linphone.core.Address
 import org.linphone.databinding.CallStartFragmentBinding
+import org.linphone.ui.main.calls.viewmodel.StartCallViewModel
+import org.linphone.ui.main.calls.viewmodel.SuggestionsListViewModel
+import org.linphone.ui.main.contacts.adapter.ContactsListAdapter
+import org.linphone.ui.main.contacts.model.ContactAvatarModel
+import org.linphone.ui.main.contacts.model.ContactNumberOrAddressClickListener
+import org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel
+import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
+import org.linphone.ui.main.contacts.viewmodel.ContactsListViewModel
 import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.utils.DialogUtils
 
 class StartCallFragment : GenericFragment() {
     private lateinit var binding: CallStartFragmentBinding
+
+    private val viewModel: StartCallViewModel by navGraphViewModels(
+        R.id.startCallFragment
+    )
+
+    private val contactsListViewModel: ContactsListViewModel by navGraphViewModels(
+        R.id.startCallFragment
+    )
+
+    private val suggestionsListViewModel: SuggestionsListViewModel by navGraphViewModels(
+        R.id.startCallFragment
+    )
+
+    private lateinit var contactsAdapter: ContactsListAdapter
+    private lateinit var suggestionsAdapter: ContactsListAdapter
+
+    private val listener = object : ContactNumberOrAddressClickListener {
+        override fun onClicked(address: Address?) {
+            // UI thread
+            if (address != null) {
+                coreContext.postOnCoreThread {
+                    coreContext.startCall(address)
+                }
+            }
+        }
+
+        override fun onLongPress(model: ContactNumberOrAddressModel) {
+            // UI thread
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,10 +91,111 @@ class StartCallFragment : GenericFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = viewLifecycleOwner
+        postponeEnterTransition()
 
-        binding.setCancelClickListener {
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = viewModel
+
+        binding.setBackClickListener {
             goBack()
+        }
+
+        contactsAdapter = ContactsListAdapter(viewLifecycleOwner, false)
+        binding.contactsList.setHasFixedSize(true)
+        binding.contactsList.adapter = contactsAdapter
+
+        contactsAdapter.contactClickedEvent.observe(viewLifecycleOwner) {
+            it.consume { model ->
+                startCall(model)
+            }
+        }
+
+        binding.contactsList.layoutManager = LinearLayoutManager(requireContext())
+
+        suggestionsAdapter = ContactsListAdapter(viewLifecycleOwner, false)
+        binding.suggestionsList.setHasFixedSize(true)
+        binding.suggestionsList.adapter = suggestionsAdapter
+
+        suggestionsAdapter.contactClickedEvent.observe(viewLifecycleOwner) {
+            it.consume { model ->
+                startCall(model)
+            }
+        }
+
+        binding.suggestionsList.layoutManager = LinearLayoutManager(requireContext())
+
+        contactsListViewModel.contactsList.observe(
+            viewLifecycleOwner
+        ) {
+            contactsAdapter.submitList(it)
+
+            (view.parent as? ViewGroup)?.doOnPreDraw {
+                startPostponedEnterTransition()
+            }
+        }
+
+        suggestionsListViewModel.suggestionsList.observe(viewLifecycleOwner) {
+            suggestionsAdapter.submitList(it)
+        }
+
+        viewModel.searchFilter.observe(viewLifecycleOwner) { filter ->
+            contactsListViewModel.applyFilter(filter)
+            suggestionsListViewModel.applyFilter(filter)
+        }
+    }
+
+    private fun startCall(model: ContactAvatarModel) {
+        coreContext.postOnCoreThread { core ->
+            val friend = model.friend
+            val addressesCount = friend.addresses.size
+            val numbersCount = friend.phoneNumbers.size
+            if (addressesCount == 1 && numbersCount == 0) {
+                val address = friend.addresses.first()
+                coreContext.startCall(address)
+            } else if (addressesCount == 1 && numbersCount == 0) {
+                val number = friend.phoneNumbers.first()
+                val address = core.interpretUrl(number, true)
+                if (address != null) {
+                    coreContext.startCall(address)
+                }
+            } else {
+                val list = arrayListOf<ContactNumberOrAddressModel>()
+                for (address in friend.addresses) {
+                    val addressModel = ContactNumberOrAddressModel(
+                        address,
+                        address.asStringUriOnly(),
+                        listener,
+                        true
+                    )
+                    list.add(addressModel)
+                }
+
+                for (number in friend.phoneNumbersWithLabel) {
+                    val address = core.interpretUrl(number.phoneNumber, true)
+                    val addressModel = ContactNumberOrAddressModel(
+                        address,
+                        number.phoneNumber,
+                        listener,
+                        false,
+                        number.label.orEmpty()
+                    )
+                    list.add(addressModel)
+                }
+
+                coreContext.postOnMainThread {
+                    val model = NumberOrAddressPickerDialogModel(list)
+                    val dialog =
+                        DialogUtils.getNumberOrAddressPickerDialog(requireActivity(), model)
+
+                    model.dismissEvent.observe(viewLifecycleOwner) { event ->
+                        event.consume {
+                            dialog.dismiss()
+                        }
+                    }
+
+                    dialog.show()
+                }
+            }
         }
     }
 }

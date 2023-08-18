@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.main.contacts.viewmodel
+package org.linphone.ui.main.calls.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -32,18 +32,12 @@ import org.linphone.core.SearchResult
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 
-class ContactsListViewModel : ViewModel() {
+class SuggestionsListViewModel : ViewModel() {
     companion object {
-        const val TAG = "[Contacts List ViewModel]"
+        const val TAG = "[Suggestions List ViewModel]"
     }
 
-    val contactsList = MutableLiveData<ArrayList<ContactAvatarModel>>()
-
-    val favourites = MutableLiveData<ArrayList<ContactAvatarModel>>()
-
-    val showFavourites = MutableLiveData<Boolean>()
-
-    val isListFiltered = MutableLiveData<Boolean>()
+    val suggestionsList = MutableLiveData<ArrayList<ContactAvatarModel>>()
 
     private var currentFilter = ""
     private var previousFilter = "NotSet"
@@ -66,15 +60,13 @@ class ContactsListViewModel : ViewModel() {
             applyFilter(
                 currentFilter,
                 if (limitSearchToLinphoneAccounts) corePreferences.defaultDomain else "",
-                MagicSearch.Source.Friends.toInt() or MagicSearch.Source.LdapServers.toInt(),
+                MagicSearch.Source.CallLogs.toInt() or MagicSearch.Source.ChatRooms.toInt(),
                 MagicSearch.Aggregation.Friend
             )
         }
     }
 
     init {
-        showFavourites.value = true
-
         coreContext.postOnCoreThread { core ->
             coreContext.contactsManager.addListener(contactsListener)
             magicSearch = core.createMagicSearch()
@@ -93,61 +85,41 @@ class ContactsListViewModel : ViewModel() {
         super.onCleared()
     }
 
-    fun toggleFavouritesVisibility() {
-        // UI thread
-        showFavourites.value = showFavourites.value == false
-    }
-
     fun processMagicSearchResults(results: Array<SearchResult>) {
         // Core thread
         Log.i("$TAG Processing ${results.size} results")
-        contactsList.value.orEmpty().forEach(ContactAvatarModel::destroy)
+        suggestionsList.value.orEmpty().forEach(ContactAvatarModel::destroy)
 
         val list = arrayListOf<ContactAvatarModel>()
-        val favouritesList = arrayListOf<ContactAvatarModel>()
-        var previousLetter = ""
 
         for (result in results) {
             val friend = result.friend
 
-            var currentLetter = ""
             val model = if (friend != null) {
-                currentLetter = friend.name?.get(0).toString()
                 ContactAvatarModel(friend)
             } else {
                 Log.w("$TAG SearchResult [$result] has no Friend!")
                 val fakeFriend =
                     createFriendFromSearchResult(result)
-                currentLetter = fakeFriend.name?.get(0).toString()
                 ContactAvatarModel(fakeFriend)
             }
-
-            val displayLetter = previousLetter.isEmpty() || currentLetter != previousLetter
-            if (currentLetter != previousLetter) {
-                previousLetter = currentLetter
-            }
-            model.firstContactStartingByThatLetter.postValue(displayLetter)
+            model.noAlphabet.postValue(true)
 
             list.add(model)
-            if (friend?.starred == true) {
-                favouritesList.add(model)
-            }
         }
 
-        favourites.postValue(favouritesList)
-        contactsList.postValue(list)
+        suggestionsList.postValue(list)
 
         Log.i("$TAG Processed ${results.size} results")
     }
 
     fun applyFilter(filter: String) {
         // UI thread
-        isListFiltered.value = filter.isNotEmpty()
         coreContext.postOnCoreThread {
             applyFilter(
                 filter,
                 if (limitSearchToLinphoneAccounts) corePreferences.defaultDomain else "",
-                MagicSearch.Source.Friends.toInt() or MagicSearch.Source.LdapServers.toInt(),
+                MagicSearch.Source.CallLogs.toInt() or MagicSearch.Source.ChatRooms.toInt(),
                 MagicSearch.Aggregation.Friend
             )
         }
