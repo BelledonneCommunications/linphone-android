@@ -40,7 +40,7 @@ import org.linphone.databinding.CallsListFragmentBinding
 import org.linphone.databinding.CallsListPopupMenuBinding
 import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.calls.adapter.CallsListAdapter
-import org.linphone.ui.main.calls.model.RemoveAllCallLogsDialogModel
+import org.linphone.ui.main.calls.model.ConfirmationDialogModel
 import org.linphone.ui.main.calls.viewmodel.CallsListViewModel
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.DialogUtils
@@ -179,7 +179,7 @@ class CallsListFragment : GenericFragment() {
         )
 
         popupView.setDeleteAllHistoryClickListener {
-            val model = RemoveAllCallLogsDialogModel()
+            val model = ConfirmationDialogModel()
             val dialog = DialogUtils.getRemoveAllCallLogsConfirmationDialog(
                 requireActivity(),
                 model

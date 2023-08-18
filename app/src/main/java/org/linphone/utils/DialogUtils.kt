@@ -29,10 +29,11 @@ import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import org.linphone.R
+import org.linphone.databinding.DialogCancelContactChangesBinding
 import org.linphone.databinding.DialogConfirmZrtpSasBinding
 import org.linphone.databinding.DialogPickNumberOrAddressBinding
 import org.linphone.databinding.DialogRemoveAllCallLogsBinding
-import org.linphone.ui.main.calls.model.RemoveAllCallLogsDialogModel
+import org.linphone.ui.main.calls.model.ConfirmationDialogModel
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
 import org.linphone.ui.voip.model.ZrtpSasConfirmationDialogModel
 
@@ -66,9 +67,10 @@ class DialogUtils {
             dialog.window?.setBackgroundDrawable(d)
             return dialog
         }
+
         fun getRemoveAllCallLogsConfirmationDialog(
             context: Context,
-            model: RemoveAllCallLogsDialogModel
+            model: ConfirmationDialogModel
         ): Dialog {
             val dialog = Dialog(context, R.style.Theme_LinphoneDialog)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -76,6 +78,35 @@ class DialogUtils {
             val binding: DialogRemoveAllCallLogsBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(context),
                 R.layout.dialog_remove_all_call_logs,
+                null,
+                false
+            )
+            binding.viewModel = model
+            dialog.setContentView(binding.root)
+
+            val d: Drawable = ColorDrawable(
+                ContextCompat.getColor(dialog.context, R.color.dialog_background)
+            )
+            d.alpha = 166
+            dialog.window
+                ?.setLayout(
+                    WindowManager.LayoutParams.MATCH_PARENT,
+                    WindowManager.LayoutParams.MATCH_PARENT
+                )
+            dialog.window?.setBackgroundDrawable(d)
+            return dialog
+        }
+
+        fun getCancelContactChangesConfirmationDialog(
+            context: Context,
+            model: ConfirmationDialogModel
+        ): Dialog {
+            val dialog = Dialog(context, R.style.Theme_LinphoneDialog)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+
+            val binding: DialogCancelContactChangesBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.dialog_cancel_contact_changes,
                 null,
                 false
             )

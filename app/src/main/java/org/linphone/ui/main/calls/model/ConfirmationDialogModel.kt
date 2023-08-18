@@ -22,7 +22,7 @@ package org.linphone.ui.main.calls.model
 import androidx.lifecycle.MutableLiveData
 import org.linphone.utils.Event
 
-class RemoveAllCallLogsDialogModel() {
+class ConfirmationDialogModel() {
     val dismissEvent = MutableLiveData<Event<Boolean>>()
 
     val confirmRemovalEvent = MutableLiveData<Event<Boolean>>()

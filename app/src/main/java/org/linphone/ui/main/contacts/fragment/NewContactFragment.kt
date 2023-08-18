@@ -37,9 +37,11 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactNewOrEditFragmentBinding
 import org.linphone.ui.main.MainActivity
+import org.linphone.ui.main.calls.model.ConfirmationDialogModel
 import org.linphone.ui.main.contacts.model.NewOrEditNumberOrAddressModel
 import org.linphone.ui.main.contacts.viewmodel.ContactNewOrEditViewModel
 import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 
@@ -95,7 +97,26 @@ class NewContactFragment : GenericFragment() {
         viewModel.findFriendByRefKey("")
 
         binding.setCancelClickListener {
-            goBack()
+            val model = ConfirmationDialogModel()
+            val dialog = DialogUtils.getCancelContactChangesConfirmationDialog(
+                requireActivity(),
+                model
+            )
+
+            model.dismissEvent.observe(viewLifecycleOwner) {
+                it.consume {
+                    dialog.dismiss()
+                }
+            }
+
+            model.confirmRemovalEvent.observe(viewLifecycleOwner) {
+                it.consume {
+                    goBack()
+                    dialog.dismiss()
+                }
+            }
+
+            dialog.show()
         }
 
         binding.setPickImageClickListener {
