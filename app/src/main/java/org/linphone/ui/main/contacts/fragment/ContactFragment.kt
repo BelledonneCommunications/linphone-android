@@ -111,12 +111,15 @@ class ContactFragment : GenericFragment() {
 
         viewModel.showLongPressMenuForNumberOrAddressEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
-                val modalBottomSheet = ContactNumberOrAddressMenuDialogFragment({
+                val modalBottomSheet = ContactNumberOrAddressMenuDialogFragment(model.isSip, {
                     // onDismiss
                     model.selected.value = false
                 }, {
                     // onCopyNumberOrAddressToClipboard
                     copyNumberOrAddressToClipboard(model.displayedValue, model.isSip)
+                }, {
+                    // onInviteNumberOrAddress
+                    inviteContactBySms(model.displayedValue)
                 })
 
                 modalBottomSheet.show(
@@ -190,11 +193,22 @@ class ContactFragment : GenericFragment() {
         val sendIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_STREAM, publicUri)
-            putExtra(Intent.EXTRA_SUBJECT, "John Doe")
+            putExtra(Intent.EXTRA_SUBJECT, viewModel.contact.value?.friend?.name)
             type = ContactsContract.Contacts.CONTENT_VCARD_TYPE
         }
 
         val shareIntent = Intent.createChooser(sendIntent, null)
         startActivity(shareIntent)
+    }
+
+    private fun inviteContactBySms(number: String) {
+        Log.i("$TAG Sending SMS to [$number]")
+        val smsIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SENDTO
+            data = Uri.parse("smsto:$number")
+            putExtra("address", number)
+            putExtra("sms_body", "Coucou <3") // TODO FIXME
+        }
+        startActivity(smsIntent)
     }
 }
