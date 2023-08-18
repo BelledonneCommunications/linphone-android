@@ -91,6 +91,15 @@ class ContactsFragment : GenericFragment() {
             }
         }
 
+        sharedViewModel.showNewContactEvent.observe(
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                val navController = binding.contactsLeftNavContainer.findNavController()
+                navController.navigate(R.id.action_global_newContactFragment)
+            }
+        }
+
         sharedViewModel.navigateToConversationsEvent.observe(viewLifecycleOwner) {
             it.consume {
                 if (findNavController().currentDestination?.id == R.id.contactsFragment) {

@@ -33,19 +33,19 @@
             android:onClick="@{backClickListener}"
             android:visibility="@{viewModel.showBackButton ? View.VISIBLE : View.GONE}"
             android:src="@drawable/back"
-            app:layout_constraintBottom_toBottomOf="@id/invisible_title"
+            app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/invisible_title"/>
+            app:layout_constraintTop_toTopOf="@id/title"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_800"
-            android:id="@+id/invisible_title"
-            android:visibility="invisible"
+            android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="@dimen/top_bar_height"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:gravity="center_vertical"
+            android:text="Call history"
             android:textColor="@color/primary_color"
             android:textSize="16sp"
             app:layout_constraintEnd_toStartOf="@id/menu"
@@ -65,9 +65,9 @@
             android:paddingEnd="10dp"
             android:src="@drawable/dot_menu"
             app:tint="@color/primary_color"
-            app:layout_constraintBottom_toBottomOf="@id/invisible_title"
+            app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/invisible_title" />
+            app:layout_constraintTop_toTopOf="@id/title" />
 
         <ScrollView
             android:id="@+id/scrollView"

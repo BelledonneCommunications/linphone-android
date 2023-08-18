@@ -25,6 +25,8 @@ class CallLogModel(private val callLog: CallLog) {
 
     val dateTime = MutableLiveData<String>()
 
+    val friendRefKey: String?
+
     var friendExists: Boolean = false
 
     init {
@@ -43,11 +45,13 @@ class CallLogModel(private val callLog: CallLog) {
 
         val friend = coreContext.core.findFriend(address)
         if (friend != null) {
+            friendRefKey = friend.refKey
             avatarModel = ContactAvatarModel(friend)
             friendExists = true
         } else {
             val fakeFriend = coreContext.core.createFriend()
             fakeFriend.address = address
+            friendRefKey = null
             avatarModel = ContactAvatarModel(fakeFriend)
             friendExists = false
         }

@@ -112,7 +112,7 @@ class ContactsListFragment : GenericFragment() {
         }
 
         binding.setOnNewContactClicked {
-            findNavController().navigate(R.id.action_global_newContactFragment)
+            sharedViewModel.showNewContactEvent.value = Event(true)
         }
     }
 

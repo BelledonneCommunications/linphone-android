@@ -137,10 +137,18 @@ class CallFragment : GenericFragment() {
 
         popupView.setAddToContactsListener {
             // TODO: go to new contact fragment
+            sharedViewModel.navigateToContactsEvent.value = Event(true)
+            sharedViewModel.showNewContactEvent.value = Event(true)
+            popupWindow.dismiss()
         }
 
         popupView.setGoToContactListener {
-            // TODO: go to contact fragment
+            val friendRefKey = viewModel.callLogModel.value?.friendRefKey
+            if (!friendRefKey.isNullOrEmpty()) {
+                sharedViewModel.navigateToContactsEvent.value = Event(true)
+                sharedViewModel.showContactEvent.value = Event(friendRefKey)
+            }
+            popupWindow.dismiss()
         }
 
         popupView.setDeleteAllHistoryClickListener {

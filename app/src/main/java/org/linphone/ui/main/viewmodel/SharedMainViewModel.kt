@@ -62,6 +62,10 @@ class SharedMainViewModel : ViewModel() {
         MutableLiveData<Event<String>>()
     }
 
+    val showNewContactEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     /* Call logs related */
 
     val showCallLogEvent: MutableLiveData<Event<String>> by lazy {
