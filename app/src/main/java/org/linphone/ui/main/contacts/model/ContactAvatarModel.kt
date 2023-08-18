@@ -44,9 +44,7 @@ class ContactAvatarModel(val friend: Friend) {
 
     val name = MutableLiveData<String>()
 
-    val firstLetter: String by lazy {
-        LinphoneUtils.getFirstLetter(friend.name.orEmpty())
-    }
+    val firstLetter: String = LinphoneUtils.getFirstLetter(friend.name.orEmpty())
 
     val showFirstLetter = MutableLiveData<Boolean>()
 

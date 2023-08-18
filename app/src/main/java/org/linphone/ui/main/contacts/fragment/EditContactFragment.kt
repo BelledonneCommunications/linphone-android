@@ -23,18 +23,23 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
+import kotlinx.coroutines.launch
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactNewOrEditFragmentBinding
 import org.linphone.ui.main.contacts.viewmodel.ContactNewOrEditViewModel
 import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.utils.FileUtils
 
 class EditContactFragment : GenericFragment() {
     companion object {
-        const val TAG = "[Contact Edit Fragment]"
+        const val TAG = "[Edit Contact Fragment]"
     }
 
     private lateinit var binding: ContactNewOrEditFragmentBinding
@@ -44,6 +49,25 @@ class EditContactFragment : GenericFragment() {
     )
 
     private val args: EditContactFragmentArgs by navArgs()
+
+    private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        if (uri != null) {
+            Log.i("$TAG Picture picked [$uri]")
+            // TODO FIXME: use a better file name
+            val localFileName = FileUtils.getFileStoragePath("temp", true)
+            lifecycleScope.launch {
+                if (FileUtils.copyFile(uri, localFileName)) {
+                    viewModel.picturePath.postValue(localFileName.absolutePath)
+                } else {
+                    Log.e(
+                        "$TAG Failed to copy file from [$uri] to [${localFileName.absolutePath}]"
+                    )
+                }
+            }
+        } else {
+            Log.w("$TAG No picture picked")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -74,6 +98,10 @@ class EditContactFragment : GenericFragment() {
             goBack()
         }
 
+        binding.setPickImageClickListener {
+            pickImage()
+        }
+
         viewModel.saveChangesEvent.observe(viewLifecycleOwner) {
             it.consume { refKey ->
                 if (refKey.isNotEmpty()) {
@@ -90,5 +118,9 @@ class EditContactFragment : GenericFragment() {
                 startPostponedEnterTransition()
             }
         }
+    }
+
+    private fun pickImage() {
+        pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
     }
 }

@@ -37,6 +37,8 @@ class ContactNewOrEditViewModel() : ViewModel() {
 
     val isEdit = MutableLiveData<Boolean>()
 
+    val picturePath = MutableLiveData<String>()
+
     val firstName = MutableLiveData<String>()
 
     val lastName = MutableLiveData<String>()
@@ -78,6 +80,8 @@ class ContactNewOrEditViewModel() : ViewModel() {
                 } else {
                     // TODO ?
                 }
+
+                picturePath.postValue(friend.photo)
 
                 for (address in friend.addresses) {
                     addresses.add(
@@ -141,6 +145,12 @@ class ContactNewOrEditViewModel() : ViewModel() {
             if (vCard != null) {
                 vCard.familyName = lastName.value
                 vCard.givenName = firstName.value
+
+                // TODO FIXME : doesn't work for newly created contact
+                val picture = picturePath.value.orEmpty()
+                if (picture.isNotEmpty()) {
+                    friend.photo = picture
+                }
             }
 
             friend.organization = company.value.orEmpty()

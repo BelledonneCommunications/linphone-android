@@ -132,6 +132,16 @@ fun AppCompatTextView.setDrawableTint(color: Int) {
     }
 }
 
+@BindingAdapter("coil")
+fun loadPictureWithCoil(imageView: ImageView, file: String?) {
+    // UI thread
+    if (file != null) {
+        imageView.load(file) {
+            transformations(CircleCropTransformation())
+        }
+    }
+}
+
 @BindingAdapter("coilContact")
 fun loadContactPictureWithCoil2(imageView: ImageView, contact: ContactData?) {
     // UI thread
@@ -158,7 +168,7 @@ fun ImageView.setPresenceIcon(presence: ConsolidatedPresence?) {
 }
 
 @BindingAdapter("contactAvatar")
-fun AvatarView.loadContactPicture(contact: ContactAvatarModel?) {
+fun AvatarView.loadContactAvatar(contact: ContactAvatarModel?) {
     // UI thread
     if (contact == null) {
         loadImage(R.drawable.contact_avatar)

@@ -23,6 +23,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Address
+import org.linphone.core.Friend
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.contacts.model.ContactDeviceModel
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressClickListener
@@ -39,6 +40,8 @@ class ContactViewModel : ViewModel() {
     val company = MutableLiveData<String>()
 
     val title = MutableLiveData<String>()
+
+    val isFavourite = MutableLiveData<Boolean>()
 
     val showBackButton = MutableLiveData<Boolean>()
 
@@ -64,7 +67,7 @@ class ContactViewModel : ViewModel() {
         MutableLiveData<Event<String>>()
     }
 
-    val listener = object : ContactNumberOrAddressClickListener {
+    private val listener = object : ContactNumberOrAddressClickListener {
         override fun onClicked(address: Address?) {
             // UI thread
             if (address != null) {
@@ -80,6 +83,8 @@ class ContactViewModel : ViewModel() {
         }
     }
 
+    private lateinit var friend: Friend
+
     init {
         showNumbersAndAddresses.value = true
         showDevicesTrust.value = false // TODO FIXME: set it to true when it will work for real
@@ -90,6 +95,9 @@ class ContactViewModel : ViewModel() {
         coreContext.postOnCoreThread { core ->
             val friend = coreContext.contactsManager.findContactById(refKey)
             if (friend != null) {
+                this.friend = friend
+                isFavourite.postValue(friend.starred)
+
                 contact.postValue(ContactAvatarModel(friend))
 
                 val organization = friend.organization
@@ -111,6 +119,8 @@ class ContactViewModel : ViewModel() {
                     )
                     addressesAndNumbers.add(data)
                 }
+                val indexOfLastSipAddress = addressesAndNumbers.count()
+
                 for (number in friend.phoneNumbersWithLabel) {
                     val presenceModel = friend.getPresenceModelForUriOrTel(number.phoneNumber)
                     if (presenceModel != null && !presenceModel.contact.isNullOrEmpty()) {
@@ -120,15 +130,16 @@ class ContactViewModel : ViewModel() {
                             it.displayedValue == contact
                         }
                         if (!contact.isNullOrEmpty() && found == null) {
-                            val address = core.interpretUrl(contact, true)
+                            val address = core.interpretUrl(contact, false)
                             if (address != null) {
+                                address.clean() // To remove ;user=phone
                                 val data = ContactNumberOrAddressModel(
                                     address,
-                                    contact,
+                                    address.asStringUriOnly(),
                                     listener,
                                     true
                                 )
-                                addressesAndNumbers.add(data)
+                                addressesAndNumbers.add(indexOfLastSipAddress, data)
                             }
                         }
                     }
@@ -176,6 +187,17 @@ class ContactViewModel : ViewModel() {
             // TODO FIXME : openNativeContactEditor.value = Event(uri)
         } else {
             openLinphoneContactEditor.value = Event(contact.value?.id.orEmpty())
+        }
+    }
+
+    fun toggleFavourite() {
+        // UI thread
+        coreContext.postOnCoreThread {
+            friend.edit()
+            friend.starred = !friend.starred
+            friend.done()
+            isFavourite.postValue(friend.starred)
+            coreContext.contactsManager.notifyContactsListChanged()
         }
     }
 

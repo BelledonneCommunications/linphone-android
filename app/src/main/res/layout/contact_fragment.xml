@@ -484,14 +484,16 @@
                     app:layout_constraintTop_toBottomOf="@+id/action_edit"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    android:onClick="@{() -> viewModel.toggleFavourite()}"
                     style="@style/context_menu_action_label_style"
                     android:id="@+id/action_favorite"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="17dp"
                     android:layout_marginEnd="17dp"
-                    android:text="Add to favourites"
+                    android:text="@{viewModel.isFavourite() ? `Remove from favourites` : `Add to favourites`, default=`Add to favourites`}"
                     android:drawableStart="@drawable/favorite"
+                    android:drawableTint="@{viewModel.isFavourite() ? @color/red_danger : @color/gray_1, default=@color/gray_1}"
                     app:layout_constraintTop_toBottomOf="@id/action_edit"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>

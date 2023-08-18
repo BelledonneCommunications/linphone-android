@@ -9,6 +9,9 @@
             name="cancelClickListener"
             type="View.OnClickListener" />
         <variable
+            name="pickImageClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.main.contacts.viewmodel.ContactNewOrEditViewModel" />
     </data>
@@ -76,17 +79,27 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
+                    android:onClick="@{pickImageClickListener}"
                     android:id="@+id/avatar"
                     android:layout_width="@dimen/avatar_big_size"
                     android:layout_height="@dimen/avatar_big_size"
                     android:layout_marginTop="8dp"
-                    android:adjustViewBounds="true"
-                    android:padding="20dp"
-                    android:src="@drawable/pick_picture"
                     android:background="@drawable/shape_button_round"
+                    coil="@{viewModel.picturePath}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/overlay"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:padding="20dp"
+                    android:src="@drawable/pick_picture"
+                    app:layout_constraintEnd_toEndOf="@id/avatar"
+                    app:layout_constraintStart_toStartOf="@id/avatar"
+                    app:layout_constraintTop_toTopOf="@id/avatar"
+                    app:layout_constraintBottom_toBottomOf="@id/avatar" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/default_text_style"
