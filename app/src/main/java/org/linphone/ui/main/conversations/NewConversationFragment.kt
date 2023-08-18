@@ -33,11 +33,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.contacts.ContactsSelectionAdapter
-import org.linphone.databinding.NewConversationFragmentBinding
+import org.linphone.databinding.ConversationStartFragmentBinding
 import org.linphone.ui.main.conversations.viewmodel.NewConversationViewModel
 
 class NewConversationFragment : Fragment() {
-    private lateinit var binding: NewConversationFragmentBinding
+    private lateinit var binding: ConversationStartFragmentBinding
     private lateinit var adapter: ContactsSelectionAdapter
     private val viewModel: NewConversationViewModel by navGraphViewModels(
         R.id.conversationsFragment
@@ -56,7 +56,7 @@ class NewConversationFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = NewConversationFragmentBinding.inflate(layoutInflater)
+        binding = ConversationStartFragmentBinding.inflate(layoutInflater)
         return binding.root
     }
 

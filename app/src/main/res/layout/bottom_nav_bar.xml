@@ -30,6 +30,12 @@
         <variable
             name="meetingsSelected"
             type="Boolean" />
+        <variable
+            name="hideConversations"
+            type="Boolean" />
+        <variable
+            name="hideMeetings"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -48,8 +54,8 @@
             android:paddingBottom="16dp"
             android:drawableTop="@drawable/contacts"
             android:drawablePadding="10dp"
-            android:text="Contacts"
             android:drawableTint="@{contactsSelected ? @color/primary_color : @color/gray_9, default=@color/gray_9}"
+            android:text="Contacts"
             android:textStyle="@{contactsSelected ? Typeface.BOLD : Typeface.NORMAL}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/calls"
@@ -67,8 +73,8 @@
             android:paddingBottom="16dp"
             android:drawableTop="@drawable/calls"
             android:drawablePadding="10dp"
-            android:text="Calls"
             android:drawableTint="@{callsSelected ? @color/primary_color : @color/gray_9, default=@color/gray_9}"
+            android:text="Calls"
             android:textStyle="@{callsSelected ? Typeface.BOLD : Typeface.NORMAL}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/conversations"
@@ -78,6 +84,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/bottom_nav_bar_label_style"
             android:onClick="@{onConversationsClicked}"
+            android:visibility="@{hideConversations ? View.GONE : View.VISIBLE}"
             android:enabled="false"
             android:id="@+id/conversations"
             android:layout_width="0dp"
@@ -87,8 +94,8 @@
             android:paddingBottom="16dp"
             android:drawableTop="@drawable/conversations"
             android:drawablePadding="10dp"
-            android:text="Conversations"
             android:drawableTint="@{conversationsSelected ? @color/primary_color : @color/gray_9, default=@color/gray_9}"
+            android:text="Conversations"
             android:textStyle="@{conversationsSelected ? Typeface.BOLD : Typeface.NORMAL}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/meetings"
@@ -99,6 +106,7 @@
             style="@style/bottom_nav_bar_label_style"
             android:onClick="@{onMeetingsClicked}"
             android:id="@+id/meetings"
+            android:visibility="@{hideMeetings ? View.GONE : View.VISIBLE}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
@@ -106,8 +114,8 @@
             android:paddingBottom="16dp"
             android:drawableTop="@drawable/meetings"
             android:drawablePadding="10dp"
-            android:text="Meetings"
             android:drawableTint="@{meetingsSelected ? @color/primary_color : @color/gray_9, default=@color/gray_9}"
+            android:text="Meetings"
             android:textStyle="@{meetingsSelected ? Typeface.BOLD : Typeface.NORMAL}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

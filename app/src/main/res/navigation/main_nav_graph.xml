@@ -36,7 +36,7 @@
         android:id="@+id/newConversationFragment"
         android:name="org.linphone.ui.main.conversations.NewConversationFragment"
         android:label="NewConversationFragment"
-        tools:layout="@layout/new_conversation_fragment" >
+        tools:layout="@layout/conversation_start_fragment" >
         <action
             android:id="@+id/action_newConversationFragment_to_conversationFragment"
             app:destination="@id/conversationFragment"

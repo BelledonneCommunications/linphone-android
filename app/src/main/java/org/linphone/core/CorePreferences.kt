@@ -57,6 +57,10 @@ class CorePreferences constructor(private val context: Context) {
             config.setBool("app", "publish_presence", value)
         }
 
+    // Will disable chat feature completely
+    val disableChat: Boolean
+        get() = config.getBool("app", "disable_chat_feature", false)
+
     val defaultDomain: String
         get() = config.getString("app", "default_domain", "sip.linphone.org")!!
 

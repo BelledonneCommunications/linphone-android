@@ -30,6 +30,12 @@
         <variable
             name="meetingsSelected"
             type="Boolean" />
+        <variable
+            name="hideConversations"
+            type="Boolean" />
+        <variable
+            name="hideMeetings"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -61,6 +67,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:drawableTop="@drawable/calls"
+            android:drawableTint="@{callsSelected ? @color/primary_color : @color/gray_9, default=@color/gray_9}"
             android:drawablePadding="10dp"
             android:text="Calls"
             android:textStyle="@{callsSelected ? Typeface.BOLD : Typeface.NORMAL}"
@@ -72,6 +79,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/bottom_nav_bar_label_style"
             android:id="@+id/conversations"
+            android:visibility="@{hideConversations ? View.GONE : View.VISIBLE}"
             android:enabled="false"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -90,6 +98,7 @@
             style="@style/bottom_nav_bar_label_style"
             android:onClick="@{onMeetingsClicked}"
             android:id="@+id/meetings"
+            android:visibility="@{hideMeetings ? View.GONE : View.VISIBLE}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:drawableTop="@drawable/meetings"

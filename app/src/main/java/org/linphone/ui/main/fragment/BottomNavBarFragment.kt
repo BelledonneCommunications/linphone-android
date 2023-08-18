@@ -26,6 +26,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.databinding.BottomNavBarBinding
 import org.linphone.ui.main.viewmodel.SharedMainViewModel
@@ -87,5 +88,8 @@ class BottomNavBarFragment : Fragment() {
             binding.callsSelected = it == R.id.callsFragment
             binding.conversationsSelected = it == R.id.conversationsFragment
         }
+
+        binding.hideConversations = corePreferences.disableChat || true // TODO
+        binding.hideMeetings = true // TODO
     }
 }
