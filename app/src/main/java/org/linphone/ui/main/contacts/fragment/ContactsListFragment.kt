@@ -29,6 +29,7 @@ import androidx.core.view.doOnPreDraw
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.databinding.ContactsListFragmentBinding
 import org.linphone.ui.main.contacts.adapter.ContactsListAdapter
@@ -118,9 +119,26 @@ class ContactsListFragment : GenericFragment() {
     private fun configureAdapter(adapter: ContactsListAdapter) {
         adapter.contactLongClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
-                val modalBottomSheet = ContactsListMenuDialogFragment(model.friend) {
+                val modalBottomSheet = ContactsListMenuDialogFragment(model.friend.starred, {
                     adapter.resetSelection()
-                }
+                }, {
+                    // onFavourite
+                    coreContext.postOnCoreThread {
+                        model.friend.edit()
+                        model.friend.starred = !model.friend.starred
+                        model.friend.done()
+                        coreContext.contactsManager.notifyContactsListChanged()
+                    }
+                }, {
+                    // onShare
+                    // TODO
+                }, {
+                    // onDelete
+                    coreContext.postOnCoreThread {
+                        model.friend.remove()
+                        coreContext.contactsManager.notifyContactsListChanged()
+                    }
+                })
                 modalBottomSheet.show(parentFragmentManager, ContactsListMenuDialogFragment.TAG)
             }
         }

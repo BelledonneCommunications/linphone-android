@@ -25,12 +25,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import org.linphone.core.Friend
 import org.linphone.databinding.ContactsListLongPressMenuBinding
 
 class ContactsListMenuDialogFragment(
-    private val friend: Friend,
-    private val onDismiss: (() -> Unit)? = null
+    val isFavourite: Boolean,
+    private val onDismiss: (() -> Unit)? = null,
+    private val onFavourite: (() -> Unit)? = null,
+    private val onShare: (() -> Unit)? = null,
+    private val onDelete: (() -> Unit)? = null
 ) : BottomSheetDialogFragment() {
     companion object {
         const val TAG = "ContactsListMenuDialogFragment"
@@ -52,24 +54,20 @@ class ContactsListMenuDialogFragment(
         savedInstanceState: Bundle?
     ): View {
         val view = ContactsListLongPressMenuBinding.inflate(layoutInflater)
+        view.isFavourite = isFavourite
 
         view.setFavoriteClickListener {
-            // TODO
+            onFavourite?.invoke()
             dismiss()
         }
 
         view.setShareClickListener {
-            // TODO
-            dismiss()
-        }
-
-        view.setInviteClickListener {
-            // TODO
+            onShare?.invoke()
             dismiss()
         }
 
         view.setDeleteClickListener {
-            // TODO
+            onDelete?.invoke()
             dismiss()
         }
 
