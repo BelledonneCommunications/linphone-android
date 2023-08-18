@@ -5,6 +5,7 @@
 
     <data>
         <import type="android.view.View" />
+        <import type="android.text.InputType" />
         <variable
             name="backClickListener"
             type="View.OnClickListener" />
@@ -108,12 +109,22 @@
                 android:textSize="14sp"
                 android:textColor="@color/gray_9"
                 android:background="@drawable/shape_edit_text_background"
-                android:inputType="textPassword"
-                android:drawableEnd="@drawable/show_password"
-                android:drawableTint="@color/gray_1"
+                android:inputType="@{viewModel.showPassword ? InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD : InputType.TYPE_TEXT_VARIATION_PASSWORD, default=textPassword}"
                 app:layout_constraintTop_toBottomOf="@id/password_label"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
+
+            <ImageView
+                android:onClick="@{() -> viewModel.toggleShowPassword()}"
+                android:id="@+id/show_password"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginEnd="20dp"
+                android:src="@{viewModel.showPassword ? @drawable/hide_password : @drawable/show_password, default=@drawable/show_password}"
+                app:tint="@color/gray_1"
+                app:layout_constraintEnd_toEndOf="@id/password"
+                app:layout_constraintTop_toTopOf="@id/password"
+                app:layout_constraintBottom_toBottomOf="@id/password" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:onClick="@{() -> viewModel.login()}"

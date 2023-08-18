@@ -29,11 +29,13 @@ import android.provider.ContactsContract
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.FileProvider
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import java.io.File
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactFragmentBinding
@@ -45,6 +47,10 @@ import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 
 class ContactFragment : GenericFragment() {
+    companion object {
+        const val TAG = "[Contact Fragment]"
+    }
+
     private lateinit var binding: ContactFragmentBinding
 
     private lateinit var viewModel: ContactViewModel
@@ -80,6 +86,16 @@ class ContactFragment : GenericFragment() {
 
         binding.setBackClickListener {
             goBack()
+        }
+
+        binding.setShareClickListener {
+            viewModel.exportContactAsVCard()
+        }
+
+        binding.setDeleteClickListener {
+            viewModel.deleteContact()
+            goBack()
+            // TODO: show toast ?
         }
 
         sharedViewModel.isSlidingPaneSlideable.observe(viewLifecycleOwner) { slideable ->
@@ -143,6 +159,13 @@ class ContactFragment : GenericFragment() {
                 findNavController().navigate(action)
             }
         }
+
+        viewModel.vCardTerminatedEvent.observe(viewLifecycleOwner) {
+            it.consume { file ->
+                Log.i("$TAG Friend was exported as vCard file [${file.absolutePath}]")
+                shareContact(file)
+            }
+        }
     }
 
     private fun copyNumberOrAddressToClipboard(value: String, isSip: Boolean) {
@@ -154,5 +177,24 @@ class ContactFragment : GenericFragment() {
             "Numéro copié dans le presse-papier",
             R.drawable.check
         )
+    }
+
+    private fun shareContact(file: File) {
+        val publicUri = FileProvider.getUriForFile(
+            requireContext(),
+            requireContext().getString(R.string.file_provider),
+            file
+        )
+        Log.i("$TAG Public URI for vCard file is [$publicUri], starting intent chooser")
+
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_STREAM, publicUri)
+            putExtra(Intent.EXTRA_SUBJECT, "John Doe")
+            type = ContactsContract.Contacts.CONTENT_VCARD_TYPE
+        }
+
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        startActivity(shareIntent)
     }
 }

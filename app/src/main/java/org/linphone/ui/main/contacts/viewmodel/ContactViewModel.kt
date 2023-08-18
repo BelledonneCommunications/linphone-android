@@ -21,16 +21,26 @@ package org.linphone.ui.main.contacts.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import java.io.File
+import java.util.Locale
+import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Address
 import org.linphone.core.Friend
+import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.contacts.model.ContactDeviceModel
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressClickListener
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel
 import org.linphone.utils.Event
+import org.linphone.utils.FileUtils
 
 class ContactViewModel : ViewModel() {
+    companion object {
+        const val TAG = "[Contact ViewModel]"
+    }
+
     val contact = MutableLiveData<ContactAvatarModel>()
 
     val sipAddressesAndPhoneNumbers = MutableLiveData<ArrayList<ContactNumberOrAddressModel>>()
@@ -65,6 +75,10 @@ class ContactViewModel : ViewModel() {
 
     val openLinphoneContactEditor: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
+    }
+
+    val vCardTerminatedEvent: MutableLiveData<Event<File>> by lazy {
+        MutableLiveData<Event<File>>()
     }
 
     private val listener = object : ContactNumberOrAddressClickListener {
@@ -181,12 +195,52 @@ class ContactViewModel : ViewModel() {
 
     fun editContact() {
         // UI thread
-        val uri = contact.value?.friend?.nativeUri
-        if (uri != null) {
-            openLinphoneContactEditor.value = Event(contact.value?.id.orEmpty())
-            // TODO FIXME : openNativeContactEditor.value = Event(uri)
-        } else {
-            openLinphoneContactEditor.value = Event(contact.value?.id.orEmpty())
+        coreContext.postOnCoreThread {
+            if (::friend.isInitialized) {
+                val uri = friend.nativeUri
+                if (uri != null) {
+                    openNativeContactEditor.postValue(Event(uri))
+                } else {
+                    openLinphoneContactEditor.postValue(Event(contact.value?.id.orEmpty()))
+                }
+            }
+        }
+    }
+
+    fun exportContactAsVCard() {
+        // UI thread
+        coreContext.postOnCoreThread {
+            if (::friend.isInitialized) {
+                val vCard = friend.vcard?.asVcard4String()
+                if (!vCard.isNullOrEmpty()) {
+                    Log.i("$TAG Friend has been successfully dumped as vCard string")
+                    val fileName = friend.name.orEmpty().replace(" ", "_").toLowerCase(
+                        Locale.getDefault()
+                    )
+                    val file = FileUtils.getFileStorageCacheDir("$fileName.vcf")
+                    viewModelScope.launch {
+                        if (FileUtils.dumpStringToFile(vCard, file)) {
+                            Log.i("$TAG vCard string saved as file in cache folder")
+                            vCardTerminatedEvent.postValue(Event(file))
+                        } else {
+                            Log.e("$TAG Failed to save vCard string as file in cache folder")
+                        }
+                    }
+                } else {
+                    Log.e("$TAG Failed to dump contact as vCard string")
+                }
+            }
+        }
+    }
+
+    fun deleteContact() {
+        // UI thread
+        coreContext.postOnCoreThread { core ->
+            if (::friend.isInitialized) {
+                Log.i("$TAG Deleting friend [$friend]")
+                friend.remove()
+                coreContext.contactsManager.notifyContactsListChanged()
+            }
         }
     }
 

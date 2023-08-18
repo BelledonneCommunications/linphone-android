@@ -41,6 +41,8 @@ class AssistantViewModel : ViewModel() {
 
     val password = MutableLiveData<String>()
 
+    val showPassword = MutableLiveData<Boolean>()
+
     val loginEnabled = MediatorLiveData<Boolean>()
 
     val registrationInProgress = MutableLiveData<Boolean>()
@@ -84,6 +86,7 @@ class AssistantViewModel : ViewModel() {
     }
 
     init {
+        showPassword.value = false
         registrationInProgress.value = false
 
         loginEnabled.addSource(username) {
@@ -123,6 +126,11 @@ class AssistantViewModel : ViewModel() {
             core.addListener(coreListener)
             core.addAccount(newlyCreatedAccount)
         }
+    }
+
+    fun toggleShowPassword() {
+        // UI thread
+        showPassword.value = showPassword.value == false
     }
 
     private fun isLoginButtonEnabled(): Boolean {

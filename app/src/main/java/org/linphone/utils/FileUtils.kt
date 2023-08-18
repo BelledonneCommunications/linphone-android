@@ -47,6 +47,20 @@ class FileUtils {
             return file
         }
 
+        fun getFileStorageCacheDir(fileName: String): File {
+            val path = coreContext.context.cacheDir
+            Log.i("$TAG Cache directory is: $path")
+
+            var file = File(path, fileName)
+            var prefix = 1
+            while (file.exists()) {
+                file = File(path, prefix.toString() + "_" + fileName)
+                Log.w("$TAG File with that name already exists, renamed to ${file.name}")
+                prefix += 1
+            }
+            return file
+        }
+
         suspend fun copyFile(from: Uri, to: File): Boolean {
             try {
                 withContext(Dispatchers.IO) {
@@ -64,6 +78,25 @@ class FileUtils {
                 return true
             } catch (e: IOException) {
                 Log.e("$TAG copyFile [$from] to [$to] exception: $e")
+            }
+            return false
+        }
+
+        suspend fun dumpStringToFile(data: String, to: File): Boolean {
+            try {
+                withContext(Dispatchers.IO) {
+                    FileOutputStream(to).use { outputStream ->
+                        val inputStream = data.byteInputStream()
+                        val buffer = ByteArray(4096)
+                        var bytesRead: Int
+                        while (inputStream.read(buffer).also { bytesRead = it } >= 0) {
+                            outputStream.write(buffer, 0, bytesRead)
+                        }
+                    }
+                }
+                return true
+            } catch (e: IOException) {
+                Log.e("$TAG dumpStringToFile [$data] to [$to] exception: $e")
             }
             return false
         }

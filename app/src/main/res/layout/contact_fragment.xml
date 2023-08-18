@@ -10,6 +10,12 @@
             name="backClickListener"
             type="View.OnClickListener" />
         <variable
+            name="shareClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="deleteClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.main.contacts.viewmodel.ContactViewModel" />
     </data>
@@ -491,9 +497,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="17dp"
                     android:layout_marginEnd="17dp"
-                    android:text="@{viewModel.isFavourite() ? `Remove from favourites` : `Add to favourites`, default=`Add to favourites`}"
-                    android:drawableStart="@drawable/favorite"
-                    android:drawableTint="@{viewModel.isFavourite() ? @color/red_danger : @color/gray_1, default=@color/gray_1}"
+                    android:text="@{viewModel.isFavourite ? `Remove from favourites` : `Add to favourites`, default=`Add to favourites`}"
+                    android:drawableStart="@{viewModel.isFavourite ? @drawable/favourite : @drawable/not_favourite, default=@drawable/favourite}"
+                    android:drawableTint="@{viewModel.isFavourite ? @color/red_danger : @color/gray_1, default=@color/gray_1}"
                     app:layout_constraintTop_toBottomOf="@id/action_edit"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
@@ -509,6 +515,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/action_favorite"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    android:onClick="@{shareClickListener}"
                     style="@style/context_menu_action_label_style"
                     android:id="@+id/action_share"
                     android:layout_width="0dp"
@@ -532,29 +539,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/action_share"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/context_menu_action_label_style"
-                    android:id="@+id/action_invite"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="17dp"
-                    android:layout_marginEnd="17dp"
-                    android:text="Invite"
-                    android:drawableStart="@drawable/invite"
-                    app:layout_constraintTop_toBottomOf="@id/action_share"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"/>
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="17dp"
-                    android:layout_marginEnd="17dp"
-                    android:background="@color/blue_outgoing_message"
-                    app:layout_constraintStart_toStartOf="@id/action_invite"
-                    app:layout_constraintEnd_toEndOf="@id/action_invite"
-                    app:layout_constraintTop_toBottomOf="@+id/action_invite"/>
-
-                <androidx.appcompat.widget.AppCompatTextView
+                    android:onClick="@{deleteClickListener}"
                     style="@style/context_menu_danger_action_label_style"
                     android:id="@+id/action_delete"
                     android:layout_width="0dp"
@@ -563,7 +548,7 @@
                     android:layout_marginEnd="17dp"
                     android:text="Delete"
                     android:drawableStart="@drawable/delete"
-                    app:layout_constraintTop_toBottomOf="@id/action_invite"
+                    app:layout_constraintTop_toBottomOf="@id/action_share"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
 

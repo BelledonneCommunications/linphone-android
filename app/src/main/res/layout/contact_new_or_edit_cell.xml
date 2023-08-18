@@ -46,7 +46,7 @@
             android:textColor="@color/gray_9"
             android:background="@drawable/shape_edit_text_background"
             android:maxLines="1"
-            android:inputType="@{model.isSip ? InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS : InputType.TYPE_CLASS_PHONE}"
+            android:inputType="@{model.isSip ? InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS : InputType.TYPE_CLASS_PHONE}"
             app:layout_constraintTop_toBottomOf="@id/label"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/remove"/>
