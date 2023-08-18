@@ -43,9 +43,9 @@ class ContactNewOrEditViewModel() : ViewModel() {
 
     val lastName = MutableLiveData<String>()
 
-    val sipAddresses = MutableLiveData<ArrayList<NewOrEditNumberOrAddressModel>>()
+    val sipAddresses = ArrayList<NewOrEditNumberOrAddressModel>()
 
-    val phoneNumbers = MutableLiveData<ArrayList<NewOrEditNumberOrAddressModel>>()
+    val phoneNumbers = ArrayList<NewOrEditNumberOrAddressModel>()
 
     val company = MutableLiveData<String>()
 
@@ -57,6 +57,10 @@ class ContactNewOrEditViewModel() : ViewModel() {
 
     val friendFoundEvent = MutableLiveData<Event<Boolean>>()
 
+    val addNewNumberOrAddressFieldEvent = MutableLiveData<Event<NewOrEditNumberOrAddressModel>>()
+
+    val removeNewNumberOrAddressFieldEvent = MutableLiveData<Event<NewOrEditNumberOrAddressModel>>()
+
     fun findFriendByRefKey(refKey: String?) {
         // UI thread
         coreContext.postOnCoreThread { core ->
@@ -67,9 +71,6 @@ class ContactNewOrEditViewModel() : ViewModel() {
             }
             val exists = !friend.refKey.isNullOrEmpty()
             isEdit.postValue(exists)
-
-            val addresses = arrayListOf<NewOrEditNumberOrAddressModel>()
-            val numbers = arrayListOf<NewOrEditNumberOrAddressModel>()
 
             if (exists) {
                 Log.i("$TAG Found friend [$friend] using ref key [$refKey]")
@@ -84,45 +85,22 @@ class ContactNewOrEditViewModel() : ViewModel() {
                 picturePath.postValue(friend.photo)
 
                 for (address in friend.addresses) {
-                    addresses.add(
-                        NewOrEditNumberOrAddressModel(address.asStringUriOnly(), true, { }, { model ->
-                            removeModel(model)
-                        })
-                    )
+                    addSipAddress(address.asStringUriOnly())
                 }
                 for (number in friend.phoneNumbers) {
-                    numbers.add(
-                        NewOrEditNumberOrAddressModel(number, false, { }, { model ->
-                            removeModel(model)
-                        })
-                    )
+                    addPhoneNumber(number)
                 }
 
                 company.postValue(friend.organization)
                 jobTitle.postValue(friend.jobTitle)
-
-                friendFoundEvent.postValue(Event(true))
             } else if (refKey.orEmpty().isNotEmpty()) {
                 Log.e("$TAG No friend found using ref key [$refKey]")
             }
 
-            addresses.add(
-                NewOrEditNumberOrAddressModel("", true, {
-                    addNewModel(true)
-                }, { model ->
-                    removeModel(model)
-                })
-            )
-            numbers.add(
-                NewOrEditNumberOrAddressModel("", false, {
-                    addNewModel(false)
-                }, { model ->
-                    removeModel(model)
-                })
-            )
+            addSipAddress()
+            addPhoneNumber()
 
-            sipAddresses.postValue(addresses)
-            phoneNumbers.postValue(numbers)
+            friendFoundEvent.postValue(Event(exists))
         }
     }
 
@@ -159,7 +137,7 @@ class ContactNewOrEditViewModel() : ViewModel() {
             for (address in friend.addresses) {
                 friend.removeAddress(address)
             }
-            for (address in sipAddresses.value.orEmpty()) {
+            for (address in sipAddresses) {
                 val data = address.value.value
                 if (!data.isNullOrEmpty()) {
                     val parsedAddress = core.interpretUrl(data, true)
@@ -172,7 +150,7 @@ class ContactNewOrEditViewModel() : ViewModel() {
             for (number in friend.phoneNumbers) {
                 friend.removePhoneNumber(number)
             }
-            for (number in phoneNumbers.value.orEmpty()) {
+            for (number in phoneNumbers) {
                 val data = number.value.value
                 if (!data.isNullOrEmpty()) {
                     friend.addPhoneNumber(data)
@@ -201,43 +179,45 @@ class ContactNewOrEditViewModel() : ViewModel() {
         }
     }
 
-    private fun addNewModel(isSip: Boolean) {
-        // UI thread
-        // TODO FIXME: causes focus issues
-        val list = arrayListOf<NewOrEditNumberOrAddressModel>()
-        val source = if (isSip) sipAddresses.value.orEmpty() else phoneNumbers.value.orEmpty()
+    private fun addSipAddress(address: String = "", requestFieldToBeAddedInUi: Boolean = false) {
+        // Core thread
+        val newModel = NewOrEditNumberOrAddressModel(address, true, {
+            if (address.isEmpty()) {
+                addSipAddress(requestFieldToBeAddedInUi = true)
+            }
+        }, { model ->
+            removeModel(model)
+        })
+        sipAddresses.add(newModel)
 
-        list.addAll(source)
-        list.add(
-            NewOrEditNumberOrAddressModel("", isSip, {
-                addNewModel(isSip)
-            }, { model ->
-                removeModel(model)
-            })
-        )
+        if (requestFieldToBeAddedInUi) {
+            addNewNumberOrAddressFieldEvent.postValue(Event(newModel))
+        }
+    }
 
-        if (isSip) {
-            sipAddresses.value = list
-        } else {
-            phoneNumbers.value = list
+    private fun addPhoneNumber(number: String = "", requestFieldToBeAddedInUi: Boolean = false) {
+        // Core thread
+        val newModel = NewOrEditNumberOrAddressModel(number, false, {
+            if (number.isEmpty()) {
+                addPhoneNumber(requestFieldToBeAddedInUi = true)
+            }
+        }, { model ->
+            removeModel(model)
+        })
+        phoneNumbers.add(newModel)
+
+        if (requestFieldToBeAddedInUi) {
+            addNewNumberOrAddressFieldEvent.postValue(Event(newModel))
         }
     }
 
     private fun removeModel(model: NewOrEditNumberOrAddressModel) {
         // UI thread
-        val list = arrayListOf<NewOrEditNumberOrAddressModel>()
-        val source = if (model.isSip) sipAddresses.value.orEmpty() else phoneNumbers.value.orEmpty()
-
-        for (item in source) {
-            if (item != model) {
-                list.add(item)
-            }
-        }
-
         if (model.isSip) {
-            sipAddresses.value = list
+            sipAddresses.remove(model)
         } else {
-            phoneNumbers.value = list
+            phoneNumbers.remove(model)
         }
+        removeNewNumberOrAddressFieldEvent.value = Event(model)
     }
 }

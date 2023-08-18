@@ -6,6 +6,7 @@
     <data>
         <import type="android.view.View" />
         <import type="android.graphics.Typeface" />
+        <import type="android.text.InputType" />
         <variable
             name="model"
             type="org.linphone.ui.main.contacts.model.NewOrEditNumberOrAddressModel" />
@@ -44,6 +45,8 @@
             android:textSize="14sp"
             android:textColor="@color/gray_9"
             android:background="@drawable/shape_edit_text_background"
+            android:maxLines="1"
+            android:inputType="@{model.isSip ? InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS : InputType.TYPE_CLASS_PHONE}"
             app:layout_constraintTop_toBottomOf="@id/label"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/remove"/>

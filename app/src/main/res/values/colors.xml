@@ -3,7 +3,7 @@
     <color name="transparent_color">#00000000</color>
 
     <color name="primary_color">#FF5E00</color>
-    <color name="primary_color_disabled">#FFEACB</color>
+    <color name="primary_color_disabled">#4DFE5E00</color>
     <color name="primary_color_pressed">#B72D00</color>
 
     <color name="black">#000000</color>

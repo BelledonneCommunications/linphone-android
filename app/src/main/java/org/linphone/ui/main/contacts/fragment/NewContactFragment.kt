@@ -19,19 +19,25 @@
  */
 package org.linphone.ui.main.contacts.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import kotlinx.coroutines.launch
+import org.linphone.BR
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactNewOrEditFragmentBinding
+import org.linphone.ui.main.MainActivity
+import org.linphone.ui.main.contacts.model.NewOrEditNumberOrAddressModel
 import org.linphone.ui.main.contacts.viewmodel.ContactNewOrEditViewModel
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.Event
@@ -105,6 +111,56 @@ class NewContactFragment : GenericFragment() {
                     // TODO : show error
                 }
             }
+        }
+
+        viewModel.friendFoundEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                binding.sipAddresses.removeAllViews()
+                for (items in viewModel.sipAddresses) {
+                    addCell(items)
+                }
+                binding.phoneNumbers.removeAllViews()
+                for (items in viewModel.phoneNumbers) {
+                    addCell(items)
+                }
+            }
+        }
+
+        viewModel.addNewNumberOrAddressFieldEvent.observe(viewLifecycleOwner) {
+            it.consume { model ->
+                addCell(model)
+            }
+        }
+
+        viewModel.removeNewNumberOrAddressFieldEvent.observe(viewLifecycleOwner) {
+            it.consume { model ->
+                removeCell(model)
+            }
+        }
+    }
+
+    private fun addCell(model: NewOrEditNumberOrAddressModel) {
+        val inflater = requireContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val parent = if (model.isSip) binding.sipAddresses else binding.phoneNumbers
+
+        val cellBinding = DataBindingUtil.inflate<ViewDataBinding>(
+            inflater,
+            R.layout.contact_new_or_edit_cell,
+            parent,
+            false
+        )
+        cellBinding.setVariable(BR.model, model)
+        cellBinding.lifecycleOwner = (requireActivity() as MainActivity)
+
+        parent.addView(cellBinding.root)
+    }
+
+    private fun removeCell(model: NewOrEditNumberOrAddressModel) {
+        val parent = if (model.isSip) binding.sipAddresses else binding.phoneNumbers
+        parent.removeAllViews()
+        val source = if (model.isSip) viewModel.sipAddresses else viewModel.phoneNumbers
+        for (items in source) {
+            addCell(items)
         }
     }
 

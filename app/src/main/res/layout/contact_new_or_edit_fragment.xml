@@ -140,7 +140,9 @@
                     android:text="@={viewModel.firstName, default=`John`}"
                     android:textSize="14sp"
                     android:textColor="@color/gray_9"
+                    android:maxLines="1"
                     android:background="@drawable/shape_edit_text_background"
+                    android:inputType="text|textPersonName"
                     app:layout_constraintTop_toBottomOf="@id/first_name_label"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
@@ -172,7 +174,9 @@
                     android:text="@={viewModel.lastName, default=`Doe`}"
                     android:textSize="14sp"
                     android:textColor="@color/gray_9"
+                    android:maxLines="1"
                     android:background="@drawable/shape_edit_text_background"
+                    android:inputType="text|textPersonName"
                     app:layout_constraintTop_toBottomOf="@id/last_name_label"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
@@ -181,32 +185,28 @@
                     android:id="@+id/sip_addresses"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="40dp"
+                    android:layout_marginTop="30dp"
                     android:orientation="vertical"
                     app:layout_constraintTop_toBottomOf="@id/last_name"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    entries="@{viewModel.sipAddresses}"
-                    layout="@{@layout/contact_new_or_edit_cell}"/>
+                    app:layout_constraintEnd_toEndOf="parent"/>
 
                 <LinearLayout
                     android:id="@+id/phone_numbers"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="40dp"
+                    android:layout_marginTop="30dp"
                     android:orientation="vertical"
                     app:layout_constraintTop_toBottomOf="@id/sip_addresses"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    entries="@{viewModel.phoneNumbers}"
-                    layout="@{@layout/contact_new_or_edit_cell}"/>
+                    app:layout_constraintEnd_toEndOf="parent"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/default_text_style_700"
                     android:id="@+id/company_label"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="40dp"
+                    android:layout_marginTop="30dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:text="Company"
@@ -228,7 +228,9 @@
                     android:text="@={viewModel.company, default=`Belledonne Comm`}"
                     android:textSize="14sp"
                     android:textColor="@color/gray_9"
+                    android:maxLines="1"
                     android:background="@drawable/shape_edit_text_background"
+                    android:inputType="text"
                     app:layout_constraintTop_toBottomOf="@id/company_label"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
@@ -260,7 +262,9 @@
                     android:text="@={viewModel.jobTitle, default=`Android dev`}"
                     android:textSize="14sp"
                     android:textColor="@color/gray_9"
+                    android:maxLines="1"
                     android:background="@drawable/shape_edit_text_background"
+                    android:inputType="text"
                     app:layout_constraintTop_toBottomOf="@id/job_title_label"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
