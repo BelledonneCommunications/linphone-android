@@ -10,6 +10,23 @@ plugins {
 
 def packageName = "org.linphone"
 
+configurations {
+    customImplementation.extendsFrom implementation
+}
+
+task linphoneSdkSource() {
+    doLast {
+        configurations.customImplementation.getIncoming().each {
+            it.getResolutionResult().allComponents.each {
+                if (it.id.getDisplayName().contains("linphone-sdk-android")) {
+                    println 'Linphone SDK used is ' + it.moduleVersion.version + ' from ' + it.properties["repositoryName"]
+                }
+            }
+        }
+    }
+}
+project.tasks['preBuild'].dependsOn 'linphoneSdkSource'
+
 android {
     namespace 'org.linphone'
     compileSdk 34
