@@ -20,6 +20,8 @@
 package org.linphone.ui.voip.viewmodel
 
 import android.animation.ValueAnimator
+import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import java.util.Locale
@@ -91,10 +93,12 @@ class CurrentCallViewModel() : ViewModel() {
     private lateinit var call: Call
 
     private val callListener = object : CallListenerStub() {
+        @WorkerThread
         override fun onEncryptionChanged(call: Call, on: Boolean, authenticationToken: String?) {
             updateEncryption()
         }
 
+        @WorkerThread
         override fun onStateChanged(call: Call, state: Call.State?, message: String) {
             if (LinphoneUtils.isCallOutgoing(call.state)) {
                 isVideoEnabled.postValue(call.params.isVideoEnabled)
@@ -124,6 +128,7 @@ class CurrentCallViewModel() : ViewModel() {
         }
     }
 
+    @UiThread
     override fun onCleared() {
         super.onCleared()
 
@@ -134,24 +139,24 @@ class CurrentCallViewModel() : ViewModel() {
         }
     }
 
+    @UiThread
     fun answer() {
-        // UI thread
         coreContext.postOnCoreThread {
             Log.i("$TAG Answering call [$call]")
             call.accept()
         }
     }
 
+    @UiThread
     fun hangUp() {
-        // UI thread
         coreContext.postOnCoreThread {
             Log.i("$TAG Terminating call [$call]")
             call.terminate()
         }
     }
 
+    @UiThread
     fun updateZrtpSas(verified: Boolean) {
-        // UI thread
         coreContext.postOnCoreThread {
             if (::call.isInitialized) {
                 call.authenticationTokenVerified = verified
@@ -159,8 +164,8 @@ class CurrentCallViewModel() : ViewModel() {
         }
     }
 
+    @UiThread
     fun toggleMuteMicrophone() {
-        // UI thread
         // TODO: check record audio permission
         coreContext.postOnCoreThread {
             call.microphoneMuted = !call.microphoneMuted
@@ -168,13 +173,13 @@ class CurrentCallViewModel() : ViewModel() {
         }
     }
 
+    @UiThread
     fun changeAudioOutputDevice() {
-        // UI thread
         // TODO: display list of all output devices
     }
 
+    @UiThread
     fun toggleVideo() {
-        // UI thread
         // TODO: check video permission
 
         coreContext.postOnCoreThread { core ->
@@ -202,17 +207,21 @@ class CurrentCallViewModel() : ViewModel() {
         }
     }
 
+    @UiThread
     fun switchCamera() {
-        coreContext.switchCamera()
+        coreContext.postOnCoreThread {
+            coreContext.switchCamera()
+        }
     }
 
+    @UiThread
     fun toggleFullScreen() {
         if (fullScreenMode.value == false && isVideoEnabled.value == false) return
         fullScreenMode.value = fullScreenMode.value != true
     }
 
+    @UiThread
     fun toggleExpandActionsMenu() {
-        // UI thread
         isActionsMenuExpanded.value = isActionsMenuExpanded.value == false
 
         if (isActionsMenuExpanded.value == true) {
@@ -220,9 +229,9 @@ class CurrentCallViewModel() : ViewModel() {
         } else {
             extraButtonsMenuAnimator.reverse()
         }
-        // toggleExtraActionMenuVisibilityEvent.value = Event(isActionsMenuExpanded.value == true)
     }
 
+    @WorkerThread
     fun forceShowZrtpSasDialog() {
         val authToken = call.authenticationToken
         if (authToken.orEmpty().isNotEmpty()) {
@@ -230,6 +239,7 @@ class CurrentCallViewModel() : ViewModel() {
         }
     }
 
+    @WorkerThread
     private fun showZrtpSasDialog(authToken: String) {
         val toRead: String
         val toListen: String
@@ -246,8 +256,8 @@ class CurrentCallViewModel() : ViewModel() {
         showZrtpSasDialogEvent.postValue(Event(Pair(toRead, toListen)))
     }
 
+    @WorkerThread
     private fun updateEncryption() {
-        // Core thread
         when (call.currentParams.mediaEncryption) {
             MediaEncryption.ZRTP -> {
                 val authToken = call.authenticationToken
@@ -269,8 +279,8 @@ class CurrentCallViewModel() : ViewModel() {
         }
     }
 
+    @WorkerThread
     private fun configureCall(call: Call) {
-        // Core thread
         call.addListener(callListener)
 
         if (LinphoneUtils.isCallOutgoing(call.state)) {

@@ -1,5 +1,6 @@
 package org.linphone.ui.main.calls.viewmodel
 
+import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -24,8 +25,8 @@ class CallLogViewModel : ViewModel() {
 
     private lateinit var address: Address
 
+    @UiThread
     fun findCallLogByCallId(callId: String) {
-        // UI thread
         coreContext.postOnCoreThread { core ->
             val callLog = core.findCallLogFromCallId(callId)
             if (callLog != null) {
@@ -47,8 +48,8 @@ class CallLogViewModel : ViewModel() {
         }
     }
 
+    @UiThread
     fun deleteHistory() {
-        // UI thread
         coreContext.postOnCoreThread { core ->
             for (model in historyCallLogs.value.orEmpty()) {
                 core.removeCallLog(model.callLog)
@@ -57,8 +58,8 @@ class CallLogViewModel : ViewModel() {
         }
     }
 
+    @UiThread
     fun startAudioCall() {
-        // UI thread
         coreContext.postOnCoreThread { core ->
             val params = core.createCallParams(null)
             params?.isVideoEnabled = false
@@ -66,8 +67,8 @@ class CallLogViewModel : ViewModel() {
         }
     }
 
+    @UiThread
     fun startVideoCall() {
-        // UI thread
         coreContext.postOnCoreThread { core ->
             val params = core.createCallParams(null)
             params?.isVideoEnabled = true
@@ -75,8 +76,8 @@ class CallLogViewModel : ViewModel() {
         }
     }
 
+    @UiThread
     fun sendMessage() {
-        // UI thread
         // TODO
     }
 }

@@ -19,6 +19,8 @@
  */
 package org.linphone.ui.main.contacts.viewmodel
 
+import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -61,8 +63,8 @@ class ContactNewOrEditViewModel() : ViewModel() {
 
     val removeNewNumberOrAddressFieldEvent = MutableLiveData<Event<NewOrEditNumberOrAddressModel>>()
 
+    @UiThread
     fun findFriendByRefKey(refKey: String?) {
-        // UI thread
         coreContext.postOnCoreThread { core ->
             friend = if (refKey.isNullOrEmpty()) {
                 core.createFriend()
@@ -104,8 +106,8 @@ class ContactNewOrEditViewModel() : ViewModel() {
         }
     }
 
+    @UiThread
     fun saveChanges() {
-        // UI thread
         coreContext.postOnCoreThread { core ->
             var status = Status.OK
 
@@ -179,8 +181,8 @@ class ContactNewOrEditViewModel() : ViewModel() {
         }
     }
 
+    @WorkerThread
     private fun addSipAddress(address: String = "", requestFieldToBeAddedInUi: Boolean = false) {
-        // Core thread
         val newModel = NewOrEditNumberOrAddressModel(address, true, {
             if (address.isEmpty()) {
                 addSipAddress(requestFieldToBeAddedInUi = true)
@@ -195,8 +197,8 @@ class ContactNewOrEditViewModel() : ViewModel() {
         }
     }
 
+    @WorkerThread
     private fun addPhoneNumber(number: String = "", requestFieldToBeAddedInUi: Boolean = false) {
-        // Core thread
         val newModel = NewOrEditNumberOrAddressModel(number, false, {
             if (number.isEmpty()) {
                 addPhoneNumber(requestFieldToBeAddedInUi = true)
@@ -211,8 +213,8 @@ class ContactNewOrEditViewModel() : ViewModel() {
         }
     }
 
+    @UiThread
     private fun removeModel(model: NewOrEditNumberOrAddressModel) {
-        // UI thread
         if (model.isSip) {
             sipAddresses.remove(model)
         } else {

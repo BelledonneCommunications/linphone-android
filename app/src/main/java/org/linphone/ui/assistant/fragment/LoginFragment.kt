@@ -23,6 +23,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.UiThread
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import org.linphone.R
@@ -30,6 +31,7 @@ import org.linphone.databinding.AssistantLoginFragmentBinding
 import org.linphone.ui.assistant.viewmodel.AssistantViewModel
 import org.linphone.ui.main.fragment.GenericFragment
 
+@UiThread
 class LoginFragment : GenericFragment() {
     private lateinit var binding: AssistantLoginFragmentBinding
 

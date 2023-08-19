@@ -19,6 +19,8 @@
  */
 package org.linphone.contacts
 
+import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
 import androidx.loader.app.LoaderManager
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Core
@@ -34,13 +36,14 @@ class ContactsManager {
     companion object {
         const val TAG = "[Contacts Manager]"
     }
+
     val localFriends = arrayListOf<Friend>()
 
     private val listeners = arrayListOf<ContactsListener>()
 
     private val friendListListener: FriendListListenerStub = object : FriendListListenerStub() {
+        @WorkerThread
         override fun onPresenceReceived(list: FriendList, friends: Array<Friend>) {
-            // Core thread
             Log.i("$TAG Presence received")
             for (listener in listeners) {
                 listener.onContactsLoaded()
@@ -49,25 +52,25 @@ class ContactsManager {
     }
 
     private val coreListener: CoreListenerStub = object : CoreListenerStub() {
+        @WorkerThread
         override fun onFriendListCreated(core: Core, friendList: FriendList) {
-            // Core thread
             friendList.addListener(friendListListener)
         }
 
+        @WorkerThread
         override fun onFriendListRemoved(core: Core, friendList: FriendList) {
-            // Core thread
             friendList.removeListener(friendListListener)
         }
     }
 
+    @UiThread
     fun loadContacts(activity: MainActivity) {
-        // UI thread
         val manager = LoaderManager.getInstance(activity)
         manager.restartLoader(0, null, ContactLoader())
     }
 
+    @UiThread
     fun addListener(listener: ContactsListener) {
-        // UI thread
         if (coreContext.isReady()) {
             coreContext.postOnCoreThread {
                 listeners.add(listener)
@@ -75,8 +78,8 @@ class ContactsManager {
         }
     }
 
+    @UiThread
     fun removeListener(listener: ContactsListener) {
-        // UI thread
         if (coreContext.isReady()) {
             coreContext.postOnCoreThread {
                 listeners.remove(listener)
@@ -84,28 +87,28 @@ class ContactsManager {
         }
     }
 
+    @UiThread
     fun onContactsLoaded() {
-        // UI thread
         coreContext.postOnCoreThread {
             updateLocalContacts()
             notifyContactsListChanged()
         }
     }
 
+    @WorkerThread
     fun notifyContactsListChanged() {
-        // Core thread
         for (listener in listeners) {
             listener.onContactsLoaded()
         }
     }
 
+    @WorkerThread
     fun findContactById(id: String): Friend? {
-        // Core thread
         return coreContext.core.defaultFriendList?.findFriendByRefKey(id)
     }
 
+    @WorkerThread
     fun updateLocalContacts() {
-        // Core thread
         Log.i("$TAG Updating local contact(s)")
         localFriends.clear()
 
@@ -123,8 +126,8 @@ class ContactsManager {
         }
     }
 
+    @WorkerThread
     fun onCoreStarted() {
-        // Core thread
         val core = coreContext.core
         core.addListener(coreListener)
         for (list in core.friendsLists) {
@@ -134,8 +137,8 @@ class ContactsManager {
         updateLocalContacts()
     }
 
+    @WorkerThread
     fun onCoreStopped() {
-        // Core thread
         val core = coreContext.core
         core.removeListener(coreListener)
         for (list in core.friendsLists) {

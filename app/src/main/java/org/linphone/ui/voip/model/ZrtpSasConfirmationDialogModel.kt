@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.voip.model
 
+import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import java.util.Random
@@ -77,10 +78,12 @@ class ZrtpSasConfirmationDialogModel(
         letters4.value = if (correctLetters == 3) authTokenToListen else randomLetters4
     }
 
+    @UiThread
     fun dismiss() {
         dismissEvent.value = Event(true)
     }
 
+    @UiThread
     fun lettersClicked(letters: MutableLiveData<String>) {
         val verified = letters.value == authTokenToListen
         Log.i(

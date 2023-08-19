@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.main.contacts.model
 
+import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 
 class NewOrEditNumberOrAddressModel(
@@ -37,16 +38,16 @@ class NewOrEditNumberOrAddressModel(
         showRemoveButton.postValue(defaultValue.isNotEmpty())
     }
 
+    @UiThread
     fun onValueChanged(newValue: String) {
-        // UI thread
         if (newValue.isNotEmpty() && showRemoveButton.value == false) {
             onValueNoLongerEmpty?.invoke()
             showRemoveButton.value = true
         }
     }
 
+    @UiThread
     fun remove() {
-        // Core thread
         onRemove?.invoke(this)
     }
 }

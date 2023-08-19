@@ -29,6 +29,7 @@ import android.provider.ContactsContract
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.UiThread
 import androidx.core.content.FileProvider
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
@@ -46,6 +47,7 @@ import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 
+@UiThread
 class ContactFragment : GenericFragment() {
     companion object {
         const val TAG = "[Contact Fragment]"

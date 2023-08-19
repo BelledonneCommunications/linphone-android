@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.main.conversations.viewmodel
 
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -103,6 +104,7 @@ class NewConversationViewModel : ViewModel() {
         groupEnabled.value = true
     }
 
+    @WorkerThread
     private fun processMagicSearchResults(results: Array<SearchResult>) {
         Log.i("[New Conversation ViewModel] [${results.size}] matching results")
         contactsList.value.orEmpty().forEach(ContactData::onDestroy)

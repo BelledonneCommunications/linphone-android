@@ -25,6 +25,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.UiThread
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
@@ -35,6 +36,7 @@ import org.linphone.ui.voip.viewmodel.CurrentCallViewModel
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.slideInToastFromTop
 
+@UiThread
 class ActiveCallFragment : GenericFragment() {
     private lateinit var binding: VoipActiveCallFragmentBinding
 

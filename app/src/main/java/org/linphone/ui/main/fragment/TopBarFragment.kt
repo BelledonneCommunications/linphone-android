@@ -23,6 +23,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.R
@@ -34,6 +35,7 @@ import org.linphone.utils.Event
 import org.linphone.utils.hideKeyboard
 import org.linphone.utils.showKeyboard
 
+@UiThread
 class TopBarFragment : Fragment() {
     private lateinit var binding: TopSearchBarBinding
 

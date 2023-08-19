@@ -25,12 +25,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.transition.AutoTransition
 import org.linphone.R
 import org.linphone.databinding.EmptyFragmentBinding
 
+@UiThread
 class EmptyFragment : Fragment() {
     private lateinit var binding: EmptyFragmentBinding
 

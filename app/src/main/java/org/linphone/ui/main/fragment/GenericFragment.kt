@@ -23,6 +23,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -30,6 +31,7 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.viewmodel.SharedMainViewModel
 
+@UiThread
 abstract class GenericFragment : Fragment() {
     protected lateinit var sharedViewModel: SharedMainViewModel
 

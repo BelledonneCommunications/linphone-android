@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.main.calls.model
 
+import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.utils.Event
 
@@ -27,13 +28,13 @@ class ConfirmationDialogModel() {
 
     val confirmRemovalEvent = MutableLiveData<Event<Boolean>>()
 
+    @UiThread
     fun dismiss() {
-        // UI thread
         dismissEvent.value = Event(true)
     }
 
+    @UiThread
     fun confirmRemoval() {
-        // UI thread
         confirmRemovalEvent.value = Event(true)
     }
 }

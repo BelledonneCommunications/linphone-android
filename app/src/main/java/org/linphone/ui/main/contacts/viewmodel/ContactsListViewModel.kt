@@ -19,6 +19,8 @@
  */
 package org.linphone.ui.main.contacts.viewmodel
 
+import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import java.util.ArrayList
@@ -52,16 +54,16 @@ class ContactsListViewModel : ViewModel() {
     private lateinit var magicSearch: MagicSearch
 
     private val magicSearchListener = object : MagicSearchListenerStub() {
+        @WorkerThread
         override fun onSearchResultsReceived(magicSearch: MagicSearch) {
-            // Core thread
             Log.i("$TAG Magic search contacts available")
             processMagicSearchResults(magicSearch.lastSearch)
         }
     }
 
     private val contactsListener = object : ContactsListener {
+        @WorkerThread
         override fun onContactsLoaded() {
-            // Core thread
             Log.i("$TAG Contacts have been (re)loaded, updating list")
             applyFilter(
                 currentFilter,
@@ -85,6 +87,7 @@ class ContactsListViewModel : ViewModel() {
         applyFilter(currentFilter)
     }
 
+    @UiThread
     override fun onCleared() {
         coreContext.postOnCoreThread {
             magicSearch.removeListener(magicSearchListener)
@@ -93,13 +96,13 @@ class ContactsListViewModel : ViewModel() {
         super.onCleared()
     }
 
+    @UiThread
     fun toggleFavouritesVisibility() {
-        // UI thread
         showFavourites.value = showFavourites.value == false
     }
 
+    @WorkerThread
     fun processMagicSearchResults(results: Array<SearchResult>) {
-        // Core thread
         Log.i("$TAG Processing ${results.size} results")
         contactsList.value.orEmpty().forEach(ContactAvatarModel::destroy)
 
@@ -140,8 +143,8 @@ class ContactsListViewModel : ViewModel() {
         Log.i("$TAG Processed ${results.size} results")
     }
 
+    @UiThread
     fun applyFilter(filter: String) {
-        // UI thread
         isListFiltered.value = filter.isNotEmpty()
         coreContext.postOnCoreThread {
             applyFilter(
@@ -153,13 +156,13 @@ class ContactsListViewModel : ViewModel() {
         }
     }
 
+    @WorkerThread
     private fun applyFilter(
         filter: String,
         domain: String,
         sources: Int,
         aggregation: MagicSearch.Aggregation
     ) {
-        // Core thread
         if (previousFilter.isNotEmpty() && (
             previousFilter.length > filter.length ||
                 (previousFilter.length == filter.length && previousFilter != filter)
@@ -181,8 +184,8 @@ class ContactsListViewModel : ViewModel() {
         )
     }
 
+    @WorkerThread
     private fun createFriendFromSearchResult(searchResult: SearchResult): Friend {
-        // Core thread
         val searchResultFriend = searchResult.friend
         if (searchResultFriend != null) return searchResultFriend
 

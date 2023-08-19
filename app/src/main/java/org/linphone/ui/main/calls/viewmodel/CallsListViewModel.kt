@@ -19,6 +19,8 @@
  */
 package org.linphone.ui.main.calls.viewmodel
 
+import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -51,6 +53,7 @@ class CallsListViewModel : ViewModel() {
         }
     }
 
+    @UiThread
     override fun onCleared() {
         super.onCleared()
 
@@ -59,8 +62,8 @@ class CallsListViewModel : ViewModel() {
         }
     }
 
+    @UiThread
     fun applyFilter(filter: String = currentFilter) {
-        // UI thread
         currentFilter = filter
 
         coreContext.postOnCoreThread {
@@ -68,8 +71,8 @@ class CallsListViewModel : ViewModel() {
         }
     }
 
+    @UiThread
     fun removeAllCallLogs() {
-        // UI thread
         coreContext.postOnCoreThread { core ->
             for (callLog in core.callLogs) {
                 core.removeCallLog(callLog)
@@ -79,8 +82,8 @@ class CallsListViewModel : ViewModel() {
         }
     }
 
+    @WorkerThread
     private fun computeCallLogsList(filter: String) {
-        // Core thread
         val list = arrayListOf<CallLogModel>()
 
         // TODO : filter depending on currently selected account

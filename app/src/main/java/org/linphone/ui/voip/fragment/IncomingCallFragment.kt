@@ -24,11 +24,13 @@ import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.UiThread
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.databinding.VoipIncomingCallFragmentBinding
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.ui.voip.viewmodel.CurrentCallViewModel
 
+@UiThread
 class IncomingCallFragment : GenericFragment() {
     private lateinit var binding: VoipIncomingCallFragmentBinding
 

@@ -25,6 +25,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.annotation.UiThread
 import androidx.core.view.doOnPreDraw
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
@@ -37,6 +38,7 @@ import org.linphone.ui.main.contacts.viewmodel.ContactsListViewModel
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.Event
 
+@UiThread
 class ContactsListFragment : GenericFragment() {
     private lateinit var binding: ContactsListFragmentBinding
 

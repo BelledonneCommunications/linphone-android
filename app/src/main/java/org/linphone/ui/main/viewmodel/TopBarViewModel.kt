@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.main.viewmodel
 
+import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -53,6 +54,7 @@ class TopBarViewModel : ViewModel() {
         }
     }
 
+    @UiThread
     override fun onCleared() {
         super.onCleared()
 
@@ -61,26 +63,26 @@ class TopBarViewModel : ViewModel() {
         }
     }
 
+    @UiThread
     fun openDrawerMenu() {
-        // UI thread
         openDrawerMenuEvent.value = Event(true)
     }
 
+    @UiThread
     fun openSearchBar() {
-        // UI thread
         searchBarVisible.value = true
         focusSearchBarEvent.value = Event(true)
     }
 
+    @UiThread
     fun closeSearchBar() {
-        // UI thread
         clearFilter()
         searchBarVisible.value = false
         focusSearchBarEvent.value = Event(false)
     }
 
+    @UiThread
     fun clearFilter() {
-        // UI thread
         searchFilter.value = ""
     }
 }

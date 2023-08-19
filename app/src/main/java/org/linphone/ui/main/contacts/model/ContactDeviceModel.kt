@@ -19,12 +19,14 @@
  */
 package org.linphone.ui.main.contacts.model
 
+import androidx.annotation.UiThread
+
 class ContactDeviceModel(
     val name: String,
     val trusted: Boolean
 ) {
+    @UiThread
     fun startCallToDevice() {
-        // UI thread
         // TODO
     }
 }

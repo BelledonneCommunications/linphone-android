@@ -26,6 +26,9 @@ import android.content.Intent
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
+import androidx.annotation.AnyThread
+import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
 import androidx.emoji2.text.EmojiCompat
 import java.util.*
 import org.linphone.BuildConfig
@@ -55,10 +58,12 @@ class CoreContext(val context: Context) : HandlerThread("Core Thread") {
     private lateinit var coreThread: Handler
 
     private val coreListener = object : CoreListenerStub() {
+        @WorkerThread
         override fun onGlobalStateChanged(core: Core, state: GlobalState, message: String) {
             Log.i("$TAG Global state changed: $state")
         }
 
+        @WorkerThread
         override fun onCallStateChanged(
             core: Core,
             call: Call,
@@ -67,10 +72,14 @@ class CoreContext(val context: Context) : HandlerThread("Core Thread") {
         ) {
             Log.i("$TAG Call state changed [$state]")
             if (state == Call.State.OutgoingProgress) {
-                showCallActivity()
+                postOnMainThread {
+                    showCallActivity()
+                }
             } else if (state == Call.State.IncomingReceived) {
                 // TODO FIXME : remove when full screen intent notification
-                showCallActivity()
+                postOnMainThread {
+                    showCallActivity()
+                }
             }
         }
     }
@@ -82,6 +91,7 @@ class CoreContext(val context: Context) : HandlerThread("Core Thread") {
         (context as Application).registerActivityLifecycleCallbacks(activityMonitor)
     }
 
+    @WorkerThread
     override fun run() {
         Looper.prepare()
 
@@ -115,6 +125,7 @@ class CoreContext(val context: Context) : HandlerThread("Core Thread") {
         Looper.loop()
     }
 
+    @WorkerThread
     override fun destroy() {
         core.stop()
         contactsManager.onCoreStopped()
@@ -126,22 +137,26 @@ class CoreContext(val context: Context) : HandlerThread("Core Thread") {
         quitSafely()
     }
 
+    @AnyThread
     fun isReady(): Boolean {
         return ::core.isInitialized
     }
 
+    @AnyThread
     fun postOnCoreThread(lambda: (core: Core) -> Unit) {
         coreThread.post {
             lambda.invoke(core)
         }
     }
 
+    @AnyThread
     fun postOnMainThread(lambda: () -> Unit) {
         mainThread.post {
             lambda.invoke()
         }
     }
 
+    @UiThread
     fun onForeground() {
         postOnCoreThread {
             // We can't rely on defaultAccount?.params?.isPublishEnabled
@@ -153,6 +168,7 @@ class CoreContext(val context: Context) : HandlerThread("Core Thread") {
         }
     }
 
+    @UiThread
     fun onBackground() {
         postOnCoreThread {
             // We can't rely on defaultAccount?.params?.isPublishEnabled
@@ -166,13 +182,13 @@ class CoreContext(val context: Context) : HandlerThread("Core Thread") {
         }
     }
 
+    @WorkerThread
     fun startCall(
         address: Address,
         callParams: CallParams? = null,
         forceZRTP: Boolean = false,
         localAddress: Address? = null
     ) {
-        // Core thread
         if (!core.isNetworkReachable) {
             Log.e("$TAG Network unreachable, abort outgoing call")
             return
@@ -218,6 +234,7 @@ class CoreContext(val context: Context) : HandlerThread("Core Thread") {
         Log.i("$TAG Starting call $call")
     }
 
+    @WorkerThread
     fun switchCamera() {
         val currentDevice = core.videoDevice
         Log.i("$TAG Current camera device is $currentDevice")
@@ -238,10 +255,12 @@ class CoreContext(val context: Context) : HandlerThread("Core Thread") {
         call.update(null)
     }
 
+    @WorkerThread
     fun showSwitchCameraButton(): Boolean {
         return core.videoDevicesList.size > 2 // Count StaticImage camera
     }
 
+    @UiThread
     private fun showCallActivity() {
         Log.i("$TAG Starting VoIP activity")
         val intent = Intent(context, VoipActivity::class.java)
@@ -252,6 +271,7 @@ class CoreContext(val context: Context) : HandlerThread("Core Thread") {
         context.startActivity(intent)
     }
 
+    @WorkerThread
     private fun computeUserAgent() {
         val deviceName = LinphoneUtils.getDeviceName(context)
         val appName = context.getString(org.linphone.R.string.app_name)

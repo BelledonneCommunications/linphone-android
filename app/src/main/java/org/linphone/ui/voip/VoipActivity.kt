@@ -20,6 +20,7 @@
 package org.linphone.ui.voip
 
 import android.os.Bundle
+import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
@@ -35,6 +36,7 @@ import org.linphone.ui.voip.fragment.IncomingCallFragmentDirections
 import org.linphone.ui.voip.fragment.OutgoingCallFragmentDirections
 import org.linphone.ui.voip.viewmodel.CallsViewModel
 
+@UiThread
 class VoipActivity : AppCompatActivity() {
     private lateinit var binding: VoipActivityBinding
 

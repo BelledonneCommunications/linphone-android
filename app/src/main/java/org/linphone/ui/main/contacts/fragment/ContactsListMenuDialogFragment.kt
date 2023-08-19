@@ -24,11 +24,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.UiThread
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.linphone.databinding.ContactsListLongPressMenuBinding
 
+@UiThread
 class ContactsListMenuDialogFragment(
-    val isFavourite: Boolean,
+    private val isFavourite: Boolean,
     private val onDismiss: (() -> Unit)? = null,
     private val onFavourite: (() -> Unit)? = null,
     private val onShare: (() -> Unit)? = null,

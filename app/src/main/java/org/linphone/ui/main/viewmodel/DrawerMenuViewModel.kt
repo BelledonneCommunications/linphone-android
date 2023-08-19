@@ -20,6 +20,8 @@
 package org.linphone.ui.main.viewmodel
 
 import android.view.View
+import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -46,13 +48,13 @@ class DrawerMenuViewModel : ViewModel() {
     }
 
     private val coreListener = object : CoreListenerStub() {
+        @WorkerThread
         override fun onAccountRegistrationStateChanged(
             core: Core,
             account: Account,
             state: RegistrationState?,
             message: String
         ) {
-            // Core thread
             computeAccountsList()
         }
     }
@@ -64,6 +66,7 @@ class DrawerMenuViewModel : ViewModel() {
         }
     }
 
+    @UiThread
     override fun onCleared() {
         super.onCleared()
 
@@ -72,18 +75,18 @@ class DrawerMenuViewModel : ViewModel() {
         }
     }
 
+    @UiThread
     fun closeDrawerMenu() {
-        // UI thread
         closeDrawerEvent.value = Event(true)
     }
 
+    @UiThread
     fun addAccount() {
-        // UI thread
         startAssistantEvent.value = Event(true)
     }
 
+    @WorkerThread
     private fun computeAccountsList() {
-        // Core thread
         accounts.value.orEmpty().forEach(AccountModel::destroy)
 
         val list = arrayListOf<AccountModel>()

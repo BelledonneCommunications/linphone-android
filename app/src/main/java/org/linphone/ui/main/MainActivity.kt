@@ -30,6 +30,7 @@ import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.PopupWindow
 import androidx.annotation.DrawableRes
+import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.databinding.DataBindingUtil
@@ -44,6 +45,7 @@ import org.linphone.ui.assistant.AssistantActivity
 import org.linphone.ui.main.viewmodel.DrawerMenuViewModel
 import org.linphone.utils.slideInToastFromTopForDuration
 
+@UiThread
 class MainActivity : AppCompatActivity() {
     companion object {
         private const val CONTACTS_PERMISSION_REQUEST = 0

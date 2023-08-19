@@ -23,10 +23,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.UiThread
 import androidx.navigation.fragment.findNavController
 import org.linphone.databinding.AssistantRegisterFragmentBinding
 import org.linphone.ui.main.fragment.GenericFragment
 
+@UiThread
 class RegisterFragment : GenericFragment() {
     private lateinit var binding: AssistantRegisterFragmentBinding
 

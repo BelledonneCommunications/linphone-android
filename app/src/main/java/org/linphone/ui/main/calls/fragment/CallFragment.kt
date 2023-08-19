@@ -28,6 +28,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
+import androidx.annotation.UiThread
 import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -41,6 +42,7 @@ import org.linphone.ui.main.calls.viewmodel.CallLogViewModel
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.Event
 
+@UiThread
 class CallFragment : GenericFragment() {
     private lateinit var binding: CallFragmentBinding
 

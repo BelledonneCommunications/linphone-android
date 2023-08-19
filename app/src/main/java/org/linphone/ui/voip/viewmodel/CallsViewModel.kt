@@ -19,6 +19,8 @@
  */
 package org.linphone.ui.voip.viewmodel
 
+import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -38,19 +40,19 @@ class CallsViewModel : ViewModel() {
     val noMoreCallEvent = MutableLiveData<Event<Boolean>>()
 
     private val coreListener = object : CoreListenerStub() {
+        @WorkerThread
         override fun onLastCallEnded(core: Core) {
-            // Core thread
             Log.i("[Calls ViewModel] No more call, leaving VoIP activity")
             noMoreCallEvent.postValue(Event(true))
         }
 
+        @WorkerThread
         override fun onCallStateChanged(
             core: Core,
             call: Call,
             state: Call.State,
             message: String
         ) {
-            // Core thread
             if (call == core.currentCall || core.currentCall == null) {
                 when (call.state) {
                     Call.State.Connected -> {
@@ -89,6 +91,7 @@ class CallsViewModel : ViewModel() {
         }
     }
 
+    @UiThread
     override fun onCleared() {
         super.onCleared()
 

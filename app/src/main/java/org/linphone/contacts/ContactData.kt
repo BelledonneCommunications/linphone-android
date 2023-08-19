@@ -22,6 +22,7 @@ package org.linphone.contacts
 import android.content.ContentUris
 import android.net.Uri
 import android.provider.ContactsContract
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.core.*
 
@@ -33,6 +34,7 @@ class ContactData(val friend: Friend) {
     val avatar = getAvatarUri()
 
     private val friendListener = object : FriendListenerStub() {
+        @WorkerThread
         override fun onPresenceReceived(fr: Friend) {
             presenceStatus.postValue(fr.consolidatedPresence)
         }
@@ -47,10 +49,12 @@ class ContactData(val friend: Friend) {
         presenceStatus.postValue(ConsolidatedPresence.Offline)
     }
 
+    @WorkerThread
     fun onDestroy() {
         friend.removeListener(friendListener)
     }
 
+    @WorkerThread
     private fun getAvatarUri(): Uri? {
         val refKey = friend.refKey
         if (refKey != null) {

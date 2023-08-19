@@ -19,6 +19,8 @@
  */
 package org.linphone.ui.main.calls.viewmodel
 
+import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import java.util.ArrayList
@@ -46,16 +48,16 @@ class SuggestionsListViewModel : ViewModel() {
     private lateinit var magicSearch: MagicSearch
 
     private val magicSearchListener = object : MagicSearchListenerStub() {
+        @WorkerThread
         override fun onSearchResultsReceived(magicSearch: MagicSearch) {
-            // Core thread
             Log.i("$TAG Magic search contacts available")
             processMagicSearchResults(magicSearch.lastSearch)
         }
     }
 
     private val contactsListener = object : ContactsListener {
+        @WorkerThread
         override fun onContactsLoaded() {
-            // Core thread
             Log.i("$TAG Contacts have been (re)loaded, updating list")
             applyFilter(
                 currentFilter,
@@ -77,6 +79,7 @@ class SuggestionsListViewModel : ViewModel() {
         applyFilter(currentFilter)
     }
 
+    @UiThread
     override fun onCleared() {
         coreContext.postOnCoreThread {
             magicSearch.removeListener(magicSearchListener)
@@ -85,8 +88,8 @@ class SuggestionsListViewModel : ViewModel() {
         super.onCleared()
     }
 
+    @WorkerThread
     fun processMagicSearchResults(results: Array<SearchResult>) {
-        // Core thread
         Log.i("$TAG Processing ${results.size} results")
         suggestionsList.value.orEmpty().forEach(ContactAvatarModel::destroy)
 
@@ -113,8 +116,8 @@ class SuggestionsListViewModel : ViewModel() {
         Log.i("$TAG Processed ${results.size} results")
     }
 
+    @UiThread
     fun applyFilter(filter: String) {
-        // UI thread
         coreContext.postOnCoreThread {
             applyFilter(
                 filter,
@@ -125,13 +128,13 @@ class SuggestionsListViewModel : ViewModel() {
         }
     }
 
+    @WorkerThread
     private fun applyFilter(
         filter: String,
         domain: String,
         sources: Int,
         aggregation: MagicSearch.Aggregation
     ) {
-        // Core thread
         if (previousFilter.isNotEmpty() && (
             previousFilter.length > filter.length ||
                 (previousFilter.length == filter.length && previousFilter != filter)
@@ -153,8 +156,8 @@ class SuggestionsListViewModel : ViewModel() {
         )
     }
 
+    @WorkerThread
     private fun createFriendFromSearchResult(searchResult: SearchResult): Friend {
-        // Core thread
         val searchResultFriend = searchResult.friend
         if (searchResultFriend != null) return searchResultFriend
 

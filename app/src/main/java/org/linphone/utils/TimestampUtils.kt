@@ -23,7 +23,7 @@ import java.text.DateFormat
 import java.text.Format
 import java.text.SimpleDateFormat
 import java.util.*
-import org.linphone.LinphoneApplication
+import org.linphone.LinphoneApplication.Companion.coreContext
 
 class TimestampUtils {
     companion object {
@@ -58,7 +58,7 @@ class TimestampUtils {
 
         fun dateToString(date: Long, timestampInSecs: Boolean = true): String {
             val dateFormat: Format = android.text.format.DateFormat.getDateFormat(
-                LinphoneApplication.coreContext.context
+                coreContext.context
             )
             val pattern = (dateFormat as SimpleDateFormat).toLocalizedPattern()
 
@@ -73,7 +73,7 @@ class TimestampUtils {
 
         fun timeToString(hour: Int, minutes: Int): String {
             val use24hFormat = android.text.format.DateFormat.is24HourFormat(
-                LinphoneApplication.coreContext.context
+                coreContext.context
             )
             val calendar = Calendar.getInstance()
             calendar.set(Calendar.HOUR_OF_DAY, hour)
@@ -88,7 +88,7 @@ class TimestampUtils {
 
         fun timeToString(time: Long, timestampInSecs: Boolean = true): String {
             val use24hFormat = android.text.format.DateFormat.is24HourFormat(
-                LinphoneApplication.coreContext.context
+                coreContext.context
             )
             val calendar = Calendar.getInstance()
             calendar.timeInMillis = if (timestampInSecs) time * 1000 else time

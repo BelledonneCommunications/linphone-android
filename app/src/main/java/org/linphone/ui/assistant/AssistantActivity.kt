@@ -20,6 +20,7 @@
 package org.linphone.ui.assistant
 
 import android.os.Bundle
+import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.databinding.DataBindingUtil
@@ -27,6 +28,7 @@ import org.linphone.LinphoneApplication
 import org.linphone.R
 import org.linphone.databinding.AssistantActivityBinding
 
+@UiThread
 class AssistantActivity : AppCompatActivity() {
     private lateinit var binding: AssistantActivityBinding
 

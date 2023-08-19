@@ -1,6 +1,7 @@
 package org.linphone.ui.main.calls.model
 
 import androidx.annotation.IntegerRes
+import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Call.Dir
@@ -59,8 +60,8 @@ class CallLogModel(private val callLog: CallLog) {
         iconResId.postValue(LinphoneUtils.getIconResId(callLog.status, callLog.dir))
     }
 
+    @UiThread
     fun delete() {
-        // UI thread
         coreContext.postOnCoreThread { core ->
             core.removeCallLog(callLog)
         }

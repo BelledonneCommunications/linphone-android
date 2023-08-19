@@ -2,6 +2,7 @@ package org.linphone.ui.main.calls.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.UiThread
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
@@ -57,6 +58,7 @@ class CallsListAdapter(
     inner class ViewHolder(
         val binding: CallListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
+        @UiThread
         fun bind(callLogModel: CallLogModel) {
             with(binding) {
                 model = callLogModel

@@ -28,6 +28,7 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
+import androidx.annotation.UiThread
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.ViewCompat
@@ -52,6 +53,7 @@ import org.linphone.ui.main.contacts.model.ContactAvatarModel
  * This file contains all the data binding necessary for the app
  */
 
+@UiThread
 @BindingAdapter("entries", "layout")
 fun <T> setEntries(
     viewGroup: ViewGroup,
@@ -80,6 +82,7 @@ fun <T> setEntries(
     }
 }
 
+@UiThread
 fun View.showKeyboard(window: Window) {
     this.requestFocus()
     /*val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -87,11 +90,13 @@ fun View.showKeyboard(window: Window) {
     WindowCompat.getInsetsController(window, this).show(WindowInsetsCompat.Type.ime())
 }
 
+@UiThread
 fun View.hideKeyboard() {
     val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.hideSoftInputFromWindow(this.windowToken, 0)
 }
 
+@UiThread
 fun View.setKeyboardInsetListener(lambda: (visible: Boolean) -> Unit) {
     doOnLayout {
         var isKeyboardVisible = ViewCompat.getRootWindowInsets(this)?.isVisible(
@@ -115,16 +120,19 @@ fun View.setKeyboardInsetListener(lambda: (visible: Boolean) -> Unit) {
     }
 }
 
+@UiThread
 @BindingAdapter("android:src")
 fun ImageView.setSourceImageResource(resource: Int) {
     this.setImageResource(resource)
 }
 
+@UiThread
 @BindingAdapter("android:textStyle")
 fun AppCompatTextView.setTypeface(typeface: Int) {
     this.setTypeface(null, typeface)
 }
 
+@UiThread
 @BindingAdapter("android:drawableTint")
 fun AppCompatTextView.setDrawableTint(color: Int) {
     for (drawable in compoundDrawablesRelative) {
@@ -132,9 +140,9 @@ fun AppCompatTextView.setDrawableTint(color: Int) {
     }
 }
 
+@UiThread
 @BindingAdapter("coil")
 fun loadPictureWithCoil(imageView: ImageView, file: String?) {
-    // UI thread
     if (file != null) {
         imageView.load(file) {
             transformations(CircleCropTransformation())
@@ -142,9 +150,9 @@ fun loadPictureWithCoil(imageView: ImageView, file: String?) {
     }
 }
 
+@UiThread
 @BindingAdapter("coilContact")
 fun loadContactPictureWithCoil2(imageView: ImageView, contact: ContactData?) {
-    // UI thread
     if (contact == null) {
         imageView.load(R.drawable.contact_avatar)
     } else {
@@ -155,9 +163,9 @@ fun loadContactPictureWithCoil2(imageView: ImageView, contact: ContactData?) {
     }
 }
 
+@UiThread
 @BindingAdapter("presenceIcon")
 fun ImageView.setPresenceIcon(presence: ConsolidatedPresence?) {
-    // UI thread
     val icon = when (presence) {
         ConsolidatedPresence.Online -> R.drawable.led_online
         ConsolidatedPresence.DoNotDisturb -> R.drawable.led_do_not_disturb
@@ -167,9 +175,9 @@ fun ImageView.setPresenceIcon(presence: ConsolidatedPresence?) {
     setImageResource(icon)
 }
 
+@UiThread
 @BindingAdapter("contactAvatar")
 fun AvatarView.loadContactAvatar(contact: ContactAvatarModel?) {
-    // UI thread
     if (contact == null) {
         loadImage(R.drawable.contact_avatar)
     } else {
@@ -188,6 +196,7 @@ fun AvatarView.loadContactAvatar(contact: ContactAvatarModel?) {
     }
 }
 
+@UiThread
 @BindingAdapter("onValueChanged")
 fun AppCompatEditText.editTextSetting(lambda: () -> Unit) {
     addTextChangedListener(object : TextWatcher {

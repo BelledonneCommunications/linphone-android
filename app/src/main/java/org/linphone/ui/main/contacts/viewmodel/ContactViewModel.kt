@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.main.contacts.viewmodel
 
+import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -82,8 +83,8 @@ class ContactViewModel : ViewModel() {
     }
 
     private val listener = object : ContactNumberOrAddressClickListener {
+        @UiThread
         override fun onClicked(address: Address?) {
-            // UI thread
             if (address != null) {
                 coreContext.postOnCoreThread {
                     coreContext.startCall(address)
@@ -91,8 +92,8 @@ class ContactViewModel : ViewModel() {
             }
         }
 
+        @UiThread
         override fun onLongPress(model: ContactNumberOrAddressModel) {
-            // UI thread
             showLongPressMenuForNumberOrAddressEvent.value = Event(model)
         }
     }
@@ -104,8 +105,8 @@ class ContactViewModel : ViewModel() {
         showDevicesTrust.value = false // TODO FIXME: set it to true when it will work for real
     }
 
+    @UiThread
     fun findContactByRefKey(refKey: String) {
-        // UI thread
         coreContext.postOnCoreThread { core ->
             val friend = coreContext.contactsManager.findContactById(refKey)
             if (friend != null) {
@@ -183,18 +184,18 @@ class ContactViewModel : ViewModel() {
         }
     }
 
+    @UiThread
     fun toggleNumbersAndAddressesVisibility() {
-        // UI thread
         showNumbersAndAddresses.value = showNumbersAndAddresses.value == false
     }
 
+    @UiThread
     fun toggleDevicesTrustVisibility() {
-        // UI thread
         showDevicesTrust.value = showDevicesTrust.value == false
     }
 
+    @UiThread
     fun editContact() {
-        // UI thread
         coreContext.postOnCoreThread {
             if (::friend.isInitialized) {
                 val uri = friend.nativeUri
@@ -207,8 +208,8 @@ class ContactViewModel : ViewModel() {
         }
     }
 
+    @UiThread
     fun exportContactAsVCard() {
-        // UI thread
         coreContext.postOnCoreThread {
             if (::friend.isInitialized) {
                 val vCard = friend.vcard?.asVcard4String()
@@ -233,8 +234,8 @@ class ContactViewModel : ViewModel() {
         }
     }
 
+    @UiThread
     fun deleteContact() {
-        // UI thread
         coreContext.postOnCoreThread { core ->
             if (::friend.isInitialized) {
                 Log.i("$TAG Deleting friend [$friend]")
@@ -244,8 +245,8 @@ class ContactViewModel : ViewModel() {
         }
     }
 
+    @UiThread
     fun toggleFavourite() {
-        // UI thread
         coreContext.postOnCoreThread {
             friend.edit()
             friend.starred = !friend.starred
@@ -255,8 +256,8 @@ class ContactViewModel : ViewModel() {
         }
     }
 
+    @UiThread
     fun startAudioCall() {
-        // UI thread
         val numbersAndAddresses = sipAddressesAndPhoneNumbers.value.orEmpty()
         if (numbersAndAddresses.size == 1) {
             val address = numbersAndAddresses.first().address
@@ -272,8 +273,8 @@ class ContactViewModel : ViewModel() {
         }
     }
 
+    @UiThread
     fun startVideoCall() {
-        // UI thread
         val numbersAndAddresses = sipAddressesAndPhoneNumbers.value.orEmpty()
         if (numbersAndAddresses.size == 1) {
             val address = numbersAndAddresses.first().address
@@ -289,8 +290,8 @@ class ContactViewModel : ViewModel() {
         }
     }
 
+    @UiThread
     fun sendMessage() {
-        // UI thread
         if (sipAddressesAndPhoneNumbers.value.orEmpty().size == 1) {
             // TODO
         } else {

@@ -22,6 +22,7 @@ package org.linphone.ui.main.contacts.model
 import android.content.ContentUris
 import android.net.Uri
 import android.provider.ContactsContract
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.core.ConsolidatedPresence
 import org.linphone.core.Friend
@@ -51,6 +52,7 @@ class ContactAvatarModel(val friend: Friend) {
     val noAlphabet = MutableLiveData<Boolean>()
 
     private val friendListener = object : FriendListenerStub() {
+        @WorkerThread
         override fun onPresenceReceived(fr: Friend) {
             Log.d(
                 "$TAG Presence received for friend [${fr.name}]: [${friend.consolidatedPresence}]"
@@ -69,13 +71,13 @@ class ContactAvatarModel(val friend: Friend) {
         avatar.postValue(getAvatarUri())
     }
 
+    @WorkerThread
     fun destroy() {
-        // Core thread
         friend.removeListener(friendListener)
     }
 
+    @WorkerThread
     private fun getAvatarUri(): Uri? {
-        // Core thread
         val picturePath = friend.photo
         if (!picturePath.isNullOrEmpty()) {
             return Uri.parse(picturePath)

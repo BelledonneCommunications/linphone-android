@@ -23,6 +23,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.UiThread
 import androidx.core.view.doOnPreDraw
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
@@ -61,8 +62,8 @@ class StartCallFragment : GenericFragment() {
     private lateinit var suggestionsAdapter: ContactsListAdapter
 
     private val listener = object : ContactNumberOrAddressClickListener {
+        @UiThread
         override fun onClicked(address: Address?) {
-            // UI thread
             if (address != null) {
                 coreContext.postOnCoreThread {
                     coreContext.startCall(address)
@@ -70,8 +71,8 @@ class StartCallFragment : GenericFragment() {
             }
         }
 
+        @UiThread
         override fun onLongPress(model: ContactNumberOrAddressModel) {
-            // UI thread
         }
     }
 

@@ -30,6 +30,7 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.PopupWindow
+import androidx.annotation.UiThread
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
@@ -46,6 +47,7 @@ import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 
+@UiThread
 class CallsListFragment : GenericFragment() {
 
     private lateinit var binding: CallsListFragmentBinding

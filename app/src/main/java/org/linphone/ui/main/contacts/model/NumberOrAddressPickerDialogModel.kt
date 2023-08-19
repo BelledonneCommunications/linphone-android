@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.main.contacts.model
 
+import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.utils.Event
 
@@ -31,6 +32,7 @@ class NumberOrAddressPickerDialogModel(list: List<ContactNumberOrAddressModel>) 
         sipAddressesAndPhoneNumbers.value = list
     }
 
+    @UiThread
     fun dismiss() {
         dismissEvent.value = Event(true)
     }

@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.main.contacts.model
 
+import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.core.Address
 
@@ -31,10 +32,12 @@ class ContactNumberOrAddressModel(
 ) {
     val selected = MutableLiveData<Boolean>()
 
+    @UiThread
     fun onClicked() {
         listener.onClicked(address)
     }
 
+    @UiThread
     fun onLongPress(): Boolean {
         selected.value = true
         listener.onLongPress(this)

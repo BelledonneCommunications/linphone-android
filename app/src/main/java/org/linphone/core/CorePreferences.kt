@@ -21,10 +21,12 @@ package org.linphone.core
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.annotation.WorkerThread
 import java.io.File
 import java.io.FileOutputStream
 import org.linphone.LinphoneApplication.Companion.coreContext
 
+@WorkerThread
 class CorePreferences constructor(private val context: Context) {
     private var _config: Config? = null
     var config: Config

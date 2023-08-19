@@ -19,6 +19,8 @@
  */
 package org.linphone.ui.assistant.viewmodel
 
+import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -53,13 +55,13 @@ class AssistantViewModel : ViewModel() {
     private lateinit var newlyCreatedAccount: Account
 
     private val coreListener = object : CoreListenerStub() {
+        @WorkerThread
         override fun onAccountRegistrationStateChanged(
             core: Core,
             account: Account,
             state: RegistrationState?,
             message: String
         ) {
-            // Core thread
             if (account == newlyCreatedAccount) {
                 Log.i("$TAG Newly created account registration state is [$state] ($message)")
 
@@ -97,8 +99,8 @@ class AssistantViewModel : ViewModel() {
         }
     }
 
+    @UiThread
     fun login() {
-        // UI thread
         coreContext.postOnCoreThread { core ->
             core.loadConfigFromXml(corePreferences.linphoneDefaultValuesPath)
 
@@ -128,11 +130,12 @@ class AssistantViewModel : ViewModel() {
         }
     }
 
+    @UiThread
     fun toggleShowPassword() {
-        // UI thread
         showPassword.value = showPassword.value == false
     }
 
+    @UiThread
     private fun isLoginButtonEnabled(): Boolean {
         return username.value.orEmpty().isNotEmpty() && password.value.orEmpty().isNotEmpty()
     }

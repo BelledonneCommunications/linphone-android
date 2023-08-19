@@ -20,6 +20,8 @@
 package org.linphone.ui.main.model
 
 import android.view.View
+import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Account
@@ -45,6 +47,7 @@ class AccountModel(
     val isDefault = MutableLiveData<Boolean>()
 
     private val accountListener = object : AccountListenerStub() {
+        @WorkerThread
         override fun onRegistrationStateChanged(
             account: Account,
             state: RegistrationState?,
@@ -72,33 +75,33 @@ class AccountModel(
         updateRegistrationState()
     }
 
+    @WorkerThread
     fun destroy() {
-        // Core thread
         account.removeListener(accountListener)
     }
 
+    @UiThread
     fun setAsDefault() {
-        // UI thread
         coreContext.postOnCoreThread { core ->
             core.defaultAccount = account
             isDefault.postValue(true)
         }
     }
 
+    @UiThread
     fun openMenu(view: View) {
-        // UI thread
         onMenuClicked?.invoke(view, account)
     }
 
+    @UiThread
     fun refreshRegister() {
-        // UI thread
         coreContext.postOnCoreThread { core ->
             core.refreshRegisters()
         }
     }
 
+    @WorkerThread
     private fun updateRegistrationState() {
-        // Core thread
         val state = when (account.state) {
             RegistrationState.None, RegistrationState.Cleared -> "Disabled"
             RegistrationState.Progress -> "Connection..."

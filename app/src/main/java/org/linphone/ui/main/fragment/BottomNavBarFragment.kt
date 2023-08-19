@@ -24,6 +24,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -33,6 +34,7 @@ import org.linphone.ui.main.viewmodel.SharedMainViewModel
 import org.linphone.utils.Event
 import org.linphone.utils.setKeyboardInsetListener
 
+@UiThread
 class BottomNavBarFragment : Fragment() {
     private lateinit var binding: BottomNavBarBinding
 

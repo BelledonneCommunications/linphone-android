@@ -2,6 +2,7 @@ package org.linphone.ui.main.contacts.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.UiThread
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
@@ -64,6 +65,7 @@ class ContactsListAdapter(
     inner class ViewHolder(
         val binding: ContactListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
+        @UiThread
         fun bind(contactModel: ContactAvatarModel) {
             with(binding) {
                 model = contactModel
@@ -91,6 +93,7 @@ class ContactsListAdapter(
     inner class FavouriteViewHolder(
         val binding: ContactFavouriteListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
+        @UiThread
         fun bind(contactModel: ContactAvatarModel) {
             with(binding) {
                 model = contactModel

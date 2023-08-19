@@ -24,6 +24,7 @@ import android.content.Context
 import android.os.Build
 import android.provider.Settings
 import androidx.annotation.IntegerRes
+import androidx.annotation.WorkerThread
 import androidx.emoji2.text.EmojiCompat
 import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -52,7 +53,7 @@ class LinphoneUtils {
             for (i in split.indices) {
                 if (split[i].isNotEmpty()) {
                     try {
-                        if (emoji?.loadState == EmojiCompat.LOAD_STATE_SUCCEEDED && emoji.hasEmojiGlyph(
+                        if (emoji.loadState == EmojiCompat.LOAD_STATE_SUCCEEDED && emoji.hasEmojiGlyph(
                                 split[i]
                             )
                         ) {
@@ -78,6 +79,7 @@ class LinphoneUtils {
             return initials
         }
 
+        @WorkerThread
         fun getDisplayName(address: Address?): String {
             if (address == null) return "[null]"
             if (address.displayName == null) {
@@ -86,7 +88,7 @@ class LinphoneUtils {
                 }
                 val localDisplayName = account?.params?.identityAddress?.displayName
                 // Do not return an empty local display name
-                if (localDisplayName != null && localDisplayName.isNotEmpty()) {
+                if (!localDisplayName.isNullOrEmpty()) {
                     return localDisplayName
                 }
             }
@@ -130,6 +132,7 @@ class LinphoneUtils {
             }
         }
 
+        @WorkerThread
         private fun getChatRoomId(localAddress: Address, remoteAddress: Address): String {
             val localSipUri = localAddress.clone()
             localSipUri.clean()
@@ -138,6 +141,7 @@ class LinphoneUtils {
             return "${localSipUri.asStringUriOnly()}~${remoteSipUri.asStringUriOnly()}"
         }
 
+        @WorkerThread
         fun getChatRoomId(chatRoom: ChatRoom): String {
             return getChatRoomId(chatRoom.localAddress, chatRoom.peerAddress)
         }
