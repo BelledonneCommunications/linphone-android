@@ -5,5 +5,5 @@
     <item android:state_pressed="true"
         android:drawable="@drawable/shape_selected_list_cell_background" />
     <item
-        android:drawable="@drawable/shape_list_cell_background" />
+        android:drawable="@color/transparent_color" />
 </selector>

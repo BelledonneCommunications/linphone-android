@@ -15,7 +15,7 @@
         android:onClick="@{() -> model.setAsDefault()}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/shape_conversation_cell_background">
+        android:background="@drawable/shape_list_cell_background">
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/left_barrier"
