@@ -32,6 +32,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Address
 import org.linphone.databinding.CallStartFragmentBinding
+import org.linphone.ui.main.calls.adapter.SuggestionsListAdapter
 import org.linphone.ui.main.calls.viewmodel.StartCallViewModel
 import org.linphone.ui.main.calls.viewmodel.SuggestionsListViewModel
 import org.linphone.ui.main.contacts.adapter.ContactsListAdapter
@@ -59,7 +60,7 @@ class StartCallFragment : GenericFragment() {
     )
 
     private lateinit var contactsAdapter: ContactsListAdapter
-    private lateinit var suggestionsAdapter: ContactsListAdapter
+    private lateinit var suggestionsAdapter: SuggestionsListAdapter
 
     private val listener = object : ContactNumberOrAddressClickListener {
         @UiThread
@@ -101,7 +102,7 @@ class StartCallFragment : GenericFragment() {
             goBack()
         }
 
-        contactsAdapter = ContactsListAdapter(viewLifecycleOwner, false)
+        contactsAdapter = ContactsListAdapter(viewLifecycleOwner, disableLongClick = true)
         binding.contactsList.setHasFixedSize(true)
         binding.contactsList.adapter = contactsAdapter
 
@@ -113,7 +114,7 @@ class StartCallFragment : GenericFragment() {
 
         binding.contactsList.layoutManager = LinearLayoutManager(requireContext())
 
-        suggestionsAdapter = ContactsListAdapter(viewLifecycleOwner, false)
+        suggestionsAdapter = SuggestionsListAdapter(viewLifecycleOwner)
         binding.suggestionsList.setHasFixedSize(true)
         binding.suggestionsList.adapter = suggestionsAdapter
 

@@ -17,7 +17,8 @@ import org.linphone.utils.Event
 
 class ContactsListAdapter(
     private val viewLifecycleOwner: LifecycleOwner,
-    private val favourites: Boolean
+    private val favourites: Boolean = false,
+    private val disableLongClick: Boolean = false
 ) : ListAdapter<ContactAvatarModel, RecyclerView.ViewHolder>(ContactDiffCallback()) {
     var selectedAdapterPosition = -1
 
@@ -78,11 +79,13 @@ class ContactsListAdapter(
                     contactClickedEvent.value = Event(contactModel)
                 }
 
-                binding.setOnLongClickListener {
-                    selectedAdapterPosition = bindingAdapterPosition
-                    binding.root.isSelected = true
-                    contactLongClickedEvent.value = Event(contactModel)
-                    true
+                if (!disableLongClick) {
+                    binding.setOnLongClickListener {
+                        selectedAdapterPosition = bindingAdapterPosition
+                        binding.root.isSelected = true
+                        contactLongClickedEvent.value = Event(contactModel)
+                        true
+                    }
                 }
 
                 executePendingBindings()

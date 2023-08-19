@@ -62,7 +62,7 @@ class SuggestionsListViewModel : ViewModel() {
             applyFilter(
                 currentFilter,
                 if (limitSearchToLinphoneAccounts) corePreferences.defaultDomain else "",
-                MagicSearch.Source.CallLogs.toInt() or MagicSearch.Source.ChatRooms.toInt(),
+                MagicSearch.Source.CallLogs.toInt() or MagicSearch.Source.ChatRooms.toInt() or MagicSearch.Source.Request.toInt(),
                 MagicSearch.Aggregation.Friend
             )
         }
@@ -122,7 +122,7 @@ class SuggestionsListViewModel : ViewModel() {
             applyFilter(
                 filter,
                 if (limitSearchToLinphoneAccounts) corePreferences.defaultDomain else "",
-                MagicSearch.Source.CallLogs.toInt() or MagicSearch.Source.ChatRooms.toInt(),
+                MagicSearch.Source.CallLogs.toInt() or MagicSearch.Source.ChatRooms.toInt() or MagicSearch.Source.Request.toInt(),
                 MagicSearch.Aggregation.Friend
             )
         }

@@ -74,7 +74,7 @@ class ContactsListFragment : GenericFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = listViewModel
 
-        adapter = ContactsListAdapter(viewLifecycleOwner, false)
+        adapter = ContactsListAdapter(viewLifecycleOwner)
         binding.contactsList.setHasFixedSize(true)
         binding.contactsList.adapter = adapter
         configureAdapter(adapter)
@@ -82,7 +82,7 @@ class ContactsListFragment : GenericFragment() {
         val layoutManager = LinearLayoutManager(requireContext())
         binding.contactsList.layoutManager = layoutManager
 
-        favouritesAdapter = ContactsListAdapter(viewLifecycleOwner, true)
+        favouritesAdapter = ContactsListAdapter(viewLifecycleOwner, favourites = true)
         binding.favouritesContactsList.setHasFixedSize(true)
         binding.favouritesContactsList.adapter = favouritesAdapter
         configureAdapter(favouritesAdapter)
