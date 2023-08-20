@@ -53,6 +53,8 @@ class CurrentCallViewModel() : ViewModel() {
 
     val isMicrophoneMuted = MutableLiveData<Boolean>()
 
+    val isSpeakerEnabled = MutableLiveData<Boolean>()
+
     val fullScreenMode = MutableLiveData<Boolean>()
 
     // To synchronize chronometers in UI
