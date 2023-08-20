@@ -20,6 +20,7 @@
 package org.linphone.ui.main
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -36,12 +37,14 @@ import androidx.core.view.WindowCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Account
 import org.linphone.databinding.AccountPopupMenuBinding
 import org.linphone.databinding.MainActivityBinding
 import org.linphone.ui.assistant.AssistantActivity
+import org.linphone.ui.main.settings.fragment.AcocuntProfileFragmentDirections
 import org.linphone.ui.main.viewmodel.DrawerMenuViewModel
 import org.linphone.utils.slideInToastFromTopForDuration
 
@@ -72,6 +75,24 @@ class MainActivity : AppCompatActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.main_activity)
         binding.lifecycleOwner = this
+
+        binding.setSettingsClickedListener {
+            val navController = findNavController(R.id.main_nav_host_fragment)
+            navController.navigate(R.id.action_global_settingsFragment)
+            binding.drawerMenu.close()
+        }
+
+        binding.setRecordingsClickListener {
+            val navController = findNavController(R.id.main_nav_host_fragment)
+            navController.navigate(R.id.action_global_recordingsFragment)
+            binding.drawerMenu.close()
+        }
+
+        binding.setHelpClickedListener {
+            val navController = findNavController(R.id.main_nav_host_fragment)
+            navController.navigate(R.id.action_global_helpFragment)
+            binding.drawerMenu.close()
+        }
 
         drawerMenuViewModel = run {
             ViewModelProvider(this)[DrawerMenuViewModel::class.java]
@@ -133,6 +154,7 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
+    @SuppressLint("RtlHardcoded")
     fun toggleDrawerMenu() {
         if (binding.drawerMenu.isDrawerOpen(Gravity.LEFT)) {
             binding.drawerMenu.closeDrawer(binding.drawerMenuContent, true)
@@ -189,8 +211,14 @@ class MainActivity : AppCompatActivity() {
         )
 
         popupView.setManageProfileClickListener {
-            // TODO: navigate to profile
+            val navController = findNavController(R.id.main_nav_host_fragment)
+            val identity = account.params.identityAddress?.asString().orEmpty()
+            val action = AcocuntProfileFragmentDirections.actionGlobalAcocuntProfileFragment(
+                identity
+            )
+            navController.navigate(action)
             popupWindow.dismiss()
+            binding.drawerMenu.close()
         }
 
         // Elevation is for showing a shadow around the popup

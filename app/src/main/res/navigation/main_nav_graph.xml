@@ -90,4 +90,48 @@
             app:destination="@id/conversationsFragment" />
     </fragment>
 
+    <fragment
+        android:id="@+id/acocuntProfileFragment"
+        android:name="org.linphone.ui.main.settings.fragment.AcocuntProfileFragment"
+        android:label="AcocuntProfileFragment"
+        tools:layout="@layout/account_profile_fragment">
+        <argument
+            android:name="accountIdentity"
+            app:argType="string" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_acocuntProfileFragment"
+        app:destination="@id/acocuntProfileFragment" />
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="org.linphone.ui.main.settings.fragment.SettingsFragment"
+        android:label="SettingsFragment"
+        tools:layout="@layout/settings_fragment" />
+
+    <action
+        android:id="@+id/action_global_settingsFragment"
+        app:destination="@id/settingsFragment"/>
+
+    <fragment
+        android:id="@+id/helpFragment"
+        android:name="org.linphone.ui.main.settings.fragment.HelpFragment"
+        android:label="HelpFragment"
+        tools:layout="@layout/help_fragment" />
+
+    <action
+        android:id="@+id/action_global_helpFragment"
+        app:destination="@id/helpFragment"/>
+
+    <fragment
+        android:id="@+id/recordingsFragment"
+        android:name="org.linphone.ui.main.recordings.RecordingsFragment"
+        android:label="RecordingsFragment"
+        tools:layout="@layout/recordings_fragment" />
+
+    <action
+        android:id="@+id/action_global_recordingsFragment"
+        app:destination="@id/recordingsFragment"/>
+
 </navigation>

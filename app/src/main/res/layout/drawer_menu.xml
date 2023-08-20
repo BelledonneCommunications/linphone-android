@@ -6,13 +6,24 @@
     <data>
         <import type="android.view.View" />
         <variable
+            name="settingsClickedListener"
+            type="View.OnClickListener" />
+        <variable
+            name="recordingsClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="helpClickedListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.main.viewmodel.DrawerMenuViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true">
 
         <ImageView
             android:id="@+id/brand_icon"
@@ -104,6 +115,7 @@
             app:layout_constraintBottom_toTopOf="@id/settings" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:onClick="@{settingsClickedListener}"
             style="@style/default_text_style_700"
             android:id="@+id/settings"
             android:layout_width="0dp"
@@ -122,6 +134,7 @@
             app:layout_constraintBottom_toTopOf="@id/recordings" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:onClick="@{recordingsClickListener}"
             style="@style/default_text_style_700"
             android:id="@+id/recordings"
             android:layout_width="0dp"
@@ -140,6 +153,7 @@
             app:layout_constraintBottom_toTopOf="@id/help" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:onClick="@{helpClickedListener}"
             style="@style/default_text_style_700"
             android:id="@+id/help"
             android:layout_width="0dp"

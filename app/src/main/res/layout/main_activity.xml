@@ -4,6 +4,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.view.View" />
+        <variable
+            name="settingsClickedListener"
+            type="View.OnClickListener" />
+        <variable
+            name="recordingsClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="helpClickedListener"
+            type="View.OnClickListener" />
         <variable
             name="drawerMenuViewModel"
             type="org.linphone.ui.main.viewmodel.DrawerMenuViewModel" />
@@ -57,6 +67,9 @@
             android:layout_gravity="start">
 
             <include
+                tools:settingsClickedListener="@{settingsClickedListener}"
+                tools:recordingsClickListener="@{recordingsClickListener}"
+                tools:helpClickedListener="@{helpClickedListener}"
                 tools:viewModel="@{drawerMenuViewModel}"
                 layout="@layout/drawer_menu" />
 
