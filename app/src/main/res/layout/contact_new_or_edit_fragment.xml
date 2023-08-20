@@ -6,7 +6,7 @@
     <data>
         <import type="android.view.View" />
         <variable
-            name="cancelClickListener"
+            name="backClickListener"
             type="View.OnClickListener" />
         <variable
             name="pickImageClickListener"
@@ -23,7 +23,7 @@
 
         <ImageView
             android:id="@+id/back"
-            android:onClick="@{cancelClickListener}"
+            android:onClick="@{backClickListener}"
             android:layout_width="wrap_content"
             android:layout_height="35dp"
             android:layout_marginStart="10dp"

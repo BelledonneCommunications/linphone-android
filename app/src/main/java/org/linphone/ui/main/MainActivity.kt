@@ -44,7 +44,7 @@ import org.linphone.core.Account
 import org.linphone.databinding.AccountPopupMenuBinding
 import org.linphone.databinding.MainActivityBinding
 import org.linphone.ui.assistant.AssistantActivity
-import org.linphone.ui.main.settings.fragment.AcocuntProfileFragmentDirections
+import org.linphone.ui.main.settings.fragment.AccountProfileFragmentDirections
 import org.linphone.ui.main.viewmodel.DrawerMenuViewModel
 import org.linphone.utils.slideInToastFromTopForDuration
 
@@ -212,8 +212,8 @@ class MainActivity : AppCompatActivity() {
 
         popupView.setManageProfileClickListener {
             val navController = findNavController(R.id.main_nav_host_fragment)
-            val identity = account.params.identityAddress?.asString().orEmpty()
-            val action = AcocuntProfileFragmentDirections.actionGlobalAcocuntProfileFragment(
+            val identity = account.params.identityAddress?.asStringUriOnly().orEmpty()
+            val action = AccountProfileFragmentDirections.actionGlobalAccountProfileFragment(
                 identity
             )
             navController.navigate(action)

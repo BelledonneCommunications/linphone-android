@@ -6,7 +6,7 @@
     <data>
         <import type="android.view.View" />
         <variable
-            name="cancelClickListener"
+            name="backClickListener"
             type="View.OnClickListener" />
         <variable
             name="viewModel"
@@ -30,7 +30,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/cancel"
-            android:onClick="@{cancelClickListener}"
+            android:onClick="@{backClickListener}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Annuler"

@@ -98,7 +98,7 @@ class NewContactFragment : GenericFragment() {
 
         viewModel.findFriendByRefKey("")
 
-        binding.setCancelClickListener {
+        binding.setBackClickListener {
             val model = ConfirmationDialogModel()
             val dialog = DialogUtils.getCancelContactChangesConfirmationDialog(
                 requireActivity(),

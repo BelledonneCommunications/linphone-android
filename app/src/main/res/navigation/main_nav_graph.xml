@@ -91,9 +91,9 @@
     </fragment>
 
     <fragment
-        android:id="@+id/acocuntProfileFragment"
-        android:name="org.linphone.ui.main.settings.fragment.AcocuntProfileFragment"
-        android:label="AcocuntProfileFragment"
+        android:id="@+id/accountProfileFragment"
+        android:name="org.linphone.ui.main.settings.fragment.AccountProfileFragment"
+        android:label="AccountProfileFragment"
         tools:layout="@layout/account_profile_fragment">
         <argument
             android:name="accountIdentity"
@@ -101,8 +101,8 @@
     </fragment>
 
     <action
-        android:id="@+id/action_global_acocuntProfileFragment"
-        app:destination="@id/acocuntProfileFragment" />
+        android:id="@+id/action_global_accountProfileFragment"
+        app:destination="@id/accountProfileFragment" />
 
     <fragment
         android:id="@+id/settingsFragment"

@@ -94,7 +94,7 @@ class NewConversationFragment : Fragment() {
             }
         }
 
-        binding.setCancelClickListener {
+        binding.setBackClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 

@@ -101,10 +101,10 @@ class EditContactFragment : GenericFragment() {
         postponeEnterTransition()
 
         val refKey = args.contactRefKey
-        Log.i("[Contact Edit Fragment] Looking up for contact with ref key [$refKey]")
+        Log.i("$TAG Looking up for contact with ref key [$refKey]")
         viewModel.findFriendByRefKey(refKey)
 
-        binding.setCancelClickListener {
+        binding.setBackClickListener {
             val model = ConfirmationDialogModel()
             val dialog = DialogUtils.getCancelContactChangesConfirmationDialog(
                 requireActivity(),

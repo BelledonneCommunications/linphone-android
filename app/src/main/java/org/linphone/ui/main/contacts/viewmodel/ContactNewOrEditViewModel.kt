@@ -114,12 +114,9 @@ class ContactNewOrEditViewModel() : ViewModel() {
             if (!::friend.isInitialized) {
                 friend = core.createFriend()
             }
+            friend.name = "${firstName.value.orEmpty().trim()} ${lastName.value.orEmpty().trim()}"
 
-            if (isEdit.value == true) {
-                friend.edit()
-            }
-
-            friend.name = "${firstName.value.orEmpty()} ${lastName.value.orEmpty()}"
+            friend.edit()
 
             val vCard = friend.vcard
             if (vCard != null) {
@@ -133,8 +130,8 @@ class ContactNewOrEditViewModel() : ViewModel() {
                 }
             }
 
-            friend.organization = company.value.orEmpty()
-            friend.jobTitle = jobTitle.value.orEmpty()
+            friend.organization = company.value.orEmpty().trim()
+            friend.jobTitle = jobTitle.value.orEmpty().trim()
 
             for (address in friend.addresses) {
                 friend.removeAddress(address)
@@ -142,7 +139,7 @@ class ContactNewOrEditViewModel() : ViewModel() {
             for (address in sipAddresses) {
                 val data = address.value.value
                 if (!data.isNullOrEmpty()) {
-                    val parsedAddress = core.interpretUrl(data, true)
+                    val parsedAddress = core.interpretUrl(data.trim(), true)
                     if (parsedAddress != null) {
                         friend.addAddress(parsedAddress)
                     }
@@ -155,7 +152,7 @@ class ContactNewOrEditViewModel() : ViewModel() {
             for (number in phoneNumbers) {
                 val data = number.value.value
                 if (!data.isNullOrEmpty()) {
-                    friend.addPhoneNumber(data)
+                    friend.addPhoneNumber(data.trim())
                 }
             }
 
@@ -170,9 +167,9 @@ class ContactNewOrEditViewModel() : ViewModel() {
                     // TODO : generate unique ref key
                 }
                 status = core.defaultFriendList?.addFriend(friend) ?: Status.InvalidFriend
-            } else {
-                friend.done()
             }
+
+            friend.done()
             coreContext.contactsManager.notifyContactsListChanged()
 
             saveChangesEvent.postValue(
