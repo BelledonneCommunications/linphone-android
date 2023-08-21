@@ -99,13 +99,32 @@ class SuggestionsListViewModel : ViewModel() {
         val list = arrayListOf<ContactAvatarModel>()
 
         for (result in results) {
-            // We don't want Friends here as they would also be in contacts list
-            if (result.friend == null) {
-                val fakeFriend = createFriendFromSearchResult(result)
-                val model = ContactAvatarModel(fakeFriend)
-                model.noAlphabet.postValue(true)
+            val address = result.address
+            Log.i("$TAG ${address?.asStringUriOnly()}")
+            if (address != null) {
+                val friend = coreContext.core.findFriend(address)
+                Log.i("$TAG ${friend?.name}")
+                // We don't want Friends here as they would also be in contacts list
+                if (friend == null) {
+                    // If user-input generated result (always last) already exists, don't show it again
+                    if (result.sourceFlags == MagicSearch.Source.Request.toInt()) {
+                        val found = list.find {
+                            it.friend.address?.weakEqual(address) == true
+                        }
+                        if (found != null) {
+                            Log.i(
+                                "$TAG Result generated from user input is a duplicate of an existing solution, preventing double"
+                            )
+                            continue
+                        }
+                    }
 
-                list.add(model)
+                    val fakeFriend = createFriendFromSearchResult(result)
+                    val model = ContactAvatarModel(fakeFriend)
+                    model.noAlphabet.postValue(true)
+
+                    list.add(model)
+                }
             }
         }
 

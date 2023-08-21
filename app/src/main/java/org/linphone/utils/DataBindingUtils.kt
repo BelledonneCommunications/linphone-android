@@ -46,6 +46,7 @@ import org.linphone.BR
 import org.linphone.R
 import org.linphone.contacts.ContactData
 import org.linphone.core.ConsolidatedPresence
+import org.linphone.core.tools.Log
 import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 
@@ -103,7 +104,13 @@ fun View.setKeyboardInsetListener(lambda: (visible: Boolean) -> Unit) {
             WindowInsetsCompat.Type.ime()
         ) == true
 
-        lambda(isKeyboardVisible)
+        try {
+            lambda(isKeyboardVisible)
+        } catch (ise: IllegalStateException) {
+            Log.e(
+                "[Databinding Utils] Failed to called lambda after keyboard visibility changed: $ise"
+            )
+        }
 
         // See https://issuetracker.google.com/issues/281942480
         ViewCompat.setOnApplyWindowInsetsListener(
@@ -113,7 +120,14 @@ fun View.setKeyboardInsetListener(lambda: (visible: Boolean) -> Unit) {
                 ?.isVisible(WindowInsetsCompat.Type.ime()) == true
             if (keyboardVisibilityChanged != isKeyboardVisible) {
                 isKeyboardVisible = keyboardVisibilityChanged
-                lambda(isKeyboardVisible)
+
+                try {
+                    lambda(isKeyboardVisible)
+                } catch (ise: IllegalStateException) {
+                    Log.e(
+                        "[Databinding Utils] Failed to called lambda after keyboard visibility changed: $ise"
+                    )
+                }
             }
             ViewCompat.onApplyWindowInsets(view, insets)
         }
