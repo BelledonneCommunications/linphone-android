@@ -29,6 +29,7 @@ import org.linphone.core.FriendList.Status
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.NewOrEditNumberOrAddressModel
 import org.linphone.utils.Event
+import org.linphone.utils.FileUtils
 
 class ContactNewOrEditViewModel() : ViewModel() {
     companion object {
@@ -123,10 +124,9 @@ class ContactNewOrEditViewModel() : ViewModel() {
                 vCard.familyName = lastName.value
                 vCard.givenName = firstName.value
 
-                // TODO FIXME : doesn't work for newly created contact
                 val picture = picturePath.value.orEmpty()
                 if (picture.isNotEmpty()) {
-                    friend.photo = picture
+                    friend.photo = FileUtils.getProperFilePath(picture)
                 }
             }
 

@@ -114,6 +114,7 @@ class ContactsManager {
 
             val address = account.params.identityAddress ?: continue
             friend.address = address
+            friend.photo = "file:/storage/emulated/0/Android/data/org.linphone/files/Pictures/john.jpg" // TODO REMOVE
 
             Log.i(
                 "$TAG Local contact created for account [${address.asString()}] and picture [${friend.photo}]"

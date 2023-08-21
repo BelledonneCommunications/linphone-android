@@ -62,7 +62,7 @@ class NewContactFragment : GenericFragment() {
         if (uri != null) {
             Log.i("$TAG Picture picked [$uri]")
             // TODO FIXME: use a better file name
-            val localFileName = FileUtils.getFileStoragePath("temp", true)
+            val localFileName = FileUtils.getFileStoragePath("temp.jpg", true)
             lifecycleScope.launch {
                 if (FileUtils.copyFile(uri, localFileName)) {
                     viewModel.picturePath.postValue(localFileName.absolutePath)

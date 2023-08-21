@@ -21,6 +21,7 @@ package org.linphone.utils
 
 import android.net.Uri
 import android.os.Environment
+import androidx.annotation.AnyThread
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -34,33 +35,54 @@ class FileUtils {
     companion object {
         const val TAG = "[File Utils]"
 
-        fun getFileStoragePath(fileName: String, isImage: Boolean = false): File {
+        @AnyThread
+        fun getProperFilePath(path: String): String {
+            if (path.startsWith("file:") || path.startsWith("content:")) {
+                return path
+            } else if (path.startsWith("/")) {
+                return "file:$path"
+            }
+            return "file:/$path"
+        }
+
+        @AnyThread
+        fun getFileStoragePath(
+            fileName: String,
+            isImage: Boolean = false,
+            overrideExisting: Boolean = false
+        ): File {
             val path = getFileStorageDir(isImage)
             var file = File(path, fileName)
 
-            var prefix = 1
-            while (file.exists()) {
-                file = File(path, prefix.toString() + "_" + fileName)
-                Log.w("$TAG File with that name already exists, renamed to ${file.name}")
-                prefix += 1
+            if (!overrideExisting) {
+                var prefix = 1
+                while (file.exists()) {
+                    file = File(path, prefix.toString() + "_" + fileName)
+                    Log.w("$TAG File with that name already exists, renamed to ${file.name}")
+                    prefix += 1
+                }
             }
             return file
         }
 
-        fun getFileStorageCacheDir(fileName: String): File {
+        @AnyThread
+        fun getFileStorageCacheDir(fileName: String, overrideExisting: Boolean = false): File {
             val path = coreContext.context.cacheDir
             Log.i("$TAG Cache directory is: $path")
 
             var file = File(path, fileName)
-            var prefix = 1
-            while (file.exists()) {
-                file = File(path, prefix.toString() + "_" + fileName)
-                Log.w("$TAG File with that name already exists, renamed to ${file.name}")
-                prefix += 1
+            if (!overrideExisting) {
+                var prefix = 1
+                while (file.exists()) {
+                    file = File(path, prefix.toString() + "_" + fileName)
+                    Log.w("$TAG File with that name already exists, renamed to ${file.name}")
+                    prefix += 1
+                }
             }
             return file
         }
 
+        @AnyThread
         suspend fun copyFile(from: Uri, to: File): Boolean {
             try {
                 withContext(Dispatchers.IO) {
@@ -82,6 +104,7 @@ class FileUtils {
             return false
         }
 
+        @AnyThread
         suspend fun dumpStringToFile(data: String, to: File): Boolean {
             try {
                 withContext(Dispatchers.IO) {
@@ -101,6 +124,7 @@ class FileUtils {
             return false
         }
 
+        @AnyThread
         private fun getFileStorageDir(isPicture: Boolean = false): File {
             var path: File? = null
             if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {

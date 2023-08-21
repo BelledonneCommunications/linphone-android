@@ -37,9 +37,14 @@ class AccountProfileFragment : GenericFragment() {
 
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
-            Log.i("$TAG Picture picked [$uri]")
-            // TODO FIXME: use a better file name
-            val localFileName = FileUtils.getFileStoragePath("temp", true)
+            val identity = "john" // TODO FIXME
+            val localFileName = FileUtils.getFileStoragePath(
+                "$identity.jpg",
+                isImage = true,
+                overrideExisting = true
+            )
+            Log.i("$TAG Picture picked [$uri], will be stored as [${localFileName.absolutePath}]")
+
             lifecycleScope.launch {
                 if (FileUtils.copyFile(uri, localFileName)) {
                     withContext(Dispatchers.Main) {
@@ -94,7 +99,9 @@ class AccountProfileFragment : GenericFragment() {
                 if (found) {
                     startPostponedEnterTransition()
                 } else {
-                    Log.e("$TAG Failed to find an account matching this identity address [$identity]")
+                    Log.e(
+                        "$TAG Failed to find an account matching this identity address [$identity]"
+                    )
                     // TODO Error
                     goBack()
                 }

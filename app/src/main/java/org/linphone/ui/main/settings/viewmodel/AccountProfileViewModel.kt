@@ -8,6 +8,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Account
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
+import org.linphone.utils.FileUtils
 
 class AccountProfileViewModel : ViewModel() {
     companion object {
@@ -72,8 +73,9 @@ class AccountProfileViewModel : ViewModel() {
 
     @UiThread
     fun setImage(file: File) {
-        val path = file.absolutePath
+        val path = FileUtils.getProperFilePath(file.absolutePath)
         picturePath.value = path
+
         coreContext.postOnCoreThread {
             if (::account.isInitialized) {
                 val friend = coreContext.contactsManager.localFriends.find {
@@ -82,6 +84,7 @@ class AccountProfileViewModel : ViewModel() {
                     } != null
                 }
                 if (friend != null) {
+                    // TODO FIXME: photo must be set on Account not Friend, Friend will be re-created from Account right after this
                     friend.edit()
                     friend.photo = path
                     friend.done()
