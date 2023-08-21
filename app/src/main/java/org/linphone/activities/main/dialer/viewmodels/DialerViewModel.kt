@@ -134,7 +134,7 @@ class DialerViewModel : LogsUploadViewModel() {
         ) {
             if (result == VersionUpdateCheckResult.NewVersionAvailable) {
                 Log.i("[Dialer] Update available, version [$version], url [$url]")
-                if (url != null && url.isNotEmpty()) {
+                if (!url.isNullOrEmpty()) {
                     updateAvailableEvent.value = Event(url)
                 }
             }

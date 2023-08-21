@@ -23,7 +23,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.navigation.navGraphViewModels
-import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.activities.navigateToAddParticipants
 import org.linphone.activities.voip.viewmodels.ConferenceViewModel
@@ -48,8 +47,6 @@ class ConferenceParticipantsFragment : GenericVideoPreviewFragment<VoipConferenc
         binding.conferenceViewModel = conferenceViewModel
 
         binding.controlsViewModel = controlsViewModel
-
-        setupLocalViewPreview(binding.localPreviewVideoSurface, binding.switchCamera)
 
         conferenceViewModel.conferenceExists.observe(
             viewLifecycleOwner
@@ -90,12 +87,13 @@ class ConferenceParticipantsFragment : GenericVideoPreviewFragment<VoipConferenc
         super.onResume()
 
         skipEvents = false
-        coreContext.core.nativePreviewWindowId = binding.localPreviewVideoSurface
+        setupLocalVideoPreview(binding.localPreviewVideoSurface, binding.switchCamera)
     }
 
     override fun onPause() {
         super.onPause()
 
         skipEvents = true
+        cleanUpLocalVideoPreview(binding.localPreviewVideoSurface)
     }
 }

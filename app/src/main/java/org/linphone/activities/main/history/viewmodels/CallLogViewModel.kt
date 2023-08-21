@@ -44,7 +44,7 @@ class CallLogViewModel(val callLog: CallLog, private val isRelated: Boolean = fa
 
     val statusIconResource: Int by lazy {
         if (callLog.dir == Call.Dir.Incoming) {
-            if (callLog.status == Call.Status.Missed) {
+            if (LinphoneUtils.isCallLogMissed(callLog)) {
                 R.drawable.call_status_missed
             } else {
                 R.drawable.call_status_incoming
@@ -56,7 +56,7 @@ class CallLogViewModel(val callLog: CallLog, private val isRelated: Boolean = fa
 
     val iconContentDescription: Int by lazy {
         if (callLog.dir == Call.Dir.Incoming) {
-            if (callLog.status == Call.Status.Missed) {
+            if (LinphoneUtils.isCallLogMissed(callLog)) {
                 R.string.content_description_missed_call
             } else {
                 R.string.content_description_incoming_call
@@ -68,7 +68,7 @@ class CallLogViewModel(val callLog: CallLog, private val isRelated: Boolean = fa
 
     val directionIconResource: Int by lazy {
         if (callLog.dir == Call.Dir.Incoming) {
-            if (callLog.status == Call.Status.Missed) {
+            if (LinphoneUtils.isCallLogMissed(callLog)) {
                 R.drawable.call_missed
             } else {
                 R.drawable.call_incoming

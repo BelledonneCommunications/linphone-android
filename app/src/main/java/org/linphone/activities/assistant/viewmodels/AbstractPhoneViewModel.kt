@@ -21,7 +21,6 @@
 package org.linphone.activities.assistant.viewmodels
 
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.*
 import org.linphone.activities.assistant.fragments.CountryPickerFragment
 import org.linphone.core.AccountCreator
 import org.linphone.core.DialPlan
@@ -33,6 +32,7 @@ abstract class AbstractPhoneViewModel(accountCreator: AccountCreator) :
     CountryPickerFragment.CountryPickedListener {
 
     val prefix = MutableLiveData<String>()
+    val prefixError = MutableLiveData<String>()
 
     val phoneNumber = MutableLiveData<String>()
     val phoneNumberError = MutableLiveData<String>()
@@ -49,7 +49,10 @@ abstract class AbstractPhoneViewModel(accountCreator: AccountCreator) :
     }
 
     fun isPhoneNumberOk(): Boolean {
-        return prefix.value.orEmpty().isNotEmpty() && phoneNumber.value.orEmpty().isNotEmpty() && phoneNumberError.value.orEmpty().isEmpty()
+        return prefix.value.orEmpty().length > 1 && // Not just '+' character
+            prefixError.value.orEmpty().isEmpty() &&
+            phoneNumber.value.orEmpty().isNotEmpty() &&
+            phoneNumberError.value.orEmpty().isEmpty()
     }
 
     fun updateFromPhoneNumberAndOrDialPlan(number: String?, dialPlan: DialPlan?) {
@@ -70,7 +73,7 @@ abstract class AbstractPhoneViewModel(accountCreator: AccountCreator) :
         }
     }
 
-    private fun getCountryNameFromPrefix(prefix: String?) {
+    fun getCountryNameFromPrefix(prefix: String?) {
         if (!prefix.isNullOrEmpty()) {
             val countryCode = if (prefix.first() == '+') prefix.substring(1) else prefix
             val dialPlan = PhoneNumberUtils.getDialPlanFromCountryCallingPrefix(countryCode)

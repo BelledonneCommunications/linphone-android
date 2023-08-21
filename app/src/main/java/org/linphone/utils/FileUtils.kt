@@ -26,7 +26,10 @@ import android.content.Intent
 import android.database.CursorIndexOutOfBoundsException
 import android.net.Uri
 import android.os.Environment
+import android.os.ParcelFileDescriptor
+import android.os.Process.myUid
 import android.provider.OpenableColumns
+import android.system.Os.fstat
 import android.webkit.MimeTypeMap
 import androidx.core.content.FileProvider
 import java.io.*
@@ -42,6 +45,15 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 
 class FileUtils {
+    enum class MimeType {
+        PlainText,
+        Pdf,
+        Image,
+        Video,
+        Audio,
+        Unknown
+    }
+
     companion object {
         fun getNameFromFilePath(filePath: String): String {
             var name = filePath
@@ -64,36 +76,28 @@ class FileUtils {
             return extension.lowercase(Locale.getDefault())
         }
 
-        fun isMimePlainText(type: String?): Boolean {
-            return type?.startsWith("text/plain") ?: false
-        }
-
-        fun isMimePdf(type: String?): Boolean {
-            return type?.startsWith("application/pdf") ?: false
-        }
-
-        fun isMimeImage(type: String?): Boolean {
-            return type?.startsWith("image/") ?: false
-        }
-
-        fun isMimeVideo(type: String?): Boolean {
-            return type?.startsWith("video/") ?: false
-        }
-
-        fun isMimeAudio(type: String?): Boolean {
-            return type?.startsWith("audio/") ?: false
+        fun getMimeType(type: String?): MimeType {
+            if (type.isNullOrEmpty()) return MimeType.Unknown
+            return when {
+                type.startsWith("image/") -> MimeType.Image
+                type.startsWith("text/plain") -> MimeType.PlainText
+                type.startsWith("video/") -> MimeType.Video
+                type.startsWith("audio/") -> MimeType.Audio
+                type.startsWith("application/pdf") -> MimeType.Pdf
+                else -> MimeType.Unknown
+            }
         }
 
         fun isExtensionImage(path: String): Boolean {
             val extension = getExtensionFromFileName(path)
             val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
-            return isMimeImage(type)
+            return getMimeType(type) == MimeType.Image
         }
 
         fun isExtensionVideo(path: String): Boolean {
             val extension = getExtensionFromFileName(path)
             val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
-            return isMimeVideo(type)
+            return getMimeType(type) == MimeType.Video
         }
 
         fun clearExistingPlainFiles() {
@@ -268,6 +272,21 @@ class FileUtils {
         suspend fun getFilePath(context: Context, uri: Uri): String? {
             var result: String? = null
             val name: String = getNameFromUri(uri, context)
+
+            try {
+                if (fstat(
+                        ParcelFileDescriptor.open(
+                                File(uri.path),
+                                ParcelFileDescriptor.MODE_READ_ONLY
+                            ).fileDescriptor
+                    ).st_uid != myUid()
+                ) {
+                    Log.e("[File Utils] File descriptor UID different from our, denying copy!")
+                    return result
+                }
+            } catch (e: Exception) {
+                Log.e("[File Utils] Can't check file ownership: ", e)
+            }
 
             try {
                 val localFile: File = createFile(name)

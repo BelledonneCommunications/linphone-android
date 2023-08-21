@@ -273,6 +273,24 @@ class DialerFragment : SecureFragment<DialerFragmentBinding>() {
             // Don't check the following the previous permissions are being asked
             checkTelecomManagerPermissions()
         }
+
+        // See https://developer.android.com/about/versions/14/behavior-changes-14#fgs-types
+        if (Version.sdkAboveOrEqual(Version.API34_ANDROID_14_UPSIDE_DOWN_CAKE)) {
+            val fullScreenIntentPermission = Compatibility.hasFullScreenIntentPermission(
+                requireContext()
+            )
+            Log.i(
+                "[Dialer] Android 14 or above detected: full-screen intent permission is ${if (fullScreenIntentPermission) "granted" else "not granted"}"
+            )
+            if (!fullScreenIntentPermission) {
+                (requireActivity() as MainActivity).showSnackBar(
+                    R.string.android_14_full_screen_intent_permission_not_granted,
+                    R.string.android_14_go_to_full_screen_intent_permission_setting
+                ) {
+                    Compatibility.requestFullScreenIntentPermission(requireContext())
+                }
+            }
+        }
     }
 
     @TargetApi(Version.API26_O_80)

@@ -107,6 +107,8 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
 
     val isEmojiPickerVisible = MutableLiveData<Boolean>()
 
+    val isFileTransferAvailable = MutableLiveData<Boolean>()
+
     val requestKeyboardHidingEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -146,6 +148,7 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         sendMessageEnabled.value = false
         isEmojiPickerOpen.value = false
         isEmojiPickerVisible.value = corePreferences.showEmojiPickerButton
+        isFileTransferAvailable.value = LinphoneUtils.isFileTransferAvailable()
         updateChatRoomReadOnlyState()
     }
 
@@ -174,6 +177,10 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
 
     fun onTextToSendChanged(value: String) {
         sendMessageEnabled.value = value.trim().isNotEmpty() || attachments.value?.isNotEmpty() == true || isPendingVoiceRecord.value == true
+
+        val showEmojiPicker = value.isEmpty() || AppUtils.isTextOnlyContainingEmoji(value)
+        isEmojiPickerVisible.value = corePreferences.showEmojiPickerButton && showEmojiPicker
+
         if (value.isNotEmpty()) {
             if (attachFileEnabled.value == true && !corePreferences.allowMultipleFilesAndTextInSameMessage) {
                 attachFileEnabled.value = false

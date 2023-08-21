@@ -2,7 +2,7 @@
 <!DOCTYPE resources [
 <!ENTITY appName "Linphone">
 ]>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingQuantity">
     <string name="content_description_copy_conference_address">Kopírovat adresu schůzky</string>
     <string name="call_settings_auto_start_title">Okamžité zahájení volání</string>
     <string name="call_settings_auto_start_summary">Volání se spustí automaticky, pokud je spuštěno z jiné aplikace</string>
@@ -107,7 +107,7 @@
     <string name="sip_address">SIP adresa</string>
     <string name="sip_addresses">SIP adresy</string>
     <string name="cancel">Zrušit</string>
-    <plurals name="days">
+    <plurals name="days" tools:ignore="MissingQuantity">
         <item quantity="one">den</item>
         <item quantity="few">dny</item>
         <item quantity="other">dní</item>
@@ -670,7 +670,7 @@
     <string name="chat_room_ephemeral_message_disabled">Zakázáno</string>
     <string name="chat_room_ephemeral_message_one_hour">1 hodina</string>
     <string name="chat_room_ephemeral_message_one_week">1 týden</string>
-    <plurals name="chat_room_remote_composing">
+    <plurals name="chat_room_remote_composing" tools:ignore="MissingQuantity">
         <item quantity="one">%s píše…</item>
         <item quantity="few">%s píší…</item>
         <item quantity="other">%s píše…</item>
@@ -799,4 +799,25 @@
     <string name="chat_room_presence_do_not_disturb">Nerušit</string>
     <string name="chat_room_presence_away">Pryč</string>
     <string name="audio_settings_software_echo_cancellation_title">Softwarové potlačení ozvěny</string>
+    <string name="assistant_alternative_way_create_account">Vytvoření účtu pomocí e-mailu:</string>
+    <string name="assistant_create_email_account_not_validated">Váš účet ještě nebyl aktivován, klikněte prosím na odkaz, který jste obdrželi e-mailem</string>
+    <string name="account_setting_disable_bundle_mode_title">Vypnout bundle režim</string>
+    <string name="assistant_no_push_warning">Zdá se, že vaše zařízení nemůže přijímat push notifikace.
+\n
+\nProtože je nyní vyžadujeme pro vytvoření účtu, nebudete si moci vytvořit účet v aplikaci, ale můžete si ho vytvořit na našich webových stránkách:</string>
+    <string name="dialog_authentication_required_message">Připojení se nezdařilo, protože přihlašovací údaje chybí nebo jsou neplatné pro účet
+\n%s.
+\n
+\nMůžete znovu zadat heslo nebo zkontrolovat konfiguraci účtu v nastavení.</string>
+    <string name="content_description_emoji_picker">Přepnutí viditelnosti nástroje pro výběr emoji</string>
+    <string name="dialog_authentication_required_title">Vyžadováno ověření</string>
+    <string name="dialog_authentication_required_change_password_label">Potvrdit</string>
+    <string name="android_14_full_screen_intent_permission_not_granted">Povolení vyžadované pro zobrazení příchozích hovorů zatím nebylo uděleno</string>
+    <string name="android_14_go_to_full_screen_intent_permission_setting">Zobrazit</string>
+    <string name="assistant_error_invalid_international_prefix">Špatná mezinárodní předvolba</string>
+    <string name="yes">Ano</string>
+    <string name="no">Ne</string>
+    <string name="contacts_new_contact_wont_be_visible_warning_dialog">Chystáte se vytvořit nový kontakt bez SIP URI ani telefonního čísla, a proto nebude viditelný v seznamu &appName;.
+\n
+\nChcete jej přesto vytvořit\?</string>
 </resources>

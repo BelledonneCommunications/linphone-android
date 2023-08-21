@@ -22,6 +22,8 @@ package org.linphone.activities.main.settings.viewmodels
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.activities.main.settings.SettingListenerStub
+import org.linphone.core.ConsolidatedPresence
+import org.linphone.core.tools.Log
 import org.linphone.utils.Event
 import org.linphone.utils.PermissionHelper
 
@@ -40,6 +42,30 @@ class ContactsSettingsViewModel : GenericSettingsViewModel() {
     val friendListSubscribe = MutableLiveData<Boolean>()
     val rlsAddressAvailable = MutableLiveData<Boolean>()
 
+    val publishPresenceListener = object : SettingListenerStub() {
+        override fun onBoolValueChanged(newValue: Boolean) {
+            prefs.publishPresence = newValue
+
+            if (newValue) {
+                // Publish online presence when enabling setting
+                Log.i(
+                    "[Contacts Settings] Presence has been enabled, PUBLISHING presence as Online"
+                )
+                core.consolidatedPresence = ConsolidatedPresence.Online
+            } else {
+                // Unpublish presence when disabling setting
+                Log.i("[Contacts Settings] Presence has been disabled, un-PUBLISHING presence info")
+                core.consolidatedPresence = ConsolidatedPresence.Offline
+            }
+
+            publishPresenceToggledEvent.value = Event(true)
+        }
+    }
+    val publishPresence = MutableLiveData<Boolean>()
+    val publishPresenceToggledEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     val showNewContactAccountDialogListener = object : SettingListenerStub() {
         override fun onBoolValueChanged(newValue: Boolean) {
             prefs.showNewContactAccountDialog = newValue
@@ -51,12 +77,12 @@ class ContactsSettingsViewModel : GenericSettingsViewModel() {
         override fun onBoolValueChanged(newValue: Boolean) {
             if (newValue) {
                 if (PermissionHelper.get().hasWriteContactsPermission()) {
-                    prefs.storePresenceInNativeContact = newValue
+                    prefs.storePresenceInNativeContact = true
                 } else {
                     askWriteContactsPermissionForPresenceStorageEvent.value = Event(true)
                 }
             } else {
-                prefs.storePresenceInNativeContact = newValue
+                prefs.storePresenceInNativeContact = false
             }
         }
     }
@@ -97,6 +123,8 @@ class ContactsSettingsViewModel : GenericSettingsViewModel() {
 
         friendListSubscribe.value = core.isFriendListSubscriptionEnabled
         rlsAddressAvailable.value = !core.config.getString("sip", "rls_uri", "").isNullOrEmpty()
+        publishPresence.value = prefs.publishPresence
+
         showNewContactAccountDialog.value = prefs.showNewContactAccountDialog
         nativePresence.value = prefs.storePresenceInNativeContact
         showOrganization.value = prefs.displayOrganization

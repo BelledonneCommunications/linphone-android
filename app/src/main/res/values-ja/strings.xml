@@ -792,5 +792,20 @@
     <string name="assistant_no_push_warning">このデバイスではプッシュ通知を受信することができません。
 \n
 \nアカウント作成時にプッシュ通知の受信が必須となったため、このアプリ内ではアカウントを作成することができませんが、当社のWebサイト上で作成することができます:</string>
+    <string name="dialog_authentication_required_title">認証が必要です</string>
+    <string name="dialog_authentication_required_change_password_label">認証</string>
+    <string name="dialog_authentication_required_message">認証の失敗、もしくは無効なアカウントのため
+\n%s の接続に失敗しました。
+\n
+\n再度パスワードを入力するか、設定からアカウントの構成を確認することができます。</string>
     <string name="assistant_create_email_account_not_validated">アカウントがアクティベートされていません。受信したEメールのリンクを開いてください</string>
+    <string name="assistant_error_invalid_international_prefix">間違った国際プレフィックス</string>
+    <string name="android_14_full_screen_intent_permission_not_granted">着信を表示するために必要な権限がまだ付与されていません</string>
+    <string name="android_14_go_to_full_screen_intent_permission_setting">表示</string>
+    <string name="content_description_emoji_picker">絵文字ピッカーの表示を切り替える</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="contacts_new_contact_wont_be_visible_warning_dialog">SIP URIも電話番号もない新しい連絡先を作成しようとしており、&appName;には表示されません。
+\n
+\n本当に作成しますか？</string>
 </resources>

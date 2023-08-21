@@ -52,7 +52,7 @@ class NetworkSettingsViewModel : GenericSettingsViewModel() {
             try {
                 val port = newValue.toInt()
                 setTransportPort(port)
-            } catch (nfe: NumberFormatException) {
+            } catch (_: NumberFormatException) {
             }
         }
     }

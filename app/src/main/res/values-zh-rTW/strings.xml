@@ -541,7 +541,6 @@
     <string name="content_descripton_scroll_to_bottom">滑動到畫面底部或第一則未讀訊息</string>
     <string name="content_description_copy_conference_address">複製會議地址</string>
     <string name="content_description_toggle_conference_info_details">切換顯示會議詳細資訊</string>
-    <string name="chat_event_ephemeral_enabled">您已開啟「閱後即焚」訊息</string>
     <string name="chat_settings_use_in_app_file_viewer_title">總是在此程式中開啟</string>
     <string name="chat_settings_use_in_app_file_viewer_summary">還是可以匯出到第三方應用程式</string>
     <string name="chat_settings_auto_download_voice_recordings">自動下載收到的錄音檔</string>
@@ -799,6 +798,21 @@
 \n
 \n現在起註冊帳號時就必須使用此功能，您無法直接於程式中註冊帳號，但還是可以在網頁中註冊：</string>
     <string name="assistant_create_email_account_not_validated">您的帳號尚未啟用，請點擊收到的確認信件中的連結</string>
+    <string name="dialog_authentication_required_title">需要驗證</string>
+    <string name="dialog_authentication_required_message">由於缺少帳號 %s 的驗證資訊，或是驗證資訊無效，連線失敗。
+\n
+\n您可以再次輸入密碼，或是到設定畫面中確認帳號設定。</string>
+    <string name="dialog_authentication_required_change_password_label">確認</string>
+    <string name="chat_event_ephemeral_enabled">您開啟了「閱後即焚」訊息：%s</string>
+    <string name="content_description_emoji_picker">切換顯示表情符號選取器</string>
+    <string name="android_14_full_screen_intent_permission_not_granted">尚未授予顯示來電的必要權限</string>
+    <string name="android_14_go_to_full_screen_intent_permission_setting">顯示</string>
+    <string name="assistant_error_invalid_international_prefix">國際冠碼錯誤</string>
+    <string name="yes">是</string>
+    <string name="no">否</string>
+    <string name="contacts_new_contact_wont_be_visible_warning_dialog">您要建立的聯絡人不含 SIP URI 或電話號碼，不會在 &appName; 出現。
+\n
+\n還是要建立這位聯絡人嗎？</string>
     <string name="chat_message_one_reaction">%s 反應</string>
     <string name="chat_message_many_reactions">%s 反應</string>
     <string name="chat_message_voice_recording_notification_short_desc">語音訊息</string>

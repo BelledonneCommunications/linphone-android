@@ -83,7 +83,6 @@ class ChatMessageContentData(
     val conferenceDate = MutableLiveData<String>()
     val conferenceTime = MutableLiveData<String>()
     val conferenceDuration = MutableLiveData<String>()
-    var conferenceAddress = MutableLiveData<String>()
     val showDuration = MutableLiveData<Boolean>()
 
     val isAlone: Boolean
@@ -106,6 +105,8 @@ class ChatMessageContentData(
         Log.i("[Voice Recording] End of file reached")
         stopVoiceRecording()
     }
+
+    private var conferenceAddress: String? = null
 
     private fun getContent(): Content {
         return chatMessage.contents[contentIndex]
@@ -182,7 +183,7 @@ class ChatMessageContentData(
         val content = getContent()
         val filePath = content.filePath
         if (content.isFileTransfer) {
-            if (filePath == null || filePath.isEmpty()) {
+            if (filePath.isNullOrEmpty()) {
                 val contentName = content.name
                 if (contentName != null) {
                     val file = FileUtils.getFileStoragePath(contentName)
@@ -274,18 +275,26 @@ class ChatMessageContentData(
                 filePath.value = path
                 val extension = FileUtils.getExtensionFromFileName(path)
                 val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
-                isImage.value = FileUtils.isMimeImage(mime)
-                isVideo.value = FileUtils.isMimeVideo(mime) && !isVoiceRecord
-                isAudio.value = FileUtils.isMimeAudio(mime) && !isVoiceRecord
-                isPdf.value = FileUtils.isMimePdf(mime)
-                val type = when {
-                    isImage.value == true -> "image"
-                    isVideo.value == true -> "video"
-                    isAudio.value == true -> "audio"
-                    isPdf.value == true -> "pdf"
-                    isVoiceRecord -> "voice recording"
-                    isConferenceIcs -> "conference invitation"
-                    else -> "unknown"
+                val type = when (FileUtils.getMimeType(mime)) {
+                    FileUtils.MimeType.Image -> {
+                        isImage.value = true
+                        "image"
+                    }
+                    FileUtils.MimeType.Video -> {
+                        isVideo.value = !isVoiceRecord
+                        if (isVoiceRecord) "voice recording" else "video"
+                    }
+                    FileUtils.MimeType.Audio -> {
+                        isAudio.value = !isVoiceRecord
+                        if (isVoiceRecord) "voice recording" else "audio"
+                    }
+                    FileUtils.MimeType.Pdf -> {
+                        isPdf.value = true
+                        "pdf"
+                    }
+                    else -> {
+                        if (isConferenceIcs) "conference invitation" else "unknown"
+                    }
                 }
                 Log.i(
                     "[Content] Extension for file [$path] is [$extension], deduced type from MIME is [$type]"
@@ -310,23 +319,26 @@ class ChatMessageContentData(
                 Log.w(
                     "[Content] Found ${if (content.isFile) "file" else "file transfer"} content with empty path..."
                 )
-                isImage.value = false
-                isVideo.value = false
-                isAudio.value = false
-                isPdf.value = false
-                isVoiceRecording.value = false
-                isConferenceSchedule.value = false
             }
         } else if (content.isFileTransfer) {
             downloadable.value = true
             val extension = FileUtils.getExtensionFromFileName(fileName.value!!)
             val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
-            isImage.value = FileUtils.isMimeImage(mime)
-            isVideo.value = FileUtils.isMimeVideo(mime)
-            isAudio.value = FileUtils.isMimeAudio(mime)
-            isPdf.value = FileUtils.isMimePdf(mime)
-            isVoiceRecording.value = false
-            isConferenceSchedule.value = false
+            when (FileUtils.getMimeType(mime)) {
+                FileUtils.MimeType.Image -> {
+                    isImage.value = true
+                }
+                FileUtils.MimeType.Video -> {
+                    isVideo.value = true
+                }
+                FileUtils.MimeType.Audio -> {
+                    isAudio.value = true
+                }
+                FileUtils.MimeType.Pdf -> {
+                    isPdf.value = true
+                }
+                else -> {}
+            }
         } else if (content.isIcalendar) {
             Log.i("[Content] Found content with icalendar body")
             isConferenceSchedule.value = true
@@ -342,9 +354,9 @@ class ChatMessageContentData(
         val conferenceInfo = Factory.instance().createConferenceInfoFromIcalendarContent(content)
         val conferenceUri = conferenceInfo?.uri?.asStringUriOnly()
         if (conferenceInfo != null && conferenceUri != null) {
-            conferenceAddress.value = conferenceUri!!
+            conferenceAddress = conferenceUri!!
             Log.i(
-                "[Content] Created conference info from ICS with address ${conferenceAddress.value}"
+                "[Content] Created conference info from ICS with address $conferenceAddress"
             )
             conferenceSubject.value = conferenceInfo.subject
             conferenceDescription.value = conferenceInfo.description
@@ -407,7 +419,7 @@ class ChatMessageContentData(
     }
 
     fun callConferenceAddress() {
-        val address = conferenceAddress.value
+        val address = conferenceAddress
         if (address == null) {
             Log.e("[Content] Can't call null conference address!")
             return

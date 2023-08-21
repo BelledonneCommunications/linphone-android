@@ -89,13 +89,26 @@ class ConferenceSchedulingViewModel : ContactsSelectionViewModel() {
 
                 address.value = conferenceAddress!!
 
-                if (scheduleForLater.value == true && sendInviteViaChat.value == true) {
-                    // Send conference info even when conf is not scheduled for later
-                    // as the conference server doesn't invite participants automatically
-                    val chatRoomParams = LinphoneUtils.getConferenceInvitationsChatRoomParams()
-                    conferenceScheduler.sendInvitations(chatRoomParams)
+                if (scheduleForLater.value == true) {
+                    if (sendInviteViaChat.value == true) {
+                        // Send conference info even when conf is not scheduled for later
+                        // as the conference server doesn't invite participants automatically
+                        Log.i(
+                            "[Conference Creation] Scheduled conference is ready, sending invitations by chat"
+                        )
+                        val chatRoomParams = LinphoneUtils.getConferenceInvitationsChatRoomParams()
+                        conferenceScheduler.sendInvitations(chatRoomParams)
+                    } else {
+                        Log.i(
+                            "[Conference Creation] Scheduled conference is ready, we were asked not to send invitations by chat so leaving fragment"
+                        )
+                        conferenceCreationInProgress.value = false
+                        conferenceCreationCompletedEvent.value = Event(true)
+                    }
                 } else {
-                    // Will be done in coreListener
+                    Log.i("[Conference Creation] Group call is ready, leaving fragment")
+                    conferenceCreationInProgress.value = false
+                    conferenceCreationCompletedEvent.value = Event(true)
                 }
             } else if (state == ConferenceScheduler.State.Error) {
                 Log.e("[Conference Creation] Failed to create conference!")
@@ -134,30 +147,6 @@ class ConferenceSchedulingViewModel : ContactsSelectionViewModel() {
         }
     }
 
-    private val coreListener: CoreListenerStub = object : CoreListenerStub() {
-        override fun onCallStateChanged(
-            core: Core,
-            call: Call,
-            state: Call.State?,
-            message: String
-        ) {
-            when (state) {
-                Call.State.OutgoingProgress -> {
-                    conferenceCreationInProgress.value = false
-                }
-                Call.State.End -> {
-                    Log.i("[Conference Creation] Call has ended, leaving waiting room fragment")
-                    conferenceCreationCompletedEvent.value = Event(true)
-                }
-                Call.State.Error -> {
-                    Log.w("[Conference Creation] Call has failed, leaving waiting room fragment")
-                    conferenceCreationCompletedEvent.value = Event(true)
-                }
-                else -> {}
-            }
-        }
-    }
-
     init {
         sipContactsSelected.value = true
 
@@ -191,11 +180,9 @@ class ConferenceSchedulingViewModel : ContactsSelectionViewModel() {
         }
 
         conferenceScheduler.addListener(listener)
-        coreContext.core.addListener(coreListener)
     }
 
     override fun onCleared() {
-        coreContext.core.removeListener(coreListener)
         conferenceScheduler.removeListener(listener)
         participantsData.value.orEmpty().forEach(ConferenceSchedulingParticipantData::destroy)
 

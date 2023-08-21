@@ -73,7 +73,7 @@ fun View.hideKeyboard() {
     } catch (_: Exception) {}
 }
 
-fun View.addKeyboardInsetListener(lambda: (visible: Boolean) -> Unit) {
+fun View.setKeyboardInsetListener(lambda: (visible: Boolean) -> Unit) {
     doOnLayout {
         var isKeyboardVisible = ViewCompat.getRootWindowInsets(this)?.isVisible(
             WindowInsetsCompat.Type.ime()
@@ -81,8 +81,9 @@ fun View.addKeyboardInsetListener(lambda: (visible: Boolean) -> Unit) {
 
         lambda(isKeyboardVisible)
 
+        // See https://issuetracker.google.com/issues/281942480
         ViewCompat.setOnApplyWindowInsetsListener(
-            this
+            rootView
         ) { view, insets ->
             val keyboardVisibilityChanged = ViewCompat.getRootWindowInsets(view)
                 ?.isVisible(WindowInsetsCompat.Type.ime()) == true
@@ -90,7 +91,7 @@ fun View.addKeyboardInsetListener(lambda: (visible: Boolean) -> Unit) {
                 isKeyboardVisible = keyboardVisibilityChanged
                 lambda(isKeyboardVisible)
             }
-            insets
+            ViewCompat.onApplyWindowInsets(view, insets)
         }
     }
 }
@@ -343,7 +344,7 @@ fun setImageViewScaleType(imageView: ImageView, scaleType: ImageView.ScaleType) 
 
 @BindingAdapter("coilRounded")
 fun loadRoundImageWithCoil(imageView: ImageView, path: String?) {
-    if (path != null && path.isNotEmpty() && FileUtils.isExtensionImage(path)) {
+    if (!path.isNullOrEmpty() && FileUtils.isExtensionImage(path)) {
         imageView.load(path) {
             transformations(CircleCropTransformation())
         }
@@ -354,7 +355,7 @@ fun loadRoundImageWithCoil(imageView: ImageView, path: String?) {
 
 @BindingAdapter("coil")
 fun loadImageWithCoil(imageView: ImageView, path: String?) {
-    if (path != null && path.isNotEmpty() && FileUtils.isExtensionImage(path)) {
+    if (!path.isNullOrEmpty() && FileUtils.isExtensionImage(path)) {
         if (corePreferences.vfsEnabled && path.startsWith(corePreferences.vfsCachePath)) {
             imageView.load(path) {
                 diskCachePolicy(CachePolicy.DISABLED)
@@ -551,9 +552,23 @@ fun loadAvatarWithCoil(imageView: ImageView, path: String?) {
 
 @BindingAdapter("coilVideoPreview")
 fun loadVideoPreview(imageView: ImageView, path: String?) {
-    if (path != null && path.isNotEmpty() && FileUtils.isExtensionVideo(path)) {
+    if (!path.isNullOrEmpty() && FileUtils.isExtensionVideo(path)) {
         imageView.load(path) {
             videoFrameMillis(0)
+            listener(
+                onError = { _, result ->
+                    Log.e(
+                        "[Data Binding] [Coil] Error getting preview picture from video? [$path]: ${result.throwable}"
+                    )
+                },
+                onSuccess = { _, _ ->
+                    // Display "play" button above video preview
+                    LayoutInflater.from(imageView.context).inflate(
+                        R.layout.video_play_button,
+                        imageView.parent as ViewGroup
+                    )
+                }
+            )
         }
     }
 }
@@ -582,13 +597,23 @@ fun addPhoneNumberEditTextValidation(editText: EditText, enabled: Boolean) {
 fun addPrefixEditTextValidation(editText: EditText, enabled: Boolean) {
     if (!enabled) return
     editText.addTextChangedListener(object : TextWatcher {
-        override fun afterTextChanged(s: Editable?) {}
+        override fun afterTextChanged(s: Editable?) {
+            val dialPlan = PhoneNumberUtils.getDialPlanFromCountryCallingPrefix(
+                s.toString().substring(1)
+            )
+            if (dialPlan == null) {
+                editText.error =
+                    editText.context.getString(
+                        R.string.assistant_error_invalid_international_prefix
+                    )
+            }
+        }
 
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
         @SuppressLint("SetTextI18n")
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            if (s == null || s.isEmpty() || !s.startsWith("+")) {
+            if (s.isNullOrEmpty() || !s.startsWith("+")) {
                 editText.setText("+$s")
             }
         }

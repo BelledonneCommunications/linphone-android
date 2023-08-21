@@ -84,8 +84,11 @@ class StatusFragment : GenericFragment<VoipStatusFragmentBinding>() {
 
     private fun showZrtpDialog(call: Call) {
         if (zrtpDialog != null && zrtpDialog?.isShowing == true) {
-            Log.e("[Status Fragment] ZRTP dialog already visible")
-            return
+            Log.w(
+                "[Status Fragment] ZRTP dialog already visible, closing it and creating a new one"
+            )
+            zrtpDialog?.dismiss()
+            zrtpDialog = null
         }
 
         val token = call.authenticationToken
@@ -125,8 +128,19 @@ class StatusFragment : GenericFragment<VoipStatusFragmentBinding>() {
 
         viewModel.showCancelButton(
             {
-                call.authenticationTokenVerified = false
-                this@StatusFragment.viewModel.updateEncryptionInfo(call)
+                if (call.state != Call.State.End && call.state != Call.State.Released) {
+                    if (call.authenticationTokenVerified) {
+                        Log.w(
+                            "[Status Fragment] Removing trust from previously verified ZRTP SAS auth token"
+                        )
+                        this@StatusFragment.viewModel.previouslyDeclineToken = true
+                        call.authenticationTokenVerified = false
+                    }
+                } else {
+                    Log.e(
+                        "[Status Fragment] Can't decline the ZRTP SAS token, call is in state [${call.state}]"
+                    )
+                }
                 dialog.dismiss()
                 zrtpDialog = null
             },
@@ -135,8 +149,13 @@ class StatusFragment : GenericFragment<VoipStatusFragmentBinding>() {
 
         viewModel.showOkButton(
             {
-                call.authenticationTokenVerified = true
-                this@StatusFragment.viewModel.updateEncryptionInfo(call)
+                if (call.state != Call.State.End && call.state != Call.State.Released) {
+                    call.authenticationTokenVerified = true
+                } else {
+                    Log.e(
+                        "[Status Fragment] Can't verify the ZRTP SAS token, call is in state [${call.state}]"
+                    )
+                }
                 dialog.dismiss()
                 zrtpDialog = null
             },

@@ -81,6 +81,8 @@ class ControlsViewModel : ViewModel() {
 
     val attendedTransfer = MutableLiveData<Boolean>()
 
+    val chatDisabled = MutableLiveData<Boolean>()
+
     val goToConferenceParticipantsListEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -206,6 +208,7 @@ class ControlsViewModel : ViewModel() {
     init {
         coreContext.core.addListener(listener)
 
+        chatDisabled.value = corePreferences.disableChat
         fullScreenMode.value = false
         extraButtonsMenuTranslateY.value = AppUtils.getDimension(
             R.dimen.voip_call_extra_buttons_translate_y
@@ -536,7 +539,7 @@ class ControlsViewModel : ViewModel() {
 
         isVideoEnabled.value = enabled
         showTakeSnapshotButton.value = enabled && corePreferences.showScreenshotButton
-        var isVideoBeingSent = if (coreContext.core.currentCall?.conference != null) {
+        val isVideoBeingSent = if (coreContext.core.currentCall?.conference != null) {
             val videoDirection = coreContext.core.currentCall?.currentParams?.videoDirection
             videoDirection == MediaDirection.SendRecv || videoDirection == MediaDirection.SendOnly
         } else {

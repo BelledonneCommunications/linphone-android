@@ -119,6 +119,7 @@
 
                             <com.google.android.material.textfield.TextInputEditText
                                 assistantPhoneNumberPrefixValidation="@{true}"
+                                errorMessage="@={viewModel.prefixError}"
                                 android:text="@={viewModel.prefix}"
                                 android:imeOptions="actionNext"
                                 android:singleLine="true"

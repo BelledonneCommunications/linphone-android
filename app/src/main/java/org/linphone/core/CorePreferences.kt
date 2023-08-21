@@ -53,6 +53,7 @@ class CorePreferences constructor(private val context: Context) {
             context,
             MasterKey.DEFAULT_MASTER_KEY_ALIAS
         ).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build()
+
         try {
             EncryptedSharedPreferences.create(
                 context,
@@ -278,6 +279,12 @@ class CorePreferences constructor(private val context: Context) {
         get() = config.getBool("app", "contact_shortcuts", false)
         set(value) {
             config.setBool("app", "contact_shortcuts", value)
+        }
+
+    var publishPresence: Boolean
+        get() = config.getBool("app", "publish_presence", true)
+        set(value) {
+            config.setBool("app", "publish_presence", value)
         }
 
     /* Call */

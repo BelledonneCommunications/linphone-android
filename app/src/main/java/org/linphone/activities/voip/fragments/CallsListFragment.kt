@@ -62,8 +62,6 @@ class CallsListFragment : GenericVideoPreviewFragment<VoipCallsListFragmentBindi
 
         binding.controlsViewModel = controlsViewModel
 
-        setupLocalViewPreview(binding.localPreviewVideoSurface, binding.switchCamera)
-
         binding.setCancelClickListener {
             goBack()
         }
@@ -94,6 +92,18 @@ class CallsListFragment : GenericVideoPreviewFragment<VoipCallsListFragmentBindi
                 View.VISIBLE
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        setupLocalVideoPreview(binding.localPreviewVideoSurface, binding.switchCamera)
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        cleanUpLocalVideoPreview(binding.localPreviewVideoSurface)
     }
 
     private fun showCallMenu(anchor: View, callData: CallData) {

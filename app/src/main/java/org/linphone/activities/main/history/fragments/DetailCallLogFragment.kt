@@ -53,7 +53,9 @@ class DetailCallLogFragment : GenericFragment<HistoryDetailFragmentBinding>() {
 
         viewModel = callLogGroup.lastCallLogViewModel
         binding.viewModel = viewModel
-        viewModel.addRelatedCallLogs(callLogGroup.callLogs)
+        if (viewModel.relatedCallLogs.value.orEmpty().isEmpty()) {
+            viewModel.addRelatedCallLogs(callLogGroup.callLogs)
+        }
 
         useMaterialSharedAxisXForwardAnimation = sharedViewModel.isSlidingPaneSlideable.value == false
 

@@ -35,7 +35,6 @@ import androidx.core.app.Person
 import androidx.core.graphics.drawable.IconCompat
 import androidx.lifecycle.MutableLiveData
 import java.io.IOException
-import kotlinx.coroutines.*
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -388,7 +387,7 @@ fun Friend.getContactForPhoneNumberOrAddress(value: String): String? {
     return null
 }
 
-fun Friend.hasPresence(): Boolean {
+fun Friend.hasLongTermPresence(): Boolean {
     for (address in addresses) {
         val presenceModel = getPresenceModelForUriOrTel(address.asStringUriOnly())
         if (presenceModel != null && presenceModel.basicStatus == PresenceBasicStatus.Open) return true
@@ -421,10 +420,12 @@ fun Friend.getPictureUri(thumbnailPreferred: Boolean = false): Uri? {
                 // Check that the URI points to a real file
                 val contentResolver = coreContext.context.contentResolver
                 try {
-                    if (contentResolver.openAssetFileDescriptor(pictureUri, "r") != null) {
+                    val fd = contentResolver.openAssetFileDescriptor(pictureUri, "r")
+                    if (fd != null) {
+                        fd.close()
                         return pictureUri
                     }
-                } catch (ioe: IOException) { }
+                } catch (_: IOException) { }
             }
 
             // Fallback to thumbnail if high res picture isn't available
@@ -432,11 +433,11 @@ fun Friend.getPictureUri(thumbnailPreferred: Boolean = false): Uri? {
                 lookupUri,
                 ContactsContract.Contacts.Photo.CONTENT_DIRECTORY
             )
-        } catch (e: Exception) { }
+        } catch (_: Exception) { }
     } else if (photo != null) {
         try {
             return Uri.parse(photo)
-        } catch (e: Exception) { }
+        } catch (_: Exception) { }
     }
     return null
 }

@@ -120,6 +120,17 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         }
     }
 
+    private val keyboardVisibilityListener = object : AppUtils.KeyboardVisibilityListener {
+        override fun onKeyboardVisibilityChanged(visible: Boolean) {
+            if (visible && chatSendingViewModel.isEmojiPickerOpen.value == true) {
+                Log.d(
+                    "[Chat Room] Emoji picker is opened, closing it because keyboard is now visible"
+                )
+                chatSendingViewModel.isEmojiPickerOpen.value = false
+            }
+        }
+    }
+
     private lateinit var chatScrollListener: ChatScrollListener
 
     override fun getLayoutId(): Int {
@@ -200,15 +211,6 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         view.doOnPreDraw {
             // Notifies fragment is ready to be drawn
             sharedViewModel.chatRoomFragmentOpenedEvent.value = Event(true)
-        }
-
-        binding.root.addKeyboardInsetListener { keyboardVisible ->
-            if (keyboardVisible && chatSendingViewModel.isEmojiPickerOpen.value == true) {
-                Log.d(
-                    "[Chat Room] Emoji picker is opened, closing it because keyboard is now visible"
-                )
-                chatSendingViewModel.isEmojiPickerOpen.value = false
-            }
         }
 
         Compatibility.setLocusIdInContentCaptureSession(binding.root, chatRoom)
@@ -469,7 +471,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 } else {
                     if (path.isEmpty()) {
                         val name = content.name
-                        if (name != null && name.isNotEmpty()) {
+                        if (!name.isNullOrEmpty()) {
                             val file = FileUtils.getFileStoragePath(name)
                             FileUtils.writeIntoFile(content.buffer, file)
                             path = file.absolutePath
@@ -478,8 +480,8 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                                 "[Chat Room] Content file path was empty, created file from buffer at $path"
                             )
                         } else if (content.isIcalendar) {
-                            val name = "conference.ics"
-                            val file = FileUtils.getFileStoragePath(name)
+                            val filename = "conference.ics"
+                            val file = FileUtils.getFileStoragePath(filename)
                             FileUtils.writeIntoFile(content.buffer, file)
                             path = file.absolutePath
                             content.filePath = path
@@ -498,20 +500,20 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
                         val extension = FileUtils.getExtensionFromFileName(path)
                         val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
-                        when {
-                            FileUtils.isMimeImage(mime) -> navigateToImageFileViewer(
+                        when (FileUtils.getMimeType(mime)) {
+                            FileUtils.MimeType.Image -> navigateToImageFileViewer(
                                 preventScreenshots
                             )
-                            FileUtils.isMimeVideo(mime) -> navigateToVideoFileViewer(
+                            FileUtils.MimeType.Video -> navigateToVideoFileViewer(
                                 preventScreenshots
                             )
-                            FileUtils.isMimeAudio(mime) -> navigateToAudioFileViewer(
+                            FileUtils.MimeType.Audio -> navigateToAudioFileViewer(
                                 preventScreenshots
                             )
-                            FileUtils.isMimePdf(mime) -> navigateToPdfFileViewer(
+                            FileUtils.MimeType.Pdf -> navigateToPdfFileViewer(
                                 preventScreenshots
                             )
-                            FileUtils.isMimePlainText(mime) -> navigateToTextFileViewer(
+                            FileUtils.MimeType.PlainText -> navigateToTextFileViewer(
                                 preventScreenshots
                             )
                             else -> {
@@ -584,9 +586,9 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             viewLifecycleOwner
         ) {
             it.consume { chatMessage ->
-                var index = 0
-                var retryCount = 0
-                var expectedChildCount = 0
+                var index: Int
+                var loadSteps = 0
+                var expectedChildCount: Int
                 do {
                     val events = listViewModel.events.value.orEmpty()
                     expectedChildCount = events.size
@@ -600,18 +602,17 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                     }
                     index = events.indexOf(eventLog)
                     if (index == -1) {
-                        retryCount += 1
+                        loadSteps += 1
                         listViewModel.loadMoreData(events.size)
                     }
-                } while (index == -1 && retryCount < 5)
+                } while (index == -1 && loadSteps < 5)
 
                 if (index != -1) {
-                    if (retryCount == 0) {
+                    if (loadSteps == 0) {
                         scrollTo(index, true)
                     } else {
                         lifecycleScope.launch {
                             withContext(Dispatchers.Default) {
-                                val layoutManager = binding.chatMessagesList.layoutManager as LinearLayoutManager
                                 var retryCount = 0
                                 do {
                                     // We have to wait for newly loaded items to be added to list before being able to scroll
@@ -696,7 +697,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             }
         }
 
-        binding.setVoiceRecordingTouchListener { view, event ->
+        binding.setVoiceRecordingTouchListener { _, event ->
             if (corePreferences.holdToRecordVoiceMessage) {
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
@@ -846,7 +847,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             if (_adapter != null) {
                 try {
                     adapter.registerAdapterDataObserver(observer)
-                } catch (ise: IllegalStateException) {}
+                } catch (_: IllegalStateException) {}
             }
 
             // Wait for items to be displayed
@@ -858,6 +859,10 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 "[Chat Room] Fragment resuming but viewModel lateinit property isn't initialized!"
             )
         }
+
+        (requireActivity() as MainActivity).addKeyboardVisibilityListener(
+            keyboardVisibilityListener
+        )
     }
 
     override fun onPause() {
@@ -871,11 +876,15 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
         if (_adapter != null) {
             try {
                 adapter.unregisterAdapterDataObserver(observer)
-            } catch (ise: IllegalStateException) {}
+            } catch (_: IllegalStateException) {}
         }
 
         // Conversation isn't visible anymore, any new message received in it will trigger a notification
         coreContext.notificationsManager.currentlyDisplayedChatRoomAddress = null
+
+        (requireActivity() as MainActivity).removeKeyboardVisibilityListener(
+            keyboardVisibilityListener
+        )
 
         super.onPause()
     }
