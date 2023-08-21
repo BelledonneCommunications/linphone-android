@@ -7,7 +7,7 @@ plugins {
 }
 
 def appVersionName = "5.1.0"
-def appVersionCode = 50093
+def appVersionCode = 51000
 
 def packageName = "org.linphone"
 
