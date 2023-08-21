@@ -54,7 +54,11 @@ class PdfViewerFragment : GenericViewerFragment<FilePdfViewerFragmentBinding>() 
         )[PdfFileViewModel::class.java]
         binding.viewModel = viewModel
 
-        adapter = PdfPagesListAdapter(viewModel)
-        binding.pdfViewPager.adapter = adapter
+        viewModel.rendererReady.observe(viewLifecycleOwner) {
+            it.consume {
+                adapter = PdfPagesListAdapter(viewModel)
+                binding.pdfViewPager.adapter = adapter
+            }
+        }
     }
 }

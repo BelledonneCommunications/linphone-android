@@ -63,7 +63,7 @@ class ListTopBarViewModel : ViewModel() {
         val list = arrayListOf<Int>()
 
         selectedItems.value = list
-        isSelectionNotEmpty.value = list.isNotEmpty()
+        isSelectionNotEmpty.value = false
     }
 
     fun onToggleSelect(position: Int) {

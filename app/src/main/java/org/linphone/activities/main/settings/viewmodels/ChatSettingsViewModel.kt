@@ -61,7 +61,7 @@ class ChatSettingsViewModel : GenericSettingsViewModel() {
                 val maxSize = newValue.toInt()
                 core.maxSizeForAutoDownloadIncomingFiles = maxSize
                 updateAutoDownloadIndexFromMaxSize(maxSize)
-            } catch (nfe: NumberFormatException) {
+            } catch (_: NumberFormatException) {
             }
         }
     }

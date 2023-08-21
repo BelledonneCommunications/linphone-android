@@ -2,7 +2,7 @@
 <!DOCTYPE resources [
 <!ENTITY appName "Linphone">
 ]>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedQuantity">
     <string name="transport">传输</string>
     <string name="transport_udp">UDP 用户数据报协议</string>
     <string name="transport_tls">TLS安全传输层协议</string>
@@ -351,9 +351,6 @@
     <string name="contact_editor_write_permission_denied">写入联系人权限被拒绝，无法编辑联系人</string>
     <string name="contact_delete_one_dialog">您要删除这个联系人吗？\n它也将会从您的设备通讯录中删除</string>
     <string name="contact_delete_many_dialog">您确定要删除这些联系人吗？\n他们将会从您的设备通讯录中删除</string>
-    <plurals name="history_delete_dialog">
-        <item quantity="other">\@string/history_delete_one_dialog</item>
-    </plurals>
     <string name="contact_new_choose_sync_account">选择保存联系人的位置</string>
     <string name="contact_local_sync_account">本地存储</string>
     <string name="dialer_address_bar_hint">输入电话号码或地址</string>
@@ -503,17 +500,11 @@
     <string name="chat_message_forward_confirmation_dialog">是否要在此聊天室转发信息？</string>
     <string name="chat_room_ephemeral_fragment_title">短暂信息</string>
     <string name="chat_room_creation_failed_snack">群组创建失败</string>
-    <plurals name="chat_room_delete_dialog">
-        <item quantity="other">\@string/chat_room_delete_one_dialog</item>
-    </plurals>
     <string name="call_video_update_requested_dialog">对方要求启用视讯</string>
     <string name="assistant_phone_number_link_info_content">\n如果将您的帐户关联您的电话号码，您的朋友们可以更容易的找到你。\n\n您在通讯录里可以查看谁在使用&appName;，他们也同样可以通过&appName;联系您。\n</string>
     <string name="assistant_login_desc">请输入您的用户名与密码和您的SIP域名</string>
     <string name="assistant_validate_account_1">您的帐户已经创建。请检查邮件以驗證您的帐户：</string>
     <string name="call_stats_video_resolution_received">接收视频分辨率：</string>
-    <plurals name="contact_delete_dialog">
-        <item quantity="other">\@string/contact_delete_one_dialog</item>
-    </plurals>
     <string name="chat_settings_mark_as_read_notif_dismissal_title">撤消通知后标记为已读</string>
     <string name="advanced_settings_send_debug_logs_title">发送日志</string>
     <string name="advanced_settings_reset_debug_logs_title">重启日志</string>
@@ -549,7 +540,7 @@
     <string name="chat_room_sending_message_hint">信息</string>
     <string name="chat_message_voice_recording_hold_to_record">按住按钮录制语音信息</string>
     <string name="chat_message_voice_recording_playback_low_volume">您的媒体音量很低，您可能需要提高音量</string>
-    <plurals name="chat_room_unread_messages_event">
+    <plurals name="chat_room_unread_messages_event" tools:ignore="UnusedQuantity">
         <item quantity="one">%1$d 未读消息</item>
         <item quantity="other">%1$d 未读消息</item>
     </plurals>

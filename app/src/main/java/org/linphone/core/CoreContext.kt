@@ -165,12 +165,6 @@ class CoreContext(
             }
         }
 
-        override fun onAuthenticationRequested(core: Core, authInfo: AuthInfo, method: AuthMethod) {
-            Log.w(
-                "[Context] Authentication requested for account [${authInfo.username}@${authInfo.domain}] with realm [${authInfo.realm}] using method [$method]"
-            )
-        }
-
         override fun onPushNotificationReceived(core: Core, payload: String?) {
             Log.i("[Context] Push notification received: $payload")
         }
@@ -431,18 +425,22 @@ class CoreContext(
     }
 
     fun onForeground() {
-        // If presence publish is disabled and we call core.setConsolidatedPresence, it will enabled it!
-        if (core.defaultAccount?.params?.isPublishEnabled == true) {
-            Log.i("[Context] App is in foreground, setting consolidated presence to Online")
+        // We can't rely on defaultAccount?.params?.isPublishEnabled
+        // as it will be modified by the SDK when changing the presence status
+        if (corePreferences.publishPresence) {
+            Log.i("[Context] App is in foreground, PUBLISHING presence as Online")
             core.consolidatedPresence = ConsolidatedPresence.Online
         }
     }
 
     fun onBackground() {
-        // If presence publish is disabled and we call core.setConsolidatedPresence, it will enabled it!
-        if (core.defaultAccount?.params?.isPublishEnabled == true) {
-            Log.i("[Context] App is in background, setting consolidated presence to Busy")
-            core.consolidatedPresence = ConsolidatedPresence.Busy
+        // We can't rely on defaultAccount?.params?.isPublishEnabled
+        // as it will be modified by the SDK when changing the presence status
+        if (corePreferences.publishPresence) {
+            Log.i("[Context] App is in background, un-PUBLISHING presence info")
+            // We don't use ConsolidatedPresence.Busy but Offline to do an unsubscribe,
+            // Flexisip will handle the Busy status depending on other devices
+            core.consolidatedPresence = ConsolidatedPresence.Offline
         }
     }
 
@@ -1039,8 +1037,8 @@ class CoreContext(
 
                 val extension = FileUtils.getExtensionFromFileName(filePath)
                 val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
-                when {
-                    FileUtils.isMimeImage(mime) -> {
+                when (FileUtils.getMimeType(mime)) {
+                    FileUtils.MimeType.Image -> {
                         if (Compatibility.addImageToMediaStore(context, content)) {
                             Log.i(
                                 "[Context] Successfully exported image [${content.name}] to Media Store"
@@ -1051,7 +1049,7 @@ class CoreContext(
                             )
                         }
                     }
-                    FileUtils.isMimeVideo(mime) -> {
+                    FileUtils.MimeType.Video -> {
                         if (Compatibility.addVideoToMediaStore(context, content)) {
                             Log.i(
                                 "[Context] Successfully exported video [${content.name}] to Media Store"
@@ -1062,7 +1060,7 @@ class CoreContext(
                             )
                         }
                     }
-                    FileUtils.isMimeAudio(mime) -> {
+                    FileUtils.MimeType.Audio -> {
                         if (Compatibility.addAudioToMediaStore(context, content)) {
                             Log.i(
                                 "[Context] Successfully exported audio [${content.name}] to Media Store"

@@ -49,6 +49,8 @@
         <item quantity="other">%d days</item>
     </plurals>
     <string name="share_uploaded_logs_link">Share logs link using…</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
     <!-- Errors -->
     <string name="error_unexpected">Unexpected error…</string>
@@ -114,6 +116,7 @@
     <string name="contact_local_sync_account">Store locally</string>
     <string name="contact_cant_be_deleted">This contact can\'t be deleted</string>
     <string name="contacts_ldap_query_more_results_available">More results are available, refine your search</string>
+    <string name="contacts_new_contact_wont_be_visible_warning_dialog">You are about to create a new contact without a SIP URI nor a phone number, thus it won\'t be visible in &appName;.\n\nDo you want to create it anyway?</string>
 
     <!-- Dialer -->
     <string name="dialer_address_bar_hint">Enter a number or an address</string>
@@ -438,6 +441,7 @@
     <string name="assistant_error_invalid_email_address">Email address is invalid</string>
     <string name="assistant_error_username_too_long">Username has too many characters</string>
     <string name="assistant_error_invalid_credentials">Account does not exist or password does not match</string>
+    <string name="assistant_error_invalid_international_prefix">Wrong international prefix</string>
 
     <!-- Assistant login -->
     <string name="assistant_linphone_account">Use your &appName; account</string>
@@ -739,7 +743,6 @@
     <string name="account_setting_delete_generic_confirmation_dialog">Your account will only be deleted locally.\nTo delete it permanently, go on your SIP provider website.</string>
     <string name="account_setting_delete_sip_linphone_org_confirmation_dialog">Your account will only be deleted locally.\nTo delete it permanently, go to our account management platform:</string>
     <string name="account_setting_disable_bundle_mode_title">Disable bundle mode</string>
-    <string name="account_setting_disable_bundle_mode_summary"></string>
 
     <!-- Conferences settings -->
     <string name="conferences_settings_layout_title">Default layout</string>
@@ -790,6 +793,12 @@
     <string name="dialog_try_open_file_as_text_body">Would you like to try opening it as a plain text file?</string>
     <string name="dialog_apply_remote_provisioning_title">Do you want to download and apply configuration from this URL?</string>
     <string name="dialog_apply_remote_provisioning_button">Apply</string>
+    <string name="dialog_authentication_required_title">Authentication needed</string>
+    <string name="dialog_authentication_required_message">Connection failed because authentication is missing or invalid for account \n%s.\n\nYou can provide password again, or check your account configuration in the settings.</string>
+    <string name="dialog_authentication_required_change_password_label">Confirm</string>
+
+    <string name="android_14_full_screen_intent_permission_not_granted">Permission required to show incoming calls not granted yet</string>
+    <string name="android_14_go_to_full_screen_intent_permission_setting">Show</string>
 
     <!-- Content description -->
     <string name="content_description_add_sip_address_field">Add a SIP address field</string>
@@ -933,4 +942,5 @@
     <string name="content_description_presence_online">User is online</string>
     <string name="content_description_presence_offline">User is offline</string>
     <string name="content_description_presence_do_not_disturb">User is asking not to be disturbed</string>
+    <string name="content_description_emoji_picker">Toggle emoji picker visibility</string>
 </resources>

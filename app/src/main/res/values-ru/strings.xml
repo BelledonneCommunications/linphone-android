@@ -608,7 +608,7 @@
     <string name="call_remote_recording">Этот звонок записывается.</string>
     <string name="call_remotely_paused_title">Звонок был приостановлен удалённо.</string>
     <string name="audio_settings_prefer_bluetooth_devices_title">Направить звук на устройство Bluetooth, если таковое имеется</string>
-    <string name="call_settings_remote_recording_title">Получать уведомления, когда звонок записывается вашим корреспондентом</string>
+    <string name="call_settings_remote_recording_title">Получать уведомления, когда звонок записывается вашим собеседником</string>
     <string name="contacts_settings_ldap_auth_method_title">Метод аутентификации</string>
     <string name="contacts_settings_ldap_auth_method_anonymous">Анонимный</string>
     <string name="contacts_settings_ldap_cert_check_auto">Авто</string>
@@ -740,4 +740,86 @@
     <string name="conference_participants_title">Участники (%d)</string>
     <string name="conference_group_call_title">Начать групповой звонок</string>
     <string name="incoming_group_call_notification_title">Входящий групповой звонок</string>
+    <string name="chat_room_context_menu_go_to_contact">Перейти к контакту</string>
+    <string name="chat_message_context_menu_turn_off_notifications">Отключить уведомления</string>
+    <string name="conference_schedule_send_updated_invite_chat">Отправить обновление через &appName;</string>
+    <string name="conference_schedule_send_updated_invite_email">Отправить обновление по электронной почте</string>
+    <string name="call_stats_media_encryption">Шифрование медиа:</string>
+    <string name="call_stats_zrtp_key_agreement_algo">Алгоритм согласования ключей:</string>
+    <string name="assistant_create_email_account_not_validated">Ваша учетная запись еще не активирована, пожалуйста, перейдите по ссылке, которую вы получили по электронной почте</string>
+    <string name="settings_password_protection_dialog_title">Пожалуйста, введите свой пароль ниже, чтобы получить доступ к настройкам</string>
+    <string name="settings_password_protection_dialog_invalid_input">Неверный пароль!</string>
+    <string name="account_setting_end_to_end_encryption_keys_server_url">URL сервера ключей шифрования E2E</string>
+    <string name="account_setting_delete_generic_confirmation_dialog">Ваша учетная запись будет удалена только локально.
+\nЧтобы удалить её навсегда, перейдите на веб-сайт вашего SIP-провайдера.</string>
+    <string name="dialog_apply_remote_provisioning_title">Вы хотите загрузить и применить конфигурацию с этого URL-адреса\?</string>
+    <string name="dialog_authentication_required_title">Требуется аутентификация</string>
+    <string name="dialog_authentication_required_change_password_label">Подтвердить</string>
+    <string name="android_14_full_screen_intent_permission_not_granted">Разрешение, необходимое для отображения входящих вызовов, еще не предоставлено</string>
+    <string name="content_description_muted_chat_room">Уведомления для этого разговора отключены</string>
+    <string name="content_description_presence_online">Пользователь в сети</string>
+    <string name="conference_no_terminated_schedule">Завершенных встреч пока нет.</string>
+    <string name="conference_start_group_call_dialog_message">Хотите начать групповой звонок\?
+\nВсе участники этой группы получат приглашение присоединиться к встрече.</string>
+    <string name="assistant_no_push_warning">Похоже, ваше устройство не может получать push-уведомления.
+\n
+\nПоскольку теперь они требуются для процесса создания учетной записи, вы не сможете создать учетную запись внутри приложения, но вы можете создать ее на нашем веб-сайте:</string>
+    <string name="dialog_authentication_required_message">Ошибка подключения, так как аутентификация отсутствует или недействительна для учетной записи
+\n%s.
+\n
+\nВы можете ввести пароль еще раз или проверить конфигурацию своей учетной записи в настройках.</string>
+    <string name="call_action_attended_transfer_call">Сопровождаемый перевод</string>
+    <string name="call_settings_media_encryption_zrtp_post_quantum">Постквантовый ZRTP</string>
+    <string name="account_setting_disable_bundle_mode_title">Отключить режим объединения</string>
+    <string name="assistant_alternative_way_create_account">Чтобы создать учетную запись с помощью электронной почты:</string>
+    <string name="zrtp_dialog_explanation">Для повышения уровня безопасности вы можете уточнить следующие коды у своего собеседника.</string>
+    <string name="chat_room_last_message_sender_format">%s:</string>
+    <string name="content_description_emoji_picker">Переключить видимость выбора эмодзи</string>
+    <string name="zrtp_dialog_later_button_label">Позже</string>
+    <string name="zrtp_dialog_correct_button_label">Верно</string>
+    <string name="content_description_recording_export">Экспорт записи</string>
+    <string name="android_14_go_to_full_screen_intent_permission_setting">Показать</string>
+    <string name="content_description_chat_message_meeting_attachment">Приложение к собранию</string>
+    <string name="content_description_presence_offline">Пользователь не в сети</string>
+    <string name="content_description_presence_do_not_disturb">Пользователь просит не беспокоить</string>
+    <string name="error_unexpected">Непредвиденная ошибка…</string>
+    <string name="chat_message_context_menu_turn_on_notifications">Включить уведомления</string>
+    <string name="chat_message_voice_recording_received_notification">Вы получили голосовое сообщение</string>
+    <string name="chat_message_voice_recording">Голосовое сообщение</string>
+    <string name="chat_room_presence_online">Онлайн</string>
+    <string name="chat_room_presence_last_seen_online_today">Онлайн сегодня в</string>
+    <string name="chat_room_presence_last_seen_online_yesterday">Онлайн вчера в</string>
+    <string name="chat_room_presence_last_seen_online">Онлайн в</string>
+    <string name="chat_room_presence_away">Далеко</string>
+    <string name="chat_room_presence_do_not_disturb">Не беспокоить</string>
+    <string name="recordings_export">Экспорт записи с помощью…</string>
+    <string name="conference_schedule_edit">Редактировать встречу</string>
+    <string name="conference_update_title">Встреча обновлена:</string>
+    <string name="conference_cancel_title">Встреча отменена:</string>
+    <string name="conference_start_group_call_dialog_ok_button">Начать</string>
+    <string name="conference_scheduled_terminated_filter">Завершенный</string>
+    <string name="conference_scheduled_future_filter">Запланированный</string>
+    <string name="conference_scheduled_delete_many_dialog">Вы хотите удалить эти встречи\?</string>
+    <string name="conference_scheduled_cancelled_by_organizer">Конференция отменена организатором</string>
+    <string name="conference_scheduled_cancelled_by_me">Вы отменили конференцию</string>
+    <string name="conference_start_group_call_dialog_title">Групповой звонок</string>
+    <string name="call_screenshot_taken">Снимок сделан: %s</string>
+    <string name="call_stats_zrtp_cipher_algo">Алгоритм шифрования:</string>
+    <string name="call_stats_zrtp_hash_algo">Алгоритм хэширования:</string>
+    <string name="call_stats_zrtp_auth_tag_algo">Алгоритм аутентификации:</string>
+    <string name="call_stats_zrtp_sas_algo">Алгоритм SAS:</string>
+    <string name="settings_password_protection_dialog_input_hint">Пароль</string>
+    <string name="audio_settings_software_echo_cancellation_title">Программное подавление эха</string>
+    <string name="settings_password_protection_dialog_ok_label">Подтвердить</string>
+    <string name="account_setting_delete_dialog_title">Вы хотите удалить свою учетную запись\?</string>
+    <string name="account_setting_delete_sip_linphone_org_confirmation_dialog">Ваша учетная запись будет удалена только локально.
+\nЧтобы удалить её навсегда, перейдите на нашу платформу управления учетными записями:</string>
+    <string name="account_setting_publish_presence_title">Опубликовать информацию о присутствии</string>
+    <string name="dialog_apply_remote_provisioning_button">Применить</string>
+    <string name="assistant_error_invalid_international_prefix">Неправильный международный префикс</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="contacts_new_contact_wont_be_visible_warning_dialog">Вы собираетесь создать новый контакт без SIP URI и номера телефона, поэтому он не будет отображаться в &appName;.
+\n
+\nВы все равно хотите его создать\?</string>
 </resources>

@@ -34,27 +34,33 @@ class CoreService : CoreService() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.i("[Service] Ensuring Core exists")
+        Log.i("[Service] Starting, ensuring Core exists")
+
         if (corePreferences.keepServiceAlive) {
             Log.i("[Service] Starting as foreground to keep app alive in background")
-            if (!ensureCoreExists(
-                    applicationContext,
-                    pushReceived = false,
-                    service = this,
-                    useAutoStartDescription = false
-                )
-            ) {
+            val contextCreated = ensureCoreExists(
+                applicationContext,
+                pushReceived = false,
+                service = this,
+                useAutoStartDescription = false
+            )
+            if (!contextCreated) {
+                // Only start foreground notification if context already exists, otherwise context will do it itself
                 coreContext.notificationsManager.startForeground(this, false)
             }
         } else if (intent?.extras?.get("StartForeground") == true) {
             Log.i("[Service] Starting as foreground due to device boot or app update")
-            if (!ensureCoreExists(
-                    applicationContext,
-                    pushReceived = false,
-                    service = this,
-                    useAutoStartDescription = true
-                )
-            ) {
+            val contextCreated = ensureCoreExists(
+                applicationContext,
+                pushReceived = false,
+                service = this,
+                useAutoStartDescription = true,
+                skipCoreStart = true
+            )
+            if (contextCreated) {
+                coreContext.start()
+            } else {
+                // Only start foreground notification if context already exists, otherwise context will do it itself
                 coreContext.notificationsManager.startForeground(this, true)
             }
             coreContext.checkIfForegroundServiceNotificationCanBeRemovedAfterDelay(5000)

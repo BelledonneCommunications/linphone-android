@@ -23,6 +23,7 @@ import android.app.Activity
 import android.app.Notification
 import android.app.PendingIntent
 import android.app.Service
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -290,11 +291,27 @@ class Compatibility {
             }
         }
 
-        fun startForegroundService(service: Service, notifId: Int, notif: Notification?) {
+        private fun startForegroundService(service: Service, notifId: Int, notif: Notification?) {
             if (Version.sdkAboveOrEqual(Version.API31_ANDROID_12)) {
                 Api31Compatibility.startForegroundService(service, notifId, notif)
             } else {
                 Api23Compatibility.startForegroundService(service, notifId, notif)
+            }
+        }
+
+        fun startCallForegroundService(service: Service, notifId: Int, notif: Notification) {
+            if (Version.sdkAboveOrEqual(Version.API34_ANDROID_14_UPSIDE_DOWN_CAKE)) {
+                Api34Compatibility.startCallForegroundService(service, notifId, notif)
+            } else {
+                startForegroundService(service, notifId, notif)
+            }
+        }
+
+        fun startDataSyncForegroundService(service: Service, notifId: Int, notif: Notification) {
+            if (Version.sdkAboveOrEqual(Version.API34_ANDROID_14_UPSIDE_DOWN_CAKE)) {
+                Api34Compatibility.startDataSyncForegroundService(service, notifId, notif)
+            } else {
+                startForegroundService(service, notifId, notif)
             }
         }
 
@@ -452,6 +469,27 @@ class Compatibility {
                 return Api33Compatibility.hasTelecomManagerFeature(context)
             } else if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
                 return Api26Compatibility.hasTelecomManagerFeature(context)
+            }
+            return false
+        }
+
+        fun clearClipboard(clipboard: ClipboardManager) {
+            if (Version.sdkAboveOrEqual(Version.API28_PIE_90)) {
+                Api28Compatibility.clearClipboard(clipboard)
+            }
+        }
+
+        fun hasFullScreenIntentPermission(context: Context): Boolean {
+            if (Version.sdkAboveOrEqual(Version.API34_ANDROID_14_UPSIDE_DOWN_CAKE)) {
+                return Api34Compatibility.hasFullScreenIntentPermission(context)
+            }
+            return true
+        }
+
+        fun requestFullScreenIntentPermission(context: Context): Boolean {
+            if (Version.sdkAboveOrEqual(Version.API34_ANDROID_14_UPSIDE_DOWN_CAKE)) {
+                Api34Compatibility.requestFullScreenIntentPermission(context)
+                return true
             }
             return false
         }

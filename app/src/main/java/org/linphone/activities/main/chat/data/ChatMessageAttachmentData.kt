@@ -35,10 +35,11 @@ class ChatMessageAttachmentData(
     init {
         val extension = FileUtils.getExtensionFromFileName(path)
         val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
-        isImage = FileUtils.isMimeImage(mime)
-        isVideo = FileUtils.isMimeVideo(mime)
-        isAudio = FileUtils.isMimeAudio(mime)
-        isPdf = FileUtils.isMimePdf(mime)
+        val mimeType = FileUtils.getMimeType(mime)
+        isImage = mimeType == FileUtils.MimeType.Image
+        isVideo = mimeType == FileUtils.MimeType.Video
+        isAudio = mimeType == FileUtils.MimeType.Audio
+        isPdf = mimeType == FileUtils.MimeType.Pdf
     }
 
     fun delete() {

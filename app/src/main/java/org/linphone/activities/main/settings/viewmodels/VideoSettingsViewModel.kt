@@ -87,7 +87,17 @@ class VideoSettingsViewModel : GenericSettingsViewModel() {
     val videoPresetListener = object : SettingListenerStub() {
         override fun onListValueChanged(position: Int) {
             videoPresetIndex.value = position // Needed to display/hide two below settings
-            core.videoPreset = videoPresetLabels.value.orEmpty()[position]
+            val currentPreset = core.videoPreset
+            val newPreset = videoPresetLabels.value.orEmpty()[position]
+            if (newPreset != currentPreset) {
+                if (currentPreset == "custom") {
+                    // Not "custom" anymore, reset FPS & bandwidth
+                    core.preferredFramerate = 0f
+                    core.downloadBandwidth = 0
+                    core.uploadBandwidth = 0
+                }
+                core.videoPreset = newPreset
+            }
         }
     }
     val videoPresetIndex = MutableLiveData<Int>()
@@ -106,7 +116,7 @@ class VideoSettingsViewModel : GenericSettingsViewModel() {
             try {
                 core.downloadBandwidth = newValue.toInt()
                 core.uploadBandwidth = newValue.toInt()
-            } catch (nfe: NumberFormatException) {
+            } catch (_: NumberFormatException) {
             }
         }
     }

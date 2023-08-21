@@ -72,7 +72,7 @@ class AudioFileViewModel(content: Content) : FileViewerViewModel(content), Media
     override fun getCurrentPosition(): Int {
         try {
             return mediaPlayer.currentPosition
-        } catch (ise: IllegalStateException) {}
+        } catch (_: IllegalStateException) {}
         return 0
     }
 

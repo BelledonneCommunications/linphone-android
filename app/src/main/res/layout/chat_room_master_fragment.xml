@@ -34,7 +34,8 @@
     <RelativeLayout
         android:layout_width="@dimen/master_fragment_width"
         android:layout_height="match_parent"
-        android:layout_gravity="start">
+        android:layout_gravity="start"
+        android:background="?attr/backgroundColor">
 
         <LinearLayout
             android:id="@+id/top_bar"

@@ -15,17 +15,19 @@ Group changes to describe their impact on the project, as follows:
 ### Added
 - Chat messages emoji "reactions"
 
-## [5.1.0] - Unreleased
+## [5.1.0] - 2023-08-21
 
 ### Added
 - Showing short term presence for contacts whom publish it + added setting to disable it (enabled by default for sip.linphone.org accounts)
 - Confirmation dialog before removing account
 - Attended transfer instead of blind transfer if there is more than 1 call
-- Added emoji picker in chat room, and increase size of text if it only contains emojis
-- Added hidden setting to disable video completely
-- Added hidden setting to prevent adding / editing / removing native contacts
-- Added hidden setting to protect settings access using account password
+- Last sent message delivery status (IMDN) icon in chat rooms list
+- Emoji picker in chat room, and increase size of text if it only contains emojis
+- Hidden setting to disable video completely
+- Hidden setting to prevent adding / editing / removing native contacts
+- Hidden setting to protect settings access using account password
 - SIP URI in call can be selected using long press
+- Dialog showing up asking for correct account password in case of failed authentication
 
 ### Changed
 - Switched Account Creator backend from XMLRPC to FlexiAPI, it now requires to be able to receive a push notification
@@ -38,6 +40,35 @@ Group changes to describe their impact on the project, as follows:
 
 ### Fixed
 - Messages not marked as reply in basic chat room if sending more than 1 content
+- Chat message video attachment display when failing to get a preview picture
+
+## [5.0.14] - 2023-06-20
+
+### Changed
+- SDK update only
+
+## [5.0.13] - 2023-06-15
+
+### Changed
+- SDK update only
+
+## [5.0.12] - 2023-05-23
+
+### Fixed
+- Crash if notification manager throws an exception
+- Video preview not moving if call was started in audio only
+
+## [5.0.11] - 2023-05-09
+
+### Fixed
+- Wrong call displayed when hanging up a call while an incoming one is ringing
+- Crash related to call history
+- Crash due to wrongly format string
+- Add/remove missing listener on FriendLists created after Core has been created
+
+### Changed
+- Improved GSM call interruption
+- Updated translations
 
 ## [5.0.11] - 2023-05-09
 

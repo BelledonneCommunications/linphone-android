@@ -20,6 +20,7 @@
 package org.linphone.activities.main.contact.fragments
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -38,9 +39,11 @@ import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.contact.data.ContactEditorData
 import org.linphone.activities.main.contact.data.NumberOrAddressEditorData
 import org.linphone.activities.main.contact.viewmodels.*
+import org.linphone.activities.main.viewmodels.DialogViewModel
 import org.linphone.activities.navigateToContact
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactEditorFragmentBinding
+import org.linphone.utils.DialogUtils
 import org.linphone.utils.FileUtils
 import org.linphone.utils.PermissionHelper
 
@@ -71,10 +74,38 @@ class ContactEditorFragment : GenericFragment<ContactEditorFragmentBinding>(), S
             data.syncAccountName = null
             data.syncAccountType = null
 
-            if (data.friend == null && corePreferences.showNewContactAccountDialog) {
-                Log.i("[Contact Editor] New contact, ask user where to store it")
-                SyncAccountPickerFragment(this).show(childFragmentManager, "SyncAccountPicker")
+            if (data.friend == null) {
+                var atLeastASipAddressOrPhoneNumber = false
+                for (addr in data.addresses.value.orEmpty()) {
+                    if (addr.newValue.value.orEmpty().isNotEmpty()) {
+                        atLeastASipAddressOrPhoneNumber = true
+                        break
+                    }
+                }
+                if (!atLeastASipAddressOrPhoneNumber) {
+                    for (number in data.numbers.value.orEmpty()) {
+                        if (number.newValue.value.orEmpty().isNotEmpty()) {
+                            atLeastASipAddressOrPhoneNumber = true
+                            break
+                        }
+                    }
+                }
+                if (!atLeastASipAddressOrPhoneNumber) {
+                    // Contact will be created without phone and SIP address
+                    // Let's warn the user it won't be visible in Linphone app
+                    Log.w(
+                        "[Contact Editor] New contact without SIP address nor phone number, showing warning dialog"
+                    )
+                    showInvisibleContactWarningDialog()
+                } else if (corePreferences.showNewContactAccountDialog) {
+                    Log.i("[Contact Editor] New contact, ask user where to store it")
+                    SyncAccountPickerFragment(this).show(childFragmentManager, "SyncAccountPicker")
+                } else {
+                    Log.i("[Contact Editor] Saving new contact")
+                    saveContact()
+                }
             } else {
+                Log.i("[Contact Editor] Saving contact changes")
                 saveContact()
             }
         }
@@ -98,7 +129,7 @@ class ContactEditorFragment : GenericFragment<ContactEditorFragmentBinding>(), S
     }
 
     override fun onSyncAccountClicked(name: String?, type: String?) {
-        Log.i("[Contact Editor] Using account $name / $type")
+        Log.i("[Contact Editor] Saving new contact using account $name / $type")
         data.syncAccountName = name
         data.syncAccountType = type
         saveContact()
@@ -146,6 +177,9 @@ class ContactEditorFragment : GenericFragment<ContactEditorFragmentBinding>(), S
             Log.i("[Contact Editor] Displaying contact $savedContact")
             navigateToContact(id)
         } else {
+            Log.w(
+                "[Contact Editor] Can't display $savedContact because it doesn't have a refKey, going back"
+            )
             goBack()
         }
     }
@@ -182,5 +216,36 @@ class ContactEditorFragment : GenericFragment<ContactEditorFragmentBinding>(), S
         )
 
         startActivityForResult(chooserIntent, 0)
+    }
+
+    private fun showInvisibleContactWarningDialog() {
+        val dialogViewModel =
+            DialogViewModel(getString(R.string.contacts_new_contact_wont_be_visible_warning_dialog))
+        val dialog: Dialog = DialogUtils.getDialog(requireContext(), dialogViewModel)
+
+        dialogViewModel.showCancelButton(
+            {
+                Log.i("[Contact Editor] Aborting new contact saving")
+                dialog.dismiss()
+            },
+            getString(R.string.no)
+        )
+
+        dialogViewModel.showOkButton(
+            {
+                dialog.dismiss()
+
+                if (corePreferences.showNewContactAccountDialog) {
+                    Log.i("[Contact Editor] New contact, ask user where to store it")
+                    SyncAccountPickerFragment(this).show(childFragmentManager, "SyncAccountPicker")
+                } else {
+                    Log.i("[Contact Editor] Saving new contact")
+                    saveContact()
+                }
+            },
+            getString(R.string.yes)
+        )
+
+        dialog.show()
     }
 }

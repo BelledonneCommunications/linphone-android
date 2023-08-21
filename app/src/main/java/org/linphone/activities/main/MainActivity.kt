@@ -35,6 +35,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.doOnAttach
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentContainerView
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -58,6 +59,10 @@ import org.linphone.activities.main.viewmodels.SharedMainViewModel
 import org.linphone.activities.navigateToDialer
 import org.linphone.compatibility.Compatibility
 import org.linphone.contact.ContactsUpdatedListenerStub
+import org.linphone.core.AuthInfo
+import org.linphone.core.AuthMethod
+import org.linphone.core.Core
+import org.linphone.core.CoreListenerStub
 import org.linphone.core.CorePreferences
 import org.linphone.core.tools.Log
 import org.linphone.databinding.MainActivityBinding
@@ -108,6 +113,25 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     private var shouldTabsBeVisibleDependingOnDestination = true
     private var shouldTabsBeVisibleDueToOrientationAndKeyboard = true
 
+    private val authenticationRequestedEvent: MutableLiveData<Event<AuthInfo>> by lazy {
+        MutableLiveData<Event<AuthInfo>>()
+    }
+
+    private val coreListener: CoreListenerStub = object : CoreListenerStub() {
+        override fun onAuthenticationRequested(core: Core, authInfo: AuthInfo, method: AuthMethod) {
+            if (authInfo.username == null || authInfo.domain == null || authInfo.realm == null) {
+                return
+            }
+
+            Log.w(
+                "[Main Activity] Authentication requested for account [${authInfo.username}@${authInfo.domain}] with realm [${authInfo.realm}] using method [$method]"
+            )
+            authenticationRequestedEvent.value = Event(authInfo)
+        }
+    }
+
+    private val keyboardVisibilityListeners = arrayListOf<AppUtils.KeyboardVisibilityListener>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -143,6 +167,14 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             }
         }
 
+        authenticationRequestedEvent.observe(
+            this
+        ) {
+            it.consume { authInfo ->
+                showAuthenticationRequestedDialog(authInfo)
+            }
+        }
+
         if (coreContext.core.accountList.isEmpty()) {
             if (corePreferences.firstStart) {
                 startActivity(Intent(this, AssistantActivity::class.java))
@@ -174,9 +206,11 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     override fun onResume() {
         super.onResume()
         coreContext.contactsManager.addListener(listener)
+        coreContext.core.addListener(coreListener)
     }
 
     override fun onPause() {
+        coreContext.core.removeListener(coreListener)
         coreContext.contactsManager.removeListener(listener)
         super.onPause()
     }
@@ -205,13 +239,17 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         registerComponentCallbacks(componentCallbacks)
         findNavController(R.id.nav_host_fragment).addOnDestinationChangedListener(this)
 
-        binding.rootCoordinatorLayout.addKeyboardInsetListener { keyboardVisible ->
+        binding.rootCoordinatorLayout.setKeyboardInsetListener { keyboardVisible ->
             val portraitOrientation = resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
             Log.i(
                 "[Main Activity] Keyboard is ${if (keyboardVisible) "visible" else "invisible"}, orientation is ${if (portraitOrientation) "portrait" else "landscape"}"
             )
             shouldTabsBeVisibleDueToOrientationAndKeyboard = !portraitOrientation || !keyboardVisible
             updateTabsFragmentVisibility()
+
+            for (listener in keyboardVisibilityListeners) {
+                listener.onKeyboardVisibilityChanged(keyboardVisible)
+            }
         }
 
         initOverlay()
@@ -244,6 +282,14 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
             else -> false
         }
         updateTabsFragmentVisibility()
+    }
+
+    fun addKeyboardVisibilityListener(listener: AppUtils.KeyboardVisibilityListener) {
+        keyboardVisibilityListeners.add(listener)
+    }
+
+    fun removeKeyboardVisibilityListener(listener: AppUtils.KeyboardVisibilityListener) {
+        keyboardVisibilityListeners.remove(listener)
     }
 
     fun hideKeyboard() {
@@ -343,7 +389,12 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
         // Prevent this intent to be processed again
         intent.action = null
         intent.data = null
-        intent.extras?.clear()
+        val extras = intent.extras
+        if (extras != null) {
+            for (key in extras.keySet()) {
+                intent.removeExtra(key)
+            }
+        }
     }
 
     private fun handleMainIntent(intent: Intent) {
@@ -419,6 +470,8 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                 addressToCall = addressToCall.substring("sip-linphone:".length)
             }
         }
+
+        addressToCall = addressToCall.replace("%40", "@")
 
         val address = coreContext.core.interpretUrl(
             addressToCall,
@@ -626,6 +679,45 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                 dialog.dismiss()
             },
             okLabel
+        )
+
+        dialog.show()
+    }
+
+    private fun showAuthenticationRequestedDialog(
+        authInfo: AuthInfo
+    ) {
+        val identity = "${authInfo.username}@${authInfo.domain}"
+        Log.i("[Main Activity] Showing authentication required dialog for account [$identity]")
+
+        val dialogViewModel = DialogViewModel(
+            getString(R.string.dialog_authentication_required_message, identity),
+            getString(R.string.dialog_authentication_required_title)
+        )
+        dialogViewModel.showPassword = true
+        dialogViewModel.passwordTitle = getString(
+            R.string.settings_password_protection_dialog_input_hint
+        )
+        val dialog = DialogUtils.getDialog(this, dialogViewModel)
+
+        dialogViewModel.showCancelButton {
+            dialog.dismiss()
+        }
+
+        dialogViewModel.showOkButton(
+            {
+                Log.i(
+                    "[Main Activity] Updating password for account [$identity] using auth info [$authInfo]"
+                )
+                val newPassword = dialogViewModel.password
+                authInfo.password = newPassword
+                coreContext.core.addAuthInfo(authInfo)
+
+                coreContext.core.refreshRegisters()
+
+                dialog.dismiss()
+            },
+            getString(R.string.dialog_authentication_required_change_password_label)
         )
 
         dialog.show()

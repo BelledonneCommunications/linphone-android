@@ -75,6 +75,10 @@ class AccountLoginFragment : AbstractPhoneFragment<AssistantAccountLoginFragment
             startActivity(intent)
         }
 
+        viewModel.prefix.observe(viewLifecycleOwner) { internationalPrefix ->
+            viewModel.getCountryNameFromPrefix(internationalPrefix)
+        }
+
         viewModel.goToSmsValidationEvent.observe(
             viewLifecycleOwner
         ) {

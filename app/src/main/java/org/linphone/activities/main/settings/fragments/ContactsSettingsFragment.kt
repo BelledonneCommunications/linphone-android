@@ -74,6 +74,14 @@ class ContactsSettingsFragment : GenericSettingFragment<SettingsContactsFragment
             }
         }
 
+        viewModel.publishPresenceToggledEvent.observe(
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                sharedViewModel.publishPresenceToggled.value = true
+            }
+        }
+
         viewModel.ldapNewSettingsListener = object : SettingListenerStub() {
             override fun onClicked() {
                 Log.i("[Contacts Settings] Clicked on new LDAP config")

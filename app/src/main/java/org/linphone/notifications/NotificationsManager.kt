@@ -84,7 +84,7 @@ class NotificationsManager(private val context: Context) {
         const val INTENT_REMOTE_ADDRESS = "REMOTE_ADDRESS"
 
         private const val SERVICE_NOTIF_ID = 1
-        private const val MISSED_CALLS_NOTIF_ID = 2
+        private const val MISSED_CALLS_NOTIF_ID = 10
 
         const val CHAT_TAG = "Chat"
         private const val MISSED_CALL_TAG = "Missed call"
@@ -179,7 +179,23 @@ class NotificationsManager(private val context: Context) {
                 }
             }
 
-            val notifiable = createChatNotifiable(room, messages)
+            var allOutgoing = true
+            for (message in messages) {
+                if (!message.isOutgoing) {
+                    allOutgoing = false
+                    break
+                }
+            }
+
+            val notifiable = getNotifiableForRoom(room)
+            val updated = updateChatNotifiableWithMessages(notifiable, room, messages)
+            if (!updated) {
+                Log.w(
+                    "[Notifications Manager] No changes made to notifiable, do not display it again"
+                )
+                return
+            }
+
             if (notifiable.messages.isNotEmpty()) {
                 displayChatNotifiable(room, notifiable)
             } else {
@@ -333,7 +349,7 @@ class NotificationsManager(private val context: Context) {
                 Log.w(
                     "[Notifications Manager] Found existing call? notification [${notification.id}], cancelling it"
                 )
-                manager.cancel(notification.tag, notification.id)
+                manager.cancel(notification.id)
             } else if (notification.tag == CHAT_TAG) {
                 Log.i(
                     "[Notifications Manager] Found existing chat notification [${notification.id}]"
@@ -381,7 +397,18 @@ class NotificationsManager(private val context: Context) {
         }
 
         Log.i("[Notifications Manager] Notifying [$id] with tag [$tag]")
-        notificationManager.notify(tag, id, notification)
+        try {
+            notificationManager.notify(tag, id, notification)
+        } catch (iae: IllegalArgumentException) {
+            if (service == null && tag == null) {
+                // We can't notify using CallStyle if there isn't a foreground service running
+                Log.w(
+                    "[Notifications Manager] Foreground service hasn't started yet, can't display a CallStyle notification until then: $iae"
+                )
+            } else {
+                Log.e("[Notifications Manager] Exception occurred: $iae")
+            }
+        }
     }
 
     fun cancel(id: Int, tag: String? = null) {
@@ -460,24 +487,23 @@ class NotificationsManager(private val context: Context) {
     fun startForeground(coreService: CoreService, useAutoStartDescription: Boolean = true) {
         service = coreService
 
-        if (serviceNotification == null) {
-            createServiceNotification(useAutoStartDescription)
-            if (serviceNotification == null) {
-                Log.e(
-                    "[Notifications Manager] Failed to create service notification, aborting foreground service!"
-                )
-                return
-            }
+        val notification = serviceNotification ?: createServiceNotification(useAutoStartDescription)
+        if (notification == null) {
+            Log.e(
+                "[Notifications Manager] Failed to create service notification, aborting foreground service!"
+            )
+            return
         }
 
         currentForegroundServiceNotificationId = SERVICE_NOTIF_ID
         Log.i(
             "[Notifications Manager] Starting service as foreground [$currentForegroundServiceNotificationId]"
         )
-        Compatibility.startForegroundService(
+
+        Compatibility.startDataSyncForegroundService(
             coreService,
             currentForegroundServiceNotificationId,
-            serviceNotification
+            notification
         )
     }
 
@@ -491,7 +517,7 @@ class NotificationsManager(private val context: Context) {
 
                 val coreService = service
                 if (coreService != null) {
-                    Compatibility.startForegroundService(
+                    Compatibility.startCallForegroundService(
                         coreService,
                         currentForegroundServiceNotificationId,
                         callNotification
@@ -552,11 +578,11 @@ class NotificationsManager(private val context: Context) {
         service = null
     }
 
-    private fun createServiceNotification(useAutoStartDescription: Boolean = false) {
+    private fun createServiceNotification(useAutoStartDescription: Boolean = false): Notification? {
         val serviceChannel = context.getString(R.string.notification_channel_service_id)
         if (Compatibility.getChannelImportance(notificationManager, serviceChannel) == NotificationManagerCompat.IMPORTANCE_NONE) {
             Log.w("[Notifications Manager] Service channel is disabled!")
-            return
+            return null
         }
 
         val pendingIntent = NavDeepLinkBuilder(context)
@@ -588,7 +614,9 @@ class NotificationsManager(private val context: Context) {
             builder.setContentIntent(pendingIntent)
         }
 
-        serviceNotification = builder.build()
+        val notif = builder.build()
+        serviceNotification = notif
+        return notif
     }
 
     /* Call related */
@@ -846,14 +874,18 @@ class NotificationsManager(private val context: Context) {
         notify(notifiable.notificationId, notification, CHAT_TAG)
     }
 
-    private fun createChatNotifiable(room: ChatRoom, messages: Array<out ChatMessage>): Notifiable {
-        val notifiable = getNotifiableForRoom(room)
-
+    private fun updateChatNotifiableWithMessages(
+        notifiable: Notifiable,
+        room: ChatRoom,
+        messages: Array<out ChatMessage>
+    ): Boolean {
+        var updated = false
         for (message in messages) {
             if (message.isRead || message.isOutgoing) continue
             val friend = coreContext.contactsManager.findContactByAddress(message.fromAddress)
             val notifiableMessage = getNotifiableMessage(message, friend)
             notifiable.messages.add(notifiableMessage)
+            updated = true
         }
 
         if (room.hasCapability(ChatRoom.Capabilities.OneToOne.toInt())) {
@@ -862,7 +894,7 @@ class NotificationsManager(private val context: Context) {
             notifiable.isGroup = true
             notifiable.groupTitle = room.subject
         }
-        return notifiable
+        return updated
     }
 
     private fun createChatReactionNotifiable(

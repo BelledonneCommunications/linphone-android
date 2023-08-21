@@ -141,13 +141,13 @@
             android:contentDescription="@null"
             coilVoipContact="@{conferenceViewModel.speakingParticipant}"
             android:background="@drawable/generated_avatar_bg"
-            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintBottom_toBottomOf="@id/active_speaker_background"
             app:layout_constraintEnd_toEndOf="@id/active_speaker_background"
             app:layout_constraintHeight_max="@dimen/voip_contact_avatar_max_size"
             app:layout_constraintStart_toStartOf="@id/active_speaker_background"
             app:layout_constraintTop_toTopOf="@id/active_speaker_background"
-            app:layout_constraintWidth_max="@dimen/voip_contact_avatar_max_size" />
+            app:layout_constraintWidth_max="@dimen/voip_contact_avatar_max_size"
+            app:layout_constraintDimensionRatio="1:1" />
 
         <ImageView
             android:id="@+id/speaking_participant_paused"

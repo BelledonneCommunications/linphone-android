@@ -80,7 +80,8 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
             context: Context,
             pushReceived: Boolean = false,
             service: CoreService? = null,
-            useAutoStartDescription: Boolean = false
+            useAutoStartDescription: Boolean = false,
+            skipCoreStart: Boolean = false
         ): Boolean {
             if (::coreContext.isInitialized && !coreContext.stopped) {
                 Log.d("[Application] Skipping Core creation (push received? $pushReceived)")
@@ -96,7 +97,9 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
                 service,
                 useAutoStartDescription
             )
-            coreContext.start()
+            if (!skipCoreStart) {
+                coreContext.start()
+            }
             return true
         }
 

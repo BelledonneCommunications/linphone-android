@@ -98,14 +98,6 @@ class AccountSettingsFragment : GenericSettingFragment<SettingsAccountFragmentBi
             }
         }
 
-        viewModel.publishPresenceToggledEvent.observe(
-            viewLifecycleOwner
-        ) {
-            it.consume {
-                sharedViewModel.publishPresenceToggled.value = true
-            }
-        }
-
         viewModel.deleteAccountRequiredEvent.observe(
             viewLifecycleOwner
         ) {

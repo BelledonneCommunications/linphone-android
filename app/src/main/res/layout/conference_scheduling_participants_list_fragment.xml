@@ -79,6 +79,7 @@
                 android:layout_alignRight="@id/searchBar"
                 android:layout_alignBottom="@id/searchBar"
                 android:onClick="@{() -> viewModel.clearFilter()}"
+                android:contentDescription="@string/content_description_clear_field"
                 android:src="@drawable/field_clean" />
 
         </RelativeLayout>

@@ -23,6 +23,7 @@
         <RelativeLayout
             android:layout_width="@dimen/master_fragment_width"
             android:layout_height="match_parent"
+            android:background="?attr/backgroundColor"
             android:layout_gravity="start">
 
             <LinearLayout
