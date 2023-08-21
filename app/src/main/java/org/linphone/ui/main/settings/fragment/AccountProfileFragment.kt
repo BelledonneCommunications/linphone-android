@@ -13,6 +13,7 @@ import androidx.navigation.navGraphViewModels
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AccountProfileFragmentBinding
@@ -93,6 +94,7 @@ class AccountProfileFragment : GenericFragment() {
                 if (found) {
                     startPostponedEnterTransition()
                 } else {
+                    Log.e("$TAG Failed to find an account matching this identity address [$identity]")
                     // TODO Error
                     goBack()
                 }
@@ -103,7 +105,11 @@ class AccountProfileFragment : GenericFragment() {
     override fun onPause() {
         super.onPause()
 
+        Log.i("$TAG Leaving account profile, saving changes")
         viewModel.saveDisplayNameChanges()
+        coreContext.postOnCoreThread {
+            coreContext.contactsManager.updateLocalContacts()
+        }
     }
 
     private fun pickImage() {

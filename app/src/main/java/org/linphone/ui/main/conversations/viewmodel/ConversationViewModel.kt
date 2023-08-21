@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.main.conversations.viewmodel
 
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -49,10 +50,14 @@ class ConversationViewModel : ViewModel() {
     val isOneToOne = MutableLiveData<Boolean>()
 
     private val contactsListener = object : ContactsListener {
+        @WorkerThread
         override fun onContactsLoaded() {
             contactLookup()
             events.value.orEmpty().forEach(EventLogData::contactLookup)
         }
+
+        @WorkerThread
+        override fun onLocalContactsUpdated() { }
     }
 
     private val chatRoomListener = object : ChatRoomListenerStub() {
@@ -84,12 +89,13 @@ class ConversationViewModel : ViewModel() {
     }
 
     init {
+        // Core thread
         coreContext.contactsManager.addListener(contactsListener)
     }
 
     override fun onCleared() {
-        coreContext.contactsManager.removeListener(contactsListener)
         coreContext.postOnCoreThread {
+            coreContext.contactsManager.removeListener(contactsListener)
             if (::chatRoom.isInitialized) {
                 chatRoom.removeListener(chatRoomListener)
             }

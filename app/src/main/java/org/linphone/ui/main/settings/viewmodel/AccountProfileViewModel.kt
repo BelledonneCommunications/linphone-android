@@ -6,9 +6,14 @@ import androidx.lifecycle.ViewModel
 import java.io.File
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Account
+import org.linphone.core.tools.Log
 import org.linphone.utils.Event
 
 class AccountProfileViewModel : ViewModel() {
+    companion object {
+        const val TAG = "[Account Profile ViewModel]"
+    }
+
     val picturePath = MutableLiveData<String>()
 
     val displayName = MutableLiveData<String>()
@@ -24,6 +29,7 @@ class AccountProfileViewModel : ViewModel() {
                 it.params.identityAddress?.asStringUriOnly() == identity
             }
             if (found != null) {
+                Log.i("$TAG Found matching local friend [$found]")
                 account = found
                 displayName.postValue(account.params.identityAddress?.displayName)
 
@@ -50,10 +56,16 @@ class AccountProfileViewModel : ViewModel() {
             if (::account.isInitialized) {
                 val params = account.params
                 val copy = params.clone()
-                val address = params.identityAddress
-                address?.displayName = displayName.value.orEmpty().trim()
-                copy.identityAddress = address
-                account.params = copy
+                val address = params.identityAddress?.clone()
+                if (address != null) {
+                    val newValue = displayName.value.orEmpty().trim()
+                    address.displayName = newValue
+                    copy.identityAddress = address
+                    account.params = copy
+                    Log.i(
+                        "$TAG Updated account [$account] identity address display name [$newValue]"
+                    )
+                }
             }
         }
     }
@@ -73,6 +85,7 @@ class AccountProfileViewModel : ViewModel() {
                     friend.edit()
                     friend.photo = path
                     friend.done()
+                    Log.i("$TAG Updated account [$account] picture path [$path]")
                 }
             }
         }

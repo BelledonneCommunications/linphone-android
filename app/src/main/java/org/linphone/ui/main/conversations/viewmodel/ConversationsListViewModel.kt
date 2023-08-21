@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.main.conversations.viewmodel
 
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import java.util.ArrayList
@@ -39,11 +40,15 @@ class ConversationsListViewModel : ViewModel() {
     val notifyItemChangedEvent = MutableLiveData<Event<Int>>()
 
     private val contactsListener = object : ContactsListener {
+        @WorkerThread
         override fun onContactsLoaded() {
             for (chatRoomData in chatRoomsList.value.orEmpty()) {
                 chatRoomData.contactLookup()
             }
         }
+
+        @WorkerThread
+        override fun onLocalContactsUpdated() { }
     }
 
     private val coreListener = object : CoreListenerStub() {
@@ -94,9 +99,8 @@ class ConversationsListViewModel : ViewModel() {
     init {
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
+            coreContext.contactsManager.addListener(contactsListener)
         }
-
-        coreContext.contactsManager.addListener(contactsListener)
 
         coreContext.postOnCoreThread { core ->
             updateChatRoomsList()
@@ -104,8 +108,8 @@ class ConversationsListViewModel : ViewModel() {
     }
 
     override fun onCleared() {
-        coreContext.contactsManager.removeListener(contactsListener)
         coreContext.postOnCoreThread { core ->
+            coreContext.contactsManager.removeListener(contactsListener)
             core.removeListener(coreListener)
         }
         super.onCleared()

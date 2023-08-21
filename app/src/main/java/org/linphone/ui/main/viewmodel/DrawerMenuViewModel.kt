@@ -25,14 +25,20 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.contacts.ContactsListener
 import org.linphone.core.Account
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.RegistrationState
+import org.linphone.core.tools.Log
 import org.linphone.ui.main.model.AccountModel
 import org.linphone.utils.Event
 
 class DrawerMenuViewModel : ViewModel() {
+    companion object {
+        const val TAG = "[Drawer Menu ViewModel]"
+    }
+
     val accounts = MutableLiveData<ArrayList<AccountModel>>()
 
     val startAssistantEvent: MutableLiveData<Event<Boolean>> by lazy {
@@ -59,8 +65,20 @@ class DrawerMenuViewModel : ViewModel() {
         }
     }
 
+    private val localContactListener = object : ContactsListener {
+        @WorkerThread
+        override fun onContactsLoaded() {}
+
+        @WorkerThread
+        override fun onLocalContactsUpdated() {
+            Log.i("$TAG Local contact have been updated")
+            computeAccountsList()
+        }
+    }
+
     init {
         coreContext.postOnCoreThread { core ->
+            coreContext.contactsManager.addListener(localContactListener)
             core.addListener(coreListener)
             computeAccountsList()
         }
@@ -72,6 +90,7 @@ class DrawerMenuViewModel : ViewModel() {
 
         coreContext.postOnCoreThread { core ->
             core.removeListener(coreListener)
+            coreContext.contactsManager.removeListener(localContactListener)
         }
     }
 
@@ -87,6 +106,7 @@ class DrawerMenuViewModel : ViewModel() {
 
     @WorkerThread
     private fun computeAccountsList() {
+        Log.i("$TAG Updating accounts list")
         accounts.value.orEmpty().forEach(AccountModel::destroy)
 
         val list = arrayListOf<AccountModel>()

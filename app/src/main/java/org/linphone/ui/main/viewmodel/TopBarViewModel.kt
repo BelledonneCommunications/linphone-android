@@ -20,13 +20,20 @@
 package org.linphone.ui.main.viewmodel
 
 import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.contacts.ContactsListener
+import org.linphone.core.tools.Log
 import org.linphone.ui.main.model.AccountModel
 import org.linphone.utils.Event
 
 class TopBarViewModel : ViewModel() {
+    companion object {
+        const val TAG = "[Top Bar ViewModel]"
+    }
+
     val title = MutableLiveData<String>()
 
     val account = MutableLiveData<AccountModel>()
@@ -43,14 +50,23 @@ class TopBarViewModel : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    private val localContactListener = object : ContactsListener {
+        @WorkerThread
+        override fun onContactsLoaded() {}
+
+        @WorkerThread
+        override fun onLocalContactsUpdated() {
+            Log.i("$TAG Local contact have been updated")
+            updateDefaultAccount()
+        }
+    }
+
     init {
         searchBarVisible.value = false
 
-        coreContext.postOnCoreThread { core ->
-            if (core.accountList.isNotEmpty()) {
-                val defaultAccount = core.defaultAccount ?: core.accountList.first()
-                account.postValue(AccountModel(defaultAccount))
-            }
+        coreContext.postOnCoreThread {
+            coreContext.contactsManager.addListener(localContactListener)
+            updateDefaultAccount()
         }
     }
 
@@ -59,6 +75,7 @@ class TopBarViewModel : ViewModel() {
         super.onCleared()
 
         coreContext.postOnCoreThread {
+            coreContext.contactsManager.removeListener(localContactListener)
             account.value?.destroy()
         }
     }
@@ -84,5 +101,16 @@ class TopBarViewModel : ViewModel() {
     @UiThread
     fun clearFilter() {
         searchFilter.value = ""
+    }
+
+    @WorkerThread
+    private fun updateDefaultAccount() {
+        Log.i("$TAG Updating displayed default account")
+
+        val core = coreContext.core
+        if (core.accountList.isNotEmpty()) {
+            val defaultAccount = core.defaultAccount ?: core.accountList.first()
+            account.postValue(AccountModel(defaultAccount))
+        }
     }
 }

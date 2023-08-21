@@ -56,24 +56,29 @@ class NewConversationViewModel : ViewModel() {
     }
 
     private val contactsListener = object : ContactsListener {
+        @WorkerThread
         override fun onContactsLoaded() {
             applyFilter(filter.value.orEmpty().trim())
         }
+
+        @WorkerThread
+        override fun onLocalContactsUpdated() { }
     }
 
     init {
         coreContext.postOnCoreThread {
             magicSearch.addListener(magicSearchListener)
+            coreContext.contactsManager.addListener(contactsListener)
+
             applyFilter("")
         }
-        coreContext.contactsManager.addListener(contactsListener)
     }
 
     override fun onCleared() {
         coreContext.postOnCoreThread {
+            coreContext.contactsManager.removeListener(contactsListener)
             magicSearch.removeListener(magicSearchListener)
         }
-        coreContext.contactsManager.removeListener(contactsListener)
         super.onCleared()
     }
 

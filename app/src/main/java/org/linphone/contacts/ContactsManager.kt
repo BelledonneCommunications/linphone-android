@@ -69,21 +69,17 @@ class ContactsManager {
         manager.restartLoader(0, null, ContactLoader())
     }
 
-    @UiThread
+    @WorkerThread
     fun addListener(listener: ContactsListener) {
         if (coreContext.isReady()) {
-            coreContext.postOnCoreThread {
-                listeners.add(listener)
-            }
+            listeners.add(listener)
         }
     }
 
-    @UiThread
+    @WorkerThread
     fun removeListener(listener: ContactsListener) {
         if (coreContext.isReady()) {
-            coreContext.postOnCoreThread {
-                listeners.remove(listener)
-            }
+            listeners.remove(listener)
         }
     }
 
@@ -124,6 +120,15 @@ class ContactsManager {
             )
             localFriends.add(friend)
         }
+
+        notifyLocalContactsUpdated()
+    }
+
+    @WorkerThread
+    fun notifyLocalContactsUpdated() {
+        for (listener in listeners) {
+            listener.onLocalContactsUpdated()
+        }
     }
 
     @WorkerThread
@@ -149,4 +154,6 @@ class ContactsManager {
 
 interface ContactsListener {
     fun onContactsLoaded()
+
+    fun onLocalContactsUpdated()
 }

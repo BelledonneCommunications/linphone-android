@@ -60,6 +60,7 @@ class AccountModel(
     init {
         // Core thread
         account.addListener(accountListener)
+
         isDefault.postValue(coreContext.core.defaultAccount == account)
 
         friend = coreContext.contactsManager.localFriends.find {
