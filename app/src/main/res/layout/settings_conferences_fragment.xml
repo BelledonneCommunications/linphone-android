@@ -72,6 +72,13 @@
                     linphone:selectedIndex="@{viewModel.layoutIndex}"
                     linphone:labels="@{viewModel.layoutLabels}"/>
 
+                <include
+                    layout="@layout/settings_widget_switch"
+                    linphone:title="@{@string/conferences_settings_enable_broadcast_title}"
+                    linphone:subtitle="@{@string/conferences_settings_enable_broadcast_summary}"
+                    linphone:listener="@{viewModel.enableBroadcastListener}"
+                    linphone:checked="@={viewModel.enableBroadcast}"/>
+
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>

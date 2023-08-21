@@ -76,7 +76,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:entries="@{conferenceViewModel.conferenceParticipants}"
-                app:layout="@{@layout/voip_conference_participant_cell}" />
+                app:layout="@{conferenceViewModel.isBroadcast ? @layout/voip_conference_participant_broadcast_cell : @layout/voip_conference_participant_cell}" />
 
         </androidx.core.widget.NestedScrollView>
 

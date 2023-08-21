@@ -63,6 +63,8 @@ class ChatMessageContentData(
     val isConferenceSchedule = MutableLiveData<Boolean>()
     val isConferenceUpdated = MutableLiveData<Boolean>()
     val isConferenceCancelled = MutableLiveData<Boolean>()
+    val isBroadcast = MutableLiveData<Boolean>()
+    val isSpeaker = MutableLiveData<Boolean>()
 
     val fileName = MutableLiveData<String>()
     val filePath = MutableLiveData<String>()
@@ -378,14 +380,26 @@ class ChatMessageContentData(
             var participantsCount = conferenceInfo.participants.size
             val organizer = conferenceInfo.organizer
             var organizerFound = false
-            if (organizer != null) {
-                for (participant in conferenceInfo.participants) {
+            var allSpeaker = true
+            isSpeaker.value = true
+            for (info in conferenceInfo.participantInfos) {
+                val participant = info.address
+                if (participant.weakEqual(chatMessage.chatRoom.localAddress)) {
+                    isSpeaker.value = info.role == Participant.Role.Speaker
+                }
+
+                if (info.role == Participant.Role.Listener) {
+                    allSpeaker = false
+                }
+
+                if (organizer != null) {
                     if (participant.weakEqual(organizer)) {
                         organizerFound = true
-                        break
                     }
                 }
             }
+            isBroadcast.value = allSpeaker == false
+
             if (!organizerFound) participantsCount += 1 // +1 for organizer
             conferenceParticipantCount.value = String.format(
                 AppUtils.getString(R.string.conference_invite_participants_count),

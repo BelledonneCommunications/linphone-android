@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="@string/conference_waiting_room_video_disabled"
+            android:text="@{viewModel.isConferenceBroadcastWithListenerRole ? @string/conference_waiting_room_listener_broadcast : @string/conference_waiting_room_video_disabled, default=@string/conference_waiting_room_video_disabled}"
             android:visibility="@{viewModel.isVideoEnabled ? View.GONE : View.VISIBLE}" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -234,7 +234,7 @@
                 android:layout_marginEnd="5dp"
                 android:background="@drawable/button_background_reverse"
                 android:contentDescription="@{viewModel.isMicrophoneMuted ? @string/content_description_disable_mic_mute : @string/content_description_enable_mic_mute}"
-                android:enabled="@{!viewModel.joinInProgress}"
+                android:enabled="@{!viewModel.isConferenceBroadcastWithListenerRole &amp;&amp; !viewModel.joinInProgress}"
                 android:onClick="@{() -> viewModel.toggleMuteMicrophone()}"
                 android:padding="5dp"
                 android:selected="@{viewModel.isMicrophoneMuted}"
@@ -284,7 +284,7 @@
                 android:layout_marginStart="5dp"
                 android:background="@drawable/button_background_reverse"
                 android:contentDescription="@{viewModel.isVideoEnabled ? @string/content_description_disable_video : @string/content_description_enable_video}"
-                android:enabled="@{!viewModel.joinInProgress &amp;&amp; viewModel.isVideoAvailable &amp;&amp; !viewModel.isLowBandwidth}"
+                android:enabled="@{!viewModel.isConferenceBroadcastWithListenerRole &amp;&amp; !viewModel.joinInProgress &amp;&amp; viewModel.isVideoAvailable &amp;&amp; !viewModel.isLowBandwidth}"
                 android:onClick="@{() -> viewModel.toggleVideo()}"
                 android:padding="5dp"
                 android:selected="@{viewModel.isVideoEnabled}"

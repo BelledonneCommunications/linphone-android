@@ -35,8 +35,16 @@ class ConferencesSettingsViewModel : GenericSettingsViewModel() {
     val layoutLabels = MutableLiveData<ArrayList<String>>()
     private val layoutValues = arrayListOf<Int>()
 
+    val enableBroadcastListener = object : SettingListenerStub() {
+        override fun onBoolValueChanged(newValue: Boolean) {
+            prefs.disableBroadcastConference = !newValue
+        }
+    }
+    val enableBroadcast = MutableLiveData<Boolean>()
+
     init {
         initLayoutsList()
+        enableBroadcast.value = !prefs.disableBroadcastConference
     }
 
     private fun initLayoutsList() {

@@ -799,4 +799,25 @@
     <string name="chat_message_many_reactions">%s réactions</string>
     <string name="conference_invitation_notification_short_desc">invitation à une conférence</string>
     <string name="chat_message_voice_recording_notification_short_desc">message vocal</string>
+    <string name="conference_schedule_mode">Mode</string>
+    <string name="conference_schedule_mode_meeting">Réunion</string>
+    <string name="conference_schedule_mode_broadcast">Webinar</string>
+    <string name="conference_schedule_broadcast_summary">Informations du webinar</string>
+    <string name="conference_schedule_speakers_list">Liste des intervenants</string>
+    <string name="conference_schedule_speakers_list_empty">Choisissez au moins un intervenant</string>
+    <string name="conference_schedule_participants_list_empty">Choisissez au moins un participant</string>
+    <string name="conference_broadcast_start">Planifier un webinar</string>
+    <string name="conference_broadcast_edit">Modifier le webinar</string>
+    <string name="conference_meeting_title">Réunion :</string>
+    <string name="conference_broadcast_title">Webinar :</string>
+    <string name="conference_invite_speakers_list_title">Intervenants</string>
+    <string name="conference_invite_participants_list_title">Participants</string>
+    <string name="conference_broadcast_invite_title">Invitation au webinar :</string>
+    <string name="conference_broadcast_invite_you_are_speaker">(vous êtes un intervenant)</string>
+    <string name="conference_schedule_broadcast_address_title">Adresse du webinar</string>
+    <string name="conference_waiting_room_listener_broadcast">Vous n\'êtes pas un intervenant de ce webinar</string>
+    <string name="conferences_settings_enable_broadcast_title">Autoriser les webinar</string>
+    <string name="conferences_settings_enable_broadcast_summary">Fonctionalité encore en béta !</string>
+    <string name="conference_participants_list_speaker_label">Intervenant</string>
+    <string name="content_description_contact_is_speaker">Contact is a speaker</string>
 </resources>

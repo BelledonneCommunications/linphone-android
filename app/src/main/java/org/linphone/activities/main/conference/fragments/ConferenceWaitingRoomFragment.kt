@@ -53,6 +53,9 @@ class ConferenceWaitingRoomFragment : GenericFragment<ConferenceWaitingRoomFragm
         val conferenceSubject = arguments?.getString("Subject")
         viewModel.subject.value = conferenceSubject
 
+        val address = arguments?.getString("Address")
+        viewModel.findConferenceInfoByAddress(address)
+
         viewModel.cancelConferenceJoiningEvent.observe(
             viewLifecycleOwner
         ) {
