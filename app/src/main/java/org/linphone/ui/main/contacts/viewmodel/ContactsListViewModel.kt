@@ -106,7 +106,7 @@ class ContactsListViewModel : ViewModel() {
 
     @WorkerThread
     fun processMagicSearchResults(results: Array<SearchResult>) {
-        Log.i("$TAG Processing ${results.size} results")
+        Log.i("$TAG Processing [${results.size}] results")
         contactsList.value.orEmpty().forEach(ContactAvatarModel::destroy)
 
         val list = arrayListOf<ContactAvatarModel>()
@@ -143,7 +143,7 @@ class ContactsListViewModel : ViewModel() {
         favourites.postValue(favouritesList)
         contactsList.postValue(list)
 
-        Log.i("$TAG Processed ${results.size} results")
+        Log.i("$TAG Processed [${results.size}] results")
     }
 
     @UiThread

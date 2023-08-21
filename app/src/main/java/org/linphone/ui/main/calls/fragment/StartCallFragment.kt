@@ -130,6 +130,7 @@ class StartCallFragment : GenericFragment() {
             viewLifecycleOwner
         ) {
             contactsAdapter.submitList(it)
+            viewModel.emptyContactsList.value = it.isEmpty()
 
             (view.parent as? ViewGroup)?.doOnPreDraw {
                 startPostponedEnterTransition()
@@ -138,6 +139,7 @@ class StartCallFragment : GenericFragment() {
 
         suggestionsListViewModel.suggestionsList.observe(viewLifecycleOwner) {
             suggestionsAdapter.submitList(it)
+            viewModel.emptySuggestionsList.value = it.isEmpty()
         }
 
         viewModel.searchFilter.observe(viewLifecycleOwner) { filter ->

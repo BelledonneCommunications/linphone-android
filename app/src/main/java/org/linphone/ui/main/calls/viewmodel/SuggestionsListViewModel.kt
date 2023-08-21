@@ -93,30 +93,24 @@ class SuggestionsListViewModel : ViewModel() {
 
     @WorkerThread
     fun processMagicSearchResults(results: Array<SearchResult>) {
-        Log.i("$TAG Processing ${results.size} results")
+        Log.i("$TAG Processing [${results.size}] results")
         suggestionsList.value.orEmpty().forEach(ContactAvatarModel::destroy)
 
         val list = arrayListOf<ContactAvatarModel>()
 
         for (result in results) {
-            val friend = result.friend
+            // We don't want Friends here as they would also be in contacts list
+            if (result.friend == null) {
+                val fakeFriend = createFriendFromSearchResult(result)
+                val model = ContactAvatarModel(fakeFriend)
+                model.noAlphabet.postValue(true)
 
-            val model = if (friend != null) {
-                ContactAvatarModel(friend)
-            } else {
-                Log.w("$TAG SearchResult [$result] has no Friend!")
-                val fakeFriend =
-                    createFriendFromSearchResult(result)
-                ContactAvatarModel(fakeFriend)
+                list.add(model)
             }
-            model.noAlphabet.postValue(true)
-
-            list.add(model)
         }
 
         suggestionsList.postValue(list)
-
-        Log.i("$TAG Processed ${results.size} results")
+        Log.i("$TAG Processed [${results.size}] results, extracted [${list.size}] suggestions")
     }
 
     @UiThread

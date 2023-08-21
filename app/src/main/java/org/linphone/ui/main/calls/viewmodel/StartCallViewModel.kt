@@ -24,4 +24,8 @@ import androidx.lifecycle.ViewModel
 
 class StartCallViewModel : ViewModel() {
     val searchFilter = MutableLiveData<String>()
+
+    val emptyContactsList = MutableLiveData<Boolean>()
+
+    val emptySuggestionsList = MutableLiveData<Boolean>()
 }

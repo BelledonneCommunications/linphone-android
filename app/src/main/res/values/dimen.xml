@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="zero">0dp</dimen>
+
     <dimen name="landscape_nav_bar_width">75dp</dimen>
     <dimen name="sliding_pane_left_fragment_width">280dp</dimen>
     <!-- This value is the result of the above two added together -->

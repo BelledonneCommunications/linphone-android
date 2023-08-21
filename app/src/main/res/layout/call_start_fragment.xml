@@ -103,6 +103,34 @@
             app:layout_constraintTop_toTopOf="@id/group_call_icon"
             app:layout_constraintBottom_toBottomOf="@id/group_call_icon"/>
 
+        <ImageView
+            android:id="@+id/no_contacts_nor_suggestion_image"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/illu"
+            android:layout_margin="10dp"
+            android:visibility="@{viewModel.emptyContactsList &amp;&amp; viewModel.emptySuggestionsList ? View.VISIBLE : View.GONE}"
+            app:layout_constraintHeight_max="200dp"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintBottom_toTopOf="@id/no_contacts_nor_suggestion_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/group_call_icon" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_800"
+            android:id="@+id/no_contacts_nor_suggestion_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No suggestion and no contact for the moment..."
+            android:textSize="16sp"
+            android:visibility="@{viewModel.emptyContactsList &amp;&amp; viewModel.emptySuggestionsList ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/no_contacts_nor_suggestion_image" />
+
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_800"
             android:id="@+id/all_contacts_label"
@@ -114,6 +142,9 @@
             android:layout_marginTop="16dp"
             android:text="Contacts"
             android:textSize="16sp"
+            android:visibility="@{viewModel.emptyContactsList ? View.GONE : View.VISIBLE}"
+            app:layout_constraintVertical_bias="0"
+            app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/group_call_icon"
@@ -124,6 +155,8 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="8dp"
+            android:visibility="@{viewModel.emptyContactsList ? View.GONE : View.VISIBLE}"
+            app:layout_constraintVertical_bias="0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/all_contacts_label"
@@ -140,6 +173,8 @@
             android:layout_marginTop="16dp"
             android:text="Suggestions"
             android:textSize="16sp"
+            android:visibility="@{viewModel.emptySuggestionsList ? View.GONE : View.VISIBLE}"
+            app:layout_constraintVertical_bias="0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/contacts_list"
@@ -150,6 +185,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:visibility="@{viewModel.emptySuggestionsList ? View.GONE : View.VISIBLE}"
+            app:layout_constraintVertical_bias="0"
             app:layout_constraintHeight_max="220dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
