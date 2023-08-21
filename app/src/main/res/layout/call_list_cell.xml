@@ -26,8 +26,6 @@
         android:onLongClickListener="@{onLongClickListener}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
         android:background="@drawable/cell_background">
 
         <io.getstream.avatarview.AvatarView
@@ -36,6 +34,7 @@
             android:layout_height="@dimen/avatar_list_cell_size"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
+            android:layout_marginStart="5dp"
             android:adjustViewBounds="true"
             android:background="@drawable/shape_button_round"
             contactAvatar="@{model.avatarModel}"
@@ -106,7 +105,7 @@
             android:id="@+id/call"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="6dp"
             android:src="@drawable/calls"
             app:tint="@color/gray_1"
             app:layout_constraintEnd_toEndOf="parent"
