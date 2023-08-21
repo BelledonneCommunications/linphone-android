@@ -34,10 +34,13 @@ class ConferenceParticipantData(
 
     val isAdmin = MutableLiveData<Boolean>()
     val isMeAdmin = MutableLiveData<Boolean>()
+    val isSpeaker = MutableLiveData<Boolean>()
 
     init {
         isAdmin.value = participant.isAdmin
         isMeAdmin.value = conference.me.isAdmin
+        isSpeaker.value = participant.role == Participant.Role.Speaker
+
         Log.i(
             "[Conference Participant] Participant ${participant.address.asStringUriOnly()} is ${if (participant.isAdmin) "admin" else "not admin"}"
         )

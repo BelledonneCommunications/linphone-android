@@ -61,6 +61,8 @@ class ConferenceWaitingRoomViewModel : MessageNotifierViewModel() {
 
     val networkReachable = MutableLiveData<Boolean>()
 
+    val isConferenceBroadcastWithListenerRole = MutableLiveData<Boolean>()
+
     val askPermissionEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
     }
@@ -198,7 +200,10 @@ class ConferenceWaitingRoomViewModel : MessageNotifierViewModel() {
         }
 
         layoutMenuSelected.value = false
-        updateLayout()
+        when (core.defaultConferenceLayout) {
+            Conference.Layout.Grid -> setMosaicLayout()
+            else -> setActiveSpeakerLayout()
+        }
 
         if (AudioRouteUtils.isBluetoothAudioRouteAvailable()) {
             setBluetoothAudioRoute()
@@ -214,6 +219,44 @@ class ConferenceWaitingRoomViewModel : MessageNotifierViewModel() {
         coreContext.core.removeListener(listener)
 
         super.onCleared()
+    }
+
+    fun findConferenceInfoByAddress(stringAddress: String?) {
+        if (stringAddress != null) {
+            val address = Factory.instance().createAddress(stringAddress)
+            if (address != null) {
+                val conferenceInfo = coreContext.core.findConferenceInformationFromUri(address)
+                if (conferenceInfo != null) {
+                    val myself = conferenceInfo.participantInfos.find {
+                        it.address.asStringUriOnly() == coreContext.core.defaultAccount?.params?.identityAddress?.asStringUriOnly()
+                    }
+                    if (myself != null) {
+                        Log.i(
+                            "[Conference Waiting Room] Found our participant, it's role is [${myself.role}]"
+                        )
+                        val areWeListener = myself.role == Participant.Role.Listener
+                        isConferenceBroadcastWithListenerRole.value = areWeListener
+
+                        if (areWeListener) {
+                            callParams.isVideoEnabled = false
+                            callParams.videoDirection = MediaDirection.Inactive
+                            updateVideoState()
+                            updateLayout()
+                        }
+                    } else {
+                        Log.e(
+                            "[Conference Waiting Room] Failed to find ourselves in participants info"
+                        )
+                    }
+                } else {
+                    Log.e(
+                        "[Conference Waiting Room] Failed to find conference info using address [$stringAddress]"
+                    )
+                }
+            }
+        } else {
+            Log.e("[Conference Waiting Room] Can't find conference info using null address!")
+        }
     }
 
     fun cancel() {

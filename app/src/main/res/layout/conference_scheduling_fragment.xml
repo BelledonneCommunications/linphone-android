@@ -140,6 +140,31 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:orientation="vertical"
+                            android:visibility="@{viewModel.isBroadcastAllowed ? View.VISIBLE : View.GONE, default=gone}">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="@style/conference_scheduling_font"
+                                android:text="@string/conference_schedule_mode"/>
+
+                            <Spinner
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="10dp"
+                                android:layout_marginTop="5dp"
+                                style="@style/conference_scheduling_font"
+                                android:background="@drawable/icon_spinner_background"
+                                app:entries="@{viewModel.modesList}"
+                                app:selectedValue="@={viewModel.mode}"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:baselineAligned="false">
 

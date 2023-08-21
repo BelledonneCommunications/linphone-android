@@ -274,11 +274,15 @@
     <string name="conference_schedule_subject_hint">Meeting subject</string>
     <string name="conference_group_call_subject_hint">Group call subject</string>
     <string name="conference_schedule_address_title">Meeting address</string>
+    <string name="conference_schedule_broadcast_address_title">Broadcast address</string>
     <string name="conference_schedule_description_title">Add a description</string>
     <string name="conference_schedule_description_hint">Description</string>
     <string name="conference_schedule_date">Date</string>
     <string name="conference_schedule_time">Time</string>
     <string name="conference_schedule_duration">Duration</string>
+    <string name="conference_schedule_mode">Mode</string>
+    <string name="conference_schedule_mode_meeting">Meeting</string>
+    <string name="conference_schedule_mode_broadcast">Broadcast</string>
     <string name="conference_schedule_timezone">Timezone</string>
     <string name="conference_schedule_send_invite_chat">Send invite via &appName;</string>
     <string name="conference_schedule_send_updated_invite_chat">Send update via &appName;</string>
@@ -287,11 +291,17 @@
     <string name="conference_schedule_encryption">Would you like to encrypt the meeting?</string>
     <string name="conference_schedule_send_invite_chat_summary">Invite will be sent out from my &appName; account</string>
     <string name="conference_schedule_participants_list">Participants list</string>
+    <string name="conference_schedule_speakers_list">Speakers list</string>
+    <string name="conference_schedule_speakers_list_empty">Select at least one speaker</string>
+    <string name="conference_schedule_participants_list_empty">Select at least one participant</string>
     <string name="conference_organizer">Organizer</string>
     <string name="conference_schedule_summary">Meeting info</string>
     <string name="conference_group_call_summary">Group call info</string>
+    <string name="conference_schedule_broadcast_summary">Broadcast info</string>
     <string name="conference_schedule_start">Schedule meeting</string>
     <string name="conference_schedule_edit">Edit meeting</string>
+    <string name="conference_broadcast_start">Schedule broadcast</string>
+    <string name="conference_broadcast_edit">Edit broadcast</string>
     <string name="conference_group_call_create">Start group call</string>
     <string name="conference_schedule_address_copied_to_clipboard">Meeting address copied into clipboard</string>
     <string name="conference_schedule_info_not_sent_to_participant">Failed to send meeting info to a participant</string>
@@ -300,6 +310,8 @@
     <string name="conference_default_title">Remote group call</string>
     <string name="conference_local_title">Local group call</string>
     <string name="conference_invite_title">Meeting invite:</string>
+    <string name="conference_broadcast_invite_title">Broadcast invite:</string>
+    <string name="conference_broadcast_invite_you_are_speaker">(you are a speaker)</string>
     <string name="conference_update_title">Meeting has been updated:</string>
     <string name="conference_cancel_title">Meeting has been cancelled:</string>
     <string name="conference_description_title">Description</string>
@@ -311,6 +323,7 @@
     <string name="conference_waiting_room_start_call">Start</string>
     <string name="conference_waiting_room_cancel_call">Cancel</string>
     <string name="conference_waiting_room_video_disabled">Video is currently disabled</string>
+    <string name="conference_waiting_room_listener_broadcast">You aren\'t a speaker in this broadcast</string>
     <string name="conference_scheduled">Meetings</string>
     <string name="conference_layout_too_many_participants_for_mosaic">You can\'t change group call layout as there is too many participants</string>
     <string name="conference_too_many_participants_for_mosaic_layout">There is too many participants for mosaic layout, switching to active speaker</string>
@@ -346,6 +359,11 @@
     </plurals>
     <string name="conference_scheduled_cancelled_by_organizer">Conference has been cancelled by organizer</string>
     <string name="conference_scheduled_cancelled_by_me">You have cancelled the conference</string>
+    <string name="conference_meeting_title">Meeting:</string>
+    <string name="conference_broadcast_title">Broadcast:</string>
+    <string name="conference_invite_speakers_list_title">Speakers</string>
+    <string name="conference_invite_participants_list_title">Participants</string>
+    <string name="conference_participants_list_speaker_label">Speaker</string>
 
     <!-- Call -->
     <string name="call_incoming_title">Incoming Call</string>
@@ -746,6 +764,8 @@
 
     <!-- Conferences settings -->
     <string name="conferences_settings_layout_title">Default layout</string>
+    <string name="conferences_settings_enable_broadcast_title">Allow broadcasts</string>
+    <string name="conferences_settings_enable_broadcast_summary">Feature currently in beta!</string>
 
     <!-- Notifications -->
     <string name="notification_channel_service_id" translatable="false">linphone_notification_service_id</string>
@@ -851,6 +871,7 @@
     <string name="content_description_remove_contact_from_chat_room">Remove contact from conversation</string>
     <string name="content_description_contact_is_admin">Contact is an admin in this conversation</string>
     <string name="content_description_contact_is_not_admin">Contact isn\'t an admin in this conversation</string>
+    <string name="content_description_contact_is_speaker">Contact is a speaker</string>
     <string name="content_description_ephemeral_chat_room">Messages are ephemeral in this conversation</string>
     <string name="content_description_muted_chat_room">Notifications are disabled for this conversation</string>
     <string name="content_description_contact_can_do_encryption">Contact can be invited in encrypted conversations</string>

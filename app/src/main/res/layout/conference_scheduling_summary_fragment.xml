@@ -43,7 +43,7 @@
                     android:gravity="center"
                     android:orientation="horizontal"
                     style="@style/calls_list_header_font"
-                    android:text="@{viewModel.scheduleForLater ? @string/conference_schedule_summary : @string/conference_group_call_summary, default=@string/conference_group_call_summary}"/>
+                    android:text="@{viewModel.isModeBroadcastCurrentlySelected() ? @string/conference_schedule_broadcast_summary : viewModel.scheduleForLater ? @string/conference_schedule_summary : @string/conference_group_call_summary, default=@string/conference_group_call_summary}"/>
 
                 <View
                     android:layout_width="0dp"
@@ -268,6 +268,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:layout_marginLeft="10dp"
+                        android:layout_marginBottom="20dp"
                         style="@style/conference_scheduling_font"
                         android:visibility="@{viewModel.scheduleForLater &amp;&amp; viewModel.sendInviteViaChat ? View.VISIBLE : View.GONE}"
                         android:text="@string/conference_schedule_send_invite_chat_summary"/>
@@ -275,7 +276,41 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:visibility="@{viewModel.isModeBroadcastCurrentlySelected() ? View.VISIBLE : View.GONE}"
+                        android:background="?attr/voipFormDisabledFieldBackgroundColor">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:layout_marginLeft="20dp"
+                            style="@style/calls_list_header_font"
+                            android:text="@string/conference_schedule_speakers_list"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="@{viewModel.isModeBroadcastCurrentlySelected() ? View.VISIBLE : View.GONE}"
+                        app:entries="@{viewModel.speakersData}"
+                        app:layout="@{@layout/conference_scheduling_participant_cell}" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:layout_marginLeft="10dp"
+                        style="@style/calls_list_header_font"
+                        android:textColor="@color/light_grey_color"
+                        android:visibility="@{viewModel.isModeBroadcastCurrentlySelected() &amp;&amp; viewModel.speakersData.size() == 0 ? View.VISIBLE : View.GONE}"
+                        android:text="@string/conference_schedule_speakers_list_empty"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:background="?attr/voipFormDisabledFieldBackgroundColor">
 
                         <TextView
@@ -287,6 +322,16 @@
                             android:text="@string/conference_schedule_participants_list"/>
 
                     </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginLeft="10dp"
+                        style="@style/calls_list_header_font"
+                        android:textColor="@color/light_grey_color"
+                        android:visibility="@{viewModel.participantsData.size() == 0 ? View.VISIBLE : View.GONE, default=gone}"
+                        android:text="@string/conference_schedule_participants_list_empty"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -310,8 +355,26 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:layout_gravity="center"
-                android:background="@drawable/shape_rect_orange_button"
+                android:background="@drawable/rect_orange_button"
+                android:visibility="@{viewModel.isModeBroadcastCurrentlySelected() ? View.GONE : View.VISIBLE}"
                 android:text="@{viewModel.isUpdate ? @string/conference_schedule_edit : viewModel.scheduleForLater ? @string/conference_schedule_start : @string/conference_group_call_create, default=@string/conference_group_call_create}"
+                style="@style/big_orange_button_font"/>
+
+            <TextView
+                android:onClick="@{() -> viewModel.createConference()}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:paddingTop="8dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="8dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"
+                android:background="@drawable/rect_orange_button"
+                android:enabled="@{viewModel.participantsData.size() != 0 &amp;&amp; viewModel.speakersData.size() != 0}"
+                android:visibility="@{viewModel.isModeBroadcastCurrentlySelected() ? View.VISIBLE : View.GONE, default=gone}"
+                android:text="@{viewModel.isUpdate ? @string/conference_broadcast_edit : @string/conference_broadcast_start, default=@string/conference_broadcast_start}"
                 style="@style/big_orange_button_font"/>
 
         </LinearLayout>

@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/conference_invite_title_font"
-            android:text="@string/conference_invite_title"
+            android:text="@{data.isBroadcast ? @string/conference_broadcast_invite_title : @string/conference_invite_title, default=@string/conference_invite_title}"
             android:visibility="@{data.isConferenceUpdated || data.isConferenceCancelled ? View.GONE : View.VISIBLE}"/>
 
         <TextView
@@ -66,6 +66,15 @@
             style="@style/conference_invite_dat_time_font"
             android:text="@{data.conferenceParticipantCount, default=`3 participants`}"
             app:drawableStartCompat="@drawable/icon_schedule_participants"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="23dp"
+            android:layout_marginBottom="2dp"
+            android:visibility="@{data.isBroadcast &amp;&amp; data.isSpeaker ? View.VISIBLE : View.GONE}"
+            style="@style/conference_invite_dat_time_font"
+            android:text="@string/conference_broadcast_invite_you_are_speaker"/>
 
         <TextView
             android:layout_width="wrap_content"

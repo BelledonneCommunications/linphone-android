@@ -11,7 +11,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/conference_scheduling_participant_cell_height"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:background="@color/white_color">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -75,6 +76,17 @@
             </LinearLayout>
 
         </LinearLayout>
+
+        <ImageView
+            android:onClick="@{() -> data.changeIsSpeaker()}"
+            android:visibility="@{data.showBroadcastControls ? View.VISIBLE : View.GONE}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:src="@{data.isSpeaker ? @drawable/field_remove : @drawable/field_add, default=@drawable/field_add}"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="5dp" />
 
         <View
             android:layout_width="match_parent"

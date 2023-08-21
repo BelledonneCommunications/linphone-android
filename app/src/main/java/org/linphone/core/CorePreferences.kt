@@ -377,6 +377,12 @@ class CorePreferences constructor(private val context: Context) {
             config.setBool("app", "enter_video_conference_enable_full_screen_mode", value)
         }
 
+    var disableBroadcastConference: Boolean
+        get() = config.getBool("app", "disable_broadcast_conference_feature", true)
+        set(value) {
+            config.setBool("app", "disable_broadcast_conference_feature", value)
+        }
+
     /* Assistant */
 
     var firstStart: Boolean

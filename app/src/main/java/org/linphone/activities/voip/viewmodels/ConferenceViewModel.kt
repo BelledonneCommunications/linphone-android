@@ -56,8 +56,12 @@ class ConferenceViewModel : ViewModel() {
     val twoOrMoreParticipants = MutableLiveData<Boolean>()
     val moreThanTwoParticipants = MutableLiveData<Boolean>()
 
+    val speakingParticipantFound = MutableLiveData<Boolean>()
     val speakingParticipant = MutableLiveData<ConferenceParticipantDeviceData>()
     val meParticipant = MutableLiveData<ConferenceParticipantDeviceData>()
+
+    val isBroadcast = MutableLiveData<Boolean>()
+    val isMeListenerOnly = MutableLiveData<Boolean>()
 
     val participantAdminStatusChangedEvent: MutableLiveData<Event<ConferenceParticipantData>> by lazy {
         MutableLiveData<Event<ConferenceParticipantData>>()
@@ -207,6 +211,7 @@ class ConferenceViewModel : ViewModel() {
                 speakingParticipant.value?.isActiveSpeaker?.value = false
                 device.isActiveSpeaker.value = true
                 speakingParticipant.value = device!!
+                speakingParticipantFound.value = true
             } else if (device == null) {
                 Log.w(
                     "[Conference] Participant device [${participantDevice.address.asStringUriOnly()}] is the active speaker but couldn't find it in devices list"
@@ -528,6 +533,23 @@ class ConferenceViewModel : ViewModel() {
 
         val activelySpeakingParticipantDevice = conference.activeSpeakerParticipantDevice
         var foundActivelySpeakingParticipantDevice = false
+        speakingParticipantFound.value = false
+
+        val conferenceInfo = conference.core.findConferenceInformationFromUri(
+            conference.conferenceAddress
+        )
+        var allSpeaker = true
+        for (info in conferenceInfo?.participantInfos.orEmpty()) {
+            if (info.role == Participant.Role.Listener) {
+                allSpeaker = false
+            }
+        }
+        isBroadcast.value = !allSpeaker
+        if (!allSpeaker) {
+            Log.i(
+                "[Conference] Not all participants are speaker, considering it is a broadcast"
+            )
+        }
 
         for (participant in participantsList) {
             val participantDevices = participant.devices
@@ -539,6 +561,18 @@ class ConferenceViewModel : ViewModel() {
                 Log.i(
                     "[Conference] Participant device found: ${device.name} (${device.address.asStringUriOnly()})"
                 )
+
+                val info = conferenceInfo?.participantInfos?.find {
+                    it.address.weakEqual(participant.address)
+                }
+                if (info != null) {
+                    Log.i("[Conference] Participant role is [${info.role.name}]")
+                    val listener = info.role == Participant.Role.Listener || info.role == Participant.Role.Unknown
+                    if (listener) {
+                        continue
+                    }
+                }
+
                 val deviceData = ConferenceParticipantDeviceData(device, false)
                 devices.add(deviceData)
 
@@ -549,6 +583,7 @@ class ConferenceViewModel : ViewModel() {
                     speakingParticipant.value = deviceData
                     deviceData.isActiveSpeaker.value = true
                     foundActivelySpeakingParticipantDevice = true
+                    speakingParticipantFound.value = true
                 }
             }
         }
@@ -560,12 +595,26 @@ class ConferenceViewModel : ViewModel() {
             val deviceData = devices.first()
             speakingParticipant.value = deviceData
             deviceData.isActiveSpeaker.value = true
+            speakingParticipantFound.value = false
         }
 
         for (device in conference.me.devices) {
             Log.i(
                 "[Conference] Participant device for myself found: ${device.name} (${device.address.asStringUriOnly()})"
             )
+
+            val info = conferenceInfo?.participantInfos?.find {
+                it.address.weakEqual(device.address)
+            }
+            if (info != null) {
+                Log.i("[Conference] Me role is [${info.role.name}]")
+                val listener = info.role == Participant.Role.Listener || info.role == Participant.Role.Unknown
+                isMeListenerOnly.value = listener
+                if (listener) {
+                    continue
+                }
+            }
+
             val deviceData = ConferenceParticipantDeviceData(device, true)
             devices.add(deviceData)
             meParticipant.value = deviceData
@@ -601,6 +650,7 @@ class ConferenceViewModel : ViewModel() {
         if (speakingParticipant.value == null) {
             speakingParticipant.value = deviceData
             deviceData.isActiveSpeaker.value = true
+            speakingParticipantFound.value = false
         }
 
         conferenceParticipantDevices.value = sortedDevices
@@ -641,6 +691,7 @@ class ConferenceViewModel : ViewModel() {
             val deviceData = devices[1]
             speakingParticipant.value = deviceData
             deviceData.isActiveSpeaker.value = true
+            speakingParticipantFound.value = false
         }
 
         conferenceParticipantDevices.value = devices

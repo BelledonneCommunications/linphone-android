@@ -19,15 +19,35 @@
  */
 package org.linphone.activities.main.conference.data
 
+import androidx.lifecycle.MutableLiveData
 import org.linphone.contact.GenericContactData
 import org.linphone.core.Address
 import org.linphone.utils.LinphoneUtils
 
 class ConferenceSchedulingParticipantData(
-    private val sipAddress: Address,
+    val sipAddress: Address,
     val showLimeBadge: Boolean = false,
-    val showDivider: Boolean = true
+    val showDivider: Boolean = true,
+    val showBroadcastControls: Boolean = false,
+    val speaker: Boolean = false,
+    private val onAddedToSpeakers: ((data: ConferenceSchedulingParticipantData) -> Unit)? = null,
+    private val onRemovedFromSpeakers: ((data: ConferenceSchedulingParticipantData) -> Unit)? = null
 ) :
     GenericContactData(sipAddress) {
+    val isSpeaker = MutableLiveData<Boolean>()
+
     val sipUri: String get() = LinphoneUtils.getDisplayableAddress(sipAddress)
+
+    init {
+        isSpeaker.value = speaker
+    }
+
+    fun changeIsSpeaker() {
+        isSpeaker.value = isSpeaker.value == false
+        if (isSpeaker.value == true) {
+            onAddedToSpeakers?.invoke(this)
+        } else {
+            onRemovedFromSpeakers?.invoke(this)
+        }
+    }
 }
