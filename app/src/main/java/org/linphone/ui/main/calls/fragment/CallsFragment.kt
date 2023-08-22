@@ -52,6 +52,14 @@ class CallsFragment : GenericFragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
 
+        postponeEnterTransition()
+
+        sharedViewModel.callsListReadyToBeDisplayedEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                startPostponedEnterTransition()
+            }
+        }
+
         binding.root.doOnPreDraw {
             val slidingPane = binding.slidingPaneLayout
             slidingPane.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED

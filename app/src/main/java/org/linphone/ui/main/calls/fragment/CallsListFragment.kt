@@ -31,6 +31,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.PopupWindow
 import androidx.annotation.UiThread
+import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
@@ -122,7 +123,11 @@ class CallsListFragment : GenericFragment() {
 
         listViewModel.callLogs.observe(viewLifecycleOwner) {
             adapter.submitList(it)
-            startPostponedEnterTransition()
+
+            (view.parent as? ViewGroup)?.doOnPreDraw {
+                startPostponedEnterTransition()
+                sharedViewModel.callsListReadyToBeDisplayedEvent.value = Event(true)
+            }
         }
 
         listViewModel.historyDeletedEvent.observe(viewLifecycleOwner) {

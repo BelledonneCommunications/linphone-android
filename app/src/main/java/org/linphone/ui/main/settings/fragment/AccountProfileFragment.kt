@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
+import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -98,7 +99,9 @@ class AccountProfileFragment : GenericFragment() {
         viewModel.accountFoundEvent.observe(viewLifecycleOwner) {
             it.consume { found ->
                 if (found) {
-                    startPostponedEnterTransition()
+                    (view.parent as? ViewGroup)?.doOnPreDraw {
+                        startPostponedEnterTransition()
+                    }
                 } else {
                     Log.e(
                         "$TAG Failed to find an account matching this identity address [$identity]"

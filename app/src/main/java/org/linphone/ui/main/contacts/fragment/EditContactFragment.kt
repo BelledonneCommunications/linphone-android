@@ -27,6 +27,7 @@ import android.view.ViewGroup
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
+import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.lifecycleScope
@@ -153,7 +154,10 @@ class EditContactFragment : GenericFragment() {
                     for (items in viewModel.phoneNumbers) {
                         addCell(items)
                     }
-                    startPostponedEnterTransition()
+
+                    (view.parent as? ViewGroup)?.doOnPreDraw {
+                        startPostponedEnterTransition()
+                    }
                 }
             }
         }

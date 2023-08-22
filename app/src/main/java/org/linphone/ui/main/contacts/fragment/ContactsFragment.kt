@@ -52,6 +52,14 @@ class ContactsFragment : GenericFragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
 
+        postponeEnterTransition()
+
+        sharedViewModel.contactsListReadyToBeDisplayedEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                startPostponedEnterTransition()
+            }
+        }
+
         binding.root.doOnPreDraw {
             val slidingPane = binding.slidingPaneLayout
             slidingPane.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED

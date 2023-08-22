@@ -98,6 +98,7 @@ class ContactsListFragment : GenericFragment() {
 
             (view.parent as? ViewGroup)?.doOnPreDraw {
                 startPostponedEnterTransition()
+                sharedViewModel.contactsListReadyToBeDisplayedEvent.value = Event(true)
             }
         }
 
