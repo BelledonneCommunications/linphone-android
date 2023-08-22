@@ -156,6 +156,7 @@ class CallsListFragment : GenericFragment() {
 
         listViewModel.callLogs.observe(viewLifecycleOwner) {
             adapter.submitList(it)
+            binding.callsList.scrollToPosition(0)
 
             (view.parent as? ViewGroup)?.doOnPreDraw {
                 startPostponedEnterTransition()

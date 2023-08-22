@@ -27,9 +27,9 @@ import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.databinding.BottomNavBarBinding
+import org.linphone.ui.main.viewmodel.BottomNavBarViewModel
 import org.linphone.ui.main.viewmodel.SharedMainViewModel
 import org.linphone.utils.Event
 import org.linphone.utils.setKeyboardInsetListener
@@ -37,6 +37,8 @@ import org.linphone.utils.setKeyboardInsetListener
 @UiThread
 class BottomNavBarFragment : Fragment() {
     private lateinit var binding: BottomNavBarBinding
+
+    private lateinit var viewModel: BottomNavBarViewModel
 
     private lateinit var sharedViewModel: SharedMainViewModel
 
@@ -52,11 +54,16 @@ class BottomNavBarFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.lifecycleOwner = viewLifecycleOwner
+
+        viewModel = requireActivity().run {
+            ViewModelProvider(this)[BottomNavBarViewModel::class.java]
+        }
+        binding.viewModel = viewModel
+
         sharedViewModel = requireActivity().run {
             ViewModelProvider(this)[SharedMainViewModel::class.java]
         }
-
-        binding.lifecycleOwner = viewLifecycleOwner
 
         binding.root.setKeyboardInsetListener { keyboardVisible ->
             val portraitOrientation = resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
@@ -86,12 +93,9 @@ class BottomNavBarFragment : Fragment() {
         }
 
         sharedViewModel.currentlyDisplayedFragment.observe(viewLifecycleOwner) {
-            binding.contactsSelected = it == R.id.contactsFragment
-            binding.callsSelected = it == R.id.callsFragment
-            binding.conversationsSelected = it == R.id.conversationsFragment
+            viewModel.contactsSelected.value = it == R.id.contactsFragment
+            viewModel.callsSelected.value = it == R.id.callsFragment
+            viewModel.conversationsSelected.value = it == R.id.conversationsFragment
         }
-
-        binding.hideConversations = corePreferences.disableChat || true // TODO
-        binding.hideMeetings = true // TODO
     }
 }

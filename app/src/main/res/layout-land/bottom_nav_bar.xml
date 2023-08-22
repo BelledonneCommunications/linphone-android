@@ -19,23 +19,8 @@
             name="onMeetingsClicked"
             type="View.OnClickListener" />
         <variable
-            name="contactsSelected"
-            type="Boolean" />
-        <variable
-            name="callsSelected"
-            type="Boolean" />
-        <variable
-            name="conversationsSelected"
-            type="Boolean" />
-        <variable
-            name="meetingsSelected"
-            type="Boolean" />
-        <variable
-            name="hideConversations"
-            type="Boolean" />
-        <variable
-            name="hideMeetings"
-            type="Boolean" />
+            name="viewModel"
+            type="org.linphone.ui.main.viewmodel.BottomNavBarViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -51,10 +36,10 @@
             android:layout_height="wrap_content"
             android:drawableTop="@drawable/contacts"
             android:drawablePadding="10dp"
-            android:drawableTint="@{contactsSelected ? @color/primary_color : @color/gray_9, default=@color/gray_9}"
+            android:drawableTint="@{viewModel.contactsSelected ? @color/primary_color : @color/gray_9, default=@color/gray_9}"
             android:onClick="@{onContactsClicked}"
             android:text="Contacts"
-            android:textStyle="@{contactsSelected ? Typeface.BOLD : Typeface.NORMAL}"
+            android:textStyle="@{viewModel.contactsSelected ? Typeface.BOLD : Typeface.NORMAL}"
             app:layout_constraintBottom_toTopOf="@id/calls"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -67,10 +52,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:drawableTop="@drawable/calls"
-            android:drawableTint="@{callsSelected ? @color/primary_color : @color/gray_9, default=@color/gray_9}"
+            android:drawableTint="@{viewModel.callsSelected ? @color/primary_color : @color/gray_9, default=@color/gray_9}"
             android:drawablePadding="10dp"
             android:text="Calls"
-            android:textStyle="@{callsSelected ? Typeface.BOLD : Typeface.NORMAL}"
+            android:textStyle="@{viewModel.callsSelected ? Typeface.BOLD : Typeface.NORMAL}"
             app:layout_constraintBottom_toTopOf="@id/conversations"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -79,16 +64,16 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/bottom_nav_bar_label_style"
             android:id="@+id/conversations"
-            android:visibility="@{hideConversations ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.hideConversations ? View.GONE : View.VISIBLE}"
             android:enabled="false"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:drawableTop="@drawable/conversations"
             android:drawablePadding="10dp"
-            android:drawableTint="@{conversationsSelected ? @color/primary_color : @color/gray_9, default=@color/gray_9}"
+            android:drawableTint="@{viewModel.conversationsSelected ? @color/primary_color : @color/gray_9, default=@color/gray_9}"
             android:onClick="@{onConversationsClicked}"
             android:text="Conversations"
-            android:textStyle="@{conversationsSelected ? Typeface.BOLD : Typeface.NORMAL}"
+            android:textStyle="@{viewModel.conversationsSelected ? Typeface.BOLD : Typeface.NORMAL}"
             app:layout_constraintBottom_toTopOf="@id/meetings"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -98,14 +83,14 @@
             style="@style/bottom_nav_bar_label_style"
             android:onClick="@{onMeetingsClicked}"
             android:id="@+id/meetings"
-            android:visibility="@{hideMeetings ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.hideMeetings ? View.GONE : View.VISIBLE}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:drawableTop="@drawable/meetings"
             android:drawablePadding="10dp"
-            android:drawableTint="@{meetingsSelected ? @color/primary_color : @color/gray_9, default=@color/gray_9}"
+            android:drawableTint="@{viewModel.meetingsSelected ? @color/primary_color : @color/gray_9, default=@color/gray_9}"
             android:text="Meetings"
-            android:textStyle="@{meetingsSelected ? Typeface.BOLD : Typeface.NORMAL}"
+            android:textStyle="@{viewModel.meetingsSelected ? Typeface.BOLD : Typeface.NORMAL}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
