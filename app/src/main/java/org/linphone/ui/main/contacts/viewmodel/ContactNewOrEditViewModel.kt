@@ -21,6 +21,7 @@ package org.linphone.ui.main.contacts.viewmodel
 
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -54,6 +55,8 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
 
     val jobTitle = MutableLiveData<String>()
 
+    val saveButtonEnabled = MediatorLiveData<Boolean>()
+
     val saveChangesEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
     }
@@ -63,6 +66,16 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
     val addNewNumberOrAddressFieldEvent = MutableLiveData<Event<NewOrEditNumberOrAddressModel>>()
 
     val removeNewNumberOrAddressFieldEvent = MutableLiveData<Event<NewOrEditNumberOrAddressModel>>()
+
+    init {
+        saveButtonEnabled.value = isSaveButtonEnabled()
+        saveButtonEnabled.addSource(firstName) {
+            saveButtonEnabled.value = isSaveButtonEnabled()
+        }
+        saveButtonEnabled.addSource(lastName) {
+            saveButtonEnabled.value = isSaveButtonEnabled()
+        }
+    }
 
     @UiThread
     fun findFriendByRefKey(refKey: String?) {
@@ -179,7 +192,7 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
     }
 
     @WorkerThread
-    private fun addSipAddress(address: String = "", requestFieldToBeAddedInUi: Boolean = false) {
+    fun addSipAddress(address: String = "", requestFieldToBeAddedInUi: Boolean = false) {
         val newModel = NewOrEditNumberOrAddressModel(address, true, {
             if (address.isEmpty()) {
                 addSipAddress(requestFieldToBeAddedInUi = true)
@@ -218,5 +231,10 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
             phoneNumbers.remove(model)
         }
         removeNewNumberOrAddressFieldEvent.value = Event(model)
+    }
+
+    @UiThread
+    private fun isSaveButtonEnabled(): Boolean {
+        return firstName.value.orEmpty().isNotEmpty() || lastName.value.orEmpty().isNotEmpty()
     }
 }

@@ -34,6 +34,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import kotlinx.coroutines.launch
 import org.linphone.BR
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactNewOrEditFragmentBinding
@@ -97,6 +98,14 @@ class NewContactFragment : GenericFragment() {
         binding.viewModel = viewModel
 
         viewModel.findFriendByRefKey("")
+
+        val addressToAdd = sharedViewModel.sipAddressToAddToNewContact
+        if (addressToAdd.isNotEmpty()) {
+            sharedViewModel.sipAddressToAddToNewContact = ""
+            coreContext.postOnCoreThread {
+                viewModel.addSipAddress(addressToAdd)
+            }
+        }
 
         binding.setBackClickListener {
             val model = ConfirmationDialogModel()

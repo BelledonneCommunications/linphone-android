@@ -67,6 +67,8 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    var sipAddressToAddToNewContact: String = ""
+
     /* Call logs related */
 
     val showCallLogEvent: MutableLiveData<Event<String>> by lazy {

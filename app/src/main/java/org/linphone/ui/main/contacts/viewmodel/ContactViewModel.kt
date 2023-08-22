@@ -37,6 +37,7 @@ import org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel
 import org.linphone.ui.main.model.isInSecureMode
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
+import org.linphone.utils.PhoneNumberUtils
 
 class ContactViewModel @UiThread constructor() : ViewModel() {
     companion object {
@@ -165,13 +166,17 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                     // phone numbers are disabled is secure mode
                     val enablePhoneNumbers = core.defaultAccount?.isInSecureMode() != true
                     val address = core.interpretUrl(number.phoneNumber, true)
+                    val label = PhoneNumberUtils.vcardParamStringToAddressBookLabel(
+                        coreContext.context.resources,
+                        number.label ?: ""
+                    )
                     val data = ContactNumberOrAddressModel(
                         address,
                         number.phoneNumber,
                         enablePhoneNumbers,
                         listener,
                         false,
-                        label = number.label.orEmpty()
+                        label
                     )
                     addressesAndNumbers.add(data)
                 }

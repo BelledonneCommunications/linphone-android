@@ -28,6 +28,7 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
+import androidx.annotation.ColorInt
 import androidx.annotation.UiThread
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
@@ -148,7 +149,7 @@ fun AppCompatTextView.setTypeface(typeface: Int) {
 
 @UiThread
 @BindingAdapter("android:drawableTint")
-fun AppCompatTextView.setDrawableTint(color: Int) {
+fun AppCompatTextView.setDrawableTint(@ColorInt color: Int) {
     for (drawable in compoundDrawablesRelative) {
         drawable?.setTint(color)
     }

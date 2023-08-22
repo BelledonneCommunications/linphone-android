@@ -139,6 +139,7 @@ class CallFragment : GenericFragment() {
 
         popupView.setAddToContactsListener {
             // TODO: go to new contact fragment
+            sharedViewModel.sipAddressToAddToNewContact = viewModel.callLogModel.value?.displayedAddress.orEmpty()
             sharedViewModel.navigateToContactsEvent.value = Event(true)
             sharedViewModel.showNewContactEvent.value = Event(true)
             popupWindow.dismiss()
