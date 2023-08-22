@@ -50,6 +50,7 @@ import org.linphone.core.ConsolidatedPresence
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
+import org.linphone.ui.main.model.AccountModel
 
 /**
  * This file contains all the data binding necessary for the app
@@ -188,6 +189,34 @@ fun ImageView.setPresenceIcon(presence: ConsolidatedPresence?) {
         else -> R.drawable.led_not_registered
     }
     setImageResource(icon)
+}
+
+@UiThread
+@BindingAdapter("accountAvatar")
+fun AvatarView.loadAccountAvatar(account: AccountModel?) {
+    if (account == null) {
+        loadImage(R.drawable.contact_avatar)
+    } else {
+        val uri = account.avatar.value
+        loadImage(
+            data = uri,
+            onStart = {
+                // Use initials as placeholder
+                avatarInitials = account.initials.value.orEmpty()
+
+                if (account.showTrust.value == true) {
+                    avatarBorderColor = resources.getColor(R.color.trusted_blue, context.theme)
+                    avatarBorderWidth = AppUtils.getDimension(R.dimen.avatar_trust_border_width).toInt()
+                } else {
+                    avatarBorderWidth = AppUtils.getDimension(R.dimen.zero).toInt()
+                }
+            },
+            onSuccess = { _, _ ->
+                // If loading is successful, remove initials otherwise image won't be visible
+                avatarInitials = ""
+            }
+        )
+    }
 }
 
 @UiThread

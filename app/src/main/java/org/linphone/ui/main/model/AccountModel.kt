@@ -38,6 +38,8 @@ class AccountModel @WorkerThread constructor(
 
     val avatar = MutableLiveData<String>()
 
+    val initials = MutableLiveData<String>()
+
     val registrationState = MutableLiveData<String>()
 
     val isConnected = MutableLiveData<Boolean>()
@@ -45,6 +47,8 @@ class AccountModel @WorkerThread constructor(
     val inError = MutableLiveData<Boolean>()
 
     val isDefault = MutableLiveData<Boolean>()
+
+    val showTrust = MutableLiveData<Boolean>()
 
     private val accountListener = object : AccountListenerStub() {
         @WorkerThread
@@ -61,6 +65,7 @@ class AccountModel @WorkerThread constructor(
         account.addListener(accountListener)
 
         avatar.postValue(account.getPicturePath())
+        showTrust.postValue(account.isInSecureMode())
 
         update()
     }
@@ -92,7 +97,9 @@ class AccountModel @WorkerThread constructor(
 
     @WorkerThread
     private fun update() {
-        displayName.postValue(LinphoneUtils.getDisplayName(account.params.identityAddress))
+        val name = LinphoneUtils.getDisplayName(account.params.identityAddress)
+        displayName.postValue(name)
+        initials.postValue(LinphoneUtils.getInitials(name))
 
         isDefault.postValue(coreContext.core.defaultAccount == account)
 

@@ -294,7 +294,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         isMicrophoneMuted.postValue(call.microphoneMuted)
         isOutgoing.postValue(call.dir == Call.Dir.Outgoing)
 
-        val address = call.remoteAddress
+        val address = call.remoteAddress.clone()
         address.clean()
         displayedAddress.postValue(address.asStringUriOnly())
 

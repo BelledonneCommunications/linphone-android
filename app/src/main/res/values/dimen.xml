@@ -18,6 +18,7 @@
     <dimen name="avatar_presence_badge_big_size">22dp</dimen>
     <dimen name="avatar_presence_badge_big_padding">3dp</dimen>
     <dimen name="avatar_presence_badge_big_end_margin">5dp</dimen>
+    <dimen name="avatar_trust_border_width">2dp</dimen>
 
     <dimen name="top_bar_height">55dp</dimen>
     <dimen name="toast_top_margin">70dp</dimen> <!-- 15dp + top_bar_height -->

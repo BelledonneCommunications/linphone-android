@@ -33,22 +33,26 @@
             android:layout_marginBottom="5dp"
             android:adjustViewBounds="true"
             android:background="@drawable/shape_button_round"
-            coil="@{model.avatar}"
+            accountAvatar="@{model}"
             app:avatarViewPlaceholder="@drawable/contact_avatar"
             app:avatarViewInitialsBackgroundColor="@color/blue_outgoing_message"
             app:avatarViewInitialsTextColor="@color/gray_9"
             app:avatarViewInitialsTextSize="16sp"
             app:avatarViewInitialsTextStyle="bold"
             app:avatarViewShape="circle"
-            app:avatarViewBorderColor="@color/trusted_blue"
-            app:avatarViewBorderWidth="2dp"
-            app:avatarViewIndicatorSizeCriteria="3"
-            app:avatarViewIndicatorEnabled="true"
-            app:avatarViewIndicatorDrawable="@drawable/trusted"
-            app:avatarViewIndicatorPosition="bottomLeft"
+            app:avatarViewBorderWidth="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/trust_badge"
+            android:layout_width="@dimen/avatar_presence_badge_size"
+            android:layout_height="@dimen/avatar_presence_badge_size"
+            android:src="@drawable/trusted"
+            android:visibility="@{model.showTrust ? View.VISIBLE : View.GONE}"
+            app:layout_constraintStart_toStartOf="@id/avatar"
+            app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"

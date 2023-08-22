@@ -41,22 +41,26 @@
             android:layout_height="@dimen/avatar_list_cell_size"
             android:layout_marginStart="15dp"
             android:background="@drawable/shape_button_round"
-            coil="@{viewModel.account.avatar}"
-            app:avatarViewBorderColor="@color/trusted_blue"
-            app:avatarViewBorderWidth="2dp"
-            app:avatarViewIndicatorSizeCriteria="3"
-            app:avatarViewIndicatorEnabled="true"
-            app:avatarViewIndicatorDrawable="@drawable/trusted"
-            app:avatarViewIndicatorPosition="bottomLeft"
+            accountAvatar="@{viewModel.account}"
+            app:avatarViewPlaceholder="@drawable/contact_avatar"
             app:avatarViewInitialsBackgroundColor="@color/blue_outgoing_message"
             app:avatarViewInitialsTextColor="@color/gray_9"
-            app:avatarViewInitialsTextSize="21sp"
+            app:avatarViewInitialsTextSize="16sp"
             app:avatarViewInitialsTextStyle="bold"
-            app:avatarViewPlaceholder="@drawable/contact_avatar"
             app:avatarViewShape="circle"
+            app:avatarViewBorderWidth="0dp"
             app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/title" />
+
+        <ImageView
+            android:id="@+id/trust_badge"
+            android:layout_width="@dimen/avatar_presence_badge_size"
+            android:layout_height="@dimen/avatar_presence_badge_size"
+            android:src="@drawable/trusted"
+            android:visibility="@{viewModel.account.showTrust ? View.VISIBLE : View.GONE}"
+            app:layout_constraintStart_toStartOf="@id/avatar"
+            app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_800"
