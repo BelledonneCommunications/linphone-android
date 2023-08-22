@@ -26,6 +26,7 @@ import org.linphone.core.Address
 class ContactNumberOrAddressModel @UiThread constructor(
     val address: Address?,
     val displayedValue: String,
+    val isEnabled: Boolean,
     private val listener: ContactNumberOrAddressClickListener,
     val isSip: Boolean = true,
     val label: String = ""

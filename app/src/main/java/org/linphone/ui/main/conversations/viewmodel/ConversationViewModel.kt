@@ -34,7 +34,7 @@ import org.linphone.core.tools.Log
 import org.linphone.ui.main.conversations.data.EventLogData
 import org.linphone.utils.LinphoneUtils
 
-class ConversationViewModel @WorkerThread constructor(): ViewModel() {
+class ConversationViewModel @WorkerThread constructor() : ViewModel() {
     private lateinit var chatRoom: ChatRoom
 
     val events = MutableLiveData<ArrayList<EventLogData>>()

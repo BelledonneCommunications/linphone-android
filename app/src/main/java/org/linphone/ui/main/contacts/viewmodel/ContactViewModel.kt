@@ -34,6 +34,7 @@ import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.contacts.model.ContactDeviceModel
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressClickListener
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel
+import org.linphone.ui.main.model.isInSecureMode
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 
@@ -56,9 +57,9 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
 
     val showBackButton = MutableLiveData<Boolean>()
 
-    val showNumbersAndAddresses = MutableLiveData<Boolean>()
+    val expandNumbersAndAddresses = MutableLiveData<Boolean>()
 
-    val showDevicesTrust = MutableLiveData<Boolean>()
+    val expandDevicesTrust = MutableLiveData<Boolean>()
 
     val contactFoundEvent = MutableLiveData<Event<Boolean>>()
 
@@ -101,8 +102,8 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
     private lateinit var friend: Friend
 
     init {
-        showNumbersAndAddresses.value = true
-        showDevicesTrust.value = false // TODO FIXME: set it to true when it will work for real
+        expandNumbersAndAddresses.value = true
+        expandDevicesTrust.value = false // TODO FIXME: set it to true when it will work for real
     }
 
     @UiThread
@@ -129,6 +130,7 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                     val data = ContactNumberOrAddressModel(
                         address,
                         address.asStringUriOnly(),
+                        true, // SIP addresses are always enabled
                         listener,
                         true
                     )
@@ -151,6 +153,7 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                                 val data = ContactNumberOrAddressModel(
                                     address,
                                     address.asStringUriOnly(),
+                                    true, // SIP addresses are always enabled
                                     listener,
                                     true
                                 )
@@ -159,10 +162,13 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                         }
                     }
 
+                    // phone numbers are disabled is secure mode
+                    val enablePhoneNumbers = core.defaultAccount?.isInSecureMode() != true
                     val address = core.interpretUrl(number.phoneNumber, true)
                     val data = ContactNumberOrAddressModel(
                         address,
                         number.phoneNumber,
+                        enablePhoneNumbers,
                         listener,
                         false,
                         label = number.label.orEmpty()
@@ -172,7 +178,7 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                 sipAddressesAndPhoneNumbers.postValue(addressesAndNumbers)
 
                 val devicesList = arrayListOf<ContactDeviceModel>()
-                // TODO FIXME
+                // TODO FIXME: use real devices list from API
                 devicesList.add(ContactDeviceModel("Pixel 6 Pro de Sylvain", true))
                 devicesList.add(ContactDeviceModel("Sylvain Galaxy Tab S9 Pro+ Ultra", true))
                 devicesList.add(ContactDeviceModel("MacBook Pro de Marcel", false))
@@ -185,13 +191,13 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
-    fun toggleNumbersAndAddressesVisibility() {
-        showNumbersAndAddresses.value = showNumbersAndAddresses.value == false
+    fun toggleNumbersAndAddressesExpand() {
+        expandNumbersAndAddresses.value = expandNumbersAndAddresses.value == false
     }
 
     @UiThread
-    fun toggleDevicesTrustVisibility() {
-        showDevicesTrust.value = showDevicesTrust.value == false
+    fun toggleDevicesTrustExpand() {
+        expandDevicesTrust.value = expandDevicesTrust.value == false
     }
 
     @UiThread

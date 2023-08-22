@@ -42,6 +42,7 @@ import org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
 import org.linphone.ui.main.contacts.viewmodel.ContactsListViewModel
 import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.model.isInSecureMode
 import org.linphone.utils.DialogUtils
 
 @UiThread
@@ -154,10 +155,14 @@ class StartCallFragment : GenericFragment() {
             val friend = model.friend
             val addressesCount = friend.addresses.size
             val numbersCount = friend.phoneNumbers.size
-            if (addressesCount == 1 && numbersCount == 0) {
+
+            // Do not consider phone numbers if default account is in secure mode
+            val enablePhoneNumbers = core.defaultAccount?.isInSecureMode() != true
+
+            if (addressesCount == 1 && (numbersCount == 0 || !enablePhoneNumbers)) {
                 val address = friend.addresses.first()
                 coreContext.startCall(address)
-            } else if (addressesCount == 1 && numbersCount == 0) {
+            } else if (addressesCount == 0 && numbersCount == 1 && enablePhoneNumbers) {
                 val number = friend.phoneNumbers.first()
                 val address = core.interpretUrl(number, true)
                 if (address != null) {
@@ -169,22 +174,26 @@ class StartCallFragment : GenericFragment() {
                     val addressModel = ContactNumberOrAddressModel(
                         address,
                         address.asStringUriOnly(),
+                        true,
                         listener,
                         true
                     )
                     list.add(addressModel)
                 }
 
-                for (number in friend.phoneNumbersWithLabel) {
-                    val address = core.interpretUrl(number.phoneNumber, true)
-                    val addressModel = ContactNumberOrAddressModel(
-                        address,
-                        number.phoneNumber,
-                        listener,
-                        false,
-                        number.label.orEmpty()
-                    )
-                    list.add(addressModel)
+                if (enablePhoneNumbers) {
+                    for (number in friend.phoneNumbersWithLabel) {
+                        val address = core.interpretUrl(number.phoneNumber, true)
+                        val addressModel = ContactNumberOrAddressModel(
+                            address,
+                            number.phoneNumber,
+                            true,
+                            listener,
+                            false,
+                            number.label.orEmpty()
+                        )
+                        list.add(addressModel)
+                    }
                 }
 
                 coreContext.postOnMainThread {

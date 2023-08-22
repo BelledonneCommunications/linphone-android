@@ -119,3 +119,8 @@ fun Account.getPicturePath(): String {
         overrideExisting = true
     ).absolutePath
 }
+
+fun Account.isInSecureMode(): Boolean {
+    // TODO FIXME
+    return true
+}

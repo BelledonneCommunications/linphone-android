@@ -33,6 +33,7 @@ import org.linphone.core.MagicSearchListenerStub
 import org.linphone.core.SearchResult
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
+import org.linphone.ui.main.model.isInSecureMode
 
 class ContactsListViewModel @UiThread constructor() : ViewModel() {
     companion object {
@@ -78,6 +79,9 @@ class ContactsListViewModel @UiThread constructor() : ViewModel() {
         showFavourites.value = true
 
         coreContext.postOnCoreThread { core ->
+            val defaultAccount = core.defaultAccount
+            limitSearchToLinphoneAccounts = defaultAccount?.isInSecureMode() ?: false
+
             coreContext.contactsManager.addListener(contactsListener)
             magicSearch = core.createMagicSearch()
             magicSearch.limitedSearch = false

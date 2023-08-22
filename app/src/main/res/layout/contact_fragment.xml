@@ -99,7 +99,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:constraint_referenced_ids="trusted_devices_count, trust_background, trusted_devices_progress, devices, trusted_devices_progress_label"
-                    android:visibility="@{viewModel.showDevicesTrust ? View.VISIBLE : View.GONE}" />
+                    android:visibility="@{viewModel.expandDevicesTrust ? View.VISIBLE : View.GONE}" />
 
                 <io.getstream.avatarview.AvatarView
                     android:id="@+id/avatar"
@@ -241,7 +241,7 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/default_text_style_800"
-                    android:onClick="@{() -> viewModel.toggleNumbersAndAddressesVisibility()}"
+                    android:onClick="@{() -> viewModel.toggleNumbersAndAddressesExpand()}"
                     android:id="@+id/numbers_and_addresses_label"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -250,7 +250,7 @@
                     android:layout_marginEnd="26dp"
                     android:layout_marginTop="32dp"
                     android:text="Numbers &amp; addresses"
-                    android:drawableEnd="@{viewModel.showNumbersAndAddresses ? @drawable/collapse : @drawable/expand, default=@drawable/collapse}"
+                    android:drawableEnd="@{viewModel.expandNumbersAndAddresses ? @drawable/collapse : @drawable/expand, default=@drawable/collapse}"
                     android:drawableTint="@color/gray_9"
                     android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="parent"
@@ -259,7 +259,7 @@
 
                 <LinearLayout
                     android:id="@+id/numbers_and_addresses"
-                    android:visibility="@{viewModel.showNumbersAndAddresses ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewModel.expandNumbersAndAddresses ? View.VISIBLE : View.GONE}"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
@@ -348,7 +348,7 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/default_text_style_800"
-                    android:onClick="@{() -> viewModel.toggleDevicesTrustVisibility()}"
+                    android:onClick="@{() -> viewModel.toggleDevicesTrustExpand()}"
                     android:id="@+id/trust_label"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -357,7 +357,7 @@
                     android:layout_marginEnd="26dp"
                     android:layout_marginTop="16dp"
                     android:text="Trust"
-                    android:drawableEnd="@{viewModel.showDevicesTrust ? @drawable/collapse : @drawable/expand, default=@drawable/collapse}"
+                    android:drawableEnd="@{viewModel.expandDevicesTrust ? @drawable/collapse : @drawable/expand, default=@drawable/collapse}"
                     android:drawableTint="@color/gray_9"
                     android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="parent"
