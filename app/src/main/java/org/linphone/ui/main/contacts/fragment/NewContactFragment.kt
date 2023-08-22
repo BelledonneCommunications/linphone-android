@@ -101,7 +101,9 @@ class NewContactFragment : GenericFragment() {
 
         val addressToAdd = sharedViewModel.sipAddressToAddToNewContact
         if (addressToAdd.isNotEmpty()) {
+            Log.i("$TAG Pre-filling new contact form with SIP address [$addressToAdd]")
             sharedViewModel.sipAddressToAddToNewContact = ""
+
             coreContext.postOnCoreThread {
                 viewModel.addSipAddress(addressToAdd)
             }
@@ -169,6 +171,8 @@ class NewContactFragment : GenericFragment() {
                 removeCell(model)
             }
         }
+
+        sharedViewModel.contactEditorReadyToBeDisplayedEvent.value = Event(true)
     }
 
     private fun addCell(model: NewOrEditNumberOrAddressModel) {

@@ -61,6 +61,8 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
 
     val contactsListReadyToBeDisplayedEvent = MutableLiveData<Event<Boolean>>()
 
+    val contactEditorReadyToBeDisplayedEvent = MutableLiveData<Event<Boolean>>()
+
     val showContactEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
     }

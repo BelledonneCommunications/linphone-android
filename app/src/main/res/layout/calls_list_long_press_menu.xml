@@ -5,7 +5,10 @@
     <data>
         <import type="android.view.View" />
         <variable
-            name="newContactClickListener"
+            name="addToContactsListener"
+            type="View.OnClickListener" />
+        <variable
+            name="goToContactClickListener"
             type="View.OnClickListener" />
         <variable
             name="copyNumberClickListener"
@@ -13,6 +16,9 @@
         <variable
             name="deleteClickListener"
             type="View.OnClickListener" />
+        <variable
+            name="contactExists"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,8 +27,9 @@
         android:background="@color/separator">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/favorite"
-            android:onClick="@{newContactClickListener}"
+            android:id="@+id/add_to_contact"
+            android:onClick="@{addToContactsListener}"
+            android:visibility="@{contactExists ? View.GONE : View.VISIBLE}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Ajouter aux contacts"
@@ -30,6 +37,21 @@
             android:background="@drawable/menu_item_background"
             android:layout_marginBottom="1dp"
             android:drawableStart="@drawable/new_contact"
+            app:layout_constraintBottom_toTopOf="@id/go_to_contact"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/go_to_contact"
+            android:onClick="@{goToContactClickListener}"
+            android:visibility="@{contactExists ? View.VISIBLE : View.GONE}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Voir le contact"
+            style="@style/context_menu_action_label_style"
+            android:background="@drawable/menu_item_background"
+            android:layout_marginBottom="1dp"
+            android:drawableStart="@drawable/contact"
             app:layout_constraintBottom_toTopOf="@id/share"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>

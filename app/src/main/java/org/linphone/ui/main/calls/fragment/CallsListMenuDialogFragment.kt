@@ -30,7 +30,10 @@ import org.linphone.databinding.CallsListLongPressMenuBinding
 
 @UiThread
 class CallsListMenuDialogFragment(
+    private val contactExists: Boolean,
     private val onDismiss: (() -> Unit)? = null,
+    private val onAddToContact: (() -> Unit)? = null,
+    private val onGoToContact: (() -> Unit)? = null,
     private val onCopyNumberOrAddressToClipboard: (() -> Unit)? = null,
     private val onDeleteCallLog: (() -> Unit)? = null
 ) : BottomSheetDialogFragment() {
@@ -54,6 +57,7 @@ class CallsListMenuDialogFragment(
         savedInstanceState: Bundle?
     ): View {
         val view = CallsListLongPressMenuBinding.inflate(layoutInflater)
+        view.contactExists = contactExists
 
         view.setCopyNumberClickListener {
             onCopyNumberOrAddressToClipboard?.invoke()
@@ -65,8 +69,13 @@ class CallsListMenuDialogFragment(
             dismiss()
         }
 
-        view.setNewContactClickListener {
-            // TODO
+        view.setAddToContactsListener {
+            onAddToContact?.invoke()
+            dismiss()
+        }
+
+        view.setGoToContactClickListener {
+            onGoToContact?.invoke()
             dismiss()
         }
 

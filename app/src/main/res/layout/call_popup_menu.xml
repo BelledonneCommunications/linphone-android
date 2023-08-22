@@ -39,7 +39,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:gravity="left|center_vertical"
-            android:text="Ajouter aux contats"
+            android:text="Ajouter aux contacts"
             android:textSize="14sp"
             android:textColor="@color/gray_1"
             android:drawableStart="@drawable/add"

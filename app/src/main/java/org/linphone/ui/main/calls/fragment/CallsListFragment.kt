@@ -38,6 +38,7 @@ import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.core.tools.Log
 import org.linphone.databinding.CallsListFragmentBinding
 import org.linphone.databinding.CallsListPopupMenuBinding
 import org.linphone.ui.main.MainActivity
@@ -50,6 +51,9 @@ import org.linphone.utils.Event
 
 @UiThread
 class CallsListFragment : GenericFragment() {
+    companion object {
+        const val TAG = "[Calls List Fragment]"
+    }
 
     private lateinit var binding: CallsListFragmentBinding
 
@@ -89,17 +93,45 @@ class CallsListFragment : GenericFragment() {
 
         adapter.callLogLongClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
-                val modalBottomSheet = CallsListMenuDialogFragment({
-                    // onDismiss
-                    adapter.resetSelection()
-                }, {
-                    // onCopyNumberOrAddressToClipboard
-                    copyNumberOrAddressToClipboard(model.displayedAddress)
-                }, {
-                    // onDeleteCallLog
-                    model.delete()
-                    adapter.deleteSelection()
-                })
+                val modalBottomSheet = CallsListMenuDialogFragment(
+                    model.friendExists,
+                    { // onDismiss
+                        adapter.resetSelection()
+                    },
+                    { // onAddToContact
+                        val addressToAdd = model.displayedAddress
+                        Log.i(
+                            "$TAG Navigating to new contact with pre-filled value [$addressToAdd]"
+                        )
+
+                        sharedViewModel.sipAddressToAddToNewContact = addressToAdd
+                        sharedViewModel.navigateToContactsEvent.value = Event(true)
+                        sharedViewModel.showNewContactEvent.value = Event(true)
+                    },
+                    { // onGoToContact
+                        val friendRefKey = model.friendRefKey
+                        if (!friendRefKey.isNullOrEmpty()) {
+                            Log.i("$TAG Navigating to contact with ref key [$friendRefKey]")
+
+                            sharedViewModel.navigateToContactsEvent.value = Event(true)
+                            sharedViewModel.showContactEvent.value = Event(friendRefKey)
+                        } else {
+                            Log.w(
+                                "$TAG Can't navigate to existing friend, ref key is null or empty"
+                            )
+                        }
+                    },
+                    { // onCopyNumberOrAddressToClipboard
+                        val addressToCopy = model.displayedAddress
+                        Log.i("$TAG Copying number [$addressToCopy] to clipboard")
+                        copyNumberOrAddressToClipboard(addressToCopy)
+                    },
+                    { // onDeleteCallLog
+                        Log.i("$TAG Deleting call log with ref key or call ID [${model.id}]")
+                        model.delete()
+                        adapter.deleteSelection()
+                    }
+                )
                 modalBottomSheet.show(parentFragmentManager, CallsListMenuDialogFragment.TAG)
             }
         }
@@ -113,6 +145,7 @@ class CallsListFragment : GenericFragment() {
         adapter.callLogCallBackClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
                 coreContext.postOnCoreThread {
+                    Log.i("$TAG Starting call to [${model.address.asStringUriOnly()}]")
                     coreContext.startCall(model.address)
                 }
             }
@@ -200,6 +233,7 @@ class CallsListFragment : GenericFragment() {
 
             model.confirmRemovalEvent.observe(viewLifecycleOwner) {
                 it.consume {
+                    Log.w("$TAG Removing all call entries from database")
                     listViewModel.removeAllCallLogs()
                     dialog.dismiss()
                 }

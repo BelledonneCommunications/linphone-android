@@ -32,6 +32,7 @@ import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactsListFragmentBinding
 import org.linphone.ui.main.contacts.adapter.ContactsListAdapter
 import org.linphone.ui.main.contacts.viewmodel.ContactsListViewModel
@@ -40,6 +41,10 @@ import org.linphone.utils.Event
 
 @UiThread
 class ContactsListFragment : GenericFragment() {
+    companion object {
+        const val TAG = "[Contacts List Fragment]"
+    }
+
     private lateinit var binding: ContactsListFragmentBinding
 
     private val listViewModel: ContactsListViewModel by navGraphViewModels(
@@ -95,6 +100,7 @@ class ContactsListFragment : GenericFragment() {
             viewLifecycleOwner
         ) {
             adapter.submitList(it)
+            Log.i("$TAG Contacts list is ready with [${it.size}] items")
 
             (view.parent as? ViewGroup)?.doOnPreDraw {
                 startPostponedEnterTransition()
@@ -106,6 +112,7 @@ class ContactsListFragment : GenericFragment() {
             viewLifecycleOwner
         ) {
             favouritesAdapter.submitList(it)
+            Log.i("$TAG Favourites contacts list is ready with [${it.size}] items")
         }
 
         sharedViewModel.searchFilter.observe(viewLifecycleOwner) {
@@ -122,26 +129,35 @@ class ContactsListFragment : GenericFragment() {
     private fun configureAdapter(adapter: ContactsListAdapter) {
         adapter.contactLongClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
-                val modalBottomSheet = ContactsListMenuDialogFragment(model.friend.starred, {
-                    adapter.resetSelection()
-                }, {
-                    // onFavourite
-                    coreContext.postOnCoreThread {
-                        model.friend.edit()
-                        model.friend.starred = !model.friend.starred
-                        model.friend.done()
-                        coreContext.contactsManager.notifyContactsListChanged()
+                val modalBottomSheet = ContactsListMenuDialogFragment(
+                    model.friend.starred,
+                    { // ondDismiss
+                        adapter.resetSelection()
+                    },
+                    { // onFavourite
+                        coreContext.postOnCoreThread {
+                            model.friend.edit()
+                            val starred = !model.friend.starred
+                            Log.i(
+                                "$TAG Friend [${model.name.value}] will be ${if (starred) "added" else "removed"} from favourites"
+                            )
+                            model.friend.starred = starred
+                            model.friend.done()
+                            coreContext.contactsManager.notifyContactsListChanged()
+                        }
+                    },
+                    { // onShare
+                        Log.i("$TAG Sharing friend [${model.name.value}]")
+                        // TODO
+                    },
+                    { // onDelete
+                        coreContext.postOnCoreThread {
+                            Log.w("$TAG Removing friend [${model.name.value}]")
+                            model.friend.remove()
+                            coreContext.contactsManager.notifyContactsListChanged()
+                        }
                     }
-                }, {
-                    // onShare
-                    // TODO
-                }, {
-                    // onDelete
-                    coreContext.postOnCoreThread {
-                        model.friend.remove()
-                        coreContext.contactsManager.notifyContactsListChanged()
-                    }
-                })
+                )
                 modalBottomSheet.show(parentFragmentManager, ContactsListMenuDialogFragment.TAG)
             }
         }

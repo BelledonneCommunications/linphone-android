@@ -60,6 +60,12 @@ class ContactsFragment : GenericFragment() {
             }
         }
 
+        sharedViewModel.contactEditorReadyToBeDisplayedEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                startPostponedEnterTransition()
+            }
+        }
+
         binding.root.doOnPreDraw {
             val slidingPane = binding.slidingPaneLayout
             slidingPane.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
