@@ -109,7 +109,7 @@
                 android:textSize="14sp"
                 android:textColor="@color/gray_9"
                 android:background="@drawable/shape_edit_text_background"
-                android:inputType="@{viewModel.showPassword ? InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD : InputType.TYPE_TEXT_VARIATION_PASSWORD, default=textPassword}"
+                android:inputType="@{viewModel.showPassword ? InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD : InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD, default=textPassword}"
                 app:layout_constraintTop_toBottomOf="@id/password_label"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
@@ -117,8 +117,9 @@
             <ImageView
                 android:onClick="@{() -> viewModel.toggleShowPassword()}"
                 android:id="@+id/show_password"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
+                android:layout_width="24dp"
+                android:layout_height="0dp"
+                android:padding="4dp"
                 android:layout_marginEnd="20dp"
                 android:src="@{viewModel.showPassword ? @drawable/hide_password : @drawable/show_password, default=@drawable/show_password}"
                 app:tint="@color/gray_1"
