@@ -30,7 +30,7 @@ import org.linphone.core.FriendListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.utils.LinphoneUtils
 
-class ContactAvatarModel(val friend: Friend) {
+class ContactAvatarModel @WorkerThread constructor(val friend: Friend) {
     companion object {
         const val TAG = "[Contact Avatar Model]"
     }
@@ -62,7 +62,6 @@ class ContactAvatarModel(val friend: Friend) {
     }
 
     init {
-        // Core thread
         friend.addListener(friendListener)
 
         name.postValue(friend.name)

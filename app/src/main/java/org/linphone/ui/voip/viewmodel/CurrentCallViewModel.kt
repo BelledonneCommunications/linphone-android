@@ -36,7 +36,7 @@ import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
-class CurrentCallViewModel() : ViewModel() {
+class CurrentCallViewModel @UiThread constructor() : ViewModel() {
     companion object {
         const val TAG = "[Current Call ViewModel]"
     }

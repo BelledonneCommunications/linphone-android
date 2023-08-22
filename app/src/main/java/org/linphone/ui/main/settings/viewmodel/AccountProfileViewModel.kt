@@ -11,7 +11,7 @@ import org.linphone.ui.main.model.getPicturePath
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 
-class AccountProfileViewModel : ViewModel() {
+class AccountProfileViewModel @UiThread constructor() : ViewModel() {
     companion object {
         const val TAG = "[Account Profile ViewModel]"
     }

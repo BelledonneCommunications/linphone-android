@@ -32,9 +32,6 @@ import org.linphone.databinding.ContactSelectionCellBinding
 class ContactsSelectionAdapter(
     private val viewLifecycleOwner: LifecycleOwner
 ) : ListAdapter<ContactData, RecyclerView.ViewHolder>(ContactDataDiffCallback()) {
-    init {
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val binding: ContactSelectionCellBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),

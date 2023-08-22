@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.UiThread
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -21,6 +22,7 @@ import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.ui.main.settings.viewmodel.AccountProfileViewModel
 import org.linphone.utils.FileUtils
 
+@UiThread
 class AccountProfileFragment : GenericFragment() {
     companion object {
         const val TAG = "[Account Profile Fragment]"

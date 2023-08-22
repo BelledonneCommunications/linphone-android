@@ -30,7 +30,7 @@ import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
 
-class CallsViewModel : ViewModel() {
+class CallsViewModel @UiThread constructor() : ViewModel() {
     val goToActiveCallEvent = MutableLiveData<Event<Boolean>>()
 
     val showIncomingCallEvent = MutableLiveData<Event<Boolean>>()

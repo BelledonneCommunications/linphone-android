@@ -23,7 +23,7 @@ import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.utils.Event
 
-class ConfirmationDialogModel() {
+class ConfirmationDialogModel @UiThread constructor() {
     val dismissEvent = MutableLiveData<Event<Boolean>>()
 
     val confirmRemovalEvent = MutableLiveData<Event<Boolean>>()

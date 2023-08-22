@@ -30,7 +30,7 @@ import org.linphone.core.tools.Log
 import org.linphone.ui.main.model.AccountModel
 import org.linphone.utils.Event
 
-class DrawerMenuViewModel : ViewModel() {
+class DrawerMenuViewModel @UiThread constructor() : ViewModel() {
     companion object {
         const val TAG = "[Drawer Menu ViewModel]"
     }

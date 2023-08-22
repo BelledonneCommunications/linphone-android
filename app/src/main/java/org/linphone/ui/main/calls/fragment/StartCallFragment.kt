@@ -44,6 +44,7 @@ import org.linphone.ui.main.contacts.viewmodel.ContactsListViewModel
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.DialogUtils
 
+@UiThread
 class StartCallFragment : GenericFragment() {
     private lateinit var binding: CallStartFragmentBinding
 

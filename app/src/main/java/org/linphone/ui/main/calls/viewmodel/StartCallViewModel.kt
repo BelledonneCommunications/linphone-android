@@ -19,10 +19,11 @@
  */
 package org.linphone.ui.main.calls.viewmodel
 
+import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class StartCallViewModel : ViewModel() {
+class StartCallViewModel @UiThread constructor() : ViewModel() {
     val searchFilter = MutableLiveData<String>()
 
     val emptyContactsList = MutableLiveData<Boolean>()

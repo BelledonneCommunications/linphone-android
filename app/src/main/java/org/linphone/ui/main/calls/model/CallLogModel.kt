@@ -2,6 +2,7 @@ package org.linphone.ui.main.calls.model
 
 import androidx.annotation.IntegerRes
 import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Call.Dir
@@ -10,7 +11,7 @@ import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.TimestampUtils
 
-class CallLogModel(private val callLog: CallLog) {
+class CallLogModel @WorkerThread constructor(private val callLog: CallLog) {
     val id = callLog.callId ?: callLog.refKey
 
     val address = if (callLog.dir == Dir.Outgoing) callLog.remoteAddress else callLog.fromAddress
@@ -31,7 +32,6 @@ class CallLogModel(private val callLog: CallLog) {
     var friendExists: Boolean = false
 
     init {
-        // Core thread
         isOutgoing.postValue(callLog.dir == Dir.Outgoing)
 
         val timestamp = callLog.startDate

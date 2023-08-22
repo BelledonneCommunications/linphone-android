@@ -30,7 +30,7 @@ import org.linphone.core.RegistrationState
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
 
-class AccountModel(
+class AccountModel @WorkerThread constructor(
     private val account: Account,
     private val onMenuClicked: ((view: View, account: Account) -> Unit)? = null
 ) {
@@ -58,7 +58,6 @@ class AccountModel(
     }
 
     init {
-        // Core thread
         account.addListener(accountListener)
 
         avatar.postValue(account.getPicturePath())

@@ -20,9 +20,10 @@
 package org.linphone.ui.main.contacts.model
 
 import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 
-class NewOrEditNumberOrAddressModel(
+class NewOrEditNumberOrAddressModel @WorkerThread constructor(
     defaultValue: String,
     val isSip: Boolean,
     private val onValueNoLongerEmpty: (() -> Unit)? = null,
@@ -33,7 +34,6 @@ class NewOrEditNumberOrAddressModel(
     val showRemoveButton = MutableLiveData<Boolean>()
 
     init {
-        // Core thread
         value.postValue(defaultValue)
         showRemoveButton.postValue(defaultValue.isNotEmpty())
     }

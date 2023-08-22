@@ -21,7 +21,7 @@ package org.linphone.ui.main.contacts.model
 
 import androidx.annotation.UiThread
 
-class ContactDeviceModel(
+class ContactDeviceModel @UiThread constructor(
     val name: String,
     val trusted: Boolean
 ) {

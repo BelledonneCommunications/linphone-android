@@ -28,7 +28,7 @@ import org.linphone.core.tools.Log
 import org.linphone.ui.main.model.AccountModel
 import org.linphone.utils.Event
 
-class TopBarViewModel : ViewModel() {
+class TopBarViewModel @UiThread constructor() : ViewModel() {
     companion object {
         const val TAG = "[Top Bar ViewModel]"
     }

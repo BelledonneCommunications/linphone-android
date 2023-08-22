@@ -30,7 +30,7 @@ import org.linphone.core.CoreListenerStub
 import org.linphone.ui.main.calls.model.CallLogModel
 import org.linphone.utils.Event
 
-class CallsListViewModel : ViewModel() {
+class CallsListViewModel @UiThread constructor() : ViewModel() {
     val callLogs = MutableLiveData<ArrayList<CallLogModel>>()
 
     val historyDeletedEvent: MutableLiveData<Event<Boolean>> by lazy {

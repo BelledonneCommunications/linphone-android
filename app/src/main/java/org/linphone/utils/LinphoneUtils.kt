@@ -23,6 +23,7 @@ import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.os.Build
 import android.provider.Settings
+import androidx.annotation.AnyThread
 import androidx.annotation.IntegerRes
 import androidx.annotation.WorkerThread
 import androidx.emoji2.text.EmojiCompat
@@ -38,10 +39,12 @@ import org.linphone.core.tools.Log
 
 class LinphoneUtils {
     companion object {
+        @AnyThread
         fun getFirstLetter(displayName: String): String {
             return getInitials(displayName, 1)
         }
 
+        @AnyThread
         fun getInitials(displayName: String, limit: Int = 2): String {
             if (displayName.isEmpty()) return ""
 
@@ -96,6 +99,7 @@ class LinphoneUtils {
             return address.displayName ?: address.username ?: address.asString()
         }
 
+        @AnyThread
         fun isCallOutgoing(callState: Call.State): Boolean {
             return when (callState) {
                 Call.State.OutgoingInit, Call.State.OutgoingProgress, Call.State.OutgoingRinging, Call.State.OutgoingEarlyMedia -> true
@@ -103,6 +107,7 @@ class LinphoneUtils {
             }
         }
 
+        @AnyThread
         @IntegerRes
         fun getIconResId(callStatus: Status, callDir: Dir): Int {
             return when (callStatus) {
@@ -146,6 +151,7 @@ class LinphoneUtils {
             return getChatRoomId(chatRoom.localAddress, chatRoom.peerAddress)
         }
 
+        @AnyThread
         fun getDeviceName(context: Context): String {
             var name = Settings.Global.getString(
                 context.contentResolver,

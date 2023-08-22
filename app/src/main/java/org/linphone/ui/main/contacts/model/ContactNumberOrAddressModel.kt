@@ -23,7 +23,7 @@ import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.core.Address
 
-class ContactNumberOrAddressModel(
+class ContactNumberOrAddressModel @UiThread constructor(
     val address: Address?,
     val displayedValue: String,
     private val listener: ContactNumberOrAddressClickListener,

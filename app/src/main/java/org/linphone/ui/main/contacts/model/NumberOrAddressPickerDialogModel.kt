@@ -23,7 +23,9 @@ import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.utils.Event
 
-class NumberOrAddressPickerDialogModel(list: List<ContactNumberOrAddressModel>) {
+class NumberOrAddressPickerDialogModel @UiThread constructor(
+    list: List<ContactNumberOrAddressModel>
+) {
     val sipAddressesAndPhoneNumbers = MutableLiveData<List<ContactNumberOrAddressModel>>()
 
     val dismissEvent = MutableLiveData<Event<Boolean>>()

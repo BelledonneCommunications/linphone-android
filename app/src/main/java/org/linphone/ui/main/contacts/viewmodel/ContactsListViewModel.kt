@@ -34,7 +34,7 @@ import org.linphone.core.SearchResult
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 
-class ContactsListViewModel : ViewModel() {
+class ContactsListViewModel @UiThread constructor() : ViewModel() {
     companion object {
         const val TAG = "[Contacts List ViewModel]"
     }

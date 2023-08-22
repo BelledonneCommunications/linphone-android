@@ -39,7 +39,7 @@ import org.linphone.ui.voip.VoipActivity
 import org.linphone.utils.ActivityMonitor
 import org.linphone.utils.LinphoneUtils
 
-class CoreContext(val context: Context) : HandlerThread("Core Thread") {
+class CoreContext @UiThread constructor(val context: Context) : HandlerThread("Core Thread") {
     companion object {
         const val TAG = "[Core Context]"
     }

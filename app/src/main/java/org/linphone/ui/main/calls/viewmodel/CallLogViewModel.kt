@@ -10,7 +10,7 @@ import org.linphone.ui.main.calls.model.CallLogHistoryModel
 import org.linphone.ui.main.calls.model.CallLogModel
 import org.linphone.utils.Event
 
-class CallLogViewModel : ViewModel() {
+class CallLogViewModel @UiThread constructor() : ViewModel() {
     val showBackButton = MutableLiveData<Boolean>()
 
     val callLogModel = MutableLiveData<CallLogModel>()

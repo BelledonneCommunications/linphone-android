@@ -19,6 +19,7 @@
  */
 package org.linphone.utils
 
+import androidx.annotation.AnyThread
 import java.text.DateFormat
 import java.text.Format
 import java.text.SimpleDateFormat
@@ -27,12 +28,14 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 
 class TimestampUtils {
     companion object {
+        @AnyThread
         fun isToday(timestamp: Long, timestampInSecs: Boolean = true): Boolean {
             val cal = Calendar.getInstance()
             cal.timeInMillis = if (timestampInSecs) timestamp * 1000 else timestamp
             return isSameDay(cal, Calendar.getInstance())
         }
 
+        @AnyThread
         fun isYesterday(timestamp: Long, timestampInSecs: Boolean = true): Boolean {
             val yesterday = Calendar.getInstance()
             yesterday.roll(Calendar.DAY_OF_MONTH, -1)
@@ -41,6 +44,7 @@ class TimestampUtils {
             return isSameDay(cal, yesterday)
         }
 
+        @AnyThread
         fun isSameDay(timestamp1: Long, timestamp2: Long, timestampInSecs: Boolean = true): Boolean {
             val cal1 = Calendar.getInstance()
             cal1.timeInMillis = if (timestampInSecs) timestamp1 * 1000 else timestamp1
@@ -49,6 +53,7 @@ class TimestampUtils {
             return isSameDay(cal1, cal2)
         }
 
+        @AnyThread
         fun isSameDay(
             cal1: Date,
             cal2: Date
@@ -56,6 +61,7 @@ class TimestampUtils {
             return isSameDay(cal1.time, cal2.time, false)
         }
 
+        @AnyThread
         fun dateToString(date: Long, timestampInSecs: Boolean = true): String {
             val dateFormat: Format = android.text.format.DateFormat.getDateFormat(
                 coreContext.context
@@ -71,6 +77,7 @@ class TimestampUtils {
             return dateFormatter.format(calendar.time)
         }
 
+        @AnyThread
         fun timeToString(hour: Int, minutes: Int): String {
             val use24hFormat = android.text.format.DateFormat.is24HourFormat(
                 coreContext.context
@@ -86,6 +93,7 @@ class TimestampUtils {
             }
         }
 
+        @AnyThread
         fun timeToString(time: Long, timestampInSecs: Boolean = true): String {
             val use24hFormat = android.text.format.DateFormat.is24HourFormat(
                 coreContext.context
@@ -100,6 +108,7 @@ class TimestampUtils {
             }
         }
 
+        @AnyThread
         fun durationToString(duration: Int): String {
             val dateFormat = SimpleDateFormat(
                 if (duration >= 3600) "HH:mm:ss" else "mm:ss",
@@ -110,6 +119,7 @@ class TimestampUtils {
             return dateFormat.format(cal.time)
         }
 
+        @AnyThread
         fun durationToString(hours: Int, minutes: Int): String {
             val calendar = Calendar.getInstance()
             calendar.set(Calendar.HOUR_OF_DAY, hours)
@@ -124,12 +134,14 @@ class TimestampUtils {
             return SimpleDateFormat(pattern, Locale.getDefault()).format(calendar.time)
         }
 
+        @AnyThread
         private fun isSameYear(timestamp: Long, timestampInSecs: Boolean = true): Boolean {
             val cal = Calendar.getInstance()
             cal.timeInMillis = if (timestampInSecs) timestamp * 1000 else timestamp
             return isSameYear(cal, Calendar.getInstance())
         }
 
+        @AnyThread
         fun toString(
             timestamp: Long,
             onlyDate: Boolean = false,
@@ -164,6 +176,7 @@ class TimestampUtils {
             return dateFormat.format(Date(millis)).capitalize(Locale.getDefault())
         }
 
+        @AnyThread
         private fun isSameDay(
             cal1: Calendar,
             cal2: Calendar
@@ -173,6 +186,7 @@ class TimestampUtils {
                 cal1[Calendar.DAY_OF_YEAR] == cal2[Calendar.DAY_OF_YEAR]
         }
 
+        @AnyThread
         private fun isSameYear(
             cal1: Calendar,
             cal2: Calendar

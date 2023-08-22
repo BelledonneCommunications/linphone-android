@@ -26,7 +26,7 @@ import java.util.Random
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
 
-class ZrtpSasConfirmationDialogModel(
+class ZrtpSasConfirmationDialogModel @UiThread constructor(
     private val authTokenToRead: String,
     private val authTokenToListen: String
 ) : ViewModel() {

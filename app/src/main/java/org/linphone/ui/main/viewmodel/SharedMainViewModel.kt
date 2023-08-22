@@ -19,11 +19,12 @@
  */
 package org.linphone.ui.main.viewmodel
 
+import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.utils.Event
 
-class SharedMainViewModel : ViewModel() {
+class SharedMainViewModel @UiThread constructor() : ViewModel() {
     /* Sliding Pane & navigation related */
 
     val isSlidingPaneSlideable = MutableLiveData<Boolean>()

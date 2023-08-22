@@ -22,6 +22,7 @@ package org.linphone.utils
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.UiThread
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.transition.Slide
 import androidx.transition.Transition
@@ -31,6 +32,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+@UiThread
 fun View.slideInToastFromTop(
     root: ViewGroup,
     visible: Boolean
@@ -45,6 +47,7 @@ fun View.slideInToastFromTop(
     view.visibility = if (visible) View.VISIBLE else View.GONE
 }
 
+@UiThread
 fun View.slideInToastFromTopForDuration(
     root: ViewGroup,
     lifecycleScope: LifecycleCoroutineScope,

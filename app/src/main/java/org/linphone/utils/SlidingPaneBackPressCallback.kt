@@ -21,8 +21,10 @@ package org.linphone.utils
 
 import android.view.View
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.UiThread
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
 
+@UiThread
 class SlidingPaneBackPressedCallback(private val slidingPaneLayout: SlidingPaneLayout) :
     OnBackPressedCallback(
         slidingPaneLayout.isSlideable && slidingPaneLayout.isOpen

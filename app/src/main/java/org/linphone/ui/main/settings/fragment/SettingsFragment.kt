@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.UiThread
 import org.linphone.databinding.SettingsFragmentBinding
 import org.linphone.ui.main.fragment.GenericFragment
 
+@UiThread
 class SettingsFragment : GenericFragment() {
     private lateinit var binding: SettingsFragmentBinding
 

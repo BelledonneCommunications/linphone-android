@@ -21,9 +21,11 @@ package org.linphone.utils
 
 import android.content.res.Resources
 import android.provider.ContactsContract
+import androidx.annotation.AnyThread
 
 class PhoneNumberUtils {
     companion object {
+        @AnyThread
         fun addressBookLabelTypeToVcardParamString(type: Int, default: String?): String {
             return when (type) {
                 ContactsContract.CommonDataKinds.Phone.TYPE_ASSISTANT -> "assistant"
@@ -51,12 +53,14 @@ class PhoneNumberUtils {
             }
         }
 
+        @AnyThread
         fun vcardParamStringToAddressBookLabel(resources: Resources, label: String): String {
             if (label.isEmpty()) return label
             val type = labelToType(label)
             return ContactsContract.CommonDataKinds.Phone.getTypeLabel(resources, type, label).toString()
         }
 
+        @AnyThread
         private fun labelToType(label: String): Int {
             return when (label) {
                 "assistant" -> ContactsContract.CommonDataKinds.Phone.TYPE_ASSISTANT
@@ -84,10 +88,12 @@ class PhoneNumberUtils {
             }
         }
 
+        @AnyThread
         fun arePhoneNumberWeakEqual(number1: String, number2: String): Boolean {
             return trimPhoneNumber(number1) == trimPhoneNumber(number2)
         }
 
+        @AnyThread
         private fun trimPhoneNumber(phoneNumber: String): String {
             return phoneNumber.replace(" ", "")
                 .replace("-", "")

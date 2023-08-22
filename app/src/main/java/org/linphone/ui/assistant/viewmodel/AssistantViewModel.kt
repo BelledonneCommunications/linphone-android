@@ -35,7 +35,7 @@ import org.linphone.core.RegistrationState
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
 
-class AssistantViewModel : ViewModel() {
+class AssistantViewModel @UiThread constructor() : ViewModel() {
     companion object {
         const val TAG = "[Assistant ViewModel]"
     }

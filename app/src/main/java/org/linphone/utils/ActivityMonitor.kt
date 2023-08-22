@@ -22,9 +22,11 @@ package org.linphone.utils
 import android.app.Activity
 import android.app.Application.ActivityLifecycleCallbacks
 import android.os.Bundle
+import androidx.annotation.UiThread
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.tools.service.AndroidDispatcher
 
+@UiThread
 class ActivityMonitor : ActivityLifecycleCallbacks {
     private val activities = ArrayList<Activity>()
     private var mActive = false

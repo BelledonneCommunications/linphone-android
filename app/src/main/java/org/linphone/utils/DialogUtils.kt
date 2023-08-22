@@ -26,6 +26,7 @@ import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.Window
 import android.view.WindowManager
+import androidx.annotation.UiThread
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import org.linphone.R
@@ -39,6 +40,7 @@ import org.linphone.ui.voip.model.ZrtpSasConfirmationDialogModel
 
 class DialogUtils {
     companion object {
+        @UiThread
         fun getNumberOrAddressPickerDialog(
             context: Context,
             viewModel: NumberOrAddressPickerDialogModel
@@ -68,6 +70,7 @@ class DialogUtils {
             return dialog
         }
 
+        @UiThread
         fun getRemoveAllCallLogsConfirmationDialog(
             context: Context,
             model: ConfirmationDialogModel
@@ -97,6 +100,7 @@ class DialogUtils {
             return dialog
         }
 
+        @UiThread
         fun getCancelContactChangesConfirmationDialog(
             context: Context,
             model: ConfirmationDialogModel
@@ -126,6 +130,7 @@ class DialogUtils {
             return dialog
         }
 
+        @UiThread
         fun getZrtpSasConfirmationDialog(
             context: Context,
             viewModel: ZrtpSasConfirmationDialogModel
