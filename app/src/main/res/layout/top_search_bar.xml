@@ -41,7 +41,7 @@
             android:layout_height="@dimen/avatar_list_cell_size"
             android:layout_marginStart="15dp"
             android:background="@drawable/shape_button_round"
-            contactAvatar="@{viewModel.account.contact}"
+            coil="@{viewModel.account.avatar}"
             app:avatarViewBorderColor="@color/trusted_blue"
             app:avatarViewBorderWidth="2dp"
             app:avatarViewIndicatorSizeCriteria="3"

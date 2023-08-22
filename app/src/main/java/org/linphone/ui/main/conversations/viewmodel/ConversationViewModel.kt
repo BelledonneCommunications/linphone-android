@@ -55,9 +55,6 @@ class ConversationViewModel : ViewModel() {
             contactLookup()
             events.value.orEmpty().forEach(EventLogData::contactLookup)
         }
-
-        @WorkerThread
-        override fun onLocalContactsUpdated() { }
     }
 
     private val chatRoomListener = object : ChatRoomListenerStub() {

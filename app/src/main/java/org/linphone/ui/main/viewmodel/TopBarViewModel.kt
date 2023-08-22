@@ -24,7 +24,6 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.contacts.ContactsListener
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.model.AccountModel
 import org.linphone.utils.Event
@@ -50,22 +49,12 @@ class TopBarViewModel : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
-    private val localContactListener = object : ContactsListener {
-        @WorkerThread
-        override fun onContactsLoaded() {}
-
-        @WorkerThread
-        override fun onLocalContactsUpdated() {
-            Log.i("$TAG Local contact have been updated")
-            updateDefaultAccount()
-        }
-    }
-
     init {
         searchBarVisible.value = false
 
+        // TODO FIXME: update default account displayed here when uses clicks on another account
+
         coreContext.postOnCoreThread {
-            coreContext.contactsManager.addListener(localContactListener)
             updateDefaultAccount()
         }
     }
@@ -75,7 +64,6 @@ class TopBarViewModel : ViewModel() {
         super.onCleared()
 
         coreContext.postOnCoreThread {
-            coreContext.contactsManager.removeListener(localContactListener)
             account.value?.destroy()
         }
     }

@@ -66,9 +66,6 @@ class SuggestionsListViewModel : ViewModel() {
                 MagicSearch.Aggregation.Friend
             )
         }
-
-        @WorkerThread
-        override fun onLocalContactsUpdated() { }
     }
 
     init {

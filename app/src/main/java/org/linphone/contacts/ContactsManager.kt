@@ -30,14 +30,11 @@ import org.linphone.core.FriendList
 import org.linphone.core.FriendListListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.MainActivity
-import org.linphone.utils.LinphoneUtils
 
 class ContactsManager {
     companion object {
         const val TAG = "[Contacts Manager]"
     }
-
-    val localFriends = arrayListOf<Friend>()
 
     private val listeners = arrayListOf<ContactsListener>()
 
@@ -86,7 +83,6 @@ class ContactsManager {
     @UiThread
     fun onContactsLoaded() {
         coreContext.postOnCoreThread {
-            updateLocalContacts()
             notifyContactsListChanged()
         }
     }
@@ -104,43 +100,12 @@ class ContactsManager {
     }
 
     @WorkerThread
-    fun updateLocalContacts() {
-        Log.i("$TAG Updating local contact(s)")
-        localFriends.clear()
-
-        for (account in coreContext.core.accountList) {
-            val friend = coreContext.core.createFriend()
-            friend.name = LinphoneUtils.getDisplayName(account.params.identityAddress)
-
-            val address = account.params.identityAddress ?: continue
-            friend.address = address
-            friend.photo = "file:/storage/emulated/0/Android/data/org.linphone/files/Pictures/john.jpg" // TODO REMOVE
-
-            Log.i(
-                "$TAG Local contact created for account [${address.asString()}] and picture [${friend.photo}]"
-            )
-            localFriends.add(friend)
-        }
-
-        notifyLocalContactsUpdated()
-    }
-
-    @WorkerThread
-    fun notifyLocalContactsUpdated() {
-        for (listener in listeners) {
-            listener.onLocalContactsUpdated()
-        }
-    }
-
-    @WorkerThread
     fun onCoreStarted() {
         val core = coreContext.core
         core.addListener(coreListener)
         for (list in core.friendsLists) {
             list.addListener(friendListListener)
         }
-
-        updateLocalContacts()
     }
 
     @WorkerThread
@@ -155,6 +120,4 @@ class ContactsManager {
 
 interface ContactsListener {
     fun onContactsLoaded()
-
-    fun onLocalContactsUpdated()
 }

@@ -71,7 +71,6 @@ class AssistantViewModel : ViewModel() {
 
                     // Set new account as default
                     core.defaultAccount = newlyCreatedAccount
-                    coreContext.contactsManager.updateLocalContacts()
                     accountLoggedInEvent.postValue(Event(true))
                 } else if (state == RegistrationState.Failed) {
                     registrationInProgress.postValue(false)

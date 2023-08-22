@@ -26,17 +26,17 @@ import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Account
 import org.linphone.core.AccountListenerStub
-import org.linphone.core.Friend
 import org.linphone.core.RegistrationState
-import org.linphone.ui.main.contacts.model.ContactAvatarModel
+import org.linphone.utils.FileUtils
+import org.linphone.utils.LinphoneUtils
 
 class AccountModel(
     private val account: Account,
     private val onMenuClicked: ((view: View, account: Account) -> Unit)? = null
 ) {
-    val friend: Friend?
+    val displayName = MutableLiveData<String>()
 
-    val contact = MutableLiveData<ContactAvatarModel>()
+    val avatar = MutableLiveData<String>()
 
     val registrationState = MutableLiveData<String>()
 
@@ -53,7 +53,7 @@ class AccountModel(
             state: RegistrationState?,
             message: String
         ) {
-            updateRegistrationState()
+            update()
         }
     }
 
@@ -61,19 +61,9 @@ class AccountModel(
         // Core thread
         account.addListener(accountListener)
 
-        isDefault.postValue(coreContext.core.defaultAccount == account)
+        avatar.postValue(account.getPicturePath())
 
-        friend = coreContext.contactsManager.localFriends.find {
-            it.addresses.find { address ->
-                address.weakEqual(account.params.identityAddress!!)
-            } != null
-        }
-
-        if (friend != null) {
-            contact.postValue(ContactAvatarModel(friend))
-        }
-
-        updateRegistrationState()
+        update()
     }
 
     @WorkerThread
@@ -102,7 +92,11 @@ class AccountModel(
     }
 
     @WorkerThread
-    private fun updateRegistrationState() {
+    private fun update() {
+        displayName.postValue(LinphoneUtils.getDisplayName(account.params.identityAddress))
+
+        isDefault.postValue(coreContext.core.defaultAccount == account)
+
         val state = when (account.state) {
             RegistrationState.None, RegistrationState.Cleared -> "Disabled"
             RegistrationState.Progress -> "Connection..."
@@ -111,8 +105,18 @@ class AccountModel(
             RegistrationState.Refreshing -> "Refreshing"
             else -> "${account.state}"
         }
+
         isConnected.postValue(account.state == RegistrationState.Ok)
         inError.postValue(account.state == RegistrationState.Failed)
         registrationState.postValue(state)
     }
+}
+
+fun Account.getPicturePath(): String {
+    // TODO FIXME: get image path from account
+    return FileUtils.getFileStoragePath(
+        "john.jpg",
+        isImage = true,
+        overrideExisting = true
+    ).absolutePath
 }

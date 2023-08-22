@@ -13,7 +13,6 @@ import androidx.navigation.navGraphViewModels
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AccountProfileFragmentBinding
@@ -37,9 +36,9 @@ class AccountProfileFragment : GenericFragment() {
 
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
-            val identity = "john" // TODO FIXME
+            val identity = "john" // TODO FIXME: use account identity
             val localFileName = FileUtils.getFileStoragePath(
-                "$identity.jpg",
+                "$identity.jpg", // TODO FIXME: use correct file extension
                 isImage = true,
                 overrideExisting = true
             )
@@ -102,7 +101,7 @@ class AccountProfileFragment : GenericFragment() {
                     Log.e(
                         "$TAG Failed to find an account matching this identity address [$identity]"
                     )
-                    // TODO Error
+                    // TODO: show error
                     goBack()
                 }
             }
@@ -114,9 +113,6 @@ class AccountProfileFragment : GenericFragment() {
 
         Log.i("$TAG Leaving account profile, saving changes")
         viewModel.saveDisplayNameChanges()
-        coreContext.postOnCoreThread {
-            coreContext.contactsManager.updateLocalContacts()
-        }
     }
 
     private fun pickImage() {

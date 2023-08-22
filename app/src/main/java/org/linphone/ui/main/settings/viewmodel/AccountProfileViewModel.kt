@@ -7,6 +7,7 @@ import java.io.File
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Account
 import org.linphone.core.tools.Log
+import org.linphone.ui.main.model.getPicturePath
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 
@@ -33,17 +34,8 @@ class AccountProfileViewModel : ViewModel() {
                 Log.i("$TAG Found matching local friend [$found]")
                 account = found
                 displayName.postValue(account.params.identityAddress?.displayName)
+                picturePath.postValue(account.getPicturePath())
 
-                val friend = coreContext.contactsManager.localFriends.find {
-                    it.addresses.find { address ->
-                        address.asStringUriOnly() == identity
-                    } != null
-                }
-                if (friend != null) {
-                    picturePath.postValue(friend.photo)
-                } else {
-                    // TODO
-                }
                 accountFoundEvent.postValue(Event(true))
             } else {
                 accountFoundEvent.postValue(Event(false))
@@ -62,6 +54,8 @@ class AccountProfileViewModel : ViewModel() {
                     val newValue = displayName.value.orEmpty().trim()
                     address.displayName = newValue
                     copy.identityAddress = address
+                    // This will trigger a REGISTER, so account display name will be updated by
+                    // CoreListener.onAccountRegistrationStateChanged everywhere in the app
                     account.params = copy
                     Log.i(
                         "$TAG Updated account [$account] identity address display name [$newValue]"
@@ -78,18 +72,7 @@ class AccountProfileViewModel : ViewModel() {
 
         coreContext.postOnCoreThread {
             if (::account.isInitialized) {
-                val friend = coreContext.contactsManager.localFriends.find {
-                    it.addresses.find { address ->
-                        address.asStringUriOnly() == account.params.identityAddress?.asStringUriOnly()
-                    } != null
-                }
-                if (friend != null) {
-                    // TODO FIXME: photo must be set on Account not Friend, Friend will be re-created from Account right after this
-                    friend.edit()
-                    friend.photo = path
-                    friend.done()
-                    Log.i("$TAG Updated account [$account] picture path [$path]")
-                }
+                // TODO: save image path in account
             }
         }
     }

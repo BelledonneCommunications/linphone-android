@@ -60,9 +60,6 @@ class NewConversationViewModel : ViewModel() {
         override fun onContactsLoaded() {
             applyFilter(filter.value.orEmpty().trim())
         }
-
-        @WorkerThread
-        override fun onLocalContactsUpdated() { }
     }
 
     init {

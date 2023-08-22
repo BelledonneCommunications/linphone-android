@@ -25,11 +25,7 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.contacts.ContactsListener
 import org.linphone.core.Account
-import org.linphone.core.Core
-import org.linphone.core.CoreListenerStub
-import org.linphone.core.RegistrationState
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.model.AccountModel
 import org.linphone.utils.Event
@@ -53,33 +49,9 @@ class DrawerMenuViewModel : ViewModel() {
         MutableLiveData<Event<Pair<View, Account>>>()
     }
 
-    private val coreListener = object : CoreListenerStub() {
-        @WorkerThread
-        override fun onAccountRegistrationStateChanged(
-            core: Core,
-            account: Account,
-            state: RegistrationState?,
-            message: String
-        ) {
-            computeAccountsList()
-        }
-    }
-
-    private val localContactListener = object : ContactsListener {
-        @WorkerThread
-        override fun onContactsLoaded() {}
-
-        @WorkerThread
-        override fun onLocalContactsUpdated() {
-            Log.i("$TAG Local contact have been updated")
-            computeAccountsList()
-        }
-    }
-
     init {
-        coreContext.postOnCoreThread { core ->
-            coreContext.contactsManager.addListener(localContactListener)
-            core.addListener(coreListener)
+        // TODO FIXME: update accounts list when a new account is added or when removing one
+        coreContext.postOnCoreThread {
             computeAccountsList()
         }
     }
@@ -87,11 +59,6 @@ class DrawerMenuViewModel : ViewModel() {
     @UiThread
     override fun onCleared() {
         super.onCleared()
-
-        coreContext.postOnCoreThread { core ->
-            core.removeListener(coreListener)
-            coreContext.contactsManager.removeListener(localContactListener)
-        }
     }
 
     @UiThread

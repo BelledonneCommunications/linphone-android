@@ -46,9 +46,6 @@ class ConversationsListViewModel : ViewModel() {
                 chatRoomData.contactLookup()
             }
         }
-
-        @WorkerThread
-        override fun onLocalContactsUpdated() { }
     }
 
     private val coreListener = object : CoreListenerStub() {
