@@ -67,9 +67,26 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/missed_calls"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:background="@drawable/shape_orange_round"
+            android:text="@{String.valueOf(viewModel.missedCallsCount), default=`1`}"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            android:visibility="@{viewModel.missedCallsCount > 0 ? View.VISIBLE : View.GONE}"
+            app:layout_constraintTop_toTopOf="@id/calls"
+            app:layout_constraintStart_toStartOf="@id/calls"
+            app:layout_constraintEnd_toEndOf="@id/calls"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
             style="@style/bottom_nav_bar_label_style"
             android:onClick="@{onConversationsClicked}"
-            android:visibility="@{viewModel.hideConversations ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.hideConversations ? View.GONE : View.VISIBLE, default=gone}"
             android:enabled="false"
             android:id="@+id/conversations"
             android:layout_width="0dp"
@@ -91,7 +108,7 @@
             style="@style/bottom_nav_bar_label_style"
             android:onClick="@{onMeetingsClicked}"
             android:id="@+id/meetings"
-            android:visibility="@{viewModel.hideMeetings ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.hideMeetings ? View.GONE : View.VISIBLE, default=gone}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"

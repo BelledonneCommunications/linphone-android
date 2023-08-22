@@ -97,5 +97,11 @@ class BottomNavBarFragment : Fragment() {
             viewModel.callsSelected.value = it == R.id.callsFragment
             viewModel.conversationsSelected.value = it == R.id.conversationsFragment
         }
+
+        sharedViewModel.resetMissedCallsCountEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                viewModel.resetMissedCallsCount()
+            }
+        }
     }
 }

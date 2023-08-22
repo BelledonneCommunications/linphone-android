@@ -194,6 +194,13 @@ class CallsListFragment : GenericFragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        Log.i("$TAG Fragment is resumed, resetting missed calls count")
+        sharedViewModel.resetMissedCallsCountEvent.value = Event(true)
+    }
+
     private fun copyNumberOrAddressToClipboard(value: String) {
         val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val label = "SIP address"

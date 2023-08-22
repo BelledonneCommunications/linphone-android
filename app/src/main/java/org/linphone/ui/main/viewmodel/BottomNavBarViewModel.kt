@@ -20,6 +20,7 @@
 package org.linphone.ui.main.viewmodel
 
 import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -27,6 +28,7 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.Call
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
+import org.linphone.core.tools.Log
 
 class BottomNavBarViewModel @UiThread constructor() : ViewModel() {
     companion object {
@@ -45,30 +47,56 @@ class BottomNavBarViewModel @UiThread constructor() : ViewModel() {
 
     val hideMeetings = MutableLiveData<Boolean>()
 
+    val missedCallsCount = MutableLiveData<Int>()
+
     private val coreListener = object : CoreListenerStub() {
+        @WorkerThread
         override fun onCallStateChanged(
             core: Core,
             call: Call,
             state: Call.State?,
             message: String
         ) {
+            if (state == Call.State.End || state == Call.State.Error) {
+                updateMissedCallsCount()
+            }
         }
     }
 
     init {
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
+            updateMissedCallsCount()
         }
 
         hideConversations.value = corePreferences.disableChat || true // TODO
         hideMeetings.value = true // TODO
     }
 
+    @UiThread
     override fun onCleared() {
         super.onCleared()
 
         coreContext.postOnCoreThread { core ->
             core.removeListener(coreListener)
+        }
+    }
+
+    @WorkerThread
+    fun updateMissedCallsCount() {
+        val count = coreContext.core.missedCallsCount
+        val moreThanOne = count > 1
+        Log.i(
+            "$TAG There ${if (moreThanOne) "are" else "is"} [$count] missed ${if (moreThanOne) "calls" else "call"}"
+        )
+        missedCallsCount.postValue(count)
+    }
+
+    @UiThread
+    fun resetMissedCallsCount() {
+        coreContext.postOnCoreThread { core ->
+            core.resetMissedCallsCount()
+            updateMissedCallsCount()
         }
     }
 }
