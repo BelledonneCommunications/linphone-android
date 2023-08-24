@@ -33,13 +33,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="7dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:visibility="@{viewModel.fullScreenMode ? View.GONE : View.VISIBLE}"
             android:text="@{viewModel.isOutgoing ? `Outgoing call` : `Incoming call`, default=`Outgoing call`}"
             android:textColor="@color/white"
             android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@id/call_direction_icon"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/background"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_800"
@@ -87,7 +89,6 @@
             android:src="@drawable/shape_round_in_call_gray_background"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="17dp"
             android:layout_marginStart="12dp"
             android:layout_marginEnd="12dp"
             android:layout_marginBottom="@dimen/in_call_main_actions_menu_height"
@@ -152,11 +153,12 @@
             android:id="@+id/remote_video_surface"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginBottom="@{viewModel.fullScreenMode ? @dimen/zero : @dimen/in_call_main_actions_menu_height, default=@dimen/in_call_main_actions_menu_height}"
             android:onClick="@{() -> viewModel.toggleFullScreen()}"
             android:visibility="@{viewModel.isVideoEnabled ? View.VISIBLE : View.GONE, default=gone}"
-            app:layout_constraintBottom_toBottomOf="@id/background"
-            app:layout_constraintEnd_toEndOf="@id/background"
-            app:layout_constraintStart_toStartOf="@id/background"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/background" />
 
         <org.linphone.ui.voip.view.RoundCornersTextureView
