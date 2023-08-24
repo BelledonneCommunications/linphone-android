@@ -30,12 +30,14 @@ import androidx.lifecycle.ViewModel
 import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.core.AudioDevice
 import org.linphone.core.Call
 import org.linphone.core.CallListenerStub
 import org.linphone.core.MediaDirection
 import org.linphone.core.MediaEncryption
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
+import org.linphone.utils.AudioRouteUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
@@ -105,10 +107,18 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
         @WorkerThread
         override fun onStateChanged(call: Call, state: Call.State?, message: String) {
+            if (CurrentCallViewModel@call != call) {
+                return
+            }
+
             if (LinphoneUtils.isCallOutgoing(call.state)) {
                 isVideoEnabled.postValue(call.params.isVideoEnabled)
             } else {
                 val videoEnabled = call.currentParams.isVideoEnabled
+                if (videoEnabled && isVideoEnabled.value == false) {
+                    Log.i("$TAG Video enabled, routing audio to speaker")
+                    AudioRouteUtils.routeAudioToSpeaker(call)
+                }
                 isVideoEnabled.postValue(videoEnabled)
 
                 // Toggle full screen OFF when remote disables video
@@ -116,6 +126,12 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                     fullScreenMode.postValue(false)
                 }
             }
+        }
+
+        @WorkerThread
+        override fun onAudioDeviceChanged(call: Call, audioDevice: AudioDevice) {
+            Log.i("$TAG Audio device changed [$audioDevice]")
+            isSpeakerEnabled.postValue(AudioRouteUtils.isSpeakerAudioRouteCurrentlyUsed(call))
         }
     }
 
@@ -133,8 +149,9 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                 call = currentCall
                 Log.i("$TAG Found call [$call]")
                 configureCall(call)
+                isSpeakerEnabled.postValue(AudioRouteUtils.isSpeakerAudioRouteCurrentlyUsed(call))
             } else {
-                Log.e("$TAG Failed to find outgoing call!")
+                Log.e("$TAG Failed to find call!")
             }
 
             showSwitchCamera.postValue(coreContext.showSwitchCameraButton())
@@ -155,16 +172,20 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun answer() {
         coreContext.postOnCoreThread {
-            Log.i("$TAG Answering call [$call]")
-            call.accept()
+            if (::call.isInitialized) {
+                Log.i("$TAG Answering call [$call]")
+                call.accept()
+            }
         }
     }
 
     @UiThread
     fun hangUp() {
         coreContext.postOnCoreThread {
-            Log.i("$TAG Terminating call [$call]")
-            call.terminate()
+            if (::call.isInitialized) {
+                Log.i("$TAG Terminating call [$call]")
+                call.terminate()
+            }
         }
     }
 
@@ -187,15 +208,30 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
             // TODO: request record audio permission
             return
         }
+
         coreContext.postOnCoreThread {
-            call.microphoneMuted = !call.microphoneMuted
-            isMicrophoneMuted.postValue(call.microphoneMuted)
+            if (::call.isInitialized) {
+                call.microphoneMuted = !call.microphoneMuted
+                isMicrophoneMuted.postValue(call.microphoneMuted)
+            }
         }
     }
 
     @UiThread
     fun changeAudioOutputDevice() {
-        // TODO: display list of all output devices
+        // TODO: display list of all output devices if more then earpiece &
+
+        val routeAudioToSpeaker = isSpeakerEnabled.value != true
+
+        coreContext.postOnCoreThread {
+            if (::call.isInitialized) {
+                if (routeAudioToSpeaker) {
+                    AudioRouteUtils.routeAudioToSpeaker(call)
+                } else {
+                    AudioRouteUtils.routeAudioToEarpiece(call)
+                }
+            }
+        }
     }
 
     @UiThread
@@ -255,14 +291,6 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
             extraButtonsMenuAnimator.start()
         } else {
             extraButtonsMenuAnimator.reverse()
-        }
-    }
-
-    @WorkerThread
-    fun forceShowZrtpSasDialog() {
-        val authToken = call.authenticationToken
-        if (authToken.orEmpty().isNotEmpty()) {
-            showZrtpSasDialog(authToken!!.uppercase(Locale.getDefault()))
         }
     }
 
