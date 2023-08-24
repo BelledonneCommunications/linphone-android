@@ -32,7 +32,7 @@ import org.linphone.utils.Event
 
 class DrawerMenuViewModel @UiThread constructor() : ViewModel() {
     companion object {
-        const val TAG = "[Drawer Menu ViewModel]"
+        private const val TAG = "[Drawer Menu ViewModel]"
     }
 
     val accounts = MutableLiveData<ArrayList<AccountModel>>()

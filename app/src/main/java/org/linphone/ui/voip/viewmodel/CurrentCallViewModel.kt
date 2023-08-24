@@ -19,9 +19,12 @@
  */
 package org.linphone.ui.voip.viewmodel
 
+import android.Manifest
 import android.animation.ValueAnimator
+import android.content.pm.PackageManager
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import java.util.Locale
@@ -38,7 +41,7 @@ import org.linphone.utils.LinphoneUtils
 
 class CurrentCallViewModel @UiThread constructor() : ViewModel() {
     companion object {
-        const val TAG = "[Current Call ViewModel]"
+        private const val TAG = "[Current Call ViewModel]"
     }
 
     val contact = MutableLiveData<ContactAvatarModel>()
@@ -48,6 +51,8 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
     val displayedAddress = MutableLiveData<String>()
 
     val isVideoEnabled = MutableLiveData<Boolean>()
+
+    val showSwitchCamera = MutableLiveData<Boolean>()
 
     val isOutgoing = MutableLiveData<Boolean>()
 
@@ -90,8 +95,6 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         }
     }
 
-    val toggleExtraActionMenuVisibilityEvent = MutableLiveData<Event<Boolean>>()
-
     private lateinit var call: Call
 
     private val callListener = object : CallListenerStub() {
@@ -105,7 +108,13 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
             if (LinphoneUtils.isCallOutgoing(call.state)) {
                 isVideoEnabled.postValue(call.params.isVideoEnabled)
             } else {
-                isVideoEnabled.postValue(call.currentParams.isVideoEnabled)
+                val videoEnabled = call.currentParams.isVideoEnabled
+                isVideoEnabled.postValue(videoEnabled)
+
+                // Toggle full screen OFF when remote disables video
+                if (!videoEnabled && fullScreenMode.value == true) {
+                    fullScreenMode.postValue(false)
+                }
             }
         }
     }
@@ -127,6 +136,8 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
             } else {
                 Log.e("$TAG Failed to find outgoing call!")
             }
+
+            showSwitchCamera.postValue(coreContext.showSwitchCameraButton())
         }
     }
 
@@ -168,7 +179,14 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     @UiThread
     fun toggleMuteMicrophone() {
-        // TODO: check record audio permission
+        if (ActivityCompat.checkSelfPermission(
+                coreContext.context,
+                Manifest.permission.RECORD_AUDIO
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: request record audio permission
+            return
+        }
         coreContext.postOnCoreThread {
             call.microphoneMuted = !call.microphoneMuted
             isMicrophoneMuted.postValue(call.microphoneMuted)
@@ -182,7 +200,14 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     @UiThread
     fun toggleVideo() {
-        // TODO: check video permission
+        if (ActivityCompat.checkSelfPermission(
+                coreContext.context,
+                Manifest.permission.CAMERA
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: request video permission
+            return
+        }
 
         coreContext.postOnCoreThread { core ->
             if (::call.isInitialized) {

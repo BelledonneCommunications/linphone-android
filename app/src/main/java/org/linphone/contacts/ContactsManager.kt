@@ -41,7 +41,7 @@ import org.linphone.utils.ImageUtils
 
 class ContactsManager @UiThread constructor(context: Context) {
     companion object {
-        const val TAG = "[Contacts Manager]"
+        private const val TAG = "[Contacts Manager]"
     }
 
     val contactAvatar: IconCompat

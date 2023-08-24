@@ -33,7 +33,7 @@ import org.linphone.core.tools.Log
 
 class FileUtils {
     companion object {
-        const val TAG = "[File Utils]"
+        private const val TAG = "[File Utils]"
 
         @AnyThread
         fun getProperFilePath(path: String): String {

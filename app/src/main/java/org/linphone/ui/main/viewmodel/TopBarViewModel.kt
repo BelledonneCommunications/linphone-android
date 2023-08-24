@@ -30,7 +30,7 @@ import org.linphone.utils.Event
 
 class TopBarViewModel @UiThread constructor() : ViewModel() {
     companion object {
-        const val TAG = "[Top Bar ViewModel]"
+        private const val TAG = "[Top Bar ViewModel]"
     }
 
     val title = MutableLiveData<String>()

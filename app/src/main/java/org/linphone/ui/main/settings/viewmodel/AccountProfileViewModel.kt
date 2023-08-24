@@ -13,7 +13,7 @@ import org.linphone.utils.FileUtils
 
 class AccountProfileViewModel @UiThread constructor() : ViewModel() {
     companion object {
-        const val TAG = "[Account Profile ViewModel]"
+        private const val TAG = "[Account Profile ViewModel]"
     }
 
     val picturePath = MutableLiveData<String>()

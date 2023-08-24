@@ -50,7 +50,7 @@ import org.linphone.utils.FileUtils
 @UiThread
 class NewContactFragment : GenericFragment() {
     companion object {
-        const val TAG = "[New Contact Fragment]"
+        private const val TAG = "[New Contact Fragment]"
     }
 
     private lateinit var binding: ContactNewOrEditFragmentBinding

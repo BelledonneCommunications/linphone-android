@@ -37,7 +37,7 @@ import org.linphone.ui.main.model.isInSecureMode
 
 class ContactsListViewModel @UiThread constructor() : ViewModel() {
     companion object {
-        const val TAG = "[Contacts List ViewModel]"
+        private const val TAG = "[Contacts List ViewModel]"
     }
 
     val contactsList = MutableLiveData<ArrayList<ContactAvatarModel>>()

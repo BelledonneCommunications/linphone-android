@@ -31,8 +31,8 @@ class ZrtpSasConfirmationDialogModel @UiThread constructor(
     private val authTokenToListen: String
 ) : ViewModel() {
     companion object {
-        const val TAG = "[ZRTP SAS Confirmation Dialog]"
-        const val alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        private const val TAG = "[ZRTP SAS Confirmation Dialog]"
+        private const val alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
     }
 
     val message = MutableLiveData<String>()

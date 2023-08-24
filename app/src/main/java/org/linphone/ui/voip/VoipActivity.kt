@@ -26,6 +26,8 @@ import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -33,17 +35,24 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication
 import org.linphone.R
+import org.linphone.core.tools.Log
 import org.linphone.databinding.VoipActivityBinding
 import org.linphone.ui.voip.fragment.ActiveCallFragmentDirections
 import org.linphone.ui.voip.fragment.IncomingCallFragmentDirections
 import org.linphone.ui.voip.fragment.OutgoingCallFragmentDirections
 import org.linphone.ui.voip.viewmodel.CallsViewModel
+import org.linphone.ui.voip.viewmodel.SharedCallViewModel
 import org.linphone.utils.slideInToastFromTopForDuration
 
 @UiThread
 class VoipActivity : AppCompatActivity() {
+    companion object {
+        private const val TAG = "[VoIP Activity]"
+    }
+
     private lateinit var binding: VoipActivityBinding
 
+    private lateinit var sharedViewModel: SharedCallViewModel
     private lateinit var callsViewModel: CallsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,6 +71,10 @@ class VoipActivity : AppCompatActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.voip_activity)
         binding.lifecycleOwner = this
+
+        sharedViewModel = run {
+            ViewModelProvider(this)[SharedCallViewModel::class.java]
+        }
 
         callsViewModel = run {
             ViewModelProvider(this)[CallsViewModel::class.java]
@@ -100,6 +113,12 @@ class VoipActivity : AppCompatActivity() {
                 finish()
             }
         }
+
+        sharedViewModel.toggleFullScreenEvent.observe(this) {
+            it.consume { hide ->
+                hideUI(hide)
+            }
+        }
     }
 
     fun showBlueToast(message: String, @DrawableRes icon: Int) {
@@ -108,5 +127,21 @@ class VoipActivity : AppCompatActivity() {
 
         val target = binding.blueToast.root
         target.slideInToastFromTopForDuration(binding.root as ViewGroup, lifecycleScope)
+    }
+
+    private fun hideUI(hide: Boolean) {
+        Log.i("$TAG Switching full screen mode to ${if (hide) "ON" else "OFF"}")
+        val windowInsetsCompat = WindowInsetsControllerCompat(window, window.decorView)
+        if (hide) {
+            WindowCompat.setDecorFitsSystemWindows(window, false)
+            windowInsetsCompat.let {
+                it.hide(WindowInsetsCompat.Type.systemBars())
+                it.systemBarsBehavior =
+                    WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            }
+        } else {
+            windowInsetsCompat.show(WindowInsetsCompat.Type.systemBars())
+            WindowCompat.setDecorFitsSystemWindows(window, true)
+        }
     }
 }

@@ -34,7 +34,7 @@ import org.linphone.utils.FileUtils
 
 class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
     companion object {
-        const val TAG = "[Contact New/Edit View Model]"
+        private const val TAG = "[Contact New/Edit View Model]"
     }
 
     private lateinit var friend: Friend

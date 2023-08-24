@@ -32,7 +32,7 @@ import org.linphone.core.tools.Log
 
 class BottomNavBarViewModel @UiThread constructor() : ViewModel() {
     companion object {
-        const val TAG = "[Bottom Navigation Bar ViewModel]"
+        private const val TAG = "[Bottom Navigation Bar ViewModel]"
     }
 
     val contactsSelected = MutableLiveData<Boolean>()

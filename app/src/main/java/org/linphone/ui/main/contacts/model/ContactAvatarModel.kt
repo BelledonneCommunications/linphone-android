@@ -32,7 +32,7 @@ import org.linphone.utils.LinphoneUtils
 
 class ContactAvatarModel @WorkerThread constructor(val friend: Friend) {
     companion object {
-        const val TAG = "[Contact Avatar Model]"
+        private const val TAG = "[Contact Avatar Model]"
     }
 
     val id = friend.refKey

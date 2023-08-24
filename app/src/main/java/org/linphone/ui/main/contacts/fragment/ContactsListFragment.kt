@@ -42,7 +42,7 @@ import org.linphone.utils.Event
 @UiThread
 class ContactsListFragment : GenericFragment() {
     companion object {
-        const val TAG = "[Contacts List Fragment]"
+        private const val TAG = "[Contacts List Fragment]"
     }
 
     private lateinit var binding: ContactsListFragmentBinding

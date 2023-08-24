@@ -34,7 +34,7 @@ import org.linphone.core.tools.Log
 
 class ImageUtils {
     companion object {
-        const val TAG = "[Image Utils]"
+        private const val TAG = "[Image Utils]"
 
         @AnyThread
         fun getRoundBitmapFromUri(

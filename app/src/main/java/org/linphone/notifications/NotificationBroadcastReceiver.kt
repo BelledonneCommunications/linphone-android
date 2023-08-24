@@ -28,7 +28,7 @@ import org.linphone.core.tools.Log
 
 class NotificationBroadcastReceiver : BroadcastReceiver() {
     companion object {
-        const val TAG = "[NotificationBroadcastReceiver]"
+        private const val TAG = "[NotificationBroadcastReceiver]"
     }
 
     override fun onReceive(context: Context, intent: Intent) {

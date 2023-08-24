@@ -82,6 +82,7 @@
             android:padding="10dp"
             android:src="@drawable/users_three"
             android:background="@drawable/shape_orange_round"
+            app:tint="@color/white"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/search_bar" />
 

@@ -30,15 +30,16 @@ import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.databinding.VoipActiveCallFragmentBinding
-import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.ui.voip.VoipActivity
 import org.linphone.ui.voip.model.ZrtpSasConfirmationDialogModel
 import org.linphone.ui.voip.viewmodel.CurrentCallViewModel
+import org.linphone.ui.voip.viewmodel.SharedCallViewModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
+import org.linphone.utils.Event
 
 @UiThread
-class ActiveCallFragment : GenericFragment() {
+class ActiveCallFragment : GenericCallFragment() {
     private lateinit var binding: VoipActiveCallFragmentBinding
 
     private lateinit var callViewModel: CurrentCallViewModel
@@ -89,11 +90,12 @@ class ActiveCallFragment : GenericFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = callViewModel
 
-        callViewModel.toggleExtraActionMenuVisibilityEvent.observe(viewLifecycleOwner) {
-            /*it.consume { opened ->
-                val visibility = if (opened) View.VISIBLE else View.GONE
-                binding.extraActions.slideInExtraActionsMenu(binding.root as ViewGroup, visibility)
-            }*/
+        sharedViewModel = requireActivity().run {
+            ViewModelProvider(this)[SharedCallViewModel::class.java]
+        }
+
+        callViewModel.fullScreenMode.observe(viewLifecycleOwner) { hide ->
+            sharedViewModel.toggleFullScreenEvent.value = Event(hide)
         }
 
         callViewModel.isRemoteDeviceTrusted.observe(viewLifecycleOwner) { trusted ->

@@ -42,7 +42,7 @@ import org.linphone.utils.LinphoneUtils
 
 class CoreContext @UiThread constructor(val context: Context) : HandlerThread("Core Thread") {
     companion object {
-        const val TAG = "[Core Context]"
+        private const val TAG = "[Core Context]"
     }
 
     lateinit var core: Core

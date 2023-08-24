@@ -33,18 +33,22 @@ import org.linphone.ui.main.viewmodel.SharedMainViewModel
 
 @UiThread
 abstract class GenericFragment : Fragment() {
+    companion object {
+        private const val TAG = "[Generic Fragment]"
+    }
+
     protected lateinit var sharedViewModel: SharedMainViewModel
 
     private val onBackPressedCallback = object : OnBackPressedCallback(false) {
         override fun handleOnBackPressed() {
             try {
                 val navController = findNavController()
-                Log.d("[Generic Fragment] ${getFragmentRealClassName()} handleOnBackPressed")
+                Log.d("$TAG ${getFragmentRealClassName()} handleOnBackPressed")
                 if (!navController.popBackStack()) {
-                    Log.d("[Generic Fragment] ${getFragmentRealClassName()} couldn't pop")
+                    Log.d("$TAG ${getFragmentRealClassName()} couldn't pop")
                     if (!navController.navigateUp()) {
                         Log.d(
-                            "[Generic Fragment] ${getFragmentRealClassName()} couldn't navigate up"
+                            "$TAG ${getFragmentRealClassName()} couldn't navigate up"
                         )
                         // Disable this callback & start a new back press event
                         isEnabled = false
@@ -53,7 +57,7 @@ abstract class GenericFragment : Fragment() {
                 }
             } catch (ise: IllegalStateException) {
                 Log.e(
-                    "[Generic Fragment] ${getFragmentRealClassName()}.handleOnBackPressed() Can't go back: $ise"
+                    "$TAG ${getFragmentRealClassName()}.handleOnBackPressed() Can't go back: $ise"
                 )
             }
         }
@@ -68,7 +72,7 @@ abstract class GenericFragment : Fragment() {
 
         sharedViewModel.isSlidingPaneSlideable.observe(viewLifecycleOwner) {
             Log.d(
-                "[Generic Fragment] ${getFragmentRealClassName()} shared main VM sliding pane has changed"
+                "$TAG ${getFragmentRealClassName()} shared main VM sliding pane has changed"
             )
             onBackPressedCallback.isEnabled = backPressedCallBackEnabled()
         }
@@ -90,17 +94,17 @@ abstract class GenericFragment : Fragment() {
         try {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         } catch (ise: IllegalStateException) {
-            Log.w("[Generic Fragment] ${getFragmentRealClassName()}.goBack() can't go back: $ise")
+            Log.w("$TAG ${getFragmentRealClassName()}.goBack() can't go back: $ise")
             onBackPressedCallback.handleOnBackPressed()
         }
     }
 
     private fun setupBackPressCallback() {
-        Log.d("[Generic Fragment] ${getFragmentRealClassName()} setupBackPressCallback")
+        Log.d("$TAG ${getFragmentRealClassName()} setupBackPressCallback")
 
         val backButton = view?.findViewById<ImageView>(R.id.back)
         if (backButton != null && backButton.visibility == View.VISIBLE) {
-            Log.d("[Generic Fragment] ${getFragmentRealClassName()} found back button")
+            Log.d("$TAG ${getFragmentRealClassName()} found back button")
             // If popping navigation back stack entry would bring us to an "empty" fragment
             // then don't do it if sliding pane layout isn't "flat"
             onBackPressedCallback.isEnabled = backPressedCallBackEnabled()
@@ -123,14 +127,14 @@ abstract class GenericFragment : Fragment() {
 
         val isSlidingPaneFlat = sharedViewModel.isSlidingPaneSlideable.value == false
         Log.d(
-            "[Generic Fragment] ${getFragmentRealClassName()} isSlidingPaneFlat ? $isSlidingPaneFlat"
+            "$TAG ${getFragmentRealClassName()} isSlidingPaneFlat ? $isSlidingPaneFlat"
         )
         val isPreviousFragmentEmpty = findNavController().previousBackStackEntry?.destination?.id == R.id.emptyFragment
         Log.d(
-            "[Generic Fragment] ${getFragmentRealClassName()} isPreviousFragmentEmpty ? $isPreviousFragmentEmpty"
+            "$TAG ${getFragmentRealClassName()} isPreviousFragmentEmpty ? $isPreviousFragmentEmpty"
         )
         val popBackStack = isSlidingPaneFlat || !isPreviousFragmentEmpty
-        Log.d("[Generic Fragment] ${getFragmentRealClassName()} popBackStack ? $popBackStack")
+        Log.d("$TAG ${getFragmentRealClassName()} popBackStack ? $popBackStack")
         return popBackStack
     }
 }

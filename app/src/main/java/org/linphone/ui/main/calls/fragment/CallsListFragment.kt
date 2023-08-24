@@ -52,7 +52,7 @@ import org.linphone.utils.Event
 @UiThread
 class CallsListFragment : GenericFragment() {
     companion object {
-        const val TAG = "[Calls List Fragment]"
+        private const val TAG = "[Calls List Fragment]"
     }
 
     private lateinit var binding: CallsListFragmentBinding

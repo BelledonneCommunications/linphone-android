@@ -41,7 +41,7 @@ import org.linphone.utils.PhoneNumberUtils
 
 class ContactViewModel @UiThread constructor() : ViewModel() {
     companion object {
-        const val TAG = "[Contact ViewModel]"
+        private const val TAG = "[Contact ViewModel]"
     }
 
     val contact = MutableLiveData<ContactAvatarModel>()

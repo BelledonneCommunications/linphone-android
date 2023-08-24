@@ -18,7 +18,6 @@ import kotlinx.coroutines.withContext
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AccountProfileFragmentBinding
-import org.linphone.ui.main.contacts.fragment.EditContactFragment
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.ui.main.settings.viewmodel.AccountProfileViewModel
 import org.linphone.utils.FileUtils
@@ -26,7 +25,7 @@ import org.linphone.utils.FileUtils
 @UiThread
 class AccountProfileFragment : GenericFragment() {
     companion object {
-        const val TAG = "[Account Profile Fragment]"
+        private const val TAG = "[Account Profile Fragment]"
     }
 
     private lateinit var binding: AccountProfileFragmentBinding
@@ -54,12 +53,12 @@ class AccountProfileFragment : GenericFragment() {
                     }
                 } else {
                     Log.e(
-                        "${EditContactFragment.TAG} Failed to copy file from [$uri] to [${localFileName.absolutePath}]"
+                        "$TAG Failed to copy file from [$uri] to [${localFileName.absolutePath}]"
                     )
                 }
             }
         } else {
-            Log.w("${EditContactFragment.TAG} No picture picked")
+            Log.w("$TAG No picture picked")
         }
     }
 

@@ -37,7 +37,7 @@ import org.linphone.utils.Event
 
 class AssistantViewModel @UiThread constructor() : ViewModel() {
     companion object {
-        const val TAG = "[Assistant ViewModel]"
+        private const val TAG = "[Assistant ViewModel]"
     }
     val username = MutableLiveData<String>()
 

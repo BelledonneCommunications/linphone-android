@@ -26,7 +26,7 @@ import org.linphone.core.tools.service.CoreService
 
 class CoreForegroundService : CoreService() {
     companion object {
-        const val TAG = "[Core Foreground Service]"
+        private const val TAG = "[Core Foreground Service]"
     }
 
     override fun onCreate() {

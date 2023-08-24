@@ -56,7 +56,7 @@ import org.linphone.utils.LinphoneUtils
 
 class NotificationsManager @MainThread constructor(private val context: Context) {
     companion object {
-        const val TAG = "[Notifications Manager]"
+        private const val TAG = "[Notifications Manager]"
 
         const val INTENT_HANGUP_CALL_NOTIF_ACTION = "org.linphone.HANGUP_CALL_ACTION"
         const val INTENT_ANSWER_CALL_NOTIF_ACTION = "org.linphone.ANSWER_CALL_ACTION"
