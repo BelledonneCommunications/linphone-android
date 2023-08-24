@@ -20,12 +20,15 @@
 package org.linphone.ui.voip
 
 import android.os.Bundle
+import android.view.ViewGroup
+import androidx.annotation.DrawableRes
 import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication
@@ -35,6 +38,7 @@ import org.linphone.ui.voip.fragment.ActiveCallFragmentDirections
 import org.linphone.ui.voip.fragment.IncomingCallFragmentDirections
 import org.linphone.ui.voip.fragment.OutgoingCallFragmentDirections
 import org.linphone.ui.voip.viewmodel.CallsViewModel
+import org.linphone.utils.slideInToastFromTopForDuration
 
 @UiThread
 class VoipActivity : AppCompatActivity() {
@@ -96,5 +100,13 @@ class VoipActivity : AppCompatActivity() {
                 finish()
             }
         }
+    }
+
+    fun showBlueToast(message: String, @DrawableRes icon: Int) {
+        binding.blueToast.message = message
+        binding.blueToast.icon = icon
+
+        val target = binding.blueToast.root
+        target.slideInToastFromTopForDuration(binding.root as ViewGroup, lifecycleScope)
     }
 }

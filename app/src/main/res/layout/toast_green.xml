@@ -35,7 +35,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:adjustViewBounds="true"
-            android:src="@{icon, default=@drawable/check}"
+            android:src="@{icon, default=@drawable/check_fat_fill}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/toast_message"
             app:layout_constraintStart_toStartOf="parent"

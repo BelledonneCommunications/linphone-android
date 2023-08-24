@@ -13,6 +13,7 @@
     <dimen name="avatar_big_size">100dp</dimen>
     <dimen name="avatar_in_call_size">120dp</dimen>
     <dimen name="avatar_presence_badge_size">12dp</dimen>
+    <dimen name="avatar_presence_badge_in_call_size">26dp</dimen>
     <dimen name="avatar_presence_badge_padding">2dp</dimen>
     <dimen name="avatar_presence_badge_end_margin">3dp</dimen>
     <dimen name="avatar_presence_badge_big_size">22dp</dimen>

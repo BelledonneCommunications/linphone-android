@@ -231,6 +231,13 @@ fun AvatarView.loadContactAvatar(contact: ContactAvatarModel?) {
             onStart = {
                 // Use initials as placeholder
                 avatarInitials = contact.initials
+
+                if (contact.showTrust.value == true) {
+                    avatarBorderColor = resources.getColor(R.color.trusted_blue, context.theme)
+                    avatarBorderWidth = AppUtils.getDimension(R.dimen.avatar_trust_border_width).toInt()
+                } else {
+                    avatarBorderWidth = AppUtils.getDimension(R.dimen.zero).toInt()
+                }
             },
             onSuccess = { _, _ ->
                 // If loading is successful, remove initials otherwise image won't be visible

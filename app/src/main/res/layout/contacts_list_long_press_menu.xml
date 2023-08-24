@@ -35,7 +35,7 @@
             android:layout_marginBottom="1dp"
             android:background="@drawable/menu_item_background"
             android:text="@{isFavourite ? `Remove from favourites` : `Add to favourites`, default=`Add to favourites`}"
-            android:drawableStart="@{isFavourite ? @drawable/favourite : @drawable/not_favourite, default=@drawable/favourite}"
+            android:drawableStart="@{isFavourite ? @drawable/heart_fill : @drawable/heart, default=@drawable/heart_fill}"
             android:drawableTint="@{isFavourite ? @color/red_danger : @color/gray_1, default=@color/gray_1}"
             app:layout_constraintBottom_toTopOf="@id/share"
             app:layout_constraintStart_toStartOf="parent"
@@ -50,7 +50,7 @@
             style="@style/context_menu_action_label_style"
             android:background="@drawable/menu_item_background"
             android:layout_marginBottom="1dp"
-            android:drawableStart="@drawable/share"
+            android:drawableStart="@drawable/share_network"
             app:layout_constraintBottom_toTopOf="@id/delete"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -64,7 +64,7 @@
             style="@style/context_menu_danger_action_label_style"
             android:background="@drawable/menu_item_background"
             android:layout_marginBottom="1dp"
-            android:drawableStart="@drawable/delete"
+            android:drawableStart="@drawable/trash_simple"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>

@@ -33,7 +33,6 @@ import androidx.annotation.UiThread
 import androidx.core.content.FileProvider
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import java.io.File
@@ -182,7 +181,7 @@ class ContactFragment : GenericFragment() {
 
         (requireActivity() as MainActivity).showGreenToast(
             "Numéro copié dans le presse-papier",
-            R.drawable.check
+            R.drawable.check_fat_fill
         )
     }
 

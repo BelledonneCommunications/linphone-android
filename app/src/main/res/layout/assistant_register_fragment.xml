@@ -29,7 +29,7 @@
                 android:layout_height="24dp"
                 android:layout_marginTop="7dp"
                 android:layout_marginStart="15dp"
-                android:src="@drawable/back"
+                android:src="@drawable/caret_left"
                 app:tint="@color/gray_1"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
@@ -137,7 +137,7 @@
                 android:textColor="@color/gray_9"
                 android:background="@drawable/shape_edit_text_background"
                 android:inputType="textPassword"
-                android:drawableEnd="@drawable/show_password"
+                android:drawableEnd="@drawable/eye"
                 android:drawableTint="@color/gray_1"
                 app:layout_constraintTop_toBottomOf="@id/password_label"
                 app:layout_constraintStart_toStartOf="parent"

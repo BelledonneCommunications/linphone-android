@@ -25,7 +25,7 @@
             android:text="Manage the profile"
             android:textSize="14sp"
             android:textColor="@color/gray_1"
-            android:drawableStart="@drawable/manage_profile"
+            android:drawableStart="@drawable/user_gear"
             android:drawablePadding="5dp"
             app:drawableTint="@color/gray_8"
             app:layout_constraintStart_toStartOf="parent"

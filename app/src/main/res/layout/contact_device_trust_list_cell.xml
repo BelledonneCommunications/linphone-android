@@ -66,7 +66,7 @@
             android:paddingTop="6dp"
             android:paddingBottom="6dp"
             android:gravity="center"
-            android:drawableStart="@drawable/warning"
+            android:drawableStart="@drawable/warning_circle"
             android:drawablePadding="8dp"
             android:text="Vérifier l'appareil"
             android:textColor="@color/tertiary_button_label_color"

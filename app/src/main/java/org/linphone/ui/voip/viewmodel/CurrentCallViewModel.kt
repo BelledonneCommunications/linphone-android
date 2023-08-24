@@ -268,6 +268,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                     "$TAG Current call media encryption is ZRTP, auth token is ${if (deviceIsTrusted) "trusted" else "not trusted yet"}"
                 )
                 isRemoteDeviceTrusted.postValue(deviceIsTrusted)
+                contact.value?.showTrust?.postValue(deviceIsTrusted)
 
                 if (!deviceIsTrusted && authToken.orEmpty().isNotEmpty()) {
                     Log.i("$TAG Showing ZRTP SAS confirmation dialog")

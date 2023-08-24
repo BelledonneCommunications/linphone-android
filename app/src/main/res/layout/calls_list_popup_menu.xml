@@ -25,7 +25,7 @@
             android:text="Delete all history"
             android:textSize="14sp"
             android:textColor="@color/red_danger"
-            android:drawableStart="@drawable/delete"
+            android:drawableStart="@drawable/trash_simple"
             android:drawablePadding="5dp"
             app:drawableTint="@color/red_danger"
             app:layout_constraintStart_toStartOf="parent"

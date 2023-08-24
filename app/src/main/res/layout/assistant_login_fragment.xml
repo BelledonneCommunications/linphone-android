@@ -33,7 +33,7 @@
                 android:layout_height="24dp"
                 android:layout_marginTop="7dp"
                 android:layout_marginStart="15dp"
-                android:src="@drawable/back"
+                android:src="@drawable/caret_left"
                 app:tint="@color/gray_1"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
@@ -116,12 +116,12 @@
 
             <ImageView
                 android:onClick="@{() -> viewModel.toggleShowPassword()}"
-                android:id="@+id/show_password"
+                android:id="@+id/eye"
                 android:layout_width="24dp"
                 android:layout_height="0dp"
                 android:padding="4dp"
                 android:layout_marginEnd="20dp"
-                android:src="@{viewModel.showPassword ? @drawable/hide_password : @drawable/show_password, default=@drawable/show_password}"
+                android:src="@{viewModel.showPassword ? @drawable/eye_slash : @drawable/eye, default=@drawable/eye}"
                 app:tint="@color/gray_1"
                 app:layout_constraintEnd_toEndOf="@id/password"
                 app:layout_constraintTop_toTopOf="@id/password"
@@ -219,7 +219,7 @@
                 android:textColor="@color/secondary_button_label_color"
                 android:gravity="center"
                 android:background="@drawable/secondary_button_background"
-                android:drawableStart="@drawable/invite"
+                android:drawableStart="@drawable/qr_code"
                 android:drawablePadding="8dp"
                 app:drawableTint="@color/secondary_button_label_color"
                 app:layout_constraintStart_toStartOf="parent"

@@ -31,10 +31,11 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.databinding.VoipActiveCallFragmentBinding
 import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.voip.VoipActivity
 import org.linphone.ui.voip.model.ZrtpSasConfirmationDialogModel
 import org.linphone.ui.voip.viewmodel.CurrentCallViewModel
+import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
-import org.linphone.utils.slideInToastFromTop
 
 @UiThread
 class ActiveCallFragment : GenericFragment() {
@@ -97,12 +98,18 @@ class ActiveCallFragment : GenericFragment() {
 
         callViewModel.isRemoteDeviceTrusted.observe(viewLifecycleOwner) { trusted ->
             if (trusted) {
-                binding.blueToast.message = "This call can be trusted"
-                binding.blueToast.icon = R.drawable.trusted
-
-                binding.blueToast.root.slideInToastFromTop(binding.root as ViewGroup, true)
-            } else if (binding.blueToast.root.visibility == View.VISIBLE) {
-                binding.blueToast.root.slideInToastFromTop(binding.root as ViewGroup, false)
+                (requireActivity() as VoipActivity).showBlueToast(
+                    "This call can be trusted",
+                    R.drawable.trusted
+                )
+                // TODO: improve
+                binding.avatar.avatarBorderColor = resources.getColor(
+                    R.color.trusted_blue,
+                    requireContext().theme
+                )
+                binding.avatar.avatarBorderWidth = AppUtils.getDimension(
+                    R.dimen.avatar_trust_border_width
+                ).toInt()
             }
         }
 

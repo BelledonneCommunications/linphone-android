@@ -71,11 +71,6 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
     private val coreListener = object : CoreListenerStub() {
         @WorkerThread
-        override fun onFirstCallStarted(core: Core) {
-            startCoreForegroundService()
-        }
-
-        @WorkerThread
         override fun onCallStateChanged(
             core: Core,
             call: Call,
@@ -223,22 +218,6 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         }
     }
 
-    @WorkerThread
-    private fun startCoreForegroundService() {
-        val service = coreService
-        if (service == null) {
-            Log.i("$TAG Starting Core Foreground Service")
-            val intent = Intent()
-            intent.setClass(coreContext.context, CoreForegroundService::class.java)
-
-            try {
-                context.startForegroundService(intent)
-            } catch (e: Exception) {
-                Log.e("$TAG Failed to start Service: $e")
-            }
-        }
-    }
-
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     @WorkerThread
     private fun notify(id: Int, notification: Notification, tag: String? = null) {
@@ -320,9 +299,9 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         }
 
         val smallIcon = if (isVideo) {
-            R.drawable.camera_enabled
+            R.drawable.video_camera
         } else {
-            R.drawable.calls
+            R.drawable.phone
         }
 
         val style = if (isIncoming) {

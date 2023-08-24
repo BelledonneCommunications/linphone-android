@@ -102,7 +102,7 @@ class CallFragment : GenericFragment() {
 
                 (requireActivity() as MainActivity).showGreenToast(
                     "Historique supprimé",
-                    R.drawable.check
+                    R.drawable.check_fat_fill
                 )
                 goBack() // TODO FIXME : issue with tablet when pane can't be closed
             }
@@ -116,7 +116,7 @@ class CallFragment : GenericFragment() {
 
         (requireActivity() as MainActivity).showGreenToast(
             "Numéro copié dans le presse-papier",
-            R.drawable.check
+            R.drawable.check_fat_fill
         )
     }
 

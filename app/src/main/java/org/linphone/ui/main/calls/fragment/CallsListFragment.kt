@@ -168,7 +168,7 @@ class CallsListFragment : GenericFragment() {
             it.consume {
                 (requireActivity() as MainActivity).showGreenToast(
                     "Historique supprimé",
-                    R.drawable.check
+                    R.drawable.check_fat_fill
                 )
             }
         }
@@ -208,7 +208,7 @@ class CallsListFragment : GenericFragment() {
 
         (requireActivity() as MainActivity).showGreenToast(
             "Numéro copié dans le presse-papier",
-            R.drawable.check
+            R.drawable.check_fat_fill
         )
     }
 

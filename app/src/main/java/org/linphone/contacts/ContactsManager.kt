@@ -73,7 +73,7 @@ class ContactsManager @UiThread constructor(context: Context) {
     init {
         contactAvatar = IconCompat.createWithResource(
             context,
-            R.drawable.contact
+            R.drawable.user_circle
         )
     }
 
