@@ -19,10 +19,17 @@
  */
 package org.linphone.contacts
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.net.Uri
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
+import androidx.core.app.Person
+import androidx.core.graphics.drawable.IconCompat
 import androidx.loader.app.LoaderManager
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
+import org.linphone.core.Address
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.Friend
@@ -30,11 +37,14 @@ import org.linphone.core.FriendList
 import org.linphone.core.FriendListListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.MainActivity
+import org.linphone.utils.ImageUtils
 
-class ContactsManager {
+class ContactsManager @UiThread constructor(context: Context) {
     companion object {
         const val TAG = "[Contacts Manager]"
     }
+
+    val contactAvatar: IconCompat
 
     private val listeners = arrayListOf<ContactsListener>()
 
@@ -58,6 +68,13 @@ class ContactsManager {
         override fun onFriendListRemoved(core: Core, friendList: FriendList) {
             friendList.removeListener(friendListListener)
         }
+    }
+
+    init {
+        contactAvatar = IconCompat.createWithResource(
+            context,
+            R.drawable.contact
+        )
     }
 
     @UiThread
@@ -100,6 +117,14 @@ class ContactsManager {
     }
 
     @WorkerThread
+    fun findContactByAddress(address: Address): Friend? {
+        val friend = coreContext.core.findFriend(address)
+        if (friend != null) return friend
+
+        return null
+    }
+
+    @WorkerThread
     fun onCoreStarted() {
         val core = coreContext.core
         core.addListener(coreListener)
@@ -116,6 +141,33 @@ class ContactsManager {
             list.removeListener(friendListListener)
         }
     }
+}
+
+@WorkerThread
+fun Friend.getPerson(): Person {
+    val personBuilder = Person.Builder().setName(name)
+
+    val bm: Bitmap? = if (!photo.isNullOrEmpty()) {
+        ImageUtils.getRoundBitmapFromUri(
+            coreContext.context,
+            Uri.parse(photo ?: "")
+        )
+    } else {
+        null
+    }
+
+    personBuilder.setIcon(
+        if (bm == null) {
+            coreContext.contactsManager.contactAvatar
+        } else {
+            IconCompat.createWithAdaptiveBitmap(bm)
+        }
+    )
+
+    personBuilder.setKey(refKey)
+    personBuilder.setUri(nativeUri)
+    personBuilder.setImportant(starred)
+    return personBuilder.build()
 }
 
 interface ContactsListener {

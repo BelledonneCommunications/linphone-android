@@ -1,0 +1,69 @@
+/*
+ * Copyright (c) 2010-2023 Belledonne Communications SARL.
+ *
+ * This file is part of linphone-android
+ * (see https://www.linphone.org).
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.linphone.core
+
+import android.content.Intent
+import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.core.tools.Log
+import org.linphone.core.tools.service.CoreService
+
+class CoreForegroundService : CoreService() {
+    companion object {
+        const val TAG = "[Core Foreground Service]"
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        Log.i("$TAG Created")
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Log.i("$TAG onStartCommand")
+
+        coreContext.notificationsManager.onServiceStarted(this)
+
+        return super.onStartCommand(intent, flags, startId)
+    }
+
+    override fun createServiceNotificationChannel() {
+        // Done elsewhere
+    }
+
+    override fun showForegroundServiceNotification() {
+        // Done elsewhere
+    }
+
+    override fun hideForegroundServiceNotification() {
+        // Done elsewhere
+    }
+
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        Log.i("$TAG Task removed, doing nothing")
+
+        super.onTaskRemoved(rootIntent)
+    }
+
+    override fun onDestroy() {
+        Log.i("$TAG onDestroy")
+        coreContext.notificationsManager.onServiceDestroyed()
+
+        super.onDestroy()
+    }
+}

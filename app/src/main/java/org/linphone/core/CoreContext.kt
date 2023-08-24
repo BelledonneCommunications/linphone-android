@@ -35,6 +35,7 @@ import org.linphone.BuildConfig
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.contacts.ContactsManager
 import org.linphone.core.tools.Log
+import org.linphone.notifications.NotificationsManager
 import org.linphone.ui.voip.VoipActivity
 import org.linphone.utils.ActivityMonitor
 import org.linphone.utils.LinphoneUtils
@@ -48,7 +49,9 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
 
     val emojiCompat: EmojiCompat
 
-    val contactsManager = ContactsManager()
+    val contactsManager = ContactsManager(context)
+
+    val notificationsManager = NotificationsManager(context)
 
     private val activityMonitor = ActivityMonitor()
 
@@ -71,14 +74,13 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
             message: String
         ) {
             Log.i("$TAG Call state changed [$state]")
-            if (state == Call.State.OutgoingProgress) {
-                postOnMainThread {
-                    showCallActivity()
+            when (state) {
+                Call.State.OutgoingProgress, Call.State.Connected -> {
+                    postOnMainThread {
+                        showCallActivity()
+                    }
                 }
-            } else if (state == Call.State.IncomingReceived) {
-                // TODO FIXME : remove when full screen intent notification
-                postOnMainThread {
-                    showCallActivity()
+                else -> {
                 }
             }
         }
@@ -121,6 +123,7 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         core.start()
 
         contactsManager.onCoreStarted()
+        notificationsManager.onCoreStarted()
 
         Looper.loop()
     }
@@ -128,7 +131,9 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
     @WorkerThread
     override fun destroy() {
         core.stop()
+
         contactsManager.onCoreStopped()
+        notificationsManager.onCoreStopped()
 
         postOnMainThread {
             (context as Application).unregisterActivityLifecycleCallbacks(activityMonitor)
@@ -258,6 +263,53 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
     @WorkerThread
     fun showSwitchCameraButton(): Boolean {
         return core.videoDevicesList.size > 2 // Count StaticImage camera
+    }
+
+    @WorkerThread
+    fun answerCall(call: Call) {
+        Log.i("$TAG Answering call $call")
+        val params = core.createCallParams(call)
+        if (params == null) {
+            Log.w("$TAG Answering call without params!")
+            call.accept()
+            return
+        }
+
+        // params.recordFile = LinphoneUtils.getRecordingFilePathForAddress(call.remoteAddress)
+
+        /*if (LinphoneUtils.checkIfNetworkHasLowBandwidth(context)) {
+            Log.w("$TAG Enabling low bandwidth mode!")
+            params.isLowBandwidthEnabled = true
+        }*/
+
+        if (call.callLog.wasConference()) {
+            // Prevent incoming group call to start in audio only layout
+            // Do the same as the conference waiting room
+            params.isVideoEnabled = true
+            params.videoDirection = if (core.videoActivationPolicy.automaticallyInitiate) MediaDirection.SendRecv else MediaDirection.RecvOnly
+            Log.i(
+                "$TAG Enabling video on call params to prevent audio-only layout when answering"
+            )
+        }
+
+        call.acceptWithParams(params)
+    }
+
+    @WorkerThread
+    fun declineCall(call: Call) {
+        val reason = if (core.callsNb > 1) {
+            Reason.Busy
+        } else {
+            Reason.Declined
+        }
+        Log.i("$TAG Declining call [$call] with reason [$reason]")
+        call.decline(reason)
+    }
+
+    @WorkerThread
+    fun terminateCall(call: Call) {
+        Log.i("$TAG Terminating call $call")
+        call.terminate()
     }
 
     @UiThread

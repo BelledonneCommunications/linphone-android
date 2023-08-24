@@ -54,6 +54,8 @@ class MainActivity : AppCompatActivity() {
         private const val CONTACTS_PERMISSION_REQUEST = 0
         private const val CAMERA_PERMISSION_REQUEST = 1
         private const val RECORD_AUDIO_PERMISSION_REQUEST = 2
+        private const val POST_NOTIFICATIONS_PERMISSION_REQUEST = 3
+        private const val MANAGE_OWN_CALLS_PERMISSION_REQUEST = 4
     }
 
     private lateinit var binding: MainActivityBinding
@@ -138,6 +140,18 @@ class MainActivity : AppCompatActivity() {
             requestPermissions(
                 arrayOf(Manifest.permission.RECORD_AUDIO),
                 RECORD_AUDIO_PERMISSION_REQUEST
+            )
+        }
+        if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(
+                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                POST_NOTIFICATIONS_PERMISSION_REQUEST
+            )
+        }
+        if (checkSelfPermission(Manifest.permission.MANAGE_OWN_CALLS) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(
+                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                MANAGE_OWN_CALLS_PERMISSION_REQUEST
             )
         }
     }
