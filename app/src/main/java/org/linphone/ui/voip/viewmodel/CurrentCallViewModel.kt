@@ -344,7 +344,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
     }
 
     @WorkerThread
-    private fun updateEncryption() {
+    private fun updateEncryption(): Boolean {
         when (call.currentParams.mediaEncryption) {
             MediaEncryption.ZRTP -> {
                 val authToken = call.authenticationToken
@@ -359,12 +359,15 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                     Log.i("$TAG Showing ZRTP SAS confirmation dialog")
                     showZrtpSasDialog(authToken!!.uppercase(Locale.getDefault()))
                 }
+
+                return deviceIsTrusted
             }
             MediaEncryption.SRTP, MediaEncryption.DTLS -> {
             }
             else -> {
             }
         }
+        return false
     }
 
     @WorkerThread
@@ -387,19 +390,23 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         address.clean()
         displayedAddress.postValue(address.asStringUriOnly())
 
+        val isDeviceTrusted = updateEncryption()
         val friend = call.core.findFriend(address)
         if (friend != null) {
             displayedName.postValue(friend.name)
-            contact.postValue(ContactAvatarModel(friend))
+            val model = ContactAvatarModel(friend)
+            model.showTrust.postValue(isDeviceTrusted)
+            contact.postValue(model)
         } else {
             val fakeFriend = coreContext.core.createFriend()
             fakeFriend.name = LinphoneUtils.getDisplayName(address)
             fakeFriend.addAddress(address)
-            contact.postValue(ContactAvatarModel(fakeFriend))
+            val model = ContactAvatarModel(fakeFriend)
+            model.showTrust.postValue(isDeviceTrusted)
+            contact.postValue(model)
             displayedName.postValue(fakeFriend.name)
         }
 
-        updateEncryption()
         callDuration.postValue(call.duration)
     }
 
