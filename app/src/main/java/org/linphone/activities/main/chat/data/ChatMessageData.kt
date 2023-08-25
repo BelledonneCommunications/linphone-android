@@ -285,14 +285,20 @@ class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMes
         val reactionsList = arrayListOf<String>()
         val allReactions = chatMessage.reactions
 
+        var sameReactionTwiceOrMore = false
         if (allReactions.isNotEmpty()) {
             for (reaction in allReactions) {
                 val body = reaction.body
                 if (!reactionsList.contains(body)) {
                     reactionsList.add(body)
+                } else {
+                    sameReactionTwiceOrMore = true
                 }
             }
-            reactionsList.add(allReactions.size.toString())
+
+            if (sameReactionTwiceOrMore) {
+                reactionsList.add(allReactions.size.toString())
+            }
         }
 
         reactions.value = reactionsList
