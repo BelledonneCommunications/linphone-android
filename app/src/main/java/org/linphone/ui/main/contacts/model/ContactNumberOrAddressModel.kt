@@ -35,7 +35,7 @@ class ContactNumberOrAddressModel @UiThread constructor(
 
     @UiThread
     fun onClicked() {
-        listener.onClicked(address)
+        listener.onClicked(this)
     }
 
     @UiThread
@@ -47,7 +47,7 @@ class ContactNumberOrAddressModel @UiThread constructor(
 }
 
 interface ContactNumberOrAddressClickListener {
-    fun onClicked(address: Address?)
+    fun onClicked(model: ContactNumberOrAddressModel)
 
     fun onLongPress(model: ContactNumberOrAddressModel)
 }

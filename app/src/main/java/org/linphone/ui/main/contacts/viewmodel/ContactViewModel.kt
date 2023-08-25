@@ -86,11 +86,18 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
 
     private val listener = object : ContactNumberOrAddressClickListener {
         @UiThread
-        override fun onClicked(address: Address?) {
-            if (address != null) {
+        override fun onClicked(model: ContactNumberOrAddressModel) {
+            val address = model.address
+            if (model.isEnabled && address != null) {
                 coreContext.postOnCoreThread {
+                    Log.i("$TAG Calling SIP address [${address.asStringUriOnly()}]")
                     coreContext.startCall(address)
                 }
+            } else if (!model.isEnabled) {
+                Log.w(
+                    "$TAG Can't call SIP address [${address?.asStringUriOnly()}], it is disabled due to currently selected mode"
+                )
+                // TODO: Explain why user can't call that number
             }
         }
 
@@ -112,6 +119,7 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
         coreContext.postOnCoreThread { core ->
             val friend = coreContext.contactsManager.findContactById(refKey)
             if (friend != null) {
+                Log.i("$TAG Found contact [${friend.name}] matching ref key [$refKey]")
                 this.friend = friend
                 isFavourite.postValue(friend.starred)
 
@@ -138,10 +146,17 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                     addressesAndNumbers.add(data)
                 }
                 val indexOfLastSipAddress = addressesAndNumbers.count()
+                Log.i(
+                    "$TAG Contact [${friend.name}] has [$indexOfLastSipAddress] SIP ${if (indexOfLastSipAddress > 1) "addresses" else "address"}"
+                )
 
                 for (number in friend.phoneNumbersWithLabel) {
                     val presenceModel = friend.getPresenceModelForUriOrTel(number.phoneNumber)
-                    if (presenceModel != null && !presenceModel.contact.isNullOrEmpty()) {
+                    val hasPresenceInfo = !presenceModel?.contact.isNullOrEmpty()
+                    var presenceAddress: Address? = null
+
+                    if (presenceModel != null && hasPresenceInfo) {
+                        Log.i("$TAG Phone number [${number.phoneNumber}] has presence information")
                         // Show linked SIP address if not already stored as-is
                         val contact = presenceModel.contact
                         val found = addressesAndNumbers.find {
@@ -151,6 +166,7 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                             val address = core.interpretUrl(contact, false)
                             if (address != null) {
                                 address.clean() // To remove ;user=phone
+                                presenceAddress = address
                                 val data = ContactNumberOrAddressModel(
                                     address,
                                     address.asStringUriOnly(),
@@ -159,13 +175,21 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                                     true
                                 )
                                 addressesAndNumbers.add(indexOfLastSipAddress, data)
+                                Log.i(
+                                    "$TAG Phone number [${number.phoneNumber}] is linked to SIP address [${presenceAddress.asStringUriOnly()}]"
+                                )
                             }
+                        } else if (found != null) {
+                            presenceAddress = found.address
+                            Log.i(
+                                "$TAG Phone number [${number.phoneNumber}] is linked to existing SIP address [${presenceAddress?.asStringUriOnly()}]"
+                            )
                         }
                     }
 
-                    // phone numbers are disabled is secure mode
-                    val enablePhoneNumbers = core.defaultAccount?.isInSecureMode() != true
-                    val address = core.interpretUrl(number.phoneNumber, true)
+                    // phone numbers are disabled is secure mode unless linked to a SIP address
+                    val enablePhoneNumbers = hasPresenceInfo || core.defaultAccount?.isInSecureMode() != true
+                    val address = presenceAddress ?: core.interpretUrl(number.phoneNumber, true)
                     val label = PhoneNumberUtils.vcardParamStringToAddressBookLabel(
                         coreContext.context.resources,
                         number.label ?: ""
@@ -180,6 +204,11 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                     )
                     addressesAndNumbers.add(data)
                 }
+
+                val phoneNumbersCount = addressesAndNumbers.count() - indexOfLastSipAddress
+                Log.i(
+                    "$TAG Contact [${friend.name}] has [$phoneNumbersCount] phone ${if (phoneNumbersCount > 1) "numbers" else "number"}"
+                )
                 sipAddressesAndPhoneNumbers.postValue(addressesAndNumbers)
 
                 val devicesList = arrayListOf<ContactDeviceModel>()
@@ -211,9 +240,16 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
             if (::friend.isInitialized) {
                 val uri = friend.nativeUri
                 if (uri != null) {
+                    Log.i(
+                        "$TAG Contact [${friend.name}] is a native contact, opening native contact editor using URI [$uri]"
+                    )
                     openNativeContactEditor.postValue(Event(uri))
                 } else {
-                    openLinphoneContactEditor.postValue(Event(contact.value?.id.orEmpty()))
+                    val id = contact.value?.id.orEmpty()
+                    Log.i(
+                        "$TAG Contact [${friend.name}] is a Linphone contact, opening in-app contact editor using ID [$id]"
+                    )
+                    openLinphoneContactEditor.postValue(Event(id))
                 }
             }
         }
@@ -247,9 +283,9 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
 
     @UiThread
     fun deleteContact() {
-        coreContext.postOnCoreThread { core ->
+        coreContext.postOnCoreThread {
             if (::friend.isInitialized) {
-                Log.i("$TAG Deleting friend [$friend]")
+                Log.w("$TAG Deleting friend [$friend]")
                 friend.remove()
                 coreContext.contactsManager.notifyContactsListChanged()
             }
@@ -259,9 +295,15 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun toggleFavourite() {
         coreContext.postOnCoreThread {
+            val favourite = friend.starred
+            Log.i(
+                "$TAG Flagging contact [${friend.name}] as ${if (favourite) "no longer favourite" else "favourite"}"
+            )
+
             friend.edit()
-            friend.starred = !friend.starred
+            friend.starred = !favourite
             friend.done()
+
             isFavourite.postValue(friend.starred)
             coreContext.contactsManager.notifyContactsListChanged()
         }
@@ -270,7 +312,11 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun startAudioCall() {
         val numbersAndAddresses = sipAddressesAndPhoneNumbers.value.orEmpty()
-        if (numbersAndAddresses.size == 1) {
+        val count = numbersAndAddresses.size
+        if (count == 1) {
+            Log.i(
+                "$TAG Only 1 number or address found for contact [${friend.name}], starting audio call directly"
+            )
             val address = numbersAndAddresses.first().address
             if (address != null) {
                 coreContext.postOnCoreThread { core ->
@@ -280,6 +326,9 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                 }
             }
         } else {
+            Log.i(
+                "$TAG [$count] numbers or addresses found for contact [${friend.name}], showing selection dialog"
+            )
             showNumberOrAddressPickerDialogEvent.value = Event(true)
         }
     }
@@ -287,7 +336,11 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun startVideoCall() {
         val numbersAndAddresses = sipAddressesAndPhoneNumbers.value.orEmpty()
-        if (numbersAndAddresses.size == 1) {
+        val count = numbersAndAddresses.size
+        if (count == 1) {
+            Log.i(
+                "$TAG Only 1 number or address found for contact [${friend.name}], starting video call directly"
+            )
             val address = numbersAndAddresses.first().address
             if (address != null) {
                 coreContext.postOnCoreThread { core ->
@@ -297,15 +350,26 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                 }
             }
         } else {
+            Log.i(
+                "$TAG [$count] numbers or addresses found for contact [${friend.name}], showing selection dialog"
+            )
             showNumberOrAddressPickerDialogEvent.value = Event(true)
         }
     }
 
     @UiThread
     fun sendMessage() {
-        if (sipAddressesAndPhoneNumbers.value.orEmpty().size == 1) {
+        val numbersAndAddresses = sipAddressesAndPhoneNumbers.value.orEmpty()
+        val count = numbersAndAddresses.size
+        if (count == 1) {
+            Log.i(
+                "$TAG Only 1 number or address found for contact [${friend.name}], sending message directly"
+            )
             // TODO
         } else {
+            Log.i(
+                "$TAG [$count] numbers or addresses found for contact [${friend.name}], showing selection dialog"
+            )
             showNumberOrAddressPickerDialogEvent.value = Event(true)
         }
     }
