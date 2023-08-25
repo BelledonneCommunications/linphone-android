@@ -21,20 +21,24 @@ package org.linphone.core
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.annotation.AnyThread
+import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import java.io.File
 import java.io.FileOutputStream
 import org.linphone.LinphoneApplication.Companion.coreContext
 
-@WorkerThread
-class CorePreferences constructor(private val context: Context) {
+class CorePreferences @UiThread constructor(private val context: Context) {
     private var _config: Config? = null
+
+    @get:WorkerThread @set:WorkerThread
     var config: Config
         get() = _config ?: coreContext.core.config
         set(value) {
             _config = value
         }
 
+    @UiThread
     fun chatRoomMuted(id: String): Boolean {
         val sharedPreferences: SharedPreferences = coreContext.context.getSharedPreferences(
             "notifications",
@@ -43,6 +47,7 @@ class CorePreferences constructor(private val context: Context) {
         return sharedPreferences.getBoolean(id, false)
     }
 
+    @UiThread
     fun muteChatRoom(id: String, mute: Boolean) {
         val sharedPreferences: SharedPreferences = coreContext.context.getSharedPreferences(
             "notifications",
@@ -53,6 +58,7 @@ class CorePreferences constructor(private val context: Context) {
         editor.apply()
     }
 
+    @get:WorkerThread @set:WorkerThread
     var publishPresence: Boolean
         get() = config.getBool("app", "publish_presence", true)
         set(value) {
@@ -60,27 +66,34 @@ class CorePreferences constructor(private val context: Context) {
         }
 
     // Will disable chat feature completely
+    @get:WorkerThread
     val disableChat: Boolean
         get() = config.getBool("app", "disable_chat_feature", false)
 
+    @get:WorkerThread
     val defaultDomain: String
         get() = config.getString("app", "default_domain", "sip.linphone.org")!!
 
+    @get:AnyThread
     val configPath: String
         get() = context.filesDir.absolutePath + "/.linphonerc"
 
+    @get:AnyThread
     val factoryConfigPath: String
         get() = context.filesDir.absolutePath + "/linphonerc"
 
+    @get:AnyThread
     val linphoneDefaultValuesPath: String
         get() = context.filesDir.absolutePath + "/assistant_linphone_default_values"
 
+    @UiThread
     fun copyAssetsFromPackage() {
         copy("linphonerc_default", configPath)
         copy("linphonerc_factory", factoryConfigPath, true)
         copy("assistant_linphone_default_values", linphoneDefaultValuesPath, true)
     }
 
+    @AnyThread
     private fun copy(from: String, to: String, overrideIfExists: Boolean = false) {
         val outFile = File(to)
         if (outFile.exists()) {
