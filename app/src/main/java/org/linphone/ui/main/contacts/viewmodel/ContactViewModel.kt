@@ -84,6 +84,10 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<File>>()
     }
 
+    val displayTrustProcessDialogEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     private val listener = object : ContactNumberOrAddressClickListener {
         @UiThread
         override fun onClicked(model: ContactNumberOrAddressModel) {
@@ -232,6 +236,11 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun toggleDevicesTrustExpand() {
         expandDevicesTrust.value = expandDevicesTrust.value == false
+    }
+
+    @UiThread
+    fun displayTrustDialog() {
+        displayTrustProcessDialogEvent.value = Event(true)
     }
 
     @UiThread

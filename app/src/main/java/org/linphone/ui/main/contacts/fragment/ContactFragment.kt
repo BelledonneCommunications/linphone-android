@@ -172,6 +172,12 @@ class ContactFragment : GenericFragment() {
                 shareContact(file)
             }
         }
+
+        viewModel.displayTrustProcessDialogEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                showTrustProcessDialog()
+            }
+        }
     }
 
     private fun copyNumberOrAddressToClipboard(value: String, isSip: Boolean) {
@@ -213,5 +219,10 @@ class ContactFragment : GenericFragment() {
             putExtra("sms_body", "Coucou <3") // TODO FIXME
         }
         startActivity(smsIntent)
+    }
+
+    private fun showTrustProcessDialog() {
+        val dialog = DialogUtils.getContactTrustProcessExplanationDialog(requireActivity())
+        dialog.show()
     }
 }

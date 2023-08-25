@@ -30,7 +30,6 @@ import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
-import org.linphone.core.Address
 import org.linphone.databinding.CallStartFragmentBinding
 import org.linphone.ui.main.calls.adapter.SuggestionsListAdapter
 import org.linphone.ui.main.calls.viewmodel.StartCallViewModel
@@ -66,7 +65,8 @@ class StartCallFragment : GenericFragment() {
 
     private val listener = object : ContactNumberOrAddressClickListener {
         @UiThread
-        override fun onClicked(address: Address?) {
+        override fun onClicked(model: ContactNumberOrAddressModel) {
+            val address = model.address
             if (address != null) {
                 coreContext.postOnCoreThread {
                     coreContext.startCall(address)
