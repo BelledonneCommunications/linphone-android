@@ -88,6 +88,10 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    val startCallToDeviceToIncreaseTrustEvent: MutableLiveData<Event<Pair<String, String>>> by lazy {
+        MutableLiveData<Event<Pair<String, String>>>()
+    }
+
     private val listener = object : ContactNumberOrAddressClickListener {
         @UiThread
         override fun onClicked(model: ContactNumberOrAddressModel) {
@@ -219,7 +223,15 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                 // TODO FIXME: use real devices list from API
                 devicesList.add(ContactDeviceModel("Pixel 6 Pro de Sylvain", true))
                 devicesList.add(ContactDeviceModel("Sylvain Galaxy Tab S9 Pro+ Ultra", true))
-                devicesList.add(ContactDeviceModel("MacBook Pro de Marcel", false))
+                devicesList.add(
+                    ContactDeviceModel("MacBook Pro de Marcel", false) {
+                        // TODO: check if do not show dialog anymore setting is set
+                        if (::friend.isInitialized) {
+                            startCallToDeviceToIncreaseTrustEvent.value =
+                                Event(Pair(friend.name.orEmpty(), it.name))
+                        }
+                    }
+                )
                 devicesList.add(ContactDeviceModel("sylvain@fedora-linux-38", true))
                 devices.postValue(devicesList)
 

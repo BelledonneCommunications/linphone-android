@@ -23,7 +23,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:src="@drawable/shape_dialog_orange_shadow"
-            app:layout_constraintBottom_toBottomOf="@id/numbers_and_addresses"
+            app:layout_constraintBottom_toBottomOf="@id/anchor"
             app:layout_constraintEnd_toEndOf="@id/dialog_background"
             app:layout_constraintStart_toStartOf="@id/dialog_background"
             app:layout_constraintTop_toTopOf="@id/dialog_background" />
@@ -36,7 +36,7 @@
             android:layout_marginEnd="12dp"
             android:layout_marginBottom="2dp"
             android:src="@drawable/shape_dialog_background"
-            app:layout_constraintBottom_toBottomOf="@id/numbers_and_addresses"
+            app:layout_constraintBottom_toBottomOf="@id/anchor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/title" />
@@ -47,7 +47,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
-            android:paddingTop="25dp"
+            android:paddingTop="@dimen/dialog_top_bottom_margin"
             android:text="Which canal do you choose?"
             android:textSize="16sp"
             app:layout_constraintVertical_chainStyle="packed"
@@ -64,13 +64,21 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="15dp"
             android:orientation="vertical"
-            android:paddingBottom="20dp"
             app:entries="@{viewModel.sipAddressesAndPhoneNumbers}"
             app:layout="@{@layout/dialog_number_address_list_cell}"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/anchor"
             app:layout_constraintStart_toStartOf="@id/dialog_background"
             app:layout_constraintEnd_toEndOf="@id/dialog_background"
             app:layout_constraintTop_toBottomOf="@id/title" />
+
+        <View
+            android:id="@+id/anchor"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dialog_top_bottom_margin"
+            app:layout_constraintTop_toBottomOf="@id/numbers_and_addresses"
+            app:layout_constraintStart_toStartOf="@id/dialog_background"
+            app:layout_constraintEnd_toEndOf="@id/dialog_background"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

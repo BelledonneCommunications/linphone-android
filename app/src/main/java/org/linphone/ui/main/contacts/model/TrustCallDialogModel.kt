@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2020 Belledonne Communications SARL.
+ * Copyright (c) 2010-2023 Belledonne Communications SARL.
  *
  * This file is part of linphone-android
  * (see https://www.linphone.org).
@@ -20,14 +20,29 @@
 package org.linphone.ui.main.contacts.model
 
 import androidx.annotation.UiThread
+import androidx.lifecycle.MutableLiveData
+import org.linphone.utils.Event
 
-class ContactDeviceModel @UiThread constructor(
-    val name: String,
-    val trusted: Boolean,
-    private val onCall: ((model: ContactDeviceModel) -> Unit)? = null
-) {
+class TrustCallDialogModel @UiThread constructor(contact: String, device: String) {
+    val message = MutableLiveData<String>()
+
+    val doNotShowAnymore = MutableLiveData<Boolean>()
+
+    val dismissEvent = MutableLiveData<Event<Boolean>>()
+
+    val confirmCallEvent = MutableLiveData<Event<Boolean>>()
+
+    init {
+        message.value = "You're about to call $contact's device $device.\nAre you sure you want to make a call now?"
+    }
+
     @UiThread
-    fun startCallToDevice() {
-        onCall?.invoke(this)
+    fun dismiss() {
+        dismissEvent.value = Event(true)
+    }
+
+    @UiThread
+    fun confirmCall() {
+        confirmCallEvent.value = Event(true)
     }
 }

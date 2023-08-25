@@ -33,11 +33,13 @@ import androidx.databinding.ViewDataBinding
 import org.linphone.R
 import org.linphone.databinding.DialogCancelContactChangesBinding
 import org.linphone.databinding.DialogConfirmZrtpSasBinding
+import org.linphone.databinding.DialogContactConfirmTrustCallBinding
 import org.linphone.databinding.DialogContactTrustProcessBinding
 import org.linphone.databinding.DialogPickNumberOrAddressBinding
 import org.linphone.databinding.DialogRemoveAllCallLogsBinding
 import org.linphone.ui.main.calls.model.ConfirmationDialogModel
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
+import org.linphone.ui.main.contacts.model.TrustCallDialogModel
 import org.linphone.ui.voip.model.ZrtpSasConfirmationDialogModel
 
 class DialogUtils {
@@ -58,6 +60,23 @@ class DialogUtils {
             return getDialog(context, binding)
         }
 
+        @UiThread
+        fun getContactTrustCallConfirmationDialog(
+            context: Context,
+            viewModel: TrustCallDialogModel
+        ): Dialog {
+            val binding: DialogContactConfirmTrustCallBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.dialog_contact_confirm_trust_call,
+                null,
+                false
+            )
+            binding.viewModel = viewModel
+
+            return getDialog(context, binding)
+        }
+
+        @UiThread
         fun getContactTrustProcessExplanationDialog(context: Context): Dialog {
             val binding: DialogContactTrustProcessBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(context),

@@ -41,6 +41,7 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactFragmentBinding
 import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
+import org.linphone.ui.main.contacts.model.TrustCallDialogModel
 import org.linphone.ui.main.contacts.viewmodel.ContactViewModel
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.DialogUtils
@@ -178,6 +179,12 @@ class ContactFragment : GenericFragment() {
                 showTrustProcessDialog()
             }
         }
+
+        viewModel.startCallToDeviceToIncreaseTrustEvent.observe(viewLifecycleOwner) {
+            it.consume { pair ->
+                showConfirmTrustCallDialog(pair.first, pair.second)
+            }
+        }
     }
 
     private fun copyNumberOrAddressToClipboard(value: String, isSip: Boolean) {
@@ -223,6 +230,29 @@ class ContactFragment : GenericFragment() {
 
     private fun showTrustProcessDialog() {
         val dialog = DialogUtils.getContactTrustProcessExplanationDialog(requireActivity())
+        dialog.show()
+    }
+
+    private fun showConfirmTrustCallDialog(contact: String, device: String) {
+        val model = TrustCallDialogModel(contact, device)
+        val dialog = DialogUtils.getContactTrustCallConfirmationDialog(requireActivity(), model)
+
+        model.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        model.confirmCallEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                if (model.doNotShowAnymore.value == true) {
+                    // TODO: never display this anymore
+                }
+                // TODO: start call
+                dialog.dismiss()
+            }
+        }
+
         dialog.show()
     }
 }
