@@ -56,7 +56,7 @@
             android:layout_width="@dimen/avatar_big_size"
             android:layout_height="@dimen/avatar_big_size"
             android:layout_marginTop="8dp"
-            android:background="@drawable/shape_button_round"
+            android:background="@drawable/shape_avatar_background"
             coil="@{viewModel.picturePath}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

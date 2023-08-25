@@ -40,7 +40,7 @@
             android:layout_width="@dimen/avatar_list_cell_size"
             android:layout_height="@dimen/avatar_list_cell_size"
             android:layout_marginStart="15dp"
-            android:background="@drawable/shape_button_round"
+            android:background="@drawable/shape_avatar_background"
             accountAvatar="@{viewModel.account}"
             app:avatarViewPlaceholder="@drawable/contact_avatar"
             app:avatarViewInitialsBackgroundColor="@color/blue_outgoing_message"
