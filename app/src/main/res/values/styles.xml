@@ -355,6 +355,7 @@
 
     <style name="chat_message_emoji_reaction_font">
         <item name="android:textSize">@dimen/chat_message_emoji_reaction_font_size</item>
+        <item name="android:textColor">?attr/primaryTextColor</item>
     </style>
 
     <!-- Dialog related -->
