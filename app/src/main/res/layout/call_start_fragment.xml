@@ -60,7 +60,6 @@
             android:paddingStart="15dp"
             android:paddingEnd="15dp"
             android:drawableStart="@drawable/magnifying_glass"
-            android:drawableEnd="@drawable/dialer"
             android:drawablePadding="10dp"
             android:drawableTint="@color/gray_9"
             android:background="@drawable/shape_search_square_background"
@@ -72,13 +71,25 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title" />
 
+        <!-- margin start must be half the size of the group_call_icon below -->
+        <View
+            android:id="@+id/gradient_background"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="22dp"
+            android:background="@drawable/shape_gradient"
+            app:layout_constraintTop_toTopOf="@id/group_call_icon"
+            app:layout_constraintBottom_toBottomOf="@id/group_call_icon"
+            app:layout_constraintStart_toStartOf="@id/group_call_icon"
+            app:layout_constraintEnd_toEndOf="@id/group_call_label" />
+
         <ImageView
             android:id="@+id/group_call_icon"
             android:visibility="@{viewModel.searchFilter.length() > 0 ? View.GONE : View.VISIBLE}"
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="28dp"
             android:padding="10dp"
             android:src="@drawable/users_three"
             android:background="@drawable/shape_orange_round"
@@ -158,6 +169,7 @@
             android:layout_marginTop="8dp"
             android:visibility="@{viewModel.emptyContactsList ? View.GONE : View.VISIBLE}"
             app:layout_constraintVertical_bias="0"
+            app:layout_constraintVertical_weight="6"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/all_contacts_label"
@@ -188,6 +200,7 @@
             android:layout_marginTop="8dp"
             android:visibility="@{viewModel.emptySuggestionsList ? View.GONE : View.VISIBLE}"
             app:layout_constraintVertical_bias="0"
+            app:layout_constraintVertical_weight="1"
             app:layout_constraintHeight_max="220dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
