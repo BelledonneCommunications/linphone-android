@@ -89,8 +89,10 @@ class CallsListViewModel @UiThread constructor() : ViewModel() {
         // TODO : filter depending on currently selected account
         // TODO : Add support for call logs in magic search
         for (callLog in coreContext.core.callLogs) {
-            val model = CallLogModel(callLog)
-            list.add(model)
+            if (callLog.remoteAddress.asStringUriOnly().contains(filter)) {
+                val model = CallLogModel(callLog)
+                list.add(model)
+            }
         }
 
         callLogs.postValue(list)
