@@ -81,7 +81,7 @@
             android:layout_height="@dimen/voip_button_size"
             android:layout_marginEnd="30dp"
             android:padding="@dimen/voip_button_icon_padding"
-            android:src="@{viewModel.isSpeakerEnabled ? @drawable/speaker_high : @drawable/speaker_slash, default=@drawable/speaker_slash}"
+            android:src="@{viewModel.isHeadsetEnabled ? @drawable/headset : viewModel.isBluetoothEnabled ? @drawable/bluetooth : viewModel.isSpeakerEnabled ? @drawable/speaker_high : @drawable/speaker_slash, default=@drawable/speaker_slash}"
             android:background="@drawable/in_call_button_background"
             app:tint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"

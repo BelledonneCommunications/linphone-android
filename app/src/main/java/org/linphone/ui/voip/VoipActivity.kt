@@ -38,9 +38,12 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.VoipActivityBinding
 import org.linphone.ui.voip.fragment.ActiveCallFragmentDirections
+import org.linphone.ui.voip.fragment.AudioDevicesMenuDialogFragment
 import org.linphone.ui.voip.fragment.IncomingCallFragmentDirections
 import org.linphone.ui.voip.fragment.OutgoingCallFragmentDirections
+import org.linphone.ui.voip.model.AudioDeviceModel
 import org.linphone.ui.voip.viewmodel.CallsViewModel
+import org.linphone.ui.voip.viewmodel.CurrentCallViewModel
 import org.linphone.ui.voip.viewmodel.SharedCallViewModel
 import org.linphone.utils.slideInToastFromTopForDuration
 
@@ -54,6 +57,7 @@ class VoipActivity : AppCompatActivity() {
 
     private lateinit var sharedViewModel: SharedCallViewModel
     private lateinit var callsViewModel: CallsViewModel
+    private lateinit var callViewModel: CurrentCallViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, true)
@@ -78,6 +82,16 @@ class VoipActivity : AppCompatActivity() {
 
         callsViewModel = run {
             ViewModelProvider(this)[CallsViewModel::class.java]
+        }
+
+        callViewModel = run {
+            ViewModelProvider(this)[CurrentCallViewModel::class.java]
+        }
+
+        callViewModel.showAudioDevicesListEvent.observe(this) {
+            it.consume { devices ->
+                showAudioRoutesMenu(devices)
+            }
         }
 
         callsViewModel.showIncomingCallEvent.observe(this) {
@@ -143,5 +157,10 @@ class VoipActivity : AppCompatActivity() {
             windowInsetsCompat.show(WindowInsetsCompat.Type.systemBars())
             WindowCompat.setDecorFitsSystemWindows(window, true)
         }
+    }
+
+    private fun showAudioRoutesMenu(devicesList: List<AudioDeviceModel>) {
+        val modalBottomSheet = AudioDevicesMenuDialogFragment(devicesList)
+        modalBottomSheet.show(supportFragmentManager, AudioDevicesMenuDialogFragment.TAG)
     }
 }

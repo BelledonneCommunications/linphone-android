@@ -131,7 +131,7 @@ class ContactsListFragment : GenericFragment() {
             it.consume { model ->
                 val modalBottomSheet = ContactsListMenuDialogFragment(
                     model.friend.starred,
-                    { // ondDismiss
+                    { // onDismiss
                         adapter.resetSelection()
                     },
                     { // onFavourite

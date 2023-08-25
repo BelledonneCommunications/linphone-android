@@ -65,6 +65,19 @@ class AudioRouteUtils {
         }
 
         @WorkerThread
+        fun routeAudioToBluetooth(call: Call? = null) {
+            routeAudioTo(call, arrayListOf(AudioDevice.Type.Bluetooth))
+        }
+
+        @WorkerThread
+        fun routeAudioToHeadset(call: Call? = null) {
+            routeAudioTo(
+                call,
+                arrayListOf(AudioDevice.Type.Headphones, AudioDevice.Type.Headset)
+            )
+        }
+
+        @WorkerThread
         private fun routeAudioTo(
             call: Call?,
             types: List<AudioDevice.Type>

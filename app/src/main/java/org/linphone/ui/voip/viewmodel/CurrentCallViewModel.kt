@@ -37,6 +37,7 @@ import org.linphone.core.MediaDirection
 import org.linphone.core.MediaEncryption
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
+import org.linphone.ui.voip.model.AudioDeviceModel
 import org.linphone.utils.AudioRouteUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
@@ -62,10 +63,18 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     val isSpeakerEnabled = MutableLiveData<Boolean>()
 
+    val isHeadsetEnabled = MutableLiveData<Boolean>()
+
+    val isBluetoothEnabled = MutableLiveData<Boolean>()
+
     val fullScreenMode = MutableLiveData<Boolean>()
 
     // To synchronize chronometers in UI
     val callDuration = MutableLiveData<Int>()
+
+    val showAudioDevicesListEvent: MutableLiveData<Event<ArrayList<AudioDeviceModel>>> by lazy {
+        MutableLiveData<Event<ArrayList<AudioDeviceModel>>>()
+    }
 
     // ZRTP related
 
@@ -130,8 +139,8 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
         @WorkerThread
         override fun onAudioDeviceChanged(call: Call, audioDevice: AudioDevice) {
-            Log.i("$TAG Audio device changed [$audioDevice]")
-            isSpeakerEnabled.postValue(AudioRouteUtils.isSpeakerAudioRouteCurrentlyUsed(call))
+            Log.i("$TAG Audio device changed [${audioDevice.id}]")
+            updateOutputAudioDevice(audioDevice)
         }
     }
 
@@ -149,7 +158,6 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                 call = currentCall
                 Log.i("$TAG Found call [$call]")
                 configureCall(call)
-                isSpeakerEnabled.postValue(AudioRouteUtils.isSpeakerAudioRouteCurrentlyUsed(call))
             } else {
                 Log.e("$TAG Failed to find call!")
             }
@@ -219,16 +227,40 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     @UiThread
     fun changeAudioOutputDevice() {
-        // TODO: display list of all output devices if more then earpiece &
-
         val routeAudioToSpeaker = isSpeakerEnabled.value != true
 
-        coreContext.postOnCoreThread {
-            if (::call.isInitialized) {
-                if (routeAudioToSpeaker) {
-                    AudioRouteUtils.routeAudioToSpeaker(call)
-                } else {
-                    AudioRouteUtils.routeAudioToEarpiece(call)
+        coreContext.postOnCoreThread { core ->
+            val audioDevices = core.audioDevices
+            val list = arrayListOf<AudioDeviceModel>()
+            for (device in audioDevices) {
+                // Only list output audio devices
+                if (!device.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) continue
+
+                val isSpeaker = device.type == AudioDevice.Type.Speaker
+                val isHeadset = device.type == AudioDevice.Type.Headset || device.type == AudioDevice.Type.Headphones
+                val isBluetooth = device.type == AudioDevice.Type.Bluetooth
+                val model = AudioDeviceModel(device, device.id, isSpeaker, isHeadset, isBluetooth) {
+                    // onSelected
+                    coreContext.postOnCoreThread {
+                        Log.i("$TAG Selected audio device with ID [${device.id}]")
+                        if (::call.isInitialized) {
+                            call.outputAudioDevice = device
+                        }
+                    }
+                }
+                list.add(model)
+                Log.i("$TAG Found audio device [$device]")
+            }
+
+            if (list.size > 2) {
+                showAudioDevicesListEvent.postValue(Event(list))
+            } else {
+                if (::call.isInitialized) {
+                    if (routeAudioToSpeaker) {
+                        AudioRouteUtils.routeAudioToSpeaker(call)
+                    } else {
+                        AudioRouteUtils.routeAudioToEarpiece(call)
+                    }
                 }
             }
         }
@@ -346,6 +378,9 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         }
 
         isMicrophoneMuted.postValue(call.microphoneMuted)
+        val audioDevice = call.outputAudioDevice
+        updateOutputAudioDevice(audioDevice)
+
         isOutgoing.postValue(call.dir == Call.Dir.Outgoing)
 
         val address = call.remoteAddress.clone()
@@ -366,5 +401,13 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
         updateEncryption()
         callDuration.postValue(call.duration)
+    }
+
+    private fun updateOutputAudioDevice(audioDevice: AudioDevice?) {
+        isSpeakerEnabled.postValue(audioDevice?.type == AudioDevice.Type.Speaker)
+        isHeadsetEnabled.postValue(
+            audioDevice?.type == AudioDevice.Type.Headphones || audioDevice?.type == AudioDevice.Type.Headset
+        )
+        isBluetoothEnabled.postValue(audioDevice?.type == AudioDevice.Type.Bluetooth)
     }
 }
