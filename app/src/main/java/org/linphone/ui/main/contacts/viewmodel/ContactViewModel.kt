@@ -208,7 +208,8 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                         enablePhoneNumbers,
                         listener,
                         false,
-                        label
+                        label,
+                        presenceAddress != null
                     )
                     addressesAndNumbers.add(data)
                 }

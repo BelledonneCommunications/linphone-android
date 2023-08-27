@@ -118,7 +118,7 @@ class ContactFragment : GenericFragment() {
 
         viewModel.showLongPressMenuForNumberOrAddressEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
-                val modalBottomSheet = ContactNumberOrAddressMenuDialogFragment(model.isSip, {
+                val modalBottomSheet = ContactNumberOrAddressMenuDialogFragment(model.isSip, model.hasPresence, {
                     // onDismiss
                     model.selected.value = false
                 }, {

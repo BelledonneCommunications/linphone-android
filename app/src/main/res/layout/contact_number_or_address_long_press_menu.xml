@@ -13,6 +13,9 @@
         <variable
             name="isSip"
             type="Boolean" />
+        <variable
+            name="hideInvite"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -37,7 +40,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{inviteNumberOrAddressClickListener}"
             style="@style/context_menu_action_label_style"
-            android:visibility="@{isSip ? View.GONE : View.VISIBLE}"
+            android:visibility="@{isSip || hideInvite ? View.GONE : View.VISIBLE}"
             android:id="@+id/invite"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

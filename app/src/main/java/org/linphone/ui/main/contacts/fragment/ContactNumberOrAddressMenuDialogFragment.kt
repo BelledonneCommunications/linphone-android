@@ -31,6 +31,7 @@ import org.linphone.databinding.ContactNumberOrAddressLongPressMenuBinding
 @UiThread
 class ContactNumberOrAddressMenuDialogFragment(
     private val isSip: Boolean,
+    private val hideInviteMenu: Boolean,
     private val onDismiss: (() -> Unit)? = null,
     private val onCopyNumberOrAddressToClipboard: (() -> Unit)? = null,
     private val onInviteNumberOrAddress: (() -> Unit)? = null
@@ -56,6 +57,7 @@ class ContactNumberOrAddressMenuDialogFragment(
     ): View {
         val view = ContactNumberOrAddressLongPressMenuBinding.inflate(layoutInflater)
         view.isSip = isSip
+        view.hideInvite = hideInviteMenu
 
         view.setCopyNumberOrAddressClickListener {
             onCopyNumberOrAddressToClipboard?.invoke()

@@ -29,7 +29,8 @@ class ContactNumberOrAddressModel @UiThread constructor(
     val isEnabled: Boolean,
     private val listener: ContactNumberOrAddressClickListener,
     val isSip: Boolean = true,
-    val label: String = ""
+    val label: String = "",
+    val hasPresence: Boolean = true
 ) {
     val selected = MutableLiveData<Boolean>()
 
