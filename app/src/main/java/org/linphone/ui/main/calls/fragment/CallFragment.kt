@@ -32,6 +32,7 @@ import androidx.annotation.UiThread
 import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import org.linphone.R
 import org.linphone.core.tools.Log
@@ -44,6 +45,10 @@ import org.linphone.utils.Event
 
 @UiThread
 class CallFragment : GenericFragment() {
+    companion object {
+        private const val TAG = "[Call Fragment]"
+    }
+
     private lateinit var binding: CallFragmentBinding
 
     private lateinit var viewModel: CallLogViewModel
@@ -61,6 +66,8 @@ class CallFragment : GenericFragment() {
 
     override fun goBack() {
         sharedViewModel.closeSlidingPaneEvent.value = Event(true)
+        // If not done, when going back to CallsFragment this fragment will be created again
+        findNavController().popBackStack()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -74,7 +81,7 @@ class CallFragment : GenericFragment() {
         binding.viewModel = viewModel
 
         val callId = args.callId
-        Log.i("[Call Fragment] Looking up for call log with call id [$callId]")
+        Log.i("$TAG Looking up for call log with call id [$callId]")
         viewModel.findCallLogByCallId(callId)
 
         binding.setBackClickListener {
@@ -90,10 +97,14 @@ class CallFragment : GenericFragment() {
         }
 
         viewModel.callLogFoundEvent.observe(viewLifecycleOwner) {
-            (view.parent as? ViewGroup)?.doOnPreDraw {
-                startPostponedEnterTransition()
+            it.consume {
+                Log.i("$TAG Call log has been found, start postponed enter transition")
+
+                (view.parent as? ViewGroup)?.doOnPreDraw {
+                    startPostponedEnterTransition()
+                }
+                sharedViewModel.openSlidingPaneEvent.value = Event(true)
             }
-            sharedViewModel.openSlidingPaneEvent.value = Event(true)
         }
 
         viewModel.historyDeletedEvent.observe(viewLifecycleOwner) {

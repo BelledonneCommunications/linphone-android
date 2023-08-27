@@ -70,6 +70,8 @@ class ContactFragment : GenericFragment() {
 
     override fun goBack() {
         sharedViewModel.closeSlidingPaneEvent.value = Event(true)
+        // If not done, when going back to ContactsFragment this fragment will be created again
+        findNavController().popBackStack()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -83,7 +85,7 @@ class ContactFragment : GenericFragment() {
         binding.viewModel = viewModel
 
         val refKey = args.contactRefKey
-        Log.i("[Contact Fragment] Looking up for contact with ref key [$refKey]")
+        Log.i("$TAG Looking up for contact with ref key [$refKey]")
         viewModel.findContactByRefKey(refKey)
 
         binding.setBackClickListener {
@@ -105,10 +107,13 @@ class ContactFragment : GenericFragment() {
         }
 
         viewModel.contactFoundEvent.observe(viewLifecycleOwner) {
-            (view.parent as? ViewGroup)?.doOnPreDraw {
-                startPostponedEnterTransition()
+            it.consume {
+                Log.i("$TAG Contact has been found, start postponed enter transition")
+                (view.parent as? ViewGroup)?.doOnPreDraw {
+                    startPostponedEnterTransition()
+                }
+                sharedViewModel.openSlidingPaneEvent.value = Event(true)
             }
-            sharedViewModel.openSlidingPaneEvent.value = Event(true)
         }
 
         viewModel.showLongPressMenuForNumberOrAddressEvent.observe(viewLifecycleOwner) {

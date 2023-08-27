@@ -36,6 +36,10 @@ import org.linphone.utils.SlidingPaneBackPressedCallback
 
 @UiThread
 class ContactsFragment : GenericFragment() {
+    companion object {
+        private const val TAG = "[Contacts Fragment]"
+    }
+
     private lateinit var binding: ContactsFragmentBinding
 
     override fun onCreateView(
@@ -56,12 +60,14 @@ class ContactsFragment : GenericFragment() {
 
         sharedViewModel.contactsListReadyToBeDisplayedEvent.observe(viewLifecycleOwner) {
             it.consume {
+                Log.i("$TAG Contacts list is ready, starting postponed enter transition")
                 startPostponedEnterTransition()
             }
         }
 
         sharedViewModel.contactEditorReadyToBeDisplayedEvent.observe(viewLifecycleOwner) {
             it.consume {
+                Log.i("$TAG Contact editor is ready, starting postponed enter transition")
                 startPostponedEnterTransition()
             }
         }
@@ -82,6 +88,7 @@ class ContactsFragment : GenericFragment() {
             viewLifecycleOwner
         ) {
             it.consume {
+                Log.i("$TAG Closing sliding pane")
                 binding.slidingPaneLayout.closePane()
             }
         }
@@ -90,6 +97,7 @@ class ContactsFragment : GenericFragment() {
             viewLifecycleOwner
         ) {
             it.consume {
+                Log.i("$TAG Opening sliding pane")
                 binding.slidingPaneLayout.openPane()
             }
         }
@@ -98,7 +106,7 @@ class ContactsFragment : GenericFragment() {
             viewLifecycleOwner
         ) {
             it.consume { refKey ->
-                Log.i("[Contacts Fragment] Displaying contact with ref key [$refKey]")
+                Log.i("$TAG Displaying contact with ref key [$refKey]")
                 val navController = binding.contactsRightNavContainer.findNavController()
                 val action = ContactFragmentDirections.actionGlobalContactFragment(
                     refKey
@@ -111,6 +119,7 @@ class ContactsFragment : GenericFragment() {
             viewLifecycleOwner
         ) {
             it.consume {
+                Log.i("$TAG Opening contact editor for creating new contact")
                 val navController = binding.contactsLeftNavContainer.findNavController()
                 navController.navigate(R.id.action_global_newContactFragment)
             }
