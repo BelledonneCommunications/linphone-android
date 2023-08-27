@@ -93,6 +93,7 @@ class ContactFragment : GenericFragment() {
         }
 
         binding.setShareClickListener {
+            Log.i("$TAG Sharing friend, exporting it as vCard file first")
             viewModel.exportContactAsVCard()
         }
 
@@ -173,9 +174,13 @@ class ContactFragment : GenericFragment() {
         }
 
         viewModel.vCardTerminatedEvent.observe(viewLifecycleOwner) {
-            it.consume { file ->
-                Log.i("$TAG Friend was exported as vCard file [${file.absolutePath}]")
-                shareContact(file)
+            it.consume { pair ->
+                val contactName = pair.first
+                val file = pair.second
+                Log.i(
+                    "$TAG Friend [$contactName] was exported as vCard file [${file.absolutePath}], sharing it"
+                )
+                shareContact(contactName, file)
             }
         }
 
@@ -203,7 +208,7 @@ class ContactFragment : GenericFragment() {
         )
     }
 
-    private fun shareContact(file: File) {
+    private fun shareContact(name: String, file: File) {
         val publicUri = FileProvider.getUriForFile(
             requireContext(),
             requireContext().getString(R.string.file_provider),
@@ -214,7 +219,7 @@ class ContactFragment : GenericFragment() {
         val sendIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_STREAM, publicUri)
-            putExtra(Intent.EXTRA_SUBJECT, viewModel.contact.value?.friend?.name)
+            putExtra(Intent.EXTRA_SUBJECT, name)
             type = ContactsContract.Contacts.CONTENT_VCARD_TYPE
         }
 

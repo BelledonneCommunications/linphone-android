@@ -23,7 +23,11 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import java.io.File
 import java.util.ArrayList
+import java.util.Locale
+import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.contacts.ContactsListener
@@ -34,6 +38,8 @@ import org.linphone.core.SearchResult
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.model.isInSecureMode
+import org.linphone.utils.Event
+import org.linphone.utils.FileUtils
 
 class ContactsListViewModel @UiThread constructor() : ViewModel() {
     companion object {
@@ -47,6 +53,10 @@ class ContactsListViewModel @UiThread constructor() : ViewModel() {
     val showFavourites = MutableLiveData<Boolean>()
 
     val isListFiltered = MutableLiveData<Boolean>()
+
+    val vCardTerminatedEvent: MutableLiveData<Event<Pair<String, File>>> by lazy {
+        MutableLiveData<Event<Pair<String, File>>>()
+    }
 
     private var currentFilter = ""
     private var previousFilter = "NotSet"
@@ -157,6 +167,33 @@ class ContactsListViewModel @UiThread constructor() : ViewModel() {
                 MagicSearch.Source.Friends.toInt() or MagicSearch.Source.LdapServers.toInt(),
                 MagicSearch.Aggregation.Friend
             )
+        }
+    }
+
+    @UiThread
+    fun exportContactAsVCard(friend: Friend) {
+        coreContext.postOnCoreThread {
+            val vCard = friend.vcard?.asVcard4String()
+            if (!vCard.isNullOrEmpty()) {
+                Log.i("$TAG Friend has been successfully dumped as vCard string")
+                val fileName = friend.name.orEmpty().replace(" ", "_").toLowerCase(
+                    Locale.getDefault()
+                )
+                val file = FileUtils.getFileStorageCacheDir(
+                    "$fileName.vcf",
+                    overrideExisting = true
+                )
+                viewModelScope.launch {
+                    if (FileUtils.dumpStringToFile(vCard, file)) {
+                        Log.i("$TAG vCard string saved as file in cache folder")
+                        vCardTerminatedEvent.postValue(Event(Pair(friend.name.orEmpty(), file)))
+                    } else {
+                        Log.e("$TAG Failed to save vCard string as file in cache folder")
+                    }
+                }
+            } else {
+                Log.e("$TAG Failed to dump contact as vCard string")
+            }
         }
     }
 

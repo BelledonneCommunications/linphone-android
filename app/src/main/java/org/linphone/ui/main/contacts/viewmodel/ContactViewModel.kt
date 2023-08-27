@@ -80,8 +80,8 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<String>>()
     }
 
-    val vCardTerminatedEvent: MutableLiveData<Event<File>> by lazy {
-        MutableLiveData<Event<File>>()
+    val vCardTerminatedEvent: MutableLiveData<Event<Pair<String, File>>> by lazy {
+        MutableLiveData<Event<Pair<String, File>>>()
     }
 
     val displayTrustProcessDialogEvent: MutableLiveData<Event<Boolean>> by lazy {
@@ -287,11 +287,14 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                     val fileName = friend.name.orEmpty().replace(" ", "_").toLowerCase(
                         Locale.getDefault()
                     )
-                    val file = FileUtils.getFileStorageCacheDir("$fileName.vcf")
+                    val file = FileUtils.getFileStorageCacheDir(
+                        "$fileName.vcf",
+                        overrideExisting = true
+                    )
                     viewModelScope.launch {
                         if (FileUtils.dumpStringToFile(vCard, file)) {
                             Log.i("$TAG vCard string saved as file in cache folder")
-                            vCardTerminatedEvent.postValue(Event(file))
+                            vCardTerminatedEvent.postValue(Event(Pair(friend.name.orEmpty(), file)))
                         } else {
                             Log.e("$TAG Failed to save vCard string as file in cache folder")
                         }

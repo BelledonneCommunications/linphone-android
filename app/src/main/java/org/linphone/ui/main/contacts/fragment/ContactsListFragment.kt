@@ -19,17 +19,21 @@
  */
 package org.linphone.ui.main.contacts.fragment
 
+import android.content.Intent
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.annotation.UiThread
+import androidx.core.content.FileProvider
 import androidx.core.view.doOnPreDraw
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import java.io.File
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
@@ -115,6 +119,17 @@ class ContactsListFragment : GenericFragment() {
             Log.i("$TAG Favourites contacts list is ready with [${it.size}] items")
         }
 
+        listViewModel.vCardTerminatedEvent.observe(viewLifecycleOwner) {
+            it.consume { pair ->
+                val contactName = pair.first
+                val file = pair.second
+                Log.i(
+                    "$TAG Friend [$contactName] was exported as vCard file [${file.absolutePath}], sharing it"
+                )
+                shareContact(contactName, file)
+            }
+        }
+
         sharedViewModel.searchFilter.observe(viewLifecycleOwner) {
             it.consume { filter ->
                 listViewModel.applyFilter(filter)
@@ -130,7 +145,7 @@ class ContactsListFragment : GenericFragment() {
         adapter.contactLongClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
                 val modalBottomSheet = ContactsListMenuDialogFragment(
-                    model.friend.starred,
+                    model.starred,
                     { // onDismiss
                         adapter.resetSelection()
                     },
@@ -147,8 +162,10 @@ class ContactsListFragment : GenericFragment() {
                         }
                     },
                     { // onShare
-                        Log.i("$TAG Sharing friend [${model.name.value}]")
-                        // TODO
+                        Log.i(
+                            "$TAG Sharing friend [${model.name.value}], exporting it as vCard file first"
+                        )
+                        listViewModel.exportContactAsVCard(model.friend)
                     },
                     { // onDelete
                         coreContext.postOnCoreThread {
@@ -167,5 +184,24 @@ class ContactsListFragment : GenericFragment() {
                 sharedViewModel.showContactEvent.value = Event(model.id ?: "")
             }
         }
+    }
+
+    private fun shareContact(name: String, file: File) {
+        val publicUri = FileProvider.getUriForFile(
+            requireContext(),
+            requireContext().getString(R.string.file_provider),
+            file
+        )
+        Log.i("$TAG Public URI for vCard file is [$publicUri], starting intent chooser")
+
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_STREAM, publicUri)
+            putExtra(Intent.EXTRA_SUBJECT, name)
+            type = ContactsContract.Contacts.CONTENT_VCARD_TYPE
+        }
+
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        startActivity(shareIntent)
     }
 }

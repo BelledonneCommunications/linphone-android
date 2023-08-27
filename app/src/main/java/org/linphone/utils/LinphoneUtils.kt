@@ -39,6 +39,8 @@ import org.linphone.core.tools.Log
 
 class LinphoneUtils {
     companion object {
+        private const val TAG = "[App Utils]"
+
         @AnyThread
         fun getFirstLetter(displayName: String): String {
             return getInitials(displayName, 1)
@@ -62,7 +64,7 @@ class LinphoneUtils {
                         ) {
                             val glyph = emoji.process(split[i])
                             if (characters > 0) { // Limit initial to 1 emoji only
-                                Log.d("[App Utils] We limit initials to one emoji only")
+                                Log.d("$TAG We limit initials to one emoji only")
                                 initials = ""
                             }
                             initials += glyph
@@ -71,7 +73,7 @@ class LinphoneUtils {
                             initials += split[i][0]
                         }
                     } catch (ise: IllegalStateException) {
-                        Log.e("[App Utils] Can't call hasEmojiGlyph: $ise")
+                        Log.e("$TAG Can't call hasEmojiGlyph: $ise")
                         initials += split[i][0]
                     }
 

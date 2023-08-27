@@ -37,6 +37,8 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) {
 
     val id = friend.refKey
 
+    val starred = friend.starred
+
     val avatar = MutableLiveData<Uri>()
 
     val initials = LinphoneUtils.getInitials(friend.name.orEmpty())
