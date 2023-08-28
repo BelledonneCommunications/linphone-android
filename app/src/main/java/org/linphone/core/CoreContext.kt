@@ -54,7 +54,7 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
 
     val notificationsManager = NotificationsManager(context)
 
-    private val telecomManager = TelecomManager(context)
+    val telecomManager = TelecomManager(context)
 
     private val activityMonitor = ActivityMonitor()
 

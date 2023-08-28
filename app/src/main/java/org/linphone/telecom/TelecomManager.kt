@@ -29,6 +29,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.core.AudioDevice
 import org.linphone.core.Call
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
@@ -77,7 +78,7 @@ class TelecomManager @WorkerThread constructor(context: Context) {
                     coreContext.postOnCoreThread {
                         val callId = call.callLog.callId.orEmpty()
                         if (callId.isNotEmpty()) {
-                            Log.i("$TAG Storing callbacks (why?) for call ID [$callId]")
+                            Log.i("$TAG Storing our callbacks for call ID [$callId]")
                             map[callId] = callbacks
                         }
                     }
@@ -107,5 +108,20 @@ class TelecomManager @WorkerThread constructor(context: Context) {
     fun onCoreStopped(core: Core) {
         Log.i("$TAG Core is being stopped")
         core.removeListener(coreListener)
+    }
+
+    @WorkerThread
+    fun applyAudioRouteToCallWithId(routes: List<AudioDevice.Type>, callId: String): Boolean {
+        Log.i(
+            "$TAG Looking for audio endpoint with type [${routes.first()}] for call with ID [$callId]"
+        )
+        val callControlCallback = map[callId]
+        if (callControlCallback == null) {
+            Log.w("$TAG Failed to find callbacks for call with ID [$callId]")
+            return false
+        }
+
+        callControlCallback.applyAudioRouteToCallWithId(routes)
+        return true
     }
 }

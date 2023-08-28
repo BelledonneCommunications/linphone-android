@@ -182,7 +182,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         coreContext.postOnCoreThread {
             if (::call.isInitialized) {
                 Log.i("$TAG Answering call [$call]")
-                call.accept()
+                coreContext.answerCall(call)
             }
         }
     }
@@ -244,7 +244,12 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                     coreContext.postOnCoreThread {
                         Log.i("$TAG Selected audio device with ID [${device.id}]")
                         if (::call.isInitialized) {
-                            call.outputAudioDevice = device
+                            when {
+                                isHeadset -> AudioRouteUtils.routeAudioToHeadset(call)
+                                isBluetooth -> AudioRouteUtils.routeAudioToBluetooth(call)
+                                isSpeaker -> AudioRouteUtils.routeAudioToSpeaker(call)
+                                else -> AudioRouteUtils.routeAudioToEarpiece(call)
+                            }
                         }
                     }
                 }

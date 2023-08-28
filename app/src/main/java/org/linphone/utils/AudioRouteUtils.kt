@@ -30,31 +30,6 @@ class AudioRouteUtils {
         private const val TAG = "[Audio Route Utils]"
 
         @WorkerThread
-        fun isSpeakerAudioRouteCurrentlyUsed(call: Call? = null): Boolean {
-            val currentCall = if (coreContext.core.callsNb > 0) {
-                call ?: coreContext.core.currentCall ?: coreContext.core.calls[0]
-            } else {
-                Log.w("$TAG No call found, checking audio route on Core")
-                null
-            }
-            val conference = coreContext.core.conference
-
-            val audioDevice = if (conference != null && conference.isIn) {
-                conference.outputAudioDevice
-            } else if (currentCall != null) {
-                currentCall.outputAudioDevice
-            } else {
-                coreContext.core.outputAudioDevice
-            }
-
-            if (audioDevice == null) return false
-            Log.i(
-                "$TAG Playback audio device currently in use is [${audioDevice.deviceName} (${audioDevice.driverName}) ${audioDevice.type}]"
-            )
-            return audioDevice.type == AudioDevice.Type.Speaker
-        }
-
-        @WorkerThread
         fun routeAudioToEarpiece(call: Call? = null) {
             routeAudioTo(call, arrayListOf(AudioDevice.Type.Earpiece))
         }
@@ -85,10 +60,8 @@ class AudioRouteUtils {
             val currentCall = call ?: coreContext.core.currentCall ?: coreContext.core.calls.firstOrNull()
             if (currentCall != null) {
                 applyAudioRouteChange(currentCall, types)
-                changeCaptureDeviceToMatchAudioRoute(currentCall, types)
             } else {
-                applyAudioRouteChange(call, types)
-                changeCaptureDeviceToMatchAudioRoute(call, types)
+                applyAudioRouteChange(null, types)
             }
         }
 
@@ -96,7 +69,8 @@ class AudioRouteUtils {
         private fun applyAudioRouteChange(
             call: Call?,
             types: List<AudioDevice.Type>,
-            output: Boolean = true
+            output: Boolean = true,
+            skipTelecom: Boolean = false
         ) {
             val currentCall = if (coreContext.core.callsNb > 0) {
                 call ?: coreContext.core.currentCall ?: coreContext.core.calls[0]
@@ -105,6 +79,25 @@ class AudioRouteUtils {
                 null
             }
 
+            if (!skipTelecom) {
+                val callId = currentCall?.callLog?.callId.orEmpty()
+                val success = coreContext.telecomManager.applyAudioRouteToCallWithId(types, callId)
+                if (!success) {
+                    Log.w("$TAG Failed to change audio endpoint to [$types] for call ID [$callId]")
+                    applyAudioRouteChange(currentCall, types, output, skipTelecom = true)
+                } else {
+                    return
+                }
+            }
+
+            applyAudioRouteChangeInLinphone(currentCall, types, output)
+        }
+
+        fun applyAudioRouteChangeInLinphone(
+            call: Call?,
+            types: List<AudioDevice.Type>,
+            output: Boolean = true
+        ) {
             val capability = if (output) {
                 AudioDevice.Capabilities.CapabilityPlay
             } else {
@@ -147,14 +140,14 @@ class AudioRouteUtils {
                 }
                 return
             }
-            if (currentCall != null) {
+            if (call != null) {
                 Log.i(
                     "$TAG Found [${audioDevice.type}] ${if (output) "playback" else "recorder"} audio device [${audioDevice.deviceName} (${audioDevice.driverName})], routing call audio to it"
                 )
                 if (output) {
-                    currentCall.outputAudioDevice = audioDevice
+                    call.outputAudioDevice = audioDevice
                 } else {
-                    currentCall.inputAudioDevice = audioDevice
+                    call.inputAudioDevice = audioDevice
                 }
             } else {
                 Log.i(
@@ -164,21 +157,6 @@ class AudioRouteUtils {
                     coreContext.core.outputAudioDevice = audioDevice
                 } else {
                     coreContext.core.inputAudioDevice = audioDevice
-                }
-            }
-        }
-
-        @WorkerThread
-        private fun changeCaptureDeviceToMatchAudioRoute(call: Call?, types: List<AudioDevice.Type>) {
-            when (types.first()) {
-                AudioDevice.Type.Earpiece, AudioDevice.Type.Speaker -> {
-                    Log.i(
-                        "$TAG Audio route requested to Earpiece or Speaker, setting input to Microphone"
-                    )
-                    applyAudioRouteChange(call, (arrayListOf(AudioDevice.Type.Microphone)), false)
-                }
-                else -> {
-                    Log.w("$TAG Unexpected audio device type: ${types.first()}")
                 }
             }
         }
