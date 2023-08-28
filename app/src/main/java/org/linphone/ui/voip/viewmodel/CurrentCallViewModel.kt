@@ -119,6 +119,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
             if (CurrentCallViewModel@call != call) {
                 return
             }
+            Log.i("$TAG Call [${call.remoteAddress.asStringUriOnly()}] state changed [$state]")
 
             if (LinphoneUtils.isCallOutgoing(call.state)) {
                 isVideoEnabled.postValue(call.params.isVideoEnabled)

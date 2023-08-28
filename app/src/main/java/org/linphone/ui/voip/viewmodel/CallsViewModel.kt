@@ -75,6 +75,9 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
             message: String
         ) {
             if (call == core.currentCall || core.currentCall == null) {
+                Log.i(
+                    "$TAG Current call [${call.remoteAddress.asStringUriOnly()}] state changed [$state]"
+                )
                 when (call.state) {
                     Call.State.Connected -> {
                         goToActiveCallEvent.postValue(Event(true))

@@ -49,7 +49,7 @@ class TelecomCallControlCallback constructor(
 
     private val callListener = object : CallListenerStub() {
         override fun onStateChanged(call: Call, state: Call.State?, message: String) {
-            Log.i("$TAG Call state changed [$state]")
+            Log.i("$TAG Call [${call.remoteAddress.asStringUriOnly()}] state changed [$state]")
             if (state == Call.State.Connected) {
                 if (call.dir == Call.Dir.Incoming) {
                     scope.launch {
@@ -137,7 +137,9 @@ class TelecomCallControlCallback constructor(
 
         callControl.isMuted.onEach { muted ->
             Log.i("$TAG We're asked to ${if (muted) "mute" else "unmute"} the call")
-            call.microphoneMuted = muted
+            coreContext.postOnCoreThread {
+                call.microphoneMuted = muted
+            }
         }.launchIn(scope)
     }
 

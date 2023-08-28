@@ -19,12 +19,15 @@
  */
 package org.linphone.core
 
+import android.app.Service
 import android.content.Intent
+import android.os.IBinder
+import androidx.annotation.MainThread
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.tools.Log
-import org.linphone.core.tools.service.CoreService
 
-class CoreForegroundService : CoreService() {
+@MainThread
+class CoreForegroundService : Service() {
     companion object {
         private const val TAG = "[Core Foreground Service]"
     }
@@ -42,18 +45,6 @@ class CoreForegroundService : CoreService() {
         return super.onStartCommand(intent, flags, startId)
     }
 
-    override fun createServiceNotificationChannel() {
-        // Done elsewhere
-    }
-
-    override fun showForegroundServiceNotification() {
-        // Done elsewhere
-    }
-
-    override fun hideForegroundServiceNotification() {
-        // Done elsewhere
-    }
-
     override fun onTaskRemoved(rootIntent: Intent?) {
         Log.i("$TAG Task removed, doing nothing")
 
@@ -65,5 +56,9 @@ class CoreForegroundService : CoreService() {
         coreContext.notificationsManager.onServiceDestroyed()
 
         super.onDestroy()
+    }
+
+    override fun onBind(p0: Intent?): IBinder? {
+        return null
     }
 }

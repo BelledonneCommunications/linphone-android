@@ -117,12 +117,22 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         }
     }
 
+    @MainThread
     fun onServiceStarted(service: CoreForegroundService) {
         Log.i("$TAG Service has been started")
         coreService = service
-        startCallForeground()
+
+        coreContext.postOnCoreThread { core ->
+            if (core.callsNb == 0) {
+                Log.w("$TAG No call anymore, stopping service")
+                stopCallForeground()
+            } else {
+                startCallForeground()
+            }
+        }
     }
 
+    @MainThread
     fun onServiceDestroyed() {
         Log.i("$TAG Service has been destroyed")
         coreService = null
@@ -355,6 +365,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         return builder.build()
     }
 
+    @WorkerThread
     private fun dismissCallNotification(call: Call) {
         val address = call.remoteAddress.asStringUriOnly()
         val notifiable: Notifiable? = callNotificationsMap[address]

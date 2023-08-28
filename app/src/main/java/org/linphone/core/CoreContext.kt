@@ -76,7 +76,7 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
             state: Call.State?,
             message: String
         ) {
-            Log.i("$TAG Call state changed [$state]")
+            Log.i("$TAG Call [${call.remoteAddress.asStringUriOnly()}] state changed [$state]")
             when (state) {
                 Call.State.OutgoingProgress, Call.State.Connected -> {
                     postOnMainThread {
