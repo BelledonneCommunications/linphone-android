@@ -14,6 +14,12 @@
     <string name="notification_channel_service_id" translatable="false">linphone_notification_service_id</string>
     <string name="notification_channel_service_name">&appName; service notification</string>
 
+    <string name="welcome_carousel_skip"><u>Skip</u></string>
+
+    <string name="assistant_forgotten_password"><u>Forgotten password?</u></string>
+
     <string name="incoming_call_notification_hangup_action_label">Hangup</string>
     <string name="incoming_call_notification_answer_action_label">Answer</string>
+
+    <string name="in_call_zrtp_sas_validation_skip"><u>Skip</u></string>
 </resources>

@@ -160,7 +160,7 @@
                 android:paddingBottom="13dp"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
-                android:text="Forgotten password?"
+                android:text="@string/assistant_forgotten_password"
                 android:textSize="13sp"
                 android:textColor="@color/gray_1"
                 app:layout_constraintStart_toStartOf="parent"

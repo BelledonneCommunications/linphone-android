@@ -33,7 +33,7 @@
                 android:paddingBottom="13dp"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
-                android:text="Skip"
+                android:text="@string/welcome_carousel_skip"
                 android:textSize="13sp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/pager"
