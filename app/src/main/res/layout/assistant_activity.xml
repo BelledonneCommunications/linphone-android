@@ -9,7 +9,7 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.voip.VoipActivity">
+        tools:context=".ui.assistant.AssistantActivity">
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/assistant_nav_container"

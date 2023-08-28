@@ -111,12 +111,16 @@ class VoipActivity : AppCompatActivity() {
         callsViewModel.goToActiveCallEvent.observe(this) {
             it.consume {
                 val navController = findNavController(R.id.voip_nav_container)
-                val action = if (navController.currentDestination?.id == R.id.outgoingCallFragment) {
-                    OutgoingCallFragmentDirections.actionOutgoingCallFragmentToActiveCallFragment()
-                } else if (navController.currentDestination?.id == R.id.outgoingCallFragment) {
-                    IncomingCallFragmentDirections.actionIncomingCallFragmentToActiveCallFragment()
-                } else {
-                    ActiveCallFragmentDirections.actionGlobalActiveCallFragment()
+                val action = when (navController.currentDestination?.id) {
+                    R.id.outgoingCallFragment -> {
+                        OutgoingCallFragmentDirections.actionOutgoingCallFragmentToActiveCallFragment()
+                    }
+                    R.id.incomingCallFragment -> {
+                        IncomingCallFragmentDirections.actionIncomingCallFragmentToActiveCallFragment()
+                    }
+                    else -> {
+                        ActiveCallFragmentDirections.actionGlobalActiveCallFragment()
+                    }
                 }
                 navController.navigate(action)
             }

@@ -40,6 +40,7 @@
 
         <activity
             android:name=".ui.main.MainActivity"
+            android:enableOnBackInvokedCallback="true"
             android:windowSoftInputMode="adjustResize"
             android:exported="true"
             android:label="@string/app_name">
@@ -51,13 +52,22 @@
 
         </activity>
 
+        <!-- Disable enableOnBackInvokedCallback so back gesture will go back in viewPager -->
+        <activity
+            android:name=".ui.welcome.WelcomeActivity"
+            android:enableOnBackInvokedCallback="false"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true" />
+
         <activity
             android:name=".ui.assistant.AssistantActivity"
+            android:enableOnBackInvokedCallback="true"
             android:launchMode="singleTask"
             android:resizeableActivity="true" />
 
         <activity
             android:name=".ui.voip.VoipActivity"
+            android:enableOnBackInvokedCallback="true"
             android:launchMode="singleTask"
             android:turnScreenOn="true"
             android:showWhenLocked="true"
