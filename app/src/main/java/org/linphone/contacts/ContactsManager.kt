@@ -125,8 +125,7 @@ class ContactsManager @UiThread constructor(context: Context) {
     }
 
     @WorkerThread
-    fun onCoreStarted() {
-        val core = coreContext.core
+    fun onCoreStarted(core: Core) {
         core.addListener(coreListener)
         for (list in core.friendsLists) {
             list.addListener(friendListListener)
@@ -134,8 +133,7 @@ class ContactsManager @UiThread constructor(context: Context) {
     }
 
     @WorkerThread
-    fun onCoreStopped() {
-        val core = coreContext.core
+    fun onCoreStopped(core: Core) {
         core.removeListener(coreListener)
         for (list in core.friendsLists) {
             list.removeListener(friendListListener)

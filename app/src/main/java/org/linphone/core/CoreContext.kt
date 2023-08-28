@@ -36,6 +36,7 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.contacts.ContactsManager
 import org.linphone.core.tools.Log
 import org.linphone.notifications.NotificationsManager
+import org.linphone.telecom.TelecomManager
 import org.linphone.ui.voip.VoipActivity
 import org.linphone.utils.ActivityMonitor
 import org.linphone.utils.LinphoneUtils
@@ -52,6 +53,8 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
     val contactsManager = ContactsManager(context)
 
     val notificationsManager = NotificationsManager(context)
+
+    private val telecomManager = TelecomManager(context)
 
     private val activityMonitor = ActivityMonitor()
 
@@ -122,8 +125,9 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
 
         core.start()
 
-        contactsManager.onCoreStarted()
-        notificationsManager.onCoreStarted()
+        contactsManager.onCoreStarted(core)
+        telecomManager.onCoreStarted(core)
+        notificationsManager.onCoreStarted(core)
 
         Looper.loop()
     }
@@ -132,8 +136,9 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
     override fun destroy() {
         core.stop()
 
-        contactsManager.onCoreStopped()
-        notificationsManager.onCoreStopped()
+        contactsManager.onCoreStopped(core)
+        telecomManager.onCoreStopped(core)
+        notificationsManager.onCoreStopped(core)
 
         postOnMainThread {
             (context as Application).unregisterActivityLifecycleCallbacks(activityMonitor)

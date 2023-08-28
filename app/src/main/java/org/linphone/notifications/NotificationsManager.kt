@@ -129,15 +129,15 @@ class NotificationsManager @MainThread constructor(private val context: Context)
     }
 
     @WorkerThread
-    fun onCoreStarted() {
-        coreContext.core.addListener(coreListener)
+    fun onCoreStarted(core: Core) {
+        Log.i("$TAG Core has been started")
+        core.addListener(coreListener)
     }
 
     @WorkerThread
-    fun onCoreStopped() {
+    fun onCoreStopped(core: Core) {
         Log.i("$TAG Getting destroyed, clearing foreground Service & call notifications")
-
-        coreContext.core.removeListener(coreListener)
+        core.removeListener(coreListener)
     }
 
     @WorkerThread
