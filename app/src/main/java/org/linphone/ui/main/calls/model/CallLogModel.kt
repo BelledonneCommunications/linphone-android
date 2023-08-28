@@ -14,7 +14,7 @@ import org.linphone.utils.TimestampUtils
 class CallLogModel @WorkerThread constructor(private val callLog: CallLog) {
     val id = callLog.callId ?: callLog.refKey
 
-    val address = if (callLog.dir == Dir.Outgoing) callLog.remoteAddress else callLog.fromAddress
+    val address = if (callLog.dir == Dir.Outgoing) callLog.toAddress else callLog.fromAddress
 
     val displayedAddress = address.asStringUriOnly()
 

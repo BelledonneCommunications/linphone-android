@@ -17,8 +17,6 @@ class CallLogViewModel @UiThread constructor() : ViewModel() {
 
     val historyCallLogs = MutableLiveData<ArrayList<CallLogHistoryModel>>()
 
-    val callLogFoundEvent = MutableLiveData<Event<Boolean>>()
-
     val historyDeletedEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -31,6 +29,7 @@ class CallLogViewModel @UiThread constructor() : ViewModel() {
             val callLog = core.findCallLogFromCallId(callId)
             if (callLog != null) {
                 val model = CallLogModel(callLog)
+                address = model.address
                 callLogModel.postValue(model)
 
                 val localAddress = if (callLog.dir == Call.Dir.Outgoing) callLog.fromAddress else callLog.toAddress
@@ -41,9 +40,6 @@ class CallLogViewModel @UiThread constructor() : ViewModel() {
                     history.add(historyModel)
                 }
                 historyCallLogs.postValue(history)
-
-                address = model.address
-                callLogFoundEvent.postValue(Event(true))
             }
         }
     }

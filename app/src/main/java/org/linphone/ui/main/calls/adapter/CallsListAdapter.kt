@@ -86,14 +86,14 @@ class CallsListAdapter(
             }
         }
     }
-}
 
-private class CallLogDiffCallback : DiffUtil.ItemCallback<CallLogModel>() {
-    override fun areItemsTheSame(oldItem: CallLogModel, newItem: CallLogModel): Boolean {
-        return oldItem.id == newItem.id
-    }
+    private class CallLogDiffCallback : DiffUtil.ItemCallback<CallLogModel>() {
+        override fun areItemsTheSame(oldItem: CallLogModel, newItem: CallLogModel): Boolean {
+            return oldItem.id == newItem.id
+        }
 
-    override fun areContentsTheSame(oldItem: CallLogModel, newItem: CallLogModel): Boolean {
-        return oldItem.avatarModel.id == newItem.avatarModel.id
+        override fun areContentsTheSame(oldItem: CallLogModel, newItem: CallLogModel): Boolean {
+            return oldItem.avatarModel.id == newItem.avatarModel.id
+        }
     }
 }

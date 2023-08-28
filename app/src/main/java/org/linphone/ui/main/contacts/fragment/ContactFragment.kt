@@ -112,8 +112,8 @@ class ContactFragment : GenericFragment() {
                 Log.i("$TAG Contact has been found, start postponed enter transition")
                 (view.parent as? ViewGroup)?.doOnPreDraw {
                     startPostponedEnterTransition()
+                    sharedViewModel.openSlidingPaneEvent.value = Event(true)
                 }
-                sharedViewModel.openSlidingPaneEvent.value = Event(true)
             }
         }
 

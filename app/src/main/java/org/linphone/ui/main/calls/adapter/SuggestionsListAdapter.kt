@@ -53,14 +53,14 @@ class SuggestionsListAdapter(
             }
         }
     }
-}
 
-private class SuggestionDiffCallback : DiffUtil.ItemCallback<ContactAvatarModel>() {
-    override fun areItemsTheSame(oldItem: ContactAvatarModel, newItem: ContactAvatarModel): Boolean {
-        return oldItem.friend == newItem.friend
-    }
+    private class SuggestionDiffCallback : DiffUtil.ItemCallback<ContactAvatarModel>() {
+        override fun areItemsTheSame(oldItem: ContactAvatarModel, newItem: ContactAvatarModel): Boolean {
+            return oldItem.friend == newItem.friend
+        }
 
-    override fun areContentsTheSame(oldItem: ContactAvatarModel, newItem: ContactAvatarModel): Boolean {
-        return false
+        override fun areContentsTheSame(oldItem: ContactAvatarModel, newItem: ContactAvatarModel): Boolean {
+            return false
+        }
     }
 }

@@ -34,11 +34,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.CallFragmentBinding
 import org.linphone.databinding.CallPopupMenuBinding
 import org.linphone.ui.main.MainActivity
+import org.linphone.ui.main.calls.adapter.CallHistoryListAdapter
 import org.linphone.ui.main.calls.viewmodel.CallLogViewModel
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.Event
@@ -50,8 +52,8 @@ class CallFragment : GenericFragment() {
     }
 
     private lateinit var binding: CallFragmentBinding
-
     private lateinit var viewModel: CallLogViewModel
+    private lateinit var adapter: CallHistoryListAdapter
 
     private val args: CallFragmentArgs by navArgs()
 
@@ -84,6 +86,13 @@ class CallFragment : GenericFragment() {
         Log.i("$TAG Looking up for call log with call id [$callId]")
         viewModel.findCallLogByCallId(callId)
 
+        adapter = CallHistoryListAdapter(viewLifecycleOwner)
+        binding.callHistory.setHasFixedSize(true)
+        binding.callHistory.adapter = adapter
+
+        val layoutManager = LinearLayoutManager(requireContext())
+        binding.callHistory.layoutManager = layoutManager
+
         binding.setBackClickListener {
             goBack()
         }
@@ -96,13 +105,12 @@ class CallFragment : GenericFragment() {
             viewModel.showBackButton.value = slideable
         }
 
-        viewModel.callLogFoundEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                Log.i("$TAG Call log has been found, start postponed enter transition")
+        viewModel.historyCallLogs.observe(viewLifecycleOwner) {
+            Log.i("$TAG Call history list ready with [${it.size}] items")
+            adapter.submitList(it)
 
-                (view.parent as? ViewGroup)?.doOnPreDraw {
-                    startPostponedEnterTransition()
-                }
+            (view.parent as? ViewGroup)?.doOnPreDraw {
+                startPostponedEnterTransition()
                 sharedViewModel.openSlidingPaneEvent.value = Event(true)
             }
         }

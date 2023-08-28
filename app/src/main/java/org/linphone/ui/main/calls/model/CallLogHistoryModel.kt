@@ -10,6 +10,8 @@ import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.TimestampUtils
 
 class CallLogHistoryModel @WorkerThread constructor(val callLog: CallLog) {
+    val id = callLog.callId ?: callLog.refKey
+
     val isOutgoing = MutableLiveData<Boolean>()
 
     val isSuccessful = MutableLiveData<Boolean>()

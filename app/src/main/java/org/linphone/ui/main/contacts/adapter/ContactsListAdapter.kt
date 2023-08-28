@@ -120,15 +120,15 @@ class ContactsListAdapter(
             }
         }
     }
-}
 
-private class ContactDiffCallback : DiffUtil.ItemCallback<ContactAvatarModel>() {
-    override fun areItemsTheSame(oldItem: ContactAvatarModel, newItem: ContactAvatarModel): Boolean {
-        return oldItem.id == newItem.id
-    }
+    private class ContactDiffCallback : DiffUtil.ItemCallback<ContactAvatarModel>() {
+        override fun areItemsTheSame(oldItem: ContactAvatarModel, newItem: ContactAvatarModel): Boolean {
+            return oldItem.id == newItem.id
+        }
 
-    override fun areContentsTheSame(oldItem: ContactAvatarModel, newItem: ContactAvatarModel): Boolean {
-        return oldItem.firstContactStartingByThatLetter.value == newItem.firstContactStartingByThatLetter.value &&
-            oldItem.presenceStatus.value == newItem.presenceStatus.value
+        override fun areContentsTheSame(oldItem: ContactAvatarModel, newItem: ContactAvatarModel): Boolean {
+            return oldItem.firstContactStartingByThatLetter.value == newItem.firstContactStartingByThatLetter.value &&
+                oldItem.presenceStatus.value == newItem.presenceStatus.value
+        }
     }
 }
