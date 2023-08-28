@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <import type="android.graphics.Typeface" />
+        <variable
+            name="icon"
+            type="Integer" />
+        <variable
+            name="message"
+            type="String" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="17dp"
+        android:layout_marginEnd="17dp">
+
+        <ImageView
+            android:id="@+id/toast_background"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:src="@drawable/shape_toast_red_shadow"
+            app:layout_constraintBottom_toBottomOf="@id/toast_message"
+            app:layout_constraintEnd_toEndOf="@id/toast_message"
+            app:layout_constraintStart_toStartOf="@id/toast_icon"
+            app:layout_constraintTop_toTopOf="@id/toast_message" />
+
+        <ImageView
+            android:id="@+id/toast_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:adjustViewBounds="true"
+            android:src="@{icon, default=@drawable/wifi_low}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/toast_message"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:tint="@color/red_danger" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/toast_message"
+            style="@style/default_text_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:text="@{message, default=`Low Wi-Fi signal!`}"
+            android:textColor="@color/red_danger"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/toast_icon"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

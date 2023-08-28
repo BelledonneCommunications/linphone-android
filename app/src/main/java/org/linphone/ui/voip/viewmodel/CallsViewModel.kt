@@ -24,6 +24,8 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.core.Alert
+import org.linphone.core.AlertListenerStub
 import org.linphone.core.Call
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
@@ -31,6 +33,10 @@ import org.linphone.core.tools.Log
 import org.linphone.utils.Event
 
 class CallsViewModel @UiThread constructor() : ViewModel() {
+    companion object {
+        private const val TAG = "[Calls ViewModel]"
+    }
+
     val goToActiveCallEvent = MutableLiveData<Event<Boolean>>()
 
     val showIncomingCallEvent = MutableLiveData<Event<Boolean>>()
@@ -39,10 +45,25 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
 
     val noMoreCallEvent = MutableLiveData<Event<Boolean>>()
 
+    val showLowSignalEvent = MutableLiveData<Event<Boolean>>()
+
+    private val alertListener = object : AlertListenerStub() {
+        @WorkerThread
+        override fun onOnTerminated(alert: Alert) {
+            val remote = alert.call.remoteAddress.asStringUriOnly()
+            Log.w("$TAG Alert of type [${alert.type}] dismissed for call from [$remote]")
+            alert.removeListener(this)
+
+            if (alert.type == Alert.Type.QoSLowSignal) {
+                showLowSignalEvent.postValue(Event(false))
+            }
+        }
+    }
+
     private val coreListener = object : CoreListenerStub() {
         @WorkerThread
         override fun onLastCallEnded(core: Core) {
-            Log.i("[Calls ViewModel] No more call, leaving VoIP activity")
+            Log.i("$TAG No more call, leaving VoIP activity")
             noMoreCallEvent.postValue(Event(true))
         }
 
@@ -61,6 +82,17 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
                     else -> {
                     }
                 }
+            }
+        }
+
+        @WorkerThread
+        override fun onOnAlert(core: Core, alert: Alert) {
+            val remote = alert.call.remoteAddress.asStringUriOnly()
+            Log.w("$TAG Alert of type [${alert.type}] triggered for call from [$remote]")
+            alert.addListener(alertListener)
+
+            if (alert.type == Alert.Type.QoSLowSignal) {
+                showLowSignalEvent.postValue(Event(true))
             }
         }
     }
@@ -82,10 +114,10 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
                     Call.State.IncomingReceived, Call.State.IncomingEarlyMedia -> {
                         showIncomingCallEvent.postValue(Event(true))
                     }
-                    else -> {
-                    }
+                    else -> {}
                 }
             } else {
+                Log.w("$TAG No call found, leaving VoIP activity")
                 noMoreCallEvent.postValue(Event(true))
             }
         }

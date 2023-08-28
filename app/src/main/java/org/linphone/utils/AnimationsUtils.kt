@@ -38,6 +38,10 @@ fun View.slideInToastFromTop(
     visible: Boolean
 ) {
     val view = this
+    if (visible && view.visibility == View.VISIBLE) {
+        // Toast is already visible, hide existing one first
+        view.visibility = View.GONE
+    }
 
     val transition: Transition = Slide(Gravity.TOP)
     transition.duration = 600
@@ -51,7 +55,7 @@ fun View.slideInToastFromTop(
 fun View.slideInToastFromTopForDuration(
     root: ViewGroup,
     lifecycleScope: LifecycleCoroutineScope,
-    duration: Long = 5000
+    duration: Long = 4000
 ) {
     val view = this
 

@@ -45,6 +45,7 @@ import org.linphone.ui.voip.model.AudioDeviceModel
 import org.linphone.ui.voip.viewmodel.CallsViewModel
 import org.linphone.ui.voip.viewmodel.CurrentCallViewModel
 import org.linphone.ui.voip.viewmodel.SharedCallViewModel
+import org.linphone.utils.slideInToastFromTop
 import org.linphone.utils.slideInToastFromTopForDuration
 
 @UiThread
@@ -132,6 +133,17 @@ class VoipActivity : AppCompatActivity() {
             }
         }
 
+        callsViewModel.showLowSignalEvent.observe(this) {
+            it.consume { show ->
+                if (show) {
+                    showRedToast("Low Wi-Fi signal!", R.drawable.wifi_low)
+                } else {
+                    hideRedToast()
+                    showGreenToast("Wi-Fi signal no longer low", R.drawable.wifi_high)
+                }
+            }
+        }
+
         sharedViewModel.toggleFullScreenEvent.observe(this) {
             it.consume { hide ->
                 hideUI(hide)
@@ -145,6 +157,27 @@ class VoipActivity : AppCompatActivity() {
 
         val target = binding.blueToast.root
         target.slideInToastFromTopForDuration(binding.root as ViewGroup, lifecycleScope)
+    }
+
+    private fun showRedToast(message: String, @DrawableRes icon: Int) {
+        binding.redToast.message = message
+        binding.redToast.icon = icon
+
+        val target = binding.redToast.root
+        target.slideInToastFromTop(binding.root as ViewGroup, true)
+    }
+
+    private fun hideRedToast() {
+        val target = binding.redToast.root
+        target.slideInToastFromTop(binding.root as ViewGroup, false)
+    }
+
+    private fun showGreenToast(message: String, @DrawableRes icon: Int) {
+        binding.greenToast.message = message
+        binding.greenToast.icon = icon
+
+        val target = binding.greenToast.root
+        target.slideInToastFromTopForDuration(binding.root as ViewGroup, lifecycleScope, 2000)
     }
 
     private fun hideUI(hide: Boolean) {

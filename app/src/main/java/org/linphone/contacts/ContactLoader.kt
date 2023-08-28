@@ -26,6 +26,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.util.Patterns
+import androidx.annotation.MainThread
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.CursorLoader
 import androidx.loader.content.Loader
@@ -50,6 +51,7 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
         )
     }
 
+    @MainThread
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
         val mimeType = ContactsContract.Data.MIMETYPE
         val mimeSelection = "$mimeType = ? OR $mimeType = ? OR $mimeType = ? OR $mimeType = ?"
@@ -72,6 +74,7 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
         )
     }
 
+    @MainThread
     override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor?) {
         if (cursor == null) {
             Log.e("[Contacts Loader] Cursor is null!")
@@ -79,15 +82,14 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
         }
         Log.i("[Contacts Loader] Load finished, found ${cursor.count} entries in cursor")
 
-        val state = coreContext.core.globalState
-        if (state == GlobalState.Shutdown || state == GlobalState.Off) {
-            Log.w("[Contacts Loader] Core is being stopped or already destroyed, abort")
-            return
-        }
-
         coreContext.postOnCoreThread { core ->
-            val friends = HashMap<String, Friend>()
+            val state = coreContext.core.globalState
+            if (state == GlobalState.Shutdown || state == GlobalState.Off) {
+                Log.w("[Contacts Loader] Core is being stopped or already destroyed, abort")
+                return@postOnCoreThread
+            }
 
+            val friends = HashMap<String, Friend>()
             try {
                 // Cursor can be null now that we are on a different dispatcher according to Crashlytics
                 val friendsPhoneNumbers = arrayListOf<String>()
@@ -315,6 +317,7 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
         }
     }
 
+    @MainThread
     override fun onLoaderReset(loader: Loader<Cursor>) {
         Log.i("[Contacts Loader] Loader reset")
     }

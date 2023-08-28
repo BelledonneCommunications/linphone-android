@@ -53,4 +53,7 @@ url=https://subscribe.linphone.org/api/
 [lime]
 lime_update_threshold=86400
 
+[alerts]
+alerts_enabled=1
+
 ## End of factory rc
