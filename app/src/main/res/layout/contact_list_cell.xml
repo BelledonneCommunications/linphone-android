@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:text="@{model.firstLetter, default=`A`}"
-            android:visibility="@{model.noAlphabet ? View.GONE : model.firstContactStartingByThatLetter ? View.VISIBLE : View.INVISIBLE}"
+            android:visibility="@{model.firstContactStartingByThatLetter ? View.VISIBLE : View.INVISIBLE}"
             android:textColor="@color/gray_10"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"

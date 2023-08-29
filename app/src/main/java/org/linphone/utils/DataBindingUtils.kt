@@ -202,6 +202,12 @@ fun ImageView.setPresenceIcon(presence: ConsolidatedPresence?) {
 }
 
 @UiThread
+@BindingAdapter("avatarInitials")
+fun AvatarView.loadInitials(initials: String?) {
+    avatarInitials = initials.orEmpty()
+}
+
+@UiThread
 @BindingAdapter("accountAvatar")
 fun AvatarView.loadAccountAvatar(account: AccountModel?) {
     if (account == null) {

@@ -51,8 +51,6 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) {
 
     val firstContactStartingByThatLetter = MutableLiveData<Boolean>()
 
-    val noAlphabet = MutableLiveData<Boolean>()
-
     val showTrust = MutableLiveData<Boolean>()
 
     private val friendListener = object : FriendListenerStub() {

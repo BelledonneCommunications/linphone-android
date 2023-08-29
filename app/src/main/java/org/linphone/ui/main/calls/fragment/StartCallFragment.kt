@@ -32,9 +32,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.CallStartFragmentBinding
-import org.linphone.ui.main.calls.adapter.SuggestionsListAdapter
 import org.linphone.ui.main.calls.viewmodel.StartCallViewModel
-import org.linphone.ui.main.calls.viewmodel.SuggestionsListViewModel
 import org.linphone.ui.main.contacts.adapter.ContactsListAdapter
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressClickListener
@@ -61,15 +59,7 @@ class StartCallFragment : GenericFragment() {
         R.id.startCallFragment
     )
 
-    private val suggestionsListViewModel: SuggestionsListViewModel by navGraphViewModels(
-        R.id.startCallFragment
-    )
-
     private lateinit var contactsAdapter: ContactsListAdapter
-    private lateinit var suggestionsAdapter: SuggestionsListAdapter
-
-    private var contactsListReady = false
-    private var suggestionsListReady = false
 
     private val listener = object : ContactNumberOrAddressClickListener {
         @UiThread
@@ -122,59 +112,32 @@ class StartCallFragment : GenericFragment() {
             }
         }
 
-        binding.contactsList.layoutManager = LinearLayoutManager(requireContext())
-
-        suggestionsAdapter = SuggestionsListAdapter(viewLifecycleOwner)
-        binding.suggestionsList.setHasFixedSize(true)
-        binding.suggestionsList.adapter = suggestionsAdapter
-
-        suggestionsAdapter.contactClickedEvent.observe(viewLifecycleOwner) {
-            it.consume { model ->
-                startCall(model)
+        viewModel.onSuggestionClickedEvent.observe(viewLifecycleOwner) {
+            it.consume { address ->
+                coreContext.postOnCoreThread {
+                    coreContext.startCall(address)
+                }
             }
         }
 
-        binding.suggestionsList.layoutManager = LinearLayoutManager(requireContext())
+        binding.contactsList.layoutManager = LinearLayoutManager(requireContext())
 
         contactsListViewModel.contactsList.observe(
             viewLifecycleOwner
         ) {
             Log.i("$TAG Contacts list is ready with [${it.size}] items")
-            contactsAdapter.submitList(it) {
-                // Otherwise list won't show until keyboard is opened for example...
-                binding.contactsList.requestLayout()
-            }
+            contactsAdapter.submitList(it)
             viewModel.emptyContactsList.value = it.isEmpty()
 
-            if (suggestionsListReady && !contactsListReady) {
-                Log.i("$TAG Suggestions list is also ready, start postponed enter transition")
-                (view.parent as? ViewGroup)?.doOnPreDraw {
-                    startPostponedEnterTransition()
-                }
+            Log.i("$TAG Suggestions list is also ready, start postponed enter transition")
+            (view.parent as? ViewGroup)?.doOnPreDraw {
+                startPostponedEnterTransition()
             }
-            contactsListReady = true
-        }
-
-        suggestionsListViewModel.suggestionsList.observe(viewLifecycleOwner) {
-            Log.i("$TAG Suggestions list is ready with [${it.size}] items")
-            suggestionsAdapter.submitList(it) {
-                // Otherwise list won't show until keyboard is opened for example...
-                binding.suggestionsList.requestLayout()
-            }
-            viewModel.emptySuggestionsList.value = it.isEmpty()
-
-            if (contactsListReady && !suggestionsListReady) {
-                Log.i("$TAG Contacts list is also ready, start postponed enter transition")
-                (view.parent as? ViewGroup)?.doOnPreDraw {
-                    startPostponedEnterTransition()
-                }
-            }
-            suggestionsListReady = true
         }
 
         viewModel.searchFilter.observe(viewLifecycleOwner) { filter ->
             contactsListViewModel.applyFilter(filter)
-            suggestionsListViewModel.applyFilter(filter)
+            viewModel.applyFilter(filter)
         }
     }
 
