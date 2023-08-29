@@ -139,6 +139,11 @@ class ContactsListFragment : GenericFragment() {
         binding.setOnNewContactClicked {
             sharedViewModel.showNewContactEvent.value = Event(true)
         }
+
+        binding.setFilterClickListener {
+            // TODO FIXME: show context menu first to let user decides which filter to use
+            listViewModel.toggleContactsFilter()
+        }
     }
 
     private fun configureAdapter(adapter: ContactsListAdapter) {

@@ -111,6 +111,12 @@ class ContactsListViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
+    fun toggleContactsFilter() {
+        limitSearchToLinphoneAccounts = !limitSearchToLinphoneAccounts
+        applyFilter(currentFilter)
+    }
+
+    @UiThread
     fun toggleFavouritesVisibility() {
         showFavourites.value = showFavourites.value == false
     }

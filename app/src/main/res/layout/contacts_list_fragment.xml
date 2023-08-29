@@ -9,10 +9,7 @@
             name="onNewContactClicked"
             type="View.OnClickListener" />
         <variable
-            name="onConversationsClicked"
-            type="View.OnClickListener" />
-        <variable
-            name="onCallsClicked"
+            name="filterClickListener"
             type="View.OnClickListener" />
         <variable
             name="viewModel"
@@ -35,10 +32,23 @@
             android:name="org.linphone.ui.main.fragment.TopBarFragment"
             android:layout_width="0dp"
             android:layout_height="@dimen/top_bar_height"
+            android:layout_marginEnd="9dp"
             bind:layout="@layout/top_search_bar"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toStartOf="@id/filter"/>
+
+        <ImageView
+            android:onClick="@{filterClickListener}"
+            android:id="@+id/filter"
+            android:layout_width="24dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="9dp"
+            android:src="@drawable/funnel"
+            app:tint="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/top_bar"
+            app:layout_constraintBottom_toBottomOf="@id/top_bar" />
 
         <ImageView
             android:id="@+id/background"
