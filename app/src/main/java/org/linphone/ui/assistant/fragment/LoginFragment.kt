@@ -24,6 +24,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import org.linphone.R
@@ -67,10 +68,26 @@ class LoginFragment : GenericFragment() {
             findNavController().navigate(action)
         }
 
+        binding.setQrCodeClickListener {
+            val action = LoginFragmentDirections.actionLoginFragmentToQrCodeScannerFragment()
+            findNavController().navigate(action)
+        }
+
         viewModel.accountLoggedInEvent.observe(viewLifecycleOwner) {
             it.consume {
                 goBack()
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        // In case we come back from QrCodeScannerFragment
+        val white = ContextCompat.getColor(
+            requireContext(),
+            R.color.white
+        )
+        requireActivity().window.navigationBarColor = white
     }
 }

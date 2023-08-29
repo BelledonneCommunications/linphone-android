@@ -16,7 +16,16 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
+            app:popExitAnim="@anim/slide_out_right"
+            app:launchSingleTop="true" />
+        <action
+            android:id="@+id/action_loginFragment_to_qrCodeScannerFragment"
+            app:destination="@id/qrCodeScannerFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:launchSingleTop="true" />
     </fragment>
 
     <fragment
@@ -24,5 +33,11 @@
         android:name="org.linphone.ui.assistant.fragment.RegisterFragment"
         android:label="RegisterFragment"
         tools:layout="@layout/assistant_register_fragment" />
+
+    <fragment
+        android:id="@+id/qrCodeScannerFragment"
+        android:name="org.linphone.ui.assistant.fragment.QrCodeScannerFragment"
+        android:label="QrCodeScannerFragment"
+        tools:layout="@layout/assistant_qr_code_scanner_fragment" />
 
 </navigation>

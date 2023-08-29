@@ -26,6 +26,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewOutlineProvider
 import androidx.annotation.UiThread
+import java.lang.NumberFormatException
 import org.linphone.R
 import org.linphone.mediastream.video.capture.CaptureTextureView
 
@@ -71,12 +72,14 @@ class RoundCornersTextureView : CaptureTextureView {
                     2 -> DisplayMode.HYBRID
                     else -> DisplayMode.BLACK_BARS
                 }
-                mRadius = getFloat(
-                    R.styleable.RoundCornersTextureView_radius,
-                    context.resources.getDimension(
-                        R.dimen.in_call_round_corners_texture_view_radius
+                mRadius = try {
+                    getFloat(
+                        R.styleable.RoundCornersTextureView_radius,
+                        context.resources.getDimension(
+                            R.dimen.in_call_round_corners_texture_view_radius
+                        )
                     )
-                )
+                } catch (nfe: NumberFormatException) { 0f }
             } finally {
                 recycle()
             }

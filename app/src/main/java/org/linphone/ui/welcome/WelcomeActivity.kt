@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.welcome
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -32,6 +33,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.WelcomeActivityBinding
+import org.linphone.ui.assistant.AssistantActivity
 import org.linphone.ui.welcome.fragment.WelcomePage1Fragment
 import org.linphone.ui.welcome.fragment.WelcomePage2Fragment
 import org.linphone.ui.welcome.fragment.WelcomePage3Fragment
@@ -80,8 +82,12 @@ class WelcomeActivity : AppCompatActivity() {
 
         binding.setNextClickListener {
             if (viewPager.currentItem == PAGES - 1) {
-                Log.i("$TAG User clicked on 'start' button, leaving activity")
+                Log.i(
+                    "$TAG User clicked on 'start' button, leaving activity and going into Assistant"
+                )
                 finish()
+                val intent = Intent(this, AssistantActivity::class.java)
+                startActivity(intent)
             } else {
                 viewPager.currentItem = viewPager.currentItem + 1
             }

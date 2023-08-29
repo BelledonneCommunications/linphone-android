@@ -13,6 +13,9 @@
             name="registerClickListener"
             type="View.OnClickListener" />
         <variable
+            name="qrCodeClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.assistant.viewmodel.AssistantViewModel" />
     </data>
@@ -203,6 +206,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/or"/>
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:onClick="@{qrCodeClickListener}"
                 style="@style/default_text_style_600"
                 android:id="@+id/scan_qr_code"
                 android:layout_width="0dp"

@@ -20,13 +20,17 @@
 package org.linphone.ui.assistant
 
 import android.os.Bundle
+import android.view.ViewGroup
+import androidx.annotation.DrawableRes
 import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
 import org.linphone.LinphoneApplication
 import org.linphone.R
 import org.linphone.databinding.AssistantActivityBinding
+import org.linphone.utils.slideInToastFromTopForDuration
 
 @UiThread
 class AssistantActivity : AppCompatActivity() {
@@ -42,5 +46,21 @@ class AssistantActivity : AppCompatActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.assistant_activity)
         binding.lifecycleOwner = this
+    }
+
+    fun showGreenToast(message: String, @DrawableRes icon: Int) {
+        binding.greenToast.message = message
+        binding.greenToast.icon = icon
+
+        val target = binding.greenToast.root
+        target.slideInToastFromTopForDuration(binding.root as ViewGroup, lifecycleScope)
+    }
+
+    fun showRedToast(message: String, @DrawableRes icon: Int) {
+        binding.redToast.message = message
+        binding.redToast.icon = icon
+
+        val target = binding.redToast.root
+        target.slideInToastFromTopForDuration(binding.root as ViewGroup, lifecycleScope)
     }
 }
