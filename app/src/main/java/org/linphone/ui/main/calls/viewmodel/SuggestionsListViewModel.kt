@@ -34,6 +34,7 @@ import org.linphone.core.SearchResult
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.model.isInSecureMode
+import org.linphone.utils.LinphoneUtils
 
 class SuggestionsListViewModel @UiThread constructor() : ViewModel() {
     companion object {
@@ -101,10 +102,9 @@ class SuggestionsListViewModel @UiThread constructor() : ViewModel() {
 
         for (result in results) {
             val address = result.address
-            Log.i("$TAG ${address?.asStringUriOnly()}")
+
             if (address != null) {
                 val friend = coreContext.core.findFriend(address)
-                Log.i("$TAG ${friend?.name}")
                 // We don't want Friends here as they would also be in contacts list
                 if (friend == null) {
                     // If user-input generated result (always last) already exists, don't show it again
@@ -175,23 +175,14 @@ class SuggestionsListViewModel @UiThread constructor() : ViewModel() {
 
     @WorkerThread
     private fun createFriendFromSearchResult(searchResult: SearchResult): Friend {
-        val searchResultFriend = searchResult.friend
-        if (searchResultFriend != null) return searchResultFriend
-
         val friend = coreContext.core.createFriend()
 
         val address = searchResult.address
         if (address != null) {
             friend.address = address
-        }
 
-        val number = searchResult.phoneNumber
-        if (number != null) {
-            friend.addPhoneNumber(number)
-
-            if (address != null && address.username == number) {
-                friend.removeAddress(address)
-            }
+            friend.name = LinphoneUtils.getDisplayName(address)
+            friend.refKey = address.asStringUriOnly().hashCode().toString()
         }
 
         return friend

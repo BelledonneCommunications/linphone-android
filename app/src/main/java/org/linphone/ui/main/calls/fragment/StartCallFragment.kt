@@ -30,6 +30,7 @@ import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.core.tools.Log
 import org.linphone.databinding.CallStartFragmentBinding
 import org.linphone.ui.main.calls.adapter.SuggestionsListAdapter
 import org.linphone.ui.main.calls.viewmodel.StartCallViewModel
@@ -46,6 +47,10 @@ import org.linphone.utils.DialogUtils
 
 @UiThread
 class StartCallFragment : GenericFragment() {
+    companion object {
+        private const val TAG = "[Start Call Fragment]"
+    }
+
     private lateinit var binding: CallStartFragmentBinding
 
     private val viewModel: StartCallViewModel by navGraphViewModels(
@@ -62,6 +67,9 @@ class StartCallFragment : GenericFragment() {
 
     private lateinit var contactsAdapter: ContactsListAdapter
     private lateinit var suggestionsAdapter: SuggestionsListAdapter
+
+    private var contactsListReady = false
+    private var suggestionsListReady = false
 
     private val listener = object : ContactNumberOrAddressClickListener {
         @UiThread
@@ -131,17 +139,37 @@ class StartCallFragment : GenericFragment() {
         contactsListViewModel.contactsList.observe(
             viewLifecycleOwner
         ) {
-            contactsAdapter.submitList(it)
+            Log.i("$TAG Contacts list is ready with [${it.size}] items")
+            contactsAdapter.submitList(it) {
+                // Otherwise list won't show until keyboard is opened for example...
+                binding.contactsList.requestLayout()
+            }
             viewModel.emptyContactsList.value = it.isEmpty()
 
-            (view.parent as? ViewGroup)?.doOnPreDraw {
-                startPostponedEnterTransition()
+            if (suggestionsListReady && !contactsListReady) {
+                Log.i("$TAG Suggestions list is also ready, start postponed enter transition")
+                (view.parent as? ViewGroup)?.doOnPreDraw {
+                    startPostponedEnterTransition()
+                }
             }
+            contactsListReady = true
         }
 
         suggestionsListViewModel.suggestionsList.observe(viewLifecycleOwner) {
-            suggestionsAdapter.submitList(it)
+            Log.i("$TAG Suggestions list is ready with [${it.size}] items")
+            suggestionsAdapter.submitList(it) {
+                // Otherwise list won't show until keyboard is opened for example...
+                binding.suggestionsList.requestLayout()
+            }
             viewModel.emptySuggestionsList.value = it.isEmpty()
+
+            if (contactsListReady && !suggestionsListReady) {
+                Log.i("$TAG Contacts list is also ready, start postponed enter transition")
+                (view.parent as? ViewGroup)?.doOnPreDraw {
+                    startPostponedEnterTransition()
+                }
+            }
+            suggestionsListReady = true
         }
 
         viewModel.searchFilter.observe(viewLifecycleOwner) { filter ->
