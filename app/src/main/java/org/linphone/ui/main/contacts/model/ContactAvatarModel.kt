@@ -57,7 +57,7 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) {
         @WorkerThread
         override fun onPresenceReceived(fr: Friend) {
             Log.d(
-                "$TAG Presence received for friend [${fr.name}]: [${friend.consolidatedPresence}]"
+                "$TAG Presence received for friend [${fr.name}]: [${fr.consolidatedPresence}]"
             )
             presenceStatus.postValue(fr.consolidatedPresence)
         }

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
+import org.linphone.core.ConsolidatedPresence
 import org.linphone.databinding.ContactFavouriteListCellBinding
 import org.linphone.databinding.ContactListCellBinding
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
@@ -128,7 +129,8 @@ class ContactsListAdapter(
 
         override fun areContentsTheSame(oldItem: ContactAvatarModel, newItem: ContactAvatarModel): Boolean {
             return oldItem.firstContactStartingByThatLetter.value == newItem.firstContactStartingByThatLetter.value &&
-                oldItem.presenceStatus.value == newItem.presenceStatus.value
+                oldItem.presenceStatus.value == newItem.presenceStatus.value &&
+                (newItem.presenceStatus.value == ConsolidatedPresence.Busy || newItem.presenceStatus.value == ConsolidatedPresence.Online)
         }
     }
 }

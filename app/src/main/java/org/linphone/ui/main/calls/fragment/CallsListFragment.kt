@@ -131,7 +131,7 @@ class CallsListFragment : GenericFragment() {
                     { // onDeleteCallLog
                         Log.i("$TAG Deleting call log with ref key or call ID [${model.id}]")
                         model.delete()
-                        adapter.deleteSelection()
+                        listViewModel.applyFilter()
                     }
                 )
                 modalBottomSheet.show(parentFragmentManager, CallsListMenuDialogFragment.TAG)

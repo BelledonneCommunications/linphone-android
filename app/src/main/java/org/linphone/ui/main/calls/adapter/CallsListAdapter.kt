@@ -50,11 +50,6 @@ class CallsListAdapter(
         selectedAdapterPosition = -1
     }
 
-    fun deleteSelection() {
-        notifyItemRemoved(selectedAdapterPosition)
-        selectedAdapterPosition = -1
-    }
-
     inner class ViewHolder(
         val binding: CallListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
@@ -89,11 +84,11 @@ class CallsListAdapter(
 
     private class CallLogDiffCallback : DiffUtil.ItemCallback<CallLogModel>() {
         override fun areItemsTheSame(oldItem: CallLogModel, newItem: CallLogModel): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.id == newItem.id && oldItem.timestamp == newItem.timestamp
         }
 
         override fun areContentsTheSame(oldItem: CallLogModel, newItem: CallLogModel): Boolean {
-            return oldItem.avatarModel.id == newItem.avatarModel.id
+            return oldItem.avatarModel.id == newItem.avatarModel.id && oldItem.iconResId.value == newItem.iconResId.value
         }
     }
 }
