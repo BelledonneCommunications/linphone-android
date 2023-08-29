@@ -90,7 +90,7 @@
             android:padding="10dp"
             android:drawableStart="@drawable/magnifying_glass"
             android:drawablePadding="10dp"
-            android:background="@drawable/shape_search_square_background"
+            android:background="@drawable/edit_text_background"
             android:hint="Rechercher des contacts"
             android:text="@={viewModel.filter}"
             android:textSize="14sp"

@@ -47,6 +47,16 @@
             app:layout_constraintStart_toEndOf="@id/back"
             app:layout_constraintTop_toTopOf="parent"/>
 
+        <View
+            android:id="@+id/background"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/gray_7"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
         <androidx.appcompat.widget.AppCompatEditText
             style="@style/default_text_style"
             android:id="@+id/search_bar"
@@ -62,7 +72,7 @@
             android:drawableStart="@drawable/magnifying_glass"
             android:drawablePadding="10dp"
             android:drawableTint="@color/gray_9"
-            android:background="@drawable/shape_search_square_background"
+            android:background="@drawable/edit_text_background"
             android:hint="Search contact or history call"
             android:text="@={viewModel.searchFilter}"
             android:textSize="14sp"
@@ -70,6 +80,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title" />
+
+        <ImageView
+            android:onClick="@{() -> viewModel.clearFilter()}"
+            android:id="@+id/clear_field"
+            android:visibility="@{viewModel.searchFilter.length() > 0 ? View.VISIBLE : View.GONE, default=gone}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:src="@drawable/x"
+            app:tint="@color/gray_9"
+            app:layout_constraintTop_toTopOf="@id/search_bar"
+            app:layout_constraintBottom_toBottomOf="@id/search_bar"
+            app:layout_constraintEnd_toEndOf="@id/search_bar"/>
+
 
         <!-- margin start must be half the size of the group_call_icon below -->
         <View

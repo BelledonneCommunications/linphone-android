@@ -29,4 +29,9 @@ class StartCallViewModel @UiThread constructor() : ViewModel() {
     val emptyContactsList = MutableLiveData<Boolean>()
 
     val emptySuggestionsList = MutableLiveData<Boolean>()
+
+    @UiThread
+    fun clearFilter() {
+        searchFilter.value = ""
+    }
 }

@@ -181,7 +181,7 @@
             android:paddingBottom="5dp"
             android:maxLines="5"
             android:textSize="14sp"
-            android:background="@drawable/shape_edittext_white_background"
+            android:background="@drawable/edit_text_background"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/attach_file"
             app:layout_constraintEnd_toStartOf="@id/voice_message"/>

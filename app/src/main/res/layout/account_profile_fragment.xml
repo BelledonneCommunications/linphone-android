@@ -113,7 +113,7 @@
             android:textSize="14sp"
             android:textColor="@color/gray_9"
             android:maxLines="1"
-            android:background="@drawable/shape_edit_text_background"
+            android:background="@drawable/edit_text_background"
             android:inputType="text|textPersonName"
             app:layout_constraintTop_toBottomOf="@id/first_name_label"
             app:layout_constraintStart_toStartOf="parent"
