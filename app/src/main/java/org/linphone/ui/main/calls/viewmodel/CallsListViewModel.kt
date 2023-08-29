@@ -22,15 +22,15 @@ package org.linphone.ui.main.calls.viewmodel
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.CallLog
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.ui.main.calls.model.CallLogModel
+import org.linphone.ui.main.viewmodel.AbstractTopBarViewModel
 import org.linphone.utils.Event
 
-class CallsListViewModel @UiThread constructor() : ViewModel() {
+class CallsListViewModel @UiThread constructor() : AbstractTopBarViewModel() {
     val callLogs = MutableLiveData<ArrayList<CallLogModel>>()
 
     val historyDeletedEvent: MutableLiveData<Event<Boolean>> by lazy {

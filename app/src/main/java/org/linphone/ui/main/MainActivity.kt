@@ -46,7 +46,6 @@ import org.linphone.databinding.MainActivityBinding
 import org.linphone.ui.assistant.AssistantActivity
 import org.linphone.ui.main.settings.fragment.AccountProfileFragmentDirections
 import org.linphone.ui.main.viewmodel.DrawerMenuViewModel
-import org.linphone.ui.welcome.WelcomeActivity
 import org.linphone.utils.slideInToastFromTopForDuration
 
 @UiThread
@@ -125,7 +124,7 @@ class MainActivity : AppCompatActivity() {
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
 
-        startActivity(Intent(this, WelcomeActivity::class.java))
+        // TODO startActivity(Intent(this, WelcomeActivity::class.java))
 
         if (checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(

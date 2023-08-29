@@ -48,6 +48,8 @@ import org.linphone.ui.main.calls.viewmodel.CallsListViewModel
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
+import org.linphone.utils.hideKeyboard
+import org.linphone.utils.showKeyboard
 
 @UiThread
 class CallsListFragment : GenericFragment() {
@@ -179,12 +181,6 @@ class CallsListFragment : GenericFragment() {
             }
         }
 
-        sharedViewModel.searchFilter.observe(viewLifecycleOwner) {
-            it.consume { filter ->
-                listViewModel.applyFilter(filter)
-            }
-        }
-
         binding.setMenuClickListener {
             showPopupMenu()
         }
@@ -192,6 +188,31 @@ class CallsListFragment : GenericFragment() {
         binding.setStartCallClickListener {
             findNavController().navigate(R.id.action_global_startCallFragment)
         }
+
+        // TopBarFragment related
+
+        listViewModel.openDrawerMenuEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                (requireActivity() as MainActivity).toggleDrawerMenu()
+            }
+        }
+
+        listViewModel.searchFilter.observe(viewLifecycleOwner) { filter ->
+            listViewModel.applyFilter(filter)
+        }
+
+        listViewModel.focusSearchBarEvent.observe(viewLifecycleOwner) {
+            it.consume { show ->
+                if (show) {
+                    // To automatically open keyboard
+                    binding.topBar.search.showKeyboard(requireActivity().window)
+                } else {
+                    binding.topBar.search.hideKeyboard()
+                }
+            }
+        }
+
+        listViewModel.title.value = "Calls"
     }
 
     override fun onResume() {

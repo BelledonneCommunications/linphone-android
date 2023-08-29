@@ -38,10 +38,13 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactsListFragmentBinding
+import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.contacts.adapter.ContactsListAdapter
 import org.linphone.ui.main.contacts.viewmodel.ContactsListViewModel
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.Event
+import org.linphone.utils.hideKeyboard
+import org.linphone.utils.showKeyboard
 
 @UiThread
 class ContactsListFragment : GenericFragment() {
@@ -130,12 +133,6 @@ class ContactsListFragment : GenericFragment() {
             }
         }
 
-        sharedViewModel.searchFilter.observe(viewLifecycleOwner) {
-            it.consume { filter ->
-                listViewModel.applyFilter(filter)
-            }
-        }
-
         binding.setOnNewContactClicked {
             sharedViewModel.showNewContactEvent.value = Event(true)
         }
@@ -144,6 +141,31 @@ class ContactsListFragment : GenericFragment() {
             // TODO FIXME: show context menu first to let user decides which filter to use
             listViewModel.toggleContactsFilter()
         }
+
+        // TopBarFragment related
+
+        listViewModel.openDrawerMenuEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                (requireActivity() as MainActivity).toggleDrawerMenu()
+            }
+        }
+
+        listViewModel.searchFilter.observe(viewLifecycleOwner) { filter ->
+            listViewModel.applyFilter(filter)
+        }
+
+        listViewModel.focusSearchBarEvent.observe(viewLifecycleOwner) {
+            it.consume { show ->
+                if (show) {
+                    // To automatically open keyboard
+                    binding.topBar.search.showKeyboard(requireActivity().window)
+                } else {
+                    binding.topBar.search.hideKeyboard()
+                }
+            }
+        }
+
+        listViewModel.title.value = "Contacts"
     }
 
     private fun configureAdapter(adapter: ContactsListAdapter) {

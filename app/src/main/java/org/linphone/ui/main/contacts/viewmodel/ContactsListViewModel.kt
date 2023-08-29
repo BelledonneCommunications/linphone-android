@@ -22,7 +22,6 @@ package org.linphone.ui.main.contacts.viewmodel
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import java.io.File
 import java.util.ArrayList
@@ -38,10 +37,11 @@ import org.linphone.core.SearchResult
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.model.isInSecureMode
+import org.linphone.ui.main.viewmodel.AbstractTopBarViewModel
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 
-class ContactsListViewModel @UiThread constructor() : ViewModel() {
+class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() {
     companion object {
         private const val TAG = "[Contacts List ViewModel]"
     }

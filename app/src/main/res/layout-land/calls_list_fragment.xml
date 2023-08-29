@@ -33,13 +33,13 @@
             app:constraint_referenced_ids="no_calls_image, no_calls_label"
             android:visibility="@{viewModel.callLogs.empty ? View.VISIBLE : View.GONE}" />
 
-        <androidx.fragment.app.FragmentContainerView
+        <include
             android:id="@+id/top_bar"
-            android:name="org.linphone.ui.main.fragment.TopBarFragment"
+            layout="@layout/top_search_bar"
+            bind:viewModel="@{viewModel}"
             android:layout_width="0dp"
             android:layout_height="@dimen/top_bar_height"
             android:layout_marginEnd="9dp"
-            bind:layout="@layout/top_search_bar"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
             app:layout_constraintEnd_toStartOf="@id/menu"/>
@@ -51,6 +51,7 @@
             android:layout_height="0dp"
             android:layout_marginEnd="9dp"
             android:src="@drawable/dots_three_vertical"
+            android:visibility="@{viewModel.searchBarVisible ? View.GONE : View.VISIBLE}"
             app:tint="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/top_bar"
