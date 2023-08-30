@@ -29,6 +29,7 @@ import android.graphics.PorterDuffXfermode
 import android.graphics.Rect
 import android.net.Uri
 import androidx.annotation.AnyThread
+import androidx.annotation.WorkerThread
 import java.io.FileNotFoundException
 import org.linphone.core.tools.Log
 
@@ -36,7 +37,7 @@ class ImageUtils {
     companion object {
         private const val TAG = "[Image Utils]"
 
-        @AnyThread
+        @WorkerThread
         fun getRoundBitmapFromUri(
             context: Context,
             fromPictureUri: Uri?

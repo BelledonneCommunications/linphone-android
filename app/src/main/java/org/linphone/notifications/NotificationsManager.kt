@@ -200,6 +200,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         val service = coreService
         if (service != null) {
             Log.i("$TAG Service found, starting it as foreground using notification")
+            // TODO FIXME: API LEVEL, add compatibility
             try {
                 service.startForeground(
                     notifiable.notificationId,

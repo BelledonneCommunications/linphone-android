@@ -34,7 +34,7 @@ android {
 
     defaultConfig {
         applicationId packageName
-        minSdk 27
+        minSdk 28
         targetSdk 34
         versionCode 60000
         versionName "6.0.0"
