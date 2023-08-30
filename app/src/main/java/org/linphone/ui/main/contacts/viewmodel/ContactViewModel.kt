@@ -27,17 +27,15 @@ import java.io.File
 import java.util.Locale
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.core.Address
+import org.linphone.contacts.getListOfSipAddressesAndPhoneNumbers
 import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.contacts.model.ContactDeviceModel
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressClickListener
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel
-import org.linphone.ui.main.model.isInSecureMode
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
-import org.linphone.utils.PhoneNumberUtils
 
 class ContactViewModel @UiThread constructor() : ViewModel() {
     companion object {
@@ -124,7 +122,7 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
 
     @UiThread
     fun findContactByRefKey(refKey: String) {
-        coreContext.postOnCoreThread { core ->
+        coreContext.postOnCoreThread {
             val friend = coreContext.contactsManager.findContactById(refKey)
             if (friend != null) {
                 Log.i("$TAG Found contact [${friend.name}] matching ref key [$refKey]")
@@ -142,82 +140,7 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                     title.postValue(jobTitle!!)
                 }
 
-                val addressesAndNumbers = arrayListOf<ContactNumberOrAddressModel>()
-                for (address in friend.addresses) {
-                    val data = ContactNumberOrAddressModel(
-                        address,
-                        address.asStringUriOnly(),
-                        true, // SIP addresses are always enabled
-                        listener,
-                        true
-                    )
-                    addressesAndNumbers.add(data)
-                }
-                val indexOfLastSipAddress = addressesAndNumbers.count()
-                Log.i(
-                    "$TAG Contact [${friend.name}] has [$indexOfLastSipAddress] SIP ${if (indexOfLastSipAddress > 1) "addresses" else "address"}"
-                )
-
-                for (number in friend.phoneNumbersWithLabel) {
-                    val presenceModel = friend.getPresenceModelForUriOrTel(number.phoneNumber)
-                    val hasPresenceInfo = !presenceModel?.contact.isNullOrEmpty()
-                    var presenceAddress: Address? = null
-
-                    if (presenceModel != null && hasPresenceInfo) {
-                        Log.i("$TAG Phone number [${number.phoneNumber}] has presence information")
-                        // Show linked SIP address if not already stored as-is
-                        val contact = presenceModel.contact
-                        val found = addressesAndNumbers.find {
-                            it.displayedValue == contact
-                        }
-                        if (!contact.isNullOrEmpty() && found == null) {
-                            val address = core.interpretUrl(contact, false)
-                            if (address != null) {
-                                address.clean() // To remove ;user=phone
-                                presenceAddress = address
-                                val data = ContactNumberOrAddressModel(
-                                    address,
-                                    address.asStringUriOnly(),
-                                    true, // SIP addresses are always enabled
-                                    listener,
-                                    true
-                                )
-                                addressesAndNumbers.add(indexOfLastSipAddress, data)
-                                Log.i(
-                                    "$TAG Phone number [${number.phoneNumber}] is linked to SIP address [${presenceAddress.asStringUriOnly()}]"
-                                )
-                            }
-                        } else if (found != null) {
-                            presenceAddress = found.address
-                            Log.i(
-                                "$TAG Phone number [${number.phoneNumber}] is linked to existing SIP address [${presenceAddress?.asStringUriOnly()}]"
-                            )
-                        }
-                    }
-
-                    // phone numbers are disabled is secure mode unless linked to a SIP address
-                    val enablePhoneNumbers = hasPresenceInfo || core.defaultAccount?.isInSecureMode() != true
-                    val address = presenceAddress ?: core.interpretUrl(number.phoneNumber, true)
-                    val label = PhoneNumberUtils.vcardParamStringToAddressBookLabel(
-                        coreContext.context.resources,
-                        number.label ?: ""
-                    )
-                    val data = ContactNumberOrAddressModel(
-                        address,
-                        number.phoneNumber,
-                        enablePhoneNumbers,
-                        listener,
-                        false,
-                        label,
-                        presenceAddress != null
-                    )
-                    addressesAndNumbers.add(data)
-                }
-
-                val phoneNumbersCount = addressesAndNumbers.count() - indexOfLastSipAddress
-                Log.i(
-                    "$TAG Contact [${friend.name}] has [$phoneNumbersCount] phone ${if (phoneNumbersCount > 1) "numbers" else "number"}"
-                )
+                val addressesAndNumbers = friend.getListOfSipAddressesAndPhoneNumbers(listener)
                 sipAddressesAndPhoneNumbers.postValue(addressesAndNumbers)
 
                 val devicesList = arrayListOf<ContactDeviceModel>()

@@ -24,7 +24,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.contacts.ContactData
-import org.linphone.contacts.ContactsListener
+import org.linphone.contacts.ContactsManager.ContactsListener
 import org.linphone.core.Address
 import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoomListenerStub

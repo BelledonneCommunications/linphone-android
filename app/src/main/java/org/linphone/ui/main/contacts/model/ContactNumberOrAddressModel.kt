@@ -20,10 +20,11 @@
 package org.linphone.ui.main.contacts.model
 
 import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.core.Address
 
-class ContactNumberOrAddressModel @UiThread constructor(
+class ContactNumberOrAddressModel @WorkerThread constructor(
     val address: Address?,
     val displayedValue: String,
     val isEnabled: Boolean,

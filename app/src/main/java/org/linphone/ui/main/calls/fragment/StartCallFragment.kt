@@ -30,6 +30,7 @@ import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.contacts.getListOfSipAddressesAndPhoneNumbers
 import org.linphone.core.tools.Log
 import org.linphone.databinding.CallStartFragmentBinding
 import org.linphone.ui.main.calls.viewmodel.StartCallViewModel
@@ -160,32 +161,7 @@ class StartCallFragment : GenericFragment() {
                     coreContext.startCall(address)
                 }
             } else {
-                val list = arrayListOf<ContactNumberOrAddressModel>()
-                for (address in friend.addresses) {
-                    val addressModel = ContactNumberOrAddressModel(
-                        address,
-                        address.asStringUriOnly(),
-                        true,
-                        listener,
-                        true
-                    )
-                    list.add(addressModel)
-                }
-
-                if (enablePhoneNumbers) {
-                    for (number in friend.phoneNumbersWithLabel) {
-                        val address = core.interpretUrl(number.phoneNumber, true)
-                        val addressModel = ContactNumberOrAddressModel(
-                            address,
-                            number.phoneNumber,
-                            true,
-                            listener,
-                            false,
-                            number.label.orEmpty()
-                        )
-                        list.add(addressModel)
-                    }
-                }
+                val list = friend.getListOfSipAddressesAndPhoneNumbers(listener)
 
                 coreContext.postOnMainThread {
                     val model = NumberOrAddressPickerDialogModel(list)

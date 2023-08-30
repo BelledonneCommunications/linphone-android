@@ -26,7 +26,7 @@ import androidx.lifecycle.ViewModel
 import java.util.ArrayList
 import org.linphone.LinphoneApplication
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.contacts.ContactsListener
+import org.linphone.contacts.ContactsManager.ContactsListener
 import org.linphone.core.Address
 import org.linphone.core.Friend
 import org.linphone.core.MagicSearch
