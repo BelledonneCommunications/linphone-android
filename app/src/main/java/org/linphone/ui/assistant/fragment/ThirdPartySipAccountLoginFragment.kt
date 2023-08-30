@@ -19,32 +19,25 @@
  */
 package org.linphone.ui.assistant.fragment
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.navigation.fragment.findNavController
-import org.linphone.core.tools.Log
-import org.linphone.databinding.AssistantRegisterFragmentBinding
+import org.linphone.databinding.AssistantThirdPartySipAccountLoginFragmentBinding
 import org.linphone.ui.main.fragment.GenericFragment
 
 @UiThread
-class RegisterFragment : GenericFragment() {
-    companion object {
-        private const val TAG = "[Register Fragment]"
-    }
-
-    private lateinit var binding: AssistantRegisterFragmentBinding
+class ThirdPartySipAccountLoginFragment : GenericFragment() {
+    private lateinit var binding: AssistantThirdPartySipAccountLoginFragmentBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = AssistantRegisterFragmentBinding.inflate(layoutInflater)
+        binding = AssistantThirdPartySipAccountLoginFragmentBinding.inflate(layoutInflater)
         return binding.root
     }
 
@@ -59,23 +52,6 @@ class RegisterFragment : GenericFragment() {
 
         binding.setBackClickListener {
             goBack()
-        }
-
-        binding.setLoginClickListener {
-            goBack()
-        }
-
-        binding.setOpenSubscribeWebPageClickListener {
-            try {
-                val url = "https://subscribe.linphone.org"
-                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                startActivity(browserIntent)
-            } catch (ise: IllegalStateException) {
-                Log.e("$TAG Can't start ACTION_VIEW intent, IllegalStateException: $ise")
-            }
-        }
-
-        binding.setCreateClickListener {
         }
     }
 }

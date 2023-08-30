@@ -9,6 +9,12 @@
             name="backClickListener"
             type="View.OnClickListener" />
         <variable
+            name="createClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="openSubscribeWebPageClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="loginClickListener"
             type="View.OnClickListener" />
     </data>
@@ -33,16 +39,29 @@
                 app:tint="@color/gray_1"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
-    
+
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:src="@drawable/header"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/back"
+                app:layout_constraintBottom_toBottomOf="@id/title"/>
+
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style_800"
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="100dp"
+                android:paddingBottom="30dp"
                 android:text="Register"
                 android:textSize="20sp"
-                android:textColor="@color/gray_9"
+                android:textColor="@color/white"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
@@ -144,6 +163,7 @@
                 app:layout_constraintEnd_toEndOf="parent"/>
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:onClick="@{createClickListener}"
                 style="@style/default_text_style_600"
                 android:id="@+id/create"
                 android:layout_width="0dp"
@@ -177,6 +197,7 @@
                 app:layout_constraintEnd_toEndOf="parent"/>
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:onClick="@{openSubscribeWebPageClickListener}"
                 style="@style/default_text_style_600"
                 android:id="@+id/create_email_account"
                 android:layout_width="wrap_content"

@@ -34,6 +34,10 @@ import org.linphone.ui.main.fragment.GenericFragment
 
 @UiThread
 class LoginFragment : GenericFragment() {
+    companion object {
+        private const val TAG = "[Login Fragment]"
+    }
+
     private lateinit var binding: AssistantLoginFragmentBinding
 
     private val viewModel: AssistantViewModel by navGraphViewModels(
@@ -70,6 +74,11 @@ class LoginFragment : GenericFragment() {
 
         binding.setQrCodeClickListener {
             val action = LoginFragmentDirections.actionLoginFragmentToQrCodeScannerFragment()
+            findNavController().navigate(action)
+        }
+
+        binding.setThirdPartySipAccountLoginClickListener {
+            val action = LoginFragmentDirections.actionLoginFragmentToThirdPartySipAccountLoginFragment()
             findNavController().navigate(action)
         }
 

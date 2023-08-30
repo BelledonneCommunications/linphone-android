@@ -13,6 +13,9 @@
             name="registerClickListener"
             type="View.OnClickListener" />
         <variable
+            name="thirdPartySipAccountLoginClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="qrCodeClickListener"
             type="View.OnClickListener" />
         <variable
@@ -40,6 +43,18 @@
                 app:tint="@color/gray_1"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
+
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:src="@drawable/header"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/back"
+                app:layout_constraintBottom_toBottomOf="@id/title"/>
     
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style_800"
@@ -47,9 +62,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="100dp"
+                android:paddingBottom="30dp"
                 android:text="Login"
                 android:textSize="20sp"
-                android:textColor="@color/gray_9"
+                android:textColor="@color/white"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
@@ -59,7 +75,7 @@
                 style="@style/default_text_style_700"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="48dp"
+                android:layout_marginTop="18dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:text="Username*"
@@ -231,6 +247,7 @@
                 app:layout_constraintTop_toBottomOf="@id/or" />
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:onClick="@{thirdPartySipAccountLoginClickListener}"
                 style="@style/default_text_style_600"
                 android:id="@+id/third_party_sip_account"
                 android:layout_width="0dp"
