@@ -44,8 +44,8 @@
         <ImageView
             android:id="@+id/trusted"
             android:visibility="@{model.trusted ? View.VISIBLE : View.GONE}"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
             android:layout_marginEnd="10dp"
             android:src="@drawable/trusted"
             app:layout_constraintTop_toTopOf="parent"

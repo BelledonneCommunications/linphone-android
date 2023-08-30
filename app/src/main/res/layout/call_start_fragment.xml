@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View" />
         <variable
             name="backClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="hideNumpadClickListener"
             type="View.OnClickListener" />
         <variable
             name="viewModel"
@@ -16,7 +19,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="@color/gray_7">
 
         <ImageView
             android:id="@+id/back"
@@ -51,7 +54,7 @@
             android:id="@+id/background"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@color/gray_7"
+            android:background="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -82,9 +85,22 @@
             app:layout_constraintTop_toBottomOf="@id/title" />
 
         <ImageView
+            android:id="@+id/numpad"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_marginEnd="15dp"
+            android:onClick="@{() -> viewModel.switchBetweenKeyboardAndNumpad()}"
+            android:src="@{viewModel.isNumpadVisible ? @drawable/keyboard : @drawable/numpad, default=@drawable/numpad}"
+            android:visibility="@{viewModel.searchFilter.length() == 0 ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@id/search_bar"
+            app:layout_constraintEnd_toEndOf="@id/search_bar"
+            app:layout_constraintTop_toTopOf="@id/search_bar"
+            app:tint="@color/gray_9" />
+
+        <ImageView
             android:id="@+id/clear_field"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
             android:layout_marginEnd="15dp"
             android:onClick="@{() -> viewModel.clearFilter()}"
             android:src="@drawable/x"
@@ -225,6 +241,20 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/suggestions_label"
             app:layout_constraintBottom_toBottomOf="parent" />
+
+        <ViewStub
+            android:id="@+id/numpad_layout"
+            android:inflatedId="@+id/numpad_inflated"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout="@layout/call_start_numpad"
+            android:visibility="@{viewModel.isNumpadVisible ? View.VISIBLE : View.GONE}"
+            inflatedVisibility="@{viewModel.isNumpadVisible ? View.VISIBLE : View.GONE}"
+            handleClickedListener="@{hideNumpadClickListener}"
+            model="@{viewModel.numpadModel}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

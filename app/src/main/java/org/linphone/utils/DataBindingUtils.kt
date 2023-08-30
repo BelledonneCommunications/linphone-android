@@ -40,6 +40,7 @@ import androidx.core.view.doOnLayout
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.LifecycleOwner
 import coil.load
 import coil.transform.CircleCropTransformation
 import io.getstream.avatarview.AvatarView
@@ -120,7 +121,7 @@ fun View.setKeyboardInsetListener(lambda: (visible: Boolean) -> Unit) {
             lambda(isKeyboardVisible)
         } catch (ise: IllegalStateException) {
             Log.e(
-                "[Databinding Utils] Failed to called lambda after keyboard visibility changed: $ise"
+                "[Data Binding Utils] Failed to called lambda after keyboard visibility changed: $ise"
             )
         }
 
@@ -137,7 +138,7 @@ fun View.setKeyboardInsetListener(lambda: (visible: Boolean) -> Unit) {
                     lambda(isKeyboardVisible)
                 } catch (ise: IllegalStateException) {
                     Log.e(
-                        "[Databinding Utils] Failed to called lambda after keyboard visibility changed: $ise"
+                        "[Data Binding Utils] Failed to called lambda after keyboard visibility changed: $ise"
                     )
                 }
             }
@@ -283,4 +284,13 @@ fun setConstraintLayoutBottomMargin(view: View, margins: Float) {
     val m = margins.toInt()
     params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, m)
     view.layoutParams = params
+}
+
+@BindingAdapter("inflatedLifecycleOwner")
+fun setInflatedViewStubLifecycleOwner(view: View, enable: Boolean) {
+    val binding = DataBindingUtil.bind<ViewDataBinding>(view)
+    // This is a bit hacky...
+    if (view.context is LifecycleOwner) {
+        binding?.lifecycleOwner = view.context as? LifecycleOwner
+    }
 }

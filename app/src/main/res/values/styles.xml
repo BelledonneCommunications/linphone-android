@@ -50,6 +50,14 @@
         <item name="android:drawableTint">@color/red_danger</item>
         <item name="android:drawablePadding">8dp</item>
     </style>
+    <style name="call_start_numpad_digits_style">
+        <item name="android:fontFamily">@font/noto_sans</item>
+        <item name="android:textColor">@color/gray_9</item>
+        <item name="android:textSize">32sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:elevation">3dp</item>
+        <item name="android:background">@drawable/shape_circle_white_background</item>
+    </style>
     <style name="in_call_extra_action_label_style">
         <item name="android:fontFamily">@font/noto_sans</item>
         <item name="android:textSize">14sp</item>

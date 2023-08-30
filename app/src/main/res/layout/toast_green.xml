@@ -32,8 +32,8 @@
 
         <ImageView
             android:id="@+id/toast_icon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
             android:adjustViewBounds="true"
             android:src="@{icon, default=@drawable/check_fat_fill}"
             app:layout_constraintBottom_toBottomOf="parent"

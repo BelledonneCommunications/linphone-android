@@ -33,6 +33,7 @@ import org.linphone.core.MagicSearch
 import org.linphone.core.MagicSearchListenerStub
 import org.linphone.core.SearchResult
 import org.linphone.core.tools.Log
+import org.linphone.ui.main.calls.model.NumpadModel
 import org.linphone.ui.main.calls.model.SuggestionModel
 import org.linphone.ui.main.model.isInSecureMode
 import org.linphone.utils.Event
@@ -48,6 +49,18 @@ class StartCallViewModel @UiThread constructor() : ViewModel() {
     val emptyContactsList = MutableLiveData<Boolean>()
 
     val suggestionsList = MutableLiveData<ArrayList<SuggestionModel>>()
+
+    val numpadModel: NumpadModel
+
+    val isNumpadVisible = MutableLiveData<Boolean>()
+
+    val appendDigitToSearchBarEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
+
+    val requestKeyboardVisibilityChangedEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
 
     val onSuggestionClickedEvent: MutableLiveData<Event<Address>> by lazy {
         MutableLiveData<Event<Address>>()
@@ -81,6 +94,31 @@ class StartCallViewModel @UiThread constructor() : ViewModel() {
     }
 
     init {
+        isNumpadVisible.value = false
+        numpadModel = NumpadModel(
+            { digit ->
+                // onDigitClicked
+                appendDigitToSearchBarEvent.value = Event(digit)
+                // Don't do that, cursor will stay at start
+                // searchFilter.value = "${searchFilter.value.orEmpty()}$digit"
+            },
+            { // OnCallClicked
+                val suggestion = searchFilter.value.orEmpty()
+                if (suggestion.isNotEmpty()) {
+                    Log.i("$TAG Using numpad dial button to call [$suggestion]")
+                    coreContext.postOnCoreThread { core ->
+                        val address = core.interpretUrl(suggestion, true)
+                        if (address != null) {
+                            Log.i("$TAG Calling [${address.asStringUriOnly()}]")
+                            onSuggestionClickedEvent.postValue(Event(address))
+                        } else {
+                            Log.e("$TAG Failed to parse [$suggestion] as SIP address")
+                        }
+                    }
+                }
+            }
+        )
+
         coreContext.postOnCoreThread { core ->
             val defaultAccount = core.defaultAccount
             limitSearchToLinphoneAccounts = defaultAccount?.isInSecureMode() ?: false
@@ -106,6 +144,17 @@ class StartCallViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun clearFilter() {
         searchFilter.value = ""
+    }
+
+    @UiThread
+    fun switchBetweenKeyboardAndNumpad() {
+        requestKeyboardVisibilityChangedEvent.value = Event(isNumpadVisible.value == true)
+        isNumpadVisible.value = isNumpadVisible.value == false
+    }
+
+    @UiThread
+    fun hideNumpad() {
+        isNumpadVisible.value = false
     }
 
     @WorkerThread

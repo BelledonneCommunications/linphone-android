@@ -43,6 +43,9 @@ import org.linphone.ui.main.contacts.viewmodel.ContactsListViewModel
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.ui.main.model.isInSecureMode
 import org.linphone.utils.DialogUtils
+import org.linphone.utils.hideKeyboard
+import org.linphone.utils.setKeyboardInsetListener
+import org.linphone.utils.showKeyboard
 
 @UiThread
 class StartCallFragment : GenericFragment() {
@@ -103,6 +106,10 @@ class StartCallFragment : GenericFragment() {
             goBack()
         }
 
+        binding.setHideNumpadClickListener {
+            viewModel.hideNumpad()
+        }
+
         contactsAdapter = ContactsListAdapter(viewLifecycleOwner, disableLongClick = true)
         binding.contactsList.setHasFixedSize(true)
         binding.contactsList.adapter = contactsAdapter
@@ -139,6 +146,32 @@ class StartCallFragment : GenericFragment() {
         viewModel.searchFilter.observe(viewLifecycleOwner) { filter ->
             contactsListViewModel.applyFilter(filter)
             viewModel.applyFilter(filter)
+        }
+
+        viewModel.appendDigitToSearchBarEvent.observe(viewLifecycleOwner) {
+            it.consume { digit ->
+                val newValue = "${binding.searchBar.text}$digit"
+                binding.searchBar.setText(newValue)
+                binding.searchBar.setSelection(newValue.length)
+            }
+        }
+
+        viewModel.requestKeyboardVisibilityChangedEvent.observe(viewLifecycleOwner) {
+            it.consume { show ->
+                if (show) {
+                    // To automatically open keyboard
+                    binding.searchBar.showKeyboard(requireActivity().window)
+                } else {
+                    binding.searchBar.requestFocus()
+                    binding.searchBar.hideKeyboard()
+                }
+            }
+        }
+
+        binding.root.setKeyboardInsetListener { keyboardVisible ->
+            if (keyboardVisible) {
+                viewModel.isNumpadVisible.value = false
+            }
         }
     }
 

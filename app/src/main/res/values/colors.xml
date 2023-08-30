@@ -19,6 +19,7 @@
     <color name="warning_orange_background">#FFEACB</color>
     <color name="warning_orange_pressed_background">#FFB266</color>
     <color name="dialog_background">#22334D</color>
+    <color name="drawer_handle">#C0D1D9</color>
 
     <color name="gradient_start">#EEF7F8</color>
 
