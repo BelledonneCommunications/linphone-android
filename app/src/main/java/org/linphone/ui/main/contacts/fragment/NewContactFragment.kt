@@ -110,26 +110,8 @@ class NewContactFragment : GenericFragment() {
         }
 
         binding.setBackClickListener {
-            val model = ConfirmationDialogModel()
-            val dialog = DialogUtils.getCancelContactChangesConfirmationDialog(
-                requireActivity(),
-                model
-            )
-
-            model.dismissEvent.observe(viewLifecycleOwner) {
-                it.consume {
-                    dialog.dismiss()
-                }
-            }
-
-            model.confirmRemovalEvent.observe(viewLifecycleOwner) {
-                it.consume {
-                    goBack()
-                    dialog.dismiss()
-                }
-            }
-
-            dialog.show()
+            goBack()
+            // TODO: confirmation dialog
         }
 
         binding.setPickImageClickListener {
@@ -202,5 +184,28 @@ class NewContactFragment : GenericFragment() {
 
     private fun pickImage() {
         pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+    }
+
+    private fun showAbortConfirmationDialog() {
+        val model = ConfirmationDialogModel()
+        val dialog = DialogUtils.getCancelContactChangesConfirmationDialog(
+            requireActivity(),
+            model
+        )
+
+        model.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        model.confirmRemovalEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                goBack()
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
     }
 }

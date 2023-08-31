@@ -24,11 +24,10 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import java.util.ArrayList
-import org.linphone.LinphoneApplication
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.contacts.ContactsManager.ContactsListener
 import org.linphone.core.Address
-import org.linphone.core.Friend
 import org.linphone.core.MagicSearch
 import org.linphone.core.MagicSearchListenerStub
 import org.linphone.core.SearchResult
@@ -37,7 +36,6 @@ import org.linphone.ui.main.calls.model.NumpadModel
 import org.linphone.ui.main.calls.model.SuggestionModel
 import org.linphone.ui.main.model.isInSecureMode
 import org.linphone.utils.Event
-import org.linphone.utils.LinphoneUtils
 
 class StartCallViewModel @UiThread constructor() : ViewModel() {
     companion object {
@@ -86,9 +84,9 @@ class StartCallViewModel @UiThread constructor() : ViewModel() {
             Log.i("$TAG Contacts have been (re)loaded, updating list")
             applyFilter(
                 currentFilter,
-                if (limitSearchToLinphoneAccounts) LinphoneApplication.corePreferences.defaultDomain else "",
+                if (limitSearchToLinphoneAccounts) corePreferences.defaultDomain else "",
                 MagicSearch.Source.CallLogs.toInt() or MagicSearch.Source.ChatRooms.toInt() or MagicSearch.Source.Request.toInt(),
-                MagicSearch.Aggregation.Friend
+                MagicSearch.Aggregation.None
             )
         }
     }
@@ -199,9 +197,9 @@ class StartCallViewModel @UiThread constructor() : ViewModel() {
         coreContext.postOnCoreThread {
             applyFilter(
                 filter,
-                if (limitSearchToLinphoneAccounts) LinphoneApplication.corePreferences.defaultDomain else "",
+                if (limitSearchToLinphoneAccounts) corePreferences.defaultDomain else "",
                 MagicSearch.Source.CallLogs.toInt() or MagicSearch.Source.ChatRooms.toInt() or MagicSearch.Source.Request.toInt(),
-                MagicSearch.Aggregation.Friend
+                MagicSearch.Aggregation.None
             )
         }
     }
@@ -232,20 +230,5 @@ class StartCallViewModel @UiThread constructor() : ViewModel() {
             sources,
             aggregation
         )
-    }
-
-    @WorkerThread
-    private fun createFriendFromSearchResult(searchResult: SearchResult): Friend {
-        val friend = coreContext.core.createFriend()
-
-        val address = searchResult.address
-        if (address != null) {
-            friend.address = address
-
-            friend.name = LinphoneUtils.getDisplayName(address)
-            friend.refKey = address.asStringUriOnly().hashCode().toString()
-        }
-
-        return friend
     }
 }
