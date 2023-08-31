@@ -3,13 +3,10 @@ package org.linphone.ui.main.settings.viewmodel
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import java.io.File
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Account
 import org.linphone.core.tools.Log
-import org.linphone.ui.main.model.getPicturePath
 import org.linphone.utils.Event
-import org.linphone.utils.FileUtils
 
 class AccountProfileViewModel @UiThread constructor() : ViewModel() {
     companion object {
@@ -35,11 +32,11 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
                 it.params.identityAddress?.asStringUriOnly() == identity
             }
             if (found != null) {
-                Log.i("$TAG Found matching local friend [$found]")
+                Log.i("$TAG Found matching account [$found]")
                 account = found
                 sipAddress.postValue(account.params.identityAddress?.asStringUriOnly())
                 displayName.postValue(account.params.identityAddress?.displayName)
-                picturePath.postValue(account.getPicturePath())
+                picturePath.postValue(account.params.pictureUri)
                 internationalPrefix.postValue(account.params.internationalPrefix)
 
                 accountFoundEvent.postValue(Event(true))
@@ -58,6 +55,12 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
 
                 copy.internationalPrefix = internationalPrefix.value.orEmpty()
 
+                val newPictureUri = picturePath.value
+                if (!newPictureUri.isNullOrEmpty() && newPictureUri != params.pictureUri) {
+                    Log.i("$TAG New account profile picture [$newPictureUri]")
+                    copy.pictureUri = newPictureUri
+                }
+
                 val address = params.identityAddress?.clone()
                 if (address != null) {
                     val newValue = displayName.value.orEmpty().trim()
@@ -65,23 +68,13 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
                     copy.identityAddress = address
                     // This will trigger a REGISTER, so account display name will be updated by
                     // CoreListener.onAccountRegistrationStateChanged everywhere in the app
-                    account.params = copy
                     Log.i(
-                        "$TAG Updated account [$account] identity address display name [$newValue]"
+                        "$TAG Updated account [${params.identityAddress?.asStringUriOnly()}] identity address display name [$newValue]"
                     )
                 }
-            }
-        }
-    }
 
-    @UiThread
-    fun setImage(file: File) {
-        val path = FileUtils.getProperFilePath(file.absolutePath)
-        picturePath.value = path
-
-        coreContext.postOnCoreThread {
-            if (::account.isInitialized) {
-                // TODO: save image path in account
+                account.params = copy
+                account.refreshRegister()
             }
         }
     }

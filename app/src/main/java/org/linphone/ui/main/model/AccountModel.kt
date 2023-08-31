@@ -27,13 +27,17 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Account
 import org.linphone.core.AccountListenerStub
 import org.linphone.core.RegistrationState
-import org.linphone.utils.FileUtils
+import org.linphone.core.tools.Log
 import org.linphone.utils.LinphoneUtils
 
 class AccountModel @WorkerThread constructor(
     private val account: Account,
     private val onMenuClicked: ((view: View, account: Account) -> Unit)? = null
 ) {
+    companion object {
+        private const val TAG = "[Account Model]"
+    }
+
     val displayName = MutableLiveData<String>()
 
     val avatar = MutableLiveData<String>()
@@ -57,6 +61,9 @@ class AccountModel @WorkerThread constructor(
             state: RegistrationState?,
             message: String
         ) {
+            Log.i(
+                "$TAG Account [${account.params.identityAddress?.asStringUriOnly()}] registration state changed: [$state]($message)"
+            )
             update()
         }
     }
@@ -64,7 +71,6 @@ class AccountModel @WorkerThread constructor(
     init {
         account.addListener(accountListener)
 
-        avatar.postValue(account.getPicturePath())
         showTrust.postValue(account.isInSecureMode())
 
         update()
@@ -97,9 +103,18 @@ class AccountModel @WorkerThread constructor(
 
     @WorkerThread
     private fun update() {
+        Log.i(
+            "$TAG Refreshing info for account [${account.params.identityAddress?.asStringUriOnly()}]"
+        )
+
         val name = LinphoneUtils.getDisplayName(account.params.identityAddress)
         displayName.postValue(name)
+
         initials.postValue(LinphoneUtils.getInitials(name))
+
+        val pictureUri = account.params.pictureUri.orEmpty()
+        avatar.postValue(pictureUri)
+        Log.i("$TAG Account picture URI is [$pictureUri]")
 
         isDefault.postValue(coreContext.core.defaultAccount == account)
 
@@ -116,15 +131,6 @@ class AccountModel @WorkerThread constructor(
         inError.postValue(account.state == RegistrationState.Failed)
         registrationState.postValue(state)
     }
-}
-
-fun Account.getPicturePath(): String {
-    // TODO FIXME: get image path from account
-    return FileUtils.getFileStoragePath(
-        "john.jpg",
-        isImage = true,
-        overrideExisting = true
-    ).absolutePath
 }
 
 fun Account.isInSecureMode(): Boolean {

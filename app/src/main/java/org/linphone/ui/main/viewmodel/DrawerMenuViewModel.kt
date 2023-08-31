@@ -54,6 +54,8 @@ class DrawerMenuViewModel @UiThread constructor() : ViewModel() {
         coreContext.postOnCoreThread {
             computeAccountsList()
         }
+
+        // TODO FIXME: account avatar not refreshed...
     }
 
     @UiThread

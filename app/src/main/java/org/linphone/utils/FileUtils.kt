@@ -19,19 +19,36 @@
  */
 package org.linphone.utils
 
+import android.content.Context
+import android.database.CursorIndexOutOfBoundsException
 import android.net.Uri
 import android.os.Environment
+import android.os.ParcelFileDescriptor
+import android.os.Process
+import android.provider.OpenableColumns
+import android.system.Os
+import android.webkit.MimeTypeMap
 import androidx.annotation.AnyThread
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
+import java.util.Locale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.tools.Log
 
 class FileUtils {
+    enum class MimeType {
+        PlainText,
+        Pdf,
+        Image,
+        Video,
+        Audio,
+        Unknown
+    }
+
     companion object {
         private const val TAG = "[File Utils]"
 
@@ -80,6 +97,38 @@ class FileUtils {
                 }
             }
             return file
+        }
+
+        suspend fun getFilePath(context: Context, uri: Uri, overrideExisting: Boolean): String? {
+            val name: String = getNameFromUri(uri, context)
+            try {
+                if (Os.fstat(
+                        ParcelFileDescriptor.open(
+                                File(uri.path),
+                                ParcelFileDescriptor.MODE_READ_ONLY
+                            ).fileDescriptor
+                    ).st_uid != Process.myUid()
+                ) {
+                    Log.e("$TAG File descriptor UID different from our, denying copy!")
+                    return null
+                }
+            } catch (e: Exception) {
+                Log.e("$TAG Can't check file ownership: ", e)
+            }
+
+            val extension = getExtensionFromFileName(name)
+            val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+            val isImage = getMimeType(type) == MimeType.Image
+
+            try {
+                val localFile: File = getFileStoragePath(name, isImage, overrideExisting)
+                copyFile(uri, localFile)
+                return localFile.absolutePath
+            } catch (e: Exception) {
+                Log.e("$TAG Can't copy file in local storage: ", e)
+            }
+
+            return null
         }
 
         @AnyThread
@@ -145,6 +194,67 @@ class FileUtils {
             }
 
             return returnPath
+        }
+
+        @AnyThread
+        private fun getNameFromUri(uri: Uri, context: Context): String {
+            var name = ""
+            if (uri.scheme == "content") {
+                val returnCursor =
+                    context.contentResolver.query(uri, null, null, null, null)
+                if (returnCursor != null) {
+                    returnCursor.moveToFirst()
+                    val nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                    if (nameIndex != -1) {
+                        try {
+                            val displayName = returnCursor.getString(nameIndex)
+                            if (displayName != null) {
+                                name = displayName
+                            } else {
+                                Log.e(
+                                    "$TAG Failed to get the display name for URI $uri, returned value is null"
+                                )
+                            }
+                        } catch (e: CursorIndexOutOfBoundsException) {
+                            Log.e(
+                                "$TAG Failed to get the display name for URI $uri, exception is $e"
+                            )
+                        }
+                    } else {
+                        Log.e("$TAG Couldn't get DISPLAY_NAME column index for URI: $uri")
+                    }
+                    returnCursor.close()
+                }
+            } else if (uri.scheme == "file") {
+                name = uri.lastPathSegment ?: ""
+            }
+            return name
+        }
+
+        @AnyThread
+        private fun getExtensionFromFileName(fileName: String): String {
+            var extension = MimeTypeMap.getFileExtensionFromUrl(fileName)
+            if (extension.isNullOrEmpty()) {
+                val i = fileName.lastIndexOf('.')
+                if (i > 0) {
+                    extension = fileName.substring(i + 1)
+                }
+            }
+
+            return extension.lowercase(Locale.getDefault())
+        }
+
+        @AnyThread
+        private fun getMimeType(type: String?): MimeType {
+            if (type.isNullOrEmpty()) return MimeType.Unknown
+            return when {
+                type.startsWith("image/") -> MimeType.Image
+                type.startsWith("text/plain") -> MimeType.PlainText
+                type.startsWith("video/") -> MimeType.Video
+                type.startsWith("audio/") -> MimeType.Audio
+                type.startsWith("application/pdf") -> MimeType.Pdf
+                else -> MimeType.Unknown
+            }
         }
     }
 }

@@ -12,9 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AccountProfileFragmentBinding
@@ -38,23 +36,15 @@ class AccountProfileFragment : GenericFragment() {
 
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
-            val identity = "john" // TODO FIXME: use account identity
-            val localFileName = FileUtils.getFileStoragePath(
-                "$identity.jpg", // TODO FIXME: use correct file extension
-                isImage = true,
-                overrideExisting = true
-            )
-            Log.i("$TAG Picture picked [$uri], will be stored as [${localFileName.absolutePath}]")
-
+            Log.i("$TAG Picture picked [$uri]")
             lifecycleScope.launch {
-                if (FileUtils.copyFile(uri, localFileName)) {
-                    withContext(Dispatchers.Main) {
-                        viewModel.setImage(localFileName)
-                    }
+                val localFileName = FileUtils.getFilePath(requireContext(), uri, true)
+                if (localFileName != null) {
+                    Log.i("$TAG Picture will be locally stored as [$localFileName]")
+                    val path = FileUtils.getProperFilePath(localFileName)
+                    viewModel.picturePath.postValue(path)
                 } else {
-                    Log.e(
-                        "$TAG Failed to copy file from [$uri] to [${localFileName.absolutePath}]"
-                    )
+                    Log.e("$TAG Failed to copy [$uri] to local storage")
                 }
             }
         } else {
