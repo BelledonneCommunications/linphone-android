@@ -18,7 +18,11 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
 
     val picturePath = MutableLiveData<String>()
 
+    val sipAddress = MutableLiveData<String>()
+
     val displayName = MutableLiveData<String>()
+
+    val internationalPrefix = MutableLiveData<String>()
 
     val accountFoundEvent = MutableLiveData<Event<Boolean>>()
 
@@ -33,8 +37,10 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
             if (found != null) {
                 Log.i("$TAG Found matching local friend [$found]")
                 account = found
+                sipAddress.postValue(account.params.identityAddress?.asStringUriOnly())
                 displayName.postValue(account.params.identityAddress?.displayName)
                 picturePath.postValue(account.getPicturePath())
+                internationalPrefix.postValue(account.params.internationalPrefix)
 
                 accountFoundEvent.postValue(Event(true))
             } else {
@@ -44,11 +50,14 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
-    fun saveDisplayNameChanges() {
+    fun saveChangesWhenLeaving() {
         coreContext.postOnCoreThread {
             if (::account.isInitialized) {
                 val params = account.params
                 val copy = params.clone()
+
+                copy.internationalPrefix = internationalPrefix.value.orEmpty()
+
                 val address = params.identityAddress?.clone()
                 if (address != null) {
                     val newValue = displayName.value.orEmpty().trim()

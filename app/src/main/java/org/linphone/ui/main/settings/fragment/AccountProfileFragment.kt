@@ -116,7 +116,7 @@ class AccountProfileFragment : GenericFragment() {
         super.onPause()
 
         Log.i("$TAG Leaving account profile, saving changes")
-        viewModel.saveDisplayNameChanges()
+        viewModel.saveChangesWhenLeaving()
     }
 
     private fun pickImage() {
