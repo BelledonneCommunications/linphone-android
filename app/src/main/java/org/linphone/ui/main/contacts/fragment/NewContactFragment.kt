@@ -24,6 +24,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
@@ -59,6 +60,12 @@ class NewContactFragment : GenericFragment() {
         R.id.newContactFragment
     )
 
+    private val backPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            showAbortConfirmationDialog()
+        }
+    }
+
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
             Log.i("$TAG Picture picked [$uri]")
@@ -84,6 +91,7 @@ class NewContactFragment : GenericFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = ContactNewOrEditFragmentBinding.inflate(layoutInflater)
+
         return binding.root
     }
 
@@ -93,6 +101,11 @@ class NewContactFragment : GenericFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            backPressedCallback
+        )
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
@@ -110,8 +123,7 @@ class NewContactFragment : GenericFragment() {
         }
 
         binding.setBackClickListener {
-            goBack()
-            // TODO: confirmation dialog
+            showAbortConfirmationDialog()
         }
 
         binding.setPickImageClickListener {
@@ -121,6 +133,7 @@ class NewContactFragment : GenericFragment() {
         viewModel.saveChangesEvent.observe(viewLifecycleOwner) {
             it.consume { refKey ->
                 if (refKey.isNotEmpty()) {
+                    backPressedCallback.isEnabled = false
                     goBack()
                     sharedViewModel.showContactEvent.value = Event(refKey)
                 } else {
@@ -155,6 +168,11 @@ class NewContactFragment : GenericFragment() {
         }
 
         sharedViewModel.contactEditorReadyToBeDisplayedEvent.value = Event(true)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        backPressedCallback.isEnabled = true
     }
 
     private fun addCell(model: NewOrEditNumberOrAddressModel) {
@@ -201,6 +219,7 @@ class NewContactFragment : GenericFragment() {
 
         model.confirmRemovalEvent.observe(viewLifecycleOwner) {
             it.consume {
+                backPressedCallback.isEnabled = false
                 goBack()
                 dialog.dismiss()
             }
