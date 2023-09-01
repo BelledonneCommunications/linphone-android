@@ -106,12 +106,15 @@ class ContactsListFragment : GenericFragment() {
         listViewModel.contactsList.observe(
             viewLifecycleOwner
         ) {
+            val emptyAdapter = adapter.itemCount == 0
             adapter.submitList(it)
-            Log.i("$TAG Contacts list is ready with [${it.size}] items")
+            Log.i("$TAG Contacts list updated with [${it.size}] items")
 
-            (view.parent as? ViewGroup)?.doOnPreDraw {
-                startPostponedEnterTransition()
-                sharedViewModel.contactsListReadyToBeDisplayedEvent.value = Event(true)
+            if (emptyAdapter) {
+                (view.parent as? ViewGroup)?.doOnPreDraw {
+                    startPostponedEnterTransition()
+                    sharedViewModel.contactsListReadyToBeDisplayedEvent.value = Event(true)
+                }
             }
         }
 
@@ -119,7 +122,7 @@ class ContactsListFragment : GenericFragment() {
             viewLifecycleOwner
         ) {
             favouritesAdapter.submitList(it)
-            Log.i("$TAG Favourites contacts list is ready with [${it.size}] items")
+            Log.i("$TAG Favourites contacts list updated with [${it.size}] items")
         }
 
         listViewModel.vCardTerminatedEvent.observe(viewLifecycleOwner) {

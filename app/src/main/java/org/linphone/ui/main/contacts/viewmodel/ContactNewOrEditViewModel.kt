@@ -25,6 +25,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.contacts.ContactLoader.Companion.LINPHONE_ADDRESS_BOOK_FRIEND_LIST
 import org.linphone.core.Friend
 import org.linphone.core.FriendList.Status
 import org.linphone.core.tools.Log
@@ -179,10 +180,23 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
                     Log.e("$TAG Failed to generate a ref key using vCard's generateUniqueId()")
                     // TODO : generate unique ref key
                 }
-                status = core.defaultFriendList?.addFriend(friend) ?: Status.InvalidFriend
+                friend.done()
+
+                val fl = core.getFriendListByName(LINPHONE_ADDRESS_BOOK_FRIEND_LIST) ?: core.createFriendList()
+                if (fl.displayName.isNullOrEmpty()) {
+                    Log.i(
+                        "$TAG Locally saved friend list [$LINPHONE_ADDRESS_BOOK_FRIEND_LIST] didn't exist yet, let's create it"
+                    )
+                    fl.isDatabaseStorageEnabled = true // We do want to store friends created in app in DB
+                    fl.displayName = LINPHONE_ADDRESS_BOOK_FRIEND_LIST
+                    core.addFriendList(fl)
+                }
+                status = fl.addFriend(friend)
+                fl.updateSubscriptions()
+            } else {
+                friend.done()
             }
 
-            friend.done()
             coreContext.contactsManager.notifyContactsListChanged()
 
             saveChangesEvent.postValue(

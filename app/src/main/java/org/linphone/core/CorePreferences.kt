@@ -29,6 +29,10 @@ import java.io.FileOutputStream
 import org.linphone.LinphoneApplication.Companion.coreContext
 
 class CorePreferences @UiThread constructor(private val context: Context) {
+    companion object {
+        private const val TAG = "[Preferences]"
+    }
+
     private var _config: Config? = null
 
     @get:WorkerThread @set:WorkerThread
@@ -83,6 +87,10 @@ class CorePreferences @UiThread constructor(private val context: Context) {
         get() = context.filesDir.absolutePath + "/linphonerc"
 
     @get:AnyThread
+    val friendsDatabasePath: String
+        get() = context.filesDir.absolutePath + "/friends.db"
+
+    @get:AnyThread
     val linphoneDefaultValuesPath: String
         get() = context.filesDir.absolutePath + "/assistant_linphone_default_values"
 
@@ -100,14 +108,14 @@ class CorePreferences @UiThread constructor(private val context: Context) {
             if (!overrideIfExists) {
                 android.util.Log.i(
                     context.getString(org.linphone.R.string.app_name),
-                    "[Preferences] File $to already exists"
+                    "$TAG File $to already exists"
                 )
                 return
             }
         }
         android.util.Log.i(
             context.getString(org.linphone.R.string.app_name),
-            "[Preferences] Overriding $to by $from asset"
+            "$TAG Overriding $to by $from asset"
         )
 
         val outStream = FileOutputStream(outFile)

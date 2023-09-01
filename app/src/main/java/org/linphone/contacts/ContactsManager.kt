@@ -117,7 +117,11 @@ class ContactsManager @UiThread constructor(context: Context) {
 
     @WorkerThread
     fun findContactById(id: String): Friend? {
-        return coreContext.core.defaultFriendList?.findFriendByRefKey(id)
+        for (friendList in coreContext.core.friendsLists) {
+            val found = friendList.findFriendByRefKey(id)
+            if (found != null) return found
+        }
+        return null
     }
 
     @WorkerThread

@@ -49,6 +49,11 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
             ContactsContract.CommonDataKinds.Phone.LABEL,
             ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER
         )
+
+        private const val TAG = "[Contacts Loader]"
+
+        private const val NATIVE_ADDRESS_BOOK_FRIEND_LIST = "Native address-book"
+        const val LINPHONE_ADDRESS_BOOK_FRIEND_LIST = "Linphone address-book"
     }
 
     @MainThread
@@ -77,15 +82,15 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
     @MainThread
     override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor?) {
         if (cursor == null) {
-            Log.e("[Contacts Loader] Cursor is null!")
+            Log.e("$TAG Cursor is null!")
             return
         }
-        Log.i("[Contacts Loader] Load finished, found ${cursor.count} entries in cursor")
+        Log.i("$TAG Load finished, found ${cursor.count} entries in cursor")
 
         coreContext.postOnCoreThread { core ->
             val state = coreContext.core.globalState
             if (state == GlobalState.Shutdown || state == GlobalState.Off) {
-                Log.w("[Contacts Loader] Core is being stopped or already destroyed, abort")
+                Log.w("$TAG Core is being stopped or already destroyed, abort")
                 return@postOnCoreThread
             }
 
@@ -278,47 +283,57 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
 
                         friends[id] = friend
                     } catch (e: Exception) {
-                        Log.e("[Contacts Loader] Exception: $e")
+                        Log.e("$TAG Exception: $e")
                     }
                 }
 
                 if (core.globalState == GlobalState.Shutdown || core.globalState == GlobalState.Off) {
-                    Log.w("[Contacts Loader] Core is being stopped or already destroyed, abort")
+                    Log.w("$TAG Core is being stopped or already destroyed, abort")
                 } else if (friends.isEmpty()) {
-                    Log.w("[Contacts Loader] No friend created!")
+                    Log.w("$TAG No friend created!")
                 } else {
-                    Log.i("[Contacts Loader] ${friends.size} friends created")
+                    Log.i("$TAG ${friends.size} friends created")
 
-                    val fl = core.defaultFriendList ?: core.createFriendList()
-                    for (friend in fl.friends) {
-                        fl.removeFriend(friend)
+                    val fl = core.getFriendListByName(NATIVE_ADDRESS_BOOK_FRIEND_LIST) ?: core.createFriendList()
+                    if (fl.displayName.isNullOrEmpty()) {
+                        Log.i(
+                            "$TAG Friend list [$NATIVE_ADDRESS_BOOK_FRIEND_LIST] didn't exist yet, let's create it"
+                        )
+                        fl.isDatabaseStorageEnabled = false // We don't want to store local address-book in DB
+                        fl.displayName = NATIVE_ADDRESS_BOOK_FRIEND_LIST
+                        core.addFriendList(fl)
+                    } else {
+                        Log.i(
+                            "$TAG Friend list [$LINPHONE_ADDRESS_BOOK_FRIEND_LIST] found, removing existing friends if any"
+                        )
+                        for (friend in fl.friends) {
+                            fl.removeFriend(friend)
+                        }
                     }
-
-                    if (fl != core.defaultFriendList) core.addFriendList(fl)
 
                     val friendsList = friends.values
                     for (friend in friendsList) {
                         fl.addLocalFriend(friend)
                     }
                     friends.clear()
-                    Log.i("[Contacts Loader] Friends added")
+                    Log.i("$TAG Friends added")
 
                     fl.updateSubscriptions()
-                    Log.i("[Contacts Loader] Subscription(s) updated")
+                    Log.i("$TAG Subscription(s) updated")
                     coreContext.contactsManager.onContactsLoaded()
                 }
             } catch (sde: StaleDataException) {
-                Log.e("[Contacts Loader] State Data Exception: $sde")
+                Log.e("$TAG State Data Exception: $sde")
             } catch (ise: IllegalStateException) {
-                Log.e("[Contacts Loader] Illegal State Exception: $ise")
+                Log.e("$TAG Illegal State Exception: $ise")
             } catch (e: Exception) {
-                Log.e("[Contacts Loader] Exception: $e")
+                Log.e("$TAG Exception: $e")
             }
         }
     }
 
     @MainThread
     override fun onLoaderReset(loader: Loader<Cursor>) {
-        Log.i("[Contacts Loader] Loader reset")
+        Log.i("$TAG Loader reset")
     }
 }

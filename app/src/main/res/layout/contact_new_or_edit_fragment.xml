@@ -142,7 +142,7 @@
                     android:textColor="@color/gray_9"
                     android:maxLines="1"
                     android:background="@drawable/edit_text_background"
-                    android:inputType="text|textPersonName"
+                    android:inputType="text|textPersonName|textCapWords"
                     app:layout_constraintTop_toBottomOf="@id/first_name_label"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
@@ -176,7 +176,7 @@
                     android:textColor="@color/gray_9"
                     android:maxLines="1"
                     android:background="@drawable/edit_text_background"
-                    android:inputType="text|textPersonName"
+                    android:inputType="text|textPersonName|textCapWords"
                     app:layout_constraintTop_toBottomOf="@id/last_name_label"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
@@ -230,7 +230,7 @@
                     android:textColor="@color/gray_9"
                     android:maxLines="1"
                     android:background="@drawable/edit_text_background"
-                    android:inputType="text"
+                    android:inputType="text|textCapWords"
                     app:layout_constraintTop_toBottomOf="@id/company_label"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
@@ -265,7 +265,7 @@
                     android:textColor="@color/gray_9"
                     android:maxLines="1"
                     android:background="@drawable/edit_text_background"
-                    android:inputType="text"
+                    android:inputType="text|textCapWords"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/job_title_label"
                     app:layout_constraintStart_toStartOf="parent"

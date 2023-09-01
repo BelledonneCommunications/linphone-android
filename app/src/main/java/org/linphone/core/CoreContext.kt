@@ -104,9 +104,10 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         coreThread = Handler(looper)
 
         core = Factory.instance().createCoreWithConfig(corePreferences.config, context)
-
         core.isAutoIterateEnabled = false
         core.addListener(coreListener)
+
+        core.friendsDatabasePath = corePreferences.friendsDatabasePath
 
         val timer = Timer("Linphone core.iterate() scheduler")
         timer.schedule(
