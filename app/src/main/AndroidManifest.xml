@@ -13,7 +13,7 @@
 
     <!-- Needed for full screen intent in incoming call notifications -->
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
-    <!-- To vibrate when pressing DTMF keys on numpad & incoming calls -->
+    <!-- To vibrate while receiving an incoming call -->
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <!-- Needed for foreground service

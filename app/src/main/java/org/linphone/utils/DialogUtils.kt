@@ -31,12 +31,14 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import org.linphone.R
+import org.linphone.databinding.DialogAssistantCreateAccountConfirmPhoneNumberBinding
 import org.linphone.databinding.DialogCancelContactChangesBinding
 import org.linphone.databinding.DialogConfirmZrtpSasBinding
 import org.linphone.databinding.DialogContactConfirmTrustCallBinding
 import org.linphone.databinding.DialogContactTrustProcessBinding
 import org.linphone.databinding.DialogPickNumberOrAddressBinding
 import org.linphone.databinding.DialogRemoveAllCallLogsBinding
+import org.linphone.ui.assistant.model.ConfirmPhoneNumberDialogModel
 import org.linphone.ui.main.calls.model.ConfirmationDialogModel
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
 import org.linphone.ui.main.contacts.model.TrustCallDialogModel
@@ -44,6 +46,22 @@ import org.linphone.ui.voip.model.ZrtpSasConfirmationDialogModel
 
 class DialogUtils {
     companion object {
+        @UiThread
+        fun getAccountCreationPhoneNumberConfirmationDialog(
+            context: Context,
+            viewModel: ConfirmPhoneNumberDialogModel
+        ): Dialog {
+            val binding: DialogAssistantCreateAccountConfirmPhoneNumberBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.dialog_assistant_create_account_confirm_phone_number,
+                null,
+                false
+            )
+            binding.viewModel = viewModel
+
+            return getDialog(context, binding)
+        }
+
         @UiThread
         fun getNumberOrAddressPickerDialog(
             context: Context,

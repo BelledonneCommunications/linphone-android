@@ -19,12 +19,35 @@
  */
 package org.linphone.utils
 
+import android.content.Context
 import android.content.res.Resources
 import android.provider.ContactsContract
+import android.telephony.TelephonyManager
 import androidx.annotation.AnyThread
+import androidx.annotation.WorkerThread
+import org.linphone.core.Factory
+import org.linphone.core.tools.Log
 
 class PhoneNumberUtils {
     companion object {
+        private const val TAG = "[Phone Number Utils]"
+
+        @WorkerThread
+        fun getDeviceInternationalPrefix(context: Context): String? {
+            val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+            val countryIso = telephonyManager.networkCountryIso
+            for (dp in Factory.instance().dialPlans) {
+                if (dp.isoCountryCode.equals(countryIso, true)) {
+                    val prefix = dp.countryCallingCode
+                    Log.i(
+                        "$TAG Found matching entry [$prefix] in dialplan for network country iso [$countryIso]"
+                    )
+                    return prefix
+                }
+            }
+            return null
+        }
+
         @AnyThread
         fun addressBookLabelTypeToVcardParamString(type: Int, default: String?): String {
             return when (type) {

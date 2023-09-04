@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.assistant.model.ConfirmPhoneNumberDialogModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:onClick="@{() -> viewModel.dismiss()}"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true">
+
+        <ImageView
+            android:id="@+id/dialog_background_shadow"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/shape_dialog_orange_shadow"
+            app:layout_constraintBottom_toBottomOf="@id/anchor"
+            app:layout_constraintEnd_toEndOf="@id/dialog_background"
+            app:layout_constraintStart_toStartOf="@id/dialog_background"
+            app:layout_constraintTop_toTopOf="@id/dialog_background" />
+
+        <ImageView
+            android:id="@+id/dialog_background"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="2dp"
+            android:src="@drawable/shape_dialog_background"
+            app:layout_constraintBottom_toBottomOf="@id/anchor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/title" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_800"
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:paddingTop="@dimen/dialog_top_bottom_margin"
+            android:text="Confirm phone number"
+            android:textSize="16sp"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintBottom_toTopOf="@id/message"
+            app:layout_constraintStart_toStartOf="@id/dialog_background"
+            app:layout_constraintEnd_toEndOf="@id/dialog_background"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/message"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="10dp"
+            android:text="@{viewModel.message, default=`Are you sure you want to use this phone number?`}"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toTopOf="@id/cancel"
+            app:layout_constraintStart_toStartOf="@id/dialog_background"
+            app:layout_constraintEnd_toEndOf="@id/dialog_background"
+            app:layout_constraintTop_toBottomOf="@id/title" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:onClick="@{() -> viewModel.dismiss()}"
+            style="@style/default_text_style_600"
+            android:id="@+id/cancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:paddingBottom="@dimen/primary_secondary_buttons_label_padding"
+            android:paddingTop="@dimen/primary_secondary_buttons_label_padding"
+            android:gravity="center"
+            android:background="@drawable/secondary_button_background"
+            android:text="Cancel"
+            android:textSize="18sp"
+            android:textColor="@color/secondary_button_label_color"
+            app:layout_constraintStart_toStartOf="@id/dialog_background"
+            app:layout_constraintEnd_toEndOf="@id/dialog_background"
+            app:layout_constraintTop_toBottomOf="@id/message"
+            app:layout_constraintBottom_toTopOf="@id/confirm"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:onClick="@{() -> viewModel.confirmPhoneNumber()}"
+            style="@style/default_text_style_600"
+            android:id="@+id/confirm"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:paddingBottom="@dimen/primary_secondary_buttons_label_padding"
+            android:paddingTop="@dimen/primary_secondary_buttons_label_padding"
+            android:gravity="center"
+            android:background="@drawable/primary_button_background"
+            android:text="Continue"
+            android:textSize="18sp"
+            android:textColor="@color/primary_button_label_color"
+            app:layout_constraintStart_toStartOf="@id/dialog_background"
+            app:layout_constraintEnd_toEndOf="@id/dialog_background"
+            app:layout_constraintTop_toBottomOf="@id/cancel"
+            app:layout_constraintBottom_toTopOf="@id/anchor"/>
+
+        <View
+            android:id="@+id/anchor"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dialog_top_bottom_margin"
+            app:layout_constraintTop_toBottomOf="@id/confirm"
+            app:layout_constraintStart_toStartOf="@id/dialog_background"
+            app:layout_constraintEnd_toEndOf="@id/dialog_background"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

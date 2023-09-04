@@ -22,14 +22,23 @@ package org.linphone.ui.assistant.fragment
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
+import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantRegisterFragmentBinding
+import org.linphone.ui.assistant.model.ConfirmPhoneNumberDialogModel
+import org.linphone.ui.assistant.viewmodel.AccountCreationViewModel
 import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.utils.DialogUtils
+import org.linphone.utils.PhoneNumberUtils
 
 @UiThread
 class RegisterFragment : GenericFragment() {
@@ -38,6 +47,10 @@ class RegisterFragment : GenericFragment() {
     }
 
     private lateinit var binding: AssistantRegisterFragmentBinding
+
+    private val viewModel: AccountCreationViewModel by navGraphViewModels(
+        R.id.registerFragment
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,6 +69,7 @@ class RegisterFragment : GenericFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = viewModel
 
         binding.setBackClickListener {
             goBack()
@@ -63,6 +77,10 @@ class RegisterFragment : GenericFragment() {
 
         binding.setLoginClickListener {
             goBack()
+        }
+
+        binding.setShowCountryPickerClickListener {
+            // TODO FIXME
         }
 
         binding.setOpenSubscribeWebPageClickListener {
@@ -75,7 +93,66 @@ class RegisterFragment : GenericFragment() {
             }
         }
 
-        binding.setCreateClickListener {
+        binding.username.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.usernameError.value = ""
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
+        binding.phoneNumber.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.phoneNumberError.value = ""
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
+        viewModel.normalizedPhoneNumberEvent.observe(viewLifecycleOwner) {
+            it.consume { number ->
+                showPhoneNumberConfirmationDialog(number)
+            }
         }
+
+        viewModel.goToSmsCodeConfirmationViewEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i("$TAG Going to SMS code confirmation fragment")
+                val action = RegisterFragmentDirections.actionRegisterFragmentToRegisterCodeConfirmationFragment()
+                findNavController().navigate(action)
+            }
+        }
+
+        coreContext.postOnCoreThread {
+            val prefix = PhoneNumberUtils.getDeviceInternationalPrefix(requireContext())
+            viewModel.internationalPrefix.postValue("+$prefix")
+        }
+    }
+
+    private fun showPhoneNumberConfirmationDialog(number: String) {
+        val model = ConfirmPhoneNumberDialogModel(number)
+        val dialog = DialogUtils.getAccountCreationPhoneNumberConfirmationDialog(
+            requireActivity(),
+            model
+        )
+
+        model.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        model.confirmPhoneNumberEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                viewModel.requestToken()
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
     }
 }

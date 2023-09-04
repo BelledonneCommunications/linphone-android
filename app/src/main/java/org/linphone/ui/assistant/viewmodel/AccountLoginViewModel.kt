@@ -35,13 +35,16 @@ import org.linphone.core.RegistrationState
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
 
-class AssistantViewModel @UiThread constructor() : ViewModel() {
+class AccountLoginViewModel @UiThread constructor() : ViewModel() {
     companion object {
-        private const val TAG = "[Assistant ViewModel]"
+        private const val TAG = "[Account Login ViewModel]"
     }
+
     val username = MutableLiveData<String>()
 
     val password = MutableLiveData<String>()
+
+    val internationalPrefix = MutableLiveData<String>()
 
     val showPassword = MutableLiveData<Boolean>()
 
@@ -119,9 +122,21 @@ class AssistantViewModel @UiThread constructor() : ViewModel() {
             val accountParams = core.createAccountParams()
             val identityAddress = Factory.instance().createAddress("sip:$user@$domain")
             accountParams.identityAddress = identityAddress
-            newlyCreatedAccount = core.createAccount(accountParams)
 
-            // TODO: set international prefix if detected
+            val prefix = internationalPrefix.value.orEmpty()
+            if (prefix.isNotEmpty()) {
+                val prefixDigits = if (prefix.startsWith("+")) {
+                    prefix.substring(1)
+                } else {
+                    prefix
+                }
+                if (prefixDigits.isNotEmpty()) {
+                    Log.i("$TAG Setting international prefix [$prefixDigits] in account params")
+                    accountParams.internationalPrefix = prefixDigits
+                }
+            }
+
+            newlyCreatedAccount = core.createAccount(accountParams)
 
             registrationInProgress.postValue(true)
             core.addListener(coreListener)

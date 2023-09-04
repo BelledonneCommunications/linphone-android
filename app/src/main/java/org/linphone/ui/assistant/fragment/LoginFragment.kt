@@ -19,6 +19,8 @@
  */
 package org.linphone.ui.assistant.fragment
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,10 +29,13 @@ import androidx.annotation.UiThread
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantLoginFragmentBinding
-import org.linphone.ui.assistant.viewmodel.AssistantViewModel
+import org.linphone.ui.assistant.viewmodel.AccountLoginViewModel
 import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.utils.PhoneNumberUtils
 
 @UiThread
 class LoginFragment : GenericFragment() {
@@ -40,7 +45,7 @@ class LoginFragment : GenericFragment() {
 
     private lateinit var binding: AssistantLoginFragmentBinding
 
-    private val viewModel: AssistantViewModel by navGraphViewModels(
+    private val viewModel: AccountLoginViewModel by navGraphViewModels(
         R.id.loginFragment
     )
 
@@ -72,6 +77,16 @@ class LoginFragment : GenericFragment() {
             findNavController().navigate(action)
         }
 
+        binding.setForgottenPasswordClickListener {
+            try {
+                val url = "https://subscribe.linphone.org"
+                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                startActivity(browserIntent)
+            } catch (ise: IllegalStateException) {
+                Log.e("$TAG Can't start ACTION_VIEW intent, IllegalStateException: $ise")
+            }
+        }
+
         binding.setQrCodeClickListener {
             val action = LoginFragmentDirections.actionLoginFragmentToQrCodeScannerFragment()
             findNavController().navigate(action)
@@ -86,6 +101,11 @@ class LoginFragment : GenericFragment() {
             it.consume {
                 goBack()
             }
+        }
+
+        coreContext.postOnCoreThread {
+            val prefix = PhoneNumberUtils.getDeviceInternationalPrefix(requireContext())
+            viewModel.internationalPrefix.postValue(prefix)
         }
     }
 
