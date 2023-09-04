@@ -55,7 +55,9 @@ class ContactsManager @UiThread constructor(context: Context) {
     private val friendListListener: FriendListListenerStub = object : FriendListListenerStub() {
         @WorkerThread
         override fun onPresenceReceived(list: FriendList, friends: Array<Friend>) {
-            Log.i("$TAG Presence received")
+            Log.i(
+                "$TAG Presence received for list [${list.displayName}] and [${friends.size}] friends"
+            )
             for (listener in listeners) {
                 listener.onContactsLoaded()
             }
@@ -65,11 +67,14 @@ class ContactsManager @UiThread constructor(context: Context) {
     private val coreListener: CoreListenerStub = object : CoreListenerStub() {
         @WorkerThread
         override fun onFriendListCreated(core: Core, friendList: FriendList) {
+            Log.i("$TAG Friend list [${friendList.displayName}] created")
             friendList.addListener(friendListListener)
+            friendList.updateSubscriptions()
         }
 
         @WorkerThread
         override fun onFriendListRemoved(core: Core, friendList: FriendList) {
+            Log.i("$TAG Friend list [${friendList.displayName}] remoed")
             friendList.removeListener(friendListListener)
         }
     }

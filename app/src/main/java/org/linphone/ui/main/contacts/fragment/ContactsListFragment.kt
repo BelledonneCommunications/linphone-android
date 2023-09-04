@@ -106,15 +106,18 @@ class ContactsListFragment : GenericFragment() {
         listViewModel.contactsList.observe(
             viewLifecycleOwner
         ) {
-            val emptyAdapter = adapter.itemCount == 0
+            val currentCount = adapter.itemCount
             adapter.submitList(it)
             Log.i("$TAG Contacts list updated with [${it.size}] items")
 
-            if (emptyAdapter) {
+            if (currentCount == 0) {
                 (view.parent as? ViewGroup)?.doOnPreDraw {
                     startPostponedEnterTransition()
                     sharedViewModel.contactsListReadyToBeDisplayedEvent.value = Event(true)
                 }
+            } else if (currentCount < it.size) {
+                Log.i("$TAG Contacts list updated with new items, scrolling to top")
+                binding.contactsList.smoothScrollToPosition(0)
             }
         }
 

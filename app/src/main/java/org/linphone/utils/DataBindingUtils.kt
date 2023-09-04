@@ -272,53 +272,27 @@ fun AvatarView.loadContactAvatar(contact: ContactAvatarModel?) {
     if (contact == null) {
         loadImage(R.drawable.contact_avatar)
     } else {
-        val lifecycleOwner = findViewTreeLifecycleOwner()
-        if (lifecycleOwner != null) {
-            contact.avatar.observe(lifecycleOwner) { uri ->
-                loadImage(
-                    data = uri,
-                    onStart = {
-                        // Use initials as placeholder
-                        avatarInitials = contact.initials
+        val uri = contact.avatar.value
+        loadImage(
+            data = uri,
+            onStart = {
+                // Use initials as placeholder
+                avatarInitials = contact.initials
 
-                        if (contact.showTrust.value == true) {
-                            avatarBorderColor =
-                                resources.getColor(R.color.trusted_blue, context.theme)
-                            avatarBorderWidth =
-                                AppUtils.getDimension(R.dimen.avatar_trust_border_width).toInt()
-                        } else {
-                            avatarBorderWidth = AppUtils.getDimension(R.dimen.zero).toInt()
-                        }
-                    },
-                    onSuccess = { _, _ ->
-                        // If loading is successful, remove initials otherwise image won't be visible
-                        avatarInitials = ""
-                    }
-                )
-            }
-        } else {
-            val uri = contact.avatar.value
-            loadImage(
-                data = uri,
-                onStart = {
-                    // Use initials as placeholder
-                    avatarInitials = contact.initials
-
-                    if (contact.showTrust.value == true) {
-                        avatarBorderColor =
-                            resources.getColor(R.color.trusted_blue, context.theme)
-                        avatarBorderWidth =
-                            AppUtils.getDimension(R.dimen.avatar_trust_border_width).toInt()
-                    } else {
-                        avatarBorderWidth = AppUtils.getDimension(R.dimen.zero).toInt()
-                    }
-                },
-                onSuccess = { _, _ ->
-                    // If loading is successful, remove initials otherwise image won't be visible
-                    avatarInitials = ""
+                if (contact.showTrust.value == true) {
+                    avatarBorderColor =
+                        resources.getColor(R.color.trusted_blue, context.theme)
+                    avatarBorderWidth =
+                        AppUtils.getDimension(R.dimen.avatar_trust_border_width).toInt()
+                } else {
+                    avatarBorderWidth = AppUtils.getDimension(R.dimen.zero).toInt()
                 }
-            )
-        }
+            },
+            onSuccess = { _, _ ->
+                // If loading is successful, remove initials otherwise image won't be visible
+                avatarInitials = ""
+            }
+        )
     }
 }
 

@@ -49,7 +49,7 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
 
     private val alertListener = object : AlertListenerStub() {
         @WorkerThread
-        override fun onOnTerminated(alert: Alert) {
+        override fun onTerminated(alert: Alert) {
             val remote = alert.call.remoteAddress.asStringUriOnly()
             Log.w("$TAG Alert of type [${alert.type}] dismissed for call from [$remote]")
             alert.removeListener(this)
@@ -89,7 +89,7 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
         }
 
         @WorkerThread
-        override fun onOnAlert(core: Core, alert: Alert) {
+        override fun onNewAlertTriggered(core: Core, alert: Alert) {
             val remote = alert.call.remoteAddress.asStringUriOnly()
             Log.w("$TAG Alert of type [${alert.type}] triggered for call from [$remote]")
             alert.addListener(alertListener)
