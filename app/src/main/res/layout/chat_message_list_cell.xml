@@ -200,22 +200,23 @@
 
         <LinearLayout
             android:onClick="@{() -> data.showReactionsList()}"
+            android:visibility="@{data.reactions.size() > 0 ? View.VISIBLE : View.GONE, default=gone}"
             android:id="@+id/reactions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/chat_bubble_outgoing_full"
-            backgroundImage="@{data.backgroundRes, default=@drawable/chat_bubble_outgoing_full}"
+            android:background="@{data.chatMessage.outgoing ? @drawable/chat_bubble_outgoing_reactions : @drawable/chat_bubble_incoming_reactions, default=@drawable/chat_bubble_outgoing_reactions}"
             android:padding="2dp"
             android:layout_marginTop="-10dp"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
             android:layout_below="@id/background"
             android:layout_alignLeft="@{data.chatMessage.outgoing || selectionListViewModel.isEditionEnabled ? 0 : @id/background}"
             android:layout_alignRight="@{data.chatMessage.outgoing || selectionListViewModel.isEditionEnabled ? @id/background : 0}"
             android:orientation="horizontal"
             android:gravity="center_vertical"
             entries="@{data.reactions}"
-            layout="@{@layout/chat_message_reaction}" />
+            layout="@{@layout/chat_message_reaction}"/>
 
         <TextView
             android:id="@+id/time"
