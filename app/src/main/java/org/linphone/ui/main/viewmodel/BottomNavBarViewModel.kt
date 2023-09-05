@@ -29,6 +29,7 @@ import org.linphone.core.Call
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
+import org.linphone.utils.LinphoneUtils
 
 class BottomNavBarViewModel @UiThread constructor() : ViewModel() {
     companion object {
@@ -84,7 +85,8 @@ class BottomNavBarViewModel @UiThread constructor() : ViewModel() {
 
     @WorkerThread
     fun updateMissedCallsCount() {
-        val count = coreContext.core.missedCallsCount
+        val account = LinphoneUtils.getDefaultAccount()
+        val count = account?.missedCallsCount ?: coreContext.core.missedCallsCount
         val moreThanOne = count > 1
         Log.i(
             "$TAG There ${if (moreThanOne) "are" else "is"} [$count] missed ${if (moreThanOne) "calls" else "call"}"
@@ -95,7 +97,8 @@ class BottomNavBarViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun resetMissedCallsCount() {
         coreContext.postOnCoreThread { core ->
-            core.resetMissedCallsCount()
+            val account = LinphoneUtils.getDefaultAccount()
+            account?.resetMissedCallsCount() ?: core.resetMissedCallsCount()
             updateMissedCallsCount()
         }
     }

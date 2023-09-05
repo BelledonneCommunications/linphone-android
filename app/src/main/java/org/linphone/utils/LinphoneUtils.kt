@@ -30,6 +30,7 @@ import androidx.emoji2.text.EmojiCompat
 import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.core.Account
 import org.linphone.core.Address
 import org.linphone.core.Call
 import org.linphone.core.Call.Dir
@@ -40,6 +41,11 @@ import org.linphone.core.tools.Log
 class LinphoneUtils {
     companion object {
         private const val TAG = "[App Utils]"
+
+        @WorkerThread
+        fun getDefaultAccount(): Account? {
+            return coreContext.core.defaultAccount ?: coreContext.core.accountList.first()
+        }
 
         @AnyThread
         fun getFirstLetter(displayName: String): String {

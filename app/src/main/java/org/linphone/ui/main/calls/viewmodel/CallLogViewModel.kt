@@ -9,6 +9,7 @@ import org.linphone.core.Call
 import org.linphone.ui.main.calls.model.CallLogHistoryModel
 import org.linphone.ui.main.calls.model.CallLogModel
 import org.linphone.utils.Event
+import org.linphone.utils.LinphoneUtils
 
 class CallLogViewModel @UiThread constructor() : ViewModel() {
     val showBackButton = MutableLiveData<Boolean>()
@@ -32,10 +33,16 @@ class CallLogViewModel @UiThread constructor() : ViewModel() {
                 address = model.address
                 callLogModel.postValue(model)
 
-                val localAddress = if (callLog.dir == Call.Dir.Outgoing) callLog.fromAddress else callLog.toAddress
                 val peerAddress = if (callLog.dir == Call.Dir.Outgoing) callLog.toAddress else callLog.fromAddress
                 val history = arrayListOf<CallLogHistoryModel>()
-                for (log in core.getCallHistory(peerAddress, localAddress)) {
+                val account = LinphoneUtils.getDefaultAccount()
+                val list = if (account == null) {
+                    val localAddress = if (callLog.dir == Call.Dir.Outgoing) callLog.fromAddress else callLog.toAddress
+                    core.getCallHistory(peerAddress, localAddress)
+                } else {
+                    account.getCallLogsForAddress(peerAddress)
+                }
+                for (log in list) {
                     val historyModel = CallLogHistoryModel(log)
                     history.add(historyModel)
                 }

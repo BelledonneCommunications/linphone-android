@@ -29,6 +29,7 @@ import org.linphone.core.CoreListenerStub
 import org.linphone.ui.main.calls.model.CallLogModel
 import org.linphone.ui.main.viewmodel.AbstractTopBarViewModel
 import org.linphone.utils.Event
+import org.linphone.utils.LinphoneUtils
 
 class CallsListViewModel @UiThread constructor() : AbstractTopBarViewModel() {
     val callLogs = MutableLiveData<ArrayList<CallLogModel>>()
@@ -74,9 +75,15 @@ class CallsListViewModel @UiThread constructor() : AbstractTopBarViewModel() {
     @UiThread
     fun removeAllCallLogs() {
         coreContext.postOnCoreThread { core ->
-            for (callLog in core.callLogs) {
-                core.removeCallLog(callLog)
+            val account = LinphoneUtils.getDefaultAccount()
+            if (account != null) {
+                account.clearCallLogs()
+            } else {
+                for (callLog in core.callLogs) {
+                    core.removeCallLog(callLog)
+                }
             }
+
             historyDeletedEvent.postValue(Event(true))
             computeCallLogsList(currentFilter)
         }
@@ -86,9 +93,10 @@ class CallsListViewModel @UiThread constructor() : AbstractTopBarViewModel() {
     private fun computeCallLogsList(filter: String) {
         val list = arrayListOf<CallLogModel>()
 
-        // TODO : filter depending on currently selected account
         // TODO : Add support for call logs in magic search
-        for (callLog in coreContext.core.callLogs) {
+        val account = LinphoneUtils.getDefaultAccount()
+        val logs = account?.callLogs ?: coreContext.core.callLogs
+        for (callLog in logs) {
             if (callLog.remoteAddress.asStringUriOnly().contains(filter)) {
                 val model = CallLogModel(callLog)
                 list.add(model)
