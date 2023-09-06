@@ -49,6 +49,10 @@ class DrawerMenuViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Pair<View, Account>>>()
     }
 
+    val defaultAccountChangedEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
+
     init {
         // TODO FIXME: update accounts list when a new account is added or when removing one
         coreContext.postOnCoreThread {
@@ -80,9 +84,23 @@ class DrawerMenuViewModel @UiThread constructor() : ViewModel() {
 
         val list = arrayListOf<AccountModel>()
         for (account in coreContext.core.accountList) {
-            val model = AccountModel(account) { view, account ->
+            val model = AccountModel(account, { view, account ->
+                // onClicked
                 showAccountPopupMenuEvent.postValue(Event(Pair(view, account)))
-            }
+            }, { account ->
+                // onSetAsDefault
+                Log.i(
+                    "$TAG Account [${account.params.identityAddress?.asStringUriOnly()}] has been set as default by user"
+                )
+                for (model in accounts.value.orEmpty()) {
+                    if (model.account != account) {
+                        model.isDefault.value = false
+                    }
+                }
+                defaultAccountChangedEvent.postValue(
+                    Event(account.params.identityAddress?.asStringUriOnly() ?: "")
+                )
+            })
             list.add(model)
         }
         accounts.postValue(list)

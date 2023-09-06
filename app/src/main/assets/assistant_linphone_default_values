@@ -33,14 +33,4 @@
   <section name="net">
     <entry name="friendlist_subscription_enabled" overwrite="true">1</entry>
   </section>
-  <section name="assistant">
-    <entry name="domain" overwrite="true">sip.linphone.org</entry>
-    <entry name="algorithm" overwrite="true">SHA-256</entry>
-    <entry name="password_max_length" overwrite="true">-1</entry>
-    <entry name="password_min_length" overwrite="true">1</entry>
-    <entry name="username_length" overwrite="true">-1</entry>
-    <entry name="username_max_length" overwrite="true">64</entry>
-    <entry name="username_min_length" overwrite="true">1</entry>
-    <entry name="username_regex" overwrite="true">^[a-z0-9+_.\-]*$</entry>
-  </section>
 </config>

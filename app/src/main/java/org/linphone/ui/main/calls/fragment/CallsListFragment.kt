@@ -189,6 +189,16 @@ class CallsListFragment : GenericFragment() {
             findNavController().navigate(R.id.action_global_startCallFragment)
         }
 
+        sharedViewModel.defaultAccountChangedEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i(
+                    "$TAG Default account changed, updating avatar in top bar & re-computing call logs"
+                )
+                listViewModel.updateDefaultAccount()
+                listViewModel.applyFilter()
+            }
+        }
+
         // TopBarFragment related
 
         listViewModel.openDrawerMenuEvent.observe(viewLifecycleOwner) {

@@ -25,27 +25,18 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.widget.PopupWindow
 import androidx.annotation.DrawableRes
 import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
-import org.linphone.core.Account
-import org.linphone.databinding.AccountPopupMenuBinding
 import org.linphone.databinding.MainActivityBinding
-import org.linphone.ui.assistant.AssistantActivity
-import org.linphone.ui.main.settings.fragment.AccountProfileFragmentDirections
-import org.linphone.ui.main.viewmodel.DrawerMenuViewModel
 import org.linphone.ui.welcome.WelcomeActivity
 import org.linphone.utils.slideInToastFromTopForDuration
 
@@ -60,7 +51,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: MainActivityBinding
-    private lateinit var drawerMenuViewModel: DrawerMenuViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, true)
@@ -78,48 +68,6 @@ class MainActivity : AppCompatActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.main_activity)
         binding.lifecycleOwner = this
-
-        binding.setSettingsClickedListener {
-            val navController = findNavController(R.id.main_nav_host_fragment)
-            navController.navigate(R.id.action_global_settingsFragment)
-            binding.drawerMenu.close()
-        }
-
-        binding.setRecordingsClickListener {
-            val navController = findNavController(R.id.main_nav_host_fragment)
-            navController.navigate(R.id.action_global_recordingsFragment)
-            binding.drawerMenu.close()
-        }
-
-        binding.setHelpClickedListener {
-            val navController = findNavController(R.id.main_nav_host_fragment)
-            navController.navigate(R.id.action_global_helpFragment)
-            binding.drawerMenu.close()
-        }
-
-        drawerMenuViewModel = run {
-            ViewModelProvider(this)[DrawerMenuViewModel::class.java]
-        }
-        binding.drawerMenuViewModel = drawerMenuViewModel
-
-        drawerMenuViewModel.startAssistantEvent.observe(this) {
-            it.consume {
-                startActivity(Intent(baseContext, AssistantActivity::class.java))
-                binding.drawerMenu.close()
-            }
-        }
-
-        drawerMenuViewModel.closeDrawerEvent.observe(this) {
-            it.consume {
-                binding.drawerMenu.close()
-            }
-        }
-
-        drawerMenuViewModel.showAccountPopupMenuEvent.observe(this) {
-            it.consume { pair ->
-                showAccountPopupMenu(pair.first, pair.second)
-            }
-        }
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -174,10 +122,18 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("RtlHardcoded")
     fun toggleDrawerMenu() {
         if (binding.drawerMenu.isDrawerOpen(Gravity.LEFT)) {
-            binding.drawerMenu.closeDrawer(binding.drawerMenuContent, true)
+            closeDrawerMenu()
         } else {
             binding.drawerMenu.openDrawer(binding.drawerMenuContent, true)
         }
+    }
+
+    fun closeDrawerMenu() {
+        binding.drawerMenu.closeDrawer(binding.drawerMenuContent, true)
+    }
+
+    fun findNavController(): NavController {
+        return findNavController(R.id.main_nav_host_fragment)
     }
 
     fun showGreenToast(message: String, @DrawableRes icon: Int) {
@@ -210,36 +166,5 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }*/
-    }
-
-    private fun showAccountPopupMenu(view: View, account: Account) {
-        val popupView: AccountPopupMenuBinding = DataBindingUtil.inflate(
-            LayoutInflater.from(baseContext),
-            R.layout.account_popup_menu,
-            null,
-            false
-        )
-
-        val popupWindow = PopupWindow(
-            popupView.root,
-            WRAP_CONTENT,
-            WRAP_CONTENT,
-            true
-        )
-
-        popupView.setManageProfileClickListener {
-            val navController = findNavController(R.id.main_nav_host_fragment)
-            val identity = account.params.identityAddress?.asStringUriOnly().orEmpty()
-            val action = AccountProfileFragmentDirections.actionGlobalAccountProfileFragment(
-                identity
-            )
-            navController.navigate(action)
-            popupWindow.dismiss()
-            binding.drawerMenu.close()
-        }
-
-        // Elevation is for showing a shadow around the popup
-        popupWindow.elevation = 20f
-        popupWindow.showAsDropDown(view, 0, 0, Gravity.BOTTOM)
     }
 }

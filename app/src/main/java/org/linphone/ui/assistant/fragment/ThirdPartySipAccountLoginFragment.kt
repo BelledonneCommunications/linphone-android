@@ -31,7 +31,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.linphone.LinphoneApplication
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log

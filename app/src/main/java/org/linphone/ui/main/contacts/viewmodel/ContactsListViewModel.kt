@@ -164,7 +164,7 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
     }
 
     @UiThread
-    fun applyFilter(filter: String) {
+    fun applyFilter(filter: String = currentFilter) {
         isListFiltered.value = filter.isNotEmpty()
         coreContext.postOnCoreThread {
             applyFilter(

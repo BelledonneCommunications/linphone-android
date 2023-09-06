@@ -31,8 +31,9 @@ import org.linphone.core.tools.Log
 import org.linphone.utils.LinphoneUtils
 
 class AccountModel @WorkerThread constructor(
-    private val account: Account,
-    private val onMenuClicked: ((view: View, account: Account) -> Unit)? = null
+    val account: Account,
+    private val onMenuClicked: ((view: View, account: Account) -> Unit)? = null,
+    private val onSetAsDefault: ((account: Account) -> Unit)? = null
 ) {
     companion object {
         private const val TAG = "[Account Model]"
@@ -85,8 +86,9 @@ class AccountModel @WorkerThread constructor(
     fun setAsDefault() {
         coreContext.postOnCoreThread { core ->
             core.defaultAccount = account
-            isDefault.postValue(true)
         }
+        isDefault.value = true
+        onSetAsDefault?.invoke(account)
     }
 
     @UiThread
@@ -135,5 +137,5 @@ class AccountModel @WorkerThread constructor(
 
 fun Account.isInSecureMode(): Boolean {
     // TODO FIXME
-    return true
+    return params.identityAddress?.domain == "sip.linphone.org"
 }

@@ -148,6 +148,16 @@ class ContactsListFragment : GenericFragment() {
             listViewModel.toggleContactsFilter()
         }
 
+        sharedViewModel.defaultAccountChangedEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i(
+                    "$TAG Default account changed, updating avatar in top bar & refreshing contacts list"
+                )
+                listViewModel.updateDefaultAccount()
+                listViewModel.applyFilter()
+            }
+        }
+
         // TopBarFragment related
 
         listViewModel.openDrawerMenuEvent.observe(viewLifecycleOwner) {

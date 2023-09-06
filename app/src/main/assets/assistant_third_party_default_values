@@ -22,21 +22,4 @@
     <entry name="rtp_bundle" overwrite="true">0</entry>
     <entry name="lime_server_url" overwrite="true"></entry>
   </section>
-  <section name="nat_policy_default_values">
-    <entry name="stun_server" overwrite="true"></entry>
-    <entry name="protocols" overwrite="true"></entry>
-  </section>
-  <section name="net">
-    <entry name="friendlist_subscription_enabled" overwrite="true">0</entry>
-  </section>
-  <section name="assistant">
-    <entry name="domain" overwrite="true"></entry>
-    <entry name="algorithm" overwrite="true">MD5</entry>
-    <entry name="password_max_length" overwrite="true">-1</entry>
-    <entry name="password_min_length" overwrite="true">0</entry>
-    <entry name="username_length" overwrite="true">-1</entry>
-    <entry name="username_max_length" overwrite="true">128</entry>
-    <entry name="username_min_length" overwrite="true">1</entry>
-    <entry name="username_regex" overwrite="true">^[a-zA-Z0-9+_.\-]*$</entry>
-  </section>
 </config>

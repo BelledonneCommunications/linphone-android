@@ -20,7 +20,6 @@
 package org.linphone.ui.main.viewmodel
 
 import androidx.annotation.UiThread
-import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -52,11 +51,7 @@ open class AbstractTopBarViewModel @UiThread constructor() : ViewModel() {
     init {
         searchBarVisible.value = false
 
-        // TODO FIXME: update default account displayed here when uses clicks on another account
-
-        coreContext.postOnCoreThread {
-            updateDefaultAccount()
-        }
+        updateDefaultAccount()
     }
 
     @UiThread
@@ -91,14 +86,16 @@ open class AbstractTopBarViewModel @UiThread constructor() : ViewModel() {
         searchFilter.value = ""
     }
 
-    @WorkerThread
-    private fun updateDefaultAccount() {
-        Log.i("$TAG Updating displayed default account")
+    @UiThread
+    fun updateDefaultAccount() {
+        coreContext.postOnCoreThread {
+            Log.i("$TAG Updating displayed default account")
 
-        val core = coreContext.core
-        if (core.accountList.isNotEmpty()) {
-            val defaultAccount = core.defaultAccount ?: core.accountList.first()
-            account.postValue(AccountModel(defaultAccount))
+            val core = coreContext.core
+            if (core.accountList.isNotEmpty()) {
+                val defaultAccount = core.defaultAccount ?: core.accountList.first()
+                account.postValue(AccountModel(defaultAccount))
+            }
         }
     }
 }

@@ -5,18 +5,6 @@
 
     <data>
         <import type="android.view.View" />
-        <variable
-            name="settingsClickedListener"
-            type="View.OnClickListener" />
-        <variable
-            name="recordingsClickListener"
-            type="View.OnClickListener" />
-        <variable
-            name="helpClickedListener"
-            type="View.OnClickListener" />
-        <variable
-            name="drawerMenuViewModel"
-            type="org.linphone.ui.main.viewmodel.DrawerMenuViewModel" />
     </data>
 
     <androidx.drawerlayout.widget.DrawerLayout
@@ -59,21 +47,14 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!-- Side Menu -->
-        <RelativeLayout
+        <androidx.fragment.app.FragmentContainerView
             android:id="@+id/drawer_menu_content"
+            android:name="org.linphone.ui.main.fragment.DrawerMenuFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white"
-            android:layout_gravity="start">
-
-            <include
-                tools:settingsClickedListener="@{settingsClickedListener}"
-                tools:recordingsClickListener="@{recordingsClickListener}"
-                tools:helpClickedListener="@{helpClickedListener}"
-                tools:viewModel="@{drawerMenuViewModel}"
-                layout="@layout/drawer_menu" />
-
-        </RelativeLayout>
+            android:layout_gravity="start"
+            app:layout="@layout/drawer_menu" />
 
     </androidx.drawerlayout.widget.DrawerLayout>
 
