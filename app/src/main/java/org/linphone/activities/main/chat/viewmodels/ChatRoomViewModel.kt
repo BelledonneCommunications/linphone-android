@@ -285,13 +285,11 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
     }
 
     fun areNotificationsMuted(): Boolean {
-        val id = LinphoneUtils.getChatRoomId(chatRoom.localAddress, chatRoom.peerAddress)
-        return corePreferences.chatRoomMuted(id)
+        return chatRoom.muted
     }
 
     fun muteNotifications(mute: Boolean) {
-        val id = LinphoneUtils.getChatRoomId(chatRoom.localAddress, chatRoom.peerAddress)
-        corePreferences.muteChatRoom(id, mute)
+        chatRoom.muted = mute
     }
 
     fun getRemoteAddress(): Address? {

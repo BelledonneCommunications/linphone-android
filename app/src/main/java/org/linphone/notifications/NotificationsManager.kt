@@ -161,9 +161,8 @@ class NotificationsManager(private val context: Context) {
                 return
             }
 
-            val id = LinphoneUtils.getChatRoomId(room.localAddress, room.peerAddress)
-            val mute = corePreferences.chatRoomMuted(id)
-            if (mute) {
+            if (room.muted) {
+                val id = LinphoneUtils.getChatRoomId(room.localAddress, room.peerAddress)
                 Log.i("[Notifications Manager] Chat room $id has been muted")
                 return
             }
@@ -176,14 +175,6 @@ class NotificationsManager(private val context: Context) {
                         "[Notifications Manager] Ensure chat room shortcut exists for bubble notification"
                     )
                     ShortcutsHelper.createShortcutsToChatRooms(context)
-                }
-            }
-
-            var allOutgoing = true
-            for (message in messages) {
-                if (!message.isOutgoing) {
-                    allOutgoing = false
-                    break
                 }
             }
 
@@ -203,6 +194,18 @@ class NotificationsManager(private val context: Context) {
                     "[Notifications Manager] No message to display in received aggregated messages"
                 )
             }
+        }
+
+        override fun onReactionRemoved(
+            core: Core,
+            chatRoom: ChatRoom,
+            message: ChatMessage,
+            address: Address
+        ) {
+            Log.i(
+                "[Notifications Manager] [${address.asStringUriOnly()}] removed it's previously sent reaction for chat message [$message]"
+                // TODO: remove notification if any
+            )
         }
 
         override fun onNewMessageReaction(
@@ -234,9 +237,8 @@ class NotificationsManager(private val context: Context) {
                 return
             }
 
-            val id = LinphoneUtils.getChatRoomId(chatRoom.localAddress, chatRoom.peerAddress)
-            val mute = corePreferences.chatRoomMuted(id)
-            if (mute) {
+            if (chatRoom.muted) {
+                val id = LinphoneUtils.getChatRoomId(chatRoom.localAddress, chatRoom.peerAddress)
                 Log.i("[Notifications Manager] Chat room $id has been muted")
                 return
             }
