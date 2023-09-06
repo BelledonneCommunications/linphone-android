@@ -22,7 +22,6 @@ package org.linphone.ui.main.conversations.data
 import androidx.lifecycle.MutableLiveData
 import java.lang.StringBuilder
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.contacts.ContactData
 import org.linphone.core.*
@@ -121,7 +120,7 @@ class ChatRoomData(val chatRoom: ChatRoom) {
         isSecure.postValue(chatRoom.securityLevel == ChatRoom.SecurityLevel.Encrypted)
         isSecureVerified.postValue(chatRoom.securityLevel == ChatRoom.SecurityLevel.Safe)
         isEphemeral.postValue(chatRoom.isEphemeralEnabled)
-        isMuted.postValue(areNotificationsMuted())
+        isMuted.postValue(chatRoom.muted)
     }
 
     fun onCleared() {
@@ -239,10 +238,6 @@ class ChatRoomData(val chatRoom: ChatRoom) {
         } else {
             lastMessage.postValue(text)
         }
-    }
-
-    private fun areNotificationsMuted(): Boolean {
-        return corePreferences.chatRoomMuted(id)
     }
 }
 

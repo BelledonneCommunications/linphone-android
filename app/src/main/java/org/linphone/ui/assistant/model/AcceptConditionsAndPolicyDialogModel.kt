@@ -23,20 +23,18 @@ import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.utils.Event
 
-class ConfirmConditionsAndPolicyDialogModel @UiThread constructor() {
+class AcceptConditionsAndPolicyDialogModel @UiThread constructor() {
     val dismissEvent = MutableLiveData<Event<Boolean>>()
+
+    val conditionsAcceptedEvent = MutableLiveData<Event<Boolean>>()
 
     @UiThread
     fun dismiss() {
         dismissEvent.value = Event(true)
     }
 
-    fun denyConditions() {
-        // TODO
-    }
-
     @UiThread
     fun acceptConditions() {
-        // TODO
+        conditionsAcceptedEvent.value = Event(true)
     }
 }

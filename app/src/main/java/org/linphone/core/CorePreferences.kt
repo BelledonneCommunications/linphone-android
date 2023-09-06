@@ -20,7 +20,6 @@
 package org.linphone.core
 
 import android.content.Context
-import android.content.SharedPreferences
 import androidx.annotation.AnyThread
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
@@ -42,25 +41,12 @@ class CorePreferences @UiThread constructor(private val context: Context) {
             _config = value
         }
 
-    @UiThread
-    fun chatRoomMuted(id: String): Boolean {
-        val sharedPreferences: SharedPreferences = coreContext.context.getSharedPreferences(
-            "notifications",
-            Context.MODE_PRIVATE
-        )
-        return sharedPreferences.getBoolean(id, false)
-    }
-
-    @UiThread
-    fun muteChatRoom(id: String, mute: Boolean) {
-        val sharedPreferences: SharedPreferences = coreContext.context.getSharedPreferences(
-            "notifications",
-            Context.MODE_PRIVATE
-        )
-        val editor = sharedPreferences.edit()
-        editor.putBoolean(id, mute)
-        editor.apply()
-    }
+    @get:WorkerThread @set:WorkerThread
+    var conditionsAndPrivacyPolicyAccepted: Boolean
+        get() = config.getBool("app", "read_and_agree_terms_and_privacy", false)
+        set(value) {
+            config.setBool("app", "read_and_agree_terms_and_privacy", value)
+        }
 
     @get:WorkerThread @set:WorkerThread
     var publishPresence: Boolean

@@ -26,10 +26,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.ChatRoom
 import org.linphone.databinding.ChatRoomMenuBinding
-import org.linphone.utils.LinphoneUtils
 
 class ConversationMenuDialogFragment(
     private val chatRoom: ChatRoom,
@@ -57,27 +55,26 @@ class ConversationMenuDialogFragment(
         // TODO FIXME: use a viewmodel and use core thread
         val view = ChatRoomMenuBinding.inflate(layoutInflater)
 
-        val id = LinphoneUtils.getChatRoomId(chatRoom)
-        view.isMuted = corePreferences.chatRoomMuted(id)
+        view.isMuted = chatRoom.muted
         view.isRead = chatRoom.unreadMessagesCount == 0
 
         view.setMarkAsReadClickListener {
-            coreContext.postOnCoreThread { core ->
+            coreContext.postOnCoreThread {
                 chatRoom.markAsRead()
             }
             dismiss()
         }
 
         view.setMuteClickListener {
-            coreContext.postOnCoreThread { core ->
-                corePreferences.muteChatRoom(id, true)
+            coreContext.postOnCoreThread {
+                chatRoom.muted = true
             }
             dismiss()
         }
 
         view.setUnMuteClickListener {
-            coreContext.postOnCoreThread { core ->
-                corePreferences.muteChatRoom(id, false)
+            coreContext.postOnCoreThread {
+                chatRoom.muted = false
             }
             dismiss()
         }

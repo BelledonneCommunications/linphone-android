@@ -7,7 +7,7 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.assistant.model.ConfirmConditionsAndPolicyDialogModel" />
+            type="org.linphone.ui.assistant.model.AcceptConditionsAndPolicyDialogModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -63,7 +63,7 @@
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
             android:layout_marginTop="10dp"
-            android:text="En continuant, vous acceptez ces conditions, notre politique de confidentialité et nos conditions d'utilisation."
+            android:text="En continuant, vous notre politique de confidentialité et nos conditions d'utilisation."
             android:textSize="14sp"
             app:layout_constraintBottom_toTopOf="@id/cancel"
             app:layout_constraintStart_toStartOf="@id/dialog_background"
@@ -71,7 +71,7 @@
             app:layout_constraintTop_toBottomOf="@id/title" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:onClick="@{() -> viewModel.denyConditions()}"
+            android:onClick="@{() -> viewModel.dismiss()}"
             style="@style/default_text_style_600"
             android:id="@+id/cancel"
             android:layout_width="0dp"

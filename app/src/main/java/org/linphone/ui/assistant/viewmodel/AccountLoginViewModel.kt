@@ -56,6 +56,8 @@ class AccountLoginViewModel @UiThread constructor() : ViewModel() {
 
     val accountLoginErrorEvent = MutableLiveData<Event<String>>()
 
+    var conditionsAndPrivacyPolicyAccepted = false
+
     private lateinit var newlyCreatedAuthInfo: AuthInfo
     private lateinit var newlyCreatedAccount: Account
 
@@ -93,6 +95,10 @@ class AccountLoginViewModel @UiThread constructor() : ViewModel() {
     init {
         showPassword.value = false
         registrationInProgress.value = false
+
+        coreContext.postOnCoreThread {
+            conditionsAndPrivacyPolicyAccepted = corePreferences.conditionsAndPrivacyPolicyAccepted
+        }
 
         loginEnabled.addSource(username) {
             loginEnabled.value = isLoginButtonEnabled()

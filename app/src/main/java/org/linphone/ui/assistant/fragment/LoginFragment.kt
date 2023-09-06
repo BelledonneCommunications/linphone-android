@@ -38,7 +38,9 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantLoginFragmentBinding
 import org.linphone.ui.assistant.AssistantActivity
+import org.linphone.ui.assistant.model.AcceptConditionsAndPolicyDialogModel
 import org.linphone.ui.assistant.viewmodel.AccountLoginViewModel
+import org.linphone.utils.DialogUtils
 import org.linphone.utils.PhoneNumberUtils
 
 @UiThread
@@ -73,8 +75,11 @@ class LoginFragment : Fragment() {
         }
 
         binding.setRegisterClickListener {
-            val action = LoginFragmentDirections.actionLoginFragmentToRegisterFragment()
-            findNavController().navigate(action)
+            if (viewModel.conditionsAndPrivacyPolicyAccepted) {
+                goToRegisterFragment()
+            } else {
+                showAcceptConditionsAndPrivacyDialog(goToAccountCreate = true)
+            }
         }
 
         binding.setForgottenPasswordClickListener {
@@ -93,8 +98,11 @@ class LoginFragment : Fragment() {
         }
 
         binding.setThirdPartySipAccountLoginClickListener {
-            val action = LoginFragmentDirections.actionLoginFragmentToThirdPartySipAccountWarningFragment()
-            findNavController().navigate(action)
+            if (viewModel.conditionsAndPrivacyPolicyAccepted) {
+                goToLoginThirdPartySipAccountFragment()
+            } else {
+                showAcceptConditionsAndPrivacyDialog(goToThirdPartySipAccountLogin = true)
+            }
         }
 
         viewModel.showPassword.observe(viewLifecycleOwner) {
@@ -141,5 +149,51 @@ class LoginFragment : Fragment() {
 
     private fun goBack() {
         requireActivity().finish()
+    }
+
+    private fun goToRegisterFragment() {
+        val action = LoginFragmentDirections.actionLoginFragmentToRegisterFragment()
+        findNavController().navigate(action)
+    }
+
+    private fun goToLoginThirdPartySipAccountFragment() {
+        val action = LoginFragmentDirections.actionLoginFragmentToThirdPartySipAccountWarningFragment()
+        findNavController().navigate(action)
+    }
+
+    private fun showAcceptConditionsAndPrivacyDialog(
+        goToAccountCreate: Boolean = false,
+        goToThirdPartySipAccountLogin: Boolean = false
+    ) {
+        val model = AcceptConditionsAndPolicyDialogModel()
+        val dialog = DialogUtils.getAcceptConditionsAndPrivacyDialog(
+            requireActivity(),
+            model
+        )
+
+        model.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        model.conditionsAcceptedEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i("$TAG Conditions & Privacy policy have been accepted")
+                coreContext.postOnCoreThread {
+                    // TODO FIXME: uncomment
+                    // corePreferences.conditionsAndPrivacyPolicyAccepted = true
+                }
+                dialog.dismiss()
+
+                if (goToAccountCreate) {
+                    goToRegisterFragment()
+                } else if (goToThirdPartySipAccountLogin) {
+                    goToLoginThirdPartySipAccountFragment()
+                }
+            }
+        }
+
+        dialog.show()
     }
 }
