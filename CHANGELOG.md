@@ -10,6 +10,12 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [5.1.1] - 2023-09-06
+
+### Fixed
+- Fixed issue in SDK randomly generated password when creating account from app
+- Various issues reported on the Play Store
+
 ## [5.1.0] - 2023-08-21
 
 ### Added
