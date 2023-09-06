@@ -72,6 +72,24 @@ class DrawerMenuFragment : GenericFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
+        binding.setSettingsClickedListener {
+            val navController = (requireActivity() as MainActivity).findNavController()
+            navController.navigate(R.id.action_global_settingsFragment)
+            (requireActivity() as MainActivity).closeDrawerMenu()
+        }
+
+        binding.setRecordingsClickListener {
+            val navController = (requireActivity() as MainActivity).findNavController()
+            navController.navigate(R.id.action_global_recordingsFragment)
+            (requireActivity() as MainActivity).closeDrawerMenu()
+        }
+
+        binding.setHelpClickedListener {
+            val navController = (requireActivity() as MainActivity).findNavController()
+            navController.navigate(R.id.action_global_helpFragment)
+            (requireActivity() as MainActivity).closeDrawerMenu()
+        }
+
         viewModel.startAssistantEvent.observe(viewLifecycleOwner) {
             it.consume {
                 startActivity(Intent(requireContext(), AssistantActivity::class.java))
@@ -98,22 +116,10 @@ class DrawerMenuFragment : GenericFragment() {
             }
         }
 
-        binding.setSettingsClickedListener {
-            val navController = (requireActivity() as MainActivity).findNavController()
-            navController.navigate(R.id.action_global_settingsFragment)
-            (requireActivity() as MainActivity).closeDrawerMenu()
-        }
-
-        binding.setRecordingsClickListener {
-            val navController = (requireActivity() as MainActivity).findNavController()
-            navController.navigate(R.id.action_global_recordingsFragment)
-            (requireActivity() as MainActivity).closeDrawerMenu()
-        }
-
-        binding.setHelpClickedListener {
-            val navController = (requireActivity() as MainActivity).findNavController()
-            navController.navigate(R.id.action_global_helpFragment)
-            (requireActivity() as MainActivity).closeDrawerMenu()
+        sharedViewModel.refreshDrawerMenuAccountsListEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                viewModel.updateAccountsList()
+            }
         }
     }
 
@@ -147,5 +153,10 @@ class DrawerMenuFragment : GenericFragment() {
         // Elevation is for showing a shadow around the popup
         popupWindow.elevation = 20f
         popupWindow.showAsDropDown(view, 0, 0, Gravity.BOTTOM)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.updateAccountsList()
     }
 }

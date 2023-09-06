@@ -54,16 +54,14 @@ class DrawerMenuViewModel @UiThread constructor() : ViewModel() {
     }
 
     init {
-        // TODO FIXME: update accounts list when a new account is added or when removing one
-        coreContext.postOnCoreThread {
-            computeAccountsList()
-        }
-
-        // TODO FIXME: account avatar not refreshed...
     }
 
     @UiThread
     override fun onCleared() {
+        coreContext.postOnCoreThread {
+            accounts.value.orEmpty().forEach(AccountModel::destroy)
+        }
+
         super.onCleared()
     }
 
@@ -77,9 +75,15 @@ class DrawerMenuViewModel @UiThread constructor() : ViewModel() {
         startAssistantEvent.value = Event(true)
     }
 
+    @UiThread
+    fun updateAccountsList() {
+        coreContext.postOnCoreThread {
+            computeAccountsList()
+        }
+    }
+
     @WorkerThread
     private fun computeAccountsList() {
-        Log.i("$TAG Updating accounts list")
         accounts.value.orEmpty().forEach(AccountModel::destroy)
 
         val list = arrayListOf<AccountModel>()

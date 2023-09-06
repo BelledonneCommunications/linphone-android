@@ -18,6 +18,7 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.AccountProfileFragmentBinding
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.ui.main.settings.viewmodel.AccountProfileViewModel
+import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 
 @UiThread
@@ -107,6 +108,7 @@ class AccountProfileFragment : GenericFragment() {
 
         Log.i("$TAG Leaving account profile, saving changes")
         viewModel.saveChangesWhenLeaving()
+        sharedViewModel.refreshDrawerMenuAccountsListEvent.value = Event(true)
     }
 
     private fun pickImage() {

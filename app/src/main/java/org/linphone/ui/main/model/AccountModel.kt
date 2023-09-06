@@ -62,10 +62,12 @@ class AccountModel @WorkerThread constructor(
             state: RegistrationState?,
             message: String
         ) {
-            Log.i(
-                "$TAG Account [${account.params.identityAddress?.asStringUriOnly()}] registration state changed: [$state]($message)"
-            )
-            update()
+            if (account == this@AccountModel.account) {
+                Log.i(
+                    "$TAG Account [${account.params.identityAddress?.asStringUriOnly()}] registration state changed: [$state]($message)"
+                )
+                update()
+            }
         }
     }
 
@@ -116,7 +118,7 @@ class AccountModel @WorkerThread constructor(
 
         val pictureUri = account.params.pictureUri.orEmpty()
         avatar.postValue(pictureUri)
-        Log.i("$TAG Account picture URI is [$pictureUri]")
+        Log.d("$TAG Account picture URI is [$pictureUri]")
 
         isDefault.postValue(coreContext.core.defaultAccount == account)
 
