@@ -594,14 +594,16 @@ fun addPrefixEditTextValidation(editText: EditText, enabled: Boolean) {
     if (!enabled) return
     editText.addTextChangedListener(object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
-            val dialPlan = PhoneNumberUtils.getDialPlanFromCountryCallingPrefix(
-                s.toString().substring(1)
-            )
-            if (dialPlan == null) {
-                editText.error =
-                    editText.context.getString(
-                        R.string.assistant_error_invalid_international_prefix
-                    )
+            if ((s?.length ?: 0) > 1) {
+                val dialPlan = PhoneNumberUtils.getDialPlanFromCountryCallingPrefix(
+                    s.toString().substring(1)
+                )
+                if (dialPlan == null) {
+                    editText.error =
+                        editText.context.getString(
+                            R.string.assistant_error_invalid_international_prefix
+                        )
+                }
             }
         }
 
@@ -857,7 +859,9 @@ fun ScrollDotsView.setSelectedIndex(index: Int) {
 }
 
 @BindingAdapter("presenceIcon")
-fun ImageView.setPresenceIcon(presence: ConsolidatedPresence) {
+fun ImageView.setPresenceIcon(presence: ConsolidatedPresence?) {
+    if (presence == null) return
+
     val icon = when (presence) {
         ConsolidatedPresence.Online -> R.drawable.led_online
         ConsolidatedPresence.DoNotDisturb -> R.drawable.led_do_not_disturb

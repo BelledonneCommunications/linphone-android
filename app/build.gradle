@@ -210,11 +210,11 @@ dependencies {
     implementation "androidx.security:security-crypto-ktx:1.1.0-alpha06"
     implementation "androidx.window:window:1.1.0"
 
-    def emoji_version = "1.4.0-rc01"
+    def emoji_version = "1.4.0"
     implementation "androidx.emoji2:emoji2:$emoji_version"
     implementation "androidx.emoji2:emoji2-emojipicker:$emoji_version"
 
-    def nav_version = "2.6.0"
+    def nav_version = "2.7.1"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
