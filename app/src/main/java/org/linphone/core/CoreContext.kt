@@ -481,6 +481,35 @@ class CoreContext(
 
         computeUserAgent()
 
+        val fiveTwoMigrationRequired = core.config.getBool("app", "migration_5.2_required", true)
+        if (fiveTwoMigrationRequired) {
+            Log.i(
+                "[Context] Starting migration of muted chat room from shared preferences to our SDK"
+            )
+            val sharedPreferences: SharedPreferences = context.getSharedPreferences(
+                "notifications",
+                Context.MODE_PRIVATE
+            )
+            val editor = sharedPreferences.edit()
+
+            for (chatRoom in core.chatRooms) {
+                val id = LinphoneUtils.getChatRoomId(chatRoom)
+                if (sharedPreferences.getBoolean(id, false)) {
+                    Log.i("[Context] Migrating muted flag for chat room [$id]")
+                    chatRoom.muted = true
+                    editor.remove(id)
+                }
+            }
+
+            editor.apply()
+            core.config.setBool(
+                "app",
+                "migration_5.2_required",
+                false
+            )
+            Log.i("[Context] Migration of muted chat room finished")
+        }
+
         val fiveOneMigrationRequired = core.config.getBool("app", "migration_5.1_required", true)
         if (fiveOneMigrationRequired) {
             core.config.setBool(

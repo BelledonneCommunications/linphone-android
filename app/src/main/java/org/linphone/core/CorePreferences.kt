@@ -91,24 +91,6 @@ class CorePreferences constructor(private val context: Context) {
             // logcatLogsOutput = false
         }
 
-    fun chatRoomMuted(id: String): Boolean {
-        val sharedPreferences: SharedPreferences = coreContext.context.getSharedPreferences(
-            "notifications",
-            Context.MODE_PRIVATE
-        )
-        return sharedPreferences.getBoolean(id, false)
-    }
-
-    fun muteChatRoom(id: String, mute: Boolean) {
-        val sharedPreferences: SharedPreferences = coreContext.context.getSharedPreferences(
-            "notifications",
-            Context.MODE_PRIVATE
-        )
-        val editor = sharedPreferences.edit()
-        editor.putBoolean(id, mute)
-        editor.apply()
-    }
-
     /* App settings */
 
     var debugLogs: Boolean

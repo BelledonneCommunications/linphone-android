@@ -28,7 +28,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.contact.ContactDataInterface
 import org.linphone.contact.ContactsUpdatedListenerStub
@@ -273,6 +272,6 @@ class ChatRoomData(val chatRoom: ChatRoom) : ContactDataInterface {
     }
 
     private fun areNotificationsMuted(): Boolean {
-        return corePreferences.chatRoomMuted(id)
+        return chatRoom.muted
     }
 }
