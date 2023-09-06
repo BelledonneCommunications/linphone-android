@@ -154,7 +154,7 @@ class ContactsListFragment : GenericFragment() {
                     "$TAG Default account changed, updating avatar in top bar & refreshing contacts list"
                 )
                 listViewModel.updateDefaultAccount()
-                listViewModel.applyFilter()
+                listViewModel.applyCurrentDefaultAccountFilter()
             }
         }
 

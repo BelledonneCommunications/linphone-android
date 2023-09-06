@@ -50,14 +50,6 @@ class WelcomeActivity : AppCompatActivity() {
 
     private val pageChangedCallback = PageChangedCallback()
 
-    override fun onBackPressed() {
-        if (viewPager.currentItem == 0) {
-            super.onBackPressed()
-        } else {
-            viewPager.currentItem = viewPager.currentItem - 1
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, true)
         super.onCreate(savedInstanceState)

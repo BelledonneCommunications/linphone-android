@@ -28,6 +28,7 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -36,10 +37,9 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantQrCodeScannerFragmentBinding
 import org.linphone.ui.assistant.AssistantActivity
 import org.linphone.ui.assistant.viewmodel.QrCodeViewModel
-import org.linphone.ui.main.fragment.GenericFragment
 
 @UiThread
-class QrCodeScannerFragment : GenericFragment() {
+class QrCodeScannerFragment : Fragment() {
     companion object {
         private const val TAG = "[Qr Code Scanner Fragment]"
     }
@@ -69,10 +69,6 @@ class QrCodeScannerFragment : GenericFragment() {
     ): View {
         binding = AssistantQrCodeScannerFragmentBinding.inflate(layoutInflater)
         return binding.root
-    }
-
-    override fun goBack() {
-        findNavController().popBackStack()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -131,6 +127,10 @@ class QrCodeScannerFragment : GenericFragment() {
         }
 
         super.onPause()
+    }
+
+    private fun goBack() {
+        findNavController().popBackStack()
     }
 
     private fun isCameraPermissionGranted(): Boolean {

@@ -27,6 +27,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
@@ -38,11 +39,10 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantLoginFragmentBinding
 import org.linphone.ui.assistant.AssistantActivity
 import org.linphone.ui.assistant.viewmodel.AccountLoginViewModel
-import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.PhoneNumberUtils
 
 @UiThread
-class LoginFragment : GenericFragment() {
+class LoginFragment : Fragment() {
     companion object {
         private const val TAG = "[Login Fragment]"
     }
@@ -60,10 +60,6 @@ class LoginFragment : GenericFragment() {
     ): View {
         binding = AssistantLoginFragmentBinding.inflate(layoutInflater)
         return binding.root
-    }
-
-    override fun goBack() {
-        requireActivity().finish()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -141,5 +137,9 @@ class LoginFragment : GenericFragment() {
             R.color.white
         )
         requireActivity().window.navigationBarColor = white
+    }
+
+    private fun goBack() {
+        requireActivity().finish()
     }
 }

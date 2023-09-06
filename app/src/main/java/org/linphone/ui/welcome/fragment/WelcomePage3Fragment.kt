@@ -23,9 +23,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import org.linphone.R
 
+@UiThread
 class WelcomePage3Fragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,

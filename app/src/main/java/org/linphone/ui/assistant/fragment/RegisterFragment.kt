@@ -28,6 +28,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
@@ -39,12 +40,11 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantRegisterFragmentBinding
 import org.linphone.ui.assistant.model.ConfirmPhoneNumberDialogModel
 import org.linphone.ui.assistant.viewmodel.AccountCreationViewModel
-import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.PhoneNumberUtils
 
 @UiThread
-class RegisterFragment : GenericFragment() {
+class RegisterFragment : Fragment() {
     companion object {
         private const val TAG = "[Register Fragment]"
     }
@@ -62,10 +62,6 @@ class RegisterFragment : GenericFragment() {
     ): View {
         binding = AssistantRegisterFragmentBinding.inflate(layoutInflater)
         return binding.root
-    }
-
-    override fun goBack() {
-        findNavController().popBackStack()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -141,6 +137,10 @@ class RegisterFragment : GenericFragment() {
             val prefix = PhoneNumberUtils.getDeviceInternationalPrefix(requireContext())
             viewModel.internationalPrefix.postValue("+$prefix")
         }
+    }
+
+    private fun goBack() {
+        findNavController().popBackStack()
     }
 
     private fun showPhoneNumberConfirmationDialog(number: String) {

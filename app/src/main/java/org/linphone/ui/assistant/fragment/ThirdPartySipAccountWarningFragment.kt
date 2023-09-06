@@ -26,13 +26,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantThirdPartySipAccountWarningFragmentBinding
-import org.linphone.ui.main.fragment.GenericFragment
 
 @UiThread
-class ThirdPartySipAccountWarningFragment : GenericFragment() {
+class ThirdPartySipAccountWarningFragment : Fragment() {
     companion object {
         private const val TAG = "[Third Party SIP Account Warning Fragment]"
     }
@@ -46,10 +46,6 @@ class ThirdPartySipAccountWarningFragment : GenericFragment() {
     ): View {
         binding = AssistantThirdPartySipAccountWarningFragmentBinding.inflate(layoutInflater)
         return binding.root
-    }
-
-    override fun goBack() {
-        findNavController().popBackStack()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -80,5 +76,9 @@ class ThirdPartySipAccountWarningFragment : GenericFragment() {
             val action = ThirdPartySipAccountWarningFragmentDirections.actionThirdPartySipAccountWarningFragmentToThirdPartySipAccountLoginFragment()
             findNavController().navigate(action)
         }
+    }
+
+    private fun goBack() {
+        findNavController().popBackStack()
     }
 }

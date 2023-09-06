@@ -27,11 +27,10 @@ import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.databinding.VoipOutgoingCallFragmentBinding
-import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.ui.voip.viewmodel.CurrentCallViewModel
 
 @UiThread
-class OutgoingCallFragment : GenericFragment() {
+class OutgoingCallFragment : GenericCallFragment() {
     private lateinit var binding: VoipOutgoingCallFragmentBinding
 
     private lateinit var callViewModel: CurrentCallViewModel

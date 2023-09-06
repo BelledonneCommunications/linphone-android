@@ -92,7 +92,7 @@ class DrawerMenuFragment : GenericFragment() {
 
         viewModel.startAssistantEvent.observe(viewLifecycleOwner) {
             it.consume {
-                startActivity(Intent(requireContext(), AssistantActivity::class.java))
+                startActivity(Intent(requireActivity(), AssistantActivity::class.java))
                 (requireActivity() as MainActivity).closeDrawerMenu()
             }
         }

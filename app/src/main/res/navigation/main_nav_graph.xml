@@ -69,9 +69,9 @@
         <action
             android:id="@+id/action_contactsFragment_to_callsFragment"
             app:destination="@id/callsFragment"
-            app:popUpTo="@id/callsFragment"
-            app:popUpToInclusive="true"
-            app:launchSingleTop="true"/>
+            app:launchSingleTop="true"
+            app:popUpTo="@id/contactsFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -82,9 +82,9 @@
         <action
             android:id="@+id/action_callsFragment_to_contactsFragment"
             app:destination="@id/contactsFragment"
-            app:popUpTo="@id/contactsFragment"
-            app:popUpToInclusive="true"
-            app:launchSingleTop="true" />
+            app:launchSingleTop="true"
+            app:popUpTo="@id/callsFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_callsFragment_to_conversationsFragment"
             app:destination="@id/conversationsFragment" />

@@ -111,6 +111,16 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
     }
 
     @UiThread
+    fun applyCurrentDefaultAccountFilter() {
+        coreContext.postOnCoreThread { core ->
+            val defaultAccount = core.defaultAccount
+            limitSearchToLinphoneAccounts = defaultAccount?.isInSecureMode() ?: false
+        }
+
+        applyFilter(currentFilter)
+    }
+
+    @UiThread
     fun toggleContactsFilter() {
         limitSearchToLinphoneAccounts = !limitSearchToLinphoneAccounts
         applyFilter(currentFilter)

@@ -26,16 +26,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantRegisterConfirmSmsCodeFragmentBinding
 import org.linphone.ui.assistant.viewmodel.AccountCreationViewModel
-import org.linphone.ui.main.fragment.GenericFragment
 
 @UiThread
-class RegisterCodeConfirmationFragment : GenericFragment() {
+class RegisterCodeConfirmationFragment : Fragment() {
     companion object {
         private const val TAG = "[Register Code Confirmation Fragment]"
     }
@@ -53,10 +53,6 @@ class RegisterCodeConfirmationFragment : GenericFragment() {
     ): View {
         binding = AssistantRegisterConfirmSmsCodeFragmentBinding.inflate(layoutInflater)
         return binding.root
-    }
-
-    override fun goBack() {
-        findNavController().popBackStack()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -96,5 +92,9 @@ class RegisterCodeConfirmationFragment : GenericFragment() {
                 }
             }
         }
+    }
+
+    private fun goBack() {
+        findNavController().popBackStack()
     }
 }
