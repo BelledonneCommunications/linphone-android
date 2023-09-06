@@ -100,7 +100,7 @@
                 android:textSize="14sp"
                 android:textColor="@color/gray_9"
                 android:background="@{viewModel.usernameError.length() > 0 ? @drawable/shape_edit_text_error_background : @drawable/edit_text_background, default=@drawable/edit_text_background}"
-                android:inputType=""
+                android:inputType="text"
                 android:hint="Username"
                 app:layout_constraintTop_toBottomOf="@id/username_label"
                 app:layout_constraintStart_toStartOf="parent"
@@ -130,7 +130,6 @@
                 android:text="Phone Number*"
                 android:textSize="13sp"
                 android:textColor="@color/gray_9"
-                android:inputType="text"
                 app:layout_constraintTop_toBottomOf="@id/username_error"
                 app:layout_constraintStart_toStartOf="parent"/>
 

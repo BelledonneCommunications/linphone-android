@@ -9,6 +9,9 @@
         <variable
             name="backClickListener"
             type="View.OnClickListener" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.assistant.viewmodel.ThirdPartySipAccountLoginViewModel" />
     </data>
 
     <ScrollView
@@ -31,6 +34,224 @@
                 app:tint="@color/gray_1"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_800"
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="100dp"
+                android:text="Use a third party SIP Account"
+                android:textSize="20sp"
+                android:textColor="@color/gray_9"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/username_label"
+                style="@style/default_text_style_700"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="38dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="Username*"
+                android:textSize="13sp"
+                android:textColor="@color/gray_9"
+                app:layout_constraintTop_toBottomOf="@id/title"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <androidx.appcompat.widget.AppCompatEditText
+                style="@style/default_text_style"
+                android:id="@+id/username"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="@={viewModel.username, default=`johndoe`}"
+                android:textSize="14sp"
+                android:textColor="@color/gray_9"
+                android:background="@drawable/edit_text_background"
+                android:inputType="text"
+                android:hint="Username"
+                app:layout_constraintTop_toBottomOf="@id/username_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/password_label"
+                style="@style/default_text_style_700"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+                android:text="Password*"
+                android:textSize="13sp"
+                android:textColor="@color/gray_9"
+                app:layout_constraintTop_toBottomOf="@id/username"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <androidx.appcompat.widget.AppCompatEditText
+                style="@style/default_text_style"
+                android:id="@+id/password"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="@={viewModel.password, default=`johndoe`}"
+                android:textSize="14sp"
+                android:textColor="@color/gray_9"
+                android:background="@drawable/edit_text_background"
+                android:hint="Password"
+                android:inputType="@{viewModel.showPassword ? InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD : InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD, default=textPassword}"
+                app:layout_constraintTop_toBottomOf="@id/password_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <ImageView
+                android:onClick="@{() -> viewModel.toggleShowPassword()}"
+                android:id="@+id/eye"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="0dp"
+                android:layout_marginEnd="20dp"
+                android:padding="4dp"
+                android:src="@{viewModel.showPassword ? @drawable/eye_slash : @drawable/eye, default=@drawable/eye}"
+                app:tint="@color/gray_1"
+                app:layout_constraintEnd_toEndOf="@id/password"
+                app:layout_constraintTop_toTopOf="@id/password"
+                app:layout_constraintBottom_toBottomOf="@id/password" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/domain_label"
+                style="@style/default_text_style_700"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="Domain*"
+                android:textSize="13sp"
+                android:textColor="@color/gray_9"
+                app:layout_constraintTop_toBottomOf="@id/password"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <androidx.appcompat.widget.AppCompatEditText
+                style="@style/default_text_style"
+                android:id="@+id/domain"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="@={viewModel.domain, default=`sip.example.net`}"
+                android:textSize="14sp"
+                android:textColor="@color/gray_9"
+                android:background="@drawable/edit_text_background"
+                android:inputType="text|textUri"
+                android:hint="Domain"
+                app:layout_constraintTop_toBottomOf="@id/domain_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/display_name_label"
+                style="@style/default_text_style_700"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="Display Name"
+                android:textSize="13sp"
+                android:textColor="@color/gray_9"
+                app:layout_constraintTop_toBottomOf="@id/domain"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <androidx.appcompat.widget.AppCompatEditText
+                style="@style/default_text_style"
+                android:id="@+id/display_name"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="@={viewModel.displayName, default=`John Doe`}"
+                android:textSize="14sp"
+                android:textColor="@color/gray_9"
+                android:background="@drawable/edit_text_background"
+                android:inputType="text|textPersonName"
+                android:hint="Display Name"
+                app:layout_constraintTop_toBottomOf="@id/display_name_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/transport_label"
+                style="@style/default_text_style_700"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="Transport*"
+                android:textSize="13sp"
+                android:textColor="@color/gray_9"
+                app:layout_constraintTop_toBottomOf="@id/display_name"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/transport"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:background="@drawable/edit_text_background"
+                app:layout_constraintTop_toBottomOf="@id/transport_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <ImageView
+                android:id="@+id/transport_caret"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:src="@drawable/caret_down"
+                app:layout_constraintTop_toTopOf="@id/transport"
+                app:layout_constraintBottom_toBottomOf="@id/transport"
+                app:layout_constraintEnd_toEndOf="@id/transport"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:onClick="@{() -> viewModel.login()}"
+                android:enabled="@{viewModel.loginEnabled &amp;&amp; !viewModel.registrationInProgress, default=false}"
+                style="@style/default_text_style_600"
+                android:id="@+id/login"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:paddingTop="@dimen/primary_secondary_buttons_label_padding"
+                android:paddingBottom="@dimen/primary_secondary_buttons_label_padding"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="Login"
+                android:textSize="18sp"
+                android:textColor="@color/primary_button_label_color"
+                android:gravity="center"
+                android:background="@drawable/primary_button_background"
+                app:layout_constraintTop_toBottomOf="@id/transport"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

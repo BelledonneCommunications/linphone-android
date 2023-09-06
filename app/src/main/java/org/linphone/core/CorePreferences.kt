@@ -94,11 +94,16 @@ class CorePreferences @UiThread constructor(private val context: Context) {
     val linphoneDefaultValuesPath: String
         get() = context.filesDir.absolutePath + "/assistant_linphone_default_values"
 
+    @get:AnyThread
+    val thirdPartyDefaultValuesPath: String
+        get() = context.filesDir.absolutePath + "/assistant_third_party_default_values"
+
     @UiThread
     fun copyAssetsFromPackage() {
         copy("linphonerc_default", configPath)
         copy("linphonerc_factory", factoryConfigPath, true)
         copy("assistant_linphone_default_values", linphoneDefaultValuesPath, true)
+        copy("assistant_third_party_default_values", thirdPartyDefaultValuesPath, true)
     }
 
     @AnyThread

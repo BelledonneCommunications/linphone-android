@@ -27,12 +27,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantLoginFragmentBinding
+import org.linphone.ui.assistant.AssistantActivity
 import org.linphone.ui.assistant.viewmodel.AccountLoginViewModel
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.PhoneNumberUtils
@@ -97,9 +101,28 @@ class LoginFragment : GenericFragment() {
             findNavController().navigate(action)
         }
 
+        viewModel.showPassword.observe(viewLifecycleOwner) {
+            lifecycleScope.launch {
+                delay(50)
+                binding.password.setSelection(binding.password.text?.length ?: 0)
+            }
+        }
+
         viewModel.accountLoggedInEvent.observe(viewLifecycleOwner) {
             it.consume {
+                Log.i("$TAG Account successfully logged-in, leaving assistant")
                 goBack()
+            }
+        }
+
+        viewModel.accountLoginErrorEvent.observe(viewLifecycleOwner) {
+            it.consume { message ->
+                Log.e("$TAG Failed to log in account [$message]")
+                // TODO FIXME: don't use message from callback
+                (requireActivity() as AssistantActivity).showRedToast(
+                    message,
+                    R.drawable.warning_circle
+                )
             }
         }
 

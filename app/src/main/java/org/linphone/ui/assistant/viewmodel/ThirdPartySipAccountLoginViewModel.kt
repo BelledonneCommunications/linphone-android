@@ -32,17 +32,28 @@ import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.Factory
 import org.linphone.core.RegistrationState
+import org.linphone.core.TransportType
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
 
-class AccountLoginViewModel @UiThread constructor() : ViewModel() {
+class ThirdPartySipAccountLoginViewModel @UiThread constructor() : ViewModel() {
     companion object {
-        private const val TAG = "[Account Login ViewModel]"
+        private const val TAG = "[Third Party SIP Account Login ViewModel]"
+
+        private const val UDP = "UDP"
+        private const val TCP = "TCP"
+        private const val TLS = "TLS"
     }
 
     val username = MutableLiveData<String>()
 
     val password = MutableLiveData<String>()
+
+    val domain = MutableLiveData<String>()
+
+    val displayName = MutableLiveData<String>()
+
+    val transport = MutableLiveData<String>()
 
     val internationalPrefix = MutableLiveData<String>()
 
@@ -55,6 +66,8 @@ class AccountLoginViewModel @UiThread constructor() : ViewModel() {
     val accountLoggedInEvent = MutableLiveData<Event<Boolean>>()
 
     val accountLoginErrorEvent = MutableLiveData<Event<String>>()
+
+    val availableTransports = arrayListOf<String>()
 
     private lateinit var newlyCreatedAuthInfo: AuthInfo
     private lateinit var newlyCreatedAccount: Account
@@ -100,15 +113,23 @@ class AccountLoginViewModel @UiThread constructor() : ViewModel() {
         loginEnabled.addSource(password) {
             loginEnabled.value = isLoginButtonEnabled()
         }
+        loginEnabled.addSource(domain) {
+            loginEnabled.value = isLoginButtonEnabled()
+        }
+
+        availableTransports.add(UDP)
+        availableTransports.add(TCP)
+        availableTransports.add(TLS)
+        transport.value = UDP
     }
 
     @UiThread
     fun login() {
         coreContext.postOnCoreThread { core ->
-            core.loadConfigFromXml(corePreferences.linphoneDefaultValuesPath)
+            core.loadConfigFromXml(corePreferences.thirdPartyDefaultValuesPath)
 
             val user = username.value.orEmpty()
-            val domain = corePreferences.defaultDomain
+            val domainValue = domain.value.orEmpty()
 
             newlyCreatedAuthInfo = Factory.instance().createAuthInfo(
                 user,
@@ -116,13 +137,25 @@ class AccountLoginViewModel @UiThread constructor() : ViewModel() {
                 password.value.orEmpty(),
                 null,
                 null,
-                domain
+                domainValue
             )
             core.addAuthInfo(newlyCreatedAuthInfo)
 
             val accountParams = core.createAccountParams()
-            val identityAddress = Factory.instance().createAddress("sip:$user@$domain")
+
+            val identityAddress = Factory.instance().createAddress("sip:$user@$domainValue")
+            if (displayName.value.orEmpty().isNotEmpty()) {
+                identityAddress?.displayName = displayName.value.orEmpty()
+            }
             accountParams.identityAddress = identityAddress
+
+            val serverAddress = Factory.instance().createAddress("sip:$domainValue")
+            serverAddress?.transport = when (transport.value.orEmpty()) {
+                TCP -> TransportType.Tcp
+                TLS -> TransportType.Tls
+                else -> TransportType.Udp
+            }
+            accountParams.serverAddress = serverAddress
 
             val prefix = internationalPrefix.value.orEmpty()
             if (prefix.isNotEmpty()) {
@@ -152,6 +185,6 @@ class AccountLoginViewModel @UiThread constructor() : ViewModel() {
 
     @UiThread
     private fun isLoginButtonEnabled(): Boolean {
-        return username.value.orEmpty().isNotEmpty() && password.value.orEmpty().isNotEmpty()
+        return username.value.orEmpty().isNotEmpty() && password.value.orEmpty().isNotEmpty() && domain.value.orEmpty().isNotEmpty()
     }
 }

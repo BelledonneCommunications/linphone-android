@@ -28,8 +28,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
@@ -116,6 +119,13 @@ class RegisterFragment : GenericFragment() {
         viewModel.normalizedPhoneNumberEvent.observe(viewLifecycleOwner) {
             it.consume { number ->
                 showPhoneNumberConfirmationDialog(number)
+            }
+        }
+
+        viewModel.showPassword.observe(viewLifecycleOwner) {
+            lifecycleScope.launch {
+                delay(50)
+                binding.password.setSelection(binding.password.text?.length ?: 0)
             }
         }
 

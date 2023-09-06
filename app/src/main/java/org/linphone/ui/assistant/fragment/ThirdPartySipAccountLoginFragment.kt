@@ -23,14 +23,48 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.annotation.UiThread
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import org.linphone.LinphoneApplication
+import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
+import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantThirdPartySipAccountLoginFragmentBinding
+import org.linphone.ui.assistant.AssistantActivity
+import org.linphone.ui.assistant.viewmodel.ThirdPartySipAccountLoginViewModel
 import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.utils.PhoneNumberUtils
 
 @UiThread
 class ThirdPartySipAccountLoginFragment : GenericFragment() {
+    companion object {
+        private const val TAG = "[Third Party SIP Account Login Fragment]"
+    }
+
     private lateinit var binding: AssistantThirdPartySipAccountLoginFragmentBinding
+
+    private val viewModel: ThirdPartySipAccountLoginViewModel by navGraphViewModels(
+        R.id.thirdPartySipAccountLoginFragment
+    )
+
+    private val dropdownListener = object : AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            val transport = viewModel.availableTransports[position]
+            Log.i("$TAG Selected transport updated [$transport]")
+            viewModel.transport.value = transport
+        }
+
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+        }
+    }
+
+    private lateinit var adapter: ArrayAdapter<String>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,8 +84,49 @@ class ThirdPartySipAccountLoginFragment : GenericFragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
 
+        adapter = ArrayAdapter(
+            requireContext(),
+            R.layout.drop_down_item,
+            viewModel.availableTransports
+        )
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.transport.adapter = adapter
+        binding.transport.onItemSelectedListener = dropdownListener
+
+        binding.viewModel = viewModel
+
         binding.setBackClickListener {
             goBack()
+        }
+
+        viewModel.showPassword.observe(viewLifecycleOwner) {
+            lifecycleScope.launch {
+                delay(50)
+                binding.password.setSelection(binding.password.text?.length ?: 0)
+            }
+        }
+
+        viewModel.accountLoggedInEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i("$TAG Account successfully logged-in, leaving assistant")
+                requireActivity().finish()
+            }
+        }
+
+        viewModel.accountLoginErrorEvent.observe(viewLifecycleOwner) {
+            it.consume { message ->
+                Log.e("$TAG Failed to log in account [$message]")
+                // TODO FIXME: don't use message from callback
+                (requireActivity() as AssistantActivity).showRedToast(
+                    message,
+                    R.drawable.warning_circle
+                )
+            }
+        }
+
+        coreContext.postOnCoreThread {
+            val prefix = PhoneNumberUtils.getDeviceInternationalPrefix(requireContext())
+            viewModel.internationalPrefix.postValue(prefix)
         }
     }
 }
