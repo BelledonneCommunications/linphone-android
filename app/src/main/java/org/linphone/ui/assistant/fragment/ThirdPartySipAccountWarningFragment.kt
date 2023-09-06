@@ -26,60 +26,44 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
-import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navGraphViewModels
-import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.R
 import org.linphone.core.tools.Log
-import org.linphone.databinding.AssistantLoginFragmentBinding
-import org.linphone.ui.assistant.viewmodel.AccountLoginViewModel
+import org.linphone.databinding.AssistantThirdPartySipAccountWarningFragmentBinding
 import org.linphone.ui.main.fragment.GenericFragment
-import org.linphone.utils.PhoneNumberUtils
 
 @UiThread
-class LoginFragment : GenericFragment() {
+class ThirdPartySipAccountWarningFragment : GenericFragment() {
     companion object {
-        private const val TAG = "[Login Fragment]"
+        private const val TAG = "[Third Party SIP Account Warning Fragment]"
     }
 
-    private lateinit var binding: AssistantLoginFragmentBinding
-
-    private val viewModel: AccountLoginViewModel by navGraphViewModels(
-        R.id.loginFragment
-    )
+    private lateinit var binding: AssistantThirdPartySipAccountWarningFragmentBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = AssistantLoginFragmentBinding.inflate(layoutInflater)
+        binding = AssistantThirdPartySipAccountWarningFragmentBinding.inflate(layoutInflater)
         return binding.root
     }
 
     override fun goBack() {
-        requireActivity().finish()
+        findNavController().popBackStack()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.viewModel = viewModel
 
         binding.setBackClickListener {
             goBack()
         }
 
-        binding.setRegisterClickListener {
-            val action = LoginFragmentDirections.actionLoginFragmentToRegisterFragment()
-            findNavController().navigate(action)
-        }
-
-        binding.setForgottenPasswordClickListener {
+        binding.setContactClickListener {
             try {
-                val url = "https://subscribe.linphone.org"
+                val url = "https://linphone.org/contact"
                 val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                 startActivity(browserIntent)
             } catch (ise: IllegalStateException) {
@@ -87,36 +71,14 @@ class LoginFragment : GenericFragment() {
             }
         }
 
-        binding.setQrCodeClickListener {
-            val action = LoginFragmentDirections.actionLoginFragmentToQrCodeScannerFragment()
+        binding.setCreateAccountClickListener {
+            val action = ThirdPartySipAccountWarningFragmentDirections.actionThirdPartySipAccountWarningFragmentToRegisterFragment()
             findNavController().navigate(action)
         }
 
-        binding.setThirdPartySipAccountLoginClickListener {
-            val action = LoginFragmentDirections.actionLoginFragmentToThirdPartySipAccountWarningFragment()
+        binding.setLoginClickListener {
+            val action = ThirdPartySipAccountWarningFragmentDirections.actionThirdPartySipAccountWarningFragmentToThirdPartySipAccountLoginFragment()
             findNavController().navigate(action)
         }
-
-        viewModel.accountLoggedInEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                goBack()
-            }
-        }
-
-        coreContext.postOnCoreThread {
-            val prefix = PhoneNumberUtils.getDeviceInternationalPrefix(requireContext())
-            viewModel.internationalPrefix.postValue(prefix)
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        // In case we come back from QrCodeScannerFragment
-        val white = ContextCompat.getColor(
-            requireContext(),
-            R.color.white
-        )
-        requireActivity().window.navigationBarColor = white
     }
 }

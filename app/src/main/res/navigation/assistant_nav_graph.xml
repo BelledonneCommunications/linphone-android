@@ -10,6 +10,7 @@
         android:name="org.linphone.ui.assistant.fragment.LoginFragment"
         android:label="LoginFragment"
         tools:layout="@layout/assistant_login_fragment" >
+
         <action
             android:id="@+id/action_loginFragment_to_registerFragment"
             app:destination="@id/registerFragment"
@@ -18,6 +19,7 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
             app:launchSingleTop="true" />
+
         <action
             android:id="@+id/action_loginFragment_to_qrCodeScannerFragment"
             app:destination="@id/qrCodeScannerFragment"
@@ -26,14 +28,16 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
             app:launchSingleTop="true" />
+
         <action
-            android:id="@+id/action_loginFragment_to_thirdPartySipAccountLoginFragment"
-            app:destination="@id/thirdPartySipAccountLoginFragment"
+            android:id="@+id/action_loginFragment_to_thirdPartySipAccountWarningFragment"
+            app:destination="@id/thirdPartySipAccountWarningFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
             app:launchSingleTop="true" />
+
     </fragment>
 
     <fragment
@@ -41,6 +45,7 @@
         android:name="org.linphone.ui.assistant.fragment.RegisterFragment"
         android:label="RegisterFragment"
         tools:layout="@layout/assistant_register_fragment" >
+
         <action
             android:id="@+id/action_registerFragment_to_registerCodeConfirmationFragment"
             app:destination="@id/registerCodeConfirmationFragment"
@@ -49,6 +54,7 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
             app:launchSingleTop="true" />
+
     </fragment>
 
     <fragment
@@ -64,18 +70,52 @@
         tools:layout="@layout/assistant_third_party_sip_account_login_fragment" />
 
     <fragment
+        android:id="@+id/thirdPartySipAccountWarningFragment"
+        android:name="org.linphone.ui.assistant.fragment.ThirdPartySipAccountWarningFragment"
+        android:label="ThirdPartySipAccountWarningFragment"
+        tools:layout="@layout/assistant_third_party_sip_account_warning_fragment" >
+
+        <action
+            android:id="@+id/action_thirdPartySipAccountWarningFragment_to_thirdPartySipAccountLoginFragment"
+            app:destination="@id/thirdPartySipAccountLoginFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="false" />
+
+        <action
+            android:id="@+id/action_thirdPartySipAccountWarningFragment_to_registerFragment"
+            app:destination="@id/registerFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="false" />
+
+    </fragment>
+
+    <fragment
         android:id="@+id/registerCodeConfirmationFragment"
         android:name="org.linphone.ui.assistant.fragment.RegisterCodeConfirmationFragment"
         android:label="RegisterCodeConfirmationFragment"
         tools:layout="@layout/assistant_register_confirm_sms_code_fragment" >
+
         <action
             android:id="@+id/action_registerCodeConfirmationFragment_to_loginFragment"
             app:destination="@id/loginFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
+            app:launchSingleTop="true"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
-            app:launchSingleTop="true" />
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="false" />
+
     </fragment>
 
 </navigation>
