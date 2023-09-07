@@ -636,7 +636,8 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             viewLifecycleOwner
         ) {
             it.consume { message ->
-                val modalBottomSheet = ChatMessageReactionsListDialogFragment(message)
+                val modalBottomSheet = ChatMessageReactionsListDialogFragment()
+                modalBottomSheet.setMessage(message)
                 modalBottomSheet.show(
                     parentFragmentManager,
                     ChatMessageReactionsListDialogFragment.TAG
