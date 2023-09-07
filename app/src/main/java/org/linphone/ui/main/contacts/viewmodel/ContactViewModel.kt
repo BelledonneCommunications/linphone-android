@@ -34,6 +34,7 @@ import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.contacts.model.ContactDeviceModel
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressClickListener
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel
+import org.linphone.ui.main.model.isInSecureMode
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 
@@ -259,66 +260,112 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
 
     @UiThread
     fun startAudioCall() {
-        val numbersAndAddresses = sipAddressesAndPhoneNumbers.value.orEmpty()
-        val count = numbersAndAddresses.size
-        if (count == 1) {
-            Log.i(
-                "$TAG Only 1 number or address found for contact [${friend.name}], starting audio call directly"
-            )
-            val address = numbersAndAddresses.first().address
-            if (address != null) {
-                coreContext.postOnCoreThread { core ->
-                    val params = core.createCallParams(null)
-                    params?.isVideoEnabled = false
-                    coreContext.startCall(address, params)
+        coreContext.postOnCoreThread { core ->
+            val addressesCount = friend.addresses.size
+            val numbersCount = friend.phoneNumbers.size
+
+            // Do not consider phone numbers if default account is in secure mode
+            val enablePhoneNumbers = core.defaultAccount?.isInSecureMode() != true
+
+            if (addressesCount == 1 && (numbersCount == 0 || !enablePhoneNumbers)) {
+                Log.i(
+                    "$TAG Only 1 SIP address found for contact [${friend.name}], starting audio call directly"
+                )
+                val address = friend.addresses.first()
+                coreContext.startCall(address)
+            } else if (addressesCount == 0 && numbersCount == 1 && enablePhoneNumbers) {
+                val number = friend.phoneNumbers.first()
+                val address = core.interpretUrl(number, true)
+                if (address != null) {
+                    Log.i(
+                        "$TAG Only 1 phone number found for contact [${friend.name}], starting audio call directly"
+                    )
+                    coreContext.startCall(address)
+                } else {
+                    Log.e("$TAG Failed to interpret phone number [$number] as SIP address")
                 }
+            } else {
+                val list = sipAddressesAndPhoneNumbers.value.orEmpty()
+                Log.i(
+                    "$TAG [${list.size}] numbers or addresses found for contact [${friend.name}], showing selection dialog"
+                )
+                showNumberOrAddressPickerDialogEvent.postValue(Event(true))
             }
-        } else {
-            Log.i(
-                "$TAG [$count] numbers or addresses found for contact [${friend.name}], showing selection dialog"
-            )
-            showNumberOrAddressPickerDialogEvent.value = Event(true)
         }
     }
 
     @UiThread
     fun startVideoCall() {
-        val numbersAndAddresses = sipAddressesAndPhoneNumbers.value.orEmpty()
-        val count = numbersAndAddresses.size
-        if (count == 1) {
-            Log.i(
-                "$TAG Only 1 number or address found for contact [${friend.name}], starting video call directly"
-            )
-            val address = numbersAndAddresses.first().address
-            if (address != null) {
-                coreContext.postOnCoreThread { core ->
+        coreContext.postOnCoreThread { core ->
+            val addressesCount = friend.addresses.size
+            val numbersCount = friend.phoneNumbers.size
+
+            // Do not consider phone numbers if default account is in secure mode
+            val enablePhoneNumbers = core.defaultAccount?.isInSecureMode() != true
+
+            if (addressesCount == 1 && (numbersCount == 0 || !enablePhoneNumbers)) {
+                Log.i(
+                    "$TAG Only 1 SIP address found for contact [${friend.name}], starting video call directly"
+                )
+                val address = friend.addresses.first()
+                val params = core.createCallParams(null)
+                params?.isVideoEnabled = true
+                coreContext.startCall(address, params)
+            } else if (addressesCount == 0 && numbersCount == 1 && enablePhoneNumbers) {
+                val number = friend.phoneNumbers.first()
+                val address = core.interpretUrl(number, true)
+                if (address != null) {
+                    Log.i(
+                        "$TAG Only 1 phone number found for contact [${friend.name}], starting video call directly"
+                    )
                     val params = core.createCallParams(null)
                     params?.isVideoEnabled = true
                     coreContext.startCall(address, params)
+                } else {
+                    Log.e("$TAG Failed to interpret phone number [$number] as SIP address")
                 }
+            } else {
+                val list = sipAddressesAndPhoneNumbers.value.orEmpty()
+                Log.i(
+                    "$TAG [${list.size}] numbers or addresses found for contact [${friend.name}], showing selection dialog"
+                )
+                showNumberOrAddressPickerDialogEvent.postValue(Event(true))
             }
-        } else {
-            Log.i(
-                "$TAG [$count] numbers or addresses found for contact [${friend.name}], showing selection dialog"
-            )
-            showNumberOrAddressPickerDialogEvent.value = Event(true)
         }
     }
 
     @UiThread
     fun sendMessage() {
-        val numbersAndAddresses = sipAddressesAndPhoneNumbers.value.orEmpty()
-        val count = numbersAndAddresses.size
-        if (count == 1) {
-            Log.i(
-                "$TAG Only 1 number or address found for contact [${friend.name}], sending message directly"
-            )
-            // TODO
-        } else {
-            Log.i(
-                "$TAG [$count] numbers or addresses found for contact [${friend.name}], showing selection dialog"
-            )
-            showNumberOrAddressPickerDialogEvent.value = Event(true)
+        coreContext.postOnCoreThread { core ->
+            val addressesCount = friend.addresses.size
+            val numbersCount = friend.phoneNumbers.size
+
+            // Do not consider phone numbers if default account is in secure mode
+            val enablePhoneNumbers = core.defaultAccount?.isInSecureMode() != true
+
+            if (addressesCount == 1 && (numbersCount == 0 || !enablePhoneNumbers)) {
+                Log.i(
+                    "$TAG Only 1 SIP address found for contact [${friend.name}], sending message directly"
+                )
+                // TODO
+            } else if (addressesCount == 0 && numbersCount == 1 && enablePhoneNumbers) {
+                val number = friend.phoneNumbers.first()
+                val address = core.interpretUrl(number, true)
+                if (address != null) {
+                    Log.i(
+                        "$TAG Only 1 phone number found for contact [${friend.name}], sending message directly"
+                    )
+                    // TODO
+                } else {
+                    Log.e("$TAG Failed to interpret phone number [$number] as SIP address")
+                }
+            } else {
+                val list = sipAddressesAndPhoneNumbers.value.orEmpty()
+                Log.i(
+                    "$TAG [${list.size}] numbers or addresses found for contact [${friend.name}], showing selection dialog"
+                )
+                showNumberOrAddressPickerDialogEvent.postValue(Event(true))
+            }
         }
     }
 }

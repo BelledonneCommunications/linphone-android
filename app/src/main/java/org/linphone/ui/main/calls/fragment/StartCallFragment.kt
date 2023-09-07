@@ -195,16 +195,27 @@ class StartCallFragment : GenericFragment() {
             val enablePhoneNumbers = core.defaultAccount?.isInSecureMode() != true
 
             if (addressesCount == 1 && (numbersCount == 0 || !enablePhoneNumbers)) {
+                Log.i(
+                    "$TAG Only 1 SIP address found for contact [${friend.name}], starting call directly"
+                )
                 val address = friend.addresses.first()
                 coreContext.startCall(address)
             } else if (addressesCount == 0 && numbersCount == 1 && enablePhoneNumbers) {
                 val number = friend.phoneNumbers.first()
                 val address = core.interpretUrl(number, true)
                 if (address != null) {
+                    Log.i(
+                        "$TAG Only 1 phone number found for contact [${friend.name}], starting call directly"
+                    )
                     coreContext.startCall(address)
+                } else {
+                    Log.e("$TAG Failed to interpret phone number [$number] as SIP address")
                 }
             } else {
                 val list = friend.getListOfSipAddressesAndPhoneNumbers(listener)
+                Log.i(
+                    "$TAG [${list.size}] numbers or addresses found for contact [${friend.name}], showing selection dialog"
+                )
 
                 coreContext.postOnMainThread {
                     val model = NumberOrAddressPickerDialogModel(list)
