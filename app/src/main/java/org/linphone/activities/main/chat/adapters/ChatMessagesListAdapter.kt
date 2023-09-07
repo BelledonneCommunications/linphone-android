@@ -406,6 +406,27 @@ class ChatMessagesListAdapter(
                             totalSize -= itemSize
                         }
 
+                        val reaction = chatMessage.ownReaction
+                        if (reaction != null) {
+                            when (reaction.body) {
+                                AppUtils.getString(R.string.emoji_love) -> {
+                                    popupView.heartSelected = true
+                                }
+                                AppUtils.getString(R.string.emoji_laughing) -> {
+                                    popupView.laughingSelected = true
+                                }
+                                AppUtils.getString(R.string.emoji_surprised) -> {
+                                    popupView.surprisedSelected = true
+                                }
+                                AppUtils.getString(R.string.emoji_thumbs_up) -> {
+                                    popupView.thumbsUpSelected = true
+                                }
+                                AppUtils.getString(R.string.emoji_tear) -> {
+                                    popupView.cryingSelected = true
+                                }
+                            }
+                        }
+
                         // When using WRAP_CONTENT instead of real size, fails to place the
                         // popup window above if not enough space is available below
                         val popupWindow = PopupWindow(
@@ -467,11 +488,21 @@ class ChatMessagesListAdapter(
         private fun reactToMessage(reaction: String) {
             val chatMessage = binding.data?.chatMessage
             if (chatMessage != null) {
-                Log.i(
-                    "[Chat Message Data] Reacting to message [$chatMessage] with [$reaction] emoji"
-                )
-                val reactionMessage = chatMessage.createReaction(reaction)
-                reactionMessage.send()
+                val ownReaction = chatMessage.ownReaction
+                if (ownReaction != null && ownReaction.body == reaction) {
+                    Log.i(
+                        "[Chat Message Data] Removing our reaction to message [$chatMessage] (previously [$reaction])"
+                    )
+                    // Empty string means remove existing reaction
+                    val reactionMessage = chatMessage.createReaction("")
+                    reactionMessage.send()
+                } else {
+                    Log.i(
+                        "[Chat Message Data] Reacting to message [$chatMessage] with [$reaction] emoji"
+                    )
+                    val reactionMessage = chatMessage.createReaction(reaction)
+                    reactionMessage.send()
+                }
             }
         }
 

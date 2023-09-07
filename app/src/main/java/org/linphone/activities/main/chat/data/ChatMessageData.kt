@@ -28,6 +28,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.contact.ContactsUpdatedListenerStub
 import org.linphone.contact.GenericContactData
+import org.linphone.core.Address
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatMessageListenerStub
 import org.linphone.core.ChatMessageReaction
@@ -92,6 +93,13 @@ class ChatMessageData(val chatMessage: ChatMessage) : GenericContactData(chatMes
         override fun onNewMessageReaction(message: ChatMessage, reaction: ChatMessageReaction) {
             Log.i(
                 "[Chat Message Data] New reaction to display [${reaction.body}] from [${reaction.fromAddress.asStringUriOnly()}]"
+            )
+            updateReactionsList()
+        }
+
+        override fun onReactionRemoved(message: ChatMessage, address: Address) {
+            Log.i(
+                "[Chat Message Data] [${address.asStringUriOnly()}] removed it's previous reaction"
             )
             updateReactionsList()
         }

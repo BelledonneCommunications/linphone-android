@@ -46,6 +46,21 @@
         <variable
             name="replyHidden"
             type="Boolean" />
+        <variable
+            name="heartSelected"
+            type="Boolean" />
+        <variable
+            name="thumbsUpSelected"
+            type="Boolean" />
+        <variable
+            name="laughingSelected"
+            type="Boolean" />
+        <variable
+            name="surprisedSelected"
+            type="Boolean" />
+        <variable
+            name="cryingSelected"
+            type="Boolean" />
     </data>
 
     <LinearLayout
@@ -56,7 +71,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/chat_message_popup_item_height">
+            android:layout_height="@dimen/chat_message_popup_item_height"
+            android:layout_marginTop="5dp">
 
             <TextView
                 style="@style/chat_message_emoji_reaction_font"
@@ -67,6 +83,7 @@
                 android:padding="10dp"
                 android:text="@string/emoji_love"
                 android:textColor="?attr/primaryTextColor"
+                android:background="@{heartSelected ? @drawable/shape_own_reaction_background : @drawable/shape_transparent_reaction_background, default=@drawable/shape_own_reaction_background}"
                 app:layout_constraintEnd_toStartOf="@id/thumbs_up"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -81,6 +98,7 @@
                 android:padding="10dp"
                 android:text="@string/emoji_thumbs_up"
                 android:textColor="?attr/primaryTextColor"
+                android:background="@{thumbsUpSelected ? @drawable/shape_own_reaction_background : @drawable/shape_transparent_reaction_background}"
                 app:layout_constraintEnd_toStartOf="@id/laughing"
                 app:layout_constraintStart_toEndOf="@id/love"
                 app:layout_constraintTop_toTopOf="parent"
@@ -95,6 +113,7 @@
                 android:padding="10dp"
                 android:text="@string/emoji_laughing"
                 android:textColor="?attr/primaryTextColor"
+                android:background="@{laughingSelected ? @drawable/shape_own_reaction_background : @drawable/shape_transparent_reaction_background}"
                 app:layout_constraintEnd_toStartOf="@id/surprised"
                 app:layout_constraintStart_toEndOf="@id/thumbs_up"
                 app:layout_constraintTop_toTopOf="parent"
@@ -109,6 +128,7 @@
                 android:padding="10dp"
                 android:text="@string/emoji_surprised"
                 android:textColor="?attr/primaryTextColor"
+                android:background="@{surprisedSelected ? @drawable/shape_own_reaction_background : @drawable/shape_transparent_reaction_background}"
                 app:layout_constraintEnd_toStartOf="@id/tear"
                 app:layout_constraintStart_toEndOf="@id/laughing"
                 app:layout_constraintTop_toTopOf="parent"
@@ -123,6 +143,7 @@
                 android:padding="10dp"
                 android:text="@string/emoji_tear"
                 android:textColor="?attr/primaryTextColor"
+                android:background="@{cryingSelected ? @drawable/shape_own_reaction_background : @drawable/shape_transparent_reaction_background}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/surprised"
                 app:layout_constraintTop_toTopOf="parent"
@@ -133,6 +154,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="@dimen/chat_message_popup_item_height"
+            android:layout_marginTop="5dp"
             android:background="@drawable/menu_background"
             android:visibility="@{resendHidden ? View.GONE : View.VISIBLE}"
             android:onClick="@{resendClickListener}"
