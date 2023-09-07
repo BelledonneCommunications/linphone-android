@@ -134,7 +134,7 @@
             android:visibility="@{viewModel.callLogModel.avatarModel.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{viewModel.callLogModel.avatarModel.presenceStatus == ConsolidatedPresence.Online ? `En ligne` : `Absent`, default=`En ligne`}"
+            android:text="@{viewModel.callLogModel.avatarModel.lastPresenceInfo, default=`En ligne`}"
             android:textColor="@{viewModel.callLogModel.avatarModel.presenceStatus == ConsolidatedPresence.Online ? @color/green_online : @color/orange_away, default=@color/green_online}"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"

@@ -29,6 +29,7 @@ import org.linphone.core.Friend
 import org.linphone.core.FriendListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.TimestampUtils
 
 class ContactAvatarModel @WorkerThread constructor(val friend: Friend) {
     companion object {
@@ -42,6 +43,8 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) {
     val avatar = MutableLiveData<Uri>()
 
     val initials = LinphoneUtils.getInitials(friend.name.orEmpty())
+
+    val lastPresenceInfo = MutableLiveData<String>()
 
     val presenceStatus = MutableLiveData<ConsolidatedPresence>()
 
@@ -59,7 +62,7 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) {
             Log.d(
                 "$TAG Presence received for friend [${fr.name}]: [${fr.consolidatedPresence}]"
             )
-            presenceStatus.postValue(fr.consolidatedPresence)
+            computePresence()
         }
     }
 
@@ -67,8 +70,7 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) {
         friend.addListener(friendListener)
 
         name.postValue(friend.name)
-        presenceStatus.postValue(friend.consolidatedPresence)
-        Log.d("$TAG Friend [${friend.name}] presence status is [${friend.consolidatedPresence}]")
+        computePresence()
         avatar.postValue(getAvatarUri())
     }
 
@@ -101,5 +103,58 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) {
         }
 
         return null
+    }
+
+    @WorkerThread
+    private fun computePresence() {
+        val presence = friend.consolidatedPresence
+        Log.d("$TAG Friend [${friend.name}] presence status is [$presence]")
+        presenceStatus.postValue(presence)
+
+        val presenceString = when (presence) {
+            ConsolidatedPresence.Online -> {
+                "Online"
+            }
+            ConsolidatedPresence.Busy -> {
+                val timestamp = friend.presenceModel?.latestActivityTimestamp ?: -1L
+                if (timestamp != -1L) {
+                    when {
+                        TimestampUtils.isToday(timestamp) -> {
+                            val time = TimestampUtils.timeToString(
+                                timestamp,
+                                timestampInSecs = true
+                            )
+                            val text = "Online today at"
+                            "$text $time"
+                        }
+                        TimestampUtils.isYesterday(timestamp) -> {
+                            val time = TimestampUtils.timeToString(
+                                timestamp,
+                                timestampInSecs = true
+                            )
+                            val text = "Online yesterday at"
+                            "$text $time"
+                        }
+                        else -> {
+                            val date = TimestampUtils.toString(
+                                timestamp,
+                                onlyDate = true,
+                                shortDate = false,
+                                hideYear = true
+                            )
+                            val text = "Online on"
+                            "$text $date"
+                        }
+                    }
+                } else {
+                    "Away"
+                }
+            }
+            ConsolidatedPresence.DoNotDisturb -> {
+                "Do not disturb"
+            }
+            else -> ""
+        }
+        lastPresenceInfo.postValue(presenceString)
     }
 }

@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.main.contacts.fragment
 
+import android.app.Dialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -58,6 +59,8 @@ class ContactFragment : GenericFragment() {
     private lateinit var viewModel: ContactViewModel
 
     private val args: ContactFragmentArgs by navArgs()
+
+    private var numberOrAddressPickerDialog: Dialog? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -143,6 +146,7 @@ class ContactFragment : GenericFragment() {
                     viewModel.sipAddressesAndPhoneNumbers.value.orEmpty()
                 )
                 val dialog = DialogUtils.getNumberOrAddressPickerDialog(requireActivity(), model)
+                numberOrAddressPickerDialog = dialog
 
                 model.dismissEvent.observe(viewLifecycleOwner) { event ->
                     event.consume {
@@ -195,6 +199,13 @@ class ContactFragment : GenericFragment() {
                 showConfirmTrustCallDialog(pair.first, pair.second)
             }
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        numberOrAddressPickerDialog?.dismiss()
+        numberOrAddressPickerDialog = null
     }
 
     private fun copyNumberOrAddressToClipboard(value: String, isSip: Boolean) {

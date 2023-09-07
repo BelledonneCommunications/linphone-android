@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.main.calls.fragment
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -80,6 +81,8 @@ class StartCallFragment : GenericFragment() {
         override fun onLongPress(model: ContactNumberOrAddressModel) {
         }
     }
+
+    private var numberOrAddressPickerDialog: Dialog? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -175,6 +178,13 @@ class StartCallFragment : GenericFragment() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+
+        numberOrAddressPickerDialog?.dismiss()
+        numberOrAddressPickerDialog = null
+    }
+
     private fun startCall(model: ContactAvatarModel) {
         coreContext.postOnCoreThread { core ->
             val friend = model.friend
@@ -200,6 +210,7 @@ class StartCallFragment : GenericFragment() {
                     val model = NumberOrAddressPickerDialogModel(list)
                     val dialog =
                         DialogUtils.getNumberOrAddressPickerDialog(requireActivity(), model)
+                    numberOrAddressPickerDialog = dialog
 
                     model.dismissEvent.observe(viewLifecycleOwner) { event ->
                         event.consume {
