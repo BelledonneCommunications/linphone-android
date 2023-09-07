@@ -28,15 +28,16 @@ import com.google.android.material.tabs.TabLayout
 import org.linphone.R
 import org.linphone.activities.main.chat.data.ChatMessageReactionsListData
 import org.linphone.core.ChatMessage
+import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatMessageReactionsListDialogBinding
 import org.linphone.utils.AppUtils
 
-class ChatMessageReactionsListDialogFragment(
-    private val chatMessage: ChatMessage
-) : BottomSheetDialogFragment() {
+class ChatMessageReactionsListDialogFragment() : BottomSheetDialogFragment() {
     companion object {
         const val TAG = "ChatMessageReactionsListDialogFragment"
     }
+
+    private lateinit var binding: ChatMessageReactionsListDialogBinding
 
     private lateinit var data: ChatMessageReactionsListData
 
@@ -45,38 +46,43 @@ class ChatMessageReactionsListDialogFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val binding = ChatMessageReactionsListDialogBinding.inflate(layoutInflater)
+        binding = ChatMessageReactionsListDialogBinding.inflate(layoutInflater)
         binding.lifecycleOwner = viewLifecycleOwner
+        if (::data.isInitialized) {
+            binding.data = data
 
-        data = ChatMessageReactionsListData(chatMessage)
-        binding.data = data
-
-        data.reactions.observe(viewLifecycleOwner) {
-            binding.tabs.removeAllTabs()
-            binding.tabs.addTab(
-                binding.tabs.newTab().setText(
-                    AppUtils.getStringWithPlural(
-                        R.plurals.chat_message_reactions_count,
-                        it.orEmpty().size
-                    )
-                ).setId(0)
-            )
-
-            var index = 1
-            data.reactionsMap.forEach { (key, value) ->
+            data.reactions.observe(viewLifecycleOwner) {
+                binding.tabs.removeAllTabs()
                 binding.tabs.addTab(
-                    binding.tabs.newTab().setText("$key $value").setId(index).setTag(key)
+                    binding.tabs.newTab().setText(
+                        AppUtils.getStringWithPlural(
+                            R.plurals.chat_message_reactions_count,
+                            it.orEmpty().size
+                        )
+                    ).setId(0)
                 )
-                index += 1
+
+                var index = 1
+                data.reactionsMap.forEach { (key, value) ->
+                    binding.tabs.addTab(
+                        binding.tabs.newTab().setText("$key $value").setId(index).setTag(key)
+                    )
+                    index += 1
+                }
             }
+        } else {
+            Log.w("$TAG View created but no message has been set, dismissing...")
+            dismiss()
         }
 
         binding.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
-                if (tab.id == 0) {
-                    data.updateFilteredReactions("")
-                } else {
-                    data.updateFilteredReactions(tab.tag.toString())
+                if (::data.isInitialized) {
+                    if (tab.id == 0) {
+                        data.updateFilteredReactions("")
+                    } else {
+                        data.updateFilteredReactions(tab.tag.toString())
+                    }
                 }
             }
 
@@ -90,8 +96,14 @@ class ChatMessageReactionsListDialogFragment(
         return binding.root
     }
 
+    fun setMessage(chatMessage: ChatMessage) {
+        data = ChatMessageReactionsListData(chatMessage)
+    }
+
     override fun onDestroy() {
-        data.onDestroy()
+        if (::data.isInitialized) {
+            data.onDestroy()
+        }
         super.onDestroy()
     }
 }
