@@ -88,7 +88,19 @@ class AccountModel @WorkerThread constructor(
     fun setAsDefault() {
         coreContext.postOnCoreThread { core ->
             core.defaultAccount = account
+
+            for (friendList in core.friendsLists) {
+                if (friendList.isSubscriptionsEnabled) {
+                    Log.i(
+                        "$TAG Default account has changed, refreshing friend list [${friendList.displayName}] subscriptions"
+                    )
+                    // friendList.updateSubscriptions() won't trigger a refresh unless a friend has changed
+                    friendList.isSubscriptionsEnabled = false
+                    friendList.isSubscriptionsEnabled = true
+                }
+            }
         }
+
         isDefault.value = true
         onSetAsDefault?.invoke(account)
     }

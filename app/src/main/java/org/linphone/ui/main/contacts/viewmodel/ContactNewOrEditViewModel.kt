@@ -28,6 +28,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.contacts.ContactLoader.Companion.LINPHONE_ADDRESS_BOOK_FRIEND_LIST
 import org.linphone.core.Friend
 import org.linphone.core.FriendList.Status
+import org.linphone.core.SubscribePolicy
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.NewOrEditNumberOrAddressModel
 import org.linphone.utils.Event
@@ -128,6 +129,9 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
 
             if (!::friend.isInitialized) {
                 friend = core.createFriend()
+                friend.isSubscribesEnabled = false
+                // Disable peer to peer short term presence
+                friend.incSubscribePolicy = SubscribePolicy.SPDeny
             }
             friend.name = "${firstName.value.orEmpty().trim()} ${lastName.value.orEmpty().trim()}"
 

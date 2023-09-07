@@ -69,7 +69,6 @@ class ContactsManager @UiThread constructor(context: Context) {
         override fun onFriendListCreated(core: Core, friendList: FriendList) {
             Log.i("$TAG Friend list [${friendList.displayName}] created")
             friendList.addListener(friendListListener)
-            friendList.updateSubscriptions()
         }
 
         @WorkerThread

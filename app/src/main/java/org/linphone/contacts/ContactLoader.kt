@@ -151,8 +151,8 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                             friend.nativeUri =
                                 "${ContactsContract.Contacts.CONTENT_LOOKUP_URI}/$lookupKey"
 
-                            // Disable short term presence
                             friend.isSubscribesEnabled = false
+                            // Disable peer to peer short term presence
                             friend.incSubscribePolicy = SubscribePolicy.SPDeny
                         }
 
