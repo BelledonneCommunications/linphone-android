@@ -20,6 +20,7 @@
 package org.linphone.activities.main.chat.data
 
 import androidx.lifecycle.MutableLiveData
+import org.linphone.core.Address
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatMessageListenerStub
 import org.linphone.core.ChatMessageReaction
@@ -37,6 +38,13 @@ class ChatMessageReactionsListData(private val chatMessage: ChatMessage) {
             val address = reaction.fromAddress
             Log.i(
                 "[Chat Message Reactions List] Reaction received [${reaction.body}] from [${address.asStringUriOnly()}]"
+            )
+            updateReactionsList(message)
+        }
+
+        override fun onReactionRemoved(message: ChatMessage, address: Address) {
+            Log.i(
+                "[Chat Message Reactions List] Reaction removed by [${address.asStringUriOnly()}]"
             )
             updateReactionsList(message)
         }
