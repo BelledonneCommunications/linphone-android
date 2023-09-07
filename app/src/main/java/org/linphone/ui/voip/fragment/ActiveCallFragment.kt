@@ -27,6 +27,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.databinding.VoipActiveCallFragmentBinding
@@ -140,6 +141,15 @@ class ActiveCallFragment : GenericCallFragment() {
         callViewModel.callDuration.observe(viewLifecycleOwner) { duration ->
             binding.chronometer.base = SystemClock.elapsedRealtime() - (1000 * duration)
             binding.chronometer.start()
+        }
+
+        callViewModel.isActionsMenuExpanded.observe(viewLifecycleOwner) { expanded ->
+            val standardBottomSheetBehavior = BottomSheetBehavior.from(binding.bottomBar.root)
+            if (expanded) {
+                standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            } else {
+                standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
         }
     }
 

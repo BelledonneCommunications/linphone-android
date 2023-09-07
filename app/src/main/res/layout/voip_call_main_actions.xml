@@ -19,13 +19,12 @@
         android:paddingBottom="15dp"
         android:background="@color/in_call_black">
 
-        <ImageView
+        <com.google.android.material.bottomsheet.BottomSheetDragHandleView
             android:onClick="@{() -> viewModel.toggleExpandActionsMenu()}"
             android:visibility="@{showExpandToggle ? View.VISIBLE : View.INVISIBLE}"
             android:id="@+id/toggle_expand"
             android:layout_width="0dp"
             android:layout_height="@dimen/icon_size"
-            android:layout_marginBottom="15dp"
             android:src="@{viewModel.isActionsMenuExpanded ? @drawable/caret_down : @drawable/caret_up, default=@drawable/caret_up}"
             app:tint="@color/white"
             app:layout_constraintStart_toStartOf="parent"

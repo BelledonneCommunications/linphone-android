@@ -20,7 +20,6 @@
 package org.linphone.ui.voip.viewmodel
 
 import android.Manifest
-import android.animation.ValueAnimator
 import android.content.pm.PackageManager
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
@@ -29,7 +28,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.R
 import org.linphone.core.AudioDevice
 import org.linphone.core.Call
 import org.linphone.core.CallListenerStub
@@ -88,24 +86,6 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     val isActionsMenuExpanded = MutableLiveData<Boolean>()
 
-    val extraActionsMenuTranslateY = MutableLiveData<Float>()
-
-    private val extraActionsMenuHeight = coreContext.context.resources.getDimension(
-        R.dimen.in_call_extra_actions_menu_height
-    )
-    private val extraButtonsMenuAnimator: ValueAnimator by lazy {
-        ValueAnimator.ofFloat(
-            extraActionsMenuHeight,
-            0f
-        ).apply {
-            addUpdateListener {
-                val value = it.animatedValue as Float
-                extraActionsMenuTranslateY.value = value
-            }
-            duration = 500
-        }
-    }
-
     private lateinit var call: Call
 
     private val callListener = object : CallListenerStub() {
@@ -150,7 +130,6 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         isMicrophoneMuted.value = false
         fullScreenMode.value = false
         isActionsMenuExpanded.value = false
-        extraActionsMenuTranslateY.value = extraActionsMenuHeight
 
         coreContext.postOnCoreThread { core ->
             val currentCall = core.currentCall ?: core.calls.firstOrNull()
@@ -324,12 +303,6 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun toggleExpandActionsMenu() {
         isActionsMenuExpanded.value = isActionsMenuExpanded.value == false
-
-        if (isActionsMenuExpanded.value == true) {
-            extraButtonsMenuAnimator.start()
-        } else {
-            extraButtonsMenuAnimator.reverse()
-        }
     }
 
     @WorkerThread
