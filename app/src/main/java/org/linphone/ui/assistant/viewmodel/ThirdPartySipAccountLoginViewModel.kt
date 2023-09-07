@@ -128,13 +128,13 @@ class ThirdPartySipAccountLoginViewModel @UiThread constructor() : ViewModel() {
         coreContext.postOnCoreThread { core ->
             core.loadConfigFromXml(corePreferences.thirdPartyDefaultValuesPath)
 
-            val user = username.value.orEmpty()
-            val domainValue = domain.value.orEmpty()
+            val user = username.value.orEmpty().trim()
+            val domainValue = domain.value.orEmpty().trim()
 
             newlyCreatedAuthInfo = Factory.instance().createAuthInfo(
                 user,
                 null,
-                password.value.orEmpty(),
+                password.value.orEmpty().trim(),
                 null,
                 null,
                 domainValue
@@ -145,19 +145,19 @@ class ThirdPartySipAccountLoginViewModel @UiThread constructor() : ViewModel() {
 
             val identityAddress = Factory.instance().createAddress("sip:$user@$domainValue")
             if (displayName.value.orEmpty().isNotEmpty()) {
-                identityAddress?.displayName = displayName.value.orEmpty()
+                identityAddress?.displayName = displayName.value.orEmpty().trim()
             }
             accountParams.identityAddress = identityAddress
 
             val serverAddress = Factory.instance().createAddress("sip:$domainValue")
-            serverAddress?.transport = when (transport.value.orEmpty()) {
+            serverAddress?.transport = when (transport.value.orEmpty().trim()) {
                 TCP -> TransportType.Tcp
                 TLS -> TransportType.Tls
                 else -> TransportType.Udp
             }
             accountParams.serverAddress = serverAddress
 
-            val prefix = internationalPrefix.value.orEmpty()
+            val prefix = internationalPrefix.value.orEmpty().trim()
             if (prefix.isNotEmpty()) {
                 val prefixDigits = if (prefix.startsWith("+")) {
                     prefix.substring(1)

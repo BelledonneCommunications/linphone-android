@@ -147,8 +147,9 @@ class StartCallFragment : GenericFragment() {
         }
 
         viewModel.searchFilter.observe(viewLifecycleOwner) { filter ->
-            contactsListViewModel.applyFilter(filter)
-            viewModel.applyFilter(filter)
+            val trimmed = filter.trim()
+            contactsListViewModel.applyFilter(trimmed)
+            viewModel.applyFilter(trimmed)
         }
 
         viewModel.appendDigitToSearchBarEvent.observe(viewLifecycleOwner) {

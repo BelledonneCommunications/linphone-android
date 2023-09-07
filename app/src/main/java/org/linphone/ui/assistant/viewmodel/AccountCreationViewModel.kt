@@ -138,6 +138,7 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel() {
             response: String?
         ) {
             Log.i("$TAG onCreateAccount status [$status] ($response)")
+            accountCreator.token = null
             operationInProgress.postValue(false)
 
             when (status) {
@@ -254,13 +255,13 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel() {
     fun confirmPhoneNumber() {
         coreContext.postOnCoreThread {
             if (::accountCreator.isInitialized) {
-                val prefix = internationalPrefix.value.orEmpty()
+                val prefix = internationalPrefix.value.orEmpty().trim()
                 val digitsPrefix = if (prefix.startsWith("+")) {
                     prefix.substring(1)
                 } else {
                     prefix
                 }
-                val number = phoneNumber.value.orEmpty()
+                val number = phoneNumber.value.orEmpty().trim()
                 accountCreator.setPhoneNumber(number, digitsPrefix)
 
                 val normalizedPhoneNumber = accountCreator.phoneNumber
@@ -316,7 +317,7 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel() {
     @WorkerThread
     private fun checkUsername() {
         usernameError.postValue("")
-        accountCreator.username = username.value.orEmpty()
+        accountCreator.username = username.value.orEmpty().trim()
 
         operationInProgress.postValue(true)
         val status = accountCreator.isAccountExist
@@ -342,7 +343,7 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel() {
     @WorkerThread
     private fun createAccount() {
         operationInProgress.postValue(true)
-        accountCreator.password = password.value.orEmpty()
+        accountCreator.password = password.value.orEmpty().trim()
         val status = accountCreator.createAccount()
 
         Log.i("$TAG createAccount returned $status")

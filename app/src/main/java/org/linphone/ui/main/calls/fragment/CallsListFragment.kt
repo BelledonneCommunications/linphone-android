@@ -198,7 +198,7 @@ class CallsListFragment : GenericFragment() {
         }
 
         listViewModel.searchFilter.observe(viewLifecycleOwner) { filter ->
-            listViewModel.applyFilter(filter)
+            listViewModel.applyFilter(filter.trim())
         }
 
         listViewModel.focusSearchBarEvent.observe(viewLifecycleOwner) {

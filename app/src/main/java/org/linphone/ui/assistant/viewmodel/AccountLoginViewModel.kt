@@ -113,13 +113,13 @@ class AccountLoginViewModel @UiThread constructor() : ViewModel() {
         coreContext.postOnCoreThread { core ->
             core.loadConfigFromXml(corePreferences.linphoneDefaultValuesPath)
 
-            val user = username.value.orEmpty()
+            val user = username.value.orEmpty().trim()
             val domain = corePreferences.defaultDomain
 
             newlyCreatedAuthInfo = Factory.instance().createAuthInfo(
                 user,
                 null,
-                password.value.orEmpty(),
+                password.value.orEmpty().trim(),
                 null,
                 null,
                 domain
@@ -130,7 +130,7 @@ class AccountLoginViewModel @UiThread constructor() : ViewModel() {
             val identityAddress = Factory.instance().createAddress("sip:$user@$domain")
             accountParams.identityAddress = identityAddress
 
-            val prefix = internationalPrefix.value.orEmpty()
+            val prefix = internationalPrefix.value.orEmpty().trim()
             if (prefix.isNotEmpty()) {
                 val prefixDigits = if (prefix.startsWith("+")) {
                     prefix.substring(1)

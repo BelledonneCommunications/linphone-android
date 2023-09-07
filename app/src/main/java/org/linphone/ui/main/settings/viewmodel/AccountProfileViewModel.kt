@@ -55,8 +55,8 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
 
                 copy.internationalPrefix = internationalPrefix.value.orEmpty()
 
-                val newPictureUri = picturePath.value
-                if (!newPictureUri.isNullOrEmpty() && newPictureUri != params.pictureUri) {
+                val newPictureUri = picturePath.value.orEmpty().trim()
+                if (newPictureUri.isNotEmpty() && newPictureUri != params.pictureUri) {
                     Log.i("$TAG New account profile picture [$newPictureUri]")
                     copy.pictureUri = newPictureUri
                 }

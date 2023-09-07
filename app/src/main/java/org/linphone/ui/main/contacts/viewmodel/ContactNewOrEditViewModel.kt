@@ -133,14 +133,16 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
                 // Disable peer to peer short term presence
                 friend.incSubscribePolicy = SubscribePolicy.SPDeny
             }
-            friend.name = "${firstName.value.orEmpty().trim()} ${lastName.value.orEmpty().trim()}"
+            val fn = firstName.value.orEmpty().trim()
+            val ln = lastName.value.orEmpty().trim()
+            friend.name = "$fn $ln"
 
             friend.edit()
 
             val vCard = friend.vcard
             if (vCard != null) {
-                vCard.familyName = lastName.value
-                vCard.givenName = firstName.value
+                vCard.familyName = fn
+                vCard.givenName = ln
 
                 val picture = picturePath.value.orEmpty()
                 if (picture.isNotEmpty()) {
@@ -155,9 +157,9 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
                 friend.removeAddress(address)
             }
             for (address in sipAddresses) {
-                val data = address.value.value
-                if (!data.isNullOrEmpty()) {
-                    val parsedAddress = core.interpretUrl(data.trim(), true)
+                val data = address.value.value.orEmpty().trim()
+                if (data.isNotEmpty()) {
+                    val parsedAddress = core.interpretUrl(data, true)
                     if (parsedAddress != null) {
                         friend.addAddress(parsedAddress)
                     }
@@ -168,9 +170,9 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
                 friend.removePhoneNumber(number)
             }
             for (number in phoneNumbers) {
-                val data = number.value.value
-                if (!data.isNullOrEmpty()) {
-                    friend.addPhoneNumber(data.trim())
+                val data = number.value.value.orEmpty().trim()
+                if (data.isNotEmpty()) {
+                    friend.addPhoneNumber(data)
                 }
             }
 
