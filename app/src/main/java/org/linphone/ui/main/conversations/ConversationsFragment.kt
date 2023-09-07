@@ -89,11 +89,10 @@ class ConversationsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = listViewModel
-
-        postponeEnterTransition()
 
         adapter = ConversationsListAdapter(viewLifecycleOwner)
         adapter.registerAdapterDataObserver(observer)

@@ -55,6 +55,7 @@ class ConversationFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
@@ -73,8 +74,6 @@ class ConversationFragment : Fragment() {
             }
         }
         arguments?.clear()
-
-        postponeEnterTransition()
 
         adapter = ChatEventLogsListAdapter(viewLifecycleOwner)
         binding.messagesList.setHasFixedSize(false)

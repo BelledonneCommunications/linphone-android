@@ -95,11 +95,10 @@ class EditContactFragment : GenericFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
-
-        postponeEnterTransition()
 
         val refKey = args.contactRefKey
         Log.i("$TAG Looking up for contact with ref key [$refKey]")

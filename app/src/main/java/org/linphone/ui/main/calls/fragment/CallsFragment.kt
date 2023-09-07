@@ -23,6 +23,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.annotation.UiThread
 import androidx.core.view.doOnPreDraw
 import androidx.navigation.findNavController
@@ -47,12 +49,19 @@ class CallsFragment : GenericFragment() {
         return binding.root
     }
 
+    override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
+        if (findNavController().currentDestination?.id == R.id.startCallFragment) {
+            // Holds fragment in place while new contact fragment slides over it
+            return AnimationUtils.loadAnimation(activity, R.anim.hold)
+        }
+        return AnimationUtils.loadAnimation(activity, R.anim.hold)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
 
         binding.lifecycleOwner = viewLifecycleOwner
-
-        postponeEnterTransition()
 
         sharedViewModel.callsListReadyToBeDisplayedEvent.observe(viewLifecycleOwner) {
             it.consume {
@@ -88,12 +97,18 @@ class CallsFragment : GenericFragment() {
             }
         }
 
+        sharedViewModel.showStartCallEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                findNavController().navigate(R.id.action_global_startCallFragment)
+            }
+        }
+
         sharedViewModel.showCallLogEvent.observe(
             viewLifecycleOwner
         ) {
             it.consume { callId ->
                 Log.i("[Calls Fragment] Displaying call log with call ID [$callId]")
-                val navController = binding.callsRightNavContainer.findNavController()
+                val navController = binding.callsNavContainer.findNavController()
                 val action = CallFragmentDirections.actionGlobalCallFragment(
                     callId
                 )
@@ -105,7 +120,7 @@ class CallsFragment : GenericFragment() {
             it.consume {
                 if (findNavController().currentDestination?.id == R.id.callsFragment) {
                     // To prevent any previously seen contact to show up when navigating back to here later
-                    binding.callsRightNavContainer.findNavController().popBackStack()
+                    binding.callsNavContainer.findNavController().popBackStack()
 
                     val action =
                         CallsFragmentDirections.actionCallsFragmentToConversationsFragment()
@@ -118,7 +133,7 @@ class CallsFragment : GenericFragment() {
             it.consume {
                 if (findNavController().currentDestination?.id == R.id.callsFragment) {
                     // To prevent any previously seen contact to show up when navigating back to here later
-                    binding.callsRightNavContainer.findNavController().popBackStack()
+                    binding.callsNavContainer.findNavController().popBackStack()
 
                     val action = CallsFragmentDirections.actionCallsFragmentToContactsFragment()
                     findNavController().navigate(action)

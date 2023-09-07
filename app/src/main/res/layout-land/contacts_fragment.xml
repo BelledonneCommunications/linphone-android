@@ -20,21 +20,20 @@
             app:layout_constraintEnd_toEndOf="parent">
 
             <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/contacts_left_nav_container"
-                android:name="androidx.navigation.fragment.NavHostFragment"
+                android:id="@+id/contacts_list"
+                android:name="org.linphone.ui.main.contacts.fragment.ContactsListFragment"
                 android:layout_width="@dimen/sliding_pane_left_fragment_with_nav_width"
                 android:layout_height="match_parent"
-                app:defaultNavHost="false"
-                app:navGraph="@navigation/contact_left_nav_graph"/>
+                app:layout="@layout/contacts_list_fragment"/>
 
             <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/contacts_right_nav_container"
+                android:id="@+id/contacts_nav_container"
                 android:name="androidx.navigation.fragment.NavHostFragment"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 app:defaultNavHost="false"
-                app:navGraph="@navigation/contact_right_nav_graph"/>
+                app:navGraph="@navigation/contacts_nav_graph"/>
 
         </androidx.slidingpanelayout.widget.SlidingPaneLayout>
 

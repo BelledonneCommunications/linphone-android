@@ -74,7 +74,6 @@ class CallFragment : GenericFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         postponeEnterTransition()
 
         binding.lifecycleOwner = viewLifecycleOwner

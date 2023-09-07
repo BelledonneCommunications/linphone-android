@@ -62,11 +62,10 @@ class NewConversationFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
-
-        postponeEnterTransition()
 
         adapter = ContactsSelectionAdapter(viewLifecycleOwner)
         binding.contactsList.adapter = adapter

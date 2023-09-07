@@ -138,4 +138,30 @@
         android:id="@+id/action_global_recordingsFragment"
         app:destination="@id/recordingsFragment"/>
 
+    <fragment
+        android:id="@+id/startCallFragment"
+        android:name="org.linphone.ui.main.calls.fragment.StartCallFragment"
+        android:label="StartCallFragment"
+        tools:layout="@layout/call_start_fragment" />
+
+    <action
+        android:id="@+id/action_global_startCallFragment"
+        app:destination="@id/startCallFragment"
+        app:enterAnim="@anim/slide_in"
+        app:popExitAnim="@anim/slide_out"
+        app:launchSingleTop="true"/>
+
+    <fragment
+        android:id="@+id/newContactFragment"
+        android:name="org.linphone.ui.main.contacts.fragment.NewContactFragment"
+        android:label="NewContactFragment"
+        tools:layout="@layout/contact_new_or_edit_fragment"/>
+
+    <action
+        android:id="@+id/action_global_newContactFragment"
+        app:destination="@id/newContactFragment"
+        app:enterAnim="@anim/slide_in"
+        app:popExitAnim="@anim/slide_out"
+        app:launchSingleTop="true" />
+
 </navigation>

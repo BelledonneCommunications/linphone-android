@@ -25,13 +25,10 @@ import android.provider.ContactsContract
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import androidx.annotation.UiThread
 import androidx.core.content.FileProvider
 import androidx.core.view.doOnPreDraw
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.navGraphViewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import java.io.File
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -54,20 +51,10 @@ class ContactsListFragment : GenericFragment() {
 
     private lateinit var binding: ContactsListFragmentBinding
 
-    private val listViewModel: ContactsListViewModel by navGraphViewModels(
-        R.id.contactsListFragment
-    )
+    private lateinit var listViewModel: ContactsListViewModel
 
     private lateinit var adapter: ContactsListAdapter
     private lateinit var favouritesAdapter: ContactsListAdapter
-
-    override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
-        if (findNavController().currentDestination?.id == R.id.newContactFragment) {
-            // Holds fragment in place while new contact fragment slides over it
-            return AnimationUtils.loadAnimation(activity, R.anim.hold)
-        }
-        return super.onCreateAnimation(transit, enter, nextAnim)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -80,8 +67,11 @@ class ContactsListFragment : GenericFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         postponeEnterTransition()
+
+        listViewModel = requireActivity().run {
+            ViewModelProvider(this)[ContactsListViewModel::class.java]
+        }
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = listViewModel

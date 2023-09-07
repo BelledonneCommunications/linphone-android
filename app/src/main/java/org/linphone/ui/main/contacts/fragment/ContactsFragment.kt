@@ -23,6 +23,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.annotation.UiThread
 import androidx.core.view.doOnPreDraw
 import androidx.navigation.findNavController
@@ -51,12 +53,19 @@ class ContactsFragment : GenericFragment() {
         return binding.root
     }
 
+    override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
+        if (findNavController().currentDestination?.id == R.id.newContactFragment) {
+            // Holds fragment in place while new contact fragment slides over it
+            return AnimationUtils.loadAnimation(activity, R.anim.hold)
+        }
+        return super.onCreateAnimation(transit, enter, nextAnim)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
 
         binding.lifecycleOwner = viewLifecycleOwner
-
-        postponeEnterTransition()
 
         sharedViewModel.contactsListReadyToBeDisplayedEvent.observe(viewLifecycleOwner) {
             it.consume {
@@ -107,7 +116,7 @@ class ContactsFragment : GenericFragment() {
         ) {
             it.consume { refKey ->
                 Log.i("$TAG Displaying contact with ref key [$refKey]")
-                val navController = binding.contactsRightNavContainer.findNavController()
+                val navController = binding.contactsNavContainer.findNavController()
                 val action = ContactFragmentDirections.actionGlobalContactFragment(
                     refKey
                 )
@@ -120,7 +129,7 @@ class ContactsFragment : GenericFragment() {
         ) {
             it.consume {
                 Log.i("$TAG Opening contact editor for creating new contact")
-                val navController = binding.contactsLeftNavContainer.findNavController()
+                val navController = findNavController()
                 navController.navigate(R.id.action_global_newContactFragment)
             }
         }
@@ -129,7 +138,7 @@ class ContactsFragment : GenericFragment() {
             it.consume {
                 if (findNavController().currentDestination?.id == R.id.contactsFragment) {
                     // To prevent any previously seen contact to show up when navigating back to here later
-                    binding.contactsRightNavContainer.findNavController().popBackStack()
+                    binding.contactsNavContainer.findNavController().popBackStack()
 
                     val action = ContactsFragmentDirections.actionContactsFragmentToConversationsFragment()
                     findNavController().navigate(action)
@@ -141,7 +150,7 @@ class ContactsFragment : GenericFragment() {
             it.consume {
                 if (findNavController().currentDestination?.id == R.id.contactsFragment) {
                     // To prevent any previously seen contact to show up when navigating back to here later
-                    binding.contactsRightNavContainer.findNavController().popBackStack()
+                    binding.contactsNavContainer.findNavController().popBackStack()
 
                     val action = ContactsFragmentDirections.actionContactsFragmentToCallsFragment()
                     findNavController().navigate(action)

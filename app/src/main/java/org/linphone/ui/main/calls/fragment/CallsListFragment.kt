@@ -27,14 +27,11 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import android.widget.PopupWindow
 import androidx.annotation.UiThread
 import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.navGraphViewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
@@ -59,19 +56,9 @@ class CallsListFragment : GenericFragment() {
 
     private lateinit var binding: CallsListFragmentBinding
 
-    private val listViewModel: CallsListViewModel by navGraphViewModels(
-        R.id.callsListFragment
-    )
+    private lateinit var listViewModel: CallsListViewModel
 
     private lateinit var adapter: CallsListAdapter
-
-    override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
-        if (findNavController().currentDestination?.id == R.id.startCallFragment) {
-            // Holds fragment in place while new contact fragment slides over it
-            return AnimationUtils.loadAnimation(activity, R.anim.hold)
-        }
-        return super.onCreateAnimation(transit, enter, nextAnim)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -83,11 +70,14 @@ class CallsListFragment : GenericFragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
+
+        listViewModel = requireActivity().run {
+            ViewModelProvider(this)[CallsListViewModel::class.java]
+        }
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = listViewModel
-
-        postponeEnterTransition()
 
         adapter = CallsListAdapter(viewLifecycleOwner)
         binding.callsList.setHasFixedSize(true)
@@ -186,7 +176,7 @@ class CallsListFragment : GenericFragment() {
         }
 
         binding.setStartCallClickListener {
-            findNavController().navigate(R.id.action_global_startCallFragment)
+            sharedViewModel.showStartCallEvent.value = Event(true)
         }
 
         sharedViewModel.defaultAccountChangedEvent.observe(viewLifecycleOwner) {
