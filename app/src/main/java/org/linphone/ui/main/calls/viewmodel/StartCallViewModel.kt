@@ -23,7 +23,10 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import java.util.ArrayList
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.contacts.ContactsManager.ContactsListener
@@ -146,8 +149,12 @@ class StartCallViewModel @UiThread constructor() : ViewModel() {
 
     @UiThread
     fun switchBetweenKeyboardAndNumpad() {
-        requestKeyboardVisibilityChangedEvent.value = Event(isNumpadVisible.value == true)
-        isNumpadVisible.value = isNumpadVisible.value == false
+        val showKeyboard = isNumpadVisible.value == true
+        requestKeyboardVisibilityChangedEvent.value = Event(showKeyboard)
+        viewModelScope.launch {
+            delay(100)
+            isNumpadVisible.value = !showKeyboard
+        }
     }
 
     @UiThread

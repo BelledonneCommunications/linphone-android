@@ -10,27 +10,26 @@
         <variable
             name="model"
             type="org.linphone.ui.main.calls.model.NumpadModel" />
-        <variable
-            name="inflatedVisibility"
-            type="Integer" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/shape_numpad_background"
-        android:visibility="@{inflatedVisibility}"
-        inflatedLifecycleOwner="@{true}"
         android:clickable="true"
-        android:focusable="true">
+        android:focusable="true"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="0dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-        <ImageView
+        <com.google.android.material.bottomsheet.BottomSheetDragHandleView
             android:id="@+id/handle"
             android:onClick="@{handleClickedListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="11dp"
             android:src="@drawable/shape_drawer_handle"
+            app:tint="@color/drawer_handle"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />

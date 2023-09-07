@@ -29,6 +29,7 @@ import androidx.core.view.doOnPreDraw
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.contacts.getListOfSipAddressesAndPhoneNumbers
@@ -168,6 +169,15 @@ class StartCallFragment : GenericFragment() {
                     binding.searchBar.requestFocus()
                     binding.searchBar.hideKeyboard()
                 }
+            }
+        }
+
+        viewModel.isNumpadVisible.observe(viewLifecycleOwner) { visible ->
+            val standardBottomSheetBehavior = BottomSheetBehavior.from(binding.numpadLayout.root)
+            if (visible) {
+                standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            } else {
+                standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }
         }
 
