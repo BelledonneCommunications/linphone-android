@@ -21,7 +21,6 @@ package org.linphone.ui.main
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.Gravity
@@ -37,7 +36,6 @@ import androidx.navigation.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.databinding.MainActivityBinding
-import org.linphone.ui.welcome.WelcomeActivity
 import org.linphone.utils.slideInToastFromTopForDuration
 
 @UiThread
@@ -73,7 +71,8 @@ class MainActivity : AppCompatActivity() {
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
 
-        startActivity(Intent(this, WelcomeActivity::class.java))
+        // TODO FIXME: uncomment
+        // startActivity(Intent(this, WelcomeActivity::class.java))
 
         if (checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(

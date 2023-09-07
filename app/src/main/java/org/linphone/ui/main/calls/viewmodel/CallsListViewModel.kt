@@ -23,15 +23,21 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.contacts.ContactsManager
 import org.linphone.core.CallLog
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
+import org.linphone.core.tools.Log
 import org.linphone.ui.main.calls.model.CallLogModel
 import org.linphone.ui.main.viewmodel.AbstractTopBarViewModel
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
 class CallsListViewModel @UiThread constructor() : AbstractTopBarViewModel() {
+    companion object {
+        private const val TAG = "[Calls List ViewModel]"
+    }
+
     val callLogs = MutableLiveData<ArrayList<CallLogModel>>()
 
     val historyDeletedEvent: MutableLiveData<Event<Boolean>> by lazy {
@@ -46,8 +52,17 @@ class CallsListViewModel @UiThread constructor() : AbstractTopBarViewModel() {
         }
     }
 
+    private val contactsListener = object : ContactsManager.ContactsListener {
+        @WorkerThread
+        override fun onContactsLoaded() {
+            Log.i("$TAG Contacts have been (re)loaded, updating list")
+            computeCallLogsList(currentFilter)
+        }
+    }
+
     init {
         coreContext.postOnCoreThread { core ->
+            coreContext.contactsManager.addListener(contactsListener)
             core.addListener(coreListener)
 
             computeCallLogsList(currentFilter)
@@ -59,6 +74,7 @@ class CallsListViewModel @UiThread constructor() : AbstractTopBarViewModel() {
         super.onCleared()
 
         coreContext.postOnCoreThread { core ->
+            coreContext.contactsManager.removeListener(contactsListener)
             core.removeListener(coreListener)
         }
     }

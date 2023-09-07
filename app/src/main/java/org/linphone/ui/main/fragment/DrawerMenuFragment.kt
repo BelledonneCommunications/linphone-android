@@ -38,6 +38,7 @@ import org.linphone.ui.assistant.AssistantActivity
 import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.settings.fragment.AccountProfileFragmentDirections
 import org.linphone.ui.main.viewmodel.DrawerMenuViewModel
+import org.linphone.ui.welcome.WelcomeActivity
 import org.linphone.utils.Event
 
 @UiThread
@@ -79,9 +80,11 @@ class DrawerMenuFragment : GenericFragment() {
         }
 
         binding.setRecordingsClickListener {
-            val navController = (requireActivity() as MainActivity).findNavController()
+            // TODO FIXME
+            /*val navController = (requireActivity() as MainActivity).findNavController()
             navController.navigate(R.id.action_global_recordingsFragment)
-            (requireActivity() as MainActivity).closeDrawerMenu()
+            (requireActivity() as MainActivity).closeDrawerMenu()*/
+            startActivity(Intent(requireActivity(), WelcomeActivity::class.java))
         }
 
         binding.setHelpClickedListener {
