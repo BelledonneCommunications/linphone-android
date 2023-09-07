@@ -25,6 +25,10 @@
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
+            app:tabMode="fixed"
+            app:tabGravity="fill"
+            app:tabPadding="0dp"
+            app:tabInlineLabel="true"
             app:tabTextColor="?attr/primaryTextColor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -38,7 +42,7 @@
             android:layout_marginBottom="5dp"
             android:background="?dividerColor" />
 
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="220dp">
 
@@ -49,7 +53,7 @@
                 entries="@{data.filteredReactions}"
                 layout="@{@layout/chat_message_reactions_list_cell}" />
 
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
 
     </LinearLayout>
 
