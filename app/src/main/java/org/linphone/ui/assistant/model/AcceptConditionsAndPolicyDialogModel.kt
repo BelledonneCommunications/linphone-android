@@ -19,14 +19,72 @@
  */
 package org.linphone.ui.assistant.model
 
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.ClickableSpan
+import android.view.View
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
+import java.util.regex.Pattern
+import org.linphone.core.tools.Log
 import org.linphone.utils.Event
 
 class AcceptConditionsAndPolicyDialogModel @UiThread constructor() {
+    companion object {
+        private const val TAG = "[Accept Terms & Policy Dialog Model]"
+    }
+
+    val message = MutableLiveData<SpannableString>()
+
     val dismissEvent = MutableLiveData<Event<Boolean>>()
 
     val conditionsAcceptedEvent = MutableLiveData<Event<Boolean>>()
+
+    val generalTermsClickedEvent = MutableLiveData<Event<Boolean>>()
+
+    val privacyPolicyClickedEvent = MutableLiveData<Event<Boolean>>()
+
+    init {
+        val privacy = "politique de confidentialité"
+        val terms = "conditions d'utilisation"
+
+        val label = "En continuant, vous notre $privacy et nos $terms."
+        val spannable = SpannableString(label)
+
+        val termsMatcher = Pattern.compile(terms).matcher(label)
+        if (termsMatcher.find()) {
+            val clickableSpan: ClickableSpan = object : ClickableSpan() {
+                override fun onClick(widget: View) {
+                    Log.i("$TAG Clicked on general terms link")
+                    generalTermsClickedEvent.value = Event(true)
+                }
+            }
+            spannable.setSpan(
+                clickableSpan,
+                termsMatcher.start(0),
+                termsMatcher.end(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+
+        val policyMatcher = Pattern.compile(privacy).matcher(label)
+        if (policyMatcher.find()) {
+            val clickableSpan: ClickableSpan = object : ClickableSpan() {
+                override fun onClick(widget: View) {
+                    Log.i("$TAG Clicked on privacy policy link")
+                    privacyPolicyClickedEvent.value = Event(true)
+                }
+            }
+            spannable.setSpan(
+                clickableSpan,
+                policyMatcher.start(0),
+                policyMatcher.end(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+
+        message.value = spannable
+    }
 
     @UiThread
     fun dismiss() {

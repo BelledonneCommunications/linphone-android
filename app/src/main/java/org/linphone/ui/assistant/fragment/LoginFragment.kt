@@ -194,6 +194,34 @@ class LoginFragment : Fragment() {
             }
         }
 
+        model.privacyPolicyClickedEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                val browserIntent = Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://www.linphone.org/privacy-policy")
+                )
+                try {
+                    startActivity(browserIntent)
+                } catch (e: Exception) {
+                    Log.e("$TAG Can't start activity: $e")
+                }
+            }
+        }
+
+        model.generalTermsClickedEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                val browserIntent = Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://www.linphone.org/general-terms")
+                )
+                try {
+                    startActivity(browserIntent)
+                } catch (e: Exception) {
+                    Log.e("$TAG Can't start activity: $e")
+                }
+            }
+        }
+
         dialog.show()
     }
 }

@@ -13,9 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:onClick="@{dismissClickListener}"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="true"
-        android:focusable="true">
+        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/dialog_background_shadow"

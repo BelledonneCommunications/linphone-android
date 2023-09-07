@@ -23,6 +23,7 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.Window
 import android.view.WindowManager
@@ -60,6 +61,7 @@ class DialogUtils {
                 false
             )
             binding.viewModel = viewModel
+            binding.message.movementMethod = LinkMovementMethod.getInstance()
 
             return getDialog(context, binding)
         }
