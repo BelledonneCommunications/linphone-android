@@ -19,15 +19,12 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_700"
             android:id="@+id/label"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
             android:text="@{model.isSip ? `SIP address` : `Phone number`, default=`SIP address`}"
             android:textSize="13sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/field"
             app:layout_constraintTop_toTopOf="parent"/>
 
         <androidx.appcompat.widget.AppCompatEditText
@@ -36,8 +33,6 @@
             android:id="@+id/field"
             android:layout_width="0dp"
             android:layout_height="50dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
             android:layout_marginTop="5dp"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
@@ -47,6 +42,7 @@
             android:background="@drawable/edit_text_background"
             android:maxLines="1"
             android:inputType="@{model.isSip ? InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS : InputType.TYPE_CLASS_PHONE}"
+            app:layout_constraintWidth_max="@dimen/text_input_max_width"
             app:layout_constraintTop_toBottomOf="@id/label"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/remove"/>
@@ -57,7 +53,7 @@
             android:visibility="@{model.showRemoveButton ? View.VISIBLE : View.INVISIBLE, default=invisible}"
             android:layout_width="@dimen/icon_size"
             android:layout_height="@dimen/icon_size"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="10dp"
             android:src="@drawable/x"
             app:tint="@color/gray_8"
             app:layout_constraintStart_toEndOf="@id/field"

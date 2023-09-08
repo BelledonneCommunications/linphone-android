@@ -181,6 +181,7 @@
                 android:layout_height="wrap_content"
                 android:text="No suggestion and no contact for the moment..."
                 android:textSize="16sp"
+                android:gravity="center"
                 android:visibility="@{viewModel.emptyContactsList &amp;&amp; viewModel.suggestionsList.size() == 0 ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

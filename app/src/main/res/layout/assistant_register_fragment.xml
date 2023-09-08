@@ -79,13 +79,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="48dp"
-                android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:text="Username*"
                 android:textSize="13sp"
                 android:textColor="@color/gray_9"
                 app:layout_constraintTop_toBottomOf="@id/title"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintStart_toStartOf="@id/username"/>
 
             <androidx.appcompat.widget.AppCompatEditText
                 style="@style/default_text_style"
@@ -102,6 +101,7 @@
                 android:background="@{viewModel.usernameError.length() > 0 ? @drawable/shape_edit_text_error_background : @drawable/edit_text_background, default=@drawable/edit_text_background}"
                 android:inputType="text"
                 android:hint="Username"
+                app:layout_constraintWidth_max="@dimen/text_input_max_width"
                 app:layout_constraintTop_toBottomOf="@id/username_label"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
@@ -124,21 +124,19 @@
                 style="@style/default_text_style_700"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="16dp"
                 android:text="Phone Number*"
                 android:textSize="13sp"
                 android:textColor="@color/gray_9"
                 app:layout_constraintTop_toBottomOf="@id/username_error"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintStart_toStartOf="@id/prefix"/>
 
             <androidx.appcompat.widget.AppCompatEditText
                 style="@style/default_text_style"
                 android:id="@+id/phone_number"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
-                android:layout_marginEnd="16dp"
                 android:paddingStart="90dp"
                 android:paddingEnd="20dp"
                 android:text="@={viewModel.phoneNumber, default=`6 01 02 03 04 05`}"
@@ -149,9 +147,10 @@
                 android:drawableStart="@drawable/separator"
                 android:drawablePadding="10dp"
                 android:hint="Phone number"
+                app:layout_constraintWidth_max="@dimen/text_input_max_width"
                 app:layout_constraintTop_toBottomOf="@id/phone_number_label"
-                app:layout_constraintStart_toStartOf="@id/prefix"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintStart_toStartOf="@id/username"
+                app:layout_constraintEnd_toEndOf="@id/username"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:onClick="@{showCountryPickerClickListener}"
@@ -159,7 +158,6 @@
                 android:id="@+id/prefix"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_marginStart="16dp"
                 android:paddingStart="20dp"
                 android:text="@{viewModel.internationalPrefix, default=`+33`}"
                 android:textSize="14sp"
@@ -169,7 +167,7 @@
                 android:drawablePadding="10dp"
                 app:layout_constraintTop_toTopOf="@id/phone_number"
                 app:layout_constraintBottom_toBottomOf="@id/phone_number"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="@id/username" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style_600"
@@ -189,14 +187,13 @@
                 style="@style/default_text_style_700"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="16dp"
                 android:text="Password*"
                 android:textSize="13sp"
                 android:textColor="@color/gray_9"
                 app:layout_constraintTop_toBottomOf="@id/phone_number_error"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintStart_toStartOf="@id/password"/>
 
             <androidx.appcompat.widget.AppCompatEditText
                 style="@style/default_text_style"
@@ -213,6 +210,7 @@
                 android:background="@drawable/edit_text_background"
                 android:hint="Password"
                 android:inputType="@{viewModel.showPassword ? InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD : InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD, default=textPassword}"
+                app:layout_constraintWidth_max="@dimen/text_input_max_width"
                 app:layout_constraintTop_toBottomOf="@id/password_label"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
@@ -247,6 +245,7 @@
                 android:textColor="@color/primary_button_label_color"
                 android:gravity="center"
                 android:background="@drawable/primary_button_background"
+                app:layout_constraintWidth_max="@dimen/button_max_width"
                 app:layout_constraintTop_toBottomOf="@id/password"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />

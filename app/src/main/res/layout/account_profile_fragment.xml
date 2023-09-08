@@ -88,15 +88,14 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_700"
             android:id="@+id/sip_uri_label"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:text="SIP address"
             android:textSize="13sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintWidth_max="@dimen/text_input_max_width"
+            app:layout_constraintStart_toStartOf="@id/sip_uri"
             app:layout_constraintTop_toBottomOf="@id/add_picture_label"/>
 
         <androidx.appcompat.widget.AppCompatEditText
@@ -116,6 +115,7 @@
             android:maxLines="1"
             android:background="@drawable/edit_text_background"
             android:inputType="text|textPersonName"
+            app:layout_constraintWidth_max="@dimen/text_input_max_width"
             app:layout_constraintTop_toBottomOf="@id/sip_uri_label"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
@@ -123,15 +123,14 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_700"
             android:id="@+id/first_name_label"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:text="Display Name"
             android:textSize="13sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintWidth_max="@dimen/text_input_max_width"
+            app:layout_constraintStart_toStartOf="@id/first_name"
             app:layout_constraintTop_toBottomOf="@id/sip_uri"/>
 
         <androidx.appcompat.widget.AppCompatEditText
@@ -150,6 +149,7 @@
             android:maxLines="1"
             android:background="@drawable/edit_text_background"
             android:inputType="text|textPersonName"
+            app:layout_constraintWidth_max="@dimen/text_input_max_width"
             app:layout_constraintTop_toBottomOf="@id/first_name_label"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
@@ -157,15 +157,14 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_700"
             android:id="@+id/international_prefix_label"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:text="International Prefix"
             android:textSize="13sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintWidth_max="@dimen/text_input_max_width"
+            app:layout_constraintStart_toStartOf="@id/international_prefix"
             app:layout_constraintTop_toBottomOf="@id/first_name"/>
 
         <androidx.appcompat.widget.AppCompatEditText
@@ -184,6 +183,7 @@
             android:maxLines="1"
             android:background="@drawable/edit_text_background"
             android:inputType="number|phone"
+            app:layout_constraintWidth_max="@dimen/text_input_max_width"
             app:layout_constraintTop_toBottomOf="@id/international_prefix_label"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>

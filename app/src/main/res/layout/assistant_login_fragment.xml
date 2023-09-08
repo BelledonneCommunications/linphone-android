@@ -79,13 +79,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
-                android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:text="Username*"
                 android:textSize="13sp"
                 android:textColor="@color/gray_9"
                 app:layout_constraintTop_toBottomOf="@id/title"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintStart_toStartOf="@id/username"/>
 
             <androidx.appcompat.widget.AppCompatEditText
                 style="@style/default_text_style"
@@ -102,6 +101,7 @@
                 android:background="@drawable/edit_text_background"
                 android:inputType="text"
                 android:hint="Username"
+                app:layout_constraintWidth_max="@dimen/text_input_max_width"
                 app:layout_constraintTop_toBottomOf="@id/username_label"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
@@ -111,14 +111,14 @@
                 style="@style/default_text_style_700"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="16dp"
                 android:text="Password*"
                 android:textSize="13sp"
                 android:textColor="@color/gray_9"
+                app:layout_constraintWidth_max="@dimen/text_input_max_width"
                 app:layout_constraintTop_toBottomOf="@id/username"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintStart_toStartOf="@id/password"/>
 
             <androidx.appcompat.widget.AppCompatEditText
                 style="@style/default_text_style"
@@ -134,6 +134,7 @@
                 android:textColor="@color/gray_9"
                 android:background="@drawable/edit_text_background"
                 android:hint="Password"
+                app:layout_constraintWidth_max="@dimen/text_input_max_width"
                 android:inputType="@{viewModel.showPassword ? InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD : InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD, default=textPassword}"
                 app:layout_constraintTop_toBottomOf="@id/password_label"
                 app:layout_constraintStart_toStartOf="parent"
@@ -171,6 +172,7 @@
                 android:textColor="@color/primary_button_label_color"
                 android:gravity="center"
                 android:background="@drawable/primary_button_background"
+                app:layout_constraintWidth_max="@dimen/button_max_width"
                 app:layout_constraintTop_toBottomOf="@id/password"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
@@ -249,6 +251,7 @@
                 android:drawableStart="@drawable/qr_code"
                 android:drawablePadding="8dp"
                 app:drawableTint="@color/secondary_button_label_color"
+                app:layout_constraintWidth_max="@dimen/button_max_width"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/or" />
@@ -271,6 +274,7 @@
                 android:textColor="@color/secondary_button_label_color"
                 android:gravity="center"
                 android:background="@drawable/secondary_button_background"
+                app:layout_constraintWidth_max="@dimen/button_max_width"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/scan_qr_code" />

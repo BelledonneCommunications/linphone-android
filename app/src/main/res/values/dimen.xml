@@ -3,9 +3,9 @@
     <dimen name="zero">0dp</dimen>
 
     <dimen name="landscape_nav_bar_width">75dp</dimen>
-    <dimen name="sliding_pane_left_fragment_width">280dp</dimen>
+    <dimen name="sliding_pane_left_fragment_width">400dp</dimen>
     <!-- This value is the result of the above two added together -->
-    <dimen name="sliding_pane_left_fragment_with_nav_width">355dp</dimen>
+    <dimen name="sliding_pane_left_fragment_with_nav_width">475dp</dimen>
     <dimen name="sliding_pane_right_fragment_width">300dp</dimen>
 
     <dimen name="icon_size">24dp</dimen>
@@ -34,7 +34,10 @@
     <dimen name="in_call_all_actions_menu_height">345dp</dimen> <!-- sum of above two -->
     <dimen name="in_call_round_corners_texture_view_radius">20dp</dimen>
 
-    <dimen name="toast_max_width">360dp</dimen>
+    <dimen name="toast_max_width">400dp</dimen>
+    <dimen name="button_max_width">400dp</dimen>
+    <dimen name="dialog_max_width">400dp</dimen>
+    <dimen name="text_input_max_width">400dp</dimen>
 
     <dimen name="voip_button_size">55dp</dimen>
     <dimen name="voip_button_icon_padding">15dp</dimen>

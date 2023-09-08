@@ -89,6 +89,7 @@
             android:text="Some features require a Linphone account, such as group messaging, video conferences...\n\nThese features are hidden when you register with a third party SIP account.\n\nTo enable it in a commercial projet, please contact us. "
             android:textSize="14sp"
             android:gravity="center"
+            app:layout_constraintWidth_max="@dimen/text_input_max_width"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/no_chat"/>
@@ -132,6 +133,7 @@
             android:textColor="@color/secondary_button_label_color"
             android:gravity="center"
             android:background="@drawable/secondary_button_background"
+            app:layout_constraintWidth_max="@dimen/button_max_width"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/continue_third_party_account_login" />
@@ -155,6 +157,7 @@
             android:textColor="@color/primary_button_label_color"
             android:gravity="center"
             android:background="@drawable/primary_button_background"
+            app:layout_constraintWidth_max="@dimen/button_max_width"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
