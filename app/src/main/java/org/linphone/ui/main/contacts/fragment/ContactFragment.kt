@@ -212,6 +212,7 @@ class ContactFragment : GenericFragment() {
         val label = if (isSip) "SIP address" else "Phone number"
         clipboard.setPrimaryClip(ClipData.newPlainText(label, value))
 
+        // TODO FIXME: show translated string
         (requireActivity() as MainActivity).showGreenToast(
             "Numéro copié dans le presse-papier",
             R.drawable.check_fat_fill

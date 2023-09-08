@@ -41,7 +41,7 @@ import org.linphone.ui.main.conversations.viewmodel.ConversationsListViewModel
 class ConversationsFragment : Fragment() {
     private lateinit var binding: ConversationsFragmentBinding
     private val listViewModel: ConversationsListViewModel by navGraphViewModels(
-        R.id.conversationsFragment
+        R.id.main_nav_graph
     )
     private lateinit var adapter: ConversationsListAdapter
 

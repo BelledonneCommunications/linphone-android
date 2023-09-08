@@ -82,6 +82,7 @@ class AccountLoginViewModel @UiThread constructor() : ViewModel() {
                 } else if (state == RegistrationState.Failed) {
                     registrationInProgress.postValue(false)
                     core.removeListener(this)
+                    // TODO: show translated string
                     accountLoginErrorEvent.postValue(Event(message))
 
                     Log.e("$TAG Account failed to REGISTER, removing it")

@@ -40,7 +40,7 @@ class NewConversationFragment : Fragment() {
     private lateinit var binding: ConversationStartFragmentBinding
     private lateinit var adapter: ContactsSelectionAdapter
     private val viewModel: NewConversationViewModel by navGraphViewModels(
-        R.id.conversationsFragment
+        R.id.main_nav_graph
     )
 
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {

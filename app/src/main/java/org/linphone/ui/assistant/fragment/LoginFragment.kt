@@ -52,7 +52,7 @@ class LoginFragment : Fragment() {
     private lateinit var binding: AssistantLoginFragmentBinding
 
     private val viewModel: AccountLoginViewModel by navGraphViewModels(
-        R.id.loginFragment
+        R.id.assistant_nav_graph
     )
 
     override fun onCreateView(

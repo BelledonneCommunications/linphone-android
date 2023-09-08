@@ -30,7 +30,7 @@ class AccountProfileFragment : GenericFragment() {
     private lateinit var binding: AccountProfileFragmentBinding
 
     private val viewModel: AccountProfileViewModel by navGraphViewModels(
-        R.id.accountProfileFragment
+        R.id.main_nav_graph
     )
 
     private val args: AccountProfileFragmentArgs by navArgs()

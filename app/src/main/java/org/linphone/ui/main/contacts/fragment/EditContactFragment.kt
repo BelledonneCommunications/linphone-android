@@ -56,7 +56,7 @@ class EditContactFragment : GenericFragment() {
     private lateinit var binding: ContactNewOrEditFragmentBinding
 
     private val viewModel: ContactNewOrEditViewModel by navGraphViewModels(
-        R.id.editContactFragment
+        R.id.main_nav_graph
     )
 
     private val args: EditContactFragmentArgs by navArgs()

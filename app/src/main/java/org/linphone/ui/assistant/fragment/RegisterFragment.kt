@@ -52,7 +52,7 @@ class RegisterFragment : Fragment() {
     private lateinit var binding: AssistantRegisterFragmentBinding
 
     private val viewModel: AccountCreationViewModel by navGraphViewModels(
-        R.id.registerFragment
+        R.id.assistant_nav_graph
     )
 
     override fun onCreateView(

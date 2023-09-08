@@ -118,6 +118,7 @@ class CallFragment : GenericFragment() {
             it.consume {
                 sharedViewModel.forceRefreshCallLogsListEvent.value = Event(true)
 
+                // TODO FIXME: show translated string
                 (requireActivity() as MainActivity).showGreenToast(
                     "Historique supprimé",
                     R.drawable.check_fat_fill
@@ -132,6 +133,7 @@ class CallFragment : GenericFragment() {
         val label = "SIP address"
         clipboard.setPrimaryClip(ClipData.newPlainText(label, value))
 
+        // TODO FIXME: show translated string
         (requireActivity() as MainActivity).showGreenToast(
             "Numéro copié dans le presse-papier",
             R.drawable.check_fat_fill

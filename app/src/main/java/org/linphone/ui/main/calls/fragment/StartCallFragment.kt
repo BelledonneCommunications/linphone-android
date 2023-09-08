@@ -58,11 +58,11 @@ class StartCallFragment : GenericFragment() {
     private lateinit var binding: CallStartFragmentBinding
 
     private val viewModel: StartCallViewModel by navGraphViewModels(
-        R.id.startCallFragment
+        R.id.voip_nav_graph
     )
 
     private val contactsListViewModel: ContactsListViewModel by navGraphViewModels(
-        R.id.startCallFragment
+        R.id.voip_nav_graph
     )
 
     private lateinit var contactsAdapter: ContactsListAdapter

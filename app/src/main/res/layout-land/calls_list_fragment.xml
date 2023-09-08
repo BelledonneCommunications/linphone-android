@@ -120,7 +120,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
             android:layout_margin="16dp"
-            android:src="@drawable/plus_circle"
+            android:src="@drawable/phone_plus"
             app:tint="@color/gray_8"
             app:backgroundTint="@color/white"
             app:layout_constraintEnd_toEndOf="parent"

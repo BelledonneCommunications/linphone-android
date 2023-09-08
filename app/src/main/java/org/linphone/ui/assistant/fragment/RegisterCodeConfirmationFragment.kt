@@ -43,7 +43,7 @@ class RegisterCodeConfirmationFragment : Fragment() {
     private lateinit var binding: AssistantRegisterConfirmSmsCodeFragmentBinding
 
     private val viewModel: AccountCreationViewModel by navGraphViewModels(
-        R.id.registerCodeConfirmationFragment
+        R.id.assistant_nav_graph
     )
 
     override fun onCreateView(

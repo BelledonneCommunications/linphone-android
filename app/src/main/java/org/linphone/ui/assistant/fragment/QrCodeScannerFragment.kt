@@ -47,7 +47,7 @@ class QrCodeScannerFragment : Fragment() {
     private lateinit var binding: AssistantQrCodeScannerFragmentBinding
 
     private val viewModel: QrCodeViewModel by navGraphViewModels(
-        R.id.qrCodeScannerFragment
+        R.id.assistant_nav_graph
     )
 
     private val requestPermissionLauncher = registerForActivityResult(
@@ -84,11 +84,13 @@ class QrCodeScannerFragment : Fragment() {
         viewModel.qrCodeFoundEvent.observe(viewLifecycleOwner) {
             it.consume { isValid ->
                 if (isValid) {
+                    // TODO FIXME: show translated string
                     (requireActivity() as AssistantActivity).showGreenToast(
                         "QR code validated!",
                         R.drawable.check_fat_fill
                     )
                 } else {
+                    // TODO FIXME: show translated string
                     (requireActivity() as AssistantActivity).showRedToast(
                         "Invalid QR code!",
                         R.drawable.warning_circle

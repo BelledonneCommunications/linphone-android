@@ -57,7 +57,7 @@ class NewContactFragment : GenericFragment() {
     private lateinit var binding: ContactNewOrEditFragmentBinding
 
     private val viewModel: ContactNewOrEditViewModel by navGraphViewModels(
-        R.id.newContactFragment
+        R.id.main_nav_graph
     )
 
     private val backPressedCallback = object : OnBackPressedCallback(true) {

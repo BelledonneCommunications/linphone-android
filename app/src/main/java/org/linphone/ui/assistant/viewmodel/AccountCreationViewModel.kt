@@ -64,6 +64,8 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
 
     val createEnabled = MediatorLiveData<Boolean>()
 
+    val confirmationMessage = MutableLiveData<String>()
+
     val smsCodeFirstDigit = MutableLiveData<String>()
     val smsCodeSecondDigit = MutableLiveData<String>()
     val smsCodeThirdDigit = MutableLiveData<String>()
@@ -95,6 +97,7 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
                 AccountCreator.Status.AccountExist, AccountCreator.Status.AccountExistWithAlias -> {
                     operationInProgress.postValue(false)
                     createEnabled.postValue(false)
+                    // TODO FIXME: use translated string
                     usernameError.postValue("Account already exists")
                 }
                 AccountCreator.Status.AccountNotExist -> {
@@ -102,8 +105,10 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
                     checkPhoneNumber()
                 }
                 else -> {
+                    Log.e("$TAG An unexpected error occurred!")
                     operationInProgress.postValue(false)
                     createEnabled.postValue(false)
+                    // TODO FIXME: use translated string
                     phoneNumberError.postValue(status.name)
                 }
             }
@@ -120,6 +125,7 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
                 AccountCreator.Status.AliasExist, AccountCreator.Status.AliasIsAccount -> {
                     operationInProgress.postValue(false)
                     createEnabled.postValue(false)
+                    // TODO FIXME: use translated string
                     phoneNumberError.postValue("Phone number already used")
                 }
                 AccountCreator.Status.AliasNotExist -> {
@@ -127,8 +133,10 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
                     createAccount()
                 }
                 else -> {
+                    Log.e("$TAG An unexpected error occurred!")
                     operationInProgress.postValue(false)
                     createEnabled.postValue(false)
+                    // TODO FIXME: use translated string
                     phoneNumberError.postValue(status.name)
                 }
             }
@@ -149,7 +157,8 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
                     goToSmsCodeConfirmationViewEvent.postValue(Event(true))
                 }
                 else -> {
-                    // TODO
+                    Log.e("$TAG Account couldn't be created, an unexpected error occurred!")
+                    // TODO: show error message to user
                 }
             }
         }
@@ -167,7 +176,8 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
                 Log.i("$TAG Account has been successfully activated, going to login page")
                 goToLoginPageEvent.postValue(Event(true))
             } else {
-                // TODO
+                Log.e("$TAG Account couldn't be activated, an unexpected error occurred!")
+                // TODO: show error message to user
             }
         }
     }
@@ -273,20 +283,42 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
                     prefix
                 }
                 val number = phoneNumber.value.orEmpty().trim()
-                accountCreator.setPhoneNumber(number, digitsPrefix)
 
-                val normalizedPhoneNumber = accountCreator.phoneNumber
-                if (!normalizedPhoneNumber.isNullOrEmpty()) {
-                    normalizedPhoneNumberEvent.postValue(Event(normalizedPhoneNumber))
+                val status = accountCreator.setPhoneNumber(number, digitsPrefix)
+                if (status == AccountCreator.PhoneNumberStatus.Ok.toInt()) {
+                    val normalizedPhoneNumber = accountCreator.phoneNumber
+
+                    // TODO FIXME: use translated string
+                    val message = "We have sent a verification code on your phone number “$normalizedPhoneNumber”.\n\nPlease enter the verification code below:"
+                    confirmationMessage.postValue(message)
+
+                    Log.i(
+                        "$TAG Normalized phone number from [$number] and prefix [$digitsPrefix] is [$normalizedPhoneNumber]"
+                    )
+                    if (!normalizedPhoneNumber.isNullOrEmpty()) {
+                        normalizedPhoneNumberEvent.postValue(Event(normalizedPhoneNumber))
+                    } else {
+                        Log.e(
+                            "$TAG Failed to compute phone number using international prefix [$digitsPrefix] and number [$number]"
+                        )
+                        operationInProgress.postValue(false)
+                        // TODO FIXME: use translated string
+                        phoneNumberError.postValue(
+                            "Wrong international prefix / local phone number"
+                        )
+                    }
                 } else {
                     Log.e(
-                        "$TAG Failed to compute phone number using international prefix [$digitsPrefix] and number [$number]"
+                        "$TAG Failed to set phone number [$number] and prefix [$digitsPrefix] into account creator!"
                     )
-                    operationInProgress.postValue(false)
-                    phoneNumberError.postValue("Wrong international prefix / local phone number")
+                    // TODO FIXME: use translated string
+                    phoneNumberError.postValue(
+                        "Failed to configure phone number and prefix in account creator!"
+                    )
                 }
             } else {
                 Log.e("$TAG Account creator hasn't been initialized!")
+                // TODO: show error message to user
             }
         }
     }
@@ -330,6 +362,7 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
             if (status != AccountCreator.Status.RequestOk) {
                 Log.e("$TAG Can't activate account [$status]")
                 operationInProgress.postValue(false)
+                // TODO: show error message to user
             }
         }
     }
@@ -347,6 +380,7 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
         if (status != AccountCreator.Status.RequestOk) {
             Log.e("$TAG Can't check if account already exists [$status]")
             operationInProgress.postValue(false)
+            // TODO: show error message to user
         }
     }
 
@@ -359,6 +393,7 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
         if (status != AccountCreator.Status.RequestOk) {
             Log.e("$TAG Can't check if phone number is already used [$status]")
             operationInProgress.postValue(false)
+            // TODO: show error message to user
         }
     }
 
@@ -373,6 +408,7 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
         if (status != AccountCreator.Status.RequestOk) {
             Log.e("$TAG Can't create account [$status]")
             operationInProgress.postValue(false)
+            // TODO: show error message to user
         } else {
             Log.i("$TAG createAccount consumed our token, setting it to null")
             accountCreator.token = null
@@ -434,5 +470,6 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
     private fun onFlexiApiTokenRequestError() {
         Log.e("$TAG Flexi API token request by push error!")
         operationInProgress.postValue(false)
+        // TODO: show error message to user
     }
 }

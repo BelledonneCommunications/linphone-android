@@ -136,9 +136,11 @@ class VoipActivity : AppCompatActivity() {
         callsViewModel.showLowSignalEvent.observe(this) {
             it.consume { show ->
                 if (show) {
+                    // TODO FIXME: show translated string
                     showRedToast("Low Wi-Fi signal!", R.drawable.wifi_low)
                 } else {
                     hideRedToast()
+                    // TODO FIXME: show translated string
                     showGreenToast("Wi-Fi signal no longer low", R.drawable.wifi_high)
                 }
             }

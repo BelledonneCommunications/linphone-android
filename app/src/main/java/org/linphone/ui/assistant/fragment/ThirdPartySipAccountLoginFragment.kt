@@ -49,7 +49,7 @@ class ThirdPartySipAccountLoginFragment : Fragment() {
     private lateinit var binding: AssistantThirdPartySipAccountLoginFragmentBinding
 
     private val viewModel: ThirdPartySipAccountLoginViewModel by navGraphViewModels(
-        R.id.thirdPartySipAccountLoginFragment
+        R.id.assistant_nav_graph
     )
 
     private val dropdownListener = object : AdapterView.OnItemSelectedListener {
