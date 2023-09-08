@@ -242,8 +242,12 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
             }
 
             if (list.size > 2) {
+                Log.i("$TAG Found more than two devices, showing list to let user choose")
                 showAudioDevicesListEvent.postValue(Event(list))
             } else {
+                Log.i(
+                    "$TAG Found less than two devices, simply switching between earpiece & speaker"
+                )
                 if (::call.isInitialized) {
                     if (routeAudioToSpeaker) {
                         AudioRouteUtils.routeAudioToSpeaker(call)

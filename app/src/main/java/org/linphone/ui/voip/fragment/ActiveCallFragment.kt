@@ -30,6 +30,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.core.tools.Log
 import org.linphone.databinding.VoipActiveCallFragmentBinding
 import org.linphone.ui.voip.VoipActivity
 import org.linphone.ui.voip.model.ZrtpSasConfirmationDialogModel
@@ -41,6 +42,10 @@ import org.linphone.utils.Event
 
 @UiThread
 class ActiveCallFragment : GenericCallFragment() {
+    companion object {
+        private const val TAG = "[Active Call Fragment]"
+    }
+
     private lateinit var binding: VoipActiveCallFragmentBinding
 
     private lateinit var callViewModel: CurrentCallViewModel
@@ -91,11 +96,15 @@ class ActiveCallFragment : GenericCallFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = callViewModel
 
+        val standardBottomSheetBehavior = BottomSheetBehavior.from(binding.bottomBar.root)
+        standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+
         sharedViewModel = requireActivity().run {
             ViewModelProvider(this)[SharedCallViewModel::class.java]
         }
 
         callViewModel.fullScreenMode.observe(viewLifecycleOwner) { hide ->
+            Log.i("$TAG Switching full screen mode to ${if (hide) "ON" else "OFF"}")
             sharedViewModel.toggleFullScreenEvent.value = Event(hide)
         }
 
@@ -143,7 +152,6 @@ class ActiveCallFragment : GenericCallFragment() {
             binding.chronometer.start()
         }
 
-        val standardBottomSheetBehavior = BottomSheetBehavior.from(binding.bottomBar.root)
         callViewModel.toggleExtraActionsBottomSheetEvent.observe(viewLifecycleOwner) {
             it.consume {
                 val state = standardBottomSheetBehavior.state
@@ -158,7 +166,7 @@ class ActiveCallFragment : GenericCallFragment() {
         standardBottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
-                    BottomSheetBehavior.STATE_COLLAPSED -> {
+                    BottomSheetBehavior.STATE_COLLAPSED, BottomSheetBehavior.STATE_HIDDEN -> {
                         callViewModel.isActionsMenuExpanded.value = false
                     }
                     BottomSheetBehavior.STATE_EXPANDED -> {

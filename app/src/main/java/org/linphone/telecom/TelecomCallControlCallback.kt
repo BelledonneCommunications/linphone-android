@@ -101,6 +101,16 @@ class TelecomCallControlCallback constructor(
 
         callControl.availableEndpoints.onEach { list ->
             Log.i("$TAG New available audio endpoints list")
+            if (availableEndpoints.size != list.size) {
+                Log.i(
+                    "$TAG List size of available audio endpoints has changed, reload sound devices in SDK"
+                )
+                coreContext.postOnCoreThread { core ->
+                    core.reloadSoundDevices()
+                    Log.i("$TAG Sound devices reloaded")
+                }
+            }
+
             availableEndpoints = list
             for (endpoint in list) {
                 Log.i("$TAG Available audio endpoint [${endpoint.name}]")

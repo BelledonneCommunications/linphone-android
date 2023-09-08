@@ -183,6 +183,7 @@
 
         <include
             android:id="@+id/bottom_bar"
+            android:visibility="@{viewModel.fullScreenMode ? View.GONE : View.VISIBLE}"
             layout="@layout/voip_call_extra_actions"
             bind:viewModel="@{viewModel}"/>
 
