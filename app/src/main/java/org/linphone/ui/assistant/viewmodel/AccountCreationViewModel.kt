@@ -33,14 +33,17 @@ import kotlinx.coroutines.withContext
 import org.json.JSONException
 import org.json.JSONObject
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.AccountCreator
 import org.linphone.core.AccountCreatorListenerStub
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
+import org.linphone.core.DialPlan
 import org.linphone.core.tools.Log
+import org.linphone.ui.assistant.fragment.CountryPickerFragment
 import org.linphone.utils.Event
 
-class AccountCreationViewModel @UiThread constructor() : ViewModel() {
+class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPickerFragment.CountryPickedListener {
     companion object {
         private const val TAG = "[Account Creation ViewModel]"
     }
@@ -239,6 +242,11 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
+    override fun onCountryClicked(dialPlan: DialPlan) {
+        internationalPrefix.value = "+${dialPlan.countryCallingCode}"
+    }
+
+    @UiThread
     override fun onCleared() {
         coreContext.postOnCoreThread { core ->
             if (::accountCreator.isInitialized) {
@@ -318,10 +326,11 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel() {
     private fun checkUsername() {
         usernameError.postValue("")
         accountCreator.username = username.value.orEmpty().trim()
+        accountCreator.domain = corePreferences.defaultDomain
 
         operationInProgress.postValue(true)
         val status = accountCreator.isAccountExist
-        Log.i("$TAG isAccountExist returned $status")
+        Log.i("$TAG isAccountExist for username [${accountCreator.username}] returned $status")
         if (status != AccountCreator.Status.RequestOk) {
             Log.e("$TAG Can't check if account already exists [$status]")
             operationInProgress.postValue(false)

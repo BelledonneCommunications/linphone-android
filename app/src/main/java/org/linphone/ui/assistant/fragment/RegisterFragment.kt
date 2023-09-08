@@ -79,7 +79,9 @@ class RegisterFragment : Fragment() {
         }
 
         binding.setShowCountryPickerClickListener {
-            // TODO FIXME
+            val countryPickerFragment = CountryPickerFragment()
+            countryPickerFragment.listener = viewModel
+            countryPickerFragment.show(childFragmentManager, "CountryPicker")
         }
 
         binding.setOpenSubscribeWebPageClickListener {
