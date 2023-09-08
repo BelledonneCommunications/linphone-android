@@ -219,6 +219,8 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
     }
 
     init {
+        internationalPrefix.value = "+1"
+
         coreContext.postOnCoreThread { core ->
             accountCreator = core.createAccountCreator(core.accountCreatorUrl)
             accountCreator.addListener(accountCreatorListener)
