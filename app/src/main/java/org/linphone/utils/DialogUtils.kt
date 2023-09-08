@@ -187,7 +187,7 @@ class DialogUtils {
             val d: Drawable = ColorDrawable(
                 ContextCompat.getColor(dialog.context, R.color.dialog_background)
             )
-            d.alpha = 166
+            // d.alpha = 166
             dialog.window
                 ?.setLayout(
                     WindowManager.LayoutParams.MATCH_PARENT,

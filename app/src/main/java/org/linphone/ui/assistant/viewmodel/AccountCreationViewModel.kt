@@ -220,6 +220,7 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
 
     init {
         internationalPrefix.value = "+1"
+        operationInProgress.value = false
 
         coreContext.postOnCoreThread { core ->
             accountCreator = core.createAccountCreator(core.accountCreatorUrl)
@@ -292,6 +293,8 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
 
     @UiThread
     fun requestToken() {
+        operationInProgress.value = true
+
         coreContext.postOnCoreThread {
             if (accountCreator.token == null) {
                 Log.i("$TAG We don't have a creation token, let's request one")
@@ -316,6 +319,7 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
     @UiThread
     fun validateCode() {
         operationInProgress.value = true
+
         val code = "${smsCodeFirstDigit.value}${smsCodeSecondDigit.value}${smsCodeThirdDigit.value}${smsCodeLastDigit.value}"
         Log.i("$TAG Activating account using code [$code]")
         accountCreator.activationCode = code
@@ -332,11 +336,12 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
 
     @WorkerThread
     private fun checkUsername() {
+        operationInProgress.postValue(true)
+
         usernameError.postValue("")
         accountCreator.username = username.value.orEmpty().trim()
         accountCreator.domain = corePreferences.defaultDomain
 
-        operationInProgress.postValue(true)
         val status = accountCreator.isAccountExist
         Log.i("$TAG isAccountExist for username [${accountCreator.username}] returned $status")
         if (status != AccountCreator.Status.RequestOk) {
@@ -360,6 +365,7 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
     @WorkerThread
     private fun createAccount() {
         operationInProgress.postValue(true)
+
         accountCreator.password = password.value.orEmpty().trim()
         val status = accountCreator.createAccount()
 
@@ -382,6 +388,8 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
             onFlexiApiTokenRequestError()
             return
         }
+
+        operationInProgress.postValue(true)
 
         val pushConfig = coreContext.core.pushNotificationConfig
         if (pushConfig != null) {

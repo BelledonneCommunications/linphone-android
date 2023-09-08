@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="visibility"
+            type="Boolean" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="@{visibility ? View.VISIBLE : View.GONE}"
+        android:background="@color/dialog_background">
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            app:indicatorColor="@color/primary_color"
+            android:indeterminate="true" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_800"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Operation in progress, please wait"
+            android:textColor="@color/primary_color"
+            android:textSize="18sp"
+            android:layout_below="@id/progress"
+            android:layout_centerHorizontal="true"/>
+
+    </RelativeLayout>
+
+</layout>
