@@ -40,11 +40,11 @@ import org.linphone.core.tools.Log
 
 class LinphoneUtils {
     companion object {
-        private const val TAG = "[App Utils]"
+        private const val TAG = "[Linphone Utils]"
 
         @WorkerThread
         fun getDefaultAccount(): Account? {
-            return coreContext.core.defaultAccount ?: coreContext.core.accountList.first()
+            return coreContext.core.defaultAccount ?: coreContext.core.accountList.firstOrNull()
         }
 
         @AnyThread

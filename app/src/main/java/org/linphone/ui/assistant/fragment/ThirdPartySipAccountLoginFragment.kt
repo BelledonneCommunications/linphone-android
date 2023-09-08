@@ -121,7 +121,9 @@ class ThirdPartySipAccountLoginFragment : Fragment() {
 
         coreContext.postOnCoreThread {
             val prefix = PhoneNumberUtils.getDeviceInternationalPrefix(requireContext())
-            viewModel.internationalPrefix.postValue(prefix)
+            if (!prefix.isNullOrEmpty()) {
+                viewModel.internationalPrefix.postValue(prefix)
+            }
         }
     }
 
