@@ -291,7 +291,13 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
     @UiThread
     fun requestToken() {
         coreContext.postOnCoreThread {
-            requestFlexiApiToken()
+            if (accountCreator.token == null) {
+                Log.i("$TAG We don't have a creation token, let's request one")
+                requestFlexiApiToken()
+            } else {
+                Log.i("$TAG We've already have a token [${accountCreator.token}], continuing")
+                checkUsername()
+            }
         }
     }
 
@@ -359,6 +365,9 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
         if (status != AccountCreator.Status.RequestOk) {
             Log.e("$TAG Can't create account [$status]")
             operationInProgress.postValue(false)
+        } else {
+            Log.i("$TAG createAccount consumed our token, setting it to null")
+            accountCreator.token = null
         }
     }
 
