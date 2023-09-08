@@ -86,6 +86,10 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     val isActionsMenuExpanded = MutableLiveData<Boolean>()
 
+    val toggleExtraActionsBottomSheetEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     private lateinit var call: Call
 
     private val callListener = object : CallListenerStub() {
@@ -302,7 +306,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     @UiThread
     fun toggleExpandActionsMenu() {
-        isActionsMenuExpanded.value = isActionsMenuExpanded.value == false
+        toggleExtraActionsBottomSheetEvent.value = Event(true)
     }
 
     @WorkerThread

@@ -143,14 +143,33 @@ class ActiveCallFragment : GenericCallFragment() {
             binding.chronometer.start()
         }
 
-        callViewModel.isActionsMenuExpanded.observe(viewLifecycleOwner) { expanded ->
-            val standardBottomSheetBehavior = BottomSheetBehavior.from(binding.bottomBar.root)
-            if (expanded) {
-                standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-            } else {
-                standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        val standardBottomSheetBehavior = BottomSheetBehavior.from(binding.bottomBar.root)
+        callViewModel.toggleExtraActionsBottomSheetEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                val state = standardBottomSheetBehavior.state
+                if (state == BottomSheetBehavior.STATE_COLLAPSED) {
+                    standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                } else if (state == BottomSheetBehavior.STATE_EXPANDED) {
+                    standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                }
             }
         }
+
+        standardBottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+                        callViewModel.isActionsMenuExpanded.value = false
+                    }
+                    BottomSheetBehavior.STATE_EXPANDED -> {
+                        callViewModel.isActionsMenuExpanded.value = true
+                    }
+                    else -> {}
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+        })
     }
 
     override fun onResume() {
