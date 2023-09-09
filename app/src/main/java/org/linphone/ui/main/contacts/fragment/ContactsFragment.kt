@@ -44,6 +44,10 @@ class ContactsFragment : GenericFragment() {
 
     private lateinit var binding: ContactsFragmentBinding
 
+    // Otherwise when going into NewContactFragment and going back,
+    // ContactFragment will resume and ask to open the pane
+    private var preventSlidingPaneOpening = false
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -64,6 +68,7 @@ class ContactsFragment : GenericFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         postponeEnterTransition()
+        preventSlidingPaneOpening = true
 
         binding.lifecycleOwner = viewLifecycleOwner
 
@@ -106,8 +111,14 @@ class ContactsFragment : GenericFragment() {
             viewLifecycleOwner
         ) {
             it.consume {
-                Log.i("$TAG Opening sliding pane")
-                binding.slidingPaneLayout.openPane()
+                if (!preventSlidingPaneOpening) {
+                    Log.i("$TAG Opening sliding pane")
+                    binding.slidingPaneLayout.openPane()
+                } else {
+                    Log.i(
+                        "$TAG We were asked to open the sliding pane but we aren't resumed yet, so not doing it"
+                    )
+                }
             }
         }
 
@@ -161,6 +172,7 @@ class ContactsFragment : GenericFragment() {
 
     override fun onResume() {
         super.onResume()
+        preventSlidingPaneOpening = false
         sharedViewModel.currentlyDisplayedFragment.value = R.id.contactsFragment
     }
 }
