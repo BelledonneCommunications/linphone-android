@@ -44,10 +44,6 @@ class CallsFragment : GenericFragment() {
 
     private lateinit var binding: CallsFragmentBinding
 
-    // Otherwise when going into StartCallFragment and going back,
-    // CallFragment will resume and ask to open the pane
-    private var preventSlidingPaneOpening = false
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -68,7 +64,6 @@ class CallsFragment : GenericFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         postponeEnterTransition()
-        preventSlidingPaneOpening = true
 
         binding.lifecycleOwner = viewLifecycleOwner
 
@@ -104,14 +99,8 @@ class CallsFragment : GenericFragment() {
             viewLifecycleOwner
         ) {
             it.consume {
-                if (!preventSlidingPaneOpening) {
-                    Log.i("$TAG Opening sliding pane")
-                    binding.slidingPaneLayout.openPane()
-                } else {
-                    Log.i(
-                        "$TAG We were asked to open the sliding pane but we aren't resumed yet, so not doing it"
-                    )
-                }
+                Log.i("$TAG Opening sliding pane")
+                binding.slidingPaneLayout.openPane()
             }
         }
 
@@ -163,7 +152,6 @@ class CallsFragment : GenericFragment() {
 
     override fun onResume() {
         super.onResume()
-        preventSlidingPaneOpening = false
         sharedViewModel.currentlyDisplayedFragment.value = R.id.callsFragment
     }
 }
