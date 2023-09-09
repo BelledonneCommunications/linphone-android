@@ -38,6 +38,10 @@ import org.linphone.utils.SlidingPaneBackPressedCallback
 
 @UiThread
 class CallsFragment : GenericFragment() {
+    companion object {
+        private const val TAG = "[Calls Fragment]"
+    }
+
     private lateinit var binding: CallsFragmentBinding
 
     override fun onCreateView(
@@ -65,6 +69,7 @@ class CallsFragment : GenericFragment() {
 
         sharedViewModel.callsListReadyToBeDisplayedEvent.observe(viewLifecycleOwner) {
             it.consume {
+                Log.i("$TAG Calls list is ready, starting postponed enter transition")
                 startPostponedEnterTransition()
             }
         }
@@ -85,6 +90,7 @@ class CallsFragment : GenericFragment() {
             viewLifecycleOwner
         ) {
             it.consume {
+                Log.i("$TAG Closing sliding pane")
                 binding.slidingPaneLayout.closePane()
             }
         }
@@ -93,12 +99,14 @@ class CallsFragment : GenericFragment() {
             viewLifecycleOwner
         ) {
             it.consume {
+                Log.i("$TAG Opening sliding pane")
                 binding.slidingPaneLayout.openPane()
             }
         }
 
         sharedViewModel.showStartCallEvent.observe(viewLifecycleOwner) {
             it.consume {
+                Log.i("$TAG Navigating to start call fragment")
                 findNavController().navigate(R.id.action_global_startCallFragment)
             }
         }
@@ -107,7 +115,7 @@ class CallsFragment : GenericFragment() {
             viewLifecycleOwner
         ) {
             it.consume { callId ->
-                Log.i("[Calls Fragment] Displaying call log with call ID [$callId]")
+                Log.i("$TAG Displaying call log with call ID [$callId]")
                 val navController = binding.callsNavContainer.findNavController()
                 val action = CallFragmentDirections.actionGlobalCallFragment(
                     callId

@@ -130,6 +130,7 @@ class CallsListFragment : GenericFragment() {
 
         adapter.callLogClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
+                Log.i("$TAG Show details for call log with ID [${model.id}]")
                 sharedViewModel.showCallLogEvent.value = Event(model.id ?: "")
             }
         }
@@ -147,6 +148,7 @@ class CallsListFragment : GenericFragment() {
         binding.callsList.layoutManager = layoutManager
 
         listViewModel.callLogs.observe(viewLifecycleOwner) {
+            Log.i("$TAG Call logs ready with [${it.size}] items")
             adapter.submitList(it)
             binding.callsList.scrollToPosition(0)
 
@@ -158,6 +160,7 @@ class CallsListFragment : GenericFragment() {
 
         listViewModel.historyDeletedEvent.observe(viewLifecycleOwner) {
             it.consume {
+                Log.w("$TAG Deleting all call history")
                 // TODO FIXME: show translated string
                 (requireActivity() as MainActivity).showGreenToast(
                     "Historique supprimé",
