@@ -31,7 +31,6 @@ import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
 import kotlinx.coroutines.launch
@@ -87,10 +86,6 @@ class EditContactFragment : GenericFragment() {
     ): View {
         binding = ContactNewOrEditFragmentBinding.inflate(layoutInflater)
         return binding.root
-    }
-
-    override fun goBack() {
-        findNavController().popBackStack()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

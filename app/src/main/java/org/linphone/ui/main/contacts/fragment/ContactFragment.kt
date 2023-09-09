@@ -71,10 +71,10 @@ class ContactFragment : GenericFragment() {
         return binding.root
     }
 
-    override fun goBack() {
+    override fun goBack(): Boolean {
         sharedViewModel.closeSlidingPaneEvent.value = Event(true)
         // If not done, when going back to ContactsFragment this fragment will be created again
-        findNavController().popBackStack()
+        return findNavController().popBackStack()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
