@@ -209,13 +209,21 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/contacts_list"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:visibility="@{viewModel.emptyContactsList ? View.GONE : View.VISIBLE}"
+                app:layout_constrainedHeight="true"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/all_contacts_label"
                 app:layout_constraintBottom_toTopOf="@id/suggestions_label" />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/suggestions_top_barrier"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="contacts_list, all_contacts_label, group_call_icon" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/suggestions_label"
@@ -231,21 +239,27 @@
                 android:visibility="@{viewModel.suggestionsList.size() == 0 ? View.GONE : View.VISIBLE}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/contacts_list"
+                app:layout_constraintTop_toBottomOf="@id/suggestions_top_barrier"
                 app:layout_constraintBottom_toTopOf="@id/suggestions_list"/>
 
-            <LinearLayout
+            <ScrollView
                 android:id="@+id/suggestions_list"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                entries="@{viewModel.suggestionsList}"
-                layout="@{@layout/call_suggestion_list_cell}"
                 app:layout_constrainedHeight="true"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/suggestions_label"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    entries="@{viewModel.suggestionsList}"
+                    layout="@{@layout/call_suggestion_list_cell}" />
+
+            </ScrollView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
