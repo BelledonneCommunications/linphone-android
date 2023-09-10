@@ -20,6 +20,8 @@
 package org.linphone.ui.voip
 
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.annotation.UiThread
@@ -36,6 +38,9 @@ import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication
 import org.linphone.R
 import org.linphone.core.tools.Log
+import org.linphone.databinding.ToastBlueBinding
+import org.linphone.databinding.ToastGreenBinding
+import org.linphone.databinding.ToastRedBinding
 import org.linphone.databinding.VoipActivityBinding
 import org.linphone.ui.voip.fragment.ActiveCallFragmentDirections
 import org.linphone.ui.voip.fragment.AudioDevicesMenuDialogFragment
@@ -154,32 +159,63 @@ class VoipActivity : AppCompatActivity() {
     }
 
     fun showBlueToast(message: String, @DrawableRes icon: Int) {
-        binding.blueToast.message = message
-        binding.blueToast.icon = icon
+        val blueToast: ToastBlueBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(this),
+            R.layout.toast_blue,
+            binding.toastsArea,
+            false
+        )
+        blueToast.message = message
+        blueToast.icon = icon
+        blueToast.root.visibility = View.GONE
+        binding.toastsArea.addView(blueToast.root)
 
-        val target = binding.blueToast.root
-        target.slideInToastFromTopForDuration(binding.root as ViewGroup, lifecycleScope)
+        blueToast.root.slideInToastFromTopForDuration(
+            binding.toastsArea as ViewGroup,
+            lifecycleScope
+        )
     }
 
     private fun showRedToast(message: String, @DrawableRes icon: Int) {
-        binding.redToast.message = message
-        binding.redToast.icon = icon
+        val redToast: ToastRedBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(this),
+            R.layout.toast_red,
+            binding.toastsArea,
+            false
+        )
+        redToast.message = message
+        redToast.icon = icon
+        redToast.root.visibility = View.GONE
+        binding.toastsArea.addView(redToast.root)
 
-        val target = binding.redToast.root
-        target.slideInToastFromTop(binding.root as ViewGroup, true)
+        redToast.root.slideInToastFromTop(
+            binding.toastsArea as ViewGroup,
+            true
+        )
     }
 
     private fun hideRedToast() {
-        val target = binding.redToast.root
-        target.slideInToastFromTop(binding.root as ViewGroup, false)
+        // TODO: improve
+        binding.toastsArea.removeAllViews()
     }
 
     private fun showGreenToast(message: String, @DrawableRes icon: Int) {
-        binding.greenToast.message = message
-        binding.greenToast.icon = icon
+        val greenToast: ToastGreenBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(this),
+            R.layout.toast_green,
+            binding.toastsArea,
+            false
+        )
+        greenToast.message = message
+        greenToast.icon = icon
+        greenToast.root.visibility = View.GONE
+        binding.toastsArea.addView(greenToast.root)
 
-        val target = binding.greenToast.root
-        target.slideInToastFromTopForDuration(binding.root as ViewGroup, lifecycleScope, 2000)
+        greenToast.root.slideInToastFromTopForDuration(
+            binding.toastsArea as ViewGroup,
+            lifecycleScope,
+            2000
+        )
     }
 
     private fun hideUI(hide: Boolean) {

@@ -91,6 +91,7 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
         @WorkerThread
         override fun onNewAlertTriggered(core: Core, alert: Alert) {
             val remote = alert.call.remoteAddress.asStringUriOnly()
+            // TODO: differentiate WiFi from Cellular
             Log.w("$TAG Alert of type [${alert.type}] triggered for call from [$remote]")
             alert.addListener(alertListener)
 

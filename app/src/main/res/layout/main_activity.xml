@@ -31,12 +31,11 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
-            <include
-                android:id="@+id/green_toast"
-                android:visibility="gone"
-                layout="@layout/toast_green"
+            <LinearLayout
+                android:id="@+id/toasts_area"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:layout_marginTop="@dimen/toast_top_margin"
                 android:layout_marginStart="15dp"
                 android:layout_marginEnd="15dp"

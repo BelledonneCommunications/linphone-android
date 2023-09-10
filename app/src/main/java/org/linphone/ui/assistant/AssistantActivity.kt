@@ -20,6 +20,8 @@
 package org.linphone.ui.assistant
 
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.annotation.UiThread
@@ -30,6 +32,8 @@ import androidx.lifecycle.lifecycleScope
 import org.linphone.LinphoneApplication
 import org.linphone.R
 import org.linphone.databinding.AssistantActivityBinding
+import org.linphone.databinding.ToastGreenBinding
+import org.linphone.databinding.ToastRedBinding
 import org.linphone.utils.slideInToastFromTopForDuration
 
 @UiThread
@@ -49,18 +53,38 @@ class AssistantActivity : AppCompatActivity() {
     }
 
     fun showGreenToast(message: String, @DrawableRes icon: Int) {
-        binding.greenToast.message = message
-        binding.greenToast.icon = icon
+        val greenToast: ToastGreenBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(this),
+            R.layout.toast_green,
+            binding.toastsArea,
+            false
+        )
+        greenToast.message = message
+        greenToast.icon = icon
+        greenToast.root.visibility = View.GONE
+        binding.toastsArea.addView(greenToast.root)
 
-        val target = binding.greenToast.root
-        target.slideInToastFromTopForDuration(binding.root as ViewGroup, lifecycleScope)
+        greenToast.root.slideInToastFromTopForDuration(
+            binding.toastsArea as ViewGroup,
+            lifecycleScope
+        )
     }
 
     fun showRedToast(message: String, @DrawableRes icon: Int) {
-        binding.redToast.message = message
-        binding.redToast.icon = icon
+        val redToast: ToastRedBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(this),
+            R.layout.toast_red,
+            binding.toastsArea,
+            false
+        )
+        redToast.message = message
+        redToast.icon = icon
+        redToast.root.visibility = View.GONE
+        binding.toastsArea.addView(redToast.root)
 
-        val target = binding.redToast.root
-        target.slideInToastFromTopForDuration(binding.root as ViewGroup, lifecycleScope)
+        redToast.root.slideInToastFromTopForDuration(
+            binding.toastsArea as ViewGroup,
+            lifecycleScope
+        )
     }
 }

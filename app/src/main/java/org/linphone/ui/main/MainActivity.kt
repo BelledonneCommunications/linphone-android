@@ -24,6 +24,8 @@ import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.annotation.UiThread
@@ -36,6 +38,7 @@ import androidx.navigation.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.databinding.MainActivityBinding
+import org.linphone.databinding.ToastGreenBinding
 import org.linphone.utils.slideInToastFromTopForDuration
 
 @UiThread
@@ -136,11 +139,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun showGreenToast(message: String, @DrawableRes icon: Int) {
-        binding.greenToast.message = message
-        binding.greenToast.icon = icon
+        val greenToast: ToastGreenBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(this),
+            R.layout.toast_green,
+            binding.toastsArea,
+            false
+        )
+        greenToast.message = message
+        greenToast.icon = icon
+        greenToast.root.visibility = View.GONE
+        binding.toastsArea.addView(greenToast.root)
 
-        val target = binding.greenToast.root
-        target.slideInToastFromTopForDuration(binding.root as ViewGroup, lifecycleScope)
+        greenToast.root.slideInToastFromTopForDuration(
+            binding.toastsArea as ViewGroup,
+            lifecycleScope
+        )
     }
 
     private fun loadContacts() {
