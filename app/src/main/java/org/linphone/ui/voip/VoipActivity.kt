@@ -19,6 +19,8 @@
  */
 package org.linphone.ui.voip
 
+import android.app.PictureInPictureParams
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
@@ -103,6 +105,7 @@ class VoipActivity : AppCompatActivity() {
         callViewModel = run {
             ViewModelProvider(this)[CurrentCallViewModel::class.java]
         }
+        binding.callViewModel = callViewModel
 
         callViewModel.showAudioDevicesListEvent.observe(this) {
             it.consume { devices ->
@@ -168,6 +171,43 @@ class VoipActivity : AppCompatActivity() {
         sharedViewModel.toggleFullScreenEvent.observe(this) {
             it.consume { hide ->
                 hideUI(hide)
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val isInPipMode = isInPictureInPictureMode
+        if (::callViewModel.isInitialized) {
+            Log.i("$TAG onResume: is in PiP mode? $isInPipMode")
+            callViewModel.pipMode.value = isInPipMode
+        }
+    }
+
+    override fun onUserLeaveHint() {
+        super.onUserLeaveHint()
+
+        if (::callViewModel.isInitialized && callViewModel.isVideoEnabled.value == true) {
+            Log.i("$TAG User leave hint, entering PiP mode")
+            val supportsPip = packageManager.hasSystemFeature(
+                PackageManager.FEATURE_PICTURE_IN_PICTURE
+            )
+            Log.i("$TAG Is PiP supported: $supportsPip")
+            if (supportsPip) {
+                val params = PictureInPictureParams.Builder()
+                    .setAspectRatio(AppUtils.getPipRatio(this))
+                    .build()
+                try {
+                    if (!enterPictureInPictureMode(params)) {
+                        Log.e("$TAG Failed to enter PiP mode")
+                        callViewModel.pipMode.value = false
+                    } else {
+                        Log.i("$TAG Entered PiP mode")
+                    }
+                } catch (e: Exception) {
+                    Log.e("$TAG Can't build PiP params: $e")
+                }
             }
         }
     }

@@ -19,7 +19,10 @@
  */
 package org.linphone.utils
 
+import android.app.Activity
 import android.content.Context
+import android.util.DisplayMetrics
+import android.util.Rational
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,6 +51,42 @@ class AppUtils {
         @AnyThread
         fun getFormattedString(@StringRes id: Int, args: Any): String {
             return coreContext.context.getString(id, args)
+        }
+
+        @MainThread
+        fun getPipRatio(
+            activity: Activity,
+            forcePortrait: Boolean = false,
+            forceLandscape: Boolean = false
+        ): Rational {
+            val displayMetrics = DisplayMetrics()
+            activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
+            var height = displayMetrics.heightPixels
+            var width = displayMetrics.widthPixels
+
+            val aspectRatio = width / height
+            if (aspectRatio < 1 / 2.39) {
+                height = 2.39.toInt()
+                width = 1
+            } else if (aspectRatio > 2.39) {
+                width = 2.39.toInt()
+                height = 1
+            }
+
+            val ratio = if (width > height) {
+                if (forcePortrait) {
+                    Rational(height, width)
+                } else {
+                    Rational(width, height)
+                }
+            } else {
+                if (forceLandscape) {
+                    Rational(height, width)
+                } else {
+                    Rational(width, height)
+                }
+            }
+            return ratio
         }
 
         @MainThread

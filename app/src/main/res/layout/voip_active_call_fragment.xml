@@ -113,13 +113,19 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
 
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/header_info_visibility"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="@{viewModel.fullScreenMode || viewModel.pipMode ? View.INVISIBLE : View.VISIBLE}"
+                app:constraint_referenced_ids="call_direction_icon, call_direction_label, separator, chronometer" />
+
             <ImageView
                 android:id="@+id/call_direction_icon"
                 android:layout_width="@dimen/icon_size"
                 android:layout_height="@dimen/icon_size"
                 android:layout_marginStart="10dp"
                 android:adjustViewBounds="true"
-                android:visibility="@{viewModel.fullScreenMode ? View.GONE : View.VISIBLE}"
                 android:src="@{viewModel.isOutgoing ? @drawable/outgoing_call : @drawable/incoming_call, default=@drawable/outgoing_call}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/call_direction_label"
@@ -133,7 +139,6 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:visibility="@{viewModel.fullScreenMode ? View.GONE : View.VISIBLE}"
                 android:text="@{viewModel.isOutgoing ? @string/call_outgoing : @string/call_incoming, default=@string/call_outgoing}"
                 android:textColor="@color/white"
                 android:textSize="16sp"
@@ -150,7 +155,6 @@
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:text="@string/vertical_separator"
-                android:visibility="@{viewModel.fullScreenMode ? View.GONE : View.VISIBLE}"
                 app:layout_constraintStart_toEndOf="@id/call_direction_label"
                 app:layout_constraintTop_toTopOf="@id/call_direction_label"
                 app:layout_constraintBottom_toBottomOf="@id/call_direction_label"/>
@@ -163,7 +167,6 @@
                 android:layout_marginStart="5dp"
                 android:textColor="@color/white"
                 android:textSize="16sp"
-                android:visibility="@{viewModel.fullScreenMode ? View.GONE : View.VISIBLE}"
                 app:layout_constraintStart_toEndOf="@id/separator"
                 app:layout_constraintTop_toTopOf="@id/call_direction_label"
                 app:layout_constraintBottom_toBottomOf="@id/call_direction_label"/>
@@ -176,7 +179,7 @@
                 android:padding="5dp"
                 android:layout_marginEnd="10dp"
                 android:src="@drawable/camera_rotate"
-                android:visibility="@{!viewModel.fullScreenMode &amp;&amp; viewModel.isVideoEnabled &amp;&amp; viewModel.showSwitchCamera ? View.VISIBLE : View.GONE}"
+                android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; viewModel.isVideoEnabled &amp;&amp; viewModel.showSwitchCamera ? View.VISIBLE : View.GONE}"
                 app:tint="@color/white"
                 app:layout_constraintTop_toTopOf="@id/call_direction_label"
                 app:layout_constraintBottom_toBottomOf="@id/call_direction_label"
@@ -200,7 +203,7 @@
 
         <include
             android:id="@+id/bottom_bar"
-            android:visibility="@{viewModel.fullScreenMode ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.fullScreenMode || viewModel.pipMode ? View.INVISIBLE : View.VISIBLE}"
             layout="@layout/voip_call_extra_actions"
             bind:viewModel="@{viewModel}"/>
 

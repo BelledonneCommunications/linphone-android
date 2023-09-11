@@ -4,6 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.view.View" />
+        <variable
+            name="callViewModel"
+            type="org.linphone.ui.voip.viewmodel.CurrentCallViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -26,6 +30,7 @@
 
             <LinearLayout
                 android:id="@+id/toasts_area"
+                android:visibility="@{callViewModel.pipMode ? View.INVISIBLE : View.VISIBLE}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
