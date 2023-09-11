@@ -15,9 +15,103 @@
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/in_call_black">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/hinge_top"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/hinge_bottom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="1" />
+
+            <ImageView
+                android:id="@+id/background"
+                android:src="@drawable/shape_round_in_call_gray_background"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginBottom="@dimen/in_call_main_actions_menu_height"
+                app:layout_constraintTop_toBottomOf="@id/call_direction_label"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <io.getstream.avatarview.AvatarView
+                android:id="@+id/avatar"
+                android:layout_width="@dimen/avatar_in_call_size"
+                android:layout_height="@dimen/avatar_in_call_size"
+                android:background="@drawable/shape_avatar_background"
+                contactAvatar="@{viewModel.contact}"
+                app:avatarViewInitialsBackgroundColor="@color/blue_outgoing_message"
+                app:avatarViewInitialsTextColor="@color/gray_9"
+                app:avatarViewInitialsTextSize="36sp"
+                app:avatarViewInitialsTextStyle="bold"
+                app:avatarViewPlaceholder="@drawable/contact_avatar"
+                app:avatarViewShape="circle"
+                app:avatarViewBorderWidth="0dp"
+                app:layout_constraintVertical_chainStyle="packed"
+                app:layout_constraintEnd_toEndOf="@id/background"
+                app:layout_constraintStart_toStartOf="@id/background"
+                app:layout_constraintTop_toBottomOf="@id/call_direction_label"
+                app:layout_constraintBottom_toTopOf="@id/name"/>
+
+            <ImageView
+                android:id="@+id/trust_badge"
+                android:layout_width="@dimen/avatar_presence_badge_in_call_size"
+                android:layout_height="@dimen/avatar_presence_badge_in_call_size"
+                android:src="@drawable/trusted"
+                android:visibility="@{viewModel.contact.showTrust ? View.VISIBLE : View.GONE}"
+                app:layout_constraintStart_toStartOf="@id/avatar"
+                app:layout_constraintBottom_toBottomOf="@id/avatar"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_300"
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="@{viewModel.displayedName, default=`John Doe`}"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                app:layout_constraintTop_toBottomOf="@id/avatar"
+                app:layout_constraintBottom_toTopOf="@id/address"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:id="@+id/address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.displayedAddress, default=`sip:johndoe@sip.linphone.org`}"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                app:layout_constraintTop_toBottomOf="@id/name"
+                app:layout_constraintBottom_toBottomOf="@id/background"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <org.linphone.ui.voip.view.RoundCornersTextureView
+                android:id="@+id/remote_video_surface"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:onClick="@{() -> viewModel.toggleFullScreen()}"
+                android:visibility="@{viewModel.isVideoEnabled ? View.VISIBLE : View.GONE}"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/hinge_bottom"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
 
             <ImageView
                 android:id="@+id/call_direction_icon"
@@ -44,7 +138,7 @@
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 app:layout_constraintStart_toEndOf="@id/call_direction_icon"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toTopOf="@id/hinge_top"
                 app:layout_constraintBottom_toTopOf="@id/background"/>
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -83,87 +177,10 @@
                 android:layout_marginEnd="10dp"
                 android:src="@drawable/camera_rotate"
                 android:visibility="@{!viewModel.fullScreenMode &amp;&amp; viewModel.isVideoEnabled &amp;&amp; viewModel.showSwitchCamera ? View.VISIBLE : View.GONE}"
+                app:tint="@color/white"
                 app:layout_constraintTop_toTopOf="@id/call_direction_label"
                 app:layout_constraintBottom_toBottomOf="@id/call_direction_label"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:tint="@color/white" />
-
-            <ImageView
-                android:id="@+id/background"
-                android:src="@drawable/shape_round_in_call_gray_background"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
-                android:layout_marginBottom="@dimen/in_call_main_actions_menu_height"
-                app:layout_constraintTop_toBottomOf="@id/call_direction_label"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
-
-            <io.getstream.avatarview.AvatarView
-                android:id="@+id/avatar"
-                android:layout_width="@dimen/avatar_in_call_size"
-                android:layout_height="@dimen/avatar_in_call_size"
-                android:background="@drawable/shape_avatar_background"
-                contactAvatar="@{viewModel.contact}"
-                app:avatarViewInitialsBackgroundColor="@color/blue_outgoing_message"
-                app:avatarViewInitialsTextColor="@color/gray_9"
-                app:avatarViewInitialsTextSize="36sp"
-                app:avatarViewInitialsTextStyle="bold"
-                app:avatarViewPlaceholder="@drawable/contact_avatar"
-                app:avatarViewShape="circle"
-                app:avatarViewBorderWidth="0dp"
-                app:layout_constraintEnd_toEndOf="@id/background"
-                app:layout_constraintStart_toStartOf="@id/background"
-                app:layout_constraintTop_toTopOf="@id/background"
-                app:layout_constraintBottom_toBottomOf="@id/background"/>
-
-            <ImageView
-                android:id="@+id/trust_badge"
-                android:layout_width="@dimen/avatar_presence_badge_in_call_size"
-                android:layout_height="@dimen/avatar_presence_badge_in_call_size"
-                android:src="@drawable/trusted"
-                android:visibility="@{viewModel.contact.showTrust ? View.VISIBLE : View.GONE}"
-                app:layout_constraintStart_toStartOf="@id/avatar"
-                app:layout_constraintBottom_toBottomOf="@id/avatar"/>
-
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/default_text_style_300"
-                android:id="@+id/name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:text="@{viewModel.displayedName, default=`John Doe`}"
-                android:textColor="@color/white"
-                android:textSize="22sp"
-                app:layout_constraintTop_toBottomOf="@id/avatar"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/default_text_style"
-                android:id="@+id/address"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{viewModel.displayedAddress, default=`sip:johndoe@sip.linphone.org`}"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                app:layout_constraintTop_toBottomOf="@id/name"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-            <org.linphone.ui.voip.view.RoundCornersTextureView
-                android:id="@+id/remote_video_surface"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginBottom="@{viewModel.fullScreenMode ? @dimen/zero : @dimen/in_call_main_actions_menu_height, default=@dimen/in_call_main_actions_menu_height}"
-                android:onClick="@{() -> viewModel.toggleFullScreen()}"
-                android:visibility="@{viewModel.isVideoEnabled ? View.VISIBLE : View.GONE, default=gone}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/background" />
 
             <org.linphone.ui.voip.view.RoundCornersTextureView
                 android:id="@+id/local_preview_video_surface"

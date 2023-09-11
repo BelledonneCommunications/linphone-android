@@ -22,8 +22,13 @@ package org.linphone.ui.voip.viewmodel
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.window.layout.FoldingFeature
 import org.linphone.utils.Event
 
 class SharedCallViewModel @UiThread constructor() : ViewModel() {
     val toggleFullScreenEvent = MutableLiveData<Event<Boolean>>()
+
+    val foldingState = MutableLiveData<FoldingFeature>()
+
+    val folded = MutableLiveData<Boolean>()
 }

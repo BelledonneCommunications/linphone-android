@@ -26,7 +26,9 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.lifecycle.ViewModelProvider
+import androidx.window.layout.FoldingFeature
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
@@ -96,11 +98,15 @@ class ActiveCallFragment : GenericCallFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = callViewModel
 
-        val standardBottomSheetBehavior = BottomSheetBehavior.from(binding.bottomBar.root)
-        standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomBar.root)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
         sharedViewModel = requireActivity().run {
             ViewModelProvider(this)[SharedCallViewModel::class.java]
+        }
+
+        sharedViewModel.foldingState.observe(viewLifecycleOwner) { feature ->
+            updateHingeRelatedConstraints(feature)
         }
 
         callViewModel.fullScreenMode.observe(viewLifecycleOwner) { hide ->
@@ -154,16 +160,16 @@ class ActiveCallFragment : GenericCallFragment() {
 
         callViewModel.toggleExtraActionsBottomSheetEvent.observe(viewLifecycleOwner) {
             it.consume {
-                val state = standardBottomSheetBehavior.state
+                val state = bottomSheetBehavior.state
                 if (state == BottomSheetBehavior.STATE_COLLAPSED) {
-                    standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
                 } else if (state == BottomSheetBehavior.STATE_EXPANDED) {
-                    standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                 }
             }
         }
 
-        standardBottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
                     BottomSheetBehavior.STATE_COLLAPSED, BottomSheetBehavior.STATE_HIDDEN -> {
@@ -193,5 +199,25 @@ class ActiveCallFragment : GenericCallFragment() {
     override fun onPause() {
         super.onPause()
         binding.localPreviewVideoSurface.setOnTouchListener(null)
+    }
+
+    private fun updateHingeRelatedConstraints(feature: FoldingFeature) {
+        Log.i("$TAG Updating constraint layout hinges: $feature")
+
+        val constraintLayout = binding.constraintLayout
+        val set = ConstraintSet()
+        set.clone(constraintLayout)
+
+        if (feature.state == FoldingFeature.State.HALF_OPENED) {
+            set.setGuidelinePercent(R.id.hinge_top, 0.5f)
+            set.setGuidelinePercent(R.id.hinge_bottom, 0.5f)
+            sharedViewModel.folded.value = true
+        } else {
+            set.setGuidelinePercent(R.id.hinge_top, 0f)
+            set.setGuidelinePercent(R.id.hinge_bottom, 1f)
+            sharedViewModel.folded.value = false
+        }
+
+        set.applyTo(constraintLayout)
     }
 }

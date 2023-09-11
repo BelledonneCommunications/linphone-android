@@ -9,6 +9,7 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:keepScreenOn="true"
         tools:context=".ui.voip.VoipActivity">
 
         <androidx.constraintlayout.widget.ConstraintLayout

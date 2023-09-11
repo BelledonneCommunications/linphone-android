@@ -33,6 +33,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import androidx.window.layout.FoldingFeature
+import androidx.window.layout.WindowInfoTracker
+import androidx.window.layout.WindowLayoutInfo
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication
 import org.linphone.R
 import org.linphone.core.tools.Log
@@ -77,6 +82,15 @@ class VoipActivity : AppCompatActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.voip_activity)
         binding.lifecycleOwner = this
+
+        lifecycleScope.launch(Dispatchers.Main) {
+            WindowInfoTracker
+                .getOrCreate(this@VoipActivity)
+                .windowLayoutInfo(this@VoipActivity)
+                .collect { newLayoutInfo ->
+                    updateCurrentLayout(newLayoutInfo)
+                }
+        }
 
         sharedViewModel = run {
             ViewModelProvider(this)[SharedCallViewModel::class.java]
@@ -154,6 +168,20 @@ class VoipActivity : AppCompatActivity() {
         sharedViewModel.toggleFullScreenEvent.observe(this) {
             it.consume { hide ->
                 hideUI(hide)
+            }
+        }
+    }
+
+    private fun updateCurrentLayout(newLayoutInfo: WindowLayoutInfo) {
+        if (newLayoutInfo.displayFeatures.isNotEmpty()) {
+            for (feature in newLayoutInfo.displayFeatures) {
+                val foldingFeature = feature as? FoldingFeature
+                if (foldingFeature != null) {
+                    Log.i(
+                        "$TAG Folding feature state changed: ${foldingFeature.state}, orientation is ${foldingFeature.orientation}"
+                    )
+                    sharedViewModel.foldingState.value = foldingFeature
+                }
             }
         }
     }
