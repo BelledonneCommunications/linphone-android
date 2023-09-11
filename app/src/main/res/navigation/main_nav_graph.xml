@@ -6,66 +6,10 @@
     app:startDestination="@id/callsFragment">
 
     <fragment
-        android:id="@+id/conversationsFragment"
-        android:name="org.linphone.ui.main.conversations.ConversationsFragment"
-        android:label="ConversationsFragment"
-        tools:layout="@layout/conversations_fragment">
-        <action
-            android:id="@+id/action_conversationsFragment_to_newConversationFragment"
-            app:destination="@id/newConversationFragment"
-            app:enterAnim="@anim/slide_in"
-            app:popExitAnim="@anim/slide_out"
-            app:launchSingleTop="true" />
-        <action
-            android:id="@+id/action_conversationsFragment_to_conversationFragment"
-            app:destination="@id/conversationFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:popExitAnim="@anim/slide_out_right"  />
-        <action
-            android:id="@+id/action_conversationsFragment_to_contactsFragment"
-            app:destination="@id/contactsFragment"
-            app:popUpTo="@id/contactsFragment"
-            app:popUpToInclusive="true"
-            app:launchSingleTop="true" />
-        <action
-            android:id="@+id/action_conversationsFragment_to_callsFragment"
-            app:destination="@id/callsFragment" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/newConversationFragment"
-        android:name="org.linphone.ui.main.conversations.NewConversationFragment"
-        android:label="NewConversationFragment"
-        tools:layout="@layout/conversation_start_fragment" >
-        <action
-            android:id="@+id/action_newConversationFragment_to_conversationFragment"
-            app:destination="@id/conversationFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:popExitAnim="@anim/slide_out_right"
-            app:popUpTo="@id/conversationsFragment" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/conversationFragment"
-        android:name="org.linphone.ui.main.conversations.ConversationFragment"
-        android:label="ConversationFragment"
-        tools:layout="@layout/conversation_fragment" >
-        <argument
-            android:name="localSipUri"
-            app:argType="string" />
-        <argument
-            android:name="remoteSipUri"
-            app:argType="string" />
-    </fragment>
-
-    <fragment
         android:id="@+id/contactsFragment"
         android:name="org.linphone.ui.main.contacts.fragment.ContactsFragment"
         android:label="ContactsFragment"
         tools:layout="@layout/contacts_fragment">
-        <action
-            android:id="@+id/action_contactsFragment_to_conversationsFragment"
-            app:destination="@id/conversationsFragment" />
         <action
             android:id="@+id/action_contactsFragment_to_callsFragment"
             app:destination="@id/callsFragment"
@@ -85,9 +29,6 @@
             app:launchSingleTop="true"
             app:popUpTo="@id/callsFragment"
             app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_callsFragment_to_conversationsFragment"
-            app:destination="@id/conversationsFragment" />
     </fragment>
 
     <fragment

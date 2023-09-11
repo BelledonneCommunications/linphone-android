@@ -134,11 +134,11 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
 
                 val organization = friend.organization
                 if (!organization.isNullOrEmpty()) {
-                    company.postValue(organization!!)
+                    company.postValue(organization)
                 }
                 val jobTitle = friend.jobTitle
                 if (!jobTitle.isNullOrEmpty()) {
-                    title.postValue(jobTitle!!)
+                    title.postValue(jobTitle)
                 }
 
                 val addressesAndNumbers = friend.getListOfSipAddressesAndPhoneNumbers(listener)
@@ -208,7 +208,7 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                 val vCard = friend.vcard?.asVcard4String()
                 if (!vCard.isNullOrEmpty()) {
                     Log.i("$TAG Friend has been successfully dumped as vCard string")
-                    val fileName = friend.name.orEmpty().replace(" ", "_").toLowerCase(
+                    val fileName = friend.name.orEmpty().replace(" ", "_").lowercase(
                         Locale.getDefault()
                     )
                     val file = FileUtils.getFileStorageCacheDir(

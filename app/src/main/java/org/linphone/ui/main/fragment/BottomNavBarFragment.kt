@@ -83,9 +83,7 @@ class BottomNavBarFragment : Fragment() {
         }
 
         binding.setOnConversationsClicked {
-            if (sharedViewModel.currentlyDisplayedFragment.value != R.id.conversationsFragment) {
-                sharedViewModel.navigateToConversationsEvent.value = Event(true)
-            }
+            // TODO
         }
 
         binding.setOnMeetingsClicked {
@@ -95,7 +93,6 @@ class BottomNavBarFragment : Fragment() {
         sharedViewModel.currentlyDisplayedFragment.observe(viewLifecycleOwner) {
             viewModel.contactsSelected.value = it == R.id.contactsFragment
             viewModel.callsSelected.value = it == R.id.callsFragment
-            viewModel.conversationsSelected.value = it == R.id.conversationsFragment
         }
 
         sharedViewModel.resetMissedCallsCountEvent.observe(viewLifecycleOwner) {

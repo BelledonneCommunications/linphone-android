@@ -124,19 +124,6 @@ class CallsFragment : GenericFragment() {
             }
         }
 
-        sharedViewModel.navigateToConversationsEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                if (findNavController().currentDestination?.id == R.id.callsFragment) {
-                    // To prevent any previously seen contact to show up when navigating back to here later
-                    binding.callsNavContainer.findNavController().popBackStack()
-
-                    val action =
-                        CallsFragmentDirections.actionCallsFragmentToConversationsFragment()
-                    findNavController().navigate(action)
-                }
-            }
-        }
-
         sharedViewModel.navigateToContactsEvent.observe(viewLifecycleOwner) {
             it.consume {
                 if (findNavController().currentDestination?.id == R.id.callsFragment) {

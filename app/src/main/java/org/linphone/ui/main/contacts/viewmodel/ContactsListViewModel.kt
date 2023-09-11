@@ -192,7 +192,7 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
             val vCard = friend.vcard?.asVcard4String()
             if (!vCard.isNullOrEmpty()) {
                 Log.i("$TAG Friend has been successfully dumped as vCard string")
-                val fileName = friend.name.orEmpty().replace(" ", "_").toLowerCase(
+                val fileName = friend.name.orEmpty().replace(" ", "_").lowercase(
                     Locale.getDefault()
                 )
                 val file = FileUtils.getFileStorageCacheDir(

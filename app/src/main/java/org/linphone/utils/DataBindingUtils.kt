@@ -52,7 +52,6 @@ import io.getstream.avatarview.AvatarView
 import io.getstream.avatarview.coil.loadImage
 import org.linphone.BR
 import org.linphone.R
-import org.linphone.contacts.ContactData
 import org.linphone.core.ConsolidatedPresence
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.MainActivity
@@ -178,20 +177,6 @@ fun loadPictureWithCoil(imageView: ImageView, file: String?) {
     if (file != null) {
         imageView.load(file) {
             transformations(CircleCropTransformation())
-        }
-    }
-}
-
-@UiThread
-@BindingAdapter("coilContact")
-fun loadContactPictureWithCoil2(imageView: ImageView, contact: ContactData?) {
-    Log.i("[Data Binding Utils] Loading contact picture [${contact?.avatar}] with coil")
-    if (contact == null) {
-        imageView.load(R.drawable.contact_avatar)
-    } else {
-        imageView.load(contact.avatar) {
-            transformations(CircleCropTransformation())
-            error(R.drawable.contact_avatar)
         }
     }
 }
