@@ -156,6 +156,18 @@ open class ContactsSelectionViewModel : MessageNotifierViewModel() {
         Log.i("[Contacts Selection] Processing ${results.size} results")
         val list = arrayListOf<SearchResult>()
         for (result in results) {
+            if (result.sourceFlags == MagicSearch.Source.Request.toInt()) {
+                val address = result.address
+                if (address != null) {
+                    val found = list.find {
+                        it.address?.weakEqual(address) ?: false
+                    }
+                    if (found != null) {
+                        Log.i("[Contacts Selection] User-input is already present in search results, skipping request")
+                        continue
+                    }
+                }
+            }
             list.add(result)
         }
         contactsList.postValue(list)
