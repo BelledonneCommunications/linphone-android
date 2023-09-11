@@ -193,10 +193,10 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         val notifiable = getNotifiableForCall(
             coreContext.core.currentCall ?: coreContext.core.calls.first()
         )
-        val notif = notificationManager.activeNotifications.find {
+        val notification = notificationManager.activeNotifications.find {
             it.id == notifiable.notificationId
         }
-        notif ?: return
+        notification ?: return
 
         val service = coreService
         if (service != null) {
@@ -205,7 +205,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             try {
                 service.startForeground(
                     notifiable.notificationId,
-                    notif.notification,
+                    notification.notification,
                     ServiceInfo.FOREGROUND_SERVICE_TYPE_PHONE_CALL
                         or ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE
                         or ServiceInfo.FOREGROUND_SERVICE_TYPE_CAMERA
