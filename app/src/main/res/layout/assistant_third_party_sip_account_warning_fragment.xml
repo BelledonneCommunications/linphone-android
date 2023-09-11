@@ -20,148 +20,156 @@
             type="View.OnClickListener" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white">
 
-        <ImageView
-            android:onClick="@{backClickListener}"
-            android:id="@+id/back"
-            android:layout_width="@dimen/icon_size"
-            android:layout_height="@dimen/icon_size"
-            android:layout_marginTop="7dp"
-            android:layout_marginStart="15dp"
-            android:src="@drawable/caret_left"
-            app:tint="@color/gray_1"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_800"
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
-            android:text="Use a third party SIP Account"
-            android:textSize="20sp"
-            android:textColor="@color/gray_9"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            android:background="@color/white">
 
-        <ImageView
-            android:id="@+id/no_chat"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_marginTop="68dp"
-            android:layout_marginEnd="30dp"
-            android:background="@drawable/call_chat_button_background"
-            android:padding="16dp"
-            android:src="@drawable/chat_text"
-            app:tint="@color/gray_1"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/no_video"
-            app:layout_constraintTop_toBottomOf="@id/title"/>
+            <ImageView
+                android:onClick="@{backClickListener}"
+                android:id="@+id/back"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:layout_marginTop="7dp"
+                android:layout_marginStart="15dp"
+                android:src="@drawable/caret_left"
+                app:tint="@color/gray_1"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
 
-        <ImageView
-            android:id="@+id/no_video"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_marginTop="68dp"
-            android:background="@drawable/call_chat_button_background"
-            android:padding="16dp"
-            android:src="@drawable/video_camera_slash"
-            app:tint="@color/gray_1"
-            app:layout_constraintStart_toEndOf="@id/no_chat"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/title"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_800"
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="100dp"
+                android:text="Use a third party SIP Account"
+                android:textSize="20sp"
+                android:textColor="@color/gray_9"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style"
-            android:id="@+id/message"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="42dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="Some features require a Linphone account, such as group messaging, video conferences...\n\nThese features are hidden when you register with a third party SIP account.\n\nTo enable it in a commercial projet, please contact us. "
-            android:textSize="14sp"
-            android:gravity="center"
-            app:layout_constraintWidth_max="@dimen/text_input_max_width"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/no_chat"/>
+            <ImageView
+                android:id="@+id/no_chat"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginTop="68dp"
+                android:layout_marginEnd="30dp"
+                android:background="@drawable/call_chat_button_background"
+                android:padding="16dp"
+                android:src="@drawable/chat_text"
+                app:tint="@color/gray_1"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/no_video"
+                app:layout_constraintTop_toBottomOf="@id/title"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:onClick="@{contactClickListener}"
-            style="@style/default_text_style_600"
-            android:id="@+id/contact"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="42dp"
-            android:paddingTop="6dp"
-            android:paddingBottom="6dp"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:text="linphone.org/contact"
-            android:textSize="13sp"
-            android:textColor="@color/secondary_button_label_color"
-            android:gravity="center"
-            android:background="@drawable/secondary_button_background"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/message" />
+            <ImageView
+                android:id="@+id/no_video"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginTop="68dp"
+                android:background="@drawable/call_chat_button_background"
+                android:padding="16dp"
+                android:src="@drawable/video_camera_slash"
+                app:tint="@color/gray_1"
+                app:layout_constraintStart_toEndOf="@id/no_chat"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:onClick="@{createAccountClickListener}"
-            style="@style/default_text_style_600"
-            android:id="@+id/create_linphone_account"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="20dp"
-            android:paddingTop="@dimen/primary_secondary_buttons_label_padding"
-            android:paddingBottom="@dimen/primary_secondary_buttons_label_padding"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:text="I prefer to create an account"
-            android:textSize="18sp"
-            android:textColor="@color/secondary_button_label_color"
-            android:gravity="center"
-            android:background="@drawable/secondary_button_background"
-            app:layout_constraintWidth_max="@dimen/button_max_width"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/continue_third_party_account_login" />
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:id="@+id/message"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="42dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="Some features require a Linphone account, such as group messaging, video conferences...\n\nThese features are hidden when you register with a third party SIP account.\n\nTo enable it in a commercial projet, please contact us. "
+                android:textSize="14sp"
+                android:gravity="center"
+                app:layout_constraintWidth_max="@dimen/text_input_max_width"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/no_chat"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:onClick="@{loginClickListener}"
-            style="@style/default_text_style_600"
-            android:id="@+id/continue_third_party_account_login"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="20dp"
-            android:paddingTop="@dimen/primary_secondary_buttons_label_padding"
-            android:paddingBottom="@dimen/primary_secondary_buttons_label_padding"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:text="I understand"
-            android:textSize="18sp"
-            android:textColor="@color/primary_button_label_color"
-            android:gravity="center"
-            android:background="@drawable/primary_button_background"
-            app:layout_constraintWidth_max="@dimen/button_max_width"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:onClick="@{contactClickListener}"
+                style="@style/default_text_style_600"
+                android:id="@+id/contact"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="42dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:text="linphone.org/contact"
+                android:textSize="13sp"
+                android:textColor="@color/secondary_button_label_color"
+                android:gravity="center"
+                android:background="@drawable/secondary_button_background"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/message"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:onClick="@{createAccountClickListener}"
+                style="@style/default_text_style_600"
+                android:id="@+id/create_linphone_account"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="130dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="20dp"
+                android:paddingTop="@dimen/primary_secondary_buttons_label_padding"
+                android:paddingBottom="@dimen/primary_secondary_buttons_label_padding"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="I prefer to create an account"
+                android:textSize="18sp"
+                android:textColor="@color/secondary_button_label_color"
+                android:gravity="center"
+                android:background="@drawable/secondary_button_background"
+                app:layout_constraintWidth_max="@dimen/button_max_width"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/contact"
+                app:layout_constraintBottom_toTopOf="@id/continue_third_party_account_login" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:onClick="@{loginClickListener}"
+                style="@style/default_text_style_600"
+                android:id="@+id/continue_third_party_account_login"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="20dp"
+                android:paddingTop="@dimen/primary_secondary_buttons_label_padding"
+                android:paddingBottom="@dimen/primary_secondary_buttons_label_padding"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="I understand"
+                android:textSize="18sp"
+                android:textColor="@color/primary_button_label_color"
+                android:gravity="center"
+                android:background="@drawable/primary_button_background"
+                app:layout_constraintWidth_max="@dimen/button_max_width"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 
 </layout>
