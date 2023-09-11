@@ -12,6 +12,12 @@
         <variable
             name="message"
             type="String" />
+        <variable
+            name="shadow_color"
+            type="Integer" />
+        <variable
+            name="text_color"
+            type="Integer" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,7 +31,7 @@
             android:id="@+id/toast_background"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:src="@drawable/shape_toast_blue_shadow"
+            android:src="@{shadow_color, default=@drawable/shape_toast_blue_shadow}"
             app:layout_constraintBottom_toBottomOf="@id/toast_message"
             app:layout_constraintEnd_toEndOf="@id/toast_message"
             app:layout_constraintStart_toStartOf="@id/toast_icon"
@@ -36,7 +42,8 @@
             android:layout_width="@dimen/icon_size"
             android:layout_height="@dimen/icon_size"
             android:adjustViewBounds="true"
-            android:src="@{icon, default=@drawable/trusted}"
+            android:src="@{icon, default=@drawable/check_fat_fill}"
+            tint="@{text_color, default=@color/blue_trusted}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/toast_message"
             app:layout_constraintStart_toStartOf="parent"
@@ -53,7 +60,7 @@
             android:paddingBottom="8dp"
             android:text="@{message, default=`This call can be trusted`}"
             android:textSize="14sp"
-            android:textColor="@color/trusted_blue"
+            textColor="@{text_color, default=@color/blue_trusted}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/toast_icon"

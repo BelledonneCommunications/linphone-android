@@ -26,7 +26,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical|center"
                 android:singleLine="true"
-                android:text="Choose your country"/>
+                android:text="@string/assistant_country_picker_title"/>
 
         </LinearLayout>
 
@@ -39,7 +39,7 @@
                 android:layout_toLeftOf="@id/clear_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Country name">
+                android:hint="@string/assistant_country_picker_hint">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/search_country"
@@ -80,7 +80,7 @@
             android:padding="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Cancel"
+            android:text="@string/cancel"
             android:gravity="right" />
 
     </LinearLayout>

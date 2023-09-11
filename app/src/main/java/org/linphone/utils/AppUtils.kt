@@ -19,14 +19,98 @@
  */
 package org.linphone.utils
 
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.AnyThread
+import androidx.annotation.DimenRes
+import androidx.annotation.DrawableRes
+import androidx.annotation.MainThread
+import androidx.annotation.StringRes
+import androidx.databinding.DataBindingUtil
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
+import org.linphone.databinding.ToastBinding
 
 class AppUtils {
     companion object {
         @AnyThread
-        fun getDimension(id: Int): Float {
+        fun getDimension(@DimenRes id: Int): Float {
             return coreContext.context.resources.getDimension(id)
+        }
+
+        @AnyThread
+        fun getString(@StringRes id: Int): String {
+            return coreContext.context.getString(id)
+        }
+
+        @AnyThread
+        fun getFormattedString(@StringRes id: Int, args: Any): String {
+            return coreContext.context.getString(id, args)
+        }
+
+        @MainThread
+        fun getRedToast(
+            context: Context,
+            parent: ViewGroup,
+            message: String,
+            @DrawableRes icon: Int
+        ): ToastBinding {
+            val redToast: ToastBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.toast,
+                parent,
+                false
+            )
+            redToast.message = message
+            redToast.icon = icon
+            redToast.shadowColor = R.drawable.shape_toast_red_shadow
+            redToast.textColor = R.color.red_danger
+            redToast.root.visibility = View.GONE
+            return redToast
+        }
+
+        @MainThread
+        fun getGreenToast(
+            context: Context,
+            parent: ViewGroup,
+            message: String,
+            @DrawableRes icon: Int
+        ): ToastBinding {
+            val greenToast: ToastBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.toast,
+                parent,
+                false
+            )
+            greenToast.message = message
+            greenToast.icon = icon
+            greenToast.shadowColor = R.drawable.shape_toast_green_shadow
+            greenToast.textColor = R.color.green_online
+            greenToast.root.visibility = View.GONE
+            return greenToast
+        }
+
+        @MainThread
+        fun getBlueToast(
+            context: Context,
+            parent: ViewGroup,
+            message: String,
+            @DrawableRes icon: Int
+        ): ToastBinding {
+            val blueToast: ToastBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.toast,
+                parent,
+                false
+            )
+            blueToast.message = message
+            blueToast.icon = icon
+            blueToast.shadowColor = R.drawable.shape_toast_blue_shadow
+            blueToast.textColor = R.color.blue_trusted
+            blueToast.root.visibility = View.GONE
+            return blueToast
         }
     }
 }

@@ -160,10 +160,9 @@ class CallsListFragment : GenericFragment() {
 
         listViewModel.historyDeletedEvent.observe(viewLifecycleOwner) {
             it.consume {
-                Log.w("$TAG Deleting all call history")
-                // TODO FIXME: show translated string
+                Log.w("$TAG All call logs have been deleted")
                 (requireActivity() as MainActivity).showGreenToast(
-                    "Historique supprimé",
+                    getString(R.string.toast_call_history_deleted),
                     R.drawable.check_fat_fill
                 )
             }
@@ -231,9 +230,8 @@ class CallsListFragment : GenericFragment() {
         val label = "SIP address"
         clipboard.setPrimaryClip(ClipData.newPlainText(label, value))
 
-        // TODO FIXME: show translated string
         (requireActivity() as MainActivity).showGreenToast(
-            "Numéro copié dans le presse-papier",
+            getString(R.string.toast_sip_address_copied_to_clipboard),
             R.drawable.check_fat_fill
         )
     }

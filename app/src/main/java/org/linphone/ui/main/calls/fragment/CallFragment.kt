@@ -118,9 +118,8 @@ class CallFragment : GenericFragment() {
             it.consume {
                 sharedViewModel.forceRefreshCallLogsListEvent.value = Event(true)
 
-                // TODO FIXME: show translated string
                 (requireActivity() as MainActivity).showGreenToast(
-                    "Historique supprimé",
+                    getString(R.string.toast_call_history_deleted),
                     R.drawable.check_fat_fill
                 )
                 goBack() // TODO FIXME : issue with tablet when pane can't be closed
@@ -133,9 +132,8 @@ class CallFragment : GenericFragment() {
         val label = "SIP address"
         clipboard.setPrimaryClip(ClipData.newPlainText(label, value))
 
-        // TODO FIXME: show translated string
         (requireActivity() as MainActivity).showGreenToast(
-            "Numéro copié dans le presse-papier",
+            getString(R.string.toast_sip_address_copied_to_clipboard),
             R.drawable.check_fat_fill
         )
     }

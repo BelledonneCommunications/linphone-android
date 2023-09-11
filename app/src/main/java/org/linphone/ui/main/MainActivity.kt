@@ -38,7 +38,7 @@ import androidx.navigation.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.databinding.MainActivityBinding
-import org.linphone.databinding.ToastGreenBinding
+import org.linphone.databinding.ToastBinding
 import org.linphone.utils.slideInToastFromTopForDuration
 
 @UiThread
@@ -95,16 +95,17 @@ class MainActivity : AppCompatActivity() {
                 RECORD_AUDIO_PERMISSION_REQUEST
             )
         }
+        if (checkSelfPermission(Manifest.permission.MANAGE_OWN_CALLS) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(
+                arrayOf(Manifest.permission.MANAGE_OWN_CALLS),
+                MANAGE_OWN_CALLS_PERMISSION_REQUEST
+            )
+        }
+        // TODO FIXME : use compatibility
         if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(
                 arrayOf(Manifest.permission.POST_NOTIFICATIONS),
                 POST_NOTIFICATIONS_PERMISSION_REQUEST
-            )
-        }
-        if (checkSelfPermission(Manifest.permission.MANAGE_OWN_CALLS) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(
-                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
-                MANAGE_OWN_CALLS_PERMISSION_REQUEST
             )
         }
     }
@@ -139,14 +140,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun showGreenToast(message: String, @DrawableRes icon: Int) {
-        val greenToast: ToastGreenBinding = DataBindingUtil.inflate(
+        val greenToast: ToastBinding = DataBindingUtil.inflate(
             LayoutInflater.from(this),
-            R.layout.toast_green,
+            R.layout.toast,
             binding.toastsArea,
             false
         )
         greenToast.message = message
         greenToast.icon = icon
+        greenToast.shadowColor = R.drawable.shape_toast_green_shadow
+        greenToast.textColor = R.color.green_online
         greenToast.root.visibility = View.GONE
         binding.toastsArea.addView(greenToast.root)
 

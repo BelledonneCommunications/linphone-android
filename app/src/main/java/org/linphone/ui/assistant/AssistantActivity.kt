@@ -20,8 +20,6 @@
 package org.linphone.ui.assistant
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.annotation.UiThread
@@ -32,8 +30,7 @@ import androidx.lifecycle.lifecycleScope
 import org.linphone.LinphoneApplication
 import org.linphone.R
 import org.linphone.databinding.AssistantActivityBinding
-import org.linphone.databinding.ToastGreenBinding
-import org.linphone.databinding.ToastRedBinding
+import org.linphone.utils.AppUtils
 import org.linphone.utils.slideInToastFromTopForDuration
 
 @UiThread
@@ -53,15 +50,7 @@ class AssistantActivity : AppCompatActivity() {
     }
 
     fun showGreenToast(message: String, @DrawableRes icon: Int) {
-        val greenToast: ToastGreenBinding = DataBindingUtil.inflate(
-            LayoutInflater.from(this),
-            R.layout.toast_green,
-            binding.toastsArea,
-            false
-        )
-        greenToast.message = message
-        greenToast.icon = icon
-        greenToast.root.visibility = View.GONE
+        val greenToast = AppUtils.getGreenToast(this, binding.toastsArea, message, icon)
         binding.toastsArea.addView(greenToast.root)
 
         greenToast.root.slideInToastFromTopForDuration(
@@ -71,15 +60,7 @@ class AssistantActivity : AppCompatActivity() {
     }
 
     fun showRedToast(message: String, @DrawableRes icon: Int) {
-        val redToast: ToastRedBinding = DataBindingUtil.inflate(
-            LayoutInflater.from(this),
-            R.layout.toast_red,
-            binding.toastsArea,
-            false
-        )
-        redToast.message = message
-        redToast.icon = icon
-        redToast.root.visibility = View.GONE
+        val redToast = AppUtils.getRedToast(this, binding.toastsArea, message, icon)
         binding.toastsArea.addView(redToast.root)
 
         redToast.root.slideInToastFromTopForDuration(

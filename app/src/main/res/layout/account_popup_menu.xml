@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            android:text="Manage the profile"
+            android:text="@string/drawer_menu_manage_account"
             android:textSize="14sp"
             android:textColor="@color/gray_1"
             android:drawableStart="@drawable/user_gear"

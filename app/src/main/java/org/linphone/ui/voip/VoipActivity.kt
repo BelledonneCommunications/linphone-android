@@ -20,8 +20,6 @@
 package org.linphone.ui.voip
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.annotation.UiThread
@@ -38,9 +36,6 @@ import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication
 import org.linphone.R
 import org.linphone.core.tools.Log
-import org.linphone.databinding.ToastBlueBinding
-import org.linphone.databinding.ToastGreenBinding
-import org.linphone.databinding.ToastRedBinding
 import org.linphone.databinding.VoipActivityBinding
 import org.linphone.ui.voip.fragment.ActiveCallFragmentDirections
 import org.linphone.ui.voip.fragment.AudioDevicesMenuDialogFragment
@@ -50,6 +45,7 @@ import org.linphone.ui.voip.model.AudioDeviceModel
 import org.linphone.ui.voip.viewmodel.CallsViewModel
 import org.linphone.ui.voip.viewmodel.CurrentCallViewModel
 import org.linphone.ui.voip.viewmodel.SharedCallViewModel
+import org.linphone.utils.AppUtils
 import org.linphone.utils.slideInToastFromTop
 import org.linphone.utils.slideInToastFromTopForDuration
 
@@ -141,12 +137,16 @@ class VoipActivity : AppCompatActivity() {
         callsViewModel.showLowSignalEvent.observe(this) {
             it.consume { show ->
                 if (show) {
-                    // TODO FIXME: show translated string
-                    showRedToast("Low Wi-Fi signal!", R.drawable.wifi_low)
+                    showRedToast(
+                        getString(R.string.toast_alert_low_wifi_signal),
+                        R.drawable.wifi_low
+                    )
                 } else {
                     hideRedToast()
-                    // TODO FIXME: show translated string
-                    showGreenToast("Wi-Fi signal no longer low", R.drawable.wifi_high)
+                    showGreenToast(
+                        getString(R.string.toast_alert_low_wifi_signal_cleared),
+                        R.drawable.wifi_high
+                    )
                 }
             }
         }
@@ -159,15 +159,7 @@ class VoipActivity : AppCompatActivity() {
     }
 
     fun showBlueToast(message: String, @DrawableRes icon: Int) {
-        val blueToast: ToastBlueBinding = DataBindingUtil.inflate(
-            LayoutInflater.from(this),
-            R.layout.toast_blue,
-            binding.toastsArea,
-            false
-        )
-        blueToast.message = message
-        blueToast.icon = icon
-        blueToast.root.visibility = View.GONE
+        val blueToast = AppUtils.getBlueToast(this, binding.toastsArea, message, icon)
         binding.toastsArea.addView(blueToast.root)
 
         blueToast.root.slideInToastFromTopForDuration(
@@ -177,15 +169,7 @@ class VoipActivity : AppCompatActivity() {
     }
 
     private fun showRedToast(message: String, @DrawableRes icon: Int) {
-        val redToast: ToastRedBinding = DataBindingUtil.inflate(
-            LayoutInflater.from(this),
-            R.layout.toast_red,
-            binding.toastsArea,
-            false
-        )
-        redToast.message = message
-        redToast.icon = icon
-        redToast.root.visibility = View.GONE
+        val redToast = AppUtils.getRedToast(this, binding.toastsArea, message, icon)
         binding.toastsArea.addView(redToast.root)
 
         redToast.root.slideInToastFromTop(
@@ -200,15 +184,7 @@ class VoipActivity : AppCompatActivity() {
     }
 
     private fun showGreenToast(message: String, @DrawableRes icon: Int) {
-        val greenToast: ToastGreenBinding = DataBindingUtil.inflate(
-            LayoutInflater.from(this),
-            R.layout.toast_green,
-            binding.toastsArea,
-            false
-        )
-        greenToast.message = message
-        greenToast.icon = icon
-        greenToast.root.visibility = View.GONE
+        val greenToast = AppUtils.getGreenToast(this, binding.toastsArea, message, icon)
         binding.toastsArea.addView(greenToast.root)
 
         greenToast.root.slideInToastFromTopForDuration(

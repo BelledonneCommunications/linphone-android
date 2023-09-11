@@ -48,7 +48,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="100dp"
-            android:text="Scan a QR Code"
+            android:text="@string/assistant_scan_qr_code_title"
             android:textSize="20sp"
             android:textColor="@color/white"
             android:gravity="center"

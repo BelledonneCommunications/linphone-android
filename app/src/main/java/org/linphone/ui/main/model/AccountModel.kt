@@ -24,10 +24,12 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
 import org.linphone.core.Account
 import org.linphone.core.AccountListenerStub
 import org.linphone.core.RegistrationState
 import org.linphone.core.tools.Log
+import org.linphone.utils.AppUtils
 import org.linphone.utils.LinphoneUtils
 
 class AccountModel @WorkerThread constructor(
@@ -135,11 +137,21 @@ class AccountModel @WorkerThread constructor(
         isDefault.postValue(coreContext.core.defaultAccount == account)
 
         val state = when (account.state) {
-            RegistrationState.None, RegistrationState.Cleared -> "Disabled"
-            RegistrationState.Progress -> "Connection..."
-            RegistrationState.Failed -> "Error"
-            RegistrationState.Ok -> "Connected"
-            RegistrationState.Refreshing -> "Refreshing"
+            RegistrationState.None, RegistrationState.Cleared -> AppUtils.getString(
+                R.string.drawer_menu_account_connection_status_cleared
+            )
+            RegistrationState.Progress -> AppUtils.getString(
+                R.string.drawer_menu_account_connection_status_progress
+            )
+            RegistrationState.Failed -> AppUtils.getString(
+                R.string.drawer_menu_account_connection_status_failed
+            )
+            RegistrationState.Ok -> AppUtils.getString(
+                R.string.drawer_menu_account_connection_status_connected
+            )
+            RegistrationState.Refreshing -> AppUtils.getString(
+                R.string.drawer_menu_account_connection_status_refreshing
+            )
             else -> "${account.state}"
         }
 

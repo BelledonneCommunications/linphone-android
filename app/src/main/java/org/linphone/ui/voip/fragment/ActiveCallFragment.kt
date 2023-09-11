@@ -111,12 +111,12 @@ class ActiveCallFragment : GenericCallFragment() {
         callViewModel.isRemoteDeviceTrusted.observe(viewLifecycleOwner) { trusted ->
             if (trusted) {
                 (requireActivity() as VoipActivity).showBlueToast(
-                    "This call can be trusted",
+                    getString(R.string.toast_call_can_be_trusted),
                     R.drawable.trusted
                 )
                 // TODO: improve
                 binding.avatar.avatarBorderColor = resources.getColor(
-                    R.color.trusted_blue,
+                    R.color.blue_trusted,
                     requireContext().theme
                 )
                 binding.avatar.avatarBorderWidth = AppUtils.getDimension(

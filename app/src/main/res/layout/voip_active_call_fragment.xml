@@ -40,7 +40,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:visibility="@{viewModel.fullScreenMode ? View.GONE : View.VISIBLE}"
-                android:text="@{viewModel.isOutgoing ? `Outgoing call` : `Incoming call`, default=`Outgoing call`}"
+                android:text="@{viewModel.isOutgoing ? @string/call_outgoing : @string/call_incoming, default=@string/call_outgoing}"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 app:layout_constraintStart_toEndOf="@id/call_direction_icon"

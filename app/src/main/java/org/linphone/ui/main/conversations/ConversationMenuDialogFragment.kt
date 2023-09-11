@@ -52,7 +52,6 @@ class ConversationMenuDialogFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // TODO FIXME: use a viewmodel and use core thread
         val view = ChatRoomMenuBinding.inflate(layoutInflater)
 
         view.isMuted = chatRoom.muted

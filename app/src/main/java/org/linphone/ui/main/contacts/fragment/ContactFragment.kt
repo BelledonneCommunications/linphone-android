@@ -212,9 +212,13 @@ class ContactFragment : GenericFragment() {
         val label = if (isSip) "SIP address" else "Phone number"
         clipboard.setPrimaryClip(ClipData.newPlainText(label, value))
 
-        // TODO FIXME: show translated string
+        val message = if (isSip) {
+            getString(R.string.toast_sip_address_copied_to_clipboard)
+        } else {
+            getString(R.string.toast_phone_number_copied_to_clipboard)
+        }
         (requireActivity() as MainActivity).showGreenToast(
-            "Numéro copié dans le presse-papier",
+            message,
             R.drawable.check_fat_fill
         )
     }

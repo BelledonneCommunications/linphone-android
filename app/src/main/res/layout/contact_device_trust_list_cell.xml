@@ -68,7 +68,7 @@
             android:gravity="center"
             android:drawableStart="@drawable/warning_circle"
             android:drawablePadding="8dp"
-            android:text="Vérifier l'appareil"
+            android:text="@string/friend_make_call_check_device_trust"
             android:textColor="@color/tertiary_button_label_color"
             android:textSize="13sp"
             android:maxLines="1"

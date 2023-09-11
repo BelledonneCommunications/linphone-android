@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="@{model.isSip ? `SIP address` : `Phone number`, default=`SIP address`}"
+            android:text="@{model.isSip ? @string/sip_address : @string/phone_number, default=@string/sip_address}"
             android:textSize="13sp"
             app:layout_constraintStart_toStartOf="@id/field"
             app:layout_constraintTop_toTopOf="parent"/>

@@ -7,19 +7,162 @@
 <resources>
     <string name="app_name">Linphone</string>
 
-    <string name="vertical_separator">|</string>
-
+    <string name="vertical_separator" translatable="false">|</string>
+    <string name="assistant_web_platform_link" translatable="false">subscribe.linphone.org</string>
+    <string name="assistant_linphone_contact_us_link" translatable="false">linphone.org/contact</string>
     <string name="notification_channel_incoming_call_id" translatable="false">linphone_notification_call_id</string>
-    <string name="notification_channel_incoming_call_name">&appName; incoming calls notifications</string>
     <string name="notification_channel_service_id" translatable="false">linphone_notification_service_id</string>
+
+    <string name="sip_address">SIP address</string>
+    <string name="sip_address_display_name">Display name</string>
+    <string name="sip_address_domain">Domain</string>
+    <string name="cancel">Cancel</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="phone_number">Phone number</string>
+    <string name="or">or</string>
+    <string name="next">next</string>
+
+    <string name="notification_channel_incoming_call_name">&appName; incoming calls notifications</string>
     <string name="notification_channel_service_name">&appName; service notification</string>
-
-    <string name="welcome_carousel_skip"><u>Skip</u></string>
-
-    <string name="assistant_forgotten_password"><u>Forgotten password?</u></string>
 
     <string name="incoming_call_notification_hangup_action_label">Hangup</string>
     <string name="incoming_call_notification_answer_action_label">Answer</string>
 
+    <string name="bottom_navigation_contacts_label">Contacts</string>
+    <string name="bottom_navigation_calls_label">Calls</string>
+    <string name="bottom_navigation_conversations_label">Conversations</string>
+    <string name="bottom_navigation_meetings_label">Meetings</string>
+
+    <string name="dialog_deny">Deny</string>
+    <string name="dialog_accept">Accept</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_continue">Continue</string>
+    <string name="dialog_ok">Ok</string>
+    <string name="dialog_call">Call</string>
+    <string name="dialog_delete">Delete</string>
+    <string name="dialog_do_not_show_anymore">Do not show this dialog anymore</string>
+    <string name="dialog_general_terms_and_privacy_policy_title">General terms &amp; privacy policy</string>
+    <string name="dialog_general_terms_and_privacy_policy_message">blah blah blah</string> <!-- TODO FIXME -->
+    <string name="dialog_confirm_phone_number_title">Confirm phone number</string>
+    <string name="dialog_confirm_phone_number_message">Are you sure you want to use this phone number?</string>
+    <string name="dialog_contact_new_or_edit_abort_confirmation_title">Don\'t save changes?</string>
+    <string name="dialog_contact_new_or_edit_abort_confirmation_message">All changes will be lost</string>
+    <string name="dialog_zrtp_validate_trust_title">Validate the device</string>
+    <string name="dialog_zrtp_validate_trust_message">Blah</string> <!-- TODO FIXME -->
+    <string name="dialog_zrtp_validate_trust_letters_do_not_match">Letters don\'t match!</string>
+    <string name="dialog_contact_increase_trust_level_title">Increase trust level</string>
+    <string name="dialog_contact_increase_trust_level_message">You\'re about to make a call to $1%s\'s device $2%s.\nDo you want to make the call?</string>
+    <string name="dialog_contact_devices_trust_help_title">What does it mean?</string>
+    <string name="dialog_contact_devices_trust_help_message">Blah blah blah</string> <!-- TODO FIXME -->
+    <string name="dialog_pick_phone_number_or_sip_address_title">Which canal do you choose?</string>
+    <string name="dialog_delete_all_call_logs_title">Do you really want to delete all calls history?</string>
+    <string name="dialog_delete_all_call_logs_message">All calls will be deleted of the history</string>
+
+    <string name="toast_assistant_qr_code_valid">QR code validated!</string>
+    <string name="toast_assistant_qr_code_invalid">Invalid QR code!</string>
+    <string name="toast_sip_address_copied_to_clipboard">SIP address copied into clipboard</string>
+    <string name="toast_phone_number_copied_to_clipboard">Number copied into clipboard</string>
+    <string name="toast_call_history_deleted">History has been deleted</string>
+    <string name="toast_alert_low_wifi_signal">Low Wi-Fi signal!</string>
+    <string name="toast_alert_low_wifi_signal_cleared">Wi-Fi signal no longer low</string>
+    <string name="toast_call_can_be_trusted">This call can be trusted</string>
+
+    <string name="assistant_country_picker_title">Choose your country</string>
+    <string name="assistant_country_picker_hint">Country name</string>
+    <string name="assistant_account_login">Login</string>
+    <string name="assistant_scan_qr_code">Scan QR code</string>
+    <string name="assistant_login_third_party_sip_account">Use a third party SIP account</string>
+    <string name="assistant_no_account_yet">No account yet?</string>
+    <string name="assistant_account_register">Register</string>
+    <string name="assistant_scan_qr_code_title">Scan a QR code</string>
+    <string name="assistant_account_creation_sms_confirmation_explanation">We have sent a verification code on your phone number %1$s.\n\nPlease enter the verification code below:</string>
+    <string name="assistant_account_creation_wrong_phone_number">Wrong number?</string>
+    <string name="assistant_account_create">Create</string>
+    <string name="assistant_create_account_using_email_on_our_web_platform">Create an account with your email on:</string>
+    <string name="assistant_already_have_an_account">Already have an account?</string>
+    <string name="assistant_sip_account_transport_protocol">Transport</string>
+    <string name="assistant_third_party_sip_account_warning_explanation">Some features require a Linphone account, such as group messaging, video conferences…\n\nThese features are hidden when you register with a third party SIP account.\n\nTo enable it in a commercial project, please contact us.</string>
+    <string name="assistant_third_party_sip_account_create_linphone_account">I prefer to create an account</string>
+    <string name="assistant_third_party_sip_account_warning_ok">I understand</string>
+
+    <string name="drawer_menu_default_account_label">Default</string>
+    <string name="drawer_menu_manage_account">Manage the profile</string>
+    <string name="drawer_menu_account_connection_status_connected">Connected</string>
+    <string name="drawer_menu_account_connection_status_refreshing">Refreshing</string>
+    <string name="drawer_menu_account_connection_status_cleared">Disabled</string>
+    <string name="drawer_menu_account_connection_status_progress">Connecting…</string>
+    <string name="drawer_menu_account_connection_status_failed">Error</string>
+    <string name="drawer_menu_no_account_configured_yet">No account configured yet</string>
+    <string name="drawer_menu_add_account">Add an account</string>
+
+    <string name="settings_title">Settings</string>
+    <string name="recordings_title">Recordings</string>
+    <string name="help_title">Help</string>
+
+    <string name="manage_account_title">Account profile</string>
+    <string name="manage_account_add_picture">Add a picture</string>
+    <string name="manage_account_edit_picture">Edit picture</string>
+    <string name="manage_account_international_prefix">International Prefix</string>
+
+    <string name="friend_presence_status_online">Online</string>
+    <string name="friend_presence_status_was_online_on">Online on $1%s</string>
+    <string name="friend_presence_status_was_online_today_at">Online today at $1%s</string>
+    <string name="friend_presence_status_was_online_yesterday_at">Online yesterday at $1%s</string>
+    <string name="friend_presence_status_away">Away</string>
+    <string name="friend_presence_status_do_not_disturb">Do not disturb</string>
+    <string name="friend_call_action">Call</string>
+    <string name="friend_message_action">Message</string>
+    <string name="friend_video_call_action">Video Call</string>
+    <string name="friend_make_call_check_device_trust">Verify device</string>
+
+    <string name="menu_add_address_to_contacts">Add to contacts</string>
+    <string name="menu_see_existing_contact">See contact</string>
+    <string name="menu_copy_sip_address">Copy SIP address</string>
+    <string name="menu_delete_history">Delete history</string>
+    <string name="menu_delete_selected_item">Delete</string>
+    <string name="menu_invite">Invite</string>
+
+    <string name="call_history_title">Call history</string>
+    <string name="call_start_title">New call</string>
+    <string name="call_start_search_bar_filter_hint">Search contact or history call</string>
+    <string name="call_start_create_group_call">Create a group call</string>
+    <string name="call_start_no_suggestion_nor_contact">No suggestion and no contact for the moment…</string>
+    <string name="call_start_suggestions_list_title">Suggestions</string>
+
+    <string name="calls_list_empty_history">No call for the moment…</string>
+
+    <string name="contacts_list_title">Contacts</string>
+    <string name="contacts_list_empty">No contact for the moment…</string>
+    <string name="contacts_list_favourites_title">Favourites</string>
+    <string name="contacts_list_all_contacts_title">All contacts</string>
+
+    <string name="contact_new_title">New contact</string>
+    <string name="contact_edit_title">Edit contact</string>
+    <string name="contact_editor_first_name">First name</string>
+    <string name="contact_editor_last_name">Last name</string>
+    <string name="contact_editor_company">Company</string>
+    <string name="contact_editor_job_title">Job title</string>
+
+    <string name="contact_details_numbers_and_addresses_title">Phone numbers &amp; SIP addresses</string>
+    <string name="contact_details_company_name">Company:</string>
+    <string name="contact_details_job_title">Job title:</string>
+    <string name="contact_details_trust_title">Trust</string>
+    <string name="contact_details_trusted_devices_count">Number of trusted devices:</string>
+    <string name="contact_details_actions_title">Trust</string>
+    <string name="contact_details_edit">Edit</string>
+    <string name="contact_details_add_to_favourites">Add to favourites</string>
+    <string name="contact_details_remove_from_favourites">Remove from favourites</string>
+    <string name="contact_details_share">Share</string>
+    <string name="contact_details_delete">Delete</string>
+
+    <string name="call_outgoing">Outgoing call</string>
+    <string name="call_incoming">Incoming call</string>
+
+    <string name="operation_in_progress_overlay">Operation in progress, please wait</string>
+
+    <!-- Keep <u></u> in following strings translations! -->
+    <string name="welcome_carousel_skip"><u>Skip</u></string>
+    <string name="assistant_forgotten_password"><u>Forgotten password?</u></string>
     <string name="in_call_zrtp_sas_validation_skip"><u>Skip</u></string>
 </resources>

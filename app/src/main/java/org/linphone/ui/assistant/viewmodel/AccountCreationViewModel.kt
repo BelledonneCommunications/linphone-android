@@ -34,6 +34,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
+import org.linphone.R
 import org.linphone.core.AccountCreator
 import org.linphone.core.AccountCreatorListenerStub
 import org.linphone.core.Core
@@ -288,8 +289,10 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
                 if (status == AccountCreator.PhoneNumberStatus.Ok.toInt()) {
                     val normalizedPhoneNumber = accountCreator.phoneNumber
 
-                    // TODO FIXME: use translated string
-                    val message = "We have sent a verification code on your phone number “$normalizedPhoneNumber”.\n\nPlease enter the verification code below:"
+                    val message = coreContext.context.getString(
+                        R.string.assistant_account_creation_sms_confirmation_explanation,
+                        normalizedPhoneNumber
+                    )
                     confirmationMessage.postValue(message)
 
                     Log.i(

@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginStart="10dp"
-            android:text="@{model.sip ? `SIP address` : model.label.length() > 0 ? `Phone (` + model.label + `)` : `Phone`, default=`Phone (Home)`}"
+            android:text="@{model.sip ? @string/sip_address : model.label.length() > 0 ? @string/phone_number + ` (` + model.label + `)` : @string/phone_number, default=`Phone number (Home)`}"
             android:textSize="14sp"
             android:maxLines="1"
             android:ellipsize="end"

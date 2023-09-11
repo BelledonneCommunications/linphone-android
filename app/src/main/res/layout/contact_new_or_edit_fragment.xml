@@ -43,7 +43,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:gravity="center_vertical"
-            android:text="@{viewModel.isEdit ? `Edit contact` : `New contact`, default=`New contact`}"
+            android:text="@{viewModel.isEdit ? @string/contact_edit_title : @string/contact_new_title, default=@string/contact_new_title}"
             android:textColor="@color/primary_color"
             android:textSize="16sp"
             app:layout_constraintEnd_toStartOf="@id/save"
@@ -107,7 +107,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Add a picture"
+                    android:text="@string/manage_account_add_picture"
                     android:textSize="14sp"
                     app:layout_constraintTop_toBottomOf="@id/avatar"
                     app:layout_constraintStart_toStartOf="parent"
@@ -120,7 +120,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
                     android:layout_marginEnd="16dp"
-                    android:text="First Name"
+                    android:text="@string/contact_editor_first_name"
                     android:textSize="13sp"
                     app:layout_constraintStart_toStartOf="@id/first_name"
                     app:layout_constraintTop_toBottomOf="@id/add_picture_label"/>
@@ -153,7 +153,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
-                    android:text="Last Name"
+                    android:text="@string/contact_editor_last_name"
                     android:textSize="13sp"
                     app:layout_constraintStart_toStartOf="@id/last_name"
                     app:layout_constraintTop_toBottomOf="@id/first_name"/>
@@ -212,7 +212,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
                     android:layout_marginEnd="16dp"
-                    android:text="Company"
+                    android:text="@string/contact_editor_company"
                     android:textSize="13sp"
                     app:layout_constraintStart_toStartOf="@id/company"
                     app:layout_constraintTop_toBottomOf="@id/phone_numbers"/>
@@ -245,7 +245,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
-                    android:text="Job"
+                    android:text="@string/contact_editor_job_title"
                     android:textSize="13sp"
                     app:layout_constraintStart_toStartOf="@id/job_title"
                     app:layout_constraintTop_toBottomOf="@id/company"/>

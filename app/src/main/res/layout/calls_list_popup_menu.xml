@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            android:text="Delete all history"
+            android:text="@string/menu_delete_history"
             android:textSize="14sp"
             android:textColor="@color/red_danger"
             android:drawableStart="@drawable/trash_simple"

@@ -20,6 +20,7 @@
 package org.linphone.utils
 
 import android.content.Context
+import android.graphics.PorterDuff
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -31,10 +32,12 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
 import androidx.annotation.UiThread
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -205,6 +208,16 @@ fun ImageView.setPresenceIcon(presence: ConsolidatedPresence?) {
     setImageResource(icon)
 }
 
+@BindingAdapter("tint")
+fun ImageView.setTintColor(@ColorRes color: Int) {
+    setColorFilter(ContextCompat.getColor(context, color), PorterDuff.Mode.SRC_IN)
+}
+
+@BindingAdapter("textColor")
+fun AppCompatTextView.setColor(@ColorRes color: Int) {
+    setTextColor(ContextCompat.getColor(context, color))
+}
+
 @UiThread
 @BindingAdapter("avatarInitials")
 fun AvatarView.loadInitials(initials: String?) {
@@ -230,7 +243,7 @@ fun AvatarView.loadAccountAvatar(account: AccountModel?) {
 
                         if (account.showTrust.value == true) {
                             avatarBorderColor =
-                                resources.getColor(R.color.trusted_blue, context.theme)
+                                resources.getColor(R.color.blue_trusted, context.theme)
                             avatarBorderWidth =
                                 AppUtils.getDimension(R.dimen.avatar_trust_border_width).toInt()
                         } else {
@@ -251,7 +264,7 @@ fun AvatarView.loadAccountAvatar(account: AccountModel?) {
                     avatarInitials = account.initials.value.orEmpty()
 
                     if (account.showTrust.value == true) {
-                        avatarBorderColor = resources.getColor(R.color.trusted_blue, context.theme)
+                        avatarBorderColor = resources.getColor(R.color.blue_trusted, context.theme)
                         avatarBorderWidth = AppUtils.getDimension(R.dimen.avatar_trust_border_width).toInt()
                     } else {
                         avatarBorderWidth = AppUtils.getDimension(R.dimen.zero).toInt()
@@ -281,7 +294,7 @@ fun AvatarView.loadContactAvatar(contact: ContactAvatarModel?) {
 
                 if (contact.showTrust.value == true) {
                     avatarBorderColor =
-                        resources.getColor(R.color.trusted_blue, context.theme)
+                        resources.getColor(R.color.blue_trusted, context.theme)
                     avatarBorderWidth =
                         AppUtils.getDimension(R.dimen.avatar_trust_border_width).toInt()
                 } else {

@@ -13,7 +13,7 @@
     <color name="blue_filter">#09C5F4</color>
     <color name="blue_outgoing_message">#DFECF2</color>
     <color name="gray_incoming_message">#F4F4F7</color>
-    <color name="trusted_blue">#4AA8FF</color>
+    <color name="blue_trusted">#4AA8FF</color>
     <color name="orange_away">#FFA645</color>
     <color name="gray_offline">#E1E1E1</color>
     <color name="warning_orange_background">#FFEACB</color>

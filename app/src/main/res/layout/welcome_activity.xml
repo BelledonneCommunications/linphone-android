@@ -79,7 +79,7 @@
                 android:paddingBottom="@dimen/primary_secondary_buttons_label_padding"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
-                android:text="Next"
+                android:text="@string/next"
                 android:textSize="18sp"
                 android:textColor="@color/primary_button_label_color"
                 android:gravity="center"

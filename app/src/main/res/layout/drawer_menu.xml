@@ -80,7 +80,7 @@
                     style="@style/default_text_style"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="No account configured yet" />
+                    android:text="@string/drawer_menu_no_account_configured_yet" />
 
             </LinearLayout>
 
@@ -99,7 +99,7 @@
             android:paddingBottom="@dimen/primary_secondary_buttons_label_padding"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
-            android:text="Add an account"
+            android:text="@string/drawer_menu_add_account"
             android:textSize="18sp"
             android:textColor="@color/secondary_button_label_color"
             android:gravity="center"
@@ -133,7 +133,7 @@
             android:layout_marginBottom="20dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:text="Settings"
+            android:text="@string/settings_title"
             android:textSize="13sp"
             android:drawableStart="@drawable/gear"
             android:drawableEnd="@drawable/caret_right"
@@ -152,7 +152,7 @@
             android:layout_marginBottom="20dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:text="Recordings"
+            android:text="@string/recordings_title"
             android:textSize="13sp"
             android:drawableStart="@drawable/recordings"
             android:drawableEnd="@drawable/caret_right"
@@ -171,7 +171,7 @@
             android:layout_marginBottom="20dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:text="Help"
+            android:text="@string/help_title"
             android:textSize="13sp"
             android:drawableStart="@drawable/question"
             android:drawableEnd="@drawable/caret_right"

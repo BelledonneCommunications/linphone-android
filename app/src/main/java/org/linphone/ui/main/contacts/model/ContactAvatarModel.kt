@@ -24,10 +24,12 @@ import android.net.Uri
 import android.provider.ContactsContract
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
+import org.linphone.R
 import org.linphone.core.ConsolidatedPresence
 import org.linphone.core.Friend
 import org.linphone.core.FriendListenerStub
 import org.linphone.core.tools.Log
+import org.linphone.utils.AppUtils
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.TimestampUtils
 
@@ -113,7 +115,7 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) {
 
         val presenceString = when (presence) {
             ConsolidatedPresence.Online -> {
-                "Online"
+                AppUtils.getString(R.string.friend_presence_status_online)
             }
             ConsolidatedPresence.Busy -> {
                 val timestamp = friend.presenceModel?.latestActivityTimestamp ?: -1L
@@ -124,16 +126,20 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) {
                                 timestamp,
                                 timestampInSecs = true
                             )
-                            val text = "Online today at"
-                            "$text $time"
+                            AppUtils.getFormattedString(
+                                R.string.friend_presence_status_was_online_today_at,
+                                time
+                            )
                         }
                         TimestampUtils.isYesterday(timestamp) -> {
                             val time = TimestampUtils.timeToString(
                                 timestamp,
                                 timestampInSecs = true
                             )
-                            val text = "Online yesterday at"
-                            "$text $time"
+                            AppUtils.getFormattedString(
+                                R.string.friend_presence_status_was_online_yesterday_at,
+                                time
+                            )
                         }
                         else -> {
                             val date = TimestampUtils.toString(
@@ -142,16 +148,18 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) {
                                 shortDate = false,
                                 hideYear = true
                             )
-                            val text = "Online on"
-                            "$text $date"
+                            AppUtils.getFormattedString(
+                                R.string.friend_presence_status_was_online_on,
+                                date
+                            )
                         }
                     }
                 } else {
-                    "Away"
+                    AppUtils.getString(R.string.friend_presence_status_away)
                 }
             }
             ConsolidatedPresence.DoNotDisturb -> {
-                "Do not disturb"
+                AppUtils.getString(R.string.friend_presence_status_do_not_disturb)
             }
             else -> ""
         }
