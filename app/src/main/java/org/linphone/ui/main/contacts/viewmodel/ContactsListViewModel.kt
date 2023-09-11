@@ -79,8 +79,7 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
             applyFilter(
                 currentFilter,
                 if (limitSearchToLinphoneAccounts) corePreferences.defaultDomain else "",
-                MagicSearch.Source.Friends.toInt() or MagicSearch.Source.LdapServers.toInt(),
-                MagicSearch.Aggregation.Friend
+                MagicSearch.Source.Friends.toInt() or MagicSearch.Source.LdapServers.toInt()
             )
         }
     }
@@ -180,8 +179,7 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
             applyFilter(
                 filter,
                 if (limitSearchToLinphoneAccounts) corePreferences.defaultDomain else "",
-                MagicSearch.Source.Friends.toInt() or MagicSearch.Source.LdapServers.toInt(),
-                MagicSearch.Aggregation.Friend
+                MagicSearch.Source.Friends.toInt() or MagicSearch.Source.LdapServers.toInt()
             )
         }
     }
@@ -217,8 +215,7 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
     private fun applyFilter(
         filter: String,
         domain: String,
-        sources: Int,
-        aggregation: MagicSearch.Aggregation
+        sources: Int
     ) {
         if (previousFilter.isNotEmpty() && (
             previousFilter.length > filter.length ||
@@ -237,7 +234,7 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
             filter,
             domain,
             sources,
-            aggregation
+            MagicSearch.Aggregation.Friend
         )
     }
 

@@ -28,13 +28,13 @@ import org.linphone.core.tools.Log
 
 class NotificationBroadcastReceiver : BroadcastReceiver() {
     companion object {
-        private const val TAG = "[NotificationBroadcastReceiver]"
+        private const val TAG = "[Notification Broadcast Receiver]"
     }
 
     override fun onReceive(context: Context, intent: Intent) {
         val notificationId = intent.getIntExtra(NotificationsManager.INTENT_NOTIF_ID, 0)
         Log.i(
-            "[Notification Broadcast Receiver] Got notification broadcast for ID [$notificationId]"
+            "$TAG Got notification broadcast for ID [$notificationId]"
         )
 
         if (intent.action == NotificationsManager.INTENT_ANSWER_CALL_NOTIF_ACTION || intent.action == NotificationsManager.INTENT_HANGUP_CALL_NOTIF_ACTION) {
@@ -45,14 +45,14 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
     private fun handleCallIntent(intent: Intent) {
         val callId = intent.getStringExtra(NotificationsManager.INTENT_CALL_ID)
         if (callId == null) {
-            Log.e("[Notification Broadcast Receiver] Remote SIP address is null for notification")
+            Log.e("$TAG Remote SIP address is null for notification")
             return
         }
 
         coreContext.postOnCoreThread { core ->
             val call = core.getCallByCallid(callId)
             if (call == null) {
-                Log.e("[Notification Broadcast Receiver] Couldn't find call from ID [$callId]")
+                Log.e("$TAG Couldn't find call from ID [$callId]")
             } else {
                 if (intent.action == NotificationsManager.INTENT_ANSWER_CALL_NOTIF_ACTION) {
                     coreContext.answerCall(call)

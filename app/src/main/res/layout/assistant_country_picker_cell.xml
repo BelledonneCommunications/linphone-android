@@ -17,6 +17,7 @@
         android:id="@+id/country_prefix"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:paddingLeft="5dp" />
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp" />
 
 </LinearLayout>

@@ -22,8 +22,6 @@ class CallLogModel @WorkerThread constructor(private val callLog: CallLog) {
 
     val avatarModel: ContactAvatarModel
 
-    val isOutgoing = MutableLiveData<Boolean>()
-
     @IntegerRes
     val iconResId = MutableLiveData<Int>()
 
@@ -34,8 +32,6 @@ class CallLogModel @WorkerThread constructor(private val callLog: CallLog) {
     var friendExists: Boolean = false
 
     init {
-        isOutgoing.postValue(callLog.dir == Dir.Outgoing)
-
         val timestamp = timestamp
         val displayedDate = if (TimestampUtils.isToday(timestamp)) {
             TimestampUtils.timeToString(timestamp)

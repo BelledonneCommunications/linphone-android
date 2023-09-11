@@ -36,7 +36,7 @@
             android:layout_margin="10dp">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:layout_toLeftOf="@id/clear_field"
+                android:layout_toStartOf="@id/clear_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/assistant_country_picker_hint">
@@ -57,7 +57,7 @@
                 android:onClick="@{() -> searchCountry.setText(``)}"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
@@ -81,7 +81,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/cancel"
-            android:gravity="right" />
+            android:gravity="end" />
 
     </LinearLayout>
 

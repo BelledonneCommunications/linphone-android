@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.voip.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.LayoutInflater
@@ -186,6 +187,7 @@ class ActiveCallFragment : GenericCallFragment() {
         })
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onResume() {
         super.onResume()
 
@@ -196,6 +198,7 @@ class ActiveCallFragment : GenericCallFragment() {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onPause() {
         super.onPause()
         binding.localPreviewVideoSurface.setOnTouchListener(null)

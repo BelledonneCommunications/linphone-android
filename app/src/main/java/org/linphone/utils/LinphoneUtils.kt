@@ -19,13 +19,16 @@
  */
 package org.linphone.utils
 
+import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Build
 import android.provider.Settings
 import androidx.annotation.AnyThread
 import androidx.annotation.IntegerRes
 import androidx.annotation.WorkerThread
+import androidx.core.app.ActivityCompat
 import androidx.emoji2.text.EmojiCompat
 import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -35,7 +38,6 @@ import org.linphone.core.Address
 import org.linphone.core.Call
 import org.linphone.core.Call.Dir
 import org.linphone.core.Call.Status
-import org.linphone.core.ChatRoom
 import org.linphone.core.tools.Log
 
 class LinphoneUtils {
@@ -145,20 +147,6 @@ class LinphoneUtils {
             }
         }
 
-        @WorkerThread
-        private fun getChatRoomId(localAddress: Address, remoteAddress: Address): String {
-            val localSipUri = localAddress.clone()
-            localSipUri.clean()
-            val remoteSipUri = remoteAddress.clone()
-            remoteSipUri.clean()
-            return "${localSipUri.asStringUriOnly()}~${remoteSipUri.asStringUriOnly()}"
-        }
-
-        @WorkerThread
-        fun getChatRoomId(chatRoom: ChatRoom): String {
-            return getChatRoomId(chatRoom.localAddress, chatRoom.peerAddress)
-        }
-
         @AnyThread
         fun getDeviceName(context: Context): String {
             var name = Settings.Global.getString(
@@ -166,8 +154,14 @@ class LinphoneUtils {
                 Settings.Global.DEVICE_NAME
             )
             if (name == null) {
-                val adapter = BluetoothAdapter.getDefaultAdapter()
-                name = adapter?.name
+                if (ActivityCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.BLUETOOTH_CONNECT
+                    ) == PackageManager.PERMISSION_GRANTED
+                ) {
+                    val adapter = BluetoothAdapter.getDefaultAdapter()
+                    name = adapter?.name
+                }
             }
             if (name == null) {
                 name = Settings.Secure.getString(

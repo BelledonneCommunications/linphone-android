@@ -23,13 +23,11 @@
     <string name="phone_number">Phone number</string>
     <string name="or">or</string>
     <string name="next">next</string>
+    <string name="start">Start</string>
 
     <string name="notification_channel_call_name">&appName; active calls notifications</string>
     <string name="notification_channel_incoming_call_name">&appName; incoming calls notifications</string>
     <string name="notification_channel_service_name">&appName; service notification</string>
-
-    <string name="incoming_call_notification_hangup_action_label">Hangup</string>
-    <string name="incoming_call_notification_answer_action_label">Answer</string>
 
     <string name="bottom_navigation_contacts_label">Contacts</string>
     <string name="bottom_navigation_calls_label">Calls</string>
@@ -40,7 +38,7 @@
     <string name="dialog_accept">Accept</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_continue">Continue</string>
-    <string name="dialog_ok">Ok</string>
+    <string name="dialog_ok">OK</string>
     <string name="dialog_call">Call</string>
     <string name="dialog_delete">Delete</string>
     <string name="dialog_do_not_show_anymore">Do not show this dialog anymore</string>
@@ -162,6 +160,15 @@
     <string name="call_incoming">Incoming call</string>
 
     <string name="operation_in_progress_overlay">Operation in progress, please wait</string>
+
+    <string name="voip_action_call_transfer">Transfer</string>
+    <string name="voip_action_start_new_call">New call</string>
+    <string name="voip_action_go_to_calls_list">Calls list</string>
+    <string name="voip_action_show_dialer">Dialer</string>
+    <string name="voip_action_show_messages">Messages</string>
+    <string name="voip_action_pause_call">Pause</string>
+    <string name="voip_action_resume_call">Pause</string>
+    <string name="voip_action_record_call">Record</string>
 
     <!-- Keep <u></u> in following strings translations! -->
     <string name="welcome_carousel_skip"><u>Skip</u></string>

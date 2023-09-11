@@ -27,7 +27,7 @@ import org.linphone.core.tools.Log
 import org.linphone.utils.Event
 
 class ZrtpSasConfirmationDialogModel @UiThread constructor(
-    private val authTokenToRead: String,
+    authTokenToRead: String,
     private val authTokenToListen: String
 ) : ViewModel() {
     companion object {

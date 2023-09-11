@@ -37,6 +37,7 @@ import org.linphone.ui.assistant.AssistantActivity
 import org.linphone.ui.welcome.fragment.WelcomePage1Fragment
 import org.linphone.ui.welcome.fragment.WelcomePage2Fragment
 import org.linphone.ui.welcome.fragment.WelcomePage3Fragment
+import org.linphone.utils.AppUtils
 
 class WelcomeActivity : AppCompatActivity() {
     companion object {
@@ -112,10 +113,10 @@ class WelcomeActivity : AppCompatActivity() {
         override fun onPageSelected(position: Int) {
             Log.i("$TAG Current page is [$position]")
             if (position == PAGES - 1) {
-                binding.next.text = "Start"
+                binding.next.text = AppUtils.getString(R.string.start)
                 binding.skip.visibility = View.INVISIBLE
             } else {
-                binding.next.text = "Next"
+                binding.next.text = AppUtils.getString(R.string.next)
                 binding.skip.visibility = View.VISIBLE
             }
         }

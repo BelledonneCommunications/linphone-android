@@ -53,9 +53,6 @@ class DrawerMenuViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<String>>()
     }
 
-    init {
-    }
-
     @UiThread
     override fun onCleared() {
         coreContext.postOnCoreThread {

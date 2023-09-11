@@ -171,7 +171,8 @@
                     android:drawablePadding="10dp"
                     app:layout_constraintTop_toTopOf="@id/phone_number"
                     app:layout_constraintBottom_toBottomOf="@id/phone_number"
-                    app:layout_constraintStart_toStartOf="@id/username" />
+                    app:layout_constraintStart_toStartOf="@id/username"
+                    bind:ignore="RtlSymmetry" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/default_text_style_600"

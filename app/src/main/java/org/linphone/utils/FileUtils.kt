@@ -136,14 +136,17 @@ class FileUtils {
             try {
                 withContext(Dispatchers.IO) {
                     FileOutputStream(to).use { outputStream ->
-                        val inputStream = FileInputStream(
-                            coreContext.context.contentResolver.openFileDescriptor(from, "r")?.fileDescriptor
+                        val fileDescriptor = coreContext.context.contentResolver.openFileDescriptor(
+                            from,
+                            "r"
                         )
+                        val inputStream = FileInputStream(fileDescriptor?.fileDescriptor)
                         val buffer = ByteArray(4096)
                         var bytesRead: Int
                         while (inputStream.read(buffer).also { bytesRead = it } >= 0) {
                             outputStream.write(buffer, 0, bytesRead)
                         }
+                        fileDescriptor?.close()
                     }
                 }
                 return true

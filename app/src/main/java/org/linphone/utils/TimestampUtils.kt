@@ -45,23 +45,6 @@ class TimestampUtils {
         }
 
         @AnyThread
-        fun isSameDay(timestamp1: Long, timestamp2: Long, timestampInSecs: Boolean = true): Boolean {
-            val cal1 = Calendar.getInstance()
-            cal1.timeInMillis = if (timestampInSecs) timestamp1 * 1000 else timestamp1
-            val cal2 = Calendar.getInstance()
-            cal2.timeInMillis = if (timestampInSecs) timestamp2 * 1000 else timestamp2
-            return isSameDay(cal1, cal2)
-        }
-
-        @AnyThread
-        fun isSameDay(
-            cal1: Date,
-            cal2: Date
-        ): Boolean {
-            return isSameDay(cal1.time, cal2.time, false)
-        }
-
-        @AnyThread
         fun dateToString(date: Long, timestampInSecs: Boolean = true): String {
             val dateFormat: Format = android.text.format.DateFormat.getDateFormat(
                 coreContext.context
@@ -75,22 +58,6 @@ class TimestampUtils {
             val dateFormatter = SimpleDateFormat(pattern, Locale.getDefault())
             dateFormatter.timeZone = TimeZone.getTimeZone("UTC")
             return dateFormatter.format(calendar.time)
-        }
-
-        @AnyThread
-        fun timeToString(hour: Int, minutes: Int): String {
-            val use24hFormat = android.text.format.DateFormat.is24HourFormat(
-                coreContext.context
-            )
-            val calendar = Calendar.getInstance()
-            calendar.set(Calendar.HOUR_OF_DAY, hour)
-            calendar.set(Calendar.MINUTE, minutes)
-
-            return if (use24hFormat) {
-                SimpleDateFormat("HH'h'mm", Locale.getDefault()).format(calendar.time)
-            } else {
-                SimpleDateFormat("h:mm a", Locale.getDefault()).format(calendar.time)
-            }
         }
 
         @AnyThread
@@ -117,21 +84,6 @@ class TimestampUtils {
             val cal = Calendar.getInstance()
             cal[0, 0, 0, 0, 0] = duration
             return dateFormat.format(cal.time)
-        }
-
-        @AnyThread
-        fun durationToString(hours: Int, minutes: Int): String {
-            val calendar = Calendar.getInstance()
-            calendar.set(Calendar.HOUR_OF_DAY, hours)
-            calendar.set(Calendar.MINUTE, minutes)
-            val pattern = when {
-                hours == 0 -> "mm'min'"
-                hours < 10 && minutes == 0 -> "H'h'"
-                hours < 10 && minutes > 0 -> "H'h'mm"
-                hours >= 10 && minutes == 0 -> "HH'h'"
-                else -> "HH'h'mm"
-            }
-            return SimpleDateFormat(pattern, Locale.getDefault()).format(calendar.time)
         }
 
         @AnyThread
