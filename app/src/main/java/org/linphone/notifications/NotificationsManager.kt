@@ -106,6 +106,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
     init {
         createServiceChannel()
         createIncomingCallNotificationChannel()
+        createActiveCallNotificationChannel()
 
         for (notification in notificationManager.activeNotifications) {
             if (notification.tag.isNullOrEmpty()) {
@@ -181,11 +182,11 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
     @WorkerThread
     private fun startCallForeground() {
-        val channelId = context.getString(R.string.notification_channel_service_id)
+        val channelId = context.getString(R.string.notification_channel_call_id)
         val channel = notificationManager.getNotificationChannel(channelId)
         val importance = channel?.importance ?: NotificationManagerCompat.IMPORTANCE_NONE
         if (importance == NotificationManagerCompat.IMPORTANCE_NONE) {
-            Log.e("$TAG Service channel has been disabled, can't start foreground service!")
+            Log.e("$TAG Calls channel has been disabled, can't start foreground service!")
             return
         }
 
@@ -328,10 +329,13 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             )
         }
 
-        val channel = if (isIncoming) {
-            context.getString(R.string.notification_channel_incoming_call_id)
-        } else {
-            context.getString(R.string.notification_channel_service_id)
+        val channel = when (call.state) {
+            Call.State.IncomingReceived, Call.State.IncomingEarlyMedia -> {
+                context.getString(R.string.notification_channel_incoming_call_id)
+            }
+            else -> {
+                context.getString(R.string.notification_channel_call_id)
+            }
         }
 
         val builder = NotificationCompat.Builder(
@@ -349,7 +353,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
                 setStyle(style)
             } catch (iae: IllegalArgumentException) {
                 Log.e(
-                    "[Api31 Compatibility] Can't use notification call style: $iae, using API 26 notification instead"
+                    "$TAG Can't use notification call style: $iae, using API 26 notification instead"
                 )
             }
             setSmallIcon(smallIcon)
@@ -432,9 +436,23 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH)
         channel.description = name
         channel.lightColor = context.getColor(R.color.primary_color)
-        channel.lockscreenVisibility
+        channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
         channel.enableVibration(true)
         channel.enableLights(true)
+        channel.setShowBadge(false)
+        notificationManager.createNotificationChannel(channel)
+    }
+
+    @MainThread
+    private fun createActiveCallNotificationChannel() {
+        val id = context.getString(R.string.notification_channel_call_id)
+        val name = context.getString(R.string.notification_channel_call_name)
+
+        val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_DEFAULT)
+        channel.description = name
+        channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+        channel.enableVibration(false)
+        channel.enableLights(false)
         channel.setShowBadge(false)
         notificationManager.createNotificationChannel(channel)
     }

@@ -10,7 +10,8 @@
     <string name="vertical_separator" translatable="false">|</string>
     <string name="assistant_web_platform_link" translatable="false">subscribe.linphone.org</string>
     <string name="assistant_linphone_contact_us_link" translatable="false">linphone.org/contact</string>
-    <string name="notification_channel_incoming_call_id" translatable="false">linphone_notification_call_id</string>
+    <string name="notification_channel_call_id" translatable="false">linphone_notification_call_id</string>
+    <string name="notification_channel_incoming_call_id" translatable="false">linphone_notification_incoming_call_id</string>
     <string name="notification_channel_service_id" translatable="false">linphone_notification_service_id</string>
 
     <string name="sip_address">SIP address</string>
@@ -23,6 +24,7 @@
     <string name="or">or</string>
     <string name="next">next</string>
 
+    <string name="notification_channel_call_name">&appName; active calls notifications</string>
     <string name="notification_channel_incoming_call_name">&appName; incoming calls notifications</string>
     <string name="notification_channel_service_name">&appName; service notification</string>
 
