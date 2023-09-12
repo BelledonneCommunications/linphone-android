@@ -214,11 +214,11 @@ class ActiveCallFragment : GenericCallFragment() {
         if (feature.state == FoldingFeature.State.HALF_OPENED) {
             set.setGuidelinePercent(R.id.hinge_top, 0.5f)
             set.setGuidelinePercent(R.id.hinge_bottom, 0.5f)
-            sharedViewModel.folded.value = true
+            callViewModel.halfOpenedFolded.value = true
         } else {
             set.setGuidelinePercent(R.id.hinge_top, 0f)
             set.setGuidelinePercent(R.id.hinge_bottom, 1f)
-            sharedViewModel.folded.value = false
+            callViewModel.halfOpenedFolded.value = false
         }
 
         set.applyTo(constraintLayout)

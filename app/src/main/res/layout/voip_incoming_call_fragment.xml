@@ -17,8 +17,8 @@
 
         <ImageView
             android:id="@+id/call_direction_icon"
-            android:layout_width="@dimen/icon_size"
-            android:layout_height="@dimen/icon_size"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginStart="10dp"
             android:adjustViewBounds="true"
             android:src="@drawable/incoming_call"
@@ -30,7 +30,7 @@
             style="@style/default_text_style_800"
             android:id="@+id/call_direction_label"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/in_call_top_bar_text_height"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"

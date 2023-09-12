@@ -69,6 +69,8 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     val pipMode = MutableLiveData<Boolean>()
 
+    val halfOpenedFolded = MutableLiveData<Boolean>()
+
     // To synchronize chronometers in UI
     val callDuration = MutableLiveData<Int>()
 

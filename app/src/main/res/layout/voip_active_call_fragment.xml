@@ -106,6 +106,8 @@
                 android:id="@+id/remote_video_surface"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:layout_marginBottom="@{viewModel.fullScreenMode || viewModel.pipMode || viewModel.halfOpenedFolded ? @dimen/zero : @dimen/in_call_main_actions_menu_height, default=@dimen/in_call_main_actions_menu_height}"
+                android:layout_marginTop="@{viewModel.fullScreenMode || viewModel.pipMode || viewModel.halfOpenedFolded ? @dimen/zero : @dimen/in_call_top_bar_info_height, default=@dimen/in_call_top_bar_info_height}"
                 android:onClick="@{() -> viewModel.toggleFullScreen()}"
                 android:visibility="@{viewModel.isVideoEnabled ? View.VISIBLE : View.GONE}"
                 app:layout_constraintTop_toTopOf="parent"
@@ -122,8 +124,8 @@
 
             <ImageView
                 android:id="@+id/call_direction_icon"
-                android:layout_width="@dimen/icon_size"
-                android:layout_height="@dimen/icon_size"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginStart="10dp"
                 android:adjustViewBounds="true"
                 android:src="@{viewModel.isOutgoing ? @drawable/outgoing_call : @drawable/incoming_call, default=@drawable/outgoing_call}"
@@ -135,7 +137,7 @@
                 style="@style/default_text_style_800"
                 android:id="@+id/call_direction_label"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/in_call_top_bar_text_height"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
@@ -150,33 +152,31 @@
                 style="@style/default_text_style_800"
                 android:id="@+id/separator"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/in_call_top_bar_text_height"
                 android:layout_marginStart="5dp"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:text="@string/vertical_separator"
                 app:layout_constraintStart_toEndOf="@id/call_direction_label"
-                app:layout_constraintTop_toTopOf="@id/call_direction_label"
-                app:layout_constraintBottom_toBottomOf="@id/call_direction_label"/>
+                app:layout_constraintTop_toTopOf="@id/call_direction_label"/>
 
             <Chronometer
                 style="@style/default_text_style_800"
                 android:id="@+id/chronometer"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/in_call_top_bar_text_height"
                 android:layout_marginStart="5dp"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 app:layout_constraintStart_toEndOf="@id/separator"
-                app:layout_constraintTop_toTopOf="@id/call_direction_label"
-                app:layout_constraintBottom_toBottomOf="@id/call_direction_label"/>
+                app:layout_constraintTop_toTopOf="@id/call_direction_label"/>
 
             <ImageView
                 android:onClick="@{() -> viewModel.switchCamera()}"
                 android:id="@+id/switch_camera"
-                android:layout_width="34dp"
-                android:layout_height="34dp"
-                android:padding="5dp"
+                android:layout_width="@dimen/in_call_top_bar_info_height"
+                android:layout_height="@dimen/in_call_top_bar_info_height"
+                android:padding="10dp"
                 android:layout_marginEnd="10dp"
                 android:src="@drawable/camera_rotate"
                 android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; viewModel.isVideoEnabled &amp;&amp; viewModel.showSwitchCamera ? View.VISIBLE : View.GONE}"

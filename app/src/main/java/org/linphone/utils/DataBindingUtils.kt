@@ -36,6 +36,7 @@ import androidx.annotation.ColorRes
 import androidx.annotation.UiThread
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -305,6 +306,22 @@ fun AppCompatEditText.editTextSetting(lambda: () -> Unit) {
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     })
+}
+
+@BindingAdapter("android:layout_marginBottom")
+fun setConstraintLayoutBottomMargin(view: View, margins: Float) {
+    val params = view.layoutParams as ConstraintLayout.LayoutParams
+    val m = margins.toInt()
+    params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, m)
+    view.layoutParams = params
+}
+
+@BindingAdapter("android:layout_marginTop")
+fun setConstraintLayoutTopMargin(view: View, margins: Float) {
+    val params = view.layoutParams as ConstraintLayout.LayoutParams
+    val m = margins.toInt()
+    params.setMargins(params.leftMargin, m, params.rightMargin, params.bottomMargin)
+    view.layoutParams = params
 }
 
 @BindingAdapter("focusNextOnInput")
