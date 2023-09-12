@@ -24,6 +24,7 @@ import org.linphone.core.tools.Log
 
 class NumpadModel @UiThread constructor(
     private val onDigitClicked: (value: String) -> (Unit),
+    private val onBackspaceClicked: () -> (Unit),
     private val onCallClicked: () -> (Unit)
 ) {
     companion object {
@@ -40,6 +41,12 @@ class NumpadModel @UiThread constructor(
         Log.i("$TAG Long clicked on digit [$value]")
         onDigitClicked.invoke(value)
         return true
+    }
+
+    @UiThread
+    fun onBackspaceClicked() {
+        Log.i("$TAG Clicked on backspace")
+        onBackspaceClicked.invoke()
     }
 
     @UiThread

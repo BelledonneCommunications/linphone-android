@@ -147,6 +147,21 @@ class StartCallFragment : GenericFragment() {
             viewModel.applyFilter(trimmed)
         }
 
+        viewModel.removedCharacterAtCurrentPositionEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                val selectionStart = binding.searchBar.selectionStart
+                val selectionEnd = binding.searchBar.selectionEnd
+                if (selectionStart > 0) {
+                    binding.searchBar.text =
+                        binding.searchBar.text?.delete(
+                            selectionStart - 1,
+                            selectionEnd
+                        )
+                    binding.searchBar.setSelection(selectionStart - 1)
+                }
+            }
+        }
+
         viewModel.appendDigitToSearchBarEvent.observe(viewLifecycleOwner) {
             it.consume { digit ->
                 val newValue = "${binding.searchBar.text}$digit"

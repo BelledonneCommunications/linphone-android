@@ -59,6 +59,10 @@ class StartCallViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<String>>()
     }
 
+    val removedCharacterAtCurrentPositionEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     val requestKeyboardVisibilityChangedEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -102,6 +106,10 @@ class StartCallViewModel @UiThread constructor() : ViewModel() {
                 appendDigitToSearchBarEvent.value = Event(digit)
                 // Don't do that, cursor will stay at start
                 // searchFilter.value = "${searchFilter.value.orEmpty()}$digit"
+            },
+            {
+                // OnBackspaceClicked
+                removedCharacterAtCurrentPositionEvent.value = Event(true)
             },
             { // OnCallClicked
                 val suggestion = searchFilter.value.orEmpty()
