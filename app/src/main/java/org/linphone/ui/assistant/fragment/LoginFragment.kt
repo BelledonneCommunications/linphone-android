@@ -114,8 +114,9 @@ class LoginFragment : Fragment() {
 
         viewModel.accountLoggedInEvent.observe(viewLifecycleOwner) {
             it.consume {
-                Log.i("$TAG Account successfully logged-in, leaving assistant")
-                goBack()
+                Log.i("$TAG Account successfully logged-in, go to profile mode fragment")
+                val action = LoginFragmentDirections.actionLoginFragmentToProfileModeFragment()
+                findNavController().navigate(action)
             }
         }
 

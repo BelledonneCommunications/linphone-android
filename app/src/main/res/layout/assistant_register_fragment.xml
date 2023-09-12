@@ -52,9 +52,10 @@
                     app:layout_constraintStart_toStartOf="parent"/>
 
                 <ImageView
-                    android:id="@+id/image"
+                    android:id="@+id/header"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
+                    android:layout_marginTop="19dp"
                     android:src="@drawable/header"
                     android:adjustViewBounds="true"
                     android:scaleType="centerCrop"
@@ -69,7 +70,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="100dp"
-                    android:paddingBottom="30dp"
+                    android:paddingBottom="27dp"
                     android:text="@string/assistant_account_register"
                     android:textSize="20sp"
                     android:textColor="@color/white"

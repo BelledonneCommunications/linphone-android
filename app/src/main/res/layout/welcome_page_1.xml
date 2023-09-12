@@ -4,14 +4,27 @@
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <ImageView
+        android:id="@+id/header"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:src="@drawable/header"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/title_second_line"/>
+
     <androidx.appcompat.widget.AppCompatTextView
         style="@style/default_text_style_800"
         android:id="@+id/title_first_line"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="65dp"
+        android:layout_marginTop="16dp"
         android:text="Welcome"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="36sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
@@ -22,8 +35,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="65dp"
+        android:paddingBottom="16dp"
         android:text="in Linphone"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="26sp"
         app:layout_constraintTop_toBottomOf="@id/title_first_line"
         app:layout_constraintEnd_toEndOf="parent"/>

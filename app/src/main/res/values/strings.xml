@@ -85,6 +85,10 @@
     <string name="assistant_third_party_sip_account_warning_explanation">Some features require a Linphone account, such as group messaging, video conferences…\n\nThese features are hidden when you register with a third party SIP account.\n\nTo enable it in a commercial project, please contact us.</string>
     <string name="assistant_third_party_sip_account_create_linphone_account">I prefer to create an account</string>
     <string name="assistant_third_party_sip_account_warning_ok">I understand</string>
+    <string name="assistant_account_secure_mode_title">Personalize your profile mode</string>
+    <string name="assistant_account_secure_mode_subtitle">You may change that mode later</string>
+    <string name="assistant_secure_mode_default_title">Default</string>
+    <string name="assistant_secure_mode_interoperable_title">Interoperable</string>
 
     <string name="drawer_menu_default_account_label">Default</string>
     <string name="drawer_menu_manage_account">Manage the profile</string>

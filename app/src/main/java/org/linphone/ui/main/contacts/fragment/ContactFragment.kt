@@ -102,7 +102,7 @@ class ContactFragment : GenericFragment() {
         binding.setDeleteClickListener {
             viewModel.deleteContact()
             goBack()
-            // TODO: show toast ?
+            // TODO: show toast ? show confirmation dialog ?
         }
 
         sharedViewModel.isSlidingPaneSlideable.observe(viewLifecycleOwner) { slideable ->

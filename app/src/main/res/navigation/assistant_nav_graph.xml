@@ -37,6 +37,14 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
             app:launchSingleTop="true" />
+        <action
+            android:id="@+id/action_loginFragment_to_profileModeFragment"
+            app:destination="@id/profileModeFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:launchSingleTop="true" />
 
     </fragment>
 
@@ -117,5 +125,11 @@
             app:popUpToInclusive="false" />
 
     </fragment>
+
+    <fragment
+        android:id="@+id/profileModeFragment"
+        android:name="org.linphone.ui.assistant.fragment.ProfileModeFragment"
+        android:label="ProfileModeFragment"
+        tools:layout="@layout/assistant_secure_mode_fragment" />
 
 </navigation>
