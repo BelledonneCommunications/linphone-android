@@ -106,9 +106,9 @@
     <string name="manage_account_international_prefix">International Prefix</string>
 
     <string name="friend_presence_status_online">Online</string>
-    <string name="friend_presence_status_was_online_on">Online on $1%s</string>
-    <string name="friend_presence_status_was_online_today_at">Online today at $1%s</string>
-    <string name="friend_presence_status_was_online_yesterday_at">Online yesterday at $1%s</string>
+    <string name="friend_presence_status_was_online_on">Online on %s</string>
+    <string name="friend_presence_status_was_online_today_at">Online today at %s</string>
+    <string name="friend_presence_status_was_online_yesterday_at">Online yesterday at %s</string>
     <string name="friend_presence_status_away">Away</string>
     <string name="friend_presence_status_do_not_disturb">Do not disturb</string>
     <string name="friend_call_action">Call</string>

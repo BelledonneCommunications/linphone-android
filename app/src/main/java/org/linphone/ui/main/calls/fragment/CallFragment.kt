@@ -125,6 +125,9 @@ class CallFragment : GenericFragment() {
                 goBack() // TODO FIXME : issue with tablet when pane can't be closed
             }
         }
+
+        // TODO: remove later
+        binding.chat.isEnabled = false
     }
 
     private fun copyNumberOrAddressToClipboard(value: String) {

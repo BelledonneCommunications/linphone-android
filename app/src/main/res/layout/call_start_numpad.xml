@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:padding="11dp"
             android:src="@drawable/shape_drawer_handle"
-            app:tint="@color/drawer_handle"
+            app:tint="@color/blue_light_disabled"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -178,7 +178,7 @@
             android:src="@drawable/phone"
             android:padding="15dp"
             android:elevation="3dp"
-            android:background="@drawable/shape_circle_green_background"
+            android:background="@drawable/circle_green_button_background"
             app:tint="@color/white"
             app:layout_constraintTop_toBottomOf="@id/flow"
             app:layout_constraintStart_toStartOf="parent"

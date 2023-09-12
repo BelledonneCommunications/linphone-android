@@ -198,6 +198,9 @@ class ContactFragment : GenericFragment() {
                 showConfirmTrustCallDialog(pair.first, pair.second)
             }
         }
+
+        // TODO: remove later
+        binding.chat.isEnabled = false
     }
 
     override fun onPause() {

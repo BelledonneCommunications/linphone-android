@@ -9,19 +9,22 @@
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
     <color name="red_danger">#DD5F5F</color>
+    <color name="red_pressed">#9E3548</color>
+    <color name="red_disabled">#F5CCBE</color>
     <color name="green_online">#4FAE80</color>
-    <color name="blue_outgoing_message">#DFECF2</color>
+    <color name="green_pressed">#377D71</color>
+    <color name="blue_light">#DFECF2</color>
+    <color name="blue_light_disabled">#C0D1D9</color>
     <color name="blue_trusted">#4AA8FF</color>
     <color name="orange_away">#FFA645</color>
     <color name="gray_offline">#E1E1E1</color>
     <color name="warning_orange_background">#FFEACB</color>
     <color name="warning_orange_pressed_background">#FFB266</color>
     <color name="dialog_background">#A622334D</color>
-    <color name="drawer_handle">#C0D1D9</color>
 
     <color name="gradient_start">#EEF7F8</color>
 
-    <color name="gray_1">#6C7A87</color>
+    <color name="gray_1">#6C7A87</color>0xFF
     <color name="gray_2">#F9F9F9</color>
     <color name="gray_3">#EEF6F8</color>
     <color name="gray_4">#949494</color>
@@ -31,6 +34,7 @@
     <color name="gray_8">#364860</color>
     <color name="gray_9">#4E6074</color>
     <color name="gray_10">#9AABB5</color>
+    <color name="gray_11">#C9C9C9</color>
     <color name="separator">#E5E5EA</color>
 
     <color name="in_call_black">#070707</color>

@@ -71,7 +71,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:cacheColorHint="@color/transparent_color"
-            android:divider="@color/blue_outgoing_message"
+            android:divider="@color/blue_light"
             android:dividerHeight="1dp" />
 
         <androidx.appcompat.widget.AppCompatTextView

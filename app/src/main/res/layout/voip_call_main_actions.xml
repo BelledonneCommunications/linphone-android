@@ -41,7 +41,7 @@
             android:paddingTop="15dp"
             android:paddingBottom="15dp"
             android:src="@drawable/phone_disconnect"
-            android:background="@drawable/shape_hang_up_button_background"
+            android:background="@drawable/squircle_red_button_background"
             app:tint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

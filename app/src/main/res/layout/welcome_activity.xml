@@ -54,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                app:dotsColor="@color/blue_outgoing_message"
+                app:dotsColor="@color/blue_light"
                 app:dotsCornerRadius="8dp"
                 app:dotsSize="13dp"
                 app:dotsSpacing="5dp"
