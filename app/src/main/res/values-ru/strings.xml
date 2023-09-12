@@ -823,4 +823,8 @@
 \n
 \nВы все равно хотите его создать\?</string>
     <string name="chat_message_voice_recording_notification_short_desc">голосовое сообщение</string>
+    <string name="chat_message_reaction_received">Реакции в чате</string>
+    <string name="chat_message_one_reaction">%s реакция</string>
+    <string name="chat_message_many_reactions">%s реакции</string>
+    <string name="conference_invitation_notification_short_desc">приглашение на встречу</string>
 </resources>
