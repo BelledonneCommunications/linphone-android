@@ -9,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
 import kotlinx.coroutines.launch
@@ -78,6 +79,19 @@ class AccountProfileFragment : GenericFragment() {
 
         binding.setPickImageClickListener {
             pickImage()
+        }
+
+        binding.setChangeModeClickListener {
+            val action = AccountProfileFragmentDirections.actionAccountProfileFragmentToProfileModeFragment()
+            findNavController().navigate(action)
+        }
+
+        binding.setSettingsClickListener {
+            // TODO
+        }
+
+        binding.setDeleteClickListener {
+            // TODO
         }
 
         viewModel.accountFoundEvent.observe(viewLifecycleOwner) {

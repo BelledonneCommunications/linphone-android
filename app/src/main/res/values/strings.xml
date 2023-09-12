@@ -104,10 +104,14 @@
     <string name="recordings_title">Recordings</string>
     <string name="help_title">Help</string>
 
-    <string name="manage_account_title">Account profile</string>
+    <string name="manage_account_title">Manage account</string>
+    <string name="manage_account_details_title">Details</string>
     <string name="manage_account_add_picture">Add a picture</string>
     <string name="manage_account_edit_picture">Edit picture</string>
+    <string name="manage_account_change_mode">Change mode</string>
     <string name="manage_account_international_prefix">International Prefix</string>
+    <string name="manage_account_settings">Account settings</string>
+    <string name="manage_account_delete">Delete account</string>
 
     <string name="friend_presence_status_online">Online</string>
     <string name="friend_presence_status_was_online_on">Online on %s</string>
@@ -153,7 +157,7 @@
     <string name="contact_details_job_title">Job title:</string>
     <string name="contact_details_trust_title">Trust</string>
     <string name="contact_details_trusted_devices_count">Number of trusted devices:</string>
-    <string name="contact_details_actions_title">Trust</string>
+    <string name="contact_details_actions_title">Other actions</string>
     <string name="contact_details_edit">Edit</string>
     <string name="contact_details_add_to_favourites">Add to favourites</string>
     <string name="contact_details_remove_from_favourites">Remove from favourites</string>

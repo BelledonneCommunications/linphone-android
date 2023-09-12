@@ -40,6 +40,14 @@
         <argument
             android:name="accountIdentity"
             app:argType="string" />
+        <action
+            android:id="@+id/action_accountProfileFragment_to_profileModeFragment"
+            app:destination="@id/profileModeFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:launchSingleTop="true"/>
     </fragment>
 
     <action
@@ -105,5 +113,11 @@
         app:enterAnim="@anim/slide_in"
         app:popExitAnim="@anim/slide_out"
         app:launchSingleTop="true" />
+
+    <fragment
+        android:id="@+id/profileModeFragment"
+        android:name="org.linphone.ui.assistant.fragment.ProfileModeFragment"
+        android:label="ProfileModeFragment"
+        tools:layout="@layout/assistant_secure_mode_fragment"/>
 
 </navigation>

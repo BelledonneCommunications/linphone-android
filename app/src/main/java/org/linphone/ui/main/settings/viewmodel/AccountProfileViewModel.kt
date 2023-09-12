@@ -23,7 +23,13 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
 
     val accountFoundEvent = MutableLiveData<Event<Boolean>>()
 
+    val expandDetails = MutableLiveData<Boolean>()
+
     private lateinit var account: Account
+
+    init {
+        expandDetails.value = true
+    }
 
     @UiThread
     fun findAccountMatchingIdentity(identity: String) {
@@ -77,5 +83,10 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
                 account.refreshRegister()
             }
         }
+    }
+
+    @UiThread
+    fun toggleDetailsExpand() {
+        expandDetails.value = expandDetails.value == false
     }
 }
