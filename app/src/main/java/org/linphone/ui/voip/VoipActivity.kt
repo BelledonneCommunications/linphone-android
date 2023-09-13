@@ -150,7 +150,7 @@ class VoipActivity : AppCompatActivity() {
             }
         }
 
-        callsViewModel.showLowSignalEvent.observe(this) {
+        callsViewModel.showLowWifiSignalEvent.observe(this) {
             it.consume { show ->
                 if (show) {
                     showRedToast(
@@ -162,6 +162,23 @@ class VoipActivity : AppCompatActivity() {
                     showGreenToast(
                         getString(R.string.toast_alert_low_wifi_signal_cleared),
                         R.drawable.wifi_high
+                    )
+                }
+            }
+        }
+
+        callsViewModel.showLowCellularSignalEvent.observe(this) {
+            it.consume { show ->
+                if (show) {
+                    showRedToast(
+                        getString(R.string.toast_alert_low_cellular_signal),
+                        R.drawable.cell_signal_low
+                    )
+                } else {
+                    hideRedToast()
+                    showGreenToast(
+                        getString(R.string.toast_alert_low_cellular_signal_cleared),
+                        R.drawable.cell_signal_full
                     )
                 }
             }

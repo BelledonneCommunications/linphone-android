@@ -35,6 +35,10 @@ import org.linphone.utils.Event
 class CallsViewModel @UiThread constructor() : ViewModel() {
     companion object {
         private const val TAG = "[Calls ViewModel]"
+
+        private const val ALERT_SIGNAL_TYPE_KEY = "signal-type"
+        private const val ALERT_SIGNAL_TYPE_WIFI = "wifi"
+        private const val ALERT_SIGNAL_TYPE_CELLULAR = "mobile"
     }
 
     val goToActiveCallEvent = MutableLiveData<Event<Boolean>>()
@@ -45,7 +49,9 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
 
     val noMoreCallEvent = MutableLiveData<Event<Boolean>>()
 
-    val showLowSignalEvent = MutableLiveData<Event<Boolean>>()
+    val showLowWifiSignalEvent = MutableLiveData<Event<Boolean>>()
+
+    val showLowCellularSignalEvent = MutableLiveData<Event<Boolean>>()
 
     private val alertListener = object : AlertListenerStub() {
         @WorkerThread
@@ -55,7 +61,22 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
             alert.removeListener(this)
 
             if (alert.type == Alert.Type.QoSLowSignal) {
-                showLowSignalEvent.postValue(Event(false))
+                val signalType = alert.informations?.getString(ALERT_SIGNAL_TYPE_KEY)
+                when (signalType) {
+                    ALERT_SIGNAL_TYPE_WIFI -> {
+                        Log.i("$TAG Wi-Fi signal no longer low")
+                        showLowWifiSignalEvent.postValue(Event(false))
+                    }
+                    ALERT_SIGNAL_TYPE_CELLULAR -> {
+                        Log.i("$TAG Cellular signal no longer low")
+                        showLowCellularSignalEvent.postValue(Event(false))
+                    }
+                    else -> {
+                        Log.w(
+                            "$TAG Unexpected type of signal [$signalType] found in alert information"
+                        )
+                    }
+                }
             }
         }
     }
@@ -96,7 +117,22 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
             alert.addListener(alertListener)
 
             if (alert.type == Alert.Type.QoSLowSignal) {
-                showLowSignalEvent.postValue(Event(true))
+                val signalType = alert.informations?.getString(ALERT_SIGNAL_TYPE_KEY)
+                when (signalType) {
+                    ALERT_SIGNAL_TYPE_WIFI -> {
+                        Log.i("$TAG Triggered low signal alert is for Wi-Fi")
+                        showLowWifiSignalEvent.postValue(Event(true))
+                    }
+                    ALERT_SIGNAL_TYPE_CELLULAR -> {
+                        Log.i("$TAG Triggered low signal alert is for cellular")
+                        showLowCellularSignalEvent.postValue(Event(true))
+                    }
+                    else -> {
+                        Log.w(
+                            "$TAG Unexpected type of signal [$signalType] found in alert information"
+                        )
+                    }
+                }
             }
         }
     }

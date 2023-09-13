@@ -79,7 +79,9 @@
     <string name="toast_phone_number_copied_to_clipboard">Number copied into clipboard</string>
     <string name="toast_call_history_deleted">History has been deleted</string>
     <string name="toast_alert_low_wifi_signal">Low Wi-Fi signal!</string>
-    <string name="toast_alert_low_wifi_signal_cleared">Wi-Fi signal no longer low</string>
+    <string name="toast_alert_low_wifi_signal_cleared">Wi-Fi signal is no longer low</string>
+    <string name="toast_alert_low_cellular_signal">Low cellular signal!</string>
+    <string name="toast_alert_low_cellular_signal_cleared">Cellular signal is no longer low</string>
     <string name="toast_call_can_be_trusted">This call can be trusted</string>
 
     <string name="assistant_country_picker_title">Choose your country</string>
