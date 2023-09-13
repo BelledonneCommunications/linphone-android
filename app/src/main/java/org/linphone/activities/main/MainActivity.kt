@@ -19,6 +19,7 @@
  */
 package org.linphone.activities.main
 
+import android.app.Dialog
 import android.content.ComponentCallbacks2
 import android.content.Context
 import android.content.Intent
@@ -116,6 +117,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     private val authenticationRequestedEvent: MutableLiveData<Event<AuthInfo>> by lazy {
         MutableLiveData<Event<AuthInfo>>()
     }
+    private var authenticationRequiredDialog: Dialog? = null
 
     private val coreListener: CoreListenerStub = object : CoreListenerStub() {
         override fun onAuthenticationRequested(core: Core, authInfo: AuthInfo, method: AuthMethod) {
@@ -687,6 +689,8 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     private fun showAuthenticationRequestedDialog(
         authInfo: AuthInfo
     ) {
+        authenticationRequiredDialog?.dismiss()
+
         val identity = "${authInfo.username}@${authInfo.domain}"
         Log.i("[Main Activity] Showing authentication required dialog for account [$identity]")
 
@@ -702,6 +706,7 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
 
         dialogViewModel.showCancelButton {
             dialog.dismiss()
+            authenticationRequiredDialog = null
         }
 
         dialogViewModel.showOkButton(
@@ -716,10 +721,12 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
                 coreContext.core.refreshRegisters()
 
                 dialog.dismiss()
+                authenticationRequiredDialog = null
             },
             getString(R.string.dialog_authentication_required_change_password_label)
         )
 
         dialog.show()
+        authenticationRequiredDialog = dialog
     }
 }
