@@ -110,8 +110,6 @@ class ThirdPartySipAccountLoginFragment : Fragment() {
 
         viewModel.accountLoginErrorEvent.observe(viewLifecycleOwner) {
             it.consume { message ->
-                Log.e("$TAG Failed to log in account [$message]")
-                // TODO FIXME: don't use message from callback
                 (requireActivity() as AssistantActivity).showRedToast(
                     message,
                     R.drawable.warning_circle

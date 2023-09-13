@@ -18,9 +18,6 @@
             name="settingsClickListener"
             type="View.OnClickListener" />
         <variable
-            name="deleteClickListener"
-            type="View.OnClickListener" />
-        <variable
             name="viewModel"
             type="org.linphone.ui.main.settings.viewmodel.AccountProfileViewModel" />
     </data>
@@ -384,7 +381,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/action_settings"/>
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:onClick="@{deleteClickListener}"
+                android:onClick="@{() -> viewModel.deleteAccount()}"
                 style="@style/context_menu_danger_action_label_style"
                 android:id="@+id/action_delete"
                 android:layout_width="0dp"

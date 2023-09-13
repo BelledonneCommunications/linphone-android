@@ -48,7 +48,7 @@ class ZrtpSasConfirmationDialogModel @UiThread constructor(
     init {
         message.value = "Dites $authTokenToRead et cliquez sur les lettres données par votre interlocuteur :"
 
-        // TODO: improve algo
+        // TODO: improve algo?
         val rnd = Random()
         val randomLetters1 = "${alphabet[rnd.nextInt(alphabet.length)]}${alphabet[
             rnd.nextInt(

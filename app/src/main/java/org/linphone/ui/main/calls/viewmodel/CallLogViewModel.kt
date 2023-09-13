@@ -81,6 +81,6 @@ class CallLogViewModel @UiThread constructor() : ViewModel() {
 
     @UiThread
     fun sendMessage() {
-        // TODO
+        // TODO: chat feature
     }
 }

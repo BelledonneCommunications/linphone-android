@@ -121,11 +121,6 @@ class ActiveCallFragment : GenericCallFragment() {
                     getString(R.string.toast_call_can_be_trusted),
                     R.drawable.trusted
                 )
-                // TODO: improve
-                binding.avatar.avatarBorderColor = resources.getColor(
-                    R.color.blue_trusted,
-                    requireContext().theme
-                )
                 binding.avatar.avatarBorderWidth = AppUtils.getDimension(
                     R.dimen.avatar_trust_border_width
                 ).toInt()

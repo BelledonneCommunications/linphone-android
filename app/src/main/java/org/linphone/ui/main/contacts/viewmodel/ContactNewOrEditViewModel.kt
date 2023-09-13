@@ -97,7 +97,7 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
                     firstName.postValue(vCard.givenName)
                     lastName.postValue(vCard.familyName)
                 } else {
-                    // TODO ?
+                    // TODO ? What to do when vCard is null
                 }
 
                 picturePath.postValue(friend.photo)
@@ -184,7 +184,7 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
                     )
                 } else {
                     Log.e("$TAG Failed to generate a ref key using vCard's generateUniqueId()")
-                    // TODO : generate unique ref key
+                    // TODO? : generate unique ref key
                 }
                 friend.done()
 

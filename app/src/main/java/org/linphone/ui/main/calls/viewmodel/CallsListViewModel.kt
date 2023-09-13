@@ -109,7 +109,7 @@ class CallsListViewModel @UiThread constructor() : AbstractTopBarViewModel() {
     private fun computeCallLogsList(filter: String) {
         val list = arrayListOf<CallLogModel>()
 
-        // TODO : Add support for call logs in magic search
+        // TODO? : Add support for call logs in magic search
         val account = LinphoneUtils.getDefaultAccount()
         val logs = account?.callLogs ?: coreContext.core.callLogs
         for (callLog in logs) {

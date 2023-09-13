@@ -83,14 +83,6 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
                         showCallActivity()
                     }
                 }
-                Call.State.UpdatedByRemote -> {
-                    // TODO FIXME: remove
-                    val params = core.createCallParams(call)
-                    params?.isVideoEnabled = true
-                    core.isVideoCaptureEnabled = true
-                    core.isVideoDisplayEnabled = true
-                    call.acceptUpdate(params)
-                }
                 else -> {
                 }
             }

@@ -183,6 +183,6 @@ class AccountModel @WorkerThread constructor(
 }
 
 fun Account.isInSecureMode(): Boolean {
-    // TODO FIXME
+    // TODO FIXME: use real API when available
     return params.identityAddress?.domain == "sip.linphone.org"
 }

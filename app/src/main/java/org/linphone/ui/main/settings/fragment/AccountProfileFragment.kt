@@ -87,11 +87,14 @@ class AccountProfileFragment : GenericFragment() {
         }
 
         binding.setSettingsClickListener {
-            // TODO
+            // TODO: account settings feature
         }
 
-        binding.setDeleteClickListener {
-            // TODO
+        viewModel.accountRemovedEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i("$TAG Account has been removed, leaving profile")
+                findNavController().popBackStack()
+            }
         }
 
         viewModel.accountFoundEvent.observe(viewLifecycleOwner) {

@@ -60,6 +60,7 @@
                 app:avatarViewPlaceholder="@drawable/contact_avatar"
                 app:avatarViewShape="circle"
                 app:avatarViewBorderWidth="0dp"
+                app:avatarViewBorderColor="@color/blue_trusted"
                 app:layout_constraintVertical_chainStyle="packed"
                 app:layout_constraintEnd_toEndOf="@id/background"
                 app:layout_constraintStart_toStartOf="@id/background"

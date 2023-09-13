@@ -130,9 +130,16 @@ class EditContactFragment : GenericFragment() {
             it.consume { refKey ->
                 if (refKey.isNotEmpty()) {
                     Log.i("$TAG Changes were applied, going back to details page")
+                    (requireActivity() as MainActivity).showGreenToast(
+                        getString(R.string.contact_editor_saved_changes_toast),
+                        R.drawable.info
+                    )
                     goBack()
                 } else {
-                    // TODO : show error
+                    (requireActivity() as MainActivity).showRedToast(
+                        getString(R.string.contact_editor_error_saving_changes_toast),
+                        R.drawable.warning_circle
+                    )
                 }
             }
         }

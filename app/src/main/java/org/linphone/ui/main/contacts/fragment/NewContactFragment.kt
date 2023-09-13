@@ -131,8 +131,15 @@ class NewContactFragment : GenericFragment() {
                     backPressedCallback.isEnabled = false
                     goBack()
                     sharedViewModel.showContactEvent.value = Event(refKey)
+                    (requireActivity() as MainActivity).showGreenToast(
+                        getString(R.string.contact_editor_saved_contact_toast),
+                        R.drawable.info
+                    )
                 } else {
-                    // TODO : show error
+                    (requireActivity() as MainActivity).showRedToast(
+                        getString(R.string.contact_editor_error_saving_contact_toast),
+                        R.drawable.warning_circle
+                    )
                 }
             }
         }

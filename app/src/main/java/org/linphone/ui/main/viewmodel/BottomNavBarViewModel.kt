@@ -70,8 +70,8 @@ class BottomNavBarViewModel @UiThread constructor() : ViewModel() {
             updateMissedCallsCount()
         }
 
-        hideConversations.value = corePreferences.disableChat || true // TODO
-        hideMeetings.value = true // TODO
+        hideConversations.value = corePreferences.disableChat || true // TODO: chat feature
+        hideMeetings.value = true // TODO: meetings feature
     }
 
     @UiThread

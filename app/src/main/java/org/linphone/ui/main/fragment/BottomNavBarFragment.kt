@@ -83,11 +83,11 @@ class BottomNavBarFragment : Fragment() {
         }
 
         binding.setOnConversationsClicked {
-            // TODO
+            // TODO: chat feature
         }
 
         binding.setOnMeetingsClicked {
-            // TODO
+            // TODO: meeting feature
         }
 
         sharedViewModel.currentlyDisplayedFragment.observe(viewLifecycleOwner) {

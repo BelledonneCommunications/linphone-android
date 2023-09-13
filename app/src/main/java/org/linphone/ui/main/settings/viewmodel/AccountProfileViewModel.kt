@@ -32,6 +32,10 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
 
     val expandDetails = MutableLiveData<Boolean>()
 
+    val accountRemovedEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     private lateinit var account: Account
 
     init {
@@ -59,7 +63,7 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
                 accountModel.postValue(AccountModel(account))
                 currentMode.postValue(
                     AppUtils.getString(R.string.manage_account_secure_mode_default_title)
-                ) // TODO FIXME
+                ) // TODO: use real API when available
                 registerEnabled.postValue(account.params.isRegisterEnabled)
 
                 sipAddress.postValue(account.params.identityAddress?.asStringUriOnly())
@@ -69,6 +73,25 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
                 accountFoundEvent.postValue(Event(true))
             } else {
                 accountFoundEvent.postValue(Event(false))
+            }
+        }
+    }
+
+    @UiThread
+    fun deleteAccount() {
+        coreContext.postOnCoreThread { core ->
+            if (::account.isInitialized) {
+                val authInfo = account.findAuthInfo()
+                if (authInfo != null) {
+                    Log.i("$TAG Found auth info for account, removing it")
+                    core.removeAuthInfo(authInfo)
+                } else {
+                    Log.w("$TAG Failed to find matching auth info for account")
+                }
+
+                core.removeAccount(account)
+                Log.i("$TAG Account has been removed")
+                accountRemovedEvent.postValue(Event(true))
             }
         }
     }

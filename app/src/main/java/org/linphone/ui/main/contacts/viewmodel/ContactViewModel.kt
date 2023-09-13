@@ -384,7 +384,7 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                 Log.i(
                     "$TAG Only 1 SIP address found for contact [${friend.name}], sending message directly"
                 )
-                // TODO
+                // TODO: send message feature
             } else if (addressesCount == 0 && numbersCount == 1 && enablePhoneNumbers) {
                 val number = friend.phoneNumbers.first()
                 val address = core.interpretUrl(number, true)
@@ -392,7 +392,7 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                     Log.i(
                         "$TAG Only 1 phone number found for contact [${friend.name}], sending message directly"
                     )
-                    // TODO
+                    // TODO: send message feature
                 } else {
                     Log.e("$TAG Failed to interpret phone number [$number] as SIP address")
                 }

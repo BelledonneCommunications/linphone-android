@@ -247,11 +247,16 @@ class ContactFragment : GenericFragment() {
 
     private fun inviteContactBySms(number: String) {
         Log.i("$TAG Sending SMS to [$number]")
+
+        val smsBody = getString(
+            R.string.contact_sms_invite_content,
+            getString(R.string.website_download_page)
+        )
         val smsIntent: Intent = Intent().apply {
             action = Intent.ACTION_SENDTO
             data = Uri.parse("smsto:$number")
             putExtra("address", number)
-            putExtra("sms_body", "Coucou <3") // TODO FIXME
+            putExtra("sms_body", smsBody)
         }
         startActivity(smsIntent)
     }

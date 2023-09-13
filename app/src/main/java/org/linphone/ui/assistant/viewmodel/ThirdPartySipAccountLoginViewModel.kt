@@ -96,7 +96,7 @@ class ThirdPartySipAccountLoginViewModel @UiThread constructor() : ViewModel() {
                     // TODO: show translated string
                     accountLoginErrorEvent.postValue(Event(message))
 
-                    Log.e("$TAG Account failed to REGISTER, removing it")
+                    Log.e("$TAG Account failed to REGISTER [$message], removing it")
                     core.removeAuthInfo(newlyCreatedAuthInfo)
                     core.removeAccount(newlyCreatedAccount)
                 }

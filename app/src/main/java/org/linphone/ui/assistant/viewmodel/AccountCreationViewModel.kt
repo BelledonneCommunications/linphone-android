@@ -42,6 +42,7 @@ import org.linphone.core.CoreListenerStub
 import org.linphone.core.DialPlan
 import org.linphone.core.tools.Log
 import org.linphone.ui.assistant.fragment.CountryPickerFragment
+import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
 class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPickerFragment.CountryPickedListener {
@@ -98,8 +99,11 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
                 AccountCreator.Status.AccountExist, AccountCreator.Status.AccountExistWithAlias -> {
                     operationInProgress.postValue(false)
                     createEnabled.postValue(false)
-                    // TODO FIXME: use translated string
-                    usernameError.postValue("Account already exists")
+
+                    val error = AppUtils.getString(
+                        R.string.assistant_account_register_username_already_in_use_error
+                    )
+                    usernameError.postValue(error)
                 }
                 AccountCreator.Status.AccountNotExist -> {
                     operationInProgress.postValue(false)
@@ -126,8 +130,11 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
                 AccountCreator.Status.AliasExist, AccountCreator.Status.AliasIsAccount -> {
                     operationInProgress.postValue(false)
                     createEnabled.postValue(false)
-                    // TODO FIXME: use translated string
-                    phoneNumberError.postValue("Phone number already used")
+
+                    val error = AppUtils.getString(
+                        R.string.assistant_account_register_phone_number_already_in_use_error
+                    )
+                    phoneNumberError.postValue(error)
                 }
                 AccountCreator.Status.AliasNotExist -> {
                     operationInProgress.postValue(false)
@@ -305,19 +312,20 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
                             "$TAG Failed to compute phone number using international prefix [$digitsPrefix] and number [$number]"
                         )
                         operationInProgress.postValue(false)
-                        // TODO FIXME: use translated string
-                        phoneNumberError.postValue(
-                            "Wrong international prefix / local phone number"
+
+                        val error = AppUtils.getString(
+                            R.string.assistant_account_register_invalid_phone_number_error
                         )
+                        phoneNumberError.postValue(error)
                     }
                 } else {
                     Log.e(
                         "$TAG Failed to set phone number [$number] and prefix [$digitsPrefix] into account creator!"
                     )
-                    // TODO FIXME: use translated string
-                    phoneNumberError.postValue(
-                        "Failed to configure phone number and prefix in account creator!"
+                    val error = AppUtils.getString(
+                        R.string.assistant_account_register_invalid_phone_number_error
                     )
+                    phoneNumberError.postValue(error)
                 }
             } else {
                 Log.e("$TAG Account creator hasn't been initialized!")

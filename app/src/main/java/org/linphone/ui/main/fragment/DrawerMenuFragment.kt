@@ -77,7 +77,7 @@ class DrawerMenuFragment : GenericFragment() {
         }
 
         binding.setRecordingsClickListener {
-            // TODO FIXME
+            // TODO: recordings feature
             /*val navController = (requireActivity() as MainActivity).findNavController()
             navController.navigate(R.id.action_global_recordingsFragment)
             (requireActivity() as MainActivity).closeDrawerMenu()*/

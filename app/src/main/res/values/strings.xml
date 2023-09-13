@@ -19,6 +19,7 @@
     <string name="help_advanced_send_debug_logs_email_address" translatable="false">linphone-android@belledonne-communications.com</string>
 
     <string name="website_contact_page" translatable="false">https://linphone.org/contact</string>
+    <string name="website_download_page" translatable="false">https://linphone.org/download</string>
     <string name="privacy_policy_url" translatable="false">https://linphone.org/privacy-policy</string>
     <string name="terms_and_conditions_url" translatable="false">https://linphone.org/general-terms</string>
     <string name="users_web_platform" translatable="false">https://subscribe.linphone.org</string>
@@ -106,6 +107,9 @@
     <string name="assistant_secure_mode_default_title">Default</string>
     <string name="assistant_secure_mode_interoperable_title">Interoperable</string>
     <string name="assistant_secure_mode_finish_account_login">Continue</string>
+    <string name="assistant_account_register_username_already_in_use_error">This account already exists</string>
+    <string name="assistant_account_register_phone_number_already_in_use_error">Phone number already used</string>
+    <string name="assistant_account_register_invalid_phone_number_error">Invalid phone number and/or prefix</string>
 
     <string name="drawer_menu_default_account_label">Default</string>
     <string name="drawer_menu_manage_account">Manage the profile</string>
@@ -214,6 +218,10 @@
     <string name="contact_editor_last_name">Last name</string>
     <string name="contact_editor_company">Company</string>
     <string name="contact_editor_job_title">Job title</string>
+    <string name="contact_editor_saved_changes_toast">Changes were successfully saved</string>
+    <string name="contact_editor_error_saving_changes_toast">Failed to save changes!</string>
+    <string name="contact_editor_saved_contact_toast">Contact was successfully created</string>
+    <string name="contact_editor_error_saving_contact_toast">Failed to create contact!</string>
 
     <string name="contact_details_numbers_and_addresses_title">Phone numbers &amp; SIP addresses</string>
     <string name="contact_details_company_name">Company:</string>
@@ -226,6 +234,7 @@
     <string name="contact_details_remove_from_favourites">Remove from favourites</string>
     <string name="contact_details_share">Share</string>
     <string name="contact_details_delete">Delete</string>
+    <string name="contact_sms_invite_content">Hello, join me on &appName;! You can download it for free at %s</string>
 
     <string name="call_outgoing">Outgoing call</string>
     <string name="call_incoming">Incoming call</string>
