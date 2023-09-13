@@ -163,7 +163,9 @@ open class ContactsSelectionViewModel : MessageNotifierViewModel() {
                         it.address?.weakEqual(address) ?: false
                     }
                     if (found != null) {
-                        Log.i("[Contacts Selection] User-input is already present in search results, skipping request")
+                        Log.i(
+                            "[Contacts Selection] User-input is already present in search results, skipping request"
+                        )
                         continue
                     }
                 }
