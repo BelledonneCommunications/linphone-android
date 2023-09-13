@@ -82,7 +82,7 @@ class AccountProfileFragment : GenericFragment() {
         }
 
         binding.setChangeModeClickListener {
-            val action = AccountProfileFragmentDirections.actionAccountProfileFragmentToProfileModeFragment()
+            val action = AccountProfileFragmentDirections.actionAccountProfileFragmentToAccountProfileModeFragment()
             findNavController().navigate(action)
         }
 

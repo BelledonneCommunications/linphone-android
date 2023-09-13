@@ -30,56 +30,33 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:onClick="@{backClickListener}"
                 android:id="@+id/back"
-                android:visibility="invisible"
-                android:layout_width="@dimen/icon_size"
-                android:layout_height="@dimen/icon_size"
-                android:layout_marginTop="7dp"
-                android:layout_marginStart="15dp"
-                android:src="@drawable/caret_left"
-                app:tint="@color/gray_1"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
-
-            <ImageView
-                android:id="@+id/header"
+                android:onClick="@{backClickListener}"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_marginTop="19dp"
-                android:src="@drawable/header"
+                android:layout_height="35dp"
+                android:layout_marginStart="10dp"
                 android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
+                android:padding="5dp"
+                android:src="@drawable/caret_left"
+                android:drawableTint="@color/primary_color"
+                app:layout_constraintBottom_toBottomOf="@id/title"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/back"
-                app:layout_constraintBottom_toBottomOf="@id/sub_title"/>
+                app:layout_constraintTop_toTopOf="@id/title" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style_800"
                 android:id="@+id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="100dp"
-                android:text="@string/assistant_account_secure_mode_title"
-                android:textSize="20sp"
-                android:textColor="@color/white"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
-
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/default_text_style"
-                android:id="@+id/sub_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="25dp"
-                android:text="@string/assistant_account_secure_mode_subtitle"
-                android:textSize="14sp"
-                android:textColor="@color/white"
-                app:layout_constraintTop_toBottomOf="@id/title"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                android:layout_width="0dp"
+                android:layout_height="@dimen/top_bar_height"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:gravity="center_vertical"
+                android:text="@string/manage_account_choose_mode_title"
+                android:textColor="@color/primary_color"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/back"
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <com.google.android.material.radiobutton.MaterialRadioButton
                 android:id="@+id/default_mode"
@@ -94,7 +71,7 @@
                 android:checked="true"
                 app:useMaterialThemeColors="false"
                 app:buttonTint="@color/primary_color"
-                app:layout_constraintTop_toBottomOf="@id/sub_title"
+                app:layout_constraintTop_toBottomOf="@id/title"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <ImageView
@@ -277,7 +254,7 @@
                 android:paddingBottom="@dimen/primary_secondary_buttons_label_padding"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
-                android:text="@string/assistant_secure_mode_finish_account_login"
+                android:text="@string/manage_account_choose_mode_save_changes"
                 android:textSize="18sp"
                 android:textColor="@color/primary_button_label_color"
                 android:gravity="center"

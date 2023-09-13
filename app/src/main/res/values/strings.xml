@@ -41,6 +41,7 @@
     <string name="dialog_ok">OK</string>
     <string name="dialog_call">Call</string>
     <string name="dialog_delete">Delete</string>
+    <string name="dialog_close">Close</string>
     <string name="dialog_do_not_show_anymore">Do not show this dialog anymore</string>
     <string name="dialog_general_terms_and_privacy_policy_title">General terms &amp; privacy policy</string>
     <string name="dialog_general_terms_and_privacy_policy_message">blah blah blah</string> <!-- TODO FIXME -->
@@ -58,6 +59,8 @@
     <string name="dialog_pick_phone_number_or_sip_address_title">Which canal do you choose?</string>
     <string name="dialog_delete_all_call_logs_title">Do you really want to delete all calls history?</string>
     <string name="dialog_delete_all_call_logs_message">All calls will be deleted of the history</string>
+    <string name="dialog_account_secure_mode_default_message">Blah</string> <!-- TODO -->
+    <string name="dialog_account_secure_mode_interoperable_message">Blah</string> <!-- TODO -->
 
     <string name="toast_assistant_qr_code_valid">QR code validated!</string>
     <string name="toast_assistant_qr_code_invalid">Invalid QR code!</string>
@@ -89,6 +92,7 @@
     <string name="assistant_account_secure_mode_subtitle">You may change that mode later</string>
     <string name="assistant_secure_mode_default_title">Default</string>
     <string name="assistant_secure_mode_interoperable_title">Interoperable</string>
+    <string name="assistant_secure_mode_finish_account_login">Continue</string>
 
     <string name="drawer_menu_default_account_label">Default</string>
     <string name="drawer_menu_manage_account">Manage the profile</string>
@@ -116,6 +120,12 @@
     <string name="manage_account_international_prefix">International Prefix</string>
     <string name="manage_account_settings">Account settings</string>
     <string name="manage_account_delete">Delete account</string>
+    <string name="manage_account_choose_mode_title">Choose account mode</string>
+    <string name="manage_account_choose_mode_save_changes">Apply</string>
+    <string name="manage_account_secure_mode_default_title">Default mode</string>
+    <string name="manage_account_secure_mode_interoperable_title">Interoperable mode</string>
+    <string name="manage_account_secure_mode_default_summary">Blah</string> <!-- TODO -->
+    <string name="dialog_account_secure_mode_interoperable_summary">Blah</string> <!-- TODO -->
 
     <string name="friend_presence_status_online">Online</string>
     <string name="friend_presence_status_was_online_on">Online on %s</string>

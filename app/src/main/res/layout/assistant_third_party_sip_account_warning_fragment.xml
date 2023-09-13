@@ -22,6 +22,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="true"
         android:background="@color/white">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -124,7 +125,7 @@
                 android:id="@+id/create_linphone_account"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="130dp"
+                android:layout_marginTop="32dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="20dp"
@@ -138,6 +139,7 @@
                 android:gravity="center"
                 android:background="@drawable/secondary_button_background"
                 app:layout_constraintWidth_max="@dimen/button_max_width"
+                app:layout_constraintVertical_bias="1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/contact"

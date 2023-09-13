@@ -41,8 +41,8 @@
             android:name="accountIdentity"
             app:argType="string" />
         <action
-            android:id="@+id/action_accountProfileFragment_to_profileModeFragment"
-            app:destination="@id/profileModeFragment"
+            android:id="@+id/action_accountProfileFragment_to_accountProfileModeFragment"
+            app:destination="@id/accountProfileModeFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
@@ -115,9 +115,9 @@
         app:launchSingleTop="true" />
 
     <fragment
-        android:id="@+id/profileModeFragment"
-        android:name="org.linphone.ui.assistant.fragment.ProfileModeFragment"
-        android:label="ProfileModeFragment"
-        tools:layout="@layout/assistant_secure_mode_fragment"/>
+        android:id="@+id/accountProfileModeFragment"
+        android:name="org.linphone.ui.main.settings.fragment.AccountProfileModeFragment"
+        android:label="AccountProfileModeFragment"
+        tools:layout="@layout/account_profile_secure_mode_fragment"/>
 
 </navigation>

@@ -133,8 +133,10 @@ class AccountModel @WorkerThread constructor(
         initials.postValue(LinphoneUtils.getInitials(name))
 
         val pictureUri = account.params.pictureUri.orEmpty()
-        avatar.postValue(pictureUri)
-        Log.d("$TAG Account picture URI is [$pictureUri]")
+        if (pictureUri != avatar.value) {
+            avatar.postValue(pictureUri)
+            Log.d("$TAG Account picture URI is [$pictureUri]")
+        }
 
         isDefault.postValue(coreContext.core.defaultAccount == account)
 

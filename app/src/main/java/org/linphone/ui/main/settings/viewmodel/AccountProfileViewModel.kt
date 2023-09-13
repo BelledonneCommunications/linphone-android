@@ -58,7 +58,7 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
                 account = found
                 accountModel.postValue(AccountModel(account))
                 currentMode.postValue(
-                    "Mode ${AppUtils.getString(R.string.assistant_secure_mode_default_title)}"
+                    AppUtils.getString(R.string.manage_account_secure_mode_default_title)
                 ) // TODO FIXME
                 registerEnabled.postValue(account.params.isRegisterEnabled)
 

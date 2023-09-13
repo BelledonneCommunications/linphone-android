@@ -16,6 +16,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="true"
         android:background="@color/white">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -255,6 +256,7 @@
                 android:background="@drawable/primary_button_background"
                 app:layout_constraintWidth_max="@dimen/button_max_width"
                 app:layout_constraintTop_toBottomOf="@id/transport"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 

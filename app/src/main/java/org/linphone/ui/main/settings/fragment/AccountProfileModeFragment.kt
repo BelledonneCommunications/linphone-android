@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.assistant.fragment
+package org.linphone.ui.main.settings.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -26,23 +26,23 @@ import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import org.linphone.databinding.AssistantSecureModeFragmentBinding
+import org.linphone.databinding.AccountProfileSecureModeFragmentBinding
 import org.linphone.utils.DialogUtils
 
 @UiThread
-class ProfileModeFragment : Fragment() {
+class AccountProfileModeFragment : Fragment() {
     companion object {
-        private const val TAG = "[Profile Mode Fragment]"
+        private const val TAG = "[Account Profile Mode Fragment]"
     }
 
-    private lateinit var binding: AssistantSecureModeFragmentBinding
+    private lateinit var binding: AccountProfileSecureModeFragmentBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = AssistantSecureModeFragmentBinding.inflate(layoutInflater)
+        binding = AccountProfileSecureModeFragmentBinding.inflate(layoutInflater)
         return binding.root
     }
 
@@ -56,7 +56,7 @@ class ProfileModeFragment : Fragment() {
         }
 
         binding.setContinueClickListener {
-            requireActivity().finish()
+            findNavController().popBackStack()
         }
 
         binding.setDefaultModeTooltipClickListener {
