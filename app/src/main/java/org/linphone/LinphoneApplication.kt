@@ -70,7 +70,9 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
         val appName = context.getString(R.string.app_name)
         Factory.instance().setLoggerDomain(appName)
         Factory.instance().enableLogcatLogs(true)
-        Factory.instance().loggingService.setLogLevel(LogLevel.Message)
+        if (corePreferences.debugLogs) {
+            Factory.instance().loggingService.setLogLevel(LogLevel.Message)
+        }
 
         coreContext = CoreContext(context)
         coreContext.start()

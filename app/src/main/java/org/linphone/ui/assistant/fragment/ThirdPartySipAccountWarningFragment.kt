@@ -28,6 +28,7 @@ import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantThirdPartySipAccountWarningFragmentBinding
 
@@ -58,12 +59,14 @@ class ThirdPartySipAccountWarningFragment : Fragment() {
         }
 
         binding.setContactClickListener {
+            val url = getString(R.string.website_contact_page)
             try {
-                val url = "https://linphone.org/contact"
                 val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                 startActivity(browserIntent)
             } catch (ise: IllegalStateException) {
-                Log.e("$TAG Can't start ACTION_VIEW intent, IllegalStateException: $ise")
+                Log.e(
+                    "$TAG Can't start ACTION_VIEW intent for URL [$url], IllegalStateException: $ise"
+                )
             }
         }
 

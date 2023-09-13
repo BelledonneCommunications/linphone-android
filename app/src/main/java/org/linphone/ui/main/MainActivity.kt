@@ -24,8 +24,6 @@ import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.annotation.UiThread
@@ -38,7 +36,7 @@ import androidx.navigation.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.databinding.MainActivityBinding
-import org.linphone.databinding.ToastBinding
+import org.linphone.utils.AppUtils
 import org.linphone.utils.slideInToastFromTopForDuration
 
 @UiThread
@@ -140,20 +138,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun showGreenToast(message: String, @DrawableRes icon: Int) {
-        val greenToast: ToastBinding = DataBindingUtil.inflate(
-            LayoutInflater.from(this),
-            R.layout.toast,
-            binding.toastsArea,
-            false
-        )
-        greenToast.message = message
-        greenToast.icon = icon
-        greenToast.shadowColor = R.drawable.shape_toast_green_shadow
-        greenToast.textColor = R.color.green_online
-        greenToast.root.visibility = View.GONE
+        val greenToast = AppUtils.getGreenToast(this, binding.toastsArea, message, icon)
         binding.toastsArea.addView(greenToast.root)
 
         greenToast.root.slideInToastFromTopForDuration(
+            binding.toastsArea as ViewGroup,
+            lifecycleScope
+        )
+    }
+
+    fun showRedToast(message: String, @DrawableRes icon: Int) {
+        val redToast = AppUtils.getRedToast(this, binding.toastsArea, message, icon)
+        binding.toastsArea.addView(redToast.root)
+
+        redToast.root.slideInToastFromTopForDuration(
             binding.toastsArea as ViewGroup,
             lifecycleScope
         )

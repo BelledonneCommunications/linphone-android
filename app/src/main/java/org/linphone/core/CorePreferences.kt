@@ -42,6 +42,13 @@ class CorePreferences @UiThread constructor(private val context: Context) {
         }
 
     @get:WorkerThread @set:WorkerThread
+    var debugLogs: Boolean
+        get() = config.getBool("app", "debug", org.linphone.BuildConfig.DEBUG)
+        set(value) {
+            config.setBool("app", "debug", value)
+        }
+
+    @get:WorkerThread @set:WorkerThread
     var conditionsAndPrivacyPolicyAccepted: Boolean
         get() = config.getBool("app", "read_and_agree_terms_and_privacy", false)
         set(value) {

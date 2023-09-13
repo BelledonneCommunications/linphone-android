@@ -154,7 +154,7 @@
                 android:layout_marginTop="32dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="32dp"
                 android:paddingTop="@dimen/primary_secondary_buttons_label_padding"
                 android:paddingBottom="@dimen/primary_secondary_buttons_label_padding"
                 android:paddingStart="20dp"

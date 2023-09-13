@@ -83,12 +83,14 @@ class LoginFragment : Fragment() {
         }
 
         binding.setForgottenPasswordClickListener {
+            val url = getString(R.string.users_web_platform)
             try {
-                val url = "https://subscribe.linphone.org"
                 val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                 startActivity(browserIntent)
             } catch (ise: IllegalStateException) {
-                Log.e("$TAG Can't start ACTION_VIEW intent, IllegalStateException: $ise")
+                Log.e(
+                    "$TAG Can't start ACTION_VIEW intent for URL [$url], IllegalStateException: $ise"
+                )
             }
         }
 
@@ -199,28 +201,28 @@ class LoginFragment : Fragment() {
 
         model.privacyPolicyClickedEvent.observe(viewLifecycleOwner) {
             it.consume {
-                val browserIntent = Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("https://www.linphone.org/privacy-policy")
-                )
+                val url = getString(R.string.privacy_policy_url)
                 try {
+                    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                     startActivity(browserIntent)
-                } catch (e: Exception) {
-                    Log.e("$TAG Can't start activity: $e")
+                } catch (ise: IllegalStateException) {
+                    Log.e(
+                        "$TAG Can't start ACTION_VIEW intent for URL [$url], IllegalStateException: $ise"
+                    )
                 }
             }
         }
 
         model.generalTermsClickedEvent.observe(viewLifecycleOwner) {
             it.consume {
-                val browserIntent = Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("https://www.linphone.org/general-terms")
-                )
+                val url = getString(R.string.terms_and_conditions_url)
                 try {
+                    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                     startActivity(browserIntent)
-                } catch (e: Exception) {
-                    Log.e("$TAG Can't start activity: $e")
+                } catch (ise: IllegalStateException) {
+                    Log.e(
+                        "$TAG Can't start ACTION_VIEW intent for URL [$url], IllegalStateException: $ise"
+                    )
                 }
             }
         }

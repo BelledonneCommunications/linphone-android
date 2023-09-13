@@ -85,12 +85,14 @@ class RegisterFragment : Fragment() {
         }
 
         binding.setOpenSubscribeWebPageClickListener {
+            val url = getString(R.string.users_web_platform)
             try {
-                val url = "https://subscribe.linphone.org"
                 val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                 startActivity(browserIntent)
             } catch (ise: IllegalStateException) {
-                Log.e("$TAG Can't start ACTION_VIEW intent, IllegalStateException: $ise")
+                Log.e(
+                    "$TAG Can't start ACTION_VIEW intent for URL [$url], IllegalStateException: $ise"
+                )
             }
         }
 

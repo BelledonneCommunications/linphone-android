@@ -14,6 +14,17 @@
     <string name="notification_channel_incoming_call_id" translatable="false">linphone_notification_incoming_call_id</string>
     <string name="notification_channel_service_id" translatable="false">linphone_notification_service_id</string>
 
+    <string name="help_about_open_source_licenses_title" translatable="false">GNU General Public License v3.0</string>
+    <string name="help_about_open_source_licenses_subtitle" translatable="false">© Belledonne Communications 2010-2023</string>
+    <string name="help_advanced_send_debug_logs_email_address" translatable="false">linphone-android@belledonne-communications.com</string>
+
+    <string name="website_contact_page" translatable="false">https://linphone.org/contact</string>
+    <string name="privacy_policy_url" translatable="false">https://linphone.org/privacy-policy</string>
+    <string name="terms_and_conditions_url" translatable="false">https://linphone.org/general-terms</string>
+    <string name="users_web_platform" translatable="false">https://subscribe.linphone.org</string>
+    <string name="translate_weblate_url" translatable="false">https://weblate.linphone.org/</string>
+    <string name="open_source_licences_usage_url" translatable="false">https://wiki.linphone.org/xwiki/wiki/public/view/Linphone/Third%20party%20components%20/#Hlinphone-android</string>
+
     <string name="sip_address">SIP address</string>
     <string name="sip_address_display_name">Display name</string>
     <string name="sip_address_domain">Domain</string>
@@ -106,7 +117,26 @@
 
     <string name="settings_title">Settings</string>
     <string name="recordings_title">Recordings</string>
+
     <string name="help_title">Help</string>
+    <string name="help_about_title">About &appName;</string>
+    <string name="help_about_privacy_policy_title">Privacy policy</string>
+    <string name="help_about_privacy_policy_subtitle">What information &appName; collects and uses</string>
+    <string name="help_about_version_title">Version</string>
+    <string name="help_about_check_for_update">Check update</string>
+    <string name="help_about_contribute_translations_title">Contribute on &appName; translation</string>
+    <string name="help_about_advanced_title">Advanced</string>
+    <string name="help_advanced_debug_title">Enable/disable debug logs</string>
+    <string name="help_advanced_debug_subtitle">Blah</string> <!-- TODO -->
+    <string name="help_advanced_clean_logs">Clean logs</string>
+    <string name="help_advanced_share_logs">Share logs</string>
+    <string name="help_advanced_share_logs_dialog_title">Share debug logs link using…</string>
+    <string name="help_update_available_toast_message">A new version is available: %s</string>
+    <string name="help_version_up_to_date_toast_message">Your version is up-to-date</string>
+    <string name="help_error_checking_version_toast_message">An error occurred while checking for update</string>
+    <string name="help_advanced_debug_logs_cleaned_toast_message">Debug logs have been cleaned</string>
+    <string name="help_advanced_debug_logs_url_copied_into_clipboard_toast_message">Debug logs URL copied into clipboard</string>
+    <string name="help_advanced_debug_logs_upload_error_toast_message">Failed to upload debug logs</string>
 
     <string name="manage_account_title">Manage account</string>
     <string name="manage_account_details_title">Details</string>

@@ -20,7 +20,9 @@
 package org.linphone.utils
 
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
 import android.util.DisplayMetrics
 import android.util.Rational
 import android.view.LayoutInflater
@@ -34,6 +36,7 @@ import androidx.annotation.StringRes
 import androidx.databinding.DataBindingUtil
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.core.tools.Log
 import org.linphone.databinding.ToastBinding
 
 class AppUtils {
@@ -150,6 +153,30 @@ class AppUtils {
             blueToast.textColor = R.color.blue_trusted
             blueToast.root.visibility = View.GONE
             return blueToast
+        }
+
+        @AnyThread
+        fun shareUploadedLogsUrl(activity: Activity, info: String) {
+            val appName = activity.getString(R.string.app_name)
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.putExtra(
+                Intent.EXTRA_EMAIL,
+                arrayOf(activity.getString(R.string.help_advanced_send_debug_logs_email_address))
+            )
+            intent.putExtra(Intent.EXTRA_SUBJECT, "$appName Logs")
+            intent.putExtra(Intent.EXTRA_TEXT, info)
+            intent.type = "text/plain"
+
+            try {
+                activity.startActivity(
+                    Intent.createChooser(
+                        intent,
+                        activity.getString(R.string.help_advanced_share_logs_dialog_title)
+                    )
+                )
+            } catch (ex: ActivityNotFoundException) {
+                Log.e(ex)
+            }
         }
     }
 }

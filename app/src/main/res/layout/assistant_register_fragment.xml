@@ -33,7 +33,8 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -314,7 +315,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="34dp"
                     android:layout_marginStart="20dp"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginBottom="32dp"
                     android:paddingTop="@dimen/primary_secondary_buttons_label_padding"
                     android:paddingBottom="@dimen/primary_secondary_buttons_label_padding"
                     android:paddingStart="20dp"
@@ -324,6 +325,7 @@
                     android:textColor="@color/secondary_button_label_color"
                     android:gravity="center"
                     android:background="@drawable/secondary_button_background"
+                    app:layout_constraintVertical_bias="1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/already_an_account"
                     app:layout_constraintTop_toBottomOf="@id/create_email_account"
