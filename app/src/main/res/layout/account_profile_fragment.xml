@@ -25,365 +25,380 @@
             type="org.linphone.ui.main.settings.viewmodel.AccountProfileViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white">
 
-        <androidx.constraintlayout.widget.Group
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:constraint_referenced_ids="sip_address, sip_address_label, display_name, display_name_label, details_background"
-            android:visibility="@{viewModel.expandDetails ? View.VISIBLE : View.GONE}" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/back"
-            android:onClick="@{backClickListener}"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:layout_marginStart="10dp"
-            android:adjustViewBounds="true"
-            android:padding="5dp"
-            android:src="@drawable/caret_left"
-            android:drawableTint="@color/primary_color"
-            app:layout_constraintBottom_toBottomOf="@id/title"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/title" />
+            <androidx.constraintlayout.widget.Group
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="sip_address, sip_address_label, display_name, display_name_label, details_background"
+                android:visibility="@{viewModel.expandDetails ? View.VISIBLE : View.GONE}" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_800"
-            android:id="@+id/title"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/top_bar_height"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:gravity="center_vertical"
-            android:text="@string/manage_account_title"
-            android:textColor="@color/primary_color"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/back"
-            app:layout_constraintTop_toTopOf="parent"/>
+            <ImageView
+                android:id="@+id/back"
+                android:onClick="@{backClickListener}"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_marginStart="10dp"
+                android:adjustViewBounds="true"
+                android:padding="5dp"
+                android:src="@drawable/caret_left"
+                android:drawableTint="@color/primary_color"
+                app:layout_constraintBottom_toBottomOf="@id/title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/title" />
 
-        <io.getstream.avatarview.AvatarView
-            android:onClick="@{pickImageClickListener}"
-            android:id="@+id/avatar"
-            android:layout_width="@dimen/avatar_big_size"
-            android:layout_height="@dimen/avatar_big_size"
-            android:layout_marginTop="8dp"
-            android:adjustViewBounds="true"
-            android:background="@drawable/shape_circle_light_blue_background"
-            app:avatarViewInitialsBackgroundColor="@color/blue_light"
-            app:avatarViewInitialsTextColor="@color/gray_9"
-            app:avatarViewInitialsTextSize="21sp"
-            app:avatarViewInitialsTextStyle="bold"
-            app:avatarViewPlaceholder="@drawable/contact_avatar"
-            app:avatarViewShape="circle"
-            app:avatarViewBorderWidth="0dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/title" />
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_800"
+                android:id="@+id/title"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/top_bar_height"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:gravity="center_vertical"
+                android:text="@string/manage_account_title"
+                android:textColor="@color/primary_color"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/back"
+                app:layout_constraintTop_toTopOf="parent"/>
 
-        <ImageView
-            android:id="@+id/overlay"
-            android:layout_width="@dimen/avatar_presence_badge_big_size"
-            android:layout_height="@dimen/avatar_presence_badge_big_size"
-            android:layout_marginEnd="@dimen/avatar_presence_badge_big_end_margin"
-            android:padding="@dimen/avatar_presence_badge_big_padding"
-            android:background="@drawable/led_background"
-            android:src="@drawable/camera"
-            app:layout_constraintEnd_toEndOf="@id/avatar"
-            app:layout_constraintBottom_toBottomOf="@id/avatar" />
+            <io.getstream.avatarview.AvatarView
+                android:onClick="@{pickImageClickListener}"
+                android:id="@+id/avatar"
+                android:layout_width="@dimen/avatar_big_size"
+                android:layout_height="@dimen/avatar_big_size"
+                android:layout_marginTop="8dp"
+                android:adjustViewBounds="true"
+                android:background="@drawable/shape_circle_light_blue_background"
+                accountAvatar="@{viewModel.accountModel}"
+                app:avatarViewInitials="JD"
+                app:avatarViewInitialsBackgroundColor="@color/blue_light"
+                app:avatarViewInitialsTextColor="@color/gray_9"
+                app:avatarViewInitialsTextSize="21sp"
+                app:avatarViewInitialsTextStyle="bold"
+                app:avatarViewPlaceholder="@drawable/contact_avatar"
+                app:avatarViewShape="circle"
+                app:avatarViewBorderWidth="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style"
-            android:id="@+id/add_picture_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/manage_account_add_picture"
-            android:textSize="14sp"
-            app:layout_constraintTop_toBottomOf="@id/avatar"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            <ImageView
+                android:id="@+id/avatar_trust_badge"
+                android:layout_width="@dimen/avatar_presence_badge_big_size"
+                android:layout_height="@dimen/avatar_presence_badge_big_size"
+                android:src="@drawable/trusted"
+                app:layout_constraintStart_toStartOf="@id/avatar"
+                app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_800"
-            android:onClick="@{() -> viewModel.toggleDetailsExpand()}"
-            android:id="@+id/details"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:layout_marginStart="26dp"
-            android:layout_marginEnd="26dp"
-            android:layout_marginTop="32dp"
-            android:text="@string/manage_account_details_title"
-            android:drawableEnd="@{viewModel.expandDetails ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
-            android:drawableTint="@color/gray_9"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/add_picture_label"/>
+            <ImageView
+                android:id="@+id/overlay"
+                android:layout_width="@dimen/avatar_presence_badge_big_size"
+                android:layout_height="@dimen/avatar_presence_badge_big_size"
+                android:layout_marginEnd="@dimen/avatar_presence_badge_big_end_margin"
+                android:padding="@dimen/avatar_presence_badge_big_padding"
+                android:background="@drawable/led_background"
+                android:src="@drawable/camera"
+                app:layout_constraintEnd_toEndOf="@id/avatar"
+                app:layout_constraintBottom_toBottomOf="@id/avatar" />
 
-        <ImageView
-            android:id="@+id/details_background"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="17dp"
-            android:layout_marginEnd="17dp"
-            android:src="@drawable/shape_squircle_gray_2_background"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/details"
-            app:layout_constraintBottom_toBottomOf="@id/details_bottom_anchor"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:onClick="@{pickImageClickListener}"
+                style="@style/default_text_style"
+                android:id="@+id/add_picture_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@{viewModel.accountModel.avatar.empty ? @string/manage_account_add_picture : @string/manage_account_edit_picture, default=@string/manage_account_add_picture}"
+                android:textSize="14sp"
+                app:layout_constraintTop_toBottomOf="@id/avatar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_700"
-            android:id="@+id/sip_address_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="17dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:text="@string/sip_address"
-            android:textSize="13sp"
-            app:layout_constraintStart_toStartOf="@id/details_background"
-            app:layout_constraintTop_toTopOf="@id/details_background"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_800"
+                android:onClick="@{() -> viewModel.toggleDetailsExpand()}"
+                android:id="@+id/details"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:layout_marginStart="26dp"
+                android:layout_marginEnd="26dp"
+                android:layout_marginTop="32dp"
+                android:text="@string/manage_account_details_title"
+                android:drawableEnd="@{viewModel.expandDetails ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
+                android:drawableTint="@color/gray_9"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/add_picture_label"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style"
-            android:id="@+id/sip_address"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:text="@={viewModel.sipAddress, default=`sip:johndoe@sip.example.org`}"
-            android:textSize="14sp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            app:layout_constraintStart_toEndOf="@id/sip_address_label"
-            app:layout_constraintEnd_toEndOf="@id/details_background"
-            app:layout_constraintTop_toTopOf="@id/details_background"/>
+            <ImageView
+                android:id="@+id/details_background"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="17dp"
+                android:layout_marginEnd="17dp"
+                android:src="@drawable/shape_squircle_gray_2_background"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/details"
+                app:layout_constraintBottom_toBottomOf="@id/details_bottom_anchor"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_700"
-            android:id="@+id/display_name_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="17dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:text="@string/sip_address_display_name"
-            android:textSize="13sp"
-            app:layout_constraintStart_toStartOf="@id/details_background"
-            app:layout_constraintTop_toBottomOf="@id/sip_address"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_700"
+                android:id="@+id/sip_address_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="17dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:text="@string/sip_address"
+                android:textSize="13sp"
+                app:layout_constraintStart_toStartOf="@id/details_background"
+                app:layout_constraintTop_toTopOf="@id/details_background"/>
 
-        <androidx.appcompat.widget.AppCompatEditText
-            style="@style/default_text_style"
-            android:id="@+id/display_name"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="5dp"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:text="@={viewModel.displayName, default=`John Doe`}"
-            android:textSize="14sp"
-            android:textColor="@color/gray_9"
-            android:maxLines="1"
-            android:background="@drawable/edit_text_background"
-            android:inputType="text|textPersonName"
-            app:layout_constraintWidth_max="@dimen/text_input_max_width"
-            app:layout_constraintTop_toBottomOf="@id/display_name_label"
-            app:layout_constraintStart_toStartOf="@id/display_name_label"
-            app:layout_constraintEnd_toEndOf="@id/details_background"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:id="@+id/sip_address"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:text="@={viewModel.sipAddress, default=`sip:johndoe@sip.example.org`}"
+                android:textSize="14sp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                app:layout_constraintStart_toEndOf="@id/sip_address_label"
+                app:layout_constraintEnd_toEndOf="@id/details_background"
+                app:layout_constraintTop_toTopOf="@id/details_background"/>
 
-        <View
-            android:id="@+id/details_bottom_anchor"
-            android:layout_width="1dp"
-            android:layout_height="1dp"
-            android:layout_marginTop="21dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/display_name"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_700"
+                android:id="@+id/display_name_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="17dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:text="@string/sip_address_display_name"
+                android:textSize="13sp"
+                app:layout_constraintStart_toStartOf="@id/details_background"
+                app:layout_constraintTop_toBottomOf="@id/sip_address"/>
 
-        <ImageView
-            android:id="@+id/connection_background"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="17dp"
-            android:layout_marginEnd="17dp"
-            android:src="@drawable/shape_squircle_gray_2_background"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/details_background"
-            app:layout_constraintBottom_toBottomOf="@id/connection_bottom_anchor"/>
+            <androidx.appcompat.widget.AppCompatEditText
+                style="@style/default_text_style"
+                android:id="@+id/display_name"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="5dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="@={viewModel.displayName, default=`John Doe`}"
+                android:textSize="14sp"
+                android:textColor="@color/gray_9"
+                android:maxLines="1"
+                android:background="@drawable/edit_text_background"
+                android:inputType="text|textPersonName"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintWidth_max="@dimen/text_input_max_width"
+                app:layout_constraintTop_toBottomOf="@id/display_name_label"
+                app:layout_constraintStart_toStartOf="@id/display_name_label"
+                app:layout_constraintEnd_toEndOf="@id/details_background"/>
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/connected_switch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="17dp"
-            android:layout_marginTop="21dp"
-            android:checked="true"
-            app:thumbTint="@color/white"
-            app:trackTint="@color/blue_trusted"
-            app:layout_constraintStart_toStartOf="@id/connection_background"
-            app:layout_constraintTop_toTopOf="@id/connection_background" />
+            <View
+                android:id="@+id/details_bottom_anchor"
+                android:layout_width="1dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="21dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/display_name"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_700"
-            android:id="@+id/connected_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:text="Connected"
-            android:textSize="13sp"
-            app:layout_constraintStart_toEndOf="@id/connected_switch"
-            app:layout_constraintTop_toTopOf="@id/connected_switch"
-            app:layout_constraintBottom_toBottomOf="@id/connected_switch" />
+            <ImageView
+                android:id="@+id/connection_background"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="17dp"
+                android:layout_marginEnd="17dp"
+                android:src="@drawable/shape_squircle_gray_2_background"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/details_background"
+                app:layout_constraintBottom_toBottomOf="@id/connection_bottom_anchor"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style"
-            android:id="@+id/connected_summary"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="17dp"
-            android:layout_marginEnd="17dp"
-            android:layout_marginTop="16dp"
-            android:textSize="14sp"
-            android:text="This account is online, everyone can call you"
-            app:layout_constraintStart_toStartOf="@id/connection_background"
-            app:layout_constraintEnd_toEndOf="@id/connection_background"
-            app:layout_constraintTop_toBottomOf="@id/connected_label" />
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:onClick="@{() -> viewModel.toggleRegister()}"
+                android:id="@+id/connected_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="17dp"
+                android:layout_marginTop="21dp"
+                android:checked="@{viewModel.registerEnabled}"
+                app:layout_constraintStart_toStartOf="@id/connection_background"
+                app:layout_constraintTop_toTopOf="@id/connection_background" />
 
-        <View
-            android:id="@+id/connection_bottom_anchor"
-            android:layout_width="1dp"
-            android:layout_height="1dp"
-            android:layout_marginTop="21dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/connected_summary"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_700"
+                android:id="@+id/connected_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@{viewModel.accountModel.registrationState, default=@string/drawer_menu_account_connection_status_connected}"
+                android:textSize="13sp"
+                app:layout_constraintStart_toEndOf="@id/connected_switch"
+                app:layout_constraintTop_toTopOf="@id/connected_switch"
+                app:layout_constraintBottom_toBottomOf="@id/connected_switch" />
 
-        <ImageView
-            android:id="@+id/mode_background"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="17dp"
-            android:layout_marginEnd="17dp"
-            android:src="@drawable/shape_squircle_gray_2_background"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/connection_background"
-            app:layout_constraintBottom_toBottomOf="@id/change_mode"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:id="@+id/connected_summary"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="17dp"
+                android:layout_marginEnd="17dp"
+                android:layout_marginTop="16dp"
+                android:textSize="14sp"
+                android:text="@{viewModel.accountModel.registrationStateSummary, default=@string/manage_account_status_connected_summary}"
+                app:layout_constraintStart_toStartOf="@id/connection_background"
+                app:layout_constraintEnd_toEndOf="@id/connection_background"
+                app:layout_constraintTop_toBottomOf="@id/connected_label" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_700"
-            android:id="@+id/current_mode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="Mode Interop ?"
-            android:textSize="13sp"
-            android:textColor="@color/gray_9"
-            app:layout_constraintTop_toTopOf="@id/mode_background"
-            app:layout_constraintStart_toStartOf="@id/mode_background"
-            app:layout_constraintBottom_toBottomOf="@id/mode_background"/>
+            <View
+                android:id="@+id/connection_bottom_anchor"
+                android:layout_width="1dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="21dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/connected_summary"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:onClick="@{changeModeClickListener}"
-            style="@style/default_text_style_600"
-            android:id="@+id/change_mode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="17dp"
-            android:background="@drawable/tertiary_button_background"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:paddingTop="6dp"
-            android:paddingBottom="6dp"
-            android:gravity="center"
-            android:text="@string/manage_account_change_mode"
-            android:textColor="@color/tertiary_button_label_color"
-            android:textSize="13sp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            app:layout_constraintEnd_toEndOf="@id/mode_background"
-            app:layout_constraintTop_toTopOf="@id/mode_background"
-            app:layout_constraintBottom_toBottomOf="@id/mode_background"/>
+            <ImageView
+                android:id="@+id/mode_background"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="17dp"
+                android:layout_marginEnd="17dp"
+                android:src="@drawable/shape_squircle_gray_2_background"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/connection_background"
+                app:layout_constraintBottom_toBottomOf="@id/change_mode"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_800"
-            android:id="@+id/actions"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:layout_marginStart="26dp"
-            android:layout_marginEnd="26dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/contact_details_actions_title"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/mode_background"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_700"
+                android:id="@+id/current_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@{viewModel.currentMode, default=@string/assistant_secure_mode_default_title}"
+                android:textSize="13sp"
+                android:textColor="@color/gray_9"
+                app:layout_constraintTop_toTopOf="@id/mode_background"
+                app:layout_constraintStart_toStartOf="@id/mode_background"
+                app:layout_constraintBottom_toBottomOf="@id/mode_background"/>
 
-        <ImageView
-            android:id="@+id/actions_background"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="17dp"
-            android:layout_marginEnd="17dp"
-            android:src="@drawable/shape_squircle_gray_2_background"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/actions"
-            app:layout_constraintBottom_toBottomOf="@id/action_delete" />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:onClick="@{changeModeClickListener}"
+                style="@style/default_text_style_600"
+                android:id="@+id/change_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="17dp"
+                android:background="@drawable/tertiary_button_background"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:gravity="center"
+                android:text="@string/manage_account_change_mode"
+                android:textColor="@color/tertiary_button_label_color"
+                android:textSize="13sp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                app:layout_constraintEnd_toEndOf="@id/mode_background"
+                app:layout_constraintTop_toTopOf="@id/mode_background"
+                app:layout_constraintBottom_toBottomOf="@id/mode_background"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:onClick="@{settingsClickListener}"
-            style="@style/context_menu_action_label_style"
-            android:id="@+id/action_settings"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="17dp"
-            android:layout_marginEnd="17dp"
-            android:background="@drawable/action_background"
-            android:text="@string/manage_account_settings"
-            android:drawableStart="@drawable/user_gear"
-            app:layout_constraintTop_toTopOf="@id/actions_background"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_800"
+                android:id="@+id/actions"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:layout_marginStart="26dp"
+                android:layout_marginEnd="26dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/contact_details_actions_title"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/mode_background"/>
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginStart="17dp"
-            android:layout_marginEnd="17dp"
-            android:background="@color/blue_light"
-            app:layout_constraintStart_toStartOf="@id/action_settings"
-            app:layout_constraintEnd_toEndOf="@id/action_settings"
-            app:layout_constraintTop_toBottomOf="@+id/action_settings"/>
+            <ImageView
+                android:id="@+id/actions_background"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="17dp"
+                android:layout_marginEnd="17dp"
+                android:src="@drawable/shape_squircle_gray_2_background"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/actions"
+                app:layout_constraintBottom_toBottomOf="@id/action_delete" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:onClick="@{deleteClickListener}"
-            style="@style/context_menu_danger_action_label_style"
-            android:id="@+id/action_delete"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="17dp"
-            android:layout_marginEnd="17dp"
-            android:background="@drawable/action_background"
-            android:text="@string/manage_account_delete"
-            android:drawableStart="@drawable/trash_simple"
-            app:layout_constraintTop_toBottomOf="@id/action_settings"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:onClick="@{settingsClickListener}"
+                style="@style/context_menu_action_label_style"
+                android:id="@+id/action_settings"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="17dp"
+                android:layout_marginEnd="17dp"
+                android:background="@drawable/action_background"
+                android:text="@string/manage_account_settings"
+                android:drawableStart="@drawable/user_gear"
+                app:layout_constraintTop_toTopOf="@id/actions_background"
+                app:layout_constraintStart_toStartOf="@id/actions_background"
+                app:layout_constraintEnd_toEndOf="@id/actions_background"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="@color/blue_light"
+                app:layout_constraintStart_toStartOf="@id/action_settings"
+                app:layout_constraintEnd_toEndOf="@id/action_settings"
+                app:layout_constraintTop_toBottomOf="@+id/action_settings"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:onClick="@{deleteClickListener}"
+                style="@style/context_menu_danger_action_label_style"
+                android:id="@+id/action_delete"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="17dp"
+                android:layout_marginEnd="17dp"
+                android:background="@drawable/action_background"
+                android:text="@string/manage_account_delete"
+                android:drawableStart="@drawable/trash_simple"
+                app:layout_constraintTop_toBottomOf="@id/action_settings"
+                app:layout_constraintStart_toStartOf="@id/actions_background"
+                app:layout_constraintEnd_toEndOf="@id/actions_background"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 
 </layout>

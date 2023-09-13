@@ -4,8 +4,11 @@ import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
 import org.linphone.core.Account
 import org.linphone.core.tools.Log
+import org.linphone.ui.main.model.AccountModel
+import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
 class AccountProfileViewModel @UiThread constructor() : ViewModel() {
@@ -13,11 +16,15 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
         private const val TAG = "[Account Profile ViewModel]"
     }
 
-    val picturePath = MutableLiveData<String>()
+    val accountModel = MutableLiveData<AccountModel>()
 
     val sipAddress = MutableLiveData<String>()
 
     val displayName = MutableLiveData<String>()
+
+    val registerEnabled = MutableLiveData<Boolean>()
+
+    val currentMode = MutableLiveData<String>()
 
     val internationalPrefix = MutableLiveData<String>()
 
@@ -32,6 +39,15 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
+    override fun onCleared() {
+        super.onCleared()
+
+        coreContext.postOnCoreThread { core ->
+            accountModel.value?.destroy()
+        }
+    }
+
+    @UiThread
     fun findAccountMatchingIdentity(identity: String) {
         coreContext.postOnCoreThread { core ->
             val found = core.accountList.find {
@@ -40,14 +56,38 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
             if (found != null) {
                 Log.i("$TAG Found matching account [$found]")
                 account = found
+                accountModel.postValue(AccountModel(account))
+                currentMode.postValue(
+                    "Mode ${AppUtils.getString(R.string.assistant_secure_mode_default_title)}"
+                ) // TODO FIXME
+                registerEnabled.postValue(account.params.isRegisterEnabled)
+
                 sipAddress.postValue(account.params.identityAddress?.asStringUriOnly())
                 displayName.postValue(account.params.identityAddress?.displayName)
-                picturePath.postValue(account.params.pictureUri)
                 internationalPrefix.postValue(account.params.internationalPrefix)
 
                 accountFoundEvent.postValue(Event(true))
             } else {
                 accountFoundEvent.postValue(Event(false))
+            }
+        }
+    }
+
+    @UiThread
+    fun setNewPicturePath(path: String) {
+        coreContext.postOnCoreThread {
+            if (::account.isInitialized) {
+                val params = account.params
+                val copy = params.clone()
+
+                if (path.isNotEmpty() && path != params.pictureUri) {
+                    Log.i("$TAG New account profile picture [$path]")
+                    copy.pictureUri = path
+                }
+
+                accountModel.value?.avatar?.postValue(path)
+                account.params = copy
+                account.refreshRegister()
             }
         }
     }
@@ -60,12 +100,6 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
                 val copy = params.clone()
 
                 copy.internationalPrefix = internationalPrefix.value.orEmpty()
-
-                val newPictureUri = picturePath.value.orEmpty().trim()
-                if (newPictureUri.isNotEmpty() && newPictureUri != params.pictureUri) {
-                    Log.i("$TAG New account profile picture [$newPictureUri]")
-                    copy.pictureUri = newPictureUri
-                }
 
                 val address = params.identityAddress?.clone()
                 if (address != null) {
@@ -88,5 +122,16 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun toggleDetailsExpand() {
         expandDetails.value = expandDetails.value == false
+    }
+
+    @UiThread
+    fun toggleRegister() {
+        coreContext.postOnCoreThread {
+            val params = account.params
+            val copy = params.clone()
+            copy.isRegisterEnabled = !params.isRegisterEnabled
+            account.params = copy
+            registerEnabled.postValue(account.params.isRegisterEnabled)
+        }
     }
 }

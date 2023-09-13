@@ -49,6 +49,8 @@ class AccountModel @WorkerThread constructor(
 
     val registrationState = MutableLiveData<String>()
 
+    val registrationStateSummary = MutableLiveData<String>()
+
     val isConnected = MutableLiveData<Boolean>()
 
     val inError = MutableLiveData<Boolean>()
@@ -154,6 +156,23 @@ class AccountModel @WorkerThread constructor(
             )
             else -> "${account.state}"
         }
+
+        val summary = when (account.state) {
+            RegistrationState.None, RegistrationState.Cleared -> AppUtils.getString(
+                R.string.manage_account_status_cleared_summary
+            )
+            RegistrationState.Refreshing, RegistrationState.Progress -> AppUtils.getString(
+                R.string.manage_account_status_progress_summary
+            )
+            RegistrationState.Failed -> AppUtils.getString(
+                R.string.manage_account_status_failed_summary
+            )
+            RegistrationState.Ok -> AppUtils.getString(
+                R.string.manage_account_status_connected_summary
+            )
+            else -> "${account.state}"
+        }
+        registrationStateSummary.postValue(summary)
 
         isConnected.postValue(account.state == RegistrationState.Ok)
         inError.postValue(account.state == RegistrationState.Failed)

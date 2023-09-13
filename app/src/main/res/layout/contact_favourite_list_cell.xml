@@ -23,7 +23,7 @@
         android:layout_width="75dp"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:background="@drawable/cell_background">
+        android:background="@drawable/primary_cell_background">
 
         <io.getstream.avatarview.AvatarView
             android:id="@+id/avatar"

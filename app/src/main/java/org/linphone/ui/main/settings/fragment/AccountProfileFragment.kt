@@ -43,7 +43,7 @@ class AccountProfileFragment : GenericFragment() {
                 if (localFileName != null) {
                     Log.i("$TAG Picture will be locally stored as [$localFileName]")
                     val path = FileUtils.getProperFilePath(localFileName)
-                    viewModel.picturePath.postValue(path)
+                    viewModel.setNewPicturePath(path)
                 } else {
                     Log.e("$TAG Failed to copy [$uri] to local storage")
                 }

@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
-        android:background="@drawable/cell_background">
+        android:background="@drawable/secondary_cell_background">
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/end_barrier"

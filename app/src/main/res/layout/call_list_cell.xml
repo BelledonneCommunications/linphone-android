@@ -26,7 +26,7 @@
         android:onLongClickListener="@{onLongClickListener}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/cell_background">
+        android:background="@drawable/primary_cell_background">
 
         <io.getstream.avatarview.AvatarView
             android:id="@+id/avatar"

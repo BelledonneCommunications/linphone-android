@@ -486,14 +486,12 @@
                     android:drawableStart="@drawable/pencil_simple"
                     android:background="@drawable/action_background"
                     app:layout_constraintTop_toTopOf="@id/actions_background"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"/>
+                    app:layout_constraintStart_toStartOf="@id/actions_background"
+                    app:layout_constraintEnd_toEndOf="@id/actions_background"/>
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="1dp"
-                    android:layout_marginStart="17dp"
-                    android:layout_marginEnd="17dp"
                     android:background="@color/blue_light"
                     app:layout_constraintStart_toStartOf="@id/action_edit"
                     app:layout_constraintEnd_toEndOf="@id/action_edit"
@@ -512,14 +510,12 @@
                     android:drawableStart="@{viewModel.isFavourite ? @drawable/heart_fill : @drawable/heart, default=@drawable/heart_fill}"
                     android:drawableTint="@{viewModel.isFavourite ? @color/red_danger : @color/gray_1, default=@color/gray_1}"
                     app:layout_constraintTop_toBottomOf="@id/action_edit"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"/>
+                    app:layout_constraintStart_toStartOf="@id/actions_background"
+                    app:layout_constraintEnd_toEndOf="@id/actions_background"/>
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="1dp"
-                    android:layout_marginStart="17dp"
-                    android:layout_marginEnd="17dp"
                     android:background="@color/blue_light"
                     app:layout_constraintStart_toStartOf="@id/action_favorite"
                     app:layout_constraintEnd_toEndOf="@id/action_favorite"
@@ -537,14 +533,12 @@
                     android:text="@string/contact_details_share"
                     android:drawableStart="@drawable/share_network"
                     app:layout_constraintTop_toBottomOf="@id/action_favorite"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"/>
+                    app:layout_constraintStart_toStartOf="@id/actions_background"
+                    app:layout_constraintEnd_toEndOf="@id/actions_background"/>
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="1dp"
-                    android:layout_marginStart="17dp"
-                    android:layout_marginEnd="17dp"
                     android:background="@color/blue_light"
                     app:layout_constraintStart_toStartOf="@id/action_share"
                     app:layout_constraintEnd_toEndOf="@id/action_share"
@@ -562,8 +556,8 @@
                     android:text="@string/contact_details_delete"
                     android:drawableStart="@drawable/trash_simple"
                     app:layout_constraintTop_toBottomOf="@id/action_share"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"/>
+                    app:layout_constraintStart_toStartOf="@id/actions_background"
+                    app:layout_constraintEnd_toEndOf="@id/actions_background"/>
 
                 <View
                     android:id="@+id/anchor"
