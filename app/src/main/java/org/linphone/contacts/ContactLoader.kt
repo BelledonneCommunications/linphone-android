@@ -54,6 +54,8 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
 
         private const val NATIVE_ADDRESS_BOOK_FRIEND_LIST = "Native address-book"
         const val LINPHONE_ADDRESS_BOOK_FRIEND_LIST = "Linphone address-book"
+
+        private const val MAX_INTERVAL_TO_REFRESH = 60000L
     }
 
     @MainThread
@@ -69,7 +71,7 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
             ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE
         )
 
-        return CursorLoader(
+        val loader = CursorLoader(
             coreContext.context,
             ContactsContract.Data.CONTENT_URI,
             projection,
@@ -77,6 +79,10 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
             selectionArgs,
             ContactsContract.Data.CONTACT_ID + " ASC"
         )
+
+        loader.setUpdateThrottle(MAX_INTERVAL_TO_REFRESH) // Update at most once per minute
+
+        return loader
     }
 
     @MainThread
@@ -293,6 +299,7 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                     Log.w("$TAG No friend created!")
                 } else {
                     Log.i("$TAG ${friends.size} friends created")
+                    val fetchedFriends = friends.values
 
                     val fl = core.getFriendListByName(NATIVE_ADDRESS_BOOK_FRIEND_LIST) ?: core.createFriendList()
                     if (fl.displayName.isNullOrEmpty()) {
@@ -311,8 +318,7 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                         }
                     }
 
-                    val friendsList = friends.values
-                    for (friend in friendsList) {
+                    for (friend in fetchedFriends) {
                         fl.addLocalFriend(friend)
                     }
                     friends.clear()

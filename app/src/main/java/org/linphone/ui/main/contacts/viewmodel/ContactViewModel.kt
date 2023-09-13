@@ -20,6 +20,7 @@
 package org.linphone.ui.main.contacts.viewmodel
 
 import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -27,6 +28,7 @@ import java.io.File
 import java.util.Locale
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.contacts.ContactsManager
 import org.linphone.contacts.getListOfSipAddressesAndPhoneNumbers
 import org.linphone.core.Friend
 import org.linphone.core.tools.Log
@@ -114,55 +116,90 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
         }
     }
 
+    private val contactsListener = object : ContactsManager.ContactsListener {
+        @WorkerThread
+        override fun onContactsLoaded() {
+            val friend = coreContext.contactsManager.findContactById(refKey)
+            if (friend != null && friend != this@ContactViewModel.friend) {
+                Log.i(
+                    "$TAG Found contact [${friend.name}] matching ref key [$refKey] after contacts have been loaded/updated"
+                )
+                this@ContactViewModel.friend = friend
+                refreshContactInfo()
+            }
+        }
+    }
+
     private lateinit var friend: Friend
+
+    private var refKey: String = ""
 
     init {
         expandNumbersAndAddresses.value = true
         expandDevicesTrust.value = false // TODO FIXME: set it to true when it will work for real
+
+        coreContext.postOnCoreThread {
+            coreContext.contactsManager.addListener(contactsListener)
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+
+        coreContext.postOnCoreThread {
+            coreContext.contactsManager.removeListener(contactsListener)
+        }
     }
 
     @UiThread
     fun findContactByRefKey(refKey: String) {
+        this.refKey = refKey
+
         coreContext.postOnCoreThread {
             val friend = coreContext.contactsManager.findContactById(refKey)
             if (friend != null) {
                 Log.i("$TAG Found contact [${friend.name}] matching ref key [$refKey]")
                 this.friend = friend
-                isFavourite.postValue(friend.starred)
 
-                contact.postValue(ContactAvatarModel(friend))
-
-                val organization = friend.organization
-                if (!organization.isNullOrEmpty()) {
-                    company.postValue(organization!!)
-                }
-                val jobTitle = friend.jobTitle
-                if (!jobTitle.isNullOrEmpty()) {
-                    title.postValue(jobTitle!!)
-                }
-
-                val addressesAndNumbers = friend.getListOfSipAddressesAndPhoneNumbers(listener)
-                sipAddressesAndPhoneNumbers.postValue(addressesAndNumbers)
-
-                val devicesList = arrayListOf<ContactDeviceModel>()
-                // TODO FIXME: use real devices list from API
-                devicesList.add(ContactDeviceModel("Pixel 6 Pro de Sylvain", true))
-                devicesList.add(ContactDeviceModel("Sylvain Galaxy Tab S9 Pro+ Ultra", true))
-                devicesList.add(
-                    ContactDeviceModel("MacBook Pro de Marcel", false) {
-                        // TODO: check if do not show dialog anymore setting is set
-                        if (::friend.isInitialized) {
-                            startCallToDeviceToIncreaseTrustEvent.value =
-                                Event(Pair(friend.name.orEmpty(), it.name))
-                        }
-                    }
-                )
-                devicesList.add(ContactDeviceModel("sylvain@fedora-linux-38", true))
-                devices.postValue(devicesList)
-
+                refreshContactInfo()
                 contactFoundEvent.postValue(Event(true))
             }
         }
+    }
+
+    @WorkerThread
+    fun refreshContactInfo() {
+        isFavourite.postValue(friend.starred)
+
+        contact.postValue(ContactAvatarModel(friend))
+
+        val organization = friend.organization
+        if (!organization.isNullOrEmpty()) {
+            company.postValue(organization!!)
+        }
+        val jobTitle = friend.jobTitle
+        if (!jobTitle.isNullOrEmpty()) {
+            title.postValue(jobTitle!!)
+        }
+
+        val addressesAndNumbers = friend.getListOfSipAddressesAndPhoneNumbers(listener)
+        sipAddressesAndPhoneNumbers.postValue(addressesAndNumbers)
+
+        val devicesList = arrayListOf<ContactDeviceModel>()
+        // TODO FIXME: use real devices list from API
+        devicesList.add(ContactDeviceModel("Pixel 6 Pro de Sylvain", true))
+        devicesList.add(ContactDeviceModel("Sylvain Galaxy Tab S9 Pro+ Ultra", true))
+        devicesList.add(
+            ContactDeviceModel("MacBook Pro de Marcel", false) {
+                // TODO: check if do not show dialog anymore setting is set
+                if (::friend.isInitialized) {
+                    startCallToDeviceToIncreaseTrustEvent.value =
+                        Event(Pair(friend.name.orEmpty(), it.name))
+                }
+            }
+        )
+        devicesList.add(ContactDeviceModel("sylvain@fedora-linux-38", true))
+        devices.postValue(devicesList)
     }
 
     @UiThread
