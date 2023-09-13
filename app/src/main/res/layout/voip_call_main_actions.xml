@@ -15,7 +15,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/in_call_main_actions_menu_height"
-        android:paddingBottom="15dp"
+        android:paddingBottom="5dp"
         android:background="@color/in_call_black">
 
         <com.google.android.material.bottomsheet.BottomSheetDragHandleView
@@ -23,7 +23,7 @@
             android:visibility="@{showExpandToggle ? View.VISIBLE : View.INVISIBLE}"
             android:id="@+id/toggle_expand"
             android:layout_width="0dp"
-            android:layout_height="@dimen/icon_size"
+            android:layout_height="wrap_content"
             android:src="@{viewModel.isActionsMenuExpanded ? @drawable/caret_down : @drawable/caret_up, default=@drawable/caret_up}"
             app:tint="@color/white"
             app:layout_constraintStart_toStartOf="parent"

@@ -138,6 +138,23 @@
     <string name="help_advanced_debug_logs_url_copied_into_clipboard_toast_message">Debug logs URL copied into clipboard</string>
     <string name="help_advanced_debug_logs_upload_error_toast_message">Failed to upload debug logs</string>
 
+    <string name="settings_calls_title">Calls</string>
+    <string name="settings_calls_echo_canceller_title">Use echo canceller</string>
+    <string name="settings_calls_echo_canceller_subtitle">Prevents echo from being heard by remote end</string>
+    <string name="settings_calls_route_audio_to_bluetooth_title">Route audio to bluetooth device, if any</string>
+    <string name="settings_calls_enable_video_title">Enable video</string>
+    <string name="settings_calls_auto_initiate_video_title">Start video calls</string>
+    <string name="settings_calls_auto_initiate_video_subtitle">Always initiate calls as video</string>
+    <string name="settings_calls_auto_accept_video_title">Accept video calls</string>
+    <string name="settings_calls_auto_accept_video_subtitle">Always accept video calls</string>
+    <string name="settings_calls_use_device_ringtone_title">Use this device\'s ringtone</string>
+    <string name="settings_calls_vibrate_while_ringing_title">Vibrate while incoming call is ringing</string>
+    <string name="settings_calls_auto_record_title">Automatically start recording calls</string>
+    <string name="settings_network_title">Network</string>
+    <string name="settings_network_use_wifi_only">Use only Wi-Fi networks</string>
+    <string name="settings_user_interface_title">User interface</string>
+    <string name="settings_advanced_title">Advanced settings</string>
+
     <string name="manage_account_title">Manage account</string>
     <string name="manage_account_details_title">Details</string>
     <string name="manage_account_add_picture">Add a picture</string>
