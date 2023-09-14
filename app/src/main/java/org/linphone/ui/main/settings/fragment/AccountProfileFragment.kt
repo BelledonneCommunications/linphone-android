@@ -16,8 +16,10 @@ import kotlinx.coroutines.launch
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AccountProfileFragmentBinding
+import org.linphone.ui.main.calls.model.ConfirmationDialogModel
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.ui.main.settings.viewmodel.AccountProfileViewModel
+import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 
@@ -92,8 +94,29 @@ class AccountProfileFragment : GenericFragment() {
 
         viewModel.accountRemovedEvent.observe(viewLifecycleOwner) {
             it.consume {
-                Log.i("$TAG Account has been removed, leaving profile")
-                findNavController().popBackStack()
+                val model = ConfirmationDialogModel()
+                val dialog = DialogUtils.getConfirmAccountRemovalDialog(
+                    requireActivity(),
+                    model,
+                    viewModel.displayName.value.orEmpty()
+                )
+
+                model.dismissEvent.observe(viewLifecycleOwner) {
+                    it.consume {
+                        dialog.dismiss()
+                    }
+                }
+
+                model.confirmRemovalEvent.observe(viewLifecycleOwner) {
+                    it.consume {
+                        Log.i("$TAG Account has been removed, leaving profile")
+                        findNavController().popBackStack()
+
+                        dialog.dismiss()
+                    }
+                }
+
+                dialog.show()
             }
         }
 

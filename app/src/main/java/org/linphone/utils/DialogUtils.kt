@@ -40,6 +40,7 @@ import org.linphone.databinding.DialogConfirmZrtpSasBinding
 import org.linphone.databinding.DialogContactConfirmTrustCallBinding
 import org.linphone.databinding.DialogContactTrustProcessBinding
 import org.linphone.databinding.DialogPickNumberOrAddressBinding
+import org.linphone.databinding.DialogRemoveAccountBinding
 import org.linphone.databinding.DialogRemoveAllCallLogsBinding
 import org.linphone.ui.assistant.model.AcceptConditionsAndPolicyDialogModel
 import org.linphone.ui.assistant.model.ConfirmPhoneNumberDialogModel
@@ -106,6 +107,27 @@ class DialogUtils {
         }
 
         @UiThread
+        fun getConfirmAccountRemovalDialog(
+            context: Context,
+            viewModel: ConfirmationDialogModel,
+            displayName: String
+        ): Dialog {
+            val binding: DialogRemoveAccountBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.dialog_remove_account,
+                null,
+                false
+            )
+            binding.viewModel = viewModel
+            binding.title.text = context.getString(
+                R.string.dialog_remove_account_title,
+                displayName
+            )
+
+            return getDialog(context, binding)
+        }
+
+        @UiThread
         fun getNumberOrAddressPickerDialog(
             context: Context,
             viewModel: NumberOrAddressPickerDialogModel
@@ -157,7 +179,7 @@ class DialogUtils {
         @UiThread
         fun getRemoveAllCallLogsConfirmationDialog(
             context: Context,
-            model: ConfirmationDialogModel
+            viewModel: ConfirmationDialogModel
         ): Dialog {
             val binding: DialogRemoveAllCallLogsBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(context),
@@ -165,7 +187,7 @@ class DialogUtils {
                 null,
                 false
             )
-            binding.viewModel = model
+            binding.viewModel = viewModel
 
             return getDialog(context, binding)
         }
@@ -173,7 +195,7 @@ class DialogUtils {
         @UiThread
         fun getCancelContactChangesConfirmationDialog(
             context: Context,
-            model: ConfirmationDialogModel
+            viewModel: ConfirmationDialogModel
         ): Dialog {
             val binding: DialogCancelContactChangesBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(context),
@@ -181,7 +203,7 @@ class DialogUtils {
                 null,
                 false
             )
-            binding.viewModel = model
+            binding.viewModel = viewModel
 
             return getDialog(context, binding)
         }

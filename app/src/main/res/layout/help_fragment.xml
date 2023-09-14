@@ -25,279 +25,286 @@
             type="org.linphone.ui.main.help.viewmodel.HelpViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="true"
         android:background="@color/white">
 
-        <ImageView
-            android:id="@+id/back"
-            android:onClick="@{backClickListener}"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:layout_marginStart="10dp"
-            android:adjustViewBounds="true"
-            android:padding="5dp"
-            android:src="@drawable/caret_left"
-            android:drawableTint="@color/primary_color"
-            app:layout_constraintBottom_toBottomOf="@id/title"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/title" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_800"
-            android:id="@+id/title"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/top_bar_height"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:gravity="center_vertical"
-            android:text="@string/help_title"
-            android:textColor="@color/primary_color"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/back"
-            app:layout_constraintTop_toTopOf="parent"/>
+            <ImageView
+                android:id="@+id/back"
+                android:onClick="@{backClickListener}"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_marginStart="10dp"
+                android:adjustViewBounds="true"
+                android:padding="5dp"
+                android:src="@drawable/caret_left"
+                android:drawableTint="@color/primary_color"
+                app:layout_constraintBottom_toBottomOf="@id/title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/title" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_800"
-            android:id="@+id/about_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="32dp"
-            android:text="@string/help_about_title"
-            android:textSize="16sp"
-            android:textColor="@color/gray_9"
-            app:layout_constraintTop_toBottomOf="@id/title"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_800"
+                android:id="@+id/title"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/top_bar_height"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:gravity="center_vertical"
+                android:text="@string/help_title"
+                android:textColor="@color/primary_color"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/back"
+                app:layout_constraintTop_toTopOf="parent"/>
 
-        <ImageView
-            android:onClick="@{privacyPolicyClickListener}"
-            android:id="@+id/privacy_policy_icon"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginStart="16dp"
-            android:src="@drawable/file_text"
-            app:tint="@color/primary_color"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/privacy_policy_title"
-            app:layout_constraintTop_toTopOf="@id/privacy_policy_title"
-            app:layout_constraintBottom_toBottomOf="@id/privacy_policy_subtitle" />
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_800"
+                android:id="@+id/about_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="32dp"
+                android:text="@string/help_about_title"
+                android:textSize="16sp"
+                android:textColor="@color/gray_9"
+                app:layout_constraintTop_toBottomOf="@id/title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_700"
-            android:onClick="@{privacyPolicyClickListener}"
-            android:id="@+id/privacy_policy_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="24dp"
-            android:text="@string/help_about_privacy_policy_title"
-            android:textSize="13sp"
-            android:textColor="@color/gray_9"
-            app:layout_constraintTop_toBottomOf="@id/about_title"
-            app:layout_constraintStart_toEndOf="@id/privacy_policy_icon"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            <ImageView
+                android:onClick="@{privacyPolicyClickListener}"
+                android:id="@+id/privacy_policy_icon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/file_text"
+                app:tint="@color/primary_color"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/privacy_policy_title"
+                app:layout_constraintTop_toTopOf="@id/privacy_policy_title"
+                app:layout_constraintBottom_toBottomOf="@id/privacy_policy_subtitle" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style"
-            android:onClick="@{privacyPolicyClickListener}"
-            android:id="@+id/privacy_policy_subtitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="@string/help_about_privacy_policy_subtitle"
-            android:textSize="14sp"
-            android:textColor="@color/gray_9"
-            app:layout_constraintTop_toBottomOf="@id/privacy_policy_title"
-            app:layout_constraintStart_toEndOf="@id/privacy_policy_icon"
-            app:layout_constraintEnd_toEndOf="parent" />
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_700"
+                android:onClick="@{privacyPolicyClickListener}"
+                android:id="@+id/privacy_policy_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="24dp"
+                android:text="@string/help_about_privacy_policy_title"
+                android:textSize="13sp"
+                android:textColor="@color/gray_9"
+                app:layout_constraintTop_toBottomOf="@id/about_title"
+                app:layout_constraintStart_toEndOf="@id/privacy_policy_icon"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
-        <ImageView
-            android:id="@+id/version_icon"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginStart="16dp"
-            android:src="@drawable/info"
-            app:tint="@color/primary_color"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/version_title"
-            app:layout_constraintTop_toTopOf="@id/version_title"
-            app:layout_constraintBottom_toBottomOf="@id/version_subtitle" />
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:onClick="@{privacyPolicyClickListener}"
+                android:id="@+id/privacy_policy_subtitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/help_about_privacy_policy_subtitle"
+                android:textSize="14sp"
+                android:textColor="@color/gray_9"
+                app:layout_constraintTop_toBottomOf="@id/privacy_policy_title"
+                app:layout_constraintStart_toEndOf="@id/privacy_policy_icon"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_700"
-            android:id="@+id/version_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="24dp"
-            android:text="@string/help_about_version_title"
-            android:textSize="13sp"
-            android:textColor="@color/gray_9"
-            app:layout_constraintTop_toBottomOf="@id/privacy_policy_subtitle"
-            app:layout_constraintStart_toEndOf="@id/version_icon"
-            app:layout_constraintEnd_toStartOf="@id/check_for_update"/>
+            <ImageView
+                android:id="@+id/version_icon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/info"
+                app:tint="@color/primary_color"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/version_title"
+                app:layout_constraintTop_toTopOf="@id/version_title"
+                app:layout_constraintBottom_toBottomOf="@id/version_subtitle" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style"
-            android:id="@+id/version_subtitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="@{viewModel.version, default=`6.0.0`}"
-            android:textSize="14sp"
-            android:textColor="@color/gray_9"
-            app:layout_constraintTop_toBottomOf="@id/version_title"
-            app:layout_constraintStart_toEndOf="@id/version_icon"
-            app:layout_constraintEnd_toStartOf="@id/check_for_update" />
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_700"
+                android:id="@+id/version_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="24dp"
+                android:text="@string/help_about_version_title"
+                android:textSize="13sp"
+                android:textColor="@color/gray_9"
+                app:layout_constraintTop_toBottomOf="@id/privacy_policy_subtitle"
+                app:layout_constraintStart_toEndOf="@id/version_icon"
+                app:layout_constraintEnd_toStartOf="@id/check_for_update"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_600"
-            android:onClick="@{() -> viewModel.checkForUpdate()}"
-            android:id="@+id/check_for_update"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="17dp"
-            android:background="@drawable/tertiary_button_background"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:paddingTop="6dp"
-            android:paddingBottom="6dp"
-            android:gravity="center"
-            android:text="@string/help_about_check_for_update"
-            android:textColor="@color/tertiary_button_label_color"
-            android:textSize="13sp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            app:layout_constraintStart_toEndOf="@id/version_title"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/version_title"
-            app:layout_constraintBottom_toBottomOf="@id/version_subtitle"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:id="@+id/version_subtitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@{viewModel.version, default=`6.0.0`}"
+                android:textSize="14sp"
+                android:textColor="@color/gray_9"
+                app:layout_constraintTop_toBottomOf="@id/version_title"
+                app:layout_constraintStart_toEndOf="@id/version_icon"
+                app:layout_constraintEnd_toStartOf="@id/check_for_update" />
 
-        <ImageView
-            android:onClick="@{licensesClickListener}"
-            android:id="@+id/open_source_licenses_icon"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginStart="16dp"
-            android:src="@drawable/file_text"
-            app:tint="@color/primary_color"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/open_source_licenses_title"
-            app:layout_constraintTop_toTopOf="@id/open_source_licenses_title"
-            app:layout_constraintBottom_toBottomOf="@id/open_source_licenses_subtitle" />
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_600"
+                android:onClick="@{() -> viewModel.checkForUpdate()}"
+                android:id="@+id/check_for_update"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="17dp"
+                android:background="@drawable/tertiary_button_background"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:gravity="center"
+                android:text="@string/help_about_check_for_update"
+                android:textColor="@color/tertiary_button_label_color"
+                android:textSize="13sp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                app:layout_constraintStart_toEndOf="@id/version_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/version_title"
+                app:layout_constraintBottom_toBottomOf="@id/version_subtitle"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_700"
-            android:onClick="@{licensesClickListener}"
-            android:id="@+id/open_source_licenses_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="24dp"
-            android:text="@string/help_about_open_source_licenses_title"
-            android:textSize="13sp"
-            android:textColor="@color/gray_9"
-            app:layout_constraintTop_toBottomOf="@id/version_subtitle"
-            app:layout_constraintStart_toEndOf="@id/open_source_licenses_icon"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            <ImageView
+                android:onClick="@{licensesClickListener}"
+                android:id="@+id/open_source_licenses_icon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/file_text"
+                app:tint="@color/primary_color"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/open_source_licenses_title"
+                app:layout_constraintTop_toTopOf="@id/open_source_licenses_title"
+                app:layout_constraintBottom_toBottomOf="@id/open_source_licenses_subtitle" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style"
-            android:onClick="@{licensesClickListener}"
-            android:id="@+id/open_source_licenses_subtitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="@string/help_about_open_source_licenses_subtitle"
-            android:textSize="14sp"
-            android:textColor="@color/gray_9"
-            app:layout_constraintTop_toBottomOf="@id/open_source_licenses_title"
-            app:layout_constraintStart_toEndOf="@id/open_source_licenses_icon"
-            app:layout_constraintEnd_toEndOf="parent" />
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_700"
+                android:onClick="@{licensesClickListener}"
+                android:id="@+id/open_source_licenses_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="24dp"
+                android:text="@string/help_about_open_source_licenses_title"
+                android:textSize="13sp"
+                android:textColor="@color/gray_9"
+                app:layout_constraintTop_toBottomOf="@id/version_subtitle"
+                app:layout_constraintStart_toEndOf="@id/open_source_licenses_icon"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
-        <ImageView
-            android:onClick="@{translateClickListener}"
-            android:id="@+id/translate_icon"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginStart="16dp"
-            android:src="@drawable/globe_hemisphere_west"
-            app:tint="@color/primary_color"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/translate_title"
-            app:layout_constraintTop_toTopOf="@id/translate_title"
-            app:layout_constraintBottom_toBottomOf="@id/translate_title" />
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:onClick="@{licensesClickListener}"
+                android:id="@+id/open_source_licenses_subtitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/help_about_open_source_licenses_subtitle"
+                android:textSize="14sp"
+                android:textColor="@color/gray_9"
+                app:layout_constraintTop_toBottomOf="@id/open_source_licenses_title"
+                app:layout_constraintStart_toEndOf="@id/open_source_licenses_icon"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_700"
-            android:onClick="@{translateClickListener}"
-            android:id="@+id/translate_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="24dp"
-            android:text="@string/help_about_contribute_translations_title"
-            android:textSize="13sp"
-            android:textColor="@color/gray_9"
-            app:layout_constraintTop_toBottomOf="@id/open_source_licenses_subtitle"
-            app:layout_constraintStart_toEndOf="@id/translate_icon"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            <ImageView
+                android:onClick="@{translateClickListener}"
+                android:id="@+id/translate_icon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/globe_hemisphere_west"
+                app:tint="@color/primary_color"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/translate_title"
+                app:layout_constraintTop_toTopOf="@id/translate_title"
+                app:layout_constraintBottom_toBottomOf="@id/translate_title" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_800"
-            android:id="@+id/advanced_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="32dp"
-            android:text="@string/help_about_advanced_title"
-            android:textSize="16sp"
-            android:textColor="@color/gray_9"
-            app:layout_constraintTop_toBottomOf="@id/translate_icon"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_700"
+                android:onClick="@{translateClickListener}"
+                android:id="@+id/translate_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="24dp"
+                android:text="@string/help_about_contribute_translations_title"
+                android:textSize="13sp"
+                android:textColor="@color/gray_9"
+                app:layout_constraintTop_toBottomOf="@id/open_source_licenses_subtitle"
+                app:layout_constraintStart_toEndOf="@id/translate_icon"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
-        <ImageView
-            android:id="@+id/debug_icon"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginStart="16dp"
-            android:src="@drawable/wrench"
-            app:tint="@color/primary_color"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/debug_title"
-            app:layout_constraintTop_toTopOf="@id/debug_title"
-            app:layout_constraintBottom_toBottomOf="@id/debug_title" />
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_800"
+                android:id="@+id/advanced_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="32dp"
+                android:text="@string/help_about_advanced_title"
+                android:textSize="16sp"
+                android:textColor="@color/gray_9"
+                app:layout_constraintTop_toBottomOf="@id/translate_icon"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_700"
-            android:onClick="@{debugClickListener}"
-            android:id="@+id/debug_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="24dp"
-            android:text="@string/help_debug_title"
-            android:textSize="13sp"
-            android:textColor="@color/gray_9"
-            app:layout_constraintTop_toBottomOf="@id/advanced_title"
-            app:layout_constraintStart_toEndOf="@id/debug_icon"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            <ImageView
+                android:id="@+id/debug_icon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/wrench"
+                app:tint="@color/primary_color"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/debug_title"
+                app:layout_constraintTop_toTopOf="@id/debug_title"
+                app:layout_constraintBottom_toBottomOf="@id/debug_title" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_700"
+                android:onClick="@{debugClickListener}"
+                android:id="@+id/debug_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="24dp"
+                android:text="@string/help_debug_title"
+                android:textSize="13sp"
+                android:textColor="@color/gray_9"
+                app:layout_constraintTop_toBottomOf="@id/advanced_title"
+                app:layout_constraintStart_toEndOf="@id/debug_icon"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 
 </layout>

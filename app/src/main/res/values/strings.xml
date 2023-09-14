@@ -73,6 +73,8 @@
     <string name="dialog_delete_all_call_logs_message">All calls will be deleted of the history</string>
     <string name="dialog_account_secure_mode_default_message">Blah</string> <!-- TODO -->
     <string name="dialog_account_secure_mode_interoperable_message">Blah</string> <!-- TODO -->
+    <string name="dialog_remove_account_title">Delete %s?</string>
+    <string name="dialog_remove_account_message">You can reconnect at any time by clicking “Add an account”. However, all data on this phone will be deleted.</string>
 
     <string name="toast_assistant_qr_code_valid">QR code validated!</string>
     <string name="toast_assistant_qr_code_invalid">Invalid QR code!</string>
