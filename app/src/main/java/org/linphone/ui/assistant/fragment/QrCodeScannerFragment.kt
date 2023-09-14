@@ -101,13 +101,6 @@ class QrCodeScannerFragment : Fragment() {
             Log.w("$TAG Camera permission wasn't granted yet, asking for it now")
             requestPermissionLauncher.launch(Manifest.permission.CAMERA)
         }
-
-        // Better to have black background in navigation bar when doing full screen video
-        val black = ContextCompat.getColor(
-            requireContext(),
-            R.color.black
-        )
-        requireActivity().window.navigationBarColor = black
     }
 
     override fun onResume() {

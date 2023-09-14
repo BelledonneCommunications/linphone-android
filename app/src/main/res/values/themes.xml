@@ -10,12 +10,10 @@
         <!-- Customize your theme here. -->
         <item name="android:windowActivityTransitions">true</item>
         <item name="android:windowBackground">@color/white</item>
-        <item name="android:navigationBarColor">@color/white</item>
     </style>
 
     <style name="Theme.LinphoneDialog" parent="Theme.Linphone">
         <item name="android:windowAnimationStyle">@null</item>
         <item name="android:windowBackground">@color/transparent_color</item>
-        <item name="android:navigationBarColor">@color/black</item>
     </style>
 </resources>

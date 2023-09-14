@@ -26,7 +26,6 @@ import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -70,12 +69,6 @@ class VoipActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, true)
         super.onCreate(savedInstanceState)
-
-        val inCallBlackColor = ContextCompat.getColor(
-            this,
-            R.color.in_call_black
-        )
-        window.navigationBarColor = inCallBlackColor
 
         while (!LinphoneApplication.coreContext.isReady()) {
             Thread.sleep(20)

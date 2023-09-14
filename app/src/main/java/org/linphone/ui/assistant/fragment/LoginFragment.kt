@@ -26,7 +26,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -137,17 +136,6 @@ class LoginFragment : Fragment() {
                 viewModel.internationalPrefix.postValue(prefix)
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        // In case we come back from QrCodeScannerFragment
-        val white = ContextCompat.getColor(
-            requireContext(),
-            R.color.white
-        )
-        requireActivity().window.navigationBarColor = white
     }
 
     private fun goBack() {
