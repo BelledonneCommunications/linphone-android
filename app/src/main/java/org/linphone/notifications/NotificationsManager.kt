@@ -68,7 +68,10 @@ class NotifiableMessage(
     val senderAvatar: Bitmap? = null,
     var filePath: Uri? = null,
     var fileMime: String? = null,
-    val isOutgoing: Boolean = false
+    val isOutgoing: Boolean = false,
+    val isReaction: Boolean = false,
+    val reactionToMessageId: String? = null,
+    val reactionFrom: String? = null
 )
 
 class NotificationsManager(private val context: Context) {
@@ -204,8 +207,47 @@ class NotificationsManager(private val context: Context) {
         ) {
             Log.i(
                 "[Notifications Manager] [${address.asStringUriOnly()}] removed it's previously sent reaction for chat message [$message]"
-                // TODO: remove notification if any
             )
+            if (corePreferences.disableChat) return
+
+            if (chatRoom.muted) {
+                val id = LinphoneUtils.getChatRoomId(chatRoom.localAddress, chatRoom.peerAddress)
+                Log.i("[Notifications Manager] Chat room $id has been muted")
+                return
+            }
+
+            val chatRoomPeerAddress = chatRoom.peerAddress.asStringUriOnly()
+            var notifiable: Notifiable? = chatNotificationsMap[chatRoomPeerAddress]
+            if (notifiable == null) {
+                Log.i(
+                    "[Notifications Manager] No notification for chat room [$chatRoomPeerAddress], nothing to do"
+                )
+                return
+            }
+
+            val from = address.asStringUriOnly()
+            val found = notifiable.messages.find {
+                it.isReaction && it.reactionToMessageId == message.messageId && it.reactionFrom == from
+            }
+            if (found != null) {
+                if (notifiable.messages.remove(found)) {
+                    if (notifiable.messages.isNotEmpty()) {
+                        Log.i(
+                            "[Notifications Manager] After removing original reaction notification there is still messages, updating notification"
+                        )
+                        displayChatNotifiable(chatRoom, notifiable)
+                    } else {
+                        Log.i(
+                            "[Notifications Manager] After removing original reaction notification there is nothing left to display, remove notification"
+                        )
+                        notificationManager.cancel(CHAT_TAG, notifiable.notificationId)
+                    }
+                }
+            } else {
+                Log.w(
+                    "[Notifications Manager] Original reaction not found in currently displayed notification"
+                )
+            }
         }
 
         override fun onNewMessageReaction(
@@ -924,7 +966,10 @@ class NotificationsManager(private val context: Context) {
             displayName,
             message.time,
             senderAvatar = roundPicture,
-            isOutgoing = false
+            isOutgoing = false,
+            isReaction = true,
+            reactionToMessageId = message.messageId,
+            reactionFrom = from.asStringUriOnly()
         )
         notifiable.messages.add(notifiableMessage)
 
