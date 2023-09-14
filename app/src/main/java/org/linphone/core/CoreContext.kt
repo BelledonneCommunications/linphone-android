@@ -194,6 +194,14 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
     }
 
     @WorkerThread
+    fun isAddressMyself(address: Address): Boolean {
+        val found = core.accountList.find {
+            it.params.identityAddress?.weakEqual(address) ?: false
+        }
+        return found != null
+    }
+
+    @WorkerThread
     fun startCall(
         address: Address,
         callParams: CallParams? = null,

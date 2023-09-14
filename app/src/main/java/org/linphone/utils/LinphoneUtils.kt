@@ -38,6 +38,7 @@ import org.linphone.core.Address
 import org.linphone.core.Call
 import org.linphone.core.Call.Dir
 import org.linphone.core.Call.Status
+import org.linphone.core.ChatRoom
 import org.linphone.core.tools.Log
 
 class LinphoneUtils {
@@ -173,6 +174,20 @@ class LinphoneUtils {
                 name = Build.MANUFACTURER + " " + Build.MODEL
             }
             return name
+        }
+
+        @WorkerThread
+        fun getChatRoomId(room: ChatRoom): String {
+            return getChatRoomId(room.localAddress, room.peerAddress)
+        }
+
+        @WorkerThread
+        fun getChatRoomId(localAddress: Address, remoteAddress: Address): String {
+            val localSipUri = localAddress.clone()
+            localSipUri.clean()
+            val remoteSipUri = remoteAddress.clone()
+            remoteSipUri.clean()
+            return "${localSipUri.asStringUriOnly()}~${remoteSipUri.asStringUriOnly()}"
         }
     }
 }

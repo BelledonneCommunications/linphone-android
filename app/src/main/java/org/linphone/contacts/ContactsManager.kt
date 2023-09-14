@@ -41,6 +41,7 @@ import org.linphone.ui.main.contacts.model.ContactNumberOrAddressClickListener
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel
 import org.linphone.ui.main.model.isInSecureMode
 import org.linphone.utils.ImageUtils
+import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.PhoneNumberUtils
 
 class ContactsManager @UiThread constructor(context: Context) {
@@ -150,6 +151,39 @@ class ContactsManager @UiThread constructor(context: Context) {
         for (list in core.friendsLists) {
             list.removeListener(friendListListener)
         }
+    }
+
+    @WorkerThread
+    fun getMePerson(localAddress: Address): Person {
+        val account = coreContext.core.accountList.find {
+            it.params.identityAddress?.weakEqual(localAddress) ?: false
+        }
+        val name = account?.params?.identityAddress?.displayName ?: LinphoneUtils.getDisplayName(
+            localAddress
+        )
+        val personBuilder = Person.Builder().setName(name)
+
+        val photo = account?.params?.pictureUri.orEmpty()
+        val bm: Bitmap? = if (photo.isNotEmpty()) {
+            ImageUtils.getRoundBitmapFromUri(
+                coreContext.context,
+                Uri.parse(photo ?: "")
+            )
+        } else {
+            null
+        }
+
+        personBuilder.setIcon(
+            if (bm == null) {
+                coreContext.contactsManager.contactAvatar
+            } else {
+                IconCompat.createWithAdaptiveBitmap(bm)
+            }
+        )
+
+        personBuilder.setKey("") // TODO FIXME: use a valid key
+        personBuilder.setImportant(false)
+        return personBuilder.build()
     }
 
     interface ContactsListener {

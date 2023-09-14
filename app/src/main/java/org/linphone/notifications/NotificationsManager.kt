@@ -33,24 +33,30 @@ import android.graphics.Bitmap
 import android.net.Uri
 import androidx.annotation.AnyThread
 import androidx.annotation.MainThread
-import androidx.annotation.RequiresPermission
 import androidx.annotation.WorkerThread
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.Person
 import androidx.core.content.ContextCompat
+import androidx.core.content.LocusIdCompat
 import androidx.core.graphics.drawable.IconCompat
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.contacts.getPerson
+import org.linphone.core.Address
 import org.linphone.core.Call
+import org.linphone.core.ChatMessage
+import org.linphone.core.ChatMessageReaction
+import org.linphone.core.ChatRoom
 import org.linphone.core.Core
 import org.linphone.core.CoreForegroundService
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.ui.voip.VoipActivity
+import org.linphone.utils.AppUtils
 import org.linphone.utils.ImageUtils
 import org.linphone.utils.LinphoneUtils
 
@@ -63,6 +69,9 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
         const val INTENT_CALL_ID = "CALL_ID"
         const val INTENT_NOTIF_ID = "NOTIFICATION_ID"
+
+        const val CHAT_TAG = "Chat"
+        const val CHAT_NOTIFICATIONS_GROUP = "CHAT_NOTIF_GROUP"
     }
 
     private val notificationManager: NotificationManagerCompat by lazy {
@@ -97,16 +106,122 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             Log.i("$TAG Last call ended, stopping foreground service")
             stopCallForeground()
         }
+
+        @WorkerThread
+        override fun onMessagesReceived(
+            core: Core,
+            chatRoom: ChatRoom,
+            messages: Array<out ChatMessage>
+        ) {
+            Log.i("$TAG Received ${messages.size} aggregated messages")
+            if (corePreferences.disableChat) return
+
+            if (chatRoom.muted) {
+                val id = LinphoneUtils.getChatRoomId(chatRoom.localAddress, chatRoom.peerAddress)
+                Log.i("$TAG Chat room $id has been muted")
+                return
+            }
+
+            showChatRoomNotification(chatRoom, messages)
+        }
+
+        @WorkerThread
+        override fun onNewMessageReaction(
+            core: Core,
+            chatRoom: ChatRoom,
+            message: ChatMessage,
+            reaction: ChatMessageReaction
+        ) {
+            val address = reaction.fromAddress
+            val defaultAccountAddress = core.defaultAccount?.params?.identityAddress
+            // Do not notify our own reactions, it won't be done anyway since the chat room is very likely to be currently displayed
+            if (defaultAccountAddress != null && defaultAccountAddress.weakEqual(address)) return
+
+            Log.i(
+                "$TAG Reaction received [${reaction.body}] from [${address.asStringUriOnly()}] for chat message [$message]"
+            )
+            if (corePreferences.disableChat) return
+
+            if (chatRoom.muted) {
+                val id = LinphoneUtils.getChatRoomId(chatRoom.localAddress, chatRoom.peerAddress)
+                Log.i("$TAG Chat room $id has been muted")
+                return
+            }
+            if (coreContext.isAddressMyself(address)) {
+                Log.i("$TAG Reaction has been sent by ourselves, do not notify it")
+                return
+            }
+
+            if (reaction.body.isNotEmpty()) {
+                showChatMessageReactionNotification(chatRoom, reaction.body, address, message)
+            }
+        }
+
+        @WorkerThread
+        override fun onReactionRemoved(
+            core: Core,
+            chatRoom: ChatRoom,
+            message: ChatMessage,
+            address: Address
+        ) {
+            Log.i(
+                "$TAG [${address.asStringUriOnly()}] removed it's previously sent reaction for chat message [$message]"
+            )
+            if (corePreferences.disableChat) return
+
+            if (chatRoom.muted) {
+                val id = LinphoneUtils.getChatRoomId(chatRoom.localAddress, chatRoom.peerAddress)
+                Log.i("$TAG Chat room $id has been muted")
+                return
+            }
+
+            val chatRoomPeerAddress = chatRoom.peerAddress.asStringUriOnly()
+            var notifiable: Notifiable? = chatNotificationsMap[chatRoomPeerAddress]
+            if (notifiable == null) {
+                Log.i("$TAG No notification for chat room [$chatRoomPeerAddress], nothing to do")
+                return
+            }
+
+            val from = address.asStringUriOnly()
+            val found = notifiable.messages.find {
+                it.isReaction && it.reactionToMessageId == message.messageId && it.reactionFrom == from
+            }
+            if (found != null) {
+                if (notifiable.messages.remove(found)) {
+                    if (notifiable.messages.isNotEmpty()) {
+                        Log.i(
+                            "$TAG After removing original reaction notification there is still messages, updating notification"
+                        )
+                        val me = coreContext.contactsManager.getMePerson(chatRoom.localAddress)
+                        val notification = createMessageNotification(
+                            notifiable,
+                            LinphoneUtils.getChatRoomId(chatRoom),
+                            me
+                        )
+                        notify(notifiable.notificationId, notification, CHAT_TAG)
+                    } else {
+                        Log.i(
+                            "$TAG After removing original reaction notification there is nothing left to display, remove notification"
+                        )
+                        notificationManager.cancel(CHAT_TAG, notifiable.notificationId)
+                    }
+                }
+            } else {
+                Log.w("$TAG Original reaction not found in currently displayed notification")
+            }
+        }
     }
 
     private var coreService: CoreForegroundService? = null
 
     private val callNotificationsMap: HashMap<String, Notifiable> = HashMap()
+    private val chatNotificationsMap: HashMap<String, Notifiable> = HashMap()
 
     init {
         createServiceChannel()
         createIncomingCallNotificationChannel()
         createActiveCallNotificationChannel()
+        createMessageChannel()
 
         for (notification in notificationManager.activeNotifications) {
             if (notification.tag.isNullOrEmpty()) {
@@ -171,13 +286,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             pendingIntent,
             isIncoming
         )
-        if (ActivityCompat.checkSelfPermission(
-                context,
-                Manifest.permission.POST_NOTIFICATIONS
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            notify(notifiable.notificationId, notification)
-        }
+        notify(notifiable.notificationId, notification)
     }
 
     @WorkerThread
@@ -230,23 +339,141 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         }
     }
 
-    @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
+    private fun getNotifiableForRoom(chatRoom: ChatRoom): Notifiable {
+        val address = chatRoom.peerAddress.asStringUriOnly()
+        var notifiable: Notifiable? = chatNotificationsMap[address]
+        if (notifiable == null) {
+            notifiable = Notifiable(LinphoneUtils.getChatRoomId(chatRoom).hashCode())
+            notifiable.myself = LinphoneUtils.getDisplayName(chatRoom.localAddress)
+            notifiable.localIdentity = chatRoom.localAddress.asStringUriOnly()
+            notifiable.remoteAddress = chatRoom.peerAddress.asStringUriOnly()
+
+            chatNotificationsMap[address] = notifiable
+
+            if (chatRoom.hasCapability(ChatRoom.Capabilities.OneToOne.toInt())) {
+                notifiable.isGroup = false
+            } else {
+                notifiable.isGroup = true
+                notifiable.groupTitle = chatRoom.subject
+            }
+        }
+        return notifiable
+    }
+
+    @WorkerThread
+    private fun showChatRoomNotification(chatRoom: ChatRoom, messages: Array<out ChatMessage>) {
+        val notifiable = getNotifiableForRoom(chatRoom)
+
+        var updated = false
+        for (message in messages) {
+            if (message.isRead || message.isOutgoing) continue
+            val notifiableMessage = getNotifiableForChatMessage(message)
+            notifiable.messages.add(notifiableMessage)
+            updated = true
+        }
+
+        if (chatRoom.hasCapability(ChatRoom.Capabilities.OneToOne.toInt())) {
+            notifiable.isGroup = false
+        } else {
+            notifiable.isGroup = true
+            notifiable.groupTitle = chatRoom.subject
+        }
+        if (!updated) {
+            Log.w("$TAG No changes made to notifiable, do not display it again")
+            return
+        }
+
+        if (notifiable.messages.isNotEmpty()) {
+            val me = coreContext.contactsManager.getMePerson(chatRoom.localAddress)
+            val notification = createMessageNotification(
+                notifiable,
+                LinphoneUtils.getChatRoomId(chatRoom),
+                me
+            )
+            notify(notifiable.notificationId, notification, CHAT_TAG)
+        } else {
+            Log.w(
+                "$TAG No message to display in received aggregated messages"
+            )
+        }
+    }
+
+    @WorkerThread
+    private fun showChatMessageReactionNotification(
+        chatRoom: ChatRoom,
+        reaction: String,
+        from: Address,
+        message: ChatMessage
+    ) {
+        val notifiable = getNotifiableForRoom(chatRoom)
+
+        val contact =
+            coreContext.contactsManager.findContactByAddress(from)
+        val contactPicture = contact?.photo
+        val roundPicture = if (!contactPicture.isNullOrEmpty()) {
+            ImageUtils.getRoundBitmapFromUri(context, Uri.parse(contactPicture))
+        } else {
+            null
+        }
+        val displayName = contact?.name ?: LinphoneUtils.getDisplayName(from)
+
+        val originalMessage = getTextDescribingMessage(message)
+        val text = AppUtils.getString(R.string.chat_message_reaction_received).format(
+            displayName,
+            reaction,
+            originalMessage
+        )
+
+        val notifiableMessage = NotifiableMessage(
+            text,
+            contact,
+            displayName,
+            message.time,
+            senderAvatar = roundPicture,
+            isOutgoing = false,
+            isReaction = true,
+            reactionToMessageId = message.messageId,
+            reactionFrom = from.asStringUriOnly()
+        )
+        notifiable.messages.add(notifiableMessage)
+
+        if (notifiable.messages.isNotEmpty()) {
+            val me = coreContext.contactsManager.getMePerson(chatRoom.localAddress)
+            val notification = createMessageNotification(
+                notifiable,
+                LinphoneUtils.getChatRoomId(chatRoom),
+                me
+            )
+            notify(notifiable.notificationId, notification, CHAT_TAG)
+        } else {
+            Log.e(
+                "$TAG Notifiable is empty but we should have displayed the reaction!"
+            )
+        }
+    }
+
     @WorkerThread
     private fun notify(id: Int, notification: Notification, tag: String? = null) {
-        Log.i("$TAG Notifying [$id] with tag [$tag]")
-        try {
-            notificationManager.notify(tag, id, notification)
-        } catch (iae: IllegalArgumentException) {
-            if (coreService == null && tag == null) {
-                // We can't notify using CallStyle if there isn't a foreground service running
-                Log.w(
-                    "$TAG Foreground service hasn't started yet, can't display a CallStyle notification until then: $iae"
-                )
-            } else {
-                Log.e("$TAG Illegal Argument Exception occurred: $iae")
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            Log.i("$TAG Notifying [$id] with tag [$tag]")
+            try {
+                notificationManager.notify(tag, id, notification)
+            } catch (iae: IllegalArgumentException) {
+                if (coreService == null && tag == null) {
+                    // We can't notify using CallStyle if there isn't a foreground service running
+                    Log.w(
+                        "$TAG Foreground service hasn't started yet, can't display a CallStyle notification until then: $iae"
+                    )
+                } else {
+                    Log.e("$TAG Illegal Argument Exception occurred: $iae")
+                }
+            } catch (e: Exception) {
+                Log.e("$TAG Exception occurred: $e")
             }
-        } catch (e: Exception) {
-            Log.e("$TAG Exception occurred: $e")
         }
     }
 
@@ -272,6 +499,55 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             callNotificationsMap[address] = notifiable
         }
         return notifiable
+    }
+
+    @WorkerThread
+    private fun getNotifiableForChatMessage(message: ChatMessage): NotifiableMessage {
+        val contact =
+            coreContext.contactsManager.findContactByAddress(message.fromAddress)
+        val contactPicture = contact?.photo
+        val roundPicture = if (!contactPicture.isNullOrEmpty()) {
+            ImageUtils.getRoundBitmapFromUri(context, Uri.parse(contactPicture))
+        } else {
+            null
+        }
+        val displayName = contact?.name ?: LinphoneUtils.getDisplayName(message.fromAddress)
+
+        val text = getTextDescribingMessage(message)
+        val notifiableMessage = NotifiableMessage(
+            text,
+            contact,
+            displayName,
+            message.time * 1000, /* Linphone timestamps are in seconds */
+            senderAvatar = roundPicture,
+            isOutgoing = message.isOutgoing
+        )
+
+        for (content in message.contents) {
+            /*if (content.isFile) { // TODO
+                val path = content.filePath
+                if (path != null) {
+                    val contentUri: Uri = FileUtils.getFilePath(context, path)
+                    val filePath: String = contentUri.toString()
+                    val extension = FileUtils.getExtensionFromFileName(filePath)
+                    if (extension.isNotEmpty()) {
+                        val mime =
+                            MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+                        notifiableMessage.filePath = contentUri
+                        notifiableMessage.fileMime = mime
+                        Log.i(
+                            "$TAG Added file $contentUri with MIME $mime to notification"
+                        )
+                    } else {
+                        Log.e(
+                            "$TAG Couldn't find extension for incoming message with file $path"
+                        )
+                    }
+                }
+            }*/
+        }
+
+        return notifiableMessage
     }
 
     @WorkerThread
@@ -370,6 +646,73 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         return builder.build()
     }
 
+    private fun createMessageNotification(
+        notifiable: Notifiable,
+        id: String,
+        me: Person
+    ): Notification {
+        val style = NotificationCompat.MessagingStyle(me)
+        val allPersons = arrayListOf<Person>()
+
+        var lastPersonAvatar: Bitmap? = null
+        var lastPerson: Person? = null
+        for (message in notifiable.messages) {
+            val friend = message.friend
+            val person = getPerson(friend, message.sender, message.senderAvatar)
+
+            if (!message.isOutgoing) {
+                // We don't want to see our own avatar
+                lastPerson = person
+                lastPersonAvatar = message.senderAvatar
+
+                if (allPersons.find { it.key == person.key } == null) {
+                    allPersons.add(person)
+                }
+            }
+
+            val senderPerson = if (message.isOutgoing) null else person // Use null for ourselves
+            val tmp = NotificationCompat.MessagingStyle.Message(
+                message.message,
+                message.time,
+                senderPerson
+            )
+            if (message.filePath != null) tmp.setData(message.fileMime, message.filePath)
+
+            style.addMessage(tmp)
+            if (message.isOutgoing) {
+                style.addHistoricMessage(tmp)
+            }
+        }
+
+        style.conversationTitle = if (notifiable.isGroup) notifiable.groupTitle else lastPerson?.name
+        style.isGroupConversation = notifiable.isGroup
+
+        val largeIcon = lastPersonAvatar
+        val notificationBuilder = NotificationCompat.Builder(
+            context,
+            context.getString(R.string.notification_channel_chat_id)
+        )
+            .setSmallIcon(R.drawable.chat_text)
+            .setAutoCancel(true)
+            .setLargeIcon(largeIcon)
+            .setColor(ContextCompat.getColor(context, R.color.primary_color))
+            .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+            .setGroup(CHAT_NOTIFICATIONS_GROUP)
+            .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
+            .setNumber(notifiable.messages.size)
+            .setWhen(System.currentTimeMillis())
+            .setShowWhen(true)
+            .setStyle(style)
+            .setShortcutId(id)
+            .setLocusId(LocusIdCompat(id))
+
+        for (person in allPersons) {
+            notificationBuilder.addPerson(person)
+        }
+
+        return notificationBuilder.build()
+    }
+
     @WorkerThread
     private fun dismissCallNotification(call: Call) {
         val address = call.remoteAddress.asStringUriOnly()
@@ -458,6 +801,22 @@ class NotificationsManager @MainThread constructor(private val context: Context)
     }
 
     @MainThread
+    private fun createMessageChannel() {
+        val id = context.getString(R.string.notification_channel_chat_id)
+        val name = context.getString(R.string.notification_channel_chat_name)
+
+        val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH)
+        channel.description = name
+        channel.lightColor = context.getColor(R.color.primary_color)
+        channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+        channel.enableLights(true)
+        channel.enableVibration(true)
+        channel.setShowBadge(true)
+        channel.setAllowBubbles(true)
+        notificationManager.createNotificationChannel(channel)
+    }
+
+    @MainThread
     private fun createServiceChannel() {
         val id = context.getString(R.string.notification_channel_service_id)
         val name = context.getString(R.string.notification_channel_service_name)
@@ -470,8 +829,53 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         notificationManager.createNotificationChannel(channel)
     }
 
+    @WorkerThread
+    private fun getTextDescribingMessage(message: ChatMessage): String {
+        // If message contains text, then use that
+        var text = message.contents.find { content -> content.isText }?.utf8Text ?: ""
+
+        if (text.isEmpty()) {
+            val firstContent = message.contents.firstOrNull()
+            if (firstContent?.isIcalendar == true) {
+                text = "meeting invite" // TODO: use translated string
+            } else if (firstContent?.isVoiceRecording == true) {
+                text = "voice message" // TODO: use translated string
+            } else {
+                for (content in message.contents) {
+                    if (text.isNotEmpty()) {
+                        text += ", "
+                    }
+                    text += content.name
+                }
+            }
+        }
+
+        return text
+    }
+
     class Notifiable(val notificationId: Int) {
         var myself: String? = null
         var callId: String? = null
+
+        var localIdentity: String? = null
+        var remoteAddress: String? = null
+
+        var isGroup: Boolean = false
+        var groupTitle: String? = null
+        val messages: ArrayList<NotifiableMessage> = arrayListOf()
     }
+
+    class NotifiableMessage(
+        var message: String,
+        val friend: Friend?,
+        val sender: String,
+        val time: Long,
+        val senderAvatar: Bitmap? = null,
+        var filePath: Uri? = null,
+        var fileMime: String? = null,
+        val isOutgoing: Boolean = false,
+        val isReaction: Boolean = false,
+        val reactionToMessageId: String? = null,
+        val reactionFrom: String? = null
+    )
 }

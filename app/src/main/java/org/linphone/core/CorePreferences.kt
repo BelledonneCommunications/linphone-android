@@ -79,7 +79,7 @@ class CorePreferences @UiThread constructor(private val context: Context) {
     // Will disable chat feature completely
     @get:WorkerThread
     val disableChat: Boolean
-        get() = config.getBool("app", "disable_chat_feature", false)
+        get() = config.getBool("app", "disable_chat_feature", false) // TODO FIXME: set it to true for first "release" without chat
 
     @get:WorkerThread
     val defaultDomain: String

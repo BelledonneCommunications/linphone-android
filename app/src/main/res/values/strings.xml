@@ -13,6 +13,7 @@
     <string name="notification_channel_call_id" translatable="false">linphone_notification_call_id</string>
     <string name="notification_channel_incoming_call_id" translatable="false">linphone_notification_incoming_call_id</string>
     <string name="notification_channel_service_id" translatable="false">linphone_notification_service_id</string>
+    <string name="notification_channel_chat_id" translatable="false">linphone_notification_chat_id</string>
 
     <string name="help_about_open_source_licenses_title" translatable="false">GNU General Public License v3.0</string>
     <string name="help_about_open_source_licenses_subtitle" translatable="false">© Belledonne Communications 2010-2023</string>
@@ -40,6 +41,7 @@
     <string name="notification_channel_call_name">&appName; active calls notifications</string>
     <string name="notification_channel_incoming_call_name">&appName; incoming calls notifications</string>
     <string name="notification_channel_service_name">&appName; service notification</string>
+    <string name="notification_channel_chat_name">&appName; instant messages notifications</string>
 
     <string name="bottom_navigation_contacts_label">Contacts</string>
     <string name="bottom_navigation_calls_label">Calls</string>
@@ -252,6 +254,8 @@
     <string name="voip_action_pause_call">Pause</string>
     <string name="voip_action_resume_call">Pause</string>
     <string name="voip_action_record_call">Record</string>
+    
+    <string name="chat_message_reaction_received">%s has reacted by %s to: %s</string>
 
     <!-- Keep <u></u> in following strings translations! -->
     <string name="welcome_carousel_skip"><u>Skip</u></string>

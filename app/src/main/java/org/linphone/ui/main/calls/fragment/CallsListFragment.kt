@@ -148,13 +148,17 @@ class CallsListFragment : AbstractTopBarFragment() {
         binding.callsList.layoutManager = layoutManager
 
         listViewModel.callLogs.observe(viewLifecycleOwner) {
-            Log.i("$TAG Call logs ready with [${it.size}] items")
+            val currentCount = adapter.itemCount
             adapter.submitList(it)
-            binding.callsList.scrollToPosition(0)
+            Log.i("$TAG Call logs ready with [${it.size}] items")
 
-            (view.parent as? ViewGroup)?.doOnPreDraw {
-                startPostponedEnterTransition()
-                sharedViewModel.callsListReadyToBeDisplayedEvent.value = Event(true)
+            if (currentCount == 0) {
+                (view.parent as? ViewGroup)?.doOnPreDraw {
+                    startPostponedEnterTransition()
+                    sharedViewModel.callsListReadyToBeDisplayedEvent.value = Event(true)
+                }
+            } else if (currentCount < it.size) {
+                binding.callsList.scrollToPosition(0)
             }
         }
 
