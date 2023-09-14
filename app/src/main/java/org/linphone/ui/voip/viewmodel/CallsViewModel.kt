@@ -36,9 +36,9 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
     companion object {
         private const val TAG = "[Calls ViewModel]"
 
-        private const val ALERT_SIGNAL_TYPE_KEY = "signal-type"
-        private const val ALERT_SIGNAL_TYPE_WIFI = "wifi"
-        private const val ALERT_SIGNAL_TYPE_CELLULAR = "mobile"
+        private const val ALERT_NETWORK_TYPE_KEY = "network-type"
+        private const val ALERT_NETWORK_TYPE_WIFI = "wifi"
+        private const val ALERT_NETWORK_TYPE_CELLULAR = "mobile"
     }
 
     val goToActiveCallEvent = MutableLiveData<Event<Boolean>>()
@@ -61,13 +61,12 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
             alert.removeListener(this)
 
             if (alert.type == Alert.Type.QoSLowSignal) {
-                val signalType = alert.informations?.getString(ALERT_SIGNAL_TYPE_KEY)
-                when (signalType) {
-                    ALERT_SIGNAL_TYPE_WIFI -> {
+                when (val signalType = alert.informations?.getString(ALERT_NETWORK_TYPE_KEY)) {
+                    ALERT_NETWORK_TYPE_WIFI -> {
                         Log.i("$TAG Wi-Fi signal no longer low")
                         showLowWifiSignalEvent.postValue(Event(false))
                     }
-                    ALERT_SIGNAL_TYPE_CELLULAR -> {
+                    ALERT_NETWORK_TYPE_CELLULAR -> {
                         Log.i("$TAG Cellular signal no longer low")
                         showLowCellularSignalEvent.postValue(Event(false))
                     }
@@ -116,19 +115,18 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
             alert.addListener(alertListener)
 
             if (alert.type == Alert.Type.QoSLowSignal) {
-                val signalType = alert.informations?.getString(ALERT_SIGNAL_TYPE_KEY)
-                when (signalType) {
-                    ALERT_SIGNAL_TYPE_WIFI -> {
+                when (val networkType = alert.informations?.getString(ALERT_NETWORK_TYPE_KEY)) {
+                    ALERT_NETWORK_TYPE_WIFI -> {
                         Log.i("$TAG Triggered low signal alert is for Wi-Fi")
                         showLowWifiSignalEvent.postValue(Event(true))
                     }
-                    ALERT_SIGNAL_TYPE_CELLULAR -> {
+                    ALERT_NETWORK_TYPE_CELLULAR -> {
                         Log.i("$TAG Triggered low signal alert is for cellular")
                         showLowCellularSignalEvent.postValue(Event(true))
                     }
                     else -> {
                         Log.w(
-                            "$TAG Unexpected type of signal [$signalType] found in alert information"
+                            "$TAG Unexpected type of signal [$networkType] found in alert information"
                         )
                     }
                 }
