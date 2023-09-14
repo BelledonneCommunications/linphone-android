@@ -101,6 +101,7 @@
                         android:id="@+id/avatar_trust_badge"
                         android:layout_width="@dimen/avatar_presence_badge_big_size"
                         android:layout_height="@dimen/avatar_presence_badge_big_size"
+                        android:layout_marginStart="@dimen/avatar_presence_badge_big_end_margin"
                         android:src="@drawable/trusted"
                         app:layout_constraintStart_toStartOf="@id/avatar"
                         app:layout_constraintBottom_toBottomOf="@id/avatar"/>
@@ -182,12 +183,13 @@
                         android:paddingTop="8dp"
                         android:paddingBottom="8dp"
                         android:text="@={viewModel.sipAddress, default=`sip:johndoe@sip.example.org`}"
-                        android:textSize="14sp"
+                        android:textSize="13sp"
                         android:maxLines="1"
                         android:ellipsize="end"
                         app:layout_constraintStart_toEndOf="@id/sip_address_label"
                         app:layout_constraintEnd_toEndOf="@id/details_background"
-                        app:layout_constraintTop_toTopOf="@id/details_background"/>
+                        app:layout_constraintTop_toTopOf="@id/sip_address_label"
+                        app:layout_constraintBottom_toBottomOf="@id/sip_address_label"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/default_text_style_700"
@@ -340,6 +342,45 @@
 
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/default_text_style_800"
+                        android:onClick="@{() -> viewModel.toggleDevicesExpand()}"
+                        android:id="@+id/devices"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:layout_marginStart="26dp"
+                        android:layout_marginEnd="26dp"
+                        android:layout_marginTop="32dp"
+                        android:text="@string/manage_account_devices_title"
+                        android:drawableEnd="@{viewModel.expandDevices ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
+                        android:drawableTint="@color/gray_9"
+                        android:textSize="16sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/mode_background"/>
+
+                    <LinearLayout
+                        android:id="@+id/devices_list"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:paddingTop="6dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:paddingBottom="21dp"
+                        android:background="@drawable/shape_squircle_white_background"
+                        android:visibility="@{viewModel.expandDevices ? View.VISIBLE : View.GONE}"
+                        app:entries="@{viewModel.devices}"
+                        app:layout="@{@layout/account_profile_device_list_cell}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/devices" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/default_text_style_800"
                         android:id="@+id/actions"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -351,7 +392,7 @@
                         android:textSize="16sp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/mode_background"/>
+                        app:layout_constraintTop_toBottomOf="@id/devices_list"/>
 
                     <ImageView
                         android:id="@+id/actions_background"

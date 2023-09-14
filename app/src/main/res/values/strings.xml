@@ -165,6 +165,7 @@
 
     <string name="manage_account_title">Manage account</string>
     <string name="manage_account_details_title">Details</string>
+    <string name="manage_account_devices_title">Devices</string>
     <string name="manage_account_add_picture">Add a picture</string>
     <string name="manage_account_edit_picture">Edit picture</string>
     <string name="manage_account_status_connected_summary">This account in online, everybody can call you.</string>

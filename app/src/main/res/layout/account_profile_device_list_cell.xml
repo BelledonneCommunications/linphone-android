@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="model"
+            type="org.linphone.ui.main.settings.model.AccountDeviceModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:paddingBottom="27dp"
+        android:background="@drawable/shape_squircle_gray_2_background">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_700"
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="23dp"
+            android:layout_marginTop="34dp"
+            android:text="@{model.name, default=`Pixel 6 Pro`}"
+            android:textSize="13sp"
+            android:textColor="@color/gray_9"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_600"
+            android:id="@+id/remove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="17dp"
+            android:background="@drawable/tertiary_button_background"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:gravity="center"
+            android:text="Remove"
+            android:textColor="@color/tertiary_button_label_color"
+            android:textSize="13sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:drawableStart="@drawable/trash_simple"
+            android:drawableTint="@color/tertiary_button_label_color"
+            android:drawablePadding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/name"
+            app:layout_constraintBottom_toBottomOf="@id/name"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_700"
+            android:id="@+id/last_connection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="23dp"
+            android:layout_marginTop="30dp"
+            android:text="Last connection:"
+            android:textSize="13sp"
+            android:textColor="@color/gray_9"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintTop_toBottomOf="@id/name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/last_connection_date"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/last_connection_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@{model.lastConnectionDate, default=`03/10/2023`}"
+            android:textSize="14sp"
+            android:textColor="@color/gray_9"
+            android:drawableStart="@drawable/calendar_blank"
+            android:drawablePadding="6dp"
+            app:layout_constraintTop_toTopOf="@id/last_connection"
+            app:layout_constraintBottom_toBottomOf="@id/last_connection"
+            app:layout_constraintStart_toEndOf="@id/last_connection"
+            app:layout_constraintEnd_toStartOf="@id/last_connection_time"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/last_connection_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@{model.lastConnectionTime, default=`9h25`}"
+            android:textSize="14sp"
+            android:textColor="@color/gray_9"
+            android:drawableStart="@drawable/clock"
+            android:drawablePadding="6dp"
+            app:layout_constraintTop_toTopOf="@id/last_connection"
+            app:layout_constraintBottom_toBottomOf="@id/last_connection"
+            app:layout_constraintStart_toEndOf="@id/last_connection_date"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

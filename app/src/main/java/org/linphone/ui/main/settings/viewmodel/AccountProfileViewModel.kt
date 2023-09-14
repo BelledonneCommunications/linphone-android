@@ -8,6 +8,7 @@ import org.linphone.R
 import org.linphone.core.Account
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.model.AccountModel
+import org.linphone.ui.main.settings.model.AccountDeviceModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
@@ -26,11 +27,15 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
 
     val currentMode = MutableLiveData<String>()
 
+    val devices = MutableLiveData<ArrayList<AccountDeviceModel>>()
+
     val internationalPrefix = MutableLiveData<String>()
 
     val accountFoundEvent = MutableLiveData<Event<Boolean>>()
 
     val expandDetails = MutableLiveData<Boolean>()
+
+    val expandDevices = MutableLiveData<Boolean>()
 
     val accountRemovedEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
@@ -40,6 +45,7 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
 
     init {
         expandDetails.value = true
+        expandDevices.value = false // TODO: set to true when feature will be available
     }
 
     @UiThread
@@ -69,6 +75,30 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
                 sipAddress.postValue(account.params.identityAddress?.asStringUriOnly())
                 displayName.postValue(account.params.identityAddress?.displayName)
                 internationalPrefix.postValue(account.params.internationalPrefix)
+
+                val devicesList = arrayListOf<AccountDeviceModel>()
+                // TODO FIXME: use real devices list from API
+                devicesList.add(
+                    AccountDeviceModel("Pixel 6 Pro de Sylvain", "03/10/2023", "9h25") {
+                    }
+                )
+                devicesList.add(
+                    AccountDeviceModel(
+                        "Sylvain Galaxy Tab S9 Pro+ Ultra",
+                        "03/10/2023",
+                        "9h25"
+                    ) {
+                    }
+                )
+                devicesList.add(
+                    AccountDeviceModel("MacBook Pro de Marcel", "03/10/2023", "9h25") {
+                    }
+                )
+                devicesList.add(
+                    AccountDeviceModel("sylvain@fedora-linux-38", "03/10/2023", "9h25") {
+                    }
+                )
+                devices.postValue(devicesList)
 
                 accountFoundEvent.postValue(Event(true))
             } else {
@@ -145,6 +175,11 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun toggleDetailsExpand() {
         expandDetails.value = expandDetails.value == false
+    }
+
+    @UiThread
+    fun toggleDevicesExpand() {
+        expandDevices.value = expandDevices.value == false
     }
 
     @UiThread
