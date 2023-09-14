@@ -1,8 +1,5 @@
-package org.linphone.ui.main.settings.fragment
+package org.linphone.ui.main.help.fragment
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -10,14 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.HelpFragmentBinding
 import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.fragment.GenericFragment
-import org.linphone.ui.main.settings.viewmodel.HelpViewModel
-import org.linphone.utils.AppUtils
+import org.linphone.ui.main.help.viewmodel.HelpViewModel
 
 @UiThread
 class HelpFragment : GenericFragment() {
@@ -47,6 +44,11 @@ class HelpFragment : GenericFragment() {
 
         binding.setBackClickListener {
             goBack()
+        }
+
+        binding.setDebugClickListener {
+            val action = HelpFragmentDirections.actionHelpFragmentToDebugFragment()
+            findNavController().navigate(action)
         }
 
         binding.setPrivacyPolicyClickListener {
@@ -107,42 +109,6 @@ class HelpFragment : GenericFragment() {
             it.consume {
                 (requireActivity() as MainActivity).showRedToast(
                     getString(R.string.help_error_checking_version_toast_message),
-                    R.drawable.warning_circle
-                )
-            }
-        }
-
-        viewModel.debugLogsCleanedEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                (requireActivity() as MainActivity).showGreenToast(
-                    getString(R.string.help_advanced_debug_logs_cleaned_toast_message),
-                    R.drawable.info
-                )
-            }
-        }
-
-        viewModel.uploadDebugLogsFinishedEvent.observe(viewLifecycleOwner) {
-            it.consume { url ->
-                val clipboard =
-                    requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val clip = ClipData.newPlainText("Logs url", url)
-                clipboard.setPrimaryClip(clip)
-
-                (requireActivity() as MainActivity).showGreenToast(
-                    getString(
-                        R.string.help_advanced_debug_logs_url_copied_into_clipboard_toast_message
-                    ),
-                    R.drawable.info
-                )
-
-                AppUtils.shareUploadedLogsUrl(requireActivity(), url)
-            }
-        }
-
-        viewModel.uploadDebugLogsErrorEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                (requireActivity() as MainActivity).showRedToast(
-                    getString(R.string.help_advanced_debug_logs_upload_error_toast_message),
                     R.drawable.warning_circle
                 )
             }

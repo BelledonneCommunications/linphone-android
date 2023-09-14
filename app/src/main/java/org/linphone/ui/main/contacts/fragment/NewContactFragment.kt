@@ -31,6 +31,7 @@ import androidx.annotation.UiThread
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import kotlinx.coroutines.launch
 import org.linphone.BR
@@ -129,7 +130,8 @@ class NewContactFragment : GenericFragment() {
             it.consume { refKey ->
                 if (refKey.isNotEmpty()) {
                     backPressedCallback.isEnabled = false
-                    goBack()
+                    findNavController().popBackStack()
+
                     sharedViewModel.showContactEvent.value = Event(refKey)
                     (requireActivity() as MainActivity).showGreenToast(
                         getString(R.string.contact_editor_saved_contact_toast),
@@ -222,7 +224,7 @@ class NewContactFragment : GenericFragment() {
         model.confirmRemovalEvent.observe(viewLifecycleOwner) {
             it.consume {
                 backPressedCallback.isEnabled = false
-                goBack()
+                findNavController().popBackStack()
                 dialog.dismiss()
             }
         }

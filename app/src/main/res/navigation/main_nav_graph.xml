@@ -56,7 +56,8 @@
         app:enterAnim="@anim/slide_in_right"
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@anim/slide_in_left"
-        app:popExitAnim="@anim/slide_out_right" />
+        app:popExitAnim="@anim/slide_out_right"
+        app:launchSingleTop="true" />
 
     <fragment
         android:id="@+id/settingsFragment"
@@ -70,9 +71,18 @@
 
     <fragment
         android:id="@+id/helpFragment"
-        android:name="org.linphone.ui.main.settings.fragment.HelpFragment"
+        android:name="org.linphone.ui.main.help.fragment.HelpFragment"
         android:label="HelpFragment"
-        tools:layout="@layout/help_fragment" />
+        tools:layout="@layout/help_fragment" >
+        <action
+            android:id="@+id/action_helpFragment_to_debugFragment"
+            app:destination="@id/debugFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:launchSingleTop="true" />
+    </fragment>
 
     <action
         android:id="@+id/action_global_helpFragment"
@@ -119,5 +129,11 @@
         android:name="org.linphone.ui.main.settings.fragment.AccountProfileModeFragment"
         android:label="AccountProfileModeFragment"
         tools:layout="@layout/account_profile_secure_mode_fragment"/>
+
+    <fragment
+        android:id="@+id/debugFragment"
+        android:name="org.linphone.ui.main.help.fragment.DebugFragment"
+        android:label="DebugFragment"
+        tools:layout="@layout/help_debug_fragment" />
 
 </navigation>

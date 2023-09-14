@@ -61,6 +61,7 @@
             android:layout_height="0dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
+            android:fillViewport="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/brand_name"
@@ -69,17 +70,35 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
                 android:orientation="vertical"
                 entries="@{viewModel.accounts}"
                 layout="@{@layout/account_list_cell}">
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style"
+                <ImageView
+                    android:id="@+id/no_account_image"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="@string/drawer_menu_no_account_configured_yet" />
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/illu"
+                    android:layout_margin="10dp"
+                    app:layout_constraintHeight_max="200dp"
+                    app:layout_constraintBottom_toTopOf="@id/no_contacts_label"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/background" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style_800"
+                    android:id="@+id/no_account_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/drawer_menu_no_account_configured_yet"
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    app:layout_constraintBottom_toTopOf="@id/background"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/no_contacts_image" />
 
             </LinearLayout>
 

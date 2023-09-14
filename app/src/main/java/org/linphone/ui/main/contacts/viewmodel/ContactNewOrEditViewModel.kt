@@ -81,6 +81,8 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
 
     @UiThread
     fun findFriendByRefKey(refKey: String?) {
+        reset()
+
         coreContext.postOnCoreThread { core ->
             friend = if (refKey.isNullOrEmpty()) {
                 core.createFriend()
@@ -256,5 +258,18 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     private fun isSaveButtonEnabled(): Boolean {
         return firstName.value.orEmpty().isNotEmpty() || lastName.value.orEmpty().isNotEmpty()
+    }
+
+    @UiThread
+    private fun reset() {
+        isEdit.value = false
+        picturePath.value = ""
+        firstName.value = ""
+        lastName.value = ""
+        sipAddresses.clear()
+        phoneNumbers.clear()
+        company.value = ""
+        jobTitle.value = ""
+        saveButtonEnabled.value = false
     }
 }

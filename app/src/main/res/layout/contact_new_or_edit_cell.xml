@@ -39,6 +39,7 @@
             android:text="@={model.value}"
             android:textSize="14sp"
             android:textColor="@color/gray_9"
+            android:hint="@{model.isSip ? @string/sip_address : @string/phone_number, default=@string/sip_address}"
             android:background="@drawable/edit_text_background"
             android:maxLines="1"
             android:inputType="@{model.isSip ? InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS : InputType.TYPE_CLASS_PHONE}"

@@ -21,6 +21,7 @@
     <color name="warning_orange_background">#FFEACB</color>
     <color name="warning_orange_pressed_background">#FFB266</color>
     <color name="dialog_background">#A622334D</color>
+    <color name="transparent_light_orange">#1ABF4601</color>
 
     <color name="gradient_start">#EEF7F8</color>
 

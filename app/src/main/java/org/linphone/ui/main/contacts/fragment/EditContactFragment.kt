@@ -31,6 +31,7 @@ import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
 import kotlinx.coroutines.launch
@@ -55,7 +56,7 @@ class EditContactFragment : GenericFragment() {
     private lateinit var binding: ContactNewOrEditFragmentBinding
 
     private val viewModel: ContactNewOrEditViewModel by navGraphViewModels(
-        R.id.main_nav_graph
+        R.id.contact_nav_graph
     )
 
     private val args: EditContactFragmentArgs by navArgs()
@@ -114,7 +115,7 @@ class EditContactFragment : GenericFragment() {
 
             model.confirmRemovalEvent.observe(viewLifecycleOwner) {
                 it.consume {
-                    goBack()
+                    findNavController().popBackStack()
                     dialog.dismiss()
                 }
             }
@@ -134,7 +135,7 @@ class EditContactFragment : GenericFragment() {
                         getString(R.string.contact_editor_saved_changes_toast),
                         R.drawable.info
                     )
-                    goBack()
+                    findNavController().popBackStack()
                 } else {
                     (requireActivity() as MainActivity).showRedToast(
                         getString(R.string.contact_editor_error_saving_changes_toast),
