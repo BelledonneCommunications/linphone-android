@@ -20,12 +20,17 @@
 package org.linphone.ui.main.viewmodel
 
 import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.core.Call
+import org.linphone.core.Core
+import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.model.AccountModel
 import org.linphone.utils.Event
+import org.linphone.utils.LinphoneUtils
 
 open class AbstractTopBarViewModel @UiThread constructor() : ViewModel() {
     companion object {
@@ -40,6 +45,12 @@ open class AbstractTopBarViewModel @UiThread constructor() : ViewModel() {
 
     val searchFilter = MutableLiveData<String>()
 
+    val atLastOneCall = MutableLiveData<Boolean>()
+
+    val callDisplayName = MutableLiveData<String>()
+
+    val callStatus = MutableLiveData<String>()
+
     val focusSearchBarEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -48,17 +59,55 @@ open class AbstractTopBarViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    val changeSystemTopBarColorToInCallEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
+    val goBackToCallEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
+    private val coreListener = object : CoreListenerStub() {
+        @WorkerThread
+        override fun onLastCallEnded(core: Core) {
+            Log.i("$TAG Last call ended, asking fragment to change back status bar color")
+            changeSystemTopBarColorToInCallEvent.postValue(Event(false))
+        }
+
+        @WorkerThread
+        override fun onCallStateChanged(
+            core: Core,
+            call: Call,
+            state: Call.State?,
+            message: String
+        ) {
+            if (core.callsNb > 0) {
+                updateCurrentCallInfo()
+            }
+            atLastOneCall.postValue(core.callsNb > 0)
+        }
+    }
+
     init {
         searchBarVisible.value = false
 
-        updateDefaultAccount()
+        coreContext.postOnCoreThread { core ->
+            core.addListener(coreListener)
+            if (core.callsNb > 0) {
+                updateCurrentCallInfo()
+            }
+            atLastOneCall.postValue(core.callsNb > 0)
+        }
+
+        update()
     }
 
     @UiThread
     override fun onCleared() {
         super.onCleared()
 
-        coreContext.postOnCoreThread {
+        coreContext.postOnCoreThread { core ->
+            core.removeListener(coreListener)
             account.value?.destroy()
         }
     }
@@ -87,15 +136,51 @@ open class AbstractTopBarViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
-    fun updateDefaultAccount() {
-        coreContext.postOnCoreThread {
-            Log.i("$TAG Updating displayed default account")
-
-            val core = coreContext.core
+    fun update() {
+        coreContext.postOnCoreThread { core ->
             if (core.accountList.isNotEmpty()) {
+                Log.i("$TAG Updating displayed default account")
                 val defaultAccount = core.defaultAccount ?: core.accountList.first()
                 account.postValue(AccountModel(defaultAccount))
             }
+
+            if (core.callsNb > 0) {
+                updateCurrentCallInfo()
+            }
+            atLastOneCall.postValue(core.callsNb > 0)
         }
+    }
+
+    @UiThread
+    fun goBackToCall() {
+        goBackToCallEvent.value = Event(true)
+    }
+
+    @WorkerThread
+    private fun updateCurrentCallInfo() {
+        val core = coreContext.core
+        val currentCall = core.currentCall
+        if (currentCall != null) {
+            val contact = coreContext.contactsManager.findContactByAddress(
+                currentCall.remoteAddress
+            )
+            callDisplayName.postValue(
+                contact?.name ?: LinphoneUtils.getDisplayName(currentCall.remoteAddress)
+            )
+            callStatus.postValue(currentCall.state.name) // TODO: improve text
+        } else {
+            val firstCall = core.calls.firstOrNull()
+            if (firstCall != null) {
+                val contact = coreContext.contactsManager.findContactByAddress(
+                    firstCall.remoteAddress
+                )
+                callDisplayName.postValue(
+                    contact?.name ?: LinphoneUtils.getDisplayName(firstCall.remoteAddress)
+                )
+                callStatus.postValue(firstCall.state.name) // TODO: improve text
+            }
+        }
+        Log.i("$TAG At least a call, asking fragment to change status bar color")
+        changeSystemTopBarColorToInCallEvent.postValue(Event(true))
     }
 }

@@ -27,7 +27,7 @@
             android:adjustViewBounds="true"
             android:padding="5dp"
             android:src="@drawable/caret_left"
-            android:drawableTint="@color/primary_color"
+            app:tint="@color/gray_1"
             app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/title" />

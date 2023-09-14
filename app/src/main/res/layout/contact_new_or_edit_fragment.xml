@@ -30,7 +30,7 @@
             android:adjustViewBounds="true"
             android:padding="5dp"
             android:src="@drawable/caret_left"
-            android:drawableTint="@color/primary_color"
+            app:tint="@color/gray_1"
             app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/title" />
@@ -262,9 +262,9 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginTop="5dp"
-                    android:layout_marginBottom="24dp"
                     android:paddingStart="20dp"
                     android:paddingEnd="20dp"
+                    android:layout_marginBottom="32dp"
                     android:text="@={viewModel.jobTitle, default=`Android dev`}"
                     android:textSize="14sp"
                     android:textColor="@color/gray_9"
@@ -272,8 +272,10 @@
                     android:maxLines="1"
                     android:background="@drawable/edit_text_background"
                     android:inputType="text|textCapWords"
+                    app:layout_constraintVertical_bias="0"
                     app:layout_constraintWidth_max="@dimen/text_input_max_width"
                     app:layout_constraintTop_toBottomOf="@id/job_title_label"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
 

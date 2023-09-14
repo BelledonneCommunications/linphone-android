@@ -42,14 +42,14 @@ import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.calls.adapter.CallsListAdapter
 import org.linphone.ui.main.calls.model.ConfirmationDialogModel
 import org.linphone.ui.main.calls.viewmodel.CallsListViewModel
-import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.fragment.AbstractTopBarFragment
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 import org.linphone.utils.hideKeyboard
 import org.linphone.utils.showKeyboard
 
 @UiThread
-class CallsListFragment : GenericFragment() {
+class CallsListFragment : AbstractTopBarFragment() {
     companion object {
         private const val TAG = "[Calls List Fragment]"
     }
@@ -187,18 +187,14 @@ class CallsListFragment : GenericFragment() {
                 Log.i(
                     "$TAG Default account changed, updating avatar in top bar & re-computing call logs"
                 )
-                listViewModel.updateDefaultAccount()
+                listViewModel.update()
                 listViewModel.applyFilter()
             }
         }
 
         // TopBarFragment related
 
-        listViewModel.openDrawerMenuEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                (requireActivity() as MainActivity).toggleDrawerMenu()
-            }
-        }
+        setViewModelAndTitle(listViewModel, "Calls")
 
         listViewModel.searchFilter.observe(viewLifecycleOwner) { filter ->
             listViewModel.applyFilter(filter.trim())
@@ -214,8 +210,6 @@ class CallsListFragment : GenericFragment() {
                 }
             }
         }
-
-        listViewModel.title.value = "Calls"
     }
 
     override fun onResume() {

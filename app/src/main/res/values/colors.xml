@@ -13,6 +13,7 @@
     <color name="red_disabled">#F5CCBE</color>
     <color name="green_online">#4FAE80</color>
     <color name="green_pressed">#377D71</color>
+    <color name="green_disabled">#4FAE80</color>
     <color name="blue_light">#DFECF2</color>
     <color name="blue_light_disabled">#C0D1D9</color>
     <color name="blue_trusted">#4AA8FF</color>

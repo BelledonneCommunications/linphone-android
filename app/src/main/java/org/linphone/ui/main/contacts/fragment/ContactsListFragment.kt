@@ -35,16 +35,15 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactsListFragmentBinding
-import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.contacts.adapter.ContactsListAdapter
 import org.linphone.ui.main.contacts.viewmodel.ContactsListViewModel
-import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.fragment.AbstractTopBarFragment
 import org.linphone.utils.Event
 import org.linphone.utils.hideKeyboard
 import org.linphone.utils.showKeyboard
 
 @UiThread
-class ContactsListFragment : GenericFragment() {
+class ContactsListFragment : AbstractTopBarFragment() {
     companion object {
         private const val TAG = "[Contacts List Fragment]"
     }
@@ -143,18 +142,14 @@ class ContactsListFragment : GenericFragment() {
                 Log.i(
                     "$TAG Default account changed, updating avatar in top bar & refreshing contacts list"
                 )
-                listViewModel.updateDefaultAccount()
+                listViewModel.update()
                 listViewModel.applyCurrentDefaultAccountFilter()
             }
         }
 
         // TopBarFragment related
 
-        listViewModel.openDrawerMenuEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                (requireActivity() as MainActivity).toggleDrawerMenu()
-            }
-        }
+        setViewModelAndTitle(listViewModel, "Contacts")
 
         listViewModel.searchFilter.observe(viewLifecycleOwner) { filter ->
             listViewModel.applyFilter(filter.trim())
@@ -170,8 +165,6 @@ class ContactsListFragment : GenericFragment() {
                 }
             }
         }
-
-        listViewModel.title.value = "Contacts"
     }
 
     private fun configureAdapter(adapter: ContactsListAdapter) {

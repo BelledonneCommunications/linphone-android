@@ -31,10 +31,10 @@
                 android:layout_height="35dp"
                 android:layout_marginStart="10dp"
                 android:adjustViewBounds="true"
-                android:drawableTint="@color/primary_color"
                 android:onClick="@{backClickListener}"
                 android:padding="5dp"
                 android:src="@drawable/caret_left"
+                app:tint="@color/gray_1"
                 app:layout_constraintBottom_toBottomOf="@id/title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/title" />

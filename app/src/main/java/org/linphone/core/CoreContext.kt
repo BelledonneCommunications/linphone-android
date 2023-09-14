@@ -319,7 +319,7 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
     }
 
     @UiThread
-    private fun showCallActivity() {
+    fun showCallActivity() {
         Log.i("$TAG Starting VoIP activity")
         val intent = Intent(context, VoipActivity::class.java)
         // This flag is required to start an Activity from a Service context
