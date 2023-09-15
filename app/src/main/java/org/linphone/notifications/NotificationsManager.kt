@@ -402,20 +402,36 @@ class NotificationsManager @MainThread constructor(private val context: Context)
     private fun showChatMessageReactionNotification(
         chatRoom: ChatRoom,
         reaction: String,
-        from: Address,
+        address: Address,
         message: ChatMessage
     ) {
         val notifiable = getNotifiableForRoom(chatRoom)
 
+        // Check if a previous reaction notifiable exists from the same person & for the same message
+        val from = address.asStringUriOnly()
+        val found = notifiable.messages.find {
+            it.isReaction && it.reactionToMessageId == message.messageId && it.reactionFrom == from
+        }
+        if (found != null) {
+            Log.i(
+                "$TAG Found a previous notifiable for a reaction from the same person to the same message"
+            )
+            if (notifiable.messages.remove(found)) {
+                Log.i("$TAG Previous reaction notifiable removed")
+            } else {
+                Log.w("$TAG Failed to remove previous reaction notifiable")
+            }
+        }
+
         val contact =
-            coreContext.contactsManager.findContactByAddress(from)
+            coreContext.contactsManager.findContactByAddress(address)
         val contactPicture = contact?.photo
         val roundPicture = if (!contactPicture.isNullOrEmpty()) {
             ImageUtils.getRoundBitmapFromUri(context, Uri.parse(contactPicture))
         } else {
             null
         }
-        val displayName = contact?.name ?: LinphoneUtils.getDisplayName(from)
+        val displayName = contact?.name ?: LinphoneUtils.getDisplayName(address)
 
         val originalMessage = getTextDescribingMessage(message)
         val text = AppUtils.getString(R.string.chat_message_reaction_received).format(
@@ -433,7 +449,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             isOutgoing = false,
             isReaction = true,
             reactionToMessageId = message.messageId,
-            reactionFrom = from.asStringUriOnly()
+            reactionFrom = address.asStringUriOnly()
         )
         notifiable.messages.add(notifiableMessage)
 
