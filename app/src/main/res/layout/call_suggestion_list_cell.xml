@@ -6,12 +6,15 @@
     <data>
         <import type="android.view.View" />
         <variable
+            name="onClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="model"
-            type="org.linphone.ui.main.calls.model.SuggestionModel" />
+            type="org.linphone.ui.main.calls.model.ContactOrSuggestionModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:onClick="@{() -> model.onClicked()}"
+        android:onClick="@{onClickListener}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/primary_cell_background"

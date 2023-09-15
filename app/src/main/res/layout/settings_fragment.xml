@@ -492,7 +492,7 @@
                     android:layout_marginStart="26dp"
                     android:layout_marginEnd="26dp"
                     android:layout_marginTop="16dp"
-                    android:layout_marginBottom="32dp"
+                    android:layout_marginBottom="@dimen/screen_bottom_margin"
                     android:text="@string/settings_advanced_title"
                     android:drawableEnd="@drawable/caret_right"
                     android:drawableTint="@color/gray_9"

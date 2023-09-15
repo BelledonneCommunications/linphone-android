@@ -30,13 +30,13 @@ import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.contacts.ContactsManager.ContactsListener
-import org.linphone.core.Address
 import org.linphone.core.MagicSearch
 import org.linphone.core.MagicSearchListenerStub
 import org.linphone.core.SearchResult
 import org.linphone.core.tools.Log
+import org.linphone.ui.main.calls.model.ContactOrSuggestionModel
 import org.linphone.ui.main.calls.model.NumpadModel
-import org.linphone.ui.main.calls.model.SuggestionModel
+import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.model.isInSecureMode
 import org.linphone.utils.Event
 
@@ -47,9 +47,7 @@ class StartCallViewModel @UiThread constructor() : ViewModel() {
 
     val searchFilter = MutableLiveData<String>()
 
-    val emptyContactsList = MutableLiveData<Boolean>()
-
-    val suggestionsList = MutableLiveData<ArrayList<SuggestionModel>>()
+    val contactsAndSuggestionsList = MutableLiveData<ArrayList<ContactOrSuggestionModel>>()
 
     val numpadModel: NumpadModel
 
@@ -65,10 +63,6 @@ class StartCallViewModel @UiThread constructor() : ViewModel() {
 
     val requestKeyboardVisibilityChangedEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
-    }
-
-    val onSuggestionClickedEvent: MutableLiveData<Event<Address>> by lazy {
-        MutableLiveData<Event<Address>>()
     }
 
     private var currentFilter = ""
@@ -92,8 +86,8 @@ class StartCallViewModel @UiThread constructor() : ViewModel() {
             applyFilter(
                 currentFilter,
                 if (limitSearchToLinphoneAccounts) corePreferences.defaultDomain else "",
-                MagicSearch.Source.CallLogs.toInt() or MagicSearch.Source.ChatRooms.toInt() or MagicSearch.Source.Request.toInt(),
-                MagicSearch.Aggregation.None
+                MagicSearch.Source.All.toInt(),
+                MagicSearch.Aggregation.Friend
             )
         }
     }
@@ -119,7 +113,7 @@ class StartCallViewModel @UiThread constructor() : ViewModel() {
                         val address = core.interpretUrl(suggestion, true)
                         if (address != null) {
                             Log.i("$TAG Calling [${address.asStringUriOnly()}]")
-                            onSuggestionClickedEvent.postValue(Event(address))
+                            coreContext.startCall(address)
                         } else {
                             Log.e("$TAG Failed to parse [$suggestion] as SIP address")
                         }
@@ -174,17 +168,32 @@ class StartCallViewModel @UiThread constructor() : ViewModel() {
     fun processMagicSearchResults(results: Array<SearchResult>) {
         Log.i("$TAG Processing [${results.size}] results")
 
-        val list = arrayListOf<SuggestionModel>()
+        val contactsList = arrayListOf<ContactOrSuggestionModel>()
+        val suggestionsList = arrayListOf<ContactOrSuggestionModel>()
+        var previousLetter = ""
+
         for (result in results) {
             val address = result.address
-
             if (address != null) {
                 val friend = coreContext.core.findFriend(address)
-                // We don't want Friends here as they would also be in contacts list
-                if (friend == null) {
+                if (friend != null) {
+                    val model = ContactOrSuggestionModel(address, friend)
+                    model.contactAvatarModel = ContactAvatarModel(friend)
+
+                    val currentLetter = friend.name?.get(0).toString()
+                    val displayLetter = previousLetter.isEmpty() || currentLetter != previousLetter
+                    if (currentLetter != previousLetter) {
+                        previousLetter = currentLetter
+                    }
+                    model.contactAvatarModel.firstContactStartingByThatLetter.postValue(
+                        displayLetter
+                    )
+
+                    contactsList.add(model)
+                } else {
                     // If user-input generated result (always last) already exists, don't show it again
                     if (result.sourceFlags == MagicSearch.Source.Request.toInt()) {
-                        val found = list.find {
+                        val found = suggestionsList.find {
                             it.address.weakEqual(address)
                         }
                         if (found != null) {
@@ -195,15 +204,18 @@ class StartCallViewModel @UiThread constructor() : ViewModel() {
                         }
                     }
 
-                    val model = SuggestionModel(address) {
-                        onSuggestionClickedEvent.value = Event(it)
+                    val model = ContactOrSuggestionModel(address) {
+                        coreContext.startCall(address)
                     }
-                    list.add(model)
+                    suggestionsList.add(model)
                 }
             }
         }
 
-        suggestionsList.postValue(list)
+        val list = arrayListOf<ContactOrSuggestionModel>()
+        list.addAll(contactsList)
+        list.addAll(suggestionsList)
+        contactsAndSuggestionsList.postValue(list)
         Log.i("$TAG Processed [${results.size}] results, extracted [${list.size}] suggestions")
     }
 
@@ -213,8 +225,8 @@ class StartCallViewModel @UiThread constructor() : ViewModel() {
             applyFilter(
                 filter,
                 if (limitSearchToLinphoneAccounts) corePreferences.defaultDomain else "",
-                MagicSearch.Source.CallLogs.toInt() or MagicSearch.Source.ChatRooms.toInt() or MagicSearch.Source.Request.toInt(),
-                MagicSearch.Aggregation.None
+                MagicSearch.Source.All.toInt(),
+                MagicSearch.Aggregation.Friend
             )
         }
     }

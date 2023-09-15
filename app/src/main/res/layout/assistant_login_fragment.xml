@@ -280,7 +280,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
                 android:layout_marginStart="20dp"
-                android:layout_marginBottom="32dp"
+                android:layout_marginBottom="@dimen/screen_bottom_margin"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
                 android:text="@string/assistant_account_register"

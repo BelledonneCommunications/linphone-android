@@ -22,19 +22,26 @@ package org.linphone.ui.main.calls.model
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import org.linphone.core.Address
+import org.linphone.core.Friend
+import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.utils.LinphoneUtils
 
-class SuggestionModel @WorkerThread constructor(
+class ContactOrSuggestionModel @WorkerThread constructor(
     val address: Address,
+    val friend: Friend? = null,
     private val onClicked: ((Address) -> Unit)? = null
 ) {
     companion object {
         private const val TAG = "[Suggestion Model]"
     }
 
+    val id = friend?.refKey ?: address.asStringUriOnly().hashCode()
+
     val name = LinphoneUtils.getDisplayName(address)
 
     val initials = LinphoneUtils.getInitials(name)
+
+    lateinit var contactAvatarModel: ContactAvatarModel
 
     @UiThread
     fun onClicked() {

@@ -208,6 +208,7 @@
     <string name="call_start_search_bar_filter_hint">Search contact or history call</string>
     <string name="call_start_create_group_call">Create a group call</string>
     <string name="call_start_no_suggestion_nor_contact">No suggestion and no contact for the moment…</string>
+    <string name="call_start_contacts_list_title">Contacts</string>
     <string name="call_start_suggestions_list_title">Suggestions</string>
 
     <string name="calls_list_empty_history">No call for the moment…</string>

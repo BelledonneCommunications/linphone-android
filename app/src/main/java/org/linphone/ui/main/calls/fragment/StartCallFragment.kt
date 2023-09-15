@@ -34,16 +34,16 @@ import org.linphone.R
 import org.linphone.contacts.getListOfSipAddressesAndPhoneNumbers
 import org.linphone.core.tools.Log
 import org.linphone.databinding.CallStartFragmentBinding
+import org.linphone.ui.main.calls.adapter.ContactsAndSuggestionsListAdapter
+import org.linphone.ui.main.calls.model.ContactOrSuggestionModel
 import org.linphone.ui.main.calls.viewmodel.StartCallViewModel
-import org.linphone.ui.main.contacts.adapter.ContactsListAdapter
-import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressClickListener
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
-import org.linphone.ui.main.contacts.viewmodel.ContactsListViewModel
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.ui.main.model.isInSecureMode
 import org.linphone.utils.DialogUtils
+import org.linphone.utils.RecyclerViewHeaderDecoration
 import org.linphone.utils.hideKeyboard
 import org.linphone.utils.setKeyboardInsetListener
 import org.linphone.utils.showKeyboard
@@ -60,11 +60,7 @@ class StartCallFragment : GenericFragment() {
         R.id.main_nav_graph
     )
 
-    private val contactsListViewModel: ContactsListViewModel by navGraphViewModels(
-        R.id.main_nav_graph
-    )
-
-    private lateinit var contactsAdapter: ContactsListAdapter
+    private lateinit var adapter: ContactsAndSuggestionsListAdapter
 
     private val listener = object : ContactNumberOrAddressClickListener {
         @UiThread
@@ -108,42 +104,37 @@ class StartCallFragment : GenericFragment() {
             viewModel.hideNumpad()
         }
 
-        contactsAdapter = ContactsListAdapter(viewLifecycleOwner, disableLongClick = true)
-        binding.contactsList.setHasFixedSize(true)
-        binding.contactsList.adapter = contactsAdapter
+        adapter = ContactsAndSuggestionsListAdapter(viewLifecycleOwner)
+        binding.contactsAndSuggestionsList.setHasFixedSize(true)
+        binding.contactsAndSuggestionsList.adapter = adapter
 
-        contactsAdapter.contactClickedEvent.observe(viewLifecycleOwner) {
+        val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
+        binding.contactsAndSuggestionsList.addItemDecoration(headerItemDecoration)
+
+        adapter.contactClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
                 startCall(model)
             }
         }
 
-        viewModel.onSuggestionClickedEvent.observe(viewLifecycleOwner) {
-            it.consume { address ->
-                coreContext.postOnCoreThread {
-                    coreContext.startCall(address)
-                }
-            }
-        }
+        binding.contactsAndSuggestionsList.layoutManager = LinearLayoutManager(requireContext())
 
-        binding.contactsList.layoutManager = LinearLayoutManager(requireContext())
-
-        contactsListViewModel.contactsList.observe(
+        viewModel.contactsAndSuggestionsList.observe(
             viewLifecycleOwner
         ) {
-            Log.i("$TAG Contacts list is ready with [${it.size}] items")
-            contactsAdapter.submitList(it)
-            viewModel.emptyContactsList.value = it.isEmpty()
+            Log.i("$TAG Contacts & suggestions list is ready with [${it.size}] items")
+            val count = adapter.itemCount
+            adapter.submitList(it)
 
-            Log.i("$TAG Suggestions list is also ready, start postponed enter transition")
-            (view.parent as? ViewGroup)?.doOnPreDraw {
-                startPostponedEnterTransition()
+            if (count == 0 && it.isNotEmpty()) {
+                (view.parent as? ViewGroup)?.doOnPreDraw {
+                    startPostponedEnterTransition()
+                }
             }
         }
 
         viewModel.searchFilter.observe(viewLifecycleOwner) { filter ->
             val trimmed = filter.trim()
-            contactsListViewModel.applyFilter(trimmed)
             viewModel.applyFilter(trimmed)
         }
 
@@ -205,9 +196,14 @@ class StartCallFragment : GenericFragment() {
         numberOrAddressPickerDialog = null
     }
 
-    private fun startCall(model: ContactAvatarModel) {
+    private fun startCall(model: ContactOrSuggestionModel) {
         coreContext.postOnCoreThread { core ->
             val friend = model.friend
+            if (friend == null) {
+                coreContext.startCall(model.address)
+                return@postOnCoreThread
+            }
+
             val addressesCount = friend.addresses.size
             val numbersCount = friend.phoneNumbers.size
 
@@ -238,12 +234,15 @@ class StartCallFragment : GenericFragment() {
                 )
 
                 coreContext.postOnMainThread {
-                    val model = NumberOrAddressPickerDialogModel(list)
+                    val numberOrAddressModel = NumberOrAddressPickerDialogModel(list)
                     val dialog =
-                        DialogUtils.getNumberOrAddressPickerDialog(requireActivity(), model)
+                        DialogUtils.getNumberOrAddressPickerDialog(
+                            requireActivity(),
+                            numberOrAddressModel
+                        )
                     numberOrAddressPickerDialog = dialog
 
-                    model.dismissEvent.observe(viewLifecycleOwner) { event ->
+                    numberOrAddressModel.dismissEvent.observe(viewLifecycleOwner) { event ->
                         event.consume {
                             dialog.dismiss()
                         }

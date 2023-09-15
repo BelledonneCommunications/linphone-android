@@ -81,6 +81,8 @@
                 android:paddingBottom="10dp"
                 android:text="@={viewModel.searchFilter}"
                 android:textSize="14sp"
+                app:layout_constraintHeight_min="48dp"
+                app:layout_constraintWidth_max="@dimen/text_input_max_width"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title" />
@@ -159,17 +161,17 @@
             <ImageView
                 android:id="@+id/no_contacts_nor_suggestion_image"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_margin="10dp"
                 android:src="@drawable/illu"
-                android:visibility="@{viewModel.emptyContactsList &amp;&amp; viewModel.suggestionsList.size() == 0 ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toTopOf="@id/no_contacts_nor_suggestion_label"
+                android:visibility="@{viewModel.contactsAndSuggestionsList.size() == 0 ? View.VISIBLE : View.GONE}"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHeight_max="200dp"
+                app:layout_constraintVertical_bias="0.3"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/group_call_icon"
-                app:layout_constraintVertical_chainStyle="packed" />
+                app:layout_constraintBottom_toBottomOf="parent" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/section_header_style"
@@ -178,82 +180,39 @@
                 android:layout_height="wrap_content"
                 android:text="@string/call_start_no_suggestion_nor_contact"
                 android:gravity="center"
-                android:visibility="@{viewModel.emptyContactsList &amp;&amp; viewModel.suggestionsList.size() == 0 ? View.VISIBLE : View.GONE}"
+                android:visibility="@{viewModel.contactsAndSuggestionsList.size() == 0 ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/no_contacts_nor_suggestion_image" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/section_header_style"
-                android:id="@+id/all_contacts_label"
+                android:id="@+id/contacts_and_suggestions_label"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:padding="5dp"
-                android:text="@string/contacts_list_title"
-                android:visibility="@{viewModel.emptyContactsList ? View.GONE : View.VISIBLE}"
+                android:text="@string/call_start_contacts_list_title"
+                android:visibility="@{viewModel.contactsAndSuggestionsList.size() == 0 ? View.GONE : View.VISIBLE}"
                 app:layout_constraintVertical_chainStyle="packed"
                 app:layout_constraintVertical_bias="0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/group_call_icon"
-                app:layout_constraintBottom_toTopOf="@id/contacts_list"/>
+                app:layout_constraintBottom_toTopOf="@id/contacts_and_suggestions_list"/>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/contacts_list"
+                android:id="@+id/contacts_and_suggestions_list"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginTop="8dp"
-                android:visibility="@{viewModel.emptyContactsList ? View.GONE : View.VISIBLE}"
-                app:layout_constrainedHeight="true"
+                android:visibility="@{viewModel.contactsAndSuggestionsList.size() == 0 ? View.GONE : View.VISIBLE}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/all_contacts_label"
-                app:layout_constraintBottom_toTopOf="@id/suggestions_label" />
-
-            <androidx.constraintlayout.widget.Barrier
-                android:id="@+id/suggestions_top_barrier"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:barrierDirection="bottom"
-                app:constraint_referenced_ids="contacts_list, all_contacts_label, group_call_icon" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/section_header_style"
-                android:id="@+id/suggestions_label"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:padding="5dp"
-                android:text="@string/call_start_suggestions_list_title"
-                android:visibility="@{viewModel.suggestionsList.size() == 0 ? View.GONE : View.VISIBLE}"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/suggestions_top_barrier"
-                app:layout_constraintBottom_toTopOf="@id/suggestions_list"/>
-
-            <ScrollView
-                android:id="@+id/suggestions_list"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constrainedHeight="true"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/suggestions_label"
-                app:layout_constraintBottom_toBottomOf="parent">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    entries="@{viewModel.suggestionsList}"
-                    layout="@{@layout/call_suggestion_list_cell}" />
-
-            </ScrollView>
+                app:layout_constraintTop_toBottomOf="@id/contacts_and_suggestions_label"
+                app:layout_constraintBottom_toBottomOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
