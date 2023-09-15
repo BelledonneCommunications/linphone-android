@@ -33,7 +33,6 @@ import android.webkit.MimeTypeMap
 import android.widget.PopupWindow
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -163,6 +162,7 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
 
         binding.lifecycleOwner = viewLifecycleOwner
 
@@ -206,11 +206,6 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
             Log.e("[Chat Room] Chat room is null, aborting!")
             goBack()
             return
-        }
-
-        view.doOnPreDraw {
-            // Notifies fragment is ready to be drawn
-            sharedViewModel.chatRoomFragmentOpenedEvent.value = Event(true)
         }
 
         Compatibility.setLocusIdInContentCaptureSession(binding.root, chatRoom)
@@ -800,6 +795,8 @@ class DetailChatRoomFragment : MasterFragment<ChatRoomDetailFragmentBinding, Cha
                 sharedViewModel.isPendingMessageForward.value = false
             }
         }
+
+        startPostponedEnterTransition()
     }
 
     override fun deleteItems(indexesOfItemToDelete: ArrayList<Int>) {
