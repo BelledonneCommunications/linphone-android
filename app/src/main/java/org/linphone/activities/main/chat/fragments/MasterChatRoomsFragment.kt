@@ -115,15 +115,6 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
             }
         })
 
-        // Chat room loading can take some time, so wait until it is ready before opening the pane
-        sharedViewModel.chatRoomFragmentOpenedEvent.observe(
-            viewLifecycleOwner
-        ) {
-            it.consume {
-                binding.slidingPane.openPane()
-            }
-        }
-
         sharedViewModel.layoutChangedEvent.observe(
             viewLifecycleOwner
         ) {
@@ -280,6 +271,7 @@ class MasterChatRoomsFragment : MasterFragment<ChatRoomMasterFragmentBinding, Ch
                                 sharedViewModel
                             )
                         )
+                        binding.slidingPane.openPane()
                     }
                 }
             }
