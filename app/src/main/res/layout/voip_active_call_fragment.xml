@@ -49,8 +49,9 @@
 
             <io.getstream.avatarview.AvatarView
                 android:id="@+id/avatar"
-                android:layout_width="@dimen/avatar_in_call_size"
-                android:layout_height="@dimen/avatar_in_call_size"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="5dp"
                 android:background="@drawable/shape_circle_light_blue_background"
                 contactAvatar="@{viewModel.contact}"
                 app:avatarViewInitialsBackgroundColor="@color/blue_light"
@@ -61,10 +62,13 @@
                 app:avatarViewShape="circle"
                 app:avatarViewBorderWidth="0dp"
                 app:avatarViewBorderColor="@color/blue_trusted"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintWidth_max="@dimen/avatar_in_call_size"
+                app:layout_constraintHeight_max="@dimen/avatar_in_call_size"
                 app:layout_constraintVertical_chainStyle="packed"
                 app:layout_constraintEnd_toEndOf="@id/background"
                 app:layout_constraintStart_toStartOf="@id/background"
-                app:layout_constraintTop_toBottomOf="@id/call_direction_label"
+                app:layout_constraintTop_toTopOf="@id/background"
                 app:layout_constraintBottom_toTopOf="@id/name"/>
 
             <ImageView
@@ -95,6 +99,7 @@
                 android:id="@+id/address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
                 android:text="@{viewModel.displayedAddress, default=`sip:johndoe@sip.linphone.org`}"
                 android:textColor="@color/white"
                 android:textSize="14sp"
