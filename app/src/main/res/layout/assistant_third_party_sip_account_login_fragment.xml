@@ -36,13 +36,12 @@
                 app:layout_constraintStart_toStartOf="parent"/>
 
             <androidx.appcompat.widget.AppCompatTextView
-                style="@style/default_text_style_800"
+                style="@style/assistant_page_title_style"
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="100dp"
                 android:text="@string/assistant_login_third_party_sip_account"
-                android:textSize="20sp"
                 android:textColor="@color/gray_9"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -50,15 +49,13 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/username_label"
-                style="@style/default_text_style_700"
+                style="@style/header_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="38dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:text="@{@string/username + `*`}"
-                android:textSize="13sp"
-                android:textColor="@color/gray_9"
                 app:layout_constraintTop_toBottomOf="@id/title"
                 app:layout_constraintStart_toStartOf="@id/username"/>
 
@@ -84,15 +81,13 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/password_label"
-                style="@style/default_text_style_700"
+                style="@style/header_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="16dp"
                 android:text="@{@string/password + `*`}"
-                android:textSize="13sp"
-                android:textColor="@color/gray_9"
                 app:layout_constraintTop_toBottomOf="@id/username"
                 app:layout_constraintStart_toStartOf="@id/password"/>
 
@@ -131,15 +126,13 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/domain_label"
-                style="@style/default_text_style_700"
+                style="@style/header_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:text="@{@string/sip_address_domain + `*`}"
-                android:textSize="13sp"
-                android:textColor="@color/gray_9"
                 app:layout_constraintTop_toBottomOf="@id/password"
                 app:layout_constraintStart_toStartOf="@id/domain"/>
 
@@ -165,15 +158,13 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/display_name_label"
-                style="@style/default_text_style_700"
+                style="@style/header_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:text="@string/sip_address_display_name"
-                android:textSize="13sp"
-                android:textColor="@color/gray_9"
                 app:layout_constraintTop_toBottomOf="@id/domain"
                 app:layout_constraintStart_toStartOf="@id/display_name"/>
 
@@ -199,15 +190,13 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/transport_label"
-                style="@style/default_text_style_700"
+                style="@style/header_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:text="@{@string/assistant_sip_account_transport_protocol + `*`}"
-                android:textSize="13sp"
-                android:textColor="@color/gray_9"
                 app:layout_constraintTop_toBottomOf="@id/display_name"
                 app:layout_constraintStart_toStartOf="@id/transport"/>
 
@@ -238,7 +227,7 @@
             <androidx.appcompat.widget.AppCompatTextView
                 android:onClick="@{() -> viewModel.login()}"
                 android:enabled="@{viewModel.loginEnabled &amp;&amp; !viewModel.registrationInProgress, default=false}"
-                style="@style/default_text_style_600"
+                style="@style/primary_button_label_style"
                 android:id="@+id/login"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -246,15 +235,9 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="32dp"
-                android:paddingTop="@dimen/primary_secondary_buttons_label_padding"
-                android:paddingBottom="@dimen/primary_secondary_buttons_label_padding"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
                 android:text="@string/assistant_account_login"
-                android:textSize="18sp"
-                android:textColor="@color/primary_button_label_color"
-                android:gravity="center"
-                android:background="@drawable/primary_button_background"
                 app:layout_constraintWidth_max="@dimen/button_max_width"
                 app:layout_constraintVertical_bias="1"
                 app:layout_constraintTop_toBottomOf="@id/transport"

@@ -32,16 +32,13 @@
             app:layout_constraintTop_toTopOf="@id/title" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_800"
+            style="@style/main_page_title_style"
             android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="@dimen/top_bar_height"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:gravity="center_vertical"
             android:text="@string/settings_title"
-            android:textColor="@color/primary_color"
-            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/back"
             app:layout_constraintTop_toTopOf="parent"/>
@@ -61,7 +58,7 @@
                 android:layout_height="wrap_content">
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style_800"
+                    style="@style/section_header_style"
                     android:onClick="@{() -> viewModel.toggleCallsExpand()}"
                     android:id="@+id/calls"
                     android:layout_width="0dp"
@@ -73,7 +70,6 @@
                     android:text="@string/settings_calls_title"
                     android:drawableEnd="@{viewModel.expandCalls ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
                     android:drawableTint="@color/gray_9"
-                    android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"/>
@@ -93,7 +89,7 @@
                     app:layout_constraintBottom_toBottomOf="@id/calls_bottom_anchor"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style_700"
+                    style="@style/settings_title_style"
                     android:onClick="@{() -> viewModel.toggleEchoCanceller()}"
                     android:id="@+id/echo_canceller_title"
                     android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
@@ -102,8 +98,6 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="10dp"
                     android:text="@string/settings_calls_echo_canceller_title"
-                    android:textSize="13sp"
-                    android:textColor="@color/gray_1"
                     android:maxLines="1"
                     android:ellipsize="end"
                     app:layout_constraintTop_toTopOf="@id/echo_canceller_switch"
@@ -112,7 +106,7 @@
                     app:layout_constraintEnd_toStartOf="@id/echo_canceller_switch"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style"
+                    style="@style/settings_subtitle_style"
                     android:onClick="@{() -> viewModel.toggleEchoCanceller()}"
                     android:id="@+id/echo_canceller_subtitle"
                     android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
@@ -121,10 +115,6 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="10dp"
                     android:text="@string/settings_calls_echo_canceller_subtitle"
-                    android:textSize="14sp"
-                    android:textColor="@color/gray_1"
-                    android:maxLines="2"
-                    android:ellipsize="end"
                     app:layout_constraintTop_toBottomOf="@id/echo_canceller_title"
                     app:layout_constraintBottom_toBottomOf="@id/echo_canceller_switch"
                     app:layout_constraintStart_toStartOf="@id/calls_background"
@@ -143,7 +133,7 @@
                     app:layout_constraintTop_toTopOf="@id/calls_background" />
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style_700"
+                    style="@style/settings_title_style"
                     android:onClick="@{() -> viewModel.toggleRouteAudioToBluetooth()}"
                     android:id="@+id/route_audio_to_bluetooth_title"
                     android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
@@ -152,8 +142,6 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="10dp"
                     android:text="@string/settings_calls_route_audio_to_bluetooth_title"
-                    android:textSize="13sp"
-                    android:textColor="@color/gray_1"
                     android:maxLines="2"
                     android:ellipsize="end"
                     app:layout_constraintTop_toTopOf="@id/route_audio_to_bluetooth_switch"
@@ -174,7 +162,7 @@
                     app:layout_constraintTop_toBottomOf="@id/echo_canceller_switch" />
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style_700"
+                    style="@style/settings_title_style"
                     android:onClick="@{() -> viewModel.toggleEnableVideo()}"
                     android:id="@+id/enable_video_title"
                     android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
@@ -183,8 +171,6 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="10dp"
                     android:text="@string/settings_calls_enable_video_title"
-                    android:textSize="13sp"
-                    android:textColor="@color/gray_1"
                     android:maxLines="2"
                     android:ellipsize="end"
                     app:layout_constraintTop_toTopOf="@id/enable_video_switch"
@@ -205,7 +191,7 @@
                     app:layout_constraintTop_toBottomOf="@id/route_audio_to_bluetooth_switch" />
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style_700"
+                    style="@style/settings_title_style"
                     android:onClick="@{() -> viewModel.toggleAutoInitiateVideoCalls()}"
                     android:id="@+id/auto_initiate_video_title"
                     android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
@@ -214,8 +200,6 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="10dp"
                     android:text="@string/settings_calls_auto_initiate_video_title"
-                    android:textSize="13sp"
-                    android:textColor="@color/gray_1"
                     android:maxLines="1"
                     android:ellipsize="end"
                     app:layout_constraintTop_toTopOf="@id/auto_initiate_video_switch"
@@ -224,7 +208,7 @@
                     app:layout_constraintEnd_toStartOf="@id/auto_initiate_video_switch"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style"
+                    style="@style/settings_subtitle_style"
                     android:onClick="@{() -> viewModel.toggleAutoInitiateVideoCalls()}"
                     android:id="@+id/auto_initiate_video_subtitle"
                     android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
@@ -233,10 +217,6 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="10dp"
                     android:text="@string/settings_calls_auto_initiate_video_subtitle"
-                    android:textSize="14sp"
-                    android:textColor="@color/gray_1"
-                    android:maxLines="2"
-                    android:ellipsize="end"
                     app:layout_constraintTop_toBottomOf="@id/auto_initiate_video_title"
                     app:layout_constraintBottom_toBottomOf="@id/auto_initiate_video_switch"
                     app:layout_constraintStart_toStartOf="@id/calls_background"
@@ -255,7 +235,7 @@
                     app:layout_constraintTop_toBottomOf="@id/enable_video_switch" />
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style_700"
+                    style="@style/settings_title_style"
                     android:id="@+id/auto_accept_video_title"
                     android:onClick="@{() -> viewModel.toggleAutoAcceptVideoRequests()}"
                     android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
@@ -264,8 +244,6 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="10dp"
                     android:text="@string/settings_calls_auto_accept_video_title"
-                    android:textSize="13sp"
-                    android:textColor="@color/gray_1"
                     android:maxLines="1"
                     android:ellipsize="end"
                     app:layout_constraintTop_toTopOf="@id/auto_accept_video_switch"
@@ -274,7 +252,7 @@
                     app:layout_constraintEnd_toStartOf="@id/auto_accept_video_switch"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style"
+                    style="@style/settings_subtitle_style"
                     android:id="@+id/auto_accept_video_subtitle"
                     android:onClick="@{() -> viewModel.toggleAutoAcceptVideoRequests()}"
                     android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
@@ -283,10 +261,6 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="10dp"
                     android:text="@string/settings_calls_auto_accept_video_subtitle"
-                    android:textSize="14sp"
-                    android:textColor="@color/gray_1"
-                    android:maxLines="2"
-                    android:ellipsize="end"
                     app:layout_constraintTop_toBottomOf="@id/auto_accept_video_title"
                     app:layout_constraintBottom_toBottomOf="@id/auto_accept_video_switch"
                     app:layout_constraintStart_toStartOf="@id/calls_background"
@@ -305,7 +279,7 @@
                     app:layout_constraintTop_toBottomOf="@id/auto_initiate_video_switch" />
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style_700"
+                    style="@style/settings_title_style"
                     android:id="@+id/device_ringtone_title"
                     android:onClick="@{() -> viewModel.toggleDeviceRingtone()}"
                     android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
@@ -314,8 +288,6 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="10dp"
                     android:text="@string/settings_calls_use_device_ringtone_title"
-                    android:textSize="13sp"
-                    android:textColor="@color/gray_1"
                     android:maxLines="2"
                     android:ellipsize="end"
                     app:layout_constraintTop_toTopOf="@id/device_ringtone_switch"
@@ -336,7 +308,7 @@
                     app:layout_constraintTop_toBottomOf="@id/auto_accept_video_switch" />
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style_700"
+                    style="@style/settings_title_style"
                     android:onClick="@{() -> viewModel.toggleVibrateOnIncomingCalls()}"
                     android:id="@+id/vibrate_title"
                     android:visibility="@{viewModel.expandCalls &amp;&amp; viewModel.isVibrationAvailable ? View.VISIBLE : View.GONE}"
@@ -345,8 +317,6 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="10dp"
                     android:text="@string/settings_calls_vibrate_while_ringing_title"
-                    android:textSize="13sp"
-                    android:textColor="@color/gray_1"
                     android:maxLines="2"
                     android:ellipsize="end"
                     app:layout_constraintTop_toTopOf="@id/vibrate_switch"
@@ -367,7 +337,7 @@
                     app:layout_constraintTop_toBottomOf="@id/device_ringtone_switch" />
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style_700"
+                    style="@style/settings_title_style"
                     android:onClick="@{() -> viewModel.toggleAutoRecordCall()}"
                     android:id="@+id/auto_record_title"
                     android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
@@ -376,8 +346,6 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="10dp"
                     android:text="@string/settings_calls_auto_record_title"
-                    android:textSize="13sp"
-                    android:textColor="@color/gray_1"
                     android:maxLines="2"
                     android:ellipsize="end"
                     app:layout_constraintTop_toTopOf="@id/auto_record_switch"
@@ -407,7 +375,7 @@
                     app:layout_constraintTop_toBottomOf="@id/auto_record_switch"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style_800"
+                    style="@style/section_header_style"
                     android:onClick="@{() -> viewModel.toggleNetworkExpand()}"
                     android:id="@+id/network"
                     android:layout_width="0dp"
@@ -419,7 +387,6 @@
                     android:text="@string/settings_network_title"
                     android:drawableEnd="@{viewModel.expandNetwork ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
                     android:drawableTint="@color/gray_9"
-                    android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/calls_background"/>
@@ -439,7 +406,7 @@
                     app:layout_constraintBottom_toBottomOf="@id/network_bottom_anchor"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style_700"
+                    style="@style/settings_title_style"
                     android:onClick="@{() -> viewModel.toggleEnableVideo()}"
                     android:id="@+id/wifi_only_title"
                     android:visibility="@{viewModel.expandNetwork ? View.VISIBLE : View.GONE}"
@@ -448,8 +415,6 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="10dp"
                     android:text="@string/settings_network_use_wifi_only"
-                    android:textSize="13sp"
-                    android:textColor="@color/gray_1"
                     android:maxLines="2"
                     android:ellipsize="end"
                     app:layout_constraintTop_toTopOf="@id/wifi_only_switch"
@@ -479,7 +444,7 @@
                     app:layout_constraintTop_toBottomOf="@id/wifi_only_switch"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style_800"
+                    style="@style/section_header_style"
                     android:onClick="@{() -> viewModel.toggleUserInterfaceExpand()}"
                     android:id="@+id/user_interface"
                     android:layout_width="0dp"
@@ -491,7 +456,6 @@
                     android:text="@string/settings_user_interface_title"
                     android:drawableEnd="@{viewModel.expandUserInterface ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
                     android:drawableTint="@color/gray_9"
-                    android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/network_background"/>
@@ -520,7 +484,7 @@
                     app:layout_constraintTop_toBottomOf="@id/network_bottom_anchor"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style_800"
+                    style="@style/section_header_style"
                     android:id="@+id/advanced_settings"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -532,7 +496,6 @@
                     android:text="@string/settings_advanced_title"
                     android:drawableEnd="@drawable/caret_right"
                     android:drawableTint="@color/gray_9"
-                    android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/user_interface"

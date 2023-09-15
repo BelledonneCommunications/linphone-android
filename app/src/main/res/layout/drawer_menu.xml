@@ -37,7 +37,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{() -> viewModel.closeDrawerMenu()}"
-            style="@style/default_text_style_800"
+            style="@style/section_header_style"
             android:id="@+id/brand_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -46,8 +46,6 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:text="@string/app_name"
-            android:textSize="16sp"
-            android:textColor="@color/gray_9"
             android:gravity="center_vertical"
             android:drawableEnd="@drawable/x"
             android:drawablePadding="15dp"
@@ -88,12 +86,11 @@
                     app:layout_constraintTop_toBottomOf="@id/background" />
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style_800"
+                    style="@style/section_header_style"
                     android:id="@+id/no_account_label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/drawer_menu_no_account_configured_yet"
-                    android:textSize="16sp"
                     android:gravity="center"
                     app:layout_constraintBottom_toTopOf="@id/background"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -106,25 +103,19 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{() -> viewModel.addAccount()}"
-            style="@style/default_text_style_600"
+            style="@style/secondary_button_label_style"
             android:id="@+id/add_account"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="30dp"
-            android:paddingTop="@dimen/primary_secondary_buttons_label_padding"
-            android:paddingBottom="@dimen/primary_secondary_buttons_label_padding"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             android:text="@string/drawer_menu_add_account"
-            android:textSize="18sp"
-            android:textColor="@color/secondary_button_label_color"
-            android:gravity="center"
             android:drawableStart="@drawable/plus_circle"
             android:drawablePadding="8dp"
             app:drawableTint="@color/secondary_button_label_color"
-            android:background="@drawable/secondary_button_background"
             app:layout_constraintWidth_max="@dimen/button_max_width"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -144,7 +135,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{settingsClickedListener}"
-            style="@style/default_text_style_700"
+            style="@style/header_style"
             android:id="@+id/settings"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -152,7 +143,6 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:text="@string/settings_title"
-            android:textSize="13sp"
             android:drawableStart="@drawable/gear"
             android:drawableEnd="@drawable/caret_right"
             android:drawablePadding="8dp"
@@ -163,7 +153,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{recordingsClickListener}"
-            style="@style/default_text_style_700"
+            style="@style/header_style"
             android:id="@+id/recordings"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -171,7 +161,6 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:text="@string/recordings_title"
-            android:textSize="13sp"
             android:drawableStart="@drawable/recordings"
             android:drawableEnd="@drawable/caret_right"
             android:drawablePadding="8dp"
@@ -182,7 +171,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{helpClickedListener}"
-            style="@style/default_text_style_700"
+            style="@style/header_style"
             android:id="@+id/help"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -190,7 +179,6 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:text="@string/help_title"
-            android:textSize="13sp"
             android:drawableStart="@drawable/question"
             android:drawableEnd="@drawable/caret_right"
             android:drawablePadding="8dp"

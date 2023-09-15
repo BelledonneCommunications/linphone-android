@@ -92,12 +92,11 @@
             app:layout_constraintTop_toBottomOf="@id/background" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_800"
+            style="@style/section_header_style"
             android:id="@+id/no_calls_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/calls_list_empty_history"
-            android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@id/background"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

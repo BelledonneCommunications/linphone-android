@@ -39,16 +39,13 @@
             app:layout_constraintTop_toTopOf="@id/title" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_800"
+            style="@style/main_page_title_style"
             android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="@dimen/top_bar_height"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:gravity="center_vertical"
             android:text="@string/manage_account_choose_mode_title"
-            android:textColor="@color/primary_color"
-            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/back"
             app:layout_constraintTop_toTopOf="parent"/>
@@ -85,7 +82,6 @@
 
                 <ImageView
                     android:id="@+id/default_mode_tooltip"
-                    style="@style/default_text_style_800"
                     android:onClick="@{defaultModeTooltipClickListener}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -218,7 +214,6 @@
 
                 <ImageView
                     android:id="@+id/interop_mode_tooltip"
-                    style="@style/default_text_style_800"
                     android:onClick="@{interopModeTooltipClickListener}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -250,7 +245,7 @@
                     app:layout_constraintEnd_toEndOf="parent"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style_600"
+                    style="@style/primary_button_label_style"
                     android:onClick="@{continueClickListener}"
                     android:id="@+id/login"
                     android:layout_width="0dp"
@@ -259,15 +254,9 @@
                     android:layout_marginBottom="32dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:paddingTop="@dimen/primary_secondary_buttons_label_padding"
-                    android:paddingBottom="@dimen/primary_secondary_buttons_label_padding"
                     android:paddingStart="20dp"
                     android:paddingEnd="20dp"
                     android:text="@string/manage_account_choose_mode_save_changes"
-                    android:textSize="18sp"
-                    android:textColor="@color/primary_button_label_color"
-                    android:gravity="center"
-                    android:background="@drawable/primary_button_background"
                     app:layout_constraintWidth_max="@dimen/button_max_width"
                     app:layout_constraintVertical_bias="1"
                     app:layout_constraintTop_toBottomOf="@id/interop_mode_summary"

@@ -50,22 +50,19 @@
                 app:layout_constraintTop_toTopOf="@id/title" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                style="@style/default_text_style_800"
+                style="@style/main_page_title_style"
                 android:id="@+id/title"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/top_bar_height"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:gravity="center_vertical"
                 android:text="@string/help_title"
-                android:textColor="@color/primary_color"
-                android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/back"
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <androidx.appcompat.widget.AppCompatTextView
-                style="@style/default_text_style_800"
+                style="@style/section_header_style"
                 android:id="@+id/about_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -73,8 +70,6 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="32dp"
                 android:text="@string/help_about_title"
-                android:textSize="16sp"
-                android:textColor="@color/gray_9"
                 app:layout_constraintTop_toBottomOf="@id/title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
@@ -93,7 +88,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/privacy_policy_subtitle" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                style="@style/default_text_style_700"
+                style="@style/header_style"
                 android:onClick="@{privacyPolicyClickListener}"
                 android:id="@+id/privacy_policy_title"
                 android:layout_width="0dp"
@@ -102,8 +97,6 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="24dp"
                 android:text="@string/help_about_privacy_policy_title"
-                android:textSize="13sp"
-                android:textColor="@color/gray_9"
                 app:layout_constraintTop_toBottomOf="@id/about_title"
                 app:layout_constraintStart_toEndOf="@id/privacy_policy_icon"
                 app:layout_constraintEnd_toEndOf="parent"/>
@@ -136,7 +129,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/version_subtitle" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                style="@style/default_text_style_700"
+                style="@style/header_style"
                 android:id="@+id/version_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -144,8 +137,6 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="24dp"
                 android:text="@string/help_about_version_title"
-                android:textSize="13sp"
-                android:textColor="@color/gray_9"
                 app:layout_constraintTop_toBottomOf="@id/privacy_policy_subtitle"
                 app:layout_constraintStart_toEndOf="@id/version_icon"
                 app:layout_constraintEnd_toStartOf="@id/check_for_update"/>
@@ -165,7 +156,7 @@
                 app:layout_constraintEnd_toStartOf="@id/check_for_update" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                style="@style/default_text_style_600"
+                style="@style/tertiary_button_label_style"
                 android:onClick="@{() -> viewModel.checkForUpdate()}"
                 android:id="@+id/check_for_update"
                 android:layout_width="wrap_content"
@@ -178,8 +169,6 @@
                 android:paddingBottom="6dp"
                 android:gravity="center"
                 android:text="@string/help_about_check_for_update"
-                android:textColor="@color/tertiary_button_label_color"
-                android:textSize="13sp"
                 android:maxLines="1"
                 android:ellipsize="end"
                 app:layout_constraintStart_toEndOf="@id/version_title"
@@ -201,7 +190,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/open_source_licenses_subtitle" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                style="@style/default_text_style_700"
+                style="@style/header_style"
                 android:onClick="@{licensesClickListener}"
                 android:id="@+id/open_source_licenses_title"
                 android:layout_width="0dp"
@@ -210,8 +199,6 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="24dp"
                 android:text="@string/help_about_open_source_licenses_title"
-                android:textSize="13sp"
-                android:textColor="@color/gray_9"
                 app:layout_constraintTop_toBottomOf="@id/version_subtitle"
                 app:layout_constraintStart_toEndOf="@id/open_source_licenses_icon"
                 app:layout_constraintEnd_toEndOf="parent"/>
@@ -245,7 +232,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/translate_title" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                style="@style/default_text_style_700"
+                style="@style/header_style"
                 android:onClick="@{translateClickListener}"
                 android:id="@+id/translate_title"
                 android:layout_width="0dp"
@@ -254,14 +241,12 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="24dp"
                 android:text="@string/help_about_contribute_translations_title"
-                android:textSize="13sp"
-                android:textColor="@color/gray_9"
                 app:layout_constraintTop_toBottomOf="@id/open_source_licenses_subtitle"
                 app:layout_constraintStart_toEndOf="@id/translate_icon"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
             <androidx.appcompat.widget.AppCompatTextView
-                style="@style/default_text_style_800"
+                style="@style/section_header_style"
                 android:id="@+id/advanced_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -269,8 +254,6 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="32dp"
                 android:text="@string/help_about_advanced_title"
-                android:textSize="16sp"
-                android:textColor="@color/gray_9"
                 app:layout_constraintTop_toBottomOf="@id/translate_icon"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
@@ -288,7 +271,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/debug_title" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                style="@style/default_text_style_700"
+                style="@style/header_style"
                 android:onClick="@{debugClickListener}"
                 android:id="@+id/debug_title"
                 android:layout_width="0dp"
@@ -297,8 +280,6 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="24dp"
                 android:text="@string/help_debug_title"
-                android:textSize="13sp"
-                android:textColor="@color/gray_9"
                 app:layout_constraintTop_toBottomOf="@id/advanced_title"
                 app:layout_constraintStart_toEndOf="@id/debug_icon"
                 app:layout_constraintEnd_toEndOf="parent"/>

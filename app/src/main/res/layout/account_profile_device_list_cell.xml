@@ -18,20 +18,18 @@
         android:background="@drawable/shape_squircle_gray_2_background">
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_700"
+            style="@style/header_style"
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="23dp"
             android:layout_marginTop="34dp"
             android:text="@{model.name, default=`Pixel 6 Pro`}"
-            android:textSize="13sp"
-            android:textColor="@color/gray_9"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_600"
+            style="@style/tertiary_button_label_style"
             android:id="@+id/remove"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -43,8 +41,6 @@
             android:paddingBottom="6dp"
             android:gravity="center"
             android:text="Remove"
-            android:textColor="@color/tertiary_button_label_color"
-            android:textSize="13sp"
             android:maxLines="1"
             android:ellipsize="end"
             android:drawableStart="@drawable/trash_simple"
@@ -55,15 +51,13 @@
             app:layout_constraintBottom_toBottomOf="@id/name"/>
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_700"
+            style="@style/header_style"
             android:id="@+id/last_connection"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="23dp"
             android:layout_marginTop="30dp"
             android:text="Last connection:"
-            android:textSize="13sp"
-            android:textColor="@color/gray_9"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintTop_toBottomOf="@id/name"

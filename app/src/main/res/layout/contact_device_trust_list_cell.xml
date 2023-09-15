@@ -53,7 +53,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{() -> model.startCallToDevice()}"
-            style="@style/default_text_style_600"
+            style="@style/tertiary_button_label_style"
             android:id="@+id/verify_device"
             android:visibility="@{model.trusted ? View.GONE : View.VISIBLE}"
             android:layout_width="wrap_content"
@@ -68,8 +68,6 @@
             android:drawableStart="@drawable/warning_circle"
             android:drawablePadding="8dp"
             android:text="@string/friend_make_call_check_device_trust"
-            android:textColor="@color/tertiary_button_label_color"
-            android:textSize="13sp"
             android:maxLines="1"
             android:ellipsize="end"
             app:drawableTint="@color/tertiary_button_label_color"

@@ -41,14 +41,13 @@
             app:layout_constraintTop_toTopOf="@id/title" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_800"
+            style="@style/section_header_style"
             android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:paddingTop="@dimen/dialog_top_bottom_margin"
             android:text="@string/dialog_pick_phone_number_or_sip_address_title"
-            android:textSize="16sp"
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintBottom_toTopOf="@id/numbers_and_addresses"
             app:layout_constraintStart_toStartOf="@id/dialog_background"

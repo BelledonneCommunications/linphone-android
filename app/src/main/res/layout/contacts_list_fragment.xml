@@ -86,19 +86,18 @@
             app:layout_constraintTop_toBottomOf="@id/background" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_800"
+            style="@style/section_header_style"
             android:id="@+id/no_contacts_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
-            android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@id/background"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/no_contacts_image" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_800"
+            style="@style/section_header_style"
             android:id="@+id/favourites_label"
             android:visibility="@{!viewModel.isListFiltered &amp;&amp; viewModel.favourites.size() > 0 ? View.VISIBLE : View.GONE}"
             onClickListener="@{() -> viewModel.toggleFavouritesVisibility()}"
@@ -111,7 +110,6 @@
             android:text="@string/contacts_list_favourites_title"
             android:drawableEnd="@{viewModel.showFavourites ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
             android:drawableTint="@color/gray_9"
-            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/background"/>
@@ -129,7 +127,7 @@
             app:layout_constraintTop_toBottomOf="@id/favourites_label" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_800"
+            style="@style/section_header_style"
             android:id="@+id/all_contacts_label"
             android:visibility="@{!viewModel.isListFiltered &amp;&amp; viewModel.favourites.size() > 0 ? View.VISIBLE : View.GONE}"
             android:layout_width="0dp"
@@ -139,7 +137,6 @@
             android:layout_marginEnd="16dp"
             android:layout_marginTop="20dp"
             android:text="@string/contacts_list_all_contacts_title"
-            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/favourites_contacts_list"/>

@@ -43,14 +43,13 @@
             app:layout_constraintTop_toTopOf="@id/title" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_800"
+            style="@style/section_header_style"
             android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:paddingTop="@dimen/dialog_top_bottom_margin"
             android:text="@{defaultMode ? @string/manage_account_secure_mode_default_title : @string/manage_account_secure_mode_interoperable_title, default=@string/manage_account_secure_mode_default_title}"
-            android:textSize="16sp"
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintBottom_toTopOf="@id/message"
             app:layout_constraintStart_toStartOf="@id/dialog_background"
@@ -74,20 +73,14 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{dismissClickListener}"
-            style="@style/default_text_style_600"
+            style="@style/primary_button_label_style"
             android:id="@+id/confirm"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
-            android:paddingBottom="@dimen/primary_secondary_buttons_label_padding"
-            android:paddingTop="@dimen/primary_secondary_buttons_label_padding"
-            android:gravity="center"
-            android:background="@drawable/primary_button_background"
             android:text="@string/dialog_close"
-            android:textSize="18sp"
-            android:textColor="@color/primary_button_label_color"
             app:layout_constraintStart_toStartOf="@id/dialog_background"
             app:layout_constraintEnd_toEndOf="@id/dialog_background"
             app:layout_constraintTop_toBottomOf="@id/message"

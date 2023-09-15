@@ -41,16 +41,13 @@
             app:layout_constraintTop_toTopOf="@id/invisible_title"/>
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_800"
+            style="@style/main_page_title_style"
             android:id="@+id/invisible_title"
             android:visibility="invisible"
             android:layout_width="0dp"
             android:layout_height="@dimen/top_bar_height"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:gravity="center_vertical"
-            android:textColor="@color/primary_color"
-            android:textSize="16sp"
             app:layout_constraintEnd_toStartOf="@id/edit"
             app:layout_constraintStart_toEndOf="@id/back"
             app:layout_constraintTop_toTopOf="parent"/>
@@ -237,7 +234,7 @@
                     app:layout_constraintEnd_toEndOf="@id/video_call"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style_800"
+                    style="@style/section_header_style"
                     android:onClick="@{() -> viewModel.toggleNumbersAndAddressesExpand()}"
                     android:id="@+id/numbers_and_addresses_label"
                     android:layout_width="0dp"
@@ -249,7 +246,6 @@
                     android:text="@string/contact_details_numbers_and_addresses_title"
                     android:drawableEnd="@{viewModel.expandNumbersAndAddresses ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
                     android:drawableTint="@color/gray_9"
-                    android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/call_label"/>
@@ -286,7 +282,7 @@
                     app:layout_constraintBottom_toBottomOf="@id/title_label"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style_700"
+                    style="@style/header_style"
                     android:id="@+id/company_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -294,7 +290,6 @@
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
                     android:text="@string/contact_details_company_name"
-                    android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="@id/info_background"
                     app:layout_constraintTop_toTopOf="@id/info_background"/>
 
@@ -315,7 +310,7 @@
                     app:layout_constraintTop_toTopOf="@id/info_background"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style_700"
+                    style="@style/header_style"
                     android:id="@+id/title_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -323,7 +318,6 @@
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
                     android:text="@string/contact_details_job_title"
-                    android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="@id/info_background"
                     app:layout_constraintTop_toBottomOf="@id/company"/>
 
@@ -344,7 +338,7 @@
                     app:layout_constraintTop_toBottomOf="@id/company"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style_800"
+                    style="@style/section_header_style"
                     android:onClick="@{() -> viewModel.displayTrustDialog()}"
                     android:id="@+id/trust_label"
                     android:layout_width="wrap_content"
@@ -353,7 +347,6 @@
                     android:layout_marginTop="16dp"
                     android:padding="5dp"
                     android:text="@string/contact_details_trust_title"
-                    android:textSize="16sp"
                     android:drawableEnd="@drawable/question"
                     android:drawableTint="@color/gray_9"
                     android:drawablePadding="8dp"
@@ -361,7 +354,7 @@
                     app:layout_constraintTop_toBottomOf="@id/info_background"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style_800"
+                    style="@style/section_header_style"
                     android:onClick="@{() -> viewModel.toggleDevicesTrustExpand()}"
                     android:id="@+id/trust_toggle"
                     android:layout_width="0dp"
@@ -371,7 +364,6 @@
                     android:padding="5dp"
                     android:drawableEnd="@{viewModel.expandDevicesTrust ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
                     android:drawableTint="@color/gray_9"
-                    android:textSize="16sp"
                     app:layout_constraintStart_toEndOf="@id/trust_label"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/info_background"/>
@@ -390,14 +382,13 @@
                     app:layout_constraintBottom_toBottomOf="@id/devices"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style_700"
+                    style="@style/header_style"
                     android:id="@+id/trusted_devices_count"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="17dp"
                     android:layout_marginEnd="17dp"
                     android:layout_marginTop="20dp"
-                    android:textSize="14sp"
                     android:text="@string/contact_details_trusted_devices_count"
                     app:layout_constraintStart_toStartOf="@id/trust_background"
                     app:layout_constraintEnd_toEndOf="@id/trust_background"
@@ -449,7 +440,7 @@
                     app:layout_constraintTop_toBottomOf="@id/trusted_devices_progress" />
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style_800"
+                    style="@style/section_header_style"
                     android:id="@+id/actions"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -458,7 +449,6 @@
                     android:layout_marginEnd="26dp"
                     android:layout_marginTop="16dp"
                     android:text="@string/contact_details_actions_title"
-                    android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/trust_background"/>

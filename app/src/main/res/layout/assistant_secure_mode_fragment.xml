@@ -56,14 +56,12 @@
                 app:layout_constraintBottom_toBottomOf="@id/sub_title"/>
 
             <androidx.appcompat.widget.AppCompatTextView
-                style="@style/default_text_style_800"
+                style="@style/assistant_page_title_style"
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="100dp"
                 android:text="@string/assistant_account_secure_mode_title"
-                android:textSize="20sp"
-                android:textColor="@color/white"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
@@ -99,7 +97,6 @@
 
             <ImageView
                 android:id="@+id/default_mode_tooltip"
-                style="@style/default_text_style_800"
                 android:onClick="@{defaultModeTooltipClickListener}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -232,7 +229,6 @@
 
             <ImageView
                 android:id="@+id/interop_mode_tooltip"
-                style="@style/default_text_style_800"
                 android:onClick="@{interopModeTooltipClickListener}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -264,7 +260,7 @@
                 app:layout_constraintEnd_toEndOf="parent"/>
 
             <androidx.appcompat.widget.AppCompatTextView
-                style="@style/default_text_style_600"
+                style="@style/primary_button_label_style"
                 android:onClick="@{continueClickListener}"
                 android:id="@+id/login"
                 android:layout_width="0dp"
@@ -273,15 +269,9 @@
                 android:layout_marginBottom="32dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:paddingTop="@dimen/primary_secondary_buttons_label_padding"
-                android:paddingBottom="@dimen/primary_secondary_buttons_label_padding"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
                 android:text="@string/assistant_secure_mode_finish_account_login"
-                android:textSize="18sp"
-                android:textColor="@color/primary_button_label_color"
-                android:gravity="center"
-                android:background="@drawable/primary_button_background"
                 app:layout_constraintWidth_max="@dimen/button_max_width"
                 app:layout_constraintVertical_bias="1"
                 app:layout_constraintTop_toBottomOf="@id/interop_mode_summary"

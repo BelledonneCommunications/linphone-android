@@ -42,7 +42,7 @@
                 app:layout_constraintTop_toTopOf="@id/title" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                style="@style/default_text_style_800"
+                style="@style/section_header_style"
                 android:id="@+id/title"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/top_bar_height"
@@ -131,7 +131,7 @@
                         app:layout_constraintEnd_toEndOf="parent"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/default_text_style_800"
+                        style="@style/section_header_style"
                         android:onClick="@{() -> viewModel.toggleDetailsExpand()}"
                         android:id="@+id/details"
                         android:layout_width="0dp"
@@ -143,7 +143,6 @@
                         android:text="@string/manage_account_details_title"
                         android:drawableEnd="@{viewModel.expandDetails ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
                         android:drawableTint="@color/gray_9"
-                        android:textSize="16sp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/add_picture_label"/>
@@ -162,7 +161,7 @@
                         app:layout_constraintBottom_toBottomOf="@id/details_bottom_anchor"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/default_text_style_700"
+                        style="@style/header_style"
                         android:id="@+id/sip_address_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -170,7 +169,6 @@
                         android:paddingTop="8dp"
                         android:paddingBottom="8dp"
                         android:text="@string/sip_address"
-                        android:textSize="13sp"
                         app:layout_constraintStart_toStartOf="@id/details_background"
                         app:layout_constraintTop_toTopOf="@id/details_background"/>
 
@@ -192,7 +190,7 @@
                         app:layout_constraintBottom_toBottomOf="@id/sip_address_label"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/default_text_style_700"
+                        style="@style/header_style"
                         android:id="@+id/display_name_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -200,7 +198,6 @@
                         android:paddingTop="8dp"
                         android:paddingBottom="8dp"
                         android:text="@string/sip_address_display_name"
-                        android:textSize="13sp"
                         app:layout_constraintStart_toStartOf="@id/details_background"
                         app:layout_constraintTop_toBottomOf="@id/sip_address"/>
 
@@ -258,13 +255,12 @@
                         app:layout_constraintTop_toTopOf="@id/connection_background" />
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/default_text_style_700"
+                        style="@style/header_style"
                         android:id="@+id/connected_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:text="@{viewModel.accountModel.registrationState, default=@string/drawer_menu_account_connection_status_connected}"
-                        android:textSize="13sp"
                         app:layout_constraintStart_toEndOf="@id/connected_switch"
                         app:layout_constraintTop_toTopOf="@id/connected_switch"
                         app:layout_constraintBottom_toBottomOf="@id/connected_switch" />
@@ -305,22 +301,20 @@
                         app:layout_constraintBottom_toBottomOf="@id/change_mode"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/default_text_style_700"
+                        style="@style/header_style"
                         android:id="@+id/current_mode"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
                         android:text="@{viewModel.currentMode, default=@string/manage_account_secure_mode_default_title}"
-                        android:textSize="13sp"
-                        android:textColor="@color/gray_9"
                         app:layout_constraintTop_toTopOf="@id/mode_background"
                         app:layout_constraintStart_toStartOf="@id/mode_background"
                         app:layout_constraintBottom_toBottomOf="@id/mode_background"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:onClick="@{changeModeClickListener}"
-                        style="@style/default_text_style_600"
+                        style="@style/tertiary_button_label_style"
                         android:id="@+id/change_mode"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -332,8 +326,6 @@
                         android:paddingBottom="6dp"
                         android:gravity="center"
                         android:text="@string/manage_account_change_mode"
-                        android:textColor="@color/tertiary_button_label_color"
-                        android:textSize="13sp"
                         android:maxLines="1"
                         android:ellipsize="end"
                         app:layout_constraintEnd_toEndOf="@id/mode_background"
@@ -341,7 +333,7 @@
                         app:layout_constraintBottom_toBottomOf="@id/mode_background"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/default_text_style_800"
+                        style="@style/section_header_style"
                         android:onClick="@{() -> viewModel.toggleDevicesExpand()}"
                         android:id="@+id/devices"
                         android:layout_width="0dp"
@@ -353,7 +345,6 @@
                         android:text="@string/manage_account_devices_title"
                         android:drawableEnd="@{viewModel.expandDevices ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
                         android:drawableTint="@color/gray_9"
-                        android:textSize="16sp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/mode_background"/>
@@ -380,7 +371,7 @@
                         app:layout_constraintTop_toBottomOf="@id/devices" />
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        style="@style/default_text_style_800"
+                        style="@style/section_header_style"
                         android:id="@+id/actions"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -389,7 +380,6 @@
                         android:layout_marginEnd="26dp"
                         android:layout_marginTop="16dp"
                         android:text="@string/contact_details_actions_title"
-                        android:textSize="16sp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/devices_list"/>
