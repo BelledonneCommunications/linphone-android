@@ -303,9 +303,14 @@ class NotificationsManager(private val context: Context) {
                 }
             }
 
-            val notifiable = createChatReactionNotifiable(chatRoom, reaction.body, address, message)
-            if (notifiable.messages.isNotEmpty()) {
-                displayChatNotifiable(chatRoom, notifiable)
+            val newNotifiable = createChatReactionNotifiable(
+                chatRoom,
+                reaction.body,
+                address,
+                message
+            )
+            if (newNotifiable.messages.isNotEmpty()) {
+                displayChatNotifiable(chatRoom, newNotifiable)
             } else {
                 Log.e(
                     "[Notifications Manager] Notifiable is empty but we should have displayed the reaction!"
@@ -948,6 +953,18 @@ class NotificationsManager(private val context: Context) {
         message: ChatMessage
     ): Notifiable {
         val notifiable = getNotifiableForRoom(room)
+
+        // Check for previous reaction notifiable from the same person for the same message
+        val fromAddr = from.asStringUriOnly()
+        val found = notifiable.messages.find {
+            it.isReaction && it.reactionToMessageId == message.messageId && it.reactionFrom == fromAddr
+        }
+        if (found != null) {
+            Log.i(
+                "[Notifications Manager] Found a previous notifiable for a reaction from the same person to the same message, removing it"
+            )
+            notifiable.messages.remove(found)
+        }
 
         val friend = coreContext.contactsManager.findContactByAddress(from)
         val roundPicture = ImageUtils.getRoundBitmapFromUri(context, friend?.getThumbnailUri())
