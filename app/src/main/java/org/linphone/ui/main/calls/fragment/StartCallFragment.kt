@@ -108,7 +108,7 @@ class StartCallFragment : GenericFragment() {
         binding.contactsAndSuggestionsList.setHasFixedSize(true)
         binding.contactsAndSuggestionsList.adapter = adapter
 
-        val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
+        val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter, true)
         binding.contactsAndSuggestionsList.addItemDecoration(headerItemDecoration)
 
         adapter.contactClickedEvent.observe(viewLifecycleOwner) {

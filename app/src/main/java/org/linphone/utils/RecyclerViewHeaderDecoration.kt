@@ -27,7 +27,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-class RecyclerViewHeaderDecoration(private val context: Context, private val adapter: HeaderAdapter) : RecyclerView.ItemDecoration() {
+class RecyclerViewHeaderDecoration(
+    private val context: Context,
+    private val adapter: HeaderAdapter,
+    private val sticky: Boolean = false
+) : RecyclerView.ItemDecoration() {
     private val headers: SparseArray<View> = SparseArray()
 
     override fun getItemOffsets(
@@ -74,8 +78,12 @@ class RecyclerViewHeaderDecoration(private val context: Context, private val ada
     }
 
     override fun onDraw(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
-        for (i in 0 until parent.childCount) {
+        if (sticky) return
+
+        // Used to display the moving item decoration
+        for (i in 0 until parent.childCount) { // Only returns visible children
             val child = parent.getChildAt(i)
+            // Maps the visible view position to the item index in the adapter
             val position = parent.getChildAdapterPosition(child)
             if (position != RecyclerView.NO_POSITION && adapter.displayHeaderForPosition(position)) {
                 canvas.save()
@@ -86,6 +94,62 @@ class RecyclerViewHeaderDecoration(private val context: Context, private val ada
                 canvas.translate(0f, child.y - headerView.height)
                 headerView.draw(canvas)
                 canvas.restore()
+            }
+        }
+    }
+
+    override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
+        if (!sticky) return
+
+        var latestPositionHeaderFound = -1
+        var nextHeaderTopPosition = -1f
+
+        for (index in parent.childCount downTo 0) {
+            val child = parent.getChildAt(index)
+            val position = parent.getChildAdapterPosition(child)
+            if (position != RecyclerView.NO_POSITION && adapter.displayHeaderForPosition(position)) {
+                canvas.save()
+                val headerView: View = headers.get(position) ?: adapter.getHeaderViewForPosition(
+                    context,
+                    position
+                )
+
+                val top = child.y - headerView.height
+                if (top >= 0) { // don't move the first header
+                    canvas.translate(0f, top)
+                }
+
+                headerView.draw(canvas)
+                canvas.restore()
+
+                latestPositionHeaderFound = position
+                nextHeaderTopPosition = child.y
+            }
+        }
+
+        // Makes sure at least one header is displayed
+        if (latestPositionHeaderFound > 0 || latestPositionHeaderFound == -1) {
+            // Display first item header at top
+            val topVisibleChild = parent.getChildAt(0)
+            val topVisibleChildPosition = parent.getChildAdapterPosition(topVisibleChild)
+            for (position in topVisibleChildPosition downTo 0) {
+                if (adapter.displayHeaderForPosition(position)) {
+                    canvas.save()
+                    val headerView: View = headers.get(position) ?: adapter.getHeaderViewForPosition(
+                        context,
+                        position
+                    )
+
+                    // Do not translate it as we want it sticky to the top unless in contact with next header
+                    if (nextHeaderTopPosition > 0 && nextHeaderTopPosition <= (headerView.height * 2)) {
+                        val top = nextHeaderTopPosition - (headerView.height * 2)
+                        canvas.translate(0f, top)
+                    }
+
+                    headerView.draw(canvas)
+                    canvas.restore()
+                    break
+                }
             }
         }
     }

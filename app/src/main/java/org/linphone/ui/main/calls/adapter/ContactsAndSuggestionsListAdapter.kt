@@ -13,8 +13,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
 import org.linphone.databinding.CallSuggestionListCellBinding
+import org.linphone.databinding.CallSuggestionListDecorationBinding
 import org.linphone.databinding.ContactListCellBinding
 import org.linphone.ui.main.calls.model.ContactOrSuggestionModel
+import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.HeaderAdapter
 
@@ -43,12 +45,18 @@ class ContactsAndSuggestionsListAdapter(
             }
             val previousModel = getItem(position - 1)
             return previousModel.friend != null
-        }
+        } else if (position == 0) return true
         return false
     }
 
     override fun getHeaderViewForPosition(context: Context, position: Int): View {
-        return LayoutInflater.from(context).inflate(R.layout.call_suggestion_list_decoration, null)
+        val binding = CallSuggestionListDecorationBinding.inflate(LayoutInflater.from(context))
+        binding.header.text = if (position == 0) {
+            AppUtils.getString(R.string.call_start_contacts_list_title)
+        } else {
+            AppUtils.getString(R.string.call_start_suggestions_list_title)
+        }
+        return binding.root
     }
 
     override fun getItemViewType(position: Int): Int {
