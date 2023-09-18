@@ -113,8 +113,22 @@
     <string name="assistant_secure_mode_interoperable_title">Interoperable</string>
     <string name="assistant_secure_mode_finish_account_login">Continue</string>
     <string name="assistant_account_register_username_already_in_use_error">This account already exists</string>
+    <string name="assistant_account_register_username_invalid_characters_error">Invalid characters: capital letters and special characters are not allowed</string>
+    <string name="assistant_account_register_username_too_short_error">Username is too short</string>
+    <string name="assistant_account_register_username_too_long_error">Username is too long</string>
+    <string name="assistant_account_register_username_error">Unexpected username error</string>
     <string name="assistant_account_register_phone_number_already_in_use_error">Phone number already used</string>
-    <string name="assistant_account_register_invalid_phone_number_error">Invalid phone number and/or prefix</string>
+    <string name="assistant_account_register_invalid_phone_number_international_prefix_error">Invalid phone number</string>
+    <string name="assistant_account_register_invalid_phone_number_too_long_error">Phone number is too long</string>
+    <string name="assistant_account_register_invalid_phone_number_too_short_error">Phone number is too short</string>
+    <string name="assistant_account_register_invalid_phone_number_error">Unexpected phone number error</string>
+    <string name="assistant_account_register_password_invalid_characters_error">Invalid characters</string>
+    <string name="assistant_account_register_password_too_short">Password is too short</string>
+    <string name="assistant_account_register_password_too_long_error">Password is too long</string>
+    <string name="assistant_account_register_invalid_password_error">Unexpected password error</string>
+    <string name="assistant_account_register_server_error">Failed to create account, error %i</string>
+    <string name="assistant_account_register_push_notification_not_received_error">Push notification with auth token not received in 5 seconds, please try again later</string>
+    <string name="assistant_account_register_unexpected_error">Unexpected error occurred, please try again later</string>
 
     <string name="drawer_menu_manage_account">Manage the profile</string>
     <string name="drawer_menu_account_connection_status_connected">Connected</string>

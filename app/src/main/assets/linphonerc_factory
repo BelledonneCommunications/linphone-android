@@ -57,4 +57,9 @@ lime_update_threshold=86400
 [alerts]
 alerts_enabled=1
 
+[assistant]
+algorithm=SHA-256
+password_min_length=6
+username_regex=^[a-z0-9+_.\-]*$
+
 ## End of factory rc

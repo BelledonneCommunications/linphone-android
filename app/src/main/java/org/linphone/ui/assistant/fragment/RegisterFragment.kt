@@ -38,6 +38,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantRegisterFragmentBinding
+import org.linphone.ui.assistant.AssistantActivity
 import org.linphone.ui.assistant.model.ConfirmPhoneNumberDialogModel
 import org.linphone.ui.assistant.viewmodel.AccountCreationViewModel
 import org.linphone.utils.DialogUtils
@@ -134,6 +135,15 @@ class RegisterFragment : Fragment() {
                 Log.i("$TAG Going to SMS code confirmation fragment")
                 val action = RegisterFragmentDirections.actionRegisterFragmentToRegisterCodeConfirmationFragment()
                 findNavController().navigate(action)
+            }
+        }
+
+        viewModel.errorHappenedEvent.observe(viewLifecycleOwner) {
+            it.consume { error ->
+                (requireActivity() as AssistantActivity).showRedToast(
+                    error,
+                    R.drawable.warning_circle
+                )
             }
         }
 

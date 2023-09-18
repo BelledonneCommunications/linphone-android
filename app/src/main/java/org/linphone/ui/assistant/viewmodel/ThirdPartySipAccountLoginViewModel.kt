@@ -118,10 +118,12 @@ class ThirdPartySipAccountLoginViewModel @UiThread constructor() : ViewModel() {
             loginEnabled.value = isLoginButtonEnabled()
         }
 
+        // TODO: handle formatting errors
+
         availableTransports.add(UDP)
         availableTransports.add(TCP)
         availableTransports.add(TLS)
-        transport.value = UDP
+        transport.value = TLS
     }
 
     @UiThread

@@ -40,6 +40,7 @@
     <dimen name="in_call_round_corners_texture_view_radius">20dp</dimen>
 
     <dimen name="toast_max_width">400dp</dimen>
+    <dimen name="toast_text_max_width">300dp</dimen>
     <dimen name="button_max_width">400dp</dimen>
     <dimen name="dialog_max_width">400dp</dimen>
     <dimen name="text_input_max_width">400dp</dimen>

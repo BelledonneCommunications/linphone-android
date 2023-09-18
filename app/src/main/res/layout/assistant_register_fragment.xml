@@ -213,6 +213,19 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
 
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style_600"
+                    android:visibility="@{viewModel.passwordError.length() == 0 ? View.GONE : View.VISIBLE, default=gone}"
+                    android:id="@+id/password_error"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@{viewModel.passwordError, default=`Error`}"
+                    android:textSize="13sp"
+                    android:textColor="@color/red_danger"
+                    app:layout_constraintTop_toBottomOf="@id/password"
+                    app:layout_constraintStart_toStartOf="@id/password"
+                    app:layout_constraintEnd_toEndOf="@id/password"/>
+
                 <ImageView
                     android:onClick="@{() -> viewModel.toggleShowPassword()}"
                     android:id="@+id/eye"

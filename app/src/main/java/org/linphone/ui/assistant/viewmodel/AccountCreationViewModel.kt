@@ -36,6 +36,8 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.AccountCreator
+import org.linphone.core.AccountCreator.PhoneNumberStatus
+import org.linphone.core.AccountCreator.UsernameStatus
 import org.linphone.core.AccountCreatorListenerStub
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
@@ -55,6 +57,8 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
     val usernameError = MutableLiveData<String>()
 
     val password = MutableLiveData<String>()
+
+    val passwordError = MutableLiveData<String>()
 
     val phoneNumber = MutableLiveData<String>()
 
@@ -80,6 +84,10 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
     val goToSmsCodeConfirmationViewEvent = MutableLiveData<Event<Boolean>>()
 
     val goToLoginPageEvent = MutableLiveData<Event<Boolean>>()
+
+    val errorHappenedEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
 
     private var waitingForFlexiApiPushToken = false
     private var waitForPushJob: Job? = null
@@ -113,8 +121,12 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
                     Log.e("$TAG An unexpected error occurred!")
                     operationInProgress.postValue(false)
                     createEnabled.postValue(false)
-                    // TODO FIXME: use translated string
-                    phoneNumberError.postValue(status.name)
+
+                    phoneNumberError.postValue(
+                        AppUtils.getString(
+                            R.string.assistant_account_register_invalid_phone_number_error
+                        )
+                    )
                 }
             }
         }
@@ -144,8 +156,12 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
                     Log.e("$TAG An unexpected error occurred!")
                     operationInProgress.postValue(false)
                     createEnabled.postValue(false)
-                    // TODO FIXME: use translated string
-                    phoneNumberError.postValue(status.name)
+
+                    phoneNumberError.postValue(
+                        AppUtils.getString(
+                            R.string.assistant_account_register_invalid_phone_number_error
+                        )
+                    )
                 }
             }
         }
@@ -166,7 +182,14 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
                 }
                 else -> {
                     Log.e("$TAG Account couldn't be created, an unexpected error occurred!")
-                    // TODO: show error message to user
+                    errorHappenedEvent.postValue(
+                        Event(
+                            AppUtils.getFormattedString(
+                                R.string.assistant_account_register_server_error,
+                                status.toInt()
+                            )
+                        )
+                    )
                 }
             }
         }
@@ -185,7 +208,14 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
                 goToLoginPageEvent.postValue(Event(true))
             } else {
                 Log.e("$TAG Account couldn't be activated, an unexpected error occurred!")
-                // TODO: show error message to user
+                errorHappenedEvent.postValue(
+                    Event(
+                        AppUtils.getFormattedString(
+                            R.string.assistant_account_register_server_error,
+                            status.toInt()
+                        )
+                    )
+                )
             }
         }
     }
@@ -282,6 +312,7 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
 
     @UiThread
     fun confirmPhoneNumber() {
+        operationInProgress.value = true
         coreContext.postOnCoreThread {
             if (::accountCreator.isInitialized) {
                 val prefix = internationalPrefix.value.orEmpty().trim()
@@ -293,7 +324,8 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
                 val number = phoneNumber.value.orEmpty().trim()
 
                 val status = accountCreator.setPhoneNumber(number, digitsPrefix)
-                if (status == AccountCreator.PhoneNumberStatus.Ok.toInt()) {
+                Log.i("$TAG setPhoneNumber returned $status")
+                if (status == PhoneNumberStatus.Ok.toInt()) {
                     val normalizedPhoneNumber = accountCreator.phoneNumber
 
                     val message = coreContext.context.getString(
@@ -322,14 +354,41 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
                     Log.e(
                         "$TAG Failed to set phone number [$number] and prefix [$digitsPrefix] into account creator!"
                     )
-                    val error = AppUtils.getString(
-                        R.string.assistant_account_register_invalid_phone_number_error
-                    )
+                    val error = when (status) {
+                        PhoneNumberStatus.Invalid.toInt() -> {
+                            AppUtils.getString(
+                                R.string.assistant_account_register_invalid_phone_number_error
+                            )
+                        }
+                        PhoneNumberStatus.InvalidCountryCode.toInt() -> {
+                            AppUtils.getString(
+                                R.string.assistant_account_register_invalid_phone_number_international_prefix_error
+                            )
+                        }
+                        PhoneNumberStatus.TooLong.toInt() -> {
+                            AppUtils.getString(
+                                R.string.assistant_account_register_invalid_phone_number_too_long_error
+                            )
+                        }
+                        PhoneNumberStatus.TooShort.toInt() -> {
+                            AppUtils.getString(
+                                R.string.assistant_account_register_invalid_phone_number_too_short_error
+                            )
+                        }
+                        else -> {
+                            AppUtils.getString(
+                                R.string.assistant_account_register_invalid_phone_number_error
+                            )
+                        }
+                    }
                     phoneNumberError.postValue(error)
+                    operationInProgress.postValue(false)
                 }
             } else {
                 Log.e("$TAG Account creator hasn't been initialized!")
-                // TODO: show error message to user
+                errorHappenedEvent.postValue(
+                    Event(AppUtils.getString(R.string.assistant_account_register_unexpected_error))
+                )
             }
         }
     }
@@ -373,7 +432,14 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
             if (status != AccountCreator.Status.RequestOk) {
                 Log.e("$TAG Can't activate account [$status]")
                 operationInProgress.postValue(false)
-                // TODO: show error message to user
+                errorHappenedEvent.postValue(
+                    Event(
+                        AppUtils.getFormattedString(
+                            R.string.assistant_account_register_server_error,
+                            status.toInt()
+                        )
+                    )
+                )
             }
         }
     }
@@ -383,7 +449,30 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
         operationInProgress.postValue(true)
 
         usernameError.postValue("")
-        accountCreator.username = username.value.orEmpty().trim()
+        val usernameStatus = accountCreator.setUsername(username.value.orEmpty().trim())
+        Log.i("$TAG setUsername returned $usernameStatus")
+        if (usernameStatus != UsernameStatus.Ok) {
+            val error = when (usernameStatus) {
+                UsernameStatus.InvalidCharacters, UsernameStatus.Invalid -> {
+                    AppUtils.getString(
+                        R.string.assistant_account_register_username_invalid_characters_error
+                    )
+                }
+                UsernameStatus.TooShort -> {
+                    AppUtils.getString(R.string.assistant_account_register_username_too_short_error)
+                }
+                UsernameStatus.TooLong -> {
+                    AppUtils.getString(R.string.assistant_account_register_username_too_long_error)
+                }
+                else -> {
+                    AppUtils.getString(R.string.assistant_account_register_username_error)
+                }
+            }
+            usernameError.postValue(error)
+            operationInProgress.postValue(false)
+            return
+        }
+
         accountCreator.domain = corePreferences.defaultDomain
 
         val status = accountCreator.isAccountExist
@@ -391,7 +480,14 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
         if (status != AccountCreator.Status.RequestOk) {
             Log.e("$TAG Can't check if account already exists [$status]")
             operationInProgress.postValue(false)
-            // TODO: show error message to user
+            errorHappenedEvent.postValue(
+                Event(
+                    AppUtils.getFormattedString(
+                        R.string.assistant_account_register_server_error,
+                        status.toInt()
+                    )
+                )
+            )
         }
     }
 
@@ -404,7 +500,14 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
         if (status != AccountCreator.Status.RequestOk) {
             Log.e("$TAG Can't check if phone number is already used [$status]")
             operationInProgress.postValue(false)
-            // TODO: show error message to user
+            errorHappenedEvent.postValue(
+                Event(
+                    AppUtils.getFormattedString(
+                        R.string.assistant_account_register_server_error,
+                        status.toInt()
+                    )
+                )
+            )
         }
     }
 
@@ -412,14 +515,42 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
     private fun createAccount() {
         operationInProgress.postValue(true)
 
-        accountCreator.password = password.value.orEmpty().trim()
-        val status = accountCreator.createAccount()
+        val passwordStatus = accountCreator.setPassword(password.value.orEmpty().trim())
+        Log.i("$TAG setPassword returned $passwordStatus")
+        if (passwordStatus != AccountCreator.PasswordStatus.Ok) {
+            val error = when (passwordStatus) {
+                AccountCreator.PasswordStatus.InvalidCharacters -> {
+                    AppUtils.getString(
+                        R.string.assistant_account_register_password_invalid_characters_error
+                    )
+                }
+                AccountCreator.PasswordStatus.TooShort -> {
+                    AppUtils.getString(R.string.assistant_account_register_password_too_short)
+                }
+                AccountCreator.PasswordStatus.TooLong -> {
+                    AppUtils.getString(R.string.assistant_account_register_password_too_long_error)
+                }
+                else -> {
+                    AppUtils.getString(R.string.assistant_account_register_invalid_password_error)
+                }
+            }
+            passwordError.postValue(error)
+            operationInProgress.postValue(false)
+        }
 
+        val status = accountCreator.createAccount()
         Log.i("$TAG createAccount returned $status")
         if (status != AccountCreator.Status.RequestOk) {
             Log.e("$TAG Can't create account [$status]")
             operationInProgress.postValue(false)
-            // TODO: show error message to user
+            errorHappenedEvent.postValue(
+                Event(
+                    AppUtils.getFormattedString(
+                        R.string.assistant_account_register_server_error,
+                        status.toInt()
+                    )
+                )
+            )
         } else {
             Log.i("$TAG createAccount consumed our token, setting it to null")
             accountCreator.token = null
@@ -481,6 +612,12 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
     private fun onFlexiApiTokenRequestError() {
         Log.e("$TAG Flexi API token request by push error!")
         operationInProgress.postValue(false)
-        // TODO: show error message to user
+        errorHappenedEvent.postValue(
+            Event(
+                AppUtils.getString(
+                    R.string.assistant_account_register_push_notification_not_received_error
+                )
+            )
+        )
     }
 }
