@@ -42,7 +42,7 @@ class CallLogModel @WorkerThread constructor(private val callLog: CallLog) {
         }
         dateTime.postValue(displayedDate)
 
-        val friend = coreContext.core.findFriend(address)
+        val friend = coreContext.contactsManager.findContactByAddress(address)
         if (friend != null) {
             friendRefKey = friend.refKey
             avatarModel = ContactAvatarModel(friend)

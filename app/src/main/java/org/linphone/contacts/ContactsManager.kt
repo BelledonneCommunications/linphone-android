@@ -131,10 +131,15 @@ class ContactsManager @UiThread constructor(context: Context) {
 
     @WorkerThread
     fun findContactByAddress(address: Address): Friend? {
-        val friend = coreContext.core.findFriend(address)
-        if (friend != null) return friend
-
-        return null
+        val username = address.username
+        val usernameIsPhoneNumber = !username.isNullOrEmpty() && username.startsWith("+")
+        return coreContext.core.findFriend(address) ?: if (usernameIsPhoneNumber) {
+            coreContext.core.findFriendByPhoneNumber(
+                username!!
+            )
+        } else {
+            null
+        }
     }
 
     @WorkerThread

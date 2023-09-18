@@ -175,7 +175,7 @@ class StartCallViewModel @UiThread constructor() : ViewModel() {
         for (result in results) {
             val address = result.address
             if (address != null) {
-                val friend = coreContext.core.findFriend(address)
+                val friend = coreContext.contactsManager.findContactByAddress(address)
                 if (friend != null) {
                     val model = ContactOrSuggestionModel(address, friend)
                     model.contactAvatarModel = ContactAvatarModel(friend)

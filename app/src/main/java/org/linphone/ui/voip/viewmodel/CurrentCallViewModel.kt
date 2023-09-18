@@ -382,7 +382,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         displayedAddress.postValue(address.asStringUriOnly())
 
         val isDeviceTrusted = updateEncryption()
-        val friend = call.core.findFriend(address)
+        val friend = coreContext.contactsManager.findContactByAddress(address)
         if (friend != null) {
             displayedName.postValue(friend.name)
             val model = ContactAvatarModel(friend)

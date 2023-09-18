@@ -207,7 +207,9 @@ fun AppCompatTextView.setColor(@ColorRes color: Int) {
 @BindingAdapter("avatarInitials")
 fun AvatarView.loadInitials(initials: String?) {
     Log.i("[Data Binding Utils] Displaying initials [$initials] on AvatarView")
-    avatarInitials = initials.orEmpty()
+    if (initials.orEmpty() != "+") {
+        avatarInitials = initials.orEmpty()
+    }
 }
 
 @UiThread
@@ -224,7 +226,10 @@ fun AvatarView.loadAccountAvatar(account: AccountModel?) {
                     data = uri,
                     onStart = {
                         // Use initials as placeholder
-                        avatarInitials = account.initials.value.orEmpty()
+                        val initials = account.initials.value.orEmpty()
+                        if (initials != "+") {
+                            avatarInitials = initials
+                        }
 
                         if (account.showTrust.value == true) {
                             avatarBorderColor =
@@ -246,7 +251,10 @@ fun AvatarView.loadAccountAvatar(account: AccountModel?) {
                 data = account.avatar.value,
                 onStart = {
                     // Use initials as placeholder
-                    avatarInitials = account.initials.value.orEmpty()
+                    val initials = account.initials.value.orEmpty()
+                    if (initials != "+") {
+                        avatarInitials = initials
+                    }
 
                     if (account.showTrust.value == true) {
                         avatarBorderColor = resources.getColor(R.color.blue_trusted, context.theme)
@@ -275,7 +283,10 @@ fun AvatarView.loadContactAvatar(contact: ContactAvatarModel?) {
             data = uri,
             onStart = {
                 // Use initials as placeholder
-                avatarInitials = contact.initials
+                val initials = contact.initials
+                if (initials != "+") {
+                    avatarInitials = initials
+                }
 
                 if (contact.showTrust.value == true) {
                     avatarBorderColor =
