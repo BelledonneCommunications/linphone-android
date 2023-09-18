@@ -69,8 +69,10 @@ class WelcomeActivity : AppCompatActivity() {
         binding.dotsIndicator.attachTo(viewPager)
 
         binding.setSkipClickListener {
-            Log.i("$TAG User clicked on 'skip' button, going to last page")
-            viewPager.currentItem = PAGES - 1
+            Log.i("$TAG User clicked on 'skip' button, going to Assistant")
+            finish()
+            val intent = Intent(this, AssistantActivity::class.java)
+            startActivity(intent)
         }
 
         binding.setNextClickListener {
