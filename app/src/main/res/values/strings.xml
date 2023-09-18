@@ -183,7 +183,9 @@
     <string name="manage_account_secure_mode_default_title">Default mode</string>
     <string name="manage_account_secure_mode_interoperable_title">Interoperable mode</string>
     <string name="manage_account_secure_mode_default_summary">Blah</string> <!-- TODO -->
-    <string name="dialog_account_secure_mode_interoperable_summary">Blah</string> <!-- TODO -->
+    <string name="manage_account_secure_mode_interoperable_summary">Blah</string> <!-- TODO -->
+    <string name="manage_account_device_remove">Remove</string>
+    <string name="manage_account_device_last_connection">Last connection:</string>
 
     <string name="friend_presence_status_online">Online</string>
     <string name="friend_presence_status_was_online_on">Online on %s</string>

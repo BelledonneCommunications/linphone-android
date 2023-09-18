@@ -20,13 +20,16 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/header_style"
             android:id="@+id/name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="23dp"
             android:layout_marginTop="34dp"
             android:text="@{model.name, default=`Pixel 6 Pro`}"
+            android:maxLines="1"
+            android:ellipsize="end"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/remove"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/tertiary_button_label_style"
@@ -40,7 +43,7 @@
             android:paddingTop="6dp"
             android:paddingBottom="6dp"
             android:gravity="center"
-            android:text="Remove"
+            android:text="@string/manage_account_device_remove"
             android:maxLines="1"
             android:ellipsize="end"
             android:drawableStart="@drawable/trash_simple"
@@ -57,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="23dp"
             android:layout_marginTop="30dp"
-            android:text="Last connection:"
+            android:text="@string/manage_account_device_last_connection"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintTop_toBottomOf="@id/name"

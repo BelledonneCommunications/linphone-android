@@ -237,7 +237,7 @@
                     android:paddingBottom="21dp"
                     android:paddingStart="17dp"
                     android:paddingEnd="17dp"
-                    android:text="@string/dialog_account_secure_mode_interoperable_summary"
+                    android:text="@string/manage_account_secure_mode_interoperable_summary"
                     android:textSize="14sp"
                     android:gravity="center"
                     app:layout_constraintTop_toBottomOf="@id/interop_mode"
