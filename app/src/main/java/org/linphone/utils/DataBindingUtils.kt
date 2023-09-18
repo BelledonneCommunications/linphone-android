@@ -217,7 +217,7 @@ fun AvatarView.loadInitials(initials: String?) {
 fun AvatarView.loadAccountAvatar(account: AccountModel?) {
     Log.i("[Data Binding Utils] Loading account picture [${account?.avatar?.value}] with coil")
     if (account == null) {
-        loadImage(R.drawable.contact_avatar)
+        loadImage(R.drawable.user_circle)
     } else {
         val lifecycleOwner = findViewTreeLifecycleOwner()
         if (lifecycleOwner != null) {
@@ -276,7 +276,7 @@ fun AvatarView.loadAccountAvatar(account: AccountModel?) {
 @BindingAdapter("contactAvatar")
 fun AvatarView.loadContactAvatar(contact: ContactAvatarModel?) {
     if (contact == null) {
-        loadImage(R.drawable.contact_avatar)
+        loadImage(R.drawable.user_circle)
     } else {
         val uri = contact.avatar.value
         loadImage(

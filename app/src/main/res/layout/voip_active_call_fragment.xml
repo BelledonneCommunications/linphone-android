@@ -58,7 +58,7 @@
                 app:avatarViewInitialsTextColor="@color/gray_9"
                 app:avatarViewInitialsTextSize="36sp"
                 app:avatarViewInitialsTextStyle="bold"
-                app:avatarViewPlaceholder="@drawable/contact_avatar"
+                app:avatarViewPlaceholder="@drawable/user_circle"
                 app:avatarViewShape="circle"
                 app:avatarViewBorderWidth="0dp"
                 app:avatarViewBorderColor="@color/blue_trusted"

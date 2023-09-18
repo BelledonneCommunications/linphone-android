@@ -186,7 +186,8 @@ class ContactsManager @UiThread constructor(context: Context) {
             }
         )
 
-        personBuilder.setKey("") // TODO FIXME: use a valid key
+        val identity = account?.params?.identityAddress?.asStringUriOnly() ?: localAddress.asStringUriOnly()
+        personBuilder.setKey(identity)
         personBuilder.setImportant(false)
         return personBuilder.build()
     }

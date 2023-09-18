@@ -34,7 +34,7 @@
             android:adjustViewBounds="true"
             android:background="@drawable/shape_circle_light_blue_background"
             accountAvatar="@{model}"
-            app:avatarViewPlaceholder="@drawable/contact_avatar"
+            app:avatarViewPlaceholder="@drawable/user_circle"
             app:avatarViewInitialsBackgroundColor="@color/blue_light"
             app:avatarViewInitialsTextColor="@color/gray_9"
             app:avatarViewInitialsTextSize="16sp"
