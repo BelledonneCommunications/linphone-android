@@ -47,12 +47,25 @@
         android:id="@+id/activeCallFragment"
         android:name="org.linphone.ui.voip.fragment.ActiveCallFragment"
         android:label="ActiveCallFragment"
-        tools:layout="@layout/voip_active_call_fragment"/>
+        tools:layout="@layout/voip_active_call_fragment">
+        <action
+            android:id="@+id/action_activeCallFragment_to_newCallFragment"
+            app:destination="@id/newCallFragment"
+            app:enterAnim="@anim/slide_in"
+            app:popExitAnim="@anim/slide_out"
+            app:launchSingleTop="true" />
+    </fragment>
 
     <action android:id="@+id/action_global_activeCallFragment"
         app:destination="@id/activeCallFragment"
         app:popUpTo="@id/activeCallFragment"
         app:popUpToInclusive="true"
         app:launchSingleTop="true"/>
+
+    <fragment
+        android:id="@+id/newCallFragment"
+        android:name="org.linphone.ui.voip.fragment.NewCallFragment"
+        android:label="NewCallFragment"
+        tools:layout="@layout/call_start_fragment" />
 
 </navigation>

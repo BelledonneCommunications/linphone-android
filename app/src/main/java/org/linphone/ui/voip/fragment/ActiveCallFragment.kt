@@ -26,9 +26,12 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.annotation.UiThread
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.window.layout.FoldingFeature
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -80,6 +83,14 @@ class ActiveCallFragment : GenericCallFragment() {
         }
     }
 
+    override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
+        if (findNavController().currentDestination?.id == R.id.newCallFragment) {
+            // Holds fragment in place while new contact fragment slides over it
+            return AnimationUtils.loadAnimation(activity, R.anim.hold)
+        }
+        return AnimationUtils.loadAnimation(activity, R.anim.hold)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -101,6 +112,11 @@ class ActiveCallFragment : GenericCallFragment() {
 
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomBar.root)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+
+        binding.setNewCallClickListener {
+            val action = ActiveCallFragmentDirections.actionActiveCallFragmentToNewCallFragment()
+            findNavController().navigate(action)
+        }
 
         sharedViewModel = requireActivity().run {
             ViewModelProvider(this)[SharedCallViewModel::class.java]

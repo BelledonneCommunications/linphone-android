@@ -6,6 +6,15 @@
     <data>
         <import type="android.view.View" />
         <variable
+            name="transferClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="newCallClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="callsListClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.voip.viewmodel.CurrentCallViewModel" />
     </data>
@@ -205,7 +214,10 @@
             android:id="@+id/bottom_bar"
             android:visibility="@{viewModel.fullScreenMode || viewModel.pipMode ? View.INVISIBLE : View.VISIBLE}"
             layout="@layout/voip_call_extra_actions"
-            bind:viewModel="@{viewModel}"/>
+            bind:viewModel="@{viewModel}"
+            bind:transferClickListener="@{transferClickListener}"
+            bind:newCallClickListener="@{newCallClickListener}"
+            bind:callsListClickListener="@{callsListClickListener}"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

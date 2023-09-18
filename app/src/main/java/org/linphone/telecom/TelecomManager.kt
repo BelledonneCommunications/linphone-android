@@ -61,7 +61,11 @@ class TelecomManager @WorkerThread constructor(context: Context) {
             } else {
                 CallAttributesCompat.DIRECTION_INCOMING
             }
-            val type = CallAttributesCompat.CALL_TYPE_AUDIO_CALL or CallAttributesCompat.CALL_TYPE_VIDEO_CALL
+            val type = if (core.isVideoEnabled) {
+                CallAttributesCompat.CALL_TYPE_VIDEO_CALL
+            } else {
+                CallAttributesCompat.CALL_TYPE_AUDIO_CALL
+            }
             val capabilities = CallAttributesCompat.SUPPORTS_SET_INACTIVE or CallAttributesCompat.SUPPORTS_TRANSFER
 
             val callAttributes = CallAttributesCompat(
@@ -71,21 +75,27 @@ class TelecomManager @WorkerThread constructor(context: Context) {
                 type,
                 capabilities
             )
+            Log.i("$TAG Adding call to Telecom's CallsManager with attributes [$callAttributes]")
+
             scope.launch {
-                callsManager.addCall(callAttributes) {
-                    val callbacks = TelecomCallControlCallback(call, this, scope)
+                try {
+                    callsManager.addCall(callAttributes) {
+                        val callbacks = TelecomCallControlCallback(call, this, scope)
 
-                    coreContext.postOnCoreThread {
-                        val callId = call.callLog.callId.orEmpty()
-                        if (callId.isNotEmpty()) {
-                            Log.i("$TAG Storing our callbacks for call ID [$callId]")
-                            map[callId] = callbacks
+                        coreContext.postOnCoreThread {
+                            val callId = call.callLog.callId.orEmpty()
+                            if (callId.isNotEmpty()) {
+                                Log.i("$TAG Storing our callbacks for call ID [$callId]")
+                                map[callId] = callbacks
+                            }
                         }
-                    }
 
-                    setCallback(callbacks)
-                    // We must first call setCallback on callControlScope before using it
-                    callbacks.onCallControlCallbackSet()
+                        setCallback(callbacks)
+                        // We must first call setCallback on callControlScope before using it
+                        callbacks.onCallControlCallbackSet()
+                    }
+                } catch (e: Exception) {
+                    Log.e("$TAG Failed to add call to Telecom's CallsManager!")
                 }
             }
         }

@@ -6,6 +6,15 @@
     <data>
         <import type="android.view.View" />
         <variable
+            name="transferClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="newCallClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="callsListClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.voip.viewmodel.CurrentCallViewModel" />
     </data>
@@ -30,6 +39,7 @@
 
         <ImageView
             android:id="@+id/transfer"
+            android:onClick="@{transferClickListener}"
             android:layout_width="0dp"
             android:layout_height="@dimen/voip_button_size"
             android:layout_marginTop="@dimen/voip_extra_button_top_margin"
@@ -44,6 +54,7 @@
 
         <ImageView
             android:id="@+id/new_call"
+            android:onClick="@{newCallClickListener}"
             android:layout_width="0dp"
             android:layout_height="@dimen/voip_button_size"
             android:layout_marginTop="@dimen/voip_extra_button_top_margin"
@@ -58,6 +69,7 @@
 
         <ImageView
             android:id="@+id/calls_list"
+            android:onClick="@{callsListClickListener}"
             android:layout_width="0dp"
             android:layout_height="@dimen/voip_button_size"
             android:layout_marginTop="@dimen/voip_extra_button_top_margin"
@@ -127,8 +139,9 @@
             app:tint="@color/white" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/transfer_label"
             style="@style/in_call_extra_action_label_style"
+            android:id="@+id/transfer_label"
+            android:onClick="@{transferClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"
@@ -138,8 +151,9 @@
             app:layout_constraintTop_toBottomOf="@id/transfer"/>
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/new_call_label"
             style="@style/in_call_extra_action_label_style"
+            android:id="@+id/new_call_label"
+            android:onClick="@{newCallClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"
@@ -149,8 +163,9 @@
             app:layout_constraintTop_toBottomOf="@id/new_call"/>
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/calls_list_label"
             style="@style/in_call_extra_action_label_style"
+            android:id="@+id/calls_list_label"
+            android:onClick="@{callsListClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"
@@ -160,8 +175,8 @@
             app:layout_constraintTop_toBottomOf="@id/calls_list"/>
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/dialer_label"
             style="@style/in_call_extra_action_label_style"
+            android:id="@+id/dialer_label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"
@@ -171,8 +186,8 @@
             app:layout_constraintTop_toBottomOf="@id/chat" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/chat_label"
             style="@style/in_call_extra_action_label_style"
+            android:id="@+id/chat_label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"
@@ -182,8 +197,8 @@
             app:layout_constraintTop_toBottomOf="@id/chat" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/pause_call_label"
             style="@style/in_call_extra_action_label_style"
+            android:id="@+id/pause_call_label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"
@@ -193,8 +208,8 @@
             app:layout_constraintTop_toBottomOf="@id/pause_call" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/record_call_label"
             style="@style/in_call_extra_action_label_style"
+            android:id="@+id/record_call_label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"
