@@ -250,7 +250,7 @@ class ContactFragment : GenericFragment() {
 
         val smsBody = getString(
             R.string.contact_sms_invite_content,
-            getString(R.string.website_download_page)
+            getString(R.string.website_download_url)
         )
         val smsIntent: Intent = Intent().apply {
             action = Intent.ACTION_SENDTO

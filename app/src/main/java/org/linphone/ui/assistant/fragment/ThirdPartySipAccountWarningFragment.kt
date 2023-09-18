@@ -59,7 +59,7 @@ class ThirdPartySipAccountWarningFragment : Fragment() {
         }
 
         binding.setContactClickListener {
-            val url = getString(R.string.website_contact_page)
+            val url = getString(R.string.website_contact_url)
             try {
                 val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                 startActivity(browserIntent)

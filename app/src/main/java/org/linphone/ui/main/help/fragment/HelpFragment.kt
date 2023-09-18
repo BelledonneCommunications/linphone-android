@@ -52,7 +52,7 @@ class HelpFragment : GenericFragment() {
         }
 
         binding.setPrivacyPolicyClickListener {
-            val url = getString(R.string.privacy_policy_url)
+            val url = getString(R.string.website_privacy_policy_url)
             try {
                 val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                 startActivity(browserIntent)
@@ -64,7 +64,7 @@ class HelpFragment : GenericFragment() {
         }
 
         binding.setLicensesClickListener {
-            val url = getString(R.string.open_source_licences_usage_url)
+            val url = getString(R.string.website_open_source_licences_usage_url)
             try {
                 val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                 startActivity(browserIntent)
@@ -76,7 +76,7 @@ class HelpFragment : GenericFragment() {
         }
 
         binding.setTranslateClickListener {
-            val url = getString(R.string.translate_weblate_url)
+            val url = getString(R.string.website_translate_weblate_url)
             try {
                 val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                 startActivity(browserIntent)

@@ -85,7 +85,7 @@ class RegisterFragment : Fragment() {
         }
 
         binding.setOpenSubscribeWebPageClickListener {
-            val url = getString(R.string.users_web_platform)
+            val url = getString(R.string.web_platform_register_email_url)
             try {
                 val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                 startActivity(browserIntent)

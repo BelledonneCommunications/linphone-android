@@ -82,7 +82,7 @@ class LoginFragment : Fragment() {
         }
 
         binding.setForgottenPasswordClickListener {
-            val url = getString(R.string.users_web_platform)
+            val url = getString(R.string.web_platform_forgotten_password_url)
             try {
                 val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                 startActivity(browserIntent)
@@ -187,7 +187,7 @@ class LoginFragment : Fragment() {
 
         model.privacyPolicyClickedEvent.observe(viewLifecycleOwner) {
             it.consume {
-                val url = getString(R.string.privacy_policy_url)
+                val url = getString(R.string.website_privacy_policy_url)
                 try {
                     val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                     startActivity(browserIntent)
@@ -201,7 +201,7 @@ class LoginFragment : Fragment() {
 
         model.generalTermsClickedEvent.observe(viewLifecycleOwner) {
             it.consume {
-                val url = getString(R.string.terms_and_conditions_url)
+                val url = getString(R.string.website_terms_and_conditions_url)
                 try {
                     val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                     startActivity(browserIntent)
