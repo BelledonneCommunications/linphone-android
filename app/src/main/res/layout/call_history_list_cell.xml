@@ -19,8 +19,8 @@
 
         <ImageView
             android:id="@+id/call_status"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
             android:layout_marginTop="11dp"
             android:layout_marginStart="2dp"
             android:src="@{model.iconResId, default=@drawable/outgoing_call}"
@@ -51,7 +51,7 @@
             android:text="@{model.dateTime, default=`August 13th 2023 | 07:47 PM`}"
             android:textSize="12sp"
             android:textColor="@{model.isSuccessful ? @color/gray_9 : @color/red_danger, default=@color/gray_9}"
-            app:layout_constraintStart_toEndOf="@id/call_status"
+            app:layout_constraintStart_toStartOf="@id/direction_label"
             app:layout_constraintTop_toBottomOf="@id/direction_label"
             app:layout_constraintBottom_toTopOf="@id/separator"/>
 

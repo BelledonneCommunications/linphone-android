@@ -31,7 +31,7 @@
             android:id="@+id/toast_background"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:src="@{shadow_color, default=@drawable/shape_toast_blue_shadow}"
+            android:src="@{shadow_color, default=@drawable/shape_toast_blue_background}"
             app:layout_constraintBottom_toBottomOf="@id/toast_message"
             app:layout_constraintEnd_toEndOf="@id/toast_message"
             app:layout_constraintStart_toStartOf="@id/toast_icon"

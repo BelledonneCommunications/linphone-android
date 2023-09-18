@@ -3,13 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="rectangle">
-            <corners android:radius="50dp" />
-            <solid android:color="@color/blue_trusted"/>
+            <corners android:radius="15dp" />
+            <solid android:color="@color/primary_color"/>
         </shape>
     </item>
     <item android:bottom="2dp">
         <shape android:shape="rectangle">
-            <corners android:radius="50dp" />
+            <corners android:radius="15dp" />
             <solid
                 android:color="@color/white" />
         </shape>

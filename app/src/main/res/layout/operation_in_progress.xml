@@ -9,11 +9,26 @@
             type="Boolean" />
     </data>
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="@{visibility ? View.VISIBLE : View.GONE}"
-        android:background="@color/dialog_background">
+        android:background="@color/dialog_background"
+        android:visibility="@{visibility ? View.VISIBLE : View.GONE, default=gone}">
+
+        <ImageView
+            android:id="@+id/dialog_background"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="2dp"
+            android:src="@drawable/shape_dialog_background"
+            app:layout_constraintWidth_max="@dimen/dialog_max_width"
+            app:layout_constraintHeight_max="300dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/progress"
@@ -21,18 +36,29 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             app:indicatorColor="@color/primary_color"
-            android:indeterminate="true" />
+            android:indeterminate="true"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintTop_toTopOf="@id/dialog_background"
+            app:layout_constraintStart_toStartOf="@id/dialog_background"
+            app:layout_constraintEnd_toEndOf="@id/dialog_background"
+            app:layout_constraintBottom_toTopOf="@id/title"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_800"
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:text="@string/operation_in_progress_overlay"
             android:textColor="@color/primary_color"
             android:textSize="18sp"
             android:layout_below="@id/progress"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerHorizontal="true"
+            app:layout_constraintTop_toBottomOf="@id/progress"
+            app:layout_constraintStart_toStartOf="@id/dialog_background"
+            app:layout_constraintEnd_toEndOf="@id/dialog_background"
+            app:layout_constraintBottom_toBottomOf="@id/dialog_background"/>
 
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

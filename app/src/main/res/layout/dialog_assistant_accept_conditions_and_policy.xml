@@ -16,23 +16,13 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/dialog_background_shadow"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:src="@drawable/shape_squircle_primary_background"
-            app:layout_constraintBottom_toBottomOf="@id/anchor"
-            app:layout_constraintEnd_toEndOf="@id/dialog_background"
-            app:layout_constraintStart_toStartOf="@id/dialog_background"
-            app:layout_constraintTop_toTopOf="@id/dialog_background" />
-
-        <ImageView
             android:id="@+id/dialog_background"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="12dp"
             android:layout_marginEnd="12dp"
             android:layout_marginBottom="2dp"
-            android:src="@drawable/shape_squircle_white_background"
+            android:src="@drawable/shape_dialog_background"
             android:clickable="true"
             android:focusable="true"
             app:layout_constraintWidth_max="@dimen/dialog_max_width"

@@ -127,4 +127,9 @@
         <item name="maxLines">1</item>
         <item name="android:ellipsize">end</item>
     </style>
+    <style name="material_switch_style">
+        <item name="thumbTint">@color/white</item>
+        <item name="trackTint">@color/switch_track_color</item>
+        <item name="trackDecorationTint">@color/transparent_color</item>
+    </style>
 </resources>

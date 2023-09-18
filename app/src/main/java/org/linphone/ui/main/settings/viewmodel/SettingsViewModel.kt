@@ -54,8 +54,8 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
     val isVibrationAvailable = MutableLiveData<Boolean>()
 
     init {
-        expandCalls.value = true
-        expandNetwork.value = true
+        expandCalls.value = false
+        expandNetwork.value = false
         expandUserInterface.value = false
 
         val vibrator = coreContext.context.getSystemService(Vibrator::class.java)

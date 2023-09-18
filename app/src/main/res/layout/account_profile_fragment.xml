@@ -244,6 +244,7 @@
                         app:layout_constraintBottom_toBottomOf="@id/connection_bottom_anchor"/>
 
                     <com.google.android.material.materialswitch.MaterialSwitch
+                        style="@style/material_switch_style"
                         android:onClick="@{() -> viewModel.toggleRegister()}"
                         android:id="@+id/connected_switch"
                         android:layout_width="wrap_content"

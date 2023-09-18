@@ -272,6 +272,12 @@
     <string name="voip_action_pause_call">Pause</string>
     <string name="voip_action_resume_call">Pause</string>
     <string name="voip_action_record_call">Record</string>
+    <string name="voip_call_state_outgoing_progress">In progress</string>
+    <string name="voip_call_state_outgoing_ringing">Ringing</string>
+    <string name="voip_call_state_incoming_received">Incoming</string>
+    <string name="voip_call_state_connected">Active</string>
+    <string name="voip_call_state_paused">Paused</string>
+    <string name="voip_call_state_ended">Ended</string>
     
     <string name="chat_message_reaction_received">%s has reacted by %s to: %s</string>
 

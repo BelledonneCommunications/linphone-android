@@ -139,8 +139,8 @@
 
             <ImageView
                 android:id="@+id/call_direction_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
                 android:layout_marginStart="10dp"
                 android:adjustViewBounds="true"
                 android:src="@{viewModel.isOutgoing ? @drawable/outgoing_call : @drawable/incoming_call, default=@drawable/outgoing_call}"

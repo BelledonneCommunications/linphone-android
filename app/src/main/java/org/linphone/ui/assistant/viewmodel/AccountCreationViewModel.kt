@@ -312,7 +312,6 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
 
     @UiThread
     fun confirmPhoneNumber() {
-        operationInProgress.value = true
         coreContext.postOnCoreThread {
             if (::accountCreator.isInitialized) {
                 val prefix = internationalPrefix.value.orEmpty().trim()
@@ -343,7 +342,6 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
                         Log.e(
                             "$TAG Failed to compute phone number using international prefix [$digitsPrefix] and number [$number]"
                         )
-                        operationInProgress.postValue(false)
 
                         val error = AppUtils.getString(
                             R.string.assistant_account_register_invalid_phone_number_error
@@ -382,7 +380,6 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
                         }
                     }
                     phoneNumberError.postValue(error)
-                    operationInProgress.postValue(false)
                 }
             } else {
                 Log.e("$TAG Account creator hasn't been initialized!")

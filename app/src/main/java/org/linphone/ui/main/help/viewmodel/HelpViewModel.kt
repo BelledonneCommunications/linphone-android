@@ -165,7 +165,7 @@ class HelpViewModel @UiThread constructor() : ViewModel() {
     fun checkForUpdate() {
         val currentVersion = version.value.orEmpty()
         coreContext.postOnCoreThread { core ->
-            Log.i("[$TAG] Checking for update using current version [$currentVersion]")
+            Log.i("$TAG Checking for update using current version [$currentVersion]")
             core.checkForUpdate(currentVersion)
         }
     }

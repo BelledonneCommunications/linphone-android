@@ -24,11 +24,13 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
 import org.linphone.core.Call
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.model.AccountModel
+import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
@@ -167,7 +169,7 @@ open class AbstractTopBarViewModel @UiThread constructor() : ViewModel() {
             callDisplayName.postValue(
                 contact?.name ?: LinphoneUtils.getDisplayName(currentCall.remoteAddress)
             )
-            callStatus.postValue(currentCall.state.name) // TODO: improve text
+            callStatus.postValue(callStateToString(currentCall.state))
         } else {
             val firstCall = core.calls.firstOrNull()
             if (firstCall != null) {
@@ -177,10 +179,38 @@ open class AbstractTopBarViewModel @UiThread constructor() : ViewModel() {
                 callDisplayName.postValue(
                     contact?.name ?: LinphoneUtils.getDisplayName(firstCall.remoteAddress)
                 )
-                callStatus.postValue(firstCall.state.name) // TODO: improve text
+                callStatus.postValue(callStateToString(firstCall.state))
             }
         }
         Log.i("$TAG At least a call, asking fragment to change status bar color")
         changeSystemTopBarColorToInCallEvent.postValue(Event(true))
+    }
+
+    @WorkerThread
+    private fun callStateToString(state: Call.State): String {
+        return when (state) {
+            Call.State.IncomingEarlyMedia, Call.State.IncomingReceived -> {
+                AppUtils.getString(R.string.voip_call_state_incoming_received)
+            }
+            Call.State.OutgoingInit, Call.State.OutgoingProgress -> {
+                AppUtils.getString(R.string.voip_call_state_outgoing_progress)
+            }
+            Call.State.OutgoingRinging, Call.State.OutgoingEarlyMedia -> {
+                AppUtils.getString(R.string.voip_call_state_outgoing_ringing)
+            }
+            Call.State.Connected, Call.State.StreamsRunning, Call.State.Updating, Call.State.UpdatedByRemote -> {
+                AppUtils.getString(R.string.voip_call_state_connected)
+            }
+            Call.State.Pausing, Call.State.Paused, Call.State.PausedByRemote -> {
+                AppUtils.getString(R.string.voip_call_state_paused)
+            }
+            Call.State.End, Call.State.Released, Call.State.Error -> {
+                AppUtils.getString(R.string.voip_call_state_ended)
+            }
+            else -> {
+                // TODO: handle other states
+                ""
+            }
+        }
     }
 }

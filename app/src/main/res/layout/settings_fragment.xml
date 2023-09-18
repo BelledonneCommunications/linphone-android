@@ -121,6 +121,7 @@
                     app:layout_constraintEnd_toStartOf="@id/echo_canceller_switch"/>
 
                 <com.google.android.material.materialswitch.MaterialSwitch
+                    style="@style/material_switch_style"
                     android:id="@+id/echo_canceller_switch"
                     android:onClick="@{() -> viewModel.toggleEchoCanceller()}"
                     android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
@@ -150,6 +151,7 @@
                     app:layout_constraintEnd_toStartOf="@id/route_audio_to_bluetooth_switch"/>
 
                 <com.google.android.material.materialswitch.MaterialSwitch
+                    style="@style/material_switch_style"
                     android:id="@+id/route_audio_to_bluetooth_switch"
                     android:onClick="@{() -> viewModel.toggleRouteAudioToBluetooth()}"
                     android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
@@ -179,6 +181,7 @@
                     app:layout_constraintEnd_toStartOf="@id/enable_video_switch"/>
 
                 <com.google.android.material.materialswitch.MaterialSwitch
+                    style="@style/material_switch_style"
                     android:id="@+id/enable_video_switch"
                     android:onClick="@{() -> viewModel.toggleEnableVideo()}"
                     android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
@@ -223,6 +226,7 @@
                     app:layout_constraintEnd_toStartOf="@id/auto_initiate_video_switch"/>
 
                 <com.google.android.material.materialswitch.MaterialSwitch
+                    style="@style/material_switch_style"
                     android:id="@+id/auto_initiate_video_switch"
                     android:onClick="@{() -> viewModel.toggleAutoInitiateVideoCalls()}"
                     android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
@@ -267,6 +271,7 @@
                     app:layout_constraintEnd_toStartOf="@id/auto_accept_video_switch"/>
 
                 <com.google.android.material.materialswitch.MaterialSwitch
+                    style="@style/material_switch_style"
                     android:id="@+id/auto_accept_video_switch"
                     android:onClick="@{() -> viewModel.toggleAutoAcceptVideoRequests()}"
                     android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
@@ -296,6 +301,7 @@
                     app:layout_constraintEnd_toStartOf="@id/device_ringtone_switch"/>
 
                 <com.google.android.material.materialswitch.MaterialSwitch
+                    style="@style/material_switch_style"
                     android:id="@+id/device_ringtone_switch"
                     android:onClick="@{() -> viewModel.toggleDeviceRingtone()}"
                     android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
@@ -325,6 +331,7 @@
                     app:layout_constraintEnd_toStartOf="@id/vibrate_switch"/>
 
                 <com.google.android.material.materialswitch.MaterialSwitch
+                    style="@style/material_switch_style"
                     android:id="@+id/vibrate_switch"
                     android:onClick="@{() -> viewModel.toggleVibrateOnIncomingCalls()}"
                     android:visibility="@{viewModel.expandCalls &amp;&amp; viewModel.isVibrationAvailable ? View.VISIBLE : View.GONE}"
@@ -354,6 +361,7 @@
                     app:layout_constraintEnd_toStartOf="@id/auto_record_switch"/>
 
                 <com.google.android.material.materialswitch.MaterialSwitch
+                    style="@style/material_switch_style"
                     android:id="@+id/auto_record_switch"
                     android:onClick="@{() -> viewModel.toggleAutoRecordCall()}"
                     android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
@@ -423,6 +431,7 @@
                     app:layout_constraintEnd_toStartOf="@id/wifi_only_switch"/>
 
                 <com.google.android.material.materialswitch.MaterialSwitch
+                    style="@style/material_switch_style"
                     android:id="@+id/wifi_only_switch"
                     android:onClick="@{() -> viewModel.toggleUseWifiOnly()}"
                     android:visibility="@{viewModel.expandNetwork ? View.VISIBLE : View.GONE}"
@@ -496,6 +505,7 @@
                     android:text="@string/settings_advanced_title"
                     android:drawableEnd="@drawable/caret_right"
                     android:drawableTint="@color/gray_9"
+                    app:layout_constraintVertical_bias="0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/user_interface"
