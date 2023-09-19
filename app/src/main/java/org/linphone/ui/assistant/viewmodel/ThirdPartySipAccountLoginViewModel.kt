@@ -26,14 +26,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
+import org.linphone.R
 import org.linphone.core.Account
 import org.linphone.core.AuthInfo
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.Factory
+import org.linphone.core.Reason
 import org.linphone.core.RegistrationState
 import org.linphone.core.TransportType
 import org.linphone.core.tools.Log
+import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
 class ThirdPartySipAccountLoginViewModel @UiThread constructor() : ViewModel() {
@@ -93,8 +96,19 @@ class ThirdPartySipAccountLoginViewModel @UiThread constructor() : ViewModel() {
                 } else if (state == RegistrationState.Failed) {
                     registrationInProgress.postValue(false)
                     core.removeListener(this)
-                    // TODO: show translated string
-                    accountLoginErrorEvent.postValue(Event(message))
+
+                    val error = when (account.error) {
+                        Reason.Forbidden -> {
+                            AppUtils.getString(R.string.assistant_account_login_forbidden_error)
+                        }
+                        else -> {
+                            AppUtils.getFormattedString(
+                                R.string.assistant_account_login_error,
+                                account.error.toInt()
+                            )
+                        }
+                    }
+                    accountLoginErrorEvent.postValue(Event(error))
 
                     Log.e("$TAG Account failed to REGISTER [$message], removing it")
                     core.removeAuthInfo(newlyCreatedAuthInfo)
@@ -118,7 +132,7 @@ class ThirdPartySipAccountLoginViewModel @UiThread constructor() : ViewModel() {
             loginEnabled.value = isLoginButtonEnabled()
         }
 
-        // TODO: handle formatting errors
+        // TODO: handle formatting errors ?
 
         availableTransports.add(UDP)
         availableTransports.add(TCP)
