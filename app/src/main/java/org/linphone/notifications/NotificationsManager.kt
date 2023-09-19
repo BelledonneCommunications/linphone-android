@@ -210,12 +210,21 @@ class NotificationsManager @MainThread constructor(private val context: Context)
                 Log.w("$TAG Original reaction not found in currently displayed notification")
             }
         }
+
+        @WorkerThread
+        override fun onChatRoomRead(core: Core, chatRoom: ChatRoom) {
+            Log.i(
+                "$TAG Chat room [$chatRoom] has been marked as read, removing notification if any"
+            )
+            dismissChatNotification(chatRoom)
+        }
     }
 
     private var coreService: CoreForegroundService? = null
 
     private val callNotificationsMap: HashMap<String, Notifiable> = HashMap()
     private val chatNotificationsMap: HashMap<String, Notifiable> = HashMap()
+    private val previousChatNotifications: ArrayList<Int> = arrayListOf()
 
     init {
         createServiceChannel()
@@ -229,6 +238,11 @@ class NotificationsManager @MainThread constructor(private val context: Context)
                     "$TAG Found existing (call?) notification [${notification.id}] without tag, cancelling it"
                 )
                 notificationManager.cancel(notification.id)
+            } else if (notification.tag == CHAT_TAG) {
+                Log.i(
+                    "[Notifications Manager] Found existing chat notification [${notification.id}]"
+                )
+                previousChatNotifications.add(notification.id)
             }
         }
     }
@@ -540,7 +554,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         )
 
         for (content in message.contents) {
-            /*if (content.isFile) { // TODO
+            /*if (content.isFile) { // TODO: show image in notif if possible
                 val path = content.filePath
                 if (path != null) {
                     val contentUri: Uri = FileUtils.getFilePath(context, path)
@@ -741,6 +755,32 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         }
     }
 
+    @WorkerThread
+    fun dismissChatNotification(chatRoom: ChatRoom): Boolean {
+        val address = chatRoom.peerAddress.asStringUriOnly()
+        val notifiable: Notifiable? = chatNotificationsMap[address]
+        if (notifiable != null) {
+            Log.i(
+                "$TAG Dismissing notification for chat room $chatRoom with id ${notifiable.notificationId}"
+            )
+            notifiable.messages.clear()
+            cancelNotification(notifiable.notificationId, CHAT_TAG)
+            return true
+        } else {
+            val previousNotificationId = previousChatNotifications.find { id ->
+                id == LinphoneUtils.getChatRoomId(chatRoom).hashCode()
+            }
+            if (previousNotificationId != null) {
+                Log.i(
+                    "$TAG Found previous notification with same ID [$previousNotificationId], canceling it"
+                )
+                cancelNotification(previousNotificationId, CHAT_TAG)
+                return true
+            }
+        }
+        return false
+    }
+
     @AnyThread
     fun getCallDeclinePendingIntent(notifiable: Notifiable): PendingIntent {
         val hangupIntent = Intent(context, NotificationBroadcastReceiver::class.java)
@@ -828,7 +868,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         channel.enableLights(true)
         channel.enableVibration(true)
         channel.setShowBadge(true)
-        channel.setAllowBubbles(true)
+        channel.setAllowBubbles(false)
         notificationManager.createNotificationChannel(channel)
     }
 
