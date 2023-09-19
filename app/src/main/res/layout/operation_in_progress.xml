@@ -12,7 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/dialog_background"
+        android:background="@color/gray_main2_800_alpha_65"
         android:visibility="@{visibility ? View.VISIBLE : View.GONE, default=gone}">
 
         <ImageView
@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            app:indicatorColor="@color/primary_color"
+            app:indicatorColor="@color/orange_main_500"
             android:indeterminate="true"
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintTop_toTopOf="@id/dialog_background"
@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/operation_in_progress_overlay"
-            android:textColor="@color/primary_color"
+            android:textColor="@color/orange_main_500"
             android:textSize="18sp"
             android:layout_below="@id/progress"
             android:layout_centerHorizontal="true"

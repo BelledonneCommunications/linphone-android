@@ -39,8 +39,8 @@
             android:background="@drawable/shape_circle_light_blue_background"
             contactAvatar="@{model.avatarModel}"
             app:avatarViewPlaceholder="@drawable/user_circle"
-            app:avatarViewInitialsBackgroundColor="@color/blue_light"
-            app:avatarViewInitialsTextColor="@color/gray_9"
+            app:avatarViewInitialsBackgroundColor="@color/gray_main2_200"
+            app:avatarViewInitialsTextColor="@color/gray_main2_600"
             app:avatarViewInitialsTextSize="16sp"
             app:avatarViewInitialsTextStyle="bold"
             app:avatarViewShape="circle"
@@ -70,7 +70,7 @@
             android:layout_marginStart="10dp"
             android:text="@{model.avatarModel.name, default=`John Doe`}"
             android:textSize="14sp"
-            android:textColor="@color/gray_8"
+            android:textColor="@color/gray_main2_700"
             app:layout_constraintStart_toEndOf="@id/avatar"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/date_time"/>
@@ -106,7 +106,7 @@
             android:layout_height="@dimen/icon_size"
             android:layout_marginEnd="6dp"
             android:src="@drawable/phone"
-            app:tint="@color/gray_1"
+            app:tint="@color/gray_main2_500"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/name"
             app:layout_constraintBottom_toBottomOf="@id/date_time" />
@@ -116,7 +116,7 @@
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_marginEnd="10dp"
-            android:background="@color/blue_light"
+            android:background="@color/gray_main2_200"
             app:layout_constraintStart_toStartOf="@id/name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>

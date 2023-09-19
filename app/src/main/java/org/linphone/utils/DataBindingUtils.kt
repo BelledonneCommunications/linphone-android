@@ -233,7 +233,7 @@ fun AvatarView.loadAccountAvatar(account: AccountModel?) {
 
                         if (account.showTrust.value == true) {
                             avatarBorderColor =
-                                resources.getColor(R.color.blue_trusted, context.theme)
+                                resources.getColor(R.color.blue_info_500, context.theme)
                             avatarBorderWidth =
                                 AppUtils.getDimension(R.dimen.avatar_trust_border_width).toInt()
                         } else {
@@ -257,7 +257,7 @@ fun AvatarView.loadAccountAvatar(account: AccountModel?) {
                     }
 
                     if (account.showTrust.value == true) {
-                        avatarBorderColor = resources.getColor(R.color.blue_trusted, context.theme)
+                        avatarBorderColor = resources.getColor(R.color.blue_info_500, context.theme)
                         avatarBorderWidth = AppUtils.getDimension(R.dimen.avatar_trust_border_width).toInt()
                     } else {
                         avatarBorderWidth = AppUtils.getDimension(R.dimen.zero).toInt()
@@ -290,7 +290,7 @@ fun AvatarView.loadContactAvatar(contact: ContactAvatarModel?) {
 
                 if (contact.showTrust.value == true) {
                     avatarBorderColor =
-                        resources.getColor(R.color.blue_trusted, context.theme)
+                        resources.getColor(R.color.blue_info_500, context.theme)
                     avatarBorderWidth =
                         AppUtils.getDimension(R.dimen.avatar_trust_border_width).toInt()
                 } else {

@@ -2,9 +2,9 @@
     <!-- Base application theme. -->
     <style name="Theme.Linphone" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/primary_color</item>
+        <item name="colorPrimary">@color/orange_main_500</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">@color/primary_color</item>
+        <item name="android:statusBarColor">@color/orange_main_500</item>
         <!-- https://developer.android.com/guide/topics/display-cutout#best_practices_for_display_cutout_support -->
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
         <!-- Customize your theme here. -->

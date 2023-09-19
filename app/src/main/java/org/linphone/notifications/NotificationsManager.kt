@@ -637,10 +637,10 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             try {
                 style.setIsVideo(isVideo)
                 style.setAnswerButtonColorHint(
-                    context.resources.getColor(R.color.green_online, context.theme)
+                    context.resources.getColor(R.color.green_success_500, context.theme)
                 )
                 style.setDeclineButtonColorHint(
-                    context.resources.getColor(R.color.red_danger, context.theme)
+                    context.resources.getColor(R.color.red_danger_500, context.theme)
                 )
                 setStyle(style)
             } catch (iae: IllegalArgumentException) {
@@ -655,7 +655,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             setAutoCancel(false)
             setShowWhen(true)
             setOngoing(true)
-            color = ContextCompat.getColor(context, R.color.primary_color)
+            color = ContextCompat.getColor(context, R.color.orange_main_500)
             setFullScreenIntent(pendingIntent, true)
         }
 
@@ -711,7 +711,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             .setSmallIcon(R.drawable.chat_text)
             .setAutoCancel(true)
             .setLargeIcon(largeIcon)
-            .setColor(ContextCompat.getColor(context, R.color.primary_color))
+            .setColor(ContextCompat.getColor(context, R.color.orange_main_500))
             .setCategory(NotificationCompat.CATEGORY_MESSAGE)
             .setGroup(CHAT_NOTIFICATIONS_GROUP)
             .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
@@ -794,7 +794,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
         val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH)
         channel.description = name
-        channel.lightColor = context.getColor(R.color.primary_color)
+        channel.lightColor = context.getColor(R.color.orange_main_500)
         channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
         channel.enableVibration(true)
         channel.enableLights(true)
@@ -823,7 +823,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
         val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH)
         channel.description = name
-        channel.lightColor = context.getColor(R.color.primary_color)
+        channel.lightColor = context.getColor(R.color.orange_main_500)
         channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
         channel.enableLights(true)
         channel.enableVibration(true)

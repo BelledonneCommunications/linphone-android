@@ -108,7 +108,7 @@ class AppUtils {
             redToast.message = message
             redToast.icon = icon
             redToast.shadowColor = R.drawable.shape_toast_red_background
-            redToast.textColor = R.color.red_danger
+            redToast.textColor = R.color.red_danger_500
             redToast.root.visibility = View.GONE
             return redToast
         }
@@ -129,7 +129,7 @@ class AppUtils {
             greenToast.message = message
             greenToast.icon = icon
             greenToast.shadowColor = R.drawable.shape_toast_green_background
-            greenToast.textColor = R.color.green_online
+            greenToast.textColor = R.color.green_success_500
             greenToast.root.visibility = View.GONE
             return greenToast
         }
@@ -150,7 +150,7 @@ class AppUtils {
             blueToast.message = message
             blueToast.icon = icon
             blueToast.shadowColor = R.drawable.shape_toast_blue_background
-            blueToast.textColor = R.color.blue_trusted
+            blueToast.textColor = R.color.blue_info_500
             blueToast.root.visibility = View.GONE
             return blueToast
         }

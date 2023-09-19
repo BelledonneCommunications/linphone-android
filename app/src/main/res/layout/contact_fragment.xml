@@ -35,7 +35,7 @@
             android:onClick="@{backClickListener}"
             android:visibility="@{viewModel.showBackButton ? View.VISIBLE : View.GONE}"
             android:src="@drawable/caret_left"
-            app:tint="@color/gray_1"
+            app:tint="@color/gray_main2_500"
             app:layout_constraintBottom_toBottomOf="@id/invisible_title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/invisible_title"/>
@@ -68,7 +68,7 @@
             android:id="@+id/scrollView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@color/gray_7"
+            android:background="@color/gray_100"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/invisible_title"
@@ -104,8 +104,8 @@
                     android:adjustViewBounds="true"
                     android:background="@drawable/shape_circle_light_blue_background"
                     contactAvatar="@{viewModel.contact}"
-                    app:avatarViewInitialsBackgroundColor="@color/blue_light"
-                    app:avatarViewInitialsTextColor="@color/gray_9"
+                    app:avatarViewInitialsBackgroundColor="@color/gray_main2_200"
+                    app:avatarViewInitialsTextColor="@color/gray_main2_600"
                     app:avatarViewInitialsTextSize="21sp"
                     app:avatarViewInitialsTextStyle="bold"
                     app:avatarViewPlaceholder="@drawable/user_circle"
@@ -134,7 +134,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="@{viewModel.contact.name, default=`John Doe`}"
-                    android:textColor="@color/gray_8"
+                    android:textColor="@color/gray_main2_700"
                     android:textSize="14sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -147,7 +147,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@{viewModel.contact.lastPresenceInfo, default=@string/friend_presence_status_online}"
-                    android:textColor="@{viewModel.contact.presenceStatus == ConsolidatedPresence.Online ? @color/green_online : @color/orange_away, default=@color/green_online}"
+                    android:textColor="@{viewModel.contact.presenceStatus == ConsolidatedPresence.Online ? @color/green_success_500 : @color/orange_away, default=@color/green_success_500}"
                     android:textSize="14sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -162,7 +162,7 @@
                     android:background="@drawable/circle_light_blue_button_background"
                     android:padding="16dp"
                     android:src="@drawable/phone"
-                    app:tint="@color/gray_1"
+                    app:tint="@color/gray_main2_500"
                     app:layout_constraintEnd_toStartOf="@id/chat"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/status" />
@@ -188,7 +188,7 @@
                     android:background="@drawable/circle_light_blue_button_background"
                     android:padding="16dp"
                     android:src="@drawable/chat_dots"
-                    app:tint="@color/gray_1"
+                    app:tint="@color/gray_main2_500"
                     app:layout_constraintEnd_toStartOf="@id/video_call"
                     app:layout_constraintStart_toEndOf="@id/call"
                     app:layout_constraintTop_toBottomOf="@id/status" />
@@ -215,7 +215,7 @@
                     android:background="@drawable/circle_light_blue_button_background"
                     android:padding="16dp"
                     android:src="@drawable/video_camera"
-                    app:tint="@color/gray_1"
+                    app:tint="@color/gray_main2_500"
                     app:layout_constraintStart_toEndOf="@id/chat"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/status" />
@@ -245,7 +245,7 @@
                     android:layout_marginTop="32dp"
                     android:text="@string/contact_details_numbers_and_addresses_title"
                     android:drawableEnd="@{viewModel.expandNumbersAndAddresses ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
-                    android:drawableTint="@color/gray_9"
+                    android:drawableTint="@color/gray_main2_600"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/call_label"/>
@@ -348,7 +348,7 @@
                     android:padding="5dp"
                     android:text="@string/contact_details_trust_title"
                     android:drawableEnd="@drawable/question"
-                    android:drawableTint="@color/gray_9"
+                    android:drawableTint="@color/gray_main2_600"
                     android:drawablePadding="8dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/info_background"/>
@@ -363,7 +363,7 @@
                     android:layout_marginTop="16dp"
                     android:padding="5dp"
                     android:drawableEnd="@{viewModel.expandDevicesTrust ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
-                    android:drawableTint="@color/gray_9"
+                    android:drawableTint="@color/gray_main2_600"
                     app:layout_constraintStart_toEndOf="@id/trust_label"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/info_background"/>
@@ -403,8 +403,8 @@
                     android:layout_marginEnd="17dp"
                     app:trackCornerRadius="50dp"
                     app:trackThickness="22dp"
-                    app:trackColor="@color/gray_3"
-                    app:indicatorColor="@color/blue_trusted"
+                    app:trackColor="@color/gray_main2_100"
+                    app:indicatorColor="@color/blue_info_500"
                     android:max="100"
                     android:progress="75"
                     app:layout_constraintStart_toStartOf="@id/trust_background"
@@ -484,7 +484,7 @@
                 <View
                     android:layout_width="0dp"
                     android:layout_height="1dp"
-                    android:background="@color/blue_light"
+                    android:background="@color/gray_main2_200"
                     app:layout_constraintStart_toStartOf="@id/action_edit"
                     app:layout_constraintEnd_toEndOf="@id/action_edit"
                     app:layout_constraintTop_toBottomOf="@+id/action_edit"/>
@@ -500,7 +500,7 @@
                     android:background="@drawable/action_background"
                     android:text="@{viewModel.isFavourite ? @string/contact_details_remove_from_favourites : @string/contact_details_add_to_favourites, default=@string/contact_details_add_to_favourites}"
                     android:drawableStart="@{viewModel.isFavourite ? @drawable/heart_fill : @drawable/heart, default=@drawable/heart_fill}"
-                    android:drawableTint="@{viewModel.isFavourite ? @color/red_danger : @color/gray_1, default=@color/gray_1}"
+                    android:drawableTint="@{viewModel.isFavourite ? @color/red_danger_500 : @color/gray_main2_500, default=@color/gray_main2_500}"
                     app:layout_constraintTop_toBottomOf="@id/action_edit"
                     app:layout_constraintStart_toStartOf="@id/actions_background"
                     app:layout_constraintEnd_toEndOf="@id/actions_background"/>
@@ -508,7 +508,7 @@
                 <View
                     android:layout_width="0dp"
                     android:layout_height="1dp"
-                    android:background="@color/blue_light"
+                    android:background="@color/gray_main2_200"
                     app:layout_constraintStart_toStartOf="@id/action_favorite"
                     app:layout_constraintEnd_toEndOf="@id/action_favorite"
                     app:layout_constraintTop_toBottomOf="@+id/action_favorite"/>
@@ -531,7 +531,7 @@
                 <View
                     android:layout_width="0dp"
                     android:layout_height="1dp"
-                    android:background="@color/blue_light"
+                    android:background="@color/gray_main2_200"
                     app:layout_constraintStart_toStartOf="@id/action_share"
                     app:layout_constraintEnd_toEndOf="@id/action_share"
                     app:layout_constraintTop_toBottomOf="@+id/action_share"/>

@@ -13,7 +13,7 @@
         android:onClick="@{() -> model.onClicked()}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/separator">
+        android:background="@color/gray_main2_200">
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/context_menu_action_label_style"

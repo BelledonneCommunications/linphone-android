@@ -230,7 +230,7 @@ class DialogUtils {
             dialog.setContentView(binding.root)
 
             val d: Drawable = ColorDrawable(
-                ContextCompat.getColor(dialog.context, R.color.dialog_background)
+                ContextCompat.getColor(dialog.context, R.color.gray_main2_800_alpha_65)
             )
             // d.alpha = 166
             dialog.window

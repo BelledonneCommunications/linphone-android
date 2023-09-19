@@ -30,7 +30,7 @@
                 android:layout_marginTop="7dp"
                 android:layout_marginStart="15dp"
                 android:src="@drawable/caret_left"
-                app:tint="@color/gray_1"
+                app:tint="@color/gray_main2_500"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
 
@@ -68,7 +68,7 @@
                 android:layout_marginEnd="16dp"
                 android:text="@{viewModel.confirmationMessage, default=@string/assistant_account_creation_sms_confirmation_explanation}"
                 android:textSize="14sp"
-                android:textColor="@color/gray_9"
+                android:textColor="@color/gray_main2_600"
                 android:gravity="center_horizontal"
                 app:layout_constraintTop_toBottomOf="@id/title"
                 app:layout_constraintStart_toStartOf="parent"

@@ -27,7 +27,7 @@
             android:adjustViewBounds="true"
             android:padding="5dp"
             android:src="@drawable/caret_left"
-            app:tint="@color/gray_1"
+            app:tint="@color/gray_main2_500"
             app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/title" />
@@ -66,7 +66,7 @@
             android:layout_marginEnd="16dp"
             android:text="@string/help_advanced_debug_subtitle"
             android:textSize="14sp"
-            android:textColor="@color/gray_9"
+            android:textColor="@color/gray_main2_600"
             app:layout_constraintTop_toBottomOf="@id/debug_title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/debug_mode_switch" />

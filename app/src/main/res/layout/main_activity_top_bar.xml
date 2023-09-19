@@ -13,7 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_bar_height"
-        android:background="@color/primary_color">
+        android:background="@color/orange_main_500">
 
         <androidx.constraintlayout.widget.Group
             android:layout_width="wrap_content"
@@ -43,8 +43,8 @@
             android:background="@drawable/shape_circle_light_blue_background"
             accountAvatar="@{viewModel.account}"
             app:avatarViewPlaceholder="@drawable/user_circle"
-            app:avatarViewInitialsBackgroundColor="@color/blue_light"
-            app:avatarViewInitialsTextColor="@color/gray_9"
+            app:avatarViewInitialsBackgroundColor="@color/gray_main2_200"
+            app:avatarViewInitialsTextColor="@color/gray_main2_600"
             app:avatarViewInitialsTextSize="16sp"
             app:avatarViewInitialsTextStyle="bold"
             app:avatarViewShape="circle"
@@ -109,10 +109,10 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:textColorHint="@color/gray_6"
+            android:textColorHint="@color/gray_200"
             app:hintEnabled="false"
             app:hintAnimationEnabled="false"
-            app:hintTextColor="@color/gray_6"
+            app:hintTextColor="@color/gray_200"
             app:boxStrokeWidth="0dp"
             app:boxStrokeWidthFocused="0dp"
             app:layout_constraintEnd_toStartOf="@id/clear_field"
@@ -123,7 +123,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textCursorDrawable="@null"
-                android:textColor="@color/gray_6"
+                android:textColor="@color/gray_200"
                 android:textSize="16sp"
                 android:inputType="text"
                 android:paddingVertical="1dp"

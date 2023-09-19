@@ -37,7 +37,7 @@
                 android:onClick="@{backClickListener}"
                 android:padding="5dp"
                 android:src="@drawable/caret_left"
-                app:tint="@color/gray_1"
+                app:tint="@color/gray_main2_500"
                 app:layout_constraintBottom_toBottomOf="@id/title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/title" />
@@ -74,7 +74,7 @@
                 android:background="@drawable/edit_text_background"
                 android:drawableStart="@drawable/magnifying_glass"
                 android:drawablePadding="10dp"
-                android:drawableTint="@color/gray_9"
+                android:drawableTint="@color/gray_main2_600"
                 android:hint="@string/call_start_search_bar_filter_hint"
                 android:inputType="textPersonName|textNoSuggestions"
                 android:paddingStart="15dp"
@@ -100,7 +100,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/search_bar"
                 app:layout_constraintEnd_toEndOf="@id/search_bar"
                 app:layout_constraintTop_toTopOf="@id/search_bar"
-                app:tint="@color/gray_9" />
+                app:tint="@color/gray_main2_600" />
 
             <ImageView
                 android:id="@+id/clear_field"
@@ -113,7 +113,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/search_bar"
                 app:layout_constraintEnd_toEndOf="@id/search_bar"
                 app:layout_constraintTop_toTopOf="@id/search_bar"
-                app:tint="@color/gray_9" />
+                app:tint="@color/gray_main2_600" />
 
             <androidx.constraintlayout.widget.Group
                 android:id="@+id/group_call"

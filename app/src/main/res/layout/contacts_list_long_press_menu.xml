@@ -24,7 +24,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/separator">
+        android:background="@color/gray_main2_200">
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/context_menu_action_label_style"
@@ -36,7 +36,7 @@
             android:background="@drawable/menu_item_background"
             android:text="@{isFavourite ? @string/contact_details_remove_from_favourites : @string/contact_details_add_to_favourites, default=@string/contact_details_add_to_favourites}"
             android:drawableStart="@{isFavourite ? @drawable/heart_fill : @drawable/heart, default=@drawable/heart_fill}"
-            android:drawableTint="@{isFavourite ? @color/red_danger : @color/gray_1, default=@color/gray_1}"
+            android:drawableTint="@{isFavourite ? @color/red_danger_500 : @color/gray_main2_500, default=@color/gray_main2_500}"
             app:layout_constraintBottom_toTopOf="@id/share"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>

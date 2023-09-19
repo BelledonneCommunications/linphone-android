@@ -49,7 +49,7 @@
             android:gravity="center_vertical"
             android:drawableEnd="@drawable/x"
             android:drawablePadding="15dp"
-            app:drawableTint="@color/gray_9"
+            app:drawableTint="@color/gray_main2_600"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/brand_icon"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -128,7 +128,7 @@
             android:layout_marginBottom="30dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:background="@color/blue_light"
+            android:background="@color/gray_main2_200"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/settings" />
@@ -146,7 +146,7 @@
             android:drawableStart="@drawable/gear"
             android:drawableEnd="@drawable/caret_right"
             android:drawablePadding="8dp"
-            app:drawableTint="@color/gray_1"
+            app:drawableTint="@color/gray_main2_500"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/recordings" />
@@ -164,7 +164,7 @@
             android:drawableStart="@drawable/recordings"
             android:drawableEnd="@drawable/caret_right"
             android:drawablePadding="8dp"
-            app:drawableTint="@color/gray_1"
+            app:drawableTint="@color/gray_main2_500"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/help" />
@@ -182,7 +182,7 @@
             android:drawableStart="@drawable/question"
             android:drawableEnd="@drawable/caret_right"
             android:drawablePadding="8dp"
-            app:drawableTint="@color/gray_1"
+            app:drawableTint="@color/gray_main2_500"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />

@@ -13,7 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_bar_height"
-        android:background="@color/green_online"
+        android:background="@color/green_success_500"
         android:onClick="@{() -> viewModel.goBackToCall()}">
 
         <androidx.appcompat.widget.AppCompatTextView

@@ -42,12 +42,12 @@ abstract class AbstractTopBarFragment : GenericFragment() {
                 val color = if (useInCallColor) {
                     ContextCompat.getColor(
                         requireContext(),
-                        R.color.green_online
+                        R.color.green_success_500
                     )
                 } else {
                     ContextCompat.getColor(
                         requireContext(),
-                        R.color.primary_color
+                        R.color.orange_main_500
                     )
                 }
                 requireActivity().window.statusBarColor = color

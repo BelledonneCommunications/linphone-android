@@ -19,7 +19,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/primary_color">
+        android:background="@color/orange_main_500">
 
         <androidx.constraintlayout.widget.Group
             android:layout_width="wrap_content"
@@ -118,7 +118,7 @@
             android:layout_marginTop="20dp"
             android:text="@string/contacts_list_favourites_title"
             android:drawableEnd="@drawable/caret_up"
-            android:drawableTint="@color/gray_9"
+            android:drawableTint="@color/gray_main2_600"
             app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/background"/>
@@ -167,7 +167,7 @@
             android:layout_gravity="end|bottom"
             android:layout_margin="16dp"
             android:src="@drawable/user_plus"
-            app:tint="@color/gray_8"
+            app:tint="@color/gray_main2_700"
             app:backgroundTint="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />

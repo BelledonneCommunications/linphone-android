@@ -26,7 +26,7 @@
             android:adjustViewBounds="true"
             android:padding="5dp"
             android:src="@drawable/caret_left"
-            app:tint="@color/gray_1"
+            app:tint="@color/gray_main2_500"
             app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/title" />
@@ -47,7 +47,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:fillViewport="true"
-            android:background="@color/gray_7"
+            android:background="@color/gray_100"
             app:layout_constraintTop_toBottomOf="@id/title"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -69,7 +69,7 @@
                     android:layout_marginTop="16dp"
                     android:text="@string/settings_calls_title"
                     android:drawableEnd="@{viewModel.expandCalls ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
-                    android:drawableTint="@color/gray_9"
+                    android:drawableTint="@color/gray_main2_600"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"/>
@@ -394,7 +394,7 @@
                     android:layout_marginTop="16dp"
                     android:text="@string/settings_network_title"
                     android:drawableEnd="@{viewModel.expandNetwork ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
-                    android:drawableTint="@color/gray_9"
+                    android:drawableTint="@color/gray_main2_600"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/calls_background"/>
@@ -464,7 +464,7 @@
                     android:layout_marginTop="16dp"
                     android:text="@string/settings_user_interface_title"
                     android:drawableEnd="@{viewModel.expandUserInterface ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
-                    android:drawableTint="@color/gray_9"
+                    android:drawableTint="@color/gray_main2_600"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/network_background"/>
@@ -504,7 +504,7 @@
                     android:layout_marginBottom="@dimen/screen_bottom_margin"
                     android:text="@string/settings_advanced_title"
                     android:drawableEnd="@drawable/caret_right"
-                    android:drawableTint="@color/gray_9"
+                    android:drawableTint="@color/gray_main2_600"
                     app:layout_constraintVertical_bias="0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

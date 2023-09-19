@@ -38,7 +38,7 @@
                 android:layout_marginTop="7dp"
                 android:layout_marginStart="15dp"
                 android:src="@drawable/caret_left"
-                app:tint="@color/gray_1"
+                app:tint="@color/gray_main2_500"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
 
@@ -91,7 +91,7 @@
                 android:textColor="@color/black"
                 android:checked="true"
                 app:useMaterialThemeColors="false"
-                app:buttonTint="@color/primary_color"
+                app:buttonTint="@color/orange_main_500"
                 app:layout_constraintTop_toBottomOf="@id/sub_title"
                 app:layout_constraintStart_toStartOf="parent" />
 
@@ -137,8 +137,8 @@
                 android:background="@drawable/shape_circle_light_blue_background"
                 android:src="@drawable/user_circle"
                 app:avatarViewPlaceholder="@drawable/user_circle"
-                app:avatarViewInitialsBackgroundColor="@color/blue_light"
-                app:avatarViewInitialsTextColor="@color/gray_9"
+                app:avatarViewInitialsBackgroundColor="@color/gray_main2_200"
+                app:avatarViewInitialsTextColor="@color/gray_main2_600"
                 app:avatarViewInitialsTextSize="16sp"
                 app:avatarViewInitialsTextStyle="bold"
                 app:avatarViewShape="circle"
@@ -180,14 +180,14 @@
                 android:background="@drawable/shape_circle_light_blue_background"
                 android:src="@drawable/user_circle"
                 app:avatarViewPlaceholder="@drawable/user_circle"
-                app:avatarViewInitialsBackgroundColor="@color/blue_light"
-                app:avatarViewInitialsTextColor="@color/gray_9"
+                app:avatarViewInitialsBackgroundColor="@color/gray_main2_200"
+                app:avatarViewInitialsTextColor="@color/gray_main2_600"
                 app:avatarViewInitialsTextSize="16sp"
                 app:avatarViewInitialsTextStyle="bold"
                 app:avatarViewShape="circle"
                 app:avatarViewInitials="JD"
                 app:avatarViewBorderWidth="2dp"
-                app:avatarViewBorderColor="@color/blue_trusted"
+                app:avatarViewBorderColor="@color/blue_info_500"
                 app:layout_constraintStart_toEndOf="@id/arrow"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/image1"
@@ -223,7 +223,7 @@
                 android:textSize="16sp"
                 android:textColor="@color/black"
                 app:useMaterialThemeColors="false"
-                app:buttonTint="@color/primary_color"
+                app:buttonTint="@color/orange_main_500"
                 app:layout_constraintTop_toBottomOf="@id/image1"
                 app:layout_constraintStart_toStartOf="parent" />
 
