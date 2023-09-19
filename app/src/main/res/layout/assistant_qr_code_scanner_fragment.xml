@@ -32,10 +32,9 @@
         <ImageView
             android:onClick="@{backClickListener}"
             android:id="@+id/back"
-            android:layout_width="@dimen/icon_size"
-            android:layout_height="@dimen/icon_size"
-            android:layout_marginTop="7dp"
-            android:layout_marginStart="15dp"
+            android:layout_width="@dimen/top_bar_height"
+            android:layout_height="@dimen/top_bar_height"
+            android:padding="15dp"
             android:src="@drawable/caret_left"
             app:tint="@color/white"
             app:layout_constraintTop_toTopOf="parent"
