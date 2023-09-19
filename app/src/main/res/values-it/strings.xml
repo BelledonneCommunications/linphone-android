@@ -2,6 +2,7 @@
 <!DOCTYPE resources [
     <!ENTITY appName "Linphone">
     ]>
+<!-- Translated by Donaldo Crivello & Sergio Raneli -->
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name" translatable="false">&appName;</string>
     <string name="app_name_debug" translatable="false">&appName; (debug)</string>
