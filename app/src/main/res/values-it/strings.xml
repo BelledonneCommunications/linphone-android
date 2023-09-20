@@ -26,7 +26,7 @@
     <string name="password">Password</string>
     <string name="status_connected">Connesso</string>
     <string name="status_not_connected">Non connesso</string>
-    <string name="status_in_progress">Connessione in corso...</string>
+    <string name="status_in_progress">Connessione in corso</string>
     <string name="status_error">Connessione fallita</string>
     <string name="no_account_configured">Nessun account configurato</string>
     <string name="assistant">Assistente</string>
@@ -37,7 +37,7 @@
     <string name="no_call_history">Nessuna chiamata nella cronologia</string>
     <string name="no_missed_call_history">Nessuna chiamata persa nella cronologia</string>
     <string name="history_delete_one_dialog">Vuoi eliminare questo record\?</string>
-    <string name="history_delete_many_dialog">Vuoi cancellare queste registrazioni\?</string>
+    <string name="history_delete_many_dialog">Vuoi cancellare questi record\?</string>
     <string name="contact_invite_friend">Invita</string>
     <string name="no_contact">Nessun contatto nella tua rubrica.</string>
     <string name="no_sip_contact">Nessun contatto SIP nella tua rubrica.</string>
@@ -47,7 +47,7 @@
     <string name="contact_first_name">Nome</string>
     <string name="contact_organization">Organizzazione</string>
     <string name="contact_choose_existing_or_new_to_add_number">Seleziona un contatto o creane uno nuovo</string>
-    <string name="contact_editor_write_permission_denied">Permesso negato, impossibile editare il contatto</string>
+    <string name="contact_editor_write_permission_denied">Permesso di scrittura dei contatti negato, impossibile modificare il contatto</string>
     <string name="contact_delete_many_dialog">Vuoi cancellare questi contatti\?
 \nI contatti verranno rimossi anche dalla tua rubrica</string>
     <string name="contact_new_choose_sync_account">Scegli dove salvare il contatto</string>
@@ -70,21 +70,21 @@
     <string name="chat_event_device_added">nuovo dispositivo per %s</string>
     <string name="chat_event_device_removed">dispositivo per %s rimosso</string>
     <string name="chat_event_subject_changed">nuovo oggetto: %s</string>
-    <string name="chat_event_admin_set">%s è admin</string>
+    <string name="chat_event_admin_set">%s è amministratore</string>
     <string name="chat_event_admin_unset">%s non è più amministratore</string>
     <string name="chat_security_event_lime_identity_key_changed">Chiave di identità LIME modificata per %s</string>
-    <string name="chat_security_event_security_level_downgraded">Livello di sicurezza diminuito per %s</string>
+    <string name="chat_security_event_security_level_downgraded">Livello di sicurezza diminuito a causa di %s</string>
     <string name="chat_security_event_participant_max_count_exceeded">Numero di partecipanti massimi superato da %s</string>
     <string name="chat_event_ephemeral_lifetime_changed">Scadenza messaggi effimeri: %s</string>
     <string name="chat_message_download_file">Download</string>
     <string name="chat_event_ephemeral_enabled">Hai abilitato i messaggi effimeri: %s</string>
     <string name="chat_room_group_info_title">Info</string>
     <string name="chat_room_group_info_participants">Participanti</string>
-    <string name="chat_room_group_info_subject_hint">Nomina il gruppo</string>
+    <string name="chat_room_group_info_subject_hint">Assegna un nome al gruppo</string>
     <string name="chat_room_group_info_admin">Amministratore</string>
     <string name="chat_room_group_info_leave">Lascia il gruppo</string>
     <string name="chat_room_group_info_leave_dialog_button">Lascia</string>
-    <string name="chat_room_group_info_leave_dialog_message">Vuoi uscire da questa conversazione\?</string>
+    <string name="chat_room_group_info_leave_dialog_message">Vuoi abbandonare questa conversazione\?</string>
     <string name="chat_room_group_info_you_are_now_admin">Ora sei amministratore</string>
     <string name="chat_room_group_info_you_are_no_longer_admin">Non sei più amministratore</string>
     <string name="chat_message_imdn_delivered">Consegnato</string>
@@ -115,11 +115,11 @@
     <string name="account_settings_password_title">Password</string>
     <string name="account_settings_transport_tcp">TCP</string>
     <string name="account_settings_transport_udp">UDP</string>
-    <string name="assistant_linphone_login_desc">Inserisci il tuo nome utente e password di &amp;appName;</string>
+    <string name="assistant_linphone_login_desc">Inserisci il tuo nome utente e password di &appName;</string>
     <string name="assistant_login_with_username">Utilizza il tuo nome utente e password anziché il tuo numero di telefono</string>
     <string name="assistant_login_forgotten_password">Dimenticato la tua password\?</string>
     <string name="assistant_login_desc">Inserisci il tuo nome utente e password con il tuo dominio SIP</string>
-    <string name="assistant_create_account_part_email">Inserisci un nome utente, email e password per il tuo account &amp;appName;</string>
+    <string name="assistant_create_account_part_email">Inserisci un nome utente, email e password per il tuo account &appName;</string>
     <string name="service_auto_start_description">&appName; è stato avviato automaticamente</string>
     <string name="chat_settings_auto_download_never">Mai</string>
     <string name="chat_settings_auto_download_max_size_summary">in bytes</string>
@@ -191,15 +191,15 @@
     <string name="chat_room_last_message_sender_format">%s:</string>
     <string name="chat_remote_is_composing">Remoto sta scrivendo…</string>
     <string name="chat_message_pick_file_dialog">Seleziona sorgente</string>
-    <string name="chat_room_devices_fragment_title">Dispositivi in conversazione</string>
-    <string name="chat_room_choose_conversation_for_message_forward">Seleziona o crea una conversazione a cui mandare questo messaggio</string>
+    <string name="chat_room_devices_fragment_title">Dispositivi della conversazione</string>
+    <string name="chat_room_choose_conversation_for_message_forward">Seleziona o crea una conversazione in cui inoltrare il messaggio</string>
     <string name="chat_room_ephemeral_fragment_title">Messaggi effimeri</string>
     <string name="chat_room_choose_conversation_for_file_sharing">Seleziona o crea una conversazione in cui condividere questo file</string>
-    <string name="chat_room_ephemeral_messages_desc">Questo messaggio sarà eliminato per entrambi una volta che sarà letto e sarà scelto un timer.</string>
-    <string name="chat_room_delete_one_dialog">Vuoi cancellare questa conversazione\?</string>
-    <string name="chat_message_notification_hidden_content">&lt;Redacted&gt;</string>
+    <string name="chat_room_ephemeral_messages_desc">Questo messaggio sarà cancellato per entrambi gli utenti una volta che è stato letto alla scadenza del timeout.</string>
+    <string name="chat_room_delete_one_dialog">Sei sicuro di voler cancellare questa conversazione\?</string>
+    <string name="chat_message_notification_hidden_content">&lt;Redatto&gt;</string>
     <string name="chat_message_no_app_found_to_handle_file_mime_type">Nessun app disponibile per questo tipo di file</string>
-    <string name="chat_bubble_cant_open_enrypted_file">Impossibile aprire questo file criptato nella bolla di chat</string>
+    <string name="chat_bubble_cant_open_enrypted_file">Impossibile aprire questo file criptato nella anteprima</string>
     <string name="chat_message_cant_open_file_in_app_dialog_title">Impossibile mostrare il file.</string>
     <string name="chat_message_abort_removal">Annulla</string>
     <string name="chat_message_download_already_in_progress">Attendi che il download sia finito prima di iniziarne un altro</string>
@@ -271,18 +271,18 @@
     <string name="call_stats_zrtp_auth_tag_algo">Algoritmo di autenticazione:</string>
     <string name="assistant_welcome_title">Benvenuto</string>
     <string name="assistant_welcome_desc">Questo assistente ti aiuterà a configurare ed utilizzare il tuo account SIP.</string>
-    <string name="assistant_create_account">Crea account &amp;appName;</string>
-    <string name="assistant_login_linphone">Usa account &amp;appName;</string>
+    <string name="assistant_create_account">Crea account &appName;</string>
+    <string name="assistant_login_linphone">Usa account &appName;</string>
     <string name="assistant_login_generic">Usa account SIP</string>
     <string name="assistant_remote_provisioning">Provisioning remoto</string>
-    <string name="assistant_ec_calibration">Calibrazione cancellazione eco in corso...</string>
+    <string name="assistant_ec_calibration">Calibrazione cancellazione eco in corso</string>
     <string name="assistant_phone_number_info_title">A cosa servirà il mio numero di telefono\?</string>
     <string name="assistant_phone_number_link_info_content">"
 \nI tuoi amici ti troveranno più facilmente se collegherai il tuo account al tuo numero di telefono
 \n
-\nVedrai nella tua rubrica chi sta utilizzando &amp;appName; ed i tuoi amici sapranno che ti potranno trovare su &amp;appName;.
+\nVedrai nella tua rubrica chi sta utilizzando &appName; ed i tuoi amici sapranno che ti potranno trovare su &appName;.
 \n"</string>
-    <string name="assistant_phone_number_link_info_content_already_account">Puoi utilizzare il tuo numero di telefono solo con un account di &amp;appName;.
+    <string name="assistant_phone_number_link_info_content_already_account">Puoi utilizzare il tuo numero di telefono solo con un account di &appName;.
 \n
 \nSe hai già collegato il tuo account ad un numero di telefono ma preferisci utilizzare questo, collegalo ora ed il tuo numero sarà automaticamente spostato su questo account.</string>
     <string name="assistant_read_and_agree_terms">Accetto i %1$s and %2$s di Belledonne Communications</string>
@@ -338,7 +338,7 @@
     <string name="chat_settings_auto_download_voice_recordings">Scarica automaticamente le registrazioni vocali in arrivo</string>
     <string name="contacts_settings_friendlist_subscribe_title">Iscrivi lista amici</string>
     <string name="contacts_settings_native_presence_title">Presence information nei contatti nativi</string>
-    <string name="contacts_settings_native_presence_summary">Inserimento scorciatoie informazioni contatto da &amp;appName; ai contatti Android nativi</string>
+    <string name="contacts_settings_native_presence_summary">Inserimento scorciatoie informazioni contatto da &appName; ai contatti Android nativi</string>
     <string name="contacts_settings_show_new_contact_account_dialog_summary">Se disabilitato il contatto sarà salvato localmente</string>
     <string name="contacts_settings_create_new_ldap_config_title">Nuova configurazione LDAP</string>
     <string name="contacts_settings_ldap_enable_title">Abilitato</string>
@@ -371,7 +371,7 @@
     <string name="account_setting_delete_generic_confirmation_dialog">Il tuo account sarà eliminato solo localmente.
 \nPer eliminato permanentemente, vai nel sito web del tuo provider SIP.</string>
     <string name="account_setting_disable_bundle_mode_title">Disabilita modalità bundle</string>
-    <string name="notification_channel_chat_name">&amp;appName; notifica messaggio istantaneo</string>
+    <string name="notification_channel_chat_name">&appName; notifica messaggio istantaneo</string>
     <string name="incoming_group_call_notification_title">Chiamata di gruppo in arrivo</string>
     <string name="incoming_call_notification_answer_action_label">Accetta</string>
     <string name="received_chat_notification_reply_label">Rispondi</string>
@@ -477,13 +477,13 @@
     <string name="assistant_general_terms">condizioni d\'uso</string>
     <string name="video_settings_bandwidth_limit_summary">in kbit/s</string>
     <string name="advanced_settings_reset_debug_logs_title">Elimina i log</string>
-    <string name="conference_schedule_send_invite_chat_summary">L\'invito sarà inviato tramite il mio account &amp;appName;</string>
+    <string name="conference_schedule_send_invite_chat_summary">L\'invito sarà inviato tramite il mio account &appName;</string>
     <plurals name="chat_room_unread_messages_event">
         <item quantity="one">%1$d messaggio non letto</item>
         <item quantity="other">%1$d messaggi non letti</item>
     </plurals>
     <string name="assistant_error_invalid_international_prefix">Prefisso internazionale errato</string>
-    <string name="assistant_linphone_account">Utilizza il tuo account &amp;appName;</string>
+    <string name="assistant_linphone_account">Utilizza il tuo account &appName;</string>
     <string name="assistant_finish">Fine configurazione</string>
     <string name="assistant_display_name_optional">Nome visualizzato (opzionale)</string>
     <string name="assistant_validate_account_1">Il tuo account è stato creato. Controlla la tua email per verificare il tuo account:</string>
@@ -542,9 +542,9 @@
     <string name="account_setting_delete_sip_linphone_org_confirmation_dialog">Il tuo account sarà eliminato solo localmente.
 \nPer eliminato permanentemente, vai nella tua piattaforma di gestione account:</string>
     <string name="conferences_settings_layout_title">Layout di default</string>
-    <string name="notification_channel_service_name">&amp;appName; notifica di servizio</string>
-    <string name="notification_channel_missed_call_name">&amp;appName; notifica chiamate perse</string>
-    <string name="notification_channel_incoming_call_name">&amp;appName; notifica chiamata in arrivo</string>
+    <string name="notification_channel_service_name">&appName; notifica di servizio</string>
+    <string name="notification_channel_missed_call_name">&appName; notifica chiamate perse</string>
+    <string name="notification_channel_incoming_call_name">&appName; notifica chiamata in arrivo</string>
     <string name="incoming_call_notification_title">Chiamata in arrivo</string>
     <string name="missed_call_notification_title">Chiamata persa</string>
     <string name="missed_call_notification_body">Chiamata persa da %s</string>
@@ -581,8 +581,8 @@
     <string name="yes">Si</string>
     <string name="no">No</string>
     <string name="app_description">il client SIP &lt;i&gt;libero&lt;/i&gt;</string>
-    <string name="about">Informazioni su...</string>
-    <string name="chat_room_creation_failed_snack">Creazione chat room fallita</string>
+    <string name="about">Informazioni su</string>
+    <string name="chat_room_creation_failed_snack">Creazione chat fallita</string>
     <string name="chat_room_removal_failed_snack">Rimozione chat fallita</string>
     <string name="conference_schedule_start">Organizza meeting</string>
     <string name="conference_schedule_edit">Modifica meeting</string>
@@ -638,7 +638,7 @@
     <string name="call_stats_capture_filter">FIltro di cattura:</string>
     <string name="call_stats_media_encryption">Crittografia media:</string>
     <string name="call_stats_zrtp_cipher_algo">Algoritmo di cifratura:</string>
-    <string name="assistant_generic_account_warning">Alcune funzioni richiedono un account &amp;appName;, come le chat di gruppo o i messaggi effimeri.
+    <string name="assistant_generic_account_warning">Alcune funzioni richiedono un account &appName;, come le chat di gruppo o i messaggi effimeri.
 \n
 \nQueste funzioni verranno nascoste quando ti registri con un SIP account di terze parti.
 \n
@@ -748,7 +748,7 @@
     <string name="content_description_delivery_status">Avvisa status consegna</string>
     <string name="content_description_forward_message">Inoltra messaggio in questa conversazione</string>
     <string name="content_description_ephemeral_message">Messaggio effimero</string>
-    <string name="content_description_linphone_user">Il contatto è un utente &amp;appName;</string>
+    <string name="content_description_linphone_user">Il contatto è un utente &appName;</string>
     <string name="content_description_change_contact_picture">Cambia foto contatto</string>
     <string name="content_description_change_own_picture">Cambia foto profilo</string>
     <string name="content_description_show_call_details">Vai ai dettagli della chiamata</string>
@@ -762,16 +762,16 @@
     <string name="content_description_conference_participant_mic_muted">Il partecipante è mutato</string>
     <string name="content_description_toggle_layout_menu">Mostra o nascondi menù layout della chiamata di gruppo</string>
     <string name="content_description_recording_export">Esporta registrazioni</string>
-    <string name="service_name">Servizio &amp;appName;</string>
+    <string name="service_name">Servizio &appName;</string>
     <string name="error_unexpected">Errore inaspettato…</string>
-    <string name="chat_room_choose_conversation_for_text_sharing">Seleziona o crea una conversazione a cui condividere questo testo</string>
+    <string name="chat_room_choose_conversation_for_text_sharing">Seleziona o crea una conversazione in cui condividere il testo</string>
     <string name="chat_room_file_not_found">File non trovato</string>
-    <string name="chat_room_context_menu_group_info">Info gruppo</string>
+    <string name="chat_room_context_menu_group_info">Informazioni gruppo</string>
     <string name="chat_room_context_menu_participants_devices">Dispositivi della conversazione</string>
-    <string name="chat_room_context_menu_go_to_contact">Vai a contatto</string>
+    <string name="chat_room_context_menu_go_to_contact">Vai al contatto</string>
     <string name="chat_message_context_menu_ephemeral_messages">Messaggio effimero</string>
-    <string name="chat_message_context_menu_delete_messages">Elimina messaggi</string>
-    <string name="chat_message_context_menu_turn_on_notifications">Attiva notifiche</string>
+    <string name="chat_message_context_menu_delete_messages">Cancella messaggi</string>
+    <string name="chat_message_context_menu_turn_on_notifications">Abilita notifiche</string>
     <string name="chat_message_context_menu_turn_off_notifications">Disabilita notifiche</string>
     <string name="chat_message_cant_open_file_in_app_dialog_message">Vuoi aprirlo come testo o esportarlo (non criptato) a un app di terzi se disponibile\?</string>
     <string name="chat_message_cant_open_file_in_app_dialog_export_button">Esporta</string>
@@ -783,8 +783,8 @@
     <string name="chat_message_removal_info">Il messaggio verrà eliminato</string>
     <string name="conference_schedule_duration">Durata</string>
     <string name="conference_schedule_timezone">Fuso orario</string>
-    <string name="conference_schedule_send_invite_chat">Manda invito tramite &amp;appName;</string>
-    <string name="conference_schedule_send_updated_invite_chat">Manda aggiornamento tramite &amp;appName;</string>
+    <string name="conference_schedule_send_invite_chat">Manda invito tramite &appName;</string>
+    <string name="conference_schedule_send_updated_invite_chat">Manda aggiornamento tramite &appName;</string>
     <string name="conference_schedule_send_invite_email">Manda invito tramite email</string>
     <string name="conference_too_many_participants_for_mosaic_layout">Ci sono troppi partecipanti per la modalità mosaico, la modalità verrà cambiata a speaker attivo</string>
     <string name="conference_no_schedule">Nessun meeting organizzato.</string>
