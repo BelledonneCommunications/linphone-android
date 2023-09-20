@@ -26,7 +26,7 @@
     <string name="password">Password</string>
     <string name="status_connected">Connesso</string>
     <string name="status_not_connected">Non connesso</string>
-    <string name="status_in_progress">Connessione in corso...</string>
+    <string name="status_in_progress">Connessione in corso</string>
     <string name="status_error">Connessione fallita</string>
     <string name="no_account_configured">Nessun account configurato</string>
     <string name="assistant">Assistente</string>
@@ -37,7 +37,7 @@
     <string name="no_call_history">Nessuna chiamata nella cronologia</string>
     <string name="no_missed_call_history">Nessuna chiamata persa nella cronologia</string>
     <string name="history_delete_one_dialog">Vuoi eliminare questo record\?</string>
-    <string name="history_delete_many_dialog">Vuoi cancellare queste registrazioni\?</string>
+    <string name="history_delete_many_dialog">Vuoi cancellare questi record\?</string>
     <string name="contact_invite_friend">Invita</string>
     <string name="no_contact">Nessun contatto nella tua rubrica.</string>
     <string name="no_sip_contact">Nessun contatto SIP nella tua rubrica.</string>
@@ -47,7 +47,7 @@
     <string name="contact_first_name">Nome</string>
     <string name="contact_organization">Organizzazione</string>
     <string name="contact_choose_existing_or_new_to_add_number">Seleziona un contatto o creane uno nuovo</string>
-    <string name="contact_editor_write_permission_denied">Permesso negato, impossibile editare il contatto</string>
+    <string name="contact_editor_write_permission_denied">Permesso di scrittura dei contatti negato, impossibile modificare il contatto</string>
     <string name="contact_delete_many_dialog">Vuoi cancellare questi contatti\?
 \nI contatti verranno rimossi anche dalla tua rubrica</string>
     <string name="contact_new_choose_sync_account">Scegli dove salvare il contatto</string>
@@ -70,21 +70,21 @@
     <string name="chat_event_device_added">nuovo dispositivo per %s</string>
     <string name="chat_event_device_removed">dispositivo per %s rimosso</string>
     <string name="chat_event_subject_changed">nuovo oggetto: %s</string>
-    <string name="chat_event_admin_set">%s è admin</string>
+    <string name="chat_event_admin_set">%s è amministratore</string>
     <string name="chat_event_admin_unset">%s non è più amministratore</string>
     <string name="chat_security_event_lime_identity_key_changed">Chiave di identità LIME modificata per %s</string>
-    <string name="chat_security_event_security_level_downgraded">Livello di sicurezza diminuito per %s</string>
+    <string name="chat_security_event_security_level_downgraded">Livello di sicurezza diminuito a causa di %s</string>
     <string name="chat_security_event_participant_max_count_exceeded">Numero di partecipanti massimi superato da %s</string>
     <string name="chat_event_ephemeral_lifetime_changed">Scadenza messaggi effimeri: %s</string>
     <string name="chat_message_download_file">Download</string>
     <string name="chat_event_ephemeral_enabled">Hai abilitato i messaggi effimeri: %s</string>
     <string name="chat_room_group_info_title">Info</string>
     <string name="chat_room_group_info_participants">Participanti</string>
-    <string name="chat_room_group_info_subject_hint">Nomina il gruppo</string>
+    <string name="chat_room_group_info_subject_hint">Assegna un nome al gruppo</string>
     <string name="chat_room_group_info_admin">Amministratore</string>
     <string name="chat_room_group_info_leave">Lascia il gruppo</string>
     <string name="chat_room_group_info_leave_dialog_button">Lascia</string>
-    <string name="chat_room_group_info_leave_dialog_message">Vuoi uscire da questa conversazione\?</string>
+    <string name="chat_room_group_info_leave_dialog_message">Vuoi abbandonare questa conversazione\?</string>
     <string name="chat_room_group_info_you_are_now_admin">Ora sei amministratore</string>
     <string name="chat_room_group_info_you_are_no_longer_admin">Non sei più amministratore</string>
     <string name="chat_message_imdn_delivered">Consegnato</string>
@@ -185,8 +185,8 @@
     <string name="assistant_fetch_apply">Trova e applica</string>
     <string name="settings_default_account_subtitle">Account default</string>
     <string name="audio_settings_echo_cancellation_calibration_failed">Calibrazione fallita</string>
-    <string name="about">Informazioni su...</string>
-    <string name="chat_room_context_menu_group_info">Info gruppo</string>
+    <string name="about">Informazioni su</string>
+    <string name="chat_room_context_menu_group_info">Informazioni gruppo</string>
     <string name="chat_room_removal_failed_snack">Rimozione chat fallita</string>
     <string name="conference_organizer">Organizzatore</string>
     <string name="conference_schedule_summary">Informazioni meeting</string>
@@ -379,15 +379,15 @@
 \n
 \nVuoi crearlo comunque\?</string>
     <string name="chat_message_pick_file_dialog">Seleziona sorgente</string>
-    <string name="chat_room_devices_fragment_title">Dispositivi in conversazione</string>
-    <string name="chat_room_choose_conversation_for_text_sharing">Seleziona o crea una conversazione a cui condividere questo testo</string>
+    <string name="chat_room_devices_fragment_title">Dispositivi della conversazione</string>
+    <string name="chat_room_choose_conversation_for_text_sharing">Seleziona o crea una conversazione in cui condividere il testo</string>
     <string name="chat_room_delete_many_dialog">Sei sicuro di voler cancellare queste conversazioni\?</string>
     <string name="chat_room_context_menu_participants_devices">Dispositivi della conversazione</string>
     <string name="chat_message_context_menu_ephemeral_messages">Messaggio effimero</string>
-    <string name="chat_message_context_menu_delete_messages">Elimina messaggi</string>
-    <string name="chat_room_creation_failed_snack">Creazione chat room fallita</string>
-    <string name="chat_room_delete_one_dialog">Vuoi cancellare questa conversazione\?</string>
-    <string name="chat_message_notification_hidden_content">&lt;Redacted&gt;</string>
+    <string name="chat_message_context_menu_delete_messages">Cancella messaggi</string>
+    <string name="chat_room_creation_failed_snack">Creazione chat fallita</string>
+    <string name="chat_room_delete_one_dialog">Sei sicuro di voler cancellare questa conversazione\?</string>
+    <string name="chat_message_notification_hidden_content">&lt;Redatto&gt;</string>
     <string name="chat_message_no_app_found_to_handle_file_mime_type">Nessun app disponibile per questo tipo di file</string>
     <string name="chat_message_cant_open_file_in_app_dialog_title">Impossibile mostrare il file.</string>
     <string name="chat_message_cant_open_file_in_app_dialog_message">Vuoi aprirlo come testo o esportarlo (non criptato) a un app di terzi se disponibile\?</string>
@@ -470,7 +470,7 @@
     <string name="call_stats_zrtp_sas_algo">Algoritmo SAS:</string>
     <string name="call_stats_encoder_name">Encoder:</string>
     <string name="assistant_login_generic">Usa account SIP</string>
-    <string name="assistant_ec_calibration">Calibrazione cancellazione eco in corso...</string>
+    <string name="assistant_ec_calibration">Calibrazione cancellazione eco in corso</string>
     <string name="assistant_phone_number_info_title">A cosa servirà il mio numero di telefono\?</string>
     <string name="assistant_phone_number_link_info_content">"
 \nI tuoi amici ti troveranno più facilmente se collegherai il tuo account al tuo numero di telefono
@@ -654,11 +654,11 @@
     <string name="content_description_presence_do_not_disturb">L\'utente non vuole essere disturbato</string>
     <string name="content_description_emoji_picker">Attiva o disattiva scelta emoji</string>
     <string name="error_unexpected">Errore inaspettato…</string>
-    <string name="chat_message_context_menu_turn_on_notifications">Attiva notifiche</string>
+    <string name="chat_message_context_menu_turn_on_notifications">Abilita notifiche</string>
     <string name="chat_room_ephemeral_fragment_title">Messaggi effimeri</string>
-    <string name="chat_room_ephemeral_messages_desc">Questo messaggio sarà eliminato per entrambi una volta che sarà letto e sarà scelto un timer.</string>
+    <string name="chat_room_ephemeral_messages_desc">Questo messaggio sarà cancellato per entrambi gli utenti una volta che è stato letto alla scadenza del timeout.</string>
     <string name="chat_room_ephemeral_message_disabled">Disabilitato</string>
-    <string name="chat_bubble_cant_open_enrypted_file">Impossibile aprire questo file criptato nella bolla di chat</string>
+    <string name="chat_bubble_cant_open_enrypted_file">Impossibile aprire questo file criptato nella anteprima</string>
     <string name="chat_message_cant_open_file_in_app_dialog_export_button">Esporta</string>
     <string name="chat_message_cant_open_file_in_app_dialog_open_as_text_button">Apri come testo</string>
     <string name="chat_room_sending_reply_hint">Rispondi</string>
@@ -725,9 +725,9 @@
     <string name="content_description_menu_contacts">Contatti</string>
     <string name="content_description_menu_dialer">Tastierino numerico</string>
     <string name="chat_room_last_message_sender_format">%s:</string>
-    <string name="chat_room_choose_conversation_for_message_forward">Seleziona o crea una conversazione a cui mandare questo messaggio</string>
+    <string name="chat_room_choose_conversation_for_message_forward">Seleziona o crea una conversazione in cui inoltrare il messaggio</string>
     <string name="chat_room_file_not_found">File non trovato</string>
-    <string name="chat_room_context_menu_go_to_contact">Vai a contatto</string>
+    <string name="chat_room_context_menu_go_to_contact">Vai al contatto</string>
     <string name="conference_schedule_description_title">Aggiungi una descrizione</string>
     <string name="conference_schedule_description_hint">Descrizione</string>
     <string name="call_stats_video_resolution_sent">Risoluzione video inviata:</string>
