@@ -25,6 +25,8 @@
     <color name="gray_300">#C9C9C9</color>
     <color name="gray_400">#949494</color>
     <color name="gray_500">#4E4E4E</color>
+    <color name="gray_600">#2E3030</color>
+    <color name="grey_900">#070707</color>
 
     <color name="red_danger_200">#F5CCBE</color>
     <color name="red_danger_500">#DD5F5F</color>
@@ -37,8 +39,5 @@
     <color name="blue_info_500">#4AA8FF</color>
 
     <color name="orange_away">#FFA645</color>
-    <color name="gray_offline">#E1E1E1</color>
     <color name="transparent_light_orange">#1ABF4601</color>
-    <color name="in_call_black">#070707</color>
-    <color name="in_call_gray">#2E3030</color>
 </resources>

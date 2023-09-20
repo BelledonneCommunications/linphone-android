@@ -27,7 +27,7 @@
             android:id="@+id/constraint_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/in_call_black">
+            android:background="@color/grey_900">
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/hinge_top"

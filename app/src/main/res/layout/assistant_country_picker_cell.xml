@@ -8,9 +8,19 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         style="@style/default_text_style"
+        android:id="@+id/country_flag"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/default_text_style"
         android:id="@+id/country_name"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp" />
 
     <androidx.appcompat.widget.AppCompatTextView
         style="@style/default_text_style"

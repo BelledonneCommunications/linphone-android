@@ -48,6 +48,9 @@ class CountryPickerAdapter : BaseAdapter(), Filterable {
         )
         val dialPlan: DialPlan = countries[position]
 
+        val flag = view.findViewById<TextView>(R.id.country_flag)
+        flag.text = dialPlan.flag
+
         val name = view.findViewById<TextView>(R.id.country_name)
         name.text = dialPlan.country
 

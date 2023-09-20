@@ -22,7 +22,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/in_call_all_actions_menu_height"
-        android:background="@color/in_call_black"
+        android:background="@color/grey_900"
         app:behavior_hideable="false"
         app:behavior_peekHeight="@dimen/in_call_main_actions_menu_height"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
