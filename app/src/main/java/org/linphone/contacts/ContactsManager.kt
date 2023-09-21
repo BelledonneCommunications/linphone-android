@@ -19,11 +19,17 @@
  */
 package org.linphone.contacts
 
+import android.Manifest
+import android.content.ContentUris
 import android.content.Context
+import android.content.pm.PackageManager
+import android.database.Cursor
 import android.graphics.Bitmap
 import android.net.Uri
+import android.provider.ContactsContract
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
+import androidx.core.app.ActivityCompat
 import androidx.core.app.Person
 import androidx.core.graphics.drawable.IconCompat
 import androidx.loader.app.LoaderManager
@@ -50,6 +56,8 @@ class ContactsManager @UiThread constructor(context: Context) {
     }
 
     val contactAvatar: IconCompat
+
+    private var nativeContactsLoaded = false
 
     private val listeners = arrayListOf<ContactsListener>()
 
@@ -94,20 +102,31 @@ class ContactsManager @UiThread constructor(context: Context) {
 
     @WorkerThread
     fun addListener(listener: ContactsListener) {
-        if (coreContext.isReady()) {
-            listeners.add(listener)
+        // Post again to prevent ConcurrentModificationException
+        coreContext.postOnCoreThread {
+            try {
+                listeners.add(listener)
+            } catch (cme: ConcurrentModificationException) {
+            }
         }
     }
 
     @WorkerThread
     fun removeListener(listener: ContactsListener) {
         if (coreContext.isReady()) {
-            listeners.remove(listener)
+            // Post again to prevent ConcurrentModificationException
+            coreContext.postOnCoreThread {
+                try {
+                    listeners.remove(listener)
+                } catch (cme: ConcurrentModificationException) {
+                }
+            }
         }
     }
 
     @UiThread
-    fun onContactsLoaded() {
+    fun onNativeContactsLoaded() {
+        nativeContactsLoaded = true
         coreContext.postOnCoreThread {
             notifyContactsListChanged()
         }
@@ -131,14 +150,17 @@ class ContactsManager @UiThread constructor(context: Context) {
 
     @WorkerThread
     fun findContactByAddress(address: Address): Friend? {
+        Log.i("$TAG Looking for friend with address [${address.asStringUriOnly()}]")
         val username = address.username
-        val usernameIsPhoneNumber = !username.isNullOrEmpty() && username.startsWith("+")
-        return coreContext.core.findFriend(address) ?: if (usernameIsPhoneNumber) {
-            coreContext.core.findFriendByPhoneNumber(
-                username!!
+        val found = coreContext.core.findFriend(address)
+        return found ?: if (!username.isNullOrEmpty() && username.startsWith("+")) {
+            Log.i("$TAG Looking for friend with phone number [$username]")
+            val foundUsingPhoneNumber = coreContext.core.findFriendByPhoneNumber(
+                username
             )
+            foundUsingPhoneNumber ?: findNativeContact(address)
         } else {
-            null
+            findNativeContact(address)
         }
     }
 
@@ -156,6 +178,103 @@ class ContactsManager @UiThread constructor(context: Context) {
         for (list in core.friendsLists) {
             list.removeListener(friendListListener)
         }
+    }
+
+    @WorkerThread
+    fun findNativeContact(address: Address): Friend? {
+        Log.i(
+            "$TAG Looking for native contact with address [${address.asStringUriOnly()}] or phone number [${address.username}]"
+        )
+        if (nativeContactsLoaded) {
+            Log.w(
+                "$TAG Native contacts already loaded, no need to search further, no native contact matches address [${address.asStringUriOnly()}]"
+            )
+            return null
+        }
+
+        val context = coreContext.context
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.READ_CONTACTS
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            val number: String = address.username.orEmpty()
+            val sipUri: String = address.asStringUriOnly()
+            try {
+                val selection = "${ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER} LIKE ? OR ${ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS} LIKE ?"
+                val cursor: Cursor? = context.contentResolver.query(
+                    ContactsContract.Data.CONTENT_URI,
+                    arrayOf(
+                        ContactsContract.Data.CONTACT_ID,
+                        ContactsContract.Contacts.LOOKUP_KEY,
+                        ContactsContract.Data.DISPLAY_NAME_PRIMARY
+                    ),
+                    selection,
+                    arrayOf(number, sipUri),
+                    null
+                )
+
+                if (cursor != null && cursor.moveToNext()) {
+                    val friend = coreContext.core.createFriend()
+                    friend.edit()
+
+                    do {
+                        val id: String =
+                            cursor.getString(
+                                cursor.getColumnIndexOrThrow(ContactsContract.Data.CONTACT_ID)
+                            )
+                        friend.refKey = id
+
+                        if (friend.name.isNullOrEmpty()) {
+                            val displayName: String? =
+                                cursor.getString(
+                                    cursor.getColumnIndexOrThrow(
+                                        ContactsContract.Data.DISPLAY_NAME_PRIMARY
+                                    )
+                                )
+                            friend.name = displayName
+                        }
+
+                        if (friend.photo.isNullOrEmpty()) {
+                            val picture = Uri.withAppendedPath(
+                                ContentUris.withAppendedId(
+                                    ContactsContract.Contacts.CONTENT_URI,
+                                    id.toLong()
+                                ),
+                                ContactsContract.Contacts.Photo.CONTENT_DIRECTORY
+                            ).toString()
+                            friend.photo = picture
+                        }
+
+                        if (friend.nativeUri.isNullOrEmpty()) {
+                            val lookupKey =
+                                cursor.getString(
+                                    cursor.getColumnIndexOrThrow(
+                                        ContactsContract.Contacts.LOOKUP_KEY
+                                    )
+                                )
+                            friend.nativeUri =
+                                "${ContactsContract.Contacts.CONTENT_LOOKUP_URI}/$lookupKey"
+                        }
+                    } while (cursor.moveToNext())
+
+                    friend.address = address
+                    friend.done()
+
+                    Log.i("$TAG Found native contact [${friend.name}] with address [$sipUri]")
+                    cursor.close()
+                    return friend
+                }
+
+                Log.w("$TAG Failed to find native contact with address [$sipUri]")
+                return null
+            } catch (e: IllegalArgumentException) {
+                Log.e("$TAG Failed to search for native contact with address [$sipUri]: $e")
+            }
+        } else {
+            Log.w("$TAG READ_CONTACTS permission not granted, can't check native address book")
+        }
+        return null
     }
 
     @WorkerThread

@@ -326,7 +326,7 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
 
                     fl.updateSubscriptions()
                     Log.i("$TAG Subscription(s) updated")
-                    coreContext.contactsManager.onContactsLoaded()
+                    coreContext.contactsManager.onNativeContactsLoaded()
                 }
             } catch (sde: StaleDataException) {
                 Log.e("$TAG State Data Exception: $sde")

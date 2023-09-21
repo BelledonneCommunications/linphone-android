@@ -176,7 +176,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             }
 
             val chatRoomPeerAddress = chatRoom.peerAddress.asStringUriOnly()
-            var notifiable: Notifiable? = chatNotificationsMap[chatRoomPeerAddress]
+            val notifiable: Notifiable? = chatNotificationsMap[chatRoomPeerAddress]
             if (notifiable == null) {
                 Log.i("$TAG No notification for chat room [$chatRoomPeerAddress], nothing to do")
                 return
@@ -489,7 +489,9 @@ class NotificationsManager @MainThread constructor(private val context: Context)
                 Manifest.permission.POST_NOTIFICATIONS
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            Log.i("$TAG Notifying [$id] with tag [$tag]")
+            Log.i(
+                "$TAG Notifying using ID [$id] and ${if (tag == null) "without tag" else "with tag [$tag]"}"
+            )
             try {
                 notificationManager.notify(tag, id, notification)
             } catch (iae: IllegalArgumentException) {
@@ -509,7 +511,9 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
     @WorkerThread
     fun cancelNotification(id: Int, tag: String? = null) {
-        Log.i("$TAG Canceling [$id] with tag [$tag]")
+        Log.i(
+            "$TAG Canceling notification with ID [$id] and ${if (tag == null) "without tag" else "with tag [$tag]"}"
+        )
         notificationManager.cancel(tag, id)
     }
 
