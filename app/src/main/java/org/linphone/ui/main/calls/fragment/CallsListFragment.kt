@@ -249,32 +249,36 @@ class CallsListFragment : AbstractTopBarFragment() {
         )
 
         popupView.setDeleteAllHistoryClickListener {
-            val model = ConfirmationDialogModel()
-            val dialog = DialogUtils.getRemoveAllCallLogsConfirmationDialog(
-                requireActivity(),
-                model
-            )
-
-            model.dismissEvent.observe(viewLifecycleOwner) {
-                it.consume {
-                    dialog.dismiss()
-                }
-            }
-
-            model.confirmRemovalEvent.observe(viewLifecycleOwner) {
-                it.consume {
-                    Log.w("$TAG Removing all call entries from database")
-                    listViewModel.removeAllCallLogs()
-                    dialog.dismiss()
-                }
-            }
-
-            dialog.show()
+            showDeleteConfirmationDialog()
             popupWindow.dismiss()
         }
 
         // Elevation is for showing a shadow around the popup
         popupWindow.elevation = 20f
         popupWindow.showAsDropDown(binding.menu, 0, 0, Gravity.BOTTOM)
+    }
+
+    private fun showDeleteConfirmationDialog() {
+        val model = ConfirmationDialogModel()
+        val dialog = DialogUtils.getRemoveAllCallLogsConfirmationDialog(
+            requireActivity(),
+            model
+        )
+
+        model.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        model.confirmRemovalEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.w("$TAG Removing all call entries from database")
+                listViewModel.removeAllCallLogs()
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
     }
 }

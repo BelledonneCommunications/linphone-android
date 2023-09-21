@@ -93,6 +93,10 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Pair<String, String>>>()
     }
 
+    val contactRemovedEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     private val listener = object : ContactNumberOrAddressClickListener {
         @UiThread
         override fun onClicked(model: ContactNumberOrAddressModel) {
@@ -274,6 +278,7 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                 Log.w("$TAG Deleting friend [$friend]")
                 friend.remove()
                 coreContext.contactsManager.notifyContactsListChanged()
+                contactRemovedEvent.postValue(Event(true))
             }
         }
     }

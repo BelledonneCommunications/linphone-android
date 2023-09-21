@@ -39,9 +39,11 @@ import org.linphone.databinding.DialogCancelContactChangesBinding
 import org.linphone.databinding.DialogConfirmZrtpSasBinding
 import org.linphone.databinding.DialogContactConfirmTrustCallBinding
 import org.linphone.databinding.DialogContactTrustProcessBinding
+import org.linphone.databinding.DialogDeleteContactBinding
 import org.linphone.databinding.DialogPickNumberOrAddressBinding
 import org.linphone.databinding.DialogRemoveAccountBinding
 import org.linphone.databinding.DialogRemoveAllCallLogsBinding
+import org.linphone.databinding.DialogRemoveCallLogsBinding
 import org.linphone.ui.assistant.model.AcceptConditionsAndPolicyDialogModel
 import org.linphone.ui.assistant.model.ConfirmPhoneNumberDialogModel
 import org.linphone.ui.main.calls.model.ConfirmationDialogModel
@@ -174,6 +176,43 @@ class DialogUtils {
             }
 
             return dialog
+        }
+
+        @UiThread
+        fun getDeleteContactConfirmationDialog(
+            context: Context,
+            viewModel: ConfirmationDialogModel,
+            contactName: String
+        ): Dialog {
+            val binding: DialogDeleteContactBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.dialog_delete_contact,
+                null,
+                false
+            )
+            binding.viewModel = viewModel
+            binding.title.text = context.getString(
+                R.string.dialog_contact_delete_title,
+                contactName
+            )
+
+            return getDialog(context, binding)
+        }
+
+        @UiThread
+        fun getRemoveCallLogsConfirmationDialog(
+            context: Context,
+            viewModel: ConfirmationDialogModel
+        ): Dialog {
+            val binding: DialogRemoveCallLogsBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.dialog_remove_call_logs,
+                null,
+                false
+            )
+            binding.viewModel = viewModel
+
+            return getDialog(context, binding)
         }
 
         @UiThread

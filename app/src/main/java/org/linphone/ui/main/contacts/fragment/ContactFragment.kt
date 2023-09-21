@@ -41,6 +41,7 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactFragmentBinding
 import org.linphone.ui.main.MainActivity
+import org.linphone.ui.main.calls.model.ConfirmationDialogModel
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
 import org.linphone.ui.main.contacts.model.TrustCallDialogModel
 import org.linphone.ui.main.contacts.viewmodel.ContactViewModel
@@ -100,9 +101,7 @@ class ContactFragment : GenericFragment() {
         }
 
         binding.setDeleteClickListener {
-            viewModel.deleteContact()
-            goBack()
-            // TODO: show toast ? show confirmation dialog ?
+            showDeleteConfirmationDialog()
         }
 
         sharedViewModel.isSlidingPaneSlideable.observe(viewLifecycleOwner) { slideable ->
@@ -199,6 +198,15 @@ class ContactFragment : GenericFragment() {
             }
         }
 
+        viewModel.contactRemovedEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.w(
+                    "$TAG Contact [${viewModel.contact.value?.name?.value}] has been deleted"
+                )
+                goBack()
+            }
+        }
+
         // TODO: remove later
         binding.chat.isEnabled = false
     }
@@ -282,6 +290,33 @@ class ContactFragment : GenericFragment() {
                     // TODO: never display this anymore
                 }
                 // TODO: start call
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
+    }
+
+    private fun showDeleteConfirmationDialog() {
+        val model = ConfirmationDialogModel()
+        val dialog = DialogUtils.getDeleteContactConfirmationDialog(
+            requireActivity(),
+            model,
+            viewModel.contact.value?.name?.value ?: ""
+        )
+
+        model.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        model.confirmRemovalEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.w(
+                    "$TAG Deleting contact [${viewModel.contact.value?.name?.value}]"
+                )
+                viewModel.deleteContact()
                 dialog.dismiss()
             }
         }

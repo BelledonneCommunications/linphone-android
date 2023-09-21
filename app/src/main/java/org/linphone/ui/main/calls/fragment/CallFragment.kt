@@ -41,8 +41,10 @@ import org.linphone.databinding.CallFragmentBinding
 import org.linphone.databinding.CallPopupMenuBinding
 import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.calls.adapter.CallHistoryListAdapter
+import org.linphone.ui.main.calls.model.ConfirmationDialogModel
 import org.linphone.ui.main.calls.viewmodel.CallLogViewModel
 import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 
 @UiThread
@@ -175,7 +177,7 @@ class CallFragment : GenericFragment() {
         }
 
         popupView.setDeleteAllHistoryClickListener {
-            viewModel.deleteHistory()
+            showDeleteConfirmationDialog()
             popupWindow.dismiss()
         }
 
@@ -187,5 +189,31 @@ class CallFragment : GenericFragment() {
         // Elevation is for showing a shadow around the popup
         popupWindow.elevation = 20f
         popupWindow.showAsDropDown(binding.menu, 0, 0, Gravity.BOTTOM)
+    }
+
+    private fun showDeleteConfirmationDialog() {
+        val model = ConfirmationDialogModel()
+        val dialog = DialogUtils.getRemoveCallLogsConfirmationDialog(
+            requireActivity(),
+            model
+        )
+
+        model.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        model.confirmRemovalEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.w(
+                    "$TAG Removing call entries with [${viewModel.callLogModel.value?.address?.asStringUriOnly()}] from database"
+                )
+                viewModel.deleteHistory()
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
     }
 }
