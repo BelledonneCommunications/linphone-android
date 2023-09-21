@@ -181,6 +181,7 @@
 
                 <ImageView
                     android:id="@+id/chat"
+                    android:visibility="@{viewModel.chatDisabled ? View.GONE : View.VISIBLE}"
                     android:layout_width="56dp"
                     android:layout_height="56dp"
                     android:layout_marginTop="20dp"
@@ -196,6 +197,7 @@
                     style="@style/default_text_style"
                     android:onClick="@{() -> viewModel.sendMessage()}"
                     android:id="@+id/chat_label"
+                    android:visibility="@{viewModel.chatDisabled ? View.GONE : View.VISIBLE}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"

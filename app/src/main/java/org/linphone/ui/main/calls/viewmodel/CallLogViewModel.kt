@@ -4,6 +4,7 @@ import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.Address
 import org.linphone.core.Call
 import org.linphone.ui.main.calls.model.CallLogHistoryModel
@@ -18,11 +19,19 @@ class CallLogViewModel @UiThread constructor() : ViewModel() {
 
     val historyCallLogs = MutableLiveData<ArrayList<CallLogHistoryModel>>()
 
+    val chatDisabled = MutableLiveData<Boolean>()
+
     val historyDeletedEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
 
     private lateinit var address: Address
+
+    init {
+        coreContext.postOnCoreThread {
+            chatDisabled.postValue(corePreferences.disableChat)
+        }
+    }
 
     @UiThread
     fun findCallLogByCallId(callId: String) {

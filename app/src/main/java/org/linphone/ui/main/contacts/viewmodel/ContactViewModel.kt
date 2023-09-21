@@ -28,6 +28,7 @@ import java.io.File
 import java.util.Locale
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.contacts.ContactsManager
 import org.linphone.contacts.getListOfSipAddressesAndPhoneNumbers
 import org.linphone.core.Friend
@@ -64,6 +65,8 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
     val expandDevicesTrust = MutableLiveData<Boolean>()
 
     val contactFoundEvent = MutableLiveData<Event<Boolean>>()
+
+    val chatDisabled = MutableLiveData<Boolean>()
 
     val showLongPressMenuForNumberOrAddressEvent: MutableLiveData<Event<ContactNumberOrAddressModel>> by lazy {
         MutableLiveData<Event<ContactNumberOrAddressModel>>()
@@ -143,6 +146,7 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
         expandDevicesTrust.value = false // TODO FIXME: set it to true when it will work for real
 
         coreContext.postOnCoreThread {
+            chatDisabled.postValue(corePreferences.disableChat)
             coreContext.contactsManager.addListener(contactsListener)
         }
     }
