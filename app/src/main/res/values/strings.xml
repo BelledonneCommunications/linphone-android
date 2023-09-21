@@ -268,6 +268,7 @@
 
     <string name="call_outgoing">Outgoing call</string>
     <string name="call_incoming">Incoming call</string>
+    <string name="call_incoming_for_account">Incoming call for %s</string>
 
     <string name="operation_in_progress_overlay">Operation in progress, please wait</string>
 

@@ -154,6 +154,7 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
         }
     }
 
+    @UiThread
     override fun onCleared() {
         super.onCleared()
 

@@ -28,6 +28,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
 import org.linphone.core.AudioDevice
 import org.linphone.core.Call
 import org.linphone.core.CallListenerStub
@@ -36,6 +37,7 @@ import org.linphone.core.MediaEncryption
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.voip.model.AudioDeviceModel
+import org.linphone.utils.AppUtils
 import org.linphone.utils.AudioRouteUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
@@ -70,6 +72,10 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
     val pipMode = MutableLiveData<Boolean>()
 
     val halfOpenedFolded = MutableLiveData<Boolean>()
+
+    val incomingCallTitle: MutableLiveData<String> by lazy {
+        MutableLiveData<String>()
+    }
 
     // To synchronize chronometers in UI
     val callDuration = MutableLiveData<Int>()
@@ -364,6 +370,20 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
     @WorkerThread
     private fun configureCall(call: Call) {
         call.addListener(callListener)
+
+        if (call.dir == Call.Dir.Incoming) {
+            if (call.core.accountList.size > 1) {
+                val displayName = LinphoneUtils.getDisplayName(call.toAddress)
+                incomingCallTitle.postValue(
+                    AppUtils.getFormattedString(
+                        R.string.call_incoming_for_account,
+                        displayName
+                    )
+                )
+            } else {
+                incomingCallTitle.postValue(AppUtils.getString(R.string.call_incoming))
+            }
+        }
 
         if (LinphoneUtils.isCallOutgoing(call.state)) {
             isVideoEnabled.postValue(call.params.isVideoEnabled)
