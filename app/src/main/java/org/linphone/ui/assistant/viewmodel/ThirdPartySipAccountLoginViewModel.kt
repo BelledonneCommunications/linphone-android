@@ -137,7 +137,6 @@ class ThirdPartySipAccountLoginViewModel @UiThread constructor() : ViewModel() {
         availableTransports.add(UDP)
         availableTransports.add(TCP)
         availableTransports.add(TLS)
-        transport.value = TLS
     }
 
     @UiThread
