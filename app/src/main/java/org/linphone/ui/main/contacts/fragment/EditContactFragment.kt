@@ -24,6 +24,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
@@ -61,6 +62,12 @@ class EditContactFragment : GenericFragment() {
 
     private val args: EditContactFragmentArgs by navArgs()
 
+    private val backPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            showAbortConfirmationDialog()
+        }
+    }
+
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
             Log.i("$TAG Picture picked [$uri]")
@@ -92,6 +99,11 @@ class EditContactFragment : GenericFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         postponeEnterTransition()
+
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            backPressedCallback
+        )
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
@@ -135,6 +147,8 @@ class EditContactFragment : GenericFragment() {
                         getString(R.string.contact_editor_saved_changes_toast),
                         R.drawable.info
                     )
+
+                    backPressedCallback.isEnabled = false
                     findNavController().popBackStack()
                 } else {
                     (requireActivity() as MainActivity).showRedToast(
@@ -177,6 +191,11 @@ class EditContactFragment : GenericFragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        backPressedCallback.isEnabled = true
+    }
+
     private fun addCell(model: NewOrEditNumberOrAddressModel) {
         val inflater = requireContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val parent = if (model.isSip) binding.sipAddresses else binding.phoneNumbers
@@ -204,5 +223,29 @@ class EditContactFragment : GenericFragment() {
 
     private fun pickImage() {
         pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+    }
+
+    private fun showAbortConfirmationDialog() {
+        val model = ConfirmationDialogModel()
+        val dialog = DialogUtils.getCancelContactChangesConfirmationDialog(
+            requireActivity(),
+            model
+        )
+
+        model.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        model.confirmRemovalEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                backPressedCallback.isEnabled = false
+                findNavController().popBackStack()
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
     }
 }
