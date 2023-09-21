@@ -92,31 +92,34 @@ class AccountProfileFragment : GenericFragment() {
             // TODO: account settings feature
         }
 
+        binding.setDeleteAccountClickListener {
+            val model = ConfirmationDialogModel()
+            val dialog = DialogUtils.getConfirmAccountRemovalDialog(
+                requireActivity(),
+                model,
+                viewModel.displayName.value.orEmpty()
+            )
+
+            model.dismissEvent.observe(viewLifecycleOwner) {
+                it.consume {
+                    dialog.dismiss()
+                }
+            }
+
+            model.confirmRemovalEvent.observe(viewLifecycleOwner) {
+                it.consume {
+                    viewModel.deleteAccount()
+                    dialog.dismiss()
+                }
+            }
+
+            dialog.show()
+        }
+
         viewModel.accountRemovedEvent.observe(viewLifecycleOwner) {
             it.consume {
-                val model = ConfirmationDialogModel()
-                val dialog = DialogUtils.getConfirmAccountRemovalDialog(
-                    requireActivity(),
-                    model,
-                    viewModel.displayName.value.orEmpty()
-                )
-
-                model.dismissEvent.observe(viewLifecycleOwner) {
-                    it.consume {
-                        dialog.dismiss()
-                    }
-                }
-
-                model.confirmRemovalEvent.observe(viewLifecycleOwner) {
-                    it.consume {
-                        Log.i("$TAG Account has been removed, leaving profile")
-                        findNavController().popBackStack()
-
-                        dialog.dismiss()
-                    }
-                }
-
-                dialog.show()
+                Log.i("$TAG Account has been removed, leaving profile")
+                findNavController().popBackStack()
             }
         }
 

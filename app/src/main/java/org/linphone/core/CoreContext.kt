@@ -56,6 +56,14 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
 
     val telecomManager = TelecomManager(context)
 
+    @get:AnyThread
+    val sdkVersion: String by lazy {
+        val sdkVersion = context.getString(R.string.linphone_sdk_version)
+        val sdkBranch = context.getString(R.string.linphone_sdk_branch)
+        val sdkBuildType = org.linphone.core.BuildConfig.BUILD_TYPE
+        "$sdkVersion ($sdkBranch, $sdkBuildType)"
+    }
+
     private val activityMonitor = ActivityMonitor()
 
     private val mainThread = Handler(Looper.getMainLooper())

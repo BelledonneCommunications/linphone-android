@@ -26,6 +26,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.core.view.doOnPreDraw
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -87,6 +88,14 @@ class StartCallFragment : GenericFragment() {
     ): View {
         binding = CallStartFragmentBinding.inflate(layoutInflater)
         return binding.root
+    }
+
+    override fun goBack(): Boolean {
+        val standardBottomSheetBehavior = BottomSheetBehavior.from(binding.numpadLayout.root)
+        standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+
+        findNavController().popBackStack()
+        return true
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

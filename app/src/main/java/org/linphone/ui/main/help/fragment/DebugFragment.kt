@@ -66,7 +66,7 @@ class DebugFragment : GenericFragment() {
         viewModel.debugLogsCleanedEvent.observe(viewLifecycleOwner) {
             it.consume {
                 (requireActivity() as MainActivity).showGreenToast(
-                    getString(R.string.help_advanced_debug_logs_cleaned_toast_message),
+                    getString(R.string.help_troubleshooting_debug_logs_cleaned_toast_message),
                     R.drawable.info
                 )
             }
@@ -81,7 +81,7 @@ class DebugFragment : GenericFragment() {
 
                 (requireActivity() as MainActivity).showGreenToast(
                     getString(
-                        R.string.help_advanced_debug_logs_url_copied_into_clipboard_toast_message
+                        R.string.help_troubleshooting_debug_logs_url_copied_into_clipboard_toast_message
                     ),
                     R.drawable.info
                 )
@@ -93,7 +93,7 @@ class DebugFragment : GenericFragment() {
         viewModel.uploadDebugLogsErrorEvent.observe(viewLifecycleOwner) {
             it.consume {
                 (requireActivity() as MainActivity).showRedToast(
-                    getString(R.string.help_advanced_debug_logs_upload_error_toast_message),
+                    getString(R.string.help_troubleshooting_debug_logs_upload_error_toast_message),
                     R.drawable.warning_circle
                 )
             }

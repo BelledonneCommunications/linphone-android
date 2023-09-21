@@ -41,6 +41,8 @@ class HelpViewModel @UiThread constructor() : ViewModel() {
 
     val version = MutableLiveData<String>()
 
+    val sdkVersion = MutableLiveData<String>()
+
     val debugModeEnabled = MutableLiveData<Boolean>()
 
     val newVersionAvailableEvent: MutableLiveData<Event<String>> by lazy {
@@ -111,6 +113,7 @@ class HelpViewModel @UiThread constructor() : ViewModel() {
     init {
         val currentVersion = BuildConfig.VERSION_NAME
         version.value = currentVersion
+        sdkVersion.value = coreContext.sdkVersion
 
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)

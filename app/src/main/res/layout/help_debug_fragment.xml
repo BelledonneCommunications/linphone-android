@@ -38,7 +38,7 @@
             android:layout_height="@dimen/top_bar_height"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:text="@string/help_debug_title"
+            android:text="@string/help_troubleshooting_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/back"
             app:layout_constraintTop_toTopOf="parent"/>
@@ -51,7 +51,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginTop="24dp"
-            android:text="@string/help_advanced_debug_title"
+            android:text="@string/help_troubleshooting_debug_title"
             app:layout_constraintTop_toBottomOf="@id/title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/debug_mode_switch"/>
@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:text="@string/help_advanced_debug_subtitle"
+            android:text="@string/help_troubleshooting_debug_subtitle"
             android:textSize="14sp"
             android:textColor="@color/gray_main2_600"
             app:layout_constraintTop_toBottomOf="@id/debug_title"
@@ -100,7 +100,7 @@
             android:paddingTop="6dp"
             android:paddingBottom="6dp"
             android:gravity="center"
-            android:text="@string/help_advanced_clean_logs"
+            android:text="@string/help_troubleshooting_clean_logs"
             android:maxLines="1"
             android:ellipsize="end"
             app:layout_constraintStart_toStartOf="parent"
@@ -122,11 +122,50 @@
             android:paddingTop="6dp"
             android:paddingBottom="6dp"
             android:gravity="center"
-            android:text="@string/help_advanced_share_logs"
+            android:text="@string/help_troubleshooting_share_logs"
             android:maxLines="1"
             android:ellipsize="end"
             app:layout_constraintStart_toEndOf="@id/clean_logs"
             app:layout_constraintTop_toBottomOf="@id/debug_subtitle"/>
+
+        <ImageView
+            android:id="@+id/version_icon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/info"
+            app:tint="@color/orange_main_500"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/version_title"
+            app:layout_constraintTop_toTopOf="@id/version_title"
+            app:layout_constraintBottom_toBottomOf="@id/version_subtitle"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/header_style"
+            android:id="@+id/version_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/help_troubleshooting_sdk_version_title"
+            app:layout_constraintTop_toBottomOf="@id/send_logs"
+            app:layout_constraintStart_toEndOf="@id/version_icon"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/version_subtitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="@{viewModel.sdkVersion, default=`5.3.0`}"
+            android:textSize="14sp"
+            android:textColor="@color/gray_main2_600"
+            app:layout_constraintTop_toBottomOf="@id/version_title"
+            app:layout_constraintStart_toEndOf="@id/version_icon"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

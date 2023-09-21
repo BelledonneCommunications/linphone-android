@@ -171,7 +171,7 @@ class AppUtils {
                 activity.startActivity(
                     Intent.createChooser(
                         intent,
-                        activity.getString(R.string.help_advanced_share_logs_dialog_title)
+                        activity.getString(R.string.help_troubleshooting_share_logs_dialog_title)
                     )
                 )
             } catch (ex: ActivityNotFoundException) {
