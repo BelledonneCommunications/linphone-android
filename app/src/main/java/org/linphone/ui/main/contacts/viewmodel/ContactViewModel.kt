@@ -68,6 +68,8 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
 
     val chatDisabled = MutableLiveData<Boolean>()
 
+    val videoCallDisabled = MutableLiveData<Boolean>()
+
     val showLongPressMenuForNumberOrAddressEvent: MutableLiveData<Event<ContactNumberOrAddressModel>> by lazy {
         MutableLiveData<Event<ContactNumberOrAddressModel>>()
     }
@@ -145,8 +147,9 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
         expandNumbersAndAddresses.value = true
         expandDevicesTrust.value = false // TODO FIXME: set it to true when it will work for real
 
-        coreContext.postOnCoreThread {
+        coreContext.postOnCoreThread { core ->
             chatDisabled.postValue(corePreferences.disableChat)
+            videoCallDisabled.postValue(!core.isVideoEnabled)
             coreContext.contactsManager.addListener(contactsListener)
         }
     }

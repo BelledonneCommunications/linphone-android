@@ -21,6 +21,8 @@ class CallLogViewModel @UiThread constructor() : ViewModel() {
 
     val chatDisabled = MutableLiveData<Boolean>()
 
+    val videoCallDisabled = MutableLiveData<Boolean>()
+
     val historyDeletedEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -28,8 +30,9 @@ class CallLogViewModel @UiThread constructor() : ViewModel() {
     private lateinit var address: Address
 
     init {
-        coreContext.postOnCoreThread {
+        coreContext.postOnCoreThread { core ->
             chatDisabled.postValue(corePreferences.disableChat)
+            videoCallDisabled.postValue(!core.isVideoEnabled)
         }
     }
 

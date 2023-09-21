@@ -210,6 +210,7 @@
                 <ImageView
                     android:onClick="@{() -> viewModel.startVideoCall()}"
                     android:id="@+id/video_call"
+                    android:visibility="@{viewModel.videoCallDisabled ? View.GONE : View.VISIBLE}"
                     android:layout_width="56dp"
                     android:layout_height="56dp"
                     android:layout_marginTop="20dp"
@@ -225,6 +226,7 @@
                     style="@style/default_text_style"
                     android:onClick="@{() -> viewModel.startVideoCall()}"
                     android:id="@+id/video_call_label"
+                    android:visibility="@{viewModel.videoCallDisabled ? View.GONE : View.VISIBLE}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
