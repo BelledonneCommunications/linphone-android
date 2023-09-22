@@ -17,6 +17,9 @@
         <variable
             name="viewModel"
             type="org.linphone.ui.call.viewmodel.CurrentCallViewModel" />
+        <variable
+            name="callsViewModel"
+            type="org.linphone.ui.call.viewmodel.CallsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -68,7 +71,7 @@
             app:layout_constraintTop_toBottomOf="@id/main_actions" />
 
         <ImageView
-            android:id="@+id/history_list"
+            android:id="@+id/calls_list"
             android:onClick="@{callsListClickListener}"
             android:layout_width="0dp"
             android:layout_height="@dimen/call_button_size"
@@ -81,6 +84,22 @@
             app:layout_constraintStart_toStartOf="@id/calls_list_label"
             app:layout_constraintEnd_toEndOf="@id/calls_list_label"
             app:layout_constraintTop_toBottomOf="@id/main_actions" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/missed_calls"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="50dp"
+            android:gravity="center"
+            android:background="@drawable/shape_orange_round"
+            android:text="@{String.valueOf(callsViewModel.callsCount), default=`1`}"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            android:visibility="@{callsViewModel.callsCount > 1 ? View.VISIBLE : View.GONE}"
+            app:layout_constraintTop_toTopOf="@id/calls_list"
+            app:layout_constraintStart_toStartOf="@id/calls_list"
+            app:layout_constraintEnd_toEndOf="@id/calls_list"/>
 
         <ImageView
             android:id="@+id/dialer"
@@ -135,8 +154,8 @@
             app:tint="@color/white"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintTop_toBottomOf="@id/calls_list_label"
-            app:layout_constraintStart_toStartOf="@id/history_list"
-            app:layout_constraintEnd_toEndOf="@id/history_list" />
+            app:layout_constraintStart_toStartOf="@id/calls_list"
+            app:layout_constraintEnd_toEndOf="@id/calls_list" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/in_call_extra_action_label_style"
@@ -167,7 +186,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/call_action_go_to_calls_list"
-            app:layout_constraintTop_toBottomOf="@id/history_list"
+            app:layout_constraintTop_toBottomOf="@id/calls_list"
             app:layout_constraintStart_toEndOf="@id/new_call_label"
             app:layout_constraintEnd_toStartOf="@id/dialer_label" />
 

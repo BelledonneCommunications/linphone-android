@@ -19,15 +19,23 @@
  */
 package org.linphone.ui.call.model
 
+import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Call
 import org.linphone.core.CallListenerStub
+import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.utils.LinphoneUtils
 
 class CallModel @WorkerThread constructor(val call: Call) {
+    companion object {
+        private const val TAG = "[Call Model]"
+    }
+
+    val id = call.callLog.callId
+
     val displayName = MutableLiveData<String>()
 
     val state = MutableLiveData<String>()
@@ -60,5 +68,27 @@ class CallModel @WorkerThread constructor(val call: Call) {
     @WorkerThread
     fun destroy() {
         call.removeListener(callListener)
+    }
+
+    @WorkerThread
+    fun togglePauseResume() {
+        when (call.state) {
+            Call.State.Paused -> {
+                Log.i("$TAG Trying to resume call [${call.remoteAddress.asStringUriOnly()}]")
+                call.resume()
+            }
+            else -> {
+                Log.i("$TAG Trying to resume call [${call.remoteAddress.asStringUriOnly()}]")
+                call.pause()
+            }
+        }
+    }
+
+    @UiThread
+    fun hangUp() {
+        coreContext.postOnCoreThread {
+            Log.i("$TAG Terminating call [${call.remoteAddress.asStringUriOnly()}]")
+            call.terminate()
+        }
     }
 }

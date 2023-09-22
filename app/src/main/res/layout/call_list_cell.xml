@@ -6,26 +6,24 @@
     <data>
         <import type="android.view.View" />
         <variable
+            name="onClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="onLongClickListener"
+            type="View.OnLongClickListener" />
+        <variable
             name="model"
             type="org.linphone.ui.call.model.CallModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:onClick="@{onClickListener}"
+        android:onLongClick="@{onLongClickListener}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp">
-
-        <ImageView
-            android:id="@+id/background"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="5dp"
-            android:src="@drawable/primary_cell_background"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/primary_cell_background">
 
         <io.getstream.avatarview.AvatarView
             android:id="@+id/avatar"

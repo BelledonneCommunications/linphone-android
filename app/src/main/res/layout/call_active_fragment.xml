@@ -17,6 +17,9 @@
         <variable
             name="viewModel"
             type="org.linphone.ui.call.viewmodel.CurrentCallViewModel" />
+        <variable
+            name="callsViewModel"
+            type="org.linphone.ui.call.viewmodel.CallsViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -215,6 +218,7 @@
             android:visibility="@{viewModel.fullScreenMode || viewModel.pipMode ? View.INVISIBLE : View.VISIBLE}"
             layout="@layout/call_extra_actions"
             bind:viewModel="@{viewModel}"
+            bind:callsViewModel="@{callsViewModel}"
             bind:transferClickListener="@{transferClickListener}"
             bind:newCallClickListener="@{newCallClickListener}"
             bind:callsListClickListener="@{callsListClickListener}"/>

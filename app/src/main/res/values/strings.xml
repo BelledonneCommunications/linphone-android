@@ -282,6 +282,7 @@
     <string name="call_action_pause_call">Pause</string>
     <string name="call_action_resume_call">Pause</string>
     <string name="call_action_record_call">Record</string>
+    <string name="call_action_hang_up">Hang up</string>
     <string name="call_state_outgoing_progress">In progress</string>
     <string name="call_state_outgoing_ringing">Ringing</string>
     <string name="call_state_incoming_received">Incoming</string>

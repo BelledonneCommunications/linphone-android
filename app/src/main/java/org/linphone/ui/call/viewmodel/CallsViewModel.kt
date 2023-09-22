@@ -37,12 +37,15 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
     companion object {
         private const val TAG = "[Calls ViewModel]"
 
+        // Keys are hardcoded in SDK
         private const val ALERT_NETWORK_TYPE_KEY = "network-type"
         private const val ALERT_NETWORK_TYPE_WIFI = "wifi"
         private const val ALERT_NETWORK_TYPE_CELLULAR = "mobile"
     }
 
     val calls = MutableLiveData<ArrayList<CallModel>>()
+
+    val callsCount = MutableLiveData<Int>()
 
     val goToActiveCallEvent = MutableLiveData<Event<Boolean>>()
 
@@ -111,6 +114,7 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
                     val model = CallModel(call)
                     list.add(model)
                     calls.postValue(list)
+                    callsCount.postValue(list.size)
                 }
             } else {
                 if (state == Call.State.End || state == Call.State.Released || state == Call.State.Error) {
@@ -176,6 +180,7 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
                     list.add(model)
                 }
                 calls.postValue(list)
+                callsCount.postValue(list.size)
 
                 val currentCall = core.currentCall ?: core.calls.first()
 
@@ -204,6 +209,7 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
 
         coreContext.postOnCoreThread { core ->
             calls.value.orEmpty().forEach(CallModel::destroy)
+            callsCount.postValue(0)
             core.removeListener(coreListener)
         }
     }

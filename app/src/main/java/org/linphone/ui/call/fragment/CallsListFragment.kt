@@ -23,10 +23,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navGraphViewModels
-import org.linphone.R
+import androidx.recyclerview.widget.LinearLayoutManager
+import org.linphone.core.tools.Log
 import org.linphone.databinding.CallsListFragmentBinding
+import org.linphone.ui.call.adapter.CallsListAdapter
 import org.linphone.ui.call.viewmodel.CallsViewModel
 
 class CallsListFragment : GenericCallFragment() {
@@ -36,9 +38,9 @@ class CallsListFragment : GenericCallFragment() {
 
     private lateinit var binding: CallsListFragmentBinding
 
-    private val viewModel: CallsViewModel by navGraphViewModels(
-        R.id.call_nav_graph
-    )
+    private lateinit var viewModel: CallsViewModel
+
+    private lateinit var adapter: CallsListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,11 +54,43 @@ class CallsListFragment : GenericCallFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel = requireActivity().run {
+            ViewModelProvider(this)[CallsViewModel::class.java]
+        }
+
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
+        adapter = CallsListAdapter(viewLifecycleOwner)
+        binding.callsList.setHasFixedSize(true)
+        binding.callsList.adapter = adapter
+
+        val layoutManager = LinearLayoutManager(requireContext())
+        binding.callsList.layoutManager = layoutManager
+
+        adapter.callLongClickedEvent.observe(viewLifecycleOwner) {
+            it.consume { model ->
+                val modalBottomSheet = CallMenuDialogFragment(model) {
+                    // onDismiss
+                    adapter.resetSelection()
+                }
+                modalBottomSheet.show(parentFragmentManager, CallMenuDialogFragment.TAG)
+            }
+        }
+
+        adapter.callClickedEvent.observe(viewLifecycleOwner) {
+            it.consume { model ->
+                model.togglePauseResume()
+            }
+        }
+
         binding.setBackClickListener {
             findNavController().popBackStack()
+        }
+
+        viewModel.calls.observe(viewLifecycleOwner) {
+            Log.i("$TAG Calls list updated with [${it.size}] items")
+            adapter.submitList(it)
         }
     }
 }

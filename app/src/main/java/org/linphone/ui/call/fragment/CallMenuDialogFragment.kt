@@ -17,28 +17,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.main.history.fragment
+package org.linphone.ui.call.fragment
 
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.UiThread
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import org.linphone.databinding.HistoryListLongPressMenuBinding
+import org.linphone.databinding.CallsListLongPressMenuBinding
+import org.linphone.ui.call.model.CallModel
 
-@UiThread
-class HistoryMenuDialogFragment(
-    private val contactExists: Boolean,
-    private val onDismiss: (() -> Unit)? = null,
-    private val onAddToContact: (() -> Unit)? = null,
-    private val onGoToContact: (() -> Unit)? = null,
-    private val onCopyNumberOrAddressToClipboard: (() -> Unit)? = null,
-    private val onDeleteCallLog: (() -> Unit)? = null
+class CallMenuDialogFragment(
+    private val callModel: CallModel,
+    private val onDismiss: (() -> Unit)? = null
 ) : BottomSheetDialogFragment() {
     companion object {
-        const val TAG = "HistoryMenuDialogFragment"
+        const val TAG = "CallMenuDialogFragment"
     }
 
     override fun onCancel(dialog: DialogInterface) {
@@ -56,26 +51,10 @@ class HistoryMenuDialogFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view = HistoryListLongPressMenuBinding.inflate(layoutInflater)
-        view.contactExists = contactExists
+        val view = CallsListLongPressMenuBinding.inflate(layoutInflater)
 
-        view.setCopyNumberClickListener {
-            onCopyNumberOrAddressToClipboard?.invoke()
-            dismiss()
-        }
-
-        view.setDeleteClickListener {
-            onDeleteCallLog?.invoke()
-            dismiss()
-        }
-
-        view.setAddToContactsListener {
-            onAddToContact?.invoke()
-            dismiss()
-        }
-
-        view.setGoToContactClickListener {
-            onGoToContact?.invoke()
+        view.setHangUpClickListener {
+            callModel.hangUp()
             dismiss()
         }
 

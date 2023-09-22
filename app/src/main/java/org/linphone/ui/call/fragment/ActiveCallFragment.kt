@@ -40,6 +40,7 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.CallActiveFragmentBinding
 import org.linphone.ui.call.CallActivity
 import org.linphone.ui.call.model.ZrtpSasConfirmationDialogModel
+import org.linphone.ui.call.viewmodel.CallsViewModel
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
 import org.linphone.ui.call.viewmodel.SharedCallViewModel
 import org.linphone.utils.AppUtils
@@ -55,6 +56,8 @@ class ActiveCallFragment : GenericCallFragment() {
     private lateinit var binding: CallActiveFragmentBinding
 
     private lateinit var callViewModel: CurrentCallViewModel
+
+    private lateinit var callsViewModel: CallsViewModel
 
     // For moving video preview purposes
 
@@ -107,8 +110,13 @@ class ActiveCallFragment : GenericCallFragment() {
             ViewModelProvider(this)[CurrentCallViewModel::class.java]
         }
 
+        callsViewModel = requireActivity().run {
+            ViewModelProvider(this)[CallsViewModel::class.java]
+        }
+
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = callViewModel
+        binding.callsViewModel = callsViewModel
 
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomBar.root)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED

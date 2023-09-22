@@ -12,7 +12,7 @@
         android:layout_height="match_parent">
 
         <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/history_list"
+            android:id="@+id/history"
             android:name="org.linphone.ui.main.history.fragment.HistoryListFragment"
             android:layout_width="@dimen/sliding_pane_left_fragment_width"
             android:layout_height="match_parent"
