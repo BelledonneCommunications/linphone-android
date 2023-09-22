@@ -325,7 +325,7 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
 
     @WorkerThread
     fun terminateCall(call: Call) {
-        Log.i("$TAG Terminating call $call")
+        Log.i("$TAG Terminating call [${call.remoteAddress.asStringUriOnly()}]")
         call.terminate()
     }
 

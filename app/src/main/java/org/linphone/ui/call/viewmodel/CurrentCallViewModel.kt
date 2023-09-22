@@ -150,7 +150,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
             if (currentCall != null) {
                 call = currentCall
-                Log.i("$TAG Found call [$call]")
+                Log.i("$TAG Found call [${call.remoteAddress.asStringUriOnly()}]")
                 configureCall(call)
             } else {
                 Log.e("$TAG Failed to find call!")
@@ -185,7 +185,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
     fun hangUp() {
         coreContext.postOnCoreThread {
             if (::call.isInitialized) {
-                Log.i("$TAG Terminating call [$call]")
+                Log.i("$TAG Terminating call [${call.remoteAddress.asStringUriOnly()}]")
                 call.terminate()
             }
         }
@@ -419,6 +419,13 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         }
 
         callDuration.postValue(call.duration)
+    }
+
+    @WorkerThread
+    fun updateCallDuration() {
+        if (::call.isInitialized) {
+            callDuration.postValue(call.duration)
+        }
     }
 
     private fun updateOutputAudioDevice(audioDevice: AudioDevice?) {

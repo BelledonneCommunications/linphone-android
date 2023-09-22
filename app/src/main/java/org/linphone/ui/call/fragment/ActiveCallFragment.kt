@@ -219,6 +219,9 @@ class ActiveCallFragment : GenericCallFragment() {
             core.nativeVideoWindowId = binding.remoteVideoSurface
             coreContext.core.nativePreviewWindowId = binding.localPreviewVideoSurface
             binding.localPreviewVideoSurface.setOnTouchListener(previewTouchListener)
+
+            // Need to be done manually
+            callViewModel.updateCallDuration()
         }
     }
 

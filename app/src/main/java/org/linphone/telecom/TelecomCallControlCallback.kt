@@ -218,7 +218,7 @@ class TelecomCallControlCallback constructor(
     override suspend fun onDisconnect(disconnectCause: DisconnectCause): Boolean {
         Log.i("$TAG We're asked to terminate the call with reason [$disconnectCause]")
         coreContext.postOnCoreThread {
-            Log.i("$TAG Terminating call")
+            Log.i("$TAG Terminating call [${call.remoteAddress.asStringUriOnly()}]")
             call.terminate() // TODO: use cause
         }
         return true
