@@ -54,10 +54,10 @@ import org.linphone.BR
 import org.linphone.R
 import org.linphone.core.ConsolidatedPresence
 import org.linphone.core.tools.Log
+import org.linphone.ui.call.CallActivity
 import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.model.AccountModel
-import org.linphone.ui.voip.VoipActivity
 
 /**
  * This file contains all the data binding necessary for the app
@@ -86,8 +86,8 @@ fun <T> setEntries(
             // This is a bit hacky...
             if (viewGroup.context as? MainActivity != null) {
                 binding.lifecycleOwner = viewGroup.context as MainActivity
-            } else if (viewGroup.context as? VoipActivity != null) {
-                binding.lifecycleOwner = viewGroup.context as VoipActivity
+            } else if (viewGroup.context as? CallActivity != null) {
+                binding.lifecycleOwner = viewGroup.context as CallActivity
             } else {
                 Log.e(
                     "[Data Binding Utils] Failed to cast viewGroup's context as an Activity, lifecycle owner hasn't be set!"

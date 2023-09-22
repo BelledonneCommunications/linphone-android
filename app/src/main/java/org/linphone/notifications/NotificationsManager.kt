@@ -58,7 +58,7 @@ import org.linphone.core.CoreForegroundService
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.Friend
 import org.linphone.core.tools.Log
-import org.linphone.ui.voip.VoipActivity
+import org.linphone.ui.call.CallActivity
 import org.linphone.utils.AppUtils
 import org.linphone.utils.ImageUtils
 import org.linphone.utils.LinphoneUtils
@@ -324,7 +324,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
     private fun showCallNotification(call: Call, isIncoming: Boolean) {
         val notifiable = getNotifiableForCall(call)
 
-        val callNotificationIntent = Intent(context, VoipActivity::class.java)
+        val callNotificationIntent = Intent(context, CallActivity::class.java)
         callNotificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         val pendingIntent = PendingIntent.getActivity(
             context,

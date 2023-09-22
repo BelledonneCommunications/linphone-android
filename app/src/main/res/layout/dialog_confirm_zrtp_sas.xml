@@ -8,7 +8,7 @@
         <import type="android.graphics.Typeface" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.voip.model.ZrtpSasConfirmationDialogModel" />
+            type="org.linphone.ui.call.model.ZrtpSasConfirmationDialogModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -141,7 +141,7 @@
             android:paddingBottom="13dp"
             android:paddingEnd="20dp"
             android:paddingStart="20dp"
-            android:text="@string/in_call_zrtp_sas_validation_skip"
+            android:text="@string/call_zrtp_sas_validation_skip"
             android:textSize="13sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

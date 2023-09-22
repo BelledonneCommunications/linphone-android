@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="in_call_main_actions_menu_height">110dp</dimen>
-    <dimen name="in_call_extra_actions_menu_height">125dp</dimen>
-    <dimen name="in_call_all_actions_menu_height">235dp</dimen> <!-- sum of above two -->
+    <dimen name="call_main_actions_menu_height">110dp</dimen>
+    <dimen name="call_extra_actions_menu_height">125dp</dimen>
+    <dimen name="call_all_actions_menu_height">235dp</dimen> <!-- sum of above two -->
 </resources>

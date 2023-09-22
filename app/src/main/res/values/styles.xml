@@ -35,7 +35,7 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">20sp</item>
     </style>
-    <style name="in_call_header_style">
+    <style name="call_header_style">
         <item name="android:fontFamily">@font/noto_sans_800</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">16sp</item>

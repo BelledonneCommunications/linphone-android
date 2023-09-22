@@ -172,7 +172,7 @@
             android:id="@+id/call"
             android:onClick="@{() -> model.onCallClicked()}"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/voip_button_size"
+            android:layout_height="@dimen/call_button_size"
             android:paddingStart="30dp"
             android:paddingTop="15dp"
             android:paddingEnd="30dp"

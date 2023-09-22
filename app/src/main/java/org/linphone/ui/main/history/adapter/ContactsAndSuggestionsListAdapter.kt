@@ -52,9 +52,9 @@ class ContactsAndSuggestionsListAdapter(
     override fun getHeaderViewForPosition(context: Context, position: Int): View {
         val binding = StartCallSuggestionListDecorationBinding.inflate(LayoutInflater.from(context))
         binding.header.text = if (position == 0) {
-            AppUtils.getString(R.string.call_start_contacts_list_title)
+            AppUtils.getString(R.string.history_call_start_contacts_list_title)
         } else {
-            AppUtils.getString(R.string.call_start_suggestions_list_title)
+            AppUtils.getString(R.string.history_call_start_suggestions_list_title)
         }
         return binding.root
     }

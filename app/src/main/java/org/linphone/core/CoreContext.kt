@@ -37,7 +37,7 @@ import org.linphone.contacts.ContactsManager
 import org.linphone.core.tools.Log
 import org.linphone.notifications.NotificationsManager
 import org.linphone.telecom.TelecomManager
-import org.linphone.ui.voip.VoipActivity
+import org.linphone.ui.call.CallActivity
 import org.linphone.utils.ActivityMonitor
 import org.linphone.utils.LinphoneUtils
 
@@ -331,8 +331,8 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
 
     @UiThread
     fun showCallActivity() {
-        Log.i("$TAG Starting VoIP activity")
-        val intent = Intent(context, VoipActivity::class.java)
+        Log.i("$TAG Starting Call activity")
+        val intent = Intent(context, CallActivity::class.java)
         // This flag is required to start an Activity from a Service context
         intent.addFlags(
             Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT

@@ -70,7 +70,7 @@
             android:resizeableActivity="true" />
 
         <activity
-            android:name=".ui.voip.VoipActivity"
+            android:name=".ui.call.CallActivity"
             android:launchMode="singleTask"
             android:turnScreenOn="true"
             android:showWhenLocked="true"

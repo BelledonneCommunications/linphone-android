@@ -17,7 +17,7 @@
         android:layout_height="match_parent"
         android:background="@color/black">
 
-        <org.linphone.ui.voip.view.RoundCornersTextureView
+        <org.linphone.ui.call.view.RoundCornersTextureView
             android:id="@+id/qr_code_preview"
             android:layout_width="0dp"
             android:layout_height="0dp"

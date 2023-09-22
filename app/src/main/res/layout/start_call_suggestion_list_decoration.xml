@@ -15,7 +15,7 @@
         android:paddingStart="21dp"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
-        android:text="@string/call_start_suggestions_list_title"
+        android:text="@string/history_call_start_suggestions_list_title"
         android:gravity="center_vertical"/>
 
 </layout>

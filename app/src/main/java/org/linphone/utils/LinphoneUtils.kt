@@ -202,22 +202,22 @@ class LinphoneUtils {
         fun callStateToString(state: Call.State): String {
             return when (state) {
                 Call.State.IncomingEarlyMedia, Call.State.IncomingReceived -> {
-                    AppUtils.getString(R.string.voip_call_state_incoming_received)
+                    AppUtils.getString(R.string.call_state_incoming_received)
                 }
                 Call.State.OutgoingInit, Call.State.OutgoingProgress -> {
-                    AppUtils.getString(R.string.voip_call_state_outgoing_progress)
+                    AppUtils.getString(R.string.call_state_outgoing_progress)
                 }
                 Call.State.OutgoingRinging, Call.State.OutgoingEarlyMedia -> {
-                    AppUtils.getString(R.string.voip_call_state_outgoing_ringing)
+                    AppUtils.getString(R.string.call_state_outgoing_ringing)
                 }
                 Call.State.Connected, Call.State.StreamsRunning, Call.State.Updating, Call.State.UpdatedByRemote -> {
-                    AppUtils.getString(R.string.voip_call_state_connected)
+                    AppUtils.getString(R.string.call_state_connected)
                 }
                 Call.State.Pausing, Call.State.Paused, Call.State.PausedByRemote -> {
-                    AppUtils.getString(R.string.voip_call_state_paused)
+                    AppUtils.getString(R.string.call_state_paused)
                 }
                 Call.State.End, Call.State.Released, Call.State.Error -> {
-                    AppUtils.getString(R.string.voip_call_state_ended)
+                    AppUtils.getString(R.string.call_state_ended)
                 }
                 else -> {
                     // TODO: handle other states
