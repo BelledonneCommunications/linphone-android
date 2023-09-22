@@ -19,6 +19,8 @@
  */
 package org.linphone.notifications
 
+import android.app.NotificationManager
+import android.app.RemoteInput
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -39,6 +41,8 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
 
         if (intent.action == NotificationsManager.INTENT_ANSWER_CALL_NOTIF_ACTION || intent.action == NotificationsManager.INTENT_HANGUP_CALL_NOTIF_ACTION) {
             handleCallIntent(intent)
+        } else if (intent.action == NotificationsManager.INTENT_REPLY_MESSAGE_NOTIF_ACTION || intent.action == NotificationsManager.INTENT_MARK_MESSAGE_AS_READ_NOTIF_ACTION) {
+            handleChatIntent(context, intent, notificationId)
         }
     }
 
@@ -67,5 +71,80 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
                 }
             }
         }
+    }
+
+    private fun handleChatIntent(context: Context, intent: Intent, notificationId: Int) {
+        val remoteSipAddress = intent.getStringExtra(NotificationsManager.INTENT_REMOTE_ADDRESS)
+        if (remoteSipAddress == null) {
+            Log.e(
+                "$TAG Remote SIP address is null for notification id $notificationId"
+            )
+            return
+        }
+        val localIdentity = intent.getStringExtra(NotificationsManager.INTENT_LOCAL_IDENTITY)
+        if (localIdentity == null) {
+            Log.e(
+                "$TAG Local identity is null for notification id $notificationId"
+            )
+            return
+        }
+
+        val reply = getMessageText(intent)?.toString()
+        if (intent.action == NotificationsManager.INTENT_REPLY_MESSAGE_NOTIF_ACTION) {
+            if (reply == null) {
+                Log.e("$TAG Couldn't get reply text")
+                return
+            }
+        }
+
+        coreContext.postOnCoreThread { core ->
+            val remoteAddress = core.interpretUrl(remoteSipAddress, false)
+            if (remoteAddress == null) {
+                Log.e(
+                    "$TAG Couldn't interpret remote address $remoteSipAddress"
+                )
+                return@postOnCoreThread
+            }
+
+            val localAddress = core.interpretUrl(localIdentity, false)
+            if (localAddress == null) {
+                Log.e(
+                    "$TAG Couldn't interpret local address $localIdentity"
+                )
+                return@postOnCoreThread
+            }
+
+            val room = core.searchChatRoom(null, localAddress, remoteAddress, arrayOfNulls(0))
+            if (room == null) {
+                Log.e(
+                    "$TAG Couldn't find chat room for remote address $remoteSipAddress and local address $localIdentity"
+                )
+                return@postOnCoreThread
+            }
+
+            if (intent.action == NotificationsManager.INTENT_REPLY_MESSAGE_NOTIF_ACTION) {
+                val msg = room.createMessageFromUtf8(reply)
+                msg.userData = notificationId
+                msg.addListener(coreContext.notificationsManager.chatListener)
+                msg.send()
+                Log.i("$TAG Reply sent for notif id $notificationId")
+            } else if (intent.action == NotificationsManager.INTENT_MARK_MESSAGE_AS_READ_NOTIF_ACTION) {
+                room.markAsRead()
+                if (!coreContext.notificationsManager.dismissChatNotification(room)) {
+                    Log.w(
+                        "$TAG Notifications Manager failed to cancel notification"
+                    )
+                    val notificationManager = context.getSystemService(
+                        NotificationManager::class.java
+                    )
+                    notificationManager.cancel(NotificationsManager.CHAT_TAG, notificationId)
+                }
+            }
+        }
+    }
+
+    private fun getMessageText(intent: Intent): CharSequence? {
+        val remoteInput = RemoteInput.getResultsFromIntent(intent)
+        return remoteInput?.getCharSequence(NotificationsManager.KEY_TEXT_REPLY)
     }
 }

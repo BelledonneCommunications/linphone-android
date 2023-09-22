@@ -43,6 +43,9 @@
     <string name="notification_channel_incoming_call_name">&appName; incoming calls notifications</string>
     <string name="notification_channel_service_name">&appName; service notification</string>
     <string name="notification_channel_chat_name">&appName; instant messages notifications</string>
+    <string name="notification_chat_message_reaction_received">%s has reacted by %s to: %s</string>
+    <string name="notification_mark_message_as_read">Mark as read</string>
+    <string name="notification_reply_to_message">Reply</string>
 
     <string name="bottom_navigation_contacts_label">Contacts</string>
     <string name="bottom_navigation_calls_label">Calls</string>
@@ -286,8 +289,6 @@
     <string name="voip_call_state_connected">Active</string>
     <string name="voip_call_state_paused">Paused</string>
     <string name="voip_call_state_ended">Ended</string>
-    
-    <string name="chat_message_reaction_received">%s has reacted by %s to: %s</string>
 
     <!-- Keep <u></u> in following strings translations! -->
     <string name="welcome_carousel_skip"><u>Skip</u></string>

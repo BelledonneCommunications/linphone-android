@@ -38,6 +38,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.Person
+import androidx.core.app.RemoteInput
 import androidx.core.content.ContextCompat
 import androidx.core.content.LocusIdCompat
 import androidx.core.graphics.drawable.IconCompat
@@ -48,6 +49,8 @@ import org.linphone.contacts.getPerson
 import org.linphone.core.Address
 import org.linphone.core.Call
 import org.linphone.core.ChatMessage
+import org.linphone.core.ChatMessageListener
+import org.linphone.core.ChatMessageListenerStub
 import org.linphone.core.ChatMessageReaction
 import org.linphone.core.ChatRoom
 import org.linphone.core.Core
@@ -66,9 +69,15 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
         const val INTENT_HANGUP_CALL_NOTIF_ACTION = "org.linphone.HANGUP_CALL_ACTION"
         const val INTENT_ANSWER_CALL_NOTIF_ACTION = "org.linphone.ANSWER_CALL_ACTION"
+        const val INTENT_REPLY_MESSAGE_NOTIF_ACTION = "org.linphone.REPLY_ACTION"
+        const val INTENT_MARK_MESSAGE_AS_READ_NOTIF_ACTION = "org.linphone.MARK_AS_READ_ACTION"
 
         const val INTENT_CALL_ID = "CALL_ID"
         const val INTENT_NOTIF_ID = "NOTIFICATION_ID"
+
+        const val KEY_TEXT_REPLY = "key_text_reply"
+        const val INTENT_LOCAL_IDENTITY = "LOCAL_IDENTITY"
+        const val INTENT_REMOTE_ADDRESS = "REMOTE_ADDRESS"
 
         const val CHAT_TAG = "Chat"
         const val CHAT_NOTIFICATIONS_GROUP = "CHAT_NOTIF_GROUP"
@@ -217,6 +226,37 @@ class NotificationsManager @MainThread constructor(private val context: Context)
                 "$TAG Chat room [$chatRoom] has been marked as read, removing notification if any"
             )
             dismissChatNotification(chatRoom)
+        }
+    }
+
+    val chatListener: ChatMessageListener = object : ChatMessageListenerStub() {
+        @WorkerThread
+        override fun onMsgStateChanged(message: ChatMessage, state: ChatMessage.State) {
+            message.userData ?: return
+            val id = message.userData as Int
+            Log.i("$TAG Reply message state changed [$state] for id $id")
+
+            if (state != ChatMessage.State.InProgress) {
+                // No need to be called here twice
+                message.removeListener(this)
+            }
+
+            if (state == ChatMessage.State.Delivered || state == ChatMessage.State.Displayed) {
+                val address = message.chatRoom.peerAddress.asStringUriOnly()
+                val notifiable = chatNotificationsMap[address]
+                if (notifiable != null) {
+                    if (notifiable.notificationId != id) {
+                        Log.w("$TAG ID doesn't match: ${notifiable.notificationId} != $id")
+                    }
+                    displayReplyMessageNotification(message, notifiable)
+                } else {
+                    Log.e("$TAG Couldn't find notification for chat room $address")
+                    cancelNotification(id, CHAT_TAG)
+                }
+            } else if (state == ChatMessage.State.NotDelivered) {
+                Log.e("$TAG Reply wasn't delivered")
+                cancelNotification(id, CHAT_TAG)
+            }
         }
     }
 
@@ -448,7 +488,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         val displayName = contact?.name ?: LinphoneUtils.getDisplayName(address)
 
         val originalMessage = getTextDescribingMessage(message)
-        val text = AppUtils.getString(R.string.chat_message_reaction_received).format(
+        val text = AppUtils.getString(R.string.notification_chat_message_reaction_received).format(
             displayName,
             reaction,
             originalMessage
@@ -737,6 +777,8 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             .setWhen(System.currentTimeMillis())
             .setShowWhen(true)
             .setStyle(style)
+            .addAction(getReplyMessageAction(notifiable))
+            .addAction(getMarkMessageAsReadAction(notifiable))
             .setShortcutId(id)
             .setLocusId(LocusIdCompat(id))
 
@@ -813,6 +855,94 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             answerIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
+    }
+
+    @WorkerThread
+    private fun displayReplyMessageNotification(message: ChatMessage, notifiable: Notifiable) {
+        Log.i(
+            "$TAG Updating message notification with reply for notification ${notifiable.notificationId}"
+        )
+
+        val text = message.contents.find { content -> content.isText }?.utf8Text ?: ""
+        val senderAddress = message.fromAddress
+        val reply = NotifiableMessage(
+            text,
+            null,
+            notifiable.myself ?: LinphoneUtils.getDisplayName(senderAddress),
+            System.currentTimeMillis(),
+            isOutgoing = true
+        )
+        notifiable.messages.add(reply)
+
+        val chatRoom = message.chatRoom
+        val me = coreContext.contactsManager.getMePerson(chatRoom.localAddress)
+        val notification = createMessageNotification(
+            notifiable,
+            LinphoneUtils.getChatRoomId(chatRoom),
+            me
+        )
+        notify(notifiable.notificationId, notification, CHAT_TAG)
+    }
+
+    @AnyThread
+    private fun getReplyMessageAction(notifiable: Notifiable): NotificationCompat.Action {
+        val replyLabel =
+            context.resources.getString(R.string.notification_reply_to_message)
+        val remoteInput =
+            RemoteInput.Builder(KEY_TEXT_REPLY).setLabel(replyLabel).build()
+
+        val replyIntent = Intent(context, NotificationBroadcastReceiver::class.java)
+        replyIntent.action = INTENT_REPLY_MESSAGE_NOTIF_ACTION
+        replyIntent.putExtra(INTENT_NOTIF_ID, notifiable.notificationId)
+        replyIntent.putExtra(INTENT_LOCAL_IDENTITY, notifiable.localIdentity)
+        replyIntent.putExtra(INTENT_REMOTE_ADDRESS, notifiable.remoteAddress)
+
+        // PendingIntents attached to actions with remote inputs must be mutable
+        val replyPendingIntent = PendingIntent.getBroadcast(
+            context,
+            notifiable.notificationId,
+            replyIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+        )
+        return NotificationCompat.Action.Builder(
+            R.drawable.paper_plane_tilt,
+            context.getString(R.string.notification_reply_to_message),
+            replyPendingIntent
+        )
+            .addRemoteInput(remoteInput)
+            .setAllowGeneratedReplies(true)
+            .setShowsUserInterface(false)
+            .setSemanticAction(NotificationCompat.Action.SEMANTIC_ACTION_REPLY)
+            .build()
+    }
+
+    @AnyThread
+    private fun getMarkMessageAsReadPendingIntent(notifiable: Notifiable): PendingIntent {
+        val markAsReadIntent = Intent(context, NotificationBroadcastReceiver::class.java)
+        markAsReadIntent.action = INTENT_MARK_MESSAGE_AS_READ_NOTIF_ACTION
+        markAsReadIntent.putExtra(INTENT_NOTIF_ID, notifiable.notificationId)
+        markAsReadIntent.putExtra(INTENT_LOCAL_IDENTITY, notifiable.localIdentity)
+        markAsReadIntent.putExtra(INTENT_REMOTE_ADDRESS, notifiable.remoteAddress)
+
+        return PendingIntent.getBroadcast(
+            context,
+            notifiable.notificationId,
+            markAsReadIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+    }
+
+    @AnyThread
+    private fun getMarkMessageAsReadAction(notifiable: Notifiable): NotificationCompat.Action {
+        val markAsReadPendingIntent = getMarkMessageAsReadPendingIntent(notifiable)
+        return NotificationCompat.Action.Builder(
+            R.drawable.envelope_simple_open,
+            context.getString(R.string.notification_mark_message_as_read),
+            markAsReadPendingIntent
+        )
+            .setShowsUserInterface(false)
+            .setSemanticAction(NotificationCompat.Action.SEMANTIC_ACTION_MARK_AS_READ)
+            .build()
     }
 
     @WorkerThread
