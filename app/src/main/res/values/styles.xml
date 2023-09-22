@@ -119,6 +119,14 @@
         <item name="android:elevation">3dp</item>
         <item name="android:background">@drawable/circle_white_button_background</item>
     </style>
+    <style name="call_numpad_digits_style">
+        <item name="android:fontFamily">@font/noto_sans</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">32sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:elevation">3dp</item>
+        <item name="android:background">@drawable/in_call_button_background</item>
+    </style>
     <style name="in_call_extra_action_label_style">
         <item name="android:fontFamily">@font/noto_sans</item>
         <item name="android:textSize">14sp</item>

@@ -37,6 +37,7 @@ import org.linphone.core.MediaEncryption
 import org.linphone.core.tools.Log
 import org.linphone.ui.call.model.AudioDeviceModel
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
+import org.linphone.ui.main.history.model.NumpadModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.AudioRouteUtils
 import org.linphone.utils.Event
@@ -100,6 +101,20 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    val showNumpadBottomSheetEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
+    val numpadModel: NumpadModel
+
+    val appendDigitToSearchBarEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
+
+    val removedCharacterAtCurrentPositionEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     private lateinit var call: Call
 
     private val callListener = object : CallListenerStub() {
@@ -158,6 +173,21 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
             showSwitchCamera.postValue(coreContext.showSwitchCameraButton())
         }
+
+        numpadModel = NumpadModel(
+            { digit -> // onDigitClicked
+                appendDigitToSearchBarEvent.value = Event(digit)
+                coreContext.postOnCoreThread {
+                    Log.i("$TAG Sending DTMF [${digit.first()}]")
+                    call.sendDtmf(digit.first())
+                }
+            },
+            { // OnBackspaceClicked
+                removedCharacterAtCurrentPositionEvent.value = Event(true)
+            },
+            { // OnCallClicked
+            }
+        )
     }
 
     @UiThread
@@ -321,6 +351,11 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun toggleExpandActionsMenu() {
         toggleExtraActionsBottomSheetEvent.value = Event(true)
+    }
+
+    @UiThread
+    fun showNumpad() {
+        showNumpadBottomSheetEvent.value = Event(true)
     }
 
     @WorkerThread

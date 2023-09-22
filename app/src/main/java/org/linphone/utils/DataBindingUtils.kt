@@ -114,6 +114,27 @@ fun View.hideKeyboard() {
 }
 
 @UiThread
+fun AppCompatEditText.removeCharacterAtPosition() {
+    val start = selectionStart
+    val end = selectionEnd
+    if (start > 0) {
+        text =
+            text?.delete(
+                start - 1,
+                end
+            )
+        setSelection(start - 1)
+    }
+}
+
+@UiThread
+fun AppCompatEditText.addCharacterAtPosition(character: String) {
+    val newValue = "${text}$character"
+    setText(newValue)
+    setSelection(newValue.length)
+}
+
+@UiThread
 fun View.setKeyboardInsetListener(lambda: (visible: Boolean) -> Unit) {
     doOnLayout {
         var isKeyboardVisible = ViewCompat.getRootWindowInsets(this)?.isVisible(

@@ -44,7 +44,9 @@ import org.linphone.ui.main.history.viewmodel.StartCallViewModel
 import org.linphone.ui.main.model.isInSecureMode
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.RecyclerViewHeaderDecoration
+import org.linphone.utils.addCharacterAtPosition
 import org.linphone.utils.hideKeyboard
+import org.linphone.utils.removeCharacterAtPosition
 import org.linphone.utils.setKeyboardInsetListener
 import org.linphone.utils.showKeyboard
 
@@ -140,24 +142,13 @@ class StartCallFragment : GenericFragment() {
 
         viewModel.removedCharacterAtCurrentPositionEvent.observe(viewLifecycleOwner) {
             it.consume {
-                val selectionStart = binding.searchBar.selectionStart
-                val selectionEnd = binding.searchBar.selectionEnd
-                if (selectionStart > 0) {
-                    binding.searchBar.text =
-                        binding.searchBar.text?.delete(
-                            selectionStart - 1,
-                            selectionEnd
-                        )
-                    binding.searchBar.setSelection(selectionStart - 1)
-                }
+                binding.searchBar.removeCharacterAtPosition()
             }
         }
 
         viewModel.appendDigitToSearchBarEvent.observe(viewLifecycleOwner) {
             it.consume { digit ->
-                val newValue = "${binding.searchBar.text}$digit"
-                binding.searchBar.setText(newValue)
-                binding.searchBar.setSelection(newValue.length)
+                binding.searchBar.addCharacterAtPosition(digit)
             }
         }
 

@@ -20,9 +20,10 @@
 package org.linphone.ui.main.history.model
 
 import androidx.annotation.UiThread
+import androidx.lifecycle.MutableLiveData
 import org.linphone.core.tools.Log
 
-class NumpadModel @UiThread constructor(
+open class NumpadModel @UiThread constructor(
     private val onDigitClicked: (value: String) -> (Unit),
     private val onBackspaceClicked: () -> (Unit),
     private val onCallClicked: () -> (Unit)
@@ -30,6 +31,8 @@ class NumpadModel @UiThread constructor(
     companion object {
         private const val TAG = "[Numpad Model]"
     }
+
+    val digits = MutableLiveData<String>()
 
     @UiThread
     fun onDigitClicked(value: String) {
