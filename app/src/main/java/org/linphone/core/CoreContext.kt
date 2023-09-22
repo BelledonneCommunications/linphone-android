@@ -208,6 +208,14 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
             return
         }
 
+        val currentCall = core.currentCall
+        if (currentCall != null) {
+            Log.w(
+                "$TAG Found current call [${currentCall.remoteAddress.asStringUriOnly()}], pausing it first"
+            )
+            currentCall.pause()
+        }
+
         val params = callParams ?: core.createCallParams(null)
         if (params == null) {
             val call = core.inviteAddress(address)

@@ -54,6 +54,12 @@
             app:enterAnim="@anim/slide_in"
             app:popExitAnim="@anim/slide_out"
             app:launchSingleTop="true" />
+        <action
+            android:id="@+id/action_activeCallFragment_to_callsListFragment"
+            app:destination="@id/callsListFragment"
+            app:enterAnim="@anim/slide_in"
+            app:popExitAnim="@anim/slide_out"
+            app:launchSingleTop="true" />
     </fragment>
 
     <action android:id="@+id/action_global_activeCallFragment"
@@ -67,5 +73,11 @@
         android:name="org.linphone.ui.voip.fragment.NewCallFragment"
         android:label="NewCallFragment"
         tools:layout="@layout/call_start_fragment" />
+
+    <fragment
+        android:id="@+id/callsListFragment"
+        android:name="org.linphone.ui.voip.fragment.CallsListFragment"
+        android:label="CallsListFragment"
+        tools:layout="@layout/voip_calls_list_fragment" />
 
 </navigation>

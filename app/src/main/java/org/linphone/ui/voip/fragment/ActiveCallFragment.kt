@@ -118,6 +118,11 @@ class ActiveCallFragment : GenericCallFragment() {
             findNavController().navigate(action)
         }
 
+        binding.setCallsListClickListener {
+            val action = ActiveCallFragmentDirections.actionActiveCallFragmentToCallsListFragment()
+            findNavController().navigate(action)
+        }
+
         sharedViewModel = requireActivity().run {
             ViewModelProvider(this)[SharedCallViewModel::class.java]
         }

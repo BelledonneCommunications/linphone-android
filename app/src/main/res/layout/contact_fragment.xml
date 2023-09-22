@@ -34,7 +34,7 @@
             android:onClick="@{backClickListener}"
             android:visibility="@{viewModel.showBackButton ? View.VISIBLE : View.GONE}"
             android:src="@drawable/caret_left"
-            app:tint="@color/gray_main2_500"
+            app:tint="@color/orange_main_500"
             app:layout_constraintBottom_toBottomOf="@id/invisible_title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/invisible_title"/>

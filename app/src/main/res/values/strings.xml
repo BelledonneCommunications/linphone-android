@@ -290,6 +290,8 @@
     <string name="voip_call_state_paused">Paused</string>
     <string name="voip_call_state_ended">Ended</string>
 
+    <string name="voip_calls_list_title">Calls list</string>
+
     <!-- Keep <u></u> in following strings translations! -->
     <string name="welcome_carousel_skip"><u>Skip</u></string>
     <string name="assistant_forgotten_password"><u>Forgotten password?</u></string>

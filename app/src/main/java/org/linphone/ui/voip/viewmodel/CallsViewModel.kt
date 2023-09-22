@@ -30,6 +30,7 @@ import org.linphone.core.Call
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
+import org.linphone.ui.voip.model.CallModel
 import org.linphone.utils.Event
 
 class CallsViewModel @UiThread constructor() : ViewModel() {
@@ -40,6 +41,8 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
         private const val ALERT_NETWORK_TYPE_WIFI = "wifi"
         private const val ALERT_NETWORK_TYPE_CELLULAR = "mobile"
     }
+
+    val calls = MutableLiveData<ArrayList<CallModel>>()
 
     val goToActiveCallEvent = MutableLiveData<Event<Boolean>>()
 
@@ -94,6 +97,34 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
             state: Call.State,
             message: String
         ) {
+            // Update calls list if needed
+            val found = calls.value.orEmpty().find {
+                it.call == call
+            }
+            if (found == null) {
+                if (state != Call.State.End && state != Call.State.Released && state != Call.State.Error) {
+                    Log.i(
+                        "$TAG Found a call [${call.remoteAddress.asStringUriOnly()}] not yet in calls list, let's add it"
+                    )
+                    val list = arrayListOf<CallModel>()
+                    list.addAll(calls.value.orEmpty())
+                    val model = CallModel(call)
+                    list.add(model)
+                    calls.postValue(list)
+                }
+            } else {
+                if (state == Call.State.End || state == Call.State.Released || state == Call.State.Error) {
+                    Log.i(
+                        "$TAG Call [${call.remoteAddress.asStringUriOnly()}] shouldn't be in calls list anymore, let's remove it"
+                    )
+                    val list = arrayListOf<CallModel>()
+                    list.addAll(calls.value.orEmpty())
+                    list.remove(found)
+                    calls.postValue(list)
+                    found.destroy()
+                }
+            }
+
             if (call == core.currentCall || core.currentCall == null) {
                 Log.i(
                     "$TAG Current call [${call.remoteAddress.asStringUriOnly()}] state changed [$state]"
@@ -139,6 +170,13 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
             core.addListener(coreListener)
 
             if (core.callsNb > 0) {
+                val list = arrayListOf<CallModel>()
+                for (call in core.calls) {
+                    val model = CallModel(call)
+                    list.add(model)
+                }
+                calls.postValue(list)
+
                 val currentCall = core.currentCall ?: core.calls.first()
 
                 when (currentCall.state) {
@@ -165,6 +203,7 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
         super.onCleared()
 
         coreContext.postOnCoreThread { core ->
+            calls.value.orEmpty().forEach(CallModel::destroy)
             core.removeListener(coreListener)
         }
     }

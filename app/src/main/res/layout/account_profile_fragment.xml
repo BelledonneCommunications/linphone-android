@@ -38,7 +38,7 @@
                 android:adjustViewBounds="true"
                 android:padding="15dp"
                 android:src="@drawable/caret_left"
-                app:tint="@color/gray_main2_500"
+                app:tint="@color/orange_main_500"
                 app:layout_constraintBottom_toBottomOf="@id/title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/title" />
@@ -83,7 +83,7 @@
                         android:id="@+id/avatar"
                         android:layout_width="@dimen/avatar_big_size"
                         android:layout_height="@dimen/avatar_big_size"
-                        android:layout_marginTop="21dp"
+                        android:layout_marginTop="20dp"
                         android:adjustViewBounds="true"
                         android:background="@drawable/shape_circle_light_blue_background"
                         accountAvatar="@{viewModel.accountModel}"
