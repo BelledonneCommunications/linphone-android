@@ -19,15 +19,15 @@
  */
 package org.linphone.core
 
-import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import androidx.annotation.MainThread
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.tools.Log
+import org.linphone.core.tools.service.CoreService
 
 @MainThread
-class CoreForegroundService : Service() {
+class CoreForegroundService : CoreService() {
     companion object {
         private const val TAG = "[Core Foreground Service]"
     }

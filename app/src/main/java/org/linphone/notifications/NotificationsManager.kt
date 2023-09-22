@@ -97,12 +97,21 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         ) {
             when (state) {
                 Call.State.IncomingReceived, Call.State.IncomingEarlyMedia -> {
+                    Log.i(
+                        "$TAG Showing incoming call notification for [${call.remoteAddress.asStringUriOnly()}]"
+                    )
                     showCallNotification(call, true)
                 }
                 Call.State.Connected -> {
+                    Log.i(
+                        "$TAG Showing connected call notification for [${call.remoteAddress.asStringUriOnly()}]"
+                    )
                     showCallNotification(call, false)
                 }
                 Call.State.End, Call.State.Error -> {
+                    Log.i(
+                        "$TAG Removing terminated call notification for [${call.remoteAddress.asStringUriOnly()}]"
+                    )
                     dismissCallNotification(call)
                 }
                 else -> {
@@ -546,6 +555,8 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             } catch (e: Exception) {
                 Log.e("$TAG Exception occurred: $e")
             }
+        } else {
+            Log.w("$TAG POST_NOTIFICATIONS permission wasn't granted")
         }
     }
 
