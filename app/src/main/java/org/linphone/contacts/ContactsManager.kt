@@ -150,17 +150,21 @@ class ContactsManager @UiThread constructor(context: Context) {
 
     @WorkerThread
     fun findContactByAddress(address: Address): Friend? {
-        Log.i("$TAG Looking for friend with address [${address.asStringUriOnly()}]")
-        val username = address.username
-        val found = coreContext.core.findFriend(address)
+        val clonedAddress = address.clone()
+        clonedAddress.clean()
+        val sipUri = clonedAddress.asStringUriOnly()
+
+        Log.i("$TAG Looking for friend with address [$sipUri]")
+        val username = clonedAddress.username
+        val found = coreContext.core.findFriend(clonedAddress)
         return found ?: if (!username.isNullOrEmpty() && username.startsWith("+")) {
             Log.i("$TAG Looking for friend with phone number [$username]")
             val foundUsingPhoneNumber = coreContext.core.findFriendByPhoneNumber(
                 username
             )
-            foundUsingPhoneNumber ?: findNativeContact(address)
+            foundUsingPhoneNumber ?: findNativeContact(sipUri, true, username)
         } else {
-            findNativeContact(address)
+            findNativeContact(sipUri, false)
         }
     }
 
@@ -181,13 +185,10 @@ class ContactsManager @UiThread constructor(context: Context) {
     }
 
     @WorkerThread
-    fun findNativeContact(address: Address): Friend? {
-        Log.i(
-            "$TAG Looking for native contact with address [${address.asStringUriOnly()}] or phone number [${address.username}]"
-        )
+    fun findNativeContact(address: String, searchAsPhoneNumber: Boolean, number: String = ""): Friend? {
         if (nativeContactsLoaded) {
-            Log.w(
-                "$TAG Native contacts already loaded, no need to search further, no native contact matches address [${address.asStringUriOnly()}]"
+            Log.d(
+                "$TAG Native contacts already loaded, no need to search further, no native contact matches address [$address]"
             )
             return null
         }
@@ -198,10 +199,21 @@ class ContactsManager @UiThread constructor(context: Context) {
                 Manifest.permission.READ_CONTACTS
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            val number: String = address.username.orEmpty()
-            val sipUri: String = address.asStringUriOnly()
+            Log.i(
+                "$TAG Looking for native contact with address [$address] ${if (searchAsPhoneNumber) "or phone number [$number]" else ""}"
+            )
+
             try {
-                val selection = "${ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER} LIKE ? OR ${ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS} LIKE ?"
+                val selection = if (searchAsPhoneNumber) {
+                    "${ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER} LIKE ? OR ${ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS} LIKE ?"
+                } else {
+                    "${ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS} LIKE ?"
+                }
+                val selectionParams = if (searchAsPhoneNumber) {
+                    arrayOf(number, address)
+                } else {
+                    arrayOf(address)
+                }
                 val cursor: Cursor? = context.contentResolver.query(
                     ContactsContract.Data.CONTENT_URI,
                     arrayOf(
@@ -210,7 +222,7 @@ class ContactsManager @UiThread constructor(context: Context) {
                         ContactsContract.Data.DISPLAY_NAME_PRIMARY
                     ),
                     selection,
-                    arrayOf(number, sipUri),
+                    selectionParams,
                     null
                 )
 
@@ -258,18 +270,17 @@ class ContactsManager @UiThread constructor(context: Context) {
                         }
                     } while (cursor.moveToNext())
 
-                    friend.address = address
                     friend.done()
 
-                    Log.i("$TAG Found native contact [${friend.name}] with address [$sipUri]")
+                    Log.i("$TAG Found native contact [${friend.name}] with address [$address]")
                     cursor.close()
                     return friend
                 }
 
-                Log.w("$TAG Failed to find native contact with address [$sipUri]")
+                Log.w("$TAG Failed to find native contact with address [$address]")
                 return null
             } catch (e: IllegalArgumentException) {
-                Log.e("$TAG Failed to search for native contact with address [$sipUri]: $e")
+                Log.e("$TAG Failed to search for native contact with address [$address]: $e")
             }
         } else {
             Log.w("$TAG READ_CONTACTS permission not granted, can't check native address book")
