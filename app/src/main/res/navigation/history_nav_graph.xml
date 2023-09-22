@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--suppress ALL -->
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/history_nav_graph"
+    app:startDestination="@id/emptyFragment">
+
+    <fragment
+        android:id="@+id/emptyFragment"
+        android:name="org.linphone.ui.main.fragment.EmptyFragment"
+        android:label="EmptyFragment"
+        tools:layout="@layout/empty_fragment"/>
+
+    <fragment
+        android:id="@+id/historyContactFragment"
+        android:name="org.linphone.ui.main.history.fragment.HistoryContactFragment"
+        android:label="HistoryContactFragment"
+        tools:layout="@layout/history_contact_fragment">
+        <argument
+            android:name="callId"
+            app:argType="string" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_historyContactFragment"
+        app:destination="@id/historyContactFragment"
+        app:launchSingleTop="true" />
+
+</navigation>

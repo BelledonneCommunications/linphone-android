@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <import type="android.graphics.Typeface" />
+        <import type="org.linphone.core.ConsolidatedPresence" />
+        <variable
+            name="model"
+            type="org.linphone.ui.main.history.model.CallLogModel" />
+        <variable
+            name="onClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="onLongClickListener"
+            type="View.OnLongClickListener" />
+        <variable
+            name="onCallClickListener"
+            type="View.OnClickListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:onClick="@{onClickListener}"
+        android:onLongClickListener="@{onLongClickListener}"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/primary_cell_background">
+
+        <io.getstream.avatarview.AvatarView
+            android:id="@+id/avatar"
+            android:layout_width="@dimen/avatar_list_cell_size"
+            android:layout_height="@dimen/avatar_list_cell_size"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginStart="5dp"
+            android:adjustViewBounds="true"
+            android:background="@drawable/shape_circle_light_blue_background"
+            contactAvatar="@{model.avatarModel}"
+            app:avatarViewPlaceholder="@drawable/user_circle"
+            app:avatarViewInitialsBackgroundColor="@color/gray_main2_200"
+            app:avatarViewInitialsTextColor="@color/gray_main2_600"
+            app:avatarViewInitialsTextSize="16sp"
+            app:avatarViewInitialsTextStyle="bold"
+            app:avatarViewShape="circle"
+            app:avatarViewBorderWidth="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/presence_badge"
+            android:layout_width="@dimen/avatar_presence_badge_size"
+            android:layout_height="@dimen/avatar_presence_badge_size"
+            android:layout_marginEnd="@dimen/avatar_presence_badge_end_margin"
+            android:background="@drawable/led_background"
+            android:padding="@dimen/avatar_presence_badge_padding"
+            app:presenceIcon="@{model.avatarModel.presenceStatus}"
+            android:visibility="@{model.avatarModel.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE}"
+            app:layout_constraintEnd_toEndOf="@id/avatar"
+            app:layout_constraintBottom_toBottomOf="@id/avatar"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="10dp"
+            android:text="@{model.avatarModel.name, default=`John Doe`}"
+            android:textSize="14sp"
+            android:textColor="@color/gray_main2_700"
+            app:layout_constraintStart_toEndOf="@id/avatar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/date_time"/>
+
+        <ImageView
+            android:id="@+id/call_status"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_marginBottom="10dp"
+            android:src="@{model.iconResId, default=@drawable/outgoing_call}"
+            app:layout_constraintStart_toStartOf="@id/name"
+            app:layout_constraintTop_toBottomOf="@id/name"
+            app:layout_constraintBottom_toTopOf="@id/separator" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_300"
+            android:id="@+id/date_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="5dp"
+            android:gravity="center"
+            android:text="@{model.dateTime, default=`13 aout 2023`}"
+            android:textSize="12sp"
+            app:layout_constraintStart_toEndOf="@id/call_status"
+            app:layout_constraintTop_toBottomOf="@id/name"
+            app:layout_constraintBottom_toTopOf="@id/separator"/>
+
+        <ImageView
+            android:onClick="@{onCallClickListener}"
+            android:id="@+id/call"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_marginEnd="6dp"
+            android:src="@drawable/phone"
+            app:tint="@color/gray_main2_500"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/name"
+            app:layout_constraintBottom_toBottomOf="@id/date_time" />
+
+        <View
+            android:id="@+id/separator"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginEnd="10dp"
+            android:background="@color/gray_main2_200"
+            app:layout_constraintStart_toStartOf="@id/name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

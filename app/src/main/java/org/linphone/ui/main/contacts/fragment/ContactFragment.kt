@@ -41,11 +41,11 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactFragmentBinding
 import org.linphone.ui.main.MainActivity
-import org.linphone.ui.main.calls.model.ConfirmationDialogModel
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
 import org.linphone.ui.main.contacts.model.TrustCallDialogModel
 import org.linphone.ui.main.contacts.viewmodel.ContactViewModel
 import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.history.model.ConfirmationDialogModel
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 

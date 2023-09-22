@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.main.contacts.fragment
+package org.linphone.ui.main.history.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -32,33 +32,33 @@ import androidx.navigation.fragment.findNavController
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import org.linphone.R
 import org.linphone.core.tools.Log
-import org.linphone.databinding.ContactsFragmentBinding
+import org.linphone.databinding.HistoryFragmentBinding
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.SlidingPaneBackPressedCallback
 
 @UiThread
-class ContactsFragment : GenericFragment() {
+class HistoryFragment : GenericFragment() {
     companion object {
-        private const val TAG = "[Contacts Fragment]"
+        private const val TAG = "[Calls Fragment]"
     }
 
-    private lateinit var binding: ContactsFragmentBinding
+    private lateinit var binding: HistoryFragmentBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = ContactsFragmentBinding.inflate(layoutInflater)
+        binding = HistoryFragmentBinding.inflate(layoutInflater)
         return binding.root
     }
 
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
-        if (findNavController().currentDestination?.id == R.id.newContactFragment) {
+        if (findNavController().currentDestination?.id == R.id.startCallFragment) {
             // Holds fragment in place while new contact fragment slides over it
             return AnimationUtils.loadAnimation(activity, R.anim.hold)
         }
-        return super.onCreateAnimation(transit, enter, nextAnim)
+        return AnimationUtils.loadAnimation(activity, R.anim.hold)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -67,16 +67,9 @@ class ContactsFragment : GenericFragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        sharedViewModel.contactsListReadyToBeDisplayedEvent.observe(viewLifecycleOwner) {
+        sharedViewModel.callsListReadyToBeDisplayedEvent.observe(viewLifecycleOwner) {
             it.consume {
-                Log.i("$TAG Contacts list is ready, starting postponed enter transition")
-                startPostponedEnterTransition()
-            }
-        }
-
-        sharedViewModel.contactEditorReadyToBeDisplayedEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                Log.i("$TAG Contact editor is ready, starting postponed enter transition")
+                Log.i("$TAG Calls list is ready, starting postponed enter transition")
                 startPostponedEnterTransition()
             }
         }
@@ -111,36 +104,33 @@ class ContactsFragment : GenericFragment() {
             }
         }
 
-        sharedViewModel.showContactEvent.observe(
+        sharedViewModel.showStartCallEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i("$TAG Navigating to start call fragment")
+                findNavController().navigate(R.id.action_global_startCallFragment)
+            }
+        }
+
+        sharedViewModel.showCallLogEvent.observe(
             viewLifecycleOwner
         ) {
-            it.consume { refKey ->
-                Log.i("$TAG Displaying contact with ref key [$refKey]")
-                val navController = binding.contactsNavContainer.findNavController()
-                val action = ContactFragmentDirections.actionGlobalContactFragment(
-                    refKey
+            it.consume { callId ->
+                Log.i("$TAG Displaying call log with call ID [$callId]")
+                val navController = binding.historyNavContainer.findNavController()
+                val action = HistoryContactFragmentDirections.actionGlobalHistoryContactFragment(
+                    callId
                 )
                 navController.navigate(action)
             }
         }
 
-        sharedViewModel.showNewContactEvent.observe(
-            viewLifecycleOwner
-        ) {
+        sharedViewModel.navigateToContactsEvent.observe(viewLifecycleOwner) {
             it.consume {
-                Log.i("$TAG Opening contact editor for creating new contact")
-                val navController = findNavController()
-                navController.navigate(R.id.action_global_newContactFragment)
-            }
-        }
-
-        sharedViewModel.navigateToCallsEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                if (findNavController().currentDestination?.id == R.id.contactsFragment) {
+                if (findNavController().currentDestination?.id == R.id.historyFragment) {
                     // To prevent any previously seen contact to show up when navigating back to here later
-                    binding.contactsNavContainer.findNavController().popBackStack()
+                    binding.historyNavContainer.findNavController().popBackStack()
 
-                    val action = ContactsFragmentDirections.actionContactsFragmentToHistoryFragment()
+                    val action = HistoryFragmentDirections.actionHistoryFragmentToContactsFragment()
                     findNavController().navigate(action)
                 }
             }
@@ -149,6 +139,6 @@ class ContactsFragment : GenericFragment() {
 
     override fun onResume() {
         super.onResume()
-        sharedViewModel.currentlyDisplayedFragment.value = R.id.contactsFragment
+        sharedViewModel.currentlyDisplayedFragment.value = R.id.historyFragment
     }
 }

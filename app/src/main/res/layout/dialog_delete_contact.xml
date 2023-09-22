@@ -8,7 +8,7 @@
         <import type="android.graphics.Typeface" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.main.calls.model.ConfirmationDialogModel" />
+            type="org.linphone.ui.main.history.model.ConfirmationDialogModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

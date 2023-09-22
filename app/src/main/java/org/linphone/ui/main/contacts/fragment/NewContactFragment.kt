@@ -40,10 +40,10 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactNewOrEditFragmentBinding
 import org.linphone.ui.main.MainActivity
-import org.linphone.ui.main.calls.model.ConfirmationDialogModel
 import org.linphone.ui.main.contacts.model.NewOrEditNumberOrAddressModel
 import org.linphone.ui.main.contacts.viewmodel.ContactNewOrEditViewModel
 import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.history.model.ConfirmationDialogModel
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils

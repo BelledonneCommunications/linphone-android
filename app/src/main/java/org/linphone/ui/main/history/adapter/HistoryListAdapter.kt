@@ -1,0 +1,94 @@
+package org.linphone.ui.main.history.adapter
+
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.annotation.UiThread
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import org.linphone.R
+import org.linphone.databinding.HistoryListCellBinding
+import org.linphone.ui.main.history.model.CallLogModel
+import org.linphone.utils.Event
+
+class HistoryListAdapter(
+    private val viewLifecycleOwner: LifecycleOwner
+) : ListAdapter<CallLogModel, RecyclerView.ViewHolder>(CallLogDiffCallback()) {
+    var selectedAdapterPosition = -1
+
+    val callLogClickedEvent: MutableLiveData<Event<CallLogModel>> by lazy {
+        MutableLiveData<Event<CallLogModel>>()
+    }
+
+    val callLogLongClickedEvent: MutableLiveData<Event<CallLogModel>> by lazy {
+        MutableLiveData<Event<CallLogModel>>()
+    }
+
+    val callLogCallBackClickedEvent: MutableLiveData<Event<CallLogModel>> by lazy {
+        MutableLiveData<Event<CallLogModel>>()
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val binding: HistoryListCellBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(parent.context),
+            R.layout.history_list_cell,
+            parent,
+            false
+        )
+        return ViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        (holder as ViewHolder).bind(getItem(position))
+    }
+
+    fun resetSelection() {
+        notifyItemChanged(selectedAdapterPosition)
+        selectedAdapterPosition = -1
+    }
+
+    inner class ViewHolder(
+        val binding: HistoryListCellBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+        @UiThread
+        fun bind(callLogModel: CallLogModel) {
+            with(binding) {
+                model = callLogModel
+
+                lifecycleOwner = viewLifecycleOwner
+
+                binding.root.isSelected = bindingAdapterPosition == selectedAdapterPosition
+
+                binding.setOnClickListener {
+                    callLogClickedEvent.value = Event(callLogModel)
+                }
+
+                binding.setOnLongClickListener {
+                    selectedAdapterPosition = bindingAdapterPosition
+                    binding.root.isSelected = true
+                    callLogLongClickedEvent.value = Event(callLogModel)
+                    true
+                }
+
+                binding.setOnCallClickListener {
+                    callLogCallBackClickedEvent.value = Event(callLogModel)
+                }
+
+                executePendingBindings()
+            }
+        }
+    }
+
+    private class CallLogDiffCallback : DiffUtil.ItemCallback<CallLogModel>() {
+        override fun areItemsTheSame(oldItem: CallLogModel, newItem: CallLogModel): Boolean {
+            return oldItem.id == newItem.id && oldItem.timestamp == newItem.timestamp
+        }
+
+        override fun areContentsTheSame(oldItem: CallLogModel, newItem: CallLogModel): Boolean {
+            return oldItem.avatarModel.id == newItem.avatarModel.id && oldItem.iconResId.value == newItem.iconResId.value
+        }
+    }
+}

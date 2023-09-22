@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.voip.fragment
+package org.linphone.ui.main.history.fragment
 
 import android.app.Dialog
 import android.os.Bundle
@@ -26,7 +26,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.core.view.doOnPreDraw
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -50,15 +49,15 @@ import org.linphone.utils.setKeyboardInsetListener
 import org.linphone.utils.showKeyboard
 
 @UiThread
-class NewCallFragment : GenericFragment() {
+class StartCallFragment : GenericFragment() {
     companion object {
-        private const val TAG = "[New Call Fragment]"
+        private const val TAG = "[Start Call Fragment]"
     }
 
     private lateinit var binding: StartCallFragmentBinding
 
     private val viewModel: StartCallViewModel by navGraphViewModels(
-        R.id.voip_nav_graph
+        R.id.main_nav_graph
     )
 
     private lateinit var adapter: ContactsAndSuggestionsListAdapter
@@ -71,7 +70,6 @@ class NewCallFragment : GenericFragment() {
                 coreContext.postOnCoreThread {
                     coreContext.startCall(address)
                 }
-                findNavController().popBackStack()
             }
         }
 
@@ -97,7 +95,6 @@ class NewCallFragment : GenericFragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
-        binding.hideGroupChatButton = true
 
         binding.setBackClickListener {
             goBack()
@@ -195,6 +192,8 @@ class NewCallFragment : GenericFragment() {
     override fun onPause() {
         super.onPause()
 
+        viewModel.isNumpadVisible.value = false
+
         numberOrAddressPickerDialog?.dismiss()
         numberOrAddressPickerDialog = null
     }
@@ -204,9 +203,6 @@ class NewCallFragment : GenericFragment() {
             val friend = model.friend
             if (friend == null) {
                 coreContext.startCall(model.address)
-                coreContext.postOnMainThread {
-                    findNavController().popBackStack()
-                }
                 return@postOnCoreThread
             }
 
@@ -222,9 +218,6 @@ class NewCallFragment : GenericFragment() {
                 )
                 val address = friend.addresses.first()
                 coreContext.startCall(address)
-                coreContext.postOnMainThread {
-                    findNavController().popBackStack()
-                }
             } else if (addressesCount == 0 && numbersCount == 1 && enablePhoneNumbers) {
                 val number = friend.phoneNumbers.first()
                 val address = core.interpretUrl(number, true)
@@ -233,9 +226,6 @@ class NewCallFragment : GenericFragment() {
                         "$TAG Only 1 phone number found for contact [${friend.name}], starting call directly"
                     )
                     coreContext.startCall(address)
-                    coreContext.postOnMainThread {
-                        findNavController().popBackStack()
-                    }
                 } else {
                     Log.e("$TAG Failed to interpret phone number [$number] as SIP address")
                 }

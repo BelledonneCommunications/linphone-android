@@ -72,7 +72,7 @@
         android:id="@+id/newCallFragment"
         android:name="org.linphone.ui.voip.fragment.NewCallFragment"
         android:label="NewCallFragment"
-        tools:layout="@layout/call_start_fragment" />
+        tools:layout="@layout/start_call_fragment" />
 
     <fragment
         android:id="@+id/callsListFragment"

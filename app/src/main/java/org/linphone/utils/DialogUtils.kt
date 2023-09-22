@@ -46,9 +46,9 @@ import org.linphone.databinding.DialogRemoveAllCallLogsBinding
 import org.linphone.databinding.DialogRemoveCallLogsBinding
 import org.linphone.ui.assistant.model.AcceptConditionsAndPolicyDialogModel
 import org.linphone.ui.assistant.model.ConfirmPhoneNumberDialogModel
-import org.linphone.ui.main.calls.model.ConfirmationDialogModel
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
 import org.linphone.ui.main.contacts.model.TrustCallDialogModel
+import org.linphone.ui.main.history.model.ConfirmationDialogModel
 import org.linphone.ui.voip.model.ZrtpSasConfirmationDialogModel
 
 class DialogUtils {

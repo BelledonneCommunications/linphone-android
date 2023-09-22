@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav_graph"
-    app:startDestination="@id/callsFragment">
+    app:startDestination="@id/historyFragment">
 
     <fragment
         android:id="@+id/contactsFragment"
@@ -12,23 +12,23 @@
         android:label="ContactsFragment"
         tools:layout="@layout/contacts_fragment">
         <action
-            android:id="@+id/action_contactsFragment_to_callsFragment"
-            app:destination="@id/callsFragment"
+            android:id="@+id/action_contactsFragment_to_historyFragment"
+            app:destination="@id/historyFragment"
             app:launchSingleTop="true"
             app:popUpTo="@id/contactsFragment"
             app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
-        android:id="@+id/callsFragment"
-        android:name="org.linphone.ui.main.calls.fragment.CallsFragment"
-        android:label="CallsFragment"
-        tools:layout="@layout/calls_fragment">
+        android:id="@+id/historyFragment"
+        android:name="org.linphone.ui.main.history.fragment.HistoryFragment"
+        android:label="HistoryFragment"
+        tools:layout="@layout/history_fragment">
         <action
-            android:id="@+id/action_callsFragment_to_contactsFragment"
+            android:id="@+id/action_historyFragment_to_contactsFragment"
             app:destination="@id/contactsFragment"
             app:launchSingleTop="true"
-            app:popUpTo="@id/callsFragment"
+            app:popUpTo="@id/historyFragment"
             app:popUpToInclusive="true" />
     </fragment>
 
@@ -100,9 +100,9 @@
 
     <fragment
         android:id="@+id/startCallFragment"
-        android:name="org.linphone.ui.main.calls.fragment.StartCallFragment"
+        android:name="org.linphone.ui.main.history.fragment.StartCallFragment"
         android:label="StartCallFragment"
-        tools:layout="@layout/call_start_fragment" />
+        tools:layout="@layout/start_call_fragment" />
 
     <action
         android:id="@+id/action_global_startCallFragment"

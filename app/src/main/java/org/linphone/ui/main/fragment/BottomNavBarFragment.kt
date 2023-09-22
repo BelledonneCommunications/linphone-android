@@ -77,7 +77,7 @@ class BottomNavBarFragment : Fragment() {
         }
 
         binding.setOnCallsClicked {
-            if (sharedViewModel.currentlyDisplayedFragment.value != R.id.callsFragment) {
+            if (sharedViewModel.currentlyDisplayedFragment.value != R.id.historyFragment) {
                 sharedViewModel.navigateToCallsEvent.value = Event(true)
             }
         }
@@ -92,7 +92,7 @@ class BottomNavBarFragment : Fragment() {
 
         sharedViewModel.currentlyDisplayedFragment.observe(viewLifecycleOwner) {
             viewModel.contactsSelected.value = it == R.id.contactsFragment
-            viewModel.callsSelected.value = it == R.id.callsFragment
+            viewModel.callsSelected.value = it == R.id.historyFragment
         }
 
         sharedViewModel.resetMissedCallsCountEvent.observe(viewLifecycleOwner) {

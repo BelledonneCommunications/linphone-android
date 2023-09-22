@@ -16,8 +16,8 @@ import kotlinx.coroutines.launch
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AccountProfileFragmentBinding
-import org.linphone.ui.main.calls.model.ConfirmationDialogModel
 import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.history.model.ConfirmationDialogModel
 import org.linphone.ui.main.settings.viewmodel.AccountProfileViewModel
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
