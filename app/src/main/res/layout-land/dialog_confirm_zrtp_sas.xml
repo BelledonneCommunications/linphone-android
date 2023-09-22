@@ -76,7 +76,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/letters_2"
             app:layout_constraintTop_toBottomOf="@id/message"
-            app:layout_constraintBottom_toTopOf="@id/letters_3"
+            app:layout_constraintBottom_toTopOf="@id/skip"
             app:layout_constraintHorizontal_chainStyle="packed"/>
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -85,13 +85,14 @@
             android:id="@+id/letters_2"
             android:layout_width="70dp"
             android:layout_height="70dp"
+            android:layout_marginEnd="32dp"
             android:text="@{viewModel.letters2, default=`PT`}"
             android:textSize="32sp"
             android:gravity="center"
             android:background="@drawable/shape_circle_white_background"
             android:elevation="5dp"
             app:layout_constraintStart_toEndOf="@id/letters_1"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/letters_3"
             app:layout_constraintTop_toTopOf="@id/letters_1"
             app:layout_constraintBottom_toBottomOf="@id/letters_1"/>
 
@@ -101,18 +102,16 @@
             android:id="@+id/letters_3"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:layout_marginTop="32dp"
             android:layout_marginEnd="32dp"
             android:text="@{viewModel.letters3, default=`BB`}"
             android:textSize="32sp"
             android:gravity="center"
             android:background="@drawable/shape_circle_white_background"
             android:elevation="5dp"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/letters_2"
             app:layout_constraintEnd_toStartOf="@id/letters_4"
-            app:layout_constraintTop_toBottomOf="@id/letters_1"
-            app:layout_constraintBottom_toTopOf="@id/skip"
-            app:layout_constraintHorizontal_chainStyle="packed"/>
+            app:layout_constraintTop_toTopOf="@id/letters_2"
+            app:layout_constraintBottom_toBottomOf="@id/letters_2"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{() -> viewModel.lettersClicked(viewModel.letters4)}"
@@ -127,8 +126,8 @@
             android:elevation="5dp"
             app:layout_constraintStart_toEndOf="@id/letters_3"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/letters_3"
-            app:layout_constraintBottom_toBottomOf="@id/letters_3"/>
+            app:layout_constraintTop_toTopOf="@id/letters_1"
+            app:layout_constraintBottom_toBottomOf="@id/letters_1"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{() -> viewModel.dismiss()}"
@@ -136,7 +135,7 @@
             android:id="@+id/skip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:paddingTop="13dp"
             android:paddingBottom="13dp"
             android:paddingEnd="20dp"
@@ -145,7 +144,7 @@
             android:textSize="13sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/letters_3"
+            app:layout_constraintTop_toBottomOf="@id/letters_1"
             app:layout_constraintBottom_toTopOf="@id/nothing_matches"/>
 
         <androidx.appcompat.widget.AppCompatTextView
