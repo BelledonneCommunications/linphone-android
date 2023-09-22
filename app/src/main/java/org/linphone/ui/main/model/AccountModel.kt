@@ -55,6 +55,8 @@ class AccountModel @WorkerThread constructor(
 
     val inError = MutableLiveData<Boolean>()
 
+    val isDisabled = MutableLiveData<Boolean>()
+
     val isDefault = MutableLiveData<Boolean>()
 
     val showTrust = MutableLiveData<Boolean>()
@@ -141,23 +143,33 @@ class AccountModel @WorkerThread constructor(
         isDefault.postValue(coreContext.core.defaultAccount == account)
 
         val state = when (account.state) {
-            RegistrationState.None, RegistrationState.Cleared -> AppUtils.getString(
-                R.string.drawer_menu_account_connection_status_cleared
-            )
+            RegistrationState.None, RegistrationState.Cleared -> {
+                isDisabled.postValue(true)
+                AppUtils.getString(
+                    R.string.drawer_menu_account_connection_status_cleared
+                )
+            }
             RegistrationState.Progress -> AppUtils.getString(
                 R.string.drawer_menu_account_connection_status_progress
             )
-            RegistrationState.Failed -> AppUtils.getString(
-                R.string.drawer_menu_account_connection_status_failed
-            )
-            RegistrationState.Ok -> AppUtils.getString(
-                R.string.drawer_menu_account_connection_status_connected
-            )
+            RegistrationState.Failed -> {
+                inError.postValue(true)
+                AppUtils.getString(
+                    R.string.drawer_menu_account_connection_status_failed
+                )
+            }
+            RegistrationState.Ok -> {
+                isConnected.postValue(true)
+                AppUtils.getString(
+                    R.string.drawer_menu_account_connection_status_connected
+                )
+            }
             RegistrationState.Refreshing -> AppUtils.getString(
                 R.string.drawer_menu_account_connection_status_refreshing
             )
             else -> "${account.state}"
         }
+        registrationState.postValue(state)
 
         val summary = when (account.state) {
             RegistrationState.None, RegistrationState.Cleared -> AppUtils.getString(
@@ -175,10 +187,6 @@ class AccountModel @WorkerThread constructor(
             else -> "${account.state}"
         }
         registrationStateSummary.postValue(summary)
-
-        isConnected.postValue(account.state == RegistrationState.Ok)
-        inError.postValue(account.state == RegistrationState.Failed)
-        registrationState.postValue(state)
     }
 }
 
