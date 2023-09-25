@@ -55,12 +55,14 @@ class CallActivity : ProximitySensorActivity() {
     private lateinit var statsViewModel: StatisticsListViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        // Flag in manifest should be enough starting Android 8.1
+        if (Version.sdkStrictlyBelow(Version.API27_OREO_81)) {
+            Compatibility.setShowWhenLocked(this, true)
+            Compatibility.setTurnScreenOn(this, true)
+            Compatibility.requestDismissKeyguard(this)
+        }
 
-        Compatibility.setShowWhenLocked(this, true)
-        Compatibility.setTurnScreenOn(this, true)
-        // Leaks on API 27+: https://stackoverflow.com/questions/60477120/keyguardmanager-memory-leak
-        Compatibility.requestDismissKeyguard(this)
+        super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.voip_activity)
         binding.lifecycleOwner = this
