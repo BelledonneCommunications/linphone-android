@@ -344,6 +344,7 @@ class CorePreferences constructor(private val context: Context) {
             config.setBool("app", "user_disabled_self_managed_telecom_manager", value)
         }
 
+    // Also uses Hearing Aids if available
     var routeAudioToBluetoothIfAvailable: Boolean
         get() = config.getBool("app", "route_audio_to_bluetooth_if_available", true)
         set(value) {
