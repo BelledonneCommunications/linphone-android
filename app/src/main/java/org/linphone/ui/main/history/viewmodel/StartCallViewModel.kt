@@ -45,6 +45,8 @@ class StartCallViewModel @UiThread constructor() : ViewModel() {
         private const val TAG = "[Start Call ViewModel]"
     }
 
+    val title = MutableLiveData<String>()
+
     val searchFilter = MutableLiveData<String>()
 
     val contactsAndSuggestionsList = MutableLiveData<ArrayList<ContactOrSuggestionModel>>()

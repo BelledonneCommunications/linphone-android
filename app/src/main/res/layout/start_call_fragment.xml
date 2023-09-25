@@ -15,6 +15,9 @@
             name="hideGroupChatButton"
             type="Boolean" />
         <variable
+            name="title"
+            type="String" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.main.history.viewmodel.StartCallViewModel" />
     </data>
@@ -48,7 +51,7 @@
                 android:layout_height="@dimen/top_bar_height"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:text="@string/history_call_start_title"
+                android:text="@{viewModel.title, default=@string/history_call_start_title}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/back"
                 app:layout_constraintTop_toTopOf="parent" />

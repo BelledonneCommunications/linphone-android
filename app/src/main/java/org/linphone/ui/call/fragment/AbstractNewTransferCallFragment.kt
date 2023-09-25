@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.main.history.fragment
+package org.linphone.ui.call.fragment
 
 import android.app.Dialog
 import android.os.Bundle
@@ -25,41 +25,40 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
 import androidx.core.view.doOnPreDraw
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.contacts.getListOfSipAddressesAndPhoneNumbers
+import org.linphone.core.Address
 import org.linphone.core.tools.Log
 import org.linphone.databinding.StartCallFragmentBinding
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressClickListener
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
-import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.ui.main.history.adapter.ContactsAndSuggestionsListAdapter
 import org.linphone.ui.main.history.model.ContactOrSuggestionModel
 import org.linphone.ui.main.history.viewmodel.StartCallViewModel
 import org.linphone.ui.main.model.isInSecureMode
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.RecyclerViewHeaderDecoration
-import org.linphone.utils.addCharacterAtPosition
 import org.linphone.utils.hideKeyboard
-import org.linphone.utils.removeCharacterAtPosition
 import org.linphone.utils.setKeyboardInsetListener
 import org.linphone.utils.showKeyboard
 
-@UiThread
-class StartCallFragment : GenericFragment() {
+abstract class AbstractNewTransferCallFragment : GenericCallFragment() {
     companion object {
-        private const val TAG = "[Start Call Fragment]"
+        private const val TAG = "[New/Transfer Call Fragment]"
     }
 
     private lateinit var binding: StartCallFragmentBinding
 
     private val viewModel: StartCallViewModel by navGraphViewModels(
-        R.id.main_nav_graph
+        R.id.call_nav_graph
     )
 
     private lateinit var adapter: ContactsAndSuggestionsListAdapter
@@ -70,7 +69,7 @@ class StartCallFragment : GenericFragment() {
             val address = model.address
             if (address != null) {
                 coreContext.postOnCoreThread {
-                    coreContext.startCall(address)
+                    action(address)
                 }
             }
         }
@@ -81,6 +80,8 @@ class StartCallFragment : GenericFragment() {
     }
 
     private var numberOrAddressPickerDialog: Dialog? = null
+
+    abstract val title: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -97,11 +98,13 @@ class StartCallFragment : GenericFragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        viewModel.title.value = getString(R.string.history_call_start_title)
+        viewModel.title.value = title
         binding.viewModel = viewModel
 
+        binding.hideGroupChatButton = true
+
         binding.setBackClickListener {
-            goBack()
+            findNavController().popBackStack()
         }
 
         binding.setHideNumpadClickListener {
@@ -144,13 +147,24 @@ class StartCallFragment : GenericFragment() {
 
         viewModel.removedCharacterAtCurrentPositionEvent.observe(viewLifecycleOwner) {
             it.consume {
-                binding.searchBar.removeCharacterAtPosition()
+                val selectionStart = binding.searchBar.selectionStart
+                val selectionEnd = binding.searchBar.selectionEnd
+                if (selectionStart > 0) {
+                    binding.searchBar.text =
+                        binding.searchBar.text?.delete(
+                            selectionStart - 1,
+                            selectionEnd
+                        )
+                    binding.searchBar.setSelection(selectionStart - 1)
+                }
             }
         }
 
         viewModel.appendDigitToSearchBarEvent.observe(viewLifecycleOwner) {
             it.consume { digit ->
-                binding.searchBar.addCharacterAtPosition(digit)
+                val newValue = "${binding.searchBar.text}$digit"
+                binding.searchBar.setText(newValue)
+                binding.searchBar.setSelection(newValue.length)
             }
         }
 
@@ -185,17 +199,18 @@ class StartCallFragment : GenericFragment() {
     override fun onPause() {
         super.onPause()
 
-        viewModel.isNumpadVisible.value = false
-
         numberOrAddressPickerDialog?.dismiss()
         numberOrAddressPickerDialog = null
     }
+
+    @WorkerThread
+    abstract fun action(address: Address)
 
     private fun startCall(model: ContactOrSuggestionModel) {
         coreContext.postOnCoreThread { core ->
             val friend = model.friend
             if (friend == null) {
-                coreContext.startCall(model.address)
+                action(model.address)
                 return@postOnCoreThread
             }
 
@@ -210,7 +225,7 @@ class StartCallFragment : GenericFragment() {
                     "$TAG Only 1 SIP address found for contact [${friend.name}], starting call directly"
                 )
                 val address = friend.addresses.first()
-                coreContext.startCall(address)
+                action(address)
             } else if (addressesCount == 0 && numbersCount == 1 && enablePhoneNumbers) {
                 val number = friend.phoneNumbers.first()
                 val address = core.interpretUrl(number, true)
@@ -218,7 +233,7 @@ class StartCallFragment : GenericFragment() {
                     Log.i(
                         "$TAG Only 1 phone number found for contact [${friend.name}], starting call directly"
                     )
-                    coreContext.startCall(address)
+                    action(address)
                 } else {
                     Log.e("$TAG Failed to interpret phone number [$number] as SIP address")
                 }

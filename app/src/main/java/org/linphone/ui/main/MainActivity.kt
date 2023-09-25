@@ -106,6 +106,14 @@ class MainActivity : AppCompatActivity() {
                 POST_NOTIFICATIONS_PERMISSION_REQUEST
             )
         }
+
+        coreContext.greenToastToShowEvent.observe(this) {
+            it.consume { pair ->
+                val message = pair.first
+                val icon = pair.second
+                showGreenToast(message, icon)
+            }
+        }
     }
 
     override fun onRequestPermissionsResult(

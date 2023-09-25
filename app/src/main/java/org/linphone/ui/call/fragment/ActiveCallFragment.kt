@@ -135,6 +135,11 @@ class ActiveCallFragment : GenericCallFragment() {
             findNavController().navigate(action)
         }
 
+        binding.setTransferClickListener {
+            val action = ActiveCallFragmentDirections.actionActiveCallFragmentToTransferCallFragment()
+            findNavController().navigate(action)
+        }
+
         binding.setCallsListClickListener {
             val action = ActiveCallFragmentDirections.actionActiveCallFragmentToCallsListFragment()
             findNavController().navigate(action)

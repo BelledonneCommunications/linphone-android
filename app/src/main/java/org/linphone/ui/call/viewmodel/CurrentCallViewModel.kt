@@ -30,6 +30,7 @@ import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.core.Address
 import org.linphone.core.Alert
 import org.linphone.core.AlertListenerStub
 import org.linphone.core.AudioDevice
@@ -113,6 +114,14 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     val showNumpadBottomSheetEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
+    }
+
+    val transferInProgressEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
+
+    val transferFailedEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
     }
 
     val numpadModel: NumpadModel
@@ -245,6 +254,22 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                         )
                     }
                 }
+            }
+        }
+
+        @WorkerThread
+        override fun onTransferStateChanged(core: Core, transfered: Call, state: Call.State) {
+            Log.i(
+                "$TAG Transferred call [${transfered.remoteAddress.asStringUriOnly()}] state changed [$state]"
+            )
+
+            // TODO FIXME: Remote is call being transferred, not transferee !
+            if (state == Call.State.OutgoingProgress) {
+                val displayName = coreContext.contactsManager.findDisplayName(transfered.remoteAddress)
+                transferInProgressEvent.postValue(Event(displayName))
+            } else if (LinphoneUtils.isCallEnding(state)) {
+                val displayName = coreContext.contactsManager.findDisplayName(transfered.remoteAddress)
+                transferFailedEvent.postValue(Event(displayName))
             }
         }
     }
@@ -487,6 +512,22 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun showNumpad() {
         showNumpadBottomSheetEvent.value = Event(true)
+    }
+
+    @WorkerThread
+    fun blindTransferCallTo(to: Address) {
+        if (::currentCall.isInitialized) {
+            Log.i(
+                "$TAG Call [${currentCall.remoteAddress.asStringUriOnly()}] is being blindly transferred to [${to.asStringUriOnly()}]"
+            )
+            if (currentCall.transferTo(to) == 0) {
+                Log.i("$TAG Blind call transfer is successful")
+            } else {
+                Log.e("$TAG Failed to make blind call transfer!")
+                val displayName = coreContext.contactsManager.findDisplayName(to)
+                transferFailedEvent.postValue(Event(displayName))
+            }
+        }
     }
 
     @WorkerThread

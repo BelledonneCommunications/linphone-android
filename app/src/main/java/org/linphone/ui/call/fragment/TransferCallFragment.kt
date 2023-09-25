@@ -19,27 +19,41 @@
  */
 package org.linphone.ui.call.fragment
 
+import android.os.Bundle
+import android.view.View
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Address
 import org.linphone.core.tools.Log
+import org.linphone.ui.call.viewmodel.CurrentCallViewModel
 
 @UiThread
-class NewCallFragment : AbstractNewTransferCallFragment() {
+class TransferCallFragment : AbstractNewTransferCallFragment() {
     companion object {
-        private const val TAG = "[New Call Fragment]"
+        private const val TAG = "[Transfer Call Fragment]"
     }
 
     override val title: String
-        get() = getString(R.string.call_action_start_new_call)
+        get() = getString(R.string.call_transfer_title)
+
+    private lateinit var callViewModel: CurrentCallViewModel
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        callViewModel = requireActivity().run {
+            ViewModelProvider(this)[CurrentCallViewModel::class.java]
+        }
+    }
 
     @WorkerThread
     override fun action(address: Address) {
-        Log.i("$TAG Calling [${address.asStringUriOnly()}]")
-        coreContext.startCall(address)
+        Log.i("$TAG Transferring current call to [${address.asStringUriOnly()}]")
+        callViewModel.blindTransferCallTo(address)
 
         coreContext.postOnMainThread {
             findNavController().popBackStack()

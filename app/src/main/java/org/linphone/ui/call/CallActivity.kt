@@ -29,6 +29,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.view.children
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -58,6 +59,8 @@ import org.linphone.utils.slideInToastFromTopForDuration
 class CallActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "[Call Activity]"
+
+        private const val PERSISTENT_TOAST_TAG = "PERSISTENT"
     }
 
     private lateinit var binding: CallActivityBinding
@@ -108,15 +111,16 @@ class CallActivity : AppCompatActivity() {
         callViewModel.showLowWifiSignalEvent.observe(this) {
             it.consume { show ->
                 if (show) {
-                    showRedToast(
+                    showPersistentRedToast(
                         getString(R.string.toast_alert_low_wifi_signal),
                         R.drawable.wifi_low
                     )
                 } else {
-                    hideRedToast()
+                    removePersistentRedToasts()
                     showGreenToast(
                         getString(R.string.toast_alert_low_wifi_signal_cleared),
-                        R.drawable.wifi_high
+                        R.drawable.wifi_high,
+                        2000
                     )
                 }
             }
@@ -125,17 +129,36 @@ class CallActivity : AppCompatActivity() {
         callViewModel.showLowCellularSignalEvent.observe(this) {
             it.consume { show ->
                 if (show) {
-                    showRedToast(
+                    showPersistentRedToast(
                         getString(R.string.toast_alert_low_cellular_signal),
                         R.drawable.cell_signal_low
                     )
                 } else {
-                    hideRedToast()
+                    removePersistentRedToasts()
                     showGreenToast(
                         getString(R.string.toast_alert_low_cellular_signal_cleared),
-                        R.drawable.cell_signal_full
+                        R.drawable.cell_signal_full,
+                        2000
                     )
                 }
+            }
+        }
+
+        callViewModel.transferInProgressEvent.observe(this) {
+            it.consume { remote ->
+                showGreenToast(
+                    getString(R.string.toast_call_transfer_in_progress, remote),
+                    R.drawable.transfer
+                )
+            }
+        }
+
+        callViewModel.transferFailedEvent.observe(this) {
+            it.consume { remote ->
+                showRedToast(
+                    getString(R.string.toast_call_transfer_failed, remote),
+                    R.drawable.warning_circle
+                )
             }
         }
 
@@ -245,8 +268,20 @@ class CallActivity : AppCompatActivity() {
         )
     }
 
-    private fun showRedToast(message: String, @DrawableRes icon: Int) {
+    private fun showRedToast(message: String, @DrawableRes icon: Int, duration: Long = 4000) {
         val redToast = AppUtils.getRedToast(this, binding.toastsArea, message, icon)
+        binding.toastsArea.addView(redToast.root)
+
+        redToast.root.slideInToastFromTopForDuration(
+            binding.toastsArea as ViewGroup,
+            lifecycleScope,
+            duration
+        )
+    }
+
+    private fun showPersistentRedToast(message: String, @DrawableRes icon: Int) {
+        val redToast = AppUtils.getRedToast(this, binding.toastsArea, message, icon)
+        redToast.root.tag = PERSISTENT_TOAST_TAG
         binding.toastsArea.addView(redToast.root)
 
         redToast.root.slideInToastFromTop(
@@ -255,19 +290,22 @@ class CallActivity : AppCompatActivity() {
         )
     }
 
-    private fun hideRedToast() {
-        // TODO: improve
-        binding.toastsArea.removeAllViews()
+    private fun removePersistentRedToasts() {
+        for (child in binding.toastsArea.children) {
+            if (child.tag == PERSISTENT_TOAST_TAG) {
+                binding.toastsArea.removeView(child)
+            }
+        }
     }
 
-    private fun showGreenToast(message: String, @DrawableRes icon: Int) {
+    private fun showGreenToast(message: String, @DrawableRes icon: Int, duration: Long = 4000) {
         val greenToast = AppUtils.getGreenToast(this, binding.toastsArea, message, icon)
         binding.toastsArea.addView(greenToast.root)
 
         greenToast.root.slideInToastFromTopForDuration(
             binding.toastsArea as ViewGroup,
             lifecycleScope,
-            2000
+            duration
         )
     }
 

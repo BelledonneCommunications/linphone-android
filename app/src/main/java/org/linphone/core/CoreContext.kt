@@ -30,8 +30,10 @@ import androidx.annotation.AnyThread
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.emoji2.text.EmojiCompat
+import androidx.lifecycle.MutableLiveData
 import java.util.*
 import org.linphone.BuildConfig
+import org.linphone.LinphoneApplication
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.contacts.ContactsManager
 import org.linphone.core.tools.Log
@@ -39,6 +41,7 @@ import org.linphone.notifications.NotificationsManager
 import org.linphone.telecom.TelecomManager
 import org.linphone.ui.call.CallActivity
 import org.linphone.utils.ActivityMonitor
+import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
 class CoreContext @UiThread constructor(val context: Context) : HandlerThread("Core Thread") {
@@ -68,6 +71,10 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
 
     private val mainThread = Handler(Looper.getMainLooper())
 
+    val greenToastToShowEvent: MutableLiveData<Event<Pair<String, Int>>> by lazy {
+        MutableLiveData<Event<Pair<String, Int>>>()
+    }
+
     @SuppressLint("HandlerLeak")
     private lateinit var coreThread: Handler
 
@@ -77,6 +84,7 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
             Log.i("$TAG Global state changed [$state]")
         }
 
+        @WorkerThread
         override fun onConfiguringStatus(
             core: Core,
             status: Config.ConfiguringState?,
@@ -101,6 +109,25 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
                 }
                 else -> {
                 }
+            }
+        }
+
+        @WorkerThread
+        override fun onTransferStateChanged(core: Core, transfered: Call, state: Call.State) {
+            Log.i(
+                "$TAG Transferred call [${transfered.remoteAddress.asStringUriOnly()}] state changed [$state]"
+            )
+            if (state == Call.State.Connected) {
+                // TODO FIXME: Remote is call being transferred, not transferee !
+                val displayName = contactsManager.findDisplayName(transfered.remoteAddress)
+
+                val message = context.getString(
+                    org.linphone.R.string.toast_call_transfer_successful,
+                    displayName
+                )
+                val icon = org.linphone.R.drawable.transfer
+
+                greenToastToShowEvent.postValue(Event(Pair(message, icon)))
             }
         }
     }
