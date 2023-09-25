@@ -19,8 +19,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        android:animateLayoutChanges="true">
+        android:background="@color/white">
 
         <ImageView
             android:id="@+id/back"
@@ -60,193 +59,184 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/title" />
 
-        <ScrollView
-            android:id="@+id/scrollView"
+        <View
+            android:id="@+id/background"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@color/gray_100"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <io.getstream.avatarview.AvatarView
+            android:id="@+id/avatar"
+            android:layout_width="@dimen/avatar_big_size"
+            android:layout_height="@dimen/avatar_big_size"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/shape_circle_light_blue_background"
+            contactAvatar="@{viewModel.callLogModel.avatarModel}"
+            app:avatarViewInitialsBackgroundColor="@color/gray_main2_200"
+            app:avatarViewInitialsTextColor="@color/gray_main2_600"
+            app:avatarViewInitialsTextSize="21sp"
+            app:avatarViewInitialsTextStyle="bold"
+            app:avatarViewPlaceholder="@drawable/user_circle"
+            app:avatarViewShape="circle"
+            app:avatarViewBorderWidth="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title" />
+
+        <ImageView
+            android:id="@+id/presence_badge"
+            android:layout_width="@dimen/avatar_presence_badge_big_size"
+            android:layout_height="@dimen/avatar_presence_badge_big_size"
+            android:layout_marginEnd="@dimen/avatar_presence_badge_big_end_margin"
+            android:background="@drawable/led_background"
+            android:padding="@dimen/avatar_presence_badge_big_padding"
+            app:presenceIcon="@{viewModel.callLogModel.avatarModel.presenceStatus}"
+            android:visibility="@{viewModel.callLogModel.avatarModel.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE}"
+            app:layout_constraintEnd_toEndOf="@id/avatar"
+            app:layout_constraintBottom_toBottomOf="@id/avatar"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@{viewModel.callLogModel.avatarModel.name, default=`John Doe`}"
+            android:textColor="@color/gray_main2_700"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/avatar" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.callLogModel.displayedAddress, default=`+33601020304`}"
+            android:textColor="@color/gray_main2_700"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/name" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_300"
+            android:id="@+id/status"
+            android:visibility="@{viewModel.callLogModel.avatarModel.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.callLogModel.avatarModel.lastPresenceInfo, default=@string/friend_presence_status_online}"
+            android:textColor="@{viewModel.callLogModel.avatarModel.presenceStatus == ConsolidatedPresence.Online ? @color/green_success_500 : @color/orange_away, default=@color/green_success_500}"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/address" />
+
+        <ImageView
+            android:onClick="@{() -> viewModel.startAudioCall()}"
+            android:id="@+id/call"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/circle_light_blue_button_background"
+            android:padding="16dp"
+            android:src="@drawable/phone"
+            app:tint="@color/gray_main2_500"
+            app:layout_constraintEnd_toStartOf="@id/chat"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/status" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:onClick="@{() -> viewModel.startAudioCall()}"
+            android:id="@+id/call_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/friend_call_action"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@id/call"
+            app:layout_constraintStart_toStartOf="@id/call"
+            app:layout_constraintEnd_toEndOf="@id/call"/>
+
+        <ImageView
+            android:onClick="@{() -> viewModel.sendMessage()}"
+            android:id="@+id/chat"
+            android:visibility="@{viewModel.chatDisabled ? View.GONE : View.VISIBLE}"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/circle_light_blue_button_background"
+            android:padding="16dp"
+            android:src="@drawable/chat_dots"
+            app:tint="@color/gray_main2_500"
+            app:layout_constraintEnd_toStartOf="@id/video_call"
+            app:layout_constraintStart_toEndOf="@id/call"
+            app:layout_constraintTop_toBottomOf="@id/status" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:onClick="@{() -> viewModel.sendMessage()}"
+            android:id="@+id/chat_label"
+            android:visibility="@{viewModel.chatDisabled ? View.GONE : View.VISIBLE}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/friend_message_action"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@id/chat"
+            app:layout_constraintStart_toStartOf="@id/chat"
+            app:layout_constraintEnd_toEndOf="@id/chat"/>
+
+        <ImageView
+            android:onClick="@{() -> viewModel.startVideoCall()}"
+            android:id="@+id/video_call"
+            android:visibility="@{viewModel.videoCallDisabled ? View.GONE : View.VISIBLE}"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/circle_light_blue_button_background"
+            android:padding="16dp"
+            android:src="@drawable/video_camera"
+            app:tint="@color/gray_main2_500"
+            app:layout_constraintStart_toEndOf="@id/chat"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/status" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:onClick="@{() -> viewModel.startVideoCall()}"
+            android:id="@+id/video_call_label"
+            android:visibility="@{viewModel.videoCallDisabled ? View.GONE : View.VISIBLE}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/friend_video_call_action"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@id/video_call"
+            app:layout_constraintStart_toStartOf="@id/video_call"
+            app:layout_constraintEnd_toEndOf="@id/video_call"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/call_history"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="28dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="@dimen/screen_bottom_margin"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:background="@drawable/shape_squircle_white_background"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/title"
-            app:layout_constraintBottom_toBottomOf="parent">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <io.getstream.avatarview.AvatarView
-                    android:id="@+id/avatar"
-                    android:layout_width="@dimen/avatar_big_size"
-                    android:layout_height="@dimen/avatar_big_size"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/shape_circle_light_blue_background"
-                    contactAvatar="@{viewModel.callLogModel.avatarModel}"
-                    app:avatarViewInitialsBackgroundColor="@color/gray_main2_200"
-                    app:avatarViewInitialsTextColor="@color/gray_main2_600"
-                    app:avatarViewInitialsTextSize="21sp"
-                    app:avatarViewInitialsTextStyle="bold"
-                    app:avatarViewPlaceholder="@drawable/user_circle"
-                    app:avatarViewShape="circle"
-                    app:avatarViewBorderWidth="0dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:id="@+id/presence_badge"
-                    android:layout_width="@dimen/avatar_presence_badge_big_size"
-                    android:layout_height="@dimen/avatar_presence_badge_big_size"
-                    android:layout_marginEnd="@dimen/avatar_presence_badge_big_end_margin"
-                    android:background="@drawable/led_background"
-                    android:padding="@dimen/avatar_presence_badge_big_padding"
-                    app:presenceIcon="@{viewModel.callLogModel.avatarModel.presenceStatus}"
-                    android:visibility="@{viewModel.callLogModel.avatarModel.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE}"
-                    app:layout_constraintEnd_toEndOf="@id/avatar"
-                    app:layout_constraintBottom_toBottomOf="@id/avatar"/>
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style"
-                    android:id="@+id/name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="@{viewModel.callLogModel.avatarModel.name, default=`John Doe`}"
-                    android:textColor="@color/gray_main2_700"
-                    android:textSize="14sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/avatar" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style"
-                    android:id="@+id/address"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@{viewModel.callLogModel.displayedAddress, default=`+33601020304`}"
-                    android:textColor="@color/gray_main2_700"
-                    android:textSize="14sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/name" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style_300"
-                    android:id="@+id/status"
-                    android:visibility="@{viewModel.callLogModel.avatarModel.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@{viewModel.callLogModel.avatarModel.lastPresenceInfo, default=@string/friend_presence_status_online}"
-                    android:textColor="@{viewModel.callLogModel.avatarModel.presenceStatus == ConsolidatedPresence.Online ? @color/green_success_500 : @color/orange_away, default=@color/green_success_500}"
-                    android:textSize="14sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/address" />
-
-                <ImageView
-                    android:onClick="@{() -> viewModel.startAudioCall()}"
-                    android:id="@+id/call"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:layout_marginTop="20dp"
-                    android:background="@drawable/circle_light_blue_button_background"
-                    android:padding="16dp"
-                    android:src="@drawable/phone"
-                    app:tint="@color/gray_main2_500"
-                    app:layout_constraintEnd_toStartOf="@id/chat"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/status" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style"
-                    android:onClick="@{() -> viewModel.startAudioCall()}"
-                    android:id="@+id/call_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/friend_call_action"
-                    android:textSize="14sp"
-                    app:layout_constraintTop_toBottomOf="@id/call"
-                    app:layout_constraintStart_toStartOf="@id/call"
-                    app:layout_constraintEnd_toEndOf="@id/call"/>
-
-                <ImageView
-                    android:onClick="@{() -> viewModel.sendMessage()}"
-                    android:id="@+id/chat"
-                    android:visibility="@{viewModel.chatDisabled ? View.GONE : View.VISIBLE}"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:layout_marginTop="20dp"
-                    android:background="@drawable/circle_light_blue_button_background"
-                    android:padding="16dp"
-                    android:src="@drawable/chat_dots"
-                    app:tint="@color/gray_main2_500"
-                    app:layout_constraintEnd_toStartOf="@id/video_call"
-                    app:layout_constraintStart_toEndOf="@id/call"
-                    app:layout_constraintTop_toBottomOf="@id/status" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style"
-                    android:onClick="@{() -> viewModel.sendMessage()}"
-                    android:id="@+id/chat_label"
-                    android:visibility="@{viewModel.chatDisabled ? View.GONE : View.VISIBLE}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/friend_message_action"
-                    android:textSize="14sp"
-                    app:layout_constraintTop_toBottomOf="@id/chat"
-                    app:layout_constraintStart_toStartOf="@id/chat"
-                    app:layout_constraintEnd_toEndOf="@id/chat"/>
-
-                <ImageView
-                    android:onClick="@{() -> viewModel.startVideoCall()}"
-                    android:id="@+id/video_call"
-                    android:visibility="@{viewModel.videoCallDisabled ? View.GONE : View.VISIBLE}"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:layout_marginTop="20dp"
-                    android:background="@drawable/circle_light_blue_button_background"
-                    android:padding="16dp"
-                    android:src="@drawable/video_camera"
-                    app:tint="@color/gray_main2_500"
-                    app:layout_constraintStart_toEndOf="@id/chat"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/status" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style"
-                    android:onClick="@{() -> viewModel.startVideoCall()}"
-                    android:id="@+id/video_call_label"
-                    android:visibility="@{viewModel.videoCallDisabled ? View.GONE : View.VISIBLE}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/friend_video_call_action"
-                    android:textSize="14sp"
-                    app:layout_constraintTop_toBottomOf="@id/video_call"
-                    app:layout_constraintStart_toStartOf="@id/video_call"
-                    app:layout_constraintEnd_toEndOf="@id/video_call"/>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/call_history"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="28dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="@dimen/screen_bottom_margin"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:background="@drawable/shape_squircle_white_background"
-                    android:nestedScrollingEnabled="true"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/call_label"
-                    app:layout_constraintBottom_toBottomOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </ScrollView>
+            app:layout_constraintTop_toBottomOf="@id/call_label"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
