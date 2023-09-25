@@ -30,6 +30,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.ServiceInfo
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.annotation.AnyThread
 import androidx.annotation.MainThread
@@ -490,7 +491,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             coreContext.contactsManager.findContactByAddress(address)
         val contactPicture = contact?.photo
         val roundPicture = if (!contactPicture.isNullOrEmpty()) {
-            ImageUtils.getRoundBitmapFromUri(context, Uri.parse(contactPicture))
+            BitmapFactory.decodeFile(contactPicture)
         } else {
             null
         }
@@ -592,7 +593,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             coreContext.contactsManager.findContactByAddress(message.fromAddress)
         val contactPicture = contact?.photo
         val roundPicture = if (!contactPicture.isNullOrEmpty()) {
-            ImageUtils.getRoundBitmapFromUri(context, Uri.parse(contactPicture))
+            BitmapFactory.decodeFile(contactPicture)
         } else {
             null
         }
@@ -650,7 +651,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             coreContext.contactsManager.findContactByAddress(call.remoteAddress)
         val contactPicture = contact?.photo
         val roundPicture = if (!contactPicture.isNullOrEmpty()) {
-            ImageUtils.getRoundBitmapFromUri(context, Uri.parse(contactPicture))
+            BitmapFactory.decodeFile(contactPicture)
         } else {
             null
         }

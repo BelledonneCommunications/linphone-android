@@ -25,6 +25,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.ContactsContract
 import androidx.annotation.UiThread
@@ -300,10 +301,7 @@ class ContactsManager @UiThread constructor(context: Context) {
 
         val photo = account?.params?.pictureUri.orEmpty()
         val bm: Bitmap? = if (photo.isNotEmpty()) {
-            ImageUtils.getRoundBitmapFromUri(
-                coreContext.context,
-                Uri.parse(photo ?: "")
-            )
+            BitmapFactory.decodeFile(photo)
         } else {
             null
         }
@@ -332,10 +330,7 @@ fun Friend.getPerson(): Person {
     val personBuilder = Person.Builder().setName(name)
 
     val bm: Bitmap? = if (!photo.isNullOrEmpty()) {
-        ImageUtils.getRoundBitmapFromUri(
-            coreContext.context,
-            Uri.parse(photo ?: "")
-        )
+        BitmapFactory.decodeFile(photo)
     } else {
         null
     }
