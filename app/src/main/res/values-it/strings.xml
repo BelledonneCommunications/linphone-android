@@ -115,11 +115,11 @@
     <string name="account_settings_password_title">Password</string>
     <string name="account_settings_transport_tcp">TCP</string>
     <string name="account_settings_transport_udp">UDP</string>
-    <string name="assistant_linphone_login_desc">Inserisci il tuo nome utente e password di &amp;appName;</string>
+    <string name="assistant_linphone_login_desc">Inserisci il tuo nome utente e password di &appName;</string>
     <string name="assistant_login_with_username">Utilizza il tuo nome utente e password anziché il tuo numero di telefono</string>
     <string name="assistant_login_forgotten_password">Dimenticato la tua password\?</string>
     <string name="assistant_login_desc">Inserisci il tuo nome utente e password con il tuo dominio SIP</string>
-    <string name="assistant_create_account_part_email">Inserisci un nome utente, email e password per il tuo account &amp;appName;</string>
+    <string name="assistant_create_account_part_email">Inserisci un nome utente, email e password per il tuo account &appName;</string>
     <string name="service_auto_start_description">&appName; è stato avviato automaticamente</string>
     <string name="chat_settings_auto_download_never">Mai</string>
     <string name="chat_settings_auto_download_max_size_summary">in bytes</string>
@@ -198,7 +198,7 @@
     <string name="conference_info_removed">Le info del meeting sono state eliminate</string>
     <string name="call_locally_paused_title">Hai messo in pausa la chiamata.</string>
     <string name="call_stats_jitter_buffer">Jitter buffer:</string>
-    <string name="assistant_login_linphone">Usa account &amp;appName;</string>
+    <string name="assistant_login_linphone">Usa account &appName;</string>
     <string name="assistant_general_terms">condizioni d\'uso</string>
     <string name="account_settings_user_id_title">Auth id</string>
     <string name="content_description_numpad_4">4</string>
@@ -213,7 +213,7 @@
     <string name="content_description_contact_can_do_encryption">Il contatto può essere invitato in una conversazione criptata</string>
     <string name="content_description_start_chat">Vai alla conversazione</string>
     <string name="content_description_discard_changes">Annulla modifiche</string>
-    <string name="service_name">Servizio &amp;appName;</string>
+    <string name="service_name">Servizio &appName;</string>
     <string name="content_description_show_call_details">Vai ai dettagli della chiamata</string>
     <string name="content_description_select_all">Seleziona tutti gli oggetti in lista</string>
     <string name="content_description_numpad_5">5</string>
@@ -243,7 +243,7 @@
     <string name="call_stats_video">Video</string>
     <string name="advanced_settings_remote_provisioning_url_title">URL provisioning remoto</string>
     <string name="call_stats_codec">Codec:</string>
-    <string name="conference_schedule_send_invite_chat_summary">L\'invito sarà inviato tramite il mio account &amp;appName;</string>
+    <string name="conference_schedule_send_invite_chat_summary">L\'invito sarà inviato tramite il mio account &appName;</string>
     <string name="assistant_validate_account_1">Il tuo account è stato creato. Controlla la tua email per verificare il tuo account:</string>
     <string name="contacts_settings_ldap_tls_title">Usa TLS</string>
     <string name="contacts_settings_ldap_cert_check_disabled">Disabilitato</string>
@@ -282,7 +282,7 @@
     <string name="assistant_welcome_title">Benvenuto</string>
     <string name="advanced_settings_background_mode_title">Modalità background</string>
     <string name="assistant_welcome_desc">Questo assistente ti aiuterà a configurare ed utilizzare il tuo account SIP.</string>
-    <string name="assistant_create_account">Crea account &amp;appName;</string>
+    <string name="assistant_create_account">Crea account &appName;</string>
     <string name="assistant_remote_provisioning">Provisioning remoto</string>
     <string name="advanced_settings_vfs_summary">Una volta abilitato non sarà più possibile disabilitare!</string>
     <string name="assistant_link_account">Collega account</string>
@@ -331,8 +331,8 @@
     <string name="account_settings_advanced_title">Avanzate</string>
     <string name="account_settings_push_notification_title">Permetti notifiche push</string>
     <string name="account_settings_transport_tls">TLS</string>
-    <string name="notification_channel_service_name">&amp;appName; notifica di servizio</string>
-    <string name="notification_channel_missed_call_name">&amp;appName; notifica chiamate perse</string>
+    <string name="notification_channel_service_name">&appName; notifica di servizio</string>
+    <string name="notification_channel_missed_call_name">&appName; notifica chiamate perse</string>
     <string name="dialog_delete">Elimina</string>
     <string name="conference_low_bandwidth">Connessione lenta, disabilitazione video</string>
     <string name="conference_scheduled_delete_many_dialog">Vuoi cancellare questi meeting\?</string>
@@ -364,18 +364,18 @@
     <string name="assistant_validate_account_2">Una volta fatto, torna qui e clicca sul tasto.</string>
     <string name="audio_settings_echo_tester_summary_is_stopped">Test eco fermato</string>
     <string name="tunnel_settings_dual_mode_title">Dual mode abilitata</string>
-    <string name="conference_schedule_send_updated_invite_chat">Manda aggiornamento tramite &amp;appName;</string>
+    <string name="conference_schedule_send_updated_invite_chat">Manda aggiornamento tramite &appName;</string>
     <string name="conference_schedule_send_updated_invite_email">Manda aggiornamento tramite email</string>
     <string name="call_action_chat">Chat</string>
     <string name="call_action_numpad">Tastierino numerico</string>
     <string name="account_settings_link_phone_number_title">Collega il tuo account</string>
     <string name="incoming_call_notification_title">Chiamata in arrivo</string>
     <string name="content_description_delivery_status">Avvisa status consegna</string>
-    <string name="content_description_linphone_user">Il contatto è un utente &amp;appName;</string>
+    <string name="content_description_linphone_user">Il contatto è un utente &appName;</string>
     <string name="content_description_voice_mail">Segreteria telefonica</string>
     <string name="content_description_call_security_pending">La sicurezza della chiamata è in attesa</string>
     <string name="content_description_conference_participant_mic_muted">Il partecipante è mutato</string>
-    <string name="contacts_new_contact_wont_be_visible_warning_dialog">Stai per creare un nuovo contatto senza un SIP URI o un numero di telefono, questo non lo renderà visibile su &amp;appName;.
+    <string name="contacts_new_contact_wont_be_visible_warning_dialog">Stai per creare un nuovo contatto senza un SIP URI o un numero di telefono, questo non lo renderà visibile su &appName;.
 \n
 \nVuoi crearlo comunque\?</string>
     <string name="chat_message_pick_file_dialog">Seleziona sorgente</string>
@@ -410,7 +410,7 @@
     <string name="conference_schedule_time">Orario</string>
     <string name="conference_schedule_duration">Durata</string>
     <string name="conference_schedule_timezone">Fuso orario</string>
-    <string name="conference_schedule_send_invite_chat">Manda invito tramite &amp;appName;</string>
+    <string name="conference_schedule_send_invite_chat">Manda invito tramite &appName;</string>
     <string name="conference_schedule_send_invite_email">Manda invito tramite email</string>
     <string name="conference_schedule_encryption">Vuoi criptare il meeting\?</string>
     <string name="conference_schedule_participants_list">Lista partecipanti</string>
@@ -475,10 +475,10 @@
     <string name="assistant_phone_number_link_info_content">"
 \nI tuoi amici ti troveranno più facilmente se collegherai il tuo account al tuo numero di telefono
 \n
-\nVedrai nella tua rubrica chi sta utilizzando &amp;appName; ed i tuoi amici sapranno che ti potranno trovare su &amp;appName;.
+\nVedrai nella tua rubrica chi sta utilizzando &appName; ed i tuoi amici sapranno che ti potranno trovare su &appName;.
 \n"</string>
     <string name="assistant_read_and_agree_terms">Accetto i %1$s and %2$s di Belledonne Communications</string>
-    <string name="assistant_generic_account_warning">Alcune funzioni richiedono un account &amp;appName;, come le chat di gruppo o i messaggi effimeri.
+    <string name="assistant_generic_account_warning">Alcune funzioni richiedono un account &appName;, come le chat di gruppo o i messaggi effimeri.
 \n
 \nQueste funzioni verranno nascoste quando ti registri con un SIP account di terze parti.
 \n
@@ -486,7 +486,7 @@
     <string name="assistant_error_phone_number_already_exists">Un altro account utilizza già questo numero</string>
     <string name="assistant_error_username_too_long">Il nome utente è troppo lungo</string>
     <string name="assistant_error_invalid_international_prefix">Prefisso internazionale errato</string>
-    <string name="assistant_linphone_account">Utilizza il tuo account &amp;appName;</string>
+    <string name="assistant_linphone_account">Utilizza il tuo account &appName;</string>
     <string name="assistant_finish">Fine configurazione</string>
     <string name="assistant_use_username_instead_or_phone_number">Usa un nome utente (opzionale)</string>
     <string name="assistant_create_email_account_not_validated">Il tuo account non è stato ancora attivato, clicca sul link che hai ricevuto nella tua email</string>
@@ -666,7 +666,7 @@
     <string name="chat_message_abort_removal">Annulla</string>
     <string name="chat_message_voice_recording">Messaggio vocale</string>
     <string name="call_remotely_paused_title">La chiamata è stata messa in pausa da remoto.</string>
-    <string name="assistant_phone_number_link_info_content_already_account">Puoi utilizzare il tuo numero di telefono solo con un account di &amp;appName;.
+    <string name="assistant_phone_number_link_info_content_already_account">Puoi utilizzare il tuo numero di telefono solo con un account di &appName;.
 \n
 \nSe hai già collegato il tuo account ad un numero di telefono ma preferisci utilizzare questo, collegalo ora ed il tuo numero sarà automaticamente spostato su questo account.</string>
     <string name="assistant_error_username_already_exists">Nome utente già in uso</string>
@@ -714,7 +714,7 @@
     <string name="call_settings_auto_answer_delay_title">Tempo accettazione automatica</string>
     <string name="call_settings_auto_answer_delay_summary">in millisecondi</string>
     <string name="call_settings_incoming_timeout_summary">in secondi</string>
-    <string name="contacts_settings_native_presence_summary">Inserimento scorciatoie informazioni contatto da &amp;appName; ai contatti Android nativi</string>
+    <string name="contacts_settings_native_presence_summary">Inserimento scorciatoie informazioni contatto da &appName; ai contatti Android nativi</string>
     <string name="content_description_disable_video">Disabilita video in chiamata</string>
     <string name="content_description_transfer_call">Trasferisci chiamata ad altro utente</string>
     <string name="content_description_pending_file_transfer">Richiesta trasferimento file in attesa</string>
@@ -817,8 +817,8 @@
     <string name="assistant_error_phone_number_invalid_characters">Inserire solo numeri</string>
     <string name="audio_settings_codec_bitrate_title">Limite di bitrate del codec</string>
     <string name="contacts_settings_friendlist_subscribe_title">Iscrivi lista amici</string>
-    <string name="notification_channel_incoming_call_name">&amp;appName; notifica chiamata in arrivo</string>
-    <string name="notification_channel_chat_name">&amp;appName; notifica messaggio istantaneo</string>
+    <string name="notification_channel_incoming_call_name">&appName; notifica chiamata in arrivo</string>
+    <string name="notification_channel_chat_name">&appName; notifica messaggio istantaneo</string>
     <string name="incoming_group_call_notification_title">Chiamata di gruppo in arrivo</string>
     <string name="dialog_ok">OK</string>
     <string name="content_description_edit_contact">Modifica contatto</string>
