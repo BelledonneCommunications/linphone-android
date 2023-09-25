@@ -64,12 +64,22 @@ class CorePreferences @UiThread constructor(private val context: Context) {
 
     // Calls settings
 
+    @get:WorkerThread @set:WorkerThread
     var routeAudioToBluetoothIfAvailable: Boolean
         get() = config.getBool("app", "route_audio_to_bluetooth_if_available", true)
         set(value) {
             config.setBool("app", "route_audio_to_bluetooth_if_available", value)
         }
 
+    // This won't be done if bluetooth or wired headset is used
+    @get:WorkerThread @set:WorkerThread
+    var routeAudioToSpeakerWhenVideoIsEnabled: Boolean
+        get() = config.getBool("app", "route_audio_to_speaker_when_video_enabled", true)
+        set(value) {
+            config.setBool("app", "route_audio_to_speaker_when_video_enabled", value)
+        }
+
+    @get:WorkerThread @set:WorkerThread
     var automaticallyStartCallRecording: Boolean
         get() = config.getBool("app", "auto_start_call_record", false)
         set(value) {
@@ -105,9 +115,11 @@ class CorePreferences @UiThread constructor(private val context: Context) {
     val thirdPartyDefaultValuesPath: String
         get() = context.filesDir.absolutePath + "/assistant_third_party_default_values"
 
+    @get:AnyThread
     private val ringtonesPath: String
         get() = context.filesDir.absolutePath + "/share/sounds/linphone/rings/"
 
+    @get:AnyThread
     val defaultRingtonePath: String
         get() = ringtonesPath + "notes_of_the_optimistic.mkv"
 

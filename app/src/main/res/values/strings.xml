@@ -280,7 +280,7 @@
     <string name="call_action_show_dialer">Dialer</string>
     <string name="call_action_show_messages">Messages</string>
     <string name="call_action_pause_call">Pause</string>
-    <string name="call_action_resume_call">Pause</string>
+    <string name="call_action_resume_call">Resume</string>
     <string name="call_action_record_call">Record</string>
     <string name="call_action_hang_up">Hang up</string>
     <string name="call_state_outgoing_progress">In progress</string>

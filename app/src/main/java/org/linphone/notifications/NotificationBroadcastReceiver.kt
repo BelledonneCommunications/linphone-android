@@ -25,8 +25,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.core.Call
 import org.linphone.core.tools.Log
+import org.linphone.utils.LinphoneUtils
 
 class NotificationBroadcastReceiver : BroadcastReceiver() {
     companion object {
@@ -61,9 +61,7 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
                 if (intent.action == NotificationsManager.INTENT_ANSWER_CALL_NOTIF_ACTION) {
                     coreContext.answerCall(call)
                 } else {
-                    if (call.state == Call.State.IncomingReceived ||
-                        call.state == Call.State.IncomingEarlyMedia
-                    ) {
+                    if (LinphoneUtils.isCallIncoming(call.state)) {
                         coreContext.declineCall(call)
                     } else {
                         coreContext.terminateCall(call)

@@ -5,8 +5,14 @@
     <data>
         <import type="android.view.View" />
         <variable
+            name="pauseResumeClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="hangUpClickListener"
             type="View.OnClickListener" />
+        <variable
+            name="isPaused"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -15,7 +21,37 @@
         android:background="@color/gray_main2_200">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/delete"
+            android:id="@+id/pause"
+            android:onClick="@{pauseResumeClickListener}"
+            android:visibility="@{isPaused ? View.GONE : View.VISIBLE}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/call_action_pause_call"
+            style="@style/context_menu_action_label_style"
+            android:background="@drawable/menu_item_background"
+            android:layout_marginBottom="1dp"
+            android:drawableStart="@drawable/pause_call"
+            app:layout_constraintBottom_toTopOf="@id/hang_up"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/resume"
+            android:onClick="@{pauseResumeClickListener}"
+            android:visibility="@{isPaused ? View.VISIBLE : View.GONE, default=gone}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/call_action_resume_call"
+            style="@style/context_menu_action_label_style"
+            android:background="@drawable/menu_item_background"
+            android:layout_marginBottom="1dp"
+            android:drawableStart="@drawable/pause_call"
+            app:layout_constraintBottom_toTopOf="@id/hang_up"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/hang_up"
             android:onClick="@{hangUpClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

@@ -111,6 +111,14 @@ class LinphoneUtils {
         }
 
         @AnyThread
+        fun isCallIncoming(callState: Call.State): Boolean {
+            return when (callState) {
+                Call.State.IncomingReceived, Call.State.IncomingEarlyMedia -> true
+                else -> false
+            }
+        }
+
+        @AnyThread
         fun isCallOutgoing(callState: Call.State): Boolean {
             return when (callState) {
                 Call.State.OutgoingInit, Call.State.OutgoingProgress, Call.State.OutgoingRinging, Call.State.OutgoingEarlyMedia -> true
@@ -122,6 +130,14 @@ class LinphoneUtils {
         fun isCallPaused(callState: Call.State): Boolean {
             return when (callState) {
                 Call.State.Pausing, Call.State.Paused, Call.State.PausedByRemote, Call.State.Resuming -> true
+                else -> false
+            }
+        }
+
+        @AnyThread
+        fun isCallEnding(callState: Call.State): Boolean {
+            return when (callState) {
+                Call.State.End, Call.State.Error -> true
                 else -> false
             }
         }

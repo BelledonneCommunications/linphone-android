@@ -58,6 +58,13 @@ class CallMenuDialogFragment(
             dismiss()
         }
 
+        view.setPauseResumeClickListener {
+            callModel.togglePauseResume()
+            dismiss()
+        }
+
+        view.isPaused = callModel.isPaused.value == true
+
         return view.root
     }
 }

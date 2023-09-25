@@ -20,6 +20,7 @@
 package org.linphone.ui.call.fragment
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.LayoutInflater
@@ -60,6 +61,8 @@ class ActiveCallFragment : GenericCallFragment() {
     private lateinit var callViewModel: CurrentCallViewModel
 
     private lateinit var callsViewModel: CallsViewModel
+
+    private var zrtpSasDialog: Dialog? = null
 
     // For moving video preview purposes
 
@@ -181,6 +184,7 @@ class ActiveCallFragment : GenericCallFragment() {
                 }
 
                 dialog.show()
+                zrtpSasDialog = dialog
             }
         }
 
@@ -253,6 +257,10 @@ class ActiveCallFragment : GenericCallFragment() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onPause() {
         super.onPause()
+
+        zrtpSasDialog?.dismiss()
+        zrtpSasDialog = null
+
         binding.localPreviewVideoSurface.setOnTouchListener(null)
     }
 

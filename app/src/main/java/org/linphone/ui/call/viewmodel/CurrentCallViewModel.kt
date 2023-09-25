@@ -28,10 +28,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.core.Alert
+import org.linphone.core.AlertListenerStub
 import org.linphone.core.AudioDevice
 import org.linphone.core.Call
 import org.linphone.core.CallListenerStub
+import org.linphone.core.Core
+import org.linphone.core.CoreListenerStub
 import org.linphone.core.MediaDirection
 import org.linphone.core.MediaEncryption
 import org.linphone.core.tools.Log
@@ -46,6 +51,11 @@ import org.linphone.utils.LinphoneUtils
 class CurrentCallViewModel @UiThread constructor() : ViewModel() {
     companion object {
         private const val TAG = "[Current Call ViewModel]"
+
+        // Keys are hardcoded in SDK
+        private const val ALERT_NETWORK_TYPE_KEY = "network-type"
+        private const val ALERT_NETWORK_TYPE_WIFI = "wifi"
+        private const val ALERT_NETWORK_TYPE_CELLULAR = "mobile"
     }
 
     val contact = MutableLiveData<ContactAvatarModel>()
@@ -115,7 +125,13 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
-    private lateinit var call: Call
+    // Alerts related
+
+    val showLowWifiSignalEvent = MutableLiveData<Event<Boolean>>()
+
+    val showLowCellularSignalEvent = MutableLiveData<Event<Boolean>>()
+
+    private lateinit var currentCall: Call
 
     private val callListener = object : CallListenerStub() {
         @WorkerThread
@@ -124,24 +140,41 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         }
 
         @WorkerThread
-        override fun onStateChanged(call: Call, state: Call.State?, message: String) {
-            if (CurrentCallViewModel@call != call) {
-                return
-            }
+        override fun onStateChanged(call: Call, state: Call.State, message: String) {
             Log.i("$TAG Call [${call.remoteAddress.asStringUriOnly()}] state changed [$state]")
-
             if (LinphoneUtils.isCallOutgoing(call.state)) {
                 isVideoEnabled.postValue(call.params.isVideoEnabled)
+            } else if (LinphoneUtils.isCallEnding(call.state)) {
+                // If current call is being terminated but there is at least one other call, switch
+                val core = call.core
+                val callsCount = core.callsNb
+                Log.i(
+                    "$TAG Call is being ended, check for another current call (currently [$callsCount] calls)"
+                )
+                if (callsCount > 0) {
+                    val newCurrentCall = core.currentCall ?: core.calls.firstOrNull()
+                    if (newCurrentCall != null) {
+                        Log.i(
+                            "$TAG From now on current call will be [${newCurrentCall.remoteAddress.asStringUriOnly()}]"
+                        )
+                        configureCall(newCurrentCall)
+                    } else {
+                        Log.e("$TAG Failed to get a valid call to display!")
+                    }
+                }
             } else {
                 val videoEnabled = call.currentParams.isVideoEnabled
                 if (videoEnabled && isVideoEnabled.value == false) {
-                    Log.i("$TAG Video enabled, routing audio to speaker")
-                    AudioRouteUtils.routeAudioToSpeaker(call)
+                    if (corePreferences.routeAudioToSpeakerWhenVideoIsEnabled) {
+                        Log.i("$TAG Video is now enabled, routing audio to speaker")
+                        AudioRouteUtils.routeAudioToSpeaker(call)
+                    }
                 }
                 isVideoEnabled.postValue(videoEnabled)
 
                 // Toggle full screen OFF when remote disables video
                 if (!videoEnabled && fullScreenMode.value == true) {
+                    Log.w("$TAG Video is not longer enabled, leaving full screen mode")
                     fullScreenMode.postValue(false)
                 }
             }
@@ -154,6 +187,100 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         }
     }
 
+    private val coreListener = object : CoreListenerStub() {
+        override fun onCallStateChanged(
+            core: Core,
+            call: Call,
+            state: Call.State,
+            message: String
+        ) {
+            if (::currentCall.isInitialized) {
+                if (call != currentCall) {
+                    if (call == currentCall.core.currentCall) {
+                        Log.w(
+                            "$TAG Current call has changed, now is [${call.remoteAddress.asStringUriOnly()}] with state [$state]"
+                        )
+                        currentCall.removeListener(callListener)
+                        configureCall(call)
+                    } else if (LinphoneUtils.isCallIncoming(call.state)) {
+                        Log.w(
+                            "$TAG A call is being received [${call.remoteAddress.asStringUriOnly()}], using it as current call unless declined"
+                        )
+                        currentCall.removeListener(callListener)
+                        configureCall(call)
+                    }
+                }
+            } else {
+                Log.w(
+                    "$TAG There was no current call (shouldn't be possible), using [${call.remoteAddress.asStringUriOnly()}] anyway"
+                )
+                configureCall(call)
+            }
+        }
+
+        @WorkerThread
+        override fun onNewAlertTriggered(core: Core, alert: Alert) {
+            val remote = alert.call.remoteAddress.asStringUriOnly()
+            Log.w("$TAG Alert of type [${alert.type}] triggered for call from [$remote]")
+            alert.addListener(alertListener)
+
+            if (alert.call != currentCall) {
+                Log.w("$TAG Terminated alert wasn't for current call, do not display it")
+                return
+            }
+
+            if (alert.type == Alert.Type.QoSLowSignal) {
+                when (val networkType = alert.informations?.getString(ALERT_NETWORK_TYPE_KEY)) {
+                    ALERT_NETWORK_TYPE_WIFI -> {
+                        Log.i("$TAG Triggered low signal alert is for Wi-Fi")
+                        showLowWifiSignalEvent.postValue(Event(true))
+                    }
+                    ALERT_NETWORK_TYPE_CELLULAR -> {
+                        Log.i("$TAG Triggered low signal alert is for cellular")
+                        showLowCellularSignalEvent.postValue(Event(true))
+                    }
+                    else -> {
+                        Log.w(
+                            "$TAG Unexpected type of signal [$networkType] found in alert information"
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private val alertListener = object : AlertListenerStub() {
+        @WorkerThread
+        override fun onTerminated(alert: Alert) {
+            val remote = alert.call.remoteAddress.asStringUriOnly()
+            Log.w("$TAG Alert of type [${alert.type}] dismissed for call from [$remote]")
+            alert.removeListener(this)
+
+            if (alert.call != currentCall) {
+                Log.w("$TAG Terminated alert wasn't for current call, do not display it")
+                return
+            }
+
+            if (alert.type == Alert.Type.QoSLowSignal) {
+                when (val signalType = alert.informations?.getString(ALERT_NETWORK_TYPE_KEY)) {
+                    ALERT_NETWORK_TYPE_WIFI -> {
+                        Log.i("$TAG Wi-Fi signal no longer low")
+                        showLowWifiSignalEvent.postValue(Event(false))
+                    }
+                    ALERT_NETWORK_TYPE_CELLULAR -> {
+                        Log.i("$TAG Cellular signal no longer low")
+                        showLowCellularSignalEvent.postValue(Event(false))
+                    }
+                    else -> {
+                        Log.w(
+                            "$TAG Unexpected type of signal [$signalType] found in alert information"
+                        )
+                    }
+                }
+            }
+        }
+    }
+
     init {
         isVideoEnabled.value = false
         isMicrophoneMuted.value = false
@@ -161,10 +288,10 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         isActionsMenuExpanded.value = false
 
         coreContext.postOnCoreThread { core ->
-            val currentCall = core.currentCall ?: core.calls.firstOrNull()
+            core.addListener(coreListener)
+            val call = core.currentCall ?: core.calls.firstOrNull()
 
-            if (currentCall != null) {
-                call = currentCall
+            if (call != null) {
                 Log.i("$TAG Found call [${call.remoteAddress.asStringUriOnly()}]")
                 configureCall(call)
             } else {
@@ -178,8 +305,10 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
             { digit -> // onDigitClicked
                 appendDigitToSearchBarEvent.value = Event(digit)
                 coreContext.postOnCoreThread {
-                    Log.i("$TAG Sending DTMF [${digit.first()}]")
-                    call.sendDtmf(digit.first())
+                    if (::currentCall.isInitialized) {
+                        Log.i("$TAG Sending DTMF [${digit.first()}]")
+                        currentCall.sendDtmf(digit.first())
+                    }
                 }
             },
             { // OnBackspaceClicked
@@ -194,9 +323,11 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
     override fun onCleared() {
         super.onCleared()
 
-        coreContext.postOnCoreThread {
-            if (::call.isInitialized) {
-                call.removeListener(callListener)
+        coreContext.postOnCoreThread { core ->
+            core.removeListener(coreListener)
+
+            if (::currentCall.isInitialized) {
+                currentCall.removeListener(callListener)
             }
         }
     }
@@ -204,9 +335,9 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun answer() {
         coreContext.postOnCoreThread {
-            if (::call.isInitialized) {
-                Log.i("$TAG Answering call [$call]")
-                coreContext.answerCall(call)
+            if (::currentCall.isInitialized) {
+                Log.i("$TAG Answering call [$currentCall]")
+                coreContext.answerCall(currentCall)
             }
         }
     }
@@ -214,9 +345,9 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun hangUp() {
         coreContext.postOnCoreThread {
-            if (::call.isInitialized) {
-                Log.i("$TAG Terminating call [${call.remoteAddress.asStringUriOnly()}]")
-                call.terminate()
+            if (::currentCall.isInitialized) {
+                Log.i("$TAG Terminating call [${currentCall.remoteAddress.asStringUriOnly()}]")
+                currentCall.terminate()
             }
         }
     }
@@ -224,8 +355,8 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun updateZrtpSas(verified: Boolean) {
         coreContext.postOnCoreThread {
-            if (::call.isInitialized) {
-                call.authenticationTokenVerified = verified
+            if (::currentCall.isInitialized) {
+                currentCall.authenticationTokenVerified = verified
             }
         }
     }
@@ -242,9 +373,9 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         }
 
         coreContext.postOnCoreThread {
-            if (::call.isInitialized) {
-                call.microphoneMuted = !call.microphoneMuted
-                isMicrophoneMuted.postValue(call.microphoneMuted)
+            if (::currentCall.isInitialized) {
+                currentCall.microphoneMuted = !currentCall.microphoneMuted
+                isMicrophoneMuted.postValue(currentCall.microphoneMuted)
             }
         }
     }
@@ -267,12 +398,12 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                     // onSelected
                     coreContext.postOnCoreThread {
                         Log.i("$TAG Selected audio device with ID [${device.id}]")
-                        if (::call.isInitialized) {
+                        if (::currentCall.isInitialized) {
                             when {
-                                isHeadset -> AudioRouteUtils.routeAudioToHeadset(call)
-                                isBluetooth -> AudioRouteUtils.routeAudioToBluetooth(call)
-                                isSpeaker -> AudioRouteUtils.routeAudioToSpeaker(call)
-                                else -> AudioRouteUtils.routeAudioToEarpiece(call)
+                                isHeadset -> AudioRouteUtils.routeAudioToHeadset(currentCall)
+                                isBluetooth -> AudioRouteUtils.routeAudioToBluetooth(currentCall)
+                                isSpeaker -> AudioRouteUtils.routeAudioToSpeaker(currentCall)
+                                else -> AudioRouteUtils.routeAudioToEarpiece(currentCall)
                             }
                         }
                     }
@@ -288,11 +419,11 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                 Log.i(
                     "$TAG Found less than two devices, simply switching between earpiece & speaker"
                 )
-                if (::call.isInitialized) {
+                if (::currentCall.isInitialized) {
                     if (routeAudioToSpeaker) {
-                        AudioRouteUtils.routeAudioToSpeaker(call)
+                        AudioRouteUtils.routeAudioToSpeaker(currentCall)
                     } else {
-                        AudioRouteUtils.routeAudioToEarpiece(call)
+                        AudioRouteUtils.routeAudioToEarpiece(currentCall)
                     }
                 }
             }
@@ -311,9 +442,9 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         }
 
         coreContext.postOnCoreThread { core ->
-            if (::call.isInitialized) {
-                val params = core.createCallParams(call)
-                if (call.conference != null) {
+            if (::currentCall.isInitialized) {
+                val params = core.createCallParams(currentCall)
+                if (currentCall.conference != null) {
                     if (params?.isVideoEnabled == false) {
                         params.isVideoEnabled = true
                         params.videoDirection = MediaDirection.SendRecv
@@ -330,7 +461,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                         "$TAG Updating call with video enabled set to ${params?.isVideoEnabled}"
                     )
                 }
-                call.update(params)
+                currentCall.update(params)
             }
         }
     }
@@ -362,7 +493,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
     private fun showZrtpSasDialog(authToken: String) {
         val toRead: String
         val toListen: String
-        when (call.dir) {
+        when (currentCall.dir) {
             Call.Dir.Incoming -> {
                 toRead = authToken.substring(0, 2)
                 toListen = authToken.substring(2)
@@ -377,10 +508,10 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     @WorkerThread
     private fun updateEncryption(): Boolean {
-        when (call.currentParams.mediaEncryption) {
+        when (currentCall.currentParams.mediaEncryption) {
             MediaEncryption.ZRTP -> {
-                val authToken = call.authenticationToken
-                val deviceIsTrusted = call.authenticationTokenVerified && authToken != null
+                val authToken = currentCall.authenticationToken
+                val deviceIsTrusted = currentCall.authenticationTokenVerified && authToken != null
                 Log.i(
                     "$TAG Current call media encryption is ZRTP, auth token is ${if (deviceIsTrusted) "trusted" else "not trusted yet"}"
                 )
@@ -404,6 +535,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     @WorkerThread
     private fun configureCall(call: Call) {
+        currentCall = call
         call.addListener(callListener)
 
         if (call.dir == Call.Dir.Incoming) {
@@ -458,8 +590,8 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     @WorkerThread
     fun updateCallDuration() {
-        if (::call.isInitialized) {
-            callDuration.postValue(call.duration)
+        if (::currentCall.isInitialized) {
+            callDuration.postValue(currentCall.duration)
         }
     }
 

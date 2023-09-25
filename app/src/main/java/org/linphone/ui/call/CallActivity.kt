@@ -105,6 +105,40 @@ class CallActivity : AppCompatActivity() {
             }
         }
 
+        callViewModel.showLowWifiSignalEvent.observe(this) {
+            it.consume { show ->
+                if (show) {
+                    showRedToast(
+                        getString(R.string.toast_alert_low_wifi_signal),
+                        R.drawable.wifi_low
+                    )
+                } else {
+                    hideRedToast()
+                    showGreenToast(
+                        getString(R.string.toast_alert_low_wifi_signal_cleared),
+                        R.drawable.wifi_high
+                    )
+                }
+            }
+        }
+
+        callViewModel.showLowCellularSignalEvent.observe(this) {
+            it.consume { show ->
+                if (show) {
+                    showRedToast(
+                        getString(R.string.toast_alert_low_cellular_signal),
+                        R.drawable.cell_signal_low
+                    )
+                } else {
+                    hideRedToast()
+                    showGreenToast(
+                        getString(R.string.toast_alert_low_cellular_signal_cleared),
+                        R.drawable.cell_signal_full
+                    )
+                }
+            }
+        }
+
         callsViewModel.showIncomingCallEvent.observe(this) {
             it.consume {
                 val action = IncomingCallFragmentDirections.actionGlobalIncomingCallFragment()
@@ -140,40 +174,6 @@ class CallActivity : AppCompatActivity() {
         callsViewModel.noMoreCallEvent.observe(this) {
             it.consume {
                 finish()
-            }
-        }
-
-        callsViewModel.showLowWifiSignalEvent.observe(this) {
-            it.consume { show ->
-                if (show) {
-                    showRedToast(
-                        getString(R.string.toast_alert_low_wifi_signal),
-                        R.drawable.wifi_low
-                    )
-                } else {
-                    hideRedToast()
-                    showGreenToast(
-                        getString(R.string.toast_alert_low_wifi_signal_cleared),
-                        R.drawable.wifi_high
-                    )
-                }
-            }
-        }
-
-        callsViewModel.showLowCellularSignalEvent.observe(this) {
-            it.consume { show ->
-                if (show) {
-                    showRedToast(
-                        getString(R.string.toast_alert_low_cellular_signal),
-                        R.drawable.cell_signal_low
-                    )
-                } else {
-                    hideRedToast()
-                    showGreenToast(
-                        getString(R.string.toast_alert_low_cellular_signal_cleared),
-                        R.drawable.cell_signal_full
-                    )
-                }
             }
         }
 

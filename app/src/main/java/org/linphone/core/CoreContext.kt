@@ -74,7 +74,15 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
     private val coreListener = object : CoreListenerStub() {
         @WorkerThread
         override fun onGlobalStateChanged(core: Core, state: GlobalState, message: String) {
-            Log.i("$TAG Global state changed: $state")
+            Log.i("$TAG Global state changed [$state]")
+        }
+
+        override fun onConfiguringStatus(
+            core: Core,
+            status: Config.ConfiguringState?,
+            message: String?
+        ) {
+            Log.i("$TAG Configuring state changed [$status]")
         }
 
         @WorkerThread

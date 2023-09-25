@@ -35,6 +35,7 @@ import org.linphone.core.Call
 import org.linphone.core.CallListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.utils.AudioRouteUtils
+import org.linphone.utils.LinphoneUtils
 
 class TelecomCallControlCallback constructor(
     private val call: Call,
@@ -207,7 +208,7 @@ class TelecomCallControlCallback constructor(
     override suspend fun onAnswer(callType: Int): Boolean {
         Log.i("$TAG We're asked to answer the call with type [$callType]")
         coreContext.postOnCoreThread {
-            if (call.state == Call.State.IncomingReceived || call.state == Call.State.IncomingEarlyMedia) {
+            if (LinphoneUtils.isCallIncoming(call.state)) {
                 Log.i("$TAG Answering call")
                 coreContext.answerCall(call) // TODO: use call type
             }

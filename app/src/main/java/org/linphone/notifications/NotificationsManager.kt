@@ -61,7 +61,6 @@ import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.ui.call.CallActivity
 import org.linphone.utils.AppUtils
-import org.linphone.utils.ImageUtils
 import org.linphone.utils.LinphoneUtils
 
 class NotificationsManager @MainThread constructor(private val context: Context) {
