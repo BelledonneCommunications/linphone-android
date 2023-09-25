@@ -97,7 +97,7 @@
                         android:gravity="center"
                         android:onClick="@{() -> viewModel.showOnlyConferenceCallLogs()}"
                         android:padding="8dp"
-                        android:src="@drawable/icon_video_conf_new" />
+                        android:src="@drawable/icon_video_conf_history_filter" />
 
                     <View
                         android:visibility="@{viewModel.filter == CallLogsFilter.CONFERENCE ? View.VISIBLE : View.GONE}"
