@@ -116,7 +116,7 @@ class AudioRouteUtils {
 
         private fun changeCaptureDeviceToMatchAudioRoute(call: Call?, types: List<AudioDevice.Type>) {
             when (types.first()) {
-                AudioDevice.Type.Bluetooth -> {
+                AudioDevice.Type.Bluetooth, AudioDevice.Type.HearingAid -> {
                     if (isBluetoothAudioRecorderAvailable()) {
                         Log.i(
                             "[Audio Route Helper] Bluetooth device is able to record audio, also change input audio device"
@@ -166,7 +166,7 @@ class AudioRouteUtils {
                         AudioDevice.Type.Earpiece -> CallAudioState.ROUTE_EARPIECE
                         AudioDevice.Type.Speaker -> CallAudioState.ROUTE_SPEAKER
                         AudioDevice.Type.Headphones, AudioDevice.Type.Headset -> CallAudioState.ROUTE_WIRED_HEADSET
-                        AudioDevice.Type.Bluetooth, AudioDevice.Type.BluetoothA2DP -> CallAudioState.ROUTE_BLUETOOTH
+                        AudioDevice.Type.Bluetooth, AudioDevice.Type.BluetoothA2DP, AudioDevice.Type.HearingAid -> CallAudioState.ROUTE_BLUETOOTH
                         else -> CallAudioState.ROUTE_WIRED_OR_EARPIECE
                     }
                     Log.i(
@@ -201,7 +201,11 @@ class AudioRouteUtils {
         }
 
         fun routeAudioToBluetooth(call: Call? = null, skipTelecom: Boolean = false) {
-            routeAudioTo(call, arrayListOf(AudioDevice.Type.Bluetooth), skipTelecom)
+            routeAudioTo(
+                call,
+                arrayListOf(AudioDevice.Type.Bluetooth, AudioDevice.Type.HearingAid),
+                skipTelecom
+            )
         }
 
         fun routeAudioToHeadset(call: Call? = null, skipTelecom: Boolean = false) {
@@ -254,12 +258,12 @@ class AudioRouteUtils {
             Log.i(
                 "[Audio Route Helper] Playback audio device currently in use is [${audioDevice.deviceName} (${audioDevice.driverName}) ${audioDevice.type}]"
             )
-            return audioDevice.type == AudioDevice.Type.Bluetooth
+            return audioDevice.type == AudioDevice.Type.Bluetooth || audioDevice.type == AudioDevice.Type.HearingAid
         }
 
         fun isBluetoothAudioRouteAvailable(): Boolean {
             for (audioDevice in coreContext.core.audioDevices) {
-                if (audioDevice.type == AudioDevice.Type.Bluetooth &&
+                if ((audioDevice.type == AudioDevice.Type.Bluetooth || audioDevice.type == AudioDevice.Type.HearingAid) &&
                     audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityPlay)
                 ) {
                     Log.i(
@@ -273,7 +277,7 @@ class AudioRouteUtils {
 
         private fun isBluetoothAudioRecorderAvailable(): Boolean {
             for (audioDevice in coreContext.core.audioDevices) {
-                if (audioDevice.type == AudioDevice.Type.Bluetooth &&
+                if ((audioDevice.type == AudioDevice.Type.Bluetooth || audioDevice.type == AudioDevice.Type.HearingAid) &&
                     audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityRecord)
                 ) {
                     Log.i(
@@ -323,10 +327,10 @@ class AudioRouteUtils {
             for (device in coreContext.core.audioDevices) {
                 if (device.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
                     when (device.type) {
-                        AudioDevice.Type.Headphones, AudioDevice.Type.Headset, AudioDevice.Type.HearingAid -> {
+                        AudioDevice.Type.Headphones, AudioDevice.Type.Headset -> {
                             headphonesCard = device.id
                         }
-                        AudioDevice.Type.Bluetooth -> {
+                        AudioDevice.Type.Bluetooth, AudioDevice.Type.HearingAid -> {
                             bluetoothCard = device.id
                         }
                         AudioDevice.Type.Speaker -> {
@@ -354,10 +358,10 @@ class AudioRouteUtils {
             for (device in coreContext.core.audioDevices) {
                 if (device.hasCapability(AudioDevice.Capabilities.CapabilityRecord)) {
                     when (device.type) {
-                        AudioDevice.Type.Bluetooth -> {
+                        AudioDevice.Type.Bluetooth, AudioDevice.Type.HearingAid -> {
                             bluetoothAudioDevice = device
                         }
-                        AudioDevice.Type.Headset, AudioDevice.Type.HearingAid, AudioDevice.Type.Headphones -> {
+                        AudioDevice.Type.Headset, AudioDevice.Type.Headphones -> {
                             headsetAudioDevice = device
                         }
                         AudioDevice.Type.Microphone -> {
