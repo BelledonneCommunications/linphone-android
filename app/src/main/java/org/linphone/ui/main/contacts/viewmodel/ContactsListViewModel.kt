@@ -120,9 +120,13 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
     }
 
     @UiThread
-    fun toggleContactsFilter() {
-        limitSearchToLinphoneAccounts = !limitSearchToLinphoneAccounts
+    fun changeContactsFilter(onlyLinphoneContacts: Boolean) {
+        limitSearchToLinphoneAccounts = onlyLinphoneContacts
         applyFilter(currentFilter)
+    }
+
+    fun areAllContactsDisplayed(): Boolean {
+        return !limitSearchToLinphoneAccounts
     }
 
     @UiThread

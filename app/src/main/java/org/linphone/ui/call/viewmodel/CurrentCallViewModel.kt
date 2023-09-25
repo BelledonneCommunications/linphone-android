@@ -265,10 +265,14 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
             // TODO FIXME: Remote is call being transferred, not transferee !
             if (state == Call.State.OutgoingProgress) {
-                val displayName = coreContext.contactsManager.findDisplayName(transfered.remoteAddress)
+                val displayName = coreContext.contactsManager.findDisplayName(
+                    transfered.remoteAddress
+                )
                 transferInProgressEvent.postValue(Event(displayName))
             } else if (LinphoneUtils.isCallEnding(state)) {
-                val displayName = coreContext.contactsManager.findDisplayName(transfered.remoteAddress)
+                val displayName = coreContext.contactsManager.findDisplayName(
+                    transfered.remoteAddress
+                )
                 transferFailedEvent.postValue(Event(displayName))
             }
         }

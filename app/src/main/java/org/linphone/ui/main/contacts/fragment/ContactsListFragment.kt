@@ -22,18 +22,22 @@ package org.linphone.ui.main.contacts.fragment
 import android.content.Intent
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupWindow
 import androidx.annotation.UiThread
 import androidx.core.content.FileProvider
 import androidx.core.view.doOnPreDraw
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import java.io.File
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
+import org.linphone.databinding.ContactsListFilterPopupMenuBinding
 import org.linphone.databinding.ContactsListFragmentBinding
 import org.linphone.ui.main.contacts.adapter.ContactsListAdapter
 import org.linphone.ui.main.contacts.viewmodel.ContactsListViewModel
@@ -133,8 +137,7 @@ class ContactsListFragment : AbstractTopBarFragment() {
         }
 
         binding.setFilterClickListener {
-            // TODO FIXME: show context menu first to let user decides which filter to use
-            listViewModel.toggleContactsFilter()
+            showFilterPopupMenu(binding.filter)
         }
 
         sharedViewModel.defaultAccountChangedEvent.observe(viewLifecycleOwner) {
@@ -229,5 +232,40 @@ class ContactsListFragment : AbstractTopBarFragment() {
 
         val shareIntent = Intent.createChooser(sendIntent, null)
         startActivity(shareIntent)
+    }
+
+    private fun showFilterPopupMenu(view: View) {
+        val popupView: ContactsListFilterPopupMenuBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(requireContext()),
+            R.layout.contacts_list_filter_popup_menu,
+            null,
+            false
+        )
+        popupView.seeAllSelected = listViewModel.areAllContactsDisplayed()
+
+        val popupWindow = PopupWindow(
+            popupView.root,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            true
+        )
+
+        popupView.setNoFilterClickListener {
+            if (!listViewModel.areAllContactsDisplayed()) {
+                listViewModel.changeContactsFilter(onlyLinphoneContacts = false)
+            }
+            popupWindow.dismiss()
+        }
+
+        popupView.setLinphoneOnlyClickListener {
+            if (listViewModel.areAllContactsDisplayed()) {
+                listViewModel.changeContactsFilter(onlyLinphoneContacts = true)
+            }
+            popupWindow.dismiss()
+        }
+
+        // Elevation is for showing a shadow around the popup
+        popupWindow.elevation = 20f
+        popupWindow.showAsDropDown(view, 0, 0, Gravity.BOTTOM)
     }
 }

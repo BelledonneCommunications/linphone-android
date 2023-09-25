@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <import type="android.graphics.Typeface" />
+        <variable
+            name="noFilterClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="linphoneOnlyClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="seeAllSelected"
+            type="Boolean" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_round_popup_menu_background">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/no_filter"
+            android:onClick="@{noFilterClickListener}"
+            style="@style/default_text_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="5dp"
+            android:text="@string/contacts_list_filter_popup_see_all"
+            android:textSize="14sp"
+            android:textColor="@color/gray_main2_500"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/no_filter_selected"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/linphone_filter"/>
+
+        <ImageView
+            android:id="@+id/no_filter_selected"
+            android:onClick="@{noFilterClickListener}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/check_fat_fill"
+            android:visibility="@{seeAllSelected ? View.VISIBLE : View.INVISIBLE, default=invisible}"
+            app:tint="@color/green_success_500"
+            app:layout_constraintTop_toTopOf="@id/no_filter"
+            app:layout_constraintBottom_toBottomOf="@id/no_filter"
+            app:layout_constraintStart_toStartOf="@id/linphone_filter_selected"
+            app:layout_constraintEnd_toEndOf="@id/linphone_filter_selected"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/linphone_filter"
+            android:onClick="@{linphoneOnlyClickListener}"
+            style="@style/default_text_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginStart="20dp"
+            android:text="@string/contacts_list_filter_popup_see_linphone_only"
+            android:textSize="14sp"
+            android:textColor="@color/gray_main2_500"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/no_filter"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageView
+            android:id="@+id/linphone_filter_selected"
+            android:onClick="@{linphoneOnlyClickListener}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/check_fat_fill"
+            android:visibility="@{seeAllSelected ? View.INVISIBLE : View.VISIBLE}"
+            app:tint="@color/green_success_500"
+            app:layout_constraintTop_toTopOf="@id/linphone_filter"
+            app:layout_constraintBottom_toBottomOf="@id/linphone_filter"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/linphone_filter"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

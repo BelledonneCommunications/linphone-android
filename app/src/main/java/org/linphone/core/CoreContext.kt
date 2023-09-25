@@ -33,7 +33,6 @@ import androidx.emoji2.text.EmojiCompat
 import androidx.lifecycle.MutableLiveData
 import java.util.*
 import org.linphone.BuildConfig
-import org.linphone.LinphoneApplication
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.contacts.ContactsManager
 import org.linphone.core.tools.Log
