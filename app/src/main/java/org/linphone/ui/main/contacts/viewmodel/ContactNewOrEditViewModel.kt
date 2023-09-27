@@ -131,9 +131,6 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
 
             if (!::friend.isInitialized) {
                 friend = core.createFriend()
-                friend.isSubscribesEnabled = false
-                // Disable peer to peer short term presence
-                friend.incSubscribePolicy = SubscribePolicy.SPDeny
             }
             val fn = firstName.value.orEmpty().trim()
             val ln = lastName.value.orEmpty().trim()
@@ -188,6 +185,11 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
                     Log.e("$TAG Failed to generate a ref key using vCard's generateUniqueId()")
                     // TODO? : generate unique ref key
                 }
+
+                friend.isSubscribesEnabled = false
+                // Disable peer to peer short term presence
+                friend.incSubscribePolicy = SubscribePolicy.SPDeny
+
                 friend.done()
 
                 val fl = core.getFriendListByName(LINPHONE_ADDRESS_BOOK_FRIEND_LIST) ?: core.createFriendList()
@@ -200,6 +202,7 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
                     core.addFriendList(fl)
                 }
                 status = fl.addFriend(friend)
+                Log.e("UPDATE SUB")
                 fl.updateSubscriptions()
             } else {
                 friend.done()

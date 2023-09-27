@@ -6,6 +6,7 @@
     <data>
         <import type="android.view.View" />
         <import type="android.graphics.Typeface" />
+        <import type="org.linphone.core.RegistrationState" />
         <variable
             name="model"
             type="org.linphone.ui.main.model.AccountModel" />
@@ -84,8 +85,8 @@
             android:paddingBottom="4dp"
             android:background="@drawable/shape_squircle_main2_200_background"
             android:gravity="center"
-            android:text="@{model.registrationState, default=@string/drawer_menu_account_connection_status_connected}"
-            android:textColor="@{model.isConnected ? @color/green_success_500 : model.inError ? @color/red_danger_500 : model.isDisabled ? @color/orange_warning_600 : @color/gray_main2_500, default=@color/green_success_500}"
+            android:text="@{model.registrationStateLabel, default=@string/drawer_menu_account_connection_status_connected}"
+            android:textColor="@{model.registrationState == RegistrationState.Ok ? @color/green_success_500 : model.registrationState == RegistrationState.Failed ? @color/red_danger_500 : model.registrationState == RegistrationState.Cleared || model.registrationState == RegistrationState.None ? @color/orange_warning_600 : @color/gray_main2_500, default=@color/green_success_500}"
             android:textSize="12sp"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="@id/name"

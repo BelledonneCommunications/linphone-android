@@ -47,15 +47,11 @@ class AccountModel @WorkerThread constructor(
 
     val initials = MutableLiveData<String>()
 
-    val registrationState = MutableLiveData<String>()
+    val registrationState = MutableLiveData<RegistrationState>()
+
+    val registrationStateLabel = MutableLiveData<String>()
 
     val registrationStateSummary = MutableLiveData<String>()
-
-    val isConnected = MutableLiveData<Boolean>()
-
-    val inError = MutableLiveData<Boolean>()
-
-    val isDisabled = MutableLiveData<Boolean>()
 
     val isDefault = MutableLiveData<Boolean>()
 
@@ -142,9 +138,11 @@ class AccountModel @WorkerThread constructor(
 
         isDefault.postValue(coreContext.core.defaultAccount == account)
 
-        val state = when (account.state) {
+        val state = account.state
+        registrationState.postValue(state)
+
+        val label = when (state) {
             RegistrationState.None, RegistrationState.Cleared -> {
-                isDisabled.postValue(true)
                 AppUtils.getString(
                     R.string.drawer_menu_account_connection_status_cleared
                 )
@@ -153,13 +151,11 @@ class AccountModel @WorkerThread constructor(
                 R.string.drawer_menu_account_connection_status_progress
             )
             RegistrationState.Failed -> {
-                inError.postValue(true)
                 AppUtils.getString(
                     R.string.drawer_menu_account_connection_status_failed
                 )
             }
             RegistrationState.Ok -> {
-                isConnected.postValue(true)
                 AppUtils.getString(
                     R.string.drawer_menu_account_connection_status_connected
                 )
@@ -169,7 +165,7 @@ class AccountModel @WorkerThread constructor(
             )
             else -> "${account.state}"
         }
-        registrationState.postValue(state)
+        registrationStateLabel.postValue(label)
 
         val summary = when (account.state) {
             RegistrationState.None, RegistrationState.Cleared -> AppUtils.getString(
