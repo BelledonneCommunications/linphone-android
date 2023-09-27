@@ -25,6 +25,7 @@ import android.provider.ContactsContract
 import android.telephony.TelephonyManager
 import androidx.annotation.AnyThread
 import androidx.annotation.WorkerThread
+import org.linphone.core.DialPlan
 import org.linphone.core.Factory
 import org.linphone.core.tools.Log
 
@@ -33,7 +34,7 @@ class PhoneNumberUtils {
         private const val TAG = "[Phone Number Utils]"
 
         @WorkerThread
-        fun getDeviceInternationalPrefix(context: Context): String? {
+        fun getDeviceDialPlan(context: Context): DialPlan? {
             val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
             val countryIso = telephonyManager.networkCountryIso
             for (dp in Factory.instance().dialPlans) {
@@ -42,7 +43,7 @@ class PhoneNumberUtils {
                     Log.i(
                         "$TAG Found matching entry [$prefix] in dialplan for network country iso [$countryIso]"
                     )
-                    return prefix
+                    return dp
                 }
             }
             return null

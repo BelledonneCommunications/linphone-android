@@ -29,8 +29,6 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
 
     val devices = MutableLiveData<ArrayList<AccountDeviceModel>>()
 
-    val internationalPrefix = MutableLiveData<String>()
-
     val accountFoundEvent = MutableLiveData<Event<Boolean>>()
 
     val expandDetails = MutableLiveData<Boolean>()
@@ -74,7 +72,6 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
 
                 sipAddress.postValue(account.params.identityAddress?.asStringUriOnly())
                 displayName.postValue(account.params.identityAddress?.displayName)
-                internationalPrefix.postValue(account.params.internationalPrefix)
 
                 val devicesList = arrayListOf<AccountDeviceModel>()
                 // TODO FIXME: use real devices list from API
@@ -151,8 +148,6 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
             if (::account.isInitialized) {
                 val params = account.params
                 val copy = params.clone()
-
-                copy.internationalPrefix = internationalPrefix.value.orEmpty()
 
                 val address = params.identityAddress?.clone()
                 if (address != null) {

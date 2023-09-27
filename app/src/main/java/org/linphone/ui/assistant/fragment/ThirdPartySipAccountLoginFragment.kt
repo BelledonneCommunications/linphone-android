@@ -119,9 +119,9 @@ class ThirdPartySipAccountLoginFragment : Fragment() {
         }
 
         coreContext.postOnCoreThread {
-            val prefix = PhoneNumberUtils.getDeviceInternationalPrefix(requireContext())
-            if (!prefix.isNullOrEmpty()) {
-                viewModel.internationalPrefix.postValue(prefix)
+            val dialPlan = PhoneNumberUtils.getDeviceDialPlan(requireContext())
+            if (dialPlan != null) {
+                viewModel.internationalPrefix.postValue(dialPlan.countryCallingCode)
             }
         }
     }

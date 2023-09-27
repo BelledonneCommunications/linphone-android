@@ -45,6 +45,7 @@ import androidx.core.view.doOnLayout
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import coil.load
 import coil.transform.CircleCropTransformation
@@ -54,8 +55,6 @@ import org.linphone.BR
 import org.linphone.R
 import org.linphone.core.ConsolidatedPresence
 import org.linphone.core.tools.Log
-import org.linphone.ui.call.CallActivity
-import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.model.AccountModel
 
@@ -84,10 +83,8 @@ fun <T> setEntries(
             binding.setVariable(BR.model, entry)
 
             // This is a bit hacky...
-            if (viewGroup.context as? MainActivity != null) {
-                binding.lifecycleOwner = viewGroup.context as MainActivity
-            } else if (viewGroup.context as? CallActivity != null) {
-                binding.lifecycleOwner = viewGroup.context as CallActivity
+            if (viewGroup.context as? LifecycleOwner != null) {
+                binding.lifecycleOwner = viewGroup.context as LifecycleOwner
             } else {
                 Log.e(
                     "[Data Binding Utils] Failed to cast viewGroup's context as an Activity, lifecycle owner hasn't be set!"

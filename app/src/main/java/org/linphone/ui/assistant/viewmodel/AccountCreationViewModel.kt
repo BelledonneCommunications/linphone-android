@@ -64,6 +64,8 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
 
     val phoneNumberError = MutableLiveData<String>()
 
+    val selectedDialPlan = MutableLiveData<DialPlan>()
+
     val internationalPrefix = MutableLiveData<String>()
 
     val showPassword = MutableLiveData<Boolean>()
@@ -267,7 +269,6 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
     }
 
     init {
-        internationalPrefix.value = "+1"
         operationInProgress.value = false
 
         coreContext.postOnCoreThread { core ->
@@ -284,7 +285,7 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
         createEnabled.addSource(password) {
             createEnabled.value = isCreateButtonEnabled()
         }
-        createEnabled.addSource(internationalPrefix) {
+        createEnabled.addSource(selectedDialPlan) {
             createEnabled.value = isCreateButtonEnabled()
         }
         createEnabled.addSource(phoneNumber) {
@@ -294,7 +295,14 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
 
     @UiThread
     override fun onCountryClicked(dialPlan: DialPlan) {
-        internationalPrefix.value = "+${dialPlan.countryCallingCode}"
+        coreContext.postOnCoreThread {
+            setDialPlan(dialPlan)
+        }
+    }
+
+    @WorkerThread
+    fun setDialPlan(dialPlan: DialPlan) {
+        internationalPrefix.postValue("${dialPlan.flag} +${dialPlan.countryCallingCode}")
     }
 
     @UiThread
@@ -314,7 +322,8 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
     fun confirmPhoneNumber() {
         coreContext.postOnCoreThread {
             if (::accountCreator.isInitialized) {
-                val prefix = internationalPrefix.value.orEmpty().trim()
+                val dialPlan = selectedDialPlan.value
+                val prefix = dialPlan?.internationalCallPrefix.orEmpty()
                 val digitsPrefix = if (prefix.startsWith("+")) {
                     prefix.substring(1)
                 } else {
@@ -412,7 +421,7 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
 
     @UiThread
     private fun isCreateButtonEnabled(): Boolean {
-        return username.value.orEmpty().isNotEmpty() && password.value.orEmpty().isNotEmpty() && phoneNumber.value.orEmpty().isNotEmpty() && internationalPrefix.value.orEmpty().isNotEmpty()
+        return username.value.orEmpty().isNotEmpty() && password.value.orEmpty().isNotEmpty() && phoneNumber.value.orEmpty().isNotEmpty() && selectedDialPlan.value?.internationalCallPrefix.orEmpty().isNotEmpty()
     }
 
     @UiThread
