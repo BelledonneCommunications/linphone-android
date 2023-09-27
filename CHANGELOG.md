@@ -14,6 +14,32 @@ Group changes to describe their impact on the project, as follows:
 
 ### Added
 - Chat messages emoji "reactions"
+- Hearing aids should be working the same way bluetooth headset does
+
+### Fixed
+- Connection status & color when in refreshing state
+
+## [5.1.3] - 2023-09-23
+
+### Fixed
+- Core not able to open database due to issue in 5.2.107 SDK from last update
+- Incoming call activity and lock screen interaction
+- Selected "meeting" filter icon color
+
+## [5.1.2] - 2023-09-22
+
+### Added
+- Italian translation completed
+
+### Fixed
+- Multiple authentication requested dialogs stacking above each other sometimes
+- Downgraded navigation version to try to prevent some crashes reported on the Play Store
+
+## [5.1.1] - 2023-09-06
+
+### Fixed
+- Fixed issue in SDK randomly generated password when creating account from app
+- Various issues reported on the Play Store
 
 ## [5.1.0] - 2023-08-21
 
