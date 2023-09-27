@@ -472,12 +472,12 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
         iconResource.value = when (account.state) {
             RegistrationState.Ok -> R.drawable.led_registered
             RegistrationState.Failed -> R.drawable.led_error
-            RegistrationState.Progress -> R.drawable.led_registration_in_progress
+            RegistrationState.Progress, RegistrationState.Refreshing -> R.drawable.led_registration_in_progress
             else -> R.drawable.led_not_registered
         }
         iconContentDescription.value = when (account.state) {
             RegistrationState.Ok -> R.string.status_connected
-            RegistrationState.Progress -> R.string.status_in_progress
+            RegistrationState.Progress, RegistrationState.Refreshing -> R.string.status_in_progress
             RegistrationState.Failed -> R.string.status_error
             else -> R.string.status_not_connected
         }
