@@ -67,7 +67,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:gravity="center"
-            android:background="@drawable/shape_orange_round"
+            android:background="@drawable/shape_red_round"
             android:text="@{String.valueOf(viewModel.missedCallsCount), default=`1`}"
             android:textColor="@color/white"
             android:textSize="13sp"

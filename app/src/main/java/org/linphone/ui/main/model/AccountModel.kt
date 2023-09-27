@@ -57,6 +57,8 @@ class AccountModel @WorkerThread constructor(
 
     val showTrust = MutableLiveData<Boolean>()
 
+    val notificationsCount = MutableLiveData<Int>()
+
     private val accountListener = object : AccountListenerStub() {
         @WorkerThread
         override fun onRegistrationStateChanged(
@@ -137,6 +139,7 @@ class AccountModel @WorkerThread constructor(
         }
 
         isDefault.postValue(coreContext.core.defaultAccount == account)
+        notificationsCount.postValue(account.unreadChatMessageCount + account.missedCallsCount)
 
         val state = account.state
         registrationState.postValue(state)

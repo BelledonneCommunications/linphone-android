@@ -74,7 +74,7 @@
             android:layout_marginStart="50dp"
             android:layout_marginTop="5dp"
             android:gravity="center"
-            android:background="@drawable/shape_orange_round"
+            android:background="@drawable/shape_red_round"
             android:text="@{String.valueOf(viewModel.missedCallsCount), default=`1`}"
             android:textColor="@color/white"
             android:textSize="13sp"

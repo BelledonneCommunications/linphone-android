@@ -87,17 +87,18 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
-            android:id="@+id/missed_calls"
+            android:id="@+id/calls_count"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_marginStart="50dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="25dp"
             android:gravity="center"
-            android:background="@drawable/shape_orange_round"
+            android:background="@drawable/shape_red_round"
             android:text="@{String.valueOf(callsViewModel.callsCount), default=`1`}"
             android:textColor="@color/white"
             android:textSize="13sp"
             android:visibility="@{callsViewModel.callsCount > 1 ? View.VISIBLE : View.GONE}"
-            app:layout_constraintTop_toTopOf="@id/calls_list"
+            app:layout_constraintTop_toBottomOf="@id/main_actions"
             app:layout_constraintStart_toStartOf="@id/calls_list"
             app:layout_constraintEnd_toEndOf="@id/calls_list"/>
 
