@@ -10,6 +10,13 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [5.1.3] - 2023-09-23
+
+### Fixed
+- Core not able to open database due to issue in 5.2.107 SDK from last update
+- Incoming call activity and lock screen interaction
+- Selected "meeting" filter icon color
+
 ## [5.1.2] - 2023-09-22
 
 ### Added
