@@ -27,6 +27,8 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -56,6 +58,19 @@ class RegisterFragment : Fragment() {
         R.id.assistant_nav_graph
     )
 
+    private val dropdownListener = object : AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            val dialPlan = viewModel.dialPlansList[position]
+            Log.i(
+                "$TAG Selected dialplan updated [+${dialPlan.countryCallingCode}] / [${dialPlan.country}]"
+            )
+            viewModel.selectedDialPlan.value = dialPlan
+        }
+
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -77,12 +92,6 @@ class RegisterFragment : Fragment() {
 
         binding.setLoginClickListener {
             goBack()
-        }
-
-        binding.setShowCountryPickerClickListener {
-            val countryPickerFragment = CountryPickerFragment()
-            countryPickerFragment.listener = viewModel
-            countryPickerFragment.show(childFragmentManager, "CountryPicker")
         }
 
         binding.setOpenSubscribeWebPageClickListener {
@@ -148,9 +157,24 @@ class RegisterFragment : Fragment() {
         }
 
         coreContext.postOnCoreThread {
+            val adapter = ArrayAdapter(
+                requireContext(),
+                R.layout.drop_down_item,
+                viewModel.dialPlansLabelList
+            )
+            adapter.setDropDownViewResource(R.layout.assistant_country_picker_dropdown_cell)
+
             val dialPlan = PhoneNumberUtils.getDeviceDialPlan(requireContext())
+            var default = 0
             if (dialPlan != null) {
-                viewModel.setDialPlan(dialPlan)
+                viewModel.selectedDialPlan.postValue(dialPlan)
+                default = viewModel.dialPlansList.indexOf(dialPlan)
+            }
+
+            coreContext.postOnMainThread {
+                binding.prefix.adapter = adapter
+                binding.prefix.setSelection(default)
+                binding.prefix.onItemSelectedListener = dropdownListener
             }
         }
     }

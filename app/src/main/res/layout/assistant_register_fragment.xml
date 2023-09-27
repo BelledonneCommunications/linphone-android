@@ -13,9 +13,6 @@
             name="createAccountClickListener"
             type="View.OnClickListener" />
         <variable
-            name="showCountryPickerClickListener"
-            type="View.OnClickListener" />
-        <variable
             name="openSubscribeWebPageClickListener"
             type="View.OnClickListener" />
         <variable
@@ -136,7 +133,7 @@
                     android:id="@+id/phone_number"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
-                    android:paddingStart="115dp"
+                    android:paddingStart="120dp"
                     android:paddingEnd="20dp"
                     android:text="@={viewModel.phoneNumber, default=`6 01 02 03 04 05`}"
                     android:textSize="14sp"
@@ -151,14 +148,12 @@
                     app:layout_constraintStart_toStartOf="@id/username"
                     app:layout_constraintEnd_toEndOf="@id/username"/>
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:onClick="@{showCountryPickerClickListener}"
+                <androidx.appcompat.widget.AppCompatSpinner
                     style="@style/default_text_style"
                     android:id="@+id/prefix"
-                    android:layout_width="110dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:paddingStart="20dp"
-                    android:text="@{viewModel.internationalPrefix, default=`🇫🇷 +33`}"
                     android:textSize="14sp"
                     android:textColor="@color/gray_main2_600"
                     android:gravity="center_vertical"

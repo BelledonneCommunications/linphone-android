@@ -42,12 +42,12 @@ import org.linphone.core.AccountCreatorListenerStub
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.DialPlan
+import org.linphone.core.Factory
 import org.linphone.core.tools.Log
-import org.linphone.ui.assistant.fragment.CountryPickerFragment
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
-class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPickerFragment.CountryPickedListener {
+class AccountCreationViewModel @UiThread constructor() : ViewModel() {
     companion object {
         private const val TAG = "[Account Creation ViewModel]"
     }
@@ -64,9 +64,11 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
 
     val phoneNumberError = MutableLiveData<String>()
 
-    val selectedDialPlan = MutableLiveData<DialPlan>()
+    val dialPlansLabelList = arrayListOf<String>()
 
-    val internationalPrefix = MutableLiveData<String>()
+    val dialPlansList = arrayListOf<DialPlan>()
+
+    val selectedDialPlan = MutableLiveData<DialPlan>()
 
     val showPassword = MutableLiveData<Boolean>()
 
@@ -272,6 +274,12 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
         operationInProgress.value = false
 
         coreContext.postOnCoreThread { core ->
+            val dialPlans = Factory.instance().dialPlans.toList()
+            for (dialPlan in dialPlans) {
+                dialPlansList.add(dialPlan)
+                dialPlansLabelList.add("${dialPlan.flag} +${dialPlan.countryCallingCode}")
+            }
+
             accountCreator = core.createAccountCreator(core.accountCreatorUrl)
             accountCreator.addListener(accountCreatorListener)
             core.addListener(coreListener)
@@ -291,18 +299,6 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel(), CountryPic
         createEnabled.addSource(phoneNumber) {
             createEnabled.value = isCreateButtonEnabled()
         }
-    }
-
-    @UiThread
-    override fun onCountryClicked(dialPlan: DialPlan) {
-        coreContext.postOnCoreThread {
-            setDialPlan(dialPlan)
-        }
-    }
-
-    @WorkerThread
-    fun setDialPlan(dialPlan: DialPlan) {
-        internationalPrefix.postValue("${dialPlan.flag} +${dialPlan.countryCallingCode}")
     }
 
     @UiThread

@@ -84,7 +84,7 @@ class ThirdPartySipAccountLoginFragment : Fragment() {
             R.layout.drop_down_item,
             viewModel.availableTransports
         )
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        adapter.setDropDownViewResource(R.layout.assistant_transport_dropdown_cell)
         binding.transport.adapter = adapter
         binding.transport.onItemSelectedListener = dropdownListener
         binding.transport.setSelection(viewModel.availableTransports.size - 1)
