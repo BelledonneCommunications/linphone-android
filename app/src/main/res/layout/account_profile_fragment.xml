@@ -12,6 +12,9 @@
             name="pickImageClickListener"
             type="View.OnClickListener" />
         <variable
+            name="deleteImageClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="changeModeClickListener"
             type="View.OnClickListener" />
         <variable
@@ -108,17 +111,6 @@
                         app:layout_constraintStart_toStartOf="@id/avatar"
                         app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 
-                    <ImageView
-                        android:id="@+id/overlay"
-                        android:layout_width="@dimen/avatar_presence_badge_big_size"
-                        android:layout_height="@dimen/avatar_presence_badge_big_size"
-                        android:layout_marginEnd="@dimen/avatar_presence_badge_big_end_margin"
-                        android:padding="@dimen/avatar_presence_badge_big_padding"
-                        android:background="@drawable/led_background"
-                        android:src="@drawable/camera"
-                        app:layout_constraintEnd_toEndOf="@id/avatar"
-                        app:layout_constraintBottom_toBottomOf="@id/avatar" />
-
                     <androidx.appcompat.widget.AppCompatTextView
                         android:onClick="@{pickImageClickListener}"
                         style="@style/default_text_style"
@@ -126,11 +118,55 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="@{viewModel.accountModel.avatar.empty ? @string/manage_account_add_picture : @string/manage_account_edit_picture, default=@string/manage_account_add_picture}"
+                        android:text="@string/manage_account_add_picture"
                         android:textSize="14sp"
+                        android:drawableStart="@drawable/camera"
+                        android:drawablePadding="3dp"
+                        android:visibility="@{viewModel.accountModel.avatar.empty ? View.VISIBLE : View.GONE, default=gone}"
                         app:layout_constraintTop_toBottomOf="@id/avatar"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:onClick="@{pickImageClickListener}"
+                        style="@style/default_text_style"
+                        android:id="@+id/edit_picture_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/manage_account_edit_picture"
+                        android:textSize="14sp"
+                        android:drawableStart="@drawable/pencil_simple"
+                        android:drawablePadding="3dp"
+                        android:visibility="@{viewModel.accountModel.avatar.empty ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintTop_toBottomOf="@id/avatar"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/remove_picture_label"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:onClick="@{deleteImageClickListener}"
+                        style="@style/default_text_style"
+                        android:id="@+id/remove_picture_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginStart="16dp"
+                        android:text="@string/manage_account_remove_picture"
+                        android:textSize="14sp"
+                        android:drawableStart="@drawable/trash_simple"
+                        android:drawablePadding="3dp"
+                        android:visibility="@{viewModel.accountModel.avatar.empty ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintTop_toBottomOf="@id/avatar"
+                        app:layout_constraintStart_toEndOf="@id/edit_picture_label"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+
+                    <androidx.constraintlayout.widget.Barrier
+                        android:id="@+id/avatar_barrier"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:constraint_referenced_ids="remove_picture_label, edit_picture_label, add_picture_label"
+                        app:barrierDirection="bottom" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/section_header_style"
@@ -147,7 +183,7 @@
                         android:drawableTint="@color/gray_main2_600"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/add_picture_label"/>
+                        app:layout_constraintTop_toBottomOf="@id/avatar_barrier"/>
 
                     <ImageView
                         android:id="@+id/details_background"

@@ -83,6 +83,10 @@ class AccountProfileFragment : GenericFragment() {
             pickImage()
         }
 
+        binding.setDeleteImageClickListener {
+            viewModel.setNewPicturePath("")
+        }
+
         binding.setChangeModeClickListener {
             val action = AccountProfileFragmentDirections.actionAccountProfileFragmentToAccountProfileModeFragment()
             findNavController().navigate(action)

@@ -133,6 +133,9 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
                 if (path.isNotEmpty() && path != params.pictureUri) {
                     Log.i("$TAG New account profile picture [$path]")
                     copy.pictureUri = path
+                } else {
+                    Log.i("$TAG Account profile picture removed")
+                    copy.pictureUri = null
                 }
 
                 accountModel.value?.avatar?.postValue(path)

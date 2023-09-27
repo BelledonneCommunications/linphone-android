@@ -102,7 +102,10 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
                     // TODO ? What to do when vCard is null
                 }
 
-                picturePath.postValue(friend.photo)
+                val photo = friend.photo.orEmpty()
+                if (photo.isNotEmpty()) {
+                    picturePath.postValue(photo)
+                }
 
                 for (address in friend.addresses) {
                     addSipAddress(address.asStringUriOnly())
@@ -146,6 +149,8 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
                 val picture = picturePath.value.orEmpty()
                 if (picture.isNotEmpty()) {
                     friend.photo = FileUtils.getProperFilePath(picture)
+                } else {
+                    friend.photo = null
                 }
             }
 

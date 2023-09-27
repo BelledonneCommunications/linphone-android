@@ -139,6 +139,10 @@ class EditContactFragment : GenericFragment() {
             pickImage()
         }
 
+        binding.setDeleteImageClickListener {
+            viewModel.picturePath.value = ""
+        }
+
         viewModel.saveChangesEvent.observe(viewLifecycleOwner) {
             it.consume { refKey ->
                 if (refKey.isNotEmpty()) {
