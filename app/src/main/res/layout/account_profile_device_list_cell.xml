@@ -24,6 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="23dp"
             android:layout_marginTop="34dp"
+            android:layout_marginEnd="5dp"
             android:text="@{model.name, default=`Pixel 6 Pro`}"
             android:maxLines="1"
             android:ellipsize="end"
@@ -34,6 +35,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/tertiary_button_label_style"
             android:id="@+id/remove"
+            android:onClick="@{() -> model.removeDevice()}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="17dp"

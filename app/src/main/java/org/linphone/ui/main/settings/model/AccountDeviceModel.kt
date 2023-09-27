@@ -26,4 +26,9 @@ class AccountDeviceModel @WorkerThread constructor(
     val lastConnectionDate: String,
     val lastConnectionTime: String,
     private val onRemove: () -> (Unit)
-)
+) {
+
+    fun removeDevice() {
+        onRemove()
+    }
+}
