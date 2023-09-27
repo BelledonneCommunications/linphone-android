@@ -91,6 +91,11 @@ class CorePreferences @UiThread constructor(private val context: Context) {
     val disableChat: Boolean
         get() = config.getBool("app", "disable_chat_feature", false) // TODO FIXME: set it to true for first "release" without chat
 
+    // Will disable meetings feature completely
+    @get:WorkerThread
+    val disableMeetings: Boolean
+        get() = config.getBool("app", "disable_meetings_feature", false) // TODO FIXME: set it to true for first "release" without meetings
+
     @get:WorkerThread
     val defaultDomain: String
         get() = config.getString("app", "default_domain", "sip.linphone.org")!!

@@ -12,9 +12,6 @@
             name="hideNumpadClickListener"
             type="View.OnClickListener" />
         <variable
-            name="hideGroupChatButton"
-            type="Boolean" />
-        <variable
             name="title"
             type="String" />
         <variable
@@ -122,7 +119,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:constraint_referenced_ids="group_call_icon, gradient_background, group_call_label"
-                android:visibility="@{hideGroupChatButton ? View.GONE : View.VISIBLE}" />
+                android:visibility="@{viewModel.hideGroupCallButton || viewModel.searchFilter.length() > 0 ? View.GONE : View.VISIBLE}" />
 
             <!-- margin start must be half the size of the group_call_icon below -->
             <View
@@ -145,7 +142,6 @@
                 android:background="@drawable/shape_orange_round"
                 android:padding="10dp"
                 android:src="@drawable/users_three"
-                android:visibility="@{viewModel.searchFilter.length() > 0 ? View.GONE : View.VISIBLE}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/search_bar"
                 app:tint="@color/white" />
@@ -162,7 +158,6 @@
                 android:text="@string/history_call_start_create_group_call"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                android:visibility="@{viewModel.searchFilter.length() > 0 ? View.GONE : View.VISIBLE}"
                 app:layout_constraintBottom_toBottomOf="@id/group_call_icon"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/group_call_icon"

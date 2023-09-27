@@ -101,8 +101,6 @@ abstract class AbstractNewTransferCallFragment : GenericCallFragment() {
         viewModel.title.value = title
         binding.viewModel = viewModel
 
-        binding.hideGroupChatButton = true
-
         binding.setBackClickListener {
             findNavController().popBackStack()
         }

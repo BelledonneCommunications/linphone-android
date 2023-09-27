@@ -39,6 +39,7 @@ import org.linphone.core.Call
 import org.linphone.core.Call.Dir
 import org.linphone.core.Call.Status
 import org.linphone.core.ChatRoom
+import org.linphone.core.Core
 import org.linphone.core.tools.Log
 
 class LinphoneUtils {
@@ -140,6 +141,23 @@ class LinphoneUtils {
                 Call.State.End, Call.State.Error -> true
                 else -> false
             }
+        }
+
+        @WorkerThread
+        fun isEndToEndEncryptedChatAvailable(core: Core): Boolean {
+            return core.isLimeX3DhEnabled &&
+                core.defaultAccount?.params?.limeServerUrl != null &&
+                core.defaultAccount?.params?.conferenceFactoryUri != null
+        }
+
+        @WorkerThread
+        fun isGroupChatAvailable(core: Core): Boolean {
+            return core.defaultAccount?.params?.conferenceFactoryUri != null
+        }
+
+        @WorkerThread
+        fun isRemoteConferencingAvailable(core: Core): Boolean {
+            return core.defaultAccount?.params?.audioVideoConferenceFactoryAddress != null
         }
 
         @AnyThread

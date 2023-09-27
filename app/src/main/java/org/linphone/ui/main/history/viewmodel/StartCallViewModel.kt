@@ -39,6 +39,7 @@ import org.linphone.ui.main.history.model.ContactOrSuggestionModel
 import org.linphone.ui.main.history.model.NumpadModel
 import org.linphone.ui.main.model.isInSecureMode
 import org.linphone.utils.Event
+import org.linphone.utils.LinphoneUtils
 
 class StartCallViewModel @UiThread constructor() : ViewModel() {
     companion object {
@@ -52,6 +53,8 @@ class StartCallViewModel @UiThread constructor() : ViewModel() {
     val contactsAndSuggestionsList = MutableLiveData<ArrayList<ContactOrSuggestionModel>>()
 
     val numpadModel: NumpadModel
+
+    val hideGroupCallButton = MutableLiveData<Boolean>()
 
     val isNumpadVisible = MutableLiveData<Boolean>()
 
@@ -127,6 +130,11 @@ class StartCallViewModel @UiThread constructor() : ViewModel() {
         coreContext.postOnCoreThread { core ->
             val defaultAccount = core.defaultAccount
             limitSearchToLinphoneAccounts = defaultAccount?.isInSecureMode() ?: false
+
+            val hideGroupCall = corePreferences.disableMeetings || !LinphoneUtils.isRemoteConferencingAvailable(
+                core
+            )
+            hideGroupCallButton.postValue(hideGroupCall)
 
             coreContext.contactsManager.addListener(contactsListener)
             magicSearch = core.createMagicSearch()

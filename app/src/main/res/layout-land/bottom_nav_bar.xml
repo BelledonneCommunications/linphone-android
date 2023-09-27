@@ -78,7 +78,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/bottom_nav_bar_label_style"
             android:id="@+id/conversations"
-            android:visibility="@{viewModel.hideConversations ? View.GONE : View.VISIBLE, default=gone}"
+            android:visibility="@{viewModel.hideConversations ? View.GONE : View.VISIBLE}"
             android:enabled="false"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -97,7 +97,7 @@
             style="@style/bottom_nav_bar_label_style"
             android:onClick="@{onMeetingsClicked}"
             android:id="@+id/meetings"
-            android:visibility="@{viewModel.hideMeetings ? View.GONE : View.VISIBLE, default=gone}"
+            android:visibility="@{viewModel.hideMeetings ? View.GONE : View.VISIBLE}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:drawableTop="@drawable/users_three"

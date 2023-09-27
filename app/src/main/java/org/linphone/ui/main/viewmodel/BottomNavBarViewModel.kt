@@ -68,10 +68,14 @@ class BottomNavBarViewModel @UiThread constructor() : ViewModel() {
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
             updateMissedCallsCount()
-        }
 
-        hideConversations.value = corePreferences.disableChat || true // TODO: chat feature
-        hideMeetings.value = true // TODO: meetings feature
+            hideConversations.postValue(corePreferences.disableChat)
+
+            val hideGroupCall = corePreferences.disableMeetings || !LinphoneUtils.isRemoteConferencingAvailable(
+                core
+            )
+            hideMeetings.postValue(hideGroupCall)
+        }
     }
 
     @UiThread
