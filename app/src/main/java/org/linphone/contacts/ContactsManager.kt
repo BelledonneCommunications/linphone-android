@@ -25,7 +25,6 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.ContactsContract
 import androidx.annotation.UiThread
@@ -47,6 +46,7 @@ import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressClickListener
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel
 import org.linphone.ui.main.model.isInSecureMode
+import org.linphone.utils.ImageUtils
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.PhoneNumberUtils
 
@@ -304,12 +304,7 @@ class ContactsManager @UiThread constructor(context: Context) {
         val personBuilder = Person.Builder().setName(name)
 
         val photo = account?.params?.pictureUri.orEmpty()
-        val bm: Bitmap? = if (photo.isNotEmpty()) {
-            BitmapFactory.decodeFile(photo)
-        } else {
-            null
-        }
-
+        val bm = ImageUtils.getBitmap(coreContext.context, photo)
         personBuilder.setIcon(
             if (bm == null) {
                 coreContext.contactsManager.contactAvatar
@@ -330,15 +325,15 @@ class ContactsManager @UiThread constructor(context: Context) {
 }
 
 @WorkerThread
+fun Friend.getAvatarBitmap(): Bitmap? {
+    return ImageUtils.getBitmap(coreContext.context, photo)
+}
+
+@WorkerThread
 fun Friend.getPerson(): Person {
     val personBuilder = Person.Builder().setName(name)
 
-    val bm: Bitmap? = if (!photo.isNullOrEmpty()) {
-        BitmapFactory.decodeFile(photo)
-    } else {
-        null
-    }
-
+    val bm: Bitmap? = getAvatarBitmap()
     personBuilder.setIcon(
         if (bm == null) {
             coreContext.contactsManager.contactAvatar

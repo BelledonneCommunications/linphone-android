@@ -30,7 +30,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.ServiceInfo
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.annotation.AnyThread
 import androidx.annotation.MainThread
@@ -42,10 +41,10 @@ import androidx.core.app.Person
 import androidx.core.app.RemoteInput
 import androidx.core.content.ContextCompat
 import androidx.core.content.LocusIdCompat
-import androidx.core.graphics.drawable.IconCompat
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.contacts.getAvatarBitmap
 import org.linphone.contacts.getPerson
 import org.linphone.core.Address
 import org.linphone.core.Call
@@ -488,12 +487,6 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
         val contact =
             coreContext.contactsManager.findContactByAddress(address)
-        val contactPicture = contact?.photo
-        val roundPicture = if (!contactPicture.isNullOrEmpty()) {
-            BitmapFactory.decodeFile(contactPicture)
-        } else {
-            null
-        }
         val displayName = contact?.name ?: LinphoneUtils.getDisplayName(address)
 
         val originalMessage = getTextDescribingMessage(message)
@@ -508,7 +501,6 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             contact,
             displayName,
             message.time,
-            senderAvatar = roundPicture,
             isOutgoing = false,
             isReaction = true,
             reactionToMessageId = message.messageId,
@@ -590,12 +582,6 @@ class NotificationsManager @MainThread constructor(private val context: Context)
     private fun getNotifiableForChatMessage(message: ChatMessage): NotifiableMessage {
         val contact =
             coreContext.contactsManager.findContactByAddress(message.fromAddress)
-        val contactPicture = contact?.photo
-        val roundPicture = if (!contactPicture.isNullOrEmpty()) {
-            BitmapFactory.decodeFile(contactPicture)
-        } else {
-            null
-        }
         val displayName = contact?.name ?: LinphoneUtils.getDisplayName(message.fromAddress)
 
         val text = getTextDescribingMessage(message)
@@ -604,7 +590,6 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             contact,
             displayName,
             message.time * 1000, /* Linphone timestamps are in seconds */
-            senderAvatar = roundPicture,
             isOutgoing = message.isOutgoing
         )
 
@@ -648,15 +633,9 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
         val contact =
             coreContext.contactsManager.findContactByAddress(call.remoteAddress)
-        val contactPicture = contact?.photo
-        val roundPicture = if (!contactPicture.isNullOrEmpty()) {
-            BitmapFactory.decodeFile(contactPicture)
-        } else {
-            null
-        }
         val displayName = contact?.name ?: LinphoneUtils.getDisplayName(call.remoteAddress)
 
-        val person = getPerson(contact, displayName, roundPicture)
+        val person = getPerson(contact, displayName)
         val caller = Person.Builder()
             .setName(person.name)
             .setIcon(person.icon)
@@ -743,12 +722,12 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         var lastPerson: Person? = null
         for (message in notifiable.messages) {
             val friend = message.friend
-            val person = getPerson(friend, message.sender, message.senderAvatar)
+            val person = getPerson(friend, message.sender)
 
             if (!message.isOutgoing) {
                 // We don't want to see our own avatar
                 lastPerson = person
-                lastPersonAvatar = message.senderAvatar
+                lastPersonAvatar = friend?.getAvatarBitmap()
 
                 if (allPersons.find { it.key == person.key } == null) {
                     allPersons.add(person)
@@ -796,6 +775,8 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         for (person in allPersons) {
             notificationBuilder.addPerson(person)
         }
+
+        // TODO FIXME: shortcuts!
 
         return notificationBuilder.build()
     }
@@ -957,17 +938,11 @@ class NotificationsManager @MainThread constructor(private val context: Context)
     }
 
     @WorkerThread
-    private fun getPerson(friend: Friend?, displayName: String, picture: Bitmap?): Person {
+    private fun getPerson(friend: Friend?, displayName: String): Person {
         return friend?.getPerson()
             ?: Person.Builder()
                 .setName(displayName)
-                .setIcon(
-                    if (picture != null) {
-                        IconCompat.createWithAdaptiveBitmap(picture)
-                    } else {
-                        coreContext.contactsManager.contactAvatar
-                    }
-                )
+                .setIcon(coreContext.contactsManager.contactAvatar)
                 .setKey(displayName)
                 .build()
     }
@@ -1013,7 +988,6 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         channel.enableLights(true)
         channel.enableVibration(true)
         channel.setShowBadge(true)
-        channel.setAllowBubbles(false)
         notificationManager.createNotificationChannel(channel)
     }
 
@@ -1071,7 +1045,6 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         val friend: Friend?,
         val sender: String,
         val time: Long,
-        val senderAvatar: Bitmap? = null,
         var filePath: Uri? = null,
         var fileMime: String? = null,
         val isOutgoing: Boolean = false,

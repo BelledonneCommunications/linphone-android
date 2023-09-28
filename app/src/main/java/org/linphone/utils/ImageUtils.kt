@@ -21,14 +21,8 @@ package org.linphone.utils
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.graphics.ImageDecoder
-import android.graphics.Paint
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffXfermode
-import android.graphics.Rect
 import android.net.Uri
-import androidx.annotation.AnyThread
 import androidx.annotation.WorkerThread
 import java.io.FileNotFoundException
 import org.linphone.core.tools.Log
@@ -38,58 +32,37 @@ class ImageUtils {
         private const val TAG = "[Image Utils]"
 
         @WorkerThread
-        fun getRoundBitmapFromUri(
+        fun getBitmap(
             context: Context,
-            fromPictureUri: Uri?
+            path: String?
         ): Bitmap? {
-            var bm: Bitmap? = null
-            if (fromPictureUri != null) {
-                bm = try {
+            Log.d("$TAG Trying to create Bitmap from path [$path]")
+            if (path != null) {
+                try {
+                    val fromPictureUri = Uri.parse(path)
+                    if (fromPictureUri == null) {
+                        Log.e("$TAG Failed to parse path [$path] as URI")
+                        return null
+                    }
+
                     // We make a copy to ensure Bitmap will be Software and not Hardware, required for shortcuts
-                    ImageDecoder.decodeBitmap(
+                    return ImageDecoder.decodeBitmap(
                         ImageDecoder.createSource(context.contentResolver, fromPictureUri)
                     ).copy(
                         Bitmap.Config.ARGB_8888,
                         true
                     )
                 } catch (fnfe: FileNotFoundException) {
+                    Log.e("$TAG File [$path] not found: $fnfe")
                     return null
                 } catch (e: Exception) {
-                    Log.e("$TAG Failed to get bitmap from URI [$fromPictureUri]: $e")
+                    Log.e("$TAG Failed to get bitmap using path [$path]: $e")
                     return null
                 }
             }
-            if (bm != null) {
-                val roundBm = getRoundBitmap(bm)
-                if (roundBm != null) {
-                    bm.recycle()
-                    return roundBm
-                }
-            }
-            return bm
-        }
 
-        @AnyThread
-        private fun getRoundBitmap(bitmap: Bitmap): Bitmap? {
-            val output =
-                Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
-            val canvas = Canvas(output)
-            val color = -0xbdbdbe
-            val paint = Paint()
-            val rect =
-                Rect(0, 0, bitmap.width, bitmap.height)
-            paint.isAntiAlias = true
-            canvas.drawARGB(0, 0, 0, 0)
-            paint.color = color
-            canvas.drawCircle(
-                bitmap.width / 2.toFloat(),
-                bitmap.height / 2.toFloat(),
-                bitmap.width / 2.toFloat(),
-                paint
-            )
-            paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
-            canvas.drawBitmap(bitmap, rect, rect, paint)
-            return output
+            Log.e("$TAG Can't get bitmap from null URI")
+            return null
         }
     }
 }
