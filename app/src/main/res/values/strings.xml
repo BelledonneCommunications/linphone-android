@@ -119,6 +119,7 @@
     <string name="assistant_secure_mode_default_title">Default</string>
     <string name="assistant_secure_mode_interoperable_title">Interoperable</string>
     <string name="assistant_secure_mode_finish_account_login">Continue</string>
+    <string name="assistant_account_register_unavailable_no_push_toast">Push notifications not available, account creation disabled</string>
     <string name="assistant_account_register_username_already_in_use_error">This account already exists</string>
     <string name="assistant_account_register_username_invalid_characters_error">Invalid characters: capital letters and special characters are not allowed</string>
     <string name="assistant_account_register_username_too_short_error">Username is too short</string>

@@ -55,7 +55,7 @@ class CallLogModel @WorkerThread constructor(private val callLog: CallLog) {
             friendExists = false
         }
 
-        iconResId.postValue(LinphoneUtils.getIconResId(callLog.status, callLog.dir))
+        iconResId.postValue(LinphoneUtils.getCallIconResId(callLog.status, callLog.dir))
     }
 
     @UiThread

@@ -160,9 +160,49 @@ class LinphoneUtils {
             return core.defaultAccount?.params?.audioVideoConferenceFactoryAddress != null
         }
 
+        @WorkerThread
+        fun arePushNotificationsAvailable(core: Core): Boolean {
+            if (!core.isPushNotificationAvailable) {
+                Log.w(
+                    "$TAG Push notifications aren't available in the Core, disable account creation"
+                )
+                return false
+            }
+
+            val pushConfig = core.pushNotificationConfig
+            if (pushConfig == null) {
+                Log.w(
+                    "$TAG Core's push notifications configuration is null, disable account creation"
+                )
+                return false
+            }
+
+            if (pushConfig.provider.isNullOrEmpty()) {
+                Log.w(
+                    "$TAG Core's push notifications configuration provider is null or empty, disable account creation"
+                )
+                return false
+            }
+            if (pushConfig.param.isNullOrEmpty()) {
+                Log.w(
+                    "$TAG Core's push notifications configuration param is null or empty, disable account creation"
+                )
+                return false
+            }
+            if (pushConfig.prid.isNullOrEmpty()) {
+                Log.w(
+                    "$TAG Core's push notifications configuration prid is null or empty, disable account creation"
+                )
+                return false
+            }
+
+            Log.i("$TAG Push notifications seems to be available")
+            return true
+        }
+
         @AnyThread
         @IntegerRes
-        fun getIconResId(callStatus: Status, callDir: Dir): Int {
+        fun getCallIconResId(callStatus: Status, callDir: Dir): Int {
             return when (callStatus) {
                 Status.Missed -> {
                     if (callDir == Dir.Outgoing) {

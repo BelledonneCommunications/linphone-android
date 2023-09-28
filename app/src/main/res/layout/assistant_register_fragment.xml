@@ -87,6 +87,7 @@
                 <androidx.appcompat.widget.AppCompatEditText
                     style="@style/default_text_style"
                     android:id="@+id/username"
+                    android:enabled="@{viewModel.pushNotificationsAvailable}"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_marginStart="16dp"
@@ -131,6 +132,7 @@
                 <androidx.appcompat.widget.AppCompatEditText
                     style="@style/default_text_style"
                     android:id="@+id/phone_number"
+                    android:enabled="@{viewModel.pushNotificationsAvailable}"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:paddingStart="120dp"
@@ -151,6 +153,7 @@
                 <androidx.appcompat.widget.AppCompatSpinner
                     style="@style/default_text_style"
                     android:id="@+id/prefix"
+                    android:enabled="@{viewModel.pushNotificationsAvailable}"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:paddingStart="20dp"
@@ -192,6 +195,7 @@
                 <androidx.appcompat.widget.AppCompatEditText
                     style="@style/default_text_style"
                     android:id="@+id/password"
+                    android:enabled="@{viewModel.pushNotificationsAvailable}"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_marginStart="16dp"
@@ -237,7 +241,7 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:onClick="@{() -> viewModel.confirmPhoneNumber()}"
-                    android:enabled="@{viewModel.createEnabled &amp;&amp; !viewModel.operationInProgress, default=false}"
+                    android:enabled="@{viewModel.createEnabled &amp;&amp; viewModel.pushNotificationsAvailable &amp;&amp; !viewModel.operationInProgress, default=false}"
                     style="@style/primary_button_label_style"
                     android:id="@+id/create"
                     android:layout_width="0dp"

@@ -126,6 +126,16 @@ class RegisterFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
+        viewModel.pushNotificationsAvailable.observe(viewLifecycleOwner) { available ->
+            if (!available) {
+                val text = getString(R.string.assistant_account_register_unavailable_no_push_toast)
+                (requireActivity() as AssistantActivity).showRedToast(
+                    text,
+                    R.drawable.warning_circle
+                )
+            }
+        }
+
         viewModel.normalizedPhoneNumberEvent.observe(viewLifecycleOwner) {
             it.consume { number ->
                 showPhoneNumberConfirmationDialog(number)

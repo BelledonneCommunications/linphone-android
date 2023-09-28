@@ -42,6 +42,6 @@ class CallLogHistoryModel @WorkerThread constructor(val callLog: CallLog) {
         )
 
         isSuccessful.postValue(callLog.status == Call.Status.Success)
-        iconResId.postValue(LinphoneUtils.getIconResId(callLog.status, callLog.dir))
+        iconResId.postValue(LinphoneUtils.getCallIconResId(callLog.status, callLog.dir))
     }
 }

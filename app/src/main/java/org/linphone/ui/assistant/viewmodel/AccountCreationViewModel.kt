@@ -46,6 +46,7 @@ import org.linphone.core.Factory
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
+import org.linphone.utils.LinphoneUtils
 
 class AccountCreationViewModel @UiThread constructor() : ViewModel() {
     companion object {
@@ -73,6 +74,8 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel() {
     val showPassword = MutableLiveData<Boolean>()
 
     val createEnabled = MediatorLiveData<Boolean>()
+
+    val pushNotificationsAvailable = MutableLiveData<Boolean>()
 
     val confirmationMessage = MutableLiveData<String>()
 
@@ -274,6 +277,8 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel() {
         operationInProgress.value = false
 
         coreContext.postOnCoreThread { core ->
+            pushNotificationsAvailable.postValue(LinphoneUtils.arePushNotificationsAvailable(core))
+
             val dialPlans = Factory.instance().dialPlans.toList()
             for (dialPlan in dialPlans) {
                 dialPlansList.add(dialPlan)
