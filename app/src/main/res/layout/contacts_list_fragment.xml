@@ -90,7 +90,7 @@
             android:id="@+id/no_contacts_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
+            android:text="@string/contacts_list_empty"
             app:layout_constraintBottom_toTopOf="@id/background"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

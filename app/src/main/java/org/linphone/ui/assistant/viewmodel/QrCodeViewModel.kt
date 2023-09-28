@@ -47,6 +47,11 @@ class QrCodeViewModel @UiThread constructor() : ViewModel() {
                 val isValidUrl = Patterns.WEB_URL.matcher(result).matches()
                 if (!isValidUrl) {
                     Log.e("$TAG The content of the QR Code doesn't seem to be a valid web URL")
+                } else {
+                    Log.i("$TAG QR code URL set, restarting the Core")
+                    core.provisioningUri = result
+                    coreContext.core.stop()
+                    coreContext.core.start()
                 }
                 qrCodeFoundEvent.postValue(Event(isValidUrl))
             }
