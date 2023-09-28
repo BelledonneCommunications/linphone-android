@@ -145,7 +145,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@{viewModel.contact.lastPresenceInfo, default=@string/friend_presence_status_online}"
-                    android:textColor="@{viewModel.contact.presenceStatus == ConsolidatedPresence.Online ? @color/green_success_500 : @color/orange_away, default=@color/green_success_500}"
+                    android:textColor="@{viewModel.contact.presenceStatus == ConsolidatedPresence.Online ? @color/green_success_500 : @color/orange_warning_600, default=@color/green_success_500}"
                     android:textSize="14sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
