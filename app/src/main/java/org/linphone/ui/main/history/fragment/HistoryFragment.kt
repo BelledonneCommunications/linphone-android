@@ -63,16 +63,8 @@ class HistoryFragment : GenericFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        postponeEnterTransition()
 
         binding.lifecycleOwner = viewLifecycleOwner
-
-        sharedViewModel.callsListReadyToBeDisplayedEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                Log.i("$TAG Calls list is ready, starting postponed enter transition")
-                startPostponedEnterTransition()
-            }
-        }
 
         binding.root.doOnPreDraw {
             val slidingPane = binding.slidingPaneLayout

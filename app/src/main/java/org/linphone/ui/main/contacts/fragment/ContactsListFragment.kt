@@ -29,7 +29,6 @@ import android.view.ViewGroup
 import android.widget.PopupWindow
 import androidx.annotation.UiThread
 import androidx.core.content.FileProvider
-import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -70,7 +69,6 @@ class ContactsListFragment : AbstractTopBarFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        postponeEnterTransition()
 
         listViewModel = requireActivity().run {
             ViewModelProvider(this)[ContactsListViewModel::class.java]
@@ -103,12 +101,7 @@ class ContactsListFragment : AbstractTopBarFragment() {
             adapter.submitList(it)
             Log.i("$TAG Contacts list updated with [${it.size}] items")
 
-            if (currentCount == 0) {
-                (view.parent as? ViewGroup)?.doOnPreDraw {
-                    startPostponedEnterTransition()
-                    sharedViewModel.contactsListReadyToBeDisplayedEvent.value = Event(true)
-                }
-            } else if (currentCount < it.size) {
+            if (currentCount < it.size) {
                 Log.i("$TAG Contacts list updated with new items, scrolling to top")
                 binding.contactsList.smoothScrollToPosition(0)
             }

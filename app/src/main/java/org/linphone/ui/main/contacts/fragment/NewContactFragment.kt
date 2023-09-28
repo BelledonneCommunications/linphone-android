@@ -174,8 +174,6 @@ class NewContactFragment : GenericFragment() {
                 removeCell(model)
             }
         }
-
-        sharedViewModel.contactEditorReadyToBeDisplayedEvent.value = Event(true)
     }
 
     override fun onResume() {

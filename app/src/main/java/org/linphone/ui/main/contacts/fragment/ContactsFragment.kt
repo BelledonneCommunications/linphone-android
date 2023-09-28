@@ -63,23 +63,8 @@ class ContactsFragment : GenericFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        postponeEnterTransition()
 
         binding.lifecycleOwner = viewLifecycleOwner
-
-        sharedViewModel.contactsListReadyToBeDisplayedEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                Log.i("$TAG Contacts list is ready, starting postponed enter transition")
-                startPostponedEnterTransition()
-            }
-        }
-
-        sharedViewModel.contactEditorReadyToBeDisplayedEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                Log.i("$TAG Contact editor is ready, starting postponed enter transition")
-                startPostponedEnterTransition()
-            }
-        }
 
         binding.root.doOnPreDraw {
             val slidingPane = binding.slidingPaneLayout

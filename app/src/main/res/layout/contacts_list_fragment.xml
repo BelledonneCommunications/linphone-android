@@ -16,164 +16,174 @@
             type="org.linphone.ui.main.contacts.viewmodel.ContactsListViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/orange_main_500">
+        android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.Group
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:constraint_referenced_ids="no_contacts_image, no_contacts_label"
-            android:visibility="@{viewModel.contactsList.empty ? View.VISIBLE : View.GONE}" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/orange_main_500">
+
+            <androidx.constraintlayout.widget.Group
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="no_contacts_image, no_contacts_label"
+                android:visibility="@{viewModel.contactsList.empty ? View.VISIBLE : View.GONE}" />
+
+            <include
+                android:id="@+id/top_bar"
+                layout="@layout/main_activity_top_bar"
+                bind:viewModel="@{viewModel}"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/top_bar_height"
+                android:layout_marginEnd="9dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/filter"/>
+
+            <ImageView
+                android:onClick="@{filterClickListener}"
+                android:id="@+id/filter"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="0dp"
+                android:layout_marginEnd="9dp"
+                android:src="@drawable/funnel"
+                android:visibility="@{viewModel.searchBarVisible ? View.GONE : View.VISIBLE}"
+                app:tint="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/top_bar"
+                app:layout_constraintBottom_toBottomOf="@id/top_bar" />
+
+            <include
+                android:id="@+id/in_call_top_bar"
+                layout="@layout/main_activity_in_call_top_bar"
+                bind:viewModel="@{viewModel}"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/top_bar_height"
+                android:visibility="@{viewModel.atLastOneCall ? View.VISIBLE : View.GONE, default=gone}"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <ImageView
+                android:id="@+id/background"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@color/white"
+                app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/top_bar" />
+
+            <ImageView
+                android:id="@+id/no_contacts_image"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/illu"
+                android:layout_margin="10dp"
+                app:layout_constraintHeight_max="200dp"
+                app:layout_constraintBottom_toTopOf="@id/no_contacts_label"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/background" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/section_header_style"
+                android:id="@+id/no_contacts_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/contacts_list_empty"
+                app:layout_constraintBottom_toTopOf="@id/background"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/no_contacts_image" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/section_header_style"
+                android:id="@+id/favourites_label"
+                android:visibility="@{!viewModel.isListFiltered &amp;&amp; viewModel.favourites.size() > 0 ? View.VISIBLE : View.GONE}"
+                onClickListener="@{() -> viewModel.toggleFavouritesVisibility()}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="15dp"
+                android:text="@string/contacts_list_favourites_title"
+                android:drawableEnd="@{viewModel.showFavourites ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
+                android:drawableTint="@color/gray_main2_600"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/background"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/favourites_contacts_list"
+                android:visibility="@{viewModel.showFavourites &amp;&amp; !viewModel.isListFiltered &amp;&amp; viewModel.favourites.size() > 0 ? View.VISIBLE : View.GONE}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/favourites_label" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/section_header_style"
+                android:id="@+id/all_contacts_label"
+                android:visibility="@{!viewModel.isListFiltered &amp;&amp; viewModel.favourites.size() > 0 ? View.VISIBLE : View.GONE}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/contacts_list_all_contacts_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/favourites_contacts_list"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/contactsList"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/all_contacts_label"
+                app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar" />
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/bottom_nav_bar"
+                android:name="org.linphone.ui.main.fragment.BottomNavBarFragment"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                bind:layout="@layout/bottom_nav_bar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/new_contact"
+                android:onClick="@{onNewContactClicked}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|bottom"
+                android:layout_margin="16dp"
+                android:src="@drawable/user_plus"
+                app:tint="@color/gray_main2_700"
+                app:backgroundTint="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <include
-            android:id="@+id/top_bar"
-            layout="@layout/main_activity_top_bar"
-            bind:viewModel="@{viewModel}"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/top_bar_height"
-            android:layout_marginEnd="9dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/filter"/>
+            layout="@layout/operation_in_progress"
+            bind:visibility="@{viewModel.fetchInProgress}" />
 
-        <ImageView
-            android:onClick="@{filterClickListener}"
-            android:id="@+id/filter"
-            android:layout_width="@dimen/icon_size"
-            android:layout_height="0dp"
-            android:layout_marginEnd="9dp"
-            android:src="@drawable/funnel"
-            android:visibility="@{viewModel.searchBarVisible ? View.GONE : View.VISIBLE}"
-            app:tint="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/top_bar"
-            app:layout_constraintBottom_toBottomOf="@id/top_bar" />
-
-        <include
-            android:id="@+id/in_call_top_bar"
-            layout="@layout/main_activity_in_call_top_bar"
-            bind:viewModel="@{viewModel}"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/top_bar_height"
-            android:visibility="@{viewModel.atLastOneCall ? View.VISIBLE : View.GONE, default=gone}"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-        <ImageView
-            android:id="@+id/background"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:src="@color/white"
-            app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/top_bar" />
-
-        <ImageView
-            android:id="@+id/no_contacts_image"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:src="@drawable/illu"
-            android:layout_margin="10dp"
-            app:layout_constraintHeight_max="200dp"
-            app:layout_constraintBottom_toTopOf="@id/no_contacts_label"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/background" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/section_header_style"
-            android:id="@+id/no_contacts_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/contacts_list_empty"
-            app:layout_constraintBottom_toTopOf="@id/background"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/no_contacts_image" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/section_header_style"
-            android:id="@+id/favourites_label"
-            android:visibility="@{!viewModel.isListFiltered &amp;&amp; viewModel.favourites.size() > 0 ? View.VISIBLE : View.GONE}"
-            onClickListener="@{() -> viewModel.toggleFavouritesVisibility()}"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="15dp"
-            android:text="@string/contacts_list_favourites_title"
-            android:drawableEnd="@{viewModel.showFavourites ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
-            android:drawableTint="@color/gray_main2_600"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/background"/>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/favourites_contacts_list"
-            android:visibility="@{viewModel.showFavourites &amp;&amp; !viewModel.isListFiltered &amp;&amp; viewModel.favourites.size() > 0 ? View.VISIBLE : View.GONE}"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="4dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/favourites_label" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/section_header_style"
-            android:id="@+id/all_contacts_label"
-            android:visibility="@{!viewModel.isListFiltered &amp;&amp; viewModel.favourites.size() > 0 ? View.VISIBLE : View.GONE}"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="20dp"
-            android:text="@string/contacts_list_all_contacts_title"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/favourites_contacts_list"/>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/contactsList"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/all_contacts_label"
-            app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar" />
-
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/bottom_nav_bar"
-            android:name="org.linphone.ui.main.fragment.BottomNavBarFragment"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            bind:layout="@layout/bottom_nav_bar"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/new_contact"
-            android:onClick="@{onNewContactClicked}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:layout_margin="16dp"
-            android:src="@drawable/user_plus"
-            app:tint="@color/gray_main2_700"
-            app:backgroundTint="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </layout>

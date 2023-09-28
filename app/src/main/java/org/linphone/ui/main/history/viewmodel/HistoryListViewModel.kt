@@ -40,6 +40,8 @@ class HistoryListViewModel @UiThread constructor() : AbstractTopBarViewModel() {
 
     val callLogs = MutableLiveData<ArrayList<CallLogModel>>()
 
+    val fetchInProgress = MutableLiveData<Boolean>()
+
     val historyDeletedEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -107,6 +109,10 @@ class HistoryListViewModel @UiThread constructor() : AbstractTopBarViewModel() {
 
     @WorkerThread
     private fun computeCallLogsList(filter: String) {
+        if (callLogs.value.orEmpty().isEmpty()) {
+            fetchInProgress.postValue(true)
+        }
+
         val list = arrayListOf<CallLogModel>()
 
         // TODO? : Add support for call logs in magic search
@@ -120,5 +126,6 @@ class HistoryListViewModel @UiThread constructor() : AbstractTopBarViewModel() {
         }
 
         callLogs.postValue(list)
+        fetchInProgress.postValue(false)
     }
 }

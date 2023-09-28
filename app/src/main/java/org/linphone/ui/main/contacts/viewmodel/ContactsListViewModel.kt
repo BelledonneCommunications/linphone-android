@@ -50,6 +50,8 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
 
     val favourites = MutableLiveData<ArrayList<ContactAvatarModel>>()
 
+    val fetchInProgress = MutableLiveData<Boolean>()
+
     val showFavourites = MutableLiveData<Boolean>()
 
     val isListFiltered = MutableLiveData<Boolean>()
@@ -172,6 +174,7 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
 
         favourites.postValue(favouritesList)
         contactsList.postValue(list)
+        fetchInProgress.postValue(false)
 
         Log.i("$TAG Processed [${results.size}] results")
     }
@@ -221,6 +224,10 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
         domain: String,
         sources: Int
     ) {
+        if (contactsList.value.orEmpty().isEmpty()) {
+            fetchInProgress.postValue(true)
+        }
+
         if (previousFilter.isNotEmpty() && (
             previousFilter.length > filter.length ||
                 (previousFilter.length == filter.length && previousFilter != filter)
