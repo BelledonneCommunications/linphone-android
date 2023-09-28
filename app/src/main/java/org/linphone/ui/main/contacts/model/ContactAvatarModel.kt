@@ -30,7 +30,6 @@ import org.linphone.core.Friend
 import org.linphone.core.FriendListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
-import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.TimestampUtils
 
 class ContactAvatarModel @WorkerThread constructor(val friend: Friend) {
@@ -44,7 +43,7 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) {
 
     val avatar = MutableLiveData<Uri>()
 
-    val initials = LinphoneUtils.getInitials(friend.name.orEmpty())
+    val initials = AppUtils.getInitials(friend.name.orEmpty())
 
     val lastPresenceInfo = MutableLiveData<String>()
 
@@ -52,7 +51,7 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) {
 
     val name = MutableLiveData<String>()
 
-    val firstLetter: String = LinphoneUtils.getFirstLetter(friend.name.orEmpty())
+    val firstLetter: String = AppUtils.getFirstLetter(friend.name.orEmpty())
 
     val firstContactStartingByThatLetter = MutableLiveData<Boolean>()
 

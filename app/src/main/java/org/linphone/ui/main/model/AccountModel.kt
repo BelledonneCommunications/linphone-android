@@ -130,7 +130,7 @@ class AccountModel @WorkerThread constructor(
         val name = LinphoneUtils.getDisplayName(account.params.identityAddress)
         displayName.postValue(name)
 
-        initials.postValue(LinphoneUtils.getInitials(name))
+        initials.postValue(AppUtils.getInitials(name))
 
         val pictureUri = account.params.pictureUri.orEmpty()
         if (pictureUri != avatar.value) {

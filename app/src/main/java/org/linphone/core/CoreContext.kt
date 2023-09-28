@@ -40,8 +40,8 @@ import org.linphone.notifications.NotificationsManager
 import org.linphone.telecom.TelecomManager
 import org.linphone.ui.call.CallActivity
 import org.linphone.utils.ActivityMonitor
+import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
-import org.linphone.utils.LinphoneUtils
 
 class CoreContext @UiThread constructor(val context: Context) : HandlerThread("Core Thread") {
     companion object {
@@ -393,7 +393,7 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
 
     @WorkerThread
     private fun computeUserAgent() {
-        val deviceName = LinphoneUtils.getDeviceName(context)
+        val deviceName = AppUtils.getDeviceName(context)
         val appName = context.getString(org.linphone.R.string.app_name)
         val androidVersion = BuildConfig.VERSION_NAME
         val userAgent = "$appName/$androidVersion ($deviceName) LinphoneSDK"
