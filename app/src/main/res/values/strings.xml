@@ -294,6 +294,7 @@
     <string name="call_state_incoming_received">Incoming</string>
     <string name="call_state_connected">Active</string>
     <string name="call_state_paused">Paused</string>
+    <string name="call_state_resuming">Resuming…</string>
     <string name="call_state_ended">Ended</string>
     <string name="calls_list_title">Calls list</string>
     <string name="call_transfer_title">Transfer call to</string>

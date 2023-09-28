@@ -63,7 +63,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginEnd="5dp"
-            android:src="@{model.isPaused ? @drawable/pause_call : @drawable/phone, default=@drawable/pause_call}"
+            android:src="@{model.isPaused ? @drawable/pause_call : @drawable/phone_call, default=@drawable/pause_call}"
             app:tint="@color/gray_main2_500"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

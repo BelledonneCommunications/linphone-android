@@ -290,11 +290,14 @@ class LinphoneUtils {
                 Call.State.Pausing, Call.State.Paused, Call.State.PausedByRemote -> {
                     AppUtils.getString(R.string.call_state_paused)
                 }
+                Call.State.Resuming -> {
+                    AppUtils.getString(R.string.call_state_resuming)
+                }
                 Call.State.End, Call.State.Released, Call.State.Error -> {
                     AppUtils.getString(R.string.call_state_ended)
                 }
                 else -> {
-                    // TODO: handle other states
+                    // TODO: handle other states?
                     ""
                 }
             }
