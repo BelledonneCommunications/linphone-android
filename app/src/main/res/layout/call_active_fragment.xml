@@ -215,6 +215,35 @@
                 app:layout_constraintHeight_max="200dp"
                 app:layout_constraintWidth_max="200dp" />
 
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_300"
+                android:id="@+id/remote_recording"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/call_remote_is_recording"
+                android:textSize="12sp"
+                android:textColor="@color/gray_900"
+                android:gravity="center_vertical"
+                android:drawableStart="@drawable/record"
+                android:drawablePadding="10dp"
+                android:background="@drawable/shape_remote_recording_background"
+                android:visibility="@{viewModel.isRemoteRecording ? View.VISIBLE : View.GONE}"
+                app:layout_constraintTop_toTopOf="@id/background"
+                app:layout_constraintStart_toStartOf="@id/background"
+                app:drawableTint="@color/red_danger_500" />
+
+            <ImageView
+                android:id="@+id/recording"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
+                android:src="@drawable/record"
+                android:visibility="@{viewModel.isRecording ? View.VISIBLE : View.GONE, default=gone}"
+                app:layout_constraintTop_toTopOf="@id/background"
+                app:layout_constraintStart_toStartOf="@id/background"
+                app:tint="@color/red_danger_500" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <include

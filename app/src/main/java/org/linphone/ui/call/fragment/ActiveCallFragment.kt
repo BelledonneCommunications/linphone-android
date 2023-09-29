@@ -228,15 +228,6 @@ class ActiveCallFragment : GenericCallFragment() {
             }
         }
 
-        callViewModel.isRecording.observe(viewLifecycleOwner) { recording ->
-            val text = if (recording) {
-                getString(R.string.toast_call_recording_started)
-            } else {
-                getString(R.string.toast_call_recording_stopped)
-            }
-            (requireActivity() as CallActivity).showGreenToast(text, R.drawable.record)
-        }
-
         actionsBottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {

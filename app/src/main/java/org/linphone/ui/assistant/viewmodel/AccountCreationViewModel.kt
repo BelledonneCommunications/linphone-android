@@ -283,7 +283,7 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel() {
             for (dialPlan in dialPlans) {
                 dialPlansList.add(dialPlan)
                 dialPlansLabelList.add(
-                    "${dialPlan.flag} +${dialPlan.countryCallingCode} | ${dialPlan.country}"
+                    "${dialPlan.flag} ${dialPlan.country} | +${dialPlan.countryCallingCode}"
                 )
             }
 

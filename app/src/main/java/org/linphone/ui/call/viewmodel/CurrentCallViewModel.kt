@@ -74,6 +74,8 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     val isRecording = MutableLiveData<Boolean>()
 
+    val isRemoteRecording = MutableLiveData<Boolean>()
+
     val isMicrophoneMuted = MutableLiveData<Boolean>()
 
     val isSpeakerEnabled = MutableLiveData<Boolean>()
@@ -149,6 +151,11 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         @WorkerThread
         override fun onEncryptionChanged(call: Call, on: Boolean, authenticationToken: String?) {
             updateEncryption()
+        }
+
+        override fun onRemoteRecording(call: Call, recording: Boolean) {
+            Log.i("$TAG Remote recording changed: $recording")
+            isRemoteRecording.postValue(recording)
         }
 
         @WorkerThread
@@ -630,10 +637,8 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
         isOutgoing.postValue(call.dir == Call.Dir.Outgoing)
 
-        if (call.params.isRecording) {
-            // Do not set it to false to prevent the "no longer recording" toast to be displayed
-            isRecording.postValue(true)
-        }
+        isRecording.postValue(call.params.isRecording)
+        isRemoteRecording.postValue(call.remoteParams?.isRecording)
 
         val address = call.remoteAddress.clone()
         address.clean()
