@@ -298,7 +298,7 @@ class CallActivity : AppCompatActivity() {
         }
     }
 
-    private fun showGreenToast(message: String, @DrawableRes icon: Int, duration: Long = 4000) {
+    fun showGreenToast(message: String, @DrawableRes icon: Int, duration: Long = 4000) {
         val greenToast = AppUtils.getGreenToast(this, binding.toastsArea, message, icon)
         binding.toastsArea.addView(greenToast.root)
 

@@ -147,12 +147,14 @@
 
         <ImageView
             android:id="@+id/record_call"
+            android:onClick="@{() -> viewModel.toggleRecording()}"
             android:layout_width="0dp"
             android:layout_height="@dimen/call_button_size"
             android:layout_marginTop="@dimen/call_extra_button_top_margin"
             android:padding="@dimen/call_button_icon_padding"
             android:background="@drawable/in_call_button_background"
             android:src="@drawable/record"
+            android:selected="@{viewModel.isRecording()}"
             app:tint="@color/white"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintTop_toBottomOf="@id/calls_list_label"
@@ -228,6 +230,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/in_call_extra_action_label_style"
             android:id="@+id/record_call_label"
+            android:onClick="@{() -> viewModel.toggleRecording()}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"

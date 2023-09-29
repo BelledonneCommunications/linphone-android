@@ -42,6 +42,7 @@ import org.linphone.ui.call.CallActivity
 import org.linphone.utils.ActivityMonitor
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
+import org.linphone.utils.LinphoneUtils
 
 class CoreContext @UiThread constructor(val context: Context) : HandlerThread("Core Thread") {
     companion object {
@@ -280,8 +281,9 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         /*if (LinphoneUtils.checkIfNetworkHasLowBandwidth(context)) {
             Log.w("[Context] Enabling low bandwidth mode!")
             params.isLowBandwidthEnabled = true
-        }
-        params.recordFile = LinphoneUtils.getRecordingFilePathForAddress(address)*/
+        }*/
+
+        params.recordFile = LinphoneUtils.getRecordingFilePathForAddress(address)
 
         if (localAddress != null) {
             val account = core.accountList.find { account ->
@@ -298,10 +300,6 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
                 )
             }
         }
-
-        /*if (corePreferences.sendEarlyMedia) {
-            params.isEarlyMediaSendingEnabled = true
-        }*/
 
         val call = core.inviteAddressWithParams(address, params)
         Log.i("$TAG Starting call $call")
@@ -343,7 +341,7 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
             return
         }
 
-        // params.recordFile = LinphoneUtils.getRecordingFilePathForAddress(call.remoteAddress)
+        params.recordFile = LinphoneUtils.getRecordingFilePathForAddress(call.remoteAddress)
 
         /*if (LinphoneUtils.checkIfNetworkHasLowBandwidth(context)) {
             Log.w("$TAG Enabling low bandwidth mode!")

@@ -72,6 +72,8 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     val isOutgoing = MutableLiveData<Boolean>()
 
+    val isRecording = MutableLiveData<Boolean>()
+
     val isMicrophoneMuted = MutableLiveData<Boolean>()
 
     val isSpeakerEnabled = MutableLiveData<Boolean>()
@@ -504,6 +506,23 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
+    fun toggleRecording() {
+        coreContext.postOnCoreThread {
+            if (::currentCall.isInitialized) {
+                if (currentCall.params.isRecording) {
+                    Log.i("$TAG Stopping call recording")
+                    currentCall.stopRecording()
+                } else {
+                    Log.i("$TAG Starting call recording")
+                    currentCall.startRecording()
+                }
+                val recording = currentCall.params.isRecording
+                isRecording.postValue(recording)
+            }
+        }
+    }
+
+    @UiThread
     fun toggleFullScreen() {
         if (fullScreenMode.value == false && isVideoEnabled.value == false) return
         fullScreenMode.value = fullScreenMode.value != true
@@ -610,6 +629,11 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         updateOutputAudioDevice(audioDevice)
 
         isOutgoing.postValue(call.dir == Call.Dir.Outgoing)
+
+        if (call.params.isRecording) {
+            // Do not set it to false to prevent the "no longer recording" toast to be displayed
+            isRecording.postValue(true)
+        }
 
         val address = call.remoteAddress.clone()
         address.clean()

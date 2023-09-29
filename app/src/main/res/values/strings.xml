@@ -301,6 +301,8 @@
     <string name="toast_call_transfer_in_progress">Call is being transferred to %s</string>
     <string name="toast_call_transfer_successful">Call has been transferred to %s</string>
     <string name="toast_call_transfer_failed">Call transfer to %s failed!</string>
+    <string name="toast_call_recording_started">Call is being recorded</string>
+    <string name="toast_call_recording_stopped">Call is no longer being recorded</string>
 
     <!-- Keep <u></u> in following strings translations! -->
     <string name="welcome_carousel_skip"><u>Skip</u></string>

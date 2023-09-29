@@ -22,6 +22,10 @@ package org.linphone.utils
 import androidx.annotation.AnyThread
 import androidx.annotation.IntegerRes
 import androidx.annotation.WorkerThread
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Account
@@ -36,6 +40,8 @@ import org.linphone.core.tools.Log
 class LinphoneUtils {
     companion object {
         private const val TAG = "[Linphone Utils]"
+
+        private const val RECORDING_DATE_PATTERN = "dd-MM-yyyy-HH-mm-ss"
 
         @WorkerThread
         fun getDefaultAccount(): Account? {
@@ -190,6 +196,17 @@ class LinphoneUtils {
             val remoteSipUri = remoteAddress.clone()
             remoteSipUri.clean()
             return "${localSipUri.asStringUriOnly()}~${remoteSipUri.asStringUriOnly()}"
+        }
+
+        @WorkerThread
+        fun getRecordingFilePathForAddress(address: Address): String {
+            val displayName = getDisplayName(address)
+            val dateFormat: DateFormat = SimpleDateFormat(
+                RECORDING_DATE_PATTERN,
+                Locale.getDefault()
+            )
+            val fileName = "${displayName}_${dateFormat.format(Date())}.mkv"
+            return FileUtils.getFileStoragePath(fileName).absolutePath
         }
 
         @WorkerThread
