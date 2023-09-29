@@ -201,7 +201,7 @@
     <string name="settings_network_title">Network</string>
     <string name="settings_network_use_wifi_only">Use only Wi-Fi networks</string>
     <string name="settings_user_interface_title">User interface</string>
-    <string name="settings_user_interface_theme_title">User interface</string>
+    <string name="settings_user_interface_theme_title">Theme</string>
     <string name="settings_user_interface_dark_theme_label">Dark theme</string>
     <string name="settings_user_interface_light_theme_label">Light theme</string>
     <string name="settings_user_interface_auto_theme_label">Auto</string>
@@ -309,6 +309,7 @@
     <string name="call_state_incoming_received">Incoming</string>
     <string name="call_state_connected">Active</string>
     <string name="call_state_paused">Paused</string>
+    <string name="call_state_paused_by_remote">Paused by remote</string>
     <string name="call_state_resuming">Resuming…</string>
     <string name="call_state_ended">Ended</string>
     <string name="calls_list_title">Calls list</string>

@@ -82,6 +82,8 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     val isPaused = MutableLiveData<Boolean>()
 
+    val isPausedByRemote = MutableLiveData<Boolean>()
+
     val isMicrophoneMuted = MutableLiveData<Boolean>()
 
     val isSpeakerEnabled = MutableLiveData<Boolean>()
@@ -213,6 +215,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
             }
 
             isPaused.postValue(isCallPaused())
+            isPausedByRemote.postValue(call.state == Call.State.PausedByRemote)
             canBePaused.postValue(canCallBePaused())
         }
 
@@ -673,6 +676,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         isOutgoing.postValue(call.dir == Call.Dir.Outgoing)
 
         isPaused.postValue(isCallPaused())
+        isPausedByRemote.postValue(call.state == Call.State.PausedByRemote)
         canBePaused.postValue(canCallBePaused())
 
         val address = call.remoteAddress.clone()

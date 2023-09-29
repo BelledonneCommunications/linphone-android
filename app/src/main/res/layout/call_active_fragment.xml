@@ -184,6 +184,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/call_top_bar_text_height"
                 android:layout_marginStart="5dp"
+                android:visibility="@{viewModel.isPaused || viewModel.isPausedByRemote ? View.GONE : View.VISIBLE}"
+                app:layout_constraintStart_toEndOf="@id/separator"
+                app:layout_constraintTop_toTopOf="@id/call_direction_label"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/call_header_style"
+                android:id="@+id/paused_call_header"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/call_top_bar_text_height"
+                android:layout_marginStart="5dp"
+                android:text="@{viewModel.isPaused ? @string/call_state_paused : @string/call_state_paused_by_remote, default=@string/call_state_paused}"
+                android:visibility="@{viewModel.isPaused || viewModel.isPausedByRemote ? View.VISIBLE : View.GONE, default=gone}"
                 app:layout_constraintStart_toEndOf="@id/separator"
                 app:layout_constraintTop_toTopOf="@id/call_direction_label"/>
 
