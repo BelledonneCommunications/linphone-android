@@ -99,7 +99,12 @@
 
     <action
         android:id="@+id/action_global_helpFragment"
-        app:destination="@id/helpFragment"/>
+        app:destination="@id/helpFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right"
+        app:launchSingleTop="true"/>
 
     <fragment
         android:id="@+id/recordingsFragment"
@@ -109,7 +114,12 @@
 
     <action
         android:id="@+id/action_global_recordingsFragment"
-        app:destination="@id/recordingsFragment"/>
+        app:destination="@id/recordingsFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right"
+        app:launchSingleTop="true"/>
 
     <fragment
         android:id="@+id/startCallFragment"

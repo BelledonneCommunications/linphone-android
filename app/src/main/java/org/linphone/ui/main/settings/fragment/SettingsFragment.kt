@@ -70,6 +70,8 @@ class SettingsFragment : GenericFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
+
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
@@ -112,5 +114,7 @@ class SettingsFragment : GenericFragment() {
         }
 
         binding.themeSpinner.onItemSelectedListener = themeListener
+
+        startPostponedEnterTransition()
     }
 }
