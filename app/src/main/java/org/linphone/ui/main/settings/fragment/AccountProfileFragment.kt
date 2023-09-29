@@ -93,7 +93,10 @@ class AccountProfileFragment : GenericFragment() {
         }
 
         binding.setSettingsClickListener {
-            // TODO: account settings feature
+            val action = AccountProfileFragmentDirections.actionAccountProfileFragmentToAccountSettingsFragment(
+                identity
+            )
+            findNavController().navigate(action)
         }
 
         binding.setDeleteAccountClickListener {
