@@ -106,8 +106,6 @@ class NewContactFragment : GenericFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
-        viewModel.findFriendByRefKey("")
-
         val addressToAdd = sharedViewModel.sipAddressToAddToNewContact
         if (addressToAdd.isNotEmpty()) {
             Log.i("$TAG Pre-filling new contact form with SIP address [$addressToAdd]")
@@ -117,6 +115,8 @@ class NewContactFragment : GenericFragment() {
                 viewModel.addSipAddress(addressToAdd)
             }
         }
+
+        viewModel.findFriendByRefKey("")
 
         binding.setBackClickListener {
             showAbortConfirmationDialog()
