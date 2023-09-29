@@ -211,9 +211,11 @@ fun ImageView.setPresenceIcon(presence: ConsolidatedPresence?) {
     setImageResource(icon)
 }
 
-@BindingAdapter("tint")
-fun ImageView.setTintColor(@ColorRes color: Int) {
-    setColorFilter(AppUtils.getColor(color), PorterDuff.Mode.SRC_IN)
+@BindingAdapter("tint", "disableTint")
+fun ImageView.setTintColor(@ColorRes color: Int, disable: Boolean) {
+    if (!disable) {
+        setColorFilter(AppUtils.getColor(color), PorterDuff.Mode.SRC_IN)
+    }
 }
 
 @BindingAdapter("textColor")

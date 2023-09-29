@@ -258,8 +258,8 @@ class CallActivity : AppCompatActivity() {
         }
     }
 
-    fun showBlueToast(message: String, @DrawableRes icon: Int) {
-        val blueToast = AppUtils.getBlueToast(this, binding.toastsArea, message, icon)
+    fun showBlueToast(message: String, @DrawableRes icon: Int, doNotTint: Boolean = false) {
+        val blueToast = AppUtils.getBlueToast(this, binding.toastsArea, message, icon, doNotTint)
         binding.toastsArea.addView(blueToast.root)
 
         blueToast.root.slideInToastFromTopForDuration(
@@ -268,8 +268,13 @@ class CallActivity : AppCompatActivity() {
         )
     }
 
-    private fun showRedToast(message: String, @DrawableRes icon: Int, duration: Long = 4000) {
-        val redToast = AppUtils.getRedToast(this, binding.toastsArea, message, icon)
+    private fun showRedToast(
+        message: String,
+        @DrawableRes icon: Int,
+        duration: Long = 4000,
+        doNotTint: Boolean = false
+    ) {
+        val redToast = AppUtils.getRedToast(this, binding.toastsArea, message, icon, doNotTint)
         binding.toastsArea.addView(redToast.root)
 
         redToast.root.slideInToastFromTopForDuration(
@@ -279,8 +284,12 @@ class CallActivity : AppCompatActivity() {
         )
     }
 
-    private fun showPersistentRedToast(message: String, @DrawableRes icon: Int) {
-        val redToast = AppUtils.getRedToast(this, binding.toastsArea, message, icon)
+    private fun showPersistentRedToast(
+        message: String,
+        @DrawableRes icon: Int,
+        doNotTint: Boolean = false
+    ) {
+        val redToast = AppUtils.getRedToast(this, binding.toastsArea, message, icon, doNotTint)
         redToast.root.tag = PERSISTENT_TOAST_TAG
         binding.toastsArea.addView(redToast.root)
 
@@ -298,8 +307,13 @@ class CallActivity : AppCompatActivity() {
         }
     }
 
-    fun showGreenToast(message: String, @DrawableRes icon: Int, duration: Long = 4000) {
-        val greenToast = AppUtils.getGreenToast(this, binding.toastsArea, message, icon)
+    fun showGreenToast(
+        message: String,
+        @DrawableRes icon: Int,
+        duration: Long = 4000,
+        doNotTint: Boolean = false
+    ) {
+        val greenToast = AppUtils.getGreenToast(this, binding.toastsArea, message, icon, doNotTint)
         binding.toastsArea.addView(greenToast.root)
 
         greenToast.root.slideInToastFromTopForDuration(

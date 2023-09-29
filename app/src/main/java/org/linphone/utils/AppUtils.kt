@@ -189,7 +189,8 @@ class AppUtils {
             context: Context,
             parent: ViewGroup,
             message: String,
-            @DrawableRes icon: Int
+            @DrawableRes icon: Int,
+            doNotTint: Boolean = false
         ): ToastBinding {
             val redToast: ToastBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(context),
@@ -197,6 +198,7 @@ class AppUtils {
                 parent,
                 false
             )
+            redToast.doNotTint = doNotTint
             redToast.message = message
             redToast.icon = icon
             redToast.shadowColor = R.drawable.shape_toast_red_background
@@ -210,7 +212,8 @@ class AppUtils {
             context: Context,
             parent: ViewGroup,
             message: String,
-            @DrawableRes icon: Int
+            @DrawableRes icon: Int,
+            doNotTint: Boolean = false
         ): ToastBinding {
             val greenToast: ToastBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(context),
@@ -218,6 +221,7 @@ class AppUtils {
                 parent,
                 false
             )
+            greenToast.doNotTint = doNotTint
             greenToast.message = message
             greenToast.icon = icon
             greenToast.shadowColor = R.drawable.shape_toast_green_background
@@ -231,7 +235,8 @@ class AppUtils {
             context: Context,
             parent: ViewGroup,
             message: String,
-            @DrawableRes icon: Int
+            @DrawableRes icon: Int,
+            doNotTint: Boolean = false
         ): ToastBinding {
             val blueToast: ToastBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(context),
@@ -239,6 +244,7 @@ class AppUtils {
                 parent,
                 false
             )
+            blueToast.doNotTint = doNotTint
             blueToast.message = message
             blueToast.icon = icon
             blueToast.shadowColor = R.drawable.shape_toast_blue_background

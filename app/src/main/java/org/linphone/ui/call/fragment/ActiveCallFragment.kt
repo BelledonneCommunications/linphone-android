@@ -162,7 +162,8 @@ class ActiveCallFragment : GenericCallFragment() {
             if (trusted) {
                 (requireActivity() as CallActivity).showBlueToast(
                     getString(R.string.toast_call_can_be_trusted),
-                    R.drawable.trusted
+                    R.drawable.trusted,
+                    doNotTint = true
                 )
                 binding.avatar.avatarBorderWidth = AppUtils.getDimension(
                     R.dimen.avatar_trust_border_width

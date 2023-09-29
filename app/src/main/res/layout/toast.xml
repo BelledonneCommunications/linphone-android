@@ -18,6 +18,9 @@
         <variable
             name="text_color"
             type="Integer" />
+        <variable
+            name="do_not_tint"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -43,7 +46,8 @@
             android:layout_height="@dimen/icon_size"
             android:adjustViewBounds="true"
             android:src="@{icon, default=@drawable/check_fat_fill}"
-            tint="@{text_color, default=@color/blue_info_500}"
+            tint="@{text_color}"
+            disableTint="@{do_not_tint}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/toast_message"
             app:layout_constraintStart_toStartOf="parent"

@@ -25,7 +25,7 @@
             android:text="@string/drawer_menu_manage_account"
             android:textSize="14sp"
             android:textColor="@color/gray_main2_500"
-            android:drawableStart="@drawable/user_gear"
+            android:drawableStart="@drawable/user_circle_gear"
             android:drawablePadding="5dp"
             app:drawableTint="@color/gray_main2_700"
             app:layout_constraintStart_toStartOf="parent"
