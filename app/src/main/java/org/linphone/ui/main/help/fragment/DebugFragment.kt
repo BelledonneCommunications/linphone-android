@@ -19,9 +19,6 @@
  */
 package org.linphone.ui.main.help.fragment
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -74,11 +71,6 @@ class DebugFragment : GenericFragment() {
 
         viewModel.uploadDebugLogsFinishedEvent.observe(viewLifecycleOwner) {
             it.consume { url ->
-                val clipboard =
-                    requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val clip = ClipData.newPlainText("Logs url", url)
-                clipboard.setPrimaryClip(clip)
-
                 (requireActivity() as MainActivity).showGreenToast(
                     getString(
                         R.string.help_troubleshooting_debug_logs_url_copied_into_clipboard_toast_message
