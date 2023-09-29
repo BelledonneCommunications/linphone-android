@@ -13,4 +13,6 @@
     <string name="about_privacy_policy">আমাদের গোপনীয়তা সুরক্ষা নীতিমালাটি দেখুন</string>
     <string name="password">শব্দচাবি</string>
     <string name="sip_addresses">এসআইপি ঠিকানা</string>
+    <string name="sync_account_name">লাইনফোন; পরিচিত নম্বর</string>
+    <string name="logs_upload_failure">লগ আপলোড করতে ব্যর্থ!</string>
 </resources>
