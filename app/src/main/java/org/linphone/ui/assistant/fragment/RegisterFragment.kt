@@ -30,6 +30,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.annotation.UiThread
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -167,11 +168,18 @@ class RegisterFragment : Fragment() {
         }
 
         coreContext.postOnCoreThread {
-            val adapter = ArrayAdapter(
+            val adapter = object : ArrayAdapter<String>(
                 requireContext(),
                 R.layout.drop_down_item,
                 viewModel.dialPlansLabelList
-            )
+            ) {
+                override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                    val view = convertView ?: super.getView(position, convertView, parent)
+                    val label = viewModel.dialPlansShortLabelList[position]
+                    (view as? AppCompatTextView)?.text = label
+                    return view
+                }
+            }
             adapter.setDropDownViewResource(R.layout.assistant_country_picker_dropdown_cell)
 
             val dialPlan = PhoneNumberUtils.getDeviceDialPlan(requireContext())

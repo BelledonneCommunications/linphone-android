@@ -67,6 +67,8 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel() {
 
     val dialPlansLabelList = arrayListOf<String>()
 
+    val dialPlansShortLabelList = arrayListOf<String>()
+
     val dialPlansList = arrayListOf<DialPlan>()
 
     val selectedDialPlan = MutableLiveData<DialPlan>()
@@ -284,6 +286,9 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel() {
                 dialPlansList.add(dialPlan)
                 dialPlansLabelList.add(
                     "${dialPlan.flag} ${dialPlan.country} | +${dialPlan.countryCallingCode}"
+                )
+                dialPlansShortLabelList.add(
+                    "${dialPlan.flag} +${dialPlan.countryCallingCode}"
                 )
             }
 

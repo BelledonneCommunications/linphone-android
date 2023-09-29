@@ -8,6 +8,4 @@
     android:layout_marginBottom="15dp"
     android:textSize="14sp"
     android:textColor="@color/gray_main2_600"
-    android:gravity="center_vertical"
-    android:singleLine="true"
-    android:ellipsize="marquee"/>
+    android:gravity="center_vertical"/>
