@@ -125,7 +125,7 @@ class EditContactFragment : GenericFragment() {
                 }
             }
 
-            model.confirmRemovalEvent.observe(viewLifecycleOwner) {
+            model.confirmEvent.observe(viewLifecycleOwner) {
                 it.consume {
                     findNavController().popBackStack()
                     dialog.dismiss()
@@ -242,7 +242,7 @@ class EditContactFragment : GenericFragment() {
             }
         }
 
-        model.confirmRemovalEvent.observe(viewLifecycleOwner) {
+        model.confirmEvent.observe(viewLifecycleOwner) {
             it.consume {
                 backPressedCallback.isEnabled = false
                 findNavController().popBackStack()

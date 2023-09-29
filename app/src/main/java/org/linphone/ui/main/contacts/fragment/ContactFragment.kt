@@ -311,7 +311,7 @@ class ContactFragment : GenericFragment() {
             }
         }
 
-        model.confirmRemovalEvent.observe(viewLifecycleOwner) {
+        model.confirmEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.w(
                     "$TAG Deleting contact [${viewModel.contact.value?.name?.value}]"

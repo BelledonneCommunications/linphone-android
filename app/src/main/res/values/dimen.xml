@@ -30,7 +30,6 @@
 
     <dimen name="top_bar_height">55dp</dimen>
     <dimen name="toast_top_margin">70dp</dimen> <!-- 15dp + top_bar_height -->
-    <dimen name="toast_elevation">5dp</dimen>
 
     <dimen name="call_top_bar_text_height">28dp</dimen>
     <dimen name="call_top_bar_info_height">48dp</dimen> <!-- Size of top text + top & bottom margins -->

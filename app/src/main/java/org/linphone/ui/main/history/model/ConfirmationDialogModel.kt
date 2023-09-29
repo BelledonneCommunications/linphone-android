@@ -26,7 +26,7 @@ import org.linphone.utils.Event
 class ConfirmationDialogModel @UiThread constructor() {
     val dismissEvent = MutableLiveData<Event<Boolean>>()
 
-    val confirmRemovalEvent = MutableLiveData<Event<Boolean>>()
+    val confirmEvent = MutableLiveData<Event<Boolean>>()
 
     @UiThread
     fun dismiss() {
@@ -34,7 +34,7 @@ class ConfirmationDialogModel @UiThread constructor() {
     }
 
     @UiThread
-    fun confirmRemoval() {
-        confirmRemovalEvent.value = Event(true)
+    fun confirm() {
+        confirmEvent.value = Event(true)
     }
 }

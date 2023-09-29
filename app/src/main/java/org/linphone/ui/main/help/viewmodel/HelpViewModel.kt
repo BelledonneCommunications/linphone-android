@@ -45,8 +45,8 @@ class HelpViewModel @UiThread constructor() : ViewModel() {
 
     val debugModeEnabled = MutableLiveData<Boolean>()
 
-    val newVersionAvailableEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
+    val newVersionAvailableEvent: MutableLiveData<Event<Pair<String, String>>> by lazy {
+        MutableLiveData<Event<Pair<String, String>>>()
     }
 
     val versionUpToDateEvent: MutableLiveData<Event<Boolean>> by lazy {
@@ -80,8 +80,8 @@ class HelpViewModel @UiThread constructor() : ViewModel() {
             when (result) {
                 VersionUpdateCheckResult.NewVersionAvailable -> {
                     Log.i("$TAG Update available, version [$version], url [$url]")
-                    if (!version.isNullOrEmpty()) {
-                        newVersionAvailableEvent.postValue(Event(version))
+                    if (!version.isNullOrEmpty() && !url.isNullOrEmpty()) {
+                        newVersionAvailableEvent.postValue(Event(Pair(version, url)))
                     }
                 }
                 VersionUpdateCheckResult.UpToDate -> {

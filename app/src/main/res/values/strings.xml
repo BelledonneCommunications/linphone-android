@@ -60,6 +60,7 @@
     <string name="dialog_call">Call</string>
     <string name="dialog_delete">Delete</string>
     <string name="dialog_close">Close</string>
+    <string name="dialog_install">Install</string>
     <string name="dialog_do_not_show_anymore">Do not show this dialog anymore</string>
     <string name="dialog_general_terms_and_privacy_policy_title">General terms &amp; privacy policy</string>
     <string name="dialog_general_terms_and_privacy_policy_message">blah blah blah</string> <!-- TODO FIXME -->
@@ -85,8 +86,9 @@
     <string name="dialog_account_secure_mode_interoperable_message">Blah</string> <!-- TODO -->
     <string name="dialog_remove_account_title">Delete %s?</string>
     <string name="dialog_remove_account_message">You can reconnect at any time by clicking “Add an account”. However, all data on this phone will be deleted.</string>
+    <string name="dialog_update_available_title">Update available</string>
+    <string name="dialog_update_available_message">A new version %s is available. Do you want to update?</string>
 
-    <string name="toast_assistant_qr_code_valid">QR code validated!</string>
     <string name="toast_assistant_qr_code_invalid">Invalid QR code!</string>
     <string name="toast_sip_address_copied_to_clipboard">SIP address copied into clipboard</string>
     <string name="toast_phone_number_copied_to_clipboard">Number copied into clipboard</string>
@@ -97,8 +99,6 @@
     <string name="toast_alert_low_cellular_signal_cleared">Cellular signal is no longer low</string>
     <string name="toast_call_can_be_trusted">This call can be trusted</string>
 
-    <string name="assistant_country_picker_title">Choose your country</string>
-    <string name="assistant_country_picker_hint">Country name</string>
     <string name="assistant_account_login">Login</string>
     <string name="assistant_scan_qr_code">Scan QR code</string>
     <string name="assistant_qr_code_provisioning_done">Configuration successfully applied</string>
@@ -162,7 +162,6 @@
     <string name="help_about_check_for_update">Check update</string>
     <string name="help_about_contribute_translations_title">Contribute on &appName; translation</string>
     <string name="help_about_advanced_title">Advanced</string>
-    <string name="help_update_available_toast_message">A new version is available: %s</string>
     <string name="help_version_up_to_date_toast_message">Your version is up-to-date</string>
     <string name="help_error_checking_version_toast_message">An error occurred while checking for update</string>
     <string name="help_troubleshooting_title">Troubleshooting</string>
@@ -252,7 +251,6 @@
     <string name="history_call_start_suggestions_list_title">Suggestions</string>
     <string name="history_list_empty_history">No call for the moment…</string>
 
-    <string name="contacts_list_title">Contacts</string>
     <string name="contacts_list_empty">No contact for the moment…</string>
     <string name="contacts_list_favourites_title">Favourites</string>
     <string name="contacts_list_all_contacts_title">All contacts</string>

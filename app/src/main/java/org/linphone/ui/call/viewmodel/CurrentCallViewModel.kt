@@ -78,6 +78,10 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     val remoteRecordingLabel = MutableLiveData<String>()
 
+    val canBePaused = MutableLiveData<Boolean>()
+
+    val isPaused = MutableLiveData<Boolean>()
+
     val isMicrophoneMuted = MutableLiveData<Boolean>()
 
     val isSpeakerEnabled = MutableLiveData<Boolean>()
@@ -207,6 +211,9 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                     fullScreenMode.postValue(false)
                 }
             }
+
+            isPaused.postValue(isCallPaused())
+            canBePaused.postValue(canCallBePaused())
         }
 
         @WorkerThread
@@ -540,6 +547,24 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
+    fun togglePause() {
+        coreContext.postOnCoreThread {
+            if (::currentCall.isInitialized) {
+                when (isCallPaused()) {
+                    true -> {
+                        Log.i("$TAG Resuming call [${currentCall.remoteAddress.asStringUriOnly()}]")
+                        currentCall.resume()
+                    }
+                    false -> {
+                        Log.i("$TAG Pausing call [${currentCall.remoteAddress.asStringUriOnly()}]")
+                        currentCall.pause()
+                    }
+                }
+            }
+        }
+    }
+
+    @UiThread
     fun toggleFullScreen() {
         if (fullScreenMode.value == false && isVideoEnabled.value == false) return
         fullScreenMode.value = fullScreenMode.value != true
@@ -647,6 +672,9 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
         isOutgoing.postValue(call.dir == Call.Dir.Outgoing)
 
+        isPaused.postValue(isCallPaused())
+        canBePaused.postValue(canCallBePaused())
+
         val address = call.remoteAddress.clone()
         address.clean()
         displayedAddress.postValue(address.asStringUriOnly())
@@ -694,5 +722,24 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
             audioDevice?.type == AudioDevice.Type.Headphones || audioDevice?.type == AudioDevice.Type.Headset
         )
         isBluetoothEnabled.postValue(audioDevice?.type == AudioDevice.Type.Bluetooth)
+    }
+
+    @WorkerThread
+    private fun isCallPaused(): Boolean {
+        if (::currentCall.isInitialized) {
+            return when (currentCall.state) {
+                Call.State.Paused, Call.State.Pausing -> true
+                else -> false
+            }
+        }
+        return false
+    }
+
+    @WorkerThread
+    private fun canCallBePaused(): Boolean {
+        return ::currentCall.isInitialized && !currentCall.mediaInProgress() && when (currentCall.state) {
+            Call.State.StreamsRunning, Call.State.PausedByRemote, Call.State.Paused -> true
+            else -> false
+        }
     }
 }

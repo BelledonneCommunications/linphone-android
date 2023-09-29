@@ -43,6 +43,7 @@ import org.linphone.databinding.DialogPickNumberOrAddressBinding
 import org.linphone.databinding.DialogRemoveAccountBinding
 import org.linphone.databinding.DialogRemoveAllCallLogsBinding
 import org.linphone.databinding.DialogRemoveCallLogsBinding
+import org.linphone.databinding.DialogUpdateAvailableBinding
 import org.linphone.ui.assistant.model.AcceptConditionsAndPolicyDialogModel
 import org.linphone.ui.assistant.model.ConfirmPhoneNumberDialogModel
 import org.linphone.ui.call.model.ZrtpSasConfirmationDialogModel
@@ -247,6 +248,24 @@ class DialogUtils {
         }
 
         @UiThread
+        fun getUpdateAvailableDialog(
+            context: Context,
+            viewModel: ConfirmationDialogModel,
+            message: String
+        ): Dialog {
+            val binding: DialogUpdateAvailableBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.dialog_update_available,
+                null,
+                false
+            )
+            binding.viewModel = viewModel
+            binding.message.text = message
+
+            return getDialog(context, binding)
+        }
+
+        @UiThread
         fun getZrtpSasConfirmationDialog(
             context: Context,
             viewModel: ZrtpSasConfirmationDialogModel
@@ -262,6 +281,7 @@ class DialogUtils {
             return getDialog(context, binding)
         }
 
+        @UiThread
         private fun getDialog(context: Context, binding: ViewDataBinding): Dialog {
             val dialog = Dialog(context, R.style.Theme_LinphoneDialog)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)

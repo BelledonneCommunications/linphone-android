@@ -270,7 +270,7 @@ class HistoryListFragment : AbstractTopBarFragment() {
             }
         }
 
-        model.confirmRemovalEvent.observe(viewLifecycleOwner) {
+        model.confirmEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.w("$TAG Removing all call entries from database")
                 listViewModel.removeAllCallLogs()

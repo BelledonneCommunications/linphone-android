@@ -204,7 +204,7 @@ class HistoryContactFragment : GenericFragment() {
             }
         }
 
-        model.confirmRemovalEvent.observe(viewLifecycleOwner) {
+        model.confirmEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.w(
                     "$TAG Removing call entries with [${viewModel.callLogModel.value?.address?.asStringUriOnly()}] from database"

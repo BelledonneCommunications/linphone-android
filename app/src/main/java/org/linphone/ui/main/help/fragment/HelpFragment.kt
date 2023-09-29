@@ -15,6 +15,8 @@ import org.linphone.databinding.HelpFragmentBinding
 import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.ui.main.help.viewmodel.HelpViewModel
+import org.linphone.ui.main.history.model.ConfirmationDialogModel
+import org.linphone.utils.DialogUtils
 
 @UiThread
 class HelpFragment : GenericFragment() {
@@ -88,11 +90,10 @@ class HelpFragment : GenericFragment() {
         }
 
         viewModel.newVersionAvailableEvent.observe(viewLifecycleOwner) {
-            it.consume { version ->
-                (requireActivity() as MainActivity).showGreenToast(
-                    getString(R.string.help_update_available_toast_message, version),
-                    R.drawable.info
-                )
+            it.consume { pair ->
+                val version = pair.first
+                val url = pair.second
+                showUpdateAvailableDialog(version, url)
             }
         }
 
@@ -113,5 +114,38 @@ class HelpFragment : GenericFragment() {
                 )
             }
         }
+    }
+
+    private fun showUpdateAvailableDialog(version: String, url: String) {
+        val message = getString(R.string.dialog_update_available_message, version)
+
+        val model = ConfirmationDialogModel()
+        val dialog = DialogUtils.getUpdateAvailableDialog(
+            requireActivity(),
+            model,
+            message
+        )
+
+        model.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        model.confirmEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                try {
+                    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                    startActivity(browserIntent)
+                } catch (ise: IllegalStateException) {
+                    Log.e(
+                        "$TAG Can't start ACTION_VIEW intent for URL [$url], IllegalStateException: $ise"
+                    )
+                }
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
     }
 }

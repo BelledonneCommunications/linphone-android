@@ -113,7 +113,7 @@ class AccountProfileFragment : GenericFragment() {
                 }
             }
 
-            model.confirmRemovalEvent.observe(viewLifecycleOwner) {
+            model.confirmEvent.observe(viewLifecycleOwner) {
                 it.consume {
                     viewModel.deleteAccount()
                     dialog.dismiss()
