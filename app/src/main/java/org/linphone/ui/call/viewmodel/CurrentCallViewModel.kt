@@ -36,6 +36,7 @@ import org.linphone.core.AlertListenerStub
 import org.linphone.core.AudioDevice
 import org.linphone.core.Call
 import org.linphone.core.CallListenerStub
+import org.linphone.core.ChatRoom.SecurityLevel
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.MediaDirection
@@ -556,19 +557,20 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         when (currentCall.currentParams.mediaEncryption) {
             MediaEncryption.ZRTP -> {
                 val authToken = currentCall.authenticationToken
-                val deviceIsTrusted = currentCall.authenticationTokenVerified && authToken != null
+                val isDeviceTrusted = currentCall.authenticationTokenVerified && authToken != null
                 Log.i(
-                    "$TAG Current call media encryption is ZRTP, auth token is ${if (deviceIsTrusted) "trusted" else "not trusted yet"}"
+                    "$TAG Current call media encryption is ZRTP, auth token is ${if (isDeviceTrusted) "trusted" else "not trusted yet"}"
                 )
-                isRemoteDeviceTrusted.postValue(deviceIsTrusted)
-                contact.value?.showTrust?.postValue(deviceIsTrusted)
+                isRemoteDeviceTrusted.postValue(isDeviceTrusted)
+                val securityLevel = if (isDeviceTrusted) SecurityLevel.Encrypted else SecurityLevel.Safe
+                contact.value?.trust?.postValue(securityLevel)
 
-                if (!deviceIsTrusted && authToken.orEmpty().isNotEmpty()) {
+                if (!isDeviceTrusted && authToken.orEmpty().isNotEmpty()) {
                     Log.i("$TAG Showing ZRTP SAS confirmation dialog")
                     showZrtpSasDialog(authToken!!.uppercase(Locale.getDefault()))
                 }
 
-                return deviceIsTrusted
+                return isDeviceTrusted
             }
             MediaEncryption.SRTP, MediaEncryption.DTLS -> {
             }
@@ -614,18 +616,19 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         displayedAddress.postValue(address.asStringUriOnly())
 
         val isDeviceTrusted = updateEncryption()
+        val securityLevel = if (isDeviceTrusted) SecurityLevel.Encrypted else SecurityLevel.Safe
         val friend = coreContext.contactsManager.findContactByAddress(address)
         if (friend != null) {
             displayedName.postValue(friend.name)
             val model = ContactAvatarModel(friend)
-            model.showTrust.postValue(isDeviceTrusted)
+            model.trust.postValue(securityLevel)
             contact.postValue(model)
         } else {
             val fakeFriend = coreContext.core.createFriend()
             fakeFriend.name = LinphoneUtils.getDisplayName(address)
             fakeFriend.addAddress(address)
             val model = ContactAvatarModel(fakeFriend)
-            model.showTrust.postValue(isDeviceTrusted)
+            model.trust.postValue(securityLevel)
             contact.postValue(model)
             displayedName.postValue(fakeFriend.name)
         }

@@ -25,6 +25,7 @@ import android.provider.ContactsContract
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.R
+import org.linphone.core.ChatRoom.SecurityLevel
 import org.linphone.core.ConsolidatedPresence
 import org.linphone.core.Friend
 import org.linphone.core.FriendListenerStub
@@ -55,7 +56,7 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) {
 
     val firstContactStartingByThatLetter = MutableLiveData<Boolean>()
 
-    val showTrust = MutableLiveData<Boolean>()
+    val trust = MutableLiveData<SecurityLevel>()
 
     private val friendListener = object : FriendListenerStub() {
         @WorkerThread
@@ -69,6 +70,8 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) {
 
     init {
         friend.addListener(friendListener)
+
+        trust.postValue(SecurityLevel.Safe) // TODO FIXME: use API
 
         name.postValue(friend.name)
         computePresence()

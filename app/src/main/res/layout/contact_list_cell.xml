@@ -7,6 +7,7 @@
         <import type="android.view.View" />
         <import type="android.graphics.Typeface" />
         <import type="org.linphone.core.ConsolidatedPresence" />
+        <import type="org.linphone.core.ChatRoom.SecurityLevel" />
         <variable
             name="model"
             type="org.linphone.ui.main.contacts.model.ContactAvatarModel" />
@@ -82,6 +83,15 @@
             app:presenceIcon="@{model.presenceStatus}"
             android:visibility="@{model.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toEndOf="@id/avatar"
+            app:layout_constraintBottom_toBottomOf="@id/avatar"/>
+
+        <ImageView
+            android:id="@+id/trust_badge"
+            android:layout_width="@dimen/avatar_presence_badge_size"
+            android:layout_height="@dimen/avatar_presence_badge_size"
+            android:src="@{model.trust == SecurityLevel.Encrypted ? @drawable/trusted : @drawable/not_trusted, default=@drawable/trusted}"
+            android:visibility="@{model.trust == SecurityLevel.Encrypted || model.trust == SecurityLevel.Unsafe ? View.VISIBLE : View.GONE}"
+            app:layout_constraintStart_toStartOf="@id/avatar"
             app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 
         <androidx.appcompat.widget.AppCompatTextView

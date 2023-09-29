@@ -53,6 +53,7 @@ import io.getstream.avatarview.AvatarView
 import io.getstream.avatarview.coil.loadImage
 import org.linphone.BR
 import org.linphone.R
+import org.linphone.core.ChatRoom
 import org.linphone.core.ConsolidatedPresence
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
@@ -306,13 +307,22 @@ fun AvatarView.loadContactAvatar(contact: ContactAvatarModel?) {
                     avatarInitials = initials
                 }
 
-                if (contact.showTrust.value == true) {
-                    avatarBorderColor =
-                        resources.getColor(R.color.blue_info_500, context.theme)
-                    avatarBorderWidth =
-                        AppUtils.getDimension(R.dimen.avatar_trust_border_width).toInt()
-                } else {
-                    avatarBorderWidth = AppUtils.getDimension(R.dimen.zero).toInt()
+                when (contact.trust.value) {
+                    ChatRoom.SecurityLevel.Unsafe -> {
+                        avatarBorderColor =
+                            resources.getColor(R.color.red_danger_500, context.theme)
+                        avatarBorderWidth =
+                            AppUtils.getDimension(R.dimen.avatar_trust_border_width).toInt()
+                    }
+                    ChatRoom.SecurityLevel.Encrypted -> {
+                        avatarBorderColor =
+                            resources.getColor(R.color.blue_info_500, context.theme)
+                        avatarBorderWidth =
+                            AppUtils.getDimension(R.dimen.avatar_trust_border_width).toInt()
+                    }
+                    else -> {
+                        avatarBorderWidth = AppUtils.getDimension(R.dimen.zero).toInt()
+                    }
                 }
             },
             onSuccess = { _, _ ->

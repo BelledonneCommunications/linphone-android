@@ -5,6 +5,7 @@
 
     <data>
         <import type="android.view.View" />
+        <import type="org.linphone.core.ChatRoom.SecurityLevel" />
         <variable
             name="transferClickListener"
             type="View.OnClickListener" />
@@ -90,8 +91,8 @@
                 android:id="@+id/trust_badge"
                 android:layout_width="@dimen/avatar_presence_badge_in_call_size"
                 android:layout_height="@dimen/avatar_presence_badge_in_call_size"
-                android:src="@drawable/trusted"
-                android:visibility="@{viewModel.contact.showTrust ? View.VISIBLE : View.GONE}"
+                android:src="@{viewModel.contact.trust == SecurityLevel.Encrypted ? @drawable/trusted : @drawable/not_trusted, default=@drawable/trusted}"
+                android:visibility="@{viewModel.contact.trust == SecurityLevel.Encrypted || viewModel.contact.trust == SecurityLevel.Unsafe ? View.VISIBLE : View.GONE}"
                 app:layout_constraintStart_toStartOf="@id/avatar"
                 app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 
