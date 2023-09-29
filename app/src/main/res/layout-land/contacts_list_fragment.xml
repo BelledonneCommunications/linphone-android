@@ -43,7 +43,7 @@
 
             <include
                 android:id="@+id/top_bar"
-                layout="@layout/main_activity_top_bar"
+                layout="@layout/top_bar"
                 bind:viewModel="@{viewModel}"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/top_bar_height"
@@ -64,17 +64,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/top_bar"
                 app:layout_constraintBottom_toBottomOf="@id/top_bar" />
-
-            <include
-                android:id="@+id/in_call_top_bar"
-                layout="@layout/main_activity_in_call_top_bar"
-                bind:viewModel="@{viewModel}"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/top_bar_height"
-                android:visibility="@{viewModel.atLastOneCall ? View.VISIBLE : View.GONE, default=gone}"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
-                app:layout_constraintEnd_toEndOf="parent"/>
 
             <ImageView
                 android:id="@+id/background"

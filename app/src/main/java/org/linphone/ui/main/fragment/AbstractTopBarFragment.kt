@@ -20,9 +20,6 @@
 package org.linphone.ui.main.fragment
 
 import androidx.annotation.UiThread
-import androidx.core.content.ContextCompat
-import org.linphone.LinphoneApplication
-import org.linphone.R
 import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.viewmodel.AbstractTopBarViewModel
 
@@ -34,29 +31,6 @@ abstract class AbstractTopBarFragment : GenericFragment() {
         viewModel.openDrawerMenuEvent.observe(viewLifecycleOwner) {
             it.consume {
                 (requireActivity() as MainActivity).toggleDrawerMenu()
-            }
-        }
-
-        viewModel.changeSystemTopBarColorToInCallEvent.observe(viewLifecycleOwner) {
-            it.consume { useInCallColor ->
-                val color = if (useInCallColor) {
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.green_success_500
-                    )
-                } else {
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.orange_main_500
-                    )
-                }
-                requireActivity().window.statusBarColor = color
-            }
-        }
-
-        viewModel.goBackToCallEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                LinphoneApplication.coreContext.showCallActivity()
             }
         }
     }

@@ -34,11 +34,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.AnyThread
+import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.MainThread
 import androidx.annotation.StringRes
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.emoji2.text.EmojiCompat
 import java.util.Locale
@@ -64,6 +67,14 @@ class AppUtils {
         @AnyThread
         fun getFormattedString(@StringRes id: Int, args: Any): String {
             return coreContext.context.getString(id, args)
+        }
+
+        @AnyThread @ColorInt
+        fun getColor(@ColorRes colorId: Int): Int {
+            return ContextCompat.getColor(
+                coreContext.context,
+                colorId
+            )
         }
 
         @MainThread

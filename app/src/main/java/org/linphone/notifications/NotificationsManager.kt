@@ -39,7 +39,6 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.Person
 import androidx.core.app.RemoteInput
-import androidx.core.content.ContextCompat
 import androidx.core.content.LocusIdCompat
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -703,7 +702,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             setAutoCancel(false)
             setShowWhen(true)
             setOngoing(true)
-            color = ContextCompat.getColor(context, R.color.orange_main_500)
+            color = AppUtils.getColor(R.color.orange_main_500)
             setFullScreenIntent(pendingIntent, true)
         }
 
@@ -759,7 +758,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             .setSmallIcon(R.drawable.chat_text)
             .setAutoCancel(true)
             .setLargeIcon(largeIcon)
-            .setColor(ContextCompat.getColor(context, R.color.orange_main_500))
+            .setColor(AppUtils.getColor(R.color.orange_main_500))
             .setCategory(NotificationCompat.CATEGORY_MESSAGE)
             .setGroup(CHAT_NOTIFICATIONS_GROUP)
             .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)

@@ -15,6 +15,9 @@
             name="callsListClickListener"
             type="View.OnClickListener" />
         <variable
+            name="chatClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.call.viewmodel.CurrentCallViewModel" />
         <variable
@@ -49,7 +52,7 @@
             android:padding="@dimen/call_button_icon_padding"
             android:background="@drawable/in_call_button_background"
             android:src="@drawable/transfer"
-            app:tint="@color/white"
+            app:tint="@color/in_call_button_tint_color"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="@id/transfer_label"
             app:layout_constraintEnd_toEndOf="@id/transfer_label"
@@ -64,7 +67,7 @@
             android:padding="@dimen/call_button_icon_padding"
             android:background="@drawable/in_call_button_background"
             android:src="@drawable/phone_plus"
-            app:tint="@color/white"
+            app:tint="@color/in_call_button_tint_color"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="@id/new_call_label"
             app:layout_constraintEnd_toEndOf="@id/new_call_label"
@@ -79,7 +82,7 @@
             android:padding="@dimen/call_button_icon_padding"
             android:background="@drawable/in_call_button_background"
             android:src="@drawable/calls_list"
-            app:tint="@color/white"
+            app:tint="@color/in_call_button_tint_color"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="@id/calls_list_label"
             app:layout_constraintEnd_toEndOf="@id/calls_list_label"
@@ -111,7 +114,7 @@
             android:padding="@dimen/call_button_icon_padding"
             android:background="@drawable/in_call_button_background"
             android:src="@drawable/dialer"
-            app:tint="@color/white"
+            app:tint="@color/in_call_button_tint_color"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="@id/dialer_label"
             app:layout_constraintEnd_toEndOf="@id/dialer_label"
@@ -119,13 +122,14 @@
 
         <ImageView
             android:id="@+id/chat"
+            android:onClick="@{chatClickListener}"
             android:layout_width="0dp"
             android:layout_height="@dimen/call_button_size"
             android:layout_marginTop="@dimen/call_extra_button_top_margin"
             android:padding="@dimen/call_button_icon_padding"
             android:background="@drawable/in_call_button_background"
             android:src="@drawable/chat_dots"
-            app:tint="@color/white"
+            app:tint="@color/in_call_button_tint_color"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintTop_toBottomOf="@id/transfer_label"
             app:layout_constraintStart_toStartOf="@id/transfer"
@@ -139,7 +143,7 @@
             android:padding="@dimen/call_button_icon_padding"
             android:background="@drawable/in_call_button_background"
             android:src="@drawable/pause_call"
-            app:tint="@color/white"
+            app:tint="@color/in_call_button_tint_color"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintTop_toBottomOf="@id/new_call_label"
             app:layout_constraintStart_toStartOf="@id/new_call"
@@ -155,7 +159,7 @@
             android:background="@drawable/in_call_button_background"
             android:src="@drawable/record"
             android:selected="@{viewModel.isRecording()}"
-            app:tint="@color/white"
+            app:tint="@color/in_call_button_tint_color"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintTop_toBottomOf="@id/calls_list_label"
             app:layout_constraintStart_toStartOf="@id/calls_list"

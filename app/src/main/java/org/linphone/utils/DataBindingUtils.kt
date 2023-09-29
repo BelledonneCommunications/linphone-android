@@ -37,7 +37,6 @@ import androidx.annotation.UiThread
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -214,12 +213,12 @@ fun ImageView.setPresenceIcon(presence: ConsolidatedPresence?) {
 
 @BindingAdapter("tint")
 fun ImageView.setTintColor(@ColorRes color: Int) {
-    setColorFilter(ContextCompat.getColor(context, color), PorterDuff.Mode.SRC_IN)
+    setColorFilter(AppUtils.getColor(color), PorterDuff.Mode.SRC_IN)
 }
 
 @BindingAdapter("textColor")
 fun AppCompatTextView.setColor(@ColorRes color: Int) {
-    setTextColor(ContextCompat.getColor(context, color))
+    setTextColor(AppUtils.getColor(color))
 }
 
 @UiThread

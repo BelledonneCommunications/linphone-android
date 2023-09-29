@@ -252,6 +252,8 @@ class ActiveCallFragment : GenericCallFragment() {
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {}
         })
+
+        binding.bottomBar.chat.isEnabled = false // TODO FIXME : remove later when chat will be available
     }
 
     @SuppressLint("ClickableViewAccessibility")

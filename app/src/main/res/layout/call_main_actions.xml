@@ -55,7 +55,7 @@
             android:padding="@dimen/call_button_icon_padding"
             android:src="@{viewModel.isVideoEnabled() ? @drawable/video_camera : @drawable/video_camera_slash, default=@drawable/video_camera}"
             android:background="@drawable/in_call_button_background"
-            app:tint="@color/white"
+            app:tint="@color/in_call_button_tint_color"
             app:layout_constraintHorizontal_bias="1"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -71,7 +71,7 @@
             android:padding="@dimen/call_button_icon_padding"
             android:src="@{viewModel.isMicrophoneMuted ? @drawable/microphone_slash : @drawable/microphone, default=@drawable/microphone}"
             android:background="@drawable/in_call_button_background"
-            app:tint="@color/white"
+            app:tint="@color/in_call_button_tint_color"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/toggle_video"
             app:layout_constraintEnd_toStartOf="@id/change_audio_output" />
@@ -85,7 +85,7 @@
             android:padding="@dimen/call_button_icon_padding"
             android:src="@{viewModel.isHeadsetEnabled ? @drawable/headset : viewModel.isBluetoothEnabled ? @drawable/bluetooth : viewModel.isSpeakerEnabled ? @drawable/speaker_high : @drawable/speaker_slash, default=@drawable/speaker_slash}"
             android:background="@drawable/in_call_button_background"
-            app:tint="@color/white"
+            app:tint="@color/in_call_button_tint_color"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/toggle_mute_mic"
             app:layout_constraintEnd_toEndOf="parent" />

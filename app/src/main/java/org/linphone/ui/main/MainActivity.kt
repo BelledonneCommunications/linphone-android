@@ -30,12 +30,14 @@ import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.databinding.MainActivityBinding
+import org.linphone.ui.main.viewmodel.MainViewModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.slideInToastFromTopForDuration
 
@@ -50,6 +52,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: MainActivityBinding
+
+    private lateinit var viewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, true)
@@ -67,6 +71,28 @@ class MainActivity : AppCompatActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.main_activity)
         binding.lifecycleOwner = this
+
+        viewModel = run {
+            ViewModelProvider(this)[MainViewModel::class.java]
+        }
+        binding.viewModel = viewModel
+
+        viewModel.changeSystemTopBarColorToInCallEvent.observe(this) {
+            it.consume { useInCallColor ->
+                val color = if (useInCallColor) {
+                    AppUtils.getColor(R.color.green_success_500)
+                } else {
+                    AppUtils.getColor(R.color.orange_main_500)
+                }
+                window.statusBarColor = color
+            }
+        }
+
+        viewModel.goBackToCallEvent.observe(this) {
+            it.consume {
+                coreContext.showCallActivity()
+            }
+        }
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {

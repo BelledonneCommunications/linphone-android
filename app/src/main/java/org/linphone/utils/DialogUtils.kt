@@ -28,7 +28,6 @@ import android.view.LayoutInflater
 import android.view.Window
 import android.view.WindowManager
 import androidx.annotation.UiThread
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import org.linphone.R
@@ -269,7 +268,7 @@ class DialogUtils {
             dialog.setContentView(binding.root)
 
             val d: Drawable = ColorDrawable(
-                ContextCompat.getColor(dialog.context, R.color.gray_main2_800_alpha_65)
+                AppUtils.getColor(R.color.gray_main2_800_alpha_65)
             )
             // d.alpha = 166
             dialog.window

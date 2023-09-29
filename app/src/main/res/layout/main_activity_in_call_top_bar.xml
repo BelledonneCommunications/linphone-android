@@ -7,12 +7,12 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.main.viewmodel.AbstractTopBarViewModel" />
+            type="org.linphone.ui.main.viewmodel.MainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/top_bar_height"
+        android:layout_height="wrap_content"
         android:background="@color/green_success_500"
         android:onClick="@{() -> viewModel.goBackToCall()}">
 
@@ -20,9 +20,11 @@
             style="@style/default_text_style_800"
             android:id="@+id/call_display_name"
             android:layout_width="0dp"
-            android:layout_height="@dimen/top_bar_height"
-            android:layout_marginStart="20dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:layout_marginEnd="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:gravity="center_vertical"
             android:text="@{viewModel.callDisplayName, default=`John Doe`}"
             android:textColor="@color/white"
@@ -32,21 +34,23 @@
             android:drawableTint="@color/white"
             app:layout_constraintEnd_toStartOf="@id/call_time"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
             android:id="@+id/call_time"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/top_bar_height"
-            android:layout_marginEnd="10dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
             android:gravity="center_vertical"
             android:text="@{viewModel.callStatus, default=`Paused`}"
             android:textColor="@color/white"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/call_display_name"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
