@@ -45,7 +45,7 @@
             android:layout_width="@dimen/icon_size"
             android:layout_height="@dimen/icon_size"
             android:adjustViewBounds="true"
-            android:src="@{icon, default=@drawable/check_fat_fill}"
+            android:src="@{icon, default=@drawable/check}"
             tint="@{text_color}"
             disableTint="@{do_not_tint}"
             app:layout_constraintBottom_toBottomOf="parent"

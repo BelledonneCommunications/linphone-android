@@ -166,7 +166,7 @@ class HistoryListFragment : AbstractTopBarFragment() {
                 Log.w("$TAG All call logs have been deleted")
                 (requireActivity() as MainActivity).showGreenToast(
                     getString(R.string.toast_call_history_deleted),
-                    R.drawable.check_fat_fill
+                    R.drawable.check
                 )
             }
         }
@@ -229,7 +229,7 @@ class HistoryListFragment : AbstractTopBarFragment() {
 
         (requireActivity() as MainActivity).showGreenToast(
             getString(R.string.toast_sip_address_copied_to_clipboard),
-            R.drawable.check_fat_fill
+            R.drawable.check
         )
     }
 

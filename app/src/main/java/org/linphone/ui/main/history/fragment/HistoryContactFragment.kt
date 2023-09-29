@@ -122,7 +122,7 @@ class HistoryContactFragment : GenericFragment() {
 
                 (requireActivity() as MainActivity).showGreenToast(
                     getString(R.string.toast_call_history_deleted),
-                    R.drawable.check_fat_fill
+                    R.drawable.check
                 )
                 goBack() // TODO FIXME : issue with tablet when pane can't be closed
             }
@@ -139,7 +139,7 @@ class HistoryContactFragment : GenericFragment() {
 
         (requireActivity() as MainActivity).showGreenToast(
             getString(R.string.toast_sip_address_copied_to_clipboard),
-            R.drawable.check_fat_fill
+            R.drawable.check
         )
     }
 

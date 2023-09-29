@@ -230,7 +230,7 @@ class ContactFragment : GenericFragment() {
         }
         (requireActivity() as MainActivity).showGreenToast(
             message,
-            R.drawable.check_fat_fill
+            R.drawable.check
         )
     }
 
