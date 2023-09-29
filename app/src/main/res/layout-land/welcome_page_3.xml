@@ -4,14 +4,26 @@
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <ImageView
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:src="@drawable/header"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/title_second_line"/>
+
     <androidx.appcompat.widget.AppCompatTextView
         style="@style/default_text_style_800"
         android:id="@+id/title_first_line"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="65dp"
-        android:text="Welcome"
-        android:textColor="@color/black"
+        android:text="@string/welcome_page_title"
+        android:textColor="@color/white"
         android:textSize="36sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
@@ -22,8 +34,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
-        android:text="in Linphone"
-        android:textColor="@color/black"
+        android:text="@string/welcome_page_subtitle"
+        android:textColor="@color/white"
         android:textSize="26sp"
         app:layout_constraintBottom_toBottomOf="@id/title_first_line"
         app:layout_constraintStart_toEndOf="@id/title_first_line"/>
@@ -31,9 +43,9 @@
     <ImageView
         android:id="@+id/image"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="@dimen/welcome_icon_size"
         android:layout_marginStart="32dp"
-        android:src="@drawable/illu"
+        android:src="@drawable/open_source"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintTop_toBottomOf="@id/title_second_line"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -46,7 +58,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="55dp"
         android:layout_marginStart="55dp"
-        android:text="Title 3"
+        android:text="@string/welcome_page_3_title"
         android:textColor="@color/gray_main2_600"
         android:textSize="20sp"
         android:gravity="center"
@@ -60,7 +72,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
         android:layout_marginTop="16dp"
-        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras egestas commodo augue ut dictum. Fusce egestas tellus ut velit pulvinar commodo."
+        android:text="@string/welcome_page_3_message"
         android:textColor="@color/gray_main2_600"
         android:textSize="14sp"
         android:gravity="start"

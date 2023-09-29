@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="65dp"
         android:layout_marginTop="16dp"
-        android:text="Welcome"
+        android:text="@string/welcome_page_title"
         android:textColor="@color/white"
         android:textSize="36sp"
         app:layout_constraintTop_toTopOf="parent"
@@ -36,35 +36,37 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="65dp"
         android:paddingBottom="16dp"
-        android:text="in Linphone"
+        android:text="@string/welcome_page_subtitle"
         android:textColor="@color/white"
         android:textSize="26sp"
         app:layout_constraintTop_toBottomOf="@id/title_first_line"
         app:layout_constraintEnd_toEndOf="parent"/>
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/welcome_icon_size"
+        android:layout_marginTop="110dp"
+        android:src="@drawable/secured"
+        app:tint="@color/orange_main_500"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintTop_toBottomOf="@id/title_second_line"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
         style="@style/default_text_style_800"
         android:id="@+id/page_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="55dp"
-        android:text="Title 2"
+        android:layout_marginTop="20dp"
+        android:text="@string/welcome_page_2_title"
         android:textColor="@color/gray_main2_600"
-        android:textSize="20sp"
+        android:textSize="29sp"
         android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/title_second_line"
+        app:layout_constraintTop_toBottomOf="@id/image"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
-
-    <ImageView
-        android:id="@+id/image"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:src="@drawable/illu"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintTop_toBottomOf="@id/page_title"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
         style="@style/default_text_style"
@@ -73,11 +75,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras egestas commodo augue ut dictum. Fusce egestas tellus ut velit pulvinar commodo."
+        android:layout_marginTop="25dp"
+        android:text="@string/welcome_page_2_message"
         android:textColor="@color/gray_main2_600"
         android:textSize="14sp"
         android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/image"
+        app:layout_constraintTop_toBottomOf="@id/page_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 

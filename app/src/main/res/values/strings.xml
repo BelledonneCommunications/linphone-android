@@ -47,6 +47,14 @@
     <string name="notification_mark_message_as_read">Mark as read</string>
     <string name="notification_reply_to_message">Reply</string>
 
+    <string name="welcome_page_title">Welcome</string>
+    <string name="welcome_page_subtitle">in Linphone</string>
+    <string name="welcome_page_1_message">Une application de communication <b>sécurisée</b>, <b>open source</b> et <b>française</b>.</string>
+    <string name="welcome_page_2_title">Sécurisé</string>
+    <string name="welcome_page_2_message">Vos communications sont en sécurité grâce au <b>chiffrement de bout en bout.</b></string>
+    <string name="welcome_page_3_title">Open source</string>
+    <string name="welcome_page_3_message">Une application open source et un <b>service gratuit</b> depuis <b>2001</b></string>
+
     <string name="bottom_navigation_contacts_label">Contacts</string>
     <string name="bottom_navigation_calls_label">Calls</string>
     <string name="bottom_navigation_conversations_label">Conversations</string>

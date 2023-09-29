@@ -11,6 +11,7 @@
     <dimen name="sliding_pane_right_fragment_width">300dp</dimen>
 
     <dimen name="icon_size">24dp</dimen>
+    <dimen name="welcome_icon_size">100dp</dimen>
 
     <dimen name="avatar_list_cell_size">45dp</dimen>
     <dimen name="avatar_favorite_list_cell_size">50dp</dimen>
