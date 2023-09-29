@@ -85,7 +85,7 @@ class SettingsFragment : GenericFragment() {
             R.layout.drop_down_item,
             viewModel.availableRingtonesNames
         )
-        ringtonesAdapter.setDropDownViewResource(R.layout.assistant_transport_dropdown_cell)
+        ringtonesAdapter.setDropDownViewResource(R.layout.generic_dropdown_cell)
         binding.deviceRingtoneSpinner.adapter = ringtonesAdapter
 
         viewModel.selectedRingtone.observe(viewLifecycleOwner) { ringtone ->
@@ -104,7 +104,7 @@ class SettingsFragment : GenericFragment() {
             R.layout.drop_down_item,
             viewModel.availableThemesNames
         )
-        themeAdapter.setDropDownViewResource(R.layout.assistant_transport_dropdown_cell)
+        themeAdapter.setDropDownViewResource(R.layout.generic_dropdown_cell)
         binding.themeSpinner.adapter = themeAdapter
 
         viewModel.theme.observe(viewLifecycleOwner) { theme ->

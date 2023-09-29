@@ -282,7 +282,9 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel() {
             val dialPlans = Factory.instance().dialPlans.toList()
             for (dialPlan in dialPlans) {
                 dialPlansList.add(dialPlan)
-                dialPlansLabelList.add("${dialPlan.flag} +${dialPlan.countryCallingCode}")
+                dialPlansLabelList.add(
+                    "${dialPlan.flag} +${dialPlan.countryCallingCode} | ${dialPlan.country}"
+                )
             }
 
             accountCreator = core.createAccountCreator(core.accountCreatorUrl)
