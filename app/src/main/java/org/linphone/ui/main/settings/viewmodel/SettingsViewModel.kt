@@ -21,6 +21,7 @@ package org.linphone.ui.main.settings.viewmodel
 
 import android.os.Vibrator
 import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import java.io.File
@@ -28,8 +29,11 @@ import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.core.Player
+import org.linphone.core.PlayerListener
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
+import org.linphone.utils.AudioRouteUtils
 
 class SettingsViewModel @UiThread constructor() : ViewModel() {
     companion object {
@@ -49,6 +53,7 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
     val availableRingtonesPaths = arrayListOf<String>()
     val availableRingtonesNames = arrayListOf<String>()
     val selectedRingtone = MutableLiveData<String>()
+    val isRingtonePlaying = MutableLiveData<Boolean>()
     val vibrateDuringIncomingCall = MutableLiveData<Boolean>()
     val autoRecordCalls = MutableLiveData<Boolean>()
 
@@ -58,6 +63,15 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
     // User Interface settings
 
     val isVibrationAvailable = MutableLiveData<Boolean>()
+
+    // Other
+
+    private lateinit var ringtonePlayer: Player
+
+    private val playerListener = PlayerListener {
+        Log.i("[$TAG] End of ringtone reached")
+        stopRingtonePlayer()
+    }
 
     init {
         expandCalls.value = false
@@ -83,6 +97,18 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
 
             useWifiOnly.postValue(core.isWifiOnlyEnabled)
             selectedRingtone.postValue(core.ring.orEmpty())
+        }
+    }
+
+    @UiThread
+    override fun onCleared() {
+        super.onCleared()
+
+        coreContext.postOnCoreThread {
+            if (::ringtonePlayer.isInitialized) {
+                stopRingtonePlayer()
+                ringtonePlayer.removeListener(playerListener)
+            }
         }
     }
 
@@ -140,6 +166,40 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
     fun setRingtone(ringtone: String) {
         coreContext.postOnCoreThread { core ->
             core.ring = ringtone
+
+            if (::ringtonePlayer.isInitialized) {
+                if (ringtonePlayer.state == Player.State.Playing) {
+                    stopRingtonePlayer()
+                }
+            }
+        }
+    }
+
+    @UiThread
+    fun playPauseRingtone() {
+        coreContext.postOnCoreThread { core ->
+            if (!::ringtonePlayer.isInitialized) {
+                val playbackDevice = AudioRouteUtils.getAudioPlaybackDeviceIdForCallRecordingOrVoiceMessage()
+                val player = core.createLocalPlayer(playbackDevice, null, null)
+                ringtonePlayer = player ?: return@postOnCoreThread
+                ringtonePlayer.addListener(playerListener)
+            }
+
+            if (ringtonePlayer.state == Player.State.Playing) {
+                stopRingtonePlayer()
+            } else {
+                val path = core.ring.orEmpty()
+                // TODO FIXME: play device default ringtone if selected
+                if (ringtonePlayer.open(path) == 0) {
+                    if (ringtonePlayer.start() == 0) {
+                        isRingtonePlaying.postValue(true)
+                    } else {
+                        Log.e("$TAG Failed to play ringtone [$path]")
+                    }
+                } else {
+                    Log.e("$TAG Failed to open ringtone [$path]")
+                }
+            }
         }
     }
 
@@ -203,6 +263,17 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
                 availableRingtonesNames.add(name)
                 availableRingtonesPaths.add(ringtone.absolutePath)
             }
+        }
+    }
+
+    @WorkerThread
+    private fun stopRingtonePlayer() {
+        if (::ringtonePlayer.isInitialized && ringtonePlayer.state != Player.State.Closed) {
+            Log.i("$TAG Stopping ringtone player")
+            ringtonePlayer.pause()
+            ringtonePlayer.seek(0)
+            ringtonePlayer.close()
+            isRingtonePlaying.postValue(false)
         }
     }
 }

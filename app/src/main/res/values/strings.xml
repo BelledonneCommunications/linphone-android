@@ -187,6 +187,8 @@
     <string name="settings_calls_auto_accept_video_subtitle">Always accept video calls</string>
     <string name="settings_calls_ringtones_title">Choose your ringtone:</string>
     <string name="settings_calls_use_device_ringtone_label">Use this device\'s ringtone</string>
+    <string name="settings_calls_play_ringtone_label">Play</string>
+    <string name="settings_calls_pause_ringtone_label">Pause</string>
     <string name="settings_calls_vibrate_while_ringing_title">Vibrate while incoming call is ringing</string>
     <string name="settings_calls_auto_record_title">Automatically start recording calls</string>
     <string name="settings_network_title">Network</string>

@@ -160,5 +160,38 @@ class AudioRouteUtils {
                 }
             }
         }
+
+        @WorkerThread
+        fun getAudioPlaybackDeviceIdForCallRecordingOrVoiceMessage(): String? {
+            // In case no headphones/headset/hearing aid/bluetooth is connected, use speaker sound card to play recordings, otherwise use earpiece
+            // If none are available, default one will be used
+            var headphonesCard: String? = null
+            var bluetoothCard: String? = null
+            var speakerCard: String? = null
+            var earpieceCard: String? = null
+            for (device in coreContext.core.audioDevices) {
+                if (device.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
+                    when (device.type) {
+                        AudioDevice.Type.Headphones, AudioDevice.Type.Headset -> {
+                            headphonesCard = device.id
+                        }
+                        AudioDevice.Type.Bluetooth, AudioDevice.Type.HearingAid -> {
+                            bluetoothCard = device.id
+                        }
+                        AudioDevice.Type.Speaker -> {
+                            speakerCard = device.id
+                        }
+                        AudioDevice.Type.Earpiece -> {
+                            earpieceCard = device.id
+                        }
+                        else -> {}
+                    }
+                }
+            }
+            Log.i(
+                "$TAG Found headset/headphones/hearingAid sound card [$headphonesCard], bluetooth sound card [$bluetoothCard], speaker sound card [$speakerCard] and earpiece sound card [$earpieceCard]"
+            )
+            return headphonesCard ?: bluetoothCard ?: speakerCard ?: earpieceCard
+        }
     }
 }
