@@ -285,32 +285,42 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/settings_title_style"
                     android:id="@+id/device_ringtone_title"
-                    android:onClick="@{() -> viewModel.toggleDeviceRingtone()}"
                     android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="10dp"
-                    android:text="@string/settings_calls_use_device_ringtone_title"
+                    android:text="@string/settings_calls_ringtones_title"
                     android:maxLines="2"
                     android:ellipsize="end"
-                    app:layout_constraintTop_toTopOf="@id/device_ringtone_switch"
-                    app:layout_constraintBottom_toBottomOf="@id/device_ringtone_switch"
+                    app:layout_constraintTop_toBottomOf="@id/auto_accept_video_switch"
                     app:layout_constraintStart_toStartOf="@id/calls_background"
-                    app:layout_constraintEnd_toStartOf="@id/device_ringtone_switch"/>
+                    app:layout_constraintEnd_toEndOf="@id/calls_background"/>
 
-                <com.google.android.material.materialswitch.MaterialSwitch
+                <androidx.appcompat.widget.AppCompatSpinner
                     style="@style/material_switch_style"
-                    android:id="@+id/device_ringtone_switch"
-                    android:onClick="@{() -> viewModel.toggleDeviceRingtone()}"
+                    android:id="@+id/device_ringtone_spinner"
+                    android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/edit_text_background"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    app:layout_constraintTop_toBottomOf="@id/device_ringtone_title"
+                    app:layout_constraintStart_toStartOf="@id/device_ringtone_title"
+                    app:layout_constraintEnd_toEndOf="@id/device_ringtone_title" />
+
+                <ImageView
+                    android:id="@+id/device_ringtone_spinner_caret"
                     android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="16dp"
-                    android:checked="@{viewModel.useDeviceRingtone}"
-                    app:layout_constraintEnd_toEndOf="@id/calls_background"
-                    app:layout_constraintTop_toBottomOf="@id/auto_accept_video_switch" />
+                    android:layout_marginEnd="20dp"
+                    android:src="@drawable/caret_down"
+                    app:layout_constraintTop_toTopOf="@id/device_ringtone_spinner"
+                    app:layout_constraintBottom_toBottomOf="@id/device_ringtone_spinner"
+                    app:layout_constraintEnd_toEndOf="@id/device_ringtone_spinner"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/settings_title_style"
@@ -340,7 +350,7 @@
                     android:layout_marginEnd="16dp"
                     android:checked="@{viewModel.vibrateDuringIncomingCall}"
                     app:layout_constraintEnd_toEndOf="@id/calls_background"
-                    app:layout_constraintTop_toBottomOf="@id/device_ringtone_switch" />
+                    app:layout_constraintTop_toBottomOf="@id/device_ringtone_spinner" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/settings_title_style"

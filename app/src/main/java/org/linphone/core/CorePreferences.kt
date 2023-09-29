@@ -121,7 +121,7 @@ class CorePreferences @UiThread constructor(private val context: Context) {
         get() = context.filesDir.absolutePath + "/assistant_third_party_default_values"
 
     @get:AnyThread
-    private val ringtonesPath: String
+    val ringtonesPath: String
         get() = context.filesDir.absolutePath + "/share/sounds/linphone/rings/"
 
     @get:AnyThread

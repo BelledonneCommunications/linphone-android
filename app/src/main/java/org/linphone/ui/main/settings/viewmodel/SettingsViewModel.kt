@@ -23,9 +23,13 @@ import android.os.Vibrator
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import java.io.File
+import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
+import org.linphone.R
 import org.linphone.core.tools.Log
+import org.linphone.utils.AppUtils
 
 class SettingsViewModel @UiThread constructor() : ViewModel() {
     companion object {
@@ -42,7 +46,9 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
     val videoEnabled = MutableLiveData<Boolean>()
     val autoInitiateVideoCalls = MutableLiveData<Boolean>()
     val autoAcceptVideoRequests = MutableLiveData<Boolean>()
-    val useDeviceRingtone = MutableLiveData<Boolean>()
+    val availableRingtonesPaths = arrayListOf<String>()
+    val availableRingtonesNames = arrayListOf<String>()
+    val selectedRingtone = MutableLiveData<String>()
     val vibrateDuringIncomingCall = MutableLiveData<Boolean>()
     val autoRecordCalls = MutableLiveData<Boolean>()
 
@@ -64,17 +70,19 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
             Log.w("$TAG Device doesn't seem to have a vibrator, hiding related setting")
         }
 
+        computeAvailableRingtones()
+
         coreContext.postOnCoreThread { core ->
             echoCancellerEnabled.postValue(core.isEchoCancellationEnabled)
             routeAudioToBluetooth.postValue(corePreferences.routeAudioToBluetoothIfAvailable)
             videoEnabled.postValue(core.isVideoEnabled)
             autoInitiateVideoCalls.postValue(core.videoActivationPolicy.automaticallyInitiate)
             autoAcceptVideoRequests.postValue(core.videoActivationPolicy.automaticallyAccept)
-            useDeviceRingtone.postValue(core.ring == null)
             vibrateDuringIncomingCall.postValue(core.isVibrationOnIncomingCallEnabled)
             autoRecordCalls.postValue(corePreferences.automaticallyStartCallRecording)
 
             useWifiOnly.postValue(core.isWifiOnlyEnabled)
+            selectedRingtone.postValue(core.ring.orEmpty())
         }
     }
 
@@ -129,11 +137,9 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
-    fun toggleDeviceRingtone() {
-        val newValue = useDeviceRingtone.value == false
+    fun setRingtone(ringtone: String) {
         coreContext.postOnCoreThread { core ->
-            core.ring = if (newValue) null else corePreferences.defaultRingtonePath
-            useDeviceRingtone.postValue(newValue)
+            core.ring = ringtone
         }
     }
 
@@ -177,5 +183,26 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun toggleUserInterfaceExpand() {
         expandUserInterface.value = expandUserInterface.value == false
+    }
+
+    @UiThread
+    private fun computeAvailableRingtones() {
+        availableRingtonesNames.add(
+            AppUtils.getString(R.string.settings_calls_use_device_ringtone_label)
+        )
+        availableRingtonesPaths.add("")
+
+        val directory = File(corePreferences.ringtonesPath)
+        val files = directory.listFiles()
+        for (ringtone in files.orEmpty()) {
+            if (ringtone.absolutePath.endsWith(".mkv")) {
+                val name = ringtone.name
+                    .substringBefore(".")
+                    .replace("_", " ")
+                    .capitalize(Locale.getDefault())
+                availableRingtonesNames.add(name)
+                availableRingtonesPaths.add(ringtone.absolutePath)
+            }
+        }
     }
 }
