@@ -50,11 +50,15 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
     val videoEnabled = MutableLiveData<Boolean>()
     val autoInitiateVideoCalls = MutableLiveData<Boolean>()
     val autoAcceptVideoRequests = MutableLiveData<Boolean>()
+
     val availableRingtonesPaths = arrayListOf<String>()
     val availableRingtonesNames = arrayListOf<String>()
     val selectedRingtone = MutableLiveData<String>()
     val isRingtonePlaying = MutableLiveData<Boolean>()
+
+    val isVibrationAvailable = MutableLiveData<Boolean>()
     val vibrateDuringIncomingCall = MutableLiveData<Boolean>()
+
     val autoRecordCalls = MutableLiveData<Boolean>()
 
     // Network settings
@@ -62,7 +66,9 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
 
     // User Interface settings
 
-    val isVibrationAvailable = MutableLiveData<Boolean>()
+    val theme = MutableLiveData<Int>()
+    val availableThemesNames = arrayListOf<String>()
+    val availableThemesValues = arrayListOf(-1, 0, 1)
 
     // Other
 
@@ -86,6 +92,16 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
 
         computeAvailableRingtones()
 
+        availableThemesNames.add(
+            AppUtils.getString(R.string.settings_user_interface_auto_theme_label)
+        )
+        availableThemesNames.add(
+            AppUtils.getString(R.string.settings_user_interface_light_theme_label)
+        )
+        availableThemesNames.add(
+            AppUtils.getString(R.string.settings_user_interface_dark_theme_label)
+        )
+
         coreContext.postOnCoreThread { core ->
             echoCancellerEnabled.postValue(core.isEchoCancellationEnabled)
             routeAudioToBluetooth.postValue(corePreferences.routeAudioToBluetoothIfAvailable)
@@ -97,6 +113,8 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
 
             useWifiOnly.postValue(core.isWifiOnlyEnabled)
             selectedRingtone.postValue(core.ring.orEmpty())
+
+            theme.postValue(corePreferences.darkMode)
         }
     }
 
@@ -243,6 +261,11 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun toggleUserInterfaceExpand() {
         expandUserInterface.value = expandUserInterface.value == false
+    }
+
+    @UiThread
+    fun setTheme(theme: Int) {
+        corePreferences.darkMode = theme
     }
 
     @UiThread

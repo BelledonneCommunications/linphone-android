@@ -194,6 +194,10 @@
     <string name="settings_network_title">Network</string>
     <string name="settings_network_use_wifi_only">Use only Wi-Fi networks</string>
     <string name="settings_user_interface_title">User interface</string>
+    <string name="settings_user_interface_theme_title">User interface</string>
+    <string name="settings_user_interface_dark_theme_label">Dark theme</string>
+    <string name="settings_user_interface_light_theme_label">Light theme</string>
+    <string name="settings_user_interface_auto_theme_label">Auto</string>
     <string name="settings_advanced_title">Advanced settings</string>
 
     <string name="manage_account_title">Manage account</string>

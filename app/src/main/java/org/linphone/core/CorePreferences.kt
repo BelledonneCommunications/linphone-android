@@ -86,6 +86,21 @@ class CorePreferences @UiThread constructor(private val context: Context) {
             config.setBool("app", "auto_start_call_record", value)
         }
 
+    /** -1 means auto, 0 no, 1 yes */
+    @get:WorkerThread @set:WorkerThread
+    var darkMode: Int
+        get() {
+            if (!darkModeAllowed) return 0
+            return config.getInt("app", "dark_mode", -1)
+        }
+        set(value) {
+            config.setInt("app", "dark_mode", value)
+        }
+
+    @get:WorkerThread
+    private val darkModeAllowed: Boolean
+        get() = config.getBool("app", "dark_mode_allowed", true)
+
     // Will disable chat feature completely
     @get:WorkerThread
     val disableChat: Boolean
