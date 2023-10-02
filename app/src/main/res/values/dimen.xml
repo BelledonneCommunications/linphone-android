@@ -5,9 +5,9 @@
     <dimen name="screen_bottom_margin">32dp</dimen>
 
     <dimen name="landscape_nav_bar_width">75dp</dimen>
-    <dimen name="sliding_pane_left_fragment_width">400dp</dimen>
+    <dimen name="sliding_pane_left_fragment_width">280dp</dimen>
     <!-- This value is the result of the above two added together -->
-    <dimen name="sliding_pane_left_fragment_with_nav_width">475dp</dimen>
+    <dimen name="sliding_pane_left_fragment_with_nav_width">355dp</dimen>
     <dimen name="sliding_pane_right_fragment_width">300dp</dimen>
 
     <dimen name="icon_size">24dp</dimen>

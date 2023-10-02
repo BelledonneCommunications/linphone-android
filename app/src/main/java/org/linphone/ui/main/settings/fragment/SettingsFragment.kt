@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter
 import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.navGraphViewModels
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsFragmentBinding
@@ -116,5 +117,13 @@ class SettingsFragment : GenericFragment() {
         binding.themeSpinner.onItemSelectedListener = themeListener
 
         startPostponedEnterTransition()
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        coreContext.postOnCoreThread {
+            viewModel.stopRingtonePlayer()
+        }
     }
 }

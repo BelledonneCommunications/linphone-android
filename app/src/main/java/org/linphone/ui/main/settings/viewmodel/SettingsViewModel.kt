@@ -112,7 +112,10 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
             autoRecordCalls.postValue(corePreferences.automaticallyStartCallRecording)
 
             useWifiOnly.postValue(core.isWifiOnlyEnabled)
-            selectedRingtone.postValue(core.ring.orEmpty())
+
+            val ringtone = core.ring.orEmpty()
+            Log.i("Currently configured ringtone in Core is [$ringtone]")
+            selectedRingtone.postValue(ringtone)
 
             theme.postValue(corePreferences.darkMode)
         }
@@ -184,6 +187,7 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
     fun setRingtone(ringtone: String) {
         coreContext.postOnCoreThread { core ->
             core.ring = ringtone
+            selectedRingtone.postValue(ringtone)
 
             if (::ringtonePlayer.isInitialized) {
                 if (ringtonePlayer.state == Player.State.Playing) {
@@ -268,6 +272,17 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
         corePreferences.darkMode = theme
     }
 
+    @WorkerThread
+    fun stopRingtonePlayer() {
+        if (::ringtonePlayer.isInitialized && ringtonePlayer.state != Player.State.Closed) {
+            Log.i("$TAG Stopping ringtone player")
+            ringtonePlayer.pause()
+            ringtonePlayer.seek(0)
+            ringtonePlayer.close()
+            isRingtonePlaying.postValue(false)
+        }
+    }
+
     @UiThread
     private fun computeAvailableRingtones() {
         availableRingtonesNames.add(
@@ -286,17 +301,6 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
                 availableRingtonesNames.add(name)
                 availableRingtonesPaths.add(ringtone.absolutePath)
             }
-        }
-    }
-
-    @WorkerThread
-    private fun stopRingtonePlayer() {
-        if (::ringtonePlayer.isInitialized && ringtonePlayer.state != Player.State.Closed) {
-            Log.i("$TAG Stopping ringtone player")
-            ringtonePlayer.pause()
-            ringtonePlayer.seek(0)
-            ringtonePlayer.close()
-            isRingtonePlaying.postValue(false)
         }
     }
 }

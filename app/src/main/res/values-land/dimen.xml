@@ -3,4 +3,9 @@
     <dimen name="call_main_actions_menu_height">110dp</dimen>
     <dimen name="call_extra_actions_menu_height">125dp</dimen>
     <dimen name="call_all_actions_menu_height">235dp</dimen> <!-- sum of above two -->
+
+    <dimen name="landscape_nav_bar_width">75dp</dimen>
+    <dimen name="sliding_pane_left_fragment_width">325dp</dimen>
+    <!-- This value is the result of the above two added together -->
+    <dimen name="sliding_pane_left_fragment_with_nav_width">400dp</dimen>
 </resources>
