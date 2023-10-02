@@ -162,6 +162,13 @@ class CallActivity : AppCompatActivity() {
             }
         }
 
+        callViewModel.goTEndedCallEvent.observe(this) {
+            it.consume {
+                val action = ActiveCallFragmentDirections.actionGlobalEndedCallFragment()
+                findNavController(R.id.call_nav_container).navigate(action)
+            }
+        }
+
         callsViewModel.showIncomingCallEvent.observe(this) {
             it.consume {
                 val action = IncomingCallFragmentDirections.actionGlobalIncomingCallFragment()
@@ -194,7 +201,7 @@ class CallActivity : AppCompatActivity() {
             }
         }
 
-        callsViewModel.noMoreCallEvent.observe(this) {
+        callsViewModel.noCallFoundEvent.observe(this) {
             it.consume {
                 finish()
             }

@@ -47,15 +47,9 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
 
     val showOutgoingCallEvent = MutableLiveData<Event<Boolean>>()
 
-    val noMoreCallEvent = MutableLiveData<Event<Boolean>>()
+    val noCallFoundEvent = MutableLiveData<Event<Boolean>>()
 
     private val coreListener = object : CoreListenerStub() {
-        @WorkerThread
-        override fun onLastCallEnded(core: Core) {
-            Log.i("$TAG No more call, leaving Call activity")
-            noMoreCallEvent.postValue(Event(true))
-        }
-
         @WorkerThread
         override fun onCallStateChanged(
             core: Core,
@@ -158,7 +152,7 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
                 }
             } else {
                 Log.w("$TAG No call found, leaving Call activity")
-                noMoreCallEvent.postValue(Event(true))
+                noCallFoundEvent.postValue(Event(true))
             }
         }
     }

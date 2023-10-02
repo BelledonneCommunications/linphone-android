@@ -94,4 +94,14 @@
         android:label="CallsListFragment"
         tools:layout="@layout/calls_list_fragment" />
 
+    <fragment
+        android:id="@+id/endedCallFragment"
+        android:name="org.linphone.ui.call.fragment.EndedCallFragment"
+        android:label="EndedCallFragment"
+        tools:layout="@layout/call_ended_fragment"/>
+
+    <action android:id="@+id/action_global_endedCallFragment"
+        app:destination="@id/endedCallFragment"
+        app:launchSingleTop="true"/>
+
 </navigation>

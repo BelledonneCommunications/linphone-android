@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/call_main_actions_menu_height"
+        android:paddingBottom="5dp"
+        android:background="@color/gray_900">
+
+        <ImageView
+            android:id="@+id/hang_up"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/call_button_size"
+            android:layout_marginStart="16dp"
+            android:paddingStart="30dp"
+            android:paddingEnd="30dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:src="@drawable/phone_disconnect"
+            android:background="@drawable/shape_squircle_red_disabled_background"
+            app:tint="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <ImageView
+            android:id="@+id/toggle_video"
+            android:layout_width="@dimen/call_button_size"
+            android:layout_height="@dimen/call_button_size"
+            android:layout_marginEnd="16dp"
+            android:padding="@dimen/call_button_icon_padding"
+            android:enabled="false"
+            android:src="@drawable/video_camera_slash"
+            android:background="@drawable/shape_round_in_call_disabled_button_background"
+            app:tint="@color/gray_500"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/hang_up"
+            app:layout_constraintEnd_toStartOf="@id/toggle_mute_mic" />
+
+        <ImageView
+            android:id="@+id/toggle_mute_mic"
+            android:layout_width="@dimen/call_button_size"
+            android:layout_height="@dimen/call_button_size"
+            android:layout_marginEnd="16dp"
+            android:padding="@dimen/call_button_icon_padding"
+            android:src="@drawable/microphone_slash"
+            android:background="@drawable/shape_round_in_call_disabled_button_background"
+            app:tint="@color/gray_500"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/toggle_video"
+            app:layout_constraintEnd_toStartOf="@id/change_audio_output" />
+
+        <ImageView
+            android:id="@+id/change_audio_output"
+            android:layout_width="@dimen/call_button_size"
+            android:layout_height="@dimen/call_button_size"
+            android:layout_marginEnd="16dp"
+            android:padding="@dimen/call_button_icon_padding"
+            android:src="@drawable/speaker_slash"
+            android:background="@drawable/shape_round_in_call_disabled_button_background"
+            app:tint="@color/gray_500"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/toggle_mute_mic"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

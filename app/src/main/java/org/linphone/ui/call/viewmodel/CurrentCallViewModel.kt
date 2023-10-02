@@ -102,6 +102,10 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<String>()
     }
 
+    val goTEndedCallEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     // To synchronize chronometers in UI
     val callDuration = MutableLiveData<Int>()
 
@@ -194,8 +198,16 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                         )
                         configureCall(newCurrentCall)
                     } else {
-                        Log.e("$TAG Failed to get a valid call to display!")
+                        Log.e(
+                            "$TAG Failed to get a valid call to display, go to ended call fragment"
+                        )
+                        goTEndedCallEvent.postValue(Event(true))
                     }
+                } else {
+                    Log.i("$TAG Call is ending, go to ended call fragment")
+                    // Show that call was ended for a few seconds, then leave
+                    // TODO FIXME: do not show it when call is being ended due to user terminating the call
+                    goTEndedCallEvent.postValue(Event(true))
                 }
             } else {
                 val videoEnabled = call.currentParams.isVideoEnabled
