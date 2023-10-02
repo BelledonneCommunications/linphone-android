@@ -147,6 +147,7 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
             if (state == ChatRoom.State.Created) {
                 contactLookup()
                 updateSecurityIcon()
+                updateParticipants()
                 subject.value = chatRoom.subject
             }
         }
@@ -255,9 +256,15 @@ class ChatRoomViewModel(val chatRoom: ChatRoom) : ViewModel(), ContactDataInterf
     }
 
     fun startCall() {
-        val address = addressToCall
+        val address = addressToCall ?: if (basicChatRoom) {
+            chatRoom.peerAddress
+        } else {
+            chatRoom.participants.firstOrNull()?.address
+        }
         if (address != null) {
             coreContext.startCall(address)
+        } else {
+            Log.e("[Chat Room] Failed to find a SIP address to call!")
         }
     }
 
