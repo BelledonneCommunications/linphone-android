@@ -34,6 +34,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.window.layout.FoldingFeature
 import androidx.window.layout.WindowInfoTracker
 import androidx.window.layout.WindowLayoutInfo
@@ -204,6 +205,25 @@ class CallActivity : AppCompatActivity() {
         callsViewModel.noCallFoundEvent.observe(this) {
             it.consume {
                 finish()
+            }
+        }
+
+        callsViewModel.goToCallsListEvent.observe(this) {
+            it.consume {
+                val navController = findNavController(R.id.call_nav_container)
+                val action = ActiveCallFragmentDirections.actionActiveCallFragmentToCallsListFragment()
+                navController.navigate(action)
+            }
+        }
+
+        callsViewModel.changeSystemTopBarColorToMultipleCallsEvent.observe(this) {
+            it.consume { useInCallColor ->
+                val color = if (useInCallColor) {
+                    AppUtils.getColor(R.color.green_success_500)
+                } else {
+                    AppUtils.getColor(R.color.orange_main_500)
+                }
+                window.statusBarColor = color
             }
         }
 

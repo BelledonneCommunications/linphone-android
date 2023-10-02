@@ -7,14 +7,14 @@
         <import type="android.view.View" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.main.viewmodel.MainViewModel" />
+            type="org.linphone.ui.call.viewmodel.CallsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/green_success_500"
-        android:onClick="@{() -> viewModel.goBackToCall()}">
+        android:onClick="@{() -> viewModel.goToCallsList()}">
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_800"
@@ -26,10 +26,10 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:gravity="center_vertical"
-            android:text="@{viewModel.callsLabel, default=`John Doe`}"
+            android:text="@{viewModel.otherCallsLabel, default=`John Doe`}"
             android:textColor="@color/white"
             android:textSize="16sp"
-            android:drawableStart="@drawable/phone"
+            android:drawableStart="@drawable/pause_call"
             android:drawablePadding="10dp"
             android:drawableTint="@color/white"
             app:layout_constraintEnd_toStartOf="@id/call_time"
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:gravity="center_vertical"
-            android:text="@{viewModel.callsStatus, default=`Paused`}"
+            android:text="@{viewModel.otherCallsStatus, default=`Paused`}"
             android:textColor="@color/white"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"

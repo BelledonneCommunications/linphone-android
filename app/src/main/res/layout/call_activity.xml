@@ -8,6 +8,9 @@
         <variable
             name="callViewModel"
             type="org.linphone.ui.call.viewmodel.CurrentCallViewModel" />
+        <variable
+            name="callsViewModel"
+            type="org.linphone.ui.call.viewmodel.CallsViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -20,13 +23,28 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <include
+                android:id="@+id/other_calls_top_bar"
+                layout="@layout/call_activity_other_calls_top_bar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:visibility="@{callsViewModel.callsCount >= 2 ? View.VISIBLE : View.GONE, default=gone}"
+                app:viewModel="@{callsViewModel}"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/call_nav_container"
                 android:name="androidx.navigation.fragment.NavHostFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 app:defaultNavHost="true"
-                app:navGraph="@navigation/call_nav_graph"/>
+                app:navGraph="@navigation/call_nav_graph"
+                app:layout_constraintTop_toBottomOf="@id/other_calls_top_bar"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
             <LinearLayout
                 android:id="@+id/toasts_area"

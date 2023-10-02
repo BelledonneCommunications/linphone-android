@@ -24,10 +24,12 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
 import org.linphone.core.Call
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
+import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
@@ -38,9 +40,9 @@ class MainViewModel @UiThread constructor() : ViewModel() {
 
     val atLastOneCall = MutableLiveData<Boolean>()
 
-    val callDisplayName = MutableLiveData<String>()
+    val callsLabel = MutableLiveData<String>()
 
-    val callStatus = MutableLiveData<String>()
+    val callsStatus = MutableLiveData<String>()
 
     val changeSystemTopBarColorToInCallEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
@@ -99,26 +101,33 @@ class MainViewModel @UiThread constructor() : ViewModel() {
     @WorkerThread
     private fun updateCurrentCallInfo() {
         val core = coreContext.core
-        val currentCall = core.currentCall
-        if (currentCall != null) {
-            val contact = coreContext.contactsManager.findContactByAddress(
-                currentCall.remoteAddress
-            )
-            callDisplayName.postValue(
-                contact?.name ?: LinphoneUtils.getDisplayName(currentCall.remoteAddress)
-            )
-            callStatus.postValue(LinphoneUtils.callStateToString(currentCall.state))
-        } else {
-            val firstCall = core.calls.firstOrNull()
-            if (firstCall != null) {
+        if (core.callsNb == 1) {
+            val currentCall = core.currentCall
+            if (currentCall != null) {
                 val contact = coreContext.contactsManager.findContactByAddress(
-                    firstCall.remoteAddress
+                    currentCall.remoteAddress
                 )
-                callDisplayName.postValue(
-                    contact?.name ?: LinphoneUtils.getDisplayName(firstCall.remoteAddress)
+                callsLabel.postValue(
+                    contact?.name ?: LinphoneUtils.getDisplayName(currentCall.remoteAddress)
                 )
-                callStatus.postValue(LinphoneUtils.callStateToString(firstCall.state))
+                callsStatus.postValue(LinphoneUtils.callStateToString(currentCall.state))
+            } else {
+                val firstCall = core.calls.firstOrNull()
+                if (firstCall != null) {
+                    val contact = coreContext.contactsManager.findContactByAddress(
+                        firstCall.remoteAddress
+                    )
+                    callsLabel.postValue(
+                        contact?.name ?: LinphoneUtils.getDisplayName(firstCall.remoteAddress)
+                    )
+                    callsStatus.postValue(LinphoneUtils.callStateToString(firstCall.state))
+                }
             }
+        } else {
+            callsLabel.postValue(
+                AppUtils.getFormattedString(R.string.calls_count_label, core.callsNb)
+            )
+            callsStatus.postValue("") // TODO: improve ?
         }
         Log.i("$TAG At least a call, asking fragment to change status bar color")
         changeSystemTopBarColorToInCallEvent.postValue(Event(true))
