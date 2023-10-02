@@ -15,6 +15,9 @@
             name="deleteImageClickListener"
             type="View.OnClickListener" />
         <variable
+            name="prefixTooltipClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="changeModeClickListener"
             type="View.OnClickListener" />
         <variable
@@ -232,7 +235,8 @@
                         android:id="@+id/display_name_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="17dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
                         android:paddingTop="8dp"
                         android:paddingBottom="8dp"
                         android:text="@string/sip_address_display_name"
@@ -260,13 +264,69 @@
                         app:layout_constraintStart_toStartOf="@id/display_name_label"
                         app:layout_constraintEnd_toEndOf="@id/details_background"/>
 
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/header_style"
+                        android:id="@+id/prefix_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:text="@string/manage_account_international_prefix"
+                        app:layout_constraintStart_toStartOf="@id/details_background"
+                        app:layout_constraintTop_toBottomOf="@id/display_name"/>
+
+                    <ImageView
+                        android:id="@+id/prefix_label_tooltip"
+                        android:onClick="@{prefixTooltipClickListener}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:src="@drawable/info"
+                        app:tint="@color/black"
+                        app:layout_constraintTop_toTopOf="@id/prefix_label"
+                        app:layout_constraintBottom_toBottomOf="@id/prefix_label"
+                        app:layout_constraintStart_toEndOf="@id/prefix_label" />
+
+                    <androidx.appcompat.widget.AppCompatSpinner
+                        style="@style/default_text_style"
+                        android:id="@+id/prefix"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginTop="5dp"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
+                        android:textSize="14sp"
+                        android:textColor="@color/gray_main2_600"
+                        android:gravity="center_vertical"
+                        android:overlapAnchor="false"
+                        android:dropDownVerticalOffset="25dp"
+                        android:spinnerMode="dropdown"
+                        android:popupBackground="@drawable/shape_squircle_white_background"
+                        android:background="@drawable/edit_text_background"
+                        app:layout_constraintTop_toBottomOf="@id/prefix_label"
+                        app:layout_constraintStart_toStartOf="@id/prefix_label"
+                        app:layout_constraintEnd_toEndOf="@id/details_background" />
+
+                    <ImageView
+                        android:id="@+id/prefix_caret"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:src="@drawable/caret_down"
+                        app:layout_constraintTop_toTopOf="@id/prefix"
+                        app:layout_constraintBottom_toBottomOf="@id/prefix"
+                        app:layout_constraintEnd_toEndOf="@id/prefix"/>
+
                     <View
                         android:id="@+id/details_bottom_anchor"
                         android:layout_width="1dp"
                         android:layout_height="1dp"
                         android:layout_marginTop="21dp"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/display_name"/>
+                        app:layout_constraintTop_toBottomOf="@id/prefix"/>
 
                     <ImageView
                         android:id="@+id/connection_background"

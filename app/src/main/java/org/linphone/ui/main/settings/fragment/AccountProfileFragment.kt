@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
@@ -55,6 +57,19 @@ class AccountProfileFragment : GenericFragment() {
         }
     }
 
+    private val dropdownListener = object : AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            val dialPlan = viewModel.dialPlansList[position]
+            Log.i(
+                "$TAG Selected dialplan updated [+${dialPlan.countryCallingCode}] / [${dialPlan.country}]"
+            )
+            viewModel.setDialPlan(dialPlan)
+        }
+
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -85,6 +100,10 @@ class AccountProfileFragment : GenericFragment() {
 
         binding.setDeleteImageClickListener {
             viewModel.setNewPicturePath("")
+        }
+
+        binding.setPrefixTooltipClickListener {
+            // TODO
         }
 
         binding.setChangeModeClickListener {
@@ -135,6 +154,8 @@ class AccountProfileFragment : GenericFragment() {
                 if (found) {
                     (view.parent as? ViewGroup)?.doOnPreDraw {
                         startPostponedEnterTransition()
+
+                        setupDialPlanPicker()
                     }
                 } else {
                     Log.e(
@@ -157,5 +178,21 @@ class AccountProfileFragment : GenericFragment() {
 
     private fun pickImage() {
         pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+    }
+
+    private fun setupDialPlanPicker() {
+        val dialPlanIndex = viewModel.selectedDialPlan.value ?: 0
+        Log.i("$TAG Setting default dial plan at index [$dialPlanIndex]")
+        val adapter = ArrayAdapter(
+            requireContext(),
+            R.layout.drop_down_item,
+            viewModel.dialPlansLabelList
+        )
+        adapter.setDropDownViewResource(
+            R.layout.assistant_country_picker_dropdown_cell
+        )
+        binding.prefix.adapter = adapter
+        binding.prefix.onItemSelectedListener = dropdownListener
+        binding.prefix.setSelection(dialPlanIndex)
     }
 }

@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Account
+import org.linphone.core.DialPlan
+import org.linphone.core.Factory
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.model.AccountModel
 import org.linphone.ui.main.settings.model.AccountDeviceModel
@@ -22,6 +24,12 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
     val sipAddress = MutableLiveData<String>()
 
     val displayName = MutableLiveData<String>()
+
+    val dialPlansLabelList = arrayListOf<String>()
+
+    val dialPlansList = arrayListOf<DialPlan>()
+
+    val selectedDialPlan = MutableLiveData<Int>()
 
     val registerEnabled = MutableLiveData<Boolean>()
 
@@ -44,6 +52,16 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
     init {
         expandDetails.value = true
         expandDevices.value = false // TODO: set to true when feature will be available
+
+        coreContext.postOnCoreThread {
+            val dialPlans = Factory.instance().dialPlans.toList()
+            for (dialPlan in dialPlans) {
+                dialPlansList.add(dialPlan)
+                dialPlansLabelList.add(
+                    "${dialPlan.flag} ${dialPlan.country} | +${dialPlan.countryCallingCode}"
+                )
+            }
+        }
     }
 
     @UiThread
@@ -96,6 +114,23 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
                     }
                 )
                 devices.postValue(devicesList)
+
+                val prefix = account.params.internationalPrefix
+                if (!prefix.isNullOrEmpty()) {
+                    Log.i(
+                        "$TAG Account [${account.params?.identityAddress?.asStringUriOnly()}] prefix is [$prefix]"
+                    )
+                    val dialPlan = Factory.instance().dialPlans.find {
+                        it.countryCallingCode == prefix
+                    }
+                    if (dialPlan != null) {
+                        val index = dialPlansList.indexOf(dialPlan)
+                        Log.i(
+                            "$TAG Found matching dial plan [${dialPlan.country}] at index [$index]"
+                        )
+                        selectedDialPlan.postValue(index)
+                    }
+                }
 
                 accountFoundEvent.postValue(Event(true))
             } else {
@@ -186,8 +221,24 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
             val params = account.params
             val copy = params.clone()
             copy.isRegisterEnabled = !params.isRegisterEnabled
+            Log.i(
+                "$TAG Account registration is now [${if (copy.isRegisterEnabled) "enabled" else "disabled"}] for account [${account.params.identityAddress?.asStringUriOnly()}]"
+            )
             account.params = copy
             registerEnabled.postValue(account.params.isRegisterEnabled)
+        }
+    }
+
+    @UiThread
+    fun setDialPlan(dialPlan: DialPlan) {
+        coreContext.postOnCoreThread {
+            val params = account.params
+            val copy = params.clone()
+            copy.internationalPrefix = dialPlan.countryCallingCode
+            account.params = copy
+            Log.i(
+                "$TAG Updated internation prefix for account [${account.params.identityAddress?.asStringUriOnly()}] to [${copy.internationalPrefix}]"
+            )
         }
     }
 }

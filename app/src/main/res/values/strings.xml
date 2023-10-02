@@ -319,8 +319,8 @@
     <string name="toast_call_transfer_in_progress">Call is being transferred to %s</string>
     <string name="toast_call_transfer_successful">Call has been transferred to %s</string>
     <string name="toast_call_transfer_failed">Call transfer to %s failed!</string>
-    <string name="calls_count_label">%i calls</string>
-    <string name="calls_paused_count_label">%i paused calls</string>
+    <string name="calls_count_label">%s calls</string>
+    <string name="calls_paused_count_label">%s paused calls</string>
 
     <!-- Keep <u></u> in following strings translations! -->
     <string name="welcome_carousel_skip"><u>Skip</u></string>
