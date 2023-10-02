@@ -102,6 +102,10 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<String>()
     }
 
+    val goToInitiateBlindTransferEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     val goTEndedCallEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -593,6 +597,35 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun showNumpad() {
         showNumpadBottomSheetEvent.value = Event(true)
+    }
+
+    @UiThread
+    fun transferClicked() {
+        coreContext.postOnCoreThread { core ->
+            if (core.callsNb == 1) {
+                Log.i("$TAG Only one call, initiate blind call transfer")
+                goToInitiateBlindTransferEvent.postValue(Event(true))
+            } else {
+                val callToTransferTo = core.calls.findLast {
+                    it.state == Call.State.Paused && it != currentCall
+                }
+                if (callToTransferTo == null) {
+                    Log.e(
+                        "$TAG Couldn't find a call in Paused state to transfer current call to"
+                    )
+                    return@postOnCoreThread
+                }
+
+                Log.i(
+                    "$TAG Doing an attended transfer between currently displayed call [${currentCall.remoteAddress.asStringUriOnly()}] and paused call [${callToTransferTo.remoteAddress.asStringUriOnly()}]"
+                )
+                if (callToTransferTo.transferToAnother(currentCall) != 0) {
+                    Log.e("$TAG Failed to make attended transfer!")
+                } else {
+                    Log.i("$TAG Attended transfer is successful")
+                }
+            }
+        }
     }
 
     @WorkerThread

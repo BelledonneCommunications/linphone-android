@@ -7,9 +7,6 @@
         <import type="android.view.View" />
         <import type="org.linphone.core.ChatRoom.SecurityLevel" />
         <variable
-            name="transferClickListener"
-            type="View.OnClickListener" />
-        <variable
             name="newCallClickListener"
             type="View.OnClickListener" />
         <variable
@@ -267,7 +264,6 @@
             layout="@layout/call_extra_actions"
             bind:viewModel="@{viewModel}"
             bind:callsViewModel="@{callsViewModel}"
-            bind:transferClickListener="@{transferClickListener}"
             bind:newCallClickListener="@{newCallClickListener}"
             bind:callsListClickListener="@{callsListClickListener}"/>
 

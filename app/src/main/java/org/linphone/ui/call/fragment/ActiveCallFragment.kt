@@ -135,11 +135,6 @@ class ActiveCallFragment : GenericCallFragment() {
             findNavController().navigate(action)
         }
 
-        binding.setTransferClickListener {
-            val action = ActiveCallFragmentDirections.actionActiveCallFragmentToTransferCallFragment()
-            findNavController().navigate(action)
-        }
-
         binding.setCallsListClickListener {
             val action = ActiveCallFragmentDirections.actionActiveCallFragmentToCallsListFragment()
             findNavController().navigate(action)
@@ -151,6 +146,13 @@ class ActiveCallFragment : GenericCallFragment() {
 
         sharedViewModel.foldingState.observe(viewLifecycleOwner) { feature ->
             updateHingeRelatedConstraints(feature)
+        }
+
+        callViewModel.goToInitiateBlindTransferEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                val action = ActiveCallFragmentDirections.actionActiveCallFragmentToTransferCallFragment()
+                findNavController().navigate(action)
+            }
         }
 
         callViewModel.fullScreenMode.observe(viewLifecycleOwner) { hide ->
