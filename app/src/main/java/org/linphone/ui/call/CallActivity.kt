@@ -97,6 +97,7 @@ class CallActivity : AppCompatActivity() {
         callsViewModel = run {
             ViewModelProvider(this)[CallsViewModel::class.java]
         }
+        binding.callsViewModel = callsViewModel
 
         callViewModel = run {
             ViewModelProvider(this)[CurrentCallViewModel::class.java]

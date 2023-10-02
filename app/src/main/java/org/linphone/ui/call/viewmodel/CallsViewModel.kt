@@ -88,6 +88,7 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
                     list.add(model)
                     calls.postValue(list)
                     callsCount.postValue(list.size)
+                    Log.i("$TAG There is [${list.size}] calls at this time")
                 }
             } else {
                 if (state == Call.State.End || state == Call.State.Released || state == Call.State.Error) {
@@ -99,9 +100,12 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
                     list.remove(found)
                     calls.postValue(list)
                     callsCount.postValue(list.size)
+                    Log.i("$TAG There is [${list.size}] calls at this time")
                     found.destroy()
                 }
             }
+
+            updateOtherCallsInfo()
 
             // Update currently displayed fragment according to call state
             if (call == core.currentCall || core.currentCall == null) {
@@ -116,6 +120,7 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
                     }
                 }
             }
+
             if (LinphoneUtils.isCallIncoming(call.state)) {
                 Log.i("$TAG Asking activity to show incoming call fragment")
                 showIncomingCallEvent.postValue(Event(true))
@@ -133,8 +138,6 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
                     }
                 }
             }
-
-            updateOtherCallsInfo()
         }
     }
 
@@ -150,6 +153,7 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
                 }
                 calls.postValue(list)
                 callsCount.postValue(list.size)
+                Log.i("$TAG There is [${list.size}] calls")
 
                 val currentCall = core.currentCall ?: core.calls.first()
                 Log.i("$TAG Current call is [${currentCall.remoteAddress.asStringUriOnly()}]")
@@ -194,6 +198,7 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
     @WorkerThread
     private fun updateOtherCallsInfo() {
         val core = coreContext.core
+
         if (core.callsNb > 1) {
             if (core.callsNb == 2) {
                 val found = core.calls.find {
@@ -217,8 +222,13 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
                 otherCallsStatus.postValue("") // TODO: improve ?
             }
 
-            Log.i("$TAG At least one other call, asking fragment to change status bar color")
+            Log.i("$TAG At least one other call, asking activity to change status bar color")
             changeSystemTopBarColorToMultipleCallsEvent.postValue(Event(true))
+        } else {
+            Log.i(
+                "$TAG No more than one call, asking activity to change status bar color back to primary"
+            )
+            changeSystemTopBarColorToMultipleCallsEvent.postValue(Event(false))
         }
     }
 }
