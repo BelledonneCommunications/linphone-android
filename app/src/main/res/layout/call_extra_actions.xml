@@ -171,7 +171,7 @@
             android:onClick="@{() -> viewModel.transferClicked()}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/call_action_transfer"
+            android:text="@{callsViewModel.callsCount == 1 ? @string/call_action_blind_transfer : @string/call_action_attended_transfer, default=@string/call_action_blind_transfer}"
             app:layout_constraintTop_toBottomOf="@id/transfer"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/new_call_label"/>

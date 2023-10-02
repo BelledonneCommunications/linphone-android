@@ -296,7 +296,8 @@
 
     <string name="operation_in_progress_overlay">Operation in progress, please wait</string>
 
-    <string name="call_action_transfer">Transfer</string>
+    <string name="call_action_blind_transfer">Transfer</string>
+    <string name="call_action_attended_transfer">Attended transfer</string>
     <string name="call_action_start_new_call">New call</string>
     <string name="call_action_go_to_calls_list">Calls list</string>
     <string name="call_action_show_dialer">Dialer</string>
