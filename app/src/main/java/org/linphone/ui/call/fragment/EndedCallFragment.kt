@@ -67,6 +67,7 @@ class EndedCallFragment : GenericCallFragment() {
         Log.i("$TAG Showing ended call fragment")
 
         callViewModel.callDuration.observe(viewLifecycleOwner) { duration ->
+            // TODO FIXME: doesn't work
             binding.chronometer.base = SystemClock.elapsedRealtime() - (1000 * duration)
             // Do not start it!
         }

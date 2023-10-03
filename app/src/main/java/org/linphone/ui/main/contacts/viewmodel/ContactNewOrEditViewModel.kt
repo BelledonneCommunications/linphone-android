@@ -143,8 +143,8 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
 
             val vCard = friend.vcard
             if (vCard != null) {
-                vCard.familyName = fn
-                vCard.givenName = ln
+                vCard.givenName = fn
+                vCard.familyName = ln
 
                 val picture = picturePath.value.orEmpty()
                 if (picture.isNotEmpty()) {
