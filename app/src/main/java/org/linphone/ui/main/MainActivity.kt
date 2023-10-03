@@ -34,6 +34,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.databinding.MainActivityBinding
@@ -77,7 +81,14 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     AppUtils.getColor(R.color.orange_main_500)
                 }
-                window.statusBarColor = color
+                lifecycleScope.launch {
+                    withContext(Dispatchers.IO) {
+                        delay(if (useInCallColor) 1000 else 0)
+                        withContext(Dispatchers.Main) {
+                            window.statusBarColor = color
+                        }
+                    }
+                }
             }
         }
 
