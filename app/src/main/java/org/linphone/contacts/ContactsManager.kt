@@ -154,7 +154,7 @@ class ContactsManager @UiThread constructor(context: Context) {
         clonedAddress.clean()
         val sipUri = clonedAddress.asStringUriOnly()
 
-        Log.i("$TAG Looking for friend with address [$sipUri]")
+        Log.d("$TAG Looking for friend with address [$sipUri]")
         val username = clonedAddress.username
         val found = coreContext.core.findFriend(clonedAddress)
         return found ?: if (!username.isNullOrEmpty() && username.startsWith("+")) {
@@ -204,7 +204,7 @@ class ContactsManager @UiThread constructor(context: Context) {
                 Manifest.permission.READ_CONTACTS
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            Log.i(
+            Log.d(
                 "$TAG Looking for native contact with address [$address] ${if (searchAsPhoneNumber) "or phone number [$number]" else ""}"
             )
 
@@ -277,7 +277,7 @@ class ContactsManager @UiThread constructor(context: Context) {
 
                     friend.done()
 
-                    Log.i("$TAG Found native contact [${friend.name}] with address [$address]")
+                    Log.d("$TAG Found native contact [${friend.name}] with address [$address]")
                     cursor.close()
                     return friend
                 }

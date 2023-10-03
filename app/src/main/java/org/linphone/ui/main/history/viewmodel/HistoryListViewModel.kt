@@ -114,6 +114,7 @@ class HistoryListViewModel @UiThread constructor() : AbstractTopBarViewModel() {
         }
 
         val list = arrayListOf<CallLogModel>()
+        var count = 0
 
         // TODO? : Add support for call logs in magic search
         val account = LinphoneUtils.getDefaultAccount()
@@ -122,6 +123,12 @@ class HistoryListViewModel @UiThread constructor() : AbstractTopBarViewModel() {
             if (callLog.remoteAddress.asStringUriOnly().contains(filter)) {
                 val model = CallLogModel(callLog)
                 list.add(model)
+                count += 1
+            }
+
+            if (count == 20) {
+                callLogs.postValue(list)
+                fetchInProgress.postValue(false)
             }
         }
 
