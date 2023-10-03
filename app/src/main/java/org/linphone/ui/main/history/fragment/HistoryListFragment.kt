@@ -44,8 +44,6 @@ import org.linphone.ui.main.history.model.ConfirmationDialogModel
 import org.linphone.ui.main.history.viewmodel.HistoryListViewModel
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
-import org.linphone.utils.RecyclerViewSwipeUtils
-import org.linphone.utils.RecyclerViewSwipeUtilsCallback
 import org.linphone.utils.hideKeyboard
 import org.linphone.utils.showKeyboard
 
@@ -85,10 +83,6 @@ class HistoryListFragment : AbstractTopBarFragment() {
 
         val layoutManager = LinearLayoutManager(requireContext())
         binding.historyList.layoutManager = layoutManager
-
-        val swipeCallbacks = RecyclerViewSwipeUtilsCallback()
-        val swipeHelper = RecyclerViewSwipeUtils(swipeCallbacks)
-        swipeHelper.attachToRecyclerView(binding.historyList)
 
         adapter.callLogLongClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
