@@ -68,14 +68,9 @@ class BottomNavBarViewModel @UiThread constructor() : ViewModel() {
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
             updateMissedCallsCount()
-
-            hideConversations.postValue(corePreferences.disableChat)
-
-            val hideGroupCall = corePreferences.disableMeetings || !LinphoneUtils.isRemoteConferencingAvailable(
-                core
-            )
-            hideMeetings.postValue(hideGroupCall)
         }
+
+        updateAvailableMenus()
     }
 
     @UiThread
@@ -104,6 +99,19 @@ class BottomNavBarViewModel @UiThread constructor() : ViewModel() {
             val account = LinphoneUtils.getDefaultAccount()
             account?.resetMissedCallsCount() ?: core.resetMissedCallsCount()
             updateMissedCallsCount()
+        }
+    }
+
+    @UiThread
+    fun updateAvailableMenus() {
+        coreContext.postOnCoreThread { core ->
+            hideConversations.postValue(corePreferences.disableChat)
+
+            val hideGroupCall =
+                corePreferences.disableMeetings || !LinphoneUtils.isRemoteConferencingAvailable(
+                    core
+                )
+            hideMeetings.postValue(hideGroupCall)
         }
     }
 }

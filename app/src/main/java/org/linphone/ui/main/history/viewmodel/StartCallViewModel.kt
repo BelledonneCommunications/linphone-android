@@ -58,6 +58,8 @@ class StartCallViewModel @UiThread constructor() : ViewModel() {
 
     val isNumpadVisible = MutableLiveData<Boolean>()
 
+    val isGroupCallAvailable = MutableLiveData<Boolean>()
+
     val appendDigitToSearchBarEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
     }
@@ -127,14 +129,11 @@ class StartCallViewModel @UiThread constructor() : ViewModel() {
             }
         )
 
+        updateGroupCallButtonVisibility()
+
         coreContext.postOnCoreThread { core ->
             val defaultAccount = core.defaultAccount
             limitSearchToLinphoneAccounts = defaultAccount?.isInSecureMode() ?: false
-
-            val hideGroupCall = corePreferences.disableMeetings || !LinphoneUtils.isRemoteConferencingAvailable(
-                core
-            )
-            hideGroupCallButton.postValue(hideGroupCall)
 
             coreContext.contactsManager.addListener(contactsListener)
             magicSearch = core.createMagicSearch()
@@ -157,6 +156,16 @@ class StartCallViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun clearFilter() {
         searchFilter.value = ""
+    }
+
+    @UiThread
+    fun updateGroupCallButtonVisibility() {
+        coreContext.postOnCoreThread { core ->
+            val hideGroupCall = corePreferences.disableMeetings || !LinphoneUtils.isRemoteConferencingAvailable(
+                core
+            )
+            hideGroupCallButton.postValue(hideGroupCall)
+        }
     }
 
     @UiThread

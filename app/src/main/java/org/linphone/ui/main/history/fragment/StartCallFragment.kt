@@ -180,6 +180,11 @@ class StartCallFragment : GenericFragment() {
                 viewModel.isNumpadVisible.value = false
             }
         }
+
+        sharedViewModel.defaultAccountChangedEvent.observe(viewLifecycleOwner) {
+            // Do not consume it!
+            viewModel.updateGroupCallButtonVisibility()
+        }
     }
 
     override fun onPause() {

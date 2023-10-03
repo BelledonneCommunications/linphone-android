@@ -100,5 +100,10 @@ class BottomNavBarFragment : Fragment() {
                 viewModel.resetMissedCallsCount()
             }
         }
+
+        sharedViewModel.defaultAccountChangedEvent.observe(viewLifecycleOwner) {
+            // Do not consume it!
+            viewModel.updateAvailableMenus()
+        }
     }
 }

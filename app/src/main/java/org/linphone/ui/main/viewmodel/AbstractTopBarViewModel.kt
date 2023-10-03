@@ -92,6 +92,8 @@ open class AbstractTopBarViewModel @UiThread constructor() : ViewModel() {
             if (core.accountList.isNotEmpty()) {
                 Log.i("$TAG Updating displayed default account")
                 val defaultAccount = core.defaultAccount ?: core.accountList.first()
+
+                account.value?.destroy()
                 account.postValue(AccountModel(defaultAccount))
             }
         }
