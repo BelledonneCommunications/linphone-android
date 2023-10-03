@@ -151,6 +151,17 @@
     <string name="assistant_account_register_unexpected_error">Unexpected error occurred, please try again later</string>
     <string name="assistant_account_login_forbidden_error">Wrong username or password</string>
     <string name="assistant_account_login_error">Failed to login: error code is %i</string>
+    <string name="assistant_permissions_title">Grant permissions</string>
+
+    <string name="assistant_permissions_subtitle">To be able to work properly, we need you to grand the application the following permissions.\n\nIf you don\'t, some features won\'t be available, but you can grant them later.</string>
+    <string name="assistant_permissions_read_contacts_title">Read contacts</string>
+    <string name="assistant_permissions_read_contacts_message">This allows us to import your address-book in &appName;</string>
+    <string name="assistant_permissions_post_notifications_title">Post notifications</string>
+    <string name="assistant_permissions_post_notifications_message">To notify incoming calls &amp; chat messages</string>
+    <string name="assistant_permissions_record_audio_title">Record audio</string>
+    <string name="assistant_permissions_record_audio_message">For audio calls, duh!</string>
+    <string name="assistant_permissions_access_camera_title">Access camera</string>
+    <string name="assistant_permissions_access_camera_message">For video calls &amp; scan QR codes</string>
 
     <string name="drawer_menu_manage_account">Manage the profile</string>
     <string name="drawer_menu_account_connection_status_connected">Connected</string>

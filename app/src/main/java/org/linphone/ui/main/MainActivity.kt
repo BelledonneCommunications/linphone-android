@@ -43,13 +43,6 @@ import org.linphone.utils.slideInToastFromTopForDuration
 
 @UiThread
 class MainActivity : AppCompatActivity() {
-    companion object {
-        private const val CONTACTS_PERMISSION_REQUEST = 0
-        private const val CAMERA_PERMISSION_REQUEST = 1
-        private const val RECORD_AUDIO_PERMISSION_REQUEST = 2
-        private const val POST_NOTIFICATIONS_PERMISSION_REQUEST = 3
-        private const val MANAGE_OWN_CALLS_PERMISSION_REQUEST = 4
-    }
 
     private lateinit var binding: MainActivityBinding
 
@@ -101,38 +94,6 @@ class MainActivity : AppCompatActivity() {
         // TODO FIXME: uncomment
         // startActivity(Intent(this, WelcomeActivity::class.java))
 
-        if (checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(
-                arrayOf(Manifest.permission.READ_CONTACTS),
-                CONTACTS_PERMISSION_REQUEST
-            )
-        }
-        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(
-                arrayOf(Manifest.permission.CAMERA),
-                CAMERA_PERMISSION_REQUEST
-            )
-        }
-        if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(
-                arrayOf(Manifest.permission.RECORD_AUDIO),
-                RECORD_AUDIO_PERMISSION_REQUEST
-            )
-        }
-        if (checkSelfPermission(Manifest.permission.MANAGE_OWN_CALLS) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(
-                arrayOf(Manifest.permission.MANAGE_OWN_CALLS),
-                MANAGE_OWN_CALLS_PERMISSION_REQUEST
-            )
-        }
-        // TODO FIXME : use compatibility
-        if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(
-                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
-                POST_NOTIFICATIONS_PERMISSION_REQUEST
-            )
-        }
-
         coreContext.greenToastToShowEvent.observe(this) {
             it.consume { pair ->
                 val message = pair.first
@@ -140,18 +101,6 @@ class MainActivity : AppCompatActivity() {
                 showGreenToast(message, icon)
             }
         }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        if (requestCode == CONTACTS_PERMISSION_REQUEST && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            loadContacts()
-        }
-
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     @SuppressLint("RtlHardcoded")

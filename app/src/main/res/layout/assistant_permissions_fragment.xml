@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <import type="android.text.InputType" />
+        <variable
+            name="backClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="grantReadContactsClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="grantPostNotificationsClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="grantRecordAudioClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="grantAccessCameraClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="skipClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.assistant.viewmodel.PermissionsViewModel" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:background="@color/white">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:onClick="@{backClickListener}"
+                android:id="@+id/back"
+                android:layout_width="@dimen/top_bar_height"
+                android:layout_height="@dimen/top_bar_height"
+                android:padding="15dp"
+                android:src="@drawable/caret_left"
+                app:tint="@color/gray_main2_500"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <ImageView
+                android:id="@+id/header"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginTop="19dp"
+                android:src="@drawable/header"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/back"
+                app:layout_constraintBottom_toBottomOf="@id/title"/>
+    
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/assistant_page_title_style"
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="100dp"
+                android:paddingBottom="27dp"
+                android:text="@string/assistant_permissions_title"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:id="@+id/subtitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/assistant_permissions_subtitle"
+                android:gravity="center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title" />
+
+            <com.google.android.material.materialswitch.MaterialSwitch
+                style="@style/material_switch_style"
+                android:id="@+id/read_contacts_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="16dp"
+                android:checked="@{viewModel.readContacts}"
+                android:enabled="@{!viewModel.readContacts}"
+                android:onClick="@{grantReadContactsClickListener}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/subtitle" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/settings_title_style"
+                android:id="@+id/read_contacts_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/assistant_permissions_read_contacts_title"
+                android:maxLines="1"
+                android:ellipsize="end"
+                app:layout_constraintTop_toTopOf="@id/read_contacts_switch"
+                app:layout_constraintBottom_toTopOf="@id/read_contacts_subtitle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/read_contacts_switch"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/settings_subtitle_style"
+                android:id="@+id/read_contacts_subtitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/assistant_permissions_read_contacts_message"
+                app:layout_constraintTop_toBottomOf="@id/read_contacts_title"
+                app:layout_constraintBottom_toBottomOf="@id/read_contacts_switch"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/read_contacts_switch"/>
+
+            <com.google.android.material.materialswitch.MaterialSwitch
+                style="@style/material_switch_style"
+                android:id="@+id/post_notifications_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="16dp"
+                android:checked="@{viewModel.postNotifications}"
+                android:enabled="@{!viewModel.postNotifications}"
+                android:onClick="@{grantPostNotificationsClickListener}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/read_contacts_switch" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/settings_title_style"
+                android:id="@+id/post_notifications_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/assistant_permissions_post_notifications_title"
+                android:maxLines="1"
+                android:ellipsize="end"
+                app:layout_constraintTop_toTopOf="@id/post_notifications_switch"
+                app:layout_constraintBottom_toTopOf="@id/post_notifications_subtitle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/post_notifications_switch"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/settings_subtitle_style"
+                android:id="@+id/post_notifications_subtitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/assistant_permissions_post_notifications_message"
+                app:layout_constraintTop_toBottomOf="@id/post_notifications_title"
+                app:layout_constraintBottom_toBottomOf="@id/post_notifications_switch"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/post_notifications_switch"/>
+
+            <com.google.android.material.materialswitch.MaterialSwitch
+                style="@style/material_switch_style"
+                android:id="@+id/record_audio_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="16dp"
+                android:checked="@{viewModel.recordAudio}"
+                android:enabled="@{!viewModel.recordAudio}"
+                android:onClick="@{grantRecordAudioClickListener}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/post_notifications_switch" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/settings_title_style"
+                android:id="@+id/record_audio_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/assistant_permissions_record_audio_title"
+                android:maxLines="1"
+                android:ellipsize="end"
+                app:layout_constraintTop_toTopOf="@id/record_audio_switch"
+                app:layout_constraintBottom_toTopOf="@id/record_audio_subtitle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/record_audio_switch"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/settings_subtitle_style"
+                android:id="@+id/record_audio_subtitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/assistant_permissions_record_audio_message"
+                app:layout_constraintTop_toBottomOf="@id/record_audio_title"
+                app:layout_constraintBottom_toBottomOf="@id/record_audio_switch"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/record_audio_switch"/>
+
+            <com.google.android.material.materialswitch.MaterialSwitch
+                style="@style/material_switch_style"
+                android:id="@+id/access_camera_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="16dp"
+                android:checked="@{viewModel.accessCamera}"
+                android:enabled="@{!viewModel.accessCamera}"
+                android:onClick="@{grantAccessCameraClickListener}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/record_audio_switch" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/settings_title_style"
+                android:id="@+id/access_camera_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/assistant_permissions_access_camera_title"
+                android:maxLines="1"
+                android:ellipsize="end"
+                app:layout_constraintTop_toTopOf="@id/access_camera_switch"
+                app:layout_constraintBottom_toTopOf="@id/access_camera_subtitle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/access_camera_switch"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/settings_subtitle_style"
+                android:id="@+id/access_camera_subtitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/assistant_permissions_access_camera_message"
+                app:layout_constraintTop_toBottomOf="@id/access_camera_title"
+                app:layout_constraintBottom_toBottomOf="@id/access_camera_switch"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/access_camera_switch"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:onClick="@{skipClickListener}"
+                style="@style/default_text_style_600"
+                android:id="@+id/skip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:paddingTop="13dp"
+                android:paddingBottom="13dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="@string/welcome_carousel_skip"
+                android:textSize="13sp"
+                android:textColor="@color/gray_main2_500"
+                app:layout_constraintVertical_bias="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/access_camera_switch"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+</layout>

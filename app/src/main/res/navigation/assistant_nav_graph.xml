@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/assistant_nav_graph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/permissionsFragment">
 
     <fragment
         android:id="@+id/loginFragment"
@@ -131,5 +131,20 @@
         android:name="org.linphone.ui.assistant.fragment.ProfileModeFragment"
         android:label="ProfileModeFragment"
         tools:layout="@layout/assistant_secure_mode_fragment" />
+
+    <fragment
+        android:id="@+id/permissionsFragment"
+        android:name="org.linphone.ui.assistant.fragment.PermissionsFragment"
+        android:label="PermissionsFragment"
+        tools:layout="@layout/assistant_permissions_fragment">
+        <action
+            android:id="@+id/action_permissionsFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:launchSingleTop="true" />
+    </fragment>
 
 </navigation>
