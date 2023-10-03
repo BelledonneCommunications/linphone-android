@@ -284,13 +284,16 @@
                         android:layout_height="50dp"
                         android:layout_marginEnd="16dp"
                         android:layout_marginStart="16dp"
+                        android:layout_marginBottom="@dimen/screen_bottom_margin"
                         android:background="@drawable/edit_text_background"
                         android:paddingStart="20dp"
                         android:paddingEnd="20dp"
                         android:text="@={viewModel.expire}"
                         android:inputType="number"
+                        app:layout_constraintVertical_bias="0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/expire_title"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
