@@ -39,6 +39,7 @@ import org.linphone.databinding.DialogConfirmZrtpSasBinding
 import org.linphone.databinding.DialogContactConfirmTrustCallBinding
 import org.linphone.databinding.DialogContactTrustProcessBinding
 import org.linphone.databinding.DialogDeleteContactBinding
+import org.linphone.databinding.DialogManageAccountInternationalPrefixHelpBinding
 import org.linphone.databinding.DialogPickNumberOrAddressBinding
 import org.linphone.databinding.DialogRemoveAccountBinding
 import org.linphone.databinding.DialogRemoveAllCallLogsBinding
@@ -84,6 +85,23 @@ class DialogUtils {
             binding.viewModel = viewModel
 
             return getDialog(context, binding)
+        }
+
+        @UiThread
+        fun getAccountInternationalPrefixHelpDialog(context: Context): Dialog {
+            val binding: DialogManageAccountInternationalPrefixHelpBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.dialog_manage_account_international_prefix_help,
+                null,
+                false
+            )
+            val dialog = getDialog(context, binding)
+
+            binding.setDismissClickListener {
+                dialog.dismiss()
+            }
+
+            return dialog
         }
 
         @UiThread

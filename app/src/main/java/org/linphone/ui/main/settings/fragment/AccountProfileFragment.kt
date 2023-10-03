@@ -103,7 +103,7 @@ class AccountProfileFragment : GenericFragment() {
         }
 
         binding.setPrefixTooltipClickListener {
-            // TODO
+            showHelpPopup()
         }
 
         binding.setChangeModeClickListener {
@@ -194,5 +194,11 @@ class AccountProfileFragment : GenericFragment() {
         binding.prefix.adapter = adapter
         binding.prefix.onItemSelectedListener = dropdownListener
         binding.prefix.setSelection(dialPlanIndex)
+    }
+
+    @UiThread
+    private fun showHelpPopup() {
+        val dialog = DialogUtils.getAccountInternationalPrefixHelpDialog(requireActivity())
+        dialog.show()
     }
 }

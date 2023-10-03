@@ -96,6 +96,8 @@
     <string name="dialog_remove_account_message">You can reconnect at any time by clicking “Add an account”. However, all data on this phone will be deleted.</string>
     <string name="dialog_update_available_title">Update available</string>
     <string name="dialog_update_available_message">A new version %s is available. Do you want to update?</string>
+    <string name="dialog_account_international_prefix_help_title">Why do we need it?</string>
+    <string name="dialog_account_international_prefix_help_message">Blah blah blah</string>
 
     <string name="toast_assistant_qr_code_invalid">Invalid QR code!</string>
     <string name="toast_sip_address_copied_to_clipboard">SIP address copied into clipboard</string>
