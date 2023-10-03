@@ -21,7 +21,6 @@ package org.linphone.ui.main.contacts.viewmodel
 
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -57,8 +56,6 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
 
     val jobTitle = MutableLiveData<String>()
 
-    val saveButtonEnabled = MediatorLiveData<Boolean>()
-
     val saveChangesEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
     }
@@ -68,16 +65,6 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
     val addNewNumberOrAddressFieldEvent = MutableLiveData<Event<NewOrEditNumberOrAddressModel>>()
 
     val removeNewNumberOrAddressFieldEvent = MutableLiveData<Event<NewOrEditNumberOrAddressModel>>()
-
-    init {
-        saveButtonEnabled.value = isSaveButtonEnabled()
-        saveButtonEnabled.addSource(firstName) {
-            saveButtonEnabled.value = isSaveButtonEnabled()
-        }
-        saveButtonEnabled.addSource(lastName) {
-            saveButtonEnabled.value = isSaveButtonEnabled()
-        }
-    }
 
     @UiThread
     fun findFriendByRefKey(refKey: String?) {
@@ -129,6 +116,22 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
 
     @UiThread
     fun saveChanges() {
+        var check = true
+        if (firstName.value.orEmpty().isEmpty()) {
+            Log.e("$TAG Firstname is empty")
+            check = false
+        }
+        if (sipAddresses.isEmpty() && phoneNumbers.isEmpty()) {
+            Log.e("$TAG No SIP address nor phone number")
+            check = false
+        }
+
+        if (!check) {
+            Log.e("$TAG At least a mandatory field wasn't filled, aborting save")
+            return
+        }
+        // TODO FIXME: notify user
+
         coreContext.postOnCoreThread { core ->
             var status = Status.OK
 
@@ -207,7 +210,6 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
                     core.addFriendList(fl)
                 }
                 status = fl.addFriend(friend)
-                Log.e("UPDATE SUB")
                 fl.updateSubscriptions()
             } else {
                 friend.done()
@@ -264,11 +266,6 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
-    private fun isSaveButtonEnabled(): Boolean {
-        return firstName.value.orEmpty().isNotEmpty() || lastName.value.orEmpty().isNotEmpty()
-    }
-
-    @UiThread
     private fun reset() {
         isEdit.value = false
         picturePath.value = ""
@@ -278,6 +275,5 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
         phoneNumbers.clear()
         company.value = ""
         jobTitle.value = ""
-        saveButtonEnabled.value = false
     }
 }
