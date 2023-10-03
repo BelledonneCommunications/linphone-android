@@ -74,10 +74,6 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     val isRecording = MutableLiveData<Boolean>()
 
-    val isRemoteRecording = MutableLiveData<Boolean>()
-
-    val remoteRecordingLabel = MutableLiveData<String>()
-
     val canBePaused = MutableLiveData<Boolean>()
 
     val isPaused = MutableLiveData<Boolean>()
@@ -100,6 +96,10 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     val incomingCallTitle: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
+    }
+
+    val isRemoteRecordingEvent: MutableLiveData<Event<Pair<Boolean, String>>> by lazy {
+        MutableLiveData<Event<Pair<Boolean, String>>>()
     }
 
     val goToInitiateBlindTransferEvent: MutableLiveData<Event<Boolean>> by lazy {
@@ -171,15 +171,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
         override fun onRemoteRecording(call: Call, recording: Boolean) {
             Log.i("$TAG Remote recording changed: $recording")
-            isRemoteRecording.postValue(recording)
-            if (recording) {
-                remoteRecordingLabel.postValue(
-                    AppUtils.getFormattedString(
-                        R.string.call_remote_is_recording,
-                        displayedName.value.orEmpty()
-                    )
-                )
-            }
+            isRemoteRecordingEvent.postValue(Event(Pair(recording, displayedName.value.orEmpty())))
         }
 
         @WorkerThread
@@ -747,12 +739,8 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         }
 
         isRecording.postValue(call.params.isRecording)
-        isRemoteRecording.postValue(call.remoteParams?.isRecording)
-        remoteRecordingLabel.postValue(
-            AppUtils.getFormattedString(
-                R.string.call_remote_is_recording,
-                displayedName.value.orEmpty()
-            )
+        isRemoteRecordingEvent.postValue(
+            Event(Pair(call.remoteParams?.isRecording ?: false, displayedName.value.orEmpty()))
         )
 
         callDuration.postValue(call.duration)

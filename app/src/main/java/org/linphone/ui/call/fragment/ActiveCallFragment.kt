@@ -231,6 +231,27 @@ class ActiveCallFragment : GenericCallFragment() {
             }
         }
 
+        callViewModel.isRemoteRecordingEvent.observe(viewLifecycleOwner) {
+            it.consume { pair ->
+                val isRemoteRecording = pair.first
+                val displayName = pair.second
+                val toastTag = "REMOTE_RECORDING"
+
+                if (isRemoteRecording) {
+                    Log.i("$TAG Showing [$displayName] is recording toast")
+                    val message = getString(R.string.call_remote_is_recording, displayName)
+                    (requireActivity() as CallActivity).showPersistentRedToast(
+                        message,
+                        R.drawable.record_fill,
+                        toastTag
+                    )
+                } else {
+                    Log.i("$TAG Removing [$displayName] is recording toast")
+                    (requireActivity() as CallActivity).removePersistentRedToast(toastTag)
+                }
+            }
+        }
+
         actionsBottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
