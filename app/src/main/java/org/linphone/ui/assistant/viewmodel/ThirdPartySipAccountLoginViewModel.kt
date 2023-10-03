@@ -24,6 +24,7 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -42,10 +43,6 @@ import org.linphone.utils.Event
 class ThirdPartySipAccountLoginViewModel @UiThread constructor() : ViewModel() {
     companion object {
         private const val TAG = "[Third Party SIP Account Login ViewModel]"
-
-        private const val UDP = "UDP"
-        private const val TCP = "TCP"
-        private const val TLS = "TLS"
     }
 
     val username = MutableLiveData<String>()
@@ -134,9 +131,9 @@ class ThirdPartySipAccountLoginViewModel @UiThread constructor() : ViewModel() {
 
         // TODO: handle formatting errors ?
 
-        availableTransports.add(UDP)
-        availableTransports.add(TCP)
-        availableTransports.add(TLS)
+        availableTransports.add(TransportType.Udp.name.uppercase(Locale.getDefault()))
+        availableTransports.add(TransportType.Tcp.name.uppercase(Locale.getDefault()))
+        availableTransports.add(TransportType.Tls.name.uppercase(Locale.getDefault()))
     }
 
     @UiThread
@@ -167,8 +164,8 @@ class ThirdPartySipAccountLoginViewModel @UiThread constructor() : ViewModel() {
 
             val serverAddress = Factory.instance().createAddress("sip:$domainValue")
             serverAddress?.transport = when (transport.value.orEmpty().trim()) {
-                TCP -> TransportType.Tcp
-                TLS -> TransportType.Tls
+                TransportType.Tcp.name.uppercase(Locale.getDefault()) -> TransportType.Tcp
+                TransportType.Tls.name.uppercase(Locale.getDefault()) -> TransportType.Tls
                 else -> TransportType.Udp
             }
             accountParams.serverAddress = serverAddress
