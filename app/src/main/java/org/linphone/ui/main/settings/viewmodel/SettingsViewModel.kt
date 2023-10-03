@@ -339,7 +339,7 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
                 val name = ringtone.name
                     .substringBefore(".")
                     .replace("_", " ")
-                    .capitalize(Locale.getDefault())
+                    .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
                 availableRingtonesNames.add(name)
                 availableRingtonesPaths.add(ringtone.absolutePath)
             }

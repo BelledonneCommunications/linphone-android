@@ -19,13 +19,10 @@
  */
 package org.linphone.utils
 
-import android.Manifest
 import android.app.Activity
-import android.bluetooth.BluetoothAdapter
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Build
 import android.provider.Settings
 import android.util.DisplayMetrics
@@ -40,7 +37,6 @@ import androidx.annotation.DimenRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.MainThread
 import androidx.annotation.StringRes
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.emoji2.text.EmojiCompat
@@ -162,16 +158,6 @@ class AppUtils {
                 context.contentResolver,
                 Settings.Global.DEVICE_NAME
             )
-            if (name == null) {
-                if (ActivityCompat.checkSelfPermission(
-                        context,
-                        Manifest.permission.BLUETOOTH_CONNECT
-                    ) == PackageManager.PERMISSION_GRANTED
-                ) {
-                    val adapter = BluetoothAdapter.getDefaultAdapter()
-                    name = adapter?.name
-                }
-            }
             if (name == null) {
                 name = Settings.Secure.getString(
                     context.contentResolver,
