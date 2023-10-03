@@ -8,7 +8,7 @@
         android:id="@+id/header"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:src="@drawable/header"
+        android:src="@drawable/mountains"
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
