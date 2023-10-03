@@ -31,6 +31,7 @@
     <color name="red_danger_200">#F5CCBE</color>
     <color name="red_danger_500">#DD5F5F</color>
     <color name="red_danger_700">#9E3548</color>
+    <color name="red_danger_900">#723333</color>
 
     <color name="green_success_500">#4FAE80</color>
     <color name="green_success_700">#377D71</color>
