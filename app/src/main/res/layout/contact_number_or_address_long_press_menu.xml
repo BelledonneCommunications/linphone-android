@@ -47,7 +47,7 @@
             android:text="@string/menu_invite"
             android:background="@drawable/menu_item_background"
             android:layout_marginBottom="1dp"
-            android:drawableStart="@drawable/qr_code"
+            android:drawableStart="@drawable/envelope_simple_open"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
