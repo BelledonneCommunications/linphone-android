@@ -94,6 +94,10 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     val halfOpenedFolded = MutableLiveData<Boolean>()
 
+    val isZrtpPq = MutableLiveData<Boolean>()
+
+    val isMediaEncrypted = MutableLiveData<Boolean>()
+
     val incomingCallTitle: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
@@ -636,18 +640,35 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         }
     }
 
+    @UiThread
+    fun showZrtpSasDialogIfPossible() {
+        coreContext.postOnCoreThread {
+            if (currentCall.currentParams.mediaEncryption == MediaEncryption.ZRTP) {
+                val authToken = currentCall.authenticationToken
+                val isDeviceTrusted = currentCall.authenticationTokenVerified && authToken != null
+                Log.i(
+                    "$TAG Current call media encryption is ZRTP, auth token is ${if (isDeviceTrusted) "trusted" else "not trusted yet"}"
+                )
+                if (!authToken.isNullOrEmpty()) {
+                    showZrtpSasDialog(authToken)
+                }
+            }
+        }
+    }
+
     @WorkerThread
     private fun showZrtpSasDialog(authToken: String) {
+        val upperCaseAuthToken = authToken.uppercase(Locale.getDefault())
         val toRead: String
         val toListen: String
         when (currentCall.dir) {
             Call.Dir.Incoming -> {
-                toRead = authToken.substring(0, 2)
-                toListen = authToken.substring(2)
+                toRead = upperCaseAuthToken.substring(0, 2)
+                toListen = upperCaseAuthToken.substring(2)
             }
             else -> {
-                toRead = authToken.substring(2)
-                toListen = authToken.substring(0, 2)
+                toRead = upperCaseAuthToken.substring(2)
+                toListen = upperCaseAuthToken.substring(0, 2)
             }
         }
         showZrtpSasDialogEvent.postValue(Event(Pair(toRead, toListen)))
@@ -666,16 +687,24 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                 val securityLevel = if (isDeviceTrusted) SecurityLevel.Encrypted else SecurityLevel.Safe
                 contact.value?.trust?.postValue(securityLevel)
 
-                if (!isDeviceTrusted && authToken.orEmpty().isNotEmpty()) {
+                isMediaEncrypted.postValue(true)
+                // When Post Quantum is available, ZRTP is Post Quantum
+                isZrtpPq.postValue(coreContext.core.postQuantumAvailable)
+
+                if (!isDeviceTrusted && !authToken.isNullOrEmpty()) {
                     Log.i("$TAG Showing ZRTP SAS confirmation dialog")
-                    showZrtpSasDialog(authToken!!.uppercase(Locale.getDefault()))
+                    showZrtpSasDialog(authToken)
                 }
 
                 return isDeviceTrusted
             }
             MediaEncryption.SRTP, MediaEncryption.DTLS -> {
+                isMediaEncrypted.postValue(true)
+                isZrtpPq.postValue(false)
             }
             else -> {
+                isMediaEncrypted.postValue(false)
+                isZrtpPq.postValue(false)
             }
         }
         return false

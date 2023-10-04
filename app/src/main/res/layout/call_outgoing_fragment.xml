@@ -40,6 +40,17 @@
             app:layout_constraintBottom_toTopOf="@id/background"/>
 
         <ImageView
+            android:id="@+id/media_encryption"
+            android:layout_width="@dimen/call_top_bar_info_height"
+            android:layout_height="@dimen/call_top_bar_info_height"
+            android:padding="10dp"
+            android:src="@{viewModel.isZrtpPq ? @drawable/media_encryption_zrtp_pq : @drawable/media_encryption_srtp, default=@drawable/media_encryption_zrtp_pq}"
+            android:visibility="@{viewModel.isMediaEncrypted ? View.VISIBLE : View.GONE}"
+            app:layout_constraintTop_toTopOf="@id/call_direction_label"
+            app:layout_constraintBottom_toBottomOf="@id/call_direction_label"
+            app:layout_constraintEnd_toStartOf="@id/switch_camera" />
+
+        <ImageView
             android:onClick="@{() -> viewModel.switchCamera()}"
             android:id="@+id/switch_camera"
             android:layout_width="@dimen/icon_size"

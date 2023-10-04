@@ -60,6 +60,17 @@
             app:layout_constraintTop_toTopOf="@id/call_direction_label"/>
 
         <ImageView
+            android:id="@+id/media_encryption"
+            android:layout_width="@dimen/call_top_bar_info_height"
+            android:layout_height="@dimen/call_top_bar_info_height"
+            android:padding="10dp"
+            android:src="@{viewModel.isZrtpPq ? @drawable/media_encryption_zrtp_pq : @drawable/media_encryption_srtp, default=@drawable/media_encryption_zrtp_pq}"
+            android:visibility="@{viewModel.isMediaEncrypted ? View.VISIBLE : View.GONE}"
+            app:layout_constraintTop_toTopOf="@id/call_direction_label"
+            app:layout_constraintBottom_toBottomOf="@id/call_direction_label"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageView
             android:id="@+id/background"
             android:src="@drawable/shape_round_in_call_gray_background"
             android:layout_width="0dp"
