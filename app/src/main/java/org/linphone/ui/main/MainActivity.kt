@@ -29,6 +29,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
+import androidx.core.view.children
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -43,6 +44,7 @@ import org.linphone.R
 import org.linphone.databinding.MainActivityBinding
 import org.linphone.ui.main.viewmodel.MainViewModel
 import org.linphone.utils.AppUtils
+import org.linphone.utils.slideInToastFromTop
 import org.linphone.utils.slideInToastFromTopForDuration
 
 @UiThread
@@ -97,6 +99,21 @@ class MainActivity : AppCompatActivity() {
                 coreContext.showCallActivity()
             }
         }
+
+        viewModel.defaultAccountRegistrationErrorEvent.observe(this) {
+            it.consume { error ->
+                val tag = "DEFAULT_ACCOUNT_REGISTRATION_ERROR"
+                if (error) {
+                    // First remove any already existing connection error toat
+                    removePersistentRedToast(tag)
+
+                    val message = getString(R.string.toast_default_account_connection_state_error)
+                    showPersistentRedToast(message, R.drawable.warning_circle, tag)
+                } else {
+                    removePersistentRedToast(tag)
+                }
+            }
+        }
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -149,6 +166,30 @@ class MainActivity : AppCompatActivity() {
             binding.toastsArea as ViewGroup,
             lifecycleScope
         )
+    }
+
+    private fun showPersistentRedToast(
+        message: String,
+        @DrawableRes icon: Int,
+        tag: String,
+        doNotTint: Boolean = false
+    ) {
+        val redToast = AppUtils.getRedToast(this, binding.toastsArea, message, icon, doNotTint)
+        redToast.root.tag = tag
+        binding.toastsArea.addView(redToast.root)
+
+        redToast.root.slideInToastFromTop(
+            binding.toastsArea as ViewGroup,
+            true
+        )
+    }
+
+    fun removePersistentRedToast(tag: String) {
+        for (child in binding.toastsArea.children) {
+            if (child.tag == tag) {
+                binding.toastsArea.removeView(child)
+            }
+        }
     }
 
     private fun loadContacts() {

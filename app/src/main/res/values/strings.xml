@@ -108,6 +108,7 @@
     <string name="toast_alert_low_cellular_signal">Low cellular signal!</string>
     <string name="toast_alert_low_cellular_signal_cleared">Cellular signal is no longer low</string>
     <string name="toast_call_can_be_trusted">This call can be trusted</string>
+    <string name="toast_default_account_connection_state_error">Connection error!</string>
 
     <string name="assistant_account_login">Login</string>
     <string name="assistant_scan_qr_code">Scan QR code</string>

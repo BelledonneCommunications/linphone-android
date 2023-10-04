@@ -25,9 +25,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.core.Account
 import org.linphone.core.Call
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
+import org.linphone.core.RegistrationState
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
@@ -44,6 +46,10 @@ class MainViewModel @UiThread constructor() : ViewModel() {
 
     val callsStatus = MutableLiveData<String>()
 
+    val defaultAccountRegistrationErrorEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     val changeSystemTopBarColorToInCallEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -51,6 +57,8 @@ class MainViewModel @UiThread constructor() : ViewModel() {
     val goBackToCallEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
+
+    var defaultAccountRegistrationFailed = false
 
     private val coreListener = object : CoreListenerStub() {
         @WorkerThread
@@ -71,9 +79,41 @@ class MainViewModel @UiThread constructor() : ViewModel() {
             }
             atLastOneCall.postValue(core.callsNb > 0)
         }
+
+        @WorkerThread
+        override fun onAccountRegistrationStateChanged(
+            core: Core,
+            account: Account,
+            state: RegistrationState?,
+            message: String
+        ) {
+            when (state) {
+                RegistrationState.Failed -> {
+                    if (account == core.defaultAccount) {
+                        Log.e("$TAG Default account registration failed!")
+                        defaultAccountRegistrationFailed = true
+                        defaultAccountRegistrationErrorEvent.postValue(Event(true))
+                    } else {
+                        // TODO: show red top bar for non-default account registration failure
+                    }
+                }
+                RegistrationState.Ok -> {
+                    if (account == core.defaultAccount && defaultAccountRegistrationFailed) {
+                        Log.i("$TAG Default account is now registered")
+                        defaultAccountRegistrationFailed = false
+                        defaultAccountRegistrationErrorEvent.postValue(Event(false))
+                    } else {
+                        // TODO: hide red top bar for non-default account registration failure
+                    }
+                }
+                else -> {}
+            }
+        }
     }
 
     init {
+        defaultAccountRegistrationFailed = false
+
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
 
