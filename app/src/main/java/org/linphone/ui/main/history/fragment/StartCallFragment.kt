@@ -158,7 +158,7 @@ class StartCallFragment : GenericFragment() {
             it.consume { show ->
                 if (show) {
                     // To automatically open keyboard
-                    binding.searchBar.showKeyboard(requireActivity().window)
+                    binding.searchBar.showKeyboard()
                 } else {
                     binding.searchBar.requestFocus()
                     binding.searchBar.hideKeyboard()

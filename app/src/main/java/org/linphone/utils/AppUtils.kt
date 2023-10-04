@@ -37,7 +37,9 @@ import androidx.annotation.DimenRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.MainThread
 import androidx.annotation.StringRes
+import androidx.annotation.UiThread
 import androidx.core.content.ContextCompat
+import androidx.core.view.SoftwareKeyboardControllerCompat
 import androidx.databinding.DataBindingUtil
 import androidx.emoji2.text.EmojiCompat
 import java.util.Locale
@@ -45,6 +47,24 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ToastBinding
+
+@UiThread
+fun View.showKeyboard() {
+    this.requestFocus()
+    /*val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)*/
+    // WindowCompat.getInsetsController(window, this).show(WindowInsetsCompat.Type.ime())*/
+    val compat = SoftwareKeyboardControllerCompat(this)
+    compat.show()
+}
+
+@UiThread
+fun View.hideKeyboard() {
+    /*val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.hideSoftInputFromWindow(this.windowToken, 0)*/
+    val compat = SoftwareKeyboardControllerCompat(this)
+    compat.hide()
+}
 
 class AppUtils {
     companion object {

@@ -201,7 +201,7 @@ class HistoryListFragment : AbstractTopBarFragment() {
             it.consume { show ->
                 if (show) {
                     // To automatically open keyboard
-                    binding.topBar.search.showKeyboard(requireActivity().window)
+                    binding.topBar.search.showKeyboard()
                 } else {
                     binding.topBar.search.hideKeyboard()
                 }

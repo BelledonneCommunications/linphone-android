@@ -26,9 +26,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.annotation.ColorInt
@@ -38,7 +36,6 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnLayout
 import androidx.databinding.BindingAdapter
@@ -94,20 +91,6 @@ fun <T> setEntries(
             viewGroup.addView(binding.root)
         }
     }
-}
-
-@UiThread
-fun View.showKeyboard(window: Window) {
-    this.requestFocus()
-    /*val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    imm.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)*/
-    WindowCompat.getInsetsController(window, this).show(WindowInsetsCompat.Type.ime())
-}
-
-@UiThread
-fun View.hideKeyboard() {
-    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    imm.hideSoftInputFromWindow(this.windowToken, 0)
 }
 
 @UiThread
