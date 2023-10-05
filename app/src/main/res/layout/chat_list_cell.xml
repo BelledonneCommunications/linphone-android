@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <import type="android.graphics.Typeface" />
+        <import type="org.linphone.core.ConsolidatedPresence" />
+        <import type="org.linphone.core.ChatRoom.SecurityLevel" />
+        <variable
+            name="model"
+            type="org.linphone.ui.main.chat.model.ConversationModel" />
+        <variable
+            name="onClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="onLongClickListener"
+            type="View.OnLongClickListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:onClick="@{onClickListener}"
+        android:onLongClickListener="@{onLongClickListener}"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/primary_cell_background">
+
+        <io.getstream.avatarview.AvatarView
+            android:id="@+id/avatar"
+            android:layout_width="@dimen/avatar_list_cell_size"
+            android:layout_height="@dimen/avatar_list_cell_size"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginStart="5dp"
+            android:adjustViewBounds="true"
+            android:background="@drawable/shape_circle_light_blue_background"
+            contactAvatar="@{model.avatarModel}"
+            app:avatarViewPlaceholder="@drawable/user_circle"
+            app:avatarViewInitialsBackgroundColor="@color/gray_main2_200"
+            app:avatarViewInitialsTextColor="@color/gray_main2_600"
+            app:avatarViewInitialsTextSize="16sp"
+            app:avatarViewInitialsTextStyle="bold"
+            app:avatarViewShape="circle"
+            app:avatarViewBorderWidth="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/presence_badge"
+            android:layout_width="@dimen/avatar_presence_badge_size"
+            android:layout_height="@dimen/avatar_presence_badge_size"
+            android:layout_marginEnd="@dimen/avatar_presence_badge_end_margin"
+            android:background="@drawable/led_background"
+            android:padding="@dimen/avatar_presence_badge_padding"
+            app:presenceIcon="@{model.avatarModel.presenceStatus}"
+            android:visibility="@{model.avatarModel.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE}"
+            app:layout_constraintEnd_toEndOf="@id/avatar"
+            app:layout_constraintBottom_toBottomOf="@id/avatar"/>
+
+        <ImageView
+            android:id="@+id/trust_badge"
+            android:layout_width="@dimen/avatar_presence_badge_size"
+            android:layout_height="@dimen/avatar_presence_badge_size"
+            android:src="@{model.avatarModel.trust == SecurityLevel.Encrypted ? @drawable/trusted : @drawable/not_trusted, default=@drawable/trusted}"
+            android:visibility="@{model.avatarModel.trust == SecurityLevel.Encrypted || model.avatarModel.trust == SecurityLevel.Unsafe ? View.VISIBLE : View.GONE}"
+            app:layout_constraintStart_toStartOf="@id/avatar"
+            app:layout_constraintBottom_toBottomOf="@id/avatar"/>
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/right_border"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="start"
+            app:constraint_referenced_ids="notifications_count, date_time" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="5dp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text="@{model.avatarModel.name, default=`John Doe`}"
+            android:textSize="14sp"
+            android:textColor="@color/gray_main2_800"
+            android:textStyle="@{model.unreadMessageCount > 0 ? Typeface.BOLD : Typeface.NORMAL}"
+            app:layout_constraintStart_toEndOf="@id/avatar"
+            app:layout_constraintEnd_toStartOf="@id/right_border"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/last_message_or_composing"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/last_message_or_composing"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="5dp"
+            android:gravity="center_vertical|start"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:text="@{model.isComposing ? model.composingLabel : model.lastMessage, default=`Hello there!`}"
+            android:textSize="14sp"
+            android:textColor="@color/gray_main2_400"
+            android:textStyle="@{model.unreadMessageCount > 0 ? Typeface.BOLD : Typeface.NORMAL}"
+            app:layout_constraintStart_toStartOf="@id/name"
+            app:layout_constraintEnd_toStartOf="@id/right_border"
+            app:layout_constraintTop_toBottomOf="@id/name"
+            app:layout_constraintBottom_toTopOf="@id/separator" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/notifications_count"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="32dp"
+            android:gravity="center"
+            android:background="@drawable/shape_red_round"
+            android:text="@{String.valueOf(model.unreadMessageCount), default=`1`}"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            android:visibility="@{model.unreadMessageCount > 0 ? View.VISIBLE : View.GONE}"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/name"
+            app:layout_constraintEnd_toStartOf="@id/date_time"/>
+
+        <ImageView
+            android:id="@+id/last_sent_message_status"
+            android:layout_width="@dimen/small_icon_size"
+            android:layout_height="@dimen/small_icon_size"
+            android:layout_marginEnd="10dp"
+            android:src="@{model.lastMessageIcon, default=@drawable/check}"
+            android:visibility="@{model.isLastMessageOutgoing ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/name"
+            app:layout_constraintBottom_toBottomOf="@id/name"
+            app:tint="@color/orange_main_500" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_300"
+            android:id="@+id/date_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:text="@{model.dateTime, default=`16:45`}"
+            android:textSize="12sp"
+            android:textColor="@color/gray_main2_500"
+            app:layout_constraintEnd_toStartOf="@id/last_sent_message_status"
+            app:layout_constraintTop_toTopOf="@id/last_sent_message_status"
+            app:layout_constraintBottom_toBottomOf="@id/last_sent_message_status" />
+
+        <ImageView
+            android:id="@+id/muted"
+            android:layout_width="@dimen/small_icon_size"
+            android:layout_height="@dimen/small_icon_size"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/bell_simple_slash"
+            android:visibility="@{model.isMuted ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/date_time"
+            app:layout_constraintBottom_toTopOf="@id/separator"
+            app:tint="@color/gray_main2_400" />
+
+        <ImageView
+            android:id="@+id/ephemeral"
+            android:layout_width="@dimen/small_icon_size"
+            android:layout_height="@dimen/small_icon_size"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/clock_countdown"
+            android:visibility="@{model.isEphemeral ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toStartOf="@id/muted"
+            app:layout_constraintTop_toBottomOf="@id/date_time"
+            app:layout_constraintBottom_toTopOf="@id/separator"
+            app:tint="@color/gray_main2_400" />
+
+        <View
+            android:id="@+id/separator"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginEnd="10dp"
+            android:background="@color/gray_main2_200"
+            app:layout_constraintStart_toStartOf="@id/name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

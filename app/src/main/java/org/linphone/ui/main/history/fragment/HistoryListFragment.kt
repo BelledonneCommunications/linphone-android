@@ -191,7 +191,7 @@ class HistoryListFragment : AbstractTopBarFragment() {
 
         // TopBarFragment related
 
-        setViewModelAndTitle(listViewModel, "Calls")
+        setViewModelAndTitle(listViewModel, getString(R.string.bottom_navigation_calls_label))
 
         listViewModel.searchFilter.observe(viewLifecycleOwner) { filter ->
             listViewModel.applyFilter(filter.trim())

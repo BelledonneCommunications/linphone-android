@@ -130,6 +130,18 @@ class ContactsFragment : GenericFragment() {
                 }
             }
         }
+
+        sharedViewModel.navigateToConversationsEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                if (findNavController().currentDestination?.id == R.id.contactsFragment) {
+                    // To prevent any previously seen contact to show up when navigating back to here later
+                    binding.contactsNavContainer.findNavController().popBackStack()
+
+                    val action = ContactsFragmentDirections.actionContactsFragmentToConversationsFragment()
+                    findNavController().navigate(action)
+                }
+            }
+        }
     }
 
     override fun onResume() {

@@ -17,6 +17,12 @@
             app:launchSingleTop="true"
             app:popUpTo="@id/contactsFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_contactsFragment_to_conversationsFragment"
+            app:destination="@id/conversationsFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/contactsFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -27,6 +33,12 @@
         <action
             android:id="@+id/action_historyFragment_to_contactsFragment"
             app:destination="@id/contactsFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/historyFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_historyFragment_to_conversationsFragment"
+            app:destination="@id/conversationsFragment"
             app:launchSingleTop="true"
             app:popUpTo="@id/historyFragment"
             app:popUpToInclusive="true" />
@@ -167,6 +179,24 @@
         <argument
             android:name="accountIdentity"
             app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/conversationsFragment"
+        android:name="org.linphone.ui.main.chat.fragment.ConversationsFragment"
+        android:label="ConversationsFragment"
+        tools:layout="@layout/chat_fragment" >
+        <action
+            android:id="@+id/action_conversationsFragment_to_historyFragment"
+            app:destination="@id/historyFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/conversationsFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_conversationsFragment_to_contactsFragment"
+            app:destination="@id/contactsFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/conversationsFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
 </navigation>

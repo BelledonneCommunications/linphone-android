@@ -488,7 +488,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             coreContext.contactsManager.findContactByAddress(address)
         val displayName = contact?.name ?: LinphoneUtils.getDisplayName(address)
 
-        val originalMessage = getTextDescribingMessage(message)
+        val originalMessage = LinphoneUtils.getTextDescribingMessage(message)
         val text = AppUtils.getString(R.string.notification_chat_message_reaction_received).format(
             displayName,
             reaction,
@@ -583,7 +583,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             coreContext.contactsManager.findContactByAddress(message.fromAddress)
         val displayName = contact?.name ?: LinphoneUtils.getDisplayName(message.fromAddress)
 
-        val text = getTextDescribingMessage(message)
+        val text = LinphoneUtils.getTextDescribingMessage(message)
         val notifiableMessage = NotifiableMessage(
             text,
             contact,
@@ -1001,30 +1001,6 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         channel.enableLights(false)
         channel.setShowBadge(false)
         notificationManager.createNotificationChannel(channel)
-    }
-
-    @WorkerThread
-    private fun getTextDescribingMessage(message: ChatMessage): String {
-        // If message contains text, then use that
-        var text = message.contents.find { content -> content.isText }?.utf8Text ?: ""
-
-        if (text.isEmpty()) {
-            val firstContent = message.contents.firstOrNull()
-            if (firstContent?.isIcalendar == true) {
-                text = "meeting invite" // TODO: use translated string
-            } else if (firstContent?.isVoiceRecording == true) {
-                text = "voice message" // TODO: use translated string
-            } else {
-                for (content in message.contents) {
-                    if (text.isNotEmpty()) {
-                        text += ", "
-                    }
-                    text += content.name
-                }
-            }
-        }
-
-        return text
     }
 
     class Notifiable(val notificationId: Int) {

@@ -145,7 +145,7 @@ class ContactsListFragment : AbstractTopBarFragment() {
 
         // TopBarFragment related
 
-        setViewModelAndTitle(listViewModel, "Contacts")
+        setViewModelAndTitle(listViewModel, getString(R.string.bottom_navigation_contacts_label))
 
         listViewModel.searchFilter.observe(viewLifecycleOwner) { filter ->
             listViewModel.applyFilter(filter.trim())

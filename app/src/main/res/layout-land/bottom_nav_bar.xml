@@ -79,7 +79,6 @@
             style="@style/bottom_nav_bar_label_style"
             android:id="@+id/conversations"
             android:visibility="@{viewModel.hideConversations ? View.GONE : View.VISIBLE}"
-            android:enabled="false"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:drawableTop="@drawable/chat_text"

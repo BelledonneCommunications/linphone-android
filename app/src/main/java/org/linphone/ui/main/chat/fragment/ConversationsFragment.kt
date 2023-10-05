@@ -17,48 +17,45 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.main.history.fragment
+package org.linphone.ui.main.chat.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
-import android.view.animation.AnimationUtils
-import androidx.annotation.UiThread
 import androidx.core.view.doOnPreDraw
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import org.linphone.R
 import org.linphone.core.tools.Log
-import org.linphone.databinding.HistoryFragmentBinding
+import org.linphone.databinding.ChatFragmentBinding
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.SlidingPaneBackPressedCallback
 
-@UiThread
-class HistoryFragment : GenericFragment() {
+class ConversationsFragment : GenericFragment() {
     companion object {
-        private const val TAG = "[Calls Fragment]"
+        private const val TAG = "[Conversations Fragment]"
     }
 
-    private lateinit var binding: HistoryFragmentBinding
+    private lateinit var binding: ChatFragmentBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = HistoryFragmentBinding.inflate(layoutInflater)
+        binding = ChatFragmentBinding.inflate(layoutInflater)
         return binding.root
     }
 
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
-        if (findNavController().currentDestination?.id == R.id.startCallFragment) {
+        /*if (findNavController().currentDestination?.id == R.id.newConversationFragment) {
             // Holds fragment in place while new contact fragment slides over it
             return AnimationUtils.loadAnimation(activity, R.anim.hold)
-        }
-        return AnimationUtils.loadAnimation(activity, R.anim.hold)
+        }*/
+        return super.onCreateAnimation(transit, enter, nextAnim)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -96,45 +93,25 @@ class HistoryFragment : GenericFragment() {
             }
         }
 
-        sharedViewModel.showStartCallEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                Log.i("$TAG Navigating to start call fragment")
-                findNavController().navigate(R.id.action_global_startCallFragment)
-            }
-        }
-
-        sharedViewModel.showCallLogEvent.observe(
-            viewLifecycleOwner
-        ) {
-            it.consume { callId ->
-                Log.i("$TAG Displaying call log with call ID [$callId]")
-                val navController = binding.historyNavContainer.findNavController()
-                val action = HistoryContactFragmentDirections.actionGlobalHistoryContactFragment(
-                    callId
-                )
-                navController.navigate(action)
-            }
-        }
-
         sharedViewModel.navigateToContactsEvent.observe(viewLifecycleOwner) {
             it.consume {
-                if (findNavController().currentDestination?.id == R.id.historyFragment) {
-                    // To prevent any previously seen call log to show up when navigating back to here later
-                    binding.historyNavContainer.findNavController().popBackStack()
+                if (findNavController().currentDestination?.id == R.id.conversationsFragment) {
+                    // To prevent any previously seen conversation to show up when navigating back to here later
+                    binding.chatNavContainer.findNavController().popBackStack()
 
-                    val action = HistoryFragmentDirections.actionHistoryFragmentToContactsFragment()
+                    val action = ConversationsFragmentDirections.actionConversationsFragmentToContactsFragment()
                     findNavController().navigate(action)
                 }
             }
         }
 
-        sharedViewModel.navigateToConversationsEvent.observe(viewLifecycleOwner) {
+        sharedViewModel.navigateToCallsEvent.observe(viewLifecycleOwner) {
             it.consume {
-                if (findNavController().currentDestination?.id == R.id.historyFragment) {
-                    // To prevent any previously seen call log to show up when navigating back to here later
-                    binding.historyNavContainer.findNavController().popBackStack()
+                if (findNavController().currentDestination?.id == R.id.conversationsFragment) {
+                    // To prevent any previously seen conversation to show up when navigating back to here later
+                    binding.chatNavContainer.findNavController().popBackStack()
 
-                    val action = HistoryFragmentDirections.actionHistoryFragmentToConversationsFragment()
+                    val action = ConversationsFragmentDirections.actionConversationsFragmentToHistoryFragment()
                     findNavController().navigate(action)
                 }
             }
@@ -143,6 +120,6 @@ class HistoryFragment : GenericFragment() {
 
     override fun onResume() {
         super.onResume()
-        sharedViewModel.currentlyDisplayedFragment.value = R.id.historyFragment
+        sharedViewModel.currentlyDisplayedFragment.value = R.id.conversationsFragment
     }
 }

@@ -10,6 +10,7 @@
     <dimen name="sliding_pane_left_fragment_with_nav_width">355dp</dimen>
     <dimen name="sliding_pane_right_fragment_width">300dp</dimen>
 
+    <dimen name="small_icon_size">14dp</dimen>
     <dimen name="icon_size">24dp</dimen>
     <dimen name="welcome_icon_size">100dp</dimen>
 

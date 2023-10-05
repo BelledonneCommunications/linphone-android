@@ -33,6 +33,7 @@ import org.linphone.core.Address
 import org.linphone.core.Call
 import org.linphone.core.Call.Dir
 import org.linphone.core.Call.Status
+import org.linphone.core.ChatMessage
 import org.linphone.core.ChatRoom
 import org.linphone.core.Core
 import org.linphone.core.tools.Log
@@ -238,6 +239,30 @@ class LinphoneUtils {
                     ""
                 }
             }
+        }
+
+        @WorkerThread
+        fun getTextDescribingMessage(message: ChatMessage): String {
+            // If message contains text, then use that
+            var text = message.contents.find { content -> content.isText }?.utf8Text ?: ""
+
+            if (text.isEmpty()) {
+                val firstContent = message.contents.firstOrNull()
+                if (firstContent?.isIcalendar == true) {
+                    text = "meeting invite" // TODO: use translated string
+                } else if (firstContent?.isVoiceRecording == true) {
+                    text = "voice message" // TODO: use translated string
+                } else {
+                    for (content in message.contents) {
+                        if (text.isNotEmpty()) {
+                            text += ", "
+                        }
+                        text += content.name
+                    }
+                }
+            }
+
+            return text
         }
     }
 }
