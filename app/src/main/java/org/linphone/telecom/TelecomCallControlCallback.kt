@@ -21,7 +21,7 @@ package org.linphone.telecom
 
 import android.telecom.DisconnectCause
 import androidx.core.telecom.CallAttributesCompat
-import androidx.core.telecom.CallControlCallback
+import androidx.core.telecom.CallControlResult
 import androidx.core.telecom.CallControlScope
 import androidx.core.telecom.CallEndpointCompat
 import kotlinx.coroutines.CoroutineScope
@@ -35,13 +35,12 @@ import org.linphone.core.Call
 import org.linphone.core.CallListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.utils.AudioRouteUtils
-import org.linphone.utils.LinphoneUtils
 
 class TelecomCallControlCallback constructor(
     private val call: Call,
     private val callControl: CallControlScope,
     private val scope: CoroutineScope
-) : CallControlCallback {
+) {
     companion object {
         private const val TAG = "[Telecom Call Control Callback]"
     }
@@ -184,17 +183,19 @@ class TelecomCallControlCallback constructor(
 
                 scope.launch {
                     Log.i("$TAG Requesting audio endpoint change with [${endpoint.name}]")
-                    var audioRouteUpdated = callControl.requestEndpointChange(endpoint)
+                    var result: CallControlResult = callControl.requestEndpointChange(endpoint)
                     var attempts = 1
-                    while (!audioRouteUpdated && attempts <= 10) {
+                    while (result is CallControlResult.Error && attempts <= 10) {
                         delay(100)
-                        Log.i("$TAG Requesting audio endpoint change with [${endpoint.name}]")
-                        audioRouteUpdated = callControl.requestEndpointChange(endpoint)
+                        Log.i(
+                            "$TAG Previous attempt failed [$result], requesting again audio endpoint change with [${endpoint.name}]"
+                        )
+                        result = callControl.requestEndpointChange(endpoint)
                         attempts += 1
                     }
 
-                    if (!audioRouteUpdated) {
-                        Log.e("$TAG Failed to change endpoint audio device!")
+                    if (result is CallControlResult.Error) {
+                        Log.e("$TAG Failed to change endpoint audio device, error [$result]")
                     } else {
                         Log.i("$TAG It took [$attempts] to change endpoint audio device...")
                     }
@@ -203,43 +204,5 @@ class TelecomCallControlCallback constructor(
                 Log.w("$TAG No matching audio endpoint found...")
             }
         }
-    }
-
-    override suspend fun onAnswer(callType: Int): Boolean {
-        Log.i("$TAG We're asked to answer the call with type [$callType]")
-        coreContext.postOnCoreThread {
-            if (LinphoneUtils.isCallIncoming(call.state)) {
-                Log.i("$TAG Answering call")
-                coreContext.answerCall(call) // TODO: use call type
-            }
-        }
-        return true
-    }
-
-    override suspend fun onDisconnect(disconnectCause: DisconnectCause): Boolean {
-        Log.i("$TAG We're asked to terminate the call with reason [$disconnectCause]")
-        coreContext.postOnCoreThread {
-            Log.i("$TAG Terminating call [${call.remoteAddress.asStringUriOnly()}]")
-            call.terminate() // TODO: use cause
-        }
-        return true
-    }
-
-    override suspend fun onSetActive(): Boolean {
-        Log.i("$TAG We're asked to resume the call")
-        coreContext.postOnCoreThread {
-            Log.i("$TAG Resuming call")
-            call.resume()
-        }
-        return true
-    }
-
-    override suspend fun onSetInactive(): Boolean {
-        Log.i("$TAG We're asked to pause the call")
-        coreContext.postOnCoreThread {
-            Log.i("$TAG Pausing call")
-            call.pause()
-        }
-        return true
     }
 }

@@ -79,7 +79,43 @@ class TelecomManager @WorkerThread constructor(context: Context) {
 
             scope.launch {
                 try {
-                    callsManager.addCall(callAttributes) {
+                    callsManager.addCall(
+                        callAttributes,
+                        { callType -> // onAnswer
+                            Log.i("$TAG We're asked to answer the call with type [$callType]")
+                            coreContext.postOnCoreThread {
+                                if (LinphoneUtils.isCallIncoming(call.state)) {
+                                    Log.i("$TAG Answering call")
+                                    coreContext.answerCall(call) // TODO: use call type
+                                }
+                            }
+                        },
+                        { disconnectCause -> // onDisconnect
+                            Log.i(
+                                "$TAG We're asked to terminate the call with reason [$disconnectCause]"
+                            )
+                            coreContext.postOnCoreThread {
+                                Log.i(
+                                    "$TAG Terminating call [${call.remoteAddress.asStringUriOnly()}]"
+                                )
+                                call.terminate() // TODO: use cause
+                            }
+                        },
+                        { // onSetActive
+                            Log.i("$TAG We're asked to resume the call")
+                            coreContext.postOnCoreThread {
+                                Log.i("$TAG Resuming call")
+                                call.resume()
+                            }
+                        },
+                        { // onSetInactive
+                            Log.i("$TAG We're asked to pause the call")
+                            coreContext.postOnCoreThread {
+                                Log.i("$TAG Pausing call")
+                                call.pause()
+                            }
+                        }
+                    ) {
                         val callbacks = TelecomCallControlCallback(call, this, scope)
 
                         coreContext.postOnCoreThread {
@@ -90,7 +126,6 @@ class TelecomManager @WorkerThread constructor(context: Context) {
                             }
                         }
 
-                        setCallback(callbacks)
                         // We must first call setCallback on callControlScope before using it
                         callbacks.onCallControlCallbackSet()
                     }
