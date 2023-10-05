@@ -153,6 +153,7 @@
     <string name="assistant_account_login_forbidden_error">Wrong username or password</string>
     <string name="assistant_account_login_error">Failed to login: error code is %i</string>
     <string name="assistant_permissions_title">Grant permissions</string>
+    <string name="assistant_permissions_grant_all_of_them">Grant all</string>
 
     <string name="assistant_permissions_subtitle">To be able to work properly, we need you to grand the application the following permissions.\n\nIf you don\'t, some features won\'t be available, but you can grant them later.</string>
     <string name="assistant_permissions_read_contacts_title">Read contacts</string>

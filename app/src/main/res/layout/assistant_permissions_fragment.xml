@@ -24,6 +24,9 @@
             name="skipClickListener"
             type="View.OnClickListener" />
         <variable
+            name="grantAllClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.assistant.viewmodel.PermissionsViewModel" />
     </data>
@@ -271,6 +274,26 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/access_camera_switch"
                 app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:onClick="@{grantAllClickListener}"
+                style="@style/primary_button_label_style"
+                android:id="@+id/continue_third_party_account_login"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="@dimen/screen_bottom_margin"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="@string/assistant_permissions_grant_all_of_them"
+                app:layout_constraintWidth_max="@dimen/button_max_width"
+                app:layout_constraintVertical_bias="1"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/skip"
+                app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

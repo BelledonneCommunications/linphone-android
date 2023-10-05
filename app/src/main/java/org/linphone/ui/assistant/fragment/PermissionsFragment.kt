@@ -126,6 +126,18 @@ class PermissionsFragment : Fragment() {
             goToLoginFragment()
         }
 
+        binding.setGrantAllClickListener {
+            Log.i("$TAG Requesting all permissions")
+            requestPermissionLauncher.launch(
+                arrayOf(
+                    Manifest.permission.READ_CONTACTS,
+                    Manifest.permission.POST_NOTIFICATIONS,
+                    Manifest.permission.RECORD_AUDIO,
+                    Manifest.permission.CAMERA
+                )
+            )
+        }
+
         if (ContextCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.MANAGE_OWN_CALLS
