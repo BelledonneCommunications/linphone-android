@@ -13,8 +13,32 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/green_success_500"
-        android:onClick="@{() -> viewModel.goBackToCall()}">
+        android:background="@{viewModel.atLeastOneCall ? @color/green_success_500 : @color/red_danger_500, default=@color/red_danger_500}"
+        android:onClick="@{() -> viewModel.onTopBarClicked()}">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_300"
+            android:id="@+id/error_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:gravity="center_vertical"
+            android:text="@string/connection_error_for_non_default_account"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:drawableStart="@drawable/bell_simple"
+            android:drawablePadding="10dp"
+            android:drawableTint="@color/white"
+            android:visibility="@{viewModel.atLeastOneCall ? View.GONE : View.VISIBLE}"
+            app:layout_constraintEnd_toStartOf="@id/close_notif"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_800"
@@ -26,12 +50,15 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:gravity="center_vertical"
-            android:text="@{viewModel.callsLabel, default=`John Doe`}"
+            android:text="@{viewModel.callLabel, default=`John Doe`}"
             android:textColor="@color/white"
             android:textSize="16sp"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:drawableStart="@drawable/phone"
             android:drawablePadding="10dp"
             android:drawableTint="@color/white"
+            android:visibility="@{viewModel.atLeastOneCall ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintEnd_toStartOf="@id/call_time"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -47,8 +74,22 @@
             android:text="@{viewModel.callsStatus, default=`Paused`}"
             android:textColor="@color/white"
             android:textSize="14sp"
+            android:visibility="@{viewModel.atLeastOneCall ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/call_display_name"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageView
+            android:id="@+id/close_notif"
+            android:onClick="@{() -> viewModel.closeTopBar()}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/x"
+            app:tint="@color/white"
+            android:visibility="@{viewModel.atLeastOneCall ? View.GONE : View.VISIBLE}"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 

@@ -38,11 +38,17 @@ import org.linphone.utils.LinphoneUtils
 class MainViewModel @UiThread constructor() : ViewModel() {
     companion object {
         private const val TAG = "[Main ViewModel]"
+
+        const val NONE = 0
+        const val ACCOUNT_REGISTRATION_FAILURE = 1
+        const val IN_CALL = 2
     }
 
-    val atLastOneCall = MutableLiveData<Boolean>()
+    val showTopBar = MutableLiveData<Boolean>()
 
-    val callsLabel = MutableLiveData<String>()
+    val atLeastOneCall = MutableLiveData<Boolean>()
+
+    val callLabel = MutableLiveData<String>()
 
     val callsStatus = MutableLiveData<String>()
 
@@ -50,8 +56,8 @@ class MainViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
-    val changeSystemTopBarColorToInCallEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+    val changeSystemTopBarColorEvent: MutableLiveData<Event<Int>> by lazy {
+        MutableLiveData<Event<Int>>()
     }
 
     val goBackToCallEvent: MutableLiveData<Event<Boolean>> by lazy {
@@ -64,7 +70,7 @@ class MainViewModel @UiThread constructor() : ViewModel() {
         @WorkerThread
         override fun onLastCallEnded(core: Core) {
             Log.i("$TAG Last call ended, asking fragment to change back status bar color")
-            changeSystemTopBarColorToInCallEvent.postValue(Event(false))
+            changeSystemTopBarColorEvent.postValue(Event(NONE))
         }
 
         @WorkerThread
@@ -77,7 +83,9 @@ class MainViewModel @UiThread constructor() : ViewModel() {
             if (core.callsNb > 0) {
                 updateCurrentCallInfo()
             }
-            atLastOneCall.postValue(core.callsNb > 0)
+            val calls = core.callsNb > 0
+            showTopBar.postValue(calls)
+            atLeastOneCall.postValue(calls)
         }
 
         @WorkerThread
@@ -94,7 +102,16 @@ class MainViewModel @UiThread constructor() : ViewModel() {
                         defaultAccountRegistrationFailed = true
                         defaultAccountRegistrationErrorEvent.postValue(Event(true))
                     } else {
-                        // TODO: show red top bar for non-default account registration failure
+                        Log.e("$TAG Non-default account registration failed!")
+                        // Do not show connection error top bar if there is a call
+                        if (atLeastOneCall.value == false) {
+                            changeSystemTopBarColorEvent.postValue(
+                                Event(
+                                    ACCOUNT_REGISTRATION_FAILURE
+                                )
+                            )
+                            showTopBar.postValue(true)
+                        }
                     }
                 }
                 RegistrationState.Ok -> {
@@ -103,7 +120,17 @@ class MainViewModel @UiThread constructor() : ViewModel() {
                         defaultAccountRegistrationFailed = false
                         defaultAccountRegistrationErrorEvent.postValue(Event(false))
                     } else {
-                        // TODO: hide red top bar for non-default account registration failure
+                        // If no call and no account is in Failed state, hide top bar
+                        val found = core.accountList.find {
+                            it.state == RegistrationState.Failed
+                        }
+                        if (found == null) {
+                            Log.i("$TAG No account in Failed state anymore")
+                            if (atLeastOneCall.value == false) {
+                                changeSystemTopBarColorEvent.postValue(Event(NONE))
+                                showTopBar.postValue(false)
+                            }
+                        }
                     }
                 }
                 else -> {}
@@ -113,6 +140,7 @@ class MainViewModel @UiThread constructor() : ViewModel() {
 
     init {
         defaultAccountRegistrationFailed = false
+        showTopBar.value = false
 
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
@@ -120,7 +148,10 @@ class MainViewModel @UiThread constructor() : ViewModel() {
             if (core.callsNb > 0) {
                 updateCurrentCallInfo()
             }
-            atLastOneCall.postValue(core.callsNb > 0)
+
+            val calls = core.callsNb > 0
+            showTopBar.postValue(calls)
+            atLeastOneCall.postValue(calls)
         }
     }
 
@@ -134,7 +165,12 @@ class MainViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
-    fun goBackToCall() {
+    fun closeTopBar() {
+        showTopBar.value = false
+    }
+
+    @UiThread
+    fun onTopBarClicked() {
         goBackToCallEvent.value = Event(true)
     }
 
@@ -147,7 +183,7 @@ class MainViewModel @UiThread constructor() : ViewModel() {
                 val contact = coreContext.contactsManager.findContactByAddress(
                     currentCall.remoteAddress
                 )
-                callsLabel.postValue(
+                callLabel.postValue(
                     contact?.name ?: LinphoneUtils.getDisplayName(currentCall.remoteAddress)
                 )
                 callsStatus.postValue(LinphoneUtils.callStateToString(currentCall.state))
@@ -157,19 +193,19 @@ class MainViewModel @UiThread constructor() : ViewModel() {
                     val contact = coreContext.contactsManager.findContactByAddress(
                         firstCall.remoteAddress
                     )
-                    callsLabel.postValue(
+                    callLabel.postValue(
                         contact?.name ?: LinphoneUtils.getDisplayName(firstCall.remoteAddress)
                     )
                     callsStatus.postValue(LinphoneUtils.callStateToString(firstCall.state))
                 }
             }
         } else {
-            callsLabel.postValue(
+            callLabel.postValue(
                 AppUtils.getFormattedString(R.string.calls_count_label, core.callsNb)
             )
             callsStatus.postValue("") // TODO: improve ?
         }
         Log.i("$TAG At least a call, asking fragment to change status bar color")
-        changeSystemTopBarColorToInCallEvent.postValue(Event(true))
+        changeSystemTopBarColorEvent.postValue(Event(IN_CALL))
     }
 }

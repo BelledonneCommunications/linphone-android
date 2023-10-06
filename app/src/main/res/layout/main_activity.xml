@@ -27,7 +27,7 @@
                 layout="@layout/main_activity_in_call_top_bar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:visibility="@{viewModel.atLastOneCall ? View.VISIBLE : View.GONE, default=gone}"
+                android:visibility="@{viewModel.showTopBar ? View.VISIBLE : View.GONE, default=gone}"
                 app:viewModel="@{viewModel}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

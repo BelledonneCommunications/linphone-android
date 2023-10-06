@@ -76,16 +76,18 @@ class MainActivity : AppCompatActivity() {
         }
         binding.viewModel = viewModel
 
-        viewModel.changeSystemTopBarColorToInCallEvent.observe(this) {
-            it.consume { useInCallColor ->
-                val color = if (useInCallColor) {
-                    AppUtils.getColor(R.color.green_success_500)
-                } else {
-                    AppUtils.getColor(R.color.orange_main_500)
+        viewModel.changeSystemTopBarColorEvent.observe(this) {
+            it.consume { mode ->
+                val color = when (mode) {
+                    MainViewModel.IN_CALL -> AppUtils.getColor(R.color.green_success_500)
+                    MainViewModel.ACCOUNT_REGISTRATION_FAILURE -> AppUtils.getColor(
+                        R.color.red_danger_500
+                    )
+                    else -> AppUtils.getColor(R.color.orange_main_500)
                 }
                 lifecycleScope.launch {
                     withContext(Dispatchers.IO) {
-                        delay(if (useInCallColor) 1000 else 0)
+                        delay(if (mode == MainViewModel.IN_CALL) 1000 else 0)
                         withContext(Dispatchers.Main) {
                             window.statusBarColor = color
                         }
