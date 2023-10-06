@@ -825,4 +825,25 @@
 \nProtože je nyní vyžadujeme pro vytvoření účtu, nebudete si moci vytvořit účet v aplikaci, ale můžete si ho vytvořit na našich webových stránkách:</string>
     <string name="assistant_create_email_account_not_validated">Váš účet ještě nebyl aktivován, klikněte prosím na odkaz, který jste obdrželi e-mailem</string>
     <string name="account_setting_disable_bundle_mode_title">Vypnout bundle režim</string>
+    <string name="conference_schedule_mode">Režim</string>
+    <string name="conference_schedule_mode_meeting">Schůzka</string>
+    <string name="conference_schedule_mode_broadcast">Vysílání</string>
+    <string name="conference_schedule_speakers_list">Seznam účastníků</string>
+    <string name="conference_schedule_speakers_list_empty">Vyberte nejméně jednoho účastníka</string>
+    <string name="conference_broadcast_start">Plán vysílání</string>
+    <string name="conference_broadcast_edit">Upravit vysílání</string>
+    <string name="conference_schedule_broadcast_summary">Info o vysílání</string>
+    <string name="conference_broadcast_invite_you_are_speaker">(vy jste mluvčí)</string>
+    <string name="conference_meeting_title">Schůzka:</string>
+    <string name="conference_broadcast_title">Vysílání:</string>
+    <string name="conference_invite_speakers_list_title">Mluvčí</string>
+    <string name="conference_invite_participants_list_title">Účastníci</string>
+    <string name="conference_participants_list_speaker_label">Mluvčí</string>
+    <string name="conferences_settings_enable_broadcast_title">Povolit vysílání</string>
+    <string name="conferences_settings_enable_broadcast_summary">Funkce je v současné době v beta verzi!</string>
+    <string name="content_description_contact_is_speaker">Kontakt je mluvčí</string>
+    <string name="conference_schedule_broadcast_address_title">Broadcast addresa</string>
+    <string name="conference_schedule_participants_list_empty">Vyberte alespoň jednoho účastníka</string>
+    <string name="conference_broadcast_invite_title">Pozvánka na vysílání:</string>
+    <string name="conference_waiting_room_listener_broadcast">V tomto vysílání nejste mluvčím</string>
 </resources>
