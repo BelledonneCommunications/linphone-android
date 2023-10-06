@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="openEmojiPickerClickListener"
+            type="View.OnClickListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="16dp"
+        android:background="@color/gray_100"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+        <!-- Keep behavior to have it at the bottom -->
+
+        <ImageView
+            android:id="@+id/emoji_picker"
+            android:onClick="@{openEmojiPickerClickListener}"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/smiley"
+            app:layout_constraintTop_toTopOf="@id/message_area_background"
+            app:layout_constraintBottom_toBottomOf="@id/message_area_background"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/attach_file"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/paperclip"
+            app:layout_constraintTop_toTopOf="@id/message_area_background"
+            app:layout_constraintBottom_toBottomOf="@id/message_area_background"
+            app:layout_constraintStart_toEndOf="@id/emoji_picker"
+            app:layout_constraintEnd_toStartOf="@id/message_area_background"/>
+
+        <ImageView
+            android:id="@+id/message_area_background"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/edit_text_background"
+            app:layout_constraintStart_toEndOf="@id/attach_file"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/message_to_send"
+            app:layout_constraintBottom_toBottomOf="@id/message_to_send"/>
+
+        <androidx.appcompat.widget.AppCompatEditText
+            style="@style/default_text_style"
+            android:id="@+id/message_to_send"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="16dp"
+            android:minHeight="48dp"
+            android:background="@color/transparent_color"
+            android:textSize="14sp"
+            android:textColorHint="@color/gray_main2_400"
+            android:maxLines="3"
+            android:hint="@string/conversation_text_field_hint"
+            app:layout_constraintStart_toStartOf="@id/message_area_background"
+            app:layout_constraintEnd_toStartOf="@id/send_barrier"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/send_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="start"
+            app:constraint_referenced_ids="voice_record, send_message" />
+
+        <ImageView
+            android:id="@+id/voice_record"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_marginEnd="12dp"
+            android:src="@drawable/microphone"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="@id/message_area_background"
+            app:layout_constraintBottom_toBottomOf="@id/message_area_background"
+            app:layout_constraintEnd_toEndOf="@id/message_area_background" />
+
+        <ImageView
+            android:id="@+id/send_message"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_marginEnd="12dp"
+            android:src="@drawable/paper_plane_tilt"
+            app:tint="@color/orange_main_500"
+            app:layout_constraintTop_toTopOf="@id/message_area_background"
+            app:layout_constraintBottom_toBottomOf="@id/message_area_background"
+            app:layout_constraintEnd_toEndOf="@id/message_area_background" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

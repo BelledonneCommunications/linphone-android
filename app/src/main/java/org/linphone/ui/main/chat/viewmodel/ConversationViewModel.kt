@@ -27,6 +27,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.ChatRoom
 import org.linphone.core.Factory
 import org.linphone.core.tools.Log
+import org.linphone.ui.main.chat.model.EventLogModel
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.utils.Event
 
@@ -38,6 +39,8 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
     val showBackButton = MutableLiveData<Boolean>()
 
     val avatarModel = MutableLiveData<ContactAvatarModel>()
+
+    val events = MutableLiveData<ArrayList<EventLogModel>>()
 
     val chatRoomFoundEvent = MutableLiveData<Event<Boolean>>()
 
@@ -86,12 +89,21 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         }
 
         val friend = coreContext.contactsManager.findContactByAddress(address)
-        if (friend != null) {
-            avatarModel.postValue(ContactAvatarModel(friend))
+        val avatar = if (friend != null) {
+            ContactAvatarModel(friend)
         } else {
             val fakeFriend = coreContext.core.createFriend()
             fakeFriend.address = address
-            avatarModel.postValue(ContactAvatarModel(fakeFriend))
+            ContactAvatarModel(fakeFriend)
         }
+        avatarModel.postValue(avatar)
+
+        val eventsList = arrayListOf<EventLogModel>()
+        val history = chatRoom.getHistoryEvents(0)
+        for (event in history) {
+            val model = EventLogModel(event, avatar)
+            eventsList.add(model)
+        }
+        events.postValue(eventsList)
     }
 }

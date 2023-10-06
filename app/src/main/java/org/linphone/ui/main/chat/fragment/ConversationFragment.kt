@@ -23,11 +23,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatConversationFragmentBinding
+import org.linphone.ui.main.chat.adapter.ConversationEventAdapter
 import org.linphone.ui.main.chat.viewmodel.ConversationViewModel
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.Event
@@ -42,6 +46,8 @@ class ConversationFragment : GenericFragment() {
     private lateinit var viewModel: ConversationViewModel
 
     private val args: ConversationFragmentArgs by navArgs()
+
+    private lateinit var adapter: ConversationEventAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -67,6 +73,14 @@ class ConversationFragment : GenericFragment() {
         viewModel = ViewModelProvider(this)[ConversationViewModel::class.java]
         binding.viewModel = viewModel
 
+        binding.setBackClickListener {
+            goBack()
+        }
+
+        sharedViewModel.isSlidingPaneSlideable.observe(viewLifecycleOwner) { slideable ->
+            viewModel.showBackButton.value = slideable
+        }
+
         val localSipUri = args.localSipUri
         val remoteSipUri = args.remoteSipUri
         Log.i(
@@ -74,27 +88,57 @@ class ConversationFragment : GenericFragment() {
         )
         viewModel.findChatRoom(localSipUri, remoteSipUri)
 
-        binding.setBackClickListener {
-            goBack()
-        }
-
         viewModel.chatRoomFoundEvent.observe(viewLifecycleOwner) {
             it.consume { found ->
                 if (found) {
                     Log.i(
                         "$TAG Found matching chat room for local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
                     )
-                    startPostponedEnterTransition()
-                    sharedViewModel.openSlidingPaneEvent.value = Event(true)
                 } else {
-                    Log.e("$TAG Failed to find chat room, going back")
-                    goBack()
+                    (view.parent as? ViewGroup)?.doOnPreDraw {
+                        Log.e("$TAG Failed to find chat room, going back")
+                        goBack()
+                    }
                 }
             }
         }
 
-        sharedViewModel.isSlidingPaneSlideable.observe(viewLifecycleOwner) { slideable ->
-            viewModel.showBackButton.value = slideable
+        adapter = ConversationEventAdapter(viewLifecycleOwner)
+        binding.eventsList.setHasFixedSize(false)
+        binding.eventsList.adapter = adapter
+
+        val layoutManager = LinearLayoutManager(requireContext())
+        binding.eventsList.layoutManager = layoutManager
+
+        viewModel.events.observe(viewLifecycleOwner) {
+            val currentCount = adapter.itemCount
+            adapter.submitList(it)
+            Log.i("$TAG Events (messages) list updated with [${it.size}] items")
+
+            if (currentCount < it.size) {
+                binding.eventsList.scrollToPosition(it.size - 1)
+            }
+
+            (view.parent as? ViewGroup)?.doOnPreDraw {
+                startPostponedEnterTransition()
+                sharedViewModel.openSlidingPaneEvent.value = Event(true)
+            }
+        }
+
+        val emojisBottomSheetBehavior = BottomSheetBehavior.from(binding.emojiPicker)
+        emojisBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        emojisBottomSheetBehavior.isDraggable = false // To allow scrolling through the emojis
+
+        binding.setOpenEmojiPickerClickListener {
+            /*val state = emojisBottomSheetBehavior.state
+            if (state == BottomSheetBehavior.STATE_COLLAPSED) {
+                emojisBottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+                if (binding.emojiPicker.visibility == View.GONE) {
+                    binding.emojiPicker.visibility = View.VISIBLE
+                }
+            } else {
+                emojisBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            }*/
         }
     }
 }
