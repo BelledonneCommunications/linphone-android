@@ -12,8 +12,21 @@
         tools:layout="@layout/empty_fragment"/>
 
     <fragment
-        android:id="@+id/conversationsListFragment"
-        android:name="org.linphone.ui.main.chat.fragment.ConversationsListFragment"
-        android:label="ConversationsListFragment"
-        tools:layout="@layout/chat_list_fragment"/>
+        android:id="@+id/conversationFragment"
+        android:name="org.linphone.ui.main.chat.fragment.ConversationFragment"
+        android:label="ConversationFragment"
+        tools:layout="@layout/chat_conversation_fragment">
+        <argument
+            android:name="localSipUri"
+            app:argType="string" />
+        <argument
+            android:name="remoteSipUri"
+            app:argType="string" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_conversationFragment"
+        app:destination="@id/conversationFragment"
+        app:launchSingleTop="true" />
+
 </navigation>

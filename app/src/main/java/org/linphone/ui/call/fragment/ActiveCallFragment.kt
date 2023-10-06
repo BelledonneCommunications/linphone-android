@@ -96,7 +96,7 @@ class ActiveCallFragment : GenericCallFragment() {
             // Holds fragment in place while new contact fragment slides over it
             return AnimationUtils.loadAnimation(activity, R.anim.hold)
         }
-        return AnimationUtils.loadAnimation(activity, R.anim.hold)
+        return super.onCreateAnimation(transit, enter, nextAnim)
     }
 
     override fun onCreateView(

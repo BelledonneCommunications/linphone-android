@@ -40,6 +40,10 @@ class ConversationModel @WorkerThread constructor(private val chatRoom: ChatRoom
 
     val id = LinphoneUtils.getChatRoomId(chatRoom)
 
+    val localSipUri = chatRoom.localAddress.asStringUriOnly()
+
+    val remoteSipUri = chatRoom.peerAddress.asStringUriOnly()
+
     val isGroup = !chatRoom.hasCapability(Capabilities.OneToOne.toInt())
 
     val lastUpdateTime = MutableLiveData<Long>()

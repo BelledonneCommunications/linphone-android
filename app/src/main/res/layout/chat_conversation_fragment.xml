@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <import type="org.linphone.core.ConsolidatedPresence" />
+        <import type="org.linphone.core.ChatRoom.SecurityLevel" />
+        <variable
+            name="backClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="pickEmojiClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="attachFileClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="recordVoiceMessageClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.main.chat.viewmodel.ConversationViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:padding="15dp"
+            android:adjustViewBounds="true"
+            android:onClick="@{backClickListener}"
+            android:visibility="@{viewModel.showBackButton ? View.VISIBLE : View.GONE}"
+            android:src="@drawable/caret_left"
+            app:tint="@color/orange_main_500"
+            app:layout_constraintBottom_toBottomOf="@id/title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/title"/>
+
+        <io.getstream.avatarview.AvatarView
+            android:id="@+id/avatar"
+            android:layout_width="@dimen/avatar_list_cell_size"
+            android:layout_height="@dimen/avatar_list_cell_size"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginStart="5dp"
+            android:adjustViewBounds="true"
+            android:background="@drawable/shape_circle_light_blue_background"
+            contactAvatar="@{viewModel.avatarModel}"
+            app:avatarViewPlaceholder="@drawable/user_circle"
+            app:avatarViewInitialsBackgroundColor="@color/gray_main2_200"
+            app:avatarViewInitialsTextColor="@color/gray_main2_600"
+            app:avatarViewInitialsTextSize="16sp"
+            app:avatarViewInitialsTextStyle="bold"
+            app:avatarViewShape="circle"
+            app:avatarViewBorderWidth="0dp"
+            app:layout_constraintBottom_toBottomOf="@id/back"
+            app:layout_constraintStart_toEndOf="@id/back"
+            app:layout_constraintTop_toTopOf="@id/back" />
+
+        <ImageView
+            android:id="@+id/trust_badge"
+            android:layout_width="@dimen/avatar_presence_badge_size"
+            android:layout_height="@dimen/avatar_presence_badge_size"
+            android:src="@{viewModel.avatarModel.trust == SecurityLevel.Encrypted ? @drawable/trusted : @drawable/not_trusted, default=@drawable/trusted}"
+            android:visibility="@{viewModel.avatarModel.trust == SecurityLevel.Encrypted || viewModel.avatarModel.trust == SecurityLevel.Unsafe ? View.VISIBLE : View.GONE}"
+            app:layout_constraintStart_toStartOf="@id/avatar"
+            app:layout_constraintBottom_toBottomOf="@id/avatar"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/top_bar_height"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text="@{viewModel.avatarModel.name, default=`John Doe`}"
+            android:textSize="16sp"
+            android:textColor="@color/gray_main2_600"
+            android:gravity="center_vertical"
+            app:layout_constraintEnd_toStartOf="@id/call"
+            app:layout_constraintStart_toEndOf="@id/avatar"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageView
+            android:id="@+id/info"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="0dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/info"
+            app:layout_constraintTop_toTopOf="@id/title"
+            app:layout_constraintBottom_toBottomOf="@id/title"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <ImageView
+            android:id="@+id/video_call"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="0dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/video_camera"
+            app:layout_constraintTop_toTopOf="@id/title"
+            app:layout_constraintBottom_toBottomOf="@id/title"
+            app:layout_constraintEnd_toStartOf="@id/info" />
+
+        <ImageView
+            android:id="@+id/call"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="0dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/phone"
+            app:layout_constraintTop_toTopOf="@id/title"
+            app:layout_constraintBottom_toBottomOf="@id/title"
+            app:layout_constraintEnd_toStartOf="@id/video_call"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            app:layout_constraintBottom_toTopOf="@id/composing" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_300"
+            android:id="@+id/composing"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="12dp"
+            android:textSize="12sp"
+            android:textColor="@color/gray_main2_400"
+            app:layout_constraintBottom_toTopOf="@id/send_area_background"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <View
+            android:id="@+id/send_area_background"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:background="@color/gray_100"
+            app:layout_constraintBottom_toBottomOf="@id/message_area_background"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/message_area_background" />
+
+        <ImageView
+            android:id="@+id/emoji_picker"
+            android:onClick="@{pickEmojiClickListener}"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/smiley"
+            app:layout_constraintTop_toTopOf="@id/message_area_background"
+            app:layout_constraintBottom_toBottomOf="@id/message_area_background"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/attach_file"
+            android:onClick="@{attachFileClickListener}"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/paperclip"
+            app:layout_constraintTop_toTopOf="@id/message_area_background"
+            app:layout_constraintBottom_toBottomOf="@id/message_area_background"
+            app:layout_constraintStart_toEndOf="@id/emoji_picker"
+            app:layout_constraintEnd_toStartOf="@id/message_area_background"/>
+
+        <ImageView
+            android:id="@+id/message_area_background"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/edit_text_background"
+            app:layout_constraintStart_toEndOf="@id/attach_file"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatEditText
+            style="@style/default_text_style"
+            android:id="@+id/message_to_send"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="5dp"
+            android:background="@color/transparent_color"
+            android:textSize="14sp"
+            android:textColorHint="@color/gray_main2_400"
+            android:hint="@string/conversation_text_field_hint"
+            app:layout_constraintTop_toTopOf="@id/message_area_background"
+            app:layout_constraintBottom_toBottomOf="@id/message_area_background"
+            app:layout_constraintStart_toStartOf="@id/message_area_background"
+            app:layout_constraintEnd_toStartOf="@id/voice_record" />
+
+        <ImageView
+            android:id="@+id/voice_record"
+            android:onClick="@{recordVoiceMessageClickListener}"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_marginEnd="12dp"
+            android:src="@drawable/microphone"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="@id/message_area_background"
+            app:layout_constraintBottom_toBottomOf="@id/message_area_background"
+            app:layout_constraintEnd_toEndOf="@id/message_area_background" />
+
+        <ImageView
+            android:id="@+id/send_message"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_marginEnd="12dp"
+            android:src="@drawable/paper_plane_tilt"
+            app:tint="@color/orange_main_500"
+            app:layout_constraintTop_toTopOf="@id/message_area_background"
+            app:layout_constraintBottom_toBottomOf="@id/message_area_background"
+            app:layout_constraintEnd_toEndOf="@id/message_area_background" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

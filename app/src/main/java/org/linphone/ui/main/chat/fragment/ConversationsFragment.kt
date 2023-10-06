@@ -101,6 +101,21 @@ class ConversationsFragment : GenericFragment() {
             }
         }
 
+        sharedViewModel.showConversationEvent.observe(viewLifecycleOwner) {
+            it.consume { pair ->
+                val localSipUri = pair.first
+                val remoteSipUri = pair.second
+                Log.i(
+                    "$TAG Navigating to conversation fragment with local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
+                )
+                val action = ConversationFragmentDirections.actionGlobalConversationFragment(
+                    localSipUri,
+                    remoteSipUri
+                )
+                binding.chatNavContainer.findNavController().navigate(action)
+            }
+        }
+
         sharedViewModel.navigateToContactsEvent.observe(viewLifecycleOwner) {
             it.consume {
                 if (findNavController().currentDestination?.id == R.id.conversationsFragment) {

@@ -118,7 +118,7 @@
             android:id="@+id/notifications_count"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_marginEnd="32dp"
+            android:layout_marginEnd="16dp"
             android:gravity="center"
             android:background="@drawable/shape_red_round"
             android:text="@{String.valueOf(model.unreadMessageCount), default=`1`}"

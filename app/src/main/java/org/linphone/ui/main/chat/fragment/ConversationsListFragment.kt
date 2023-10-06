@@ -65,10 +65,6 @@ class ConversationsListFragment : AbstractTopBarFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = listViewModel
 
-        binding.setOnNewConversationClicked {
-            // TODO: open start conversation fragment
-        }
-
         adapter = ConversationsListAdapter(viewLifecycleOwner)
         binding.conversationsList.setHasFixedSize(true)
         binding.conversationsList.adapter = adapter
@@ -113,7 +109,9 @@ class ConversationsListFragment : AbstractTopBarFragment() {
         adapter.conversationClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
                 Log.i("$TAG Show conversation with ID [${model.id}]")
-                // TODO
+                sharedViewModel.showConversationEvent.value = Event(
+                    Pair(model.localSipUri, model.remoteSipUri)
+                )
             }
         }
 
