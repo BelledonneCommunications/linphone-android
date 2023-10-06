@@ -24,6 +24,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.core.view.doOnPreDraw
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -51,10 +52,10 @@ class ConversationsFragment : GenericFragment() {
     }
 
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
-        /*if (findNavController().currentDestination?.id == R.id.newConversationFragment) {
+        if (findNavController().currentDestination?.id == R.id.startConversationFragment) {
             // Holds fragment in place while new contact fragment slides over it
             return AnimationUtils.loadAnimation(activity, R.anim.hold)
-        }*/
+        }
         return super.onCreateAnimation(transit, enter, nextAnim)
     }
 
@@ -90,6 +91,13 @@ class ConversationsFragment : GenericFragment() {
             it.consume {
                 Log.i("$TAG Opening sliding pane")
                 binding.slidingPaneLayout.openPane()
+            }
+        }
+
+        sharedViewModel.showStartConversationEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i("$TAG Navigating to start conversation fragment")
+                findNavController().navigate(R.id.action_global_startConversationFragment)
             }
         }
 

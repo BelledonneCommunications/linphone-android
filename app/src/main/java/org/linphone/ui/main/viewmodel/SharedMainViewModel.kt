@@ -94,4 +94,10 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
     val resetMissedCallsCountEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
+
+    /* Conversation related */
+
+    val showStartConversationEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
 }

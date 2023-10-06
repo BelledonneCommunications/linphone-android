@@ -32,6 +32,7 @@ import org.linphone.ui.main.chat.adapter.ConversationsListAdapter
 import org.linphone.ui.main.chat.viewmodel.ConversationsListViewModel
 import org.linphone.ui.main.fragment.AbstractTopBarFragment
 import org.linphone.ui.main.history.fragment.HistoryMenuDialogFragment
+import org.linphone.utils.Event
 import org.linphone.utils.hideKeyboard
 import org.linphone.utils.showKeyboard
 
@@ -112,7 +113,12 @@ class ConversationsListFragment : AbstractTopBarFragment() {
         adapter.conversationClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
                 Log.i("$TAG Show conversation with ID [${model.id}]")
+                // TODO
             }
+        }
+
+        binding.setOnNewConversationClicked {
+            sharedViewModel.showStartConversationEvent.value = Event(true)
         }
 
         listViewModel.conversations.observe(viewLifecycleOwner) {

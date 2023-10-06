@@ -48,10 +48,14 @@ class QrCodeViewModel @UiThread constructor() : ViewModel() {
                 if (!isValidUrl) {
                     Log.e("$TAG The content of the QR Code doesn't seem to be a valid web URL")
                 } else {
-                    Log.i("$TAG QR code URL set, restarting the Core")
+                    Log.i(
+                        "$TAG QR code URL set, restarting the Core to apply configuration changes"
+                    )
                     core.provisioningUri = result
                     coreContext.core.stop()
+                    Log.i("$TAG Core has been stopped, restarting it")
                     coreContext.core.start()
+                    Log.i("$TAG Core has been restarted")
                 }
                 qrCodeFoundEvent.postValue(Event(isValidUrl))
             }
