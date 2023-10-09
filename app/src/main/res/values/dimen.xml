@@ -52,4 +52,7 @@
     <dimen name="text_input_max_width">400dp</dimen>
 
     <dimen name="meeting_margin">8dp</dimen>
+
+    <dimen name="chat_bubble_grouped_top_margin">4dp</dimen>
+    <dimen name="chat_bubble_top_margin">16dp</dimen>
 </resources>

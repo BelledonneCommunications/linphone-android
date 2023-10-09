@@ -34,7 +34,6 @@ import androidx.annotation.ColorRes
 import androidx.annotation.UiThread
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnLayout
@@ -333,7 +332,7 @@ fun AppCompatEditText.editTextSetting(lambda: () -> Unit) {
 
 @BindingAdapter("android:layout_marginBottom")
 fun setConstraintLayoutBottomMargin(view: View, margins: Float) {
-    val params = view.layoutParams as ConstraintLayout.LayoutParams
+    val params = view.layoutParams as ViewGroup.MarginLayoutParams
     val m = margins.toInt()
     params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, m)
     view.layoutParams = params
@@ -341,7 +340,7 @@ fun setConstraintLayoutBottomMargin(view: View, margins: Float) {
 
 @BindingAdapter("android:layout_marginTop")
 fun setConstraintLayoutTopMargin(view: View, margins: Float) {
-    val params = view.layoutParams as ConstraintLayout.LayoutParams
+    val params = view.layoutParams as ViewGroup.MarginLayoutParams
     val m = margins.toInt()
     params.setMargins(params.leftMargin, m, params.rightMargin, params.bottomMargin)
     view.layoutParams = params

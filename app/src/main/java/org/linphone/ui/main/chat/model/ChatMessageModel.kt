@@ -24,6 +24,7 @@ import androidx.lifecycle.MutableLiveData
 import org.linphone.core.ChatMessage
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.TimestampUtils
 
 class ChatMessageModel @WorkerThread constructor(
     chatMessage: ChatMessage,
@@ -35,10 +36,15 @@ class ChatMessageModel @WorkerThread constructor(
 
     val state = MutableLiveData<ChatMessage.State>()
 
-    val text = MutableLiveData<String>()
+    val text = LinphoneUtils.getTextDescribingMessage(chatMessage)
+
+    val fromSipUri = chatMessage.fromAddress.asStringUriOnly()
+
+    val timestamp = chatMessage.time
+
+    val time = TimestampUtils.toString(timestamp)
 
     init {
         state.postValue(chatMessage.state)
-        text.postValue(LinphoneUtils.getTextDescribingMessage(chatMessage))
     }
 }

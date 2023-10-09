@@ -26,6 +26,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import java.lang.Math.abs
 import org.linphone.R
 import org.linphone.core.ChatMessage
 import org.linphone.databinding.ChatBubbleIncomingBinding
@@ -42,6 +43,8 @@ class ConversationEventAdapter(
         const val INCOMING_CHAT_MESSAGE = 1
         const val OUTGOING_CHAT_MESSAGE = 2
         const val EVENT = 3
+
+        const val MAX_TIME_TO_GROUP_MESSAGES = 60 // 1 minute
     }
 
     var selectedAdapterPosition = -1
@@ -116,6 +119,22 @@ class ConversationEventAdapter(
             with(binding) {
                 model = chatMessageData
 
+                isGroupedWithPreviousOne = if (bindingAdapterPosition == 0) {
+                    false
+                } else {
+                    val previous = bindingAdapterPosition - 1
+                    if (getItemViewType(previous) == INCOMING_CHAT_MESSAGE) {
+                        val previousItem = getItem(previous).data as ChatMessageModel
+                        if (kotlin.math.abs(chatMessageData.timestamp - previousItem.timestamp) < MAX_TIME_TO_GROUP_MESSAGES) {
+                            previousItem.fromSipUri == chatMessageData.fromSipUri
+                        } else {
+                            false
+                        }
+                    } else {
+                        false
+                    }
+                }
+
                 binding.setOnLongClickListener {
                     selectedAdapterPosition = bindingAdapterPosition
                     binding.root.isSelected = true
@@ -134,6 +153,22 @@ class ConversationEventAdapter(
         fun bind(chatMessageData: ChatMessageModel) {
             with(binding) {
                 model = chatMessageData
+
+                isGroupedWithPreviousOne = if (bindingAdapterPosition == 0) {
+                    false
+                } else {
+                    val previous = bindingAdapterPosition - 1
+                    if (getItemViewType(previous) == OUTGOING_CHAT_MESSAGE) {
+                        val previousItem = getItem(previous).data as ChatMessageModel
+                        if (kotlin.math.abs(chatMessageData.timestamp - previousItem.timestamp) < MAX_TIME_TO_GROUP_MESSAGES) {
+                            previousItem.fromSipUri == chatMessageData.fromSipUri
+                        } else {
+                            false
+                        }
+                    } else {
+                        false
+                    }
+                }
 
                 binding.setOnLongClickListener {
                     selectedAdapterPosition = bindingAdapterPosition

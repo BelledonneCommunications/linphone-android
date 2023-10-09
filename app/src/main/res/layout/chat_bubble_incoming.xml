@@ -12,14 +12,17 @@
         <variable
             name="model"
             type="org.linphone.ui.main.chat.model.ChatMessageModel" />
+        <variable
+            name="isGroupedWithPreviousOne"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:onLongClick="@{onLongClickListener}"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="20dp">
+        android:layout_marginTop="@{isGroupedWithPreviousOne ? @dimen/chat_bubble_grouped_top_margin : @dimen/chat_bubble_top_margin, default=@dimen/chat_bubble_top_margin}"
+        android:layout_marginStart="16dp">
 
         <io.getstream.avatarview.AvatarView
             android:id="@+id/avatar"
@@ -27,6 +30,7 @@
             android:layout_height="@dimen/avatar_list_cell_size"
             android:adjustViewBounds="true"
             android:background="@drawable/shape_circle_light_blue_background"
+            android:visibility="@{isGroupedWithPreviousOne ? View.INVISIBLE : View.VISIBLE}"
             contactAvatar="@{model.avatarModel}"
             app:avatarViewPlaceholder="@drawable/user_circle"
             app:avatarViewInitialsBackgroundColor="@color/gray_main2_200"
@@ -50,17 +54,27 @@
             app:layout_constraintEnd_toEndOf="@id/avatar"
             app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <ImageView
+            android:id="@+id/background"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@{isGroupedWithPreviousOne ? @drawable/shape_chat_bubble_incoming_full : @drawable/shape_chat_bubble_incoming_first, default=@drawable/shape_chat_bubble_incoming_first}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/text_message"
+            app:layout_constraintEnd_toEndOf="@id/text_message"/>
+
+        <org.linphone.ui.main.chat.view.ChatBubbleTextView
             style="@style/default_text_style"
+            android:id="@+id/text_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
+            android:padding="16dp"
             android:text="@{model.text, default=`Lorem ipsum dolor sit amet`}"
             android:textSize="14sp"
             android:textColor="@color/gray_main2_700"
             android:gravity="center_vertical|start"
-            android:padding="16dp"
-            android:background="@drawable/shape_chat_bubble_incoming_first"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/avatar"/>
