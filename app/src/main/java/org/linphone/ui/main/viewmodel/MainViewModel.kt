@@ -64,6 +64,10 @@ class MainViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    val openDrawerEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     var defaultAccountRegistrationFailed = false
 
     private val coreListener = object : CoreListenerStub() {
@@ -171,7 +175,11 @@ class MainViewModel @UiThread constructor() : ViewModel() {
 
     @UiThread
     fun onTopBarClicked() {
-        goBackToCallEvent.value = Event(true)
+        if (atLeastOneCall.value == true) {
+            goBackToCallEvent.value = Event(true)
+        } else {
+            openDrawerEvent.value = Event(true)
+        }
     }
 
     @WorkerThread

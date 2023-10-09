@@ -49,6 +49,13 @@ class CorePreferences @UiThread constructor(private val context: Context) {
         }
 
     @get:WorkerThread @set:WorkerThread
+    var defaultFragment: Int
+        get() = config.getInt("app", "default_page", -1)
+        set(value) {
+            config.setInt("app", "default_page", value)
+        }
+
+    @get:WorkerThread @set:WorkerThread
     var conditionsAndPrivacyPolicyAccepted: Boolean
         get() = config.getBool("app", "read_and_agree_terms_and_privacy", false)
         set(value) {

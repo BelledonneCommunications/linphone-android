@@ -40,19 +40,32 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.core.tools.Log
 import org.linphone.databinding.MainActivityBinding
 import org.linphone.ui.main.viewmodel.MainViewModel
+import org.linphone.ui.main.viewmodel.SharedMainViewModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.slideInToastFromTop
 import org.linphone.utils.slideInToastFromTopForDuration
 
 @UiThread
 class MainActivity : AppCompatActivity() {
+    companion object {
+        private const val TAG = "[Main Activity]"
+
+        private const val CONTACTS_FRAGMENT_ID = 1
+        private const val HISTORY_FRAGMENT_ID = 2
+        private const val CHAT_FRAGMENT_ID = 3
+        private const val MEETINGS_FRAGMENT_ID = 4
+    }
 
     private lateinit var binding: MainActivityBinding
 
     private lateinit var viewModel: MainViewModel
+
+    private lateinit var sharedViewModel: SharedMainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, true)
@@ -65,8 +78,6 @@ class MainActivity : AppCompatActivity() {
         if (checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
             loadContacts()
         }
-        checkSelfPermission(Manifest.permission.CAMERA)
-        checkSelfPermission(Manifest.permission.RECORD_AUDIO)
 
         binding = DataBindingUtil.setContentView(this, R.layout.main_activity)
         binding.lifecycleOwner = this
@@ -75,6 +86,10 @@ class MainActivity : AppCompatActivity() {
             ViewModelProvider(this)[MainViewModel::class.java]
         }
         binding.viewModel = viewModel
+
+        sharedViewModel = run {
+            ViewModelProvider(this)[SharedMainViewModel::class.java]
+        }
 
         viewModel.changeSystemTopBarColorEvent.observe(this) {
             it.consume { mode ->
@@ -102,6 +117,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        viewModel.openDrawerEvent.observe(this) {
+            it.consume {
+                openDrawerMenu()
+            }
+        }
+
         viewModel.defaultAccountRegistrationErrorEvent.observe(this) {
             it.consume { error ->
                 val tag = "DEFAULT_ACCOUNT_REGISTRATION_ERROR"
@@ -124,6 +145,40 @@ class MainActivity : AppCompatActivity() {
         // TODO FIXME: uncomment
         // startActivity(Intent(this, WelcomeActivity::class.java))
 
+        coreContext.postOnCoreThread {
+            val startDestination = when (corePreferences.defaultFragment) {
+                CONTACTS_FRAGMENT_ID -> {
+                    Log.i("$TAG Latest visited page is contacts, setting it as start destination")
+                    R.id.contactsFragment
+                }
+                HISTORY_FRAGMENT_ID -> {
+                    Log.i(
+                        "$TAG Latest visited page is call history, setting it as start destination"
+                    )
+                    R.id.historyFragment
+                }
+                CHAT_FRAGMENT_ID -> {
+                    Log.i(
+                        "$TAG Latest visited page is conversations, setting it as start destination"
+                    )
+                    R.id.conversationsFragment
+                }
+                /*MEETINGS_FRAGMENT_ID -> {
+                    Log.i("$TAG Latest visited page is meetings, setting it as start destination")
+                    R.id.meetingsFragment
+                }*/
+                else -> { // Default
+                    Log.i("$TAG No latest visited page stored, using default one (call history)")
+                    R.id.historyFragment
+                }
+            }
+            coreContext.postOnMainThread {
+                val navGraph = findNavController().navInflater.inflate(R.navigation.main_nav_graph)
+                navGraph.setStartDestination(startDestination)
+                findNavController().setGraph(navGraph, null)
+            }
+        }
+
         coreContext.greenToastToShowEvent.observe(this) {
             it.consume { pair ->
                 val message = pair.first
@@ -133,17 +188,48 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onPause() {
+        val defaultFragmentId = when (sharedViewModel.currentlyDisplayedFragment.value) {
+            R.id.contactsFragment -> {
+                CONTACTS_FRAGMENT_ID
+            }
+            R.id.historyFragment -> {
+                HISTORY_FRAGMENT_ID
+            }
+            R.id.conversationsFragment -> {
+                CHAT_FRAGMENT_ID
+            }
+            /*R.id.meetingsFragment -> {
+                MEETINGS_FRAGMENT_ID
+            }*/
+            else -> { // Default
+                HISTORY_FRAGMENT_ID
+            }
+        }
+        coreContext.postOnCoreThread {
+            Log.i("$TAG Storing default page [$defaultFragmentId]")
+            corePreferences.defaultFragment = defaultFragmentId
+            corePreferences.config.sync()
+        }
+
+        super.onPause()
+    }
+
     @SuppressLint("RtlHardcoded")
     fun toggleDrawerMenu() {
         if (binding.drawerMenu.isDrawerOpen(Gravity.LEFT)) {
             closeDrawerMenu()
         } else {
-            binding.drawerMenu.openDrawer(binding.drawerMenuContent, true)
+            openDrawerMenu()
         }
     }
 
     fun closeDrawerMenu() {
         binding.drawerMenu.closeDrawer(binding.drawerMenuContent, true)
+    }
+
+    private fun openDrawerMenu() {
+        binding.drawerMenu.openDrawer(binding.drawerMenuContent, true)
     }
 
     fun findNavController(): NavController {
