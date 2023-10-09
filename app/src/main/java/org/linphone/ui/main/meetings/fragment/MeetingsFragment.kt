@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.main.history.fragment
+package org.linphone.ui.main.meetings.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -25,36 +25,34 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import androidx.annotation.UiThread
 import androidx.core.view.doOnPreDraw
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import org.linphone.R
 import org.linphone.core.tools.Log
-import org.linphone.databinding.HistoryFragmentBinding
+import org.linphone.databinding.MeetingsFragmentBinding
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.SlidingPaneBackPressedCallback
 
-@UiThread
-class HistoryFragment : GenericFragment() {
+class MeetingsFragment : GenericFragment() {
     companion object {
-        private const val TAG = "[Calls Fragment]"
+        private const val TAG = "[Meetings Fragment]"
     }
 
-    private lateinit var binding: HistoryFragmentBinding
+    private lateinit var binding: MeetingsFragmentBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = HistoryFragmentBinding.inflate(layoutInflater)
+        binding = MeetingsFragmentBinding.inflate(layoutInflater)
         return binding.root
     }
 
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
-        if (findNavController().currentDestination?.id == R.id.startCallFragment) {
+        if (findNavController().currentDestination?.id == R.id.scheduleMeetingFragment) {
             // Holds fragment in place while new contact fragment slides over it
             return AnimationUtils.loadAnimation(activity, R.anim.hold)
         }
@@ -96,33 +94,32 @@ class HistoryFragment : GenericFragment() {
             }
         }
 
-        sharedViewModel.showStartCallEvent.observe(viewLifecycleOwner) {
+        sharedViewModel.showScheduleMeetingEvent.observe(viewLifecycleOwner) {
             it.consume {
-                Log.i("$TAG Navigating to start call fragment")
-                findNavController().navigate(R.id.action_global_startCallFragment)
-            }
-        }
-
-        sharedViewModel.showCallLogEvent.observe(
-            viewLifecycleOwner
-        ) {
-            it.consume { callId ->
-                Log.i("$TAG Displaying call log with call ID [$callId]")
-                val navController = binding.historyNavContainer.findNavController()
-                val action = HistoryContactFragmentDirections.actionGlobalHistoryContactFragment(
-                    callId
-                )
-                navController.navigate(action)
+                Log.i("$TAG Navigating to schedule meeting fragment")
+                findNavController().navigate(R.id.action_global_scheduleMeetingFragment)
             }
         }
 
         sharedViewModel.navigateToContactsEvent.observe(viewLifecycleOwner) {
             it.consume {
-                if (findNavController().currentDestination?.id == R.id.historyFragment) {
-                    // To prevent any previously seen call log to show up when navigating back to here later
-                    binding.historyNavContainer.findNavController().popBackStack()
+                if (findNavController().currentDestination?.id == R.id.meetingsFragment) {
+                    // To prevent any previously seen meeting to show up when navigating back to here later
+                    binding.meetingsNavContainer.findNavController().popBackStack()
 
-                    val action = HistoryFragmentDirections.actionHistoryFragmentToContactsFragment()
+                    val action = MeetingsFragmentDirections.actionMeetingsFragmentToContactsFragment()
+                    findNavController().navigate(action)
+                }
+            }
+        }
+
+        sharedViewModel.navigateToCallsEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                if (findNavController().currentDestination?.id == R.id.meetingsFragment) {
+                    // To prevent any previously seen meeting to show up when navigating back to here later
+                    binding.meetingsNavContainer.findNavController().popBackStack()
+
+                    val action = MeetingsFragmentDirections.actionMeetingsFragmentToHistoryFragment()
                     findNavController().navigate(action)
                 }
             }
@@ -130,23 +127,11 @@ class HistoryFragment : GenericFragment() {
 
         sharedViewModel.navigateToConversationsEvent.observe(viewLifecycleOwner) {
             it.consume {
-                if (findNavController().currentDestination?.id == R.id.historyFragment) {
-                    // To prevent any previously seen call log to show up when navigating back to here later
-                    binding.historyNavContainer.findNavController().popBackStack()
+                if (findNavController().currentDestination?.id == R.id.meetingsFragment) {
+                    // To prevent any previously seen meeting to show up when navigating back to here later
+                    binding.meetingsNavContainer.findNavController().popBackStack()
 
-                    val action = HistoryFragmentDirections.actionHistoryFragmentToConversationsFragment()
-                    findNavController().navigate(action)
-                }
-            }
-        }
-
-        sharedViewModel.navigateToMeetingsEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                if (findNavController().currentDestination?.id == R.id.historyFragment) {
-                    // To prevent any previously seen call log to show up when navigating back to here later
-                    binding.historyNavContainer.findNavController().popBackStack()
-
-                    val action = HistoryFragmentDirections.actionHistoryFragmentToMeetingsFragment()
+                    val action = MeetingsFragmentDirections.actionMeetingsFragmentToConversationsFragment()
                     findNavController().navigate(action)
                 }
             }
@@ -155,6 +140,6 @@ class HistoryFragment : GenericFragment() {
 
     override fun onResume() {
         super.onResume()
-        sharedViewModel.currentlyDisplayedFragment.value = R.id.historyFragment
+        sharedViewModel.currentlyDisplayedFragment.value = R.id.meetingsFragment
     }
 }

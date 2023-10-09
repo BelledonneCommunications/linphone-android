@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="model"
+            type="org.linphone.ui.main.meetings.model.MeetingModel" />
+        <variable
+            name="onClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="onLongClickListener"
+            type="View.OnLongClickListener" />
+        <variable
+            name="firstMeetingOfTheDay"
+            type="Boolean" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:onClick="@{onClickListener}"
+        android:onLongClick="@{onLongClickListener}"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/header_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@{firstMeetingOfTheDay ? @dimen/meeting_margin : @dimen/zero, default=@dimen/zero}"
+            android:layout_marginStart="5dp"
+            android:text="@{model.day, default=`Mon.`}"
+            android:visibility="@{firstMeetingOfTheDay ? View.VISIBLE : View.INVISIBLE}"
+            android:textColor="@color/gray_main2_500"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/header_day_number"
+            app:layout_constraintEnd_toEndOf="@id/header_day_number"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageView
+            android:id="@+id/today_background"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="5dp"
+            android:src="@drawable/shape_circle_primary_background"
+            android:visibility="@{model.isToday &amp;&amp; firstMeetingOfTheDay ? View.VISIBLE : View.INVISIBLE}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/header_day" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_800"
+            android:id="@+id/header_day_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{model.dayNumber, default=`19`}"
+            android:visibility="@{firstMeetingOfTheDay ? View.VISIBLE : View.INVISIBLE}"
+            android:textColor="@{model.isToday ? @color/white : @color/gray_main2_500, default=@color/gray_main2_500}"
+            android:textSize="20sp"
+            android:paddingBottom="4dp"
+            app:layout_constraintStart_toStartOf="@id/today_background"
+            app:layout_constraintEnd_toEndOf="@id/today_background"
+            app:layout_constraintBottom_toBottomOf="@id/today_background"
+            app:layout_constraintTop_toBottomOf="@id/header_day"/>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginTop="@{firstMeetingOfTheDay ? @dimen/meeting_margin : @dimen/zero, default=@dimen/zero}"
+            android:layout_marginBottom="8dp"
+            app:cardElevation="5dp"
+            app:cardCornerRadius="10dp"
+            app:layout_constraintStart_toEndOf="@id/header_day"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style_700"
+                    android:id="@+id/title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="@{model.subject, default=`Meeting with John`}"
+                    android:textSize="13sp"
+                    android:textColor="@color/gray_main2_600"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:drawableStart="@{model.isBroadcast ? @drawable/slideshow : @drawable/users_three, default=@drawable/users_three}"
+                    android:drawablePadding="8dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style"
+                    android:id="@+id/time"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="@{model.time, default=`10:00 - 12:00`}"
+                    android:textSize="14sp"
+                    android:textColor="@color/gray_main2_500"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/title"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

@@ -331,6 +331,8 @@
     <string name="new_conversation_no_contact">No contact for the moment…</string>
     <string name="conversation_text_field_hint">Say something…</string>
 
+    <string name="meetings_list_empty">No meeting for the moment…</string>
+
     <string name="operation_in_progress_overlay">Operation in progress, please wait</string>
 
     <string name="call_action_blind_transfer">Transfer</string>

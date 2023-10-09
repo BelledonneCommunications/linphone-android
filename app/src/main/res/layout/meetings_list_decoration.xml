@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View" />
+    </data>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/default_text_style_800"
+        android:id="@+id/header"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:text="October"
+        android:textSize="20sp"
+        android:textColor="@color/gray_main2_600"
+        android:gravity="center_vertical"/>
+
+</layout>

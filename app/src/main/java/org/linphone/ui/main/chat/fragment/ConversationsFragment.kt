@@ -139,6 +139,18 @@ class ConversationsFragment : GenericFragment() {
                 }
             }
         }
+
+        sharedViewModel.navigateToMeetingsEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                if (findNavController().currentDestination?.id == R.id.conversationsFragment) {
+                    // To prevent any previously seen conversation to show up when navigating back to here later
+                    binding.chatNavContainer.findNavController().popBackStack()
+
+                    val action = ConversationsFragmentDirections.actionConversationsFragmentToMeetingsFragment()
+                    findNavController().navigate(action)
+                }
+            }
+        }
     }
 
     override fun onResume() {

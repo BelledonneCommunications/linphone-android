@@ -49,6 +49,10 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    val navigateToMeetingsEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     var currentlyDisplayedFragment = MutableLiveData<Int>()
 
     /* Top bar related */
@@ -103,5 +107,11 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
 
     val showConversationEvent: MutableLiveData<Event<Pair<String, String>>> by lazy {
         MutableLiveData<Event<Pair<String, String>>>()
+    }
+
+    /* Meetings related */
+
+    val showScheduleMeetingEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
     }
 }

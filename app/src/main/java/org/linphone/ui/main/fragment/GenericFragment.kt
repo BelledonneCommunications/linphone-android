@@ -26,7 +26,6 @@ import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.viewmodel.SharedMainViewModel
 
@@ -37,6 +36,8 @@ abstract class GenericFragment : Fragment() {
     }
 
     protected lateinit var sharedViewModel: SharedMainViewModel
+
+    protected var isSlidingPaneChild: Boolean = false
 
     private val onBackPressedCallback = object : OnBackPressedCallback(false) {
         override fun handleOnBackPressed() {
@@ -114,7 +115,7 @@ abstract class GenericFragment : Fragment() {
         // This allow to navigate a SlidingPane child nav graph.
         // This only concerns fragments for which the nav graph is inside a SlidingPane layout.
         // In our case it's all graphs except the main one.
-        if (findNavController().graph.id == R.id.main_nav_graph) return false
+        if (!isSlidingPaneChild) return false
 
         val isSlidingPaneFlat = sharedViewModel.isSlidingPaneSlideable.value == false
         Log.d(

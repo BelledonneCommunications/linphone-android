@@ -89,13 +89,16 @@ class BottomNavBarFragment : Fragment() {
         }
 
         binding.setOnMeetingsClicked {
-            // TODO: meeting feature
+            if (sharedViewModel.currentlyDisplayedFragment.value != R.id.meetingsFragment) {
+                sharedViewModel.navigateToMeetingsEvent.value = Event(true)
+            }
         }
 
         sharedViewModel.currentlyDisplayedFragment.observe(viewLifecycleOwner) {
             viewModel.contactsSelected.value = it == R.id.contactsFragment
             viewModel.callsSelected.value = it == R.id.historyFragment
             viewModel.conversationsSelected.value = it == R.id.conversationsFragment
+            viewModel.meetingsSelected.value = it == R.id.meetingsFragment
         }
 
         sharedViewModel.resetMissedCallsCountEvent.observe(viewLifecycleOwner) {

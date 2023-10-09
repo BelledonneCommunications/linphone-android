@@ -75,6 +75,9 @@ class HistoryContactFragment : GenericFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        // This fragment is displayed in a SlidingPane "child" area
+        isSlidingPaneChild = true
+
         super.onViewCreated(view, savedInstanceState)
         postponeEnterTransition()
 

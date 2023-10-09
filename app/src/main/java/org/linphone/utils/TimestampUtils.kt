@@ -23,11 +23,14 @@ import androidx.annotation.AnyThread
 import java.text.DateFormat
 import java.text.Format
 import java.text.SimpleDateFormat
+import java.time.format.TextStyle
 import java.util.*
 import org.linphone.LinphoneApplication.Companion.coreContext
 
 class TimestampUtils {
     companion object {
+        private const val TAG = "[Timestamp Utils]"
+
         @AnyThread
         fun isToday(timestamp: Long, timestampInSecs: Boolean = true): Boolean {
             val cal = Calendar.getInstance()
@@ -58,6 +61,48 @@ class TimestampUtils {
             val dateFormatter = SimpleDateFormat(pattern, Locale.getDefault())
             dateFormatter.timeZone = TimeZone.getTimeZone("UTC")
             return dateFormatter.format(calendar.time)
+        }
+
+        @AnyThread
+        fun dayOfWeek(timestamp: Long, timestampInSecs: Boolean = true): String {
+            val calendar = Calendar.getInstance()
+            calendar.timeInMillis = if (timestampInSecs) timestamp * 1000 else timestamp
+            val dayName = calendar.getDisplayName(
+                Calendar.DAY_OF_WEEK,
+                TextStyle.SHORT.ordinal,
+                Locale.getDefault()
+            )
+            val upperCased = dayName?.replaceFirstChar {
+                if (it.isLowerCase()) {
+                    it.titlecase(
+                        Locale.getDefault()
+                    )
+                } else {
+                    it.toString()
+                }
+            } ?: "?"
+            val shorten = upperCased.substring(0, 3)
+            return "$shorten."
+        }
+
+        @AnyThread
+        fun dayOfMonth(timestamp: Long, timestampInSecs: Boolean = true): String {
+            val calendar = Calendar.getInstance()
+            calendar.timeInMillis = if (timestampInSecs) timestamp * 1000 else timestamp
+            return calendar.get(Calendar.DAY_OF_MONTH).toString()
+        }
+
+        @AnyThread
+        fun month(timestamp: Long, timestampInSecs: Boolean = true): String {
+            val calendar = Calendar.getInstance()
+            calendar.timeInMillis = if (timestampInSecs) timestamp * 1000 else timestamp
+            return calendar.getDisplayName(
+                Calendar.MONTH,
+                TextStyle.SHORT.ordinal,
+                Locale.getDefault()
+            )
+                ?.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+                ?: "?"
         }
 
         @AnyThread

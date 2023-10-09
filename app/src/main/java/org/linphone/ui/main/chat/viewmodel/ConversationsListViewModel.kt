@@ -24,7 +24,7 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.contacts.ContactsManager
-import org.linphone.core.CallLog
+import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoom.Capabilities
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
@@ -46,8 +46,22 @@ class ConversationsListViewModel @UiThread constructor() : AbstractTopBarViewMod
     private var currentFilter = ""
 
     private val coreListener = object : CoreListenerStub() {
-        override fun onCallLogUpdated(core: Core, callLog: CallLog) {
-            computeChatRoomsList(currentFilter)
+        @WorkerThread
+        override fun onChatRoomStateChanged(
+            core: Core,
+            chatRoom: ChatRoom,
+            state: ChatRoom.State?
+        ) {
+            Log.i(
+                "$TAG Chat room [${LinphoneUtils.getChatRoomId(chatRoom)}] state changed [$state]"
+            )
+
+            when (state) {
+                ChatRoom.State.Created, ChatRoom.State.Instantiated, ChatRoom.State.Deleted -> {
+                    computeChatRoomsList(currentFilter)
+                }
+                else -> {}
+            }
         }
     }
 

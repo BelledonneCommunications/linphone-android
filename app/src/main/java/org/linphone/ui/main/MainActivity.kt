@@ -145,6 +145,16 @@ class MainActivity : AppCompatActivity() {
         // TODO FIXME: uncomment
         // startActivity(Intent(this, WelcomeActivity::class.java))
 
+        coreContext.greenToastToShowEvent.observe(this) {
+            it.consume { pair ->
+                val message = pair.first
+                val icon = pair.second
+                showGreenToast(message, icon)
+            }
+        }
+    }
+
+    override fun onStart() {
         coreContext.postOnCoreThread {
             val startDestination = when (corePreferences.defaultFragment) {
                 CONTACTS_FRAGMENT_ID -> {
@@ -163,10 +173,10 @@ class MainActivity : AppCompatActivity() {
                     )
                     R.id.conversationsFragment
                 }
-                /*MEETINGS_FRAGMENT_ID -> {
+                MEETINGS_FRAGMENT_ID -> {
                     Log.i("$TAG Latest visited page is meetings, setting it as start destination")
                     R.id.meetingsFragment
-                }*/
+                }
                 else -> { // Default
                     Log.i("$TAG No latest visited page stored, using default one (call history)")
                     R.id.historyFragment
@@ -179,13 +189,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        coreContext.greenToastToShowEvent.observe(this) {
-            it.consume { pair ->
-                val message = pair.first
-                val icon = pair.second
-                showGreenToast(message, icon)
-            }
-        }
+        super.onStart()
     }
 
     override fun onPause() {
@@ -199,9 +203,9 @@ class MainActivity : AppCompatActivity() {
             R.id.conversationsFragment -> {
                 CHAT_FRAGMENT_ID
             }
-            /*R.id.meetingsFragment -> {
+            R.id.meetingsFragment -> {
                 MEETINGS_FRAGMENT_ID
-            }*/
+            }
             else -> { // Default
                 HISTORY_FRAGMENT_ID
             }
