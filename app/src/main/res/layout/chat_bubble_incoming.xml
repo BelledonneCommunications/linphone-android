@@ -23,8 +23,8 @@
 
         <io.getstream.avatarview.AvatarView
             android:id="@+id/avatar"
-            android:layout_width="@dimen/avatar_bubble_size"
-            android:layout_height="@dimen/avatar_bubble_size"
+            android:layout_width="@dimen/avatar_list_cell_size"
+            android:layout_height="@dimen/avatar_list_cell_size"
             android:adjustViewBounds="true"
             android:background="@drawable/shape_circle_light_blue_background"
             contactAvatar="@{model.avatarModel}"
@@ -40,8 +40,8 @@
 
         <ImageView
             android:id="@+id/presence_badge"
-            android:layout_width="@dimen/avatar_bubble_presence_badge_size"
-            android:layout_height="@dimen/avatar_bubble_presence_badge_size"
+            android:layout_width="@dimen/avatar_presence_badge_size"
+            android:layout_height="@dimen/avatar_presence_badge_size"
             android:layout_marginEnd="@dimen/avatar_presence_badge_end_margin"
             android:background="@drawable/led_background"
             android:padding="@dimen/avatar_presence_badge_padding"

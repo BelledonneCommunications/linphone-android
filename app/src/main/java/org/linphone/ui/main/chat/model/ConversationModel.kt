@@ -44,7 +44,11 @@ class ConversationModel @WorkerThread constructor(private val chatRoom: ChatRoom
 
     val remoteSipUri = chatRoom.peerAddress.asStringUriOnly()
 
-    val isGroup = !chatRoom.hasCapability(Capabilities.OneToOne.toInt())
+    val isGroup = !chatRoom.hasCapability(Capabilities.OneToOne.toInt()) && chatRoom.hasCapability(
+        Capabilities.Conference.toInt()
+    )
+
+    val subject = MutableLiveData<String>()
 
     val lastUpdateTime = MutableLiveData<Long>()
 
@@ -69,6 +73,7 @@ class ConversationModel @WorkerThread constructor(private val chatRoom: ChatRoom
     val avatarModel: ContactAvatarModel
 
     init {
+        subject.postValue(chatRoom.subject)
         lastUpdateTime.postValue(chatRoom.lastUpdateTime)
 
         val address = if (chatRoom.hasCapability(Capabilities.Basic.toInt())) {

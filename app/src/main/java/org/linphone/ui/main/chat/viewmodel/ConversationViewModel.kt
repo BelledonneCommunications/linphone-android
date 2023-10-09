@@ -24,6 +24,7 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.core.Address
 import org.linphone.core.ChatRoom
 import org.linphone.core.Factory
 import org.linphone.core.tools.Log
@@ -42,9 +43,15 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     val events = MutableLiveData<ArrayList<EventLogModel>>()
 
+    val isGroup = MutableLiveData<Boolean>()
+
+    val subject = MutableLiveData<String>()
+
     val chatRoomFoundEvent = MutableLiveData<Event<Boolean>>()
 
     private lateinit var chatRoom: ChatRoom
+
+    private val avatarsMap = hashMapOf<String, ContactAvatarModel>()
 
     @UiThread
     fun findChatRoom(localSipUri: String, remoteSipUri: String) {
@@ -81,12 +88,44 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     @WorkerThread
     private fun configureChatRoom() {
+        isGroup.postValue(
+            !chatRoom.hasCapability(ChatRoom.Capabilities.OneToOne.toInt()) && chatRoom.hasCapability(
+                ChatRoom.Capabilities.Conference.toInt()
+            )
+        )
+        subject.postValue(chatRoom.subject)
+
         val address = if (chatRoom.hasCapability(ChatRoom.Capabilities.Basic.toInt())) {
             chatRoom.peerAddress
         } else {
             val firstParticipant = chatRoom.participants.firstOrNull()
             firstParticipant?.address ?: chatRoom.peerAddress
         }
+
+        avatarModel.postValue(getAvatarModelForAddress(address))
+
+        val eventsList = arrayListOf<EventLogModel>()
+        val history = chatRoom.getHistoryEvents(0)
+        for (event in history) {
+            val avatar = getAvatarModelForAddress(event.chatMessage?.fromAddress)
+            val model = EventLogModel(event, avatar)
+            eventsList.add(model)
+        }
+        events.postValue(eventsList)
+        chatRoom.markAsRead()
+    }
+
+    @WorkerThread
+    private fun getAvatarModelForAddress(address: Address?): ContactAvatarModel {
+        Log.i("Looking for avatar model with address [${address?.asStringUriOnly()}]")
+        if (address == null) {
+            val fakeFriend = coreContext.core.createFriend()
+            return ContactAvatarModel(fakeFriend)
+        }
+
+        val key = address.asStringUriOnly()
+        val foundInMap = if (avatarsMap.keys.contains(key)) avatarsMap[key] else null
+        if (foundInMap != null) return foundInMap
 
         val friend = coreContext.contactsManager.findContactByAddress(address)
         val avatar = if (friend != null) {
@@ -96,14 +135,8 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             fakeFriend.address = address
             ContactAvatarModel(fakeFriend)
         }
-        avatarModel.postValue(avatar)
 
-        val eventsList = arrayListOf<EventLogModel>()
-        val history = chatRoom.getHistoryEvents(0)
-        for (event in history) {
-            val model = EventLogModel(event, avatar)
-            eventsList.add(model)
-        }
-        events.postValue(eventsList)
+        avatarsMap[address.asStringUriOnly()] = avatar
+        return avatar
     }
 }

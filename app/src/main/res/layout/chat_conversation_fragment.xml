@@ -80,7 +80,7 @@
                 android:layout_marginEnd="10dp"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:text="@{viewModel.avatarModel.name, default=`John Doe`}"
+                android:text="@{viewModel.isGroup ? viewModel.subject : viewModel.avatarModel.name, default=`John Doe`}"
                 android:textSize="16sp"
                 android:textColor="@color/gray_main2_600"
                 android:gravity="center_vertical"

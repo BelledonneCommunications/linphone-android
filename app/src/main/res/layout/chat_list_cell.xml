@@ -24,14 +24,16 @@
         android:onLongClickListener="@{onLongClickListener}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
         android:background="@drawable/primary_cell_background">
 
         <io.getstream.avatarview.AvatarView
             android:id="@+id/avatar"
             android:layout_width="@dimen/avatar_list_cell_size"
             android:layout_height="@dimen/avatar_list_cell_size"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
             android:layout_marginStart="5dp"
             android:adjustViewBounds="true"
             android:background="@drawable/shape_circle_light_blue_background"
@@ -85,7 +87,7 @@
             android:layout_marginEnd="5dp"
             android:maxLines="1"
             android:ellipsize="end"
-            android:text="@{model.avatarModel.name, default=`John Doe`}"
+            android:text="@{model.isGroup ? model.subject : model.avatarModel.name, default=`John Doe`}"
             android:textSize="14sp"
             android:textColor="@color/gray_main2_800"
             android:textStyle="@{model.unreadMessageCount > 0 ? Typeface.BOLD : Typeface.NORMAL}"
