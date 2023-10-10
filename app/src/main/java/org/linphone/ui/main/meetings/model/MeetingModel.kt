@@ -26,7 +26,7 @@ import org.linphone.core.Participant
 import org.linphone.utils.TimestampUtils
 
 class MeetingModel @WorkerThread constructor(conferenceInfo: ConferenceInfo) {
-    val id = conferenceInfo.uri?.asStringUriOnly()
+    val id = conferenceInfo.uri?.asStringUriOnly() ?: ""
 
     private val timestamp = conferenceInfo.dateTime
 

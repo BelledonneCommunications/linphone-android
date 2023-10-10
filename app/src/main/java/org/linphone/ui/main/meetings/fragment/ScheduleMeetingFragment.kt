@@ -73,10 +73,6 @@ class ScheduleMeetingFragment : GenericFragment() {
         }
         binding.viewModel = viewModel
 
-        sharedViewModel.isSlidingPaneSlideable.observe(viewLifecycleOwner) { slideable ->
-            viewModel.showBackButton.value = slideable
-        }
-
         binding.setBackClickListener {
             goBack()
         }

@@ -348,6 +348,8 @@
     <string name="meeting_schedule_add_participants_title">Add participants</string>
     <string name="meeting_schedule_add_speaker_title">Add speaker</string>
     <string name="meeting_schedule_send_invitations_title">Send invitation to participants</string>
+    <string name="meeting_info_join_title">Join the meeting now</string>
+    <string name="meeting_info_organizer_label">Organizer</string>
 
     <string name="operation_in_progress_overlay">Operation in progress, please wait</string>
 

@@ -35,8 +35,6 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
         private const val TAG = "[Schedule Meeting ViewModel]"
     }
 
-    val showBackButton = MutableLiveData<Boolean>()
-
     val isBroadcastSelected = MutableLiveData<Boolean>()
 
     val showBroadcastHelp = MutableLiveData<Boolean>()

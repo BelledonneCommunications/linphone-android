@@ -24,6 +24,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
+import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.R
@@ -59,6 +60,7 @@ class MeetingsListFragment : AbstractTopBarFragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
 
         listViewModel = requireActivity().run {
             ViewModelProvider(this)[MeetingsListViewModel::class.java]
@@ -85,13 +87,23 @@ class MeetingsListFragment : AbstractTopBarFragment() {
             scrollToToday()
         }
 
+        adapter.meetingClickedEvent.observe(viewLifecycleOwner) {
+            it.consume { model ->
+                Log.i("$TAG Show conversation with ID [${model.id}]")
+                sharedViewModel.showMeetingEvent.value = Event(model.id)
+            }
+        }
+
         listViewModel.meetings.observe(viewLifecycleOwner) {
             val currentCount = adapter.itemCount
             adapter.submitList(it)
             Log.i("$TAG Meetings list ready with [${it.size}] items")
 
             if (currentCount < it.size) {
-                scrollToToday()
+                (view.parent as? ViewGroup)?.doOnPreDraw {
+                    startPostponedEnterTransition()
+                    scrollToToday()
+                }
             }
         }
 

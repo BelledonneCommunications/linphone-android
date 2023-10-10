@@ -103,6 +103,14 @@ class MeetingsFragment : GenericFragment() {
             }
         }
 
+        sharedViewModel.showMeetingEvent.observe(viewLifecycleOwner) {
+            it.consume { uri ->
+                Log.i("$TAG Navigating to meeting fragment with URI [$uri]")
+                val action = MeetingFragmentDirections.actionGlobalMeetingFragment(uri)
+                binding.meetingsNavContainer.findNavController().navigate(action)
+            }
+        }
+
         sharedViewModel.navigateToContactsEvent.observe(viewLifecycleOwner) {
             it.consume {
                 if (findNavController().currentDestination?.id == R.id.meetingsFragment) {

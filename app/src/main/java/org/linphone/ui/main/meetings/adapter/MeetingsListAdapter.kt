@@ -83,7 +83,7 @@ class MeetingsListAdapter(
 
                 lifecycleOwner = viewLifecycleOwner
 
-                binding.root.isSelected = bindingAdapterPosition == selectedAdapterPosition
+                binding.cardview.isSelected = bindingAdapterPosition == selectedAdapterPosition
 
                 binding.setOnClickListener {
                     meetingClickedEvent.value = Event(meetingModel)

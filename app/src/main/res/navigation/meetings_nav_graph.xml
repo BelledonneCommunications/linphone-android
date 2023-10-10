@@ -15,10 +15,15 @@
         android:id="@+id/meetingFragment"
         android:name="org.linphone.ui.main.meetings.fragment.MeetingFragment"
         android:label="MeetingFragment"
-        tools:layout="@layout/meeting_fragment"/>
+        tools:layout="@layout/meeting_fragment">
+        <argument
+            android:name="conferenceUri"
+            app:argType="string" />
+    </fragment>
 
     <action
         android:id="@+id/action_global_meetingFragment"
-        app:destination="@id/meetingFragment"/>
+        app:destination="@id/meetingFragment"
+        app:launchSingleTop="true" />
 
 </navigation>

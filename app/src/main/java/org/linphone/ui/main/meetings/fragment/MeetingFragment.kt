@@ -19,14 +19,22 @@
  */
 package org.linphone.ui.main.meetings.fragment
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.os.Bundle
+import android.provider.CalendarContract
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
+import androidx.core.view.doOnPreDraw
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import org.linphone.core.tools.Log
 import org.linphone.databinding.MeetingFragmentBinding
 import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.meetings.viewmodel.MeetingViewModel
 import org.linphone.utils.Event
 
 @UiThread
@@ -36,6 +44,10 @@ class MeetingFragment : GenericFragment() {
     }
 
     private lateinit var binding: MeetingFragmentBinding
+
+    private lateinit var viewModel: MeetingViewModel
+
+    private val args: MeetingFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,5 +72,66 @@ class MeetingFragment : GenericFragment() {
         postponeEnterTransition()
 
         binding.lifecycleOwner = viewLifecycleOwner
+
+        viewModel = requireActivity().run {
+            ViewModelProvider(this)[MeetingViewModel::class.java]
+        }
+        binding.viewModel = viewModel
+
+        val uri = args.conferenceUri
+        Log.i(
+            "$TAG Looking up for conference with SIP URI [$uri]"
+        )
+        viewModel.findConferenceInfo(uri)
+
+        binding.setBackClickListener {
+            goBack()
+        }
+
+        binding.setShareClickListener {
+            val intent = Intent(Intent.ACTION_EDIT)
+            intent.type = "vnd.android.cursor.item/event"
+            intent.putExtra(CalendarContract.Events.TITLE, viewModel.subject.value)
+
+            val description = viewModel.description.value.orEmpty()
+            if (description.isNotEmpty()) {
+                intent.putExtra(CalendarContract.Events.DESCRIPTION, description)
+            }
+
+            intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, viewModel.startTimeStamp.value)
+            intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, viewModel.endTimeStamp.value)
+
+            intent.putExtra(CalendarContract.Events.CUSTOM_APP_URI, viewModel.sipUri.value)
+            intent.putExtra(
+                CalendarContract.Events.CUSTOM_APP_PACKAGE,
+                requireContext().packageName
+            )
+
+            try {
+                startActivity(intent)
+            } catch (exception: ActivityNotFoundException) {
+                Log.e("$TAG No activity found to handle intent: $exception")
+            }
+        }
+
+        sharedViewModel.isSlidingPaneSlideable.observe(viewLifecycleOwner) { slideable ->
+            viewModel.showBackButton.value = slideable
+        }
+
+        viewModel.conferenceInfoFoundEvent.observe(viewLifecycleOwner) {
+            it.consume { found ->
+                if (found) {
+                    (view.parent as? ViewGroup)?.doOnPreDraw {
+                        startPostponedEnterTransition()
+                        sharedViewModel.openSlidingPaneEvent.value = Event(true)
+                    }
+                } else {
+                    Log.e("$TAG Failed to find meeting with URI [$uri], going back")
+                    (view.parent as? ViewGroup)?.doOnPreDraw {
+                        goBack()
+                    }
+                }
+            }
+        }
     }
 }
