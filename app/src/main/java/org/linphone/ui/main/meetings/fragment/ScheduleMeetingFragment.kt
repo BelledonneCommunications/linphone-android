@@ -24,9 +24,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.databinding.MeetingScheduleFragmentBinding
 import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.meetings.viewmodel.ScheduleMeetingViewModel
 import org.linphone.utils.Event
 
 @UiThread
@@ -36,6 +38,8 @@ class ScheduleMeetingFragment : GenericFragment() {
     }
 
     private lateinit var binding: MeetingScheduleFragmentBinding
+
+    private lateinit var viewModel: ScheduleMeetingViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,7 +52,7 @@ class ScheduleMeetingFragment : GenericFragment() {
 
     override fun goBack(): Boolean {
         sharedViewModel.closeSlidingPaneEvent.value = Event(true)
-        // If not done, when going back to ConversationsFragment this fragment will be created again
+        // If not done, when going back to MeetingsList this fragment will be created again
         return findNavController().popBackStack()
     }
 
@@ -56,5 +60,18 @@ class ScheduleMeetingFragment : GenericFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
+
+        viewModel = requireActivity().run {
+            ViewModelProvider(this)[ScheduleMeetingViewModel::class.java]
+        }
+        binding.viewModel = viewModel
+
+        sharedViewModel.isSlidingPaneSlideable.observe(viewLifecycleOwner) { slideable ->
+            viewModel.showBackButton.value = slideable
+        }
+
+        binding.setBackClickListener {
+            goBack()
+        }
     }
 }

@@ -51,9 +51,10 @@
         <ImageView
             android:onClick="@{menuClickListener}"
             android:id="@+id/menu"
-            android:layout_width="@dimen/icon_size"
+            android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_marginEnd="10dp"
+            android:padding="15dp"
+            android:adjustViewBounds="true"
             android:src="@drawable/dots_three_vertical"
             app:tint="@color/orange_main_500"
             app:layout_constraintBottom_toBottomOf="@id/title"

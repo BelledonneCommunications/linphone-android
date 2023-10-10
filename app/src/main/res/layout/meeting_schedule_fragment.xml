@@ -7,6 +7,9 @@
         <variable
             name="backClickListener"
             type="View.OnClickListener" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.main.meetings.viewmodel.ScheduleMeetingViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -16,8 +19,160 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="80dp"
             android:background="@color/white">
+
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:padding="15dp"
+                android:adjustViewBounds="true"
+                android:onClick="@{backClickListener}"
+                android:visibility="@{viewModel.showBackButton ? View.VISIBLE : View.GONE}"
+                android:src="@drawable/caret_left"
+                app:tint="@color/orange_main_500"
+                app:layout_constraintBottom_toBottomOf="@id/title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/title"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/main_page_title_style"
+                android:id="@+id/title"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/top_bar_height"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/meeting_schedule_title"
+                app:layout_constraintEnd_toStartOf="@id/schedule"
+                app:layout_constraintStart_toEndOf="@id/back"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <ImageView
+                android:id="@+id/schedule"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:padding="15dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/check"
+                app:tint="@color/orange_main_500"
+                app:layout_constraintBottom_toBottomOf="@id/title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/title" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:id="@+id/meeting"
+                android:onClick="@{() -> viewModel.selectMeeting()}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/meeting_schedule_meeting_label"
+                android:textColor="@{viewModel.isBroadcastSelected ? @color/secondary_button_label_color : @color/primary_button_label_color, default=@color/primary_button_label_color}"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:drawableStart="@drawable/users_three"
+                android:drawableTint="@{viewModel.isBroadcastSelected ? @color/secondary_button_label_color : @color/primary_button_label_color, default=@color/primary_button_label_color}"
+                android:drawablePadding="5dp"
+                android:background="@{viewModel.isBroadcastSelected ? @drawable/secondary_button_background : @drawable/primary_button_background, default=@drawable/primary_button_background}"
+                android:paddingTop="@dimen/primary_secondary_buttons_label_padding"
+                android:paddingBottom="@dimen/primary_secondary_buttons_label_padding"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                app:layout_constraintTop_toBottomOf="@id/title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/broadcast"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:id="@+id/broadcast"
+                android:onClick="@{() -> viewModel.selectBroadcast()}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/meeting_schedule_broadcast_label"
+                android:textColor="@{viewModel.isBroadcastSelected ? @color/primary_button_label_color : @color/secondary_button_label_color, default=@color/secondary_button_label_color}"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:drawableStart="@drawable/slideshow"
+                android:drawableTint="@{viewModel.isBroadcastSelected ? @color/primary_button_label_color : @color/secondary_button_label_color, default=@color/secondary_button_label_color}"
+                android:drawablePadding="5dp"
+                android:background="@{viewModel.isBroadcastSelected ? @drawable/primary_button_background : @drawable/secondary_button_background, default=@drawable/secondary_button_background}"
+                android:paddingTop="@dimen/primary_secondary_buttons_label_padding"
+                android:paddingBottom="@dimen/primary_secondary_buttons_label_padding"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                app:layout_constraintTop_toBottomOf="@id/title"
+                app:layout_constraintStart_toEndOf="@id/meeting"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:id="@+id/broadcast_help"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/meeting_schedule_broadcast_help"
+                android:textSize="14sp"
+                android:textColor="@color/gray_main2_500"
+                android:drawableStart="@drawable/info"
+                android:drawablePadding="5dp"
+                android:gravity="center"
+                android:background="@drawable/shape_squircle_main2_100_background"
+                android:visibility="@{viewModel.showBroadcastHelp ? View.VISIBLE : View.GONE}"
+                app:layout_constraintTop_toBottomOf="@id/meeting"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <ImageView
+                android:id="@+id/close_broadcast_help"
+                android:onClick="@{() -> viewModel.closeBroadcastHelp()}"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/x"
+                android:visibility="@{viewModel.showBroadcastHelp ? View.VISIBLE : View.GONE}"
+                app:layout_constraintTop_toTopOf="@id/broadcast_help"
+                app:layout_constraintBottom_toBottomOf="@id/broadcast_help"
+                app:layout_constraintEnd_toEndOf="@id/broadcast_help" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                style="@style/default_text_style_800"
+                android:id="@+id/subject"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:hint="@string/meeting_schedule_subject_hint"
+                android:textSize="20sp"
+                android:textColor="@color/gray_main2_600"
+                android:inputType="text|textCapSentences"
+                android:drawableStart="@{viewModel.isBroadcastSelected ? @drawable/slideshow : @drawable/users_three, default=@drawable/users_three}"
+                android:drawablePadding="8dp"
+                android:background="@color/transparent_color"
+                app:layout_constraintTop_toBottomOf="@id/broadcast_help"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <View
+                android:id="@+id/separator"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/subject"
+                android:background="@color/gray_main2_200" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

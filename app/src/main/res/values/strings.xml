@@ -332,6 +332,11 @@
     <string name="conversation_text_field_hint">Say something…</string>
 
     <string name="meetings_list_empty">No meeting for the moment…</string>
+    <string name="meeting_schedule_title">New meeting</string>
+    <string name="meeting_schedule_meeting_label">Meeting</string>
+    <string name="meeting_schedule_broadcast_label">Broadcast</string>
+    <string name="meeting_schedule_broadcast_help">Info about broadcast. <u>Learn more</u></string>
+    <string name="meeting_schedule_subject_hint">Add title…</string>
 
     <string name="operation_in_progress_overlay">Operation in progress, please wait</string>
 
