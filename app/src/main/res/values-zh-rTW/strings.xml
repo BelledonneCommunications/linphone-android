@@ -801,6 +801,7 @@
     <string name="dialog_authentication_required_title">需要驗證</string>
     <string name="dialog_authentication_required_message">由於缺少帳號 %s 的驗證資訊，或是驗證資訊無效，連線失敗。
 \n
+\n
 \n您可以再次輸入密碼，或是到設定畫面中確認帳號設定。</string>
     <string name="dialog_authentication_required_change_password_label">確認</string>
     <string name="chat_event_ephemeral_enabled">您開啟了「閱後即焚」訊息：%s</string>
@@ -818,4 +819,25 @@
     <string name="chat_message_voice_recording_notification_short_desc">語音訊息</string>
     <string name="chat_message_reaction_received">%s 已由 %s 回覆給：%s</string>
     <string name="conference_invitation_notification_short_desc">會議邀請</string>
+    <string name="conference_schedule_mode">模式</string>
+    <string name="conference_schedule_mode_meeting">會議</string>
+    <string name="conference_schedule_mode_broadcast">廣播</string>
+    <string name="conference_schedule_speakers_list">發言者清單</string>
+    <string name="conference_schedule_participants_list_empty">請選擇至少一位與會者</string>
+    <string name="conference_schedule_broadcast_summary">廣播資訊</string>
+    <string name="conference_broadcast_start">排程廣播</string>
+    <string name="conference_broadcast_edit">編輯廣播</string>
+    <string name="conference_broadcast_invite_title">廣播邀請：</string>
+    <string name="conference_broadcast_invite_you_are_speaker">（您是發言者）</string>
+    <string name="conference_broadcast_title">廣播：</string>
+    <string name="conference_invite_participants_list_title">參與者</string>
+    <string name="conference_participants_list_speaker_label">發言者</string>
+    <string name="conferences_settings_enable_broadcast_summary">功能目前正在 Beta 測試中！</string>
+    <string name="conference_schedule_broadcast_address_title">廣播地址</string>
+    <string name="conference_schedule_speakers_list_empty">請選擇至少一位發言者</string>
+    <string name="conference_waiting_room_listener_broadcast">您不是此廣播的發言者</string>
+    <string name="conference_meeting_title">會議：</string>
+    <string name="conference_invite_speakers_list_title">發言者</string>
+    <string name="conferences_settings_enable_broadcast_title">允許廣播</string>
+    <string name="content_description_contact_is_speaker">聯絡人是發言者</string>
 </resources>
