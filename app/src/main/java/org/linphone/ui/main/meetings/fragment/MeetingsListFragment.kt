@@ -23,6 +23,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.UiThread
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.R
@@ -36,6 +37,7 @@ import org.linphone.utils.RecyclerViewHeaderDecoration
 import org.linphone.utils.hideKeyboard
 import org.linphone.utils.showKeyboard
 
+@UiThread
 class MeetingsListFragment : AbstractTopBarFragment() {
     companion object {
         private const val TAG = "[Meetings List Fragment]"
@@ -80,15 +82,7 @@ class MeetingsListFragment : AbstractTopBarFragment() {
         }
 
         binding.setTodayClickListener {
-            val todayMeeting = listViewModel.meetings.value.orEmpty().find {
-                it.isToday
-            }
-            val position = if (todayMeeting != null) {
-                listViewModel.meetings.value.orEmpty().indexOf(todayMeeting)
-            } else {
-                0 // TODO FIXME: improve by getting closest meeting
-            }
-            binding.meetingsList.smoothScrollToPosition(position)
+            scrollToToday()
         }
 
         listViewModel.meetings.observe(viewLifecycleOwner) {
@@ -97,7 +91,7 @@ class MeetingsListFragment : AbstractTopBarFragment() {
             Log.i("$TAG Meetings list ready with [${it.size}] items")
 
             if (currentCount < it.size) {
-                binding.meetingsList.scrollToPosition(0)
+                scrollToToday()
             }
         }
 
@@ -106,6 +100,7 @@ class MeetingsListFragment : AbstractTopBarFragment() {
                 Log.i(
                     "$TAG Default account changed, updating avatar in top bar & re-computing meetings list"
                 )
+                listViewModel.applyFilter()
             }
         }
 
@@ -130,5 +125,24 @@ class MeetingsListFragment : AbstractTopBarFragment() {
                 }
             }
         }
+    }
+
+    private fun scrollToToday() {
+        Log.i("$TAG Scrolling to today's meeting (if any)")
+        val todayMeeting = listViewModel.meetings.value.orEmpty().find {
+            it.isToday
+        }
+        val position = if (todayMeeting != null) {
+            val index = listViewModel.meetings.value.orEmpty().indexOf(todayMeeting)
+            Log.i(
+                "$TAG Found (at least) a meeting for today [${todayMeeting.subject.value}] at index [$index]"
+            )
+            // Return the element before so today's event will be properly displayed (due to header)
+            if (index > 0) index - 1 else index
+        } else {
+            Log.i("$TAG No meeting found for today")
+            0 // TODO FIXME: improve by getting closest meeting
+        }
+        binding.meetingsList.smoothScrollToPosition(position)
     }
 }

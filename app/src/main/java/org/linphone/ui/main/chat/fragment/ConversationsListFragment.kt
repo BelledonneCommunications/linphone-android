@@ -23,6 +23,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.UiThread
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.R
@@ -36,6 +37,7 @@ import org.linphone.utils.Event
 import org.linphone.utils.hideKeyboard
 import org.linphone.utils.showKeyboard
 
+@UiThread
 class ConversationsListFragment : AbstractTopBarFragment() {
     companion object {
         private const val TAG = "[Conversations List Fragment]"

@@ -79,11 +79,32 @@ class MeetingsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
     private fun computeMeetingsList(filter: String) {
         val list = arrayListOf<MeetingModel>()
 
-        // TODO FIXME: get list from default account
-        for (conferenceInfo in coreContext.core.conferenceInformationList) {
-            val model = MeetingModel(conferenceInfo)
-            // TODO FIXME: apply filter
-            list.add(model)
+        var source = coreContext.core.defaultAccount?.conferenceInformationList
+        if (source == null) {
+            Log.e(
+                "$TAG Failed to obtain conferences information list from default account, using Core"
+            )
+            source = coreContext.core.conferenceInformationList
+        }
+        for (info: ConferenceInfo in source) {
+            val add = if (filter.isNotEmpty()) {
+                val organizerCheck = info.organizer?.asStringUriOnly()?.contains(
+                    filter,
+                    ignoreCase = true
+                ) ?: false
+                val subjectCheck = info.subject?.contains(filter, ignoreCase = true) ?: false
+                val descriptionCheck = info.description?.contains(filter, ignoreCase = true) ?: false
+                val participantsCheck = info.participantInfos.find {
+                    it.address.asStringUriOnly().contains(filter, ignoreCase = true)
+                } != null
+                organizerCheck || subjectCheck || descriptionCheck || participantsCheck
+            } else {
+                true
+            }
+            if (add) {
+                val model = MeetingModel(info)
+                list.add(model)
+            }
         }
 
         meetings.postValue(list)

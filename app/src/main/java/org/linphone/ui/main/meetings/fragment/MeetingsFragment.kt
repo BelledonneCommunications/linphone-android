@@ -25,6 +25,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.annotation.UiThread
 import androidx.core.view.doOnPreDraw
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -35,6 +36,7 @@ import org.linphone.databinding.MeetingsFragmentBinding
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.SlidingPaneBackPressedCallback
 
+@UiThread
 class MeetingsFragment : GenericFragment() {
     companion object {
         private const val TAG = "[Meetings Fragment]"

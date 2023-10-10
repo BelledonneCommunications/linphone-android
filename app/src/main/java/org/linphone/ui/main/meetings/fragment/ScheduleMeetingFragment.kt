@@ -23,11 +23,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.UiThread
 import androidx.navigation.fragment.findNavController
 import org.linphone.databinding.MeetingScheduleFragmentBinding
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.Event
 
+@UiThread
 class ScheduleMeetingFragment : GenericFragment() {
     companion object {
         private const val TAG = "[Schedule Meeting Fragment]"
