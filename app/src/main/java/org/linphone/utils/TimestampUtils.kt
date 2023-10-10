@@ -24,7 +24,10 @@ import java.text.DateFormat
 import java.text.Format
 import java.text.SimpleDateFormat
 import java.time.format.TextStyle
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 import org.linphone.LinphoneApplication.Companion.coreContext
 
 class TimestampUtils {
@@ -146,7 +149,7 @@ class TimestampUtils {
             shortDate: Boolean = true,
             hideYear: Boolean = true
         ): String {
-            val dateFormat = if (isToday(timestamp, timestampInSecs)) {
+            val dateFormat = if (!onlyDate && isToday(timestamp, timestampInSecs)) {
                 DateFormat.getTimeInstance(DateFormat.SHORT)
             } else {
                 if (onlyDate) {
@@ -159,7 +162,7 @@ class TimestampUtils {
                 }
             } as SimpleDateFormat
 
-            if (hideYear || isSameYear(timestamp, timestampInSecs)) {
+            if (hideYear) {
                 // Remove the year part of the format
                 dateFormat.applyPattern(
                     dateFormat.toPattern().replace(
