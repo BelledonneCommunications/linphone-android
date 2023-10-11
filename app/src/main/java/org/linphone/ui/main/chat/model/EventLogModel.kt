@@ -35,11 +35,4 @@ class EventLogModel @WorkerThread constructor(eventLog: EventLog, avatarModel: C
     }
 
     val notifyId = eventLog.notifyId
-
-    fun destroy() {
-        /*when (data) {
-            is EventData -> data.destroy()
-            is ChatMessageModel -> data.destroy()
-        }*/
-    }
 }

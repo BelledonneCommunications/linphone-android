@@ -119,10 +119,11 @@ class ConversationEventAdapter(
             with(binding) {
                 model = chatMessageData
 
-                isGroupedWithPreviousOne = if (bindingAdapterPosition == 0) {
+                val position = bindingAdapterPosition
+                isGroupedWithPreviousOne = if (position == 0) {
                     false
                 } else {
-                    val previous = bindingAdapterPosition - 1
+                    val previous = position - 1
                     if (getItemViewType(previous) == INCOMING_CHAT_MESSAGE) {
                         val previousItem = getItem(previous).data as ChatMessageModel
                         if (kotlin.math.abs(chatMessageData.timestamp - previousItem.timestamp) < MAX_TIME_TO_GROUP_MESSAGES) {
@@ -135,10 +136,20 @@ class ConversationEventAdapter(
                     }
                 }
 
-                binding.setOnLongClickListener {
-                    selectedAdapterPosition = bindingAdapterPosition
-                    binding.root.isSelected = true
+                isLastOneOfGroup = if (position == itemCount - 1) {
                     true
+                } else {
+                    val next = position + 1
+                    if (getItemViewType(next) == INCOMING_CHAT_MESSAGE) {
+                        val nextItem = getItem(next).data as ChatMessageModel
+                        if (kotlin.math.abs(chatMessageData.timestamp - nextItem.timestamp) < MAX_TIME_TO_GROUP_MESSAGES) {
+                            nextItem.fromSipUri != chatMessageData.fromSipUri
+                        } else {
+                            true
+                        }
+                    } else {
+                        true
+                    }
                 }
 
                 lifecycleOwner = viewLifecycleOwner
@@ -154,10 +165,11 @@ class ConversationEventAdapter(
             with(binding) {
                 model = chatMessageData
 
-                isGroupedWithPreviousOne = if (bindingAdapterPosition == 0) {
+                val position = bindingAdapterPosition
+                isGroupedWithPreviousOne = if (position == 0) {
                     false
                 } else {
-                    val previous = bindingAdapterPosition - 1
+                    val previous = position - 1
                     if (getItemViewType(previous) == OUTGOING_CHAT_MESSAGE) {
                         val previousItem = getItem(previous).data as ChatMessageModel
                         if (kotlin.math.abs(chatMessageData.timestamp - previousItem.timestamp) < MAX_TIME_TO_GROUP_MESSAGES) {
@@ -170,10 +182,20 @@ class ConversationEventAdapter(
                     }
                 }
 
-                binding.setOnLongClickListener {
-                    selectedAdapterPosition = bindingAdapterPosition
-                    binding.root.isSelected = true
+                isLastOneOfGroup = if (position == itemCount - 1) {
                     true
+                } else {
+                    val next = position + 1
+                    if (getItemViewType(next) == INCOMING_CHAT_MESSAGE) {
+                        val nextItem = getItem(next).data as ChatMessageModel
+                        if (kotlin.math.abs(chatMessageData.timestamp - nextItem.timestamp) < MAX_TIME_TO_GROUP_MESSAGES) {
+                            nextItem.fromSipUri != chatMessageData.fromSipUri
+                        } else {
+                            true
+                        }
+                    } else {
+                        true
+                    }
                 }
 
                 lifecycleOwner = viewLifecycleOwner

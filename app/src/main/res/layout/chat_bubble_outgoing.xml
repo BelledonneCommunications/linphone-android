@@ -14,6 +14,9 @@
         <variable
             name="isGroupedWithPreviousOne"
             type="Boolean" />
+        <variable
+            name="isLastOneOfGroup"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

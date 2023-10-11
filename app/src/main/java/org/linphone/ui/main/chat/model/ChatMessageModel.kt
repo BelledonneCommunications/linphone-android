@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.main.chat.model
 
+import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.core.ChatMessage
@@ -46,5 +47,14 @@ class ChatMessageModel @WorkerThread constructor(
 
     init {
         state.postValue(chatMessage.state)
+    }
+
+    @UiThread
+    fun onLongClick(): Boolean {
+        return true
+    }
+
+    @UiThread
+    fun showDeliveryInfo() {
     }
 }

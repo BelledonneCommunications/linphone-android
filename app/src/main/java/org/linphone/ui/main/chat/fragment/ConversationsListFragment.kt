@@ -136,6 +136,7 @@ class ConversationsListFragment : AbstractTopBarFragment() {
                 Log.i(
                     "$TAG Default account changed, updating avatar in top bar & re-computing conversations"
                 )
+                listViewModel.applyFilter()
             }
         }
 

@@ -53,6 +53,17 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     private val avatarsMap = hashMapOf<String, ContactAvatarModel>()
 
+    init {
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+
+        coreContext.postOnCoreThread {
+            avatarsMap.values.forEach(ContactAvatarModel::destroy)
+        }
+    }
+
     @UiThread
     fun findChatRoom(localSipUri: String, remoteSipUri: String) {
         coreContext.postOnCoreThread { core ->
@@ -105,12 +116,14 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         avatarModel.postValue(getAvatarModelForAddress(address))
 
         val eventsList = arrayListOf<EventLogModel>()
+
         val history = chatRoom.getHistoryEvents(0)
         for (event in history) {
             val avatar = getAvatarModelForAddress(event.chatMessage?.fromAddress)
             val model = EventLogModel(event, avatar)
             eventsList.add(model)
         }
+
         events.postValue(eventsList)
         chatRoom.markAsRead()
     }
