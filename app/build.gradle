@@ -90,7 +90,7 @@ dependencies {
     implementation "androidx.emoji2:emoji2-emojipicker:$emoji_version"
 
     // https://github.com/material-components/material-components-android/blob/master/LICENSE Apache v2.0
-    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'com.google.android.material:material:1.10.0'
 
     // https://github.com/coil-kt/coil/blob/main/LICENSE.txt Apache v2.0
     def coil_version = "2.4.0"
