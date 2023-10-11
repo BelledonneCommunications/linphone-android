@@ -228,12 +228,6 @@ fun AvatarView.loadAccountAvatar(account: AccountModel?) {
                 loadImage(
                     data = uri,
                     onStart = {
-                        // Use initials as placeholder
-                        val initials = account.initials.value.orEmpty()
-                        if (initials != "+") {
-                            avatarInitials = initials
-                        }
-
                         if (account.showTrust.value == true) {
                             avatarBorderColor =
                                 resources.getColor(R.color.blue_info_500, context.theme)
@@ -243,9 +237,12 @@ fun AvatarView.loadAccountAvatar(account: AccountModel?) {
                             avatarBorderWidth = AppUtils.getDimension(R.dimen.zero).toInt()
                         }
                     },
-                    onSuccess = { _, _ ->
-                        // If loading is successful, remove initials otherwise image won't be visible
-                        avatarInitials = ""
+                    onError = { _, _ ->
+                        // Use initials as fallback
+                        val initials = account.initials.value.orEmpty()
+                        if (initials != "+") {
+                            avatarInitials = initials
+                        }
                     }
                 )
             }
@@ -253,12 +250,6 @@ fun AvatarView.loadAccountAvatar(account: AccountModel?) {
             loadImage(
                 data = account.avatar.value,
                 onStart = {
-                    // Use initials as placeholder
-                    val initials = account.initials.value.orEmpty()
-                    if (initials != "+") {
-                        avatarInitials = initials
-                    }
-
                     if (account.showTrust.value == true) {
                         avatarBorderColor = resources.getColor(R.color.blue_info_500, context.theme)
                         avatarBorderWidth = AppUtils.getDimension(R.dimen.avatar_trust_border_width).toInt()
@@ -266,9 +257,12 @@ fun AvatarView.loadAccountAvatar(account: AccountModel?) {
                         avatarBorderWidth = AppUtils.getDimension(R.dimen.zero).toInt()
                     }
                 },
-                onSuccess = { _, _ ->
-                    // If loading is successful, remove initials otherwise image won't be visible
-                    avatarInitials = ""
+                onError = { _, _ ->
+                    // Use initials as fallback
+                    val initials = account.initials.value.orEmpty()
+                    if (initials != "+") {
+                        avatarInitials = initials
+                    }
                 }
             )
         }
@@ -285,12 +279,6 @@ fun AvatarView.loadContactAvatar(contact: ContactAvatarModel?) {
         loadImage(
             data = uri,
             onStart = {
-                // Use initials as placeholder
-                val initials = contact.initials
-                if (initials != "+") {
-                    avatarInitials = initials
-                }
-
                 when (contact.trust.value) {
                     ChatRoom.SecurityLevel.Unsafe -> {
                         avatarBorderColor =
@@ -309,12 +297,13 @@ fun AvatarView.loadContactAvatar(contact: ContactAvatarModel?) {
                     }
                 }
             },
-            onSuccess = { _, _ ->
-                // If loading is successful, remove initials otherwise image won't be visible
-                avatarInitials = ""
-            },
             onError = { _, result ->
                 Log.e("[Contact Avatar Model] Can't load data: ${result.throwable}")
+                // Use initials as fallback
+                val initials = contact.initials
+                if (initials != "+") {
+                    avatarInitials = initials
+                }
             }
         )
     }

@@ -24,6 +24,7 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
 import org.linphone.core.Address
 import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoomListenerStub
@@ -34,7 +35,9 @@ import org.linphone.core.tools.Log
 import org.linphone.ui.main.chat.model.EventLogModel
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.contacts.model.GroupAvatarModel
+import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
+import org.linphone.utils.LinphoneUtils
 
 class ConversationViewModel @UiThread constructor() : ViewModel() {
     companion object {
@@ -55,6 +58,8 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     val isReadOnly = MutableLiveData<Boolean>()
 
+    val composingLabel = MutableLiveData<String>()
+
     val textToSend = MutableLiveData<String>()
 
     val chatRoomFoundEvent = MutableLiveData<Event<Boolean>>()
@@ -64,6 +69,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
     private val avatarsMap = hashMapOf<String, ContactAvatarModel>()
 
     private val chatRoomListener = object : ChatRoomListenerStub() {
+        @WorkerThread
         override fun onChatMessageSending(chatRoom: ChatRoom, eventLog: EventLog) {
             val message = eventLog.chatMessage
             Log.i("$TAG Chat message [$message] is being sent")
@@ -77,9 +83,44 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             events.postValue(list)
         }
 
+        @WorkerThread
         override fun onChatMessageSent(chatRoom: ChatRoom, eventLog: EventLog) {
             val message = eventLog.chatMessage
             Log.i("$TAG Chat message [$message] has been sent")
+        }
+
+        @WorkerThread
+        override fun onIsComposingReceived(
+            chatRoom: ChatRoom,
+            remoteAddress: Address,
+            isComposing: Boolean
+        ) {
+            Log.i(
+                "$TAG Remote [${remoteAddress.asStringUriOnly()}] is ${if (isComposing) "composing" else "no longer composing"}"
+            )
+            computeComposingLabel()
+        }
+
+        @WorkerThread
+        override fun onChatMessagesReceived(chatRoom: ChatRoom, eventLogs: Array<out EventLog>) {
+            Log.i("$TAG Received [${eventLogs.size}] new message(s)")
+            chatRoom.markAsRead()
+            computeComposingLabel()
+
+            val list = arrayListOf<EventLogModel>()
+            list.addAll(events.value.orEmpty())
+
+            for (eventLog in eventLogs) {
+                val address = if (eventLog.type == EventLog.Type.ConferenceChatMessage) {
+                    eventLog.chatMessage?.fromAddress
+                } else {
+                    eventLog.participantAddress
+                }
+                val avatarModel = getAvatarModelForAddress(address)
+                list.add(EventLogModel(eventLog, avatarModel))
+            }
+
+            events.postValue(list)
         }
     }
 
@@ -147,6 +188,8 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     @WorkerThread
     private fun configureChatRoom() {
+        computeComposingLabel()
+
         isGroup.postValue(
             !chatRoom.hasCapability(ChatRoom.Capabilities.OneToOne.toInt()) && chatRoom.hasCapability(
                 ChatRoom.Capabilities.Conference.toInt()
@@ -202,20 +245,47 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             return ContactAvatarModel(fakeFriend)
         }
 
-        val key = address.asStringUriOnly()
+        val clone = address.clone()
+        clone.clean()
+        val key = clone.asStringUriOnly()
+
         val foundInMap = if (avatarsMap.keys.contains(key)) avatarsMap[key] else null
         if (foundInMap != null) return foundInMap
 
-        val friend = coreContext.contactsManager.findContactByAddress(address)
+        val friend = coreContext.contactsManager.findContactByAddress(clone)
         val avatar = if (friend != null) {
             ContactAvatarModel(friend)
         } else {
             val fakeFriend = coreContext.core.createFriend()
-            fakeFriend.address = address
+            fakeFriend.address = clone
             ContactAvatarModel(fakeFriend)
         }
 
-        avatarsMap[address.asStringUriOnly()] = avatar
+        avatarsMap[key] = avatar
         return avatar
+    }
+
+    @WorkerThread
+    private fun computeComposingLabel() {
+        var composingFriends = arrayListOf<String>()
+        var label = ""
+        for (address in chatRoom.composingAddresses) {
+            val avatar = getAvatarModelForAddress(address)
+            val name = avatar.name.value ?: LinphoneUtils.getDisplayName(address)
+            composingFriends.add(name)
+            label += "$name, "
+        }
+        if (composingFriends.size > 0) {
+            label = label.dropLast(2)
+
+            val format = AppUtils.getStringWithPlural(
+                R.plurals.conversation_composing_label,
+                composingFriends.size,
+                label
+            )
+            composingLabel.postValue(format)
+        } else {
+            composingLabel.postValue("")
+        }
     }
 }

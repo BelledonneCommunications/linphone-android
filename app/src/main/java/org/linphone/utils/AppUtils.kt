@@ -36,6 +36,7 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.MainThread
+import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
 import androidx.annotation.UiThread
 import androidx.core.content.ContextCompat
@@ -83,6 +84,11 @@ class AppUtils {
         @AnyThread
         fun getFormattedString(@StringRes id: Int, args: Any): String {
             return coreContext.context.getString(id, args)
+        }
+
+        @AnyThread
+        fun getStringWithPlural(@PluralsRes id: Int, count: Int, value: String): String {
+            return coreContext.context.resources.getQuantityString(id, count, value)
         }
 
         @AnyThread @ColorInt

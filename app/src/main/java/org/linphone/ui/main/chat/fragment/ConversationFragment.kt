@@ -115,18 +115,18 @@ class ConversationFragment : GenericFragment() {
         val layoutManager = LinearLayoutManager(requireContext())
         binding.eventsList.layoutManager = layoutManager
 
-        viewModel.events.observe(viewLifecycleOwner) {
+        viewModel.events.observe(viewLifecycleOwner) { items ->
             val currentCount = adapter.itemCount
-            adapter.submitList(it)
-            Log.i("$TAG Events (messages) list updated with [${it.size}] items")
-
-            if (currentCount < it.size) {
-                binding.eventsList.scrollToPosition(it.size - 1)
-            }
+            adapter.submitList(items)
+            Log.i("$TAG Events (messages) list updated with [${items.size}] items")
 
             (view.parent as? ViewGroup)?.doOnPreDraw {
                 startPostponedEnterTransition()
                 sharedViewModel.openSlidingPaneEvent.value = Event(true)
+            }
+
+            if (currentCount < items.size) {
+                binding.eventsList.scrollToPosition(items.size - 1)
             }
         }
 
