@@ -144,6 +144,7 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
         val list = arrayListOf<ContactAvatarModel>()
         val favouritesList = arrayListOf<ContactAvatarModel>()
         var previousLetter = ""
+        var count = 0
 
         for (result in results) {
             val friend = result.friend
@@ -167,8 +168,15 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
             model.firstContactStartingByThatLetter.postValue(displayLetter)
 
             list.add(model)
+            count += 1
+
             if (friend?.starred == true) {
                 favouritesList.add(model)
+            }
+
+            if (count == 20) {
+                contactsList.postValue(list)
+                fetchInProgress.postValue(false)
             }
         }
 

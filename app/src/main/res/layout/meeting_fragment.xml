@@ -8,6 +8,9 @@
             name="backClickListener"
             type="View.OnClickListener" />
         <variable
+            name="menuClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="shareClickListener"
             type="View.OnClickListener" />
         <variable
@@ -60,6 +63,7 @@
 
         <ImageView
             android:id="@+id/menu"
+            android:onClick="@{menuClickListener}"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:padding="15dp"

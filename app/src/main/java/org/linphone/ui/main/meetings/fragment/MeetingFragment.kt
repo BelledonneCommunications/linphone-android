@@ -23,16 +23,22 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
 import android.provider.CalendarContract
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupWindow
 import androidx.annotation.UiThread
 import androidx.core.view.doOnPreDraw
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.MeetingFragmentBinding
+import org.linphone.databinding.MeetingPopupMenuBinding
+import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.ui.main.meetings.viewmodel.MeetingViewModel
 import org.linphone.utils.Event
@@ -114,6 +120,10 @@ class MeetingFragment : GenericFragment() {
             }
         }
 
+        binding.setMenuClickListener {
+            showPopupMenu()
+        }
+
         sharedViewModel.isSlidingPaneSlideable.observe(viewLifecycleOwner) { slideable ->
             viewModel.showBackButton.value = slideable
         }
@@ -133,5 +143,41 @@ class MeetingFragment : GenericFragment() {
                 }
             }
         }
+
+        viewModel.conferenceInfoDeletedEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i("$TAG Meeting info has been deleted successfully")
+                (requireActivity() as MainActivity).showGreenToast(
+                    getString(R.string.meeting_info_deleted_toast),
+                    R.drawable.trash_simple
+                )
+                sharedViewModel.forceRefreshMeetingsListEvent.value = Event(true)
+                goBack()
+            }
+        }
+    }
+
+    private fun showPopupMenu() {
+        val popupView: MeetingPopupMenuBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(requireContext()),
+            R.layout.meeting_popup_menu,
+            null,
+            false
+        )
+        val popupWindow = PopupWindow(
+            popupView.root,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            true
+        )
+
+        popupView.setDeleteClickListener {
+            viewModel.delete()
+            popupWindow.dismiss()
+        }
+
+        // Elevation is for showing a shadow around the popup
+        popupWindow.elevation = 20f
+        popupWindow.showAsDropDown(binding.menu, 0, 0, Gravity.BOTTOM)
     }
 }

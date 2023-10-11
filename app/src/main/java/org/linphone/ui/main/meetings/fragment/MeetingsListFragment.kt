@@ -107,6 +107,13 @@ class MeetingsListFragment : AbstractTopBarFragment() {
             }
         }
 
+        sharedViewModel.forceRefreshMeetingsListEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i("$TAG We were asked to refresh the meetings list, doing it now")
+                listViewModel.applyFilter()
+            }
+        }
+
         sharedViewModel.defaultAccountChangedEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.i(

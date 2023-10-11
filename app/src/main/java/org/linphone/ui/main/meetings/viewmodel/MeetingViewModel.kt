@@ -66,6 +66,10 @@ class MeetingViewModel @UiThread constructor() : ViewModel() {
     val startTimeStamp = MutableLiveData<Long>()
     val endTimeStamp = MutableLiveData<Long>()
 
+    val conferenceInfoDeletedEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     private lateinit var conferenceInfo: ConferenceInfo
 
     init {
@@ -102,6 +106,17 @@ class MeetingViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun join() {
         // TODO
+    }
+
+    @UiThread
+    fun delete() {
+        coreContext.postOnCoreThread { core ->
+            if (::conferenceInfo.isInitialized) {
+                Log.i("$TAG Deleting conference information [$conferenceInfo]")
+                core.deleteConferenceInformation(conferenceInfo)
+                conferenceInfoDeletedEvent.postValue(Event(true))
+            }
+        }
     }
 
     @WorkerThread

@@ -110,7 +110,6 @@ class ConversationsListViewModel @UiThread constructor() : AbstractTopBarViewMod
         val list = arrayListOf<ConversationModel>()
         var count = 0
 
-        // TODO? : Add support for chat rooms in magic search
         val account = LinphoneUtils.getDefaultAccount()
         val chatRooms = account?.chatRooms ?: coreContext.core.chatRooms
         for (chatRoom in chatRooms) {

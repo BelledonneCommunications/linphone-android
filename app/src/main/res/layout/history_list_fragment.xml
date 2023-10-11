@@ -131,9 +131,9 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <include
+        <!--<include
             layout="@layout/operation_in_progress"
-            bind:visibility="@{viewModel.fetchInProgress}" />
+            bind:visibility="@{viewModel.fetchInProgress}" />-->
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
