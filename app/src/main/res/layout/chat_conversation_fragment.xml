@@ -50,6 +50,7 @@
                 android:layout_marginStart="5dp"
                 android:adjustViewBounds="true"
                 android:background="@drawable/shape_circle_light_blue_background"
+                android:visibility="@{viewModel.isGroup ? View.GONE : View.VISIBLE}"
                 contactAvatar="@{viewModel.avatarModel}"
                 app:avatarViewPlaceholder="@drawable/user_circle"
                 app:avatarViewInitialsBackgroundColor="@color/gray_main2_200"
@@ -67,9 +68,37 @@
                 android:layout_width="@dimen/avatar_presence_badge_size"
                 android:layout_height="@dimen/avatar_presence_badge_size"
                 android:src="@{viewModel.avatarModel.trust == SecurityLevel.Encrypted ? @drawable/trusted : @drawable/not_trusted, default=@drawable/trusted}"
-                android:visibility="@{viewModel.avatarModel.trust == SecurityLevel.Encrypted || viewModel.avatarModel.trust == SecurityLevel.Unsafe ? View.VISIBLE : View.GONE}"
+                android:visibility="@{!viewModel.isGroup &amp;&amp; viewModel.avatarModel.trust == SecurityLevel.Encrypted || viewModel.avatarModel.trust == SecurityLevel.Unsafe ? View.VISIBLE : View.GONE}"
                 app:layout_constraintStart_toStartOf="@id/avatar"
                 app:layout_constraintBottom_toBottomOf="@id/avatar"/>
+
+            <io.getstream.avatarview.AvatarView
+                android:id="@+id/group_avatar"
+                android:layout_width="@dimen/avatar_list_cell_size"
+                android:layout_height="@dimen/avatar_list_cell_size"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginStart="5dp"
+                android:adjustViewBounds="true"
+                android:background="@drawable/shape_circle_light_blue_background"
+                android:visibility="@{viewModel.isGroup ? View.VISIBLE : View.GONE, default=gone}"
+                groupAvatar="@{viewModel.groupAvatarModel}"
+                app:avatarViewPlaceholder="@drawable/users_three"
+                app:avatarViewMaxSectionSize="four"
+                app:avatarViewShape="circle"
+                app:avatarViewBorderWidth="0dp"
+                app:layout_constraintBottom_toBottomOf="@id/back"
+                app:layout_constraintStart_toEndOf="@id/avatar"
+                app:layout_constraintTop_toTopOf="@id/back" />
+
+            <ImageView
+                android:id="@+id/group_trust_badge"
+                android:layout_width="@dimen/avatar_presence_badge_size"
+                android:layout_height="@dimen/avatar_presence_badge_size"
+                android:src="@{viewModel.groupAvatarModel.trust == SecurityLevel.Encrypted ? @drawable/trusted : @drawable/not_trusted, default=@drawable/trusted}"
+                android:visibility="@{viewModel.isGroup &amp;&amp; viewModel.groupAvatarModel.trust == SecurityLevel.Encrypted || viewModel.avatarModel.trust == SecurityLevel.Unsafe ? View.VISIBLE : View.GONE, default=gone}"
+                app:layout_constraintStart_toStartOf="@id/group_avatar"
+                app:layout_constraintBottom_toBottomOf="@id/group_avatar"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style"
@@ -85,7 +114,7 @@
                 android:textColor="@color/gray_main2_600"
                 android:gravity="center_vertical"
                 app:layout_constraintEnd_toStartOf="@id/call"
-                app:layout_constraintStart_toEndOf="@id/avatar"
+                app:layout_constraintStart_toEndOf="@id/group_avatar"
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <ImageView

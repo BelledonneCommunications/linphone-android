@@ -52,6 +52,7 @@ import org.linphone.core.ChatRoom
 import org.linphone.core.ConsolidatedPresence
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
+import org.linphone.ui.main.contacts.model.GroupAvatarModel
 import org.linphone.ui.main.model.AccountModel
 
 /**
@@ -311,6 +312,44 @@ fun AvatarView.loadContactAvatar(contact: ContactAvatarModel?) {
             onSuccess = { _, _ ->
                 // If loading is successful, remove initials otherwise image won't be visible
                 avatarInitials = ""
+            },
+            onError = { _, result ->
+                Log.e("[Contact Avatar Model] Can't load data: ${result.throwable}")
+            }
+        )
+    }
+}
+
+@UiThread
+@BindingAdapter("groupAvatar")
+fun AvatarView.loadGroupAvatar(contact: GroupAvatarModel?) {
+    if (contact == null) {
+        loadImage(R.drawable.user_circle)
+    } else {
+        val uris = contact.uris.value.orEmpty()
+        loadImage(
+            data = uris,
+            onStart = {
+                when (contact.trust.value) {
+                    ChatRoom.SecurityLevel.Unsafe -> {
+                        avatarBorderColor =
+                            resources.getColor(R.color.red_danger_500, context.theme)
+                        avatarBorderWidth =
+                            AppUtils.getDimension(R.dimen.avatar_trust_border_width).toInt()
+                    }
+                    ChatRoom.SecurityLevel.Encrypted -> {
+                        avatarBorderColor =
+                            resources.getColor(R.color.blue_info_500, context.theme)
+                        avatarBorderWidth =
+                            AppUtils.getDimension(R.dimen.avatar_trust_border_width).toInt()
+                    }
+                    else -> {
+                        avatarBorderWidth = AppUtils.getDimension(R.dimen.zero).toInt()
+                    }
+                }
+            },
+            onError = { _, result ->
+                Log.e("[Group Avatar Model] Can't load data: ${result.throwable}")
             }
         )
     }

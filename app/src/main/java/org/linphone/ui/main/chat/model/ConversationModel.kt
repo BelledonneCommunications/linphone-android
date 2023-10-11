@@ -27,8 +27,10 @@ import org.linphone.R
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoom.Capabilities
+import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
+import org.linphone.ui.main.contacts.model.GroupAvatarModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.TimestampUtils
@@ -72,10 +74,13 @@ class ConversationModel @WorkerThread constructor(private val chatRoom: ChatRoom
 
     val avatarModel: ContactAvatarModel
 
+    val groupAvatarModel: GroupAvatarModel
+
     init {
         subject.postValue(chatRoom.subject)
         lastUpdateTime.postValue(chatRoom.lastUpdateTime)
 
+        val friends = arrayListOf<Friend>()
         val address = if (chatRoom.hasCapability(Capabilities.Basic.toInt())) {
             Log.i("$TAG Chat room [$id] is 'Basic'")
             chatRoom.peerAddress
@@ -83,6 +88,14 @@ class ConversationModel @WorkerThread constructor(private val chatRoom: ChatRoom
             val firstParticipant = chatRoom.participants.firstOrNull()
             if (isGroup) {
                 Log.i("$TAG Group chat room [$id] has [${chatRoom.nbParticipants}] participant(s)")
+                for (participant in chatRoom.participants) {
+                    val friend = coreContext.contactsManager.findContactByAddress(
+                        participant.address
+                    )
+                    if (friend != null) {
+                        friends.add(friend)
+                    }
+                }
             } else {
                 Log.i(
                     "$TAG Chat room [$id] is with participant [${firstParticipant?.address?.asStringUriOnly()}]"
@@ -90,7 +103,6 @@ class ConversationModel @WorkerThread constructor(private val chatRoom: ChatRoom
             }
             firstParticipant?.address ?: chatRoom.peerAddress
         }
-
         val friend = coreContext.contactsManager.findContactByAddress(address)
         if (friend != null) {
             avatarModel = ContactAvatarModel(friend)
@@ -99,6 +111,7 @@ class ConversationModel @WorkerThread constructor(private val chatRoom: ChatRoom
             fakeFriend.address = address
             avatarModel = ContactAvatarModel(fakeFriend)
         }
+        groupAvatarModel = GroupAvatarModel(friends)
 
         isMuted.postValue(chatRoom.muted)
         isEphemeral.postValue(chatRoom.isEphemeralEnabled)

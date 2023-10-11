@@ -112,45 +112,52 @@ class ConversationEventAdapter(
         selectedAdapterPosition = -1
     }
 
+    fun groupPreviousItem(item: ChatMessageModel, position: Int): Boolean {
+        return if (position == 0) {
+            false
+        } else {
+            val previous = position - 1
+            if (getItemViewType(position) == getItemViewType(previous)) {
+                val previousItem = getItem(previous).data as ChatMessageModel
+                if (kotlin.math.abs(item.timestamp - previousItem.timestamp) < MAX_TIME_TO_GROUP_MESSAGES) {
+                    previousItem.fromSipUri == item.fromSipUri
+                } else {
+                    false
+                }
+            } else {
+                false
+            }
+        }
+    }
+
+    fun isLastItemOfGroup(item: ChatMessageModel, position: Int): Boolean {
+        return if (position == itemCount - 1) {
+            true
+        } else {
+            val next = position + 1
+            if (getItemViewType(next) == getItemViewType(position)) {
+                val nextItem = getItem(next).data as ChatMessageModel
+                if (kotlin.math.abs(item.timestamp - nextItem.timestamp) < MAX_TIME_TO_GROUP_MESSAGES) {
+                    nextItem.fromSipUri != item.fromSipUri
+                } else {
+                    true
+                }
+            } else {
+                true
+            }
+        }
+    }
+
     inner class IncomingBubbleViewHolder(
         val binding: ChatBubbleIncomingBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(chatMessageData: ChatMessageModel) {
+        fun bind(message: ChatMessageModel) {
             with(binding) {
-                model = chatMessageData
+                model = message
 
                 val position = bindingAdapterPosition
-                isGroupedWithPreviousOne = if (position == 0) {
-                    false
-                } else {
-                    val previous = position - 1
-                    if (getItemViewType(previous) == INCOMING_CHAT_MESSAGE) {
-                        val previousItem = getItem(previous).data as ChatMessageModel
-                        if (kotlin.math.abs(chatMessageData.timestamp - previousItem.timestamp) < MAX_TIME_TO_GROUP_MESSAGES) {
-                            previousItem.fromSipUri == chatMessageData.fromSipUri
-                        } else {
-                            false
-                        }
-                    } else {
-                        false
-                    }
-                }
-
-                isLastOneOfGroup = if (position == itemCount - 1) {
-                    true
-                } else {
-                    val next = position + 1
-                    if (getItemViewType(next) == INCOMING_CHAT_MESSAGE) {
-                        val nextItem = getItem(next).data as ChatMessageModel
-                        if (kotlin.math.abs(chatMessageData.timestamp - nextItem.timestamp) < MAX_TIME_TO_GROUP_MESSAGES) {
-                            nextItem.fromSipUri != chatMessageData.fromSipUri
-                        } else {
-                            true
-                        }
-                    } else {
-                        true
-                    }
-                }
+                isGroupedWithPreviousOne = groupPreviousItem(message, position)
+                isLastOneOfGroup = isLastItemOfGroup(message, position)
 
                 lifecycleOwner = viewLifecycleOwner
                 executePendingBindings()
@@ -161,42 +168,13 @@ class ConversationEventAdapter(
     inner class OutgoingBubbleViewHolder(
         val binding: ChatBubbleOutgoingBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(chatMessageData: ChatMessageModel) {
+        fun bind(message: ChatMessageModel) {
             with(binding) {
-                model = chatMessageData
+                model = message
 
                 val position = bindingAdapterPosition
-                isGroupedWithPreviousOne = if (position == 0) {
-                    false
-                } else {
-                    val previous = position - 1
-                    if (getItemViewType(previous) == OUTGOING_CHAT_MESSAGE) {
-                        val previousItem = getItem(previous).data as ChatMessageModel
-                        if (kotlin.math.abs(chatMessageData.timestamp - previousItem.timestamp) < MAX_TIME_TO_GROUP_MESSAGES) {
-                            previousItem.fromSipUri == chatMessageData.fromSipUri
-                        } else {
-                            false
-                        }
-                    } else {
-                        false
-                    }
-                }
-
-                isLastOneOfGroup = if (position == itemCount - 1) {
-                    true
-                } else {
-                    val next = position + 1
-                    if (getItemViewType(next) == INCOMING_CHAT_MESSAGE) {
-                        val nextItem = getItem(next).data as ChatMessageModel
-                        if (kotlin.math.abs(chatMessageData.timestamp - nextItem.timestamp) < MAX_TIME_TO_GROUP_MESSAGES) {
-                            nextItem.fromSipUri != chatMessageData.fromSipUri
-                        } else {
-                            true
-                        }
-                    } else {
-                        true
-                    }
-                }
+                isGroupedWithPreviousOne = groupPreviousItem(message, position)
+                isLastOneOfGroup = isLastItemOfGroup(message, position)
 
                 lifecycleOwner = viewLifecycleOwner
                 executePendingBindings()
@@ -206,9 +184,9 @@ class ConversationEventAdapter(
     inner class EventViewHolder(
         val binding: ChatEventBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(eventData: EventModel) {
+        fun bind(event: EventModel) {
             with(binding) {
-                model = eventData
+                model = event
 
                 lifecycleOwner = viewLifecycleOwner
                 executePendingBindings()

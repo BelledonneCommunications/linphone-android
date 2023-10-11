@@ -27,9 +27,11 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Address
 import org.linphone.core.ChatRoom
 import org.linphone.core.Factory
+import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.chat.model.EventLogModel
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
+import org.linphone.ui.main.contacts.model.GroupAvatarModel
 import org.linphone.utils.Event
 
 class ConversationViewModel @UiThread constructor() : ViewModel() {
@@ -40,6 +42,8 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
     val showBackButton = MutableLiveData<Boolean>()
 
     val avatarModel = MutableLiveData<ContactAvatarModel>()
+
+    val groupAvatarModel = MutableLiveData<GroupAvatarModel>()
 
     val events = MutableLiveData<ArrayList<EventLogModel>>()
 
@@ -106,14 +110,24 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         )
         subject.postValue(chatRoom.subject)
 
+        val friends = arrayListOf<Friend>()
         val address = if (chatRoom.hasCapability(ChatRoom.Capabilities.Basic.toInt())) {
             chatRoom.peerAddress
         } else {
+            for (participant in chatRoom.participants) {
+                val friend = coreContext.contactsManager.findContactByAddress(participant.address)
+                if (friend != null) {
+                    friends.add(friend)
+                }
+            }
+
             val firstParticipant = chatRoom.participants.firstOrNull()
             firstParticipant?.address ?: chatRoom.peerAddress
         }
-
-        avatarModel.postValue(getAvatarModelForAddress(address))
+        val avatar = getAvatarModelForAddress(address)
+        avatarModel.postValue(avatar)
+        val groupAvatar = GroupAvatarModel(friends)
+        groupAvatarModel.postValue(groupAvatar)
 
         val eventsList = arrayListOf<EventLogModel>()
 
