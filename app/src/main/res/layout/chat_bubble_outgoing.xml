@@ -5,6 +5,7 @@
 
     <data>
         <import type="android.view.View" />
+        <import type="org.linphone.core.ChatMessage.State" />
         <variable
             name="onLongClickListener"
             type="View.OnLongClickListener" />
@@ -26,19 +27,87 @@
         android:layout_marginTop="@{isGroupedWithPreviousOne ? @dimen/chat_bubble_grouped_top_margin : @dimen/chat_bubble_top_margin, default=@dimen/chat_bubble_top_margin}"
         android:layout_marginEnd="16dp">
 
-        <org.linphone.ui.main.chat.view.ChatBubbleTextView
-            style="@style/default_text_style"
+        <ImageView
+            android:id="@+id/background"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@{isGroupedWithPreviousOne ? @drawable/shape_chat_bubble_outgoing_full : @drawable/shape_chat_bubble_outgoing_first, default=@drawable/shape_chat_bubble_outgoing_first}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/bubble_bottom_barrier"
+            app:layout_constraintStart_toStartOf="@id/bubble_start_barrier"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/bubble_start_barrier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{model.text, default=`Lorem ipsum dolor sit amet`}"
+            app:barrierDirection="start"
+            app:barrierMargin="-18dp"
+            app:constraint_referenced_ids="text_message, date_time"/>
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/bubble_bottom_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="text_bottom_anchor, delivery_status"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/text_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="18dp"
+            android:text="@{model.text, default=`Lorem ipsum`}"
             android:textSize="14sp"
             android:textColor="@color/gray_main2_700"
-            android:gravity="center_vertical|end"
-            android:padding="16dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:gravity="center_vertical|start"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintTop_toTopOf="@id/background"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/background"/>
+
+        <View
+            android:id="@+id/text_bottom_anchor"
+            android:layout_width="1dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintTop_toBottomOf="@id/text_message"
+            app:layout_constraintStart_toStartOf="@id/text_message"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_300"
+            android:id="@+id/date_time"
+            android:onClick="@{() -> model.showDeliveryInfo()}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginEnd="5dp"
+            android:text="@{model.time, default=`13:40`}"
+            android:textSize="12sp"
+            android:visibility="@{isLastOneOfGroup ? View.VISIBLE : View.GONE}"
+            app:layout_constraintTop_toBottomOf="@id/text_message"
+            app:layout_constraintEnd_toStartOf="@id/delivery_status"
+            app:layout_constraintBottom_toBottomOf="@id/background"/>
+
+        <ImageView
+            style="@style/default_text_style_300"
+            android:id="@+id/delivery_status"
+            android:onClick="@{() -> model.showDeliveryInfo()}"
+            android:layout_width="@dimen/small_icon_size"
+            android:layout_height="@dimen/small_icon_size"
+            android:layout_marginEnd="18dp"
+            android:layout_marginTop="2dp"
+            android:src="@{model.state == State.Displayed ? @drawable/checks : model.state == State.DeliveredToUser ? @drawable/check : model.state == State.Delivered ? @drawable/envelope_simple : model.state == State.NotDelivered ? @drawable/warning_circle : @drawable/in_progress, default=@drawable/in_progress}"
+            android:visibility="@{isLastOneOfGroup ? View.VISIBLE : View.GONE}"
+            app:layout_constraintTop_toTopOf="@id/date_time"
             app:layout_constraintEnd_toEndOf="parent"
-            android:background="@{isGroupedWithPreviousOne ? @drawable/shape_chat_bubble_outgoing_full : @drawable/shape_chat_bubble_outgoing_first, default=@drawable/shape_chat_bubble_outgoing_first}"/>
+            app:layout_constraintBottom_toBottomOf="@id/date_time"
+            app:tint="@color/orange_main_500" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

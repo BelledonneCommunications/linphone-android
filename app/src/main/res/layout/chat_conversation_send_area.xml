@@ -7,6 +7,9 @@
         <variable
             name="openEmojiPickerClickListener"
             type="View.OnClickListener" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.main.chat.viewmodel.ConversationViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,6 +27,7 @@
             android:layout_height="@dimen/icon_size"
             android:layout_marginStart="16dp"
             android:src="@drawable/smiley"
+            app:tint="@color/icon_color_selector"
             app:layout_constraintTop_toTopOf="@id/message_area_background"
             app:layout_constraintBottom_toBottomOf="@id/message_area_background"
             app:layout_constraintStart_toStartOf="parent" />
@@ -35,6 +39,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:src="@drawable/paperclip"
+            app:tint="@color/icon_color_selector"
             app:layout_constraintTop_toTopOf="@id/message_area_background"
             app:layout_constraintBottom_toBottomOf="@id/message_area_background"
             app:layout_constraintStart_toEndOf="@id/emoji_picker"
@@ -61,10 +66,12 @@
             android:layout_marginBottom="16dp"
             android:minHeight="48dp"
             android:background="@color/transparent_color"
+            android:text="@={viewModel.textToSend}"
             android:textSize="14sp"
             android:textColorHint="@color/gray_main2_400"
             android:maxLines="3"
             android:hint="@string/conversation_text_field_hint"
+            android:inputType="text"
             app:layout_constraintStart_toStartOf="@id/message_area_background"
             app:layout_constraintEnd_toStartOf="@id/send_barrier"
             app:layout_constraintBottom_toBottomOf="parent"/>
@@ -83,17 +90,20 @@
             android:layout_marginEnd="12dp"
             android:src="@drawable/microphone"
             android:visibility="gone"
+            app:tint="@color/icon_color_selector"
             app:layout_constraintTop_toTopOf="@id/message_area_background"
             app:layout_constraintBottom_toBottomOf="@id/message_area_background"
             app:layout_constraintEnd_toEndOf="@id/message_area_background" />
 
         <ImageView
             android:id="@+id/send_message"
+            android:onClick="@{() -> viewModel.sendMessage()}"
             android:layout_width="@dimen/icon_size"
             android:layout_height="@dimen/icon_size"
             android:layout_marginEnd="12dp"
             android:src="@drawable/paper_plane_tilt"
-            app:tint="@color/orange_main_500"
+            android:enabled="@{viewModel.textToSend.length() > 0}"
+            app:tint="@color/icon_primary_color_selector"
             app:layout_constraintTop_toTopOf="@id/message_area_background"
             app:layout_constraintBottom_toBottomOf="@id/message_area_background"
             app:layout_constraintEnd_toEndOf="@id/message_area_background" />

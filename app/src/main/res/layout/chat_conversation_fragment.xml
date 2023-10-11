@@ -186,6 +186,8 @@
         <include
             android:id="@+id/send_area"
             openEmojiPickerClickListener="@{openEmojiPickerClickListener}"
+            viewModel="@{viewModel}"
+            android:visibility="@{viewModel.isReadOnly ? View.GONE : View.VISIBLE}"
             layout="@layout/chat_conversation_send_area"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

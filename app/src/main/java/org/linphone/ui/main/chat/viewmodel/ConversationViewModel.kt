@@ -26,6 +26,8 @@ import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Address
 import org.linphone.core.ChatRoom
+import org.linphone.core.ChatRoomListenerStub
+import org.linphone.core.EventLog
 import org.linphone.core.Factory
 import org.linphone.core.Friend
 import org.linphone.core.tools.Log
@@ -51,19 +53,41 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     val subject = MutableLiveData<String>()
 
+    val isReadOnly = MutableLiveData<Boolean>()
+
+    val textToSend = MutableLiveData<String>()
+
     val chatRoomFoundEvent = MutableLiveData<Event<Boolean>>()
 
     private lateinit var chatRoom: ChatRoom
 
     private val avatarsMap = hashMapOf<String, ContactAvatarModel>()
 
-    init {
+    private val chatRoomListener = object : ChatRoomListenerStub() {
+        override fun onChatMessageSending(chatRoom: ChatRoom, eventLog: EventLog) {
+            val message = eventLog.chatMessage
+            Log.i("$TAG Chat message [$message] is being sent")
+
+            val list = arrayListOf<EventLogModel>()
+            list.addAll(events.value.orEmpty())
+
+            val avatarModel = getAvatarModelForAddress(message?.localAddress)
+            list.add(EventLogModel(eventLog, avatarModel))
+
+            events.postValue(list)
+        }
+
+        override fun onChatMessageSent(chatRoom: ChatRoom, eventLog: EventLog) {
+            val message = eventLog.chatMessage
+            Log.i("$TAG Chat message [$message] has been sent")
+        }
     }
 
     override fun onCleared() {
         super.onCleared()
 
         coreContext.postOnCoreThread {
+            chatRoom.removeListener(chatRoomListener)
             avatarsMap.values.forEach(ContactAvatarModel::destroy)
         }
     }
@@ -88,6 +112,8 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
                 )
                 if (found != null) {
                     chatRoom = found
+                    chatRoom.addListener(chatRoomListener)
+
                     configureChatRoom()
                     chatRoomFoundEvent.postValue(Event(true))
                 } else {
@@ -101,6 +127,24 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         }
     }
 
+    @UiThread
+    fun sendMessage() {
+        coreContext.postOnCoreThread { core ->
+            val message = chatRoom.createEmptyMessage()
+
+            val toSend = textToSend.value.orEmpty().trim()
+            if (toSend.isNotEmpty()) {
+                message.addUtf8TextContent(toSend)
+            }
+
+            if (message.contents.isNotEmpty()) {
+                Log.i("$TAG Sending message")
+                message.send()
+            }
+            textToSend.postValue("")
+        }
+    }
+
     @WorkerThread
     private fun configureChatRoom() {
         isGroup.postValue(
@@ -108,6 +152,14 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
                 ChatRoom.Capabilities.Conference.toInt()
             )
         )
+
+        val empty = chatRoom.hasCapability(ChatRoom.Capabilities.Conference.toInt()) && chatRoom.participants.isEmpty()
+        val readOnly = chatRoom.isReadOnly || empty
+        isReadOnly.postValue(readOnly)
+        if (readOnly) {
+            Log.w("$TAG Chat room with subject [${chatRoom.subject}] is read only!")
+        }
+
         subject.postValue(chatRoom.subject)
 
         val friends = arrayListOf<Friend>()
