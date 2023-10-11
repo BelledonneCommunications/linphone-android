@@ -105,6 +105,24 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/unread_messages"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:background="@drawable/shape_red_round"
+            android:text="@{String.valueOf(viewModel.unreadMessages), default=`1`}"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            android:paddingBottom="2dp"
+            android:visibility="@{viewModel.unreadMessages > 0 ? View.VISIBLE : View.GONE}"
+            app:layout_constraintTop_toTopOf="@id/conversations"
+            app:layout_constraintStart_toStartOf="@id/conversations"
+            app:layout_constraintEnd_toEndOf="@id/conversations"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
             style="@style/bottom_nav_bar_label_style"
             android:onClick="@{onMeetingsClicked}"
             android:id="@+id/meetings"

@@ -26,6 +26,8 @@ import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.Call
+import org.linphone.core.ChatMessage
+import org.linphone.core.ChatRoom
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
@@ -50,6 +52,8 @@ class BottomNavBarViewModel @UiThread constructor() : ViewModel() {
 
     val missedCallsCount = MutableLiveData<Int>()
 
+    val unreadMessages = MutableLiveData<Int>()
+
     private val coreListener = object : CoreListenerStub() {
         @WorkerThread
         override fun onCallStateChanged(
@@ -62,12 +66,27 @@ class BottomNavBarViewModel @UiThread constructor() : ViewModel() {
                 updateMissedCallsCount()
             }
         }
+
+        @WorkerThread
+        override fun onMessagesReceived(
+            core: Core,
+            chatRoom: ChatRoom,
+            messages: Array<out ChatMessage>
+        ) {
+            updateUnreadMessagesCount()
+        }
+
+        @WorkerThread
+        override fun onChatRoomRead(core: Core, chatRoom: ChatRoom) {
+            updateUnreadMessagesCount()
+        }
     }
 
     init {
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
             updateMissedCallsCount()
+            updateUnreadMessagesCount()
         }
 
         updateAvailableMenus()
@@ -91,6 +110,17 @@ class BottomNavBarViewModel @UiThread constructor() : ViewModel() {
             "$TAG There ${if (moreThanOne) "are" else "is"} [$count] missed ${if (moreThanOne) "calls" else "call"}"
         )
         missedCallsCount.postValue(count)
+    }
+
+    @WorkerThread
+    fun updateUnreadMessagesCount() {
+        val account = LinphoneUtils.getDefaultAccount()
+        val count = account?.unreadChatMessageCount ?: coreContext.core.unreadChatMessageCount
+        val moreThanOne = count > 1
+        Log.i(
+            "$TAG There ${if (moreThanOne) "are" else "is"} [$count] unread ${if (moreThanOne) "messages" else "message"}"
+        )
+        unreadMessages.postValue(count)
     }
 
     @UiThread
