@@ -28,7 +28,7 @@ class EventLogModel @WorkerThread constructor(eventLog: EventLog, avatarModel: C
 
     val isEvent = type != EventLog.Type.ConferenceChatMessage
 
-    val data = if (isEvent) {
+    val model = if (isEvent) {
         EventModel(eventLog)
     } else {
         ChatMessageModel(eventLog.chatMessage!!, avatarModel)

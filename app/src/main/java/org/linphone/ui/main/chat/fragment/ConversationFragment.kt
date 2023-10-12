@@ -19,22 +19,38 @@
  */
 package org.linphone.ui.main.chat.fragment
 
+import android.app.Dialog
+import android.graphics.Rect
+import android.graphics.RenderEffect
+import android.graphics.Shader
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowManager
 import androidx.annotation.UiThread
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.doOnPreDraw
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import kotlin.math.max
+import kotlin.math.min
+import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatConversationFragmentBinding
+import org.linphone.databinding.ChatConversationLongPressMenuBinding
 import org.linphone.ui.main.chat.adapter.ConversationEventAdapter
+import org.linphone.ui.main.chat.model.ChatMessageModel
 import org.linphone.ui.main.chat.viewmodel.ConversationViewModel
 import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
 @UiThread
@@ -115,6 +131,12 @@ class ConversationFragment : GenericFragment() {
         val layoutManager = LinearLayoutManager(requireContext())
         binding.eventsList.layoutManager = layoutManager
 
+        adapter.chatMessageLongPressEvent.observe(viewLifecycleOwner) {
+            it.consume { pair ->
+                showChatMessageLongPressMenu(pair.first, pair.second)
+            }
+        }
+
         viewModel.events.observe(viewLifecycleOwner) { items ->
             val currentCount = adapter.itemCount
             adapter.submitList(items)
@@ -145,5 +167,57 @@ class ConversationFragment : GenericFragment() {
                 emojisBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }*/
         }
+    }
+
+    private fun showChatMessageLongPressMenu(chatMessageModel: ChatMessageModel, yPosition: Int) {
+        // TODO: handle backward compat for blurring
+        val blurEffect = RenderEffect.createBlurEffect(16F, 16F, Shader.TileMode.MIRROR)
+        binding.root.setRenderEffect(blurEffect)
+
+        val dialog = Dialog(requireContext(), R.style.Theme_LinphoneDialog)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+
+        val layout: ChatConversationLongPressMenuBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(context),
+            R.layout.chat_conversation_long_press_menu,
+            null,
+            false
+        )
+        layout.root.setOnClickListener {
+            dialog.dismiss()
+            binding.root.setRenderEffect(null)
+        }
+
+        layout.model = chatMessageModel
+        val screenY = yPosition - AppUtils.getDimension(
+            R.dimen.chat_bubble_long_press_menu_bubble_offset
+        )
+
+        val rect = Rect()
+        binding.root.getGlobalVisibleRect(rect)
+        val height = rect.height()
+        val percent = ((screenY * 100) / height)
+        // To prevent bubble from being behind the bottom actions or the emojis to be out of the screen
+        val guideline = min(max(0.1f, (percent / 100)), 0.4f) // value must be between 0 and 1
+
+        val constraintLayout = layout.constraintLayout
+        val set = ConstraintSet()
+        set.clone(constraintLayout)
+        set.setGuidelinePercent(R.id.guideline, guideline)
+        set.applyTo(constraintLayout)
+
+        dialog.setContentView(layout.root)
+
+        dialog.window
+            ?.setLayout(
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.MATCH_PARENT
+            )
+        val d: Drawable = ColorDrawable(
+            AppUtils.getColor(R.color.gray_300)
+        )
+        d.alpha = 102
+        dialog.window?.setBackgroundDrawable(d)
+        dialog.show()
     }
 }

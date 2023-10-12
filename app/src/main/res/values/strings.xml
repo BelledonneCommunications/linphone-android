@@ -15,6 +15,12 @@
     <string name="notification_channel_service_id" translatable="false">linphone_notification_service_id</string>
     <string name="notification_channel_chat_id" translatable="false">linphone_notification_chat_id</string>
 
+    <string name="emoji_love" translatable="false">❤️</string>
+    <string name="emoji_thumbs_up" translatable="false">👍</string>
+    <string name="emoji_laughing" translatable="false">😂</string>
+    <string name="emoji_surprised" translatable="false">😮</string>
+    <string name="emoji_tear" translatable="false">😢</string>
+
     <string name="help_about_open_source_licenses_title" translatable="false">GNU General Public License v3.0</string>
     <string name="help_about_open_source_licenses_subtitle" translatable="false">© Belledonne Communications 2010-2023</string>
     <string name="help_advanced_send_debug_logs_email_address" translatable="false">linphone-android@belledonne-communications.com</string>
@@ -272,6 +278,9 @@
     <string name="menu_delete_history">Delete history</string>
     <string name="menu_delete_selected_item">Delete</string>
     <string name="menu_invite">Invite</string>
+    <string name="menu_reply_to_chat_message">Reply</string>
+    <string name="menu_forward_chat_message">Forward</string>
+    <string name="menu_copy_chat_message">Copy</string>
 
     <string name="history_title">Call history</string>
     <string name="history_call_start_title">New call</string>

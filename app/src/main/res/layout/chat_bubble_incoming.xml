@@ -8,6 +8,9 @@
         <import type="org.linphone.core.ConsolidatedPresence" />
         <import type="org.linphone.core.ChatMessage.State" />
         <variable
+            name="onLongClickListener"
+            type="View.OnLongClickListener" />
+        <variable
             name="model"
             type="org.linphone.ui.main.chat.model.ChatMessageModel" />
         <variable
@@ -19,7 +22,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:onLongClick="@{() -> model.onLongClick()}"
+        android:onLongClick="@{onLongClickListener}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@{isGroupedWithPreviousOne ? @dimen/chat_bubble_grouped_top_margin : @dimen/chat_bubble_top_margin, default=@dimen/chat_bubble_top_margin}"

@@ -305,15 +305,15 @@ class DialogUtils {
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setContentView(binding.root)
 
-            val d: Drawable = ColorDrawable(
-                AppUtils.getColor(R.color.gray_main2_800_alpha_65)
-            )
-            // d.alpha = 166
             dialog.window
                 ?.setLayout(
                     WindowManager.LayoutParams.MATCH_PARENT,
                     WindowManager.LayoutParams.MATCH_PARENT
                 )
+            val d: Drawable = ColorDrawable(
+                AppUtils.getColor(R.color.gray_300)
+            )
+            d.alpha = 102
             dialog.window?.setBackgroundDrawable(d)
             return dialog
         }
