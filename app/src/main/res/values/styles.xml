@@ -3,26 +3,32 @@
     <style name="default_text_style_300">
         <item name="android:fontFamily">@font/noto_sans_300</item>
         <item name="android:textColor">@color/gray_main2_600</item>
+        <item name="android:textSize">14sp</item>
     </style>
     <style name="default_text_style">
         <item name="android:fontFamily">@font/noto_sans</item>
         <item name="android:textColor">@color/gray_main2_600</item>
+        <item name="android:textSize">14sp</item>
     </style>
     <style name="default_text_style_500">
         <item name="android:fontFamily">@font/noto_sans_500</item>
         <item name="android:textColor">@color/gray_main2_600</item>
+        <item name="android:textSize">14sp</item>
     </style>
     <style name="default_text_style_600">
         <item name="android:fontFamily">@font/noto_sans_600</item>
         <item name="android:textColor">@color/gray_main2_600</item>
+        <item name="android:textSize">14sp</item>
     </style>
     <style name="default_text_style_700">
         <item name="android:fontFamily">@font/noto_sans_700</item>
         <item name="android:textColor">@color/gray_main2_600</item>
+        <item name="android:textSize">14sp</item>
     </style>
     <style name="default_text_style_800">
         <item name="android:fontFamily">@font/noto_sans_800</item>
         <item name="android:textColor">@color/gray_main2_600</item>
+        <item name="android:textSize">14sp</item>
     </style>
     <style name="main_page_title_style">
         <item name="android:fontFamily">@font/noto_sans_800</item>

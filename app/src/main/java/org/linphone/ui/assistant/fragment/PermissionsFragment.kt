@@ -30,11 +30,8 @@ import androidx.annotation.UiThread
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navGraphViewModels
-import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantPermissionsFragmentBinding
-import org.linphone.ui.assistant.viewmodel.PermissionsViewModel
 
 @UiThread
 class PermissionsFragment : Fragment() {
@@ -44,41 +41,19 @@ class PermissionsFragment : Fragment() {
 
     private lateinit var binding: AssistantPermissionsFragmentBinding
 
-    private val viewModel: PermissionsViewModel by navGraphViewModels(
-        R.id.assistant_nav_graph
-    )
-
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
         permissions.entries.forEach() {
             val permissionName = it.key
             val isGranted = it.value
-
-            when (permissionName) {
-                "READ_CONTACTS" -> {
-                    viewModel.readContacts.value = isGranted
-                }
-                "POST_NOTIFICATIONS" -> {
-                    viewModel.postNotifications.value = isGranted
-                }
-                "RECORD_AUDIO" -> {
-                    viewModel.recordAudio.value = isGranted
-                }
-                "CAMERA" -> {
-                    viewModel.accessCamera.value = isGranted
-                }
-                else -> {}
-            }
-
             if (isGranted) {
                 Log.i("Permission [$permissionName] is now granted")
             } else {
                 Log.i("Permission [$permissionName] has been denied")
             }
         }
-
-        checkIfAllPermissionsHaveBeenGranted()
+        goToLoginFragment()
     }
 
     override fun onCreateView(
@@ -94,31 +69,9 @@ class PermissionsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.viewModel = viewModel
 
         binding.setBackClickListener {
             findNavController().popBackStack()
-        }
-
-        binding.setGrantReadContactsClickListener {
-            Log.i("$TAG Requesting READ_CONTACTS permission")
-            requestPermissionLauncher.launch(arrayOf(Manifest.permission.READ_CONTACTS))
-        }
-
-        // TODO FIXME: use compat for older Androids
-        binding.setGrantPostNotificationsClickListener {
-            Log.i("$TAG Requesting POST_NOTIFICATIONS permission")
-            requestPermissionLauncher.launch(arrayOf(Manifest.permission.POST_NOTIFICATIONS))
-        }
-
-        binding.setGrantRecordAudioClickListener {
-            Log.i("$TAG Requesting RECORD_AUDIO permission")
-            requestPermissionLauncher.launch(arrayOf(Manifest.permission.RECORD_AUDIO))
-        }
-
-        binding.setGrantAccessCameraClickListener {
-            Log.i("$TAG Requesting CAMERA permission")
-            requestPermissionLauncher.launch(arrayOf(Manifest.permission.CAMERA))
         }
 
         binding.setSkipClickListener {
@@ -130,8 +83,8 @@ class PermissionsFragment : Fragment() {
             Log.i("$TAG Requesting all permissions")
             requestPermissionLauncher.launch(
                 arrayOf(
-                    Manifest.permission.READ_CONTACTS,
                     Manifest.permission.POST_NOTIFICATIONS,
+                    Manifest.permission.READ_CONTACTS,
                     Manifest.permission.RECORD_AUDIO,
                     Manifest.permission.CAMERA
                 )
@@ -147,42 +100,8 @@ class PermissionsFragment : Fragment() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        viewModel.readContacts.value = ContextCompat.checkSelfPermission(
-            requireContext(),
-            Manifest.permission.READ_CONTACTS
-        ) == PackageManager.PERMISSION_GRANTED
-
-        // TODO FIXME: use compat for older Androids
-        viewModel.postNotifications.value = ContextCompat.checkSelfPermission(
-            requireContext(),
-            Manifest.permission.POST_NOTIFICATIONS
-        ) == PackageManager.PERMISSION_GRANTED
-
-        viewModel.recordAudio.value = ContextCompat.checkSelfPermission(
-            requireContext(),
-            Manifest.permission.RECORD_AUDIO
-        ) == PackageManager.PERMISSION_GRANTED
-
-        viewModel.accessCamera.value = ContextCompat.checkSelfPermission(
-            requireContext(),
-            Manifest.permission.CAMERA
-        ) == PackageManager.PERMISSION_GRANTED
-
-        checkIfAllPermissionsHaveBeenGranted()
-    }
-
     private fun goToLoginFragment() {
         val action = PermissionsFragmentDirections.actionPermissionsFragmentToLoginFragment()
         findNavController().navigate(action)
-    }
-
-    private fun checkIfAllPermissionsHaveBeenGranted() {
-        if (viewModel.readContacts.value == true && viewModel.postNotifications.value == true && viewModel.recordAudio.value == true && viewModel.accessCamera.value == true) {
-            Log.i("$TAG All permissions are granted, continuing to login fragment")
-            goToLoginFragment()
-        }
     }
 }

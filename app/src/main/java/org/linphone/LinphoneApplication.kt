@@ -87,8 +87,6 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
 
     override fun newImageLoader(): ImageLoader {
         return ImageLoader.Builder(this)
-            .crossfade(true)
-            .crossfade(400)
             .components {
                 add(VideoFrameDecoder.Factory())
                 add(SvgDecoder.Factory())
