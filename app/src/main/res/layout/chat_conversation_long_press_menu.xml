@@ -11,6 +11,9 @@
             name="deleteClickListener"
             type="View.OnClickListener" />
         <variable
+            name="pickEmojiClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="model"
             type="org.linphone.ui.main.chat.model.ChatMessageModel" />
     </data>
@@ -47,9 +50,10 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="10dp"
             android:text="@string/emoji_thumbs_up"
-            android:textSize="37sp"
+            android:textSize="30sp"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintTop_toTopOf="@id/emojis_background"
+            app:layout_constraintBottom_toBottomOf="@id/emojis_background"
             app:layout_constraintStart_toStartOf="@id/emojis_background"
             app:layout_constraintEnd_toStartOf="@id/love"/>
 
@@ -61,7 +65,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:text="@string/emoji_love"
-            android:textSize="37sp"
+            android:textSize="30sp"
             app:layout_constraintTop_toTopOf="@id/thumbs_up"
             app:layout_constraintStart_toEndOf="@id/thumbs_up"
             app:layout_constraintEnd_toStartOf="@id/laughing"/>
@@ -74,7 +78,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:text="@string/emoji_laughing"
-            android:textSize="37sp"
+            android:textSize="30sp"
             app:layout_constraintTop_toTopOf="@id/thumbs_up"
             app:layout_constraintStart_toEndOf="@id/love"
             app:layout_constraintEnd_toStartOf="@id/surprised"/>
@@ -87,10 +91,10 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:text="@string/emoji_surprised"
-            android:textSize="37sp"
+            android:textSize="30sp"
             app:layout_constraintTop_toTopOf="@id/thumbs_up"
             app:layout_constraintStart_toEndOf="@id/laughing"
-            app:layout_constraintEnd_toStartOf="@id/laughing"/>
+            app:layout_constraintEnd_toStartOf="@id/tear"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tear"
@@ -100,22 +104,23 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:text="@string/emoji_tear"
-            android:textSize="37sp"
+            android:textSize="30sp"
             app:layout_constraintTop_toTopOf="@id/thumbs_up"
             app:layout_constraintStart_toEndOf="@id/surprised"
             app:layout_constraintEnd_toStartOf="@id/plus"/>
 
         <ImageView
             android:id="@+id/plus"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:onClick="@{pickEmojiClickListener}"
+            android:layout_width="30dp"
+            android:layout_height="0dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="16dp"
             android:src="@drawable/plus_circle"
             app:layout_constraintStart_toEndOf="@id/tear"
             app:layout_constraintEnd_toEndOf="@id/emojis_background"
-            app:layout_constraintTop_toTopOf="@id/emojis_background"
-            app:layout_constraintBottom_toBottomOf="@id/emojis_background" />
+            app:layout_constraintTop_toTopOf="@id/thumbs_up"
+            app:layout_constraintBottom_toBottomOf="@id/thumbs_up" />
 
         <include
             android:id="@+id/bubble"
@@ -196,6 +201,16 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.emoji2.emojipicker.EmojiPickerView
+            android:id="@+id/emoji_picker"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/gray_100"
+            android:visibility="gone"
+            app:emojiPickedListener="@{(emoji) -> model.sendReaction(emoji.emoji)}"
+            app:layout_constraintTop_toTopOf="@id/reply"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

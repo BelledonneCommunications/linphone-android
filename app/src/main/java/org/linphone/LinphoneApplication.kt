@@ -24,7 +24,6 @@ import android.app.Application
 import androidx.annotation.MainThread
 import coil.ImageLoader
 import coil.ImageLoaderFactory
-import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.decode.SvgDecoder
 import coil.decode.VideoFrameDecoder
@@ -38,7 +37,6 @@ import org.linphone.core.CorePreferences
 import org.linphone.core.Factory
 import org.linphone.core.LogCollectionState
 import org.linphone.core.LogLevel
-import org.linphone.mediastream.Version
 
 @MainThread
 class LinphoneApplication : Application(), ImageLoaderFactory {

@@ -40,6 +40,8 @@ import androidx.core.view.doOnLayout
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.emoji2.emojipicker.EmojiPickerView
+import androidx.emoji2.emojipicker.EmojiViewItem
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import coil.load
@@ -410,4 +412,15 @@ fun validateOnInput(editText: EditText, onValidate: () -> (Unit)) {
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     })
+}
+
+@BindingAdapter("emojiPickedListener")
+fun EmojiPickerView.setEmojiPickedListener(listener: EmojiPickedListener) {
+    setOnEmojiPickedListener { emoji ->
+        listener.onEmojiPicked(emoji)
+    }
+}
+
+interface EmojiPickedListener {
+    fun onEmojiPicked(item: EmojiViewItem)
 }

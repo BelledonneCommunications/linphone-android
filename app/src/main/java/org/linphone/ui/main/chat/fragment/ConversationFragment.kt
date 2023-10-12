@@ -207,6 +207,10 @@ class ConversationFragment : GenericFragment() {
             dialog.dismiss()
         }
 
+        layout.setPickEmojiClickListener {
+            layout.emojiPicker.visibility = View.VISIBLE
+        }
+
         layout.model = chatMessageModel
         chatMessageModel.dismissLongPressMenuEvent.observe(viewLifecycleOwner) {
             dialog.dismiss()
