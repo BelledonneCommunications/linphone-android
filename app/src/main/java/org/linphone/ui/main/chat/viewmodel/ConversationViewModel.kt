@@ -257,6 +257,29 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
     }
 
     @WorkerThread
+    private fun processGroupedEvents(groupedEventLogs: ArrayList<EventLog>, isGroupChatRoom: Boolean): ArrayList<EventLogModel> {
+        val eventsList = arrayListOf<EventLogModel>()
+
+        // Handle all events in group, then re-start a new group with current item
+        var index = 0
+        for (groupedEvent in groupedEventLogs) {
+            val avatar = getAvatarModelForAddress(groupedEvent.chatMessage?.fromAddress)
+            val model = EventLogModel(
+                groupedEvent,
+                avatar,
+                isGroupChatRoom,
+                index > 0,
+                index == groupedEventLogs.size - 1
+            )
+            eventsList.add(model)
+
+            index += 1
+        }
+
+        return eventsList
+    }
+
+    @WorkerThread
     private fun getEventsListFromHistory(history: Array<EventLog>, isGroupChatRoom: Boolean): ArrayList<EventLogModel> {
         val eventsList = arrayListOf<EventLogModel>()
         val groupedEventLogs = arrayListOf<EventLog>()
@@ -270,27 +293,18 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             val groupEvents = shouldWeGroupTwoEvents(event, previousGroupEvent)
 
             if (!groupEvents) {
-                // Handle all events in group, then re-start a new group with current item
-                var index = 0
-                for (groupedEvent in groupedEventLogs) {
-                    val avatar = getAvatarModelForAddress(groupedEvent.chatMessage?.fromAddress)
-                    val model = EventLogModel(
-                        groupedEvent,
-                        avatar,
-                        isGroupChatRoom,
-                        index > 0,
-                        index == groupedEventLogs.size - 1
-                    )
-                    eventsList.add(model)
-
-                    index += 1
-                }
-
+                eventsList.addAll(processGroupedEvents(groupedEventLogs, isGroupChatRoom))
                 groupedEventLogs.clear()
             }
 
             groupedEventLogs.add(event)
         }
+
+        if (groupedEventLogs.isNotEmpty()) {
+            eventsList.addAll(processGroupedEvents(groupedEventLogs, isGroupChatRoom))
+            groupedEventLogs.clear()
+        }
+
         return eventsList
     }
 
