@@ -135,7 +135,7 @@
             android:gravity="center_vertical|start"
             android:maxLines="2"
             android:ellipsize="end"
-            android:text="@{model.isComposing ? model.composingLabel : model.lastMessage, default=`Hello there!`}"
+            android:text="@{model.isComposing ? model.composingLabel : model.lastMessageText, default=`Hello there!`}"
             android:textSize="14sp"
             android:textColor="@color/gray_main2_400"
             android:textStyle="@{model.unreadMessageCount > 0 ? Typeface.BOLD : Typeface.NORMAL}"

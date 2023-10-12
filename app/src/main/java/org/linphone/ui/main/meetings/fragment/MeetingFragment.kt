@@ -95,29 +95,7 @@ class MeetingFragment : GenericFragment() {
         }
 
         binding.setShareClickListener {
-            val intent = Intent(Intent.ACTION_EDIT)
-            intent.type = "vnd.android.cursor.item/event"
-            intent.putExtra(CalendarContract.Events.TITLE, viewModel.subject.value)
-
-            val description = viewModel.description.value.orEmpty()
-            if (description.isNotEmpty()) {
-                intent.putExtra(CalendarContract.Events.DESCRIPTION, description)
-            }
-
-            intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, viewModel.startTimeStamp.value)
-            intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, viewModel.endTimeStamp.value)
-
-            intent.putExtra(CalendarContract.Events.CUSTOM_APP_URI, viewModel.sipUri.value)
-            intent.putExtra(
-                CalendarContract.Events.CUSTOM_APP_PACKAGE,
-                requireContext().packageName
-            )
-
-            try {
-                startActivity(intent)
-            } catch (exception: ActivityNotFoundException) {
-                Log.e("$TAG No activity found to handle intent: $exception")
-            }
+            shareMeetingInfoAsCalendarEvent()
         }
 
         binding.setMenuClickListener {
@@ -179,5 +157,31 @@ class MeetingFragment : GenericFragment() {
         // Elevation is for showing a shadow around the popup
         popupWindow.elevation = 20f
         popupWindow.showAsDropDown(binding.menu, 0, 0, Gravity.BOTTOM)
+    }
+
+    private fun shareMeetingInfoAsCalendarEvent() {
+        val intent = Intent(Intent.ACTION_EDIT)
+        intent.type = "vnd.android.cursor.item/event"
+        intent.putExtra(CalendarContract.Events.TITLE, viewModel.subject.value)
+
+        val description = viewModel.description.value.orEmpty()
+        if (description.isNotEmpty()) {
+            intent.putExtra(CalendarContract.Events.DESCRIPTION, description)
+        }
+
+        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, viewModel.startTimeStamp.value)
+        intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, viewModel.endTimeStamp.value)
+
+        intent.putExtra(CalendarContract.Events.CUSTOM_APP_URI, viewModel.sipUri.value)
+        intent.putExtra(
+            CalendarContract.Events.CUSTOM_APP_PACKAGE,
+            requireContext().packageName
+        )
+
+        try {
+            startActivity(intent)
+        } catch (exception: ActivityNotFoundException) {
+            Log.e("${MeetingFragment.TAG} No activity found to handle intent: $exception")
+        }
     }
 }

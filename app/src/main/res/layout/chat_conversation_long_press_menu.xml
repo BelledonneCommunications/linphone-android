@@ -24,7 +24,7 @@
         <ImageView
             android:id="@+id/emojis_background"
             android:layout_width="0dp"
-            android:layout_height="@dimen/chat_bubble_long_press_menu_emojis_height"
+            android:layout_height="60dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:src="@drawable/shape_squircle_white_background"

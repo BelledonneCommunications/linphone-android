@@ -27,6 +27,10 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Account
 import org.linphone.core.AccountListenerStub
+import org.linphone.core.ChatMessage
+import org.linphone.core.ChatRoom
+import org.linphone.core.Core
+import org.linphone.core.CoreListenerStub
 import org.linphone.core.RegistrationState
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
@@ -75,8 +79,25 @@ class AccountModel @WorkerThread constructor(
         }
     }
 
+    private val coreListener = object : CoreListenerStub() {
+        @WorkerThread
+        override fun onChatRoomRead(core: Core, chatRoom: ChatRoom) {
+            computeNotificationsCount()
+        }
+
+        @WorkerThread
+        override fun onMessagesReceived(
+            core: Core,
+            chatRoom: ChatRoom,
+            messages: Array<out ChatMessage>
+        ) {
+            computeNotificationsCount()
+        }
+    }
+
     init {
         account.addListener(accountListener)
+        coreContext.core.addListener(coreListener)
 
         showTrust.postValue(account.isInSecureMode())
 
@@ -85,6 +106,7 @@ class AccountModel @WorkerThread constructor(
 
     @WorkerThread
     fun destroy() {
+        coreContext.core.removeListener(coreListener)
         account.removeListener(accountListener)
     }
 
@@ -139,7 +161,7 @@ class AccountModel @WorkerThread constructor(
         }
 
         isDefault.postValue(coreContext.core.defaultAccount == account)
-        notificationsCount.postValue(account.unreadChatMessageCount + account.missedCallsCount)
+        computeNotificationsCount()
 
         val state = account.state
         registrationState.postValue(state)
@@ -186,6 +208,11 @@ class AccountModel @WorkerThread constructor(
             else -> "${account.state}"
         }
         registrationStateSummary.postValue(summary)
+    }
+
+    @WorkerThread
+    private fun computeNotificationsCount() {
+        notificationsCount.postValue(account.unreadChatMessageCount + account.missedCallsCount)
     }
 }
 

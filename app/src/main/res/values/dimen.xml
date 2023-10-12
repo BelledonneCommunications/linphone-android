@@ -55,6 +55,5 @@
 
     <dimen name="chat_bubble_grouped_top_margin">4dp</dimen>
     <dimen name="chat_bubble_top_margin">16dp</dimen>
-    <dimen name="chat_bubble_long_press_menu_emojis_height">60dp</dimen>
-    <dimen name="chat_bubble_long_press_menu_bubble_offset">105dp</dimen>
+    <dimen name="chat_bubble_long_press_menu_bubble_offset">110dp</dimen>
 </resources>

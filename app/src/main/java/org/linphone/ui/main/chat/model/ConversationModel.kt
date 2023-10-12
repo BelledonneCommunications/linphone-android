@@ -24,9 +24,13 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.core.Address
 import org.linphone.core.ChatMessage
+import org.linphone.core.ChatMessageListenerStub
 import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoom.Capabilities
+import org.linphone.core.ChatRoomListenerStub
+import org.linphone.core.EventLog
 import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
@@ -62,7 +66,7 @@ class ConversationModel @WorkerThread constructor(private val chatRoom: ChatRoom
 
     val composingLabel = MutableLiveData<Boolean>()
 
-    val lastMessage = MutableLiveData<String>()
+    val lastMessageText = MutableLiveData<String>()
 
     val lastMessageIcon = MutableLiveData<Int>()
 
@@ -76,9 +80,47 @@ class ConversationModel @WorkerThread constructor(private val chatRoom: ChatRoom
 
     val groupAvatarModel: GroupAvatarModel
 
+    private var lastMessage: ChatMessage? = null
+
+    private val chatRoomListener = object : ChatRoomListenerStub() {
+        @WorkerThread
+        override fun onIsComposingReceived(
+            chatRoom: ChatRoom,
+            remoteAddress: Address,
+            isComposing: Boolean
+        ) {
+            computeComposingLabel()
+        }
+
+        @WorkerThread
+        override fun onMessagesReceived(chatRoom: ChatRoom, chatMessages: Array<out ChatMessage>) {
+            updateLastMessage()
+        }
+
+        @WorkerThread
+        override fun onChatMessageSending(chatRoom: ChatRoom, eventLog: EventLog) {
+            updateLastMessage()
+        }
+
+        @WorkerThread
+        override fun onChatRoomRead(chatRoom: ChatRoom) {
+            unreadMessageCount.postValue(chatRoom.unreadMessagesCount)
+        }
+    }
+
+    private val chatMessageListener = object : ChatMessageListenerStub() {
+        @WorkerThread
+        override fun onMsgStateChanged(message: ChatMessage, state: ChatMessage.State?) {
+            updateLastMessageStatus(message)
+        }
+    }
+
     init {
+        chatRoom.addListener(chatRoomListener)
+
         subject.postValue(chatRoom.subject)
         lastUpdateTime.postValue(chatRoom.lastUpdateTime)
+        computeComposingLabel()
 
         val friends = arrayListOf<Friend>()
         val address = if (chatRoom.hasCapability(Capabilities.Basic.toInt())) {
@@ -121,6 +163,14 @@ class ConversationModel @WorkerThread constructor(private val chatRoom: ChatRoom
         updateLastUpdatedTime()
 
         unreadMessageCount.postValue(chatRoom.unreadMessagesCount)
+    }
+
+    @WorkerThread
+    fun destroy() {
+        lastMessage?.removeListener(chatMessageListener)
+        lastMessage = null
+
+        chatRoom.removeListener(chatRoomListener)
     }
 
     @UiThread
@@ -172,36 +222,54 @@ class ConversationModel @WorkerThread constructor(private val chatRoom: ChatRoom
     }
 
     @WorkerThread
+    private fun updateLastMessageStatus(message: ChatMessage) {
+        val text = LinphoneUtils.getTextDescribingMessage(message)
+        lastMessageText.postValue(text)
+
+        val isOutgoing = message.isOutgoing
+        isLastMessageOutgoing.postValue(isOutgoing)
+        if (isOutgoing) {
+            val icon = when (message.state) {
+                ChatMessage.State.Displayed -> {
+                    R.drawable.checks
+                }
+
+                ChatMessage.State.DeliveredToUser -> {
+                    R.drawable.check
+                }
+
+                ChatMessage.State.Delivered -> {
+                    R.drawable.sent
+                }
+
+                ChatMessage.State.InProgress, ChatMessage.State.FileTransferInProgress -> {
+                    R.drawable.in_progress
+                }
+
+                ChatMessage.State.NotDelivered, ChatMessage.State.FileTransferError -> {
+                    R.drawable.warning_circle
+                }
+
+                else -> {
+                    R.drawable.info
+                }
+            }
+            lastMessageIcon.postValue(icon)
+        }
+    }
+
+    @WorkerThread
     private fun updateLastMessage() {
+        lastMessage?.removeListener(chatMessageListener)
+        lastMessage = null
+
         val message = chatRoom.lastMessageInHistory
         if (message != null) {
-            val text = LinphoneUtils.getTextDescribingMessage(message)
-            lastMessage.postValue(text)
+            updateLastMessageStatus(message)
 
-            val isOutgoing = message.isOutgoing
-            isLastMessageOutgoing.postValue(isOutgoing)
-            if (isOutgoing) {
-                val icon = when (message.state) {
-                    ChatMessage.State.Displayed -> {
-                        R.drawable.checks
-                    }
-                    ChatMessage.State.DeliveredToUser -> {
-                        R.drawable.check
-                    }
-                    ChatMessage.State.Delivered -> {
-                        R.drawable.sent
-                    }
-                    ChatMessage.State.InProgress, ChatMessage.State.FileTransferInProgress -> {
-                        R.drawable.in_progress
-                    }
-                    ChatMessage.State.NotDelivered, ChatMessage.State.FileTransferError -> {
-                        R.drawable.warning_circle
-                    }
-                    else -> {
-                        R.drawable.info
-                    }
-                }
-                lastMessageIcon.postValue(icon)
+            if (message.isOutgoing && message.state != ChatMessage.State.Displayed) {
+                message.addListener(chatMessageListener)
+                lastMessage = message
             }
         } else {
             Log.w("$TAG No last message to display for chat room [$id]")
@@ -224,5 +292,10 @@ class ConversationModel @WorkerThread constructor(private val chatRoom: ChatRoom
             }
         }
         dateTime.postValue(humanReadableTimestamp)
+    }
+
+    @WorkerThread
+    private fun computeComposingLabel() {
+        // TODO
     }
 }

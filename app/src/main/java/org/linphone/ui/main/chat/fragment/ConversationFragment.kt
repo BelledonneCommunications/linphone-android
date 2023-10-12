@@ -125,7 +125,7 @@ class ConversationFragment : GenericFragment() {
         }
 
         adapter = ConversationEventAdapter(viewLifecycleOwner)
-        binding.eventsList.setHasFixedSize(false)
+        binding.eventsList.setHasFixedSize(true)
         binding.eventsList.adapter = adapter
 
         val layoutManager = LinearLayoutManager(requireContext())
@@ -142,9 +142,11 @@ class ConversationFragment : GenericFragment() {
             adapter.submitList(items)
             Log.i("$TAG Events (messages) list updated with [${items.size}] items")
 
-            (view.parent as? ViewGroup)?.doOnPreDraw {
-                startPostponedEnterTransition()
-                sharedViewModel.openSlidingPaneEvent.value = Event(true)
+            if (currentCount == 0 && items.isNotEmpty()) {
+                (view.parent as? ViewGroup)?.doOnPreDraw {
+                    startPostponedEnterTransition()
+                    sharedViewModel.openSlidingPaneEvent.value = Event(true)
+                }
             }
 
             if (currentCount < items.size) {

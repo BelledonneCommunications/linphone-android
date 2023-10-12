@@ -87,6 +87,7 @@ class ConversationsListViewModel @UiThread constructor() : AbstractTopBarViewMod
         super.onCleared()
 
         coreContext.postOnCoreThread { core ->
+            conversations.value.orEmpty().forEach(ConversationModel::destroy)
             coreContext.contactsManager.removeListener(contactsListener)
             core.removeListener(coreListener)
         }
@@ -103,6 +104,8 @@ class ConversationsListViewModel @UiThread constructor() : AbstractTopBarViewMod
 
     @WorkerThread
     private fun computeChatRoomsList(filter: String) {
+        conversations.value.orEmpty().forEach(ConversationModel::destroy)
+
         if (conversations.value.orEmpty().isEmpty()) {
             fetchInProgress.postValue(true)
         }
