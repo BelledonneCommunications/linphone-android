@@ -32,6 +32,7 @@ import org.linphone.core.EventLog
 import org.linphone.core.Factory
 import org.linphone.core.Friend
 import org.linphone.core.tools.Log
+import org.linphone.ui.main.chat.model.ChatMessageModel
 import org.linphone.ui.main.chat.model.EventLogModel
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.contacts.model.GroupAvatarModel
@@ -129,6 +130,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
         coreContext.postOnCoreThread {
             chatRoom.removeListener(chatRoomListener)
+            events.value.orEmpty().forEach(EventLogModel::destroy)
             avatarsMap.values.forEach(ContactAvatarModel::destroy)
         }
     }
@@ -183,6 +185,25 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
                 message.send()
             }
             textToSend.postValue("")
+        }
+    }
+
+    @UiThread
+    fun deleteChatMessage(chatMessageModel: ChatMessageModel) {
+        coreContext.postOnCoreThread {
+            val eventsLogs = events.value.orEmpty()
+            val found = eventsLogs.find {
+                it.model == chatMessageModel
+            }
+            if (found != null) {
+                val list = arrayListOf<EventLogModel>()
+                list.addAll(eventsLogs)
+                list.remove(found)
+                events.postValue(list)
+            }
+
+            Log.i("$TAG Deleting message id [${chatMessageModel.id}]")
+            chatRoom.deleteMessage(chatMessageModel.chatMessage)
         }
     }
 

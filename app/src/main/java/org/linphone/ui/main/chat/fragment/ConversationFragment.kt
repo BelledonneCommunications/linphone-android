@@ -20,6 +20,9 @@
 package org.linphone.ui.main.chat.fragment
 
 import android.app.Dialog
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.graphics.Rect
 import android.graphics.RenderEffect
 import android.graphics.Shader
@@ -185,16 +188,33 @@ class ConversationFragment : GenericFragment() {
             null,
             false
         )
+
         layout.root.setOnClickListener {
             dialog.dismiss()
-            binding.root.setRenderEffect(null)
+        }
+
+        layout.setDeleteClickListener {
+            viewModel.deleteChatMessage(chatMessageModel)
+            dialog.dismiss()
+        }
+
+        layout.setCopyClickListener {
+            val text = chatMessageModel.text
+            val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val label = "Message"
+            clipboard.setPrimaryClip(ClipData.newPlainText(label, text))
+
+            dialog.dismiss()
         }
 
         layout.model = chatMessageModel
+        chatMessageModel.dismissLongPressMenuEvent.observe(viewLifecycleOwner) {
+            dialog.dismiss()
+        }
+
         val screenY = yPosition - AppUtils.getDimension(
             R.dimen.chat_bubble_long_press_menu_bubble_offset
         )
-
         val rect = Rect()
         binding.root.getGlobalVisibleRect(rect)
         val height = rect.height()
@@ -209,6 +229,9 @@ class ConversationFragment : GenericFragment() {
         set.applyTo(constraintLayout)
 
         dialog.setContentView(layout.root)
+        dialog.setOnDismissListener {
+            binding.root.setRenderEffect(null)
+        }
 
         dialog.window
             ?.setLayout(

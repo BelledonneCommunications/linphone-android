@@ -22,15 +22,25 @@ package org.linphone.ui.main.chat.model
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
+import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.core.Address
 import org.linphone.core.ChatMessage
+import org.linphone.core.ChatMessageListenerStub
+import org.linphone.core.ChatMessageReaction
+import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
+import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.TimestampUtils
 
 class ChatMessageModel @WorkerThread constructor(
-    chatMessage: ChatMessage,
+    val chatMessage: ChatMessage,
     val avatarModel: ContactAvatarModel
 ) {
+    companion object {
+        private const val TAG = "[Chat Message Model]"
+    }
+
     val id = chatMessage.messageId
 
     val isOutgoing = chatMessage.isOutgoing
@@ -45,13 +55,47 @@ class ChatMessageModel @WorkerThread constructor(
 
     val time = TimestampUtils.toString(timestamp)
 
+    val dismissLongPressMenuEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
+    private val chatMessageListener = object : ChatMessageListenerStub() {
+        @WorkerThread
+        override fun onMsgStateChanged(message: ChatMessage, messageState: ChatMessage.State?) {
+            state.postValue(chatMessage.state)
+        }
+
+        @WorkerThread
+        override fun onNewMessageReaction(message: ChatMessage, reaction: ChatMessageReaction) {
+            Log.i(
+                "$TAG New reaction [${reaction.body}] from [${reaction.fromAddress.asStringUriOnly()}] for chat message with ID [$id]"
+            )
+        }
+
+        @WorkerThread
+        override fun onReactionRemoved(message: ChatMessage, address: Address) {
+            Log.i("$TAG A reaction was removed for chat message with ID [$id]")
+        }
+    }
+
     init {
+        chatMessage.addListener(chatMessageListener)
         state.postValue(chatMessage.state)
     }
 
+    @WorkerThread
+    fun destroy() {
+        chatMessage.removeListener(chatMessageListener)
+    }
+
     @UiThread
-    fun onLongClick(): Boolean {
-        return true
+    fun sendReaction(emoji: String) {
+        coreContext.postOnCoreThread {
+            Log.i("$TAG Sending reaction [$emoji] to chat message with ID [$id]")
+            val reaction = chatMessage.createReaction(emoji)
+            reaction.send()
+            dismissLongPressMenuEvent.postValue(Event(true))
+        }
     }
 
     @UiThread

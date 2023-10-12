@@ -5,6 +5,12 @@
     <data>
         <import type="android.view.View" />
         <variable
+            name="copyClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="deleteClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="model"
             type="org.linphone.ui.main.chat.model.ChatMessageModel" />
     </data>
@@ -35,6 +41,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/thumbs_up"
+            android:onClick="@{() -> model.sendReaction(@string/emoji_thumbs_up)}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -48,6 +55,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/love"
+            android:onClick="@{() -> model.sendReaction(@string/emoji_love)}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -60,6 +68,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/laughing"
+            android:onClick="@{() -> model.sendReaction(@string/emoji_laughing)}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -72,6 +81,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/surprised"
+            android:onClick="@{() -> model.sendReaction(@string/emoji_surprised)}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -84,6 +94,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tear"
+            android:onClick="@{() -> model.sendReaction(@string/emoji_tear)}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -149,6 +160,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/copy"
+            android:onClick="@{copyClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/menu_copy_chat_message"
@@ -175,6 +187,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/delete"
+            android:onClick="@{deleteClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/menu_delete_selected_item"
