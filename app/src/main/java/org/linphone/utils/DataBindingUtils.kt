@@ -173,10 +173,10 @@ fun AppCompatTextView.setDrawableTint(@ColorInt color: Int) {
 
 @UiThread
 @BindingAdapter("coil")
-fun loadPictureWithCoil(imageView: ImageView, file: String?) {
+fun ImageView.loadCircleFileWithCoil(file: String?) {
     Log.i("[Data Binding Utils] Loading file [$file] with coil")
     if (file != null) {
-        imageView.load(file) {
+        load(file) {
             transformations(CircleCropTransformation())
         }
     }
@@ -307,6 +307,11 @@ fun AvatarView.loadContactAvatar(contact: ContactAvatarModel?) {
             }
         )
     }
+}
+
+@BindingAdapter("contactPicture")
+fun ImageView.loadContactPicture(contact: ContactAvatarModel?) {
+    loadCircleFileWithCoil(contact?.avatar?.value?.toString())
 }
 
 @UiThread

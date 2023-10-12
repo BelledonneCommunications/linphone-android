@@ -22,21 +22,14 @@
         android:layout_marginTop="@{model.isGroupedWithPreviousOne ? @dimen/chat_bubble_grouped_top_margin : @dimen/chat_bubble_top_margin, default=@dimen/chat_bubble_top_margin}"
         android:layout_marginStart="16dp">
 
-        <io.getstream.avatarview.AvatarView
+        <ImageView
             android:id="@+id/avatar"
             android:layout_width="@dimen/avatar_bubble_size"
             android:layout_height="@dimen/avatar_bubble_size"
             android:adjustViewBounds="true"
             android:background="@drawable/shape_circle_light_blue_background"
             android:visibility="@{!model.isFromGroup ? View.GONE: model.isGroupedWithPreviousOne ? View.INVISIBLE : View.VISIBLE}"
-            contactAvatar="@{model.avatarModel}"
-            app:avatarViewPlaceholder="@drawable/user_circle"
-            app:avatarViewInitialsBackgroundColor="@color/gray_main2_200"
-            app:avatarViewInitialsTextColor="@color/gray_main2_600"
-            app:avatarViewInitialsTextSize="16sp"
-            app:avatarViewInitialsTextStyle="bold"
-            app:avatarViewShape="circle"
-            app:avatarViewBorderWidth="0dp"
+            contactPicture="@{model.avatarModel}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

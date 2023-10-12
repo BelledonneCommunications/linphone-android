@@ -90,11 +90,7 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
             .components {
                 add(VideoFrameDecoder.Factory())
                 add(SvgDecoder.Factory())
-                if (Version.sdkAboveOrEqual(Version.API28_PIE_90)) {
-                    add(ImageDecoderDecoder.Factory())
-                } else {
-                    add(GifDecoder.Factory())
-                }
+                add(ImageDecoderDecoder.Factory())
             }
             .memoryCache {
                 MemoryCache.Builder(this)
