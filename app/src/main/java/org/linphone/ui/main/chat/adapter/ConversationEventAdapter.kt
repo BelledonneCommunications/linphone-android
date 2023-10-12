@@ -28,7 +28,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
-import org.linphone.core.ChatMessage
 import org.linphone.databinding.ChatBubbleIncomingBinding
 import org.linphone.databinding.ChatBubbleOutgoingBinding
 import org.linphone.databinding.ChatEventBinding
@@ -44,8 +43,6 @@ class ConversationEventAdapter(
         const val INCOMING_CHAT_MESSAGE = 1
         const val OUTGOING_CHAT_MESSAGE = 2
         const val EVENT = 3
-
-        const val MAX_TIME_TO_GROUP_MESSAGES = 60 // 1 minute
     }
 
     val chatMessageLongPressEvent = MutableLiveData<Event<Pair<ChatMessageModel, Int>>>()
@@ -107,52 +104,12 @@ class ConversationEventAdapter(
         }
     }
 
-    fun groupPreviousItem(item: ChatMessageModel, position: Int): Boolean {
-        return if (position == 0) {
-            false
-        } else {
-            val previous = position - 1
-            if (getItemViewType(position) == getItemViewType(previous)) {
-                val previousItem = getItem(previous).model as ChatMessageModel
-                if (kotlin.math.abs(item.timestamp - previousItem.timestamp) < MAX_TIME_TO_GROUP_MESSAGES) {
-                    previousItem.fromSipUri == item.fromSipUri
-                } else {
-                    false
-                }
-            } else {
-                false
-            }
-        }
-    }
-
-    fun isLastItemOfGroup(item: ChatMessageModel, position: Int): Boolean {
-        return if (position == itemCount - 1) {
-            true
-        } else {
-            val next = position + 1
-            if (getItemViewType(next) == getItemViewType(position)) {
-                val nextItem = getItem(next).model as ChatMessageModel
-                if (kotlin.math.abs(item.timestamp - nextItem.timestamp) < MAX_TIME_TO_GROUP_MESSAGES) {
-                    nextItem.fromSipUri != item.fromSipUri
-                } else {
-                    true
-                }
-            } else {
-                true
-            }
-        }
-    }
-
     inner class IncomingBubbleViewHolder(
         val binding: ChatBubbleIncomingBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(message: ChatMessageModel) {
             with(binding) {
                 model = message
-
-                val position = bindingAdapterPosition
-                isGroupedWithPreviousOne = groupPreviousItem(message, position)
-                isLastOneOfGroup = isLastItemOfGroup(message, position)
 
                 setOnLongClickListener {
                     val screen = IntArray(2)
@@ -174,10 +131,6 @@ class ConversationEventAdapter(
         fun bind(message: ChatMessageModel) {
             with(binding) {
                 model = message
-
-                val position = bindingAdapterPosition
-                isGroupedWithPreviousOne = groupPreviousItem(message, position)
-                isLastOneOfGroup = isLastItemOfGroup(message, position)
 
                 lifecycleOwner = viewLifecycleOwner
                 executePendingBindings()
@@ -214,8 +167,9 @@ class ConversationEventAdapter(
             return if (oldItem.isEvent && newItem.isEvent) {
                 true
             } else {
-                val newData = (newItem.model as ChatMessageModel)
-                newData.state.value == ChatMessage.State.Displayed
+                val oldModel = (newItem.model as ChatMessageModel)
+                val newModel = newItem.model
+                oldModel.statusIcon.value == newModel.statusIcon.value
             }
         }
     }

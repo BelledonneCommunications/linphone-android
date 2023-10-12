@@ -23,6 +23,7 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
 import org.linphone.core.Address
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatMessageListenerStub
@@ -35,7 +36,10 @@ import org.linphone.utils.TimestampUtils
 
 class ChatMessageModel @WorkerThread constructor(
     val chatMessage: ChatMessage,
-    val avatarModel: ContactAvatarModel
+    val avatarModel: ContactAvatarModel,
+    val isFromGroup: Boolean,
+    val isGroupedWithPreviousOne: Boolean,
+    val isGroupedWithNextOne: Boolean
 ) {
     companion object {
         private const val TAG = "[Chat Message Model]"
@@ -45,15 +49,11 @@ class ChatMessageModel @WorkerThread constructor(
 
     val isOutgoing = chatMessage.isOutgoing
 
-    val state = MutableLiveData<ChatMessage.State>()
+    val statusIcon = MutableLiveData<Int>()
 
     val text = LinphoneUtils.getTextDescribingMessage(chatMessage)
 
-    val fromSipUri = chatMessage.fromAddress.asStringUriOnly()
-
-    val timestamp = chatMessage.time
-
-    val time = TimestampUtils.toString(timestamp)
+    val time = TimestampUtils.toString(chatMessage.time)
 
     val dismissLongPressMenuEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
@@ -62,7 +62,7 @@ class ChatMessageModel @WorkerThread constructor(
     private val chatMessageListener = object : ChatMessageListenerStub() {
         @WorkerThread
         override fun onMsgStateChanged(message: ChatMessage, messageState: ChatMessage.State?) {
-            state.postValue(chatMessage.state)
+            computeStatusIcon(chatMessage.state)
         }
 
         @WorkerThread
@@ -80,7 +80,7 @@ class ChatMessageModel @WorkerThread constructor(
 
     init {
         chatMessage.addListener(chatMessageListener)
-        state.postValue(chatMessage.state)
+        computeStatusIcon(chatMessage.state)
     }
 
     @WorkerThread
@@ -100,5 +100,27 @@ class ChatMessageModel @WorkerThread constructor(
 
     @UiThread
     fun showDeliveryInfo() {
+    }
+
+    @WorkerThread
+    private fun computeStatusIcon(state: ChatMessage.State) {
+        val icon = when (state) {
+            ChatMessage.State.Displayed -> {
+                R.drawable.checks
+            }
+            ChatMessage.State.DeliveredToUser -> {
+                R.drawable.check
+            }
+            ChatMessage.State.Delivered -> {
+                R.drawable.envelope_simple
+            }
+            ChatMessage.State.NotDelivered -> {
+                R.drawable.warning_circle
+            }
+            else -> {
+                R.drawable.in_progress
+            }
+        }
+        statusIcon.postValue(icon)
     }
 }

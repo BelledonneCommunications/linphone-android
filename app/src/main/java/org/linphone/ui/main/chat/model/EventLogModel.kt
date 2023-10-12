@@ -23,7 +23,13 @@ import androidx.annotation.WorkerThread
 import org.linphone.core.EventLog
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 
-class EventLogModel @WorkerThread constructor(eventLog: EventLog, avatarModel: ContactAvatarModel) {
+class EventLogModel @WorkerThread constructor(
+    val eventLog: EventLog,
+    avatarModel: ContactAvatarModel,
+    isFromGroup: Boolean,
+    isGroupedWithPreviousOne: Boolean,
+    isGroupedWithNextOne: Boolean
+) {
     val type: EventLog.Type = eventLog.type
 
     val isEvent = type != EventLog.Type.ConferenceChatMessage
@@ -31,7 +37,13 @@ class EventLogModel @WorkerThread constructor(eventLog: EventLog, avatarModel: C
     val model = if (isEvent) {
         EventModel(eventLog)
     } else {
-        ChatMessageModel(eventLog.chatMessage!!, avatarModel)
+        ChatMessageModel(
+            eventLog.chatMessage!!,
+            avatarModel,
+            isFromGroup,
+            isGroupedWithPreviousOne,
+            isGroupedWithNextOne
+        )
     }
 
     val notifyId = eventLog.notifyId

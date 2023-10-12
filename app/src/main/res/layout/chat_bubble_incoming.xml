@@ -13,19 +13,13 @@
         <variable
             name="model"
             type="org.linphone.ui.main.chat.model.ChatMessageModel" />
-        <variable
-            name="isGroupedWithPreviousOne"
-            type="Boolean" />
-        <variable
-            name="isLastOneOfGroup"
-            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:onLongClick="@{onLongClickListener}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@{isGroupedWithPreviousOne ? @dimen/chat_bubble_grouped_top_margin : @dimen/chat_bubble_top_margin, default=@dimen/chat_bubble_top_margin}"
+        android:layout_marginTop="@{model.isGroupedWithPreviousOne ? @dimen/chat_bubble_grouped_top_margin : @dimen/chat_bubble_top_margin, default=@dimen/chat_bubble_top_margin}"
         android:layout_marginStart="16dp">
 
         <io.getstream.avatarview.AvatarView
@@ -34,7 +28,7 @@
             android:layout_height="@dimen/avatar_bubble_size"
             android:adjustViewBounds="true"
             android:background="@drawable/shape_circle_light_blue_background"
-            android:visibility="@{isGroupedWithPreviousOne ? View.INVISIBLE : View.VISIBLE}"
+            android:visibility="@{!model.isFromGroup ? View.GONE: model.isGroupedWithPreviousOne ? View.INVISIBLE : View.VISIBLE}"
             contactAvatar="@{model.avatarModel}"
             app:avatarViewPlaceholder="@drawable/user_circle"
             app:avatarViewInitialsBackgroundColor="@color/gray_main2_200"
@@ -54,7 +48,7 @@
             android:background="@drawable/led_background"
             android:padding="1dp"
             app:presenceIcon="@{model.avatarModel.presenceStatus}"
-            android:visibility="@{isGroupedWithPreviousOne || model.avatarModel.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE}"
+            android:visibility="@{model.isGroupedWithPreviousOne || !model.isFromGroup || model.avatarModel.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toEndOf="@id/avatar"
             app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 
@@ -63,7 +57,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="10dp"
-            android:src="@{isGroupedWithPreviousOne ? @drawable/shape_chat_bubble_incoming_full : @drawable/shape_chat_bubble_incoming_first, default=@drawable/shape_chat_bubble_incoming_first}"
+            android:src="@{model.isGroupedWithPreviousOne ? @drawable/shape_chat_bubble_incoming_full : @drawable/shape_chat_bubble_incoming_first, default=@drawable/shape_chat_bubble_incoming_first}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/bubble_bottom_barrier"
             app:layout_constraintStart_toEndOf="@id/avatar"
@@ -127,7 +121,7 @@
             android:layout_marginBottom="5dp"
             android:text="@{model.time, default=`13:40`}"
             android:textSize="12sp"
-            android:visibility="@{isLastOneOfGroup ? View.VISIBLE : View.GONE}"
+            android:visibility="@{model.isGroupedWithNextOne ? View.VISIBLE : View.GONE}"
             app:layout_constraintTop_toBottomOf="@id/text_message"
             app:layout_constraintStart_toStartOf="@id/text_message"
             app:layout_constraintBottom_toBottomOf="@id/background"/>
@@ -140,8 +134,8 @@
             android:layout_height="@dimen/small_icon_size"
             android:layout_marginStart="5dp"
             android:layout_marginTop="2dp"
-            android:src="@{model.state == State.Displayed ? @drawable/checks : model.state == State.DeliveredToUser ? @drawable/check : model.state == State.Delivered ? @drawable/envelope_simple : model.state == State.NotDelivered ? @drawable/warning_circle : @drawable/in_progress, default=@drawable/in_progress}"
-            android:visibility="@{isLastOneOfGroup ? View.VISIBLE : View.GONE}"
+            android:src="@{model.statusIcon, default=@drawable/checks}"
+            android:visibility="@{model.isGroupedWithNextOne ? View.VISIBLE : View.GONE}"
             app:layout_constraintTop_toTopOf="@id/date_time"
             app:layout_constraintStart_toEndOf="@id/date_time"
             app:layout_constraintBottom_toBottomOf="@id/date_time"

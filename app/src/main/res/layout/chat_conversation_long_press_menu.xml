@@ -133,8 +133,6 @@
             app:layout_constraintTop_toBottomOf="@id/emojis_background"
             app:layout_constraintBottom_toTopOf="@id/reply"
             model="@{model}"
-            isGroupedWithPreviousOne="@{false}"
-            isLastOneOfGroup="@{true}"
             layout="@layout/chat_bubble_incoming"/>
 
         <View

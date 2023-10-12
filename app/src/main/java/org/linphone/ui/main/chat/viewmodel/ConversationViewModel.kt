@@ -43,6 +43,8 @@ import org.linphone.utils.LinphoneUtils
 class ConversationViewModel @UiThread constructor() : ViewModel() {
     companion object {
         private const val TAG = "[Conversation ViewModel]"
+
+        const val MAX_TIME_TO_GROUP_MESSAGES = 60 // 1 minute
     }
 
     val showBackButton = MutableLiveData<Boolean>()
@@ -79,7 +81,13 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             list.addAll(events.value.orEmpty())
 
             val avatarModel = getAvatarModelForAddress(message?.localAddress)
-            list.add(EventLogModel(eventLog, avatarModel))
+            val lastEvent = events.value.orEmpty().lastOrNull()
+            val group = if (lastEvent != null) {
+                shouldWeGroupTwoEvents(eventLog, lastEvent.eventLog)
+            } else {
+                false
+            }
+            list.add(EventLogModel(eventLog, avatarModel, isGroup.value == true, group, true))
 
             events.postValue(list)
         }
@@ -103,7 +111,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         }
 
         @WorkerThread
-        override fun onChatMessagesReceived(chatRoom: ChatRoom, eventLogs: Array<out EventLog>) {
+        override fun onChatMessagesReceived(chatRoom: ChatRoom, eventLogs: Array<EventLog>) {
             Log.i("$TAG Received [${eventLogs.size}] new message(s)")
             chatRoom.markAsRead()
             computeComposingLabel()
@@ -111,15 +119,13 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             val list = arrayListOf<EventLogModel>()
             list.addAll(events.value.orEmpty())
 
-            for (eventLog in eventLogs) {
-                val address = if (eventLog.type == EventLog.Type.ConferenceChatMessage) {
-                    eventLog.chatMessage?.fromAddress
-                } else {
-                    eventLog.participantAddress
-                }
-                val avatarModel = getAvatarModelForAddress(address)
-                list.add(EventLogModel(eventLog, avatarModel))
-            }
+            val newList = getEventsListFromHistory(
+                eventLogs,
+                isGroupChatRoom = isGroup.value == true
+            )
+            list.addAll(newList)
+
+            // TODO: handle case when first one of the newly received messages should be grouped with last one of the current list
 
             events.postValue(list)
         }
@@ -211,11 +217,9 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
     private fun configureChatRoom() {
         computeComposingLabel()
 
-        isGroup.postValue(
-            !chatRoom.hasCapability(ChatRoom.Capabilities.OneToOne.toInt()) && chatRoom.hasCapability(
-                ChatRoom.Capabilities.Conference.toInt()
-            )
-        )
+        val isGroupChatRoom = !chatRoom.hasCapability(ChatRoom.Capabilities.OneToOne.toInt()) &&
+            chatRoom.hasCapability(ChatRoom.Capabilities.Conference.toInt())
+        isGroup.postValue(isGroupChatRoom)
 
         val empty = chatRoom.hasCapability(ChatRoom.Capabilities.Conference.toInt()) && chatRoom.participants.isEmpty()
         val readOnly = chatRoom.isReadOnly || empty
@@ -245,17 +249,64 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         val groupAvatar = GroupAvatarModel(friends)
         groupAvatarModel.postValue(groupAvatar)
 
-        val eventsList = arrayListOf<EventLogModel>()
-
         val history = chatRoom.getHistoryEvents(0)
-        for (event in history) {
-            val avatar = getAvatarModelForAddress(event.chatMessage?.fromAddress)
-            val model = EventLogModel(event, avatar)
-            eventsList.add(model)
-        }
+        val eventsList = getEventsListFromHistory(history, isGroupChatRoom)
 
         events.postValue(eventsList)
         chatRoom.markAsRead()
+    }
+
+    @WorkerThread
+    private fun getEventsListFromHistory(history: Array<EventLog>, isGroupChatRoom: Boolean): ArrayList<EventLogModel> {
+        val eventsList = arrayListOf<EventLogModel>()
+        val groupedEventLogs = arrayListOf<EventLog>()
+        for (event in history) {
+            if (groupedEventLogs.isEmpty()) {
+                groupedEventLogs.add(event)
+                continue
+            }
+
+            val previousGroupEvent = groupedEventLogs.last()
+            val groupEvents = shouldWeGroupTwoEvents(event, previousGroupEvent)
+
+            if (!groupEvents) {
+                // Handle all events in group, then re-start a new group with current item
+                var index = 0
+                for (groupedEvent in groupedEventLogs) {
+                    val avatar = getAvatarModelForAddress(groupedEvent.chatMessage?.fromAddress)
+                    val model = EventLogModel(
+                        groupedEvent,
+                        avatar,
+                        isGroupChatRoom,
+                        index > 0,
+                        index == groupedEventLogs.size - 1
+                    )
+                    eventsList.add(model)
+
+                    index += 1
+                }
+
+                groupedEventLogs.clear()
+            }
+
+            groupedEventLogs.add(event)
+        }
+        return eventsList
+    }
+
+    @WorkerThread
+    private fun shouldWeGroupTwoEvents(event: EventLog, previousGroupEvent: EventLog): Boolean {
+        return if (previousGroupEvent.type == EventLog.Type.ConferenceChatMessage && event.type == EventLog.Type.ConferenceChatMessage) {
+            val previousChatMessage = previousGroupEvent.chatMessage!!
+            val chatMessage = event.chatMessage!!
+
+            // If they have the same direction, the same from address and were sent in a short timelapse, group them
+            chatMessage.isOutgoing == previousChatMessage.isOutgoing &&
+                chatMessage.fromAddress.weakEqual(previousChatMessage.fromAddress) &&
+                kotlin.math.abs(chatMessage.time - previousChatMessage.time) < MAX_TIME_TO_GROUP_MESSAGES
+        } else {
+            false
+        }
     }
 
     @WorkerThread
