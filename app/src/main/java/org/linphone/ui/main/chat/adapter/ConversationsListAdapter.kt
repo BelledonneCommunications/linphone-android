@@ -80,7 +80,7 @@ class ConversationsListAdapter(
         }
 
         override fun areContentsTheSame(oldItem: ConversationModel, newItem: ConversationModel): Boolean {
-            return oldItem.avatarModel.id == newItem.avatarModel.id
+            return oldItem.avatarModel.value?.id == newItem.avatarModel.value?.id
         }
     }
 }

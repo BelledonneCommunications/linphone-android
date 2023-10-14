@@ -25,6 +25,7 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.contacts.AbstractAvatarModel
 import org.linphone.core.Account
 import org.linphone.core.AccountListenerStub
 import org.linphone.core.ChatMessage
@@ -40,16 +41,12 @@ class AccountModel @WorkerThread constructor(
     val account: Account,
     private val onMenuClicked: ((view: View, account: Account) -> Unit)? = null,
     private val onSetAsDefault: ((account: Account) -> Unit)? = null
-) {
+) : AbstractAvatarModel() {
     companion object {
         private const val TAG = "[Account Model]"
     }
 
     val displayName = MutableLiveData<String>()
-
-    val avatar = MutableLiveData<String>()
-
-    val initials = MutableLiveData<String>()
 
     val registrationState = MutableLiveData<RegistrationState>()
 
@@ -58,8 +55,6 @@ class AccountModel @WorkerThread constructor(
     val registrationStateSummary = MutableLiveData<String>()
 
     val isDefault = MutableLiveData<Boolean>()
-
-    val showTrust = MutableLiveData<Boolean>()
 
     val notificationsCount = MutableLiveData<Int>()
 
@@ -99,6 +94,7 @@ class AccountModel @WorkerThread constructor(
         account.addListener(accountListener)
         coreContext.core.addListener(coreListener)
 
+        trust.postValue(ChatRoom.SecurityLevel.Safe)
         showTrust.postValue(account.isInSecureMode())
 
         update()
@@ -155,8 +151,8 @@ class AccountModel @WorkerThread constructor(
         initials.postValue(AppUtils.getInitials(name))
 
         val pictureUri = account.params.pictureUri.orEmpty()
-        if (pictureUri != avatar.value) {
-            avatar.postValue(pictureUri)
+        if (pictureUri != images.value?.firstOrNull()) {
+            images.postValue(arrayListOf(pictureUri))
             Log.d("$TAG Account picture URI is [$pictureUri]")
         }
 

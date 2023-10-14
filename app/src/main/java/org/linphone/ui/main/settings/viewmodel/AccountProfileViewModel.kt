@@ -173,7 +173,7 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
                     copy.pictureUri = null
                 }
 
-                accountModel.value?.avatar?.postValue(path)
+                accountModel.value?.images?.postValue(arrayListOf(path))
                 account.params = copy
                 account.refreshRegister()
             }

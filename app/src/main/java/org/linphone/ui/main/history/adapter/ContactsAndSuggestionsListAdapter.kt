@@ -104,7 +104,7 @@ class ContactsAndSuggestionsListAdapter(
         @UiThread
         fun bind(contactOrSuggestionModel: ContactOrSuggestionModel) {
             with(binding) {
-                model = contactOrSuggestionModel.contactAvatarModel
+                model = contactOrSuggestionModel.avatarModel.value
 
                 lifecycleOwner = viewLifecycleOwner
 

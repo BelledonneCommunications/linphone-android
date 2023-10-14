@@ -127,14 +127,15 @@ class StartConversationViewModel @UiThread constructor() : ViewModel() {
                 val friend = coreContext.contactsManager.findContactByAddress(address)
                 if (friend != null) {
                     val model = ContactOrSuggestionModel(address, friend)
-                    model.contactAvatarModel = ContactAvatarModel(friend)
+                    val avatarModel = ContactAvatarModel(friend)
+                    model.avatarModel.postValue(avatarModel)
 
                     val currentLetter = friend.name?.get(0).toString()
                     val displayLetter = previousLetter.isEmpty() || currentLetter != previousLetter
                     if (currentLetter != previousLetter) {
                         previousLetter = currentLetter
                     }
-                    model.contactAvatarModel.firstContactStartingByThatLetter.postValue(
+                    avatarModel.firstContactStartingByThatLetter.postValue(
                         displayLetter
                     )
 

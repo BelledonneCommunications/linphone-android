@@ -29,7 +29,7 @@
             android:adjustViewBounds="true"
             android:background="@drawable/shape_circle_light_blue_background"
             android:visibility="@{!model.isFromGroup ? View.GONE: model.isGroupedWithPreviousOne ? View.INVISIBLE : View.VISIBLE}"
-            contactPicture="@{model.avatarModel}"
+            coilBubbleAvatar="@{model.avatarModel}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

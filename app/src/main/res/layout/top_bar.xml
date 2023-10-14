@@ -34,21 +34,14 @@
             app:constraint_referenced_ids="title, search"
             app:barrierDirection="bottom" />
 
-        <io.getstream.avatarview.AvatarView
+        <ImageView
             android:onClick="@{() -> viewModel.openDrawerMenu()}"
             android:id="@+id/avatar"
             android:layout_width="@dimen/avatar_list_cell_size"
             android:layout_height="@dimen/avatar_list_cell_size"
             android:layout_marginStart="15dp"
             android:background="@drawable/shape_circle_light_blue_background"
-            accountAvatar="@{viewModel.account}"
-            app:avatarViewPlaceholder="@drawable/user_circle"
-            app:avatarViewInitialsBackgroundColor="@color/gray_main2_200"
-            app:avatarViewInitialsTextColor="@color/gray_main2_600"
-            app:avatarViewInitialsTextSize="16sp"
-            app:avatarViewInitialsTextStyle="bold"
-            app:avatarViewShape="circle"
-            app:avatarViewBorderWidth="0dp"
+            coilAvatar="@{viewModel.account}"
             app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/title" />

@@ -257,7 +257,10 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
     }
 
     @WorkerThread
-    private fun processGroupedEvents(groupedEventLogs: ArrayList<EventLog>, isGroupChatRoom: Boolean): ArrayList<EventLogModel> {
+    private fun processGroupedEvents(
+        groupedEventLogs: ArrayList<EventLog>,
+        isGroupChatRoom: Boolean
+    ): ArrayList<EventLogModel> {
         val eventsList = arrayListOf<EventLogModel>()
 
         // Handle all events in group, then re-start a new group with current item

@@ -96,21 +96,14 @@
                     app:constraint_referenced_ids="trusted_devices_count, trust_background, trusted_devices_progress, devices, trusted_devices_progress_label"
                     android:visibility="@{viewModel.expandDevicesTrust ? View.VISIBLE : View.GONE}" />
 
-                <io.getstream.avatarview.AvatarView
+                <ImageView
                     android:id="@+id/avatar"
                     android:layout_width="@dimen/avatar_big_size"
                     android:layout_height="@dimen/avatar_big_size"
                     android:layout_marginTop="8dp"
                     android:adjustViewBounds="true"
                     android:background="@drawable/shape_circle_light_blue_background"
-                    contactAvatar="@{viewModel.contact}"
-                    app:avatarViewInitialsBackgroundColor="@color/gray_main2_200"
-                    app:avatarViewInitialsTextColor="@color/gray_main2_600"
-                    app:avatarViewInitialsTextSize="21sp"
-                    app:avatarViewInitialsTextStyle="bold"
-                    app:avatarViewPlaceholder="@drawable/user_circle"
-                    app:avatarViewShape="circle"
-                    app:avatarViewBorderWidth="0dp"
+                    coilBigAvatar="@{viewModel.contact}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

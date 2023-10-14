@@ -76,7 +76,7 @@ class ConversationModel @WorkerThread constructor(private val chatRoom: ChatRoom
 
     val unreadMessageCount = MutableLiveData<Int>()
 
-    val avatarModel: ContactAvatarModel
+    val avatarModel = MutableLiveData<ContactAvatarModel>()
 
     val groupAvatarModel: GroupAvatarModel
 
@@ -147,11 +147,11 @@ class ConversationModel @WorkerThread constructor(private val chatRoom: ChatRoom
         }
         val friend = coreContext.contactsManager.findContactByAddress(address)
         if (friend != null) {
-            avatarModel = ContactAvatarModel(friend)
+            avatarModel.postValue(ContactAvatarModel(friend))
         } else {
             val fakeFriend = coreContext.core.createFriend()
             fakeFriend.address = address
-            avatarModel = ContactAvatarModel(fakeFriend)
+            avatarModel.postValue(ContactAvatarModel(fakeFriend))
         }
         groupAvatarModel = GroupAvatarModel(friends)
 

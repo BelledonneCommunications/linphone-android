@@ -24,16 +24,19 @@ import android.net.Uri
 import android.provider.ContactsContract
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.contacts.AbstractAvatarModel
 import org.linphone.core.ChatRoom.SecurityLevel
 import org.linphone.core.ConsolidatedPresence
 import org.linphone.core.Friend
 import org.linphone.core.FriendListenerStub
 import org.linphone.core.tools.Log
+import org.linphone.ui.main.model.isInSecureMode
 import org.linphone.utils.AppUtils
 import org.linphone.utils.TimestampUtils
 
-class ContactAvatarModel @WorkerThread constructor(val friend: Friend) {
+class ContactAvatarModel @WorkerThread constructor(val friend: Friend) : AbstractAvatarModel() {
     companion object {
         private const val TAG = "[Contact Avatar Model]"
     }
@@ -41,10 +44,6 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) {
     val id = friend.refKey
 
     val starred = friend.starred
-
-    val avatar = MutableLiveData<Uri>()
-
-    val initials = AppUtils.getInitials(friend.name.orEmpty())
 
     val lastPresenceInfo = MutableLiveData<String>()
 
@@ -55,8 +54,6 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) {
     val firstLetter: String = AppUtils.getFirstLetter(friend.name.orEmpty())
 
     val firstContactStartingByThatLetter = MutableLiveData<Boolean>()
-
-    val trust = MutableLiveData<SecurityLevel>()
 
     private val friendListener = object : FriendListenerStub() {
         @WorkerThread
@@ -71,11 +68,13 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) {
     init {
         friend.addListener(friendListener)
 
+        initials.postValue(AppUtils.getInitials(friend.name.orEmpty()))
         trust.postValue(SecurityLevel.Safe) // TODO FIXME: use API
+        showTrust.postValue(coreContext.core.defaultAccount?.isInSecureMode())
+        images.postValue(arrayListOf(getAvatarUri().toString()))
 
         name.postValue(friend.name)
         computePresence()
-        avatar.postValue(getAvatarUri())
     }
 
     @WorkerThread

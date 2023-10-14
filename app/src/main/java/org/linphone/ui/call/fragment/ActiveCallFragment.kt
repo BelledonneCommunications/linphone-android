@@ -44,7 +44,6 @@ import org.linphone.ui.call.model.ZrtpSasConfirmationDialogModel
 import org.linphone.ui.call.viewmodel.CallsViewModel
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
 import org.linphone.ui.call.viewmodel.SharedCallViewModel
-import org.linphone.utils.AppUtils
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 import org.linphone.utils.addCharacterAtPosition
@@ -167,9 +166,9 @@ class ActiveCallFragment : GenericCallFragment() {
                     R.drawable.trusted,
                     doNotTint = true
                 )
-                binding.avatar.avatarBorderWidth = AppUtils.getDimension(
+                /*binding.avatar.avatarBorderWidth = AppUtils.getDimension(
                     R.dimen.avatar_trust_border_width
-                ).toInt()
+                ).toInt()*/ // TODO FIXME: show blue border
             }
         }
 

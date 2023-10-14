@@ -29,6 +29,11 @@
     <dimen name="avatar_presence_badge_big_end_margin">5dp</dimen>
     <dimen name="avatar_trust_border_width">2dp</dimen>
 
+    <dimen name="avatar_initials_text_size">16sp</dimen>
+    <dimen name="avatar_initials_bubble_text_size">14sp</dimen>
+    <dimen name="avatar_initials_big_text_size">21sp</dimen>
+    <dimen name="avatar_initials_call_text_size">36sp</dimen>
+
     <dimen name="primary_secondary_buttons_label_padding">11dp</dimen>
     <dimen name="dialog_top_bottom_margin">20dp</dimen>
 

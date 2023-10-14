@@ -19,6 +19,7 @@
  */
 package org.linphone.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.PorterDuff
 import android.text.Editable
@@ -31,7 +32,9 @@ import android.widget.EditText
 import android.widget.ImageView
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
+import androidx.annotation.DimenRes
 import androidx.annotation.UiThread
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.ViewCompat
@@ -43,19 +46,24 @@ import androidx.databinding.ViewDataBinding
 import androidx.emoji2.emojipicker.EmojiPickerView
 import androidx.emoji2.emojipicker.EmojiViewItem
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.findViewTreeLifecycleOwner
+import androidx.lifecycle.lifecycleScope
+import coil.dispose
 import coil.load
 import coil.transform.CircleCropTransformation
 import io.getstream.avatarview.AvatarView
 import io.getstream.avatarview.coil.loadImage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.linphone.BR
 import org.linphone.R
+import org.linphone.contacts.AbstractAvatarModel
+import org.linphone.contacts.AvatarGenerator
 import org.linphone.core.ChatRoom
 import org.linphone.core.ConsolidatedPresence
 import org.linphone.core.tools.Log
-import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.contacts.model.GroupAvatarModel
-import org.linphone.ui.main.model.AccountModel
 
 /**
  * This file contains all the data binding necessary for the app
@@ -174,17 +182,6 @@ fun AppCompatTextView.setDrawableTint(@ColorInt color: Int) {
 }
 
 @UiThread
-@BindingAdapter("coil")
-fun ImageView.loadCircleFileWithCoil(file: String?) {
-    Log.i("[Data Binding Utils] Loading file [$file] with coil")
-    if (file != null) {
-        load(file) {
-            transformations(CircleCropTransformation())
-        }
-    }
-}
-
-@UiThread
 @BindingAdapter("presenceIcon")
 fun ImageView.setPresenceIcon(presence: ConsolidatedPresence?) {
     val icon = when (presence) {
@@ -209,6 +206,106 @@ fun AppCompatTextView.setColor(@ColorRes color: Int) {
 }
 
 @UiThread
+@BindingAdapter("coil")
+fun ImageView.loadCircleFileWithCoil(file: String?) {
+    Log.i("[Data Binding Utils] Loading file [$file] with coil")
+    if (file != null) {
+        load(file) {
+            transformations(CircleCropTransformation())
+        }
+    }
+}
+
+@UiThread
+@BindingAdapter("coilAvatar")
+fun ImageView.loadAvatarWithCoil(model: AbstractAvatarModel?) {
+    val imageView = this
+    (context as AppCompatActivity).lifecycleScope.launch {
+        loadContactPictureWithCoil(imageView, model)
+    }
+}
+
+@UiThread
+@BindingAdapter("coilBubbleAvatar")
+fun ImageView.loadBubbleAvatarWithCoil(model: AbstractAvatarModel?) {
+    val imageView = this
+    (context as AppCompatActivity).lifecycleScope.launch {
+        withContext(Dispatchers.IO) {
+            val size = R.dimen.avatar_bubble_size
+            val initialsSize = R.dimen.avatar_initials_bubble_text_size
+            loadContactPictureWithCoil(imageView, model, size = size, textSize = initialsSize)
+        }
+    }
+}
+
+@UiThread
+@BindingAdapter("coilBigAvatar")
+fun ImageView.loadBigAvatarWithCoil(model: AbstractAvatarModel?) {
+    val imageView = this
+    (context as AppCompatActivity).lifecycleScope.launch {
+        withContext(Dispatchers.IO) {
+            val size = R.dimen.avatar_big_size
+            val initialsSize = R.dimen.avatar_initials_big_text_size
+            loadContactPictureWithCoil(imageView, model, size = size, textSize = initialsSize)
+        }
+    }
+}
+
+@UiThread
+@BindingAdapter("coilCallAvatar")
+fun ImageView.loadCallAvatarWithCoil(model: AbstractAvatarModel?) {
+    val imageView = this
+    (context as AppCompatActivity).lifecycleScope.launch {
+        withContext(Dispatchers.IO) {
+            val size = R.dimen.avatar_in_call_size
+            val initialsSize = R.dimen.avatar_initials_call_text_size
+            loadContactPictureWithCoil(imageView, model, size = size, textSize = initialsSize)
+        }
+    }
+}
+
+@SuppressLint("ResourceType")
+private suspend fun loadContactPictureWithCoil(
+    imageView: ImageView,
+    model: AbstractAvatarModel?,
+    @DimenRes size: Int = 0,
+    @DimenRes textSize: Int = 0
+) {
+    withContext(Dispatchers.IO) {
+        imageView.dispose()
+
+        val context = imageView.context
+        if (model != null) {
+            val image = model.images.value?.firstOrNull()
+            imageView.load(image) {
+                transformations(CircleCropTransformation())
+                error(
+                    coroutineScope {
+                        withContext(Dispatchers.IO) {
+                            val builder = AvatarGenerator(context)
+                            builder.setInitials(model.initials.value.orEmpty())
+                            if (size > 0) {
+                                builder.setAvatarSize(AppUtils.getDimension(size).toInt())
+                            }
+                            if (textSize > 0) {
+                                builder.setTextSize(AppUtils.getDimension(textSize))
+                            }
+                            /*if (color > 0) {
+                                builder.setBackgroundColorAttribute(color)
+                            }
+                            if (textColor > 0) {
+                                builder.setTextColorResource(textColor)
+                            }*/
+                            builder.build()
+                        }
+                    }
+                )
+            }
+        }
+    }
+}
+
+/*@UiThread
 @BindingAdapter("avatarInitials")
 fun AvatarView.loadInitials(initials: String?) {
     Log.i("[Data Binding Utils] Displaying initials [$initials] on AvatarView")
@@ -288,7 +385,7 @@ fun AvatarView.loadContactAvatar(contact: ContactAvatarModel?) {
                         avatarBorderWidth =
                             AppUtils.getDimension(R.dimen.avatar_trust_border_width).toInt()
                     }
-                    ChatRoom.SecurityLevel.Encrypted -> {
+                    ChatRoom.SecurityLevel.Safe -> {
                         avatarBorderColor =
                             resources.getColor(R.color.blue_info_500, context.theme)
                         avatarBorderWidth =
@@ -309,12 +406,7 @@ fun AvatarView.loadContactAvatar(contact: ContactAvatarModel?) {
             }
         )
     }
-}
-
-@BindingAdapter("contactPicture")
-fun ImageView.loadContactPicture(contact: ContactAvatarModel?) {
-    loadCircleFileWithCoil(contact?.avatar?.value?.toString())
-}
+}*/
 
 @UiThread
 @BindingAdapter("groupAvatar")

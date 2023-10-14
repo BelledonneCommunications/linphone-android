@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/primary_cell_background">
 
-        <io.getstream.avatarview.AvatarView
+        <ImageView
             android:id="@+id/avatar"
             android:layout_width="@dimen/avatar_list_cell_size"
             android:layout_height="@dimen/avatar_list_cell_size"
@@ -38,14 +38,7 @@
             android:layout_marginStart="5dp"
             android:adjustViewBounds="true"
             android:background="@drawable/shape_circle_light_blue_background"
-            contactAvatar="@{model.avatarModel}"
-            app:avatarViewPlaceholder="@drawable/user_circle"
-            app:avatarViewInitialsBackgroundColor="@color/gray_main2_200"
-            app:avatarViewInitialsTextColor="@color/gray_main2_600"
-            app:avatarViewInitialsTextSize="16sp"
-            app:avatarViewInitialsTextStyle="bold"
-            app:avatarViewShape="circle"
-            app:avatarViewBorderWidth="0dp"
+            coilAvatar="@{model.avatarModel}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

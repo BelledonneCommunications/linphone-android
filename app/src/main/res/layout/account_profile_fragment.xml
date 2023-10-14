@@ -84,7 +84,7 @@
                         app:constraint_referenced_ids="sip_address, sip_address_label, display_name, display_name_label, details_background"
                         android:visibility="@{viewModel.expandDetails ? View.VISIBLE : View.GONE}" />
 
-                    <io.getstream.avatarview.AvatarView
+                    <ImageView
                         android:onClick="@{pickImageClickListener}"
                         android:id="@+id/avatar"
                         android:layout_width="@dimen/avatar_big_size"
@@ -92,15 +92,7 @@
                         android:layout_marginTop="20dp"
                         android:adjustViewBounds="true"
                         android:background="@drawable/shape_circle_light_blue_background"
-                        accountAvatar="@{viewModel.accountModel}"
-                        app:avatarViewInitials="JD"
-                        app:avatarViewInitialsBackgroundColor="@color/gray_main2_200"
-                        app:avatarViewInitialsTextColor="@color/gray_main2_600"
-                        app:avatarViewInitialsTextSize="21sp"
-                        app:avatarViewInitialsTextStyle="bold"
-                        app:avatarViewPlaceholder="@drawable/user_circle"
-                        app:avatarViewShape="circle"
-                        app:avatarViewBorderWidth="0dp"
+                        coilAvatar="@{viewModel.accountModel}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -125,7 +117,7 @@
                         android:textSize="14sp"
                         android:drawableStart="@drawable/camera"
                         android:drawablePadding="3dp"
-                        android:visibility="@{viewModel.accountModel.avatar.empty ? View.VISIBLE : View.GONE, default=gone}"
+                        android:visibility="@{viewModel.accountModel.images.size() == 0 ? View.VISIBLE : View.GONE, default=gone}"
                         app:layout_constraintTop_toBottomOf="@id/avatar"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"/>
@@ -141,7 +133,7 @@
                         android:textSize="14sp"
                         android:drawableStart="@drawable/pencil_simple"
                         android:drawablePadding="3dp"
-                        android:visibility="@{viewModel.accountModel.avatar.empty ? View.GONE : View.VISIBLE}"
+                        android:visibility="@{viewModel.accountModel.images.size() == 0 ? View.GONE : View.VISIBLE}"
                         app:layout_constraintHorizontal_chainStyle="packed"
                         app:layout_constraintTop_toBottomOf="@id/avatar"
                         app:layout_constraintStart_toStartOf="parent"
@@ -159,7 +151,7 @@
                         android:textSize="14sp"
                         android:drawableStart="@drawable/trash_simple"
                         android:drawablePadding="3dp"
-                        android:visibility="@{viewModel.accountModel.avatar.empty ? View.GONE : View.VISIBLE}"
+                        android:visibility="@{viewModel.accountModel.images.size() == 0 ? View.GONE : View.VISIBLE}"
                         app:layout_constraintTop_toBottomOf="@id/avatar"
                         app:layout_constraintStart_toEndOf="@id/edit_picture_label"
                         app:layout_constraintEnd_toEndOf="parent"/>

@@ -76,19 +76,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <io.getstream.avatarview.AvatarView
+        <ImageView
             android:id="@+id/avatar"
             android:layout_width="@dimen/avatar_in_call_size"
             android:layout_height="@dimen/avatar_in_call_size"
             android:background="@drawable/shape_circle_light_blue_background"
-            contactAvatar="@{viewModel.contact}"
-            app:avatarViewInitialsBackgroundColor="@color/gray_main2_200"
-            app:avatarViewInitialsTextColor="@color/gray_main2_600"
-            app:avatarViewInitialsTextSize="36sp"
-            app:avatarViewInitialsTextStyle="bold"
-            app:avatarViewPlaceholder="@drawable/user_circle"
-            app:avatarViewShape="circle"
-            app:avatarViewBorderWidth="0dp"
+            coilCallAvatar="@{viewModel.contact}"
             app:layout_constraintEnd_toEndOf="@id/background"
             app:layout_constraintStart_toStartOf="@id/background"
             app:layout_constraintTop_toTopOf="@id/background"

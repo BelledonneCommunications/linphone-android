@@ -21,6 +21,7 @@ package org.linphone.ui.main.history.model
 
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
+import androidx.lifecycle.MutableLiveData
 import org.linphone.core.Address
 import org.linphone.core.Friend
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
@@ -42,7 +43,7 @@ class ContactOrSuggestionModel @WorkerThread constructor(
 
     val initials = AppUtils.getInitials(name)
 
-    lateinit var contactAvatarModel: ContactAvatarModel
+    val avatarModel = MutableLiveData<ContactAvatarModel>()
 
     @UiThread
     fun onClicked() {
