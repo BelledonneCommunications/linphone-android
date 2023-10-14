@@ -34,7 +34,6 @@ import org.linphone.core.EventLog
 import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
-import org.linphone.ui.main.contacts.model.GroupAvatarModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.TimestampUtils
@@ -77,8 +76,6 @@ class ConversationModel @WorkerThread constructor(private val chatRoom: ChatRoom
     val unreadMessageCount = MutableLiveData<Int>()
 
     val avatarModel = MutableLiveData<ContactAvatarModel>()
-
-    val groupAvatarModel: GroupAvatarModel
 
     private var lastMessage: ChatMessage? = null
 
@@ -145,15 +142,24 @@ class ConversationModel @WorkerThread constructor(private val chatRoom: ChatRoom
             }
             firstParticipant?.address ?: chatRoom.peerAddress
         }
-        val friend = coreContext.contactsManager.findContactByAddress(address)
-        if (friend != null) {
-            avatarModel.postValue(ContactAvatarModel(friend))
-        } else {
+
+        if (isGroup) {
             val fakeFriend = coreContext.core.createFriend()
-            fakeFriend.address = address
-            avatarModel.postValue(ContactAvatarModel(fakeFriend))
+            val model = ContactAvatarModel(fakeFriend)
+            model.addPicturesFromFriends(friends)
+            avatarModel.postValue(model)
+        } else {
+            val friend = coreContext.contactsManager.findContactByAddress(address)
+            if (friend != null) {
+                val model = ContactAvatarModel(friend)
+                avatarModel.postValue(model)
+            } else {
+                val fakeFriend = coreContext.core.createFriend()
+                fakeFriend.address = address
+                val model = ContactAvatarModel(fakeFriend)
+                avatarModel.postValue(model)
+            }
         }
-        groupAvatarModel = GroupAvatarModel(friends)
 
         isMuted.postValue(chatRoom.muted)
         isEphemeral.postValue(chatRoom.isEphemeralEnabled)

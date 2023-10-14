@@ -126,7 +126,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
-            <io.getstream.avatarview.AvatarView
+            <ImageView
                 android:id="@+id/image1"
                 android:layout_width="@dimen/avatar_list_cell_size"
                 android:layout_height="@dimen/avatar_list_cell_size"
@@ -135,14 +135,7 @@
                 android:layout_marginTop="20dp"
                 android:background="@drawable/shape_circle_light_blue_background"
                 android:src="@drawable/user_circle"
-                app:avatarViewPlaceholder="@drawable/user_circle"
-                app:avatarViewInitialsBackgroundColor="@color/gray_main2_200"
-                app:avatarViewInitialsTextColor="@color/gray_main2_600"
-                app:avatarViewInitialsTextSize="16sp"
-                app:avatarViewInitialsTextStyle="bold"
-                app:avatarViewShape="circle"
-                app:avatarViewInitials="JD"
-                app:avatarViewBorderWidth="0dp"
+                coilInitials="@{`JD`}"
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/arrow"
@@ -171,22 +164,14 @@
                 app:layout_constraintTop_toTopOf="@id/image1"
                 app:layout_constraintBottom_toBottomOf="@id/image1"/>
 
-            <io.getstream.avatarview.AvatarView
+            <ImageView
                 android:id="@+id/image2"
                 android:layout_width="@dimen/avatar_list_cell_size"
                 android:layout_height="@dimen/avatar_list_cell_size"
                 android:adjustViewBounds="true"
                 android:background="@drawable/shape_circle_light_blue_background"
                 android:src="@drawable/user_circle"
-                app:avatarViewPlaceholder="@drawable/user_circle"
-                app:avatarViewInitialsBackgroundColor="@color/gray_main2_200"
-                app:avatarViewInitialsTextColor="@color/gray_main2_600"
-                app:avatarViewInitialsTextSize="16sp"
-                app:avatarViewInitialsTextStyle="bold"
-                app:avatarViewShape="circle"
-                app:avatarViewInitials="JD"
-                app:avatarViewBorderWidth="2dp"
-                app:avatarViewBorderColor="@color/blue_info_500"
+                coilInitials="@{`JD`}"
                 app:layout_constraintStart_toEndOf="@id/arrow"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/image1"

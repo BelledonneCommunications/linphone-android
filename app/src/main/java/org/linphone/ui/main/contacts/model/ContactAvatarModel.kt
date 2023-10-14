@@ -71,7 +71,7 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) : Abstrac
         initials.postValue(AppUtils.getInitials(friend.name.orEmpty()))
         trust.postValue(SecurityLevel.Safe) // TODO FIXME: use API
         showTrust.postValue(coreContext.core.defaultAccount?.isInSecureMode())
-        images.postValue(arrayListOf(getAvatarUri().toString()))
+        images.postValue(arrayListOf(getAvatarUri(friend).toString()))
 
         name.postValue(friend.name)
         computePresence()
@@ -83,7 +83,19 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) : Abstrac
     }
 
     @WorkerThread
-    private fun getAvatarUri(): Uri? {
+    fun addPicturesFromFriends(friends: List<Friend>) {
+        if (friends.isNotEmpty()) {
+            val list = arrayListOf<String>()
+            list.addAll(images.value.orEmpty())
+            for (friend in friends) {
+                list.add(getAvatarUri(friend).toString())
+            }
+            images.postValue(list)
+        }
+    }
+
+    @WorkerThread
+    private fun getAvatarUri(friend: Friend): Uri? {
         val picturePath = friend.photo
         if (!picturePath.isNullOrEmpty()) {
             return Uri.parse(picturePath)

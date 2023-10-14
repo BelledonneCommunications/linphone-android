@@ -30,8 +30,6 @@ import coil.decode.VideoFrameDecoder
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
 import com.google.android.material.color.DynamicColors
-import io.getstream.avatarview.coil.AvatarCoil
-import io.getstream.avatarview.coil.AvatarImageLoaderFactory
 import org.linphone.core.CoreContext
 import org.linphone.core.CorePreferences
 import org.linphone.core.Factory
@@ -76,11 +74,6 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
         coreContext.start()
 
         DynamicColors.applyToActivitiesIfAvailable(this)
-        AvatarCoil.setImageLoader(
-            AvatarImageLoaderFactory(context) {
-                newImageLoader()
-            }
-        )
     }
 
     override fun newImageLoader(): ImageLoader {

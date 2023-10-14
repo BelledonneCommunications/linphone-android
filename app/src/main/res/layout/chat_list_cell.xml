@@ -38,7 +38,6 @@
             android:adjustViewBounds="true"
             android:background="@drawable/shape_circle_light_blue_background"
             coilAvatar="@{model.avatarModel}"
-            android:visibility="@{model.isGroup ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -51,7 +50,7 @@
             android:background="@drawable/led_background"
             android:padding="@dimen/avatar_presence_badge_padding"
             app:presenceIcon="@{model.avatarModel.presenceStatus}"
-            android:visibility="@{model.isGroup || model.avatarModel.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE}"
+            android:visibility="@{model.avatarModel.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toEndOf="@id/avatar"
             app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 
@@ -60,37 +59,9 @@
             android:layout_width="@dimen/avatar_presence_badge_size"
             android:layout_height="@dimen/avatar_presence_badge_size"
             android:src="@{model.avatarModel.trust == SecurityLevel.Encrypted ? @drawable/trusted : @drawable/not_trusted, default=@drawable/trusted}"
-            android:visibility="@{!model.isGroup &amp;&amp; model.avatarModel.trust == SecurityLevel.Encrypted || model.avatarModel.trust == SecurityLevel.Unsafe ? View.VISIBLE : View.GONE}"
+            android:visibility="@{model.avatarModel.trust == SecurityLevel.Encrypted || model.avatarModel.trust == SecurityLevel.Unsafe ? View.VISIBLE : View.GONE}"
             app:layout_constraintStart_toStartOf="@id/avatar"
             app:layout_constraintBottom_toBottomOf="@id/avatar"/>
-
-        <io.getstream.avatarview.AvatarView
-            android:id="@+id/group_avatar"
-            android:layout_width="@dimen/avatar_list_cell_size"
-            android:layout_height="@dimen/avatar_list_cell_size"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginStart="5dp"
-            android:adjustViewBounds="true"
-            android:background="@drawable/shape_circle_light_blue_background"
-            android:visibility="@{model.isGroup ? View.VISIBLE : View.GONE, default=gone}"
-            groupAvatar="@{model.groupAvatarModel}"
-            app:avatarViewPlaceholder="@drawable/users_three"
-            app:avatarViewMaxSectionSize="four"
-            app:avatarViewShape="circle"
-            app:avatarViewBorderWidth="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/avatar"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/group_trust_badge"
-            android:layout_width="@dimen/avatar_presence_badge_size"
-            android:layout_height="@dimen/avatar_presence_badge_size"
-            android:src="@{model.groupAvatarModel.trust == SecurityLevel.Encrypted ? @drawable/trusted : @drawable/not_trusted, default=@drawable/trusted}"
-            android:visibility="@{model.isGroup &amp;&amp; model.groupAvatarModel.trust == SecurityLevel.Encrypted || model.avatarModel.trust == SecurityLevel.Unsafe ? View.VISIBLE : View.GONE, default=gone}"
-            app:layout_constraintStart_toStartOf="@id/group_avatar"
-            app:layout_constraintBottom_toBottomOf="@id/group_avatar"/>
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/right_border"
@@ -113,7 +84,7 @@
             android:textSize="14sp"
             android:textColor="@color/gray_main2_800"
             android:textStyle="@{model.unreadMessageCount > 0 ? Typeface.BOLD : Typeface.NORMAL}"
-            app:layout_constraintStart_toEndOf="@id/group_avatar"
+            app:layout_constraintStart_toEndOf="@id/avatar"
             app:layout_constraintEnd_toStartOf="@id/right_border"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/last_message_or_composing"/>

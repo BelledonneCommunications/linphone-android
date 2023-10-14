@@ -21,7 +21,10 @@ package org.linphone.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.PorterDuff
+import android.graphics.Rect
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -37,6 +40,7 @@ import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnLayout
@@ -48,10 +52,10 @@ import androidx.emoji2.emojipicker.EmojiViewItem
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import coil.dispose
+import coil.imageLoader
 import coil.load
+import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
-import io.getstream.avatarview.AvatarView
-import io.getstream.avatarview.coil.loadImage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -60,10 +64,8 @@ import org.linphone.BR
 import org.linphone.R
 import org.linphone.contacts.AbstractAvatarModel
 import org.linphone.contacts.AvatarGenerator
-import org.linphone.core.ChatRoom
 import org.linphone.core.ConsolidatedPresence
 import org.linphone.core.tools.Log
-import org.linphone.ui.main.contacts.model.GroupAvatarModel
 
 /**
  * This file contains all the data binding necessary for the app
@@ -264,6 +266,20 @@ fun ImageView.loadCallAvatarWithCoil(model: AbstractAvatarModel?) {
     }
 }
 
+@UiThread
+@BindingAdapter("coilInitials")
+fun ImageView.loadInitialsAvatarWithCoil(initials: String?) {
+    Log.i("[Data Binding Utils] Displaying initials [$initials] on ImageView")
+    val imageView = this
+    (context as AppCompatActivity).lifecycleScope.launch {
+        withContext(Dispatchers.IO) {
+            val builder = AvatarGenerator(context)
+            builder.setInitials(initials.orEmpty())
+            load(builder.build())
+        }
+    }
+}
+
 @SuppressLint("ResourceType")
 private suspend fun loadContactPictureWithCoil(
     imageView: ImageView,
@@ -276,170 +292,83 @@ private suspend fun loadContactPictureWithCoil(
 
         val context = imageView.context
         if (model != null) {
-            val image = model.images.value?.firstOrNull()
-            imageView.load(image) {
-                transformations(CircleCropTransformation())
-                error(
-                    coroutineScope {
-                        withContext(Dispatchers.IO) {
-                            val builder = AvatarGenerator(context)
-                            builder.setInitials(model.initials.value.orEmpty())
-                            if (size > 0) {
-                                builder.setAvatarSize(AppUtils.getDimension(size).toInt())
+            val images = model.images.value.orEmpty()
+            val count = images.size
+            if (count == 1) {
+                val image = images.firstOrNull()
+                imageView.load(image) {
+                    transformations(CircleCropTransformation())
+                    error(
+                        coroutineScope {
+                            withContext(Dispatchers.IO) {
+                                val builder = AvatarGenerator(context)
+                                builder.setInitials(model.initials.value.orEmpty())
+                                if (size > 0) {
+                                    builder.setAvatarSize(AppUtils.getDimension(size).toInt())
+                                }
+                                if (textSize > 0) {
+                                    builder.setTextSize(AppUtils.getDimension(textSize))
+                                }
+                                builder.build()
                             }
-                            if (textSize > 0) {
-                                builder.setTextSize(AppUtils.getDimension(textSize))
-                            }
-                            /*if (color > 0) {
-                                builder.setBackgroundColorAttribute(color)
-                            }
-                            if (textColor > 0) {
-                                builder.setTextColorResource(textColor)
-                            }*/
-                            builder.build()
                         }
-                    }
-                )
+                    )
+                }
+            } else if (count > 1) {
+                val w = if (size > 0) {
+                    AppUtils.getDimension(size).toInt()
+                } else {
+                    AppUtils.getDimension(R.dimen.avatar_list_cell_size).toInt()
+                }
+                val bitmap = Bitmap.createBitmap(w, w, Bitmap.Config.ARGB_8888)
+                val canvas = Canvas(bitmap)
+
+                val drawables = images.mapNotNull {
+                    val request = ImageRequest.Builder(imageView.context)
+                        .data(it)
+                        .size(w / 2)
+                        .allowHardware(false)
+                        .build()
+                    context.imageLoader.execute(request).drawable
+                }
+
+                val rectangles = if (drawables.size == 2) {
+                    arrayListOf(
+                        Rect(0, 0, w / 2, w),
+                        Rect(w / 2, 0, w, w)
+                    )
+                } else if (drawables.size == 3) {
+                    // TODO FIXME
+                    arrayListOf(
+                        Rect(0, 0, w / 2, w / 2),
+                        Rect(w / 2, 0, w, w / 2),
+                        Rect(0, w / 2, w, w)
+                    )
+                } else if (drawables.size >= 4) {
+                    arrayListOf(
+                        Rect(0, 0, w / 2, w / 2),
+                        Rect(w / 2, 0, w, w / 2),
+                        Rect(0, w / 2, w / 2, w),
+                        Rect(w / 2, w / 2, w, w)
+                    )
+                } else {
+                    arrayListOf()
+                }
+
+                for (i in 0 until rectangles.size) {
+                    canvas.drawBitmap(
+                        drawables[i].toBitmap(w, w, Bitmap.Config.ARGB_8888),
+                        null,
+                        rectangles[i],
+                        null
+                    )
+                }
+
+                imageView.load(bitmap) {
+                    transformations(CircleCropTransformation())
+                }
             }
         }
-    }
-}
-
-/*@UiThread
-@BindingAdapter("avatarInitials")
-fun AvatarView.loadInitials(initials: String?) {
-    Log.i("[Data Binding Utils] Displaying initials [$initials] on AvatarView")
-    if (initials.orEmpty() != "+") {
-        avatarInitials = initials.orEmpty()
-    }
-}
-
-@UiThread
-@BindingAdapter("accountAvatar")
-fun AvatarView.loadAccountAvatar(account: AccountModel?) {
-    Log.i("[Data Binding Utils] Loading account picture [${account?.avatar?.value}] with coil")
-    if (account == null) {
-        loadImage(R.drawable.user_circle)
-    } else {
-        val lifecycleOwner = findViewTreeLifecycleOwner()
-        if (lifecycleOwner != null) {
-            account.avatar.observe(lifecycleOwner) { uri ->
-                loadImage(
-                    data = uri,
-                    onStart = {
-                        if (account.showTrust.value == true) {
-                            avatarBorderColor =
-                                resources.getColor(R.color.blue_info_500, context.theme)
-                            avatarBorderWidth =
-                                AppUtils.getDimension(R.dimen.avatar_trust_border_width).toInt()
-                        } else {
-                            avatarBorderWidth = AppUtils.getDimension(R.dimen.zero).toInt()
-                        }
-                    },
-                    onError = { _, _ ->
-                        // Use initials as fallback
-                        val initials = account.initials.value.orEmpty()
-                        if (initials != "+") {
-                            avatarInitials = initials
-                        }
-                    }
-                )
-            }
-        } else {
-            loadImage(
-                data = account.avatar.value,
-                onStart = {
-                    if (account.showTrust.value == true) {
-                        avatarBorderColor = resources.getColor(R.color.blue_info_500, context.theme)
-                        avatarBorderWidth = AppUtils.getDimension(R.dimen.avatar_trust_border_width).toInt()
-                    } else {
-                        avatarBorderWidth = AppUtils.getDimension(R.dimen.zero).toInt()
-                    }
-                },
-                onError = { _, _ ->
-                    // Use initials as fallback
-                    val initials = account.initials.value.orEmpty()
-                    if (initials != "+") {
-                        avatarInitials = initials
-                    }
-                }
-            )
-        }
-    }
-}
-
-@UiThread
-@BindingAdapter("contactAvatar")
-fun AvatarView.loadContactAvatar(contact: ContactAvatarModel?) {
-    if (contact == null) {
-        loadImage(R.drawable.user_circle)
-    } else {
-        val uri = contact.avatar.value
-        loadImage(
-            data = uri,
-            onStart = {
-                when (contact.trust.value) {
-                    ChatRoom.SecurityLevel.Unsafe -> {
-                        avatarBorderColor =
-                            resources.getColor(R.color.red_danger_500, context.theme)
-                        avatarBorderWidth =
-                            AppUtils.getDimension(R.dimen.avatar_trust_border_width).toInt()
-                    }
-                    ChatRoom.SecurityLevel.Safe -> {
-                        avatarBorderColor =
-                            resources.getColor(R.color.blue_info_500, context.theme)
-                        avatarBorderWidth =
-                            AppUtils.getDimension(R.dimen.avatar_trust_border_width).toInt()
-                    }
-                    else -> {
-                        avatarBorderWidth = AppUtils.getDimension(R.dimen.zero).toInt()
-                    }
-                }
-            },
-            onError = { _, result ->
-                Log.e("[Contact Avatar Model] Can't load data: ${result.throwable}")
-                // Use initials as fallback
-                val initials = contact.initials
-                if (initials != "+") {
-                    avatarInitials = initials
-                }
-            }
-        )
-    }
-}*/
-
-@UiThread
-@BindingAdapter("groupAvatar")
-fun AvatarView.loadGroupAvatar(contact: GroupAvatarModel?) {
-    if (contact == null) {
-        loadImage(R.drawable.user_circle)
-    } else {
-        val uris = contact.uris.value.orEmpty()
-        loadImage(
-            data = uris,
-            onStart = {
-                when (contact.trust.value) {
-                    ChatRoom.SecurityLevel.Unsafe -> {
-                        avatarBorderColor =
-                            resources.getColor(R.color.red_danger_500, context.theme)
-                        avatarBorderWidth =
-                            AppUtils.getDimension(R.dimen.avatar_trust_border_width).toInt()
-                    }
-                    ChatRoom.SecurityLevel.Encrypted -> {
-                        avatarBorderColor =
-                            resources.getColor(R.color.blue_info_500, context.theme)
-                        avatarBorderWidth =
-                            AppUtils.getDimension(R.dimen.avatar_trust_border_width).toInt()
-                    }
-                    else -> {
-                        avatarBorderWidth = AppUtils.getDimension(R.dimen.zero).toInt()
-                    }
-                }
-            },
-            onError = { _, result ->
-                Log.e("[Group Avatar Model] Can't load data: ${result.throwable}")
-            }
-        )
     }
 }
 
