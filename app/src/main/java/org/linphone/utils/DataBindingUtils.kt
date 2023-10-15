@@ -40,6 +40,7 @@ import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -232,11 +233,9 @@ fun ImageView.loadAvatarWithCoil(model: AbstractAvatarModel?) {
 fun ImageView.loadBubbleAvatarWithCoil(model: AbstractAvatarModel?) {
     val imageView = this
     (context as AppCompatActivity).lifecycleScope.launch {
-        withContext(Dispatchers.IO) {
-            val size = R.dimen.avatar_bubble_size
-            val initialsSize = R.dimen.avatar_initials_bubble_text_size
-            loadContactPictureWithCoil(imageView, model, size = size, textSize = initialsSize)
-        }
+        val size = R.dimen.avatar_bubble_size
+        val initialsSize = R.dimen.avatar_initials_bubble_text_size
+        loadContactPictureWithCoil(imageView, model, size = size, textSize = initialsSize)
     }
 }
 
@@ -245,11 +244,9 @@ fun ImageView.loadBubbleAvatarWithCoil(model: AbstractAvatarModel?) {
 fun ImageView.loadBigAvatarWithCoil(model: AbstractAvatarModel?) {
     val imageView = this
     (context as AppCompatActivity).lifecycleScope.launch {
-        withContext(Dispatchers.IO) {
-            val size = R.dimen.avatar_big_size
-            val initialsSize = R.dimen.avatar_initials_big_text_size
-            loadContactPictureWithCoil(imageView, model, size = size, textSize = initialsSize)
-        }
+        val size = R.dimen.avatar_big_size
+        val initialsSize = R.dimen.avatar_initials_big_text_size
+        loadContactPictureWithCoil(imageView, model, size = size, textSize = initialsSize)
     }
 }
 
@@ -258,11 +255,9 @@ fun ImageView.loadBigAvatarWithCoil(model: AbstractAvatarModel?) {
 fun ImageView.loadCallAvatarWithCoil(model: AbstractAvatarModel?) {
     val imageView = this
     (context as AppCompatActivity).lifecycleScope.launch {
-        withContext(Dispatchers.IO) {
-            val size = R.dimen.avatar_in_call_size
-            val initialsSize = R.dimen.avatar_initials_call_text_size
-            loadContactPictureWithCoil(imageView, model, size = size, textSize = initialsSize)
-        }
+        val size = R.dimen.avatar_in_call_size
+        val initialsSize = R.dimen.avatar_initials_call_text_size
+        loadContactPictureWithCoil(imageView, model, size = size, textSize = initialsSize)
     }
 }
 
@@ -301,15 +296,24 @@ private suspend fun loadContactPictureWithCoil(
                     error(
                         coroutineScope {
                             withContext(Dispatchers.IO) {
-                                val builder = AvatarGenerator(context)
-                                builder.setInitials(model.initials.value.orEmpty())
-                                if (size > 0) {
-                                    builder.setAvatarSize(AppUtils.getDimension(size).toInt())
+                                val initials = model.initials.value.orEmpty()
+                                if (initials.isEmpty() || initials == "+") {
+                                    ResourcesCompat.getDrawable(
+                                        context.resources,
+                                        R.drawable.user_circle,
+                                        context.theme
+                                    )
+                                } else {
+                                    val builder = AvatarGenerator(context)
+                                    builder.setInitials(model.initials.value.orEmpty())
+                                    if (size > 0) {
+                                        builder.setAvatarSize(AppUtils.getDimension(size).toInt())
+                                    }
+                                    if (textSize > 0) {
+                                        builder.setTextSize(AppUtils.getDimension(textSize))
+                                    }
+                                    builder.build()
                                 }
-                                if (textSize > 0) {
-                                    builder.setTextSize(AppUtils.getDimension(textSize))
-                                }
-                                builder.build()
                             }
                         }
                     )
@@ -338,7 +342,6 @@ private suspend fun loadContactPictureWithCoil(
                         Rect(w / 2, 0, w, w)
                     )
                 } else if (drawables.size == 3) {
-                    // TODO FIXME
                     arrayListOf(
                         Rect(0, 0, w / 2, w / 2),
                         Rect(w / 2, 0, w, w / 2),
@@ -356,9 +359,17 @@ private suspend fun loadContactPictureWithCoil(
                 }
 
                 for (i in 0 until rectangles.size) {
+                    // To prevent deformation for the bottom image when merging 3 of them
+                    val src = if (drawables.size == 3 && i == 2) {
+                        val quarter = w / 4
+                        Rect(0, quarter, w, 3 * quarter)
+                    } else {
+                        null
+                    }
+
                     canvas.drawBitmap(
                         drawables[i].toBitmap(w, w, Bitmap.Config.ARGB_8888),
-                        null,
+                        src,
                         rectangles[i],
                         null
                     )
