@@ -57,6 +57,7 @@ import coil.imageLoader
 import coil.load
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
+import com.google.android.material.imageview.ShapeableImageView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -65,6 +66,7 @@ import org.linphone.BR
 import org.linphone.R
 import org.linphone.contacts.AbstractAvatarModel
 import org.linphone.contacts.AvatarGenerator
+import org.linphone.core.ChatRoom
 import org.linphone.core.ConsolidatedPresence
 import org.linphone.core.tools.Log
 
@@ -210,7 +212,7 @@ fun AppCompatTextView.setColor(@ColorRes color: Int) {
 
 @UiThread
 @BindingAdapter("coil")
-fun ImageView.loadCircleFileWithCoil(file: String?) {
+fun ShapeableImageView.loadCircleFileWithCoil(file: String?) {
     Log.i("[Data Binding Utils] Loading file [$file] with coil")
     if (file != null) {
         load(file) {
@@ -221,7 +223,7 @@ fun ImageView.loadCircleFileWithCoil(file: String?) {
 
 @UiThread
 @BindingAdapter("coilAvatar")
-fun ImageView.loadAvatarWithCoil(model: AbstractAvatarModel?) {
+fun ShapeableImageView.loadAvatarWithCoil(model: AbstractAvatarModel?) {
     val imageView = this
     (context as AppCompatActivity).lifecycleScope.launch {
         loadContactPictureWithCoil(imageView, model)
@@ -230,7 +232,7 @@ fun ImageView.loadAvatarWithCoil(model: AbstractAvatarModel?) {
 
 @UiThread
 @BindingAdapter("coilBubbleAvatar")
-fun ImageView.loadBubbleAvatarWithCoil(model: AbstractAvatarModel?) {
+fun ShapeableImageView.loadBubbleAvatarWithCoil(model: AbstractAvatarModel?) {
     val imageView = this
     (context as AppCompatActivity).lifecycleScope.launch {
         val size = R.dimen.avatar_bubble_size
@@ -241,7 +243,7 @@ fun ImageView.loadBubbleAvatarWithCoil(model: AbstractAvatarModel?) {
 
 @UiThread
 @BindingAdapter("coilBigAvatar")
-fun ImageView.loadBigAvatarWithCoil(model: AbstractAvatarModel?) {
+fun ShapeableImageView.loadBigAvatarWithCoil(model: AbstractAvatarModel?) {
     val imageView = this
     (context as AppCompatActivity).lifecycleScope.launch {
         val size = R.dimen.avatar_big_size
@@ -252,7 +254,7 @@ fun ImageView.loadBigAvatarWithCoil(model: AbstractAvatarModel?) {
 
 @UiThread
 @BindingAdapter("coilCallAvatar")
-fun ImageView.loadCallAvatarWithCoil(model: AbstractAvatarModel?) {
+fun ShapeableImageView.loadCallAvatarWithCoil(model: AbstractAvatarModel?) {
     val imageView = this
     (context as AppCompatActivity).lifecycleScope.launch {
         val size = R.dimen.avatar_in_call_size
@@ -263,7 +265,7 @@ fun ImageView.loadCallAvatarWithCoil(model: AbstractAvatarModel?) {
 
 @UiThread
 @BindingAdapter("coilInitials")
-fun ImageView.loadInitialsAvatarWithCoil(initials: String?) {
+fun ShapeableImageView.loadInitialsAvatarWithCoil(initials: String?) {
     Log.i("[Data Binding Utils] Displaying initials [$initials] on ImageView")
     val imageView = this
     (context as AppCompatActivity).lifecycleScope.launch {
@@ -277,7 +279,7 @@ fun ImageView.loadInitialsAvatarWithCoil(initials: String?) {
 
 @SuppressLint("ResourceType")
 private suspend fun loadContactPictureWithCoil(
-    imageView: ImageView,
+    imageView: ShapeableImageView,
     model: AbstractAvatarModel?,
     @DimenRes size: Int = 0,
     @DimenRes textSize: Int = 0
@@ -287,6 +289,26 @@ private suspend fun loadContactPictureWithCoil(
 
         val context = imageView.context
         if (model != null) {
+            if (model.showTrust.value == true) {
+                when (model.trust.value) {
+                    ChatRoom.SecurityLevel.Safe -> {
+                        imageView.setStrokeColorResource(R.color.blue_info_500)
+                        imageView.setStrokeWidthResource(R.dimen.avatar_trust_border_width)
+                    }
+                    ChatRoom.SecurityLevel.Unsafe -> {
+                        imageView.setStrokeColorResource(R.color.red_danger_500)
+                        imageView.setStrokeWidthResource(R.dimen.avatar_trust_border_width)
+                    }
+                    else -> {
+                        imageView.setStrokeColorResource(R.color.transparent_color)
+                        imageView.setStrokeWidthResource(R.dimen.zero)
+                    }
+                }
+            } else {
+                imageView.setStrokeColorResource(R.color.transparent_color)
+                imageView.setStrokeWidthResource(R.dimen.zero)
+            }
+
             val images = model.images.value.orEmpty()
             val count = images.size
             if (count == 1) {

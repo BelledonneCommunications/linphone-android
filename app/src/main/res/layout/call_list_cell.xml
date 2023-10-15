@@ -25,15 +25,14 @@
         android:layout_marginEnd="16dp"
         android:background="@drawable/primary_cell_background">
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
+            style="@style/avatar_imageview"
             android:id="@+id/avatar"
             android:layout_width="@dimen/avatar_list_cell_size"
             android:layout_height="@dimen/avatar_list_cell_size"
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:adjustViewBounds="true"
-            android:background="@drawable/shape_circle_light_blue_background"
             coilAvatar="@{model.contact}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

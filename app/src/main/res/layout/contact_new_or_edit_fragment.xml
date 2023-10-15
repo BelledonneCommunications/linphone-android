@@ -77,13 +77,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
+                    style="@style/avatar_imageview"
                     android:onClick="@{pickImageClickListener}"
                     android:id="@+id/avatar"
                     android:layout_width="@dimen/avatar_big_size"
                     android:layout_height="@dimen/avatar_big_size"
                     android:layout_marginTop="8dp"
-                    android:background="@drawable/shape_circle_light_blue_background"
                     coil="@{viewModel.picturePath}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

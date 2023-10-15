@@ -34,13 +34,13 @@
             app:constraint_referenced_ids="title, search"
             app:barrierDirection="bottom" />
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
+            style="@style/avatar_imageview"
             android:onClick="@{() -> viewModel.openDrawerMenu()}"
             android:id="@+id/avatar"
             android:layout_width="@dimen/avatar_list_cell_size"
             android:layout_height="@dimen/avatar_list_cell_size"
             android:layout_marginStart="15dp"
-            android:background="@drawable/shape_circle_light_blue_background"
             coilAvatar="@{viewModel.account}"
             app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintStart_toStartOf="parent"

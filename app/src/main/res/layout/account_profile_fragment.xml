@@ -84,14 +84,13 @@
                         app:constraint_referenced_ids="sip_address, sip_address_label, display_name, display_name_label, details_background"
                         android:visibility="@{viewModel.expandDetails ? View.VISIBLE : View.GONE}" />
 
-                    <ImageView
+                    <com.google.android.material.imageview.ShapeableImageView
+                        style="@style/avatar_imageview"
                         android:onClick="@{pickImageClickListener}"
                         android:id="@+id/avatar"
                         android:layout_width="@dimen/avatar_big_size"
                         android:layout_height="@dimen/avatar_big_size"
                         android:layout_marginTop="20dp"
-                        android:adjustViewBounds="true"
-                        android:background="@drawable/shape_circle_light_blue_background"
                         coilAvatar="@{viewModel.accountModel}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"

@@ -19,6 +19,7 @@
     <dimen name="avatar_favorite_list_cell_size">50dp</dimen>
     <dimen name="avatar_big_size">100dp</dimen>
     <dimen name="avatar_in_call_size">120dp</dimen>
+
     <dimen name="avatar_bubble_presence_badge_size">5dp</dimen>
     <dimen name="avatar_presence_badge_size">12dp</dimen>
     <dimen name="avatar_presence_badge_in_call_size">26dp</dimen>
@@ -27,6 +28,7 @@
     <dimen name="avatar_presence_badge_big_size">22dp</dimen>
     <dimen name="avatar_presence_badge_big_padding">3dp</dimen>
     <dimen name="avatar_presence_badge_big_end_margin">5dp</dimen>
+
     <dimen name="avatar_trust_border_width">2dp</dimen>
 
     <dimen name="avatar_initials_text_size">16sp</dimen>

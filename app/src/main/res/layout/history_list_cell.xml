@@ -29,15 +29,14 @@
         android:layout_height="wrap_content"
         android:background="@drawable/primary_cell_background">
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
+            style="@style/avatar_imageview"
             android:id="@+id/avatar"
             android:layout_width="@dimen/avatar_list_cell_size"
             android:layout_height="@dimen/avatar_list_cell_size"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:layout_marginStart="5dp"
-            android:adjustViewBounds="true"
-            android:background="@drawable/shape_circle_light_blue_background"
             coilAvatar="@{model.avatarModel}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -59,8 +58,8 @@
             android:id="@+id/trust_badge"
             android:layout_width="@dimen/avatar_presence_badge_size"
             android:layout_height="@dimen/avatar_presence_badge_size"
-            android:src="@{model.avatarModel.trust == SecurityLevel.Encrypted ? @drawable/trusted : @drawable/not_trusted, default=@drawable/trusted}"
-            android:visibility="@{model.avatarModel.trust == SecurityLevel.Encrypted || model.avatarModel.trust == SecurityLevel.Unsafe ? View.VISIBLE : View.GONE}"
+            android:src="@{model.avatarModel.trust == SecurityLevel.Safe ? @drawable/trusted : @drawable/not_trusted, default=@drawable/trusted}"
+            android:visibility="@{model.avatarModel.trust == SecurityLevel.Safe || model.avatarModel.trust == SecurityLevel.Unsafe ? View.VISIBLE : View.GONE}"
             app:layout_constraintStart_toStartOf="@id/avatar"
             app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 

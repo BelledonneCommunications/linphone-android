@@ -69,7 +69,7 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) : Abstrac
         friend.addListener(friendListener)
 
         initials.postValue(AppUtils.getInitials(friend.name.orEmpty()))
-        trust.postValue(SecurityLevel.Safe) // TODO FIXME: use API
+        trust.postValue(SecurityLevel.Encrypted) // TODO FIXME: use API
         showTrust.postValue(coreContext.core.defaultAccount?.isInSecureMode())
         images.postValue(arrayListOf(getAvatarUri(friend).toString()))
 

@@ -26,12 +26,11 @@
         android:padding="5dp"
         android:background="@drawable/primary_cell_background">
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
+            style="@style/avatar_imageview"
             android:id="@+id/avatar"
             android:layout_width="@dimen/avatar_favorite_list_cell_size"
             android:layout_height="@dimen/avatar_favorite_list_cell_size"
-            android:adjustViewBounds="true"
-            android:background="@drawable/shape_circle_light_blue_background"
             coilAvatar="@{model}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -53,8 +52,8 @@
             android:id="@+id/trust_badge"
             android:layout_width="@dimen/avatar_presence_badge_size"
             android:layout_height="@dimen/avatar_presence_badge_size"
-            android:src="@{model.trust == SecurityLevel.Encrypted ? @drawable/trusted : @drawable/not_trusted, default=@drawable/trusted}"
-            android:visibility="@{model.trust == SecurityLevel.Encrypted || model.trust == SecurityLevel.Unsafe ? View.VISIBLE : View.GONE}"
+            android:src="@{model.trust == SecurityLevel.Safe ? @drawable/trusted : @drawable/not_trusted, default=@drawable/trusted}"
+            android:visibility="@{model.trust == SecurityLevel.Safe || model.trust == SecurityLevel.Unsafe ? View.VISIBLE : View.GONE}"
             app:layout_constraintStart_toStartOf="@id/avatar"
             app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 

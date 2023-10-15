@@ -21,14 +21,13 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp">
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
+            style="@style/avatar_imageview"
             android:id="@+id/avatar"
             android:layout_width="@dimen/avatar_list_cell_size"
             android:layout_height="@dimen/avatar_list_cell_size"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:adjustViewBounds="true"
-            android:background="@drawable/shape_circle_light_blue_background"
             coilInitials="@{model.initials, default=`JD`}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

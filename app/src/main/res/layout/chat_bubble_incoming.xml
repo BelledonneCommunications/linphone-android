@@ -22,12 +22,11 @@
         android:layout_marginTop="@{model.isGroupedWithPreviousOne ? @dimen/chat_bubble_grouped_top_margin : @dimen/chat_bubble_top_margin, default=@dimen/chat_bubble_top_margin}"
         android:layout_marginStart="16dp">
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
+            style="@style/avatar_imageview"
             android:id="@+id/avatar"
             android:layout_width="@dimen/avatar_bubble_size"
             android:layout_height="@dimen/avatar_bubble_size"
-            android:adjustViewBounds="true"
-            android:background="@drawable/shape_circle_light_blue_background"
             android:visibility="@{!model.isFromGroup ? View.GONE: model.isGroupedWithPreviousOne ? View.INVISIBLE : View.VISIBLE}"
             coilBubbleAvatar="@{model.avatarModel}"
             app:layout_constraintStart_toStartOf="parent"

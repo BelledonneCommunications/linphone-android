@@ -62,11 +62,11 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
+            style="@style/avatar_imageview"
             android:id="@+id/avatar"
             android:layout_width="@dimen/avatar_in_call_size"
             android:layout_height="@dimen/avatar_in_call_size"
-            android:background="@drawable/shape_circle_light_blue_background"
             coilCallAvatar="@{viewModel.contact}"
             app:layout_constraintEnd_toEndOf="@id/background"
             app:layout_constraintStart_toStartOf="@id/background"
