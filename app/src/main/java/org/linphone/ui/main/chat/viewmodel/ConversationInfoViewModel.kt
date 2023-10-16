@@ -70,17 +70,17 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
     private val chatRoomListener = object : ChatRoomListenerStub() {
         @WorkerThread
         override fun onParticipantAdded(chatRoom: ChatRoom, eventLog: EventLog) {
-            computeParticipantsList(isGroup.value == true)
+            computeParticipantsList()
         }
 
         @WorkerThread
         override fun onParticipantRemoved(chatRoom: ChatRoom, eventLog: EventLog) {
-            computeParticipantsList(isGroup.value == true)
+            computeParticipantsList()
         }
 
         @WorkerThread
         override fun onParticipantAdminStatusChanged(chatRoom: ChatRoom, eventLog: EventLog) {
-            computeParticipantsList(isGroup.value == true)
+            computeParticipantsList()
         }
 
         @WorkerThread
@@ -183,8 +183,7 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
 
         isMyselfAdmin.postValue(chatRoom.me?.isAdmin)
 
-        val isGroupChatRoom = !chatRoom.hasCapability(ChatRoom.Capabilities.OneToOne.toInt()) &&
-            chatRoom.hasCapability(ChatRoom.Capabilities.Conference.toInt())
+        val isGroupChatRoom = isChatRoomAGroup()
         isGroup.postValue(isGroupChatRoom)
 
         val empty = chatRoom.hasCapability(ChatRoom.Capabilities.Conference.toInt()) && chatRoom.participants.isEmpty()
@@ -196,13 +195,15 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
 
         subject.postValue(chatRoom.subject)
 
-        computeParticipantsList(isGroupChatRoom)
+        computeParticipantsList()
     }
 
     @WorkerThread
-    private fun computeParticipantsList(isGroupChatRoom: Boolean) {
+    private fun computeParticipantsList() {
         avatarModel.value?.destroy()
         avatarsMap.values.forEach(ParticipantModel::destroy)
+
+        val groupChatRoom = isChatRoomAGroup()
 
         val friends = arrayListOf<Friend>()
         val participantsList = arrayListOf<ParticipantModel>()
@@ -214,14 +215,14 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
             for (participant in chatRoom.participants) {
                 val model = getParticipantModelForAddress(
                     participant.address,
-                    if (isGroup.value == true) participant.isAdmin else false
+                    if (groupChatRoom) participant.isAdmin else false
                 )
                 friends.add(model.friend)
                 participantsList.add(model)
             }
         }
 
-        val avatar = if (isGroupChatRoom) {
+        val avatar = if (groupChatRoom) {
             val fakeFriend = coreContext.core.createFriend()
             ContactAvatarModel(fakeFriend)
         } else {
@@ -259,5 +260,14 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
 
         avatarsMap[key] = avatar
         return avatar
+    }
+
+    @WorkerThread
+    private fun isChatRoomAGroup(): Boolean {
+        return if (::chatRoom.isInitialized) {
+            LinphoneUtils.isChatRoomAGroup(chatRoom)
+        } else {
+            false
+        }
     }
 }

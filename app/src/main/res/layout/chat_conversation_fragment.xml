@@ -36,6 +36,25 @@
             android:layout_marginBottom="80dp"
             android:background="@color/white">
 
+            <androidx.constraintlayout.widget.Group
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="avatar, title, search_toggle, info"
+                android:visibility="@{viewModel.searchBarVisible ? View.GONE : View.VISIBLE}" />
+
+            <androidx.constraintlayout.widget.Group
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="cancel_search, search, clear_field"
+                android:visibility="@{viewModel.searchBarVisible ? View.VISIBLE : View.GONE, default=gone}" />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/top_bar_barrier"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="title, search" />
+
             <ImageView
                 android:id="@+id/back"
                 android:layout_width="wrap_content"
@@ -43,7 +62,7 @@
                 android:padding="15dp"
                 android:adjustViewBounds="true"
                 android:onClick="@{backClickListener}"
-                android:visibility="@{viewModel.showBackButton ? View.VISIBLE : View.GONE}"
+                android:visibility="@{viewModel.showBackButton &amp;&amp; !viewModel.searchBarVisible ? View.VISIBLE : View.GONE}"
                 android:src="@drawable/caret_left"
                 app:tint="@color/orange_main_500"
                 app:layout_constraintBottom_toBottomOf="@id/title"
@@ -68,7 +87,7 @@
                 android:layout_width="@dimen/avatar_presence_badge_size"
                 android:layout_height="@dimen/avatar_presence_badge_size"
                 android:src="@{viewModel.avatarModel.trust == SecurityLevel.Safe ? @drawable/trusted : @drawable/not_trusted, default=@drawable/trusted}"
-                android:visibility="@{viewModel.avatarModel.trust == SecurityLevel.Safe || viewModel.avatarModel.trust == SecurityLevel.Unsafe ? View.VISIBLE : View.GONE}"
+                android:visibility="@{!viewModel.searchBarVisible &amp;&amp; (viewModel.avatarModel.trust == SecurityLevel.Safe || viewModel.avatarModel.trust == SecurityLevel.Unsafe) ? View.VISIBLE : View.GONE}"
                 app:layout_constraintStart_toStartOf="@id/avatar"
                 app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 
@@ -78,14 +97,14 @@
                 android:layout_width="0dp"
                 android:layout_height="@dimen/top_bar_height"
                 android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
+                android:layout_marginEnd="5dp"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:text="@{viewModel.isGroup ? viewModel.subject : viewModel.avatarModel.name, default=`John Doe`}"
                 android:textSize="16sp"
                 android:textColor="@color/gray_main2_600"
                 android:gravity="center_vertical"
-                app:layout_constraintEnd_toStartOf="@id/call"
+                app:layout_constraintEnd_toStartOf="@id/search_toggle"
                 app:layout_constraintStart_toEndOf="@id/avatar"
                 app:layout_constraintTop_toTopOf="parent"/>
 
@@ -99,38 +118,82 @@
                 android:src="@drawable/info"
                 app:layout_constraintTop_toTopOf="@id/title"
                 app:layout_constraintBottom_toBottomOf="@id/title"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:tint="@color/gray_main2_500"/>
 
             <ImageView
-                android:id="@+id/video_call"
-                android:onClick="@{startVideoCallClickListener}"
+                android:id="@+id/search_toggle"
+                android:onClick="@{() -> viewModel.openSearchBar()}"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:padding="15dp"
-                android:adjustViewBounds="true"
-                android:src="@drawable/video_camera"
-                app:layout_constraintTop_toTopOf="@id/title"
+                android:src="@drawable/magnifying_glass"
                 app:layout_constraintBottom_toBottomOf="@id/title"
-                app:layout_constraintEnd_toStartOf="@id/info" />
+                app:layout_constraintEnd_toStartOf="@id/info"
+                app:layout_constraintTop_toTopOf="@id/title"
+                app:tint="@color/gray_main2_500" />
 
             <ImageView
-                android:id="@+id/call"
-                android:onClick="@{startCallClickListener}"
+                android:id="@+id/cancel_search"
+                android:onClick="@{() -> viewModel.closeSearchBar()}"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:padding="15dp"
-                android:adjustViewBounds="true"
-                android:src="@drawable/phone"
-                app:layout_constraintTop_toTopOf="@id/title"
-                app:layout_constraintBottom_toBottomOf="@id/title"
-                app:layout_constraintEnd_toStartOf="@id/video_call"/>
+                android:src="@drawable/caret_left"
+                app:layout_constraintBottom_toBottomOf="@id/search"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/search"
+                app:tint="@color/gray_main2_500" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="?attr/textInputFilledStyle"
+                android:id="@+id/search"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/top_bar_height"
+                android:gravity="center_vertical"
+                android:textColorHint="@color/gray_main2_400"
+                app:hintEnabled="false"
+                app:hintAnimationEnabled="false"
+                app:hintTextColor="@color/gray_main2_400"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                app:layout_constraintEnd_toStartOf="@id/clear_field"
+                app:layout_constraintStart_toEndOf="@id/cancel_search"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textCursorDrawable="@null"
+                    android:textSize="16sp"
+                    android:inputType="text"
+                    android:paddingVertical="1dp"
+                    android:text="@={viewModel.searchFilter}"
+                    android:background="@android:color/transparent" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <ImageView
+                android:id="@+id/clear_field"
+                android:onClick="@{() -> viewModel.clearFilter()}"
+                android:enabled="@{viewModel.searchFilter.length() > 0}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="6dp"
+                android:layout_marginEnd="9dp"
+                android:src="@drawable/x"
+                app:layout_constraintBottom_toBottomOf="@id/search"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/search"
+                app:tint="@color/gray_main2_500" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/events_list"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginBottom="5dp"
-                app:layout_constraintTop_toBottomOf="@id/title"
+                android:paddingBottom="5dp"
+                android:background="@color/gray_100"
+                app:layout_constraintTop_toBottomOf="@id/top_bar_barrier"
                 app:layout_constraintBottom_toTopOf="@id/composing" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -139,7 +202,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_marginBottom="5dp"
+                android:paddingBottom="5dp"
+                android:background="@color/gray_100"
                 android:text="@{viewModel.composingLabel, default=`John Doe is composing...`}"
                 android:textSize="12sp"
                 android:textColor="@color/gray_main2_400"

@@ -152,7 +152,9 @@ class ConversationEventAdapter(
             return if (!oldItem.isEvent && !newItem.isEvent) {
                 val oldData = (oldItem.model as ChatMessageModel)
                 val newData = (newItem.model as ChatMessageModel)
-                oldData.time == newData.time && oldData.isOutgoing == newData.isOutgoing
+                oldData.id == newData.id &&
+                    oldData.timestamp == newData.timestamp &&
+                    oldData.isOutgoing == newData.isOutgoing
             } else {
                 oldItem.notifyId == newItem.notifyId
             }
@@ -162,8 +164,8 @@ class ConversationEventAdapter(
             return if (oldItem.isEvent && newItem.isEvent) {
                 true
             } else if (!oldItem.isEvent && !newItem.isEvent) {
-                val oldModel = (newItem.model as ChatMessageModel)
-                val newModel = newItem.model
+                val oldModel = (oldItem.model as ChatMessageModel)
+                val newModel = (newItem.model as ChatMessageModel)
                 oldModel.statusIcon.value == newModel.statusIcon.value
             } else {
                 false

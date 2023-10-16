@@ -51,6 +51,8 @@ import org.linphone.ui.main.chat.viewmodel.ConversationViewModel
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
+import org.linphone.utils.hideKeyboard
+import org.linphone.utils.showKeyboard
 
 @UiThread
 class ConversationFragment : GenericFragment() {
@@ -175,6 +177,21 @@ class ConversationFragment : GenericFragment() {
                 remoteSipUri
             )
             findNavController().navigate(action)
+        }
+
+        viewModel.searchFilter.observe(viewLifecycleOwner) { filter ->
+            viewModel.applyFilter(filter.trim())
+        }
+
+        viewModel.focusSearchBarEvent.observe(viewLifecycleOwner) {
+            it.consume { show ->
+                if (show) {
+                    // To automatically open keyboard
+                    binding.search.showKeyboard()
+                } else {
+                    binding.search.hideKeyboard()
+                }
+            }
         }
     }
 

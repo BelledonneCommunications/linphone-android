@@ -200,6 +200,12 @@ class LinphoneUtils {
         }
 
         @WorkerThread
+        fun isChatRoomAGroup(chatRoom: ChatRoom): Boolean {
+            return !chatRoom.hasCapability(ChatRoom.Capabilities.OneToOne.toInt()) &&
+                chatRoom.hasCapability(ChatRoom.Capabilities.Conference.toInt())
+        }
+
+        @WorkerThread
         fun getRecordingFilePathForAddress(address: Address): String {
             val displayName = getDisplayName(address)
             val dateFormat: DateFormat = SimpleDateFormat(

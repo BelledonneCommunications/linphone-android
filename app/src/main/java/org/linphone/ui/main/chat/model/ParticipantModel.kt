@@ -22,6 +22,5 @@ package org.linphone.ui.main.chat.model
 import org.linphone.core.Friend
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 
-class ParticipantModel(friend: Friend, val isMyselfAdmin: Boolean, val isParticipantAdmin: Boolean) : ContactAvatarModel(
-    friend
-)
+class ParticipantModel(friend: Friend, val isMyselfAdmin: Boolean, val isParticipantAdmin: Boolean) :
+    ContactAvatarModel(friend)

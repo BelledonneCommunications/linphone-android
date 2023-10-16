@@ -62,9 +62,19 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     val textToSend = MutableLiveData<String>()
 
+    val searchBarVisible = MutableLiveData<Boolean>()
+
+    val searchFilter = MutableLiveData<String>()
+
+    val focusSearchBarEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     val chatRoomFoundEvent = MutableLiveData<Event<Boolean>>()
 
     private lateinit var chatRoom: ChatRoom
+
+    private var currentFilter = ""
 
     private val avatarsMap = hashMapOf<String, ContactAvatarModel>()
 
@@ -84,7 +94,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             } else {
                 false
             }
-            list.add(EventLogModel(eventLog, avatarModel, isGroup.value == true, group, true))
+            list.add(EventLogModel(eventLog, avatarModel, isChatRoomAGroup(), group, true))
 
             events.postValue(list)
         }
@@ -118,7 +128,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
             val newList = getEventsListFromHistory(
                 eventLogs,
-                isGroupChatRoom = isGroup.value == true
+                searchFilter.value.orEmpty().trim()
             )
             list.addAll(newList)
 
@@ -126,6 +136,10 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
             events.postValue(list)
         }
+    }
+
+    init {
+        searchBarVisible.value = false
     }
 
     override fun onCleared() {
@@ -137,6 +151,24 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             events.value.orEmpty().forEach(EventLogModel::destroy)
             avatarsMap.values.forEach(ContactAvatarModel::destroy)
         }
+    }
+
+    @UiThread
+    fun openSearchBar() {
+        searchBarVisible.value = true
+        focusSearchBarEvent.value = Event(true)
+    }
+
+    @UiThread
+    fun closeSearchBar() {
+        clearFilter()
+        searchBarVisible.value = false
+        focusSearchBarEvent.value = Event(false)
+    }
+
+    @UiThread
+    fun clearFilter() {
+        searchFilter.value = ""
     }
 
     @UiThread
@@ -171,6 +203,13 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
                 Log.e("$TAG Failed to parse local or remote SIP URI as Address!")
                 chatRoomFoundEvent.postValue(Event(false))
             }
+        }
+    }
+
+    @UiThread
+    fun applyFilter(filter: String) {
+        coreContext.postOnCoreThread {
+            computeEvents(filter)
         }
     }
 
@@ -215,16 +254,15 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
     private fun configureChatRoom() {
         computeComposingLabel()
 
-        val isGroupChatRoom = !chatRoom.hasCapability(ChatRoom.Capabilities.OneToOne.toInt()) &&
-            chatRoom.hasCapability(ChatRoom.Capabilities.Conference.toInt())
-        isGroup.postValue(isGroupChatRoom)
-
         val empty = chatRoom.hasCapability(ChatRoom.Capabilities.Conference.toInt()) && chatRoom.participants.isEmpty()
         val readOnly = chatRoom.isReadOnly || empty
         isReadOnly.postValue(readOnly)
         if (readOnly) {
             Log.w("$TAG Chat room with subject [${chatRoom.subject}] is read only!")
         }
+
+        val group = isChatRoomAGroup()
+        isGroup.postValue(group)
 
         subject.postValue(chatRoom.subject)
 
@@ -243,7 +281,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             firstParticipant?.address ?: chatRoom.peerAddress
         }
 
-        val avatar = if (isGroupChatRoom) {
+        val avatar = if (group) {
             val fakeFriend = coreContext.core.createFriend()
             ContactAvatarModel(fakeFriend)
         } else {
@@ -252,17 +290,22 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         avatar.setPicturesFromFriends(friends)
         avatarModel.postValue(avatar)
 
-        val history = chatRoom.getHistoryEvents(0)
-        val eventsList = getEventsListFromHistory(history, isGroupChatRoom)
-
-        events.postValue(eventsList)
+        computeEvents()
         chatRoom.markAsRead()
     }
 
     @WorkerThread
+    private fun computeEvents(filter: String = "") {
+        events.value.orEmpty().forEach(EventLogModel::destroy)
+
+        val history = chatRoom.getHistoryEvents(0)
+        val eventsList = getEventsListFromHistory(history, filter)
+        events.postValue(eventsList)
+    }
+
+    @WorkerThread
     private fun processGroupedEvents(
-        groupedEventLogs: ArrayList<EventLog>,
-        isGroupChatRoom: Boolean
+        groupedEventLogs: ArrayList<EventLog>
     ): ArrayList<EventLogModel> {
         val eventsList = arrayListOf<EventLogModel>()
 
@@ -273,7 +316,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             val model = EventLogModel(
                 groupedEvent,
                 avatar,
-                isGroupChatRoom,
+                isChatRoomAGroup(),
                 index > 0,
                 index == groupedEventLogs.size - 1
             )
@@ -286,10 +329,26 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
     }
 
     @WorkerThread
-    private fun getEventsListFromHistory(history: Array<EventLog>, isGroupChatRoom: Boolean): ArrayList<EventLogModel> {
+    private fun getEventsListFromHistory(history: Array<EventLog>, filter: String = ""): ArrayList<EventLogModel> {
         val eventsList = arrayListOf<EventLogModel>()
         val groupedEventLogs = arrayListOf<EventLog>()
         for (event in history) {
+            // TODO: let the SDK do it
+            if (event.type == EventLog.Type.ConferenceChatMessage) {
+                val message = event.chatMessage ?: continue
+                val fromAddress = message.fromAddress
+                val model = getAvatarModelForAddress(fromAddress)
+                if (
+                    !model.name.value.orEmpty().contains(filter, ignoreCase = true) &&
+                    !fromAddress.asStringUriOnly().contains(filter, ignoreCase = true) &&
+                    !message.utf8Text.orEmpty().contains(filter, ignoreCase = true)
+                ) {
+                    continue
+                }
+            } else {
+                continue
+            }
+
             if (groupedEventLogs.isEmpty()) {
                 groupedEventLogs.add(event)
                 continue
@@ -299,7 +358,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             val groupEvents = shouldWeGroupTwoEvents(event, previousGroupEvent)
 
             if (!groupEvents) {
-                eventsList.addAll(processGroupedEvents(groupedEventLogs, isGroupChatRoom))
+                eventsList.addAll(processGroupedEvents(groupedEventLogs))
                 groupedEventLogs.clear()
             }
 
@@ -307,7 +366,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         }
 
         if (groupedEventLogs.isNotEmpty()) {
-            eventsList.addAll(processGroupedEvents(groupedEventLogs, isGroupChatRoom))
+            eventsList.addAll(processGroupedEvents(groupedEventLogs))
             groupedEventLogs.clear()
         }
 
@@ -378,6 +437,15 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             composingLabel.postValue(format)
         } else {
             composingLabel.postValue("")
+        }
+    }
+
+    @WorkerThread
+    private fun isChatRoomAGroup(): Boolean {
+        return if (::chatRoom.isInitialized) {
+            LinphoneUtils.isChatRoomAGroup(chatRoom)
+        } else {
+            false
         }
     }
 }

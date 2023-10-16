@@ -53,7 +53,9 @@ class ChatMessageModel @WorkerThread constructor(
 
     val text = LinphoneUtils.getTextDescribingMessage(chatMessage)
 
-    val time = TimestampUtils.toString(chatMessage.time)
+    val timestamp = chatMessage.time
+
+    val time = TimestampUtils.toString(timestamp)
 
     val chatRoomIsReadOnly = chatMessage.chatRoom.isReadOnly
 
