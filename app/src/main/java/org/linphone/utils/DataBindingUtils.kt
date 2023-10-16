@@ -56,7 +56,6 @@ import coil.dispose
 import coil.imageLoader
 import coil.load
 import coil.request.ImageRequest
-import coil.transform.CircleCropTransformation
 import com.google.android.material.imageview.ShapeableImageView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
@@ -215,9 +214,7 @@ fun AppCompatTextView.setColor(@ColorRes color: Int) {
 fun ShapeableImageView.loadCircleFileWithCoil(file: String?) {
     Log.i("[Data Binding Utils] Loading file [$file] with coil")
     if (file != null) {
-        load(file) {
-            transformations(CircleCropTransformation())
-        }
+        load(file)
     }
 }
 
@@ -314,7 +311,6 @@ private suspend fun loadContactPictureWithCoil(
             if (count == 1) {
                 val image = images.firstOrNull()
                 imageView.load(image) {
-                    transformations(CircleCropTransformation())
                     error(
                         coroutineScope {
                             withContext(Dispatchers.IO) {
@@ -397,9 +393,7 @@ private suspend fun loadContactPictureWithCoil(
                     )
                 }
 
-                imageView.load(bitmap) {
-                    transformations(CircleCropTransformation())
-                }
+                imageView.load(bitmap)
             }
         }
     }
