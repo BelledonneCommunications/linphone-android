@@ -10,15 +10,30 @@
             type="org.linphone.ui.main.chat.model.EventModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp">
+        android:layout_marginBottom="5dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/shape_line_main2_200"
+        android:gravity="center"
+        android:orientation="horizontal">
 
+        <!-- Ugly hack to prevent last character to be missing half of it, don't know why yet -->
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_300"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:text="@{model.text + ` `, default=`You have left the group`}"
+            android:textColor="@color/gray_main2_500"
+            android:textSize="12sp"
+            android:textStyle="italic" />
 
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
 </layout>

@@ -22,4 +22,6 @@ package org.linphone.ui.main.chat.model
 import androidx.annotation.WorkerThread
 import org.linphone.core.EventLog
 
-class EventModel @WorkerThread constructor(eventLog: EventLog)
+class EventModel @WorkerThread constructor(eventLog: EventLog) {
+    val text = eventLog.type.name // TODO FIXME: use proper translated string instead
+}
