@@ -17,6 +17,9 @@
         <variable
             name="continueClickListener"
             type="View.OnClickListener" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.main.settings.viewmodel.AccountProfileViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -65,15 +68,17 @@
                 android:layout_marginTop="16dp">
 
                 <com.google.android.material.radiobutton.MaterialRadioButton
-                    android:id="@+id/default_mode"
                     style="@style/default_text_style_800"
+                    android:id="@+id/default_mode"
+                    android:onClick="@{() -> viewModel.switchToSecureMode()}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:text="@string/assistant_secure_mode_default_title"
                     android:textSize="16sp"
                     android:textColor="@color/black"
-                    android:checked="true"
+                    android:checked="@{viewModel.isCurrentlySelectedModeSecure}"
+                    android:enabled="@{!viewModel.isCurrentlySelectedModeSecure}"
                     app:useMaterialThemeColors="false"
                     app:buttonTint="@color/orange_main_500"
                     app:layout_constraintTop_toTopOf="parent"
@@ -118,7 +123,9 @@
                     android:layout_height="@dimen/avatar_list_cell_size"
                     android:layout_marginEnd="16dp"
                     android:layout_marginTop="20dp"
-                    coilInitials="@{`JD`}"
+                    coilAvatarNoTrust="@{viewModel.accountModel}"
+                    app:strokeWidth="0dp"
+                    app:strokeColor="@color/transparent_color"
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/arrow"
@@ -152,7 +159,7 @@
                     android:id="@+id/image2"
                     android:layout_width="@dimen/avatar_list_cell_size"
                     android:layout_height="@dimen/avatar_list_cell_size"
-                    coilInitials="@{`JD`}"
+                    coilAvatarNoTrust="@{viewModel.accountModel}"
                     app:strokeWidth="@dimen/avatar_trust_border_width"
                     app:strokeColor="@color/blue_info_500"
                     app:layout_constraintStart_toEndOf="@id/arrow"
@@ -180,8 +187,9 @@
                     app:layout_constraintBottom_toBottomOf="@id/image2"/>
 
                 <com.google.android.material.radiobutton.MaterialRadioButton
-                    android:id="@+id/interop_mode"
                     style="@style/default_text_style_800"
+                    android:id="@+id/interop_mode"
+                    android:onClick="@{() -> viewModel.switchToInteropMode()}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="32dp"
@@ -189,6 +197,8 @@
                     android:text="@string/assistant_secure_mode_interoperable_title"
                     android:textSize="16sp"
                     android:textColor="@color/black"
+                    android:checked="@{!viewModel.isCurrentlySelectedModeSecure}"
+                    android:enabled="@{viewModel.isCurrentlySelectedModeSecure}"
                     app:useMaterialThemeColors="false"
                     app:buttonTint="@color/orange_main_500"
                     app:layout_constraintTop_toBottomOf="@id/image1"
@@ -238,7 +248,7 @@
                     android:layout_marginEnd="16dp"
                     android:paddingStart="20dp"
                     android:paddingEnd="20dp"
-                    android:text="@string/manage_account_choose_mode_save_changes"
+                    android:text="@string/manage_account_choose_mode_apply_label"
                     app:layout_constraintWidth_max="@dimen/button_max_width"
                     app:layout_constraintVertical_bias="1"
                     app:layout_constraintTop_toBottomOf="@id/interop_mode_summary"

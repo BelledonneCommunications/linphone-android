@@ -145,7 +145,7 @@ class AccountProfileFragment : GenericFragment() {
         viewModel.accountRemovedEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.i("$TAG Account has been removed, leaving profile")
-                findNavController().popBackStack()
+                goBack()
             }
         }
 

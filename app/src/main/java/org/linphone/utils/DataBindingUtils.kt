@@ -228,6 +228,15 @@ fun ShapeableImageView.loadAvatarWithCoil(model: AbstractAvatarModel?) {
 }
 
 @UiThread
+@BindingAdapter("coilAvatarNoTrust")
+fun ShapeableImageView.loadAvatarWithCoilWithoutTrust(model: AbstractAvatarModel?) {
+    val imageView = this
+    (context as AppCompatActivity).lifecycleScope.launch {
+        loadContactPictureWithCoil(imageView, model, skipTrust = true)
+    }
+}
+
+@UiThread
 @BindingAdapter("coilBubbleAvatar")
 fun ShapeableImageView.loadBubbleAvatarWithCoil(model: AbstractAvatarModel?) {
     val imageView = this
@@ -279,31 +288,36 @@ private suspend fun loadContactPictureWithCoil(
     imageView: ShapeableImageView,
     model: AbstractAvatarModel?,
     @DimenRes size: Int = 0,
-    @DimenRes textSize: Int = 0
+    @DimenRes textSize: Int = 0,
+    skipTrust: Boolean = false
 ) {
     withContext(Dispatchers.IO) {
         imageView.dispose()
 
         val context = imageView.context
         if (model != null) {
-            if (model.showTrust.value == true) {
-                when (model.trust.value) {
-                    ChatRoom.SecurityLevel.Safe -> {
-                        imageView.setStrokeColorResource(R.color.blue_info_500)
-                        imageView.setStrokeWidthResource(R.dimen.avatar_trust_border_width)
+            if (!skipTrust) {
+                if (model.showTrust.value == true) {
+                    when (model.trust.value) {
+                        ChatRoom.SecurityLevel.Safe -> {
+                            imageView.setStrokeColorResource(R.color.blue_info_500)
+                            imageView.setStrokeWidthResource(R.dimen.avatar_trust_border_width)
+                        }
+
+                        ChatRoom.SecurityLevel.Unsafe -> {
+                            imageView.setStrokeColorResource(R.color.red_danger_500)
+                            imageView.setStrokeWidthResource(R.dimen.avatar_trust_border_width)
+                        }
+
+                        else -> {
+                            imageView.setStrokeColorResource(R.color.transparent_color)
+                            imageView.setStrokeWidthResource(R.dimen.zero)
+                        }
                     }
-                    ChatRoom.SecurityLevel.Unsafe -> {
-                        imageView.setStrokeColorResource(R.color.red_danger_500)
-                        imageView.setStrokeWidthResource(R.dimen.avatar_trust_border_width)
-                    }
-                    else -> {
-                        imageView.setStrokeColorResource(R.color.transparent_color)
-                        imageView.setStrokeWidthResource(R.dimen.zero)
-                    }
+                } else {
+                    imageView.setStrokeColorResource(R.color.transparent_color)
+                    imageView.setStrokeWidthResource(R.dimen.zero)
                 }
-            } else {
-                imageView.setStrokeColorResource(R.color.transparent_color)
-                imageView.setStrokeWidthResource(R.dimen.zero)
             }
 
             val images = model.images.value.orEmpty()

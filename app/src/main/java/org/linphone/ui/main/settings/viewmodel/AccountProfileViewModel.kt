@@ -4,14 +4,13 @@ import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.R
 import org.linphone.core.Account
 import org.linphone.core.DialPlan
 import org.linphone.core.Factory
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.model.AccountModel
+import org.linphone.ui.main.model.isInSecureMode
 import org.linphone.ui.main.settings.model.AccountDeviceModel
-import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
 class AccountProfileViewModel @UiThread constructor() : ViewModel() {
@@ -33,7 +32,7 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
 
     val registerEnabled = MutableLiveData<Boolean>()
 
-    val currentMode = MutableLiveData<String>()
+    val isCurrentlySelectedModeSecure = MutableLiveData<Boolean>()
 
     val devices = MutableLiveData<ArrayList<AccountDeviceModel>>()
 
@@ -83,9 +82,7 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
                 Log.i("$TAG Found matching account [$found]")
                 account = found
                 accountModel.postValue(AccountModel(account))
-                currentMode.postValue(
-                    AppUtils.getString(R.string.manage_account_secure_mode_default_title)
-                ) // TODO: use real API when available
+                isCurrentlySelectedModeSecure.postValue(account.isInSecureMode())
                 registerEnabled.postValue(account.params.isRegisterEnabled)
 
                 sipAddress.postValue(account.params.identityAddress?.asStringUriOnly())
@@ -240,5 +237,20 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
                 "$TAG Updated internation prefix for account [${account.params.identityAddress?.asStringUriOnly()}] to [${copy.internationalPrefix}]"
             )
         }
+    }
+
+    @UiThread
+    fun switchToSecureMode() {
+        isCurrentlySelectedModeSecure.value = true
+    }
+
+    @UiThread
+    fun switchToInteropMode() {
+        isCurrentlySelectedModeSecure.value = false
+    }
+
+    @UiThread
+    fun applySelectedMode() {
+        // TODO
     }
 }

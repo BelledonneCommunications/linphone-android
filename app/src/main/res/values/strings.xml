@@ -242,11 +242,11 @@
     <string name="manage_account_settings">Account settings</string>
     <string name="manage_account_delete">Delete account</string>
     <string name="manage_account_choose_mode_title">Choose account mode</string>
-    <string name="manage_account_choose_mode_save_changes">Apply</string>
+    <string name="manage_account_choose_mode_apply_label">Apply</string>
     <string name="manage_account_secure_mode_default_title">Default mode</string>
     <string name="manage_account_secure_mode_interoperable_title">Interoperable mode</string>
-    <string name="manage_account_secure_mode_default_summary">Blah</string> <!-- TODO -->
-    <string name="manage_account_secure_mode_interoperable_summary">Blah</string> <!-- TODO -->
+    <string name="manage_account_secure_mode_default_summary">End-to-end encryption of your communications</string>
+    <string name="manage_account_secure_mode_interoperable_summary">Allows to communicate with other SIP services, point to point encryption</string>
     <string name="manage_account_device_remove">Remove</string>
     <string name="manage_account_device_last_connection">Last connection:</string>
 

@@ -24,18 +24,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
-import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
+import org.linphone.R
+import org.linphone.core.tools.Log
 import org.linphone.databinding.AccountProfileSecureModeFragmentBinding
+import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.settings.viewmodel.AccountProfileViewModel
 import org.linphone.utils.DialogUtils
 
 @UiThread
-class AccountProfileModeFragment : Fragment() {
+class AccountProfileModeFragment : GenericFragment() {
     companion object {
         private const val TAG = "[Account Profile Mode Fragment]"
     }
 
     private lateinit var binding: AccountProfileSecureModeFragmentBinding
+
+    private val viewModel: AccountProfileViewModel by navGraphViewModels(
+        R.id.main_nav_graph
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,13 +57,17 @@ class AccountProfileModeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = viewModel
 
         binding.setBackClickListener {
-            findNavController().popBackStack()
+            Log.i("$TAG Leaving without saving changes...")
+            goBack()
         }
 
         binding.setContinueClickListener {
-            findNavController().popBackStack()
+            Log.i("$TAG Applying changes and leaving...")
+            viewModel.applySelectedMode()
+            goBack()
         }
 
         binding.setDefaultModeTooltipClickListener {
