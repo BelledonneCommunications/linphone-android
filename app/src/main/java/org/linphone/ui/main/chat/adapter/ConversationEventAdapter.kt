@@ -149,14 +149,12 @@ class ConversationEventAdapter(
 
     private class EventLogDiffCallback : DiffUtil.ItemCallback<EventLogModel>() {
         override fun areItemsTheSame(oldItem: EventLogModel, newItem: EventLogModel): Boolean {
-            return if (oldItem.isEvent && newItem.isEvent) {
-                oldItem.notifyId == newItem.notifyId
-            } else if (!oldItem.isEvent && !newItem.isEvent) {
+            return if (!oldItem.isEvent && !newItem.isEvent) {
                 val oldData = (oldItem.model as ChatMessageModel)
                 val newData = (newItem.model as ChatMessageModel)
-                oldData.id.isNotEmpty() && oldData.id == newData.id
+                oldData.time == newData.time && oldData.isOutgoing == newData.isOutgoing
             } else {
-                false
+                oldItem.notifyId == newItem.notifyId
             }
         }
 

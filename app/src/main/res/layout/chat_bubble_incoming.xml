@@ -19,8 +19,9 @@
         android:onLongClick="@{onLongClickListener}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@{model.isGroupedWithPreviousOne ? @dimen/chat_bubble_grouped_top_margin : @dimen/chat_bubble_top_margin, default=@dimen/chat_bubble_top_margin}"
-        android:layout_marginStart="16dp">
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="@{model.isGroupedWithPreviousOne ? @dimen/chat_bubble_grouped_top_margin : @dimen/chat_bubble_top_margin, default=@dimen/chat_bubble_top_margin}">
 
         <com.google.android.material.imageview.ShapeableImageView
             style="@style/avatar_imageview"
@@ -39,10 +40,18 @@
             android:layout_marginEnd="1dp"
             android:background="@drawable/led_background"
             android:padding="1dp"
-            app:presenceIcon="@{model.avatarModel.presenceStatus}"
             android:visibility="@{model.isGroupedWithPreviousOne || !model.isFromGroup || model.avatarModel.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE}"
+            app:presenceIcon="@{model.avatarModel.presenceStatus}"
             app:layout_constraintEnd_toEndOf="@id/avatar"
             app:layout_constraintBottom_toBottomOf="@id/avatar"/>
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/background_end_barrier"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:barrierDirection="end"
+            app:barrierMargin="10dp"
+            app:constraint_referenced_ids="delivery_status, text_message" />
 
         <ImageView
             android:id="@+id/background"
@@ -50,58 +59,29 @@
             android:layout_height="0dp"
             android:layout_marginStart="10dp"
             android:src="@{model.isGroupedWithPreviousOne ? @drawable/shape_chat_bubble_incoming_full : @drawable/shape_chat_bubble_incoming_first, default=@drawable/shape_chat_bubble_incoming_first}"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/bubble_bottom_barrier"
             app:layout_constraintStart_toEndOf="@id/avatar"
-            app:layout_constraintEnd_toEndOf="@id/bubble_end_barrier"/>
+            app:layout_constraintEnd_toEndOf="@id/background_end_barrier"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <androidx.constraintlayout.widget.Barrier
-            android:id="@+id/bubble_end_barrier"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:barrierDirection="end"
-            app:barrierMargin="18dp"
-            app:constraint_referenced_ids="text_message, delivery_status"/>
-
-        <androidx.constraintlayout.widget.Barrier
-            android:id="@+id/bubble_bottom_barrier"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:barrierDirection="bottom"
-            app:constraint_referenced_ids="text_bottom_anchor, delivery_status"/>
-
-        <androidx.appcompat.widget.AppCompatTextView
+        <org.linphone.ui.main.chat.view.ChatBubbleTextView
             style="@style/default_text_style"
             android:id="@+id/text_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="18dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="12dp"
-            android:layout_marginEnd="18dp"
+            android:layout_marginEnd="16dp"
+            android:paddingBottom="@{model.groupedWithNextOne ? @dimen/chat_bubble_text_padding_with_status : @dimen/chat_bubble_text_padding_with_bubble, default=@dimen/chat_bubble_text_padding_with_status}"
             android:text="@{model.text, default=`Lorem ipsum dolor sit amet`}"
             android:textSize="14sp"
             android:textColor="@color/gray_main2_700"
             android:gravity="center_vertical|start"
             app:layout_constrainedWidth="true"
             app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintTop_toTopOf="@id/background"
-            app:layout_constraintStart_toStartOf="@id/background"
-            app:layout_constraintEnd_toStartOf="@id/text_end_anchor"/>
-
-        <View
-            android:id="@+id/text_bottom_anchor"
-            android:layout_width="1dp"
-            android:layout_height="1dp"
-            android:layout_marginTop="12dp"
-            app:layout_constraintTop_toBottomOf="@id/text_message"
-            app:layout_constraintStart_toStartOf="@id/text_message"/>
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/text_end_anchor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_end="16dp" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/avatar"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_300"
@@ -109,14 +89,13 @@
             android:onClick="@{() -> model.showDeliveryInfo()}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
+            android:paddingBottom="5dp"
             android:text="@{model.time, default=`13:40`}"
             android:textSize="12sp"
             android:visibility="@{model.isGroupedWithNextOne ? View.VISIBLE : View.GONE}"
             app:layout_constraintTop_toBottomOf="@id/text_message"
-            app:layout_constraintStart_toStartOf="@id/text_message"
-            app:layout_constraintBottom_toBottomOf="@id/background"/>
+            app:layout_constraintStart_toStartOf="@id/text_message"/>
 
         <ImageView
             style="@style/default_text_style_300"
