@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <import type="org.linphone.core.ConsolidatedPresence" />
+        <import type="org.linphone.core.ChatRoom.SecurityLevel" />
+        <variable
+            name="model"
+            type="org.linphone.ui.main.chat.model.ParticipantModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/primary_cell_background"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            style="@style/avatar_imageview"
+            android:id="@+id/avatar"
+            android:layout_width="@dimen/avatar_list_cell_size"
+            android:layout_height="@dimen/avatar_list_cell_size"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            coilAvatar="@{model}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/presence_badge"
+            android:layout_width="@dimen/avatar_presence_badge_size"
+            android:layout_height="@dimen/avatar_presence_badge_size"
+            android:layout_marginEnd="@dimen/avatar_presence_badge_end_margin"
+            android:background="@drawable/led_background"
+            android:padding="@dimen/avatar_presence_badge_padding"
+            app:presenceIcon="@{model.presenceStatus}"
+            android:visibility="@{model.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE}"
+            app:layout_constraintEnd_toEndOf="@id/avatar"
+            app:layout_constraintBottom_toBottomOf="@id/avatar"/>
+
+        <ImageView
+            android:id="@+id/trust_badge"
+            android:layout_width="@dimen/avatar_presence_badge_size"
+            android:layout_height="@dimen/avatar_presence_badge_size"
+            android:src="@{model.trust == SecurityLevel.Safe ? @drawable/trusted : @drawable/not_trusted, default=@drawable/trusted}"
+            android:visibility="@{model.trust == SecurityLevel.Safe || model.trust == SecurityLevel.Unsafe ? View.VISIBLE : View.GONE}"
+            app:layout_constraintStart_toStartOf="@id/avatar"
+            app:layout_constraintBottom_toBottomOf="@id/avatar"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{model.name, default=`John Doe`}"
+            android:textSize="14sp"
+            android:layout_marginStart="10dp"
+            app:layout_constraintStart_toEndOf="@id/avatar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/participant_menu"
+            app:layout_constraintBottom_toTopOf="@id/admin_label"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_300"
+            android:id="@+id/admin_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/conversation_info_participant_is_admin_label"
+            android:textColor="@color/gray_main2_500"
+            android:textSize="12sp"
+            android:visibility="@{model.isParticipantAdmin ? View.VISIBLE : View.GONE}"
+            app:layout_constraintTop_toBottomOf="@id/name"
+            app:layout_constraintStart_toStartOf="@id/name"
+            app:layout_constraintEnd_toEndOf="@id/name"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <ImageView
+            android:id="@+id/participant_menu"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:src="@drawable/dots_three_vertical"
+            android:visibility="@{model.isMyselfAdmin ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/name"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginEnd="10dp"
+            android:background="@color/gray_main2_200"
+            app:layout_constraintStart_toStartOf="@id/name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

@@ -10,6 +10,15 @@
             name="backClickListener"
             type="View.OnClickListener" />
         <variable
+            name="startCallClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="startVideoCallClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="goToInfoClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="openEmojiPickerClickListener"
             type="View.OnClickListener" />
         <variable
@@ -82,6 +91,7 @@
 
             <ImageView
                 android:id="@+id/info"
+                android:onClick="@{goToInfoClickListener}"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:padding="15dp"
@@ -93,6 +103,7 @@
 
             <ImageView
                 android:id="@+id/video_call"
+                android:onClick="@{startVideoCallClickListener}"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:padding="15dp"
@@ -104,6 +115,7 @@
 
             <ImageView
                 android:id="@+id/call"
+                android:onClick="@{startCallClickListener}"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:padding="15dp"

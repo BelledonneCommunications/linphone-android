@@ -350,7 +350,7 @@ private suspend fun loadContactPictureWithCoil(
                         }
                     )
                 }
-            } else if (count > 1) {
+            } else {
                 val w = if (size > 0) {
                     AppUtils.getDimension(size).toInt()
                 } else {
@@ -409,6 +409,14 @@ private suspend fun loadContactPictureWithCoil(
 
                 imageView.load(bitmap)
             }
+        } else {
+            imageView.load(
+                ResourcesCompat.getDrawable(
+                    context.resources,
+                    R.drawable.user_circle,
+                    context.theme
+                )
+            )
         }
     }
 }

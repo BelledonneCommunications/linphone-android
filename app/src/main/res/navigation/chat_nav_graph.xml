@@ -22,11 +22,31 @@
         <argument
             android:name="remoteSipUri"
             app:argType="string" />
+        <action
+            android:id="@+id/action_conversationFragment_to_conversationInfoFragment"
+            app:destination="@id/conversationInfoFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <action
         android:id="@+id/action_global_conversationFragment"
         app:destination="@id/conversationFragment"
         app:launchSingleTop="true" />
+
+    <fragment
+        android:id="@+id/conversationInfoFragment"
+        android:name="org.linphone.ui.main.chat.fragment.ConversationInfoFragment"
+        android:label="ConversationInfoFragment"
+        tools:layout="@layout/chat_info_fragment">
+        <argument
+            android:name="localSipUri"
+            app:argType="string" />
+        <argument
+            android:name="remoteSipUri"
+            app:argType="string" />
+    </fragment>
 
 </navigation>

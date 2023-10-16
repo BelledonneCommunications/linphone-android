@@ -131,7 +131,7 @@ class ConversationModel @WorkerThread constructor(private val chatRoom: ChatRoom
                     val friend = coreContext.contactsManager.findContactByAddress(
                         participant.address
                     )
-                    if (friend != null) {
+                    if (friend != null && !friends.contains(friend)) {
                         friends.add(friend)
                     }
                 }
@@ -146,7 +146,7 @@ class ConversationModel @WorkerThread constructor(private val chatRoom: ChatRoom
         if (isGroup) {
             val fakeFriend = coreContext.core.createFriend()
             val model = ContactAvatarModel(fakeFriend)
-            model.addPicturesFromFriends(friends)
+            model.setPicturesFromFriends(friends)
             avatarModel.postValue(model)
         } else {
             val friend = coreContext.contactsManager.findContactByAddress(address)

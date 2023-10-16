@@ -168,6 +168,14 @@ class ConversationFragment : GenericFragment() {
                 emojisBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }*/
         }
+
+        binding.setGoToInfoClickListener {
+            val action = ConversationFragmentDirections.actionConversationFragmentToConversationInfoFragment(
+                localSipUri,
+                remoteSipUri
+            )
+            findNavController().navigate(action)
+        }
     }
 
     private fun showChatMessageLongPressMenu(chatMessageModel: ChatMessageModel) {

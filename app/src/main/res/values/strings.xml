@@ -341,6 +341,11 @@
         <item quantity="other">%s are composing…</item>
     </plurals>
 
+    <string name="conversation_info_participants_list_title">Group members</string>
+    <string name="conversation_info_add_participants_label">Add participants</string>
+    <string name="conversation_info_participant_is_admin_label">Admin</string>
+    <string name="conversation_info_delete_history_action">Delete history</string>
+
     <string name="meetings_list_empty">No meeting for the moment…</string>
     <string name="meeting_schedule_title">New meeting</string>
     <string name="meeting_schedule_meeting_label">Meeting</string>

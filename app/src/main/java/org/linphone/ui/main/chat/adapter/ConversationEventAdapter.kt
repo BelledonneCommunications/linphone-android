@@ -161,10 +161,12 @@ class ConversationEventAdapter(
         override fun areContentsTheSame(oldItem: EventLogModel, newItem: EventLogModel): Boolean {
             return if (oldItem.isEvent && newItem.isEvent) {
                 true
-            } else {
+            } else if (!oldItem.isEvent && !newItem.isEvent) {
                 val oldModel = (newItem.model as ChatMessageModel)
                 val newModel = newItem.model
                 oldModel.statusIcon.value == newModel.statusIcon.value
+            } else {
+                false
             }
         }
     }

@@ -133,6 +133,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
         coreContext.postOnCoreThread {
             chatRoom.removeListener(chatRoomListener)
+            avatarModel.value?.destroy()
             events.value.orEmpty().forEach(EventLogModel::destroy)
             avatarsMap.values.forEach(ContactAvatarModel::destroy)
         }
@@ -163,11 +164,11 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
                     configureChatRoom()
                     chatRoomFoundEvent.postValue(Event(true))
                 } else {
-                    Log.e("Failed to find chat room given local & remote addresses!")
+                    Log.e("$TAG Failed to find chat room given local & remote addresses!")
                     chatRoomFoundEvent.postValue(Event(false))
                 }
             } else {
-                Log.e("Failed to parse local or remote SIP URI as Address!")
+                Log.e("$TAG Failed to parse local or remote SIP URI as Address!")
                 chatRoomFoundEvent.postValue(Event(false))
             }
         }
@@ -233,7 +234,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         } else {
             for (participant in chatRoom.participants) {
                 val friend = coreContext.contactsManager.findContactByAddress(participant.address)
-                if (friend != null) {
+                if (friend != null && !friends.contains(friend)) {
                     friends.add(friend)
                 }
             }
@@ -248,7 +249,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         } else {
             getAvatarModelForAddress(address)
         }
-        avatar.addPicturesFromFriends(friends)
+        avatar.setPicturesFromFriends(friends)
         avatarModel.postValue(avatar)
 
         val history = chatRoom.getHistoryEvents(0)
@@ -330,7 +331,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     @WorkerThread
     private fun getAvatarModelForAddress(address: Address?): ContactAvatarModel {
-        Log.i("Looking for avatar model with address [${address?.asStringUriOnly()}]")
+        Log.i("$TAG Looking for avatar model with address [${address?.asStringUriOnly()}]")
         if (address == null) {
             val fakeFriend = coreContext.core.createFriend()
             return ContactAvatarModel(fakeFriend)

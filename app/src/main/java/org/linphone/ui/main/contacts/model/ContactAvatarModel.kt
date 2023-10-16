@@ -36,7 +36,7 @@ import org.linphone.ui.main.model.isInSecureMode
 import org.linphone.utils.AppUtils
 import org.linphone.utils.TimestampUtils
 
-class ContactAvatarModel @WorkerThread constructor(val friend: Friend) : AbstractAvatarModel() {
+open class ContactAvatarModel @WorkerThread constructor(val friend: Friend) : AbstractAvatarModel() {
     companion object {
         private const val TAG = "[Contact Avatar Model]"
     }
@@ -83,10 +83,9 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) : Abstrac
     }
 
     @WorkerThread
-    fun addPicturesFromFriends(friends: List<Friend>) {
+    fun setPicturesFromFriends(friends: List<Friend>) {
         if (friends.isNotEmpty()) {
             val list = arrayListOf<String>()
-            list.addAll(images.value.orEmpty())
             for (friend in friends) {
                 list.add(getAvatarUri(friend).toString())
             }

@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <import type="org.linphone.core.ConsolidatedPresence" />
+        <import type="org.linphone.core.ChatRoom.SecurityLevel" />
+        <variable
+            name="backClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="scheduleMeetingClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="addParticipantsClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.main.chat.viewmodel.ConversationInfoViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:adjustViewBounds="true"
+            android:padding="15dp"
+            android:onClick="@{backClickListener}"
+            android:src="@drawable/caret_left"
+            app:tint="@color/orange_main_500"
+            app:layout_constraintBottom_toBottomOf="@id/invisible_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/invisible_title"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/main_page_title_style"
+            android:id="@+id/invisible_title"
+            android:visibility="invisible"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/top_bar_height"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/back"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:fillViewport="true"
+            android:background="@color/gray_100"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/invisible_title"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    style="@style/avatar_imageview"
+                    android:id="@+id/avatar"
+                    android:layout_width="@dimen/avatar_big_size"
+                    android:layout_height="@dimen/avatar_big_size"
+                    android:layout_marginTop="8dp"
+                    coilBigAvatar="@{viewModel.avatarModel}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style"
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="16dp"
+                    android:text="@{viewModel.isGroup ? viewModel.subject : viewModel.avatarModel.name, default=`John Doe`}"
+                    android:textSize="14sp"
+                    android:textColor="@color/gray_main2_700"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintTop_toBottomOf="@id/avatar"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/edit_subject" />
+
+                <ImageView
+                    android:id="@+id/edit_subject"
+                    android:layout_width="@dimen/icon_size"
+                    android:layout_height="@dimen/icon_size"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:src="@drawable/pencil_simple"
+                    android:visibility="@{!viewModel.isGroup || viewModel.isReadOnly || !viewModel.isMyselfAdmin ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintTop_toTopOf="@id/title"
+                    app:layout_constraintBottom_toBottomOf="@id/title"
+                    app:layout_constraintStart_toEndOf="@id/title"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <ImageView
+                    android:id="@+id/mute"
+                    android:onClick="@{() -> viewModel.toggleMute()}"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="40dp"
+                    android:background="@drawable/circle_light_blue_button_background"
+                    android:padding="16dp"
+                    android:src="@{viewModel.isMuted ? @drawable/bell_simple : @drawable/bell_simple_slash, default=@drawable/bell_simple_slash}"
+                    app:tint="@color/gray_main2_500"
+                    app:layout_constraintEnd_toStartOf="@id/meeting"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/title" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style"
+                    android:id="@+id/mute_label"
+                    android:onClick="@{() -> viewModel.toggleMute()}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@{viewModel.isMuted ? @string/conversation_action_unmute : @string/conversation_action_mute, default=@string/conversation_action_mute}"
+                    android:textSize="14sp"
+                    app:layout_constraintTop_toBottomOf="@id/mute"
+                    app:layout_constraintStart_toStartOf="@id/mute"
+                    app:layout_constraintEnd_toEndOf="@id/mute"/>
+
+                <ImageView
+                    android:id="@+id/meeting"
+                    android:onClick="@{scheduleMeetingClickListener}"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="40dp"
+                    android:background="@drawable/circle_light_blue_button_background"
+                    android:padding="16dp"
+                    android:src="@drawable/users_three"
+                    app:tint="@color/gray_main2_500"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/mute"
+                    app:layout_constraintTop_toBottomOf="@id/title" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style"
+                    android:id="@+id/meeting_label"
+                    android:onClick="@{scheduleMeetingClickListener}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/meeting_schedule_meeting_label"
+                    android:textSize="14sp"
+                    app:layout_constraintTop_toBottomOf="@id/meeting"
+                    app:layout_constraintStart_toStartOf="@id/meeting"
+                    app:layout_constraintEnd_toEndOf="@id/meeting"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/section_header_style"
+                    android:onClick="@{() -> viewModel.toggleParticipantsExpand()}"
+                    android:id="@+id/participants_label"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:layout_marginStart="26dp"
+                    android:layout_marginEnd="26dp"
+                    android:layout_marginTop="32dp"
+                    android:text="@string/conversation_info_participants_list_title"
+                    android:drawableEnd="@{viewModel.expandParticipants ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
+                    android:drawableTint="@color/gray_main2_600"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/mute_label"/>
+
+                <ImageView
+                    android:id="@+id/participants_background"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:src="@drawable/shape_squircle_white_background"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/participants"
+                    app:layout_constraintBottom_toBottomOf="@id/participants_anchor" />
+
+                <LinearLayout
+                    android:id="@+id/participants"
+                    android:visibility="@{viewModel.expandParticipants ? View.VISIBLE : View.GONE}"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp"
+                    android:padding="10dp"
+                    entries="@{viewModel.participants}"
+                    layout="@{@layout/chat_participant_list_cell}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/participants_label"
+                    app:layout_constraintBottom_toTopOf="@id/add_participants"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/tertiary_button_label_style"
+                    android:id="@+id/add_participants"
+                    android:onClick="@{addParticipantsClickListener}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/tertiary_button_background"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:gravity="center"
+                    android:text="@string/conversation_info_add_participants_label"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:drawableStart="@drawable/plus_circle"
+                    android:drawablePadding="8dp"
+                    android:visibility="@{!viewModel.expandParticipants || !viewModel.isMyselfAdmin || viewModel.isGroup || viewModel.isReadOnly ? View.GONE : View.VISIBLE}"
+                    app:drawableTint="@color/orange_main_500"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/participants"/>
+
+                <View
+                    android:id="@+id/participants_anchor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="16dp"
+                    android:visibility="@{!viewModel.expandParticipants || !viewModel.isMyselfAdmin || viewModel.isGroup || viewModel.isReadOnly ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintTop_toBottomOf="@id/add_participants"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/section_header_style"
+                    android:id="@+id/actions"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:layout_marginStart="26dp"
+                    android:layout_marginEnd="26dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/contact_details_actions_title"
+                    app:layout_constraintVertical_bias="0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/participants_background"
+                    app:layout_constraintBottom_toTopOf="@id/actions_background"/>
+
+                <ImageView
+                    android:id="@+id/actions_background"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:src="@drawable/shape_squircle_white_background"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/actions"
+                    app:layout_constraintBottom_toBottomOf="@id/action_delete" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/context_menu_action_label_style"
+                    android:id="@+id/action_leave_group"
+                    android:onClick="@{() -> viewModel.leaveGroup()}"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="@string/conversation_action_leave_group"
+                    android:drawableStart="@drawable/sign_out"
+                    android:background="@drawable/action_background"
+                    android:visibility="@{viewModel.isGroup &amp;&amp; !viewModel.isReadOnly ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintTop_toTopOf="@id/actions_background"
+                    app:layout_constraintStart_toStartOf="@id/actions_background"
+                    app:layout_constraintEnd_toEndOf="@id/actions_background"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:background="@color/gray_main2_200"
+                    app:layout_constraintStart_toStartOf="@id/action_leave_group"
+                    app:layout_constraintEnd_toEndOf="@id/action_leave_group"
+                    app:layout_constraintTop_toBottomOf="@+id/action_leave_group"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/context_menu_danger_action_label_style"
+                    android:id="@+id/action_delete"
+                    android:onClick="@{() -> viewModel.deleteHistory()}"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/action_background"
+                    android:text="@string/conversation_info_delete_history_action"
+                    android:drawableStart="@drawable/trash_simple"
+                    app:layout_constraintVertical_bias="0"
+                    app:layout_constraintTop_toBottomOf="@id/action_leave_group"
+                    app:layout_constraintBottom_toTopOf="@id/anchor"
+                    app:layout_constraintStart_toStartOf="@id/actions_background"
+                    app:layout_constraintEnd_toEndOf="@id/actions_background"/>
+
+                <View
+                    android:id="@+id/anchor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/screen_bottom_margin"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
