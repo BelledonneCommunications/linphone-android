@@ -5,7 +5,13 @@
     <data>
         <import type="android.view.View" />
         <variable
+            name="replyClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="copyClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="forwardClickListener"
             type="View.OnClickListener" />
         <variable
             name="deleteClickListener"
@@ -23,12 +29,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline"
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/emojis_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.4" />
+            app:constraint_referenced_ids="thumbs_up, love, laughing, surprised, tear, plus, emojis_background"
+            android:visibility="@{model.chatRoomIsReadOnly ? View.GONE : View.VISIBLE}" />
 
         <ImageView
             android:id="@+id/emojis_background"
@@ -36,13 +42,16 @@
             android:layout_height="60dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
+            android:layout_marginBottom="12dp"
             android:src="@drawable/shape_squircle_white_background"
+            app:layout_constraintVertical_bias="1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/guideline"
-            app:layout_constraintBottom_toBottomOf="@id/thumbs_up"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/bubble"/>
 
         <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
             android:id="@+id/thumbs_up"
             android:onClick="@{() -> model.sendReaction(@string/emoji_thumbs_up)}"
             android:layout_width="wrap_content"
@@ -58,6 +67,7 @@
             app:layout_constraintEnd_toStartOf="@id/love"/>
 
         <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
             android:id="@+id/love"
             android:onClick="@{() -> model.sendReaction(@string/emoji_love)}"
             android:layout_width="wrap_content"
@@ -71,6 +81,7 @@
             app:layout_constraintEnd_toStartOf="@id/laughing"/>
 
         <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
             android:id="@+id/laughing"
             android:onClick="@{() -> model.sendReaction(@string/emoji_laughing)}"
             android:layout_width="wrap_content"
@@ -84,6 +95,7 @@
             app:layout_constraintEnd_toStartOf="@id/surprised"/>
 
         <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
             android:id="@+id/surprised"
             android:onClick="@{() -> model.sendReaction(@string/emoji_surprised)}"
             android:layout_width="wrap_content"
@@ -97,6 +109,7 @@
             app:layout_constraintEnd_toStartOf="@id/tear"/>
 
         <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
             android:id="@+id/tear"
             android:onClick="@{() -> model.sendReaction(@string/emoji_tear)}"
             android:layout_width="wrap_content"
@@ -128,14 +141,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginTop="12dp"
-            app:layout_constrainedWidth="true"
-            app:layout_constrainedHeight="true"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintVertical_bias="0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/emojis_background"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/reply"
             model="@{model}"
             layout="@layout/chat_bubble_incoming"/>
@@ -149,11 +157,13 @@
             app:layout_constraintBottom_toBottomOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            style="@style/context_menu_action_label_style"
             android:id="@+id/reply"
+            android:onClick="@{replyClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/menu_reply_to_chat_message"
-            style="@style/context_menu_action_label_style"
+            android:enabled="@{!model.chatRoomIsReadOnly}"
             android:background="@drawable/menu_item_background"
             android:layout_marginBottom="1dp"
             android:drawableStart="@drawable/arrow_bend_up_left_bold"
@@ -162,12 +172,12 @@
             app:layout_constraintEnd_toEndOf="parent"/>
 
         <androidx.appcompat.widget.AppCompatTextView
+            style="@style/context_menu_action_label_style"
             android:id="@+id/copy"
             android:onClick="@{copyClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/menu_copy_chat_message"
-            style="@style/context_menu_action_label_style"
             android:background="@drawable/menu_item_background"
             android:layout_marginBottom="1dp"
             android:drawableStart="@drawable/copy"
@@ -176,11 +186,12 @@
             app:layout_constraintEnd_toEndOf="parent"/>
 
         <androidx.appcompat.widget.AppCompatTextView
+            style="@style/context_menu_action_label_style"
             android:id="@+id/forward"
+            android:onClick="@{forwardClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/menu_forward_chat_message"
-            style="@style/context_menu_action_label_style"
             android:background="@drawable/menu_item_background"
             android:layout_marginBottom="1dp"
             android:drawableStart="@drawable/arrow_bend_up_right_bold"
@@ -189,12 +200,12 @@
             app:layout_constraintEnd_toEndOf="parent"/>
 
         <androidx.appcompat.widget.AppCompatTextView
+            style="@style/context_menu_danger_action_label_style"
             android:id="@+id/delete"
             android:onClick="@{deleteClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/menu_delete_selected_item"
-            style="@style/context_menu_danger_action_label_style"
             android:background="@drawable/menu_item_background"
             android:layout_marginBottom="1dp"
             android:drawableStart="@drawable/trash_simple"

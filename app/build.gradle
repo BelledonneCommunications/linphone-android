@@ -102,7 +102,7 @@ dependencies {
     // https://github.com/tommybuonomo/dotsindicator/blob/master/LICENSE Apache v2.0
     implementation("com.tbuonomo:dotsindicator:5.0")
 
-    implementation platform('com.google.firebase:firebase-bom:32.2.3')
+    implementation platform('com.google.firebase:firebase-bom:32.3.1')
     implementation 'com.google.firebase:firebase-messaging'
 
     //noinspection GradleDynamicVersion

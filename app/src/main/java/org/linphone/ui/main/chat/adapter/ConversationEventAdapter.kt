@@ -45,7 +45,7 @@ class ConversationEventAdapter(
         const val EVENT = 3
     }
 
-    val chatMessageLongPressEvent = MutableLiveData<Event<Pair<ChatMessageModel, Int>>>()
+    val chatMessageLongPressEvent = MutableLiveData<Event<ChatMessageModel>>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
@@ -112,10 +112,7 @@ class ConversationEventAdapter(
                 model = message
 
                 setOnLongClickListener {
-                    val screen = IntArray(2)
-                    root.getLocationOnScreen(screen)
-
-                    chatMessageLongPressEvent.value = Event(Pair(message, screen[1]))
+                    chatMessageLongPressEvent.value = Event(message)
                     true
                 }
 

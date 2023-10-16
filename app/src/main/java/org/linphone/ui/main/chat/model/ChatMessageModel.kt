@@ -55,6 +55,8 @@ class ChatMessageModel @WorkerThread constructor(
 
     val time = TimestampUtils.toString(chatMessage.time)
 
+    val chatRoomIsReadOnly = chatMessage.chatRoom.isReadOnly
+
     val dismissLongPressMenuEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }

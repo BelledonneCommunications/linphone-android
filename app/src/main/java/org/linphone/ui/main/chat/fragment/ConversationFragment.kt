@@ -23,7 +23,6 @@ import android.app.Dialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import android.graphics.Rect
 import android.graphics.RenderEffect
 import android.graphics.Shader
 import android.graphics.drawable.ColorDrawable
@@ -35,7 +34,6 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import androidx.annotation.UiThread
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -43,8 +41,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import kotlin.math.max
-import kotlin.math.min
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatConversationFragmentBinding
@@ -135,8 +131,8 @@ class ConversationFragment : GenericFragment() {
         binding.eventsList.layoutManager = layoutManager
 
         adapter.chatMessageLongPressEvent.observe(viewLifecycleOwner) {
-            it.consume { pair ->
-                showChatMessageLongPressMenu(pair.first, pair.second)
+            it.consume { model ->
+                showChatMessageLongPressMenu(model)
             }
         }
 
@@ -174,7 +170,7 @@ class ConversationFragment : GenericFragment() {
         }
     }
 
-    private fun showChatMessageLongPressMenu(chatMessageModel: ChatMessageModel, yPosition: Int) {
+    private fun showChatMessageLongPressMenu(chatMessageModel: ChatMessageModel) {
         // TODO: handle backward compat for blurring
         val blurEffect = RenderEffect.createBlurEffect(16F, 16F, Shader.TileMode.MIRROR)
         binding.root.setRenderEffect(blurEffect)
@@ -215,22 +211,6 @@ class ConversationFragment : GenericFragment() {
         chatMessageModel.dismissLongPressMenuEvent.observe(viewLifecycleOwner) {
             dialog.dismiss()
         }
-
-        val screenY = yPosition - AppUtils.getDimension(
-            R.dimen.chat_bubble_long_press_menu_bubble_offset
-        )
-        val rect = Rect()
-        binding.root.getGlobalVisibleRect(rect)
-        val height = rect.height()
-        val percent = ((screenY * 100) / height)
-        // To prevent bubble from being behind the bottom actions or the emojis to be out of the screen
-        val guideline = min(max(0.1f, (percent / 100)), 0.4f) // value must be between 0 and 1
-
-        val constraintLayout = layout.constraintLayout
-        val set = ConstraintSet()
-        set.clone(constraintLayout)
-        set.setGuidelinePercent(R.id.guideline, guideline)
-        set.applyTo(constraintLayout)
 
         dialog.setContentView(layout.root)
         dialog.setOnDismissListener {
