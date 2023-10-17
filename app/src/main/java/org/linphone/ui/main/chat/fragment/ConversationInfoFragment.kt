@@ -20,16 +20,22 @@
 package org.linphone.ui.main.chat.fragment
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupWindow
 import androidx.annotation.UiThread
 import androidx.core.view.doOnPreDraw
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatInfoFragmentBinding
+import org.linphone.databinding.ChatParticipantAdminPopupMenuBinding
+import org.linphone.ui.main.chat.model.ParticipantModel
 import org.linphone.ui.main.chat.viewmodel.ConversationInfoViewModel
 import org.linphone.ui.main.fragment.GenericFragment
 
@@ -111,8 +117,56 @@ class ConversationInfoFragment : GenericFragment() {
             }
         }
 
+        viewModel.showParticipantAdminPopupMenuEvent.observe(viewLifecycleOwner) {
+            it.consume { pair ->
+                showParticipantAdminPopupMenu(pair.first, pair.second)
+            }
+        }
+
         binding.setBackClickListener {
             goBack()
         }
+    }
+
+    private fun showParticipantAdminPopupMenu(view: View, participantModel: ParticipantModel) {
+        val popupView: ChatParticipantAdminPopupMenuBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(requireContext()),
+            R.layout.chat_participant_admin_popup_menu,
+            null,
+            false
+        )
+
+        val popupWindow = PopupWindow(
+            popupView.root,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            true
+        )
+
+        val address = participantModel.sipUri
+        val isAdmin = participantModel.isParticipantAdmin
+        popupView.isParticipantAdmin = isAdmin
+
+        popupView.setRemoveParticipantClickListener {
+            Log.w("$TAG Trying to remove participant [$address]")
+            viewModel.removeParticipant(participantModel)
+            popupWindow.dismiss()
+        }
+
+        popupView.setSetAdminClickListener {
+            Log.w("$TAG Trying to give admin rights to participant [$address]")
+            viewModel.giveAdminRightsTo(participantModel)
+            popupWindow.dismiss()
+        }
+
+        popupView.setUnsetAdminClickListener {
+            Log.w("$TAG Trying to remove admin rights from participant [$address]")
+            viewModel.removeAdminRightsFrom(participantModel)
+            popupWindow.dismiss()
+        }
+
+        // Elevation is for showing a shadow around the popup
+        popupWindow.elevation = 20f
+        popupWindow.showAsDropDown(view, 0, 0, Gravity.BOTTOM)
     }
 }

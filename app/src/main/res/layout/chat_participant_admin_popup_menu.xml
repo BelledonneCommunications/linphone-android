@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <import type="android.graphics.Typeface" />
+        <variable
+            name="removeParticipantClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="setAdminClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="unsetAdminClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="isParticipantAdmin"
+            type="Boolean" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_round_popup_menu_background">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/remove_participant"
+            android:onClick="@{removeParticipantClickListener}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:paddingEnd="20dp"
+            android:paddingStart="20dp"
+            android:text="@string/conversation_info_admin_menu_remove_participant"
+            android:textSize="14sp"
+            android:textColor="@color/red_danger_500"
+            android:drawableStart="@drawable/trash_simple"
+            android:drawablePadding="5dp"
+            app:drawableTint="@color/red_danger_500"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/set_admin"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/set_admin"
+            android:onClick="@{setAdminClickListener}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:paddingEnd="20dp"
+            android:paddingStart="20dp"
+            android:visibility="@{isParticipantAdmin ? View.GONE : View.VISIBLE}"
+            android:text="@string/conversation_info_admin_menu_set_participant_admin"
+            android:textSize="14sp"
+            android:textColor="@color/gray_main2_500"
+            android:drawableStart="@drawable/trash_simple"
+            android:drawablePadding="5dp"
+            app:drawableTint="@color/gray_main2_700"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/remove_participant"
+            app:layout_constraintBottom_toTopOf="@id/unset_admin"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/unset_admin"
+            android:onClick="@{unsetAdminClickListener}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:paddingEnd="20dp"
+            android:paddingStart="20dp"
+            android:visibility="@{isParticipantAdmin ? View.VISIBLE : View.GONE, default=gone}"
+            android:text="@string/conversation_info_admin_menu_unset_participant_admin"
+            android:textSize="14sp"
+            android:textColor="@color/gray_main2_500"
+            android:drawableStart="@drawable/trash_simple"
+            android:drawablePadding="5dp"
+            app:drawableTint="@color/gray_main2_700"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/set_admin"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

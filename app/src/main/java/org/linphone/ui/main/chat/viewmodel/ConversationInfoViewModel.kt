@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.main.chat.viewmodel
 
+import android.view.View
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
@@ -59,9 +60,17 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
 
     val chatRoomFoundEvent = MutableLiveData<Event<Boolean>>()
 
-    val groupLeftEvent = MutableLiveData<Event<Boolean>>()
+    val groupLeftEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
 
-    val historyDeletedEvent = MutableLiveData<Event<Boolean>>()
+    val historyDeletedEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
+    val showParticipantAdminPopupMenuEvent: MutableLiveData<Event<Pair<View, ParticipantModel>>> by lazy {
+        MutableLiveData<Event<Pair<View, ParticipantModel>>>()
+    }
 
     private lateinit var chatRoom: ChatRoom
 
@@ -70,21 +79,34 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
     private val chatRoomListener = object : ChatRoomListenerStub() {
         @WorkerThread
         override fun onParticipantAdded(chatRoom: ChatRoom, eventLog: EventLog) {
+            Log.i("$TAG A participant has been added to the group [${chatRoom.subject}]")
+            // TODO: show toast
             computeParticipantsList()
         }
 
         @WorkerThread
         override fun onParticipantRemoved(chatRoom: ChatRoom, eventLog: EventLog) {
+            Log.i("$TAG A participant has been removed from the group [${chatRoom.subject}]")
+            // TODO: show toast
             computeParticipantsList()
         }
 
         @WorkerThread
         override fun onParticipantAdminStatusChanged(chatRoom: ChatRoom, eventLog: EventLog) {
+            Log.i(
+                "$TAG A participant has been given/removed administration rights for group [${chatRoom.subject}]"
+            )
+            // TODO: show toast
+            // TODO FIXME: list doesn't have the changes...
             computeParticipantsList()
         }
 
         @WorkerThread
         override fun onSubjectChanged(chatRoom: ChatRoom, eventLog: EventLog) {
+            Log.i(
+                "$TAG Chat room [${LinphoneUtils.getChatRoomId(chatRoom)}] has a new subject [${chatRoom.subject}]"
+            )
+            // TODO: show toast
             subject.postValue(chatRoom.subject)
         }
     }
@@ -177,6 +199,69 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
         expandParticipants.value = expandParticipants.value == false
     }
 
+    @UiThread
+    fun removeParticipant(participantModel: ParticipantModel) {
+        coreContext.postOnCoreThread {
+            val address = participantModel.address
+            Log.i(
+                "$TAG Removing participant [$address] from the conversation [${LinphoneUtils.getChatRoomId(
+                    chatRoom
+                )}]"
+            )
+            val participant = chatRoom.participants.find {
+                it.address.weakEqual(address)
+            }
+            if (participant != null) {
+                chatRoom.removeParticipant(participant)
+                Log.i("$TAG Participant removed")
+            } else {
+                Log.e("$TAG Couldn't find participant matching address [$address]!")
+            }
+        }
+    }
+
+    @UiThread
+    fun giveAdminRightsTo(participantModel: ParticipantModel) {
+        coreContext.postOnCoreThread {
+            val address = participantModel.address
+            Log.i(
+                "$TAG Granting admin rights to participant [$address] from the conversation [${LinphoneUtils.getChatRoomId(
+                    chatRoom
+                )}]"
+            )
+            val participant = chatRoom.participants.find {
+                it.address.weakEqual(address)
+            }
+            if (participant != null) {
+                chatRoom.setParticipantAdminStatus(participant, true)
+                Log.i("$TAG Participant will become admin soon")
+            } else {
+                Log.e("$TAG Couldn't find participant matching address [$address]!")
+            }
+        }
+    }
+
+    @UiThread
+    fun removeAdminRightsFrom(participantModel: ParticipantModel) {
+        coreContext.postOnCoreThread {
+            val address = participantModel.address
+            Log.i(
+                "$TAG Removing admin rights from participant [$address] from the conversation [${LinphoneUtils.getChatRoomId(
+                    chatRoom
+                )}]"
+            )
+            val participant = chatRoom.participants.find {
+                it.address.weakEqual(address)
+            }
+            if (participant != null) {
+                chatRoom.setParticipantAdminStatus(participant, false)
+                Log.i("$TAG Participant will be removed as admin soon")
+            } else {
+                Log.e("$TAG Couldn't find participant matching address [$address]!")
+            }
+        }
+    }
+
     @WorkerThread
     private fun configureChatRoom() {
         isMuted.postValue(chatRoom.muted)
@@ -235,12 +320,9 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
     }
 
     @WorkerThread
-    private fun getParticipantModelForAddress(address: Address?, isAdmin: Boolean): ParticipantModel {
+    private fun getParticipantModelForAddress(address: Address, isAdmin: Boolean): ParticipantModel {
         Log.i("$TAG Looking for participant model with address [${address?.asStringUriOnly()}]")
-        if (address == null) {
-            val fakeFriend = coreContext.core.createFriend()
-            return ParticipantModel(fakeFriend, isMyselfAdmin.value == true, false)
-        }
+        val selfAdmin = chatRoom.me?.isAdmin == true
 
         val clone = address.clone()
         clone.clean()
@@ -251,11 +333,17 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
 
         val friend = coreContext.contactsManager.findContactByAddress(clone)
         val avatar = if (friend != null) {
-            ParticipantModel(friend, isMyselfAdmin.value == true, isAdmin)
+            ParticipantModel(friend, clone, selfAdmin, isAdmin) { view, model ->
+                // openMenu
+                showParticipantAdminPopupMenuEvent.postValue(Event(Pair(view, model)))
+            }
         } else {
             val fakeFriend = coreContext.core.createFriend()
             fakeFriend.address = clone
-            ParticipantModel(fakeFriend, isMyselfAdmin.value == true, isAdmin)
+            ParticipantModel(fakeFriend, clone, selfAdmin, isAdmin) { view, model ->
+                // openMenu
+                showParticipantAdminPopupMenuEvent.postValue(Event(Pair(view, model)))
+            }
         }
 
         avatarsMap[key] = avatar

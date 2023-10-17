@@ -81,6 +81,7 @@
 
         <ImageView
             android:id="@+id/participant_menu"
+            android:onClick="@{() -> model.openMenu(participantMenu)}"
             android:layout_width="@dimen/icon_size"
             android:layout_height="@dimen/icon_size"
             android:src="@drawable/dots_three_vertical"

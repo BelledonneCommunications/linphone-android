@@ -224,7 +224,7 @@
                     android:ellipsize="end"
                     android:drawableStart="@drawable/plus_circle"
                     android:drawablePadding="8dp"
-                    android:visibility="@{!viewModel.expandParticipants || !viewModel.isMyselfAdmin || viewModel.isGroup || viewModel.isReadOnly ? View.GONE : View.VISIBLE}"
+                    android:visibility="@{!viewModel.expandParticipants || !viewModel.isMyselfAdmin || !viewModel.isGroup || viewModel.isReadOnly ? View.GONE : View.VISIBLE}"
                     app:drawableTint="@color/orange_main_500"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -234,7 +234,7 @@
                     android:id="@+id/participants_anchor"
                     android:layout_width="wrap_content"
                     android:layout_height="16dp"
-                    android:visibility="@{!viewModel.expandParticipants || !viewModel.isMyselfAdmin || viewModel.isGroup || viewModel.isReadOnly ? View.GONE : View.VISIBLE}"
+                    android:visibility="@{!viewModel.expandParticipants || !viewModel.isMyselfAdmin || !viewModel.isGroup || viewModel.isReadOnly ? View.GONE : View.VISIBLE}"
                     app:layout_constraintTop_toBottomOf="@id/add_participants"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
