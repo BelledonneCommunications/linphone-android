@@ -22,6 +22,13 @@
             android:layout_height="match_parent"
             android:background="@color/white">
 
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/multiple_selection_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="group_name_title, group_name, required_label, create_group, multiple_selection, multiple_selection_count"
+                android:visibility="@{viewModel.multipleSelectionMode ? View.VISIBLE : View.GONE, default=gone}" />
+
             <ImageView
                 android:id="@+id/back"
                 android:layout_width="wrap_content"
@@ -49,13 +56,14 @@
 
             <ImageView
                 android:id="@+id/create_group"
+                android:onClick="@{() -> viewModel.createGroupChatRoom()}"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:padding="15dp"
                 android:adjustViewBounds="true"
                 android:src="@drawable/check"
-                android:visibility="@{viewModel.multipleSelectionMode ? View.VISIBLE : View.GONE, default=gone}"
-                app:tint="@color/orange_main_500"
+                android:enabled="@{viewModel.groupChatRoomCreateButtonEnabled}"
+                app:tint="@color/primary_color_selector"
                 app:layout_constraintBottom_toBottomOf="@id/title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/title" />
@@ -70,24 +78,69 @@
                 app:layout_constraintTop_toBottomOf="@id/title" />
 
             <androidx.appcompat.widget.AppCompatTextView
+                style="@style/header_style"
+                android:id="@+id/group_name_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/new_conversation_group_name_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/background" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_300"
+                android:id="@+id/required_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="25dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/required"
+                android:textSize="12sp"
+                android:textColor="@color/gray_main2_600"
+                app:layout_constraintEnd_toEndOf="@id/group_name"
+                app:layout_constraintTop_toTopOf="@id/background" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                style="@style/default_text_style"
+                android:id="@+id/group_name"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="5dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="@={viewModel.subject, default=`Dummy subject`}"
+                android:hint="@string/new_conversation_group_name_title"
+                android:textSize="14sp"
+                android:textColor="@color/gray_main2_600"
+                android:maxLines="1"
+                android:background="@drawable/edit_text_background"
+                android:inputType="text|textCapWords"
+                app:layout_constraintWidth_max="@dimen/text_input_max_width"
+                app:layout_constraintTop_toBottomOf="@id/group_name_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style_300"
                 android:id="@+id/multiple_selection_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
+                android:layout_marginTop="20dp"
                 android:text="@{viewModel.selectionCount, default=`0 selected`}"
                 android:textSize="12sp"
                 android:textColor="@color/black"
-                android:visibility="@{viewModel.multipleSelectionMode ? View.VISIBLE : View.GONE, default=gone}"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/background" />
+                app:layout_constraintTop_toBottomOf="@id/group_name" />
 
             <HorizontalScrollView
                 android:id="@+id/multiple_selection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:visibility="@{viewModel.multipleSelectionMode ? View.VISIBLE : View.GONE, default=gone}"
+                android:layout_marginTop="10dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/multiple_selection_count">
 

@@ -21,6 +21,7 @@ package org.linphone.ui.main.chat.viewmodel
 
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlin.collections.ArrayList
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -54,6 +55,10 @@ class StartConversationViewModel @UiThread constructor() : AddressSelectionViewM
 
     val hideGroupChatButton = MutableLiveData<Boolean>()
 
+    val subject = MutableLiveData<String>()
+
+    val groupChatRoomCreateButtonEnabled = MediatorLiveData<Boolean>()
+
     val operationInProgress = MutableLiveData<Boolean>()
 
     val chatRoomCreationErrorEvent: MutableLiveData<Event<String>> by lazy {
@@ -68,10 +73,10 @@ class StartConversationViewModel @UiThread constructor() : AddressSelectionViewM
         @WorkerThread
         override fun onStateChanged(chatRoom: ChatRoom, newState: ChatRoom.State?) {
             val state = chatRoom.state
-            Log.i("$TAG Chat room state changed: [$state]")
+            val id = LinphoneUtils.getChatRoomId(chatRoom)
+            Log.i("$TAG Chat room [$id] (${chatRoom.subject}) state changed: [$state]")
 
             if (state == ChatRoom.State.Created) {
-                val id = LinphoneUtils.getChatRoomId(chatRoom)
                 Log.i("$TAG Chat room [$id] successfully created")
                 chatRoom.removeListener(this)
                 operationInProgress.postValue(false)
@@ -84,7 +89,6 @@ class StartConversationViewModel @UiThread constructor() : AddressSelectionViewM
                     )
                 )
             } else if (state == ChatRoom.State.CreationFailed) {
-                val id = LinphoneUtils.getChatRoomId(chatRoom)
                 Log.e("$TAG Chat room [$id] creation has failed!")
                 chatRoom.removeListener(this)
                 operationInProgress.postValue(false)
@@ -121,6 +125,18 @@ class StartConversationViewModel @UiThread constructor() : AddressSelectionViewM
     }
 
     init {
+        groupChatRoomCreateButtonEnabled.postValue(false)
+        groupChatRoomCreateButtonEnabled.addSource(selection) {
+            groupChatRoomCreateButtonEnabled.postValue(
+                subject.value.orEmpty().isNotEmpty() && selection.value.orEmpty().isNotEmpty()
+            )
+        }
+        groupChatRoomCreateButtonEnabled.addSource(subject) {
+            groupChatRoomCreateButtonEnabled.postValue(
+                subject.value.orEmpty().isNotEmpty() && selection.value.orEmpty().isNotEmpty()
+            )
+        }
+
         updateGroupChatButtonVisibility()
 
         coreContext.postOnCoreThread { core ->
@@ -148,6 +164,79 @@ class StartConversationViewModel @UiThread constructor() : AddressSelectionViewM
     @UiThread
     fun clearFilter() {
         searchFilter.value = ""
+    }
+
+    @UiThread
+    fun createGroupChatRoom() {
+        coreContext.postOnCoreThread { core ->
+            val account = core.defaultAccount
+            if (account == null) {
+                Log.e(
+                    "$TAG No default account found, can't create group conversation!"
+                )
+                return@postOnCoreThread
+            }
+
+            operationInProgress.postValue(true)
+
+            val groupChatRoomSubject = subject.value.orEmpty()
+            val params: ChatRoomParams = coreContext.core.createDefaultChatRoomParams()
+            params.isGroupEnabled = true
+            params.subject = groupChatRoomSubject
+            params.backend = ChatRoom.Backend.FlexisipChat
+            params.isEncryptionEnabled = true
+
+            val participants = arrayListOf<Address>()
+            for (participant in selection.value.orEmpty()) {
+                participants.add(participant.address)
+            }
+            val localAddress = account.params.identityAddress
+
+            val participantsArray = arrayOf<Address>()
+            val chatRoom = core.createChatRoom(
+                params,
+                localAddress,
+                participants.toArray(participantsArray)
+            )
+            if (chatRoom != null) {
+                if (params.backend == ChatRoom.Backend.FlexisipChat) {
+                    if (chatRoom.state == ChatRoom.State.Created) {
+                        val id = LinphoneUtils.getChatRoomId(chatRoom)
+                        Log.i("$TAG Group chat room [$id] ($groupChatRoomSubject) has been created")
+                        operationInProgress.postValue(false)
+                        chatRoomCreatedEvent.postValue(
+                            Event(
+                                Pair(
+                                    chatRoom.localAddress.asStringUriOnly(),
+                                    chatRoom.peerAddress.asStringUriOnly()
+                                )
+                            )
+                        )
+                    } else {
+                        Log.i(
+                            "$TAG Chat room [$groupChatRoomSubject] isn't in Created state yet, wait for it"
+                        )
+                        chatRoom.addListener(chatRoomListener)
+                    }
+                } else {
+                    val id = LinphoneUtils.getChatRoomId(chatRoom)
+                    Log.i("$TAG Chat room successfully created [$id] ($groupChatRoomSubject)")
+                    operationInProgress.postValue(false)
+                    chatRoomCreatedEvent.postValue(
+                        Event(
+                            Pair(
+                                chatRoom.localAddress.asStringUriOnly(),
+                                chatRoom.peerAddress.asStringUriOnly()
+                            )
+                        )
+                    )
+                }
+            } else {
+                Log.e("$TAG Failed to create group chat room [$groupChatRoomSubject]!")
+                operationInProgress.postValue(false)
+                chatRoomCreationErrorEvent.postValue(Event("Error!")) // TODO FIXME: use translated string
+            }
+        }
     }
 
     @WorkerThread

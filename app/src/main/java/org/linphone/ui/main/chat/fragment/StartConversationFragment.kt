@@ -26,7 +26,7 @@ import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.core.view.doOnPreDraw
-import androidx.navigation.navGraphViewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.R
 import org.linphone.core.Address
@@ -49,9 +49,7 @@ class StartConversationFragment : GenericAddressPickerFragment() {
 
     private lateinit var binding: StartChatFragmentBinding
 
-    private val viewModel: StartConversationViewModel by navGraphViewModels(
-        R.id.main_nav_graph
-    )
+    private lateinit var viewModel: StartConversationViewModel
 
     private lateinit var adapter: ContactsAndSuggestionsListAdapter
 
@@ -69,6 +67,8 @@ class StartConversationFragment : GenericAddressPickerFragment() {
         postponeEnterTransition()
 
         binding.lifecycleOwner = viewLifecycleOwner
+
+        viewModel = ViewModelProvider(this)[StartConversationViewModel::class.java]
         binding.viewModel = viewModel
 
         binding.setBackClickListener {
