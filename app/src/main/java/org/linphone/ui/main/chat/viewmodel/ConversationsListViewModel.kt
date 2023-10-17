@@ -128,9 +128,13 @@ class ConversationsListViewModel @UiThread constructor() : AbstractTopBarViewMod
 
             val participants = chatRoom.participants
             val found = participants.find {
-                it.address.asStringUriOnly().contains(filter)
+                it.address.asStringUriOnly().contains(filter, ignoreCase = true)
             }
-            if (found != null || chatRoom.peerAddress.asStringUriOnly().contains(filter)) {
+            if (
+                found != null ||
+                chatRoom.peerAddress.asStringUriOnly().contains(filter, ignoreCase = true) ||
+                chatRoom.subject.orEmpty().contains(filter, ignoreCase = true)
+            ) {
                 val model = ConversationModel(chatRoom)
                 list.add(model)
                 count += 1
