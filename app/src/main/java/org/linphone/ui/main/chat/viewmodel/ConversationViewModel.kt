@@ -333,20 +333,22 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         val eventsList = arrayListOf<EventLogModel>()
         val groupedEventLogs = arrayListOf<EventLog>()
         for (event in history) {
-            // TODO: let the SDK do it
-            if (event.type == EventLog.Type.ConferenceChatMessage) {
-                val message = event.chatMessage ?: continue
-                val fromAddress = message.fromAddress
-                val model = getAvatarModelForAddress(fromAddress)
-                if (
-                    !model.name.value.orEmpty().contains(filter, ignoreCase = true) &&
-                    !fromAddress.asStringUriOnly().contains(filter, ignoreCase = true) &&
-                    !message.utf8Text.orEmpty().contains(filter, ignoreCase = true)
-                ) {
+            if (filter.isNotEmpty()) {
+                // TODO: let the SDK do it
+                if (event.type == EventLog.Type.ConferenceChatMessage) {
+                    val message = event.chatMessage ?: continue
+                    val fromAddress = message.fromAddress
+                    val model = getAvatarModelForAddress(fromAddress)
+                    if (
+                        !model.name.value.orEmpty().contains(filter, ignoreCase = true) &&
+                        !fromAddress.asStringUriOnly().contains(filter, ignoreCase = true) &&
+                        !message.utf8Text.orEmpty().contains(filter, ignoreCase = true)
+                    ) {
+                        continue
+                    }
+                } else {
                     continue
                 }
-            } else {
-                continue
             }
 
             if (groupedEventLogs.isEmpty()) {
