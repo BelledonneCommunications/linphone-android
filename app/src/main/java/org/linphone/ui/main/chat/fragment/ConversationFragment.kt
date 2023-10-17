@@ -41,6 +41,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatConversationFragmentBinding
@@ -51,6 +52,7 @@ import org.linphone.ui.main.chat.viewmodel.ConversationViewModel
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
+import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.hideKeyboard
 import org.linphone.utils.showKeyboard
 
@@ -193,6 +195,20 @@ class ConversationFragment : GenericFragment() {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val id = LinphoneUtils.getChatRoomId(args.localSipUri, args.remoteSipUri)
+        Log.i("$TAG Asking notifications manager not to notify chat messages for chat room [$id]")
+        coreContext.notificationsManager.setCurrentlyDisplayedChatRoomId(id)
+    }
+
+    override fun onPause() {
+        coreContext.notificationsManager.resetCurrentlyDisplayedChatRoomId()
+
+        super.onPause()
     }
 
     private fun showChatMessageLongPressMenu(chatMessageModel: ChatMessageModel) {

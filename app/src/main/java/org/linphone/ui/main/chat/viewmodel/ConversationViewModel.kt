@@ -74,8 +74,6 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     private lateinit var chatRoom: ChatRoom
 
-    private var currentFilter = ""
-
     private val avatarsMap = hashMapOf<String, ContactAvatarModel>()
 
     private val chatRoomListener = object : ChatRoomListenerStub() {

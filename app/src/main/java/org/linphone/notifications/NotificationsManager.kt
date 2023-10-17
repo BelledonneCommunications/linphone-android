@@ -132,8 +132,15 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             Log.i("$TAG Received ${messages.size} aggregated messages")
             if (corePreferences.disableChat) return
 
+            val id = LinphoneUtils.getChatRoomId(chatRoom.localAddress, chatRoom.peerAddress)
+            if (id == currentlyDisplayedChatRoomId) {
+                Log.i(
+                    "$TAG Do not notify received messages for currently displayed chat room [$id]"
+                )
+                return
+            }
+
             if (chatRoom.muted) {
-                val id = LinphoneUtils.getChatRoomId(chatRoom.localAddress, chatRoom.peerAddress)
                 Log.i("$TAG Chat room $id has been muted")
                 return
             }
@@ -158,8 +165,15 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             )
             if (corePreferences.disableChat) return
 
+            val id = LinphoneUtils.getChatRoomId(chatRoom.localAddress, chatRoom.peerAddress)
+            if (id == currentlyDisplayedChatRoomId) {
+                Log.i(
+                    "$TAG Do not notify received reaction for currently displayed chat room [$id]"
+                )
+                return
+            }
+
             if (chatRoom.muted) {
-                val id = LinphoneUtils.getChatRoomId(chatRoom.localAddress, chatRoom.peerAddress)
                 Log.i("$TAG Chat room $id has been muted")
                 return
             }
@@ -273,6 +287,8 @@ class NotificationsManager @MainThread constructor(private val context: Context)
     private val chatNotificationsMap: HashMap<String, Notifiable> = HashMap()
     private val previousChatNotifications: ArrayList<Int> = arrayListOf()
 
+    private var currentlyDisplayedChatRoomId: String = ""
+
     init {
         createServiceChannel()
         createIncomingCallNotificationChannel()
@@ -292,6 +308,16 @@ class NotificationsManager @MainThread constructor(private val context: Context)
                 previousChatNotifications.add(notification.id)
             }
         }
+    }
+
+    @AnyThread
+    fun setCurrentlyDisplayedChatRoomId(id: String) {
+        currentlyDisplayedChatRoomId = id
+    }
+
+    @AnyThread
+    fun resetCurrentlyDisplayedChatRoomId() {
+        currentlyDisplayedChatRoomId = ""
     }
 
     @MainThread

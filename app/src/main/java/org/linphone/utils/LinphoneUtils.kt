@@ -196,7 +196,12 @@ class LinphoneUtils {
             localSipUri.clean()
             val remoteSipUri = remoteAddress.clone()
             remoteSipUri.clean()
-            return "${localSipUri.asStringUriOnly()}~${remoteSipUri.asStringUriOnly()}"
+            return getChatRoomId(localSipUri.asStringUriOnly(), remoteSipUri.asStringUriOnly())
+        }
+
+        @AnyThread
+        fun getChatRoomId(localSipUri: String, remoteSipUri: String): String {
+            return "$localSipUri~$remoteSipUri"
         }
 
         @WorkerThread
