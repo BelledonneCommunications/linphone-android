@@ -43,9 +43,22 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:text="@string/new_conversation_title"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/create_group"
                 app:layout_constraintStart_toEndOf="@id/back"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/create_group"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:padding="15dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/check"
+                android:visibility="@{viewModel.multipleSelectionMode ? View.VISIBLE : View.GONE, default=gone}"
+                app:tint="@color/orange_main_500"
+                app:layout_constraintBottom_toBottomOf="@id/title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/title" />
 
             <View
                 android:id="@+id/background"
@@ -56,13 +69,44 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title" />
 
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_300"
+                android:id="@+id/multiple_selection_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:text="@{viewModel.selectionCount, default=`0 selected`}"
+                android:textSize="12sp"
+                android:textColor="@color/black"
+                android:visibility="@{viewModel.multipleSelectionMode ? View.VISIBLE : View.GONE, default=gone}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/background" />
+
+            <HorizontalScrollView
+                android:id="@+id/multiple_selection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:visibility="@{viewModel.multipleSelectionMode ? View.VISIBLE : View.GONE, default=gone}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/multiple_selection_count">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    entries="@{viewModel.selection}"
+                    layout="@{@layout/address_selected_list_cell}"/>
+
+            </HorizontalScrollView>
+
             <androidx.appcompat.widget.AppCompatEditText
                 style="@style/default_text_style"
                 android:id="@+id/search_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/edit_text_background"
                 android:drawableStart="@drawable/magnifying_glass"
@@ -80,7 +124,7 @@
                 app:layout_constraintWidth_max="@dimen/text_input_max_width"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/title" />
+                app:layout_constraintTop_toBottomOf="@id/multiple_selection" />
 
             <ImageView
                 android:id="@+id/clear_field"
@@ -100,7 +144,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:constraint_referenced_ids="group_chat_icon, gradient_background, group_chat_label"
-                android:visibility="@{viewModel.hideGroupChatButton || viewModel.searchFilter.length() > 0 ? View.GONE : View.VISIBLE}" />
+                android:visibility="@{viewModel.hideGroupChatButton || viewModel.multipleSelectionMode || viewModel.searchFilter.length() > 0 ? View.GONE : View.VISIBLE}" />
 
             <!-- margin start must be half the size of the group_call_icon below -->
             <View
@@ -116,6 +160,7 @@
 
             <ImageView
                 android:id="@+id/group_chat_icon"
+                android:onClick="@{() -> viewModel.switchToMultipleSelectionMode()}"
                 android:layout_width="44dp"
                 android:layout_height="44dp"
                 android:layout_marginStart="16dp"
@@ -130,6 +175,7 @@
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style_800"
                 android:id="@+id/group_chat_label"
+                android:onClick="@{() -> viewModel.switchToMultipleSelectionMode()}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -197,6 +243,10 @@
                 app:layout_constraintBottom_toBottomOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <include
+            layout="@layout/operation_in_progress"
+            bind:visibility="@{viewModel.operationInProgress}" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

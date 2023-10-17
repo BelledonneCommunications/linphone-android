@@ -23,8 +23,10 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.core.Address
+import org.linphone.core.Friend
 
 class ContactNumberOrAddressModel @WorkerThread constructor(
+    val friend: Friend,
     val address: Address?,
     val displayedValue: String,
     val isEnabled: Boolean,

@@ -19,34 +19,30 @@
  */
 package org.linphone.ui.main.chat.fragment
 
-import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
 import androidx.core.view.doOnPreDraw
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
-import org.linphone.contacts.getListOfSipAddressesAndPhoneNumbers
+import org.linphone.core.Address
+import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.databinding.StartChatFragmentBinding
 import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.chat.viewmodel.StartConversationViewModel
-import org.linphone.ui.main.contacts.model.ContactNumberOrAddressClickListener
-import org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel
-import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
-import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.contacts.model.ContactAvatarModel
+import org.linphone.ui.main.fragment.GenericAddressPickerFragment
 import org.linphone.ui.main.history.adapter.ContactsAndSuggestionsListAdapter
-import org.linphone.ui.main.history.model.ContactOrSuggestionModel
-import org.linphone.ui.main.model.isInSecureMode
-import org.linphone.utils.DialogUtils
+import org.linphone.ui.main.model.SelectedAddressModel
 import org.linphone.utils.Event
 
 @UiThread
-class StartConversationFragment : GenericFragment() {
+class StartConversationFragment : GenericAddressPickerFragment() {
     companion object {
         private const val TAG = "[Start Conversation Fragment]"
     }
@@ -58,27 +54,6 @@ class StartConversationFragment : GenericFragment() {
     )
 
     private lateinit var adapter: ContactsAndSuggestionsListAdapter
-
-    private val listener = object : ContactNumberOrAddressClickListener {
-        @UiThread
-        override fun onClicked(model: ContactNumberOrAddressModel) {
-            val address = model.address
-            coreContext.postOnCoreThread {
-                if (address != null) {
-                    Log.i(
-                        "$TAG Creating a 1-1 conversation with [${model.address.asStringUriOnly()}]"
-                    )
-                    viewModel.createOneToOneChatRoomWith(model.address)
-                }
-            }
-        }
-
-        @UiThread
-        override fun onLongPress(model: ContactNumberOrAddressModel) {
-        }
-    }
-
-    private var numberOrAddressPickerDialog: Dialog? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -106,7 +81,7 @@ class StartConversationFragment : GenericFragment() {
 
         adapter.contactClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
-                createChatRoom(model)
+                handleClickOnContactModel(model)
             }
         }
 
@@ -154,69 +129,16 @@ class StartConversationFragment : GenericFragment() {
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-
-        numberOrAddressPickerDialog?.dismiss()
-        numberOrAddressPickerDialog = null
-    }
-
-    private fun createChatRoom(model: ContactOrSuggestionModel) {
-        coreContext.postOnCoreThread { core ->
-            val friend = model.friend
-            if (friend == null) {
-                Log.i("$TAG Friend is null, creating conversation with [${model.address}]")
-                viewModel.createOneToOneChatRoomWith(model.address)
-                return@postOnCoreThread
+    @WorkerThread
+    override fun onAddressSelected(address: Address, friend: Friend) {
+        if (viewModel.multipleSelectionMode.value == true) {
+            val avatarModel = ContactAvatarModel(friend)
+            val model = SelectedAddressModel(address, avatarModel) {
+                viewModel.removeAddressModelFromSelection(it)
             }
-
-            val addressesCount = friend.addresses.size
-            val numbersCount = friend.phoneNumbers.size
-
-            // Do not consider phone numbers if default account is in secure mode
-            val enablePhoneNumbers = core.defaultAccount?.isInSecureMode() != true
-
-            if (addressesCount == 1 && (numbersCount == 0 || !enablePhoneNumbers)) {
-                Log.i(
-                    "$TAG Only 1 SIP address found for contact [${friend.name}], creating conversation directly"
-                )
-                val address = friend.addresses.first()
-                viewModel.createOneToOneChatRoomWith(address)
-            } else if (addressesCount == 0 && numbersCount == 1 && enablePhoneNumbers) {
-                val number = friend.phoneNumbers.first()
-                val address = core.interpretUrl(number, true)
-                if (address != null) {
-                    Log.i(
-                        "$TAG Only 1 phone number found for contact [${friend.name}], creating conversation directly"
-                    )
-                    viewModel.createOneToOneChatRoomWith(address)
-                } else {
-                    Log.e("$TAG Failed to interpret phone number [$number] as SIP address")
-                }
-            } else {
-                val list = friend.getListOfSipAddressesAndPhoneNumbers(listener)
-                Log.i(
-                    "$TAG [${list.size}] numbers or addresses found for contact [${friend.name}], showing selection dialog"
-                )
-
-                coreContext.postOnMainThread {
-                    val numberOrAddressModel = NumberOrAddressPickerDialogModel(list)
-                    val dialog =
-                        DialogUtils.getNumberOrAddressPickerDialog(
-                            requireActivity(),
-                            numberOrAddressModel
-                        )
-                    numberOrAddressPickerDialog = dialog
-
-                    numberOrAddressModel.dismissEvent.observe(viewLifecycleOwner) { event ->
-                        event.consume {
-                            dialog.dismiss()
-                        }
-                    }
-
-                    dialog.show()
-                }
-            }
+            viewModel.addAddressModelToSelection(model)
+        } else {
+            viewModel.createOneToOneChatRoomWith(address)
         }
     }
 }

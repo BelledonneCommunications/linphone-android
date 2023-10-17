@@ -22,8 +22,7 @@ package org.linphone.ui.main.chat.viewmodel
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import java.util.ArrayList
+import kotlin.collections.ArrayList
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -39,11 +38,12 @@ import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.history.model.ContactOrSuggestionModel
 import org.linphone.ui.main.model.isInSecureMode
+import org.linphone.ui.main.viewmodel.AddressSelectionViewModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
-class StartConversationViewModel @UiThread constructor() : ViewModel() {
+class StartConversationViewModel @UiThread constructor() : AddressSelectionViewModel() {
     companion object {
         private const val TAG = "[Start Conversation ViewModel]"
     }

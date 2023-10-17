@@ -47,6 +47,11 @@
     <string name="next">next</string>
     <string name="start">Start</string>
 
+    <plurals name="selection_count_label">
+        <item quantity="one">%s selected</item>
+        <item quantity="other">%s selected</item>
+    </plurals>
+
     <string name="notification_channel_call_name">&appName; active calls notifications</string>
     <string name="notification_channel_incoming_call_name">&appName; incoming calls notifications</string>
     <string name="notification_channel_service_name">&appName; service notification</string>

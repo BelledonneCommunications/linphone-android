@@ -354,6 +354,7 @@ fun Friend.getListOfSipAddressesAndPhoneNumbers(listener: ContactNumberOrAddress
 
     for (address in addresses) {
         val data = ContactNumberOrAddressModel(
+            this,
             address,
             address.asStringUriOnly(),
             true, // SIP addresses are always enabled
@@ -385,6 +386,7 @@ fun Friend.getListOfSipAddressesAndPhoneNumbers(listener: ContactNumberOrAddress
                     address.clean() // To remove ;user=phone
                     presenceAddress = address
                     val data = ContactNumberOrAddressModel(
+                        this,
                         address,
                         address.asStringUriOnly(),
                         true, // SIP addresses are always enabled
@@ -412,6 +414,7 @@ fun Friend.getListOfSipAddressesAndPhoneNumbers(listener: ContactNumberOrAddress
             number.label ?: ""
         )
         val data = ContactNumberOrAddressModel(
+            this,
             address,
             number.phoneNumber,
             enablePhoneNumbers,

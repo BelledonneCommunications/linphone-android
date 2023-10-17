@@ -31,8 +31,6 @@ class ContactsAndSuggestionsListAdapter(
         private const val SUGGESTION_TYPE = 1
     }
 
-    var selectedAdapterPosition = -1
-
     val contactClickedEvent: MutableLiveData<Event<ContactOrSuggestionModel>> by lazy {
         MutableLiveData<Event<ContactOrSuggestionModel>>()
     }
@@ -108,8 +106,6 @@ class ContactsAndSuggestionsListAdapter(
 
                 lifecycleOwner = viewLifecycleOwner
 
-                binding.root.isSelected = bindingAdapterPosition == selectedAdapterPosition
-
                 binding.setOnClickListener {
                     contactClickedEvent.value = Event(contactOrSuggestionModel)
                 }
@@ -128,8 +124,6 @@ class ContactsAndSuggestionsListAdapter(
                 model = contactOrSuggestionModel
 
                 lifecycleOwner = viewLifecycleOwner
-
-                binding.root.isSelected = bindingAdapterPosition == selectedAdapterPosition
 
                 binding.setOnClickListener {
                     contactClickedEvent.value = Event(contactOrSuggestionModel)
