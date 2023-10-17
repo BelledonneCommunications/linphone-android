@@ -200,6 +200,7 @@ class StartCallFragment : GenericFragment() {
         coreContext.postOnCoreThread { core ->
             val friend = model.friend
             if (friend == null) {
+                Log.i("$TAG Friend is null, starting call with [${model.address}]")
                 coreContext.startCall(model.address)
                 return@postOnCoreThread
             }

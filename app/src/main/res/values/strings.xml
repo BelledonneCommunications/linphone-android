@@ -34,6 +34,8 @@
     <string name="website_translate_weblate_url" translatable="false">https://weblate.linphone.org/</string>
     <string name="website_open_source_licences_usage_url" translatable="false">https://wiki.linphone.org/xwiki/wiki/public/view/Linphone/Third%20party%20components%20/#Hlinphone-android</string>
 
+    <string name="conversation_one_to_one_hidden_subject" translatable="false">Dummy subject</string>
+
     <string name="sip_address">SIP address</string>
     <string name="sip_address_display_name">Display name</string>
     <string name="sip_address_domain">Domain</string>

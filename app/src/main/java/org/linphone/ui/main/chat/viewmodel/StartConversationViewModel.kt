@@ -26,7 +26,12 @@ import androidx.lifecycle.ViewModel
 import java.util.ArrayList
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
+import org.linphone.R
 import org.linphone.contacts.ContactsManager.ContactsListener
+import org.linphone.core.Address
+import org.linphone.core.ChatRoom
+import org.linphone.core.ChatRoomListenerStub
+import org.linphone.core.ChatRoomParams
 import org.linphone.core.MagicSearch
 import org.linphone.core.MagicSearchListenerStub
 import org.linphone.core.SearchResult
@@ -34,6 +39,8 @@ import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.history.model.ContactOrSuggestionModel
 import org.linphone.ui.main.model.isInSecureMode
+import org.linphone.utils.AppUtils
+import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
 class StartConversationViewModel @UiThread constructor() : ViewModel() {
@@ -47,7 +54,44 @@ class StartConversationViewModel @UiThread constructor() : ViewModel() {
 
     val hideGroupChatButton = MutableLiveData<Boolean>()
 
-    val isGroupChatAvailable = MutableLiveData<Boolean>()
+    val operationInProgress = MutableLiveData<Boolean>()
+
+    val chatRoomCreationErrorEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
+
+    val chatRoomCreatedEvent: MutableLiveData<Event<Pair<String, String>>> by lazy {
+        MutableLiveData<Event<Pair<String, String>>>()
+    }
+
+    private val chatRoomListener = object : ChatRoomListenerStub() {
+        @WorkerThread
+        override fun onStateChanged(chatRoom: ChatRoom, newState: ChatRoom.State?) {
+            val state = chatRoom.state
+            Log.i("$TAG Chat room state changed: [$state]")
+
+            if (state == ChatRoom.State.Created) {
+                val id = LinphoneUtils.getChatRoomId(chatRoom)
+                Log.i("$TAG Chat room [$id] successfully created")
+                chatRoom.removeListener(this)
+                operationInProgress.postValue(false)
+                chatRoomCreatedEvent.postValue(
+                    Event(
+                        Pair(
+                            chatRoom.localAddress.asStringUriOnly(),
+                            chatRoom.peerAddress.asStringUriOnly()
+                        )
+                    )
+                )
+            } else if (state == ChatRoom.State.CreationFailed) {
+                val id = LinphoneUtils.getChatRoomId(chatRoom)
+                Log.e("$TAG Chat room [$id] creation has failed!")
+                chatRoom.removeListener(this)
+                operationInProgress.postValue(false)
+                chatRoomCreationErrorEvent.postValue(Event("Error!")) // TODO FIXME: use translated string
+            }
+        }
+    }
 
     private var currentFilter = ""
     private var previousFilter = "NotSet"
@@ -104,6 +148,102 @@ class StartConversationViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun clearFilter() {
         searchFilter.value = ""
+    }
+
+    @WorkerThread
+    fun createOneToOneChatRoomWith(remote: Address) {
+        val core = coreContext.core
+        val account = core.defaultAccount
+        if (account == null) {
+            Log.e(
+                "$TAG No default account found, can't create conversation with [${remote.asStringUriOnly()}]!"
+            )
+            return
+        }
+
+        operationInProgress.postValue(true)
+
+        val params: ChatRoomParams = coreContext.core.createDefaultChatRoomParams()
+        params.isGroupEnabled = false
+        params.subject = AppUtils.getString(R.string.conversation_one_to_one_hidden_subject)
+
+        val sameDomain = remote.domain == corePreferences.defaultDomain && remote.domain == account.params.domain
+        if (account.isInSecureMode() && sameDomain) {
+            Log.i("$TAG Account is in secure mode & domain matches, creating a E2E chat room")
+            params.backend = ChatRoom.Backend.FlexisipChat
+            params.isEncryptionEnabled = true
+            params.ephemeralLifetime = 0 // Make sure ephemeral is disabled by default
+        } else if (!account.isInSecureMode()) {
+            Log.i("$TAG Account is in interop mode, creating a SIP simple chat room")
+            params.backend = ChatRoom.Backend.Basic
+            params.isEncryptionEnabled = false
+        } else {
+            Log.e(
+                "$TAG Account is in secure mode, can't chat with SIP address of different domain [${remote.asStringUriOnly()}]"
+            )
+            operationInProgress.postValue(false)
+            chatRoomCreationErrorEvent.postValue(Event("Error!")) // TODO FIXME: use translated string
+            return
+        }
+
+        val participants = arrayOf(remote)
+        val localAddress = account.params.identityAddress
+        val existingChatRoom = core.searchChatRoom(params, localAddress, null, participants)
+        if (existingChatRoom == null) {
+            Log.i(
+                "$TAG No existing 1-1 chat room between local account [${localAddress?.asStringUriOnly()}] and remote [${remote.asStringUriOnly()}] was found for given parameters, let's create it"
+            )
+            val chatRoom = core.createChatRoom(params, localAddress, participants)
+            if (chatRoom != null) {
+                if (params.backend == ChatRoom.Backend.FlexisipChat) {
+                    if (chatRoom.state == ChatRoom.State.Created) {
+                        val id = LinphoneUtils.getChatRoomId(chatRoom)
+                        Log.i("$TAG 1-1 chat room [$id] has been created")
+                        operationInProgress.postValue(false)
+                        chatRoomCreatedEvent.postValue(
+                            Event(
+                                Pair(
+                                    chatRoom.localAddress.asStringUriOnly(),
+                                    chatRoom.peerAddress.asStringUriOnly()
+                                )
+                            )
+                        )
+                    } else {
+                        Log.i("$TAG Chat room isn't in Created state yet, wait for it")
+                        chatRoom.addListener(chatRoomListener)
+                    }
+                } else {
+                    val id = LinphoneUtils.getChatRoomId(chatRoom)
+                    Log.i("$TAG Chat room successfully created [$id]")
+                    operationInProgress.postValue(false)
+                    chatRoomCreatedEvent.postValue(
+                        Event(
+                            Pair(
+                                chatRoom.localAddress.asStringUriOnly(),
+                                chatRoom.peerAddress.asStringUriOnly()
+                            )
+                        )
+                    )
+                }
+            } else {
+                Log.e("$TAG Failed to create 1-1 chat room with [${remote.asStringUriOnly()}]!")
+                operationInProgress.postValue(false)
+                chatRoomCreationErrorEvent.postValue(Event("Error!")) // TODO FIXME: use translated string
+            }
+        } else {
+            Log.w(
+                "$TAG A 1-1 chat room between local account [${localAddress?.asStringUriOnly()}] and remote [${remote.asStringUriOnly()}] for given parameters already exists!"
+            )
+            operationInProgress.postValue(false)
+            chatRoomCreatedEvent.postValue(
+                Event(
+                    Pair(
+                        existingChatRoom.localAddress.asStringUriOnly(),
+                        existingChatRoom.peerAddress.asStringUriOnly()
+                    )
+                )
+            )
+        }
     }
 
     @UiThread
