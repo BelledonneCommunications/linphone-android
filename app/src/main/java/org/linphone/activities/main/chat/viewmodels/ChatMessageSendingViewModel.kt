@@ -287,10 +287,12 @@ class ChatMessageSendingViewModel(private val chatRoom: ChatRoom) : ViewModel() 
         for (attachment in attachments.value.orEmpty()) {
             val content = Factory.instance().createContent()
 
-            if (attachment.isImage) {
-                content.type = "image"
-            } else {
-                content.type = "file"
+            content.type = when {
+                attachment.isImage -> "image"
+                attachment.isAudio -> "audio"
+                attachment.isVideo -> "video"
+                attachment.isPdf -> "application"
+                else -> "file"
             }
             content.subtype = FileUtils.getExtensionFromFileName(attachment.fileName)
             content.name = attachment.fileName
