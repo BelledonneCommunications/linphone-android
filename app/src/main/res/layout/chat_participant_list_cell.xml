@@ -60,6 +60,7 @@
             android:text="@{model.name, default=`John Doe`}"
             android:textSize="14sp"
             android:layout_marginStart="10dp"
+            app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintStart_toEndOf="@id/avatar"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/participant_menu"

@@ -66,6 +66,12 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     val searchFilter = MutableLiveData<String>()
 
+    val isEmojiPickerOpen = MutableLiveData<Boolean>()
+
+    val requestKeyboardHidingEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     val focusSearchBarEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -209,6 +215,19 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         coreContext.postOnCoreThread {
             computeEvents(filter)
         }
+    }
+
+    @UiThread
+    fun toggleEmojiPickerVisibility() {
+        isEmojiPickerOpen.value = isEmojiPickerOpen.value == false
+        if (isEmojiPickerOpen.value == true) {
+            requestKeyboardHidingEvent.value = Event(true)
+        }
+    }
+
+    @UiThread
+    fun insertEmoji(emoji: String) {
+        textToSend.value = "${textToSend.value.orEmpty()}$emoji"
     }
 
     @UiThread

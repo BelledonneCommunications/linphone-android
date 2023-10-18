@@ -33,6 +33,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
 import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
@@ -41,6 +43,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
@@ -54,6 +57,7 @@ import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.hideKeyboard
+import org.linphone.utils.setKeyboardInsetListener
 import org.linphone.utils.showKeyboard
 
 @UiThread
@@ -69,6 +73,18 @@ class ConversationFragment : GenericFragment() {
     private val args: ConversationFragmentArgs by navArgs()
 
     private lateinit var adapter: ConversationEventAdapter
+
+    private val pickMedia = registerForActivityResult(
+        ActivityResultContracts.PickMultipleVisualMedia()
+    ) { list ->
+        if (!list.isNullOrEmpty()) {
+            for (file in list) {
+                Log.i("$TAG Picked file [$file]")
+            }
+        } else {
+            Log.w("$TAG No file picked")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -157,20 +173,15 @@ class ConversationFragment : GenericFragment() {
             }
         }
 
-        val emojisBottomSheetBehavior = BottomSheetBehavior.from(binding.emojiPicker)
+        val emojisBottomSheetBehavior = BottomSheetBehavior.from(binding.sendArea.root)
         emojisBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         emojisBottomSheetBehavior.isDraggable = false // To allow scrolling through the emojis
 
-        binding.setOpenEmojiPickerClickListener {
-            /*val state = emojisBottomSheetBehavior.state
-            if (state == BottomSheetBehavior.STATE_COLLAPSED) {
-                emojisBottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
-                if (binding.emojiPicker.visibility == View.GONE) {
-                    binding.emojiPicker.visibility = View.VISIBLE
-                }
-            } else {
-                emojisBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            }*/
+        binding.setOpenFilePickerClickListener {
+            Log.i("$TAG Opening media picker")
+            pickMedia.launch(
+                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo)
+            )
         }
 
         binding.setGoToInfoClickListener {
@@ -185,6 +196,12 @@ class ConversationFragment : GenericFragment() {
             viewModel.applyFilter(filter.trim())
         }
 
+        viewModel.requestKeyboardHidingEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                binding.search.hideKeyboard()
+            }
+        }
+
         viewModel.focusSearchBarEvent.observe(viewLifecycleOwner) {
             it.consume { show ->
                 if (show) {
@@ -193,6 +210,12 @@ class ConversationFragment : GenericFragment() {
                 } else {
                     binding.search.hideKeyboard()
                 }
+            }
+        }
+
+        binding.root.setKeyboardInsetListener { keyboardVisible ->
+            if (keyboardVisible) {
+                viewModel.isEmojiPickerOpen.value = false
             }
         }
     }
