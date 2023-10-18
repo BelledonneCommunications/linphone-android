@@ -391,10 +391,14 @@ private suspend fun loadContactPictureWithCoil(
                 }
 
                 for (i in 0 until rectangles.size) {
-                    // To prevent deformation for the bottom image when merging 3 of them
                     val src = if (drawables.size == 3 && i == 2) {
+                        // To prevent deformation for the bottom image when merging 3 of them
                         val quarter = w / 4
                         Rect(0, quarter, w, 3 * quarter)
+                    } else if (drawables.size == 2) {
+                        // To prevent deformation when two images are next to each other
+                        val quarter = w / 4
+                        Rect(quarter, 0, 3 * quarter, w)
                     } else {
                         null
                     }
