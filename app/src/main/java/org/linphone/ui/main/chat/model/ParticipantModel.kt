@@ -33,7 +33,6 @@ class ParticipantModel @WorkerThread constructor(
     val isParticipantAdmin: Boolean,
     private val onMenuClicked: ((view: View, model: ParticipantModel) -> Unit)? = null
 ) : ContactAvatarModel(friend) {
-
     val sipUri = address.asStringUriOnly()
 
     @UiThread

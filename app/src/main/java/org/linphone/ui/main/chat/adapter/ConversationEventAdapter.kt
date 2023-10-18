@@ -47,6 +47,10 @@ class ConversationEventAdapter(
 
     val chatMessageLongPressEvent = MutableLiveData<Event<ChatMessageModel>>()
 
+    val showDeliveryForChatMessageModelEvent: MutableLiveData<Event<ChatMessageModel>> by lazy {
+        MutableLiveData<Event<ChatMessageModel>>()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             INCOMING_CHAT_MESSAGE -> createIncomingChatBubble(parent)
@@ -114,6 +118,10 @@ class ConversationEventAdapter(
                 setOnLongClickListener {
                     chatMessageLongPressEvent.value = Event(message)
                     true
+                }
+
+                setShowDeliveryInfoClickListener {
+                    showDeliveryForChatMessageModelEvent.value = Event(message)
                 }
 
                 lifecycleOwner = viewLifecycleOwner

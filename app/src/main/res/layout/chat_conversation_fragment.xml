@@ -222,6 +222,10 @@
             android:visibility="@{viewModel.isReadOnly ? View.GONE : View.VISIBLE}"
             layout="@layout/chat_conversation_send_area"/>
 
+        <include
+            android:id="@+id/delivery_bottom_sheet"
+            layout="@layout/chat_message_delivery_bottom_sheet" />
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </layout>

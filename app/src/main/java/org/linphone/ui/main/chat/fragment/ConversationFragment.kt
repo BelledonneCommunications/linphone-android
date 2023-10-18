@@ -177,6 +177,16 @@ class ConversationFragment : GenericFragment() {
         emojisBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         emojisBottomSheetBehavior.isDraggable = false // To allow scrolling through the emojis
 
+        val imdnBottomSheetBehavior = BottomSheetBehavior.from(binding.deliveryBottomSheet.root)
+        imdnBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+
+        adapter.showDeliveryForChatMessageModelEvent.observe(viewLifecycleOwner) {
+            it.consume { model ->
+                binding.deliveryBottomSheet.model = model
+                imdnBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            }
+        }
+
         binding.setOpenFilePickerClickListener {
             Log.i("$TAG Opening media picker")
             pickMedia.launch(

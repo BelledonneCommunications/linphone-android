@@ -28,6 +28,7 @@ import org.linphone.core.Address
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatMessageListenerStub
 import org.linphone.core.ChatMessageReaction
+import org.linphone.core.ParticipantImdnState
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.utils.Event
@@ -59,6 +60,8 @@ class ChatMessageModel @WorkerThread constructor(
 
     val chatRoomIsReadOnly = chatMessage.chatRoom.isReadOnly
 
+    val deliveryModels = MutableLiveData<ArrayList<ChatMessageDeliveryModel>>()
+
     val dismissLongPressMenuEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -85,6 +88,8 @@ class ChatMessageModel @WorkerThread constructor(
     init {
         chatMessage.addListener(chatMessageListener)
         computeStatusIcon(chatMessage.state)
+
+        computeDeliveryStatus()
     }
 
     @WorkerThread
@@ -100,10 +105,6 @@ class ChatMessageModel @WorkerThread constructor(
             reaction.send()
             dismissLongPressMenuEvent.postValue(Event(true))
         }
-    }
-
-    @UiThread
-    fun showDeliveryInfo() {
     }
 
     @WorkerThread
@@ -126,5 +127,36 @@ class ChatMessageModel @WorkerThread constructor(
             }
         }
         statusIcon.postValue(icon)
+    }
+
+    @WorkerThread
+    private fun computeDeliveryStatus() {
+        val list = arrayListOf<ChatMessageDeliveryModel>()
+
+        for (participant in chatMessage.getParticipantsByImdnState(ChatMessage.State.Displayed)) {
+            list.add(getDeliveryModelForAddress(participant))
+        }
+
+        deliveryModels.postValue(list)
+    }
+
+    @WorkerThread
+    private fun getDeliveryModelForAddress(participantImdnState: ParticipantImdnState): ChatMessageDeliveryModel {
+        val address = participantImdnState.participant.address
+        Log.i("$TAG Looking for participant model with address [${address.asStringUriOnly()}]")
+
+        val clone = address.clone()
+        clone.clean()
+
+        val friend = coreContext.contactsManager.findContactByAddress(clone)
+        val avatar = if (friend != null) {
+            ChatMessageDeliveryModel(friend, participantImdnState)
+        } else {
+            val fakeFriend = coreContext.core.createFriend()
+            fakeFriend.address = clone
+            ChatMessageDeliveryModel(fakeFriend, participantImdnState)
+        }
+
+        return avatar
     }
 }
