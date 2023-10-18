@@ -15,6 +15,7 @@ Group changes to describe their impact on the project, as follows:
 ### Added
 - Chat messages emoji "reactions"
 - Hearing aids should be working the same way bluetooth headset does
+- Hardware video codecs (H264, H265) are now used in priority when possible
 
 ### Fixed
 - Connection status & color when in refreshing state

@@ -508,6 +508,9 @@ class CoreContext(
                 false
             )
             Log.i("[Context] Migration of muted chat room finished")
+
+            core.setVideoCodecPriorityPolicy(CodecPriorityPolicy.Auto)
+            Log.i("[Context] Video codec priority policy updated to Auto")
         }
 
         val fiveOneMigrationRequired = core.config.getBool("app", "migration_5.1_required", true)
