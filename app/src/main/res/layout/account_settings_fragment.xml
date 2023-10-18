@@ -130,7 +130,7 @@
                         android:layout_marginTop="20dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
-                        android:text="@string/assistant_sip_account_sip_proxy_url_title"
+                        android:text="@string/account_settings_sip_proxy_url_title"
                         android:maxLines="2"
                         android:ellipsize="end"
                         app:layout_constraintTop_toBottomOf="@id/transport_spinner"
@@ -187,7 +187,7 @@
                         android:layout_marginTop="20dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
-                        android:text="@string/assistant_sip_account_stun_server_url_title"
+                        android:text="@string/account_settings_stun_server_url_title"
                         android:maxLines="2"
                         android:ellipsize="end"
                         app:layout_constraintTop_toBottomOf="@id/outbound_proxy_switch"
@@ -228,7 +228,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="10dp"
-                        android:text="@string/assistant_sip_account_enable_ice_title"
+                        android:text="@string/account_settings_enable_ice_title"
                         android:maxLines="2"
                         android:ellipsize="end"
                         app:layout_constraintTop_toTopOf="@id/ice_switch"
@@ -270,7 +270,7 @@
                         android:layout_marginTop="20dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
-                        android:text="@string/assistant_sip_account_expire_title"
+                        android:text="@string/account_settings_expire_title"
                         android:maxLines="2"
                         android:ellipsize="end"
                         app:layout_constraintTop_toBottomOf="@id/avpf_switch"
@@ -279,12 +279,11 @@
 
                     <androidx.appcompat.widget.AppCompatEditText
                         style="@style/default_text_style"
-                        android:id="@+id/expire_server"
+                        android:id="@+id/expire"
                         android:layout_width="0dp"
                         android:layout_height="50dp"
                         android:layout_marginEnd="16dp"
                         android:layout_marginStart="16dp"
-                        android:layout_marginBottom="@dimen/screen_bottom_margin"
                         android:background="@drawable/edit_text_background"
                         android:paddingStart="20dp"
                         android:paddingEnd="20dp"
@@ -293,8 +292,102 @@
                         app:layout_constraintVertical_bias="0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/expire_title"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/settings_title_style"
+                        android:id="@+id/conference_factory_uri_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="@string/account_settings_conference_factory_uri_title"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        app:layout_constraintTop_toBottomOf="@id/expire"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        style="@style/default_text_style"
+                        android:id="@+id/conference_factory_uri"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="16dp"
+                        android:background="@drawable/edit_text_background"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
+                        android:text="@={viewModel.conferenceFactoryUri}"
+                        android:inputType="text|textUri"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/conference_factory_uri_title"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/settings_title_style"
+                        android:id="@+id/audio_video_conference_factory_uri_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="@string/account_settings_audio_video_conference_factory_uri_title"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        app:layout_constraintTop_toBottomOf="@id/conference_factory_uri"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        style="@style/default_text_style"
+                        android:id="@+id/audio_video_conference_factory_uri"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="16dp"
+                        android:background="@drawable/edit_text_background"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
+                        android:text="@={viewModel.audioVideoConferenceFactoryUri}"
+                        android:inputType="text|textUri"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/audio_video_conference_factory_uri_title"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/settings_title_style"
+                        android:id="@+id/lime_server_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="@string/account_settings_lime_server_url_title"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        app:layout_constraintTop_toBottomOf="@id/audio_video_conference_factory_uri"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        style="@style/default_text_style"
+                        android:id="@+id/lime_server"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginBottom="@dimen/screen_bottom_margin"
+                        android:background="@drawable/edit_text_background"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
+                        android:text="@={viewModel.limeServerUrl}"
+                        android:inputType="text|textUri"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/lime_server_title"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -55,6 +55,12 @@ class AccountSettingsViewModel @UiThread constructor() : ViewModel() {
 
     val expire = MutableLiveData<String>()
 
+    val conferenceFactoryUri = MutableLiveData<String>()
+
+    val audioVideoConferenceFactoryUri = MutableLiveData<String>()
+
+    val limeServerUrl = MutableLiveData<String>()
+
     val accountFoundEvent = MutableLiveData<Event<Boolean>>()
 
     private lateinit var account: Account
@@ -93,6 +99,14 @@ class AccountSettingsViewModel @UiThread constructor() : ViewModel() {
                 avpfEnabled.postValue(account.isAvpfEnabled)
 
                 expire.postValue(params.expires.toString())
+
+                conferenceFactoryUri.postValue(params.conferenceFactoryAddress?.asStringUriOnly())
+
+                audioVideoConferenceFactoryUri.postValue(
+                    params.audioVideoConferenceFactoryAddress?.asStringUriOnly()
+                )
+
+                limeServerUrl.postValue(params.limeServerUrl)
 
                 accountFoundEvent.postValue(Event(true))
             } else {
@@ -133,6 +147,18 @@ class AccountSettingsViewModel @UiThread constructor() : ViewModel() {
                 newParams.avpfMode = if (avpfEnabled.value == true) AVPFMode.Enabled else AVPFMode.Disabled
 
                 newParams.expires = expire.value?.toInt() ?: 31536000
+
+                val conferenceFactoryAddress = Factory.instance().createAddress(
+                    conferenceFactoryUri.value.orEmpty()
+                )
+                newParams.conferenceFactoryAddress = conferenceFactoryAddress
+
+                val audioVideoConferenceFactoryAddress = Factory.instance().createAddress(
+                    audioVideoConferenceFactoryUri.value.orEmpty()
+                )
+                newParams.conferenceFactoryAddress = audioVideoConferenceFactoryAddress
+
+                newParams.limeServerUrl = limeServerUrl.value
 
                 account.params = newParams
                 Log.i("$TAG Changes have been saved")

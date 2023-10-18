@@ -259,12 +259,15 @@
     <string name="manage_account_device_last_connection">Last connection:</string>
 
     <string name="account_settings_push_notification_title">Allow push notifications</string>
-    <string name="assistant_sip_account_sip_proxy_url_title">SIP proxy server URL</string>
+    <string name="account_settings_sip_proxy_url_title">SIP proxy server URL</string>
     <string name="account_settings_outbound_proxy_title">Outbound proxy</string>
-    <string name="assistant_sip_account_stun_server_url_title">STUN server server URL</string>
-    <string name="assistant_sip_account_enable_ice_title">Enable ICE</string>
+    <string name="account_settings_stun_server_url_title">STUN server server URL</string>
+    <string name="account_settings_enable_ice_title">Enable ICE</string>
     <string name="account_settings_avpf_title">AVPF</string>
-    <string name="assistant_sip_account_expire_title">Expire</string>
+    <string name="account_settings_expire_title">Expire</string>
+    <string name="account_settings_conference_factory_uri_title">Conference factory URI</string>
+    <string name="account_settings_audio_video_conference_factory_uri_title">Audio/video conference factory URI</string>
+    <string name="account_settings_lime_server_url_title">E2E encryption keys server URL</string>
 
     <string name="friend_presence_status_online">Online</string>
     <string name="friend_presence_status_was_online_on">Online on %s</string>
