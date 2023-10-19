@@ -183,7 +183,11 @@ class ConversationFragment : GenericFragment() {
 
         adapter.showDeliveryForChatMessageModelEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
-                showDeliveryBottomSheetDialog(model)
+                if (viewModel.isGroup.value == true) {
+                    showDeliveryBottomSheetDialog(model)
+                } else {
+                    Log.w("$TAG Conversation is not a group, not showing delivery bottom sheet")
+                }
             }
         }
 

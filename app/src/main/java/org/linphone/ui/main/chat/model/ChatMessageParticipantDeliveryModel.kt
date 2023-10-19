@@ -1,18 +1,15 @@
 package org.linphone.ui.main.chat.model
 
 import androidx.annotation.WorkerThread
-import org.linphone.LinphoneApplication
-import org.linphone.core.ParticipantImdnState
+import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.core.Address
 import org.linphone.utils.TimestampUtils
 
 class ChatMessageParticipantDeliveryModel @WorkerThread constructor(
-    imdnState: ParticipantImdnState
+    address: Address,
+    timestamp: Long
 ) {
-    val address = imdnState.participant.address
+    val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(address)
 
-    val avatarModel = LinphoneApplication.coreContext.contactsManager.getContactAvatarModelForAddress(
-        address
-    )
-
-    val time = TimestampUtils.toString(imdnState.stateChangeTime)
+    val time = TimestampUtils.toString(timestamp)
 }

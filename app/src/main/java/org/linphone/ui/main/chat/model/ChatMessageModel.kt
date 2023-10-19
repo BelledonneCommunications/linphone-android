@@ -23,7 +23,6 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.R
 import org.linphone.core.Address
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatMessageListenerStub
@@ -66,7 +65,7 @@ class ChatMessageModel @WorkerThread constructor(
     private val chatMessageListener = object : ChatMessageListenerStub() {
         @WorkerThread
         override fun onMsgStateChanged(message: ChatMessage, messageState: ChatMessage.State?) {
-            computeStatusIcon(chatMessage.state)
+            statusIcon.postValue(LinphoneUtils.getChatIconResId(chatMessage.state))
         }
 
         @WorkerThread
@@ -84,7 +83,7 @@ class ChatMessageModel @WorkerThread constructor(
 
     init {
         chatMessage.addListener(chatMessageListener)
-        computeStatusIcon(chatMessage.state)
+        statusIcon.postValue(LinphoneUtils.getChatIconResId(chatMessage.state))
     }
 
     @WorkerThread
@@ -100,27 +99,5 @@ class ChatMessageModel @WorkerThread constructor(
             reaction.send()
             dismissLongPressMenuEvent.postValue(Event(true))
         }
-    }
-
-    @WorkerThread
-    private fun computeStatusIcon(state: ChatMessage.State) {
-        val icon = when (state) {
-            ChatMessage.State.Displayed -> {
-                R.drawable.checks
-            }
-            ChatMessage.State.DeliveredToUser -> {
-                R.drawable.check
-            }
-            ChatMessage.State.Delivered -> {
-                R.drawable.envelope_simple
-            }
-            ChatMessage.State.NotDelivered -> {
-                R.drawable.warning_circle
-            }
-            else -> {
-                R.drawable.in_progress
-            }
-        }
-        statusIcon.postValue(icon)
     }
 }

@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import org.linphone.R
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatMessage.State
+import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 
 class ChatMessageDeliveryModel @WorkerThread constructor(
@@ -58,45 +59,80 @@ class ChatMessageDeliveryModel @WorkerThread constructor(
     @WorkerThread
     private fun computeDeliveryStatus() {
         for (participant in chatMessage.getParticipantsByImdnState(State.Displayed)) {
-            displayedModels.add(ChatMessageParticipantDeliveryModel(participant))
+            displayedModels.add(
+                ChatMessageParticipantDeliveryModel(
+                    participant.participant.address,
+                    participant.stateChangeTime
+                )
+            )
         }
+        // Always add ourselves to prevent empty list
+        displayedModels.add(
+            ChatMessageParticipantDeliveryModel(
+                chatMessage.localAddress,
+                chatMessage.time
+            )
+        )
+        val readCount = displayedModels.size.toString()
         readLabel.postValue(
             AppUtils.getFormattedString(
                 R.string.message_delivery_info_read_title,
-                displayedModels.size.toString()
+                readCount
             )
         )
 
         for (participant in chatMessage.getParticipantsByImdnState(State.DeliveredToUser)) {
-            deliveredModels.add(ChatMessageParticipantDeliveryModel(participant))
+            deliveredModels.add(
+                ChatMessageParticipantDeliveryModel(
+                    participant.participant.address,
+                    participant.stateChangeTime
+                )
+            )
         }
+        val receivedCount = deliveredModels.size.toString()
         receivedLabel.postValue(
             AppUtils.getFormattedString(
                 R.string.message_delivery_info_received_title,
-                deliveredModels.size.toString()
+                receivedCount
             )
         )
 
         for (participant in chatMessage.getParticipantsByImdnState(State.Delivered)) {
-            sentModels.add(ChatMessageParticipantDeliveryModel(participant))
+            sentModels.add(
+                ChatMessageParticipantDeliveryModel(
+                    participant.participant.address,
+                    participant.stateChangeTime
+                )
+            )
         }
+        val sentCount = sentModels.size.toString()
         sentLabel.postValue(
             AppUtils.getFormattedString(
                 R.string.message_delivery_info_sent_title,
-                sentModels.size.toString()
+                sentCount
             )
         )
 
         for (participant in chatMessage.getParticipantsByImdnState(State.NotDelivered)) {
-            errorModels.add(ChatMessageParticipantDeliveryModel(participant))
+            errorModels.add(
+                ChatMessageParticipantDeliveryModel(
+                    participant.participant.address,
+                    participant.stateChangeTime
+                )
+            )
         }
+        val errorCount = errorModels.size.toString()
         errorLabel.postValue(
             AppUtils.getFormattedString(
                 R.string.message_delivery_info_error_title,
-                errorModels.size.toString()
+                errorCount
             )
         )
 
         deliveryModels.postValue(displayedModels)
+        Log.i("$TAG Message ID [${chatMessage.messageId}] is in state [${chatMessage.state}]")
+        Log.i(
+            "$TAG There are [$readCount] that have read this message, [$receivedCount] that have received it, [$sentCount] that haven't received it yet and [$errorCount] that probably won't receive it due to an error"
+        )
     }
 }

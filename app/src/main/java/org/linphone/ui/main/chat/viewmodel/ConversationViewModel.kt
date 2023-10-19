@@ -98,7 +98,15 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             } else {
                 false
             }
-            list.add(EventLogModel(eventLog, avatarModel, isChatRoomAGroup(), group, true))
+            list.add(
+                EventLogModel(
+                    eventLog,
+                    avatarModel,
+                    LinphoneUtils.isChatRoomAGroup(chatRoom),
+                    group,
+                    true
+                )
+            )
 
             events.postValue(list)
         }
@@ -277,7 +285,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             Log.w("$TAG Chat room with subject [${chatRoom.subject}] is read only!")
         }
 
-        val group = isChatRoomAGroup()
+        val group = LinphoneUtils.isChatRoomAGroup(chatRoom)
         isGroup.postValue(group)
 
         subject.postValue(chatRoom.subject)
@@ -324,6 +332,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
     private fun processGroupedEvents(
         groupedEventLogs: ArrayList<EventLog>
     ): ArrayList<EventLogModel> {
+        val groupChatRoom = LinphoneUtils.isChatRoomAGroup(chatRoom)
         val eventsList = arrayListOf<EventLogModel>()
 
         // Handle all events in group, then re-start a new group with current item
@@ -335,7 +344,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             val model = EventLogModel(
                 groupedEvent,
                 avatar,
-                isChatRoomAGroup(),
+                groupChatRoom,
                 index > 0,
                 index == groupedEventLogs.size - 1
             )
@@ -432,15 +441,6 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             composingLabel.postValue(format)
         } else {
             composingLabel.postValue("")
-        }
-    }
-
-    @WorkerThread
-    private fun isChatRoomAGroup(): Boolean {
-        return if (::chatRoom.isInitialized) {
-            LinphoneUtils.isChatRoomAGroup(chatRoom)
-        } else {
-            false
         }
     }
 }

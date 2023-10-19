@@ -228,32 +228,7 @@ class ConversationModel @WorkerThread constructor(private val chatRoom: ChatRoom
         val isOutgoing = message.isOutgoing
         isLastMessageOutgoing.postValue(isOutgoing)
         if (isOutgoing) {
-            val icon = when (message.state) {
-                ChatMessage.State.Displayed -> {
-                    R.drawable.checks
-                }
-
-                ChatMessage.State.DeliveredToUser -> {
-                    R.drawable.check
-                }
-
-                ChatMessage.State.Delivered -> {
-                    R.drawable.sent
-                }
-
-                ChatMessage.State.InProgress, ChatMessage.State.FileTransferInProgress -> {
-                    R.drawable.in_progress
-                }
-
-                ChatMessage.State.NotDelivered, ChatMessage.State.FileTransferError -> {
-                    R.drawable.warning_circle
-                }
-
-                else -> {
-                    R.drawable.info
-                }
-            }
-            lastMessageIcon.postValue(icon)
+            lastMessageIcon.postValue(LinphoneUtils.getChatIconResId(message.state))
         }
     }
 

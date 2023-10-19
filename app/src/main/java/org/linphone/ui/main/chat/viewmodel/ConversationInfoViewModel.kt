@@ -262,7 +262,7 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
 
         isMyselfAdmin.postValue(chatRoom.me?.isAdmin)
 
-        val isGroupChatRoom = isChatRoomAGroup()
+        val isGroupChatRoom = LinphoneUtils.isChatRoomAGroup(chatRoom)
         isGroup.postValue(isGroupChatRoom)
 
         val empty = chatRoom.hasCapability(ChatRoom.Capabilities.Conference.toInt()) && chatRoom.participants.isEmpty()
@@ -279,8 +279,8 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
 
     @WorkerThread
     private fun computeParticipantsList() {
-        val groupChatRoom = isChatRoomAGroup()
-        val selfAdmin = chatRoom.me?.isAdmin == true
+        val groupChatRoom = LinphoneUtils.isChatRoomAGroup(chatRoom)
+        val selfAdmin = if (groupChatRoom) chatRoom.me?.isAdmin == true else false
 
         val friends = arrayListOf<Friend>()
         val participantsList = arrayListOf<ParticipantModel>()
@@ -314,14 +314,5 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
         avatarModel.postValue(avatar)
 
         participants.postValue(participantsList)
-    }
-
-    @WorkerThread
-    private fun isChatRoomAGroup(): Boolean {
-        return if (::chatRoom.isInitialized) {
-            LinphoneUtils.isChatRoomAGroup(chatRoom)
-        } else {
-            false
-        }
     }
 }

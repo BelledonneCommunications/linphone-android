@@ -185,6 +185,31 @@ class LinphoneUtils {
             }
         }
 
+        @AnyThread
+        @IntegerRes
+        fun getChatIconResId(chatState: ChatMessage.State): Int {
+            return when (chatState) {
+                ChatMessage.State.Displayed -> {
+                    R.drawable.checks
+                }
+                ChatMessage.State.DeliveredToUser -> {
+                    R.drawable.check
+                }
+                ChatMessage.State.Delivered -> {
+                    R.drawable.envelope_simple
+                }
+                ChatMessage.State.InProgress, ChatMessage.State.FileTransferInProgress -> {
+                    R.drawable.in_progress
+                }
+                ChatMessage.State.NotDelivered, ChatMessage.State.FileTransferError -> {
+                    R.drawable.warning_circle
+                }
+                else -> {
+                    R.drawable.not_trusted
+                }
+            }
+        }
+
         @WorkerThread
         fun getChatRoomId(room: ChatRoom): String {
             return getChatRoomId(room.localAddress, room.peerAddress)
@@ -206,8 +231,9 @@ class LinphoneUtils {
 
         @WorkerThread
         fun isChatRoomAGroup(chatRoom: ChatRoom): Boolean {
-            return !chatRoom.hasCapability(ChatRoom.Capabilities.OneToOne.toInt()) &&
-                chatRoom.hasCapability(ChatRoom.Capabilities.Conference.toInt())
+            val oneToOne = chatRoom.hasCapability(ChatRoom.Capabilities.OneToOne.toInt())
+            val conference = chatRoom.hasCapability(ChatRoom.Capabilities.Conference.toInt())
+            return !oneToOne && conference
         }
 
         @WorkerThread
