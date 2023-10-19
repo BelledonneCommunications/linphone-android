@@ -43,13 +43,17 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.core.ChatMessage
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatConversationFragmentBinding
 import org.linphone.databinding.ChatConversationLongPressMenuBinding
 import org.linphone.ui.main.chat.adapter.ConversationEventAdapter
+import org.linphone.ui.main.chat.model.ChatMessageDeliveryModel
 import org.linphone.ui.main.chat.model.ChatMessageModel
 import org.linphone.ui.main.chat.viewmodel.ConversationViewModel
 import org.linphone.ui.main.fragment.GenericFragment
@@ -177,13 +181,9 @@ class ConversationFragment : GenericFragment() {
         emojisBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         emojisBottomSheetBehavior.isDraggable = false // To allow scrolling through the emojis
 
-        val imdnBottomSheetBehavior = BottomSheetBehavior.from(binding.deliveryBottomSheet.root)
-        imdnBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-
         adapter.showDeliveryForChatMessageModelEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
-                binding.deliveryBottomSheet.model = model
-                imdnBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                showDeliveryBottomSheetDialog(model)
             }
         }
 
@@ -302,5 +302,63 @@ class ConversationFragment : GenericFragment() {
         d.alpha = 102
         dialog.window?.setBackgroundDrawable(d)
         dialog.show()
+    }
+
+    @UiThread
+    private fun showDeliveryBottomSheetDialog(chatMessageModel: ChatMessageModel) {
+        val deliveryBottomSheetBehavior = BottomSheetBehavior.from(binding.messageDelivery.root)
+        if (deliveryBottomSheetBehavior.state == BottomSheetBehavior.STATE_HALF_EXPANDED) {
+            deliveryBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+
+        binding.messageDelivery.setHandleClickedListener {
+            deliveryBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+
+        coreContext.postOnCoreThread {
+            val model = ChatMessageDeliveryModel(chatMessageModel.chatMessage)
+
+            coreContext.postOnMainThread {
+                binding.messageDelivery.tabs.removeAllTabs()
+                binding.messageDelivery.tabs.addTab(
+                    binding.messageDelivery.tabs.newTab().setText(model.readLabel.value).setId(
+                        ChatMessage.State.Displayed.toInt()
+                    )
+                )
+                binding.messageDelivery.tabs.addTab(
+                    binding.messageDelivery.tabs.newTab().setText(model.receivedLabel.value).setId(
+                        ChatMessage.State.DeliveredToUser.toInt()
+                    )
+                )
+                binding.messageDelivery.tabs.addTab(
+                    binding.messageDelivery.tabs.newTab().setText(model.sentLabel.value).setId(
+                        ChatMessage.State.Delivered.toInt()
+                    )
+                )
+                binding.messageDelivery.tabs.addTab(
+                    binding.messageDelivery.tabs.newTab().setText(model.errorLabel.value).setId(
+                        ChatMessage.State.NotDelivered.toInt()
+                    )
+                )
+
+                binding.messageDelivery.tabs.setOnTabSelectedListener(object : OnTabSelectedListener {
+                    override fun onTabSelected(tab: TabLayout.Tab?) {
+                        val state = tab?.id ?: ChatMessage.State.Displayed.toInt()
+                        model.computeListForState(ChatMessage.State.fromInt(state))
+                    }
+
+                    override fun onTabUnselected(tab: TabLayout.Tab?) {
+                    }
+
+                    override fun onTabReselected(tab: TabLayout.Tab?) {
+                    }
+                })
+
+                binding.messageDelivery.model = model
+
+                binding.messageDelivery.root.visibility = View.VISIBLE
+                deliveryBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            }
+        }
     }
 }

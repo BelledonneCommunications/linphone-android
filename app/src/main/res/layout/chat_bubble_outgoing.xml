@@ -10,6 +10,9 @@
             name="onLongClickListener"
             type="View.OnLongClickListener" />
         <variable
+            name="showDeliveryInfoClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="model"
             type="org.linphone.ui.main.chat.model.ChatMessageModel" />
     </data>
@@ -75,6 +78,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_300"
             android:id="@+id/date_time"
+            android:onClick="@{showDeliveryInfoClickListener}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -90,6 +94,7 @@
         <ImageView
             style="@style/default_text_style_300"
             android:id="@+id/delivery_status"
+            android:onClick="@{showDeliveryInfoClickListener}"
             android:layout_width="@dimen/small_icon_size"
             android:layout_height="@dimen/small_icon_size"
             android:layout_marginEnd="18dp"

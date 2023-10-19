@@ -15,7 +15,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/shape_bottom_sheet_background"
+        android:background="@drawable/shape_bottom_sheet_gray_100_background"
         android:clickable="true"
         android:focusable="true"
         app:behavior_hideable="true"

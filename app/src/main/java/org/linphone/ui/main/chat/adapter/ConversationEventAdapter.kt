@@ -137,6 +137,10 @@ class ConversationEventAdapter(
             with(binding) {
                 model = message
 
+                setShowDeliveryInfoClickListener {
+                    showDeliveryForChatMessageModelEvent.value = Event(message)
+                }
+
                 lifecycleOwner = viewLifecycleOwner
                 executePendingBindings()
             }

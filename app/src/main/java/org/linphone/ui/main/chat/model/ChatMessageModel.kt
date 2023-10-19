@@ -59,8 +59,6 @@ class ChatMessageModel @WorkerThread constructor(
 
     val chatRoomIsReadOnly = chatMessage.chatRoom.isReadOnly
 
-    val deliveryModels = MutableLiveData<ArrayList<ChatMessageDeliveryModel>>()
-
     val dismissLongPressMenuEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -87,8 +85,6 @@ class ChatMessageModel @WorkerThread constructor(
     init {
         chatMessage.addListener(chatMessageListener)
         computeStatusIcon(chatMessage.state)
-
-        computeDeliveryStatus()
     }
 
     @WorkerThread
@@ -126,16 +122,5 @@ class ChatMessageModel @WorkerThread constructor(
             }
         }
         statusIcon.postValue(icon)
-    }
-
-    @WorkerThread
-    private fun computeDeliveryStatus() {
-        val list = arrayListOf<ChatMessageDeliveryModel>()
-
-        /*for (participant in chatMessage.getParticipantsByImdnState(ChatMessage.State.Displayed)) {
-            list.add(ChatMessageDeliveryModel(participant))
-        }*/
-
-        deliveryModels.postValue(list)
     }
 }

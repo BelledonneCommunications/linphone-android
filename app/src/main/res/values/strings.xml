@@ -361,6 +361,11 @@
     <string name="conversation_info_admin_menu_set_participant_admin">Give admin rights</string>
     <string name="conversation_info_admin_menu_unset_participant_admin">Remove admin rights</string>
 
+    <string name="message_delivery_info_read_title">Read (%s)</string>
+    <string name="message_delivery_info_received_title">Received (%s)</string>
+    <string name="message_delivery_info_sent_title">Sent (%s)</string>
+    <string name="message_delivery_info_error_title">Error (%s)</string>
+
     <string name="meetings_list_empty">No meeting for the moment…</string>
     <string name="meeting_schedule_title">New meeting</string>
     <string name="meeting_schedule_meeting_label">Meeting</string>

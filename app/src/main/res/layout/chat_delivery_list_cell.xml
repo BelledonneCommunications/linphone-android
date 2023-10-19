@@ -9,7 +9,7 @@
         <import type="org.linphone.core.ChatRoom.SecurityLevel" />
         <variable
             name="model"
-            type="org.linphone.ui.main.chat.model.ChatMessageDeliveryModel" />
+            type="org.linphone.ui.main.chat.model.ChatMessageParticipantDeliveryModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -192,7 +192,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:paddingBottom="5dp"
-                android:background="@color/gray_100"
+                android:background="@color/white"
                 app:layout_constraintTop_toBottomOf="@id/top_bar_barrier"
                 app:layout_constraintBottom_toTopOf="@id/composing" />
 
@@ -203,7 +203,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:paddingBottom="5dp"
-                android:background="@color/gray_100"
+                android:background="@color/white"
                 android:text="@{viewModel.composingLabel, default=`John Doe is composing...`}"
                 android:textSize="12sp"
                 android:textColor="@color/gray_main2_400"
@@ -223,7 +223,8 @@
             layout="@layout/chat_conversation_send_area"/>
 
         <include
-            android:id="@+id/delivery_bottom_sheet"
+            android:id="@+id/message_delivery"
+            android:visibility="gone"
             layout="@layout/chat_message_delivery_bottom_sheet" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

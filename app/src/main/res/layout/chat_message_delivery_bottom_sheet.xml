@@ -9,15 +9,14 @@
             type="View.OnClickListener" />
         <variable
             name="model"
-            type="org.linphone.ui.main.chat.model.ChatMessageModel" />
+            type="org.linphone.ui.main.chat.model.ChatMessageDeliveryModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/shape_bottom_sheet_background"
-        android:clickable="true"
-        android:focusable="true"
+        android:background="@drawable/shape_bottom_sheet_white_background"
+        android:elevation="16dp"
         app:behavior_hideable="true"
         app:behavior_peekHeight="0dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
@@ -39,40 +38,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/transparent_color"
+            android:layout_marginBottom="16dp"
             app:layout_constraintTop_toBottomOf="@id/handle"
+            app:layout_constraintBottom_toTopOf="@id/scrollview"
             app:tabMode="fixed"
+            app:tabUnboundedRipple="true"
+            app:tabRippleColor="@color/orange_main_100"
             app:tabGravity="fill"
             app:tabPadding="0dp"
             app:tabInlineLabel="true"
+            app:tabIndicatorColor="@color/orange_main_500"
             app:tabTextColor="@color/gray_main2_400"
-            app:tabSelectedTextColor="@color/gray_main2_600">
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Lu" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Reçu" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Envoyé" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Erreur" />
-
-        </com.google.android.material.tabs.TabLayout>
+            app:tabSelectedTextColor="@color/gray_main2_600" />
 
         <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/tabs">
+            android:layout_height="250dp"
+            app:layout_constraintHeight_min="50dp"
+            app:layout_constraintBottom_toBottomOf="parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
