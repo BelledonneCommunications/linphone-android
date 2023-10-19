@@ -65,7 +65,7 @@
             app:layout_constraintStart_toEndOf="@id/avatar"
             app:layout_constraintEnd_toEndOf="@id/background_end_barrier"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="@id/date_time"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
@@ -113,6 +113,24 @@
             app:layout_constraintStart_toEndOf="@id/date_time"
             app:layout_constraintBottom_toBottomOf="@id/date_time"
             app:tint="@color/orange_main_500" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/reactions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="2dp"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal"
+            android:text="@{model.reactions, default=@string/emoji_love}"
+            android:textSize="20sp"
+            android:textColor="@color/gray_main2_600"
+            android:visibility="@{model.reactions.length() > 0 ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintStart_toStartOf="@id/background"
+            app:layout_constraintTop_toBottomOf="@id/background"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

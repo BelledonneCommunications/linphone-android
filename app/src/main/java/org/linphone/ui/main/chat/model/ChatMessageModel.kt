@@ -58,6 +58,8 @@ class ChatMessageModel @WorkerThread constructor(
 
     val chatRoomIsReadOnly = chatMessage.chatRoom.isReadOnly
 
+    val reactions = MutableLiveData<String>()
+
     val dismissLongPressMenuEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -73,17 +75,20 @@ class ChatMessageModel @WorkerThread constructor(
             Log.i(
                 "$TAG New reaction [${reaction.body}] from [${reaction.fromAddress.asStringUriOnly()}] for chat message with ID [$id]"
             )
+            updateReactionsList()
         }
 
         @WorkerThread
         override fun onReactionRemoved(message: ChatMessage, address: Address) {
             Log.i("$TAG A reaction was removed for chat message with ID [$id]")
+            updateReactionsList()
         }
     }
 
     init {
         chatMessage.addListener(chatMessageListener)
         statusIcon.postValue(LinphoneUtils.getChatIconResId(chatMessage.state))
+        updateReactionsList()
     }
 
     @WorkerThread
@@ -99,5 +104,21 @@ class ChatMessageModel @WorkerThread constructor(
             reaction.send()
             dismissLongPressMenuEvent.postValue(Event(true))
         }
+    }
+
+    @WorkerThread
+    private fun updateReactionsList() {
+        var reactionsList = ""
+        val allReactions = chatMessage.reactions
+
+        if (allReactions.isNotEmpty()) {
+            for (reaction in allReactions) {
+                val body = reaction.body
+                reactionsList += body
+            }
+        }
+
+        Log.i("$TAG Reactions for message [$id] are [$reactionsList]")
+        reactions.postValue(reactionsList)
     }
 }
