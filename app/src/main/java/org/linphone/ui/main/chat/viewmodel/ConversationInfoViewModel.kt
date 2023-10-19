@@ -25,7 +25,6 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.core.Address
 import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoomListenerStub
 import org.linphone.core.EventLog
@@ -74,8 +73,6 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
 
     private lateinit var chatRoom: ChatRoom
 
-    private val avatarsMap = hashMapOf<String, ParticipantModel>()
-
     private val chatRoomListener = object : ChatRoomListenerStub() {
         @WorkerThread
         override fun onParticipantAdded(chatRoom: ChatRoom, eventLog: EventLog) {
@@ -122,9 +119,6 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
             if (::chatRoom.isInitialized) {
                 chatRoom.removeListener(chatRoomListener)
             }
-
-            avatarModel.value?.destroy()
-            avatarsMap.values.forEach(ParticipantModel::destroy)
         }
     }
 
@@ -285,69 +279,41 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
 
     @WorkerThread
     private fun computeParticipantsList() {
-        avatarModel.value?.destroy()
-        avatarsMap.values.forEach(ParticipantModel::destroy)
-
         val groupChatRoom = isChatRoomAGroup()
+        val selfAdmin = chatRoom.me?.isAdmin == true
 
         val friends = arrayListOf<Friend>()
         val participantsList = arrayListOf<ParticipantModel>()
         if (chatRoom.hasCapability(ChatRoom.Capabilities.Basic.toInt())) {
-            val model = getParticipantModelForAddress(chatRoom.peerAddress, false)
-            friends.add(model.friend)
+            val model = ParticipantModel(chatRoom.peerAddress, selfAdmin, false) { view, model ->
+                // openMenu
+                showParticipantAdminPopupMenuEvent.postValue(Event(Pair(view, model)))
+            }
+            friends.add(model.avatarModel.friend)
             participantsList.add(model)
         } else {
             for (participant in chatRoom.participants) {
-                val model = getParticipantModelForAddress(
-                    participant.address,
-                    if (groupChatRoom) participant.isAdmin else false
-                )
-                friends.add(model.friend)
+                val isParticipantAdmin = if (groupChatRoom) participant.isAdmin else false
+                val model = ParticipantModel(participant.address, selfAdmin, isParticipantAdmin) { view, model ->
+                    // openMenu
+                    showParticipantAdminPopupMenuEvent.postValue(Event(Pair(view, model)))
+                }
+                friends.add(model.avatarModel.friend)
                 participantsList.add(model)
             }
         }
 
         val avatar = if (groupChatRoom) {
             val fakeFriend = coreContext.core.createFriend()
-            ContactAvatarModel(fakeFriend)
+            val model = ContactAvatarModel(fakeFriend)
+            model.setPicturesFromFriends(friends)
+            model
         } else {
-            participantsList.first()
+            participantsList.first().avatarModel
         }
-        avatar.setPicturesFromFriends(friends)
         avatarModel.postValue(avatar)
 
         participants.postValue(participantsList)
-    }
-
-    @WorkerThread
-    private fun getParticipantModelForAddress(address: Address, isAdmin: Boolean): ParticipantModel {
-        Log.i("$TAG Looking for participant model with address [${address?.asStringUriOnly()}]")
-        val selfAdmin = chatRoom.me?.isAdmin == true
-
-        val clone = address.clone()
-        clone.clean()
-        val key = clone.asStringUriOnly()
-
-        val foundInMap = if (avatarsMap.keys.contains(key)) avatarsMap[key] else null
-        if (foundInMap != null) return foundInMap
-
-        val friend = coreContext.contactsManager.findContactByAddress(clone)
-        val avatar = if (friend != null) {
-            ParticipantModel(friend, clone, selfAdmin, isAdmin) { view, model ->
-                // openMenu
-                showParticipantAdminPopupMenuEvent.postValue(Event(Pair(view, model)))
-            }
-        } else {
-            val fakeFriend = coreContext.core.createFriend()
-            fakeFriend.address = clone
-            ParticipantModel(fakeFriend, clone, selfAdmin, isAdmin) { view, model ->
-                // openMenu
-                showParticipantAdminPopupMenuEvent.postValue(Event(Pair(view, model)))
-            }
-        }
-
-        avatarsMap[key] = avatar
-        return avatar
     }
 
     @WorkerThread

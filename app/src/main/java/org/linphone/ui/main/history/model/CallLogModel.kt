@@ -43,15 +43,14 @@ class CallLogModel @WorkerThread constructor(private val callLog: CallLog) {
         dateTime.postValue(displayedDate)
 
         val friend = coreContext.contactsManager.findContactByAddress(address)
+        avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(address)
         if (friend != null) {
             friendRefKey = friend.refKey
-            avatarModel = ContactAvatarModel(friend)
             friendExists = true
         } else {
             val fakeFriend = coreContext.core.createFriend()
             fakeFriend.address = address
             friendRefKey = null
-            avatarModel = ContactAvatarModel(fakeFriend)
             friendExists = false
         }
 

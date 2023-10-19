@@ -80,8 +80,6 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     private lateinit var chatRoom: ChatRoom
 
-    private val avatarsMap = hashMapOf<String, ContactAvatarModel>()
-
     private val chatRoomListener = object : ChatRoomListenerStub() {
         @WorkerThread
         override fun onChatMessageSending(chatRoom: ChatRoom, eventLog: EventLog) {
@@ -91,7 +89,9 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             val list = arrayListOf<EventLogModel>()
             list.addAll(events.value.orEmpty())
 
-            val avatarModel = getAvatarModelForAddress(message?.localAddress)
+            val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(
+                message?.localAddress
+            )
             val lastEvent = events.value.orEmpty().lastOrNull()
             val group = if (lastEvent != null) {
                 shouldWeGroupTwoEvents(eventLog, lastEvent.eventLog)
@@ -144,6 +144,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     init {
         searchBarVisible.value = false
+        isEmojiPickerOpen.value = false
     }
 
     override fun onCleared() {
@@ -151,9 +152,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
         coreContext.postOnCoreThread {
             chatRoom.removeListener(chatRoomListener)
-            avatarModel.value?.destroy()
             events.value.orEmpty().forEach(EventLogModel::destroy)
-            avatarsMap.values.forEach(ContactAvatarModel::destroy)
         }
     }
 
@@ -300,11 +299,12 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
         val avatar = if (group) {
             val fakeFriend = coreContext.core.createFriend()
-            ContactAvatarModel(fakeFriend)
+            val model = ContactAvatarModel(fakeFriend)
+            model.setPicturesFromFriends(friends)
+            model
         } else {
-            getAvatarModelForAddress(address)
+            coreContext.contactsManager.getContactAvatarModelForAddress(address)
         }
-        avatar.setPicturesFromFriends(friends)
         avatarModel.postValue(avatar)
 
         computeEvents()
@@ -329,7 +329,9 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         // Handle all events in group, then re-start a new group with current item
         var index = 0
         for (groupedEvent in groupedEventLogs) {
-            val avatar = getAvatarModelForAddress(groupedEvent.chatMessage?.fromAddress)
+            val avatar = coreContext.contactsManager.getContactAvatarModelForAddress(
+                groupedEvent.chatMessage?.fromAddress
+            )
             val model = EventLogModel(
                 groupedEvent,
                 avatar,
@@ -355,7 +357,9 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
                 if (event.type == EventLog.Type.ConferenceChatMessage) {
                     val message = event.chatMessage ?: continue
                     val fromAddress = message.fromAddress
-                    val model = getAvatarModelForAddress(fromAddress)
+                    val model = coreContext.contactsManager.getContactAvatarModelForAddress(
+                        fromAddress
+                    )
                     if (
                         !model.name.value.orEmpty().contains(filter, ignoreCase = true) &&
                         !fromAddress.asStringUriOnly().contains(filter, ignoreCase = true) &&
@@ -408,39 +412,11 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
     }
 
     @WorkerThread
-    private fun getAvatarModelForAddress(address: Address?): ContactAvatarModel {
-        Log.i("$TAG Looking for avatar model with address [${address?.asStringUriOnly()}]")
-        if (address == null) {
-            val fakeFriend = coreContext.core.createFriend()
-            return ContactAvatarModel(fakeFriend)
-        }
-
-        val clone = address.clone()
-        clone.clean()
-        val key = clone.asStringUriOnly()
-
-        val foundInMap = if (avatarsMap.keys.contains(key)) avatarsMap[key] else null
-        if (foundInMap != null) return foundInMap
-
-        val friend = coreContext.contactsManager.findContactByAddress(clone)
-        val avatar = if (friend != null) {
-            ContactAvatarModel(friend)
-        } else {
-            val fakeFriend = coreContext.core.createFriend()
-            fakeFriend.address = clone
-            ContactAvatarModel(fakeFriend)
-        }
-
-        avatarsMap[key] = avatar
-        return avatar
-    }
-
-    @WorkerThread
     private fun computeComposingLabel() {
-        var composingFriends = arrayListOf<String>()
+        val composingFriends = arrayListOf<String>()
         var label = ""
         for (address in chatRoom.composingAddresses) {
-            val avatar = getAvatarModelForAddress(address)
+            val avatar = coreContext.contactsManager.getContactAvatarModelForAddress(address)
             val name = avatar.name.value ?: LinphoneUtils.getDisplayName(address)
             composingFriends.add(name)
             label += "$name, "

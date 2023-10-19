@@ -43,6 +43,7 @@ import org.linphone.core.FriendList
 import org.linphone.core.FriendListListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.MainActivity
+import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressClickListener
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel
 import org.linphone.ui.main.model.isInSecureMode
@@ -61,12 +62,18 @@ class ContactsManager @UiThread constructor(context: Context) {
 
     private val listeners = arrayListOf<ContactsListener>()
 
+    private val avatarsMap = hashMapOf<String, ContactAvatarModel>()
+
     private val friendListListener: FriendListListenerStub = object : FriendListListenerStub() {
         @WorkerThread
         override fun onPresenceReceived(list: FriendList, friends: Array<Friend>) {
             Log.i(
                 "$TAG Presence received for list [${list.displayName}] and [${friends.size}] friends"
             )
+
+            avatarsMap.values.forEach(ContactAvatarModel::destroy)
+            avatarsMap.clear()
+
             for (listener in listeners) {
                 listener.onContactsLoaded()
             }
@@ -127,6 +134,10 @@ class ContactsManager @UiThread constructor(context: Context) {
     @UiThread
     fun onNativeContactsLoaded() {
         nativeContactsLoaded = true
+
+        avatarsMap.values.forEach(ContactAvatarModel::destroy)
+        avatarsMap.clear()
+
         coreContext.postOnCoreThread {
             notifyContactsListChanged()
         }
@@ -171,6 +182,34 @@ class ContactsManager @UiThread constructor(context: Context) {
     @WorkerThread
     fun findDisplayName(address: Address): String {
         return findContactByAddress(address)?.name ?: LinphoneUtils.getDisplayName(address)
+    }
+
+    @WorkerThread
+    fun getContactAvatarModelForAddress(address: Address?): ContactAvatarModel {
+        if (address == null) {
+            val fakeFriend = coreContext.core.createFriend()
+            return ContactAvatarModel(fakeFriend)
+        }
+
+        val clone = address.clone()
+        clone.clean()
+        val key = clone.asStringUriOnly()
+
+        val foundInMap = if (avatarsMap.keys.contains(key)) avatarsMap[key] else null
+        if (foundInMap != null) return foundInMap
+
+        val friend = coreContext.contactsManager.findContactByAddress(clone)
+        val avatar = if (friend != null) {
+            ContactAvatarModel(friend)
+        } else {
+            val fakeFriend = coreContext.core.createFriend()
+            fakeFriend.address = clone
+            ContactAvatarModel(fakeFriend)
+        }
+
+        avatarsMap[key] = avatar
+
+        return avatar
     }
 
     @WorkerThread

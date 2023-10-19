@@ -34,7 +34,6 @@ import org.linphone.core.MagicSearch
 import org.linphone.core.MagicSearchListenerStub
 import org.linphone.core.SearchResult
 import org.linphone.core.tools.Log
-import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.history.model.ContactOrSuggestionModel
 import org.linphone.ui.main.history.model.NumpadModel
 import org.linphone.ui.main.model.isInSecureMode
@@ -197,7 +196,9 @@ class StartCallViewModel @UiThread constructor() : ViewModel() {
                 val friend = coreContext.contactsManager.findContactByAddress(address)
                 if (friend != null) {
                     val model = ContactOrSuggestionModel(address, friend)
-                    val avatarModel = ContactAvatarModel(friend)
+                    val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(
+                        address
+                    )
                     model.avatarModel.postValue(avatarModel)
 
                     val currentLetter = friend.name?.get(0).toString()

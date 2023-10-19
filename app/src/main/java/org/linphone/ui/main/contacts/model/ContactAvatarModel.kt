@@ -36,7 +36,7 @@ import org.linphone.ui.main.model.isInSecureMode
 import org.linphone.utils.AppUtils
 import org.linphone.utils.TimestampUtils
 
-open class ContactAvatarModel @WorkerThread constructor(val friend: Friend) : AbstractAvatarModel() {
+class ContactAvatarModel @WorkerThread constructor(val friend: Friend) : AbstractAvatarModel() {
     companion object {
         private const val TAG = "[Contact Avatar Model]"
     }
@@ -66,7 +66,9 @@ open class ContactAvatarModel @WorkerThread constructor(val friend: Friend) : Ab
     }
 
     init {
-        friend.addListener(friendListener)
+        if (friend.addresses.isNotEmpty()) {
+            friend.addListener(friendListener)
+        }
 
         initials.postValue(AppUtils.getInitials(friend.name.orEmpty()))
         trust.postValue(SecurityLevel.Encrypted) // TODO FIXME: use API
@@ -79,7 +81,9 @@ open class ContactAvatarModel @WorkerThread constructor(val friend: Friend) : Ab
 
     @WorkerThread
     fun destroy() {
-        friend.removeListener(friendListener)
+        if (friend.addresses.isNotEmpty()) {
+            friend.removeListener(friendListener)
+        }
     }
 
     @WorkerThread

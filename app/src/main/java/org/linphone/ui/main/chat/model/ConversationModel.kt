@@ -149,16 +149,9 @@ class ConversationModel @WorkerThread constructor(private val chatRoom: ChatRoom
             model.setPicturesFromFriends(friends)
             avatarModel.postValue(model)
         } else {
-            val friend = coreContext.contactsManager.findContactByAddress(address)
-            if (friend != null) {
-                val model = ContactAvatarModel(friend)
-                avatarModel.postValue(model)
-            } else {
-                val fakeFriend = coreContext.core.createFriend()
-                fakeFriend.address = address
-                val model = ContactAvatarModel(fakeFriend)
-                avatarModel.postValue(model)
-            }
+            avatarModel.postValue(
+                coreContext.contactsManager.getContactAvatarModelForAddress(address)
+            )
         }
 
         isMuted.postValue(chatRoom.muted)

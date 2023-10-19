@@ -28,6 +28,7 @@ import androidx.annotation.WorkerThread
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Address
 import org.linphone.core.Friend
@@ -35,7 +36,6 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.StartChatFragmentBinding
 import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.chat.viewmodel.StartConversationViewModel
-import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.fragment.GenericAddressPickerFragment
 import org.linphone.ui.main.history.adapter.ContactsAndSuggestionsListAdapter
 import org.linphone.ui.main.model.SelectedAddressModel
@@ -132,7 +132,7 @@ class StartConversationFragment : GenericAddressPickerFragment() {
     @WorkerThread
     override fun onAddressSelected(address: Address, friend: Friend) {
         if (viewModel.multipleSelectionMode.value == true) {
-            val avatarModel = ContactAvatarModel(friend)
+            val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(address)
             val model = SelectedAddressModel(address, avatarModel) {
                 viewModel.removeAddressModelFromSelection(it)
             }

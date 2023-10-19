@@ -107,6 +107,7 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
         coreContext.postOnCoreThread {
             magicSearch.removeListener(magicSearchListener)
             coreContext.contactsManager.removeListener(contactsListener)
+            contactsList.value.orEmpty().forEach(ContactAvatarModel::destroy)
         }
         super.onCleared()
     }

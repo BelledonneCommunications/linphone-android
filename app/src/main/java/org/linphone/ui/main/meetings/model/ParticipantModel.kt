@@ -29,19 +29,11 @@ class ParticipantModel @WorkerThread constructor(address: Address, val isOrganiz
     val avatarModel = MutableLiveData<ContactAvatarModel>()
 
     init {
-        val friend = coreContext.contactsManager.findContactByAddress(address)
-        val avatar = if (friend != null) {
-            ContactAvatarModel(friend)
-        } else {
-            val fakeFriend = coreContext.core.createFriend()
-            fakeFriend.address = address
-            ContactAvatarModel(fakeFriend)
-        }
+        val avatar = coreContext.contactsManager.getContactAvatarModelForAddress(address)
         avatarModel.postValue(avatar)
     }
 
     @WorkerThread
     fun destroy() {
-        avatarModel.value?.destroy()
     }
 }

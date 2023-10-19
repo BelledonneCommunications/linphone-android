@@ -396,6 +396,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
         coreContext.postOnCoreThread { core ->
             core.removeListener(coreListener)
+            contact.value?.destroy()
 
             if (::currentCall.isInitialized) {
                 currentCall.removeListener(callListener)
@@ -712,6 +713,8 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     @WorkerThread
     private fun configureCall(call: Call) {
+        contact.value?.destroy()
+
         currentCall = call
         call.addListener(callListener)
 

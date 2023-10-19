@@ -160,6 +160,7 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
 
         coreContext.postOnCoreThread {
             coreContext.contactsManager.removeListener(contactsListener)
+            contact.value?.destroy()
         }
     }
 
@@ -183,6 +184,7 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
     fun refreshContactInfo() {
         isFavourite.postValue(friend.starred)
 
+        contact.value?.destroy()
         contact.postValue(ContactAvatarModel(friend))
 
         val organization = friend.organization

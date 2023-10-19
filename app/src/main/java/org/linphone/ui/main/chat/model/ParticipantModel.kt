@@ -22,18 +22,18 @@ package org.linphone.ui.main.chat.model
 import android.view.View
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Address
-import org.linphone.core.Friend
-import org.linphone.ui.main.contacts.model.ContactAvatarModel
 
 class ParticipantModel @WorkerThread constructor(
-    friend: Friend,
     val address: Address,
     val isMyselfAdmin: Boolean,
     val isParticipantAdmin: Boolean,
     private val onMenuClicked: ((view: View, model: ParticipantModel) -> Unit)? = null
-) : ContactAvatarModel(friend) {
+) {
     val sipUri = address.asStringUriOnly()
+
+    val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(address)
 
     @UiThread
     fun openMenu(view: View) {
