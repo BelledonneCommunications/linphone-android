@@ -6,8 +6,8 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
-def appVersionName = "5.1.3"
-def appVersionCode = 51030
+def appVersionName = "5.1.4"
+def appVersionCode = 51040
 
 def packageName = "org.linphone"
 
