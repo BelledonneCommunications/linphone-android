@@ -9,6 +9,8 @@ class ChatMessageParticipantDeliveryModel @WorkerThread constructor(
     address: Address,
     timestamp: Long
 ) {
+    val sipUri = address.asStringUriOnly()
+
     val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(address)
 
     val time = TimestampUtils.toString(timestamp)

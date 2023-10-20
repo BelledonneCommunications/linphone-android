@@ -40,7 +40,7 @@
             android:background="@color/transparent_color"
             android:layout_marginBottom="16dp"
             app:layout_constraintTop_toBottomOf="@id/handle"
-            app:layout_constraintBottom_toTopOf="@id/scrollview"
+            app:layout_constraintBottom_toTopOf="@id/deliveryList"
             app:tabMode="fixed"
             app:tabUnboundedRipple="true"
             app:tabRippleColor="@color/orange_main_100"
@@ -51,21 +51,13 @@
             app:tabTextColor="@color/gray_main2_400"
             app:tabSelectedTextColor="@color/gray_main2_600" />
 
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/scrollview"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/deliveryList"
             android:layout_width="match_parent"
             android:layout_height="250dp"
+            android:nestedScrollingEnabled="true"
             app:layout_constraintHeight_min="50dp"
-            app:layout_constraintBottom_toBottomOf="parent">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                entries="@{model.deliveryModels}"
-                layout="@{@layout/chat_delivery_list_cell}" />
-
-        </androidx.core.widget.NestedScrollView>
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

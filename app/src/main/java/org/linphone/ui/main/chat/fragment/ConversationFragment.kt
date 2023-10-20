@@ -52,6 +52,7 @@ import org.linphone.core.ChatMessage
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatConversationFragmentBinding
 import org.linphone.databinding.ChatConversationLongPressMenuBinding
+import org.linphone.ui.main.chat.adapter.ChatMessageDeliveryAdapter
 import org.linphone.ui.main.chat.adapter.ConversationEventAdapter
 import org.linphone.ui.main.chat.model.ChatMessageDeliveryModel
 import org.linphone.ui.main.chat.model.ChatMessageModel
@@ -77,6 +78,8 @@ class ConversationFragment : GenericFragment() {
     private val args: ConversationFragmentArgs by navArgs()
 
     private lateinit var adapter: ConversationEventAdapter
+
+    private lateinit var deliveryAdapter: ChatMessageDeliveryAdapter
 
     private val pickMedia = registerForActivityResult(
         ActivityResultContracts.PickMultipleVisualMedia()
@@ -151,8 +154,15 @@ class ConversationFragment : GenericFragment() {
         binding.eventsList.setHasFixedSize(true)
         binding.eventsList.adapter = adapter
 
+        deliveryAdapter = ChatMessageDeliveryAdapter(viewLifecycleOwner)
+        binding.messageDelivery.deliveryList.setHasFixedSize(true)
+        binding.messageDelivery.deliveryList.adapter = deliveryAdapter
+
         val layoutManager = LinearLayoutManager(requireContext())
         binding.eventsList.layoutManager = layoutManager
+
+        val deliveryLayoutManager = LinearLayoutManager(requireContext())
+        binding.messageDelivery.deliveryList.layoutManager = deliveryLayoutManager
 
         adapter.chatMessageLongPressEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
@@ -323,6 +333,10 @@ class ConversationFragment : GenericFragment() {
             val model = ChatMessageDeliveryModel(chatMessageModel.chatMessage)
 
             coreContext.postOnMainThread {
+                model.deliveryModels.observe(viewLifecycleOwner) {
+                    deliveryAdapter.submitList(it)
+                }
+
                 binding.messageDelivery.tabs.removeAllTabs()
                 binding.messageDelivery.tabs.addTab(
                     binding.messageDelivery.tabs.newTab().setText(model.readLabel.value).setId(
