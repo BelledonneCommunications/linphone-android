@@ -126,6 +126,11 @@ class ConversationInfoFragment : GenericFragment() {
         binding.setBackClickListener {
             goBack()
         }
+
+        binding.setAddParticipantsClickListener {
+            val action = ConversationInfoFragmentDirections.actionConversationInfoFragmentToAddParticipantToConversationFragment()
+            findNavController().navigate(action)
+        }
     }
 
     private fun showParticipantAdminPopupMenu(view: View, participantModel: ParticipantModel) {
