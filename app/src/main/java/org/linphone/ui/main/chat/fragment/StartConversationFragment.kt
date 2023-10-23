@@ -94,7 +94,7 @@ class StartConversationFragment : GenericAddressPickerFragment() {
             val count = adapter.itemCount
             adapter.submitList(it)
 
-            if (count == 0 && it.isNotEmpty()) {
+            if (count == 0) {
                 (view.parent as? ViewGroup)?.doOnPreDraw {
                     startPostponedEnterTransition()
                 }
