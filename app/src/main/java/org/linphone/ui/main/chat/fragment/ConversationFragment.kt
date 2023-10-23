@@ -141,6 +141,10 @@ class ConversationFragment : GenericFragment() {
                     Log.i(
                         "$TAG Found matching chat room for local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
                     )
+                    (view.parent as? ViewGroup)?.doOnPreDraw {
+                        startPostponedEnterTransition()
+                        sharedViewModel.openSlidingPaneEvent.value = Event(true)
+                    }
                 } else {
                     (view.parent as? ViewGroup)?.doOnPreDraw {
                         Log.e("$TAG Failed to find chat room, going back")
@@ -174,13 +178,6 @@ class ConversationFragment : GenericFragment() {
             val currentCount = adapter.itemCount
             adapter.submitList(items)
             Log.i("$TAG Events (messages) list updated with [${items.size}] items")
-
-            if (currentCount == 0 && items.isNotEmpty()) {
-                (view.parent as? ViewGroup)?.doOnPreDraw {
-                    startPostponedEnterTransition()
-                    sharedViewModel.openSlidingPaneEvent.value = Event(true)
-                }
-            }
 
             if (currentCount < items.size) {
                 binding.eventsList.scrollToPosition(items.size - 1)

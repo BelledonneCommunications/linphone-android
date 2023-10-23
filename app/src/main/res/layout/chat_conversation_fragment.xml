@@ -83,6 +83,18 @@
                 app:layout_constraintTop_toTopOf="@id/back" />
 
             <ImageView
+                android:id="@+id/presence_badge"
+                android:layout_width="@dimen/avatar_presence_badge_size"
+                android:layout_height="@dimen/avatar_presence_badge_size"
+                android:layout_marginEnd="@dimen/avatar_presence_badge_end_margin"
+                android:background="@drawable/led_background"
+                android:padding="@dimen/avatar_presence_badge_padding"
+                app:presenceIcon="@{viewModel.avatarModel.presenceStatus}"
+                android:visibility="@{viewModel.isGroup || viewModel.avatarModel.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE}"
+                app:layout_constraintEnd_toEndOf="@id/avatar"
+                app:layout_constraintBottom_toBottomOf="@id/avatar"/>
+
+            <ImageView
                 android:id="@+id/trust_badge"
                 android:layout_width="@dimen/avatar_presence_badge_size"
                 android:layout_height="@dimen/avatar_presence_badge_size"
