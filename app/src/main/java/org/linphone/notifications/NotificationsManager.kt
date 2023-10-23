@@ -349,6 +349,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
                 Log.w("$TAG No call anymore, stopping service")
                 stopCallForeground()
             } else {
+                Log.i("$TAG At least a call is still running")
                 startCallForeground()
             }
         }
@@ -401,6 +402,8 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
     @WorkerThread
     private fun startCallForeground() {
+        Log.i("$TAG Trying to start foreground Service using call notification")
+
         val channelId = context.getString(R.string.notification_channel_call_id)
         val channel = notificationManager.getNotificationChannel(channelId)
         val importance = channel?.importance ?: NotificationManagerCompat.IMPORTANCE_NONE
@@ -415,7 +418,12 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         val notification = notificationManager.activeNotifications.find {
             it.id == notifiable.notificationId
         }
-        notification ?: return
+
+        if (notification == null) {
+            Log.w("$TAG No existing notification found for current Call, aborting")
+            return
+        }
+        Log.i("$TAG Found notification [${notification.id}] for current Call")
 
         val service = coreService
         if (service != null) {
@@ -726,6 +734,10 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             }
         }
 
+        Log.i(
+            "Creating notification for ${if (isIncoming) "incoming" else "outgoing"} call with video ${if (isVideo) "enabled" else "disabled"} on channel [$channel]"
+        )
+
         val builder = NotificationCompat.Builder(
             context,
             channel
@@ -741,7 +753,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
                 setStyle(style)
             } catch (iae: IllegalArgumentException) {
                 Log.e(
-                    "$TAG Can't use notification call style: $iae, using API 26 notification instead"
+                    "$TAG Can't use notification call style: $iae"
                 )
             }
             setSmallIcon(smallIcon)

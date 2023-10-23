@@ -61,4 +61,16 @@ class CoreForegroundService : CoreService() {
     override fun onBind(p0: Intent?): IBinder? {
         return null
     }
+
+    override fun createServiceNotification() {
+        // Do nothing, app's Notifications Manager will do the job
+    }
+
+    override fun showForegroundServiceNotification() {
+        // Do nothing, app's Notifications Manager will do the job
+    }
+
+    override fun hideForegroundServiceNotification() {
+        // Do nothing, app's Notifications Manager will do the job
+    }
 }

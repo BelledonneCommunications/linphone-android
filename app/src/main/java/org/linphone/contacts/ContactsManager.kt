@@ -366,6 +366,9 @@ fun Friend.getPerson(): Person {
     val bm: Bitmap? = getAvatarBitmap()
     personBuilder.setIcon(
         if (bm == null) {
+            Log.i(
+                "[Friend] Can't use friend [$name] picture path, generating avatar based on initials"
+            )
             AvatarGenerator(coreContext.context).setInitials(AppUtils.getInitials(name.orEmpty())).buildIcon()
         } else {
             IconCompat.createWithAdaptiveBitmap(bm)
