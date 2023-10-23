@@ -156,7 +156,7 @@ class AccountSettingsViewModel @UiThread constructor() : ViewModel() {
                 val audioVideoConferenceFactoryAddress = Factory.instance().createAddress(
                     audioVideoConferenceFactoryUri.value.orEmpty()
                 )
-                newParams.conferenceFactoryAddress = audioVideoConferenceFactoryAddress
+                newParams.audioVideoConferenceFactoryAddress = audioVideoConferenceFactoryAddress
 
                 newParams.limeServerUrl = limeServerUrl.value
 
