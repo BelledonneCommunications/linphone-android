@@ -39,13 +39,17 @@ import androidx.annotation.UiThread
 import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.ChatMessage
@@ -318,61 +322,71 @@ class ConversationFragment : GenericFragment() {
     @UiThread
     private fun showDeliveryBottomSheetDialog(chatMessageModel: ChatMessageModel) {
         val deliveryBottomSheetBehavior = BottomSheetBehavior.from(binding.messageDelivery.root)
-        if (deliveryBottomSheetBehavior.state == BottomSheetBehavior.STATE_HALF_EXPANDED) {
-            deliveryBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        }
+        deliveryBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
         binding.messageDelivery.setHandleClickedListener {
             deliveryBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
-        coreContext.postOnCoreThread {
-            val model = ChatMessageDeliveryModel(chatMessageModel.chatMessage)
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                delay(200)
 
-            coreContext.postOnMainThread {
-                model.deliveryModels.observe(viewLifecycleOwner) {
-                    deliveryAdapter.submitList(it)
+                withContext(Dispatchers.Main) {
+                    coreContext.postOnCoreThread {
+                        val model = ChatMessageDeliveryModel(chatMessageModel.chatMessage)
+
+                        coreContext.postOnMainThread {
+                            model.deliveryModels.observe(viewLifecycleOwner) {
+                                deliveryAdapter.submitList(it)
+                            }
+
+                            binding.messageDelivery.tabs.removeAllTabs()
+                            binding.messageDelivery.tabs.addTab(
+                                binding.messageDelivery.tabs.newTab().setText(model.readLabel.value).setId(
+                                    ChatMessage.State.Displayed.toInt()
+                                )
+                            )
+                            binding.messageDelivery.tabs.addTab(
+                                binding.messageDelivery.tabs.newTab().setText(
+                                    model.receivedLabel.value
+                                ).setId(
+                                    ChatMessage.State.DeliveredToUser.toInt()
+                                )
+                            )
+                            binding.messageDelivery.tabs.addTab(
+                                binding.messageDelivery.tabs.newTab().setText(model.sentLabel.value).setId(
+                                    ChatMessage.State.Delivered.toInt()
+                                )
+                            )
+                            binding.messageDelivery.tabs.addTab(
+                                binding.messageDelivery.tabs.newTab().setText(
+                                    model.errorLabel.value
+                                ).setId(
+                                    ChatMessage.State.NotDelivered.toInt()
+                                )
+                            )
+
+                            binding.messageDelivery.tabs.setOnTabSelectedListener(object : OnTabSelectedListener {
+                                override fun onTabSelected(tab: TabLayout.Tab?) {
+                                    val state = tab?.id ?: ChatMessage.State.Displayed.toInt()
+                                    model.computeListForState(ChatMessage.State.fromInt(state))
+                                }
+
+                                override fun onTabUnselected(tab: TabLayout.Tab?) {
+                                }
+
+                                override fun onTabReselected(tab: TabLayout.Tab?) {
+                                }
+                            })
+
+                            binding.messageDelivery.model = model
+
+                            binding.messageDelivery.root.visibility = View.VISIBLE
+                            deliveryBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                        }
+                    }
                 }
-
-                binding.messageDelivery.tabs.removeAllTabs()
-                binding.messageDelivery.tabs.addTab(
-                    binding.messageDelivery.tabs.newTab().setText(model.readLabel.value).setId(
-                        ChatMessage.State.Displayed.toInt()
-                    )
-                )
-                binding.messageDelivery.tabs.addTab(
-                    binding.messageDelivery.tabs.newTab().setText(model.receivedLabel.value).setId(
-                        ChatMessage.State.DeliveredToUser.toInt()
-                    )
-                )
-                binding.messageDelivery.tabs.addTab(
-                    binding.messageDelivery.tabs.newTab().setText(model.sentLabel.value).setId(
-                        ChatMessage.State.Delivered.toInt()
-                    )
-                )
-                binding.messageDelivery.tabs.addTab(
-                    binding.messageDelivery.tabs.newTab().setText(model.errorLabel.value).setId(
-                        ChatMessage.State.NotDelivered.toInt()
-                    )
-                )
-
-                binding.messageDelivery.tabs.setOnTabSelectedListener(object : OnTabSelectedListener {
-                    override fun onTabSelected(tab: TabLayout.Tab?) {
-                        val state = tab?.id ?: ChatMessage.State.Displayed.toInt()
-                        model.computeListForState(ChatMessage.State.fromInt(state))
-                    }
-
-                    override fun onTabUnselected(tab: TabLayout.Tab?) {
-                    }
-
-                    override fun onTabReselected(tab: TabLayout.Tab?) {
-                    }
-                })
-
-                binding.messageDelivery.model = model
-
-                binding.messageDelivery.root.visibility = View.VISIBLE
-                deliveryBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
         }
     }
