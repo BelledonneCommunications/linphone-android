@@ -23,9 +23,9 @@ import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.text.TextPaint
-import android.util.TypedValue
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.drawable.IconCompat
 import org.linphone.R
 import org.linphone.utils.AppUtils
 
@@ -50,10 +50,6 @@ class AvatarGenerator(private val context: Context) {
         textSize = size
     }
 
-    fun setTextColorResource(resource: Int) = apply {
-        textColor = ContextCompat.getColor(context, resource)
-    }
-
     fun setAvatarSize(size: Int) = apply {
         avatarSize = size
     }
@@ -62,14 +58,7 @@ class AvatarGenerator(private val context: Context) {
         initials = label
     }
 
-    fun setBackgroundColorAttribute(attribute: Int) = apply {
-        val theme = context.theme
-        val backgroundColorTypedValue = TypedValue()
-        theme.resolveAttribute(attribute, backgroundColorTypedValue, true)
-        backgroundColor = ContextCompat.getColor(context, backgroundColorTypedValue.resourceId)
-    }
-
-    fun build(): BitmapDrawable {
+    private fun preBuild(): Bitmap {
         val textPainter = getTextPainter()
         val painter = getPainter()
 
@@ -86,7 +75,15 @@ class AvatarGenerator(private val context: Context) {
         canvas.drawCircle(halfSize, halfSize, halfSize, painter)
         canvas.drawText(initials, bounds.left, bounds.top - textPainter.ascent(), textPainter)
 
-        return BitmapDrawable(context.resources, bitmap)
+        return bitmap
+    }
+
+    fun build(): BitmapDrawable {
+        return BitmapDrawable(context.resources, preBuild())
+    }
+
+    fun buildIcon(): IconCompat {
+        return IconCompat.createWithAdaptiveBitmap(preBuild())
     }
 
     private fun getTextPainter(): TextPaint {

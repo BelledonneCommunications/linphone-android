@@ -47,6 +47,7 @@ import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.contacts.AvatarGenerator
 import org.linphone.contacts.getAvatarBitmap
 import org.linphone.contacts.getPerson
 import org.linphone.core.Address
@@ -987,7 +988,9 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         return friend?.getPerson()
             ?: Person.Builder()
                 .setName(displayName)
-                .setIcon(coreContext.contactsManager.contactAvatar)
+                .setIcon(
+                    AvatarGenerator(context).setInitials(AppUtils.getInitials(displayName)).buildIcon()
+                )
                 .setKey(displayName)
                 .build()
     }

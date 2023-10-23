@@ -34,7 +34,6 @@ import androidx.core.app.Person
 import androidx.core.graphics.drawable.IconCompat
 import androidx.loader.app.LoaderManager
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.R
 import org.linphone.core.Address
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
@@ -47,6 +46,7 @@ import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressClickListener
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel
 import org.linphone.ui.main.model.isInSecureMode
+import org.linphone.utils.AppUtils
 import org.linphone.utils.ImageUtils
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.PhoneNumberUtils
@@ -55,8 +55,6 @@ class ContactsManager @UiThread constructor(context: Context) {
     companion object {
         private const val TAG = "[Contacts Manager]"
     }
-
-    val contactAvatar: IconCompat
 
     private var nativeContactsLoaded = false
 
@@ -92,13 +90,6 @@ class ContactsManager @UiThread constructor(context: Context) {
             Log.i("$TAG Friend list [${friendList.displayName}] remoed")
             friendList.removeListener(friendListListener)
         }
-    }
-
-    init {
-        contactAvatar = IconCompat.createWithResource(
-            context,
-            R.drawable.user_circle
-        )
     }
 
     @UiThread
@@ -346,7 +337,7 @@ class ContactsManager @UiThread constructor(context: Context) {
         val bm = ImageUtils.getBitmap(coreContext.context, photo)
         personBuilder.setIcon(
             if (bm == null) {
-                coreContext.contactsManager.contactAvatar
+                AvatarGenerator(coreContext.context).setInitials(AppUtils.getInitials(name)).buildIcon()
             } else {
                 IconCompat.createWithAdaptiveBitmap(bm)
             }
@@ -375,7 +366,7 @@ fun Friend.getPerson(): Person {
     val bm: Bitmap? = getAvatarBitmap()
     personBuilder.setIcon(
         if (bm == null) {
-            coreContext.contactsManager.contactAvatar
+            AvatarGenerator(coreContext.context).setInitials(AppUtils.getInitials(name.orEmpty())).buildIcon()
         } else {
             IconCompat.createWithAdaptiveBitmap(bm)
         }

@@ -33,6 +33,7 @@ import androidx.core.graphics.drawable.IconCompat
 import kotlin.math.min
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.contacts.AvatarGenerator
 import org.linphone.contacts.getPerson
 import org.linphone.core.ChatRoom
 import org.linphone.core.tools.Log
@@ -92,8 +93,10 @@ class ShortcutUtils {
                         personsList.add(person)
                     }
 
-                    icon = person?.icon ?: coreContext.contactsManager.contactAvatar
                     subject = contact?.name ?: LinphoneUtils.getDisplayName(peerAddress)
+                    icon = person?.icon ?: AvatarGenerator(context).setInitials(
+                        AppUtils.getInitials(subject)
+                    ).buildIcon()
                 } else if (chatRoom.hasCapability(ChatRoom.Capabilities.OneToOne.toInt()) && chatRoom.participants.isNotEmpty()) {
                     val address = chatRoom.participants.first().address
                     val contact =
@@ -104,7 +107,9 @@ class ShortcutUtils {
                     }
 
                     subject = contact?.name ?: LinphoneUtils.getDisplayName(address)
-                    icon = person?.icon ?: coreContext.contactsManager.contactAvatar
+                    icon = person?.icon ?: AvatarGenerator(context).setInitials(
+                        AppUtils.getInitials(subject)
+                    ).buildIcon()
                 } else {
                     val list = arrayListOf<String>()
                     for (participant in chatRoom.participants) {
@@ -120,10 +125,14 @@ class ShortcutUtils {
                         }
                     }
                     subject = chatRoom.subject.orEmpty()
-                    val iconSize = AppUtils.getDimension(R.dimen.avatar_list_cell_size).toInt()
-                    icon = IconCompat.createWithAdaptiveBitmap(
-                        ImageUtils.getBitmapFromMultipleAvatars(context, iconSize, list)
-                    )
+                    icon = if (list.isNotEmpty()) {
+                        val iconSize = AppUtils.getDimension(R.dimen.avatar_list_cell_size).toInt()
+                        IconCompat.createWithAdaptiveBitmap(
+                            ImageUtils.getBitmapFromMultipleAvatars(context, iconSize, list)
+                        )
+                    } else {
+                        AvatarGenerator(context).setInitials(subject).buildIcon()
+                    }
                 }
 
                 val persons = arrayOfNulls<Person>(personsList.size)
