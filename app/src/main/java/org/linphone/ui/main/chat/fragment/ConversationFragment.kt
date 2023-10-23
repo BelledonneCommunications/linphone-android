@@ -56,10 +56,11 @@ import org.linphone.core.ChatMessage
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatConversationFragmentBinding
 import org.linphone.databinding.ChatConversationLongPressMenuBinding
-import org.linphone.ui.main.chat.adapter.ChatMessageDeliveryAdapter
+import org.linphone.ui.main.chat.adapter.ChatMessageBottomSheetAdapter
 import org.linphone.ui.main.chat.adapter.ConversationEventAdapter
 import org.linphone.ui.main.chat.model.ChatMessageDeliveryModel
 import org.linphone.ui.main.chat.model.ChatMessageModel
+import org.linphone.ui.main.chat.model.ChatMessageReactionsModel
 import org.linphone.ui.main.chat.viewmodel.ConversationViewModel
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.AppUtils
@@ -83,7 +84,7 @@ class ConversationFragment : GenericFragment() {
 
     private lateinit var adapter: ConversationEventAdapter
 
-    private lateinit var deliveryAdapter: ChatMessageDeliveryAdapter
+    private lateinit var bottomSheetAdapter: ChatMessageBottomSheetAdapter
 
     private val pickMedia = registerForActivityResult(
         ActivityResultContracts.PickMultipleVisualMedia()
@@ -162,15 +163,15 @@ class ConversationFragment : GenericFragment() {
         binding.eventsList.setHasFixedSize(true)
         binding.eventsList.adapter = adapter
 
-        deliveryAdapter = ChatMessageDeliveryAdapter(viewLifecycleOwner)
-        binding.messageDelivery.deliveryList.setHasFixedSize(true)
-        binding.messageDelivery.deliveryList.adapter = deliveryAdapter
-
         val layoutManager = LinearLayoutManager(requireContext())
         binding.eventsList.layoutManager = layoutManager
 
-        val deliveryLayoutManager = LinearLayoutManager(requireContext())
-        binding.messageDelivery.deliveryList.layoutManager = deliveryLayoutManager
+        bottomSheetAdapter = ChatMessageBottomSheetAdapter(viewLifecycleOwner)
+        binding.messageBottomSheet.bottomSheetList.setHasFixedSize(true)
+        binding.messageBottomSheet.bottomSheetList.adapter = bottomSheetAdapter
+
+        val bottomSheetLayoutManager = LinearLayoutManager(requireContext())
+        binding.messageBottomSheet.bottomSheetList.layoutManager = bottomSheetLayoutManager
 
         adapter.chatMessageLongPressEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
@@ -195,9 +196,19 @@ class ConversationFragment : GenericFragment() {
         adapter.showDeliveryForChatMessageModelEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
                 if (viewModel.isGroup.value == true) {
-                    showDeliveryBottomSheetDialog(model)
+                    showDeliveryBottomSheetDialog(model, showDelivery = true)
                 } else {
                     Log.w("$TAG Conversation is not a group, not showing delivery bottom sheet")
+                }
+            }
+        }
+
+        adapter.showReactionForChatMessageModelEvent.observe(viewLifecycleOwner) {
+            it.consume { model ->
+                if (viewModel.isGroup.value == true) {
+                    showDeliveryBottomSheetDialog(model, showReactions = true)
+                } else {
+                    Log.w("$TAG Conversation is not a group, not showing reactions bottom sheet")
                 }
             }
         }
@@ -320,73 +331,140 @@ class ConversationFragment : GenericFragment() {
     }
 
     @UiThread
-    private fun showDeliveryBottomSheetDialog(chatMessageModel: ChatMessageModel) {
-        val deliveryBottomSheetBehavior = BottomSheetBehavior.from(binding.messageDelivery.root)
+    private fun showDeliveryBottomSheetDialog(
+        chatMessageModel: ChatMessageModel,
+        showDelivery: Boolean = false,
+        showReactions: Boolean = false
+    ) {
+        val deliveryBottomSheetBehavior = BottomSheetBehavior.from(binding.messageBottomSheet.root)
         deliveryBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
-        binding.messageDelivery.setHandleClickedListener {
+        binding.messageBottomSheet.setHandleClickedListener {
             deliveryBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
+                // Wait for previous bottom sheet to go away
                 delay(200)
 
                 withContext(Dispatchers.Main) {
-                    coreContext.postOnCoreThread {
-                        val model = ChatMessageDeliveryModel(chatMessageModel.chatMessage)
+                    if (showDelivery) {
+                        prepareBottomSheetForDeliveryStatus(chatMessageModel)
+                    } else if (showReactions) {
+                        prepareBottomSheetForReactions(chatMessageModel)
+                    }
 
-                        coreContext.postOnMainThread {
-                            model.deliveryModels.observe(viewLifecycleOwner) {
-                                deliveryAdapter.submitList(it)
-                            }
+                    binding.messageBottomSheet.root.visibility = View.VISIBLE
+                    deliveryBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                }
+            }
+        }
+    }
 
-                            binding.messageDelivery.tabs.removeAllTabs()
-                            binding.messageDelivery.tabs.addTab(
-                                binding.messageDelivery.tabs.newTab().setText(model.readLabel.value).setId(
-                                    ChatMessage.State.Displayed.toInt()
-                                )
-                            )
-                            binding.messageDelivery.tabs.addTab(
-                                binding.messageDelivery.tabs.newTab().setText(
-                                    model.receivedLabel.value
-                                ).setId(
-                                    ChatMessage.State.DeliveredToUser.toInt()
-                                )
-                            )
-                            binding.messageDelivery.tabs.addTab(
-                                binding.messageDelivery.tabs.newTab().setText(model.sentLabel.value).setId(
-                                    ChatMessage.State.Delivered.toInt()
-                                )
-                            )
-                            binding.messageDelivery.tabs.addTab(
-                                binding.messageDelivery.tabs.newTab().setText(
-                                    model.errorLabel.value
-                                ).setId(
-                                    ChatMessage.State.NotDelivered.toInt()
-                                )
-                            )
+    @UiThread
+    private fun prepareBottomSheetForDeliveryStatus(chatMessageModel: ChatMessageModel) {
+        coreContext.postOnCoreThread {
+            val model = ChatMessageDeliveryModel(chatMessageModel.chatMessage)
 
-                            binding.messageDelivery.tabs.setOnTabSelectedListener(object : OnTabSelectedListener {
-                                override fun onTabSelected(tab: TabLayout.Tab?) {
-                                    val state = tab?.id ?: ChatMessage.State.Displayed.toInt()
-                                    model.computeListForState(ChatMessage.State.fromInt(state))
-                                }
+            coreContext.postOnMainThread {
+                val tabs = binding.messageBottomSheet.tabs
+                tabs.removeAllTabs()
+                tabs.addTab(
+                    tabs.newTab().setText(model.readLabel.value).setId(
+                        ChatMessage.State.Displayed.toInt()
+                    )
+                )
+                tabs.addTab(
+                    tabs.newTab().setText(
+                        model.receivedLabel.value
+                    ).setId(
+                        ChatMessage.State.DeliveredToUser.toInt()
+                    )
+                )
+                tabs.addTab(
+                    tabs.newTab().setText(model.sentLabel.value).setId(
+                        ChatMessage.State.Delivered.toInt()
+                    )
+                )
+                tabs.addTab(
+                    tabs.newTab().setText(
+                        model.errorLabel.value
+                    ).setId(
+                        ChatMessage.State.NotDelivered.toInt()
+                    )
+                )
 
-                                override fun onTabUnselected(tab: TabLayout.Tab?) {
-                                }
+                tabs.setOnTabSelectedListener(object : OnTabSelectedListener {
+                    override fun onTabSelected(tab: TabLayout.Tab?) {
+                        val state = tab?.id ?: ChatMessage.State.Displayed.toInt()
+                        bottomSheetAdapter.submitList(
+                            model.computeListForState(ChatMessage.State.fromInt(state))
+                        )
+                    }
 
-                                override fun onTabReselected(tab: TabLayout.Tab?) {
-                                }
-                            })
+                    override fun onTabUnselected(tab: TabLayout.Tab?) {
+                    }
 
-                            binding.messageDelivery.model = model
+                    override fun onTabReselected(tab: TabLayout.Tab?) {
+                    }
+                })
 
-                            binding.messageDelivery.root.visibility = View.VISIBLE
-                            deliveryBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                val initialList = model.displayedModels
+                bottomSheetAdapter.submitList(initialList)
+                Log.i("$TAG Submitted [${initialList.size}] items for default delivery status list")
+            }
+        }
+    }
+
+    @UiThread
+    private fun prepareBottomSheetForReactions(chatMessageModel: ChatMessageModel) {
+        coreContext.postOnCoreThread {
+            val model = ChatMessageReactionsModel(chatMessageModel.chatMessage)
+            val totalCount = model.allReactions.size
+            val label = getString(R.string.message_reactions_info_all_title, totalCount.toString())
+
+            coreContext.postOnMainThread {
+                val tabs = binding.messageBottomSheet.tabs
+                tabs.removeAllTabs()
+                tabs.addTab(
+                    tabs.newTab().setText(label).setId(0).setTag("")
+                )
+
+                var index = 1
+                for (reaction in model.differentReactions.value.orEmpty()) {
+                    val count = model.reactionsMap[reaction]
+                    val tabLabel = getString(
+                        R.string.message_reactions_info_emoji_title,
+                        reaction,
+                        count.toString()
+                    )
+                    tabs.addTab(
+                        tabs.newTab().setText(tabLabel).setId(index).setTag(reaction)
+                    )
+                    index += 1
+                }
+
+                tabs.setOnTabSelectedListener(object : OnTabSelectedListener {
+                    override fun onTabSelected(tab: TabLayout.Tab?) {
+                        val filter = tab?.tag.toString()
+                        if (filter.isEmpty()) {
+                            bottomSheetAdapter.submitList(model.allReactions)
+                        } else {
+                            bottomSheetAdapter.submitList(model.filterReactions(filter))
                         }
                     }
-                }
+
+                    override fun onTabUnselected(tab: TabLayout.Tab?) {
+                    }
+
+                    override fun onTabReselected(tab: TabLayout.Tab?) {
+                    }
+                })
+
+                val initialList = model.allReactions
+                bottomSheetAdapter.submitList(initialList)
+                Log.i("$TAG Submitted [${initialList.size}] items for default reactions list")
             }
         }
     }

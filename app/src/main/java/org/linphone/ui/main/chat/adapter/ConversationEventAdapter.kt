@@ -50,6 +50,9 @@ class ConversationEventAdapter(
     val showDeliveryForChatMessageModelEvent: MutableLiveData<Event<ChatMessageModel>> by lazy {
         MutableLiveData<Event<ChatMessageModel>>()
     }
+    val showReactionForChatMessageModelEvent: MutableLiveData<Event<ChatMessageModel>> by lazy {
+        MutableLiveData<Event<ChatMessageModel>>()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
@@ -123,6 +126,9 @@ class ConversationEventAdapter(
                 setShowDeliveryInfoClickListener {
                     showDeliveryForChatMessageModelEvent.value = Event(message)
                 }
+                setShowReactionInfoClickListener {
+                    showReactionForChatMessageModelEvent.value = Event(message)
+                }
 
                 lifecycleOwner = viewLifecycleOwner
                 executePendingBindings()
@@ -139,6 +145,9 @@ class ConversationEventAdapter(
 
                 setShowDeliveryInfoClickListener {
                     showDeliveryForChatMessageModelEvent.value = Event(message)
+                }
+                setShowReactionInfoClickListener {
+                    showReactionForChatMessageModelEvent.value = Event(message)
                 }
 
                 lifecycleOwner = viewLifecycleOwner

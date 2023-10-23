@@ -9,19 +9,19 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
-import org.linphone.databinding.ChatMessageDeliveryListCellBinding
-import org.linphone.ui.main.chat.model.ChatMessageParticipantDeliveryModel
+import org.linphone.databinding.ChatMessageBottomSheetListCellBinding
+import org.linphone.ui.main.chat.model.ChatMessageBottomSheetParticipantModel
 
-class ChatMessageDeliveryAdapter(
+class ChatMessageBottomSheetAdapter(
     private val viewLifecycleOwner: LifecycleOwner
-) : ListAdapter<ChatMessageParticipantDeliveryModel, RecyclerView.ViewHolder>(
-    ChatDeliveryDiffCallback()
+) : ListAdapter<ChatMessageBottomSheetParticipantModel, RecyclerView.ViewHolder>(
+    ParticipantDiffCallback()
 ) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val binding: ChatMessageDeliveryListCellBinding = DataBindingUtil.inflate(
+        val binding: ChatMessageBottomSheetListCellBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
-            R.layout.chat_message_delivery_list_cell,
+            R.layout.chat_message_bottom_sheet_list_cell,
             parent,
             false
         )
@@ -33,12 +33,12 @@ class ChatMessageDeliveryAdapter(
     }
 
     inner class ViewHolder(
-        val binding: ChatMessageDeliveryListCellBinding
+        val binding: ChatMessageBottomSheetListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         @UiThread
-        fun bind(deliveryModel: ChatMessageParticipantDeliveryModel) {
+        fun bind(bottomSheetModel: ChatMessageBottomSheetParticipantModel) {
             with(binding) {
-                model = deliveryModel
+                model = bottomSheetModel
 
                 lifecycleOwner = viewLifecycleOwner
 
@@ -47,19 +47,19 @@ class ChatMessageDeliveryAdapter(
         }
     }
 
-    private class ChatDeliveryDiffCallback : DiffUtil.ItemCallback<ChatMessageParticipantDeliveryModel>() {
+    private class ParticipantDiffCallback : DiffUtil.ItemCallback<ChatMessageBottomSheetParticipantModel>() {
         override fun areItemsTheSame(
-            oldItem: ChatMessageParticipantDeliveryModel,
-            newItem: ChatMessageParticipantDeliveryModel
+            oldItem: ChatMessageBottomSheetParticipantModel,
+            newItem: ChatMessageBottomSheetParticipantModel
         ): Boolean {
             return oldItem.sipUri == newItem.sipUri
         }
 
         override fun areContentsTheSame(
-            oldItem: ChatMessageParticipantDeliveryModel,
-            newItem: ChatMessageParticipantDeliveryModel
+            oldItem: ChatMessageBottomSheetParticipantModel,
+            newItem: ChatMessageBottomSheetParticipantModel
         ): Boolean {
-            return oldItem.time == newItem.time
+            return oldItem.value == newItem.value
         }
     }
 }

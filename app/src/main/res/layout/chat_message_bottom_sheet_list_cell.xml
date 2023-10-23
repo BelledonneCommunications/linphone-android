@@ -9,7 +9,7 @@
         <import type="org.linphone.core.ChatRoom.SecurityLevel" />
         <variable
             name="model"
-            type="org.linphone.ui.main.chat.model.ChatMessageParticipantDeliveryModel" />
+            type="org.linphone.ui.main.chat.model.ChatMessageBottomSheetParticipantModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -72,7 +72,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:text="@{model.time, default=`16:18`}"
+            android:text="@{model.value, default=`16:18`}"
             android:textSize="12sp"
             android:textColor="@color/gray_main2_600"
             app:layout_constraintEnd_toEndOf="parent"

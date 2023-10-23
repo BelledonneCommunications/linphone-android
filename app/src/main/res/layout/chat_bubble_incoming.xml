@@ -14,6 +14,9 @@
             name="showDeliveryInfoClickListener"
             type="View.OnClickListener" />
         <variable
+            name="showReactionInfoClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="model"
             type="org.linphone.ui.main.chat.model.ChatMessageModel" />
     </data>
@@ -116,6 +119,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/reactions"
+            android:onClick="@{showReactionInfoClickListener}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="2dp"
