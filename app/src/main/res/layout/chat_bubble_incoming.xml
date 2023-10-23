@@ -50,8 +50,8 @@
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/background_end_barrier"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:barrierDirection="end"
             app:barrierMargin="10dp"
             app:constraint_referenced_ids="delivery_status, text_message" />
@@ -72,8 +72,8 @@
             android:id="@+id/text_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="26dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="@dimen/chat_bubble_text_padding_with_bubble"
             android:layout_marginEnd="16dp"
             android:paddingBottom="@{model.groupedWithNextOne ? @dimen/chat_bubble_text_padding_with_status : @dimen/chat_bubble_text_padding_with_bubble, default=@dimen/chat_bubble_text_padding_with_status}"
             android:text="@{model.text, default=`Lorem ipsum dolor sit amet`}"

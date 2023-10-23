@@ -40,6 +40,10 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.Person
 import androidx.core.app.RemoteInput
 import androidx.core.content.LocusIdCompat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -60,6 +64,7 @@ import org.linphone.core.tools.Log
 import org.linphone.ui.call.CallActivity
 import org.linphone.utils.AppUtils
 import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.ShortcutUtils
 
 class NotificationsManager @MainThread constructor(private val context: Context) {
     companion object {
@@ -80,6 +85,8 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         const val CHAT_TAG = "Chat"
         const val CHAT_NOTIFICATIONS_GROUP = "CHAT_NOTIF_GROUP"
     }
+
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     private val notificationManager: NotificationManagerCompat by lazy {
         NotificationManagerCompat.from(context)
@@ -143,6 +150,17 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             if (chatRoom.muted) {
                 Log.i("$TAG Chat room $id has been muted")
                 return
+            }
+
+            if (ShortcutUtils.isShortcutToChatRoomAlreadyCreated(context, chatRoom)) {
+                Log.i("$TAG Chat room shortcut already exists")
+            } else {
+                Log.i(
+                    "$TAG Ensure chat room shortcut exists for bubble notification"
+                )
+                scope.launch {
+                    ShortcutUtils.createShortcutsToChatRooms(context)
+                }
             }
 
             showChatRoomNotification(chatRoom, messages)
@@ -345,6 +363,10 @@ class NotificationsManager @MainThread constructor(private val context: Context)
     fun onCoreStarted(core: Core) {
         Log.i("$TAG Core has been started")
         core.addListener(coreListener)
+
+        scope.launch {
+            ShortcutUtils.createShortcutsToChatRooms(context)
+        }
     }
 
     @WorkerThread
@@ -800,8 +822,6 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         for (person in allPersons) {
             notificationBuilder.addPerson(person)
         }
-
-        // TODO FIXME: shortcuts!
 
         return notificationBuilder.build()
     }

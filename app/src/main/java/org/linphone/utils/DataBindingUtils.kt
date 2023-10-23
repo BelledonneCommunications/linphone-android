@@ -21,10 +21,7 @@ package org.linphone.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.graphics.PorterDuff
-import android.graphics.Rect
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -41,7 +38,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnLayout
@@ -53,9 +49,7 @@ import androidx.emoji2.emojipicker.EmojiViewItem
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import coil.dispose
-import coil.imageLoader
 import coil.load
-import coil.request.ImageRequest
 import com.google.android.material.imageview.ShapeableImageView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
@@ -356,61 +350,7 @@ private suspend fun loadContactPictureWithCoil(
                 } else {
                     AppUtils.getDimension(R.dimen.avatar_list_cell_size).toInt()
                 }
-                val bitmap = Bitmap.createBitmap(w, w, Bitmap.Config.ARGB_8888)
-                val canvas = Canvas(bitmap)
-
-                val drawables = images.mapNotNull {
-                    val request = ImageRequest.Builder(imageView.context)
-                        .data(it)
-                        .size(w / 2)
-                        .allowHardware(false)
-                        .build()
-                    context.imageLoader.execute(request).drawable
-                }
-
-                val rectangles = if (drawables.size == 2) {
-                    arrayListOf(
-                        Rect(0, 0, w / 2, w),
-                        Rect(w / 2, 0, w, w)
-                    )
-                } else if (drawables.size == 3) {
-                    arrayListOf(
-                        Rect(0, 0, w / 2, w / 2),
-                        Rect(w / 2, 0, w, w / 2),
-                        Rect(0, w / 2, w, w)
-                    )
-                } else if (drawables.size >= 4) {
-                    arrayListOf(
-                        Rect(0, 0, w / 2, w / 2),
-                        Rect(w / 2, 0, w, w / 2),
-                        Rect(0, w / 2, w / 2, w),
-                        Rect(w / 2, w / 2, w, w)
-                    )
-                } else {
-                    arrayListOf()
-                }
-
-                for (i in 0 until rectangles.size) {
-                    val src = if (drawables.size == 3 && i == 2) {
-                        // To prevent deformation for the bottom image when merging 3 of them
-                        val quarter = w / 4
-                        Rect(0, quarter, w, 3 * quarter)
-                    } else if (drawables.size == 2) {
-                        // To prevent deformation when two images are next to each other
-                        val quarter = w / 4
-                        Rect(quarter, 0, 3 * quarter, w)
-                    } else {
-                        null
-                    }
-
-                    canvas.drawBitmap(
-                        drawables[i].toBitmap(w, w, Bitmap.Config.ARGB_8888),
-                        src,
-                        rectangles[i],
-                        null
-                    )
-                }
-
+                val bitmap = ImageUtils.getBitmapFromMultipleAvatars(imageView.context, w, images)
                 imageView.load(bitmap)
             }
         } else {
