@@ -153,9 +153,7 @@ class MainActivity : AppCompatActivity() {
                 showGreenToast(message, icon)
             }
         }
-    }
 
-    override fun onStart() {
         coreContext.postOnCoreThread {
             val startDestination = when (corePreferences.defaultFragment) {
                 CONTACTS_FRAGMENT_ID -> {
@@ -187,15 +185,11 @@ class MainActivity : AppCompatActivity() {
                 if (intent != null) {
                     handleIntent(intent, startDestination, false)
                 } else {
-                    /*val navGraph = findNavController().navInflater.inflate(R.navigation.main_nav_graph)
-                    navGraph.setStartDestination(startDestination)
-                    findNavController().setGraph(navGraph, null)*/
-                    Log.e("$TAG Started without intent !")
+                    // This should never happen!
+                    Log.e("$TAG onPostCreate called without intent !")
                 }
             }
         }
-
-        super.onStart()
     }
 
     override fun onPause() {
