@@ -116,7 +116,7 @@
                 android:textColor="@color/gray_main2_600"
                 android:maxLines="1"
                 android:background="@drawable/edit_text_background"
-                android:inputType="text|textCapWords"
+                android:inputType="text|textCapSentences"
                 app:layout_constraintWidth_max="@dimen/text_input_max_width"
                 app:layout_constraintTop_toBottomOf="@id/group_name_title"
                 app:layout_constraintStart_toStartOf="parent"

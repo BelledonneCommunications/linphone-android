@@ -35,9 +35,11 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatInfoFragmentBinding
 import org.linphone.databinding.ChatParticipantAdminPopupMenuBinding
+import org.linphone.ui.main.chat.model.ConversationEditSubjectDialogModel
 import org.linphone.ui.main.chat.model.ParticipantModel
 import org.linphone.ui.main.chat.viewmodel.ConversationInfoViewModel
 import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.utils.DialogUtils
 
 @UiThread
 class ConversationInfoFragment : GenericFragment() {
@@ -137,6 +139,36 @@ class ConversationInfoFragment : GenericFragment() {
         binding.setAddParticipantsClickListener {
             val action = ConversationInfoFragmentDirections.actionConversationInfoFragmentToAddParticipantsFragment()
             findNavController().navigate(action)
+        }
+
+        binding.setEditSubjectClickListener {
+            val currentSubject = viewModel.subject.value.orEmpty()
+            val model = ConversationEditSubjectDialogModel(currentSubject)
+
+            val dialog = DialogUtils.getEditConversationSubjectDialog(
+                requireContext(),
+                model
+            )
+
+            model.dismissEvent.observe(viewLifecycleOwner) {
+                it.consume {
+                    Log.i("$TAG Conversation subject edit cancelled")
+                    dialog.dismiss()
+                }
+            }
+
+            model.confirmEvent.observe(viewLifecycleOwner) {
+                it.consume { newSubject ->
+                    Log.i(
+                        "$TAG Conversation subject edit confirmed, new subject is [$newSubject] (old was [$currentSubject])"
+                    )
+                    viewModel.updateSubject(newSubject)
+                    dialog.dismiss()
+                }
+            }
+
+            Log.i("$TAG Showing dialog to edit conversation subject")
+            dialog.show()
         }
     }
 

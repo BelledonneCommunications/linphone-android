@@ -39,6 +39,7 @@ import org.linphone.databinding.DialogConfirmZrtpSasBinding
 import org.linphone.databinding.DialogContactConfirmTrustCallBinding
 import org.linphone.databinding.DialogContactTrustProcessBinding
 import org.linphone.databinding.DialogDeleteContactBinding
+import org.linphone.databinding.DialogEditGroupConversationSubjectBinding
 import org.linphone.databinding.DialogManageAccountInternationalPrefixHelpBinding
 import org.linphone.databinding.DialogPickNumberOrAddressBinding
 import org.linphone.databinding.DialogRemoveAccountBinding
@@ -48,6 +49,7 @@ import org.linphone.databinding.DialogUpdateAvailableBinding
 import org.linphone.ui.assistant.model.AcceptConditionsAndPolicyDialogModel
 import org.linphone.ui.assistant.model.ConfirmPhoneNumberDialogModel
 import org.linphone.ui.call.model.ZrtpSasConfirmationDialogModel
+import org.linphone.ui.main.chat.model.ConversationEditSubjectDialogModel
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
 import org.linphone.ui.main.contacts.model.TrustCallDialogModel
 import org.linphone.ui.main.history.model.ConfirmationDialogModel
@@ -257,6 +259,22 @@ class DialogUtils {
             val binding: DialogCancelContactChangesBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(context),
                 R.layout.dialog_cancel_contact_changes,
+                null,
+                false
+            )
+            binding.viewModel = viewModel
+
+            return getDialog(context, binding)
+        }
+
+        @UiThread
+        fun getEditConversationSubjectDialog(
+            context: Context,
+            viewModel: ConversationEditSubjectDialogModel
+        ): Dialog {
+            val binding: DialogEditGroupConversationSubjectBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.dialog_edit_group_conversation_subject,
                 null,
                 false
             )

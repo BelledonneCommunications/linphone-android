@@ -10,6 +10,9 @@
             name="backClickListener"
             type="View.OnClickListener" />
         <variable
+            name="editSubjectClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="scheduleMeetingClickListener"
             type="View.OnClickListener" />
         <variable
@@ -95,6 +98,7 @@
 
                 <ImageView
                     android:id="@+id/edit_subject"
+                    android:onClick="@{editSubjectClickListener}"
                     android:layout_width="@dimen/icon_size"
                     android:layout_height="@dimen/icon_size"
                     android:layout_marginStart="8dp"

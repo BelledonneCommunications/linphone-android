@@ -37,7 +37,7 @@
             android:visibility="@{!model.isFromGroup ? View.GONE: model.isGroupedWithPreviousOne ? View.INVISIBLE : View.VISIBLE}"
             coilBubbleAvatar="@{model.avatarModel}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/name" />
 
         <ImageView
             android:id="@+id/presence_badge"
@@ -50,6 +50,20 @@
             app:presenceIcon="@{model.avatarModel.presenceStatus}"
             app:layout_constraintEnd_toEndOf="@id/avatar"
             app:layout_constraintBottom_toBottomOf="@id/avatar"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_300"
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:text="@{model.avatarModel.name, default=`John Doe`}"
+            android:textColor="@color/gray_main2_700"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:visibility="@{!model.isFromGroup ? View.GONE: model.isGroupedWithPreviousOne ? View.GONE : View.VISIBLE}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="@id/background" />
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/background_end_barrier"
@@ -67,7 +81,7 @@
             android:src="@{model.isGroupedWithPreviousOne ? @drawable/shape_chat_bubble_incoming_full : @drawable/shape_chat_bubble_incoming_first, default=@drawable/shape_chat_bubble_incoming_first}"
             app:layout_constraintStart_toEndOf="@id/avatar"
             app:layout_constraintEnd_toEndOf="@id/background_end_barrier"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@id/avatar"
             app:layout_constraintBottom_toBottomOf="@id/date_time"/>
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -85,7 +99,7 @@
             android:gravity="center_vertical|start"
             app:layout_constrainedWidth="true"
             app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@id/avatar"
             app:layout_constraintStart_toEndOf="@id/avatar"
             app:layout_constraintEnd_toEndOf="parent"/>
 

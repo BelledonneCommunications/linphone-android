@@ -288,6 +288,16 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
         }
     }
 
+    @UiThread
+    fun updateSubject(newSubject: String) {
+        coreContext.postOnCoreThread {
+            if (::chatRoom.isInitialized) {
+                Log.i("$TAG Updating chat room subject to [$newSubject]")
+                chatRoom.subject = newSubject
+            }
+        }
+    }
+
     @WorkerThread
     private fun configureChatRoom() {
         isMuted.postValue(chatRoom.muted)
