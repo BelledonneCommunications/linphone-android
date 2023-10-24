@@ -23,9 +23,17 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.contacts.ContactsManager
+import org.linphone.core.MagicSearch
+import org.linphone.core.MagicSearchListenerStub
+import org.linphone.core.SearchResult
 import org.linphone.mediastream.Log
+import org.linphone.ui.main.history.model.ContactOrSuggestionModel
 import org.linphone.ui.main.model.SelectedAddressModel
+import org.linphone.ui.main.model.isInSecureMode
 import org.linphone.utils.AppUtils
 
 abstract class AddressSelectionViewModel @UiThread constructor() : ViewModel() {
@@ -39,14 +47,82 @@ abstract class AddressSelectionViewModel @UiThread constructor() : ViewModel() {
 
     val selectionCount = MutableLiveData<String>()
 
+    protected var magicSearchSourceFlags = MagicSearch.Source.All.toInt()
+
+    private var currentFilter = ""
+    private var previousFilter = "NotSet"
+
+    val searchFilter = MutableLiveData<String>()
+
+    val contactsAndSuggestionsList = MutableLiveData<ArrayList<ContactOrSuggestionModel>>()
+
+    private var limitSearchToLinphoneAccounts = true
+
+    private lateinit var magicSearch: MagicSearch
+
+    private val magicSearchListener = object : MagicSearchListenerStub() {
+        @WorkerThread
+        override fun onSearchResultsReceived(magicSearch: MagicSearch) {
+            Log.i("$TAG Magic search contacts available")
+            processMagicSearchResults(magicSearch.lastSearch)
+        }
+    }
+
+    private val contactsListener = object : ContactsManager.ContactsListener {
+        @WorkerThread
+        override fun onContactsLoaded() {
+            Log.i("$TAG Contacts have been (re)loaded, updating list")
+            applyFilter(
+                currentFilter,
+                if (limitSearchToLinphoneAccounts) corePreferences.defaultDomain else "",
+                magicSearchSourceFlags,
+                MagicSearch.Aggregation.Friend
+            )
+        }
+    }
+
     init {
         multipleSelectionMode.value = false
+
+        coreContext.postOnCoreThread { core ->
+            val defaultAccount = core.defaultAccount
+            limitSearchToLinphoneAccounts = defaultAccount?.isInSecureMode() ?: false
+
+            coreContext.contactsManager.addListener(contactsListener)
+            magicSearch = core.createMagicSearch()
+            magicSearch.limitedSearch = false
+            magicSearch.addListener(magicSearchListener)
+        }
+
+        applyFilter(currentFilter)
+    }
+
+    @UiThread
+    override fun onCleared() {
+        coreContext.postOnCoreThread {
+            magicSearch.removeListener(magicSearchListener)
+            coreContext.contactsManager.removeListener(contactsListener)
+        }
+        super.onCleared()
+    }
+
+    @UiThread
+    fun clearFilter() {
+        searchFilter.value = ""
     }
 
     @UiThread
     fun switchToMultipleSelectionMode() {
         Log.i("$$TAG Multiple selection mode ON")
         multipleSelectionMode.value = true
+
+        selectionCount.postValue(
+            AppUtils.getStringWithPlural(
+                R.plurals.selection_count_label,
+                0,
+                "0"
+            )
+        )
     }
 
     @WorkerThread
@@ -100,5 +176,105 @@ abstract class AddressSelectionViewModel @UiThread constructor() : ViewModel() {
         } else {
             Log.w("$TAG Address isn't in selection, doing nothing")
         }
+    }
+
+    @WorkerThread
+    fun processMagicSearchResults(results: Array<SearchResult>) {
+        Log.i("$TAG Processing [${results.size}] results")
+
+        val contactsList = arrayListOf<ContactOrSuggestionModel>()
+        val suggestionsList = arrayListOf<ContactOrSuggestionModel>()
+        var previousLetter = ""
+
+        for (result in results) {
+            val address = result.address
+            if (address != null) {
+                val friend = coreContext.contactsManager.findContactByAddress(address)
+                if (friend != null) {
+                    val model = ContactOrSuggestionModel(address, friend)
+                    val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(
+                        address
+                    )
+                    model.avatarModel.postValue(avatarModel)
+
+                    val currentLetter = friend.name?.get(0).toString()
+                    val displayLetter = previousLetter.isEmpty() || currentLetter != previousLetter
+                    if (currentLetter != previousLetter) {
+                        previousLetter = currentLetter
+                    }
+                    avatarModel.firstContactStartingByThatLetter.postValue(
+                        displayLetter
+                    )
+
+                    contactsList.add(model)
+                } else {
+                    // If user-input generated result (always last) already exists, don't show it again
+                    if (result.sourceFlags == MagicSearch.Source.Request.toInt()) {
+                        val found = suggestionsList.find {
+                            it.address.weakEqual(address)
+                        }
+                        if (found != null) {
+                            Log.i(
+                                "$TAG Result generated from user input is a duplicate of an existing solution, preventing double"
+                            )
+                            continue
+                        }
+                    }
+
+                    val model = ContactOrSuggestionModel(address) {
+                        coreContext.startCall(address)
+                    }
+                    suggestionsList.add(model)
+                }
+            }
+        }
+
+        val list = arrayListOf<ContactOrSuggestionModel>()
+        list.addAll(contactsList)
+        list.addAll(suggestionsList)
+        contactsAndSuggestionsList.postValue(list)
+        Log.i(
+            "$TAG Processed [${results.size}] results, extracted [${suggestionsList.size}] suggestions"
+        )
+    }
+
+    @UiThread
+    fun applyFilter(filter: String) {
+        coreContext.postOnCoreThread {
+            applyFilter(
+                filter,
+                if (limitSearchToLinphoneAccounts) corePreferences.defaultDomain else "",
+                magicSearchSourceFlags,
+                MagicSearch.Aggregation.Friend
+            )
+        }
+    }
+
+    @WorkerThread
+    private fun applyFilter(
+        filter: String,
+        domain: String,
+        sources: Int,
+        aggregation: MagicSearch.Aggregation
+    ) {
+        if (previousFilter.isNotEmpty() && (
+            previousFilter.length > filter.length ||
+                (previousFilter.length == filter.length && previousFilter != filter)
+            )
+        ) {
+            magicSearch.resetSearchCache()
+        }
+        currentFilter = filter
+        previousFilter = filter
+
+        Log.i(
+            "$TAG Asking Magic search for contacts matching filter [$filter], domain [$domain] and in sources [$sources]"
+        )
+        magicSearch.getContactsListAsync(
+            filter,
+            domain,
+            sources,
+            aggregation
+        )
     }
 }

@@ -248,7 +248,7 @@
                 android:layout_height="0dp"
                 android:layout_margin="10dp"
                 android:src="@drawable/illu"
-                android:visibility="@{viewModel.contactsList.size() == 0 ? View.VISIBLE : View.GONE}"
+                android:visibility="@{viewModel.contactsAndSuggestionsList.size() == 0 ? View.VISIBLE : View.GONE}"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHeight_max="200dp"
@@ -262,36 +262,22 @@
                 android:id="@+id/no_contact_label"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/new_conversation_no_contact"
+                android:text="@{viewModel.searchFilter.length() > 0 ? @string/new_conversation_no_matching_contact : @string/new_conversation_no_contact, default=@string/new_conversation_no_contact}"
                 android:gravity="center"
-                android:visibility="@{viewModel.contactsList.size() == 0 ? View.VISIBLE : View.GONE}"
+                android:visibility="@{viewModel.contactsAndSuggestionsList.size() == 0 ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/no_contact_image" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/section_header_style"
-                android:id="@+id/contacts_label"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginTop="16dp"
-                android:text="@string/history_call_start_contacts_list_title"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/group_chat_icon"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/contacts_list"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginTop="8dp"
-                android:visibility="@{viewModel.contactsList.size() == 0 ? View.GONE : View.VISIBLE}"
+                android:visibility="@{viewModel.contactsAndSuggestionsList.size() == 0 ? View.GONE : View.VISIBLE}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/contacts_label"
+                app:layout_constraintTop_toBottomOf="@id/group_chat_icon"
                 app:layout_constraintBottom_toBottomOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

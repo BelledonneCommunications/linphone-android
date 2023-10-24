@@ -17,20 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.main.chat.viewmodel
+package org.linphone.ui.main.viewmodel
 
 import androidx.annotation.UiThread
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import org.linphone.ui.main.history.model.ContactOrSuggestionModel
 
-class ConversationAddParticipantViewModel @UiThread constructor() : ViewModel() {
-    val searchFilter = MutableLiveData<String>()
+class AddParticipantsViewModel @UiThread constructor() : AddressSelectionViewModel() {
+    companion object {
+        private const val TAG = "[Add Participants ViewModel]"
+    }
 
-    val contactsList = MutableLiveData<ArrayList<ContactOrSuggestionModel>>()
-
-    @UiThread
-    fun clearFilter() {
-        searchFilter.value = ""
+    init {
+        switchToMultipleSelectionMode()
     }
 }

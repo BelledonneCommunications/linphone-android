@@ -26,8 +26,7 @@ import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.core.view.doOnPreDraw
-import androidx.navigation.navGraphViewModels
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
@@ -36,9 +35,7 @@ import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.databinding.StartCallFragmentBinding
 import org.linphone.ui.main.fragment.GenericAddressPickerFragment
-import org.linphone.ui.main.history.adapter.ContactsAndSuggestionsListAdapter
 import org.linphone.ui.main.history.viewmodel.StartCallViewModel
-import org.linphone.utils.RecyclerViewHeaderDecoration
 import org.linphone.utils.addCharacterAtPosition
 import org.linphone.utils.hideKeyboard
 import org.linphone.utils.removeCharacterAtPosition
@@ -53,11 +50,7 @@ class StartCallFragment : GenericAddressPickerFragment() {
 
     private lateinit var binding: StartCallFragmentBinding
 
-    private val viewModel: StartCallViewModel by navGraphViewModels(
-        R.id.main_nav_graph
-    )
-
-    private lateinit var adapter: ContactsAndSuggestionsListAdapter
+    override lateinit var viewModel: StartCallViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -69,6 +62,8 @@ class StartCallFragment : GenericAddressPickerFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        viewModel = ViewModelProvider(this)[StartCallViewModel::class.java]
+
         super.onViewCreated(view, savedInstanceState)
         postponeEnterTransition()
 
@@ -85,20 +80,7 @@ class StartCallFragment : GenericAddressPickerFragment() {
             viewModel.hideNumpad()
         }
 
-        adapter = ContactsAndSuggestionsListAdapter(viewLifecycleOwner)
-        binding.contactsAndSuggestionsList.setHasFixedSize(true)
-        binding.contactsAndSuggestionsList.adapter = adapter
-
-        val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter, true)
-        binding.contactsAndSuggestionsList.addItemDecoration(headerItemDecoration)
-
-        adapter.contactClickedEvent.observe(viewLifecycleOwner) {
-            it.consume { model ->
-                handleClickOnContactModel(model)
-            }
-        }
-
-        binding.contactsAndSuggestionsList.layoutManager = LinearLayoutManager(requireContext())
+        setupRecyclerView(binding.contactsAndSuggestionsList)
 
         viewModel.contactsAndSuggestionsList.observe(
             viewLifecycleOwner
@@ -112,11 +94,6 @@ class StartCallFragment : GenericAddressPickerFragment() {
                     startPostponedEnterTransition()
                 }
             }
-        }
-
-        viewModel.searchFilter.observe(viewLifecycleOwner) { filter ->
-            val trimmed = filter.trim()
-            viewModel.applyFilter(trimmed)
         }
 
         viewModel.removedCharacterAtCurrentPositionEvent.observe(viewLifecycleOwner) {
@@ -165,7 +142,7 @@ class StartCallFragment : GenericAddressPickerFragment() {
     }
 
     @WorkerThread
-    override fun onAddressSelected(address: Address, friend: Friend) {
+    override fun onSingleAddressSelected(address: Address, friend: Friend) {
         coreContext.startCall(address)
     }
 

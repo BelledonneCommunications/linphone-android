@@ -17,32 +17,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.main.chat.fragment
+package org.linphone.ui.main.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
+import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import org.linphone.databinding.ChatAddParticipantFragmentBinding
-import org.linphone.ui.main.chat.viewmodel.ConversationAddParticipantViewModel
-import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.core.Address
+import org.linphone.core.Friend
+import org.linphone.core.tools.Log
+import org.linphone.databinding.GenericAddParticipantsFragmentBinding
+import org.linphone.ui.main.viewmodel.AddParticipantsViewModel
 
 @UiThread
-class AddParticipantToConversationFragment : GenericFragment() {
+class AddParticipantsFragment : GenericAddressPickerFragment() {
+    companion object {
+        private const val TAG = "[Add Participants Fragment]"
+    }
 
-    private lateinit var binding: ChatAddParticipantFragmentBinding
+    private lateinit var binding: GenericAddParticipantsFragmentBinding
 
-    private lateinit var viewModel: ConversationAddParticipantViewModel
+    override lateinit var viewModel: AddParticipantsViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = ChatAddParticipantFragmentBinding.inflate(layoutInflater)
+        binding = GenericAddParticipantsFragmentBinding.inflate(layoutInflater)
         return binding.root
     }
 
@@ -51,19 +57,41 @@ class AddParticipantToConversationFragment : GenericFragment() {
         return true
     }
 
+    override fun onSingleAddressSelected(address: Address, friend: Friend) {
+        Log.e("$TAG This shouldn't happen as we should always be in multiple selection mode here!")
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         // This fragment is displayed in a SlidingPane "child" area
         isSlidingPaneChild = true
 
+        viewModel = ViewModelProvider(this)[AddParticipantsViewModel::class.java]
+
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        viewModel = ViewModelProvider(this)[ConversationAddParticipantViewModel::class.java]
         binding.viewModel = viewModel
 
         binding.setBackClickListener {
             goBack()
+        }
+
+        setupRecyclerView(binding.contactsList)
+
+        viewModel.contactsAndSuggestionsList.observe(
+            viewLifecycleOwner
+        ) {
+            Log.i("$TAG Contacts & suggestions list is ready with [${it.size}] items")
+            val count = adapter.itemCount
+            adapter.submitList(it)
+
+            if (count == 0) {
+                (view.parent as? ViewGroup)?.doOnPreDraw {
+                    startPostponedEnterTransition()
+                }
+            }
         }
     }
 }

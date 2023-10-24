@@ -20,8 +20,12 @@
 package org.linphone.ui.main.fragment
 
 import android.app.Dialog
+import android.os.Bundle
+import android.view.View
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.contacts.getListOfSipAddressesAndPhoneNumbers
 import org.linphone.core.Address
@@ -30,9 +34,13 @@ import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressClickListener
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
+import org.linphone.ui.main.history.adapter.ContactsAndSuggestionsListAdapter
 import org.linphone.ui.main.history.model.ContactOrSuggestionModel
+import org.linphone.ui.main.model.SelectedAddressModel
 import org.linphone.ui.main.model.isInSecureMode
+import org.linphone.ui.main.viewmodel.AddressSelectionViewModel
 import org.linphone.utils.DialogUtils
+import org.linphone.utils.RecyclerViewHeaderDecoration
 
 @UiThread
 abstract class GenericAddressPickerFragment : GenericFragment() {
@@ -42,15 +50,9 @@ abstract class GenericAddressPickerFragment : GenericFragment() {
 
     private var numberOrAddressPickerDialog: Dialog? = null
 
-    @WorkerThread
-    abstract fun onAddressSelected(address: Address, friend: Friend)
+    protected lateinit var adapter: ContactsAndSuggestionsListAdapter
 
-    override fun onPause() {
-        super.onPause()
-
-        numberOrAddressPickerDialog?.dismiss()
-        numberOrAddressPickerDialog = null
-    }
+    protected abstract val viewModel: AddressSelectionViewModel
 
     private val listener = object : ContactNumberOrAddressClickListener {
         @UiThread
@@ -71,6 +73,57 @@ abstract class GenericAddressPickerFragment : GenericFragment() {
 
         @UiThread
         override fun onLongPress(model: ContactNumberOrAddressModel) {
+        }
+    }
+
+    @WorkerThread
+    abstract fun onSingleAddressSelected(address: Address, friend: Friend)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        adapter = ContactsAndSuggestionsListAdapter(viewLifecycleOwner)
+
+        adapter.contactClickedEvent.observe(viewLifecycleOwner) {
+            it.consume { model ->
+                handleClickOnContactModel(model)
+            }
+        }
+
+        viewModel.searchFilter.observe(viewLifecycleOwner) { filter ->
+            val trimmed = filter.trim()
+            viewModel.applyFilter(trimmed)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        numberOrAddressPickerDialog?.dismiss()
+        numberOrAddressPickerDialog = null
+    }
+
+    @UiThread
+    protected fun setupRecyclerView(recyclerView: RecyclerView) {
+        recyclerView.setHasFixedSize(true)
+        recyclerView.adapter = adapter
+
+        val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter, true)
+        recyclerView.addItemDecoration(headerItemDecoration)
+
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+    }
+
+    @WorkerThread
+    fun onAddressSelected(address: Address, friend: Friend) {
+        if (viewModel.multipleSelectionMode.value == true) {
+            val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(address)
+            val model = SelectedAddressModel(address, avatarModel) {
+                viewModel.removeAddressModelFromSelection(it)
+            }
+            viewModel.addAddressModelToSelection(model)
+        } else {
+            onSingleAddressSelected(address, friend)
         }
     }
 

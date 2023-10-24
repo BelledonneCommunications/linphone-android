@@ -128,7 +128,7 @@ class ConversationInfoFragment : GenericFragment() {
         }
 
         binding.setAddParticipantsClickListener {
-            val action = ConversationInfoFragmentDirections.actionConversationInfoFragmentToAddParticipantToConversationFragment()
+            val action = ConversationInfoFragmentDirections.actionConversationInfoFragmentToAddParticipantsFragment()
             findNavController().navigate(action)
         }
     }
