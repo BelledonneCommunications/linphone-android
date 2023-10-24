@@ -31,6 +31,7 @@ import android.content.pm.PackageManager
 import android.content.pm.ServiceInfo
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Bundle
 import androidx.annotation.AnyThread
 import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
@@ -40,6 +41,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.Person
 import androidx.core.app.RemoteInput
 import androidx.core.content.LocusIdCompat
+import androidx.navigation.NavDeepLinkBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -63,6 +65,7 @@ import org.linphone.core.CoreListenerStub
 import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.ui.call.CallActivity
+import org.linphone.ui.main.MainActivity
 import org.linphone.utils.AppUtils
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.ShortcutUtils
@@ -242,8 +245,10 @@ class NotificationsManager @MainThread constructor(private val context: Context)
                             "$TAG After removing original reaction notification there is still messages, updating notification"
                         )
                         val me = coreContext.contactsManager.getMePerson(chatRoom.localAddress)
+                        val pendingIntent = getChatRoomPendingIntent(chatRoom)
                         val notification = createMessageNotification(
                             notifiable,
+                            pendingIntent,
                             LinphoneUtils.getChatRoomId(chatRoom),
                             me
                         )
@@ -503,8 +508,10 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
         if (notifiable.messages.isNotEmpty()) {
             val me = coreContext.contactsManager.getMePerson(chatRoom.localAddress)
+            val pendingIntent = getChatRoomPendingIntent(chatRoom)
             val notification = createMessageNotification(
                 notifiable,
+                pendingIntent,
                 LinphoneUtils.getChatRoomId(chatRoom),
                 me
             )
@@ -566,8 +573,10 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
         if (notifiable.messages.isNotEmpty()) {
             val me = coreContext.contactsManager.getMePerson(chatRoom.localAddress)
+            val pendingIntent = getChatRoomPendingIntent(chatRoom)
             val notification = createMessageNotification(
                 notifiable,
+                pendingIntent,
                 LinphoneUtils.getChatRoomId(chatRoom),
                 me
             )
@@ -772,6 +781,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
     private fun createMessageNotification(
         notifiable: Notifiable,
+        pendingIntent: PendingIntent,
         id: String,
         me: Person
     ): Notification {
@@ -827,6 +837,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             .setWhen(System.currentTimeMillis())
             .setShowWhen(true)
             .setStyle(style)
+            .setContentIntent(pendingIntent)
             .addAction(getReplyMessageAction(notifiable))
             .addAction(getMarkMessageAsReadAction(notifiable))
             .setShortcutId(id)
@@ -925,9 +936,11 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         notifiable.messages.add(reply)
 
         val chatRoom = message.chatRoom
+        val pendingIntent = getChatRoomPendingIntent(chatRoom)
         val me = coreContext.contactsManager.getMePerson(chatRoom.localAddress)
         val notification = createMessageNotification(
             notifiable,
+            pendingIntent,
             LinphoneUtils.getChatRoomId(chatRoom),
             me
         )
@@ -1062,6 +1075,19 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         channel.enableLights(false)
         channel.setShowBadge(false)
         notificationManager.createNotificationChannel(channel)
+    }
+
+    @WorkerThread
+    private fun getChatRoomPendingIntent(chatRoom: ChatRoom): PendingIntent {
+        val args = Bundle()
+        args.putString("RemoteSipUri", chatRoom.peerAddress.asStringUriOnly())
+        args.putString("LocalSipUri", chatRoom.localAddress.asStringUriOnly())
+        return NavDeepLinkBuilder(context)
+            .setComponentName(MainActivity::class.java)
+            .setGraph(R.navigation.main_nav_graph)
+            .setDestination(R.id.conversationsFragment)
+            .setArguments(args)
+            .createPendingIntent()
     }
 
     class Notifiable(val notificationId: Int) {

@@ -34,6 +34,7 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatFragmentBinding
 import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.utils.Event
 import org.linphone.utils.SlidingPaneBackPressedCallback
 
 @UiThread
@@ -76,6 +77,18 @@ class ConversationsFragment : GenericFragment() {
                 viewLifecycleOwner,
                 SlidingPaneBackPressedCallback(slidingPane)
             )
+        }
+
+        val args = arguments
+        if (args != null) {
+            val localSipUri = args.getString("LocalSipUri")
+            val remoteSipUri = args.getString("RemoteSipUri")
+            if (localSipUri != null && remoteSipUri != null) {
+                Log.i("$TAG Found local [$localSipUri] & remote [$remoteSipUri] URIs in arguments")
+                val pair = Pair(localSipUri, remoteSipUri)
+                sharedViewModel.showConversationEvent.value = Event(pair)
+                args.clear()
+            }
         }
 
         sharedViewModel.closeSlidingPaneEvent.observe(

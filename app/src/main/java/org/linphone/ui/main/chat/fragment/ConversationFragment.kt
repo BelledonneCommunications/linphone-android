@@ -348,7 +348,6 @@ class ConversationFragment : GenericFragment() {
                         prepareBottomSheetForReactions(chatMessageModel)
                     }
 
-                    binding.messageBottomSheet.root.visibility = View.VISIBLE
                     deliveryBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
                 }
             }

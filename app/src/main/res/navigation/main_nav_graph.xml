@@ -282,4 +282,8 @@
         android:label="AddParticipantsFragment"
         tools:layout="@layout/generic_add_participants_fragment"/>
 
+    <action android:id="@+id/action_global_conversationsFragment"
+        app:destination="@id/conversationsFragment"
+        app:launchSingleTop="true"/>
+
 </navigation>

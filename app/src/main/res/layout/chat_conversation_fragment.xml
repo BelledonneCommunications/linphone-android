@@ -236,7 +236,6 @@
 
         <include
             android:id="@+id/message_bottom_sheet"
-            android:visibility="gone"
             layout="@layout/chat_message_bottom_sheet" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

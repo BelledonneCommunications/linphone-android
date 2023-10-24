@@ -21,6 +21,7 @@ package org.linphone.ui.main
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.Gravity
@@ -183,9 +184,14 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             coreContext.postOnMainThread {
-                val navGraph = findNavController().navInflater.inflate(R.navigation.main_nav_graph)
-                navGraph.setStartDestination(startDestination)
-                findNavController().setGraph(navGraph, null)
+                if (intent != null) {
+                    handleIntent(intent, startDestination, false)
+                } else {
+                    /*val navGraph = findNavController().navInflater.inflate(R.navigation.main_nav_graph)
+                    navGraph.setStartDestination(startDestination)
+                    findNavController().setGraph(navGraph, null)*/
+                    Log.e("$TAG Started without intent !")
+                }
             }
         }
 
@@ -217,6 +223,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         super.onPause()
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if (intent != null) {
+            handleIntent(intent, -1, true)
+        }
     }
 
     @SuppressLint("RtlHardcoded")
@@ -276,10 +289,38 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    fun removePersistentRedToast(tag: String) {
+    private fun removePersistentRedToast(tag: String) {
         for (child in binding.toastsArea.children) {
             if (child.tag == tag) {
                 binding.toastsArea.removeView(child)
+            }
+        }
+    }
+
+    private fun handleIntent(intent: Intent, defaultDestination: Int, isNewIntent: Boolean) {
+        Log.i("$TAG Handling intent [$intent]")
+        val navGraph = findNavController().navInflater.inflate(R.navigation.main_nav_graph)
+
+        if (intent.hasExtra("Chat")) {
+            Log.i("$TAG New intent with [Chat] extra")
+            coreContext.postOnMainThread {
+                if (isNewIntent) {
+                    Log.i("$TAG Going to Conversations fragment")
+                    findNavController().navigate(
+                        R.id.action_global_conversationsFragment,
+                        intent.extras
+                    )
+                } else {
+                    Log.i("$TAG Going to Conversations fragment instead of default destination")
+                    navGraph.setStartDestination(R.id.conversationsFragment)
+                    findNavController().setGraph(navGraph, intent.extras)
+                }
+            }
+        } else {
+            if (!isNewIntent && defaultDestination > 0) {
+                Log.i("$TAG Setting nav graph with expected default destination")
+                navGraph.setStartDestination(defaultDestination)
+                findNavController().setGraph(navGraph, null)
             }
         }
     }
