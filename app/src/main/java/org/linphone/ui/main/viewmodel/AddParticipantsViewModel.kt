@@ -20,13 +20,35 @@
 package org.linphone.ui.main.viewmodel
 
 import androidx.annotation.UiThread
+import androidx.lifecycle.MutableLiveData
+import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.core.tools.Log
+import org.linphone.utils.Event
 
 class AddParticipantsViewModel @UiThread constructor() : AddressSelectionViewModel() {
     companion object {
         private const val TAG = "[Add Participants ViewModel]"
     }
 
+    val selectedSipUrisEvent = MutableLiveData<Event<ArrayList<String>>>()
+
     init {
+        Log.i("$TAG Forcing multiple selection mode")
         switchToMultipleSelectionMode()
+    }
+
+    @UiThread
+    fun addParticipants() {
+        val selected = selection.value.orEmpty()
+        Log.i("$TAG [${selected.size}] participants selected")
+
+        coreContext.postOnCoreThread {
+            val list = arrayListOf<String>()
+            for (model in selected) {
+                list.add(model.address.asStringUriOnly())
+            }
+
+            selectedSipUrisEvent.postValue(Event(list))
+        }
     }
 }

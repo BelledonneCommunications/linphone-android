@@ -32,6 +32,7 @@ import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.databinding.GenericAddParticipantsFragmentBinding
 import org.linphone.ui.main.viewmodel.AddParticipantsViewModel
+import org.linphone.utils.Event
 
 @UiThread
 class AddParticipantsFragment : GenericAddressPickerFragment() {
@@ -91,6 +92,13 @@ class AddParticipantsFragment : GenericAddressPickerFragment() {
                 (view.parent as? ViewGroup)?.doOnPreDraw {
                     startPostponedEnterTransition()
                 }
+            }
+        }
+
+        viewModel.selectedSipUrisEvent.observe(viewLifecycleOwner) {
+            it.consume { list ->
+                sharedViewModel.listOfSelectedSipUrisEvent.value = Event(list)
+                goBack()
             }
         }
     }

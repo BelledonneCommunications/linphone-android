@@ -43,9 +43,23 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:text="@string/conversation_add_participants_title"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/add_participants"
                 app:layout_constraintStart_toEndOf="@id/back"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/add_participants"
+                android:onClick="@{() -> viewModel.addParticipants()}"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:padding="15dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/check"
+                android:enabled="@{viewModel.selection.size() > 0}"
+                app:tint="@color/primary_color_selector"
+                app:layout_constraintBottom_toBottomOf="@id/title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/title" />
 
             <View
                 android:id="@+id/background"

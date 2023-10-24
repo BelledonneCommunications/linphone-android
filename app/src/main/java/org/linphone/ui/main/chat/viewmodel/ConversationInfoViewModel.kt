@@ -25,6 +25,7 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.core.Address
 import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoomListenerStub
 import org.linphone.core.EventLog
@@ -252,6 +253,37 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
                 Log.i("$TAG Participant will be removed as admin soon")
             } else {
                 Log.e("$TAG Couldn't find participant matching address [$address]!")
+            }
+        }
+    }
+
+    @UiThread
+    fun addParticipants(toAdd: ArrayList<String>) {
+        coreContext.postOnCoreThread {
+            if (::chatRoom.isInitialized) {
+                if (!LinphoneUtils.isChatRoomAGroup(chatRoom)) {
+                    Log.e("$TAG Can't add participants to a chat room that's not a group!")
+                    return@postOnCoreThread
+                }
+
+                val list = arrayListOf<Address>()
+                for (participant in toAdd) {
+                    val address = Factory.instance().createAddress(participant)
+                    if (address == null) {
+                        Log.e("$TAG Failed to parse [$participant] as address!")
+                    } else {
+                        list.add(address)
+                    }
+                }
+
+                val participantsToAdd = arrayOfNulls<Address>(list.size)
+                list.toArray(participantsToAdd)
+                Log.i("$TAG Adding [${participantsToAdd.size}] new participants to chat room")
+                val ok = chatRoom.addParticipants(participantsToAdd)
+                if (!ok) {
+                    Log.w("$TAG Failed to add some/all participants to the group!")
+                    // TODO: show toast
+                }
             }
         }
     }
