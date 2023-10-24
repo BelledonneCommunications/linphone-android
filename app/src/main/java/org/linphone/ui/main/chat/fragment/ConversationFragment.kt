@@ -195,21 +195,13 @@ class ConversationFragment : GenericFragment() {
 
         adapter.showDeliveryForChatMessageModelEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
-                if (viewModel.isGroup.value == true) {
-                    showDeliveryBottomSheetDialog(model, showDelivery = true)
-                } else {
-                    Log.w("$TAG Conversation is not a group, not showing delivery bottom sheet")
-                }
+                showDeliveryBottomSheetDialog(model, showDelivery = true)
             }
         }
 
         adapter.showReactionForChatMessageModelEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
-                if (viewModel.isGroup.value == true) {
-                    showDeliveryBottomSheetDialog(model, showReactions = true)
-                } else {
-                    Log.w("$TAG Conversation is not a group, not showing reactions bottom sheet")
-                }
+                showDeliveryBottomSheetDialog(model, showReactions = true)
             }
         }
 
