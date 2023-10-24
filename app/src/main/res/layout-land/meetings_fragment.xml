@@ -14,7 +14,7 @@
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/meetings_list"
             android:name="org.linphone.ui.main.meetings.fragment.MeetingsListFragment"
-            android:layout_width="@dimen/sliding_pane_left_fragment_with_nav_width"
+            android:layout_width="@dimen/sliding_pane_left_fragment_width"
             android:layout_height="match_parent"
             app:layout="@layout/meetings_list_fragment"/>
 

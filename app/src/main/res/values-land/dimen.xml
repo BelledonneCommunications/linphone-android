@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="sliding_pane_left_fragment_width">450dp</dimen>
+    <dimen name="sliding_pane_right_fragment_width">450dp</dimen>
+
     <dimen name="call_main_actions_menu_height">110dp</dimen>
     <dimen name="call_extra_actions_menu_height">125dp</dimen>
     <dimen name="call_all_actions_menu_height">235dp</dimen> <!-- sum of above two -->
-
-    <dimen name="landscape_nav_bar_width">75dp</dimen>
-    <dimen name="sliding_pane_left_fragment_width">425dp</dimen>
-    <!-- This value is the result of the above two added together -->
-    <dimen name="sliding_pane_left_fragment_with_nav_width">500dp</dimen>
 </resources>

@@ -145,6 +145,9 @@
         <item name="thumbTint">@color/white</item>
         <item name="trackTint">@color/switch_track_color</item>
         <item name="trackDecorationTint">@color/transparent_color</item>
+        <item name="android:fontFamily">@font/noto_sans</item>
+        <item name="android:textColor">@color/gray_main2_600</item>
+        <item name="android:textSize">14sp</item>
     </style>
     <style name="ShapeAppearance.CircularBorder" parent="">
         <item name="cornerFamily">rounded</item>

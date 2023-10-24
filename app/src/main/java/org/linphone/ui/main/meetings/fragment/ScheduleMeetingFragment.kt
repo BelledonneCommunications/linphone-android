@@ -33,6 +33,7 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import org.linphone.R
+import org.linphone.core.tools.Log
 import org.linphone.databinding.MeetingScheduleFragmentBinding
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.ui.main.meetings.viewmodel.ScheduleMeetingViewModel
@@ -58,8 +59,6 @@ class ScheduleMeetingFragment : GenericFragment() {
     }
 
     override fun goBack(): Boolean {
-        sharedViewModel.closeSlidingPaneEvent.value = Event(true)
-        // If not done, when going back to MeetingsList this fragment will be created again
         return findNavController().popBackStack()
     }
 
@@ -149,6 +148,29 @@ class ScheduleMeetingFragment : GenericFragment() {
                 viewModel.setEndTime(picker.hour, picker.minute)
             }
             picker.show(parentFragmentManager, "End time picker")
+        }
+
+        binding.setPickParticipantsClickListener {
+            Log.i("$TAG Going into participant picker fragment")
+            val action = ScheduleMeetingFragmentDirections.actionScheduleMeetingFragmentToAddParticipantsFragment()
+            findNavController().navigate(action)
+        }
+
+        viewModel.conferenceCreatedEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i("$TAG Conference was scheduled, leaving fragment and ask list to refresh")
+                sharedViewModel.forceRefreshMeetingsListEvent.value = Event(true)
+                goBack()
+            }
+        }
+
+        sharedViewModel.listOfSelectedSipUrisEvent.observe(viewLifecycleOwner) {
+            it.consume { list ->
+                Log.i(
+                    "$TAG Found [${list.size}] new participants to add to the meeting, let's do it"
+                )
+                viewModel.addParticipants(list)
+            }
         }
     }
 }

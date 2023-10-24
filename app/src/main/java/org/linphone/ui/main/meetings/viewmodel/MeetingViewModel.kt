@@ -194,6 +194,12 @@ class MeetingViewModel @UiThread constructor() : ViewModel() {
                 speakersList.add(ParticipantModel(participant, isOrganizer))
             }
         }
+
+        if (allSpeaker) {
+            Log.i("$TAG All participants have Speaker role, considering it is a meeting")
+            participantsList.addAll(speakersList)
+        }
+
         if (!organizerFound && organizer != null) {
             Log.i("$TAG Organizer not found in participants list, adding it to participants list")
             participantsList.add(ParticipantModel(organizer, true))

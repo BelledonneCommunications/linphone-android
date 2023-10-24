@@ -20,14 +20,25 @@
 package org.linphone.ui.main.meetings.viewmodel
 
 import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.core.Address
+import org.linphone.core.ChatRoom
+import org.linphone.core.ConferenceScheduler
+import org.linphone.core.ConferenceSchedulerListenerStub
+import org.linphone.core.Factory
+import org.linphone.core.Participant
+import org.linphone.core.ParticipantInfo
 import org.linphone.core.tools.Log
+import org.linphone.ui.main.model.SelectedAddressModel
 import org.linphone.utils.AppUtils
+import org.linphone.utils.Event
 import org.linphone.utils.TimestampUtils
 
 class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
@@ -57,6 +68,12 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
 
     val sendInvitations = MutableLiveData<Boolean>()
 
+    val participants = MutableLiveData<ArrayList<SelectedAddressModel>>()
+
+    val operationInProgress = MutableLiveData<Boolean>()
+
+    val conferenceCreatedEvent = MutableLiveData<Event<Boolean>>()
+
     private var startTimestamp = 0L
     private var endTimestamp = 0L
 
@@ -66,10 +83,76 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
     internal var endHour = 0
     internal var endMinutes = 0
 
+    private lateinit var conferenceScheduler: ConferenceScheduler
+
+    private val conferenceSchedulerListener = object : ConferenceSchedulerListenerStub() {
+        @WorkerThread
+        override fun onStateChanged(
+            conferenceScheduler: ConferenceScheduler,
+            state: ConferenceScheduler.State?
+        ) {
+            Log.i("$TAG Conference state changed [$state]")
+            when (state) {
+                ConferenceScheduler.State.Error -> {
+                    operationInProgress.postValue(false)
+                    // TODO: show error toast
+                }
+                ConferenceScheduler.State.Ready -> {
+                    val conferenceAddress = conferenceScheduler.info?.uri
+                    Log.i(
+                        "$TAG Conference info created, address will be ${conferenceAddress?.asStringUriOnly()}"
+                    )
+                    if (sendInvitations.value == true) {
+                        Log.i("$TAG User asked for invitations to be sent, let's do it")
+                        val chatRoomParams = coreContext.core.createDefaultChatRoomParams()
+                        chatRoomParams.isGroupEnabled = false
+                        chatRoomParams.backend = ChatRoom.Backend.FlexisipChat
+                        chatRoomParams.isEncryptionEnabled = true
+                        chatRoomParams.subject = "Meeting invitation" // Won't be used
+                        conferenceScheduler.sendInvitations(chatRoomParams)
+                    } else {
+                        Log.i("$TAG User didn't asked for invitations to be sent")
+                        operationInProgress.postValue(false)
+                        conferenceCreatedEvent.postValue(Event(true))
+                    }
+                }
+                else -> {
+                }
+            }
+        }
+
+        @WorkerThread
+        override fun onInvitationsSent(
+            conferenceScheduler: ConferenceScheduler,
+            failedInvitations: Array<out Address>?
+        ) {
+            when (val failedCount = failedInvitations?.size) {
+                0 -> {
+                    Log.i("$TAG All invitations have been sent")
+                }
+                participants.value.orEmpty().size -> {
+                    Log.e("$TAG No invitation sent!")
+                    // TODO: show error toast
+                }
+                else -> {
+                    Log.w("$TAG [$failedCount] invitations couldn't have been sent for:")
+                    for (failed in failedInvitations.orEmpty()) {
+                        Log.w(failed.asStringUriOnly())
+                    }
+                    // TODO: show error toast
+                }
+            }
+
+            operationInProgress.postValue(false)
+            conferenceCreatedEvent.postValue(Event(true))
+        }
+    }
+
     init {
         isBroadcastSelected.value = false
         showBroadcastHelp.value = false
         allDayMeeting.value = false
+        sendInvitations.value = true
 
         val now = System.currentTimeMillis()
         val cal = Calendar.getInstance()
@@ -109,7 +192,16 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
                 }
             }
         )
-        sendInvitations.value = true
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+
+        coreContext.postOnCoreThread {
+            if (::conferenceScheduler.isInitialized) {
+                conferenceScheduler.removeListener(conferenceSchedulerListener)
+            }
+        }
     }
 
     @UiThread
@@ -169,6 +261,80 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun closeBroadcastHelp() {
         showBroadcastHelp.value = false
+    }
+
+    @UiThread
+    fun addParticipants(toAdd: ArrayList<String>) {
+        coreContext.postOnCoreThread {
+            val list = arrayListOf<SelectedAddressModel>()
+            for (participant in toAdd) {
+                val address = Factory.instance().createAddress(participant)
+                if (address == null) {
+                    Log.e("$TAG Failed to parse [$participant] as address!")
+                } else {
+                    val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(
+                        address
+                    )
+                    val model = SelectedAddressModel(address, avatarModel) {
+                        // onRemoveFromSelection
+                    }
+                    list.add(model)
+                }
+            }
+            participants.postValue(list)
+        }
+    }
+
+    @UiThread
+    fun schedule() {
+        coreContext.postOnCoreThread { core ->
+            Log.i(
+                "$TAG Scheduling ${if (isBroadcastSelected.value == true) "broadcast" else "meeting"}"
+            )
+            operationInProgress.postValue(true)
+
+            val localAccount = core.defaultAccount
+            val localAddress = localAccount?.params?.identityAddress
+
+            val conferenceInfo = Factory.instance().createConferenceInfo()
+            conferenceInfo.organizer = localAddress
+            conferenceInfo.subject = subject.value
+            conferenceInfo.description = description.value
+
+            val startTime = startTimestamp / 1000 // Linphone expects timestamp in seconds
+            conferenceInfo.dateTime = startTime
+            val duration = ((endTimestamp - startTimestamp) / 1000).toInt() // Linphone expects duration in seconds
+            conferenceInfo.duration = duration
+
+            val participantsList = participants.value.orEmpty()
+            val participantsInfoList = arrayListOf<ParticipantInfo>()
+            for (participant in participantsList) {
+                val info = Factory.instance().createParticipantInfo(participant.address)
+                if (info == null) {
+                    Log.e(
+                        "$TAG Failed to create Participant Info from address [${participant.address.asStringUriOnly()}]"
+                    )
+                    continue
+                }
+
+                // For meetings, all participants must have Speaker role
+                info.role = Participant.Role.Speaker
+                participantsInfoList.add(info)
+            }
+
+            val participantsInfoArray = arrayOfNulls<ParticipantInfo>(participantsInfoList.size)
+            participantsInfoList.toArray(participantsInfoArray)
+            conferenceInfo.setParticipantInfos(participantsInfoArray)
+
+            if (!::conferenceScheduler.isInitialized) {
+                conferenceScheduler = core.createConferenceScheduler()
+                conferenceScheduler.addListener(conferenceSchedulerListener)
+            }
+
+            conferenceScheduler.account = localAccount
+            // Will trigger the conference creation/update automatically
+            conferenceScheduler.info = conferenceInfo
+        }
     }
 
     @UiThread

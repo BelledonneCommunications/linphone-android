@@ -260,7 +260,15 @@
         android:id="@+id/scheduleMeetingFragment"
         android:name="org.linphone.ui.main.meetings.fragment.ScheduleMeetingFragment"
         android:label="ScheduleMeetingFragment"
-        tools:layout="@layout/meeting_schedule_fragment"/>
+        tools:layout="@layout/meeting_schedule_fragment">
+        <action
+            android:id="@+id/action_scheduleMeetingFragment_to_addParticipantsFragment"
+            app:destination="@id/addParticipantsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
 
     <action
         android:id="@+id/action_global_scheduleMeetingFragment"
@@ -268,5 +276,10 @@
         app:enterAnim="@anim/slide_in"
         app:launchSingleTop="true"
         app:popExitAnim="@anim/slide_out"/>
+    <fragment
+        android:id="@+id/addParticipantsFragment"
+        android:name="org.linphone.ui.main.fragment.AddParticipantsFragment"
+        android:label="AddParticipantsFragment"
+        tools:layout="@layout/generic_add_participants_fragment"/>
 
 </navigation>
