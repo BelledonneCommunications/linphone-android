@@ -190,6 +190,11 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
+    fun call() {
+        // TODO
+    }
+
+    @UiThread
     fun toggleParticipantsExpand() {
         expandParticipants.value = expandParticipants.value == false
     }
