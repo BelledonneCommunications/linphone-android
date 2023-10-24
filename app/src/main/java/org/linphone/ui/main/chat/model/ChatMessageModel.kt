@@ -111,10 +111,19 @@ class ChatMessageModel @WorkerThread constructor(
         var reactionsList = ""
         val allReactions = chatMessage.reactions
 
+        var sameReactionTwiceOrMore = false
         if (allReactions.isNotEmpty()) {
             for (reaction in allReactions) {
                 val body = reaction.body
-                reactionsList += body
+                if (!reactionsList.contains(body)) {
+                    reactionsList += body
+                } else {
+                    sameReactionTwiceOrMore = true
+                }
+            }
+
+            if (sameReactionTwiceOrMore) {
+                reactionsList += allReactions.size.toString()
             }
         }
 

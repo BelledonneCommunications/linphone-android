@@ -54,8 +54,8 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.ChatMessage
 import org.linphone.core.tools.Log
+import org.linphone.databinding.ChatBubbleLongPressMenuBinding
 import org.linphone.databinding.ChatConversationFragmentBinding
-import org.linphone.databinding.ChatConversationLongPressMenuBinding
 import org.linphone.ui.main.chat.adapter.ChatMessageBottomSheetAdapter
 import org.linphone.ui.main.chat.adapter.ConversationEventAdapter
 import org.linphone.ui.main.chat.model.ChatMessageDeliveryModel
@@ -278,9 +278,9 @@ class ConversationFragment : GenericFragment() {
         val dialog = Dialog(requireContext(), R.style.Theme_LinphoneDialog)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
 
-        val layout: ChatConversationLongPressMenuBinding = DataBindingUtil.inflate(
+        val layout: ChatBubbleLongPressMenuBinding = DataBindingUtil.inflate(
             LayoutInflater.from(context),
-            R.layout.chat_conversation_long_press_menu,
+            R.layout.chat_bubble_long_press_menu,
             null,
             false
         )
@@ -304,7 +304,8 @@ class ConversationFragment : GenericFragment() {
         }
 
         layout.setPickEmojiClickListener {
-            layout.emojiPicker.visibility = View.VISIBLE
+            val emojiSheetBehavior = BottomSheetBehavior.from(layout.emojiPickerBottomSheet.root)
+            emojiSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
 
         layout.model = chatMessageModel

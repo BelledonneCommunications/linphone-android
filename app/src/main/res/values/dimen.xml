@@ -66,4 +66,5 @@
     <dimen name="chat_bubble_long_press_emoji_reaction_size">30sp</dimen>
 
     <dimen name="chat_room_emoji_picker_height">290dp</dimen>
+    <dimen name="chat_bubble_emoji_picker_height">425dp</dimen>
 </resources>
