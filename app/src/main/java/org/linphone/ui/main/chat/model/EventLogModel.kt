@@ -21,7 +21,9 @@ package org.linphone.ui.main.chat.model
 
 import androidx.annotation.WorkerThread
 import org.linphone.core.EventLog
+import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
+import org.linphone.utils.LinphoneUtils
 
 class EventLogModel @WorkerThread constructor(
     val eventLog: EventLog,
@@ -30,6 +32,10 @@ class EventLogModel @WorkerThread constructor(
     isGroupedWithPreviousOne: Boolean,
     isGroupedWithNextOne: Boolean
 ) {
+    companion object {
+        private const val TAG = "[Event Log Model]"
+    }
+
     val type: EventLog.Type = eventLog.type
 
     val isEvent = type != EventLog.Type.ConferenceChatMessage
@@ -37,10 +43,27 @@ class EventLogModel @WorkerThread constructor(
     val model = if (isEvent) {
         EventModel(eventLog)
     } else {
+        val chatMessage = eventLog.chatMessage!!
+        val reply = if (chatMessage.isReply) {
+            val replyMessage = chatMessage.replyMessage
+            if (replyMessage != null) {
+                LinphoneUtils.getTextDescribingMessage(replyMessage)
+            } else {
+                Log.e(
+                    "$TAG Failed to find the reply message from ID [${chatMessage.replyMessageId}]"
+                )
+                "<?>"
+            }
+        } else {
+            ""
+        }
+
         ChatMessageModel(
-            eventLog.chatMessage!!,
+            chatMessage,
             avatarModel,
             isFromGroup,
+            chatMessage.isReply,
+            reply,
             isGroupedWithPreviousOne,
             isGroupedWithNextOne
         )

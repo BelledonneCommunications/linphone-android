@@ -63,7 +63,26 @@
             android:ellipsize="end"
             android:visibility="@{!model.isFromGroup ? View.GONE: model.isGroupedWithPreviousOne ? View.GONE : View.VISIBLE}"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/reply"
             app:layout_constraintStart_toStartOf="@id/background" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/reply"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="@{model.replyText, default=`Ceci est une réponse!`}"
+            android:textColor="@color/gray_main2_400"
+            android:textSize="14sp"
+            android:padding="10dp"
+            android:background="@drawable/shape_chat_bubble_incoming_reply"
+            android:visibility="@{model.isReply ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="@id/background"
+            app:layout_constraintEnd_toEndOf="@id/background"
+            app:layout_constraintTop_toBottomOf="@id/name"
+            app:layout_constraintBottom_toTopOf="@id/background"/>
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/background_end_barrier"
@@ -81,7 +100,7 @@
             android:src="@{model.isGroupedWithPreviousOne ? @drawable/shape_chat_bubble_incoming_full : @drawable/shape_chat_bubble_incoming_first, default=@drawable/shape_chat_bubble_incoming_first}"
             app:layout_constraintStart_toEndOf="@id/avatar"
             app:layout_constraintEnd_toEndOf="@id/background_end_barrier"
-            app:layout_constraintTop_toTopOf="@id/avatar"
+            app:layout_constraintTop_toBottomOf="@id/reply"
             app:layout_constraintBottom_toBottomOf="@id/date_time"/>
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -99,7 +118,7 @@
             android:gravity="center_vertical|start"
             app:layout_constrainedWidth="true"
             app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintTop_toTopOf="@id/avatar"
+            app:layout_constraintTop_toBottomOf="@id/reply"
             app:layout_constraintStart_toEndOf="@id/avatar"
             app:layout_constraintEnd_toEndOf="parent"/>
 
