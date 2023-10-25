@@ -112,7 +112,8 @@ class ConversationsFragment : GenericFragment() {
         sharedViewModel.showStartConversationEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.i("$TAG Navigating to start conversation fragment")
-                findNavController().navigate(R.id.action_global_startConversationFragment)
+                val action = ConversationsFragmentDirections.actionConversationsFragmentToStartConversationFragment()
+                findNavController().navigate(action)
             }
         }
 

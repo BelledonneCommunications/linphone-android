@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.assistant.fragment
+package org.linphone.ui.main.meetings.fragment
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -28,34 +28,34 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
+import androidx.core.view.doOnPreDraw
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navGraphViewModels
+import androidx.navigation.fragment.navArgs
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.R
 import org.linphone.core.tools.Log
-import org.linphone.databinding.AssistantQrCodeScannerFragmentBinding
-import org.linphone.ui.assistant.AssistantActivity
-import org.linphone.ui.assistant.viewmodel.QrCodeViewModel
+import org.linphone.databinding.MeetingWaitingRoomFragmentBinding
+import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.meetings.viewmodel.MeetingWaitingRoomViewModel
 
 @UiThread
-class QrCodeScannerFragment : Fragment() {
+class MeetingWaitingRoomFragment : GenericFragment() {
     companion object {
-        private const val TAG = "[Qr Code Scanner Fragment]"
+        private const val TAG = "[Meeting Waiting Room Fragment]"
     }
 
-    private lateinit var binding: AssistantQrCodeScannerFragmentBinding
+    private lateinit var binding: MeetingWaitingRoomFragmentBinding
 
-    private val viewModel: QrCodeViewModel by navGraphViewModels(
-        R.id.assistant_nav_graph
-    )
+    private lateinit var viewModel: MeetingWaitingRoomViewModel
+
+    private val args: MeetingWaitingRoomFragmentArgs by navArgs()
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
             Log.i("$TAG Camera permission has been granted")
-            enableQrCodeVideoScanner()
+            enableVideoPreview()
         } else {
             Log.e("$TAG Camera permission has been denied, leaving this fragment")
             goBack()
@@ -67,34 +67,50 @@ class QrCodeScannerFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = AssistantQrCodeScannerFragmentBinding.inflate(layoutInflater)
+        binding = MeetingWaitingRoomFragmentBinding.inflate(layoutInflater)
         return binding.root
+    }
+
+    override fun goBack(): Boolean {
+        return findNavController().popBackStack()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
 
         binding.lifecycleOwner = viewLifecycleOwner
+
+        viewModel = ViewModelProvider(this)[MeetingWaitingRoomViewModel::class.java]
         binding.viewModel = viewModel
+
+        val uri = args.conferenceUri
+        Log.i(
+            "$TAG Looking up for conference with SIP URI [$uri]"
+        )
+        viewModel.findConferenceInfo(uri)
 
         binding.setBackClickListener {
             goBack()
         }
 
-        viewModel.qrCodeFoundEvent.observe(viewLifecycleOwner) {
-            it.consume { isValid ->
-                if (!isValid) {
-                    (requireActivity() as AssistantActivity).showRedToast(
-                        getString(R.string.toast_assistant_qr_code_invalid),
-                        R.drawable.warning_circle
-                    )
+        viewModel.conferenceInfoFoundEvent.observe(viewLifecycleOwner) {
+            it.consume { found ->
+                if (found) {
+                    (view.parent as? ViewGroup)?.doOnPreDraw {
+                        startPostponedEnterTransition()
+                    }
                 } else {
-                    requireActivity().finish()
+                    Log.e("$TAG Failed to find meeting with URI [$uri], going back")
+                    (view.parent as? ViewGroup)?.doOnPreDraw {
+                        goBack()
+                    }
                 }
             }
         }
 
         if (!isCameraPermissionGranted()) {
+            viewModel.isVideoAvailable.value = false
             Log.w("$TAG Camera permission wasn't granted yet, asking for it now")
             requestPermissionLauncher.launch(Manifest.permission.CAMERA)
         }
@@ -105,10 +121,10 @@ class QrCodeScannerFragment : Fragment() {
 
         if (isCameraPermissionGranted()) {
             Log.i(
-                "$TAG Record video permission is granted, starting video preview with back cam if possible"
+                "$TAG Record video permission is granted, starting video preview with front cam if possible"
             )
-            viewModel.setBackCamera()
-            enableQrCodeVideoScanner()
+            viewModel.setFrontCamera()
+            enableVideoPreview()
         }
     }
 
@@ -116,14 +132,9 @@ class QrCodeScannerFragment : Fragment() {
         coreContext.postOnCoreThread { core ->
             core.nativePreviewWindowId = null
             core.isVideoPreviewEnabled = false
-            core.isQrcodeVideoPreviewEnabled = false
         }
 
         super.onPause()
-    }
-
-    private fun goBack() {
-        findNavController().popBackStack()
     }
 
     private fun isCameraPermissionGranted(): Boolean {
@@ -135,11 +146,13 @@ class QrCodeScannerFragment : Fragment() {
         return granted
     }
 
-    private fun enableQrCodeVideoScanner() {
+    private fun enableVideoPreview() {
         coreContext.postOnCoreThread { core ->
-            core.nativePreviewWindowId = binding.qrCodePreview
-            core.isQrcodeVideoPreviewEnabled = true
-            core.isVideoPreviewEnabled = true
+            if (core.isVideoEnabled) {
+                viewModel.isVideoAvailable.postValue(true)
+                core.nativePreviewWindowId = binding.videoPreview
+                core.isVideoPreviewEnabled = true
+            }
         }
     }
 }

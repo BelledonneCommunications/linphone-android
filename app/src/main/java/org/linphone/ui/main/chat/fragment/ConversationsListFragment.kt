@@ -70,9 +70,7 @@ class ConversationsListFragment : AbstractTopBarFragment() {
         adapter = ConversationsListAdapter(viewLifecycleOwner)
         binding.conversationsList.setHasFixedSize(true)
         binding.conversationsList.adapter = adapter
-
-        val layoutManager = LinearLayoutManager(requireContext())
-        binding.conversationsList.layoutManager = layoutManager
+        binding.conversationsList.layoutManager = LinearLayoutManager(requireContext())
 
         adapter.conversationLongClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->

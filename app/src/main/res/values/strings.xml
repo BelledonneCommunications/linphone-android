@@ -394,6 +394,8 @@
     <string name="meeting_info_delete">Delete meeting</string>
     <string name="meeting_info_deleted_toast">Meeting has been deleted</string>
 
+    <string name="meeting_waiting_room_join">Join</string>
+
     <string name="operation_in_progress_overlay">Operation in progress, please wait</string>
 
     <string name="call_action_blind_transfer">Transfer</string>

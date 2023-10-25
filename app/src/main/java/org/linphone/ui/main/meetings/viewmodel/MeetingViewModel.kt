@@ -91,21 +91,19 @@ class MeetingViewModel @UiThread constructor() : ViewModel() {
             if (address != null) {
                 val found = core.findConferenceInformationFromUri(address)
                 if (found != null) {
+                    Log.i("$TAG Conference info with SIP URI [$uri] was found")
                     conferenceInfo = found
                     configureConferenceInfo()
                     conferenceInfoFoundEvent.postValue(Event(true))
                 } else {
+                    Log.e("$TAG Conference info with SIP URI [$uri] couldn't be found!")
                     conferenceInfoFoundEvent.postValue(Event(false))
                 }
             } else {
+                Log.e("$TAG Failed to parse SIP URI [$uri] as Address!")
                 conferenceInfoFoundEvent.postValue(Event(false))
             }
         }
-    }
-
-    @UiThread
-    fun join() {
-        // TODO
     }
 
     @UiThread
@@ -181,7 +179,7 @@ class MeetingViewModel @UiThread constructor() : ViewModel() {
             val participant = info.address
             val isOrganizer = organizer?.weakEqual(participant) ?: false
             Log.i(
-                "$TAG Conference [${subject.value}] ${if (isOrganizer) "organizer" else "participant"} [${participant.asStringUriOnly()}] is a [${info.role}]"
+                "$TAG Conference [${conferenceInfo.subject}] ${if (isOrganizer) "organizer" else "participant"} [${participant.asStringUriOnly()}] is a [${info.role}]"
             )
             if (isOrganizer) {
                 organizerFound = true

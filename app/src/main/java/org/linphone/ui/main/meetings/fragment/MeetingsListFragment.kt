@@ -75,9 +75,7 @@ class MeetingsListFragment : AbstractTopBarFragment() {
 
         val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter, true)
         binding.meetingsList.addItemDecoration(headerItemDecoration)
-
-        val layoutManager = LinearLayoutManager(requireContext())
-        binding.meetingsList.layoutManager = layoutManager
+        binding.meetingsList.layoutManager = LinearLayoutManager(requireContext())
 
         binding.setNewMeetingClicked {
             sharedViewModel.showScheduleMeetingEvent.value = Event(true)

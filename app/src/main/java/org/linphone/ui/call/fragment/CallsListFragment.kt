@@ -64,9 +64,7 @@ class CallsListFragment : GenericCallFragment() {
         adapter = CallsListAdapter(viewLifecycleOwner)
         binding.callsList.setHasFixedSize(true)
         binding.callsList.adapter = adapter
-
-        val layoutManager = LinearLayoutManager(requireContext())
-        binding.callsList.layoutManager = layoutManager
+        binding.callsList.layoutManager = LinearLayoutManager(requireContext())
 
         adapter.callLongClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->

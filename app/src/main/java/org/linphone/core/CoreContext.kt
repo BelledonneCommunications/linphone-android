@@ -279,7 +279,7 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
             params.mediaEncryption = MediaEncryption.ZRTP
         }
         /*if (LinphoneUtils.checkIfNetworkHasLowBandwidth(context)) {
-            Log.w("[Context] Enabling low bandwidth mode!")
+            Log.w("$TAG Enabling low bandwidth mode!")
             params.isLowBandwidthEnabled = true
         }*/
 

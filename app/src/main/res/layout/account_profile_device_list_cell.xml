@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:paddingBottom="27dp"
-        android:background="@drawable/shape_squircle_gray_2_background">
+        android:background="@drawable/shape_squircle_gray_100_background">
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/header_style"

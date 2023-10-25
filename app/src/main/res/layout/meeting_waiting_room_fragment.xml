@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="backClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.main.meetings.viewmodel.MeetingWaitingRoomViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/gray_900">
+
+        <ImageView
+            android:id="@+id/back"
+            android:onClick="@{backClickListener}"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:adjustViewBounds="true"
+            android:padding="15dp"
+            android:src="@drawable/caret_left"
+            app:tint="@color/orange_main_500"
+            app:layout_constraintBottom_toBottomOf="@id/subtitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/title" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/main_page_title_style"
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="@{viewModel.subject, default=`Meeting with John Doe`}"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/back"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_300"
+            android:id="@+id/subtitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="@{viewModel.dateTime, default=`Wed. 25 Oct. 14:00 - 15:00`}"
+            android:textSize="12sp"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/back"
+            app:layout_constraintTop_toBottomOf="@id/title"/>
+
+        <View
+            android:id="@+id/no_video_background"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/shape_squircle_gray_600_background"
+            app:layout_constraintTop_toTopOf="@id/video_preview"
+            app:layout_constraintStart_toStartOf="@id/video_preview"
+            app:layout_constraintEnd_toEndOf="@id/video_preview"
+            app:layout_constraintBottom_toBottomOf="@id/video_preview" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            style="@style/avatar_imageview"
+            android:id="@+id/avatar"
+            android:layout_width="@dimen/avatar_in_call_size"
+            android:layout_height="@dimen/avatar_in_call_size"
+            coilCallAvatar="@{viewModel.selfAvatar}"
+            app:layout_constraintEnd_toEndOf="@id/no_video_background"
+            app:layout_constraintStart_toStartOf="@id/no_video_background"
+            app:layout_constraintTop_toTopOf="@id/no_video_background"
+            app:layout_constraintBottom_toBottomOf="@id/no_video_background"/>
+
+        <org.linphone.ui.call.view.RoundCornersTextureView
+            android:id="@+id/video_preview"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="@{viewModel.isVideoAvailable &amp;&amp; viewModel.isVideoEnabled ? View.VISIBLE : View.INVISIBLE}"
+            app:alignTopRight="false"
+            app:displayMode="occupy_all_space"
+            app:layout_constraintWidth_percent="0.65"
+            app:layout_constraintHeight_percent="0.65"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/back"
+            app:layout_constraintBottom_toTopOf="@id/toggle_mute_mic"/>
+        
+        <ImageView
+            android:id="@+id/switch_camera"
+            android:onClick="@{() -> viewModel.switchCamera()}"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:visibility="@{viewModel.isVideoAvailable &amp;&amp; viewModel.isVideoEnabled &amp;&amp; viewModel.isSwitchCameraAvailable ? View.VISIBLE : View.GONE}"
+            android:src="@drawable/camera_rotate"
+            app:tint="@color/white"
+            app:layout_constraintTop_toTopOf="@id/video_preview"
+            app:layout_constraintEnd_toEndOf="@id/video_preview" />
+
+        <ImageView
+            android:id="@+id/toggle_video"
+            android:onClick="@{() -> viewModel.toggleVideo()}"
+            android:layout_width="@dimen/call_button_size"
+            android:layout_height="@dimen/call_button_size"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:padding="@dimen/call_button_icon_padding"
+            android:enabled="@{viewModel.isVideoAvailable}"
+            android:src="@{viewModel.isVideoEnabled ? @drawable/video_camera : @drawable/video_camera_slash, default=@drawable/video_camera}"
+            android:background="@drawable/in_call_button_background"
+            app:tint="@color/in_call_button_tint_color"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintTop_toTopOf="@id/toggle_mute_mic"
+            app:layout_constraintBottom_toBottomOf="@id/toggle_mute_mic"
+            app:layout_constraintStart_toStartOf="@id/video_preview"
+            app:layout_constraintEnd_toStartOf="@id/toggle_mute_mic" />
+
+        <ImageView
+            android:id="@+id/toggle_mute_mic"
+            android:onClick="@{() -> viewModel.toggleMuteMicrophone()}"
+            android:layout_width="@dimen/call_button_size"
+            android:layout_height="@dimen/call_button_size"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="20dp"
+            android:padding="@dimen/call_button_icon_padding"
+            android:src="@{viewModel.isMicrophoneMuted ? @drawable/microphone_slash : @drawable/microphone, default=@drawable/microphone}"
+            android:background="@drawable/in_call_button_background"
+            app:tint="@color/in_call_button_tint_color"
+            app:layout_constraintTop_toBottomOf="@id/video_preview"
+            app:layout_constraintBottom_toTopOf="@id/join"
+            app:layout_constraintStart_toEndOf="@id/toggle_video"
+            app:layout_constraintEnd_toStartOf="@id/change_audio_output" />
+
+        <ImageView
+            android:id="@+id/change_audio_output"
+            android:onClick="@{() -> viewModel.toggleSpeaker()}"
+            android:layout_width="@dimen/call_button_size"
+            android:layout_height="@dimen/call_button_size"
+            android:layout_marginEnd="16dp"
+            android:padding="@dimen/call_button_icon_padding"
+            android:src="@drawable/speaker_slash"
+            android:background="@drawable/in_call_button_background"
+            app:tint="@color/in_call_button_tint_color"
+            app:layout_constraintTop_toTopOf="@id/toggle_mute_mic"
+            app:layout_constraintBottom_toBottomOf="@id/toggle_mute_mic"
+            app:layout_constraintStart_toEndOf="@id/toggle_mute_mic"
+            app:layout_constraintEnd_toEndOf="@id/video_preview" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/primary_button_label_style"
+            android:id="@+id/join"
+            android:onClick="@{() -> viewModel.join()}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="@dimen/screen_bottom_margin"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="@string/meeting_waiting_room_join"
+            app:layout_constraintWidth_max="@dimen/button_max_width"
+            app:layout_constraintVertical_bias="1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

@@ -162,9 +162,7 @@ class ConversationFragment : GenericFragment() {
         adapter = ConversationEventAdapter(viewLifecycleOwner)
         binding.eventsList.setHasFixedSize(true)
         binding.eventsList.adapter = adapter
-
-        val layoutManager = LinearLayoutManager(requireContext())
-        binding.eventsList.layoutManager = layoutManager
+        binding.eventsList.layoutManager = LinearLayoutManager(requireContext())
 
         bottomSheetAdapter = ChatMessageBottomSheetAdapter(viewLifecycleOwner)
         binding.messageBottomSheet.bottomSheetList.setHasFixedSize(true)

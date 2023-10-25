@@ -541,6 +541,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun switchCamera() {
         coreContext.postOnCoreThread {
+            Log.i("$TAG Switching camera")
             coreContext.switchCamera()
         }
     }

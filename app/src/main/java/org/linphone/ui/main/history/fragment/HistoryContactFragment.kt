@@ -93,9 +93,7 @@ class HistoryContactFragment : GenericFragment() {
         adapter = ContactHistoryListAdapter(viewLifecycleOwner)
         binding.callHistory.setHasFixedSize(true)
         binding.callHistory.adapter = adapter
-
-        val layoutManager = LinearLayoutManager(requireContext())
-        binding.callHistory.layoutManager = layoutManager
+        binding.callHistory.layoutManager = LinearLayoutManager(requireContext())
 
         binding.setBackClickListener {
             goBack()

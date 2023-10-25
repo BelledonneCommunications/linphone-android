@@ -54,7 +54,7 @@
             android:layout_marginEnd="16dp"
             android:padding="@dimen/call_button_icon_padding"
             android:enabled="@{!viewModel.isPaused &amp;&amp; !viewModel.isPausedByRemote}"
-            android:src="@{viewModel.isVideoEnabled() ? @drawable/video_camera : @drawable/video_camera_slash, default=@drawable/video_camera}"
+            android:src="@{viewModel.isVideoEnabled ? @drawable/video_camera : @drawable/video_camera_slash, default=@drawable/video_camera}"
             android:background="@drawable/in_call_button_background"
             app:tint="@color/in_call_button_tint_color"
             app:layout_constraintHorizontal_bias="1"

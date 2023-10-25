@@ -14,6 +14,9 @@
             name="shareClickListener"
             type="View.OnClickListener" />
         <variable
+            name="joinClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.main.meetings.viewmodel.MeetingViewModel" />
     </data>
@@ -198,7 +201,6 @@
                     android:layout_height="1dp"
                     android:layout_marginTop="16dp"
                     android:background="@color/gray_main2_200"
-                    android:visibility="@{viewModel.description.length() > 0 ? View.VISIBLE : View.GONE}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/timezone" />
@@ -230,9 +232,17 @@
                     android:layout_height="1dp"
                     android:layout_marginTop="16dp"
                     android:background="@color/gray_main2_200"
+                    android:visibility="@{viewModel.description.length() > 0 ? View.VISIBLE : View.GONE}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/description" />
+
+                <androidx.constraintlayout.widget.Barrier
+                    android:id="@+id/speakers_bottom_barrier"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:barrierDirection="bottom"
+                    app:constraint_referenced_ids="speakers, speakers_icon" />
 
                 <ImageView
                     android:id="@+id/speakers_icon"
@@ -250,11 +260,11 @@
                     android:id="@+id/speakers"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
                     android:layout_marginTop="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:visibility="@{viewModel.isBroadcast ? View.VISIBLE : View.GONE}"
+                    android:orientation="vertical"
                     entries="@{viewModel.speakers}"
                     layout="@{@layout/meeting_participant_list_cell}"
                     app:layout_constraintTop_toBottomOf="@id/separator_3"
@@ -270,7 +280,7 @@
                     android:visibility="@{viewModel.isBroadcast ? View.VISIBLE : View.GONE}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/speakers" />
+                    app:layout_constraintTop_toBottomOf="@id/speakers_bottom_barrier" />
 
                 <ImageView
                     android:id="@+id/participants_icon"
@@ -287,15 +297,22 @@
                     android:id="@+id/participants"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
                     android:layout_marginTop="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
+                    android:orientation="vertical"
                     entries="@{viewModel.participants}"
                     layout="@{@layout/meeting_participant_list_cell}"
                     app:layout_constraintTop_toBottomOf="@id/separator_4"
                     app:layout_constraintStart_toEndOf="@id/participants_icon"
                     app:layout_constraintEnd_toEndOf="parent" />
+
+                <androidx.constraintlayout.widget.Barrier
+                    android:id="@+id/participants_bottom_barrier"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:barrierDirection="bottom"
+                    app:constraint_referenced_ids="participants, participants_icon" />
 
                 <View
                     android:id="@+id/separator_5"
@@ -305,12 +322,12 @@
                     android:background="@color/gray_main2_200"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/participants" />
+                    app:layout_constraintTop_toBottomOf="@id/participants_bottom_barrier" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/primary_button_label_style"
                     android:id="@+id/join"
-                    android:onClick="@{() -> viewModel.join()}"
+                    android:onClick="@{joinClickListener}"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"

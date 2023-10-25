@@ -29,6 +29,12 @@
             app:launchSingleTop="true"
             app:popUpTo="@id/contactsFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_contactsFragment_to_newContactFragment"
+            app:destination="@id/newContactFragment"
+            app:enterAnim="@anim/slide_in"
+            app:popExitAnim="@anim/slide_out"
+            app:launchSingleTop="true" />
     </fragment>
 
     <fragment
@@ -54,6 +60,12 @@
             app:launchSingleTop="true"
             app:popUpTo="@id/historyFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_historyFragment_to_startCallFragment"
+            app:destination="@id/startCallFragment"
+            app:enterAnim="@anim/slide_in"
+            app:popExitAnim="@anim/slide_out"
+            app:launchSingleTop="true" />
     </fragment>
 
     <fragment
@@ -151,25 +163,11 @@
         android:label="StartCallFragment"
         tools:layout="@layout/start_call_fragment" />
 
-    <action
-        android:id="@+id/action_global_startCallFragment"
-        app:destination="@id/startCallFragment"
-        app:enterAnim="@anim/slide_in"
-        app:popExitAnim="@anim/slide_out"
-        app:launchSingleTop="true"/>
-
     <fragment
         android:id="@+id/newContactFragment"
         android:name="org.linphone.ui.main.contacts.fragment.NewContactFragment"
         android:label="NewContactFragment"
         tools:layout="@layout/contact_new_or_edit_fragment"/>
-
-    <action
-        android:id="@+id/action_global_newContactFragment"
-        app:destination="@id/newContactFragment"
-        app:enterAnim="@anim/slide_in"
-        app:popExitAnim="@anim/slide_out"
-        app:launchSingleTop="true" />
 
     <fragment
         android:id="@+id/accountProfileModeFragment"
@@ -216,6 +214,12 @@
             app:launchSingleTop="true"
             app:popUpTo="@id/conversationsFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_conversationsFragment_to_startConversationFragment"
+            app:destination="@id/startConversationFragment"
+            app:enterAnim="@anim/slide_in"
+            app:popExitAnim="@anim/slide_out"
+            app:launchSingleTop="true" />
     </fragment>
 
     <fragment
@@ -223,13 +227,6 @@
         android:name="org.linphone.ui.main.chat.fragment.StartConversationFragment"
         android:label="StartConversationFragment"
         tools:layout="@layout/start_chat_fragment"/>
-
-    <action
-        android:id="@+id/action_global_startConversationFragment"
-        app:destination="@id/startConversationFragment"
-        app:enterAnim="@anim/slide_in"
-        app:launchSingleTop="true"
-        app:popExitAnim="@anim/slide_out" />
 
     <fragment
         android:id="@+id/meetingsFragment"
@@ -254,6 +251,20 @@
             app:launchSingleTop="true"
             app:popUpTo="@id/meetingsFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_meetingsFragment_to_scheduleMeetingFragment"
+            app:destination="@id/scheduleMeetingFragment"
+            app:enterAnim="@anim/slide_in"
+            app:popExitAnim="@anim/slide_out"
+            app:launchSingleTop="true" />
+        <action
+            android:id="@+id/action_meetingsFragment_to_meetingWaitingRoomFragment"
+            app:destination="@id/meetingWaitingRoomFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:launchSingleTop="true" />
     </fragment>
 
     <fragment
@@ -270,12 +281,6 @@
             app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
-    <action
-        android:id="@+id/action_global_scheduleMeetingFragment"
-        app:destination="@id/scheduleMeetingFragment"
-        app:enterAnim="@anim/slide_in"
-        app:launchSingleTop="true"
-        app:popExitAnim="@anim/slide_out"/>
     <fragment
         android:id="@+id/addParticipantsFragment"
         android:name="org.linphone.ui.main.fragment.AddParticipantsFragment"
@@ -285,5 +290,15 @@
     <action android:id="@+id/action_global_conversationsFragment"
         app:destination="@id/conversationsFragment"
         app:launchSingleTop="true"/>
+
+    <fragment
+        android:id="@+id/meetingWaitingRoomFragment"
+        android:name="org.linphone.ui.main.meetings.fragment.MeetingWaitingRoomFragment"
+        android:label="MeetingWaitingRoomFragment"
+        tools:layout="@layout/meeting_waiting_room_fragment">
+        <argument
+            android:name="conferenceUri"
+            app:argType="string" />
+    </fragment>
 
 </navigation>

@@ -81,9 +81,7 @@ class ContactsListFragment : AbstractTopBarFragment() {
         binding.contactsList.setHasFixedSize(true)
         binding.contactsList.adapter = adapter
         configureAdapter(adapter)
-
-        val layoutManager = LinearLayoutManager(requireContext())
-        binding.contactsList.layoutManager = layoutManager
+        binding.contactsList.layoutManager = LinearLayoutManager(requireContext())
 
         favouritesAdapter = ContactsListAdapter(viewLifecycleOwner, favourites = true)
         binding.favouritesContactsList.setHasFixedSize(true)

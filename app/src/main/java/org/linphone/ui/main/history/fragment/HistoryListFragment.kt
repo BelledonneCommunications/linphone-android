@@ -80,9 +80,7 @@ class HistoryListFragment : AbstractTopBarFragment() {
         adapter = HistoryListAdapter(viewLifecycleOwner)
         binding.historyList.setHasFixedSize(true)
         binding.historyList.adapter = adapter
-
-        val layoutManager = LinearLayoutManager(requireContext())
-        binding.historyList.layoutManager = layoutManager
+        binding.historyList.layoutManager = LinearLayoutManager(requireContext())
 
         adapter.callLogLongClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->

@@ -48,8 +48,7 @@ class AccountSettingsFragment : GenericFragment() {
     }
 
     override fun goBack(): Boolean {
-        findNavController().popBackStack()
-        return true
+        return findNavController().popBackStack()
     }
 
     override fun onCreateView(

@@ -54,8 +54,7 @@ class AddParticipantsFragment : GenericAddressPickerFragment() {
     }
 
     override fun goBack(): Boolean {
-        findNavController().popBackStack()
-        return true
+        return findNavController().popBackStack()
     }
 
     override fun onSingleAddressSelected(address: Address, friend: Friend) {

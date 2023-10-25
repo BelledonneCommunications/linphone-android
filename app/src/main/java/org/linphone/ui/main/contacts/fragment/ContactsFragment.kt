@@ -114,8 +114,8 @@ class ContactsFragment : GenericFragment() {
         ) {
             it.consume {
                 Log.i("$TAG Opening contact editor for creating new contact")
-                val navController = findNavController()
-                navController.navigate(R.id.action_global_newContactFragment)
+                val action = ContactsFragmentDirections.actionContactsFragmentToNewContactFragment()
+                findNavController().navigate(action)
             }
         }
 

@@ -99,7 +99,8 @@ class HistoryFragment : GenericFragment() {
         sharedViewModel.showStartCallEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.i("$TAG Navigating to start call fragment")
-                findNavController().navigate(R.id.action_global_startCallFragment)
+                val action = HistoryFragmentDirections.actionHistoryFragmentToStartCallFragment()
+                findNavController().navigate(action)
             }
         }
 

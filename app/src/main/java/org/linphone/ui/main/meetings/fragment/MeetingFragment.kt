@@ -79,9 +79,7 @@ class MeetingFragment : GenericFragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        viewModel = requireActivity().run {
-            ViewModelProvider(this)[MeetingViewModel::class.java]
-        }
+        viewModel = ViewModelProvider(this)[MeetingViewModel::class.java]
         binding.viewModel = viewModel
 
         val uri = args.conferenceUri
@@ -95,11 +93,18 @@ class MeetingFragment : GenericFragment() {
         }
 
         binding.setShareClickListener {
+            Log.i("$TAG Sharing conference info as Google Calendar event")
             shareMeetingInfoAsCalendarEvent()
         }
 
         binding.setMenuClickListener {
             showPopupMenu()
+        }
+
+        binding.setJoinClickListener {
+            val conferenceUri = args.conferenceUri
+            Log.i("$TAG Requesting to go to waiting room for conference URI [$conferenceUri]")
+            sharedViewModel.goToMeetingWaitingRoomEvent.value = Event(conferenceUri)
         }
 
         sharedViewModel.isSlidingPaneSlideable.observe(viewLifecycleOwner) { slideable ->
@@ -181,7 +186,7 @@ class MeetingFragment : GenericFragment() {
         try {
             startActivity(intent)
         } catch (exception: ActivityNotFoundException) {
-            Log.e("${MeetingFragment.TAG} No activity found to handle intent: $exception")
+            Log.e("$TAG No activity found to handle intent: $exception")
         }
     }
 }

@@ -99,7 +99,18 @@ class MeetingsFragment : GenericFragment() {
         sharedViewModel.showScheduleMeetingEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.i("$TAG Navigating to schedule meeting fragment")
-                findNavController().navigate(R.id.action_global_scheduleMeetingFragment)
+                val action = MeetingsFragmentDirections.actionMeetingsFragmentToScheduleMeetingFragment()
+                findNavController().navigate(action)
+            }
+        }
+
+        sharedViewModel.goToMeetingWaitingRoomEvent.observe(viewLifecycleOwner) {
+            it.consume { uri ->
+                Log.i("$TAG Navigating to meeting waiting room fragment with URI [$uri]")
+                val action = MeetingsFragmentDirections.actionMeetingsFragmentToMeetingWaitingRoomFragment(
+                    uri
+                )
+                findNavController().navigate(action)
             }
         }
 
