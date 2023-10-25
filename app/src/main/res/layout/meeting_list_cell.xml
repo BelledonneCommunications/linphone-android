@@ -14,9 +14,6 @@
         <variable
             name="onLongClickListener"
             type="View.OnLongClickListener" />
-        <variable
-            name="firstMeetingOfTheDay"
-            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,19 +21,39 @@
         android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_300"
+            android:id="@+id/today_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@string/meetings_list_today_indicator"
+            android:textSize="12sp"
+            android:textColor="@color/orange_main_500"
+            android:visibility="@{model.displayTodayIndicator ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/today_separator"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/orange_main_500"
+            android:visibility="@{model.displayTodayIndicator ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintTop_toBottomOf="@id/today_indicator" />
+
+        <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
             android:id="@+id/header_day"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@{firstMeetingOfTheDay ? @dimen/meeting_margin : @dimen/zero, default=@dimen/zero}"
+            android:layout_marginTop="@{model.firstMeetingOfTheDay ? @dimen/meeting_margin : @dimen/zero, default=@dimen/zero}"
             android:layout_marginStart="5dp"
             android:text="@{model.day, default=`Mon.`}"
-            android:visibility="@{firstMeetingOfTheDay ? View.VISIBLE : View.INVISIBLE}"
+            android:visibility="@{model.firstMeetingOfTheDay ? View.VISIBLE : View.INVISIBLE}"
             android:textColor="@color/gray_main2_500"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="@id/header_day_number"
             app:layout_constraintEnd_toEndOf="@id/header_day_number"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/today_separator"/>
 
         <ImageView
             android:id="@+id/today_background"
@@ -44,7 +61,7 @@
             android:layout_height="32dp"
             android:layout_marginStart="5dp"
             android:src="@drawable/shape_circle_primary_background"
-            android:visibility="@{model.isToday &amp;&amp; firstMeetingOfTheDay ? View.VISIBLE : View.INVISIBLE}"
+            android:visibility="@{model.isToday &amp;&amp; model.firstMeetingOfTheDay ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/header_day" />
 
@@ -54,7 +71,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{model.dayNumber, default=`19`}"
-            android:visibility="@{firstMeetingOfTheDay ? View.VISIBLE : View.INVISIBLE}"
+            android:visibility="@{model.firstMeetingOfTheDay ? View.VISIBLE : View.INVISIBLE}"
             android:textColor="@{model.isToday ? @color/white : @color/gray_main2_500, default=@color/gray_main2_500}"
             android:textSize="20sp"
             android:paddingBottom="4dp"
@@ -71,14 +88,14 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="5dp"
-            android:layout_marginTop="@{firstMeetingOfTheDay ? @dimen/meeting_margin : @dimen/zero, default=@dimen/zero}"
+            android:layout_marginTop="@{model.firstMeetingOfTheDay ? @dimen/meeting_margin : @dimen/zero, default=@dimen/zero}"
             android:layout_marginBottom="8dp"
             app:cardBackgroundColor="@color/list_cell_background_color"
             app:cardElevation="5dp"
             app:cardCornerRadius="10dp"
             app:layout_constraintStart_toEndOf="@id/header_day"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/today_separator"
             app:layout_constraintBottom_toBottomOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout

@@ -28,7 +28,7 @@ import org.linphone.utils.TimestampUtils
 class MeetingModel @WorkerThread constructor(conferenceInfo: ConferenceInfo) {
     val id = conferenceInfo.uri?.asStringUriOnly() ?: ""
 
-    private val timestamp = conferenceInfo.dateTime
+    val timestamp = conferenceInfo.dateTime
 
     val day = TimestampUtils.dayOfWeek(timestamp)
 
@@ -47,6 +47,10 @@ class MeetingModel @WorkerThread constructor(conferenceInfo: ConferenceInfo) {
     val isBroadcast = MutableLiveData<Boolean>()
 
     val subject = MutableLiveData<String>()
+
+    val firstMeetingOfTheDay = MutableLiveData<Boolean>()
+
+    val displayTodayIndicator = MutableLiveData<Boolean>()
 
     init {
         subject.postValue(conferenceInfo.subject)

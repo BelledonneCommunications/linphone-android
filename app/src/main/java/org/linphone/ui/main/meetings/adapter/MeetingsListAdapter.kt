@@ -21,8 +21,6 @@ import org.linphone.utils.HeaderAdapter
 class MeetingsListAdapter(
     private val viewLifecycleOwner: LifecycleOwner
 ) : ListAdapter<MeetingModel, RecyclerView.ViewHolder>(MeetingDiffCallback()), HeaderAdapter {
-    var selectedAdapterPosition = -1
-
     val meetingClickedEvent: MutableLiveData<Event<MeetingModel>> by lazy {
         MutableLiveData<Event<MeetingModel>>()
     }
@@ -60,11 +58,6 @@ class MeetingsListAdapter(
         (holder as ViewHolder).bind(getItem(position))
     }
 
-    fun resetSelection() {
-        notifyItemChanged(selectedAdapterPosition)
-        selectedAdapterPosition = -1
-    }
-
     inner class ViewHolder(
         val binding: MeetingListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
@@ -73,24 +66,13 @@ class MeetingsListAdapter(
             with(binding) {
                 model = meetingModel
 
-                val hasPrevious = bindingAdapterPosition > 0
-                firstMeetingOfTheDay = if (hasPrevious) {
-                    val previous = getItem(bindingAdapterPosition - 1)
-                    previous.day != meetingModel.day || previous.dayNumber != meetingModel.dayNumber
-                } else {
-                    true
-                }
-
                 lifecycleOwner = viewLifecycleOwner
-
-                binding.cardview.isSelected = bindingAdapterPosition == selectedAdapterPosition
 
                 binding.setOnClickListener {
                     meetingClickedEvent.value = Event(meetingModel)
                 }
 
                 binding.setOnLongClickListener {
-                    selectedAdapterPosition = bindingAdapterPosition
                     binding.root.isSelected = true
                     meetingLongClickedEvent.value = Event(meetingModel)
                     true

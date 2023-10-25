@@ -42,6 +42,17 @@ class TimestampUtils {
         }
 
         @AnyThread
+        fun isAfterToday(timestamp: Long, timestampInSecs: Boolean = true): Boolean {
+            val cal = Calendar.getInstance()
+            cal.timeInMillis = if (timestampInSecs) timestamp * 1000 else timestamp
+
+            val tomorrow = Calendar.getInstance()
+            return cal[Calendar.ERA] >= tomorrow[Calendar.ERA] &&
+                cal[Calendar.YEAR] >= tomorrow[Calendar.YEAR] &&
+                cal[Calendar.DAY_OF_YEAR] >= tomorrow[Calendar.DAY_OF_YEAR]
+        }
+
+        @AnyThread
         fun isYesterday(timestamp: Long, timestampInSecs: Boolean = true): Boolean {
             val yesterday = Calendar.getInstance()
             yesterday.roll(Calendar.DAY_OF_MONTH, -1)

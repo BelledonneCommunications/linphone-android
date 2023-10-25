@@ -33,6 +33,7 @@ import org.linphone.databinding.MeetingsListFragmentBinding
 import org.linphone.ui.main.fragment.AbstractTopBarFragment
 import org.linphone.ui.main.meetings.adapter.MeetingsListAdapter
 import org.linphone.ui.main.meetings.viewmodel.MeetingsListViewModel
+import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.RecyclerViewHeaderDecoration
 import org.linphone.utils.hideKeyboard
@@ -97,6 +98,7 @@ class MeetingsListFragment : AbstractTopBarFragment() {
             adapter.submitList(it)
             Log.i("$TAG Meetings list ready with [${it.size}] items")
 
+            val newCount = it.size
             if (currentCount < it.size) {
                 (view.parent as? ViewGroup)?.doOnPreDraw {
                     startPostponedEnterTransition()
@@ -147,19 +149,12 @@ class MeetingsListFragment : AbstractTopBarFragment() {
     private fun scrollToToday() {
         Log.i("$TAG Scrolling to today's meeting (if any)")
         val todayMeeting = listViewModel.meetings.value.orEmpty().find {
-            it.isToday
+            it.displayTodayIndicator.value == true
         }
-        val position = if (todayMeeting != null) {
-            val index = listViewModel.meetings.value.orEmpty().indexOf(todayMeeting)
-            Log.i(
-                "$TAG Found (at least) a meeting for today [${todayMeeting.subject.value}] at index [$index]"
-            )
-            // Return the element before so today's event will be properly displayed (due to header)
-            if (index > 0) index - 1 else index
-        } else {
-            Log.i("$TAG No meeting found for today")
-            0 // TODO FIXME: improve by getting closest meeting
-        }
-        binding.meetingsList.smoothScrollToPosition(position)
+        val index = listViewModel.meetings.value.orEmpty().indexOf(todayMeeting)
+        (binding.meetingsList.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(
+            index,
+            AppUtils.getDimension(R.dimen.meeting_list_decoration_height).toInt()
+        )
     }
 }

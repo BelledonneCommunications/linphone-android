@@ -50,6 +50,8 @@
     <dimen name="call_button_icon_padding">15dp</dimen>
     <dimen name="call_extra_button_top_margin">30dp</dimen>
 
+    <dimen name="meeting_list_decoration_height">66dp</dimen>
+
     <dimen name="toast_max_width">400dp</dimen>
     <dimen name="toast_text_max_width">300dp</dimen>
     <dimen name="button_max_width">400dp</dimen>

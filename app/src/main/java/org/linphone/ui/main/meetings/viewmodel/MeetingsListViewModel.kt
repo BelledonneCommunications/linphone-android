@@ -29,6 +29,7 @@ import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.meetings.model.MeetingModel
 import org.linphone.ui.main.viewmodel.AbstractTopBarViewModel
+import org.linphone.utils.TimestampUtils
 
 class MeetingsListViewModel @UiThread constructor() : AbstractTopBarViewModel() {
     companion object {
@@ -86,6 +87,9 @@ class MeetingsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
             )
             source = coreContext.core.conferenceInformationList
         }
+
+        var previousModel: MeetingModel? = null
+        var firstMeetingOfTodayFound = false
         for (info: ConferenceInfo in source) {
             val add = if (filter.isNotEmpty()) {
                 val organizerCheck = info.organizer?.asStringUriOnly()?.contains(
@@ -103,7 +107,30 @@ class MeetingsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
             }
             if (add) {
                 val model = MeetingModel(info)
+                val firstMeetingOfTheDay = if (previousModel != null) {
+                    previousModel.day != model.day || previousModel.dayNumber != model.dayNumber
+                } else {
+                    true
+                }
+                model.firstMeetingOfTheDay.postValue(firstMeetingOfTheDay)
+
+                if (firstMeetingOfTheDay && model.isToday) {
+                    firstMeetingOfTodayFound = true
+                    model.displayTodayIndicator.postValue(true)
+                }
+
                 list.add(model)
+                previousModel = model
+            }
+        }
+
+        if (!firstMeetingOfTodayFound) {
+            val firstMeetingAfterToday = list.find {
+                TimestampUtils.isAfterToday(it.timestamp)
+            }
+            Log.i("$TAG $firstMeetingAfterToday")
+            if (firstMeetingAfterToday != null) {
+                firstMeetingAfterToday.displayTodayIndicator.postValue(true)
             }
         }
 
