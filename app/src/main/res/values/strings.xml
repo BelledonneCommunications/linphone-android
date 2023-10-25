@@ -427,6 +427,8 @@
     <string name="calls_count_label">%s calls</string>
     <string name="calls_paused_count_label">%s paused calls</string>
 
+    <string name="conference_call_empty">Waiting for other participants…</string>
+
     <string name="connection_error_for_non_default_account">Account connection error</string>
 
     <!-- Keep <u></u> in following strings translations! -->

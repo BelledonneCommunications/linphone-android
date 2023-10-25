@@ -34,7 +34,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.window.layout.FoldingFeature
 import androidx.window.layout.WindowInfoTracker
 import androidx.window.layout.WindowLayoutInfo
@@ -166,7 +165,7 @@ class CallActivity : AppCompatActivity() {
             }
         }
 
-        callViewModel.goTEndedCallEvent.observe(this) {
+        callViewModel.goToEndedCallEvent.observe(this) {
             it.consume {
                 val action = ActiveCallFragmentDirections.actionGlobalEndedCallFragment()
                 findNavController(R.id.call_nav_container).navigate(action)

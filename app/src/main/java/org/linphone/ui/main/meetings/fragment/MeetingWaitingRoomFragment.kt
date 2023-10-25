@@ -109,6 +109,13 @@ class MeetingWaitingRoomFragment : GenericFragment() {
             }
         }
 
+        viewModel.conferenceCreatedEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i("$TAG Conference was joined, leaving waiting room")
+                goBack()
+            }
+        }
+
         if (!isCameraPermissionGranted()) {
             viewModel.isVideoAvailable.value = false
             Log.w("$TAG Camera permission wasn't granted yet, asking for it now")

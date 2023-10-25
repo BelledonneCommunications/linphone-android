@@ -43,6 +43,7 @@ import org.linphone.core.MediaDirection
 import org.linphone.core.MediaEncryption
 import org.linphone.core.tools.Log
 import org.linphone.ui.call.model.AudioDeviceModel
+import org.linphone.ui.call.model.ConferenceModel
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.history.model.NumpadModel
 import org.linphone.utils.AppUtils
@@ -110,7 +111,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
-    val goTEndedCallEvent: MutableLiveData<Event<Boolean>> by lazy {
+    val goToEndedCallEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
 
@@ -127,6 +128,14 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     val showZrtpSasDialogEvent: MutableLiveData<Event<Pair<String, String>>> by lazy {
         MutableLiveData<Event<Pair<String, String>>>()
+    }
+
+    // Conference
+
+    val conferenceModel = ConferenceModel()
+
+    val goToConferenceEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
     }
 
     // Extras actions
@@ -201,13 +210,13 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                         Log.e(
                             "$TAG Failed to get a valid call to display, go to ended call fragment"
                         )
-                        goTEndedCallEvent.postValue(Event(true))
+                        goToEndedCallEvent.postValue(Event(true))
                     }
                 } else {
                     Log.i("$TAG Call is ending, go to ended call fragment")
                     // Show that call was ended for a few seconds, then leave
                     // TODO FIXME: do not show it when call is being ended due to user terminating the call
-                    goTEndedCallEvent.postValue(Event(true))
+                    goToEndedCallEvent.postValue(Event(true))
                 }
             } else {
                 val videoEnabled = call.currentParams.isVideoEnabled
@@ -223,6 +232,12 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                 if (!videoEnabled && fullScreenMode.value == true) {
                     Log.w("$TAG Video is not longer enabled, leaving full screen mode")
                     fullScreenMode.postValue(false)
+                }
+
+                if (call.state == Call.State.Connected && call.conference != null) {
+                    Log.i("$TAG Call is in Connected state and conference isn't null")
+                    conferenceModel.configureFromCall(call)
+                    goToConferenceEvent.postValue(Event(true))
                 }
             }
 
@@ -718,6 +733,11 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
         currentCall = call
         call.addListener(callListener)
+
+        if (call.conference != null) {
+            conferenceModel.configureFromCall(call)
+            goToConferenceEvent.postValue(Event(true))
+        }
 
         if (call.dir == Call.Dir.Incoming) {
             if (call.core.accountList.size > 1) {

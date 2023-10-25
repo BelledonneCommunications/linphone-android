@@ -66,6 +66,12 @@
             app:enterAnim="@anim/slide_in"
             app:popExitAnim="@anim/slide_out"
             app:launchSingleTop="true" />
+        <action
+            android:id="@+id/action_activeCallFragment_to_activeConferenceCallFragment"
+            app:destination="@id/activeConferenceCallFragment"
+            app:popUpTo="@id/activeCallFragment"
+            app:popUpToInclusive="true"
+            app:launchSingleTop="true" />
     </fragment>
 
     <action android:id="@+id/action_global_activeCallFragment"
@@ -103,5 +109,11 @@
     <action android:id="@+id/action_global_endedCallFragment"
         app:destination="@id/endedCallFragment"
         app:launchSingleTop="true"/>
+
+    <fragment
+        android:id="@+id/activeConferenceCallFragment"
+        android:name="org.linphone.ui.call.fragment.ActiveConferenceCallFragment"
+        android:label="ActiveConferenceCallFragment"
+        tools:layout="@layout/call_active_conference_fragment"/>
 
 </navigation>

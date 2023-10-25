@@ -24,7 +24,10 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.core.Conference
 import org.linphone.core.ConferenceInfo
+import org.linphone.core.Core
+import org.linphone.core.CoreListenerStub
 import org.linphone.core.Factory
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
@@ -53,11 +56,38 @@ class MeetingWaitingRoomViewModel @UiThread constructor() : ViewModel() {
 
     val conferenceInfoFoundEvent = MutableLiveData<Event<Boolean>>()
 
+    val conferenceCreatedEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     private lateinit var conferenceInfo: ConferenceInfo
+
+    private val coreListener = object : CoreListenerStub() {
+        override fun onConferenceStateChanged(
+            core: Core,
+            conference: Conference,
+            state: Conference.State?
+        ) {
+            Log.i("$TAG Conference state changed: [$state]")
+            if (conference.state == Conference.State.Created) {
+                conferenceCreatedEvent.postValue(Event(true))
+            }
+        }
+    }
+
+    init {
+        coreContext.postOnCoreThread { core ->
+            core.addListener(coreListener)
+        }
+    }
 
     @UiThread
     override fun onCleared() {
         super.onCleared()
+
+        coreContext.postOnCoreThread { core ->
+            core.removeListener(coreListener)
+        }
     }
 
     @UiThread

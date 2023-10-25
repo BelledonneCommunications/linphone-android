@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <import type="org.linphone.core.ChatRoom.SecurityLevel" />
+        <variable
+            name="newCallClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="callsListClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.call.viewmodel.CurrentCallViewModel" />
+        <variable
+            name="conferenceViewModel"
+            type="org.linphone.ui.call.model.ConferenceModel" />
+        <variable
+            name="callsViewModel"
+            type="org.linphone.ui.call.viewmodel.CallsViewModel" />
+        <variable
+            name="numpadModel"
+            type="org.linphone.ui.main.history.model.NumpadModel" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/gray_900">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/hinge_top"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/hinge_bottom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="1" />
+
+            <ImageView
+                android:id="@+id/background"
+                android:src="@drawable/shape_round_in_call_gray_background"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginBottom="@dimen/call_main_actions_menu_height"
+                app:layout_constraintTop_toBottomOf="@id/call_direction_label"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_300"
+                android:id="@+id/waiting_for_others"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="@string/conference_call_empty"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                app:layout_constraintTop_toTopOf="@id/background"
+                app:layout_constraintBottom_toBottomOf="@id/background"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/header_info_visibility"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="@{viewModel.fullScreenMode || viewModel.pipMode ? View.INVISIBLE : View.VISIBLE}"
+                app:constraint_referenced_ids="call_direction_icon, call_direction_label, separator, chronometer" />
+
+            <ImageView
+                android:id="@+id/call_direction_icon"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:layout_marginStart="10dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/users_three"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/call_direction_label"
+                app:layout_constraintBottom_toBottomOf="@id/call_direction_label"
+                app:tint="@color/orange_main_500" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/call_header_style"
+                android:id="@+id/call_direction_label"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/call_top_bar_text_height"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:text="@{conferenceViewModel.subject, default=`Meeting with John Doe`}"
+                app:layout_constraintStart_toEndOf="@id/call_direction_icon"
+                app:layout_constraintTop_toTopOf="@id/hinge_top"
+                app:layout_constraintBottom_toTopOf="@id/background"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/call_header_style"
+                android:id="@+id/separator"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/call_top_bar_text_height"
+                android:layout_marginStart="5dp"
+                android:text="@string/vertical_separator"
+                app:layout_constraintStart_toEndOf="@id/call_direction_label"
+                app:layout_constraintTop_toTopOf="@id/call_direction_label"/>
+
+            <Chronometer
+                style="@style/call_header_style"
+                android:id="@+id/chronometer"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/call_top_bar_text_height"
+                android:layout_marginStart="5dp"
+                android:visibility="@{viewModel.isPaused || viewModel.isPausedByRemote ? View.GONE : View.VISIBLE}"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toEndOf="@id/separator"
+                app:layout_constraintEnd_toStartOf="@id/switch_camera"
+                app:layout_constraintTop_toTopOf="@id/call_direction_label"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/call_header_style"
+                android:id="@+id/paused_call_header"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/call_top_bar_text_height"
+                android:layout_marginStart="5dp"
+                android:text="@{viewModel.isPaused ? @string/call_state_paused : @string/call_state_paused_by_remote, default=@string/call_state_paused}"
+                android:visibility="@{viewModel.isPaused || viewModel.isPausedByRemote ? View.VISIBLE : View.GONE, default=gone}"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toEndOf="@id/separator"
+                app:layout_constraintEnd_toStartOf="@id/switch_camera"
+                app:layout_constraintTop_toTopOf="@id/call_direction_label"/>
+
+            <ImageView
+                android:onClick="@{() -> viewModel.switchCamera()}"
+                android:id="@+id/switch_camera"
+                android:layout_width="@dimen/call_top_bar_info_height"
+                android:layout_height="@dimen/call_top_bar_info_height"
+                android:padding="10dp"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/camera_rotate"
+                android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; viewModel.isVideoEnabled &amp;&amp; viewModel.showSwitchCamera ? View.VISIBLE : View.GONE}"
+                app:tint="@color/white"
+                app:layout_constraintTop_toTopOf="@id/call_direction_label"
+                app:layout_constraintBottom_toBottomOf="@id/call_direction_label"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <ImageView
+                android:id="@+id/recording"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
+                android:src="@drawable/record_fill"
+                android:visibility="@{viewModel.isRecording ? View.VISIBLE : View.GONE, default=gone}"
+                app:layout_constraintTop_toTopOf="@id/background"
+                app:layout_constraintStart_toStartOf="@id/background"
+                app:tint="@color/red_danger_500" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <include
+            android:id="@+id/bottom_bar"
+            android:visibility="@{viewModel.fullScreenMode || viewModel.pipMode ? View.INVISIBLE : View.VISIBLE}"
+            layout="@layout/call_extra_actions"
+            bind:viewModel="@{viewModel}"
+            bind:callsViewModel="@{callsViewModel}"
+            bind:newCallClickListener="@{newCallClickListener}"
+            bind:callsListClickListener="@{callsListClickListener}"/>
+
+        <include
+            android:id="@+id/call_numpad"
+            android:visibility="@{viewModel.fullScreenMode || viewModel.pipMode ? View.INVISIBLE : View.VISIBLE}"
+            layout="@layout/call_numpad"
+            bind:model="@{numpadModel}"/>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</layout>

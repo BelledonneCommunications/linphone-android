@@ -119,7 +119,20 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         ) {
             Log.i("$TAG Call [${call.remoteAddress.asStringUriOnly()}] state changed [$state]")
             when (state) {
-                Call.State.OutgoingProgress, Call.State.Connected -> {
+                Call.State.OutgoingProgress -> {
+                    val conferenceInfo = core.findConferenceInformationFromUri(call.remoteAddress)
+                    // Do not show outgoing call view for conference calls, wait for connected state
+                    if (conferenceInfo == null) {
+                        postOnMainThread {
+                            showCallActivity()
+                        }
+                    } else {
+                        Log.i(
+                            "$TAG Call peer address matches known conference, delaying in-call UI until Connected state"
+                        )
+                    }
+                }
+                Call.State.Connected -> {
                     postOnMainThread {
                         showCallActivity()
                     }

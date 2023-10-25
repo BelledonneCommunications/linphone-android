@@ -251,6 +251,14 @@ class ActiveCallFragment : GenericCallFragment() {
             }
         }
 
+        callViewModel.goToConferenceEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i("$TAG Going to conference fragment")
+                val action = ActiveCallFragmentDirections.actionActiveCallFragmentToActiveConferenceCallFragment()
+                findNavController().navigate(action)
+            }
+        }
+
         actionsBottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
