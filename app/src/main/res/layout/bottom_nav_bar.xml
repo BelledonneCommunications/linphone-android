@@ -7,32 +7,21 @@
         <import type="android.view.View" />
         <import type="android.graphics.Typeface" />
         <variable
-            name="onContactsClicked"
-            type="View.OnClickListener" />
-        <variable
-            name="onCallsClicked"
-            type="View.OnClickListener" />
-        <variable
-            name="onConversationsClicked"
-            type="View.OnClickListener" />
-        <variable
-            name="onMeetingsClicked"
-            type="View.OnClickListener" />
-        <variable
             name="viewModel"
-            type="org.linphone.ui.main.viewmodel.BottomNavBarViewModel" />
+            type="org.linphone.ui.main.viewmodel.AbstractTopBarViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottom_nav_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:elevation="16dp"
         android:background="@color/white">
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/bottom_nav_bar_label_style"
-            android:onClick="@{onContactsClicked}"
             android:id="@+id/contacts"
+            android:onClick="@{() -> viewModel.navigateToContacts()}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingTop="16dp"
@@ -49,8 +38,8 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/bottom_nav_bar_label_style"
-            android:onClick="@{onCallsClicked}"
             android:id="@+id/calls"
+            android:onClick="@{() -> viewModel.navigateToHistory()}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
@@ -86,9 +75,8 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/bottom_nav_bar_label_style"
-            android:onClick="@{onConversationsClicked}"
-            android:visibility="@{viewModel.hideConversations ? View.GONE : View.VISIBLE}"
             android:id="@+id/conversations"
+            android:onClick="@{() -> viewModel.navigateToConversations()}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
@@ -99,6 +87,7 @@
             android:drawableTint="@{viewModel.conversationsSelected ? @color/orange_main_500 : @color/gray_main2_600, default=@color/gray_main2_600}"
             android:text="@string/bottom_navigation_conversations_label"
             android:textStyle="@{viewModel.conversationsSelected ? Typeface.BOLD : Typeface.NORMAL}"
+            android:visibility="@{viewModel.hideConversations ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/meetings"
             app:layout_constraintStart_toEndOf="@id/calls"
@@ -124,9 +113,8 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/bottom_nav_bar_label_style"
-            android:onClick="@{onMeetingsClicked}"
             android:id="@+id/meetings"
-            android:visibility="@{viewModel.hideMeetings ? View.GONE : View.VISIBLE}"
+            android:onClick="@{() -> viewModel.navigateToMeetings()}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
@@ -137,6 +125,7 @@
             android:drawableTint="@{viewModel.meetingsSelected ? @color/orange_main_500 : @color/gray_main2_600, default=@color/gray_main2_600}"
             android:text="@string/bottom_navigation_meetings_label"
             android:textStyle="@{viewModel.meetingsSelected ? Typeface.BOLD : Typeface.NORMAL}"
+            android:visibility="@{viewModel.hideMeetings ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/conversations"

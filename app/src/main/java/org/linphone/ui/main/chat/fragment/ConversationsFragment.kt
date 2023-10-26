@@ -144,7 +144,7 @@ class ConversationsFragment : GenericFragment() {
             }
         }
 
-        sharedViewModel.navigateToCallsEvent.observe(viewLifecycleOwner) {
+        sharedViewModel.navigateToHistoryEvent.observe(viewLifecycleOwner) {
             it.consume {
                 if (findNavController().currentDestination?.id == R.id.conversationsFragment) {
                     // To prevent any previously seen conversation to show up when navigating back to here later

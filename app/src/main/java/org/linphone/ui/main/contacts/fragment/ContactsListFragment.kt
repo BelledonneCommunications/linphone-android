@@ -20,6 +20,7 @@
 package org.linphone.ui.main.contacts.fragment
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.view.Gravity
@@ -42,8 +43,7 @@ import org.linphone.ui.main.contacts.adapter.ContactsListAdapter
 import org.linphone.ui.main.contacts.viewmodel.ContactsListViewModel
 import org.linphone.ui.main.fragment.AbstractTopBarFragment
 import org.linphone.utils.Event
-import org.linphone.utils.hideKeyboard
-import org.linphone.utils.showKeyboard
+import org.linphone.utils.setKeyboardInsetListener
 
 @UiThread
 class ContactsListFragment : AbstractTopBarFragment() {
@@ -70,9 +70,7 @@ class ContactsListFragment : AbstractTopBarFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        listViewModel = requireActivity().run {
-            ViewModelProvider(this)[ContactsListViewModel::class.java]
-        }
+        listViewModel = ViewModelProvider(this)[ContactsListViewModel::class.java]
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = listViewModel
@@ -131,6 +129,19 @@ class ContactsListFragment : AbstractTopBarFragment() {
             showFilterPopupMenu(binding.filter)
         }
 
+        // TopBarFragment related
+
+        setViewModelAndTitle(
+            binding.topBar.search,
+            listViewModel,
+            getString(R.string.bottom_navigation_contacts_label)
+        )
+
+        binding.root.setKeyboardInsetListener { keyboardVisible ->
+            val portraitOrientation = resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
+            binding.bottomNavBar.root.visibility = if (!portraitOrientation || !keyboardVisible) View.VISIBLE else View.GONE
+        }
+
         sharedViewModel.defaultAccountChangedEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.i(
@@ -138,25 +149,6 @@ class ContactsListFragment : AbstractTopBarFragment() {
                 )
                 listViewModel.update()
                 listViewModel.applyCurrentDefaultAccountFilter()
-            }
-        }
-
-        // TopBarFragment related
-
-        setViewModelAndTitle(listViewModel, getString(R.string.bottom_navigation_contacts_label))
-
-        listViewModel.searchFilter.observe(viewLifecycleOwner) { filter ->
-            listViewModel.applyFilter(filter.trim())
-        }
-
-        listViewModel.focusSearchBarEvent.observe(viewLifecycleOwner) {
-            it.consume { show ->
-                if (show) {
-                    // To automatically open keyboard
-                    binding.topBar.search.showKeyboard()
-                } else {
-                    binding.topBar.search.hideKeyboard()
-                }
             }
         }
     }

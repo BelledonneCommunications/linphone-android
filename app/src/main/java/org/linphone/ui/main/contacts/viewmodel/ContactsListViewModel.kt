@@ -60,7 +60,6 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
         MutableLiveData<Event<Pair<String, File>>>()
     }
 
-    private var currentFilter = ""
     private var previousFilter = "NotSet"
     private var limitSearchToLinphoneAccounts = true
 
@@ -189,11 +188,11 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
     }
 
     @UiThread
-    fun applyFilter(filter: String = currentFilter) {
-        isListFiltered.value = filter.isNotEmpty()
+    override fun filter() {
+        isListFiltered.value = currentFilter.isNotEmpty()
         coreContext.postOnCoreThread {
             applyFilter(
-                filter,
+                currentFilter,
                 if (limitSearchToLinphoneAccounts) corePreferences.defaultDomain else "",
                 MagicSearch.Source.Friends.toInt() or MagicSearch.Source.LdapServers.toInt()
             )

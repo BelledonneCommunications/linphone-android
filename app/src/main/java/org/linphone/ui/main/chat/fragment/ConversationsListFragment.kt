@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.main.chat.fragment
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -34,8 +35,7 @@ import org.linphone.ui.main.chat.viewmodel.ConversationsListViewModel
 import org.linphone.ui.main.fragment.AbstractTopBarFragment
 import org.linphone.ui.main.history.fragment.HistoryMenuDialogFragment
 import org.linphone.utils.Event
-import org.linphone.utils.hideKeyboard
-import org.linphone.utils.showKeyboard
+import org.linphone.utils.setKeyboardInsetListener
 
 @UiThread
 class ConversationsListFragment : AbstractTopBarFragment() {
@@ -57,12 +57,11 @@ class ConversationsListFragment : AbstractTopBarFragment() {
         binding = ChatListFragmentBinding.inflate(layoutInflater)
         return binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        listViewModel = requireActivity().run {
-            ViewModelProvider(this)[ConversationsListViewModel::class.java]
-        }
+        listViewModel = ViewModelProvider(this)[ConversationsListViewModel::class.java]
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = listViewModel
@@ -129,34 +128,25 @@ class ConversationsListFragment : AbstractTopBarFragment() {
             }
         }
 
+        // TopBarFragment related
+
+        setViewModelAndTitle(
+            binding.topBar.search,
+            listViewModel,
+            getString(R.string.bottom_navigation_conversations_label)
+        )
+
+        binding.root.setKeyboardInsetListener { keyboardVisible ->
+            val portraitOrientation = resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
+            binding.bottomNavBar.root.visibility = if (!portraitOrientation || !keyboardVisible) View.VISIBLE else View.GONE
+        }
+
         sharedViewModel.defaultAccountChangedEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.i(
                     "$TAG Default account changed, updating avatar in top bar & re-computing conversations"
                 )
                 listViewModel.applyFilter()
-            }
-        }
-
-        // TopBarFragment related
-
-        setViewModelAndTitle(
-            listViewModel,
-            getString(R.string.bottom_navigation_conversations_label)
-        )
-
-        listViewModel.searchFilter.observe(viewLifecycleOwner) { filter ->
-            listViewModel.applyFilter(filter.trim())
-        }
-
-        listViewModel.focusSearchBarEvent.observe(viewLifecycleOwner) {
-            it.consume { show ->
-                if (show) {
-                    // To automatically open keyboard
-                    binding.topBar.search.showKeyboard()
-                } else {
-                    binding.topBar.search.hideKeyboard()
-                }
             }
         }
     }

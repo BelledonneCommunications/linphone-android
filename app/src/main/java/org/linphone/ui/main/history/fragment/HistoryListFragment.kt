@@ -22,6 +22,7 @@ package org.linphone.ui.main.history.fragment
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -44,8 +45,7 @@ import org.linphone.ui.main.history.model.ConfirmationDialogModel
 import org.linphone.ui.main.history.viewmodel.HistoryListViewModel
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
-import org.linphone.utils.hideKeyboard
-import org.linphone.utils.showKeyboard
+import org.linphone.utils.setKeyboardInsetListener
 
 @UiThread
 class HistoryListFragment : AbstractTopBarFragment() {
@@ -67,12 +67,11 @@ class HistoryListFragment : AbstractTopBarFragment() {
         binding = HistoryListFragmentBinding.inflate(layoutInflater)
         return binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        listViewModel = requireActivity().run {
-            ViewModelProvider(this)[HistoryListViewModel::class.java]
-        }
+        listViewModel = ViewModelProvider(this)[HistoryListViewModel::class.java]
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = listViewModel
@@ -177,6 +176,19 @@ class HistoryListFragment : AbstractTopBarFragment() {
             sharedViewModel.showStartCallEvent.value = Event(true)
         }
 
+        // TopBarFragment related
+
+        setViewModelAndTitle(
+            binding.topBar.search,
+            listViewModel,
+            getString(R.string.bottom_navigation_calls_label)
+        )
+
+        binding.root.setKeyboardInsetListener { keyboardVisible ->
+            val portraitOrientation = resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
+            binding.bottomNavBar.root.visibility = if (!portraitOrientation || !keyboardVisible) View.VISIBLE else View.GONE
+        }
+
         sharedViewModel.defaultAccountChangedEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.i(
@@ -184,25 +196,6 @@ class HistoryListFragment : AbstractTopBarFragment() {
                 )
                 listViewModel.update()
                 listViewModel.applyFilter()
-            }
-        }
-
-        // TopBarFragment related
-
-        setViewModelAndTitle(listViewModel, getString(R.string.bottom_navigation_calls_label))
-
-        listViewModel.searchFilter.observe(viewLifecycleOwner) { filter ->
-            listViewModel.applyFilter(filter.trim())
-        }
-
-        listViewModel.focusSearchBarEvent.observe(viewLifecycleOwner) {
-            it.consume { show ->
-                if (show) {
-                    // To automatically open keyboard
-                    binding.topBar.search.showKeyboard()
-                } else {
-                    binding.topBar.search.hideKeyboard()
-                }
             }
         }
     }

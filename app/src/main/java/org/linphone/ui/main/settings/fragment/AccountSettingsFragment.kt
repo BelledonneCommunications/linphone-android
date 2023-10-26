@@ -66,9 +66,7 @@ class AccountSettingsFragment : GenericFragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        viewModel = requireActivity().run {
-            ViewModelProvider(this)[AccountSettingsViewModel::class.java]
-        }
+        viewModel = ViewModelProvider(this)[AccountSettingsViewModel::class.java]
         binding.viewModel = viewModel
 
         val identity = args.accountIdentity

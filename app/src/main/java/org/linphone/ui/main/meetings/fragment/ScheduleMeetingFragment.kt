@@ -67,9 +67,7 @@ class ScheduleMeetingFragment : GenericFragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        viewModel = requireActivity().run {
-            ViewModelProvider(this)[ScheduleMeetingViewModel::class.java]
-        }
+        viewModel = ViewModelProvider(this)[ScheduleMeetingViewModel::class.java]
         binding.viewModel = viewModel
 
         binding.setBackClickListener {

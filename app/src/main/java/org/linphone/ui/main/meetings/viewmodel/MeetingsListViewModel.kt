@@ -40,8 +40,6 @@ class MeetingsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
 
     val fetchInProgress = MutableLiveData<Boolean>()
 
-    private var currentFilter = ""
-
     private val coreListener = object : CoreListenerStub() {
         @WorkerThread
         override fun onConferenceInfoReceived(core: Core, conferenceInfo: ConferenceInfo) {
@@ -68,11 +66,9 @@ class MeetingsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
     }
 
     @UiThread
-    fun applyFilter(filter: String = currentFilter) {
-        currentFilter = filter
-
+    override fun filter() {
         coreContext.postOnCoreThread {
-            computeMeetingsList(filter)
+            computeMeetingsList(currentFilter)
         }
     }
 

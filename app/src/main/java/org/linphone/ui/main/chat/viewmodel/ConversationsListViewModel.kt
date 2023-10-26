@@ -43,8 +43,6 @@ class ConversationsListViewModel @UiThread constructor() : AbstractTopBarViewMod
 
     val fetchInProgress = MutableLiveData<Boolean>()
 
-    private var currentFilter = ""
-
     private val coreListener = object : CoreListenerStub() {
         @WorkerThread
         override fun onChatRoomStateChanged(
@@ -94,9 +92,7 @@ class ConversationsListViewModel @UiThread constructor() : AbstractTopBarViewMod
     }
 
     @UiThread
-    fun applyFilter(filter: String = currentFilter) {
-        currentFilter = filter
-
+    override fun filter() {
         coreContext.postOnCoreThread {
             computeChatRoomsList(currentFilter)
         }

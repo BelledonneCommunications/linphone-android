@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.main.meetings.fragment
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -36,8 +37,7 @@ import org.linphone.ui.main.meetings.viewmodel.MeetingsListViewModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.RecyclerViewHeaderDecoration
-import org.linphone.utils.hideKeyboard
-import org.linphone.utils.showKeyboard
+import org.linphone.utils.setKeyboardInsetListener
 
 @UiThread
 class MeetingsListFragment : AbstractTopBarFragment() {
@@ -59,13 +59,12 @@ class MeetingsListFragment : AbstractTopBarFragment() {
         binding = MeetingsListFragmentBinding.inflate(layoutInflater)
         return binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         postponeEnterTransition()
 
-        listViewModel = requireActivity().run {
-            ViewModelProvider(this)[MeetingsListViewModel::class.java]
-        }
+        listViewModel = ViewModelProvider(this)[MeetingsListViewModel::class.java]
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = listViewModel
@@ -98,7 +97,6 @@ class MeetingsListFragment : AbstractTopBarFragment() {
             adapter.submitList(it)
             Log.i("$TAG Meetings list ready with [${it.size}] items")
 
-            val newCount = it.size
             if (currentCount < it.size) {
                 (view.parent as? ViewGroup)?.doOnPreDraw {
                     startPostponedEnterTransition()
@@ -114,34 +112,25 @@ class MeetingsListFragment : AbstractTopBarFragment() {
             }
         }
 
+        // TopBarFragment related
+
+        setViewModelAndTitle(
+            binding.topBar.search,
+            listViewModel,
+            getString(R.string.bottom_navigation_meetings_label)
+        )
+
+        binding.root.setKeyboardInsetListener { keyboardVisible ->
+            val portraitOrientation = resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
+            binding.bottomNavBar.root.visibility = if (!portraitOrientation || !keyboardVisible) View.VISIBLE else View.GONE
+        }
+
         sharedViewModel.defaultAccountChangedEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.i(
                     "$TAG Default account changed, updating avatar in top bar & re-computing meetings list"
                 )
                 listViewModel.applyFilter()
-            }
-        }
-
-        // TopBarFragment related
-
-        setViewModelAndTitle(
-            listViewModel,
-            getString(R.string.bottom_navigation_meetings_label)
-        )
-
-        listViewModel.searchFilter.observe(viewLifecycleOwner) { filter ->
-            listViewModel.applyFilter(filter.trim())
-        }
-
-        listViewModel.focusSearchBarEvent.observe(viewLifecycleOwner) {
-            it.consume { show ->
-                if (show) {
-                    // To automatically open keyboard
-                    binding.topBar.search.showKeyboard()
-                } else {
-                    binding.topBar.search.hideKeyboard()
-                }
             }
         }
     }

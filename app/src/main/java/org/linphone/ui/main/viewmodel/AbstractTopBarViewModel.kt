@@ -20,12 +20,20 @@
 package org.linphone.ui.main.viewmodel
 
 import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
+import org.linphone.core.Call
+import org.linphone.core.ChatMessage
+import org.linphone.core.ChatRoom
+import org.linphone.core.Core
+import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.model.AccountModel
 import org.linphone.utils.Event
+import org.linphone.utils.LinphoneUtils
 
 open class AbstractTopBarViewModel @UiThread constructor() : ViewModel() {
     companion object {
@@ -40,6 +48,22 @@ open class AbstractTopBarViewModel @UiThread constructor() : ViewModel() {
 
     val searchFilter = MutableLiveData<String>()
 
+    val contactsSelected = MutableLiveData<Boolean>()
+
+    val callsSelected = MutableLiveData<Boolean>()
+
+    val conversationsSelected = MutableLiveData<Boolean>()
+
+    val meetingsSelected = MutableLiveData<Boolean>()
+
+    val hideConversations = MutableLiveData<Boolean>()
+
+    val hideMeetings = MutableLiveData<Boolean>()
+
+    val missedCallsCount = MutableLiveData<Int>()
+
+    val unreadMessages = MutableLiveData<Int>()
+
     val focusSearchBarEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -48,9 +72,62 @@ open class AbstractTopBarViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    val navigateToHistoryEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
+    val navigateToContactsEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
+    val navigateToConversationsEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
+    val navigateToMeetingsEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
+    protected var currentFilter = ""
+
+    private val coreListener = object : CoreListenerStub() {
+        @WorkerThread
+        override fun onCallStateChanged(
+            core: Core,
+            call: Call,
+            state: Call.State?,
+            message: String
+        ) {
+            if (state == Call.State.End || state == Call.State.Error) {
+                updateMissedCallsCount()
+            }
+        }
+
+        @WorkerThread
+        override fun onMessagesReceived(
+            core: Core,
+            chatRoom: ChatRoom,
+            messages: Array<out ChatMessage>
+        ) {
+            updateUnreadMessagesCount()
+        }
+
+        @WorkerThread
+        override fun onChatRoomRead(core: Core, chatRoom: ChatRoom) {
+            updateUnreadMessagesCount()
+        }
+    }
+
     init {
         searchBarVisible.value = false
 
+        coreContext.postOnCoreThread { core ->
+            core.addListener(coreListener)
+            updateMissedCallsCount()
+            updateUnreadMessagesCount()
+        }
+
+        updateAvailableMenus()
         update()
     }
 
@@ -59,6 +136,7 @@ open class AbstractTopBarViewModel @UiThread constructor() : ViewModel() {
         super.onCleared()
 
         coreContext.postOnCoreThread { core ->
+            core.removeListener(coreListener)
             account.value?.destroy()
         }
     }
@@ -87,6 +165,17 @@ open class AbstractTopBarViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
+    fun applyFilter(filter: String = currentFilter) {
+        Log.i("$TAG New filter set by user [$filter]")
+        currentFilter = filter
+        filter()
+    }
+
+    @UiThread
+    open fun filter() {
+    }
+
+    @UiThread
     fun update() {
         coreContext.postOnCoreThread { core ->
             if (core.accountList.isNotEmpty()) {
@@ -96,6 +185,70 @@ open class AbstractTopBarViewModel @UiThread constructor() : ViewModel() {
                 account.value?.destroy()
                 account.postValue(AccountModel(defaultAccount))
             }
+        }
+    }
+
+    @UiThread
+    fun navigateToContacts() {
+        navigateToContactsEvent.value = Event(true)
+    }
+
+    @UiThread
+    fun navigateToHistory() {
+        navigateToHistoryEvent.value = Event(true)
+    }
+
+    @UiThread
+    fun navigateToConversations() {
+        navigateToConversationsEvent.value = Event(true)
+    }
+
+    @UiThread
+    fun navigateToMeetings() {
+        navigateToMeetingsEvent.value = Event(true)
+    }
+
+    @WorkerThread
+    fun updateMissedCallsCount() {
+        val account = LinphoneUtils.getDefaultAccount()
+        val count = account?.missedCallsCount ?: coreContext.core.missedCallsCount
+        val moreThanOne = count > 1
+        Log.i(
+            "$TAG There ${if (moreThanOne) "are" else "is"} [$count] missed ${if (moreThanOne) "calls" else "call"}"
+        )
+        missedCallsCount.postValue(count)
+    }
+
+    @WorkerThread
+    fun updateUnreadMessagesCount() {
+        val account = LinphoneUtils.getDefaultAccount()
+        val count = account?.unreadChatMessageCount ?: coreContext.core.unreadChatMessageCount
+        val moreThanOne = count > 1
+        Log.i(
+            "$TAG There ${if (moreThanOne) "are" else "is"} [$count] unread ${if (moreThanOne) "messages" else "message"}"
+        )
+        unreadMessages.postValue(count)
+    }
+
+    @UiThread
+    fun resetMissedCallsCount() {
+        coreContext.postOnCoreThread { core ->
+            val account = LinphoneUtils.getDefaultAccount()
+            account?.resetMissedCallsCount() ?: core.resetMissedCallsCount()
+            updateMissedCallsCount()
+        }
+    }
+
+    @UiThread
+    fun updateAvailableMenus() {
+        coreContext.postOnCoreThread { core ->
+            hideConversations.postValue(corePreferences.disableChat)
+
+            val hideGroupCall =
+                corePreferences.disableMeetings || !LinphoneUtils.isRemoteConferencingAvailable(
+                    core
+                )
+            hideMeetings.postValue(hideGroupCall)
         }
     }
 }

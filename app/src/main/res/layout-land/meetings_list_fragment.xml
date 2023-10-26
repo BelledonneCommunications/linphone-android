@@ -34,12 +34,12 @@
                 app:constraint_referenced_ids="no_meeting_image, no_meeting_label"
                 android:visibility="@{viewModel.meetings.empty ? View.VISIBLE : View.GONE}" />
 
-            <androidx.fragment.app.FragmentContainerView
+            <include
                 android:id="@+id/bottom_nav_bar"
-                android:name="org.linphone.ui.main.fragment.BottomNavBarFragment"
-                android:layout_width="75dp"
-                android:layout_height="0dp"
-                bind:layout="@layout/bottom_nav_bar"
+                android:layout_width="@dimen/landscape_nav_bar_width"
+                android:layout_height="match_parent"
+                layout="@layout/bottom_nav_bar"
+                viewModel="@{viewModel}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent" />

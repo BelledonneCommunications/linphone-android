@@ -46,8 +46,6 @@ class HistoryListViewModel @UiThread constructor() : AbstractTopBarViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
-    private var currentFilter = ""
-
     private val coreListener = object : CoreListenerStub() {
         override fun onCallLogUpdated(core: Core, callLog: CallLog) {
             computeCallLogsList(currentFilter)
@@ -82,15 +80,6 @@ class HistoryListViewModel @UiThread constructor() : AbstractTopBarViewModel() {
     }
 
     @UiThread
-    fun applyFilter(filter: String = currentFilter) {
-        currentFilter = filter
-
-        coreContext.postOnCoreThread {
-            computeCallLogsList(currentFilter)
-        }
-    }
-
-    @UiThread
     fun removeAllCallLogs() {
         coreContext.postOnCoreThread { core ->
             val account = LinphoneUtils.getDefaultAccount()
@@ -103,6 +92,13 @@ class HistoryListViewModel @UiThread constructor() : AbstractTopBarViewModel() {
             }
 
             historyDeletedEvent.postValue(Event(true))
+            computeCallLogsList(currentFilter)
+        }
+    }
+
+    @UiThread
+    override fun filter() {
+        coreContext.postOnCoreThread {
             computeCallLogsList(currentFilter)
         }
     }

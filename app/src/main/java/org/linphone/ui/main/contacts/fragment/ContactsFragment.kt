@@ -119,7 +119,7 @@ class ContactsFragment : GenericFragment() {
             }
         }
 
-        sharedViewModel.navigateToCallsEvent.observe(viewLifecycleOwner) {
+        sharedViewModel.navigateToHistoryEvent.observe(viewLifecycleOwner) {
             it.consume {
                 if (findNavController().currentDestination?.id == R.id.contactsFragment) {
                     // To prevent any previously seen contact to show up when navigating back to here later

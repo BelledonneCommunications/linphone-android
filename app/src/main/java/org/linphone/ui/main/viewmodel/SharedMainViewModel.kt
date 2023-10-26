@@ -37,7 +37,7 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
-    val navigateToCallsEvent: MutableLiveData<Event<Boolean>> by lazy {
+    val navigateToHistoryEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
 

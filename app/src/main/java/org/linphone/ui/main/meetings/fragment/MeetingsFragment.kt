@@ -134,7 +134,7 @@ class MeetingsFragment : GenericFragment() {
             }
         }
 
-        sharedViewModel.navigateToCallsEvent.observe(viewLifecycleOwner) {
+        sharedViewModel.navigateToHistoryEvent.observe(viewLifecycleOwner) {
             it.consume {
                 if (findNavController().currentDestination?.id == R.id.meetingsFragment) {
                     // To prevent any previously seen meeting to show up when navigating back to here later
