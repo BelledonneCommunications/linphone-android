@@ -95,6 +95,9 @@ class ConferenceModel {
         @WorkerThread
         override fun onStateChanged(conference: Conference, state: Conference.State) {
             Log.i("$TAG State changed [$state]")
+            if (conference.state == Conference.State.Created) {
+                computeParticipantsDevices()
+            }
         }
     }
 
@@ -121,7 +124,9 @@ class ConferenceModel {
         )
         subject.postValue(conference.subject)
 
-        computeParticipantsDevices()
+        if (conference.state == Conference.State.Created) {
+            computeParticipantsDevices()
+        }
     }
 
     @WorkerThread

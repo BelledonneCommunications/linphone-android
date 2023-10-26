@@ -36,20 +36,6 @@
             android:layout_height="match_parent"
             android:background="@color/gray_900">
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/hinge_top"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0" />
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/hinge_bottom"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_percent="1" />
-
             <ImageView
                 android:id="@+id/background"
                 android:src="@drawable/shape_round_in_call_gray_background"
@@ -57,8 +43,9 @@
                 android:layout_height="0dp"
                 android:layout_marginStart="12dp"
                 android:layout_marginEnd="12dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginBottom="@dimen/call_main_actions_menu_height"
-                android:visibility="@{conferenceViewModel.participantDevices.size() > 1 ? View.GONE : View.VISIBLE}"
+                android:visibility="@{conferenceViewModel.participantDevices.size() > 1 ? View.GONE : View.VISIBLE, default=gone}"
                 app:layout_constraintTop_toBottomOf="@id/call_direction_label"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -73,6 +60,7 @@
                 android:text="@string/conference_call_empty"
                 android:textColor="@color/white"
                 android:textSize="22sp"
+                android:visibility="@{conferenceViewModel.participantDevices.size() > 1 ? View.GONE : View.VISIBLE, default=gone}"
                 app:layout_constraintTop_toTopOf="@id/background"
                 app:layout_constraintBottom_toBottomOf="@id/background"
                 app:layout_constraintStart_toStartOf="parent"
@@ -93,6 +81,7 @@
                 android:text="@string/conference_share_link_title"
                 android:textSize="18sp"
                 android:textColor="@color/gray_main2_400"
+                android:visibility="@{conferenceViewModel.participantDevices.size() > 1 ? View.GONE : View.VISIBLE, default=gone}"
                 android:drawableStart="@drawable/share_network"
                 android:drawablePadding="8dp"
                 app:drawableTint="@color/gray_main2_400"
@@ -106,6 +95,7 @@
                 android:layout_height="0dp"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="4dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginBottom="@dimen/call_main_actions_menu_height"
                 android:onClick="@{() -> viewModel.toggleFullScreen()}"
                 android:visibility="@{conferenceViewModel.participantDevices.size() > 1 ? View.VISIBLE : View.GONE}"
@@ -142,11 +132,9 @@
                 android:layout_height="@dimen/call_top_bar_text_height"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
                 android:text="@{conferenceViewModel.subject, default=`Meeting with John Doe`}"
                 app:layout_constraintStart_toEndOf="@id/call_direction_icon"
-                app:layout_constraintTop_toTopOf="@id/hinge_top"
-                app:layout_constraintBottom_toTopOf="@id/background"/>
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/call_header_style"

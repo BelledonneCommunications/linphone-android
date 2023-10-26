@@ -32,7 +32,6 @@ import org.linphone.core.Factory
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.utils.Event
-import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.TimestampUtils
 
 class MeetingWaitingRoomViewModel @UiThread constructor() : ViewModel() {
@@ -195,10 +194,9 @@ class MeetingWaitingRoomViewModel @UiThread constructor() : ViewModel() {
             dateTime.postValue("$date | $startTime - $endTime")
 
             val localAddress = coreContext.core.defaultAccount?.params?.identityAddress
-            val fakeFriend = coreContext.core.createFriend()
-            fakeFriend.address = localAddress
-            fakeFriend.name = LinphoneUtils.getDisplayName(localAddress)
-            val avatarModel = ContactAvatarModel(fakeFriend)
+            val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(
+                localAddress
+            )
             selfAvatar.postValue(avatarModel)
         }
     }

@@ -26,6 +26,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.databinding.CallActiveConferenceFragmentBinding
 import org.linphone.ui.call.viewmodel.CallsViewModel
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
@@ -84,6 +85,31 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
                     actionsBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                 }
             }
+        }
+
+        actionsBottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_COLLAPSED, BottomSheetBehavior.STATE_HIDDEN -> {
+                        callViewModel.isActionsMenuExpanded.value = false
+                    }
+                    BottomSheetBehavior.STATE_EXPANDED -> {
+                        callViewModel.isActionsMenuExpanded.value = true
+                    }
+                    else -> {}
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+        })
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        coreContext.postOnCoreThread {
+            // Need to be done manually
+            callViewModel.updateCallDuration()
         }
     }
 }

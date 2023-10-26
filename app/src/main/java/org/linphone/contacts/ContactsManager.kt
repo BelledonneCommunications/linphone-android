@@ -189,13 +189,24 @@ class ContactsManager @UiThread constructor(context: Context) {
         val foundInMap = if (avatarsMap.keys.contains(key)) avatarsMap[key] else null
         if (foundInMap != null) return foundInMap
 
-        val friend = coreContext.contactsManager.findContactByAddress(clone)
-        val avatar = if (friend != null) {
-            ContactAvatarModel(friend)
-        } else {
+        val localAccount = coreContext.core.accountList.find {
+            it.params.identityAddress?.weakEqual(clone) == true
+        }
+        val avatar = if (localAccount != null) {
             val fakeFriend = coreContext.core.createFriend()
             fakeFriend.address = clone
+            fakeFriend.name = LinphoneUtils.getDisplayName(localAccount.params.identityAddress)
+            fakeFriend.photo = localAccount.params.pictureUri
             ContactAvatarModel(fakeFriend)
+        } else {
+            val friend = coreContext.contactsManager.findContactByAddress(clone)
+            if (friend != null) {
+                ContactAvatarModel(friend)
+            } else {
+                val fakeFriend = coreContext.core.createFriend()
+                fakeFriend.address = clone
+                ContactAvatarModel(fakeFriend)
+            }
         }
 
         avatarsMap[key] = avatar

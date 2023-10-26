@@ -186,26 +186,26 @@ class MainViewModel @UiThread constructor() : ViewModel() {
     private fun updateCurrentCallInfo() {
         val core = coreContext.core
         if (core.callsNb == 1) {
-            val currentCall = core.currentCall
+            val currentCall = core.currentCall ?: core.calls.firstOrNull()
             if (currentCall != null) {
                 val contact = coreContext.contactsManager.findContactByAddress(
                     currentCall.remoteAddress
                 )
-                callLabel.postValue(
-                    contact?.name ?: LinphoneUtils.getDisplayName(currentCall.remoteAddress)
-                )
-                callsStatus.postValue(LinphoneUtils.callStateToString(currentCall.state))
-            } else {
-                val firstCall = core.calls.firstOrNull()
-                if (firstCall != null) {
-                    val contact = coreContext.contactsManager.findContactByAddress(
-                        firstCall.remoteAddress
+                if (contact != null) {
+                    callLabel.postValue(
+                        contact.name ?: LinphoneUtils.getDisplayName(currentCall.remoteAddress)
+                    )
+                } else {
+                    val conferenceInfo = coreContext.core.findConferenceInformationFromUri(
+                        currentCall.remoteAddress
                     )
                     callLabel.postValue(
-                        contact?.name ?: LinphoneUtils.getDisplayName(firstCall.remoteAddress)
+                        conferenceInfo?.subject ?: LinphoneUtils.getDisplayName(
+                            currentCall.remoteAddress
+                        )
                     )
-                    callsStatus.postValue(LinphoneUtils.callStateToString(firstCall.state))
                 }
+                callsStatus.postValue(LinphoneUtils.callStateToString(currentCall.state))
             }
         } else {
             callLabel.postValue(

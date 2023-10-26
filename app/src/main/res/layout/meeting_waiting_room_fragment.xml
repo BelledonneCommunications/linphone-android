@@ -92,6 +92,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/back"
             app:layout_constraintBottom_toTopOf="@id/toggle_mute_mic"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_500"
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginBottom="8dp"
+            android:text="@{viewModel.selfAvatar.name, default=`John Doe`}"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@id/no_video_background"
+            app:layout_constraintStart_toStartOf="@id/no_video_background" />
         
         <ImageView
             android:id="@+id/switch_camera"

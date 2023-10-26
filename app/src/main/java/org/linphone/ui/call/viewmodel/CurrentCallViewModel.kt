@@ -783,10 +783,14 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
             model.trust.postValue(securityLevel)
             contact.postValue(model)
         } else {
+            val conferenceInfo = coreContext.core.findConferenceInformationFromUri(
+                call.remoteAddress
+            )
             val fakeFriend = coreContext.core.createFriend()
-            fakeFriend.name = LinphoneUtils.getDisplayName(address)
+            fakeFriend.name = conferenceInfo?.subject ?: LinphoneUtils.getDisplayName(address)
             fakeFriend.addAddress(address)
             val model = ContactAvatarModel(fakeFriend)
+            model.showConferenceIcon.postValue(conferenceInfo != null)
             model.trust.postValue(securityLevel)
             contact.postValue(model)
             displayedName.postValue(fakeFriend.name)
