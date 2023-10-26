@@ -209,9 +209,6 @@ class ContactFragment : GenericFragment() {
                 goBack()
             }
         }
-
-        // TODO: remove later
-        binding.chat.isEnabled = false
     }
 
     override fun onPause() {

@@ -7,7 +7,7 @@
         <import type="android.view.View" />
         <import type="org.linphone.core.ChatRoom.SecurityLevel" />
         <variable
-            name="newCallClickListener"
+            name="shareConferenceClickListener"
             type="View.OnClickListener" />
         <variable
             name="callsListClickListener"
@@ -76,6 +76,28 @@
                 app:layout_constraintBottom_toBottomOf="@id/background"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_600"
+                android:id="@+id/share_conference_link"
+                android:onClick="@{shareConferenceClickListener}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:background="@drawable/shape_squircle_main2_400_background"
+                android:text="@string/conference_share_link_title"
+                android:textSize="18sp"
+                android:textColor="@color/gray_main2_400"
+                android:drawableStart="@drawable/share_network"
+                android:drawablePadding="8dp"
+                app:drawableTint="@color/gray_main2_400"
+                app:layout_constraintTop_toBottomOf="@id/waiting_for_others"
+                app:layout_constraintStart_toStartOf="@id/background"
+                app:layout_constraintEnd_toEndOf="@id/background"/>
 
             <androidx.constraintlayout.widget.Group
                 android:id="@+id/header_info_visibility"
@@ -175,10 +197,9 @@
         <include
             android:id="@+id/bottom_bar"
             android:visibility="@{viewModel.fullScreenMode || viewModel.pipMode ? View.INVISIBLE : View.VISIBLE}"
-            layout="@layout/call_extra_actions"
+            layout="@layout/call_extra_conference_actions"
             bind:viewModel="@{viewModel}"
             bind:callsViewModel="@{callsViewModel}"
-            bind:newCallClickListener="@{newCallClickListener}"
             bind:callsListClickListener="@{callsListClickListener}"/>
 
         <include

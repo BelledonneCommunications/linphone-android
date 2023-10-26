@@ -411,6 +411,7 @@
     <string name="call_action_resume_call">Resume</string>
     <string name="call_action_record_call">Record</string>
     <string name="call_action_hang_up">Hang up</string>
+    <string name="call_action_change_layout">Layout</string>
     <string name="call_state_outgoing_progress">In progress</string>
     <string name="call_state_outgoing_ringing">Ringing</string>
     <string name="call_state_incoming_received">Incoming</string>
@@ -428,7 +429,10 @@
     <string name="calls_count_label">%s calls</string>
     <string name="calls_paused_count_label">%s paused calls</string>
 
+    <string name="conference_share_link_title">Share invitation</string>
     <string name="conference_call_empty">Waiting for other participants…</string>
+    <string name="conference_action_screen_sharing">Screen share</string>
+    <string name="conference_action_show_participants">Participants</string>
 
     <string name="connection_error_for_non_default_account">Account connection error</string>
 
