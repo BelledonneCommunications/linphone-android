@@ -154,6 +154,7 @@ class ConversationFragment : GenericFragment() {
                     (view.parent as? ViewGroup)?.doOnPreDraw {
                         Log.e("$TAG Failed to find chat room, going back")
                         goBack()
+                        // TODO: show toast
                     }
                 }
             }

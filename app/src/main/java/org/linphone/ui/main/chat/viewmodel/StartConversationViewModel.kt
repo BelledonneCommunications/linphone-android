@@ -191,17 +191,27 @@ class StartConversationViewModel @UiThread constructor() : AddressSelectionViewM
         val params: ChatRoomParams = coreContext.core.createDefaultChatRoomParams()
         params.isGroupEnabled = false
         params.subject = AppUtils.getString(R.string.conversation_one_to_one_hidden_subject)
+        params.ephemeralLifetime = 0 // Make sure ephemeral is disabled by default
 
         val sameDomain = remote.domain == corePreferences.defaultDomain && remote.domain == account.params.domain
         if (account.isInSecureMode() && sameDomain) {
             Log.i("$TAG Account is in secure mode & domain matches, creating a E2E chat room")
             params.backend = ChatRoom.Backend.FlexisipChat
             params.isEncryptionEnabled = true
-            params.ephemeralLifetime = 0 // Make sure ephemeral is disabled by default
         } else if (!account.isInSecureMode()) {
-            Log.i("$TAG Account is in interop mode, creating a SIP simple chat room")
-            params.backend = ChatRoom.Backend.Basic
-            params.isEncryptionEnabled = false
+            if (LinphoneUtils.isEndToEndEncryptedChatAvailable(core)) {
+                Log.i(
+                    "$TAG Account is in interop mode but LIME is available, creating a E2E chat room"
+                )
+                params.backend = ChatRoom.Backend.FlexisipChat
+                params.isEncryptionEnabled = true
+            } else {
+                Log.i(
+                    "$TAG Account is in interop mode but LIME isn't available, creating a SIP simple chat room"
+                )
+                params.backend = ChatRoom.Backend.Basic
+                params.isEncryptionEnabled = false
+            }
         } else {
             Log.e(
                 "$TAG Account is in secure mode, can't chat with SIP address of different domain [${remote.asStringUriOnly()}]"

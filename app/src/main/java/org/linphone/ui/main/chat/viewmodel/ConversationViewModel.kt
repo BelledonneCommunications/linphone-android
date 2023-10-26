@@ -168,7 +168,9 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         super.onCleared()
 
         coreContext.postOnCoreThread {
-            chatRoom.removeListener(chatRoomListener)
+            if (::chatRoom.isInitialized) {
+                chatRoom.removeListener(chatRoomListener)
+            }
             events.value.orEmpty().forEach(EventLogModel::destroy)
         }
     }

@@ -128,6 +128,14 @@ class HistoryContactFragment : GenericFragment() {
                 goBack() // TODO FIXME : issue with tablet when pane can't be closed
             }
         }
+
+        viewModel.goToConversationEvent.observe(viewLifecycleOwner) {
+            it.consume { pair ->
+                Log.i("$TAG Going to conversation [${pair.first}][${pair.second}]")
+                sharedViewModel.showConversationEvent.value = Event(pair)
+                sharedViewModel.navigateToConversationsEvent.value = Event(true)
+            }
+        }
     }
 
     private fun copyNumberOrAddressToClipboard(value: String) {
