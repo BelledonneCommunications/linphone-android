@@ -94,7 +94,7 @@
             android:layout_marginStart="18dp"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
-            android:drawableTop="@drawable/chat_text"
+            android:drawableTop="@drawable/chat_teardrop_text"
             android:drawablePadding="10dp"
             android:drawableTint="@{viewModel.conversationsSelected ? @color/orange_main_500 : @color/gray_main2_600, default=@color/gray_main2_600}"
             android:text="@string/bottom_navigation_conversations_label"

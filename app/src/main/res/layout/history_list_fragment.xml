@@ -126,6 +126,7 @@
                 android:src="@drawable/phone_plus"
                 app:tint="@color/gray_main2_700"
                 app:backgroundTint="@color/white"
+                app:shapeAppearanceOverlay="@style/rounded"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar" />
 

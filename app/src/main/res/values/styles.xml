@@ -149,7 +149,7 @@
         <item name="android:textColor">@color/gray_main2_600</item>
         <item name="android:textSize">14sp</item>
     </style>
-    <style name="ShapeAppearance.CircularBorder" parent="">
+    <style name="rounded">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
     </style>
@@ -158,7 +158,7 @@
         <item name="android:background">@drawable/shape_circle_light_blue_background</item>
         <item name="android:adjustViewBounds">true</item>
         <item name="android:scaleType">centerCrop</item>
-        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.CircularBorder</item>
+        <item name="shapeAppearanceOverlay">@style/rounded</item>
         <item name="strokeColor">@color/transparent_color</item>
         <item name="strokeWidth">0dp</item>
     </style>

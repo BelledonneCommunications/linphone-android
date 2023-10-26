@@ -81,7 +81,7 @@
             android:visibility="@{viewModel.hideConversations ? View.GONE : View.VISIBLE}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:drawableTop="@drawable/chat_text"
+            android:drawableTop="@drawable/chat_teardrop_text"
             android:drawablePadding="10dp"
             android:drawableTint="@{viewModel.conversationsSelected ? @color/orange_main_500 : @color/gray_main2_600, default=@color/gray_main2_600}"
             android:onClick="@{onConversationsClicked}"
