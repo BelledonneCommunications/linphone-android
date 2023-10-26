@@ -39,6 +39,7 @@ class ChatMessageModel @WorkerThread constructor(
     val isFromGroup: Boolean,
     val isReply: Boolean,
     val replyText: String,
+    val replyToMessageId: String?,
     val isGroupedWithPreviousOne: Boolean,
     val isGroupedWithNextOne: Boolean
 ) {

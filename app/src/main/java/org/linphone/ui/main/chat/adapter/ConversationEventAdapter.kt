@@ -53,6 +53,9 @@ class ConversationEventAdapter(
     val showReactionForChatMessageModelEvent: MutableLiveData<Event<ChatMessageModel>> by lazy {
         MutableLiveData<Event<ChatMessageModel>>()
     }
+    val scrollToRepliedMessageEvent: MutableLiveData<Event<ChatMessageModel>> by lazy {
+        MutableLiveData<Event<ChatMessageModel>>()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
@@ -129,6 +132,9 @@ class ConversationEventAdapter(
                 setShowReactionInfoClickListener {
                     showReactionForChatMessageModelEvent.value = Event(message)
                 }
+                setScrollToRepliedMessageClickListener {
+                    scrollToRepliedMessageEvent.value = Event(message)
+                }
 
                 lifecycleOwner = viewLifecycleOwner
                 executePendingBindings()
@@ -148,6 +154,9 @@ class ConversationEventAdapter(
                 }
                 setShowReactionInfoClickListener {
                     showReactionForChatMessageModelEvent.value = Event(message)
+                }
+                setScrollToRepliedMessageClickListener {
+                    scrollToRepliedMessageEvent.value = Event(message)
                 }
 
                 lifecycleOwner = viewLifecycleOwner

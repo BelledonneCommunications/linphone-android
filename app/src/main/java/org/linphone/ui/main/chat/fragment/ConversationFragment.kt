@@ -203,6 +203,26 @@ class ConversationFragment : GenericFragment() {
             }
         }
 
+        adapter.scrollToRepliedMessageEvent.observe(viewLifecycleOwner) {
+            it.consume { model ->
+                val repliedMessageId = model.replyToMessageId
+                if (repliedMessageId.isNullOrEmpty()) {
+                    Log.w("$TAG Chat message [${model.id}] doesn't have a reply to ID!")
+                } else {
+                    val originalMessage = adapter.currentList.find {
+                        !it.isEvent && (it.model as ChatMessageModel).id == repliedMessageId
+                    }
+                    if (originalMessage != null) {
+                        val position = adapter.currentList.indexOf(originalMessage)
+                        Log.i("$TAG Scrolling to position [$position]")
+                        binding.eventsList.scrollToPosition(position)
+                    } else {
+                        Log.w("$TAG Failed to find matching message in adapter's items!")
+                    }
+                }
+            }
+        }
+
         binding.setOpenFilePickerClickListener {
             Log.i("$TAG Opening media picker")
             pickMedia.launch(
@@ -280,11 +300,13 @@ class ConversationFragment : GenericFragment() {
         }
 
         layout.setDeleteClickListener {
+            Log.i("$TAG Deleting message")
             viewModel.deleteChatMessage(chatMessageModel)
             dialog.dismiss()
         }
 
         layout.setCopyClickListener {
+            Log.i("$TAG Copying message text into clipboard")
             val text = chatMessageModel.text
             val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val label = "Message"
@@ -294,8 +316,15 @@ class ConversationFragment : GenericFragment() {
         }
 
         layout.setPickEmojiClickListener {
+            Log.i("$TAG Opening emoji-picker for reaction")
             val emojiSheetBehavior = BottomSheetBehavior.from(layout.emojiPickerBottomSheet.root)
             emojiSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
+
+        layout.setReplyClickListener {
+            Log.i("$TAG Updating sending area to reply to selected message")
+            viewModel.replyToMessage(chatMessageModel)
+            dialog.dismiss()
         }
 
         layout.model = chatMessageModel

@@ -64,6 +64,7 @@ class EventLogModel @WorkerThread constructor(
             isFromGroup,
             chatMessage.isReply,
             reply,
+            chatMessage.replyMessageId,
             isGroupedWithPreviousOne,
             isGroupedWithNextOne
         )

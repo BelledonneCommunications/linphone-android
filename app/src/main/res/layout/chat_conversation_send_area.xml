@@ -19,13 +19,20 @@
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
         <!-- Keep behavior to have it at the bottom -->
 
+        <include
+            android:id="@+id/reply_area"
+            layout="@layout/chat_conversation_reply_area"
+            viewModel="@{viewModel}"
+            android:visibility="@{viewModel.isReplying ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintTop_toTopOf="parent"/>
+
         <androidx.emoji2.emojipicker.EmojiPickerView
             android:id="@+id/emoji_picker"
             android:layout_width="match_parent"
             android:layout_height="@dimen/chat_room_emoji_picker_height"
             android:visibility="@{viewModel.isEmojiPickerOpen ? View.VISIBLE : View.GONE, default=gone}"
             app:emojiPickedListener="@{(emoji) -> viewModel.insertEmoji(emoji.emoji)}"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/reply_area"/>
 
         <ImageView
             android:id="@+id/emoji_picker_toggle"

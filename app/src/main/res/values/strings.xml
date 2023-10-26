@@ -356,6 +356,7 @@
         <item quantity="other">%s are composing…</item>
     </plurals>
     <string name="conversation_add_participants_title">Add participants</string>
+    <string name="conversation_reply_to_message_title">Replying to:</string>
 
     <string name="conversation_info_participants_list_title">Group members</string>
     <string name="conversation_info_add_participants_label">Add participants</string>

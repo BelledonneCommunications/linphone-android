@@ -14,6 +14,9 @@
             name="showDeliveryInfoClickListener"
             type="View.OnClickListener" />
         <variable
+            name="scrollToRepliedMessageClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="showReactionInfoClickListener"
             type="View.OnClickListener" />
         <variable
@@ -37,6 +40,38 @@
             app:barrierMargin="-10dp"
             app:constraint_referenced_ids="date_time, text_message" />
 
+        <View
+            android:id="@+id/reply_background"
+            android:onClick="@{scrollToRepliedMessageClickListener}"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/shape_chat_bubble_incoming_reply"
+            android:visibility="@{model.isReply ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintTop_toTopOf="@id/reply"
+            app:layout_constraintStart_toStartOf="@id/reply"
+            app:layout_constraintEnd_toEndOf="@id/reply"
+            app:layout_constraintBottom_toBottomOf="@id/background" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:onClick="@{scrollToRepliedMessageClickListener}"
+            android:id="@+id/reply"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@{model.replyText, default=`Ceci est une réponse!`}"
+            android:textColor="@color/gray_main2_400"
+            android:textSize="14sp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:padding="10dp"
+            android:visibility="@{model.isReply ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="@id/background"
+            app:layout_constraintEnd_toEndOf="@id/background"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/background"/>
+
         <ImageView
             android:id="@+id/background"
             android:layout_width="0dp"
@@ -44,7 +79,7 @@
             android:src="@{model.isGroupedWithPreviousOne ? @drawable/shape_chat_bubble_outgoing_full : @drawable/shape_chat_bubble_outgoing_first, default=@drawable/shape_chat_bubble_outgoing_first}"
             app:layout_constraintStart_toStartOf="@id/background_start_barrier"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/reply"
             app:layout_constraintBottom_toBottomOf="@id/date_time"/>
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -59,11 +94,11 @@
             android:text="@{model.text, default=`Hi!`}"
             android:textSize="14sp"
             android:textColor="@color/gray_main2_700"
-            android:gravity="center_vertical|start"
+            android:gravity="center_vertical|end"
             app:layout_constrainedWidth="true"
             app:layout_constraintHorizontal_bias="1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/reply"
             app:layout_constraintEnd_toEndOf="parent"/>
 
         <androidx.appcompat.widget.AppCompatTextView

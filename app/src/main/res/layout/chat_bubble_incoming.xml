@@ -14,6 +14,9 @@
             name="showDeliveryInfoClickListener"
             type="View.OnClickListener" />
         <variable
+            name="scrollToRepliedMessageClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="showReactionInfoClickListener"
             type="View.OnClickListener" />
         <variable
@@ -66,17 +69,32 @@
             app:layout_constraintBottom_toTopOf="@id/reply"
             app:layout_constraintStart_toStartOf="@id/background" />
 
+        <View
+            android:id="@+id/reply_background"
+            android:onClick="@{scrollToRepliedMessageClickListener}"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/shape_chat_bubble_incoming_reply"
+            android:visibility="@{model.isReply ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintTop_toTopOf="@id/reply"
+            app:layout_constraintStart_toStartOf="@id/reply"
+            app:layout_constraintEnd_toEndOf="@id/reply"
+            app:layout_constraintBottom_toBottomOf="@id/background" />
+
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
             android:id="@+id/reply"
+            android:onClick="@{scrollToRepliedMessageClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:text="@{model.replyText, default=`Ceci est une réponse!`}"
             android:textColor="@color/gray_main2_400"
             android:textSize="14sp"
+            android:maxLines="2"
+            android:ellipsize="end"
             android:padding="10dp"
-            android:background="@drawable/shape_chat_bubble_incoming_reply"
             android:visibility="@{model.isReply ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="@id/background"

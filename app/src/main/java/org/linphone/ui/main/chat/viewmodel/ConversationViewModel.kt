@@ -26,6 +26,7 @@ import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Address
+import org.linphone.core.ChatMessage
 import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoomListenerStub
 import org.linphone.core.EventLog
@@ -68,6 +69,12 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     val isEmojiPickerOpen = MutableLiveData<Boolean>()
 
+    val isReplying = MutableLiveData<Boolean>()
+
+    val isReplyingTo = MutableLiveData<String>()
+
+    val isReplyingToMessage = MutableLiveData<String>()
+
     val requestKeyboardHidingEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -79,6 +86,8 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
     val chatRoomFoundEvent = MutableLiveData<Event<Boolean>>()
 
     private lateinit var chatRoom: ChatRoom
+
+    private var chatMessageToReplyTo: ChatMessage? = null
 
     private val chatRoomListener = object : ChatRoomListenerStub() {
         @WorkerThread
@@ -238,9 +247,34 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
+    fun replyToMessage(model: ChatMessageModel) {
+        coreContext.postOnCoreThread {
+            val message = model.chatMessage
+            Log.i("$TAG Pending reply to chat message [${message.messageId}]")
+            chatMessageToReplyTo = message
+            isReplyingTo.postValue(model.avatarModel.friend.name)
+            isReplyingToMessage.postValue(LinphoneUtils.getTextDescribingMessage(message))
+            isReplying.postValue(true)
+        }
+    }
+
+    @UiThread
+    fun cancelReply() {
+        Log.i("$TAG Cancelling reply")
+        isReplying.value = false
+        chatMessageToReplyTo = null
+    }
+
+    @UiThread
     fun sendMessage() {
-        coreContext.postOnCoreThread { core ->
-            val message = chatRoom.createEmptyMessage()
+        coreContext.postOnCoreThread {
+            val messageToReplyTo = chatMessageToReplyTo
+            val message = if (messageToReplyTo != null) {
+                Log.i("$TAG Sending message as reply to [${messageToReplyTo.messageId}]")
+                chatRoom.createReplyMessage(messageToReplyTo)
+            } else {
+                chatRoom.createEmptyMessage()
+            }
 
             val toSend = textToSend.value.orEmpty().trim()
             if (toSend.isNotEmpty()) {
@@ -251,7 +285,10 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
                 Log.i("$TAG Sending message")
                 message.send()
             }
+
+            Log.i("$TAG Message sent, re-setting defaults")
             textToSend.postValue("")
+            cancelReply()
         }
     }
 
