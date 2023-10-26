@@ -11,4 +11,6 @@ abstract class AbstractAvatarModel {
     val initials = MutableLiveData<String>()
 
     val images = MutableLiveData<ArrayList<String>>()
+
+    val showConferenceIcon = MutableLiveData<Boolean>()
 }

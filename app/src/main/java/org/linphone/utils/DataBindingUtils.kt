@@ -290,6 +290,17 @@ private suspend fun loadContactPictureWithCoil(
 
         val context = imageView.context
         if (model != null) {
+            if (model.showConferenceIcon.value == true) {
+                imageView.load(
+                    ResourcesCompat.getDrawable(
+                        context.resources,
+                        R.drawable.users_three,
+                        context.theme
+                    )
+                )
+                return@withContext
+            }
+
             if (!skipTrust) {
                 if (model.showTrust.value == true) {
                     when (model.trust.value) {

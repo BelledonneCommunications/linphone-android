@@ -18,7 +18,9 @@ class CallLogModel @WorkerThread constructor(private val callLog: CallLog) {
 
     val address = if (callLog.dir == Dir.Outgoing) callLog.toAddress else callLog.fromAddress
 
-    val displayedAddress = address.asStringUriOnly()
+    val sipUri = address.asStringUriOnly()
+
+    val displayedAddress: String
 
     val avatarModel: ContactAvatarModel
 
@@ -32,6 +34,10 @@ class CallLogModel @WorkerThread constructor(private val callLog: CallLog) {
     var friendExists: Boolean = false
 
     init {
+        val clone = address.clone()
+        clone.clean()
+        displayedAddress = clone.asStringUriOnly()
+
         val timestamp = timestamp
         val displayedDate = if (TimestampUtils.isToday(timestamp)) {
             TimestampUtils.timeToString(timestamp)
@@ -50,6 +56,14 @@ class CallLogModel @WorkerThread constructor(private val callLog: CallLog) {
         } else {
             val fakeFriend = coreContext.core.createFriend()
             fakeFriend.address = address
+
+            // Check if it is a conference
+            val conferenceInfo = coreContext.core.findConferenceInformationFromUri(address)
+            if (conferenceInfo != null) {
+                avatarModel.name.postValue(conferenceInfo.subject)
+                avatarModel.showConferenceIcon.postValue(true)
+            }
+
             friendRefKey = null
             friendExists = false
         }

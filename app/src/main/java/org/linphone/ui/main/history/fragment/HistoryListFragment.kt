@@ -112,7 +112,7 @@ class HistoryListFragment : AbstractTopBarFragment() {
                         }
                     },
                     { // onCopyNumberOrAddressToClipboard
-                        val addressToCopy = model.displayedAddress
+                        val addressToCopy = model.sipUri
                         Log.i("$TAG Copying number [$addressToCopy] to clipboard")
                         copyNumberOrAddressToClipboard(addressToCopy)
                     },

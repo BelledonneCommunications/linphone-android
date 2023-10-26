@@ -112,7 +112,6 @@ class HistoryListViewModel @UiThread constructor() : AbstractTopBarViewModel() {
         val list = arrayListOf<CallLogModel>()
         var count = 0
 
-        // TODO? : Add support for call logs in magic search
         val account = LinphoneUtils.getDefaultAccount()
         val logs = account?.callLogs ?: coreContext.core.callLogs
         for (callLog in logs) {
