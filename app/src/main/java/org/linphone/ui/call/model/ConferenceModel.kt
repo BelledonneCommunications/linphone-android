@@ -23,6 +23,9 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.core.Call
 import org.linphone.core.Conference
+import org.linphone.core.ConferenceListenerStub
+import org.linphone.core.Participant
+import org.linphone.core.ParticipantDevice
 import org.linphone.core.tools.Log
 
 class ConferenceModel {
@@ -32,16 +35,152 @@ class ConferenceModel {
 
     val subject = MutableLiveData<String>()
 
+    val participantDevices = MutableLiveData<ArrayList<ConferenceParticipantDeviceModel>>()
+
     private lateinit var conference: Conference
+
+    private val conferenceListener = object : ConferenceListenerStub() {
+        @WorkerThread
+        override fun onParticipantDeviceAdded(
+            conference: Conference,
+            participantDevice: ParticipantDevice
+        ) {
+            Log.i(
+                "$TAG Participant device added: ${participantDevice.address.asStringUriOnly()}"
+            )
+
+            val list = arrayListOf<ConferenceParticipantDeviceModel>()
+            list.addAll(participantDevices.value.orEmpty())
+
+            val newModel = ConferenceParticipantDeviceModel(participantDevice)
+            list.add(newModel)
+
+            participantDevices.postValue(sortParticipantDevicesList(list))
+        }
+
+        @WorkerThread
+        override fun onParticipantDeviceRemoved(
+            conference: Conference,
+            participantDevice: ParticipantDevice
+        ) {
+            Log.i(
+                "$TAG Participant device removed: ${participantDevice.address.asStringUriOnly()}"
+            )
+
+            val list = arrayListOf<ConferenceParticipantDeviceModel>()
+            list.addAll(participantDevices.value.orEmpty())
+
+            val toRemove = list.find {
+                participantDevice.address.weakEqual(it.device.address)
+            }
+            if (toRemove != null) {
+                toRemove.destroy()
+                list.remove(toRemove)
+            }
+
+            participantDevices.postValue(list)
+        }
+
+        @WorkerThread
+        override fun onParticipantDeviceStateChanged(
+            conference: Conference,
+            device: ParticipantDevice,
+            state: ParticipantDevice.State
+        ) {
+            Log.i(
+                "$TAG Participant device [${device.address.asStringUriOnly()}] state changed [$state]"
+            )
+        }
+
+        @WorkerThread
+        override fun onStateChanged(conference: Conference, state: Conference.State) {
+            Log.i("$TAG State changed [$state]")
+        }
+    }
+
+    @WorkerThread
+    fun destroy() {
+        if (::conference.isInitialized) {
+            conference.removeListener(conferenceListener)
+            participantDevices.value.orEmpty().forEach(ConferenceParticipantDeviceModel::destroy)
+        }
+    }
 
     @WorkerThread
     fun configureFromCall(call: Call) {
         val conf = call.conference ?: return
+        if (::conference.isInitialized) {
+            conference.removeListener(conferenceListener)
+        }
+
         conference = conf
+        conference.addListener(conferenceListener)
 
         Log.i(
             "$TAG Configuring conference with subject [${conference.subject}] from call [${call.callLog.callId}]"
         )
         subject.postValue(conference.subject)
+
+        computeParticipantsDevices()
+    }
+
+    @WorkerThread
+    private fun computeParticipantsDevices() {
+        participantDevices.value.orEmpty().forEach(ConferenceParticipantDeviceModel::destroy)
+        val list = arrayListOf<ConferenceParticipantDeviceModel>()
+
+        val participants = conference.participantList
+        Log.i("$TAG [${participants.size}] participant in conference")
+
+        for (participant in participants) {
+            val devices = participant.devices
+            val role = participant.role
+
+            Log.i(
+                "$TAG Participant [${participant.address.asStringUriOnly()}] has [${devices.size}] devices and role [${role.name}]"
+            )
+            if (role == Participant.Role.Listener) {
+                continue
+            }
+
+            for (device in participant.devices) {
+                val model = ConferenceParticipantDeviceModel(device)
+                list.add(model)
+            }
+        }
+        Log.i(
+            "$TAG [${list.size}] participant devices will be displayed (not counting ourselves)"
+        )
+
+        val ourDevices = conference.me.devices
+        Log.i("$TAG We have [${ourDevices.size}] devices")
+        for (device in ourDevices) {
+            val model = ConferenceParticipantDeviceModel(device, true)
+            list.add(model)
+        }
+
+        participantDevices.postValue(sortParticipantDevicesList(list))
+    }
+
+    private fun sortParticipantDevicesList(devices: List<ConferenceParticipantDeviceModel>): ArrayList<ConferenceParticipantDeviceModel> {
+        val sortedList = arrayListOf<ConferenceParticipantDeviceModel>()
+        sortedList.addAll(devices)
+
+        val meDeviceData = sortedList.find {
+            it.isMe
+        }
+        if (meDeviceData != null) {
+            val index = sortedList.indexOf(meDeviceData)
+            val expectedIndex = sortedList.size - 1
+            if (index != expectedIndex) {
+                Log.i(
+                    "$TAG Me device data is at index $index, moving it to index $expectedIndex"
+                )
+                sortedList.removeAt(index)
+                sortedList.add(expectedIndex, meDeviceData)
+            }
+        }
+
+        return sortedList
     }
 }

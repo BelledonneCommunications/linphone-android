@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <import type="org.linphone.core.ChatRoom.SecurityLevel" />
+        <variable
+            name="model"
+            type="org.linphone.ui.call.model.ConferenceParticipantDeviceModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="8dp"
+        android:background="@drawable/shape_round_in_call_gray_background"
+        app:layout_constraintDimensionRatio="1:1">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            style="@style/avatar_imageview"
+            android:id="@+id/avatar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="5dp"
+            coilCallAvatar="@{model.avatarModel}"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintWidth_max="@dimen/avatar_in_call_size"
+            app:layout_constraintHeight_max="@dimen/avatar_in_call_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageView
+            android:id="@+id/trust_badge"
+            android:layout_width="@dimen/avatar_presence_badge_in_call_size"
+            android:layout_height="@dimen/avatar_presence_badge_in_call_size"
+            android:src="@{model.avatarModel.trust == SecurityLevel.Safe ? @drawable/trusted : @drawable/not_trusted, default=@drawable/trusted}"
+            android:visibility="@{model.avatarModel.trust == SecurityLevel.Safe || model.avatarModel.trust == SecurityLevel.Unsafe ? View.VISIBLE : View.GONE}"
+            app:layout_constraintStart_toStartOf="@id/avatar"
+            app:layout_constraintBottom_toBottomOf="@id/avatar"/>
+
+        <org.linphone.ui.call.view.RoundCornersTextureView
+            android:id="@+id/participant_video_surface"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="5dp"
+            app:alignTopRight="false"
+            app:displayMode="hybrid"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/muted"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:padding="2dp"
+            android:src="@drawable/microphone_slash"
+            android:background="@drawable/circle_white_button_background"
+            android:visibility="@{model.isMuted ? View.VISIBLE : View.GONE}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_500"
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginBottom="8dp"
+            android:text="@{model.avatarModel.name, default=`John Doe`}"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/speaking"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/shape_squircle_main2_200_border"
+            android:visibility="@{model.isSpeaking ? View.VISIBLE : View.GONE}" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

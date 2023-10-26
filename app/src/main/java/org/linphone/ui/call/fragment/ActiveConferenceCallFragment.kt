@@ -25,6 +25,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.linphone.databinding.CallActiveConferenceFragmentBinding
 import org.linphone.ui.call.viewmodel.CallsViewModel
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
@@ -66,9 +67,23 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
         binding.callsViewModel = callsViewModel
         binding.numpadModel = callViewModel.numpadModel
 
+        val actionsBottomSheetBehavior = BottomSheetBehavior.from(binding.bottomBar.root)
+        actionsBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+
         callViewModel.callDuration.observe(viewLifecycleOwner) { duration ->
             binding.chronometer.base = SystemClock.elapsedRealtime() - (1000 * duration)
             binding.chronometer.start()
+        }
+
+        callViewModel.toggleExtraActionsBottomSheetEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                val state = actionsBottomSheetBehavior.state
+                if (state == BottomSheetBehavior.STATE_COLLAPSED) {
+                    actionsBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                } else if (state == BottomSheetBehavior.STATE_EXPANDED) {
+                    actionsBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                }
+            }
         }
     }
 }

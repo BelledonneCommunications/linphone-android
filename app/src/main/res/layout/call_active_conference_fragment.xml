@@ -58,6 +58,7 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginEnd="12dp"
                 android:layout_marginBottom="@dimen/call_main_actions_menu_height"
+                android:visibility="@{conferenceViewModel.participantDevices.size() > 1 ? View.GONE : View.VISIBLE}"
                 app:layout_constraintTop_toBottomOf="@id/call_direction_label"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -88,7 +89,7 @@
                 android:paddingBottom="12dp"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
-                android:background="@drawable/shape_squircle_main2_400_background"
+                android:background="@drawable/shape_squircle_main2_400_border"
                 android:text="@string/conference_share_link_title"
                 android:textSize="18sp"
                 android:textColor="@color/gray_main2_400"
@@ -98,6 +99,22 @@
                 app:layout_constraintTop_toBottomOf="@id/waiting_for_others"
                 app:layout_constraintStart_toStartOf="@id/background"
                 app:layout_constraintEnd_toEndOf="@id/background"/>
+
+            <org.linphone.ui.call.view.GridBoxLayout
+                android:id="@+id/grid_box_layout"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="@dimen/call_main_actions_menu_height"
+                android:onClick="@{() -> viewModel.toggleFullScreen()}"
+                android:visibility="@{conferenceViewModel.participantDevices.size() > 1 ? View.VISIBLE : View.GONE}"
+                entries="@{conferenceViewModel.participantDevices}"
+                layout="@{@layout/call_conference_grid_cell}"
+                app:layout_constraintTop_toBottomOf="@id/call_direction_label"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <androidx.constraintlayout.widget.Group
                 android:id="@+id/header_info_visibility"
@@ -201,12 +218,6 @@
             bind:viewModel="@{viewModel}"
             bind:callsViewModel="@{callsViewModel}"
             bind:callsListClickListener="@{callsListClickListener}"/>
-
-        <include
-            android:id="@+id/call_numpad"
-            android:visibility="@{viewModel.fullScreenMode || viewModel.pipMode ? View.INVISIBLE : View.VISIBLE}"
-            layout="@layout/call_numpad"
-            bind:model="@{numpadModel}"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

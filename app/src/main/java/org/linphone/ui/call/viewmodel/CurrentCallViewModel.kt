@@ -411,6 +411,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
         coreContext.postOnCoreThread { core ->
             core.removeListener(coreListener)
+            conferenceModel.destroy()
             contact.value?.destroy()
 
             if (::currentCall.isInitialized) {
