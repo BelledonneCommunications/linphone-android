@@ -114,7 +114,7 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
                 )
                 when (call.state) {
                     Call.State.Connected -> {
-                        goToActiveCallEvent.postValue(Event(true))
+                        goToActiveCallEvent.postValue(Event(call.conference == null))
                     }
                     else -> {
                     }
@@ -132,8 +132,15 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
                             Log.i("$TAG Asking activity to show incoming call fragment")
                             showIncomingCallEvent.postValue(Event(true))
                         } else {
-                            Log.i("$TAG Asking activity to show active call fragment")
-                            goToActiveCallEvent.postValue(Event(true))
+                            if (newCurrentCall.conference == null) {
+                                Log.i("$TAG Asking activity to show active call fragment")
+                                goToActiveCallEvent.postValue(Event(true))
+                            } else {
+                                Log.i(
+                                    "$TAG Asking activity to show active conference call fragment"
+                                )
+                                goToActiveCallEvent.postValue(Event(false))
+                            }
                         }
                     }
                 }
@@ -160,7 +167,7 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
 
                 when (currentCall.state) {
                     Call.State.Connected, Call.State.StreamsRunning, Call.State.Paused, Call.State.Pausing, Call.State.PausedByRemote, Call.State.UpdatedByRemote, Call.State.Updating -> {
-                        goToActiveCallEvent.postValue(Event(true))
+                        goToActiveCallEvent.postValue(Event(currentCall.conference == null))
                     }
                     Call.State.OutgoingInit, Call.State.OutgoingRinging, Call.State.OutgoingProgress, Call.State.OutgoingEarlyMedia -> {
                         showOutgoingCallEvent.postValue(Event(true))

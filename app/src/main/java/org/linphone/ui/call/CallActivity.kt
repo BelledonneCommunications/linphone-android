@@ -44,6 +44,7 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.CallActivityBinding
 import org.linphone.ui.call.fragment.ActiveCallFragmentDirections
+import org.linphone.ui.call.fragment.ActiveConferenceCallFragmentDirections
 import org.linphone.ui.call.fragment.AudioDevicesMenuDialogFragment
 import org.linphone.ui.call.fragment.IncomingCallFragmentDirections
 import org.linphone.ui.call.fragment.OutgoingCallFragmentDirections
@@ -187,17 +188,50 @@ class CallActivity : AppCompatActivity() {
         }
 
         callsViewModel.goToActiveCallEvent.observe(this) {
-            it.consume {
+            it.consume { singleCall ->
                 val navController = findNavController(R.id.call_nav_container)
                 val action = when (navController.currentDestination?.id) {
                     R.id.outgoingCallFragment -> {
-                        OutgoingCallFragmentDirections.actionOutgoingCallFragmentToActiveCallFragment()
+                        if (singleCall) {
+                            Log.i("$TAG Going from outgoing call fragment to call fragment")
+                            OutgoingCallFragmentDirections.actionOutgoingCallFragmentToActiveCallFragment()
+                        } else {
+                            Log.i(
+                                "$TAG Going from outgoing call fragment to conference call fragment"
+                            )
+                            OutgoingCallFragmentDirections.actionOutgoingCallFragmentToActiveConferenceCallFragment()
+                        }
                     }
                     R.id.incomingCallFragment -> {
-                        IncomingCallFragmentDirections.actionIncomingCallFragmentToActiveCallFragment()
+                        if (singleCall) {
+                            Log.i("$TAG Going from incoming call fragment to call fragment")
+                            IncomingCallFragmentDirections.actionIncomingCallFragmentToActiveCallFragment()
+                        } else {
+                            Log.i(
+                                "$TAG Going from incoming call fragment to conference call fragment"
+                            )
+                            IncomingCallFragmentDirections.actionIncomingCallFragmentToActiveConferenceCallFragment()
+                        }
+                    }
+                    R.id.activeConferenceCallFragment -> {
+                        if (singleCall) {
+                            Log.i("$TAG Going from conference call fragment to call fragment")
+                            ActiveConferenceCallFragmentDirections.actionActiveConferenceCallFragmentToActiveCallFragment()
+                        } else {
+                            Log.i(
+                                "$TAG Going from conference call fragment to conference call fragment"
+                            )
+                            ActiveConferenceCallFragmentDirections.actionGlobalActiveConferenceCallFragment()
+                        }
                     }
                     else -> {
-                        ActiveCallFragmentDirections.actionGlobalActiveCallFragment()
+                        if (singleCall) {
+                            Log.i("$TAG Going from call fragment to call fragment")
+                            ActiveCallFragmentDirections.actionGlobalActiveCallFragment()
+                        } else {
+                            Log.i("$TAG Going from call fragment to conference call fragment")
+                            ActiveCallFragmentDirections.actionActiveCallFragmentToActiveConferenceCallFragment()
+                        }
                     }
                 }
                 navController.navigate(action)

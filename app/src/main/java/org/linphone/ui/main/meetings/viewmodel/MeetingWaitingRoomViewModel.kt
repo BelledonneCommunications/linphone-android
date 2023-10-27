@@ -29,6 +29,7 @@ import org.linphone.core.ConferenceInfo
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.Factory
+import org.linphone.core.MediaDirection
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.utils.Event
@@ -135,6 +136,10 @@ class MeetingWaitingRoomViewModel @UiThread constructor() : ViewModel() {
     fun join() {
         coreContext.postOnCoreThread { core ->
             if (::conferenceInfo.isInitialized) {
+                Log.i("$TAG Stopping video preview")
+                core.nativePreviewWindowId = null
+                core.isVideoPreviewEnabled = false
+
                 val conferenceUri = conferenceInfo.uri
                 if (conferenceUri == null) {
                     Log.e("$TAG Conference Info doesn't have a conference SIP URI to call!")
@@ -144,7 +149,8 @@ class MeetingWaitingRoomViewModel @UiThread constructor() : ViewModel() {
                 val params = core.createCallParams(null)
                 params ?: return@postOnCoreThread
 
-                params.isVideoEnabled = isVideoEnabled.value == true
+                params.isVideoEnabled = true
+                params.videoDirection = if (isVideoEnabled.value == true) MediaDirection.SendRecv else MediaDirection.RecvOnly
                 params.isMicEnabled = isMicrophoneMuted.value == false
                 params.account = core.defaultAccount
                 coreContext.startCall(conferenceUri, params)

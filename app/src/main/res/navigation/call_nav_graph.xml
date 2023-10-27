@@ -16,6 +16,12 @@
             app:popUpTo="@id/outgoingCallFragment"
             app:popUpToInclusive="true"
             app:launchSingleTop="true"/>
+        <action
+            android:id="@+id/action_outgoingCallFragment_to_activeConferenceCallFragment"
+            app:destination="@id/activeConferenceCallFragment"
+            app:popUpTo="@id/outgoingCallFragment"
+            app:popUpToInclusive="true"
+            app:launchSingleTop="true" />
     </fragment>
 
     <action android:id="@+id/action_global_outgoingCallFragment"
@@ -33,6 +39,12 @@
             android:id="@+id/action_incomingCallFragment_to_activeCallFragment"
             app:destination="@id/activeCallFragment"
             app:popUpTo="@id/incomingCallFragment"
+            app:popUpToInclusive="true"
+            app:launchSingleTop="true" />
+        <action
+            android:id="@+id/action_incomingCallFragment_to_activeConferenceCallFragment"
+            app:destination="@id/activeConferenceCallFragment"
+            app:popUpTo="@id/outgoingCallFragment"
             app:popUpToInclusive="true"
             app:launchSingleTop="true" />
     </fragment>
@@ -114,6 +126,19 @@
         android:id="@+id/activeConferenceCallFragment"
         android:name="org.linphone.ui.call.fragment.ActiveConferenceCallFragment"
         android:label="ActiveConferenceCallFragment"
-        tools:layout="@layout/call_active_conference_fragment"/>
+        tools:layout="@layout/call_active_conference_fragment">
+        <action
+            android:id="@+id/action_activeConferenceCallFragment_to_activeCallFragment"
+            app:destination="@id/activeCallFragment"
+            app:popUpTo="@id/activeConferenceCallFragment"
+            app:popUpToInclusive="true"
+            app:launchSingleTop="true" />
+    </fragment>
+
+    <action android:id="@+id/action_global_activeConferenceCallFragment"
+        app:destination="@id/activeConferenceCallFragment"
+        app:popUpTo="@id/activeConferenceCallFragment"
+        app:popUpToInclusive="true"
+        app:launchSingleTop="true"/>
 
 </navigation>

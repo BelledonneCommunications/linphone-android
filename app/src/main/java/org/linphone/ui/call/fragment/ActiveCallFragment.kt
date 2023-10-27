@@ -253,9 +253,12 @@ class ActiveCallFragment : GenericCallFragment() {
 
         callViewModel.goToConferenceEvent.observe(viewLifecycleOwner) {
             it.consume {
-                Log.i("$TAG Going to conference fragment")
-                val action = ActiveCallFragmentDirections.actionActiveCallFragmentToActiveConferenceCallFragment()
-                findNavController().navigate(action)
+                if (findNavController().currentDestination?.id == R.id.activeCallFragment) {
+                    Log.i("$TAG Going to conference fragment")
+                    val action =
+                        ActiveCallFragmentDirections.actionActiveCallFragmentToActiveConferenceCallFragment()
+                    findNavController().navigate(action)
+                }
             }
         }
 

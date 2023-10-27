@@ -19,11 +19,15 @@
  */
 package org.linphone.ui.call.model
 
+import android.view.TextureView
+import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.core.MediaDirection
 import org.linphone.core.ParticipantDevice
 import org.linphone.core.ParticipantDeviceListenerStub
+import org.linphone.core.StreamType
 import org.linphone.core.tools.Log
 
 class ConferenceParticipantDeviceModel @WorkerThread constructor(
@@ -40,7 +44,14 @@ class ConferenceParticipantDeviceModel @WorkerThread constructor(
 
     val isSpeaking = MutableLiveData<Boolean>()
 
+    val isVideoAvailable = MutableLiveData<Boolean>()
+
+    val isSendingVideo = MutableLiveData<Boolean>()
+
+    private lateinit var textureView: TextureView
+
     private val deviceListener = object : ParticipantDeviceListenerStub() {
+        @WorkerThread
         override fun onStateChanged(
             participantDevice: ParticipantDevice,
             state: ParticipantDevice.State?
@@ -50,6 +61,7 @@ class ConferenceParticipantDeviceModel @WorkerThread constructor(
             )
         }
 
+        @WorkerThread
         override fun onIsMuted(participantDevice: ParticipantDevice, muted: Boolean) {
             Log.i(
                 "$TAG Participant device [${participantDevice.address.asStringUriOnly()}] is ${if (participantDevice.isMuted) "muted" else "no longer muted"}"
@@ -57,6 +69,7 @@ class ConferenceParticipantDeviceModel @WorkerThread constructor(
             isMuted.postValue(participantDevice.isMuted)
         }
 
+        @WorkerThread
         override fun onIsSpeakingChanged(
             participantDevice: ParticipantDevice,
             speaking: Boolean
@@ -65,6 +78,41 @@ class ConferenceParticipantDeviceModel @WorkerThread constructor(
                 "$TAG Participant device [${participantDevice.address.asStringUriOnly()}] is ${if (participantDevice.isSpeaking) "speaking" else "no longer speaking"}"
             )
             isSpeaking.postValue(participantDevice.isSpeaking)
+        }
+
+        @WorkerThread
+        override fun onStreamAvailabilityChanged(
+            participantDevice: ParticipantDevice,
+            available: Boolean,
+            streamType: StreamType?
+        ) {
+            Log.i(
+                "$TAG Participant device [${participantDevice.address.asStringUriOnly()}] stream [$streamType] availability changed to ${if (available) "available" else "not available"}"
+            )
+            if (streamType == StreamType.Video) {
+                val available = participantDevice.getStreamAvailability(StreamType.Video)
+                isVideoAvailable.postValue(available)
+                if (available) {
+                    updateWindowId(textureView)
+                }
+            }
+        }
+
+        @WorkerThread
+        override fun onStreamCapabilityChanged(
+            participantDevice: ParticipantDevice,
+            direction: MediaDirection?,
+            streamType: StreamType?
+        ) {
+            Log.i(
+                "$TAG Participant device [${participantDevice.address.asStringUriOnly()}] stream [$streamType] capability changed to [$direction]"
+            )
+            if (streamType == StreamType.Video) {
+                val videoCapability = participantDevice.getStreamCapability(StreamType.Video)
+                isSendingVideo.postValue(
+                    videoCapability == MediaDirection.SendRecv || videoCapability == MediaDirection.SendOnly
+                )
+            }
         }
     }
 
@@ -76,10 +124,35 @@ class ConferenceParticipantDeviceModel @WorkerThread constructor(
         Log.i(
             "$TAG Participant [${device.address.asStringUriOnly()}] is in state [${device.state}]"
         )
+
+        isVideoAvailable.postValue(device.getStreamAvailability(StreamType.Video))
+        val videoCapability = device.getStreamCapability(StreamType.Video)
+        isSendingVideo.postValue(
+            videoCapability == MediaDirection.SendRecv || videoCapability == MediaDirection.SendOnly
+        )
     }
 
     @WorkerThread
     fun destroy() {
         device.removeListener(deviceListener)
+    }
+
+    @UiThread
+    fun setTextureView(view: TextureView) {
+        Log.i(
+            "$TAG TextureView for participant [${device.address.asStringUriOnly()}] available from UI [$view]"
+        )
+        textureView = view
+        coreContext.postOnCoreThread {
+            updateWindowId(textureView)
+        }
+    }
+
+    @WorkerThread
+    private fun updateWindowId(windowId: Any?) {
+        Log.i(
+            "$$TAG Setting participant [${device.address.asStringUriOnly()}] window ID [$windowId]"
+        )
+        device.nativeVideoWindowId = windowId
     }
 }

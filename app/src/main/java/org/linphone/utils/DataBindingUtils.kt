@@ -25,6 +25,7 @@ import android.graphics.PorterDuff
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
@@ -62,6 +63,7 @@ import org.linphone.contacts.AvatarGenerator
 import org.linphone.core.ChatRoom
 import org.linphone.core.ConsolidatedPresence
 import org.linphone.core.tools.Log
+import org.linphone.ui.call.model.ConferenceParticipantDeviceModel
 
 /**
  * This file contains all the data binding necessary for the app
@@ -374,6 +376,15 @@ private suspend fun loadContactPictureWithCoil(
             )
         }
     }
+}
+
+@UiThread
+@BindingAdapter("participantTextureView")
+fun setParticipantTextureView(
+    textureView: TextureView,
+    model: ConferenceParticipantDeviceModel
+) {
+    model.setTextureView(textureView)
 }
 
 @UiThread
