@@ -20,6 +20,7 @@
 package org.linphone.telecom
 
 import android.telecom.DisconnectCause
+import androidx.annotation.WorkerThread
 import androidx.core.telecom.CallAttributesCompat
 import androidx.core.telecom.CallControlResult
 import androidx.core.telecom.CallControlScope
@@ -48,6 +49,7 @@ class TelecomCallControlCallback constructor(
     private var availableEndpoints: List<CallEndpointCompat> = arrayListOf()
 
     private val callListener = object : CallListenerStub() {
+        @WorkerThread
         override fun onStateChanged(call: Call, state: Call.State?, message: String) {
             Log.i("$TAG Call [${call.remoteAddress.asStringUriOnly()}] state changed [$state]")
             if (state == Call.State.Connected) {

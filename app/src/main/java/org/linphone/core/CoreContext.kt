@@ -214,14 +214,18 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
     }
 
     @AnyThread
-    fun postOnCoreThread(lambda: (core: Core) -> Unit) {
+    fun postOnCoreThread(
+        @WorkerThread lambda: (core: Core) -> Unit
+    ) {
         coreThread.post {
             lambda.invoke(core)
         }
     }
 
     @AnyThread
-    fun postOnMainThread(lambda: () -> Unit) {
+    fun postOnMainThread(
+        @UiThread lambda: () -> Unit
+    ) {
         mainThread.post {
             lambda.invoke()
         }

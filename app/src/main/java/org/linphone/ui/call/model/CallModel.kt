@@ -47,6 +47,7 @@ class CallModel @WorkerThread constructor(val call: Call) {
     val contact = MutableLiveData<ContactAvatarModel>()
 
     private val callListener = object : CallListenerStub() {
+        @WorkerThread
         override fun onStateChanged(call: Call, state: Call.State, message: String) {
             this@CallModel.state.postValue(LinphoneUtils.callStateToString(state))
             isPaused.postValue(LinphoneUtils.isCallPaused(state))
