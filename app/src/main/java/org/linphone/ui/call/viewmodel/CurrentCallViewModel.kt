@@ -236,10 +236,14 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                     fullScreenMode.postValue(false)
                 }
 
-                if (call.state == Call.State.Connected && call.conference != null) {
-                    Log.i("$TAG Call is in Connected state and conference isn't null")
-                    conferenceModel.configureFromCall(call)
-                    goToConferenceEvent.postValue(Event(true))
+                if (call.state == Call.State.Connected) {
+                    if (call.conference != null) {
+                        Log.i("$TAG Call is in Connected state and conference isn't null")
+                        conferenceModel.configureFromCall(call)
+                        goToConferenceEvent.postValue(Event(true))
+                    } else {
+                        conferenceModel.destroy()
+                    }
                 }
             }
 
@@ -740,6 +744,8 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         if (call.conference != null) {
             conferenceModel.configureFromCall(call)
             goToConferenceEvent.postValue(Event(true))
+        } else {
+            conferenceModel.destroy()
         }
 
         if (call.dir == Call.Dir.Incoming) {

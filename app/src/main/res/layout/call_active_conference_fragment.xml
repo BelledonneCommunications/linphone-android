@@ -43,10 +43,10 @@
                 android:layout_height="0dp"
                 android:layout_marginStart="12dp"
                 android:layout_marginEnd="12dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/call_top_bar_info_height"
                 android:layout_marginBottom="@dimen/call_main_actions_menu_height"
-                android:visibility="@{conferenceViewModel.participantDevices.size() > 1 ? View.GONE : View.VISIBLE, default=gone}"
-                app:layout_constraintTop_toBottomOf="@id/call_direction_label"
+                android:visibility="@{conferenceViewModel.participantDevices.size() > 1 || viewModel.pipMode ? View.GONE : View.VISIBLE}"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
@@ -54,13 +54,16 @@
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style_300"
                 android:id="@+id/waiting_for_others"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
                 android:text="@string/conference_call_empty"
                 android:textColor="@color/white"
                 android:textSize="22sp"
-                android:visibility="@{conferenceViewModel.participantDevices.size() > 1 ? View.GONE : View.VISIBLE, default=gone}"
+                android:gravity="center"
+                android:visibility="@{conferenceViewModel.participantDevices.size() > 1 ? View.GONE : View.VISIBLE}"
                 app:layout_constraintTop_toTopOf="@id/background"
                 app:layout_constraintBottom_toBottomOf="@id/background"
                 app:layout_constraintStart_toStartOf="parent"
@@ -81,7 +84,7 @@
                 android:text="@string/conference_share_link_title"
                 android:textSize="18sp"
                 android:textColor="@color/gray_main2_400"
-                android:visibility="@{conferenceViewModel.participantDevices.size() > 1 ? View.GONE : View.VISIBLE, default=gone}"
+                android:visibility="@{conferenceViewModel.participantDevices.size() > 1 || viewModel.pipMode ? View.GONE : View.VISIBLE}"
                 android:drawableStart="@drawable/share_network"
                 android:drawablePadding="8dp"
                 app:drawableTint="@color/gray_main2_400"
@@ -93,15 +96,13 @@
                 android:id="@+id/grid_box_layout"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="@dimen/call_main_actions_menu_height"
+                android:layout_marginBottom="@{viewModel.fullScreenMode || viewModel.pipMode ? @dimen/zero : @dimen/call_main_actions_menu_height, default=@dimen/call_main_actions_menu_height}"
+                android:layout_marginTop="@{viewModel.fullScreenMode || viewModel.pipMode ? @dimen/zero : @dimen/call_top_bar_info_height, default=@dimen/call_top_bar_info_height}"
                 android:onClick="@{() -> viewModel.toggleFullScreen()}"
-                android:visibility="@{conferenceViewModel.participantDevices.size() > 1 ? View.VISIBLE : View.GONE}"
+                android:visibility="@{conferenceViewModel.participantDevices.size() > 1 ? View.VISIBLE : View.GONE, default=gone}"
                 entries="@{conferenceViewModel.participantDevices}"
                 layout="@{@layout/call_conference_grid_cell}"
-                app:layout_constraintTop_toBottomOf="@id/call_direction_label"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
@@ -111,29 +112,31 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="@{viewModel.fullScreenMode || viewModel.pipMode ? View.INVISIBLE : View.VISIBLE}"
-                app:constraint_referenced_ids="call_direction_icon, call_direction_label, separator, chronometer" />
+                app:constraint_referenced_ids="conference_icon, conference_subject, separator, chronometer" />
 
             <ImageView
-                android:id="@+id/call_direction_icon"
+                android:id="@+id/conference_icon"
                 android:layout_width="@dimen/icon_size"
                 android:layout_height="@dimen/icon_size"
                 android:layout_marginStart="10dp"
                 android:adjustViewBounds="true"
                 android:src="@drawable/users_three"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/call_direction_label"
-                app:layout_constraintBottom_toBottomOf="@id/call_direction_label"
+                app:layout_constraintTop_toTopOf="@id/conference_subject"
+                app:layout_constraintBottom_toBottomOf="@id/conference_subject"
                 app:tint="@color/orange_main_500" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/call_header_style"
-                android:id="@+id/call_direction_label"
+                android:id="@+id/conference_subject"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/call_top_bar_text_height"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:text="@{conferenceViewModel.subject, default=`Meeting with John Doe`}"
-                app:layout_constraintStart_toEndOf="@id/call_direction_icon"
+                android:maxLines="1"
+                android:ellipsize="end"
+                app:layout_constraintStart_toEndOf="@id/conference_icon"
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -143,8 +146,8 @@
                 android:layout_height="@dimen/call_top_bar_text_height"
                 android:layout_marginStart="5dp"
                 android:text="@string/vertical_separator"
-                app:layout_constraintStart_toEndOf="@id/call_direction_label"
-                app:layout_constraintTop_toTopOf="@id/call_direction_label"/>
+                app:layout_constraintStart_toEndOf="@id/conference_subject"
+                app:layout_constraintTop_toTopOf="@id/conference_subject"/>
 
             <Chronometer
                 style="@style/call_header_style"
@@ -156,7 +159,7 @@
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toEndOf="@id/separator"
                 app:layout_constraintEnd_toStartOf="@id/switch_camera"
-                app:layout_constraintTop_toTopOf="@id/call_direction_label"/>
+                app:layout_constraintTop_toTopOf="@id/conference_subject"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/call_header_style"
@@ -169,7 +172,7 @@
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toEndOf="@id/separator"
                 app:layout_constraintEnd_toStartOf="@id/switch_camera"
-                app:layout_constraintTop_toTopOf="@id/call_direction_label"/>
+                app:layout_constraintTop_toTopOf="@id/conference_subject"/>
 
             <ImageView
                 android:onClick="@{() -> viewModel.switchCamera()}"
@@ -181,8 +184,8 @@
                 android:src="@drawable/camera_rotate"
                 android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; viewModel.isVideoEnabled &amp;&amp; viewModel.showSwitchCamera ? View.VISIBLE : View.GONE}"
                 app:tint="@color/white"
-                app:layout_constraintTop_toTopOf="@id/call_direction_label"
-                app:layout_constraintBottom_toBottomOf="@id/call_direction_label"
+                app:layout_constraintTop_toTopOf="@id/conference_subject"
+                app:layout_constraintBottom_toBottomOf="@id/conference_subject"
                 app:layout_constraintEnd_toEndOf="parent" />
 
             <ImageView

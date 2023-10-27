@@ -35,9 +35,13 @@ class ConferenceModel {
 
     val subject = MutableLiveData<String>()
 
+    val sipUri = MutableLiveData<String>()
+
     val participantDevices = MutableLiveData<ArrayList<ConferenceParticipantDeviceModel>>()
 
     private lateinit var conference: Conference
+
+    val isCurrentCallInConference = MutableLiveData<Boolean>()
 
     private val conferenceListener = object : ConferenceListenerStub() {
         @WorkerThread
@@ -103,6 +107,7 @@ class ConferenceModel {
 
     @WorkerThread
     fun destroy() {
+        isCurrentCallInConference.postValue(false)
         if (::conference.isInitialized) {
             conference.removeListener(conferenceListener)
             participantDevices.value.orEmpty().forEach(ConferenceParticipantDeviceModel::destroy)
@@ -116,12 +121,14 @@ class ConferenceModel {
             conference.removeListener(conferenceListener)
         }
 
+        isCurrentCallInConference.postValue(true)
         conference = conf
         conference.addListener(conferenceListener)
 
         Log.i(
             "$TAG Configuring conference with subject [${conference.subject}] from call [${call.callLog.callId}]"
         )
+        sipUri.postValue(conference.conferenceAddress.asStringUriOnly())
         subject.postValue(conference.subject)
 
         if (conference.state == Conference.State.Created) {

@@ -19,6 +19,9 @@
  */
 package org.linphone.ui.call.fragment
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.LayoutInflater
@@ -27,9 +30,11 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.core.tools.Log
 import org.linphone.databinding.CallActiveConferenceFragmentBinding
 import org.linphone.ui.call.viewmodel.CallsViewModel
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
+import org.linphone.utils.Event
 
 class ActiveConferenceCallFragment : GenericCallFragment() {
     companion object {
@@ -87,6 +92,11 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
             }
         }
 
+        callViewModel.fullScreenMode.observe(viewLifecycleOwner) { hide ->
+            Log.i("$TAG Switching full screen mode to ${if (hide) "ON" else "OFF"}")
+            sharedViewModel.toggleFullScreenEvent.value = Event(hide)
+        }
+
         actionsBottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
@@ -102,6 +112,17 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {}
         })
+
+        binding.setShareConferenceClickListener {
+            val sipUri = callViewModel.conferenceModel.sipUri.value.orEmpty()
+            if (sipUri.isNotEmpty()) {
+                Log.i("$TAG Sharing conference SIP URI [$sipUri]")
+
+                val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val label = "Conference SIP address"
+                clipboard.setPrimaryClip(ClipData.newPlainText(label, sipUri))
+            }
+        }
     }
 
     override fun onResume() {
