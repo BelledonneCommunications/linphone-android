@@ -290,7 +290,8 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
             Log.i("$TAG Message sent, re-setting defaults")
             textToSend.postValue("")
-            cancelReply()
+            isReplying.postValue(false)
+            chatMessageToReplyTo = null
         }
     }
 
