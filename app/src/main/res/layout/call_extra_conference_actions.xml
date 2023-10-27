@@ -9,6 +9,9 @@
             name="callsListClickListener"
             type="View.OnClickListener" />
         <variable
+            name="participantsListClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.call.viewmodel.CurrentCallViewModel" />
         <variable
@@ -50,6 +53,7 @@
 
         <ImageView
             android:id="@+id/participants"
+            android:onClick="@{participantsListClickListener}"
             android:layout_width="0dp"
             android:layout_height="@dimen/call_button_size"
             android:layout_marginTop="@dimen/call_extra_button_top_margin"
@@ -167,6 +171,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/in_call_extra_action_label_style"
             android:id="@+id/participants_label"
+            android:onClick="@{participantsListClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/conference_action_show_participants"

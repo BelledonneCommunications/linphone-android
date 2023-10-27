@@ -56,10 +56,17 @@ class CallModel @WorkerThread constructor(val call: Call) {
     init {
         call.addListener(callListener)
 
-        displayName.postValue(friend?.name ?: LinphoneUtils.getDisplayName(call.remoteAddress))
-        contact.postValue(
-            coreContext.contactsManager.getContactAvatarModelForAddress(call.remoteAddress)
+        val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(
+            call.remoteAddress
         )
+        val conferenceInfo = coreContext.core.findConferenceInformationFromUri(call.remoteAddress)
+        if (conferenceInfo != null) {
+            displayName.postValue(conferenceInfo.subject)
+            avatarModel.showConferenceIcon.postValue(true)
+        } else {
+            displayName.postValue(friend?.name ?: LinphoneUtils.getDisplayName(call.remoteAddress))
+        }
+        contact.postValue(avatarModel)
 
         state.postValue(LinphoneUtils.callStateToString(call.state))
         isPaused.postValue(LinphoneUtils.isCallPaused(call.state))

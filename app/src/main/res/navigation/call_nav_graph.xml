@@ -133,6 +133,18 @@
             app:popUpTo="@id/activeConferenceCallFragment"
             app:popUpToInclusive="true"
             app:launchSingleTop="true" />
+        <action
+            android:id="@+id/action_activeConferenceCallFragment_to_conferenceParticipantsListFragment"
+            app:destination="@id/conferenceParticipantsListFragment"
+            app:enterAnim="@anim/slide_in"
+            app:popExitAnim="@anim/slide_out"
+            app:launchSingleTop="true" />
+        <action
+            android:id="@+id/action_activeConferenceCallFragment_to_callsListFragment"
+            app:destination="@id/callsListFragment"
+            app:enterAnim="@anim/slide_in"
+            app:popExitAnim="@anim/slide_out"
+            app:launchSingleTop="true" />
     </fragment>
 
     <action android:id="@+id/action_global_activeConferenceCallFragment"
@@ -140,5 +152,11 @@
         app:popUpTo="@id/activeConferenceCallFragment"
         app:popUpToInclusive="true"
         app:launchSingleTop="true"/>
+
+    <fragment
+        android:id="@+id/conferenceParticipantsListFragment"
+        android:name="org.linphone.ui.call.fragment.ConferenceParticipantsListFragment"
+        android:label="ConferenceParticipantsListFragment"
+        tools:layout="@layout/call_conference_participants_list_fragment"/>
 
 </navigation>

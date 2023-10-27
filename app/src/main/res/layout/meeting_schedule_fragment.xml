@@ -490,7 +490,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:layout_marginTop="20dp"
-                        android:layout_marginStart="8dp"
+                        android:layout_marginStart="10dp"
                         android:layout_marginEnd="16dp"
                         android:visibility="@{viewModel.participants.size() > 0 ? View.VISIBLE : View.GONE, default=gone}"
                         app:layout_constraintTop_toBottomOf="@id/participants"
@@ -499,6 +499,19 @@
                         entries="@{viewModel.participants}"
                         layout="@{@layout/meeting_schedule_participant_list_cell}"/>
 
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/default_text_style_300"
+                        android:id="@+id/add_more_participants"
+                        android:onClick="@{pickParticipantsClickListener}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/meeting_schedule_add_more_participants_title"
+                        android:visibility="@{viewModel.participants.size() > 0 ? View.VISIBLE : View.GONE, default=gone}"
+                        app:layout_constraintTop_toBottomOf="@id/participants_list"
+                        app:layout_constraintStart_toEndOf="@id/participants_list_icon" />
+
                     <View
                         android:id="@+id/separator_5"
                         android:layout_width="0dp"
@@ -506,7 +519,7 @@
                         android:layout_marginTop="16dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/participants_list"
+                        app:layout_constraintTop_toBottomOf="@id/add_more_participants"
                         android:background="@color/gray_main2_200" />
 
                     <com.google.android.material.materialswitch.MaterialSwitch

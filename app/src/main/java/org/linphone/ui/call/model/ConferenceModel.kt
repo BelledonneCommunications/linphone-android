@@ -21,12 +21,14 @@ package org.linphone.ui.call.model
 
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
+import org.linphone.R
 import org.linphone.core.Call
 import org.linphone.core.Conference
 import org.linphone.core.ConferenceListenerStub
 import org.linphone.core.Participant
 import org.linphone.core.ParticipantDevice
 import org.linphone.core.tools.Log
+import org.linphone.utils.AppUtils
 
 class ConferenceModel {
     companion object {
@@ -37,13 +39,48 @@ class ConferenceModel {
 
     val sipUri = MutableLiveData<String>()
 
+    val participants = MutableLiveData<ArrayList<ConferenceParticipantModel>>()
+
     val participantDevices = MutableLiveData<ArrayList<ConferenceParticipantDeviceModel>>()
+
+    val participantsLabel = MutableLiveData<String>()
 
     private lateinit var conference: Conference
 
     val isCurrentCallInConference = MutableLiveData<Boolean>()
 
     private val conferenceListener = object : ConferenceListenerStub() {
+        @WorkerThread
+        override fun onParticipantAdded(conference: Conference, participant: Participant) {
+            Log.i(
+                "$TAG Participant added: ${participant.address.asStringUriOnly()}"
+            )
+            addParticipant(participant)
+        }
+
+        @WorkerThread
+        override fun onParticipantRemoved(conference: Conference, participant: Participant) {
+            Log.i(
+                "$TAG Participant removed: ${participant.address.asStringUriOnly()}"
+            )
+            removeParticipant(participant)
+        }
+
+        @WorkerThread
+        override fun onParticipantAdminStatusChanged(
+            conference: Conference,
+            participant: Participant
+        ) {
+            val newAdminStatus = participant.isAdmin
+            Log.i(
+                "$TAG Participant [${participant.address.asStringUriOnly()}] is [${if (newAdminStatus) "now admin" else "no longer admin"}]"
+            )
+            val participantModel = participants.value.orEmpty().find {
+                it.participant.address.weakEqual(participant.address)
+            }
+            participantModel?.isAdmin?.postValue(newAdminStatus)
+        }
+
         @WorkerThread
         override fun onParticipantDeviceAdded(
             conference: Conference,
@@ -52,14 +89,7 @@ class ConferenceModel {
             Log.i(
                 "$TAG Participant device added: ${participantDevice.address.asStringUriOnly()}"
             )
-
-            val list = arrayListOf<ConferenceParticipantDeviceModel>()
-            list.addAll(participantDevices.value.orEmpty())
-
-            val newModel = ConferenceParticipantDeviceModel(participantDevice)
-            list.add(newModel)
-
-            participantDevices.postValue(sortParticipantDevicesList(list))
+            addParticipantDevice(participantDevice)
         }
 
         @WorkerThread
@@ -70,19 +100,7 @@ class ConferenceModel {
             Log.i(
                 "$TAG Participant device removed: ${participantDevice.address.asStringUriOnly()}"
             )
-
-            val list = arrayListOf<ConferenceParticipantDeviceModel>()
-            list.addAll(participantDevices.value.orEmpty())
-
-            val toRemove = list.find {
-                participantDevice.address.weakEqual(it.device.address)
-            }
-            if (toRemove != null) {
-                toRemove.destroy()
-                list.remove(toRemove)
-            }
-
-            participantDevices.postValue(list)
+            removeParticipantDevice(participantDevice)
         }
 
         @WorkerThread
@@ -100,7 +118,7 @@ class ConferenceModel {
         override fun onStateChanged(conference: Conference, state: Conference.State) {
             Log.i("$TAG State changed [$state]")
             if (conference.state == Conference.State.Created) {
-                computeParticipantsDevices()
+                computeParticipants()
             }
         }
     }
@@ -132,46 +150,63 @@ class ConferenceModel {
         subject.postValue(conference.subject)
 
         if (conference.state == Conference.State.Created) {
-            computeParticipantsDevices()
+            computeParticipants()
         }
     }
 
     @WorkerThread
-    private fun computeParticipantsDevices() {
+    private fun computeParticipants() {
+        participants.value.orEmpty().forEach(ConferenceParticipantModel::destroy)
         participantDevices.value.orEmpty().forEach(ConferenceParticipantDeviceModel::destroy)
-        val list = arrayListOf<ConferenceParticipantDeviceModel>()
 
-        val participants = conference.participantList
-        Log.i("$TAG [${participants.size}] participant in conference")
+        val participantsList = arrayListOf<ConferenceParticipantModel>()
+        val devicesList = arrayListOf<ConferenceParticipantDeviceModel>()
 
-        for (participant in participants) {
+        val conferenceParticipants = conference.participantList
+        Log.i("$TAG [${conferenceParticipants.size}] participant in conference")
+
+        val meParticipant = conference.me
+        val meParticipantModel = ConferenceParticipantModel(meParticipant)
+        participantsList.add(meParticipantModel)
+
+        for (participant in conferenceParticipants) {
             val devices = participant.devices
             val role = participant.role
 
             Log.i(
                 "$TAG Participant [${participant.address.asStringUriOnly()}] has [${devices.size}] devices and role [${role.name}]"
             )
+            val participantModel = ConferenceParticipantModel(participant)
+            participantsList.add(participantModel)
+
             if (role == Participant.Role.Listener) {
                 continue
             }
 
             for (device in participant.devices) {
                 val model = ConferenceParticipantDeviceModel(device)
-                list.add(model)
+                devicesList.add(model)
             }
         }
         Log.i(
-            "$TAG [${list.size}] participant devices will be displayed (not counting ourselves)"
+            "$TAG [${devicesList.size}] participant devices for [${participantsList.size}] participants will be displayed (not counting ourselves)"
         )
 
         val ourDevices = conference.me.devices
         Log.i("$TAG We have [${ourDevices.size}] devices")
         for (device in ourDevices) {
             val model = ConferenceParticipantDeviceModel(device, true)
-            list.add(model)
+            devicesList.add(model)
         }
 
-        participantDevices.postValue(sortParticipantDevicesList(list))
+        participantDevices.postValue(sortParticipantDevicesList(devicesList))
+        participants.postValue(participantsList)
+        participantsLabel.postValue(
+            AppUtils.getFormattedString(
+                R.string.conference_participants_list_title,
+                participantsList.size
+            )
+        )
     }
 
     private fun sortParticipantDevicesList(devices: List<ConferenceParticipantDeviceModel>): ArrayList<ConferenceParticipantDeviceModel> {
@@ -194,5 +229,65 @@ class ConferenceModel {
         }
 
         return sortedList
+    }
+
+    @WorkerThread
+    private fun addParticipant(participant: Participant) {
+        val list = arrayListOf<ConferenceParticipantModel>()
+        list.addAll(participants.value.orEmpty())
+
+        val newModel = ConferenceParticipantModel(participant)
+        list.add(newModel)
+
+        participants.postValue(list)
+        participantsLabel.postValue(
+            AppUtils.getFormattedString(R.string.conference_participants_list_title, list.size)
+        )
+    }
+
+    @WorkerThread
+    private fun addParticipantDevice(participantDevice: ParticipantDevice) {
+        val list = arrayListOf<ConferenceParticipantDeviceModel>()
+        list.addAll(participantDevices.value.orEmpty())
+
+        val newModel = ConferenceParticipantDeviceModel(participantDevice)
+        list.add(newModel)
+
+        participantDevices.postValue(sortParticipantDevicesList(list))
+    }
+
+    @WorkerThread
+    private fun removeParticipant(participant: Participant) {
+        val list = arrayListOf<ConferenceParticipantModel>()
+        list.addAll(participants.value.orEmpty())
+
+        val toRemove = list.find {
+            participant.address.weakEqual(it.participant.address)
+        }
+        if (toRemove != null) {
+            toRemove.destroy()
+            list.remove(toRemove)
+        }
+
+        participants.postValue(list)
+        participantsLabel.postValue(
+            AppUtils.getFormattedString(R.string.conference_participants_list_title, list.size)
+        )
+    }
+
+    @WorkerThread
+    private fun removeParticipantDevice(participantDevice: ParticipantDevice) {
+        val list = arrayListOf<ConferenceParticipantDeviceModel>()
+        list.addAll(participantDevices.value.orEmpty())
+
+        val toRemove = list.find {
+            participantDevice.address.weakEqual(it.device.address)
+        }
+        if (toRemove != null) {
+            toRemove.destroy()
+            list.remove(toRemove)
+        }
+
+        participantDevices.postValue(list)
     }
 }

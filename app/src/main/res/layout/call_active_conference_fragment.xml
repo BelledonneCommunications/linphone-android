@@ -13,6 +13,9 @@
             name="callsListClickListener"
             type="View.OnClickListener" />
         <variable
+            name="participantsListClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.call.viewmodel.CurrentCallViewModel" />
         <variable
@@ -208,6 +211,7 @@
             layout="@layout/call_extra_conference_actions"
             bind:viewModel="@{viewModel}"
             bind:callsViewModel="@{callsViewModel}"
+            bind:participantsListClickListener="@{participantsListClickListener}"
             bind:callsListClickListener="@{callsListClickListener}"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

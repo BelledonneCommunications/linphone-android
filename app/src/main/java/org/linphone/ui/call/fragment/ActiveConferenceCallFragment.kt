@@ -28,6 +28,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.tools.Log
@@ -112,6 +113,18 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {}
         })
+
+        binding.setCallsListClickListener {
+            Log.i("$TAG Going to calls list fragment")
+            val action = ActiveConferenceCallFragmentDirections.actionActiveConferenceCallFragmentToCallsListFragment()
+            findNavController().navigate(action)
+        }
+
+        binding.setParticipantsListClickListener {
+            Log.i("$TAG Going to conference participants list fragment")
+            val action = ActiveConferenceCallFragmentDirections.actionActiveConferenceCallFragmentToConferenceParticipantsListFragment()
+            findNavController().navigate(action)
+        }
 
         binding.setShareConferenceClickListener {
             val sipUri = callViewModel.conferenceModel.sipUri.value.orEmpty()
