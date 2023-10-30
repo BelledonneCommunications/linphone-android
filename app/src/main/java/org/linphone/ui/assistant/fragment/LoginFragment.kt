@@ -40,6 +40,7 @@ import org.linphone.databinding.AssistantLoginFragmentBinding
 import org.linphone.ui.assistant.AssistantActivity
 import org.linphone.ui.assistant.model.AcceptConditionsAndPolicyDialogModel
 import org.linphone.ui.assistant.viewmodel.AccountLoginViewModel
+import org.linphone.ui.sso.OpenIdActivity
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.PhoneNumberUtils
 
@@ -103,6 +104,11 @@ class LoginFragment : Fragment() {
                     "$TAG Can't start ACTION_VIEW intent for URL [$url], IllegalStateException: $ise"
                 )
             }
+        }
+
+        binding.setSingleSignOnClickListener {
+            startActivity(Intent(requireContext(), OpenIdActivity::class.java))
+            requireActivity().finish()
         }
 
         binding.setQrCodeClickListener {

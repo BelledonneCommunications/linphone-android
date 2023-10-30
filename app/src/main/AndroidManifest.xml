@@ -79,6 +79,11 @@
             android:resizeableActivity="true" />
 
         <activity
+            android:name=".ui.sso.OpenIdActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"/>
+
+        <activity
             android:name=".ui.call.CallActivity"
             android:launchMode="singleTask"
             android:turnScreenOn="true"

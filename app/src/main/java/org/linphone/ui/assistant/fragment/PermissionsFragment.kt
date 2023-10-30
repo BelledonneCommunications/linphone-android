@@ -37,6 +37,13 @@ import org.linphone.databinding.AssistantPermissionsFragmentBinding
 class PermissionsFragment : Fragment() {
     companion object {
         private const val TAG = "[Permissions Fragment]"
+
+        private val PERMISSIONS = arrayOf(
+            Manifest.permission.POST_NOTIFICATIONS,
+            Manifest.permission.READ_CONTACTS,
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.CAMERA
+        )
     }
 
     private lateinit var binding: AssistantPermissionsFragmentBinding
@@ -70,6 +77,11 @@ class PermissionsFragment : Fragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
 
+        if (areAllPermissionsGranted()) {
+            Log.i("$TAG All permissions have been granted, skipping")
+            goToLoginFragment()
+        }
+
         binding.setBackClickListener {
             findNavController().popBackStack()
         }
@@ -82,12 +94,7 @@ class PermissionsFragment : Fragment() {
         binding.setGrantAllClickListener {
             Log.i("$TAG Requesting all permissions")
             requestPermissionLauncher.launch(
-                arrayOf(
-                    Manifest.permission.POST_NOTIFICATIONS,
-                    Manifest.permission.READ_CONTACTS,
-                    Manifest.permission.RECORD_AUDIO,
-                    Manifest.permission.CAMERA
-                )
+                PERMISSIONS
             )
         }
 
@@ -103,5 +110,14 @@ class PermissionsFragment : Fragment() {
     private fun goToLoginFragment() {
         val action = PermissionsFragmentDirections.actionPermissionsFragmentToLoginFragment()
         findNavController().navigate(action)
+    }
+
+    private fun areAllPermissionsGranted(): Boolean {
+        for (permission in PERMISSIONS) {
+            if (ContextCompat.checkSelfPermission(requireContext(), permission) != PackageManager.PERMISSION_GRANTED) {
+                return false
+            }
+        }
+        return true
     }
 }

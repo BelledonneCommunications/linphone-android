@@ -131,6 +131,7 @@
     <string name="assistant_qr_code_provisioning_done">Configuration successfully applied</string>
     <string name="assistant_qr_code_provisioning_error">Remote configuration failed!</string>
     <string name="assistant_login_third_party_sip_account">Use a third party SIP account</string>
+    <string name="assistant_login_using_single_sign_on">Single sign on</string>
     <string name="assistant_no_account_yet">No account yet?</string>
     <string name="assistant_account_register">Register</string>
     <string name="assistant_scan_qr_code_title">Scan a QR code</string>

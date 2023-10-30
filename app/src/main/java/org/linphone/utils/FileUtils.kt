@@ -176,6 +176,25 @@ class FileUtils {
             return false
         }
 
+        suspend fun readFile(file: File): String {
+            Log.i("$TAG Trying to read file [${file.absoluteFile}]")
+            val stringBuilder = StringBuilder()
+            try {
+                withContext(Dispatchers.IO) {
+                    FileInputStream(file).use { inputStream ->
+                        val buffer = ByteArray(4096)
+                        while (inputStream.read(buffer) >= 0) {
+                            stringBuilder.append(String(buffer))
+                        }
+                    }
+                }
+                return stringBuilder.toString()
+            } catch (e: IOException) {
+                Log.e("$TAG Failed to read file [$file] as plain text: $e")
+            }
+            return stringBuilder.toString()
+        }
+
         @AnyThread
         private fun getFileStorageDir(isPicture: Boolean = false): File {
             var path: File? = null
