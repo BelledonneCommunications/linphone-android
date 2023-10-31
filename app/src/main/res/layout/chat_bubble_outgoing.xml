@@ -52,7 +52,7 @@
             app:layout_constraintEnd_toEndOf="@id/reply"
             app:layout_constraintBottom_toBottomOf="@id/background" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <org.linphone.ui.main.chat.view.ChatBubbleTextView
             style="@style/default_text_style"
             android:onClick="@{scrollToRepliedMessageClickListener}"
             android:id="@+id/reply"

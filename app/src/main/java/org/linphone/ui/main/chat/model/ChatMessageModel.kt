@@ -19,9 +19,11 @@
  */
 package org.linphone.ui.main.chat.model
 
+import android.text.Spannable
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
+import java.util.regex.Pattern
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Address
 import org.linphone.core.ChatMessage
@@ -31,6 +33,7 @@ import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.PatternClickableSpan
 import org.linphone.utils.TimestampUtils
 
 class ChatMessageModel @WorkerThread constructor(
@@ -53,7 +56,7 @@ class ChatMessageModel @WorkerThread constructor(
 
     val statusIcon = MutableLiveData<Int>()
 
-    val text = LinphoneUtils.getTextDescribingMessage(chatMessage)
+    val text = MutableLiveData<Spannable>()
 
     val timestamp = chatMessage.time
 
@@ -92,6 +95,42 @@ class ChatMessageModel @WorkerThread constructor(
         chatMessage.addListener(chatMessageListener)
         statusIcon.postValue(LinphoneUtils.getChatIconResId(chatMessage.state))
         updateReactionsList()
+
+        var textFound = false
+        for (content in chatMessage.contents) {
+            if (content.isText) {
+                val textContent = content.utf8Text.orEmpty().trim()
+                val spannable = Spannable.Factory.getInstance().newSpannable(textContent)
+                text.postValue(
+                    PatternClickableSpan()
+                        .add(
+                            Pattern.compile(
+                                "(?:<?sips?:)[a-zA-Z0-9+_.\\-]+(?:@([a-zA-Z0-9+_.\\-;=~]+))+(>)?"
+                            ),
+                            object : PatternClickableSpan.SpannableClickedListener {
+                                @UiThread
+                                override fun onSpanClicked(text: String) {
+                                    coreContext.postOnCoreThread {
+                                        Log.i("$TAG Clicked on SIP URI: $text")
+                                        val address = coreContext.core.interpretUrl(text)
+                                        if (address != null) {
+                                            coreContext.startCall(address)
+                                        } else {
+                                            Log.w("$TAG Failed to parse [$text] as SIP URI")
+                                        }
+                                    }
+                                }
+                            }
+                        ).build(spannable)
+                )
+                textFound = true
+            }
+        }
+        if (!textFound) {
+            val describe = LinphoneUtils.getTextDescribingMessage(chatMessage)
+            val spannable = Spannable.Factory.getInstance().newSpannable(describe)
+            text.postValue(spannable)
+        }
     }
 
     @WorkerThread

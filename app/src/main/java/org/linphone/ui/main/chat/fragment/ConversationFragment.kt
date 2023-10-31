@@ -308,7 +308,7 @@ class ConversationFragment : GenericFragment() {
 
         layout.setCopyClickListener {
             Log.i("$TAG Copying message text into clipboard")
-            val text = chatMessageModel.text
+            val text = chatMessageModel.text.value?.toString()
             val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val label = "Message"
             clipboard.setPrimaryClip(ClipData.newPlainText(label, text))

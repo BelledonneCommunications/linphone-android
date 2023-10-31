@@ -23,9 +23,10 @@ import android.content.Context
 import android.text.method.LinkMovementMethod
 import android.util.AttributeSet
 import android.view.View.MeasureSpec.*
+import androidx.annotation.UiThread
 import androidx.appcompat.widget.AppCompatTextView
-import kotlin.math.ceil
 
+@UiThread
 class ChatBubbleTextView : AppCompatTextView {
     constructor(context: Context) : super(context)
 
@@ -41,21 +42,5 @@ class ChatBubbleTextView : AppCompatTextView {
         super.setText(text, type)
         // Required for PatternClickableSpan
         movementMethod = LinkMovementMethod.getInstance()
-    }
-
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-
-        val lines = layout.lineCount
-        if (lines > 1 && getMode(widthMeasureSpec) != EXACTLY) {
-            val textWidth = (0 until lines).maxOf(layout::getLineWidth)
-            val padding = compoundPaddingLeft + compoundPaddingRight
-            val w = ceil(textWidth).toInt() + padding
-
-            if (w < measuredWidth) {
-                val newWidthMeasureSpec = makeMeasureSpec(w, AT_MOST)
-                super.onMeasure(newWidthMeasureSpec, heightMeasureSpec)
-            }
-        }
     }
 }

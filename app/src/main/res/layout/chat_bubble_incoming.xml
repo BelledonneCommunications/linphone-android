@@ -121,7 +121,7 @@
             app:layout_constraintTop_toBottomOf="@id/reply"
             app:layout_constraintBottom_toBottomOf="@id/date_time"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <org.linphone.ui.main.chat.view.ChatBubbleTextView
             style="@style/default_text_style"
             android:id="@+id/text_message"
             android:layout_width="wrap_content"
