@@ -360,6 +360,11 @@ class MasterContactsFragment : MasterFragment<ContactMasterFragmentBinding, Cont
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        listViewModel.updateContactsList(true)
+    }
+
     @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(
         requestCode: Int,
