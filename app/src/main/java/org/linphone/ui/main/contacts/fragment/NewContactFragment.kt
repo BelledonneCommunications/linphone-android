@@ -30,9 +30,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navGraphViewModels
 import kotlinx.coroutines.launch
 import org.linphone.BR
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -56,9 +56,7 @@ class NewContactFragment : GenericFragment() {
 
     private lateinit var binding: ContactNewOrEditFragmentBinding
 
-    private val viewModel: ContactNewOrEditViewModel by navGraphViewModels(
-        R.id.main_nav_graph
-    )
+    private lateinit var viewModel: ContactNewOrEditViewModel
 
     private val backPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
@@ -104,6 +102,8 @@ class NewContactFragment : GenericFragment() {
         )
 
         binding.lifecycleOwner = viewLifecycleOwner
+
+        viewModel = ViewModelProvider(this)[ContactNewOrEditViewModel::class.java]
         binding.viewModel = viewModel
 
         val addressToAdd = sharedViewModel.sipAddressToAddToNewContact

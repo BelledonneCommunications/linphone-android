@@ -47,6 +47,9 @@ store_friends=0
 activation_code_length=4
 prefer_basic_chat_room=1
 record_aware=1
+auto_download_incoming_files_max_size=0
+auto_download_incoming_voice_recordings=1
+auto_download_incoming_icalendars=1
 
 [account_creator]
 backend=1
