@@ -2,6 +2,7 @@ package org.linphone.ui.main.chat.model
 
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.ChatMessage
 import org.linphone.core.tools.Log
 
@@ -46,7 +47,24 @@ class ChatMessageReactionsModel @WorkerThread constructor(
             val count = reactionsMap.getOrDefault(body, 0)
             reactionsMap[body] = count + 1
 
-            allReactions.add(ChatMessageBottomSheetParticipantModel(reaction.fromAddress, body))
+            val isOurOwn = reaction.fromAddress.weakEqual(chatMessage.chatRoom.localAddress)
+            allReactions.add(
+                ChatMessageBottomSheetParticipantModel(
+                    reaction.fromAddress,
+                    body,
+                    isOurOwn
+                ) {
+                    if (isOurOwn) {
+                        coreContext.postOnCoreThread {
+                            Log.i(
+                                "$TAG Removing our own reaction for chat message [${chatMessage.messageId}]"
+                            )
+                            val removeReaction = chatMessage.createReaction("")
+                            removeReaction.send()
+                        }
+                    }
+                }
+            )
 
             if (!differentReactionsList.contains(body)) {
                 differentReactionsList.add(body)

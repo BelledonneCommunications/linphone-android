@@ -15,6 +15,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="@{() -> model.clicked()}"
         android:background="@drawable/primary_cell_background"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp">
@@ -64,6 +65,19 @@
             app:layout_constraintStart_toEndOf="@id/avatar"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/date_time"
+            app:layout_constraintBottom_toTopOf="@id/remove_reaction"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_300"
+            android:id="@+id/remove_reaction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/message_reaction_click_to_remove_label"
+            android:textSize="12sp"
+            android:textColor="@color/gray_main2_400"
+            android:visibility="@{model.ourOwnReaction ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintTop_toBottomOf="@id/name"
+            app:layout_constraintStart_toStartOf="@id/name"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
         <androidx.appcompat.widget.AppCompatTextView

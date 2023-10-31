@@ -373,6 +373,7 @@
     <string name="message_delivery_info_error_title">Error %s</string>
     <string name="message_reactions_info_all_title">Reactions %s</string>
     <string name="message_reactions_info_emoji_title">%s %s</string>
+    <string name="message_reaction_click_to_remove_label">Click to remove</string>
 
     <string name="meetings_list_empty">No meeting for the moment…</string>
     <string name="meetings_list_today_indicator">Today</string>
