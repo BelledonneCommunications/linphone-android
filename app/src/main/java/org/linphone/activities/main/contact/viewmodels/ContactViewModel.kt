@@ -242,7 +242,10 @@ class ContactViewModel(friend: Friend, async: Boolean = false) : MessageNotifier
             val presenceModel = friend.getPresenceModelForUriOrTel(number)
             val hasPresence = presenceModel != null && presenceModel.basicStatus == PresenceBasicStatus.Open
             val contactAddress = presenceModel?.contact ?: number
-            val address = coreContext.core.interpretUrl(contactAddress, true)
+            val address = coreContext.core.interpretUrl(
+                contactAddress,
+                LinphoneUtils.applyInternationalPrefix()
+            )
             address?.displayName = displayName.value.orEmpty()
             val isMe = if (address != null) {
                 coreContext.core.defaultAccount?.params?.identityAddress?.weakEqual(
