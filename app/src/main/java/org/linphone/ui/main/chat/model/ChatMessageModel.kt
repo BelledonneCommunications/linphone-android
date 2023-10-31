@@ -24,7 +24,6 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
-import androidx.core.text.set
 import androidx.lifecycle.MutableLiveData
 import java.util.regex.Pattern
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -32,6 +31,7 @@ import org.linphone.core.Address
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatMessageListenerStub
 import org.linphone.core.ChatMessageReaction
+import org.linphone.core.Content
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.utils.Event
@@ -64,6 +64,8 @@ class ChatMessageModel @WorkerThread constructor(
     val statusIcon = MutableLiveData<Int>()
 
     val text = MutableLiveData<Spannable>()
+
+    val bigImagePath = MutableLiveData<String>()
 
     val timestamp = chatMessage.time
 
@@ -103,88 +105,40 @@ class ChatMessageModel @WorkerThread constructor(
         statusIcon.postValue(LinphoneUtils.getChatIconResId(chatMessage.state))
         updateReactionsList()
 
-        var textFound = false
-        for (content in chatMessage.contents) {
+        var displayableContentFound = false
+        val contents = chatMessage.contents
+        for (content in contents) {
             if (content.isText) {
-                val textContent = content.utf8Text.orEmpty().trim()
-                val spannableBuilder = SpannableStringBuilder(textContent)
-
-                // Check for mentions
-                val chatRoom = chatMessage.chatRoom
-                val matcher = Pattern.compile(MENTION_REGEXP).matcher(textContent)
-                while (matcher.find()) {
-                    val start = matcher.start()
-                    val end = matcher.end()
-                    val source = textContent.subSequence(start + 1, end) // +1 to remove @
-                    Log.i("$TAG Found mention [$source]")
-
-                    // Find address matching username
-                    val address = if (chatRoom.localAddress.username == source) {
-                        Log.i("$TAG mention found in local address")
-                        coreContext.core.accountList.find {
-                            it.params.identityAddress?.username == source
-                        }?.params?.identityAddress
-                    } else if (chatRoom.peerAddress.username == source) {
-                        Log.i("$TAG mention found in peer address")
-                        chatRoom.peerAddress
-                    } else {
-                        Log.i("$TAG looking for mention in participants")
-                        chatRoom.participants.find {
-                            it.address.username == source
-                        }?.address
-                    }
-                    // Find display name for address
-                    if (address != null) {
-                        val displayName = coreContext.contactsManager.findDisplayName(address)
+                computeTextContent(content)
+                displayableContentFound = true
+            } else {
+                if (content.isFile) {
+                    val path = content.filePath ?: ""
+                    if (path.isNotEmpty()) {
                         Log.i(
-                            "$TAG Using display name [$displayName] instead of username [$source]"
+                            "$TAG Found file ready to be displayed [$path] with MIME [${content.type}/${content.subtype}] for message [${chatMessage.messageId}]"
                         )
-                        spannableBuilder.replace(start, end, "@$displayName")
-                        val span = PatternClickableSpan.StyledClickableSpan(
-                            object :
-                                SpannableClickedListener {
-                                override fun onSpanClicked(text: String) {
-                                    Log.i("$TAG Clicked on [$text] span")
-                                }
+                        when (content.type) {
+                            "image", "video" -> {
+                                bigImagePath.postValue(path)
+                                displayableContentFound = true
                             }
-                        )
-                        spannableBuilder.setSpan(
-                            span,
-                            start,
-                            start + displayName.length + 1,
-                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                        )
+                            "audio" -> {
+                            }
+                            else -> {
+                            }
+                        }
+                    } else {
+                        Log.i("$TAG Content path is empty : have to download it first")
+                        // TODO: download it
                     }
+                } else {
+                    Log.i("$TAG Content is not a File")
                 }
-
-                // Add clickable span for SIP URIs
-                text.postValue(
-                    PatternClickableSpan()
-                        .add(
-                            Pattern.compile(
-                                SIP_URI_REGEXP
-                            ),
-                            object : SpannableClickedListener {
-                                @UiThread
-                                override fun onSpanClicked(text: String) {
-                                    coreContext.postOnCoreThread {
-                                        Log.i("$TAG Clicked on SIP URI: $text")
-                                        val address = coreContext.core.interpretUrl(text)
-                                        if (address != null) {
-                                            coreContext.startCall(address)
-                                        } else {
-                                            Log.w("$TAG Failed to parse [$text] as SIP URI")
-                                        }
-                                    }
-                                }
-                            }
-                        )
-                        .build(spannableBuilder)
-                )
-                textFound = true
             }
         }
-        if (!textFound) {
+
+        if (!displayableContentFound) { // Temporary workaround to prevent empty bubbles
             val describe = LinphoneUtils.getTextDescribingMessage(chatMessage)
             val spannable = Spannable.Factory.getInstance().newSpannable(describe)
             text.postValue(spannable)
@@ -229,5 +183,83 @@ class ChatMessageModel @WorkerThread constructor(
 
         Log.i("$TAG Reactions for message [$id] are [$reactionsList]")
         reactions.postValue(reactionsList)
+    }
+
+    @WorkerThread
+    private fun computeTextContent(content: Content) {
+        val textContent = content.utf8Text.orEmpty().trim()
+        Log.i("$TAG Found text content [$textContent] for message [${chatMessage.messageId}]")
+        val spannableBuilder = SpannableStringBuilder(textContent)
+
+        // Check for mentions
+        val chatRoom = chatMessage.chatRoom
+        val matcher = Pattern.compile(MENTION_REGEXP).matcher(textContent)
+        while (matcher.find()) {
+            val start = matcher.start()
+            val end = matcher.end()
+            val source = textContent.subSequence(start + 1, end) // +1 to remove @
+            Log.i("$TAG Found mention [$source]")
+
+            // Find address matching username
+            val address = if (chatRoom.localAddress.username == source) {
+                coreContext.core.accountList.find {
+                    it.params.identityAddress?.username == source
+                }?.params?.identityAddress
+            } else if (chatRoom.peerAddress.username == source) {
+                chatRoom.peerAddress
+            } else {
+                chatRoom.participants.find {
+                    it.address.username == source
+                }?.address
+            }
+            // Find display name for address
+            if (address != null) {
+                val displayName = coreContext.contactsManager.findDisplayName(address)
+                Log.i(
+                    "$TAG Using display name [$displayName] instead of username [$source]"
+                )
+                spannableBuilder.replace(start, end, "@$displayName")
+                val span = PatternClickableSpan.StyledClickableSpan(
+                    object :
+                        SpannableClickedListener {
+                        override fun onSpanClicked(text: String) {
+                            Log.i("$TAG Clicked on [$text] span")
+                            // TODO
+                        }
+                    }
+                )
+                spannableBuilder.setSpan(
+                    span,
+                    start,
+                    start + displayName.length + 1,
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+            }
+        }
+
+        // Add clickable span for SIP URIs
+        text.postValue(
+            PatternClickableSpan()
+                .add(
+                    Pattern.compile(
+                        SIP_URI_REGEXP
+                    ),
+                    object : SpannableClickedListener {
+                        @UiThread
+                        override fun onSpanClicked(text: String) {
+                            coreContext.postOnCoreThread {
+                                Log.i("$TAG Clicked on SIP URI: $text")
+                                val address = coreContext.core.interpretUrl(text)
+                                if (address != null) {
+                                    coreContext.startCall(address)
+                                } else {
+                                    Log.w("$TAG Failed to parse [$text] as SIP URI")
+                                }
+                            }
+                        }
+                    }
+                )
+                .build(spannableBuilder)
+        )
     }
 }

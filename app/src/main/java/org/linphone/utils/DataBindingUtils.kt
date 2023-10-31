@@ -51,6 +51,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import coil.dispose
 import coil.load
+import coil.request.videoFrameMillis
 import com.google.android.material.imageview.ShapeableImageView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
@@ -203,6 +204,40 @@ fun ImageView.setTintColor(@ColorRes color: Int, disable: Boolean) {
 @BindingAdapter("textColor")
 fun AppCompatTextView.setColor(@ColorRes color: Int) {
     setTextColor(AppUtils.getColor(color))
+}
+
+@UiThread
+@BindingAdapter("coilBubble")
+fun ImageView.loadImageForChatBubble(file: String?) {
+    if (!file.isNullOrEmpty()) {
+        if (FileUtils.isExtensionVideo(file)) {
+            load(file) {
+                videoFrameMillis(0)
+                listener(
+                    onError = { _, result ->
+                        Log.e(
+                            "[Data Binding] [Coil] Error getting preview picture from video? [$file]: ${result.throwable}"
+                        )
+                        visibility = View.GONE
+                    },
+                    onSuccess = { _, _ ->
+                        // TODO: Display "play" button above video preview
+                    }
+                )
+            }
+        } else {
+            load(file) {
+                listener(
+                    onError = { _, result ->
+                        Log.e(
+                            "[Data Binding] [Coil] Error getting picture from file [$file]: ${result.throwable}"
+                        )
+                        visibility = View.GONE
+                    }
+                )
+            }
+        }
+    }
 }
 
 @UiThread

@@ -108,7 +108,7 @@
             android:layout_height="wrap_content"
             app:barrierDirection="end"
             app:barrierMargin="10dp"
-            app:constraint_referenced_ids="delivery_status, text_message" />
+            app:constraint_referenced_ids="delivery_status, contents" />
 
         <ImageView
             android:id="@+id/background"
@@ -121,24 +121,21 @@
             app:layout_constraintTop_toBottomOf="@id/reply"
             app:layout_constraintBottom_toBottomOf="@id/date_time"/>
 
-        <org.linphone.ui.main.chat.view.ChatBubbleTextView
-            style="@style/default_text_style"
-            android:id="@+id/text_message"
+        <include
+            android:id="@+id/contents"
+            layout="@layout/chat_bubble_content"
+            model="@{model}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="@dimen/chat_bubble_text_padding_with_bubble"
             android:layout_marginEnd="16dp"
             android:paddingBottom="@{model.groupedWithNextOne ? @dimen/chat_bubble_text_padding_with_status : @dimen/chat_bubble_text_padding_with_bubble, default=@dimen/chat_bubble_text_padding_with_status}"
-            android:text="@{model.text, default=`Lorem ipsum dolor sit amet`}"
-            android:textSize="14sp"
-            android:textColor="@color/gray_main2_700"
-            android:gravity="center_vertical|start"
             app:layout_constrainedWidth="true"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintTop_toBottomOf="@id/reply"
             app:layout_constraintStart_toEndOf="@id/avatar"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_300"
@@ -151,8 +148,8 @@
             android:text="@{model.time, default=`13:40`}"
             android:textSize="12sp"
             android:visibility="@{model.isGroupedWithNextOne ? View.VISIBLE : View.GONE}"
-            app:layout_constraintTop_toBottomOf="@id/text_message"
-            app:layout_constraintStart_toStartOf="@id/text_message"/>
+            app:layout_constraintTop_toBottomOf="@id/contents"
+            app:layout_constraintStart_toStartOf="@id/contents"/>
 
         <ImageView
             style="@style/default_text_style_300"

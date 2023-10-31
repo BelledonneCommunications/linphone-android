@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             app:barrierDirection="start"
             app:barrierMargin="-10dp"
-            app:constraint_referenced_ids="date_time, text_message" />
+            app:constraint_referenced_ids="date_time, contents" />
 
         <View
             android:id="@+id/reply_background"
@@ -82,24 +82,21 @@
             app:layout_constraintTop_toBottomOf="@id/reply"
             app:layout_constraintBottom_toBottomOf="@id/date_time"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style"
-            android:id="@+id/text_message"
+        <include
+            android:id="@+id/contents"
+            layout="@layout/chat_bubble_content"
+            model="@{model}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="@dimen/chat_bubble_text_padding_with_bubble"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="@dimen/chat_bubble_text_padding_with_bubble"
             android:paddingBottom="@{model.groupedWithNextOne ? @dimen/chat_bubble_text_padding_with_status : @dimen/chat_bubble_text_padding_with_bubble, default=@dimen/chat_bubble_text_padding_with_status}"
-            android:text="@{model.text, default=`Hi!`}"
-            android:textSize="14sp"
-            android:textColor="@color/gray_main2_700"
-            android:gravity="center_vertical|end"
             app:layout_constrainedWidth="true"
             app:layout_constraintHorizontal_bias="1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/reply"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_300"
@@ -113,7 +110,7 @@
             android:text="@{model.time, default=`13:40`}"
             android:textSize="12sp"
             android:visibility="@{model.isGroupedWithNextOne ? View.VISIBLE : View.GONE}"
-            app:layout_constraintTop_toBottomOf="@id/text_message"
+            app:layout_constraintTop_toBottomOf="@id/contents"
             app:layout_constraintEnd_toStartOf="@id/delivery_status"/>
 
         <ImageView
@@ -125,7 +122,7 @@
             android:src="@{model.statusIcon, default=@drawable/checks}"
             android:visibility="@{model.isGroupedWithNextOne ? View.VISIBLE : View.GONE}"
             app:layout_constraintTop_toTopOf="@id/date_time"
-            app:layout_constraintEnd_toEndOf="@id/text_message"
+            app:layout_constraintEnd_toEndOf="@id/contents"
             app:layout_constraintBottom_toBottomOf="@id/date_time"
             app:tint="@color/orange_main_500" />
 

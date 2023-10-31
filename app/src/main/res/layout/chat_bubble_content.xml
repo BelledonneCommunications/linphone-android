@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="model"
+            type="org.linphone.ui.main.chat.model.ChatMessageModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/big_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/smiley"
+            android:visibility="@{model.bigImagePath.length() > 0 ? View.VISIBLE : View.GONE}"
+            android:maxHeight="@dimen/chat_bubble_big_image_max_size"
+            coilBubble="@{model.bigImagePath}"/>
+
+        <org.linphone.ui.main.chat.view.ChatBubbleTextView
+            style="@style/default_text_style"
+            android:id="@+id/text_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{model.text, default=`Lorem ipsum dolor sit amet`}"
+            android:textSize="14sp"
+            android:textColor="@color/gray_main2_700"
+            android:gravity="center_vertical|start"
+            android:layout_below="@id/big_image"
+            android:visibility="@{model.text.length() > 0 ? View.VISIBLE : View.GONE}"/>
+
+    </RelativeLayout>
+
+</layout>
