@@ -52,7 +52,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/bubble"/>
+                app:layout_constraintBottom_toTopOf="@id/bubble_top_barrier"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style"
@@ -143,12 +143,34 @@
                 app:layout_constraintTop_toTopOf="@id/thumbs_up"
                 app:layout_constraintBottom_toBottomOf="@id/emojis_background" />
 
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/bubble_top_barrier"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="top"
+                app:constraint_referenced_ids="incoming_bubble, outgoing_bubble" />
+
             <include
-                android:id="@+id/bubble"
+                android:id="@+id/outgoing_bubble"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
+                android:visibility="@{model.outgoing ? View.VISIBLE : View.GONE, default=gone}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/reply"
+                model="@{model}"
+                layout="@layout/chat_bubble_outgoing"/>
+
+            <include
+                android:id="@+id/incoming_bubble"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:visibility="@{model.outgoing ? View.GONE : View.VISIBLE}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

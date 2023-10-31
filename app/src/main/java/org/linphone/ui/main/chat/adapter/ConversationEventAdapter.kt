@@ -149,6 +149,11 @@ class ConversationEventAdapter(
             with(binding) {
                 model = message
 
+                setOnLongClickListener {
+                    chatMessageLongPressEvent.value = Event(message)
+                    true
+                }
+
                 setShowDeliveryInfoClickListener {
                     showDeliveryForChatMessageModelEvent.value = Event(message)
                 }
