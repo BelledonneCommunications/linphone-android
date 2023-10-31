@@ -224,29 +224,49 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
 
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/header_style"
+                    android:id="@+id/sip_addresses_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="@string/sip_address"
+                    app:layout_constraintTop_toBottomOf="@id/last_name"
+                    app:layout_constraintStart_toStartOf="@id/sip_addresses"/>
+
                 <LinearLayout
                     android:id="@+id/sip_addresses"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:orientation="vertical"
                     app:layout_constraintWidth_max="@dimen/text_input_max_width"
-                    app:layout_constraintTop_toBottomOf="@id/last_name"
+                    app:layout_constraintTop_toBottomOf="@id/sip_addresses_label"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/header_style"
+                    android:id="@+id/phone_numbers_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="@string/phone_number"
+                    app:layout_constraintTop_toBottomOf="@id/sip_addresses"
+                    app:layout_constraintStart_toStartOf="@id/phone_numbers"/>
 
                 <LinearLayout
                     android:id="@+id/phone_numbers"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:orientation="vertical"
                     app:layout_constraintWidth_max="@dimen/text_input_max_width"
-                    app:layout_constraintTop_toBottomOf="@id/sip_addresses"
+                    app:layout_constraintTop_toBottomOf="@id/phone_numbers_label"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
 

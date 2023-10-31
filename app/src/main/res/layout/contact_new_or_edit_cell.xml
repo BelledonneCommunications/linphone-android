@@ -16,16 +16,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/header_style"
-            android:id="@+id/label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@{model.isSip ? @string/sip_address : @string/phone_number, default=@string/sip_address}"
-            app:layout_constraintStart_toStartOf="@id/field"
-            app:layout_constraintTop_toTopOf="parent"/>
-
         <androidx.appcompat.widget.AppCompatEditText
             onValueChanged="@{() -> model.onValueChanged(field.getText().toString())}"
             style="@style/default_text_style"
@@ -43,7 +33,7 @@
             android:maxLines="1"
             android:inputType="@{model.isSip ? InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS : InputType.TYPE_CLASS_PHONE}"
             app:layout_constraintWidth_max="@dimen/text_input_max_width"
-            app:layout_constraintTop_toBottomOf="@id/label"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/remove"/>
 
