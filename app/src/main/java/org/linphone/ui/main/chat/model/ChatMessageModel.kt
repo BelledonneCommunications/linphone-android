@@ -20,8 +20,11 @@
 package org.linphone.ui.main.chat.model
 
 import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.Spanned
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
+import androidx.core.text.set
 import androidx.lifecycle.MutableLiveData
 import java.util.regex.Pattern
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -34,6 +37,7 @@ import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.PatternClickableSpan
+import org.linphone.utils.SpannableClickedListener
 import org.linphone.utils.TimestampUtils
 
 class ChatMessageModel @WorkerThread constructor(
@@ -48,6 +52,9 @@ class ChatMessageModel @WorkerThread constructor(
 ) {
     companion object {
         private const val TAG = "[Chat Message Model]"
+
+        private const val SIP_URI_REGEXP = "(?:<?sips?:)[a-zA-Z0-9+_.\\-]+(?:@([a-zA-Z0-9+_.\\-;=~]+))+(>)?"
+        private const val MENTION_REGEXP = "@(?:[A-Za-z0-9._-]+)"
     }
 
     val id = chatMessage.messageId
@@ -100,14 +107,64 @@ class ChatMessageModel @WorkerThread constructor(
         for (content in chatMessage.contents) {
             if (content.isText) {
                 val textContent = content.utf8Text.orEmpty().trim()
-                val spannable = Spannable.Factory.getInstance().newSpannable(textContent)
+                val spannableBuilder = SpannableStringBuilder(textContent)
+
+                // Check for mentions
+                val chatRoom = chatMessage.chatRoom
+                val matcher = Pattern.compile(MENTION_REGEXP).matcher(textContent)
+                while (matcher.find()) {
+                    val start = matcher.start()
+                    val end = matcher.end()
+                    val source = textContent.subSequence(start + 1, end) // +1 to remove @
+                    Log.i("$TAG Found mention [$source]")
+
+                    // Find address matching username
+                    val address = if (chatRoom.localAddress.username == source) {
+                        Log.i("$TAG mention found in local address")
+                        coreContext.core.accountList.find {
+                            it.params.identityAddress?.username == source
+                        }?.params?.identityAddress
+                    } else if (chatRoom.peerAddress.username == source) {
+                        Log.i("$TAG mention found in peer address")
+                        chatRoom.peerAddress
+                    } else {
+                        Log.i("$TAG looking for mention in participants")
+                        chatRoom.participants.find {
+                            it.address.username == source
+                        }?.address
+                    }
+                    // Find display name for address
+                    if (address != null) {
+                        val displayName = coreContext.contactsManager.findDisplayName(address)
+                        Log.i(
+                            "$TAG Using display name [$displayName] instead of username [$source]"
+                        )
+                        spannableBuilder.replace(start, end, "@$displayName")
+                        val span = PatternClickableSpan.StyledClickableSpan(
+                            object :
+                                SpannableClickedListener {
+                                override fun onSpanClicked(text: String) {
+                                    Log.i("$TAG Clicked on [$text] span")
+                                }
+                            }
+                        )
+                        spannableBuilder.setSpan(
+                            span,
+                            start,
+                            start + displayName.length + 1,
+                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+                    }
+                }
+
+                // Add clickable span for SIP URIs
                 text.postValue(
                     PatternClickableSpan()
                         .add(
                             Pattern.compile(
-                                "(?:<?sips?:)[a-zA-Z0-9+_.\\-]+(?:@([a-zA-Z0-9+_.\\-;=~]+))+(>)?"
+                                SIP_URI_REGEXP
                             ),
-                            object : PatternClickableSpan.SpannableClickedListener {
+                            object : SpannableClickedListener {
                                 @UiThread
                                 override fun onSpanClicked(text: String) {
                                     coreContext.postOnCoreThread {
@@ -121,7 +178,8 @@ class ChatMessageModel @WorkerThread constructor(
                                     }
                                 }
                             }
-                        ).build(spannable)
+                        )
+                        .build(spannableBuilder)
                 )
                 textFound = true
             }
