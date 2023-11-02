@@ -13,16 +13,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/big_image"
+        <GridLayout
+            android:id="@+id/grid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
-            android:src="@drawable/smiley"
-            android:visibility="@{model.bigImagePath.length() > 0 ? View.VISIBLE : View.GONE}"
-            android:maxHeight="@dimen/chat_bubble_big_image_max_size"
-            coilBubble="@{model.bigImagePath}"/>
+            android:columnWidth="90dp"
+            android:numColumns="auto_fit"
+            android:stretchMode="none"
+            android:gravity="start"
+            entries="@{model.imagesList}"
+            layout="@{@layout/chat_bubble_content_grid_cell}"/>
 
         <org.linphone.ui.main.chat.view.ChatBubbleTextView
             style="@style/default_text_style"
@@ -33,7 +33,7 @@
             android:textSize="14sp"
             android:textColor="@color/gray_main2_700"
             android:gravity="center_vertical|start"
-            android:layout_below="@id/big_image"
+            android:layout_below="@id/grid"
             android:visibility="@{model.text.length() > 0 ? View.VISIBLE : View.GONE}"/>
 
     </RelativeLayout>

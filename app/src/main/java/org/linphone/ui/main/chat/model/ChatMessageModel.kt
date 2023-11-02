@@ -65,7 +65,7 @@ class ChatMessageModel @WorkerThread constructor(
 
     val text = MutableLiveData<Spannable>()
 
-    val bigImagePath = MutableLiveData<String>()
+    val imagesList = MutableLiveData<ArrayList<String>>()
 
     val timestamp = chatMessage.time
 
@@ -106,12 +106,16 @@ class ChatMessageModel @WorkerThread constructor(
         updateReactionsList()
 
         var displayableContentFound = false
+        var filesContentCount = 0
+        val imagesPath = arrayListOf<String>()
+
         val contents = chatMessage.contents
         for (content in contents) {
             if (content.isText) {
                 computeTextContent(content)
                 displayableContentFound = true
             } else {
+                filesContentCount += 1
                 if (content.isFile) {
                     val path = content.filePath ?: ""
                     if (path.isNotEmpty()) {
@@ -120,7 +124,7 @@ class ChatMessageModel @WorkerThread constructor(
                         )
                         when (content.type) {
                             "image", "video" -> {
-                                bigImagePath.postValue(path)
+                                imagesPath.add(path)
                                 displayableContentFound = true
                             }
                             "audio" -> {
@@ -137,6 +141,8 @@ class ChatMessageModel @WorkerThread constructor(
                 }
             }
         }
+
+        imagesList.postValue(imagesPath)
 
         if (!displayableContentFound) { // Temporary workaround to prevent empty bubbles
             val describe = LinphoneUtils.getTextDescribingMessage(chatMessage)
