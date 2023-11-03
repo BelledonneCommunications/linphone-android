@@ -31,16 +31,17 @@
 
         <ImageView
             android:id="@+id/single_image"
+            android:onClick="@{() -> model.firstImage.onClick()}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
-            android:visibility="@{model.imagesList.size() > 1 || model.firstImage.length() == 0 ? View.GONE : View.VISIBLE}"
+            android:visibility="@{model.imagesList.size() > 1 || model.firstImage.path.length() == 0 ? View.GONE : View.VISIBLE}"
             app:layout_constraintTop_toBottomOf="@id/images_grid"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toTopOf="@id/text_content"
             app:layout_constraintHeight_max="@dimen/chat_bubble_big_image_max_size"
-            coilBubble="@{model.firstImage}"/>
+            coilBubble="@{model.firstImage.path}"/>
 
         <org.linphone.ui.main.chat.view.ChatBubbleTextView
             style="@style/default_text_style"

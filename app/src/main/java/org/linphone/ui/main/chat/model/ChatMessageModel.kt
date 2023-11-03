@@ -48,7 +48,8 @@ class ChatMessageModel @WorkerThread constructor(
     val replyText: String,
     val replyToMessageId: String?,
     val isGroupedWithPreviousOne: Boolean,
-    val isGroupedWithNextOne: Boolean
+    val isGroupedWithNextOne: Boolean,
+    val onContentClicked: ((file: String) -> Unit)? = null
 ) {
     companion object {
         private const val TAG = "[Chat Message Model]"
@@ -73,9 +74,9 @@ class ChatMessageModel @WorkerThread constructor(
 
     val reactions = MutableLiveData<String>()
 
-    val imagesList = MutableLiveData<ArrayList<String>>()
+    val imagesList = MutableLiveData<ArrayList<FileModel>>()
 
-    val firstImage = MutableLiveData<String>()
+    val firstImage = MutableLiveData<FileModel>()
 
     val dismissLongPressMenuEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
@@ -109,7 +110,7 @@ class ChatMessageModel @WorkerThread constructor(
 
         var displayableContentFound = false
         var filesContentCount = 0
-        val imagesPath = arrayListOf<String>()
+        val imagesPath = arrayListOf<FileModel>()
 
         val contents = chatMessage.contents
         for (content in contents) {
@@ -126,10 +127,15 @@ class ChatMessageModel @WorkerThread constructor(
                         )
                         when (content.type) {
                             "image", "video" -> {
-                                imagesPath.add(path)
-                                if (filesContentCount == 1) {
-                                    firstImage.postValue(path)
+                                val fileModel = FileModel(path) { file ->
+                                    onContentClicked?.invoke(file)
                                 }
+                                imagesPath.add(fileModel)
+
+                                if (filesContentCount == 1) {
+                                    firstImage.postValue(fileModel)
+                                }
+
                                 displayableContentFound = true
                             }
                             "audio" -> {

@@ -83,6 +83,10 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    val fileToDisplayEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
+
     val chatRoomFoundEvent = MutableLiveData<Event<Boolean>>()
 
     private lateinit var chatRoom: ChatRoom
@@ -114,7 +118,9 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
                     LinphoneUtils.isChatRoomAGroup(chatRoom),
                     group,
                     true
-                )
+                ) { file ->
+                    fileToDisplayEvent.postValue(Event(file))
+                }
             )
 
             events.postValue(list)
@@ -387,7 +393,9 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
                 groupChatRoom,
                 index > 0,
                 index == groupedEventLogs.size - 1
-            )
+            ) { file ->
+                fileToDisplayEvent.postValue(Event(file))
+            }
             eventsList.add(model)
 
             index += 1

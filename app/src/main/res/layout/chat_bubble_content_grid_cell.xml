@@ -5,15 +5,16 @@
         <import type="android.view.View" />
         <variable
             name="model"
-            type="String" />
+            type="org.linphone.ui.main.chat.model.FileModel" />
     </data>
 
     <ImageView
+        android:onClick="@{() -> model.onClick()}"
         android:layout_width="88dp"
         android:layout_height="88dp"
         android:layout_margin="1dp"
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"
-        coilBubble="@{model}"/>
+        coilBubble="@{model.path}"/>
 
 </layout>

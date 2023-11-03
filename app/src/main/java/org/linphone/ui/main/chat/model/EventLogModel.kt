@@ -30,7 +30,8 @@ class EventLogModel @WorkerThread constructor(
     avatarModel: ContactAvatarModel,
     isFromGroup: Boolean,
     isGroupedWithPreviousOne: Boolean,
-    isGroupedWithNextOne: Boolean
+    isGroupedWithNextOne: Boolean,
+    onContentClicked: ((file: String) -> Unit)? = null
 ) {
     companion object {
         private const val TAG = "[Event Log Model]"
@@ -40,7 +41,7 @@ class EventLogModel @WorkerThread constructor(
 
     val isEvent = type != EventLog.Type.ConferenceChatMessage
 
-    val model = if (isEvent) {
+    val model: Any = if (isEvent) {
         EventModel(eventLog)
     } else {
         val chatMessage = eventLog.chatMessage!!
@@ -66,7 +67,8 @@ class EventLogModel @WorkerThread constructor(
             reply,
             chatMessage.replyMessageId,
             isGroupedWithPreviousOne,
-            isGroupedWithNextOne
+            isGroupedWithNextOne,
+            onContentClicked
         )
     }
 
@@ -74,8 +76,6 @@ class EventLogModel @WorkerThread constructor(
 
     @WorkerThread
     fun destroy() {
-        if (model is ChatMessageModel) {
-            model.destroy()
-        }
+        (model as? ChatMessageModel)?.destroy()
     }
 }

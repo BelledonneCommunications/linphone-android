@@ -208,6 +208,14 @@ fun AppCompatTextView.setColor(@ColorRes color: Int) {
 }
 
 @UiThread
+@BindingAdapter("coilFile")
+fun ImageView.loadFileImage(file: String?) {
+    if (!file.isNullOrEmpty()) {
+        load(file)
+    }
+}
+
+@UiThread
 @BindingAdapter("coilBubble")
 fun ImageView.loadImageForChatBubble(file: String?) {
     if (!file.isNullOrEmpty()) {

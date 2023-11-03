@@ -260,6 +260,16 @@ class ConversationFragment : GenericFragment() {
             }
         }
 
+        viewModel.fileToDisplayEvent.observe(viewLifecycleOwner) {
+            it.consume { file ->
+                Log.i("$TAG User clicked on file [$file], let's display it in file viewer")
+                val action = ConversationFragmentDirections.actionConversationFragmentToFileViewerFragment(
+                    file
+                )
+                findNavController().navigate(action)
+            }
+        }
+
         binding.root.setKeyboardInsetListener { keyboardVisible ->
             if (keyboardVisible) {
                 viewModel.isEmojiPickerOpen.value = false
