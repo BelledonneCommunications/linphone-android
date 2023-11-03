@@ -65,8 +65,6 @@ class ChatMessageModel @WorkerThread constructor(
 
     val text = MutableLiveData<Spannable>()
 
-    val imagesList = MutableLiveData<ArrayList<String>>()
-
     val timestamp = chatMessage.time
 
     val time = TimestampUtils.toString(timestamp)
@@ -74,6 +72,10 @@ class ChatMessageModel @WorkerThread constructor(
     val chatRoomIsReadOnly = chatMessage.chatRoom.isReadOnly
 
     val reactions = MutableLiveData<String>()
+
+    val imagesList = MutableLiveData<ArrayList<String>>()
+
+    val firstImage = MutableLiveData<String>()
 
     val dismissLongPressMenuEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
@@ -125,6 +127,9 @@ class ChatMessageModel @WorkerThread constructor(
                         when (content.type) {
                             "image", "video" -> {
                                 imagesPath.add(path)
+                                if (filesContentCount == 1) {
+                                    firstImage.postValue(path)
+                                }
                                 displayableContentFound = true
                             }
                             "audio" -> {

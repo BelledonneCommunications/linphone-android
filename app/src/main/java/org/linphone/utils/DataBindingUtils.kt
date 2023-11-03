@@ -52,6 +52,7 @@ import androidx.lifecycle.lifecycleScope
 import coil.dispose
 import coil.load
 import coil.request.videoFrameMillis
+import coil.transform.RoundedCornersTransformation
 import com.google.android.material.imageview.ShapeableImageView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
@@ -210,9 +211,13 @@ fun AppCompatTextView.setColor(@ColorRes color: Int) {
 @BindingAdapter("coilBubble")
 fun ImageView.loadImageForChatBubble(file: String?) {
     if (!file.isNullOrEmpty()) {
+        val radius = context.resources.getDimension(
+            R.dimen.chat_bubble_images_rounded_corner_radius
+        )
         if (FileUtils.isExtensionVideo(file)) {
             load(file) {
                 videoFrameMillis(0)
+                transformations(RoundedCornersTransformation(radius))
                 listener(
                     onError = { _, result ->
                         Log.e(
@@ -227,6 +232,7 @@ fun ImageView.loadImageForChatBubble(file: String?) {
             }
         } else {
             load(file) {
+                transformations(RoundedCornersTransformation(radius))
                 listener(
                     onError = { _, result ->
                         Log.e(

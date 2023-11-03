@@ -1,28 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <import type="android.view.View" />
+        <import type="com.google.android.flexbox.JustifyContent" />
         <variable
             name="model"
             type="org.linphone.ui.main.chat.model.ChatMessageModel" />
     </data>
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <GridLayout
-            android:id="@+id/grid"
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/images_grid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:columnWidth="90dp"
-            android:numColumns="auto_fit"
-            android:stretchMode="none"
-            android:gravity="start"
+            android:visibility="@{model.imagesList.size() >= 2 ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintWidth_max="271dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/single_image"
+            app:alignItems="center"
+            app:flexWrap="wrap"
+            app:justifyContent="@{model.outgoing ? JustifyContent.FLEX_END : JustifyContent.FLEX_START}"
             entries="@{model.imagesList}"
             layout="@{@layout/chat_bubble_content_grid_cell}"/>
+
+        <ImageView
+            android:id="@+id/single_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:visibility="@{model.imagesList.size() > 1 || model.firstImage.length() == 0 ? View.GONE : View.VISIBLE}"
+            app:layout_constraintTop_toBottomOf="@id/images_grid"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/text_content"
+            app:layout_constraintHeight_max="@dimen/chat_bubble_big_image_max_size"
+            coilBubble="@{model.firstImage}"/>
 
         <org.linphone.ui.main.chat.view.ChatBubbleTextView
             style="@style/default_text_style"
@@ -33,9 +51,10 @@
             android:textSize="14sp"
             android:textColor="@color/gray_main2_700"
             android:gravity="center_vertical|start"
-            android:layout_below="@id/grid"
-            android:visibility="@{model.text.length() > 0 ? View.VISIBLE : View.GONE}"/>
+            android:visibility="@{model.text.length() > 0 ? View.VISIBLE : View.GONE}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/single_image"/>
 
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

@@ -77,9 +77,8 @@ class GridBoxLayout : GridLayout {
 
         val maxChild = placementMatrix[0].size
         if (childCount > maxChild) {
-            val maxMosaicParticipants = 6
             Log.e(
-                "$TAG $childCount children but placementMatrix only knows how to display $maxChild (max allowed participants for grid layout in settings is $maxMosaicParticipants)"
+                "$TAG $childCount children but placementMatrix only knows how to display $maxChild (max allowed participants for grid layout in settings is 6)"
             )
             return
         }

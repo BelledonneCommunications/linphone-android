@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
         <import type="android.view.View" />
@@ -10,13 +9,11 @@
     </data>
 
     <ImageView
-        android:id="@+id/big_image"
         android:layout_width="88dp"
         android:layout_height="88dp"
         android:layout_margin="1dp"
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"
-        android:src="@drawable/smiley"
         coilBubble="@{model}"/>
 
 </layout>
