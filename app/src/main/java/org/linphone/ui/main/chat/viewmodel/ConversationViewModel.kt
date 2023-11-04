@@ -75,6 +75,8 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     val isReplyingToMessage = MutableLiveData<String>()
 
+    var scrollingPosition: Int = -1
+
     val requestKeyboardHidingEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }

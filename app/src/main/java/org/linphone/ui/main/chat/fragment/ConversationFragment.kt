@@ -283,10 +283,17 @@ class ConversationFragment : GenericFragment() {
         val id = LinphoneUtils.getChatRoomId(args.localSipUri, args.remoteSipUri)
         Log.i("$TAG Asking notifications manager not to notify chat messages for chat room [$id]")
         coreContext.notificationsManager.setCurrentlyDisplayedChatRoomId(id)
+
+        if (viewModel.scrollingPosition != -1) {
+            binding.eventsList.scrollToPosition(viewModel.scrollingPosition)
+        }
     }
 
     override fun onPause() {
         coreContext.notificationsManager.resetCurrentlyDisplayedChatRoomId()
+
+        val layoutManager = binding.eventsList.layoutManager as LinearLayoutManager
+        viewModel.scrollingPosition = layoutManager.findFirstVisibleItemPosition()
 
         super.onPause()
     }
