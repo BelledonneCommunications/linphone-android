@@ -10,6 +10,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { url "https://www.jitpack.io" } // for com.github.chrisbanes:PhotoView
 
         maven {
             name "local linphone-sdk maven repository"

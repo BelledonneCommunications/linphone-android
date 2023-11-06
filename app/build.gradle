@@ -106,6 +106,9 @@ dependencies {
     // https://github.com/tommybuonomo/dotsindicator/blob/master/LICENSE Apache v2.0
     implementation("com.tbuonomo:dotsindicator:5.0")
 
+    // https://github.com/Baseflow/PhotoView/blob/master/LICENSE Apache v2.0
+    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
+
     implementation platform('com.google.firebase:firebase-bom:32.3.1')
     implementation 'com.google.firebase:firebase-messaging'
 
