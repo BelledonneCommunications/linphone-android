@@ -27,13 +27,16 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import java.util.regex.Pattern
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
 import org.linphone.core.Address
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatMessageListenerStub
 import org.linphone.core.ChatMessageReaction
 import org.linphone.core.Content
+import org.linphone.core.Factory
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
+import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.PatternClickableSpan
@@ -78,6 +81,26 @@ class ChatMessageModel @WorkerThread constructor(
 
     val firstImage = MutableLiveData<FileModel>()
 
+    // Below are for conferences info
+    val meetingFound = MutableLiveData<Boolean>()
+
+    val meetingDay = MutableLiveData<String>()
+
+    val meetingDayNumber = MutableLiveData<String>()
+
+    val meetingSubject = MutableLiveData<String>()
+
+    val meetingDate = MutableLiveData<String>()
+
+    val meetingTime = MutableLiveData<String>()
+
+    val meetingDescription = MutableLiveData<String>()
+
+    val meetingParticipants = MutableLiveData<String>()
+
+    private lateinit var meetingConferenceUri: Address
+    // End of conference info related fields
+
     val dismissLongPressMenuEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -114,7 +137,10 @@ class ChatMessageModel @WorkerThread constructor(
 
         val contents = chatMessage.contents
         for (content in contents) {
-            if (content.isText) {
+            if (content.isIcalendar) {
+                parseConferenceInvite(content)
+                displayableContentFound = true
+            } else if (content.isText) {
                 computeTextContent(content)
                 displayableContentFound = true
             } else {
@@ -174,6 +200,16 @@ class ChatMessageModel @WorkerThread constructor(
             val reaction = chatMessage.createReaction(emoji)
             reaction.send()
             dismissLongPressMenuEvent.postValue(Event(true))
+        }
+    }
+
+    @UiThread
+    fun joinConference() {
+        coreContext.postOnCoreThread {
+            if (::meetingConferenceUri.isInitialized) {
+                Log.i("$TAG Calling conference URI [${meetingConferenceUri.asStringUriOnly()}]")
+                coreContext.startCall(meetingConferenceUri)
+            }
         }
     }
 
@@ -278,5 +314,45 @@ class ChatMessageModel @WorkerThread constructor(
                 )
                 .build(spannableBuilder)
         )
+    }
+
+    @WorkerThread
+    private fun parseConferenceInvite(content: Content) {
+        val conferenceInfo = Factory.instance().createConferenceInfoFromIcalendarContent(content)
+        val conferenceAddress = conferenceInfo?.uri
+        val conferenceUri = conferenceAddress?.asStringUriOnly()
+        if (conferenceInfo != null && conferenceAddress != null) {
+            Log.i(
+                "$TAG Found conference info with URI [$conferenceUri] and subject [${conferenceInfo.subject}]"
+            )
+            meetingConferenceUri = conferenceAddress
+
+            meetingSubject.postValue(conferenceInfo.subject)
+            meetingDescription.postValue(conferenceInfo.description)
+
+            val timestamp = conferenceInfo.dateTime
+            val duration = conferenceInfo.duration
+            val date = TimestampUtils.toString(
+                timestamp,
+                onlyDate = true,
+                shortDate = false,
+                hideYear = false
+            )
+            val startTime = TimestampUtils.timeToString(timestamp)
+            val end = timestamp + (duration * 60)
+            val endTime = TimestampUtils.timeToString(end)
+            meetingDate.postValue(date)
+            meetingTime.postValue("$startTime - $endTime")
+
+            meetingDay.postValue(TimestampUtils.dayOfWeek(timestamp))
+            meetingDayNumber.postValue(TimestampUtils.dayOfMonth(timestamp))
+
+            // TODO: fixme
+            meetingParticipants.postValue(
+                AppUtils.getFormattedString(R.string.conference_participants_list_title, "24")
+            )
+
+            meetingFound.postValue(true)
+        }
     }
 }

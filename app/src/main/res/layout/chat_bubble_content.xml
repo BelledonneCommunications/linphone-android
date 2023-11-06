@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View" />
@@ -55,6 +56,16 @@
             android:visibility="@{model.text.length() > 0 ? View.VISIBLE : View.GONE}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/single_image"/>
+
+        <include
+            android:id="@+id/meeting_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{model.meetingFound ? View.VISIBLE : View.GONE}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            layout="@layout/chat_bubble_meeting_invite_content"
+            bind:model="@{model}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="model"
+            type="org.linphone.ui.main.chat.model.ChatMessageModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minWidth="300dp"
+        android:background="@drawable/shape_squircle_white_r10_background">
+
+        <View
+            android:id="@+id/header_background"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="-16dp"
+            android:background="@drawable/shape_squircle_gray_100_top_r10_background"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/day_background"/>
+
+        <View
+            android:id="@+id/day_background"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="-4dp"
+            android:background="@drawable/shape_squircle_white_r10_background"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/header_day"
+            app:layout_constraintBottom_toBottomOf="@id/header_day_number"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/header_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingTop="4dp"
+            android:text="@{model.meetingDay, default=`Mon.`}"
+            android:textColor="@color/gray_main2_500"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/day_background"
+            app:layout_constraintTop_toTopOf="@id/day_background"/>
+
+        <ImageView
+            android:id="@+id/today_background"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/shape_circle_primary_background"
+            app:layout_constraintStart_toStartOf="@id/day_background"
+            app:layout_constraintEnd_toEndOf="@id/day_background"
+            app:layout_constraintTop_toBottomOf="@id/header_day" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_800"
+            android:id="@+id/header_day_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{model.meetingDayNumber, default=`19`}"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:paddingBottom="4dp"
+            app:layout_constraintStart_toStartOf="@id/today_background"
+            app:layout_constraintEnd_toEndOf="@id/today_background"
+            app:layout_constraintBottom_toBottomOf="@id/today_background"
+            app:layout_constraintTop_toBottomOf="@id/header_day"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_700"
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="10dp"
+            android:text="@{model.meetingSubject, default=`Meeting with John`}"
+            android:textSize="13sp"
+            android:textColor="@color/gray_main2_600"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:drawableStart="@drawable/users_three"
+            android:drawablePadding="8dp"
+            app:drawableTint="@color/gray_main2_600"
+            app:layout_constraintStart_toEndOf="@id/day_background"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_300"
+            android:id="@+id/date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{model.meetingDate, default=`Tue. 12 November`}"
+            android:textSize="12sp"
+            android:textColor="@color/gray_main2_500"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintStart_toStartOf="@id/title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_300"
+            android:id="@+id/time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{model.meetingTime, default=`10:00 PM to 12:00 PM`}"
+            android:textSize="12sp"
+            android:textColor="@color/gray_main2_500"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintStart_toStartOf="@id/title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/date"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_300"
+            android:id="@+id/description_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:text="@string/meeting_schedule_description_title"
+            android:textSize="12sp"
+            android:textColor="@color/gray_main2_800"
+            android:visibility="@{model.meetingDescription.length() > 0 ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/header_background"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_300"
+            android:id="@+id/description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="@{model.meetingDescription, default=`Meeting with John Doe.`}"
+            android:textSize="12sp"
+            android:textColor="@color/gray_main2_500"
+            android:visibility="@{model.meetingDescription.length() > 0 ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/description_title"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_300"
+            android:id="@+id/participants"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@{model.meetingParticipants, default=`24 participants`}"
+            android:textSize="12sp"
+            android:textColor="@color/gray_main2_800"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:drawableStart="@drawable/users"
+            android:drawablePadding="4dp"
+            app:drawableTint="@color/gray_main2_600"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/join"
+            app:layout_constraintTop_toBottomOf="@id/description"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/tertiary_button_label_style"
+            android:id="@+id/join"
+            android:onClick="@{() -> model.joinConference()}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/tertiary_button_background"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:gravity="center"
+            android:text="@string/meeting_waiting_room_join"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintStart_toEndOf="@id/participants"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/description"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
