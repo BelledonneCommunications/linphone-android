@@ -204,6 +204,7 @@ class ContactsManager @UiThread constructor(context: Context) {
                 ContactAvatarModel(friend)
             } else {
                 val fakeFriend = coreContext.core.createFriend()
+                fakeFriend.name = LinphoneUtils.getDisplayName(address)
                 fakeFriend.address = clone
                 ContactAvatarModel(fakeFriend)
             }

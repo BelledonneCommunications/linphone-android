@@ -41,7 +41,7 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) : Abstrac
         private const val TAG = "[Contact Avatar Model]"
     }
 
-    val id = friend.refKey
+    val id = friend.refKey ?: friend.name
 
     val starred = friend.starred
 

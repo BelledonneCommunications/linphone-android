@@ -5,6 +5,7 @@
 
     <data>
         <import type="android.view.View" />
+        <import type="org.linphone.core.ChatRoom.SecurityLevel" />
         <variable
             name="backClickListener"
             type="View.OnClickListener" />
@@ -101,7 +102,8 @@
                         android:layout_width="@dimen/avatar_presence_badge_big_size"
                         android:layout_height="@dimen/avatar_presence_badge_big_size"
                         android:layout_marginStart="@dimen/avatar_presence_badge_big_end_margin"
-                        android:src="@drawable/trusted"
+                        android:src="@{viewModel.accountModel.trust == SecurityLevel.Safe ? @drawable/trusted : @drawable/not_trusted, default=@drawable/trusted}"
+                        android:visibility="@{viewModel.accountModel.showTrust ? View.VISIBLE : View.GONE}"
                         app:layout_constraintStart_toStartOf="@id/avatar"
                         app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 

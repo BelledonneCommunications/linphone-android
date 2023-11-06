@@ -5,13 +5,20 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
 import org.linphone.core.Call.Dir
 import org.linphone.core.CallLog
+import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
+import org.linphone.utils.AppUtils
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.TimestampUtils
 
 class CallLogModel @WorkerThread constructor(private val callLog: CallLog) {
+    companion object {
+        private const val TAG = "[CallLog Model]"
+    }
+
     val id = callLog.callId ?: callLog.refKey
 
     val timestamp = callLog.startDate
@@ -34,39 +41,41 @@ class CallLogModel @WorkerThread constructor(private val callLog: CallLog) {
     var friendExists: Boolean = false
 
     init {
-        val clone = address.clone()
-        clone.clean()
-        displayedAddress = clone.asStringUriOnly()
-
         val timestamp = timestamp
         val displayedDate = if (TimestampUtils.isToday(timestamp)) {
             TimestampUtils.timeToString(timestamp)
         } else if (TimestampUtils.isYesterday(timestamp)) {
-            "Hier"
+            AppUtils.getString(R.string.yesterday)
         } else {
             TimestampUtils.dateToString(timestamp)
         }
         dateTime.postValue(displayedDate)
 
-        val friend = coreContext.contactsManager.findContactByAddress(address)
-        avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(address)
-        if (friend != null) {
-            friendRefKey = friend.refKey
-            friendExists = true
-        } else {
+        if (callLog.wasConference()) {
             val fakeFriend = coreContext.core.createFriend()
             fakeFriend.address = address
 
-            // Check if it is a conference
             val conferenceInfo = coreContext.core.findConferenceInformationFromUri(address)
             if (conferenceInfo != null) {
-                avatarModel.name.postValue(conferenceInfo.subject)
-                avatarModel.showConferenceIcon.postValue(true)
+                fakeFriend.name = conferenceInfo.subject
+            } else {
+                fakeFriend.name = LinphoneUtils.getDisplayName(address)
+                Log.w(
+                    "$TAG Call log was conference but failed to find matching conference info from it's URI!"
+                )
             }
+            avatarModel = ContactAvatarModel(fakeFriend)
 
+            avatarModel.showConferenceIcon.postValue(true)
             friendRefKey = null
             friendExists = false
+        } else {
+            avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(address)
+            val friend = avatarModel.friend
+            friendRefKey = friend.refKey
+            friendExists = !friendRefKey.isNullOrEmpty()
         }
+        displayedAddress = avatarModel.friend.address?.asStringUriOnly() ?: address.asStringUriOnly()
 
         iconResId.postValue(LinphoneUtils.getCallIconResId(callLog.status, callLog.dir))
     }

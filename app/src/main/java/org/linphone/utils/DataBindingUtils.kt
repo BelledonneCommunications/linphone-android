@@ -345,7 +345,7 @@ private suspend fun loadContactPictureWithCoil(
                 imageView.load(
                     ResourcesCompat.getDrawable(
                         context.resources,
-                        R.drawable.users_three,
+                        R.drawable.inset_users_three,
                         context.theme
                     )
                 )
@@ -419,7 +419,7 @@ private suspend fun loadContactPictureWithCoil(
             imageView.load(
                 ResourcesCompat.getDrawable(
                     context.resources,
-                    R.drawable.user_circle,
+                    R.drawable.inset_user_circle,
                     context.theme
                 )
             )

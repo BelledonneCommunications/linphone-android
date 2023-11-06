@@ -47,6 +47,8 @@
     <string name="next">next</string>
     <string name="start">Start</string>
     <string name="required">Required</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
 
     <plurals name="selection_count_label">
         <item quantity="one">%s selected</item>
