@@ -28,8 +28,8 @@
         android:onLongClick="@{onLongClickListener}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="32dp"
         android:layout_marginTop="@{model.isGroupedWithPreviousOne ? @dimen/chat_bubble_grouped_top_margin : @dimen/chat_bubble_top_margin, default=@dimen/chat_bubble_top_margin}">
 
         <com.google.android.material.imageview.ShapeableImageView
@@ -114,7 +114,7 @@
             android:id="@+id/background"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="@{model.isFromGroup ? @dimen/chat_bubble_start_margin_when_avatar_displayed : @dimen/zero, default=@dimen/chat_bubble_start_margin_when_avatar_displayed}"
             android:src="@{model.isGroupedWithPreviousOne ? @drawable/shape_chat_bubble_incoming_full : @drawable/shape_chat_bubble_incoming_first, default=@drawable/shape_chat_bubble_incoming_first}"
             app:layout_constraintStart_toEndOf="@id/avatar"
             app:layout_constraintEnd_toEndOf="@id/background_end_barrier"

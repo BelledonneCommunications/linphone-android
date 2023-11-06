@@ -90,7 +90,6 @@
                 android:id="@+id/conversations_list"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginTop="8dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"

@@ -61,7 +61,7 @@
             android:id="@+id/meeting_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="@{model.meetingFound ? View.VISIBLE : View.GONE}"
+            android:visibility="@{model.meetingFound ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             layout="@layout/chat_bubble_meeting_invite_content"

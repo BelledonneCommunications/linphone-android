@@ -466,6 +466,14 @@ fun setConstraintLayoutTopMargin(view: View, margins: Float) {
     view.layoutParams = params
 }
 
+@BindingAdapter("android:layout_marginStart")
+fun setConstraintLayoutStartMargin(view: View, margins: Float) {
+    val params = view.layoutParams as ViewGroup.MarginLayoutParams
+    val m = margins.toInt()
+    params.marginStart = m
+    view.layoutParams = params
+}
+
 @BindingAdapter("focusNextOnInput")
 fun focusNextOnInput(editText: EditText, enabled: Boolean) {
     if (!enabled) return
