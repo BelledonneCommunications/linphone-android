@@ -31,10 +31,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatInfoFragmentBinding
 import org.linphone.databinding.ChatParticipantAdminPopupMenuBinding
+import org.linphone.ui.main.chat.adapter.ConversationParticipantsAdapter
 import org.linphone.ui.main.chat.model.ConversationEditSubjectDialogModel
 import org.linphone.ui.main.chat.model.ParticipantModel
 import org.linphone.ui.main.chat.viewmodel.ConversationInfoViewModel
@@ -50,6 +52,8 @@ class ConversationInfoFragment : GenericFragment() {
     private lateinit var binding: ChatInfoFragmentBinding
 
     private lateinit var viewModel: ConversationInfoViewModel
+
+    private lateinit var adapter: ConversationParticipantsAdapter
 
     private val args: ConversationInfoFragmentArgs by navArgs()
 
@@ -71,6 +75,7 @@ class ConversationInfoFragment : GenericFragment() {
         isSlidingPaneChild = true
 
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
 
         binding.lifecycleOwner = viewLifecycleOwner
 
@@ -82,7 +87,13 @@ class ConversationInfoFragment : GenericFragment() {
         Log.i(
             "$TAG Looking up for conversation with local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
         )
-        viewModel.findChatRoom(localSipUri, remoteSipUri)
+        val chatRoom = sharedViewModel.displayedChatRoom
+        viewModel.findChatRoom(chatRoom, localSipUri, remoteSipUri)
+
+        adapter = ConversationParticipantsAdapter(viewLifecycleOwner)
+        binding.participants.setHasFixedSize(true)
+        binding.participants.layoutManager = LinearLayoutManager(requireContext())
+        binding.participants.adapter = adapter
 
         viewModel.chatRoomFoundEvent.observe(viewLifecycleOwner) {
             it.consume { found ->
@@ -90,15 +101,21 @@ class ConversationInfoFragment : GenericFragment() {
                     Log.i(
                         "$TAG Found matching chat room for local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
                     )
-                    (view.parent as? ViewGroup)?.doOnPreDraw {
-                        startPostponedEnterTransition()
-                    }
                 } else {
                     (view.parent as? ViewGroup)?.doOnPreDraw {
                         Log.e("$TAG Failed to find chat room, going back")
                         goBack()
                     }
                 }
+            }
+        }
+
+        viewModel.participants.observe(viewLifecycleOwner) { items ->
+            adapter.submitList(items)
+            Log.i("$TAG Participants list updated with [${items.size}] items")
+
+            (view.parent as? ViewGroup)?.doOnPreDraw {
+                startPostponedEnterTransition()
             }
         }
 

@@ -36,9 +36,9 @@ import org.linphone.ui.main.chat.model.EventLogModel
 import org.linphone.ui.main.chat.model.EventModel
 import org.linphone.utils.Event
 
-class ConversationEventAdapter(
-    private val viewLifecycleOwner: LifecycleOwner
-) : ListAdapter<EventLogModel, RecyclerView.ViewHolder>(EventLogDiffCallback()) {
+class ConversationEventAdapter : ListAdapter<EventLogModel, RecyclerView.ViewHolder>(
+    EventLogDiffCallback()
+) {
     companion object {
         const val INCOMING_CHAT_MESSAGE = 1
         const val OUTGOING_CHAT_MESSAGE = 2
@@ -56,6 +56,8 @@ class ConversationEventAdapter(
     val scrollToRepliedMessageEvent: MutableLiveData<Event<ChatMessageModel>> by lazy {
         MutableLiveData<Event<ChatMessageModel>>()
     }
+
+    lateinit var viewLifecycleOwner: LifecycleOwner
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {

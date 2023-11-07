@@ -124,15 +124,30 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
-    fun findChatRoom(localSipUri: String, remoteSipUri: String) {
+    fun findChatRoom(room: ChatRoom?, localSipUri: String, remoteSipUri: String) {
         coreContext.postOnCoreThread { core ->
             Log.i(
                 "$TAG Looking for chat room with local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
             )
+            if (room != null && ::chatRoom.isInitialized && chatRoom == room) {
+                Log.i("$TAG Chat room object already in memory, skipping")
+                chatRoomFoundEvent.postValue(Event(true))
+                return@postOnCoreThread
+            }
+
+            if (room != null && (!::chatRoom.isInitialized || chatRoom != room)) {
+                Log.i("$TAG Chat room object available in sharedViewModel, using it")
+                chatRoom = room
+                chatRoom.addListener(chatRoomListener)
+                configureChatRoom()
+                chatRoomFoundEvent.postValue(Event(true))
+                return@postOnCoreThread
+            }
 
             val localAddress = Factory.instance().createAddress(localSipUri)
             val remoteAddress = Factory.instance().createAddress(remoteSipUri)
             if (localAddress != null && remoteAddress != null) {
+                Log.i("$TAG Searching for chat room in Core using local & peer SIP addresses")
                 val found = core.searchChatRoom(
                     null,
                     localAddress,

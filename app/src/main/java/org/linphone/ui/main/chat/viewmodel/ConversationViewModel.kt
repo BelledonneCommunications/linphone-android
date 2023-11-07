@@ -45,6 +45,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         private const val TAG = "[Conversation ViewModel]"
 
         const val MAX_TIME_TO_GROUP_MESSAGES = 60 // 1 minute
+        const val SCROLLING_POSITION_NOT_SET = -1
     }
 
     val showBackButton = MutableLiveData<Boolean>()
@@ -75,7 +76,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     val isReplyingToMessage = MutableLiveData<String>()
 
-    var scrollingPosition: Int = -1
+    var scrollingPosition: Int = SCROLLING_POSITION_NOT_SET
 
     val requestKeyboardHidingEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
@@ -91,7 +92,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     val chatRoomFoundEvent = MutableLiveData<Event<Boolean>>()
 
-    private lateinit var chatRoom: ChatRoom
+    lateinit var chatRoom: ChatRoom
 
     private var chatMessageToReplyTo: ChatMessage? = null
 
@@ -202,15 +203,30 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
-    fun findChatRoom(localSipUri: String, remoteSipUri: String) {
+    fun findChatRoom(room: ChatRoom?, localSipUri: String, remoteSipUri: String) {
         coreContext.postOnCoreThread { core ->
             Log.i(
                 "$TAG Looking for chat room with local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
             )
+            if (room != null && ::chatRoom.isInitialized && chatRoom == room) {
+                Log.i("$TAG Chat room object already in memory, skipping")
+                chatRoomFoundEvent.postValue(Event(true))
+                return@postOnCoreThread
+            }
+
+            if (room != null && (!::chatRoom.isInitialized || chatRoom != room)) {
+                Log.i("$TAG Chat room object available in sharedViewModel, using it")
+                chatRoom = room
+                chatRoom.addListener(chatRoomListener)
+                configureChatRoom()
+                chatRoomFoundEvent.postValue(Event(true))
+                return@postOnCoreThread
+            }
 
             val localAddress = Factory.instance().createAddress(localSipUri)
             val remoteAddress = Factory.instance().createAddress(remoteSipUri)
             if (localAddress != null && remoteAddress != null) {
+                Log.i("$TAG Searching for chat room in Core using local & peer SIP addresses")
                 val found = core.searchChatRoom(
                     null,
                     localAddress,
@@ -324,6 +340,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     @WorkerThread
     private fun configureChatRoom() {
+        scrollingPosition = SCROLLING_POSITION_NOT_SET
         computeComposingLabel()
 
         val empty = chatRoom.hasCapability(ChatRoom.Capabilities.Conference.toInt()) && chatRoom.participants.isEmpty()
@@ -408,11 +425,11 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     @WorkerThread
     private fun getEventsListFromHistory(history: Array<EventLog>, filter: String = ""): ArrayList<EventLogModel> {
+        var xFirstEventsSubmitted = false
         val eventsList = arrayListOf<EventLogModel>()
         val groupedEventLogs = arrayListOf<EventLog>()
         for (event in history) {
             if (filter.isNotEmpty()) {
-                // TODO: let the SDK do it
                 if (event.type == EventLog.Type.ConferenceChatMessage) {
                     val message = event.chatMessage ?: continue
                     val fromAddress = message.fromAddress

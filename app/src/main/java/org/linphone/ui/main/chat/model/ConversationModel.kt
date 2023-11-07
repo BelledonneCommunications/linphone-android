@@ -38,7 +38,7 @@ import org.linphone.utils.AppUtils
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.TimestampUtils
 
-class ConversationModel @WorkerThread constructor(private val chatRoom: ChatRoom) {
+class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
     companion object {
         private const val TAG = "[Conversation Model]"
     }

@@ -108,6 +108,7 @@ class ConversationsListFragment : AbstractTopBarFragment() {
         adapter.conversationClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
                 Log.i("$TAG Show conversation with ID [${model.id}]")
+                sharedViewModel.displayedChatRoom = model.chatRoom
                 sharedViewModel.showConversationEvent.value = Event(
                     Pair(model.localSipUri, model.remoteSipUri)
                 )

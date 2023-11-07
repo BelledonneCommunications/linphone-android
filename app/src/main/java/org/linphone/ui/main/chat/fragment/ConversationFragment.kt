@@ -62,6 +62,7 @@ import org.linphone.ui.main.chat.model.ChatMessageDeliveryModel
 import org.linphone.ui.main.chat.model.ChatMessageModel
 import org.linphone.ui.main.chat.model.ChatMessageReactionsModel
 import org.linphone.ui.main.chat.viewmodel.ConversationViewModel
+import org.linphone.ui.main.chat.viewmodel.ConversationViewModel.Companion.SCROLLING_POSITION_NOT_SET
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
@@ -80,11 +81,11 @@ class ConversationFragment : GenericFragment() {
 
     private lateinit var viewModel: ConversationViewModel
 
-    private val args: ConversationFragmentArgs by navArgs()
-
     private lateinit var adapter: ConversationEventAdapter
 
     private lateinit var bottomSheetAdapter: ChatMessageBottomSheetAdapter
+
+    private val args: ConversationFragmentArgs by navArgs()
 
     private val pickMedia = registerForActivityResult(
         ActivityResultContracts.PickMultipleVisualMedia()
@@ -96,6 +97,12 @@ class ConversationFragment : GenericFragment() {
         } else {
             Log.w("$TAG No file picked")
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        adapter = ConversationEventAdapter()
     }
 
     override fun onCreateView(
@@ -138,19 +145,12 @@ class ConversationFragment : GenericFragment() {
         Log.i(
             "$TAG Looking up for conversation with local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
         )
-        viewModel.findChatRoom(localSipUri, remoteSipUri)
+        val chatRoom = sharedViewModel.displayedChatRoom
+        viewModel.findChatRoom(chatRoom, localSipUri, remoteSipUri)
 
         viewModel.chatRoomFoundEvent.observe(viewLifecycleOwner) {
             it.consume { found ->
-                if (found) {
-                    Log.i(
-                        "$TAG Found matching chat room for local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
-                    )
-                    (view.parent as? ViewGroup)?.doOnPreDraw {
-                        startPostponedEnterTransition()
-                        sharedViewModel.openSlidingPaneEvent.value = Event(true)
-                    }
-                } else {
+                if (!found) {
                     (view.parent as? ViewGroup)?.doOnPreDraw {
                         Log.e("$TAG Failed to find chat room, going back")
                         goBack()
@@ -160,9 +160,8 @@ class ConversationFragment : GenericFragment() {
             }
         }
 
-        adapter = ConversationEventAdapter(viewLifecycleOwner)
+        adapter.viewLifecycleOwner = viewLifecycleOwner
         binding.eventsList.setHasFixedSize(true)
-        binding.eventsList.adapter = adapter
         binding.eventsList.layoutManager = LinearLayoutManager(requireContext())
 
         bottomSheetAdapter = ChatMessageBottomSheetAdapter(viewLifecycleOwner)
@@ -172,16 +171,19 @@ class ConversationFragment : GenericFragment() {
         val bottomSheetLayoutManager = LinearLayoutManager(requireContext())
         binding.messageBottomSheet.bottomSheetList.layoutManager = bottomSheetLayoutManager
 
-        adapter.chatMessageLongPressEvent.observe(viewLifecycleOwner) {
-            it.consume { model ->
-                showChatMessageLongPressMenu(model)
-            }
-        }
-
         viewModel.events.observe(viewLifecycleOwner) { items ->
             val currentCount = adapter.itemCount
             adapter.submitList(items)
             Log.i("$TAG Events (messages) list updated with [${items.size}] items")
+
+            if (binding.eventsList.adapter != adapter) {
+                binding.eventsList.adapter = adapter
+            }
+
+            (view.parent as? ViewGroup)?.doOnPreDraw {
+                startPostponedEnterTransition()
+                sharedViewModel.openSlidingPaneEvent.value = Event(true)
+            }
 
             if (currentCount < items.size) {
                 binding.eventsList.scrollToPosition(items.size - 1)
@@ -191,6 +193,12 @@ class ConversationFragment : GenericFragment() {
         val emojisBottomSheetBehavior = BottomSheetBehavior.from(binding.sendArea.root)
         emojisBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         emojisBottomSheetBehavior.isDraggable = false // To allow scrolling through the emojis
+
+        adapter.chatMessageLongPressEvent.observe(viewLifecycleOwner) {
+            it.consume { model ->
+                showChatMessageLongPressMenu(model)
+            }
+        }
 
         adapter.showDeliveryForChatMessageModelEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
@@ -284,7 +292,7 @@ class ConversationFragment : GenericFragment() {
         Log.i("$TAG Asking notifications manager not to notify chat messages for chat room [$id]")
         coreContext.notificationsManager.setCurrentlyDisplayedChatRoomId(id)
 
-        if (viewModel.scrollingPosition != -1) {
+        if (viewModel.scrollingPosition != SCROLLING_POSITION_NOT_SET) {
             binding.eventsList.scrollToPosition(viewModel.scrollingPosition)
         }
     }

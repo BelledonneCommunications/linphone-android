@@ -95,8 +95,10 @@ class ConversationsFragment : GenericFragment() {
             viewLifecycleOwner
         ) {
             it.consume {
-                Log.i("$TAG Closing sliding pane")
-                binding.slidingPaneLayout.closePane()
+                if (binding.slidingPaneLayout.isOpen) {
+                    Log.i("$TAG Closing sliding pane")
+                    binding.slidingPaneLayout.closePane()
+                }
             }
         }
 
@@ -104,8 +106,10 @@ class ConversationsFragment : GenericFragment() {
             viewLifecycleOwner
         ) {
             it.consume {
-                Log.i("$TAG Opening sliding pane")
-                binding.slidingPaneLayout.openPane()
+                if (!binding.slidingPaneLayout.isOpen) {
+                    Log.i("$TAG Opening sliding pane")
+                    binding.slidingPaneLayout.openPane()
+                }
             }
         }
 

@@ -22,6 +22,7 @@ package org.linphone.ui.main.viewmodel
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import org.linphone.core.ChatRoom
 import org.linphone.utils.Event
 
 class SharedMainViewModel @UiThread constructor() : ViewModel() {
@@ -105,6 +106,7 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    var displayedChatRoom: ChatRoom? = null
     val showConversationEvent: MutableLiveData<Event<Pair<String, String>>> by lazy {
         MutableLiveData<Event<Pair<String, String>>>()
     }
