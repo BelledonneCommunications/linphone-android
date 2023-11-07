@@ -5,6 +5,7 @@
 
     <data>
         <import type="android.view.View" />
+        <import type="com.google.android.flexbox.JustifyContent" />
         <import type="org.linphone.core.ConsolidatedPresence" />
         <import type="org.linphone.core.ChatMessage.State" />
         <variable
@@ -32,27 +33,6 @@
         android:layout_marginEnd="8dp"
         android:layout_marginTop="@{model.isGroupedWithPreviousOne ? @dimen/chat_bubble_grouped_top_margin : @dimen/chat_bubble_top_margin, default=@dimen/chat_bubble_top_margin}">
 
-        <androidx.constraintlayout.widget.Barrier
-            android:id="@+id/background_start_barrier"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:barrierDirection="start"
-            app:barrierMargin="-10dp"
-            app:constraint_referenced_ids="date_time, contents" />
-
-        <View
-            android:id="@+id/reply_background"
-            android:onClick="@{scrollToRepliedMessageClickListener}"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/shape_chat_bubble_reply"
-            android:visibility="@{model.isReply ? View.VISIBLE : View.GONE, default=gone}"
-            app:layout_constraintTop_toTopOf="@id/reply"
-            app:layout_constraintStart_toStartOf="@id/reply"
-            app:layout_constraintEnd_toEndOf="@id/reply"
-            app:layout_constraintBottom_toBottomOf="@id/background" />
-
         <ImageView
             android:id="@+id/reply_icon"
             android:layout_width="@dimen/small_icon_size"
@@ -60,8 +40,8 @@
             android:src="@drawable/reply"
             android:visibility="@{model.isReply ? View.VISIBLE : View.GONE, default=gone}"
             app:tint="@color/gray_main2_500"
-            app:layout_constraintStart_toEndOf="@id/reply_background"
-            app:layout_constraintBottom_toTopOf="@id/background" />
+            app:layout_constraintStart_toEndOf="@id/reply"
+            app:layout_constraintBottom_toTopOf="@id/bubble" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
@@ -70,6 +50,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
+            android:background="@drawable/shape_chat_bubble_reply"
             android:text="@{model.replyText, default=`Reply`}"
             android:textColor="@color/gray_main2_500"
             android:textSize="14sp"
@@ -78,65 +59,97 @@
             android:padding="10dp"
             android:visibility="@{model.isReply ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toStartOf="@id/background"
-            app:layout_constraintEnd_toEndOf="@id/background"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/background"/>
+            app:layout_constraintStart_toStartOf="@id/bubble"
+            app:layout_constraintEnd_toEndOf="@id/bubble"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/background"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:src="@{model.isGroupedWithPreviousOne ? @drawable/shape_chat_bubble_outgoing_full : @drawable/shape_chat_bubble_outgoing_first, default=@drawable/shape_chat_bubble_outgoing_first}"
-            app:layout_constraintStart_toStartOf="@id/background_start_barrier"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/reply"
-            app:layout_constraintBottom_toBottomOf="@id/date_time"/>
-
-        <include
-            android:id="@+id/contents"
-            layout="@layout/chat_bubble_content"
-            model="@{model}"
-            onLongClickListener="@{onLongClickListener}"
+        <LinearLayout
+            android:id="@+id/bubble"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="@dimen/chat_bubble_text_padding_with_bubble"
-            android:layout_marginEnd="@dimen/chat_bubble_text_padding_with_bubble"
-            android:paddingBottom="@{model.groupedWithNextOne ? @dimen/chat_bubble_text_padding_with_status : @dimen/chat_bubble_text_padding_with_bubble, default=@dimen/chat_bubble_text_padding_with_status}"
-            app:layout_constrainedWidth="true"
-            app:layout_constraintHorizontal_bias="1"
-            app:layout_constraintStart_toStartOf="parent"
+            android:padding="10dp"
+            android:orientation="vertical"
+            android:background="@{model.isGroupedWithPreviousOne ? @drawable/shape_chat_bubble_outgoing_full : @drawable/shape_chat_bubble_outgoing_first, default=@drawable/shape_chat_bubble_outgoing_first}"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintWidth_max="@dimen/chat_bubble_max_width"
             app:layout_constraintTop_toBottomOf="@id/reply"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_300"
-            android:id="@+id/date_time"
-            android:onClick="@{showDeliveryInfoClickListener}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginEnd="5dp"
-            android:paddingBottom="5dp"
-            android:text="@{model.time, default=`13:40`}"
-            android:textSize="12sp"
-            android:visibility="@{model.isGroupedWithNextOne ? View.VISIBLE : View.GONE}"
-            app:layout_constraintTop_toBottomOf="@id/contents"
-            app:layout_constraintEnd_toStartOf="@id/delivery_status"/>
+            <com.google.android.flexbox.FlexboxLayout
+                android:id="@+id/images_grid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onLongClick="@{onLongClickListener}"
+                android:visibility="@{model.imagesList.size() >= 2 ? View.VISIBLE : View.GONE, default=gone}"
+                app:alignItems="center"
+                app:flexWrap="wrap"
+                app:justifyContent="@{model.outgoing ? JustifyContent.FLEX_END : JustifyContent.FLEX_START}"
+                entries="@{model.imagesList}"
+                layout="@{@layout/chat_bubble_content_grid_cell}"/>
 
-        <ImageView
-            style="@style/default_text_style_300"
-            android:id="@+id/delivery_status"
-            android:onClick="@{showDeliveryInfoClickListener}"
-            android:layout_width="@dimen/small_icon_size"
-            android:layout_height="@dimen/small_icon_size"
-            android:src="@{model.statusIcon, default=@drawable/checks}"
-            android:visibility="@{model.isGroupedWithNextOne ? View.VISIBLE : View.GONE}"
-            app:layout_constraintTop_toTopOf="@id/date_time"
-            app:layout_constraintEnd_toEndOf="@id/contents"
-            app:layout_constraintBottom_toBottomOf="@id/date_time"
-            app:tint="@color/orange_main_500" />
+            <ImageView
+                android:id="@+id/single_image"
+                android:onClick="@{() -> model.firstImage.onClick()}"
+                android:onLongClick="@{onLongClickListener}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxHeight="@dimen/chat_bubble_big_image_max_size"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:visibility="@{model.imagesList.size() > 1 || model.firstImage.path.length() == 0 ? View.GONE : View.VISIBLE}"
+                coilBubble="@{model.firstImage.path}"/>
+
+            <ViewStub
+                android:id="@+id/meeting_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="@{model.meetingFound ? View.VISIBLE : View.GONE, default=gone}"
+                android:layout="@layout/chat_bubble_meeting_invite_content"
+                model="@{model}"/>
+
+            <org.linphone.ui.main.chat.view.ChatBubbleTextView
+                style="@style/default_text_style"
+                android:id="@+id/text_content"
+                android:onLongClick="@{onLongClickListener}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{model.text, default=`Lorem ipsum dolor sit amet`}"
+                android:textSize="14sp"
+                android:textColor="@color/gray_main2_700"
+                android:gravity="center_vertical|start"
+                android:visibility="@{model.text.length() > 0 ? View.VISIBLE : View.GONE}"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center_vertical|start"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style_300"
+                    android:id="@+id/date_time"
+                    android:onClick="@{showDeliveryInfoClickListener}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{model.time, default=`13:40`}"
+                    android:textSize="12sp"
+                    android:visibility="@{model.isGroupedWithNextOne ? View.VISIBLE : View.GONE}"/>
+
+                <ImageView
+                    style="@style/default_text_style_300"
+                    android:id="@+id/delivery_status"
+                    android:onClick="@{showDeliveryInfoClickListener}"
+                    android:layout_width="@dimen/small_icon_size"
+                    android:layout_height="@dimen/small_icon_size"
+                    android:layout_marginStart="5dp"
+                    android:src="@{model.statusIcon, default=@drawable/checks}"
+                    android:visibility="@{model.isGroupedWithNextOne ? View.VISIBLE : View.GONE}"
+                    app:tint="@color/orange_main_500" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/reactions"
@@ -155,8 +168,8 @@
             android:paddingTop="12dp"
             android:paddingBottom="12dp"
             android:visibility="@{model.reactions.length() > 0 ? View.VISIBLE : View.GONE, default=gone}"
-            app:layout_constraintEnd_toEndOf="@id/background"
-            app:layout_constraintTop_toBottomOf="@id/background"
+            app:layout_constraintEnd_toEndOf="@id/bubble"
+            app:layout_constraintTop_toBottomOf="@id/bubble"
             app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,11 +10,11 @@
 
     <ImageView
         android:onClick="@{() -> model.onClick()}"
-        android:layout_width="88dp"
-        android:layout_height="88dp"
+        android:layout_width="@dimen/chat_bubble_grid_image_size"
+        android:layout_height="@dimen/chat_bubble_grid_image_size"
         android:layout_margin="1dp"
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"
-        coilBubble="@{model.path}"/>
+        coilBubbleGrid="@{model.path}"/>
 
 </layout>

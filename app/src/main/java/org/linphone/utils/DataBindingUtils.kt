@@ -52,6 +52,7 @@ import androidx.lifecycle.lifecycleScope
 import coil.dispose
 import coil.load
 import coil.request.videoFrameMillis
+import coil.size.Dimension
 import coil.transform.RoundedCornersTransformation
 import com.google.android.material.imageview.ShapeableImageView
 import kotlinx.coroutines.Dispatchers
@@ -218,20 +219,38 @@ fun ImageView.loadFileImage(file: String?) {
 @UiThread
 @BindingAdapter("coilBubble")
 fun ImageView.loadImageForChatBubble(file: String?) {
+    loadImageForChatBubble(this, file, false)
+}
+
+@UiThread
+@BindingAdapter("coilBubbleGrid")
+fun ImageView.loadImageForChatBubbleGrid(file: String?) {
+    loadImageForChatBubble(this, file, true)
+}
+
+private fun loadImageForChatBubble(imageView: ImageView, file: String?, grid: Boolean) {
     if (!file.isNullOrEmpty()) {
-        val radius = context.resources.getDimension(
+        val dimen = if (grid) {
+            imageView.resources.getDimension(R.dimen.chat_bubble_grid_image_size).toInt()
+        } else {
+            imageView.resources.getDimension(R.dimen.chat_bubble_big_image_max_size).toInt()
+        }
+        val width = if (grid) Dimension(dimen) else Dimension.Undefined
+        val height = Dimension(dimen)
+        val radius = imageView.resources.getDimension(
             R.dimen.chat_bubble_images_rounded_corner_radius
         )
         if (FileUtils.isExtensionVideo(file)) {
-            load(file) {
+            imageView.load(file) {
                 videoFrameMillis(0)
                 transformations(RoundedCornersTransformation(radius))
+                size(width, height)
                 listener(
                     onError = { _, result ->
                         Log.e(
                             "[Data Binding] [Coil] Error getting preview picture from video? [$file]: ${result.throwable}"
                         )
-                        visibility = View.GONE
+                        imageView.visibility = View.GONE
                     },
                     onSuccess = { _, _ ->
                         // TODO: Display "play" button above video preview
@@ -239,14 +258,15 @@ fun ImageView.loadImageForChatBubble(file: String?) {
                 )
             }
         } else {
-            load(file) {
+            imageView.load(file) {
                 transformations(RoundedCornersTransformation(radius))
+                size(width, height)
                 listener(
                     onError = { _, result ->
                         Log.e(
                             "[Data Binding] [Coil] Error getting picture from file [$file]: ${result.throwable}"
                         )
-                        visibility = View.GONE
+                        imageView.visibility = View.GONE
                     }
                 )
             }
