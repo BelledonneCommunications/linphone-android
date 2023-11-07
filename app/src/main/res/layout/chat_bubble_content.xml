@@ -7,6 +7,9 @@
         <import type="android.view.View" />
         <import type="com.google.android.flexbox.JustifyContent" />
         <variable
+            name="onLongClickListener"
+            type="View.OnLongClickListener" />
+        <variable
             name="model"
             type="org.linphone.ui.main.chat.model.ChatMessageModel" />
     </data>
@@ -47,6 +50,7 @@
         <org.linphone.ui.main.chat.view.ChatBubbleTextView
             style="@style/default_text_style"
             android:id="@+id/text_content"
+            android:onLongClick="@{onLongClickListener}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{model.text, default=`Lorem ipsum dolor sit amet`}"

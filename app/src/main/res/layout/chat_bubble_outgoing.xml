@@ -45,6 +45,7 @@
             android:onClick="@{scrollToRepliedMessageClickListener}"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginBottom="20dp"
             android:background="@drawable/shape_chat_bubble_reply"
             android:visibility="@{model.isReply ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintTop_toTopOf="@id/reply"
@@ -52,14 +53,24 @@
             app:layout_constraintEnd_toEndOf="@id/reply"
             app:layout_constraintBottom_toBottomOf="@id/background" />
 
-        <org.linphone.ui.main.chat.view.ChatBubbleTextView
+        <ImageView
+            android:id="@+id/reply_icon"
+            android:layout_width="@dimen/small_icon_size"
+            android:layout_height="@dimen/small_icon_size"
+            android:src="@drawable/reply"
+            android:visibility="@{model.isReply ? View.VISIBLE : View.GONE, default=gone}"
+            app:tint="@color/gray_main2_500"
+            app:layout_constraintStart_toEndOf="@id/reply_background"
+            app:layout_constraintBottom_toTopOf="@id/background" />
+
+        <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
             android:onClick="@{scrollToRepliedMessageClickListener}"
             android:id="@+id/reply"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:text="@{model.replyText, default=`Ceci est une réponse!`}"
+            android:layout_marginEnd="16dp"
+            android:text="@{model.replyText, default=`Reply`}"
             android:textColor="@color/gray_main2_500"
             android:textSize="14sp"
             android:maxLines="2"
@@ -86,6 +97,7 @@
             android:id="@+id/contents"
             layout="@layout/chat_bubble_content"
             model="@{model}"
+            onLongClickListener="@{onLongClickListener}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
