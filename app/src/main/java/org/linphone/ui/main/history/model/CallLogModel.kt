@@ -66,7 +66,7 @@ class CallLogModel @WorkerThread constructor(private val callLog: CallLog) {
             }
             avatarModel = ContactAvatarModel(fakeFriend)
 
-            avatarModel.showConferenceIcon.postValue(true)
+            avatarModel.forceConferenceIcon.postValue(true)
             friendRefKey = null
             friendExists = false
         } else {

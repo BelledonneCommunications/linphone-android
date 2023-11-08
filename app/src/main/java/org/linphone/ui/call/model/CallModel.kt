@@ -63,7 +63,7 @@ class CallModel @WorkerThread constructor(val call: Call) {
         val conferenceInfo = coreContext.core.findConferenceInformationFromUri(call.remoteAddress)
         if (conferenceInfo != null) {
             displayName.postValue(conferenceInfo.subject)
-            avatarModel.showConferenceIcon.postValue(true)
+            avatarModel.forceConferenceIcon.postValue(true)
         } else {
             displayName.postValue(friend?.name ?: LinphoneUtils.getDisplayName(call.remoteAddress))
         }

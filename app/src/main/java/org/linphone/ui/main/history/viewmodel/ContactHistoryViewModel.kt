@@ -98,7 +98,7 @@ class ContactHistoryViewModel @UiThread constructor() : ViewModel() {
                 val conferenceInfo = coreContext.core.findConferenceInformationFromUri(address)
                 if (conferenceInfo != null) {
                     model.avatarModel.name.postValue(conferenceInfo.subject)
-                    model.avatarModel.showConferenceIcon.postValue(true)
+                    model.avatarModel.forceConferenceIcon.postValue(true)
                 }
 
                 callLogModel.postValue(model)

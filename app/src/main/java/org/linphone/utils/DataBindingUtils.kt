@@ -361,7 +361,7 @@ private suspend fun loadContactPictureWithCoil(
 
         val context = imageView.context
         if (model != null) {
-            if (model.showConferenceIcon.value == true) {
+            if (model.forceConferenceIcon.value == true) {
                 imageView.load(
                     ResourcesCompat.getDrawable(
                         context.resources,
@@ -406,11 +406,19 @@ private suspend fun loadContactPictureWithCoil(
                             withContext(Dispatchers.IO) {
                                 val initials = model.initials.value.orEmpty()
                                 if (initials.isEmpty() || initials == "+") {
-                                    ResourcesCompat.getDrawable(
-                                        context.resources,
-                                        R.drawable.user_circle,
-                                        context.theme
-                                    )
+                                    if (model.defaultToConferenceIcon.value == true) {
+                                        ResourcesCompat.getDrawable(
+                                            context.resources,
+                                            R.drawable.inset_users_three,
+                                            context.theme
+                                        )
+                                    } else {
+                                        ResourcesCompat.getDrawable(
+                                            context.resources,
+                                            R.drawable.inset_user_circle,
+                                            context.theme
+                                        )
+                                    }
                                 } else {
                                     val builder = AvatarGenerator(context)
                                     builder.setInitials(model.initials.value.orEmpty())

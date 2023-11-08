@@ -89,7 +89,7 @@
             android:textColorHint="@color/gray_main2_400"
             android:maxLines="3"
             android:hint="@string/conversation_text_field_hint"
-            android:inputType="text"
+            android:inputType="text|textCapSentences|textAutoCorrect"
             app:layout_constraintTop_toBottomOf="@id/emoji_picker"
             app:layout_constraintStart_toStartOf="@id/message_area_background"
             app:layout_constraintEnd_toStartOf="@id/send_barrier"
