@@ -22,6 +22,7 @@ package org.linphone.ui.main.chat.model
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.Spanned
+import android.util.Patterns
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
@@ -54,7 +55,8 @@ class ChatMessageModel @WorkerThread constructor(
     val isGroupedWithPreviousOne: Boolean,
     val isGroupedWithNextOne: Boolean,
     private val onContentClicked: ((file: String) -> Unit)? = null,
-    private val onJoinConferenceClicked: ((uri: String) -> Unit)? = null
+    private val onJoinConferenceClicked: ((uri: String) -> Unit)? = null,
+    private val onWebUrlClicked: ((url: String) -> Unit)? = null
 ) {
     companion object {
         private const val TAG = "[Chat Message Model]"
@@ -315,6 +317,15 @@ class ChatMessageModel @WorkerThread constructor(
                                     Log.w("$TAG Failed to parse [$text] as SIP URI")
                                 }
                             }
+                        }
+                    }
+                )
+                .add(
+                    Patterns.WEB_URL,
+                    object : SpannableClickedListener {
+                        override fun onSpanClicked(text: String) {
+                            Log.i("$TAG Clicked on web URL: $text")
+                            onWebUrlClicked?.invoke(text)
                         }
                     }
                 )

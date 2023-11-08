@@ -33,7 +33,8 @@ class EventLogModel @WorkerThread constructor(
     isGroupedWithPreviousOne: Boolean,
     isGroupedWithNextOne: Boolean,
     onContentClicked: ((file: String) -> Unit)? = null,
-    onJoinConferenceClicked: ((uri: String) -> Unit)? = null
+    onJoinConferenceClicked: ((uri: String) -> Unit)? = null,
+    onWebUrlClicked: ((url: String) -> Unit)? = null
 ) {
     companion object {
         private const val TAG = "[Event Log Model]"
@@ -78,7 +79,8 @@ class EventLogModel @WorkerThread constructor(
             isGroupedWithPreviousOne,
             isGroupedWithNextOne,
             onContentClicked,
-            onJoinConferenceClicked
+            onJoinConferenceClicked,
+            onWebUrlClicked
         )
     }
 

@@ -23,10 +23,12 @@ import android.app.Dialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.graphics.RenderEffect
 import android.graphics.Shader
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -295,6 +297,20 @@ class ConversationFragment : GenericFragment() {
             it.consume { conferenceUri ->
                 Log.i("$TAG Requesting to go to waiting room for conference URI [$conferenceUri]")
                 sharedViewModel.goToMeetingWaitingRoomEvent.value = Event(conferenceUri)
+            }
+        }
+
+        viewModel.openWebBrowserEvent.observe(viewLifecycleOwner) {
+            it.consume { url ->
+                Log.i("$TAG Requesting to open web browser on page [$url]")
+                try {
+                    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                    startActivity(browserIntent)
+                } catch (ise: IllegalStateException) {
+                    Log.e(
+                        "$TAG Can't start ACTION_VIEW intent for URL [$url], IllegalStateException: $ise"
+                    )
+                }
             }
         }
 
