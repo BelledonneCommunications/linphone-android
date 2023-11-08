@@ -104,7 +104,7 @@ class ImageUtils {
                     Rect(size / 2, size / 2, size, size)
                 )
             } else {
-                arrayListOf()
+                arrayListOf(Rect(0, 0, size, size))
             }
 
             for (i in 0 until rectangles.size) {
