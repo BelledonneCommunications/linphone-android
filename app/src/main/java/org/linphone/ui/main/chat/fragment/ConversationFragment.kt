@@ -202,13 +202,6 @@ class ConversationFragment : GenericFragment() {
         binding.eventsList.setHasFixedSize(true)
         binding.eventsList.layoutManager = LinearLayoutManager(requireContext())
 
-        bottomSheetAdapter = ChatMessageBottomSheetAdapter(viewLifecycleOwner)
-        binding.messageBottomSheet.bottomSheetList.setHasFixedSize(true)
-        binding.messageBottomSheet.bottomSheetList.adapter = bottomSheetAdapter
-
-        val bottomSheetLayoutManager = LinearLayoutManager(requireContext())
-        binding.messageBottomSheet.bottomSheetList.layoutManager = bottomSheetLayoutManager
-
         viewModel.events.observe(viewLifecycleOwner) { items ->
             val currentCount = adapter.itemCount
             adapter.submitList(items)
@@ -227,6 +220,13 @@ class ConversationFragment : GenericFragment() {
                 binding.eventsList.scrollToPosition(items.size - 1)
             }
         }
+
+        bottomSheetAdapter = ChatMessageBottomSheetAdapter(viewLifecycleOwner)
+        binding.messageBottomSheet.bottomSheetList.setHasFixedSize(true)
+        binding.messageBottomSheet.bottomSheetList.adapter = bottomSheetAdapter
+
+        val bottomSheetLayoutManager = LinearLayoutManager(requireContext())
+        binding.messageBottomSheet.bottomSheetList.layoutManager = bottomSheetLayoutManager
 
         val emojisBottomSheetBehavior = BottomSheetBehavior.from(binding.sendArea.root)
         emojisBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
@@ -278,11 +278,14 @@ class ConversationFragment : GenericFragment() {
         }
 
         binding.setGoToInfoClickListener {
-            val action = ConversationFragmentDirections.actionConversationFragmentToConversationInfoFragment(
-                localSipUri,
-                remoteSipUri
-            )
-            findNavController().navigate(action)
+            if (findNavController().currentDestination?.id == R.id.conversationFragment) {
+                val action =
+                    ConversationFragmentDirections.actionConversationFragmentToConversationInfoFragment(
+                        localSipUri,
+                        remoteSipUri
+                    )
+                findNavController().navigate(action)
+            }
         }
 
         viewModel.participantUsernameToAddEvent.observe(viewLifecycleOwner) {
@@ -316,11 +319,14 @@ class ConversationFragment : GenericFragment() {
 
         viewModel.fileToDisplayEvent.observe(viewLifecycleOwner) {
             it.consume { file ->
-                Log.i("$TAG User clicked on file [$file], let's display it in file viewer")
-                val action = ConversationFragmentDirections.actionConversationFragmentToFileViewerFragment(
-                    file
-                )
-                findNavController().navigate(action)
+                if (findNavController().currentDestination?.id == R.id.conversationFragment) {
+                    Log.i("$TAG User clicked on file [$file], let's display it in file viewer")
+                    val action =
+                        ConversationFragmentDirections.actionConversationFragmentToFileViewerFragment(
+                            file
+                        )
+                    findNavController().navigate(action)
+                }
             }
         }
 

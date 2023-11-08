@@ -74,6 +74,7 @@
                     android:layout_width="@dimen/avatar_big_size"
                     android:layout_height="@dimen/avatar_big_size"
                     android:layout_marginTop="8dp"
+                    android:src="@drawable/inset_users_three"
                     coilBigAvatar="@{viewModel.avatarModel}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -215,7 +216,6 @@
                     android:layout_height="0dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:src="@drawable/shape_squircle_white_background"
                     android:visibility="@{viewModel.isGroup ? View.VISIBLE : View.GONE}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -226,16 +226,18 @@
                     android:id="@+id/participants"
                     android:visibility="@{viewModel.expandParticipants &amp;&amp; viewModel.isGroup ? View.VISIBLE : View.GONE}"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="16dp"
+                    android:nestedScrollingEnabled="true"
                     app:layout_constraintHeight_max="300dp"
+                    app:layout_constrainedHeight="true"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/participants_label"
-                    app:layout_constraintBottom_toTopOf="@id/add_participants"/>
+                    app:layout_constraintBottom_toTopOf="@id/add_participants" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/tertiary_button_label_style"
@@ -255,7 +257,7 @@
                     android:ellipsize="end"
                     android:drawableStart="@drawable/plus_circle"
                     android:drawablePadding="8dp"
-                    android:visibility="@{!viewModel.expandParticipants || !viewModel.isMyselfAdmin || !viewModel.isGroup || viewModel.isReadOnly ? View.GONE : View.VISIBLE}"
+                    android:visibility="@{!viewModel.expandParticipants || !viewModel.isMyselfAdmin || !viewModel.isGroup || viewModel.isReadOnly ? View.GONE : View.VISIBLE, default=gone}"
                     app:drawableTint="@color/orange_main_500"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -284,7 +286,7 @@
                     app:layout_constraintVertical_bias="0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/participants_background"
+                    app:layout_constraintTop_toBottomOf="@id/participants_anchor"
                     app:layout_constraintBottom_toTopOf="@id/actions_background"/>
 
                 <ImageView

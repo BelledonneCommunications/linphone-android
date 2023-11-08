@@ -101,6 +101,9 @@ class ConversationInfoFragment : GenericFragment() {
                     Log.i(
                         "$TAG Found matching chat room for local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
                     )
+                    (view.parent as? ViewGroup)?.doOnPreDraw {
+                        startPostponedEnterTransition()
+                    }
                 } else {
                     (view.parent as? ViewGroup)?.doOnPreDraw {
                         Log.e("$TAG Failed to find chat room, going back")
@@ -109,14 +112,9 @@ class ConversationInfoFragment : GenericFragment() {
                 }
             }
         }
-
         viewModel.participants.observe(viewLifecycleOwner) { items ->
             adapter.submitList(items)
             Log.i("$TAG Participants list updated with [${items.size}] items")
-
-            (view.parent as? ViewGroup)?.doOnPreDraw {
-                startPostponedEnterTransition()
-            }
         }
 
         viewModel.groupLeftEvent.observe(viewLifecycleOwner) {
