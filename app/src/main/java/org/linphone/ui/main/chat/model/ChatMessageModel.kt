@@ -48,6 +48,7 @@ class ChatMessageModel @WorkerThread constructor(
     val avatarModel: ContactAvatarModel,
     val isFromGroup: Boolean,
     val isReply: Boolean,
+    val replyTo: String,
     val replyText: String,
     val replyToMessageId: String?,
     val isGroupedWithPreviousOne: Boolean,

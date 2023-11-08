@@ -67,38 +67,68 @@
             android:ellipsize="end"
             android:visibility="@{!model.isFromGroup ? View.GONE: model.isGroupedWithPreviousOne ? View.GONE : View.VISIBLE}"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/reply"
+            app:layout_constraintBottom_toTopOf="@id/reply_icon"
             app:layout_constraintStart_toStartOf="@id/bubble" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/reply_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{model.isReply ? View.VISIBLE : View.GONE, default=gone}"
+            app:constraint_referenced_ids="reply, reply_background, reply_name, reply_icon"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_300"
+            android:id="@+id/reply_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@{model.replyTo, default=`John Doe`}"
+            android:textSize="12sp"
+            android:textColor="@color/gray_main2_500"
+            app:drawableTint="@color/gray_main2_500"
+            app:layout_constraintStart_toEndOf="@id/reply_icon"
+            app:layout_constraintTop_toBottomOf="@id/name"
+            app:layout_constraintBottom_toTopOf="@id/reply" />
 
         <ImageView
             android:id="@+id/reply_icon"
             android:layout_width="@dimen/small_icon_size"
             android:layout_height="@dimen/small_icon_size"
+            android:layout_marginStart="8dp"
             android:src="@drawable/reply"
-            android:visibility="@{model.isReply ? View.VISIBLE : View.GONE, default=gone}"
-            app:tint="@color/gray_main2_500"
-            app:layout_constraintStart_toEndOf="@id/reply"
-            app:layout_constraintBottom_toTopOf="@id/bubble" />
+            app:layout_constraintStart_toStartOf="@id/reply"
+            app:layout_constraintTop_toTopOf="@id/reply_name"
+            app:layout_constraintBottom_toBottomOf="@id/reply_name" />
+
+        <View
+            android:id="@+id/reply_background"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="-20dp"
+            android:background="@drawable/shape_chat_bubble_reply"
+            app:layout_constraintTop_toTopOf="@id/reply"
+            app:layout_constraintStart_toStartOf="@id/reply"
+            app:layout_constraintEnd_toEndOf="@id/reply"
+            app:layout_constraintBottom_toTopOf="@id/bubble"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
             android:id="@+id/reply"
             android:onClick="@{scrollToRepliedMessageClickListener}"
-            android:background="@drawable/shape_chat_bubble_reply"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="32dp"
             android:text="@{model.replyText, default=`Reply`}"
             android:textColor="@color/gray_main2_500"
             android:textSize="14sp"
             android:maxLines="2"
             android:ellipsize="end"
             android:padding="10dp"
-            android:visibility="@{model.isReply ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintWidth_max="@dimen/chat_bubble_max_reply_width"
             app:layout_constraintStart_toStartOf="@id/bubble"
-            app:layout_constraintEnd_toEndOf="@id/bubble"
-            app:layout_constraintTop_toBottomOf="@id/name" />
+            app:layout_constraintTop_toBottomOf="@id/reply_name" />
 
         <LinearLayout
             android:id="@+id/bubble"

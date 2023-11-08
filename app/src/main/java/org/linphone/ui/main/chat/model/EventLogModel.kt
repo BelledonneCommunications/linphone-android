@@ -20,6 +20,7 @@
 package org.linphone.ui.main.chat.model
 
 import androidx.annotation.WorkerThread
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.EventLog
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
@@ -46,9 +47,15 @@ class EventLogModel @WorkerThread constructor(
         EventModel(eventLog)
     } else {
         val chatMessage = eventLog.chatMessage!!
-        val reply = if (chatMessage.isReply) {
+        var replyTo = ""
+        val replyText = if (chatMessage.isReply) {
             val replyMessage = chatMessage.replyMessage
             if (replyMessage != null) {
+                val from = replyMessage.fromAddress
+                replyTo = coreContext.contactsManager.findContactByAddress(from)?.name ?: LinphoneUtils.getDisplayName(
+                    from
+                )
+
                 LinphoneUtils.getTextDescribingMessage(replyMessage)
             } else {
                 Log.e(
@@ -65,7 +72,8 @@ class EventLogModel @WorkerThread constructor(
             avatarModel,
             isFromGroup,
             chatMessage.isReply,
-            reply,
+            replyTo,
+            replyText,
             chatMessage.replyMessageId,
             isGroupedWithPreviousOne,
             isGroupedWithNextOne,
