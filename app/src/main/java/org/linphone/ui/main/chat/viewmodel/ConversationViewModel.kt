@@ -222,17 +222,23 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
                 return@postOnCoreThread
             }
 
-            if (room != null && (!::chatRoom.isInitialized || chatRoom != room)) {
-                Log.i("$TAG Chat room object available in sharedViewModel, using it")
-                chatRoom = room
-                chatRoom.addListener(chatRoomListener)
-                configureChatRoom()
-                chatRoomFoundEvent.postValue(Event(true))
-                return@postOnCoreThread
-            }
-
             val localAddress = Factory.instance().createAddress(localSipUri)
             val remoteAddress = Factory.instance().createAddress(remoteSipUri)
+
+            if (room != null && (!::chatRoom.isInitialized || chatRoom != room)) {
+                if (localAddress?.weakEqual(room.localAddress) == true && remoteAddress?.weakEqual(
+                        room.peerAddress
+                    ) == true
+                ) {
+                    Log.i("$TAG Chat room object available in sharedViewModel, using it")
+                    chatRoom = room
+                    chatRoom.addListener(chatRoomListener)
+                    configureChatRoom()
+                    chatRoomFoundEvent.postValue(Event(true))
+                    return@postOnCoreThread
+                }
+            }
+
             if (localAddress != null && remoteAddress != null) {
                 Log.i("$TAG Searching for chat room in Core using local & peer SIP addresses")
                 val found = core.searchChatRoom(

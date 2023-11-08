@@ -92,16 +92,23 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
         @WorkerThread
         override fun onMessagesReceived(chatRoom: ChatRoom, chatMessages: Array<out ChatMessage>) {
             updateLastMessage()
+            updateLastUpdatedTime()
         }
 
         @WorkerThread
         override fun onChatMessageSending(chatRoom: ChatRoom, eventLog: EventLog) {
             updateLastMessage()
+            updateLastUpdatedTime()
         }
 
         @WorkerThread
         override fun onChatRoomRead(chatRoom: ChatRoom) {
             unreadMessageCount.postValue(chatRoom.unreadMessagesCount)
+        }
+
+        override fun onSubjectChanged(chatRoom: ChatRoom, eventLog: EventLog) {
+            subject.postValue(chatRoom.subject)
+            updateLastUpdatedTime()
         }
     }
 
@@ -159,7 +166,6 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
         isEphemeral.postValue(chatRoom.isEphemeralEnabled)
 
         updateLastMessage()
-
         updateLastUpdatedTime()
 
         unreadMessageCount.postValue(chatRoom.unreadMessagesCount)

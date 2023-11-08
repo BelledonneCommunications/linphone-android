@@ -129,6 +129,13 @@ class ConversationsListFragment : AbstractTopBarFragment() {
             }
         }
 
+        listViewModel.chatRoomsReOrderedEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i("$TAG Conversations list have been re-ordered, scrolling to top")
+                binding.conversationsList.scrollToPosition(0)
+            }
+        }
+
         // TopBarFragment related
 
         setViewModelAndTitle(

@@ -24,6 +24,7 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.contacts.ContactsManager
+import org.linphone.core.ChatMessage
 import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoom.Capabilities
 import org.linphone.core.Core
@@ -32,6 +33,7 @@ import org.linphone.core.tools.Log
 import org.linphone.ui.main.chat.model.ConversationModel
 import org.linphone.ui.main.model.isInSecureMode
 import org.linphone.ui.main.viewmodel.AbstractTopBarViewModel
+import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
 class ConversationsListViewModel @UiThread constructor() : AbstractTopBarViewModel() {
@@ -42,6 +44,10 @@ class ConversationsListViewModel @UiThread constructor() : AbstractTopBarViewMod
     val conversations = MutableLiveData<ArrayList<ConversationModel>>()
 
     val fetchInProgress = MutableLiveData<Boolean>()
+
+    val chatRoomsReOrderedEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
 
     private val coreListener = object : CoreListenerStub() {
         @WorkerThread
@@ -60,6 +66,20 @@ class ConversationsListViewModel @UiThread constructor() : AbstractTopBarViewMod
                 }
                 else -> {}
             }
+        }
+
+        @WorkerThread
+        override fun onMessageSent(core: Core, chatRoom: ChatRoom, message: ChatMessage) {
+            reorderChatRooms()
+        }
+
+        @WorkerThread
+        override fun onMessagesReceived(
+            core: Core,
+            chatRoom: ChatRoom,
+            messages: Array<out ChatMessage>
+        ) {
+            reorderChatRooms()
         }
     }
 
@@ -144,5 +164,17 @@ class ConversationsListViewModel @UiThread constructor() : AbstractTopBarViewMod
 
         conversations.postValue(list)
         fetchInProgress.postValue(false)
+    }
+
+    @WorkerThread
+    private fun reorderChatRooms() {
+        Log.i("$TAG Re-ordering chat rooms")
+        val sortedList = arrayListOf<ConversationModel>()
+        sortedList.addAll(conversations.value.orEmpty())
+        sortedList.sortBy {
+            it.lastUpdateTime.value
+        }
+        conversations.postValue(sortedList)
+        chatRoomsReOrderedEvent.postValue(Event(true))
     }
 }

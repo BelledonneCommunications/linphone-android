@@ -43,6 +43,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
@@ -96,6 +97,18 @@ class ConversationFragment : GenericFragment() {
             }
         } else {
             Log.w("$TAG No file picked")
+        }
+    }
+
+    private val dataObserver = object : AdapterDataObserver() {
+        override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+            if (positionStart == 0 && adapter.itemCount == itemCount) {
+                // First time we fill the list with messages
+                Log.i("$TAG [$itemCount] events have been loaded")
+            } else {
+                Log.i("$TAG [$itemCount] new events have been loaded, scrolling to bottom")
+                binding.eventsList.smoothScrollToPosition(adapter.itemCount - 1)
+            }
         }
     }
 
@@ -302,9 +315,20 @@ class ConversationFragment : GenericFragment() {
         if (viewModel.scrollingPosition != SCROLLING_POSITION_NOT_SET) {
             binding.eventsList.scrollToPosition(viewModel.scrollingPosition)
         }
+
+        try {
+            adapter.registerAdapterDataObserver(dataObserver)
+        } catch (e: IllegalStateException) {
+            Log.e("$TAG Failed to register data observer to adapter: $e")
+        }
     }
 
     override fun onPause() {
+        try {
+            adapter.unregisterAdapterDataObserver(dataObserver)
+        } catch (e: IllegalStateException) {
+            Log.e("$TAG Failed to unregister data observer to adapter: $e")
+        }
         coreContext.notificationsManager.resetCurrentlyDisplayedChatRoomId()
 
         val layoutManager = binding.eventsList.layoutManager as LinearLayoutManager
