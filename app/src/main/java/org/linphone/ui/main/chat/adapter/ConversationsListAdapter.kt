@@ -34,7 +34,22 @@ class ConversationsListAdapter(
             parent,
             false
         )
-        return ViewHolder(binding)
+        val viewHolder = ViewHolder(binding)
+        binding.apply {
+            lifecycleOwner = viewLifecycleOwner
+
+            setOnClickListener {
+                conversationClickedEvent.value = Event(model!!)
+            }
+
+            setOnLongClickListener {
+                selectedAdapterPosition = viewHolder.bindingAdapterPosition
+                root.isSelected = true
+                conversationLongClickedEvent.value = Event(model!!)
+                true
+            }
+        }
+        return viewHolder
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -54,20 +69,7 @@ class ConversationsListAdapter(
             with(binding) {
                 model = conversationModel
 
-                lifecycleOwner = viewLifecycleOwner
-
                 binding.root.isSelected = bindingAdapterPosition == selectedAdapterPosition
-
-                binding.setOnClickListener {
-                    conversationClickedEvent.value = Event(conversationModel)
-                }
-
-                binding.setOnLongClickListener {
-                    selectedAdapterPosition = bindingAdapterPosition
-                    binding.root.isSelected = true
-                    conversationLongClickedEvent.value = Event(conversationModel)
-                    true
-                }
 
                 executePendingBindings()
             }

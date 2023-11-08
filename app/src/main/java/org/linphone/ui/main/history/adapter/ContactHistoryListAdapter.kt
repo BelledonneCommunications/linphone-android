@@ -41,6 +41,7 @@ class ContactHistoryListAdapter(
             parent,
             false
         )
+        binding.lifecycleOwner = viewLifecycleOwner
         return ViewHolder(binding)
     }
 
@@ -55,9 +56,6 @@ class ContactHistoryListAdapter(
         fun bind(callLogHistoryModel: CallLogHistoryModel) {
             with(binding) {
                 model = callLogHistoryModel
-
-                lifecycleOwner = viewLifecycleOwner
-
                 executePendingBindings()
             }
         }

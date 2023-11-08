@@ -826,7 +826,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             context,
             context.getString(R.string.notification_channel_chat_id)
         )
-            .setSmallIcon(R.drawable.chat_text)
+            .setSmallIcon(R.drawable.chat_teardrop_text)
             .setAutoCancel(true)
             .setLargeIcon(largeIcon)
             .setColor(AppUtils.getColor(R.color.orange_main_500))

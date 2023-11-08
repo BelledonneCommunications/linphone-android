@@ -52,7 +52,22 @@ class CallsListAdapter(private val viewLifecycleOwner: LifecycleOwner) :
             parent,
             false
         )
-        return ViewHolder(binding)
+        val viewHolder = ViewHolder(binding)
+        binding.apply {
+            lifecycleOwner = viewLifecycleOwner
+
+            setOnClickListener {
+                callClickedEvent.value = Event(model!!)
+            }
+
+            setOnLongClickListener {
+                selectedAdapterPosition = viewHolder.bindingAdapterPosition
+                root.isSelected = true
+                callLongClickedEvent.value = Event(model!!)
+                true
+            }
+        }
+        return viewHolder
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -72,20 +87,7 @@ class CallsListAdapter(private val viewLifecycleOwner: LifecycleOwner) :
             with(binding) {
                 model = callModel
 
-                lifecycleOwner = viewLifecycleOwner
-
                 binding.root.isSelected = bindingAdapterPosition == selectedAdapterPosition
-
-                binding.setOnClickListener {
-                    callClickedEvent.value = Event(callModel)
-                }
-
-                binding.setOnLongClickListener {
-                    selectedAdapterPosition = bindingAdapterPosition
-                    binding.root.isSelected = true
-                    callLongClickedEvent.value = Event(callModel)
-                    true
-                }
 
                 executePendingBindings()
             }

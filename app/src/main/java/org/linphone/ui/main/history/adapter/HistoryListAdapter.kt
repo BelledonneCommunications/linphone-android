@@ -38,7 +38,26 @@ class HistoryListAdapter(
             parent,
             false
         )
-        return ViewHolder(binding)
+        val viewHolder = ViewHolder(binding)
+        binding.apply {
+            lifecycleOwner = viewLifecycleOwner
+
+            setOnClickListener {
+                callLogClickedEvent.value = Event(model!!)
+            }
+
+            setOnLongClickListener {
+                selectedAdapterPosition = viewHolder.bindingAdapterPosition
+                root.isSelected = true
+                callLogLongClickedEvent.value = Event(model!!)
+                true
+            }
+
+            setOnCallClickListener {
+                callLogCallBackClickedEvent.value = Event(model!!)
+            }
+        }
+        return viewHolder
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -58,24 +77,7 @@ class HistoryListAdapter(
             with(binding) {
                 model = callLogModel
 
-                lifecycleOwner = viewLifecycleOwner
-
                 binding.root.isSelected = bindingAdapterPosition == selectedAdapterPosition
-
-                binding.setOnClickListener {
-                    callLogClickedEvent.value = Event(callLogModel)
-                }
-
-                binding.setOnLongClickListener {
-                    selectedAdapterPosition = bindingAdapterPosition
-                    binding.root.isSelected = true
-                    callLogLongClickedEvent.value = Event(callLogModel)
-                    true
-                }
-
-                binding.setOnCallClickListener {
-                    callLogCallBackClickedEvent.value = Event(callLogModel)
-                }
 
                 executePendingBindings()
             }

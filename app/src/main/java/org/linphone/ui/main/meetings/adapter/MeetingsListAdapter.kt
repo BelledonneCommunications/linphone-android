@@ -51,6 +51,19 @@ class MeetingsListAdapter(
             parent,
             false
         )
+        binding.apply {
+            lifecycleOwner = viewLifecycleOwner
+
+            setOnClickListener {
+                meetingClickedEvent.value = Event(model!!)
+            }
+
+            setOnLongClickListener {
+                root.isSelected = true
+                meetingLongClickedEvent.value = Event(model!!)
+                true
+            }
+        }
         return ViewHolder(binding)
     }
 
@@ -65,19 +78,6 @@ class MeetingsListAdapter(
         fun bind(meetingModel: MeetingModel) {
             with(binding) {
                 model = meetingModel
-
-                lifecycleOwner = viewLifecycleOwner
-
-                binding.setOnClickListener {
-                    meetingClickedEvent.value = Event(meetingModel)
-                }
-
-                binding.setOnLongClickListener {
-                    binding.root.isSelected = true
-                    meetingLongClickedEvent.value = Event(meetingModel)
-                    true
-                }
-
                 executePendingBindings()
             }
         }

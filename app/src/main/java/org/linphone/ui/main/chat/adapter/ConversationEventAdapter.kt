@@ -84,7 +84,25 @@ class ConversationEventAdapter : ListAdapter<EventLogModel, RecyclerView.ViewHol
             parent,
             false
         )
-        return IncomingBubbleViewHolder(binding)
+        val viewHolder = IncomingBubbleViewHolder(binding)
+        binding.apply {
+            setOnLongClickListener {
+                chatMessageLongPressEvent.value = Event(model!!)
+                true
+            }
+
+            setShowDeliveryInfoClickListener {
+                showDeliveryForChatMessageModelEvent.value = Event(model!!)
+            }
+            setShowReactionInfoClickListener {
+                showReactionForChatMessageModelEvent.value = Event(model!!)
+            }
+            setScrollToRepliedMessageClickListener {
+                scrollToRepliedMessageEvent.value = Event(model!!)
+            }
+            lifecycleOwner = viewLifecycleOwner
+        }
+        return viewHolder
     }
 
     private fun createOutgoingChatBubble(parent: ViewGroup): OutgoingBubbleViewHolder {
@@ -94,7 +112,25 @@ class ConversationEventAdapter : ListAdapter<EventLogModel, RecyclerView.ViewHol
             parent,
             false
         )
-        return OutgoingBubbleViewHolder(binding)
+        val viewHolder = OutgoingBubbleViewHolder(binding)
+        binding.apply {
+            setOnLongClickListener {
+                chatMessageLongPressEvent.value = Event(model!!)
+                true
+            }
+
+            setShowDeliveryInfoClickListener {
+                showDeliveryForChatMessageModelEvent.value = Event(model!!)
+            }
+            setShowReactionInfoClickListener {
+                showReactionForChatMessageModelEvent.value = Event(model!!)
+            }
+            setScrollToRepliedMessageClickListener {
+                scrollToRepliedMessageEvent.value = Event(model!!)
+            }
+            lifecycleOwner = viewLifecycleOwner
+        }
+        return viewHolder
     }
 
     private fun createEvent(parent: ViewGroup): EventViewHolder {
@@ -104,6 +140,7 @@ class ConversationEventAdapter : ListAdapter<EventLogModel, RecyclerView.ViewHol
             parent,
             false
         )
+        binding.lifecycleOwner = viewLifecycleOwner
         return EventViewHolder(binding)
     }
 
@@ -122,23 +159,6 @@ class ConversationEventAdapter : ListAdapter<EventLogModel, RecyclerView.ViewHol
         fun bind(message: ChatMessageModel) {
             with(binding) {
                 model = message
-
-                setOnLongClickListener {
-                    chatMessageLongPressEvent.value = Event(message)
-                    true
-                }
-
-                setShowDeliveryInfoClickListener {
-                    showDeliveryForChatMessageModelEvent.value = Event(message)
-                }
-                setShowReactionInfoClickListener {
-                    showReactionForChatMessageModelEvent.value = Event(message)
-                }
-                setScrollToRepliedMessageClickListener {
-                    scrollToRepliedMessageEvent.value = Event(message)
-                }
-
-                lifecycleOwner = viewLifecycleOwner
                 executePendingBindings()
             }
         }
@@ -150,23 +170,6 @@ class ConversationEventAdapter : ListAdapter<EventLogModel, RecyclerView.ViewHol
         fun bind(message: ChatMessageModel) {
             with(binding) {
                 model = message
-
-                setOnLongClickListener {
-                    chatMessageLongPressEvent.value = Event(message)
-                    true
-                }
-
-                setShowDeliveryInfoClickListener {
-                    showDeliveryForChatMessageModelEvent.value = Event(message)
-                }
-                setShowReactionInfoClickListener {
-                    showReactionForChatMessageModelEvent.value = Event(message)
-                }
-                setScrollToRepliedMessageClickListener {
-                    scrollToRepliedMessageEvent.value = Event(message)
-                }
-
-                lifecycleOwner = viewLifecycleOwner
                 executePendingBindings()
             }
         }
@@ -177,8 +180,6 @@ class ConversationEventAdapter : ListAdapter<EventLogModel, RecyclerView.ViewHol
         fun bind(event: EventModel) {
             with(binding) {
                 model = event
-
-                lifecycleOwner = viewLifecycleOwner
                 executePendingBindings()
             }
         }

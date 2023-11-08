@@ -75,6 +75,7 @@ class ContactsAndSuggestionsListAdapter(
                     parent,
                     false
                 )
+                binding.lifecycleOwner = viewLifecycleOwner
                 ContactViewHolder(binding)
             }
             else -> {
@@ -84,6 +85,12 @@ class ContactsAndSuggestionsListAdapter(
                     parent,
                     false
                 )
+                binding.apply {
+                    lifecycleOwner = viewLifecycleOwner
+                    setOnClickListener {
+                        contactClickedEvent.value = Event(model!!)
+                    }
+                }
                 SuggestionViewHolder(binding)
             }
         }
@@ -103,13 +110,9 @@ class ContactsAndSuggestionsListAdapter(
         fun bind(contactOrSuggestionModel: ContactOrSuggestionModel) {
             with(binding) {
                 model = contactOrSuggestionModel.avatarModel.value
-
-                lifecycleOwner = viewLifecycleOwner
-
-                binding.setOnClickListener {
+                setOnClickListener {
                     contactClickedEvent.value = Event(contactOrSuggestionModel)
                 }
-
                 executePendingBindings()
             }
         }
@@ -122,13 +125,6 @@ class ContactsAndSuggestionsListAdapter(
         fun bind(contactOrSuggestionModel: ContactOrSuggestionModel) {
             with(binding) {
                 model = contactOrSuggestionModel
-
-                lifecycleOwner = viewLifecycleOwner
-
-                binding.setOnClickListener {
-                    contactClickedEvent.value = Event(contactOrSuggestionModel)
-                }
-
                 executePendingBindings()
             }
         }

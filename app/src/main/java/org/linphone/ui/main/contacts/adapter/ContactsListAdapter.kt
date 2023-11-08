@@ -39,7 +39,22 @@ class ContactsListAdapter(
                 parent,
                 false
             )
-            return FavouriteViewHolder(binding)
+            val viewHolder = FavouriteViewHolder(binding)
+            binding.apply {
+                lifecycleOwner = viewLifecycleOwner
+
+                setOnClickListener {
+                    contactClickedEvent.value = Event(model!!)
+                }
+
+                setOnLongClickListener {
+                    selectedAdapterPosition = viewHolder.bindingAdapterPosition
+                    root.isSelected = true
+                    contactLongClickedEvent.value = Event(model!!)
+                    true
+                }
+            }
+            return viewHolder
         } else {
             val binding: ContactListCellBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(parent.context),
@@ -47,7 +62,24 @@ class ContactsListAdapter(
                 parent,
                 false
             )
-            return ViewHolder(binding)
+            val viewHolder = ViewHolder(binding)
+            binding.apply {
+                lifecycleOwner = viewLifecycleOwner
+
+                setOnClickListener {
+                    contactClickedEvent.value = Event(model!!)
+                }
+
+                if (!disableLongClick) {
+                    setOnLongClickListener {
+                        selectedAdapterPosition = viewHolder.bindingAdapterPosition
+                        root.isSelected = true
+                        contactLongClickedEvent.value = Event(model!!)
+                        true
+                    }
+                }
+            }
+            return viewHolder
         }
     }
 
@@ -72,22 +104,7 @@ class ContactsListAdapter(
             with(binding) {
                 model = contactModel
 
-                lifecycleOwner = viewLifecycleOwner
-
                 binding.root.isSelected = bindingAdapterPosition == selectedAdapterPosition
-
-                binding.setOnClickListener {
-                    contactClickedEvent.value = Event(contactModel)
-                }
-
-                if (!disableLongClick) {
-                    binding.setOnLongClickListener {
-                        selectedAdapterPosition = bindingAdapterPosition
-                        binding.root.isSelected = true
-                        contactLongClickedEvent.value = Event(contactModel)
-                        true
-                    }
-                }
 
                 executePendingBindings()
             }
@@ -102,20 +119,7 @@ class ContactsListAdapter(
             with(binding) {
                 model = contactModel
 
-                lifecycleOwner = viewLifecycleOwner
-
                 binding.root.isSelected = bindingAdapterPosition == selectedAdapterPosition
-
-                binding.setOnClickListener {
-                    contactClickedEvent.value = Event(contactModel)
-                }
-
-                binding.setOnLongClickListener {
-                    selectedAdapterPosition = bindingAdapterPosition
-                    binding.root.isSelected = true
-                    contactLongClickedEvent.value = Event(contactModel)
-                    true
-                }
 
                 executePendingBindings()
             }

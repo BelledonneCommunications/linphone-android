@@ -25,6 +25,7 @@ class ChatMessageBottomSheetAdapter(
             parent,
             false
         )
+        binding.lifecycleOwner = viewLifecycleOwner
         return ViewHolder(binding)
     }
 
@@ -39,9 +40,6 @@ class ChatMessageBottomSheetAdapter(
         fun bind(bottomSheetModel: ChatMessageBottomSheetParticipantModel) {
             with(binding) {
                 model = bottomSheetModel
-
-                lifecycleOwner = viewLifecycleOwner
-
                 executePendingBindings()
             }
         }

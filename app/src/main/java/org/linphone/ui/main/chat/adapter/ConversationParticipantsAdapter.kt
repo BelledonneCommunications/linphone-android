@@ -23,6 +23,7 @@ class ConversationParticipantsAdapter(
             parent,
             false
         )
+        binding.lifecycleOwner = viewLifecycleOwner
         return ViewHolder(binding)
     }
 
@@ -37,9 +38,6 @@ class ConversationParticipantsAdapter(
         fun bind(participantModel: ParticipantModel) {
             with(binding) {
                 model = participantModel
-
-                lifecycleOwner = viewLifecycleOwner
-
                 executePendingBindings()
             }
         }

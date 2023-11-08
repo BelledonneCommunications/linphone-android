@@ -33,7 +33,6 @@ import org.linphone.ui.call.model.ConferenceParticipantModel
 
 class ConferenceParticipantsListAdapter(private val viewLifecycleOwner: LifecycleOwner) :
     ListAdapter<ConferenceParticipantModel, RecyclerView.ViewHolder>(ParticipantDiffCallback()) {
-    var selectedAdapterPosition = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val binding: CallConferenceParticipantListCellBinding = DataBindingUtil.inflate(
@@ -42,16 +41,12 @@ class ConferenceParticipantsListAdapter(private val viewLifecycleOwner: Lifecycl
             parent,
             false
         )
+        binding.lifecycleOwner = viewLifecycleOwner
         return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         (holder as ViewHolder).bind(getItem(position))
-    }
-
-    fun resetSelection() {
-        notifyItemChanged(selectedAdapterPosition)
-        selectedAdapterPosition = -1
     }
 
     inner class ViewHolder(
@@ -61,10 +56,6 @@ class ConferenceParticipantsListAdapter(private val viewLifecycleOwner: Lifecycl
         fun bind(participantModel: ConferenceParticipantModel) {
             with(binding) {
                 model = participantModel
-
-                lifecycleOwner = viewLifecycleOwner
-
-                binding.root.isSelected = bindingAdapterPosition == selectedAdapterPosition
 
                 executePendingBindings()
             }
