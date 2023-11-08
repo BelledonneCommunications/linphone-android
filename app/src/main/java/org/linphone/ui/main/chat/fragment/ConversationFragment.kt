@@ -178,6 +178,10 @@ class ConversationFragment : GenericFragment() {
             viewModel.showBackButton.value = slideable
         }
 
+        adapter.viewLifecycleOwner = viewLifecycleOwner
+        binding.eventsList.setHasFixedSize(true)
+        binding.eventsList.layoutManager = LinearLayoutManager(requireContext())
+
         val localSipUri = args.localSipUri
         val remoteSipUri = args.remoteSipUri
         Log.i(
@@ -197,10 +201,6 @@ class ConversationFragment : GenericFragment() {
                 }
             }
         }
-
-        adapter.viewLifecycleOwner = viewLifecycleOwner
-        binding.eventsList.setHasFixedSize(true)
-        binding.eventsList.layoutManager = LinearLayoutManager(requireContext())
 
         viewModel.events.observe(viewLifecycleOwner) { items ->
             val currentCount = adapter.itemCount

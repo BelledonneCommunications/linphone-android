@@ -205,10 +205,10 @@
                 android:id="@+id/events_list"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_marginTop="55dp"
                 android:paddingBottom="5dp"
-                android:background="@color/white"
-                app:layout_constraintTop_toBottomOf="@id/top_bar_barrier"
-                app:layout_constraintBottom_toTopOf="@id/composing" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/composing"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style_300"
@@ -222,7 +222,6 @@
                 android:textSize="12sp"
                 android:textColor="@color/gray_main2_400"
                 android:visibility="@{viewModel.composingLabel.length() == 0 ? View.GONE : View.VISIBLE}"
-                app:layout_constraintTop_toBottomOf="@id/events_list"
                 app:layout_constraintBottom_toTopOf="@id/participants"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
