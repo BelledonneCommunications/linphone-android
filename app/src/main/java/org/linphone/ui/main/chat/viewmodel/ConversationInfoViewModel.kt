@@ -362,10 +362,10 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
         } else {
             for (participant in chatRoom.participants) {
                 val isParticipantAdmin = if (groupChatRoom) participant.isAdmin else false
-                val model = ParticipantModel(participant.address, selfAdmin, isParticipantAdmin) { view, model ->
+                val model = ParticipantModel(participant.address, selfAdmin, isParticipantAdmin, onMenuClicked = { view, model ->
                     // openMenu
                     showParticipantAdminPopupMenuEvent.postValue(Event(Pair(view, model)))
-                }
+                })
                 friends.add(model.avatarModel.friend)
                 participantsList.add(model)
             }
@@ -374,6 +374,7 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
         val avatar = if (groupChatRoom) {
             val fakeFriend = coreContext.core.createFriend()
             val model = ContactAvatarModel(fakeFriend)
+            model.defaultToConferenceIcon.postValue(true)
             model.setPicturesFromFriends(friends)
             model
         } else {

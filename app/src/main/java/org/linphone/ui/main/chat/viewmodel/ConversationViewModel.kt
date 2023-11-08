@@ -35,6 +35,7 @@ import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.chat.model.ChatMessageModel
 import org.linphone.ui.main.chat.model.EventLogModel
+import org.linphone.ui.main.chat.model.ParticipantModel
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
@@ -69,6 +70,14 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
     val searchFilter = MutableLiveData<String>()
 
     val isEmojiPickerOpen = MutableLiveData<Boolean>()
+
+    val isParticipantsListOpen = MutableLiveData<Boolean>()
+
+    val participants = MutableLiveData<ArrayList<ParticipantModel>>()
+
+    val participantUsernameToAddEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
 
     val isReplying = MutableLiveData<Boolean>()
 
@@ -180,6 +189,16 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             // TODO: handle case when first one of the newly received messages should be grouped with last one of the current list
 
             events.postValue(list)
+        }
+
+        @WorkerThread
+        override fun onParticipantAdded(chatRoom: ChatRoom, eventLog: EventLog) {
+            computeParticipantsList()
+        }
+
+        @WorkerThread
+        override fun onParticipantRemoved(chatRoom: ChatRoom, eventLog: EventLog) {
+            computeParticipantsList()
         }
     }
 
@@ -403,6 +422,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
         computeEvents()
         chatRoom.markAsRead()
+        computeParticipantsList()
     }
 
     @WorkerThread
@@ -537,5 +557,25 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         } else {
             composingLabel.postValue("")
         }
+    }
+
+    @WorkerThread
+    private fun computeParticipantsList() {
+        val participantsList = arrayListOf<ParticipantModel>()
+
+        for (participant in chatRoom.participants) {
+            val model = ParticipantModel(participant.address, onClicked = { clicked ->
+                Log.i("$TAG Clicked on participant [${clicked.sipUri}]")
+                coreContext.postOnCoreThread {
+                    val username = clicked.address.username
+                    if (!username.isNullOrEmpty()) {
+                        participantUsernameToAddEvent.postValue(Event(username))
+                    }
+                }
+            })
+            participantsList.add(model)
+        }
+
+        participants.postValue(participantsList)
     }
 }

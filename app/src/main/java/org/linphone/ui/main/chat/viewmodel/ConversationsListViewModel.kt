@@ -171,7 +171,7 @@ class ConversationsListViewModel @UiThread constructor() : AbstractTopBarViewMod
         Log.i("$TAG Re-ordering chat rooms")
         val sortedList = arrayListOf<ConversationModel>()
         sortedList.addAll(conversations.value.orEmpty())
-        sortedList.sortBy {
+        sortedList.sortByDescending {
             it.lastUpdateTime.value
         }
         conversations.postValue(sortedList)

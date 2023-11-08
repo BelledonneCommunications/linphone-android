@@ -30,6 +30,8 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,6 +41,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
 import androidx.core.view.doOnPreDraw
+import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -70,6 +73,7 @@ import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.addCharacterAtPosition
 import org.linphone.utils.hideKeyboard
 import org.linphone.utils.setKeyboardInsetListener
 import org.linphone.utils.showKeyboard
@@ -110,6 +114,25 @@ class ConversationFragment : GenericFragment() {
             } else {
                 Log.i("$TAG [$itemCount] new events have been loaded, scrolling to bottom")
                 binding.eventsList.smoothScrollToPosition(adapter.itemCount - 1)
+            }
+        }
+    }
+
+    private val textObserver = object : TextWatcher {
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+        }
+
+        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+        }
+
+        override fun afterTextChanged(p0: Editable?) {
+            viewModel.isParticipantsListOpen.value = false
+
+            val split = p0.toString().split(" ")
+            for (part in split) {
+                if (part == "@") {
+                    viewModel.isParticipantsListOpen.value = true
+                }
             }
         }
     }
@@ -262,6 +285,14 @@ class ConversationFragment : GenericFragment() {
             findNavController().navigate(action)
         }
 
+        viewModel.participantUsernameToAddEvent.observe(viewLifecycleOwner) {
+            it.consume { username ->
+                Log.i("$TAG Adding username [$username] after '@'")
+                // Also add a space for convenience
+                binding.sendArea.messageToSend.addCharacterAtPosition("$username ")
+            }
+        }
+
         viewModel.searchFilter.observe(viewLifecycleOwner) { filter ->
             viewModel.applyFilter(filter.trim())
         }
@@ -337,9 +368,17 @@ class ConversationFragment : GenericFragment() {
         } catch (e: IllegalStateException) {
             Log.e("$TAG Failed to register data observer to adapter: $e")
         }
+
+        if (viewModel.isGroup.value == true) {
+            binding.sendArea.messageToSend.addTextChangedListener(textObserver)
+        }
     }
 
     override fun onPause() {
+        if (viewModel.isGroup.value == true) {
+            binding.sendArea.messageToSend.removeTextChangedListener(textObserver)
+        }
+
         try {
             adapter.unregisterAdapterDataObserver(dataObserver)
         } catch (e: IllegalStateException) {

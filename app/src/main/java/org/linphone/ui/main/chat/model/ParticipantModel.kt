@@ -27,13 +27,19 @@ import org.linphone.core.Address
 
 class ParticipantModel @WorkerThread constructor(
     val address: Address,
-    val isMyselfAdmin: Boolean,
-    val isParticipantAdmin: Boolean,
+    val isMyselfAdmin: Boolean = false,
+    val isParticipantAdmin: Boolean = false,
+    private val onClicked: ((model: ParticipantModel) -> Unit)? = null,
     private val onMenuClicked: ((view: View, model: ParticipantModel) -> Unit)? = null
 ) {
     val sipUri = address.asStringUriOnly()
 
     val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(address)
+
+    @UiThread
+    fun onClicked() {
+        onClicked?.invoke(this)
+    }
 
     @UiThread
     fun openMenu(view: View) {
