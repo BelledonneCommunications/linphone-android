@@ -278,6 +278,13 @@ class ConversationFragment : GenericFragment() {
             }
         }
 
+        viewModel.conferenceToJoinEvent.observe(viewLifecycleOwner) {
+            it.consume { conferenceUri ->
+                Log.i("$TAG Requesting to go to waiting room for conference URI [$conferenceUri]")
+                sharedViewModel.goToMeetingWaitingRoomEvent.value = Event(conferenceUri)
+            }
+        }
+
         binding.root.setKeyboardInsetListener { keyboardVisible ->
             if (keyboardVisible) {
                 viewModel.isEmojiPickerOpen.value = false

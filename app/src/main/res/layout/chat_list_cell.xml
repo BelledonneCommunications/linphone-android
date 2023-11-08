@@ -63,11 +63,18 @@
             app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 
         <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/unread_count_right_border"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="start"
+            app:constraint_referenced_ids="ephemeral, muted, date_time, last_sent_message_status" />
+
+        <androidx.constraintlayout.widget.Barrier
             android:id="@+id/right_border"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="start"
-            app:constraint_referenced_ids="notifications_count, date_time" />
+            app:constraint_referenced_ids="notifications_count, date_time, ephemeral, muted, last_sent_message_status" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
@@ -124,19 +131,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/name"
-            app:layout_constraintEnd_toStartOf="@id/date_time"/>
-
-        <ImageView
-            android:id="@+id/last_sent_message_status"
-            android:layout_width="@dimen/small_icon_size"
-            android:layout_height="@dimen/small_icon_size"
-            android:layout_marginEnd="10dp"
-            android:src="@{model.lastMessageIcon, default=@drawable/check}"
-            android:visibility="@{model.isLastMessageOutgoing ? View.VISIBLE : View.GONE}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/name"
-            app:layout_constraintBottom_toBottomOf="@id/name"
-            app:tint="@color/orange_main_500" />
+            app:layout_constraintEnd_toStartOf="@id/unread_count_right_border"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_300"
@@ -147,9 +142,21 @@
             android:text="@{model.dateTime, default=`16:45`}"
             android:textSize="12sp"
             android:textColor="@color/gray_main2_500"
-            app:layout_constraintEnd_toStartOf="@id/last_sent_message_status"
-            app:layout_constraintTop_toTopOf="@id/last_sent_message_status"
-            app:layout_constraintBottom_toBottomOf="@id/last_sent_message_status" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/name"
+            app:layout_constraintBottom_toBottomOf="@id/name" />
+
+        <ImageView
+            android:id="@+id/last_sent_message_status"
+            android:layout_width="@dimen/small_icon_size"
+            android:layout_height="@dimen/small_icon_size"
+            android:layout_marginEnd="10dp"
+            android:src="@{model.lastMessageIcon, default=@drawable/check}"
+            android:visibility="@{model.isLastMessageOutgoing ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/date_time"
+            app:layout_constraintBottom_toTopOf="@id/separator"
+            app:tint="@color/orange_main_500" />
 
         <ImageView
             android:id="@+id/muted"
@@ -158,7 +165,7 @@
             android:layout_marginEnd="10dp"
             android:src="@drawable/bell_simple_slash"
             android:visibility="@{model.isMuted ? View.VISIBLE : View.GONE}"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/last_sent_message_status"
             app:layout_constraintTop_toBottomOf="@id/date_time"
             app:layout_constraintBottom_toTopOf="@id/separator"
             app:tint="@color/gray_main2_400" />

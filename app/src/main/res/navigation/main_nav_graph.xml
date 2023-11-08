@@ -220,6 +220,12 @@
             app:enterAnim="@anim/slide_in"
             app:popExitAnim="@anim/slide_out"
             app:launchSingleTop="true" />
+        <action
+            android:id="@+id/action_conversationsFragment_to_meetingWaitingRoomFragment"
+            app:destination="@id/meetingWaitingRoomFragment"
+            app:enterAnim="@anim/slide_in"
+            app:popExitAnim="@anim/slide_out"
+            app:launchSingleTop="true" />
     </fragment>
 
     <fragment
@@ -260,10 +266,8 @@
         <action
             android:id="@+id/action_meetingsFragment_to_meetingWaitingRoomFragment"
             app:destination="@id/meetingWaitingRoomFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in"
+            app:popExitAnim="@anim/slide_out"
             app:launchSingleTop="true" />
     </fragment>
 

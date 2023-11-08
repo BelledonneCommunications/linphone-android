@@ -31,7 +31,8 @@ class EventLogModel @WorkerThread constructor(
     isFromGroup: Boolean,
     isGroupedWithPreviousOne: Boolean,
     isGroupedWithNextOne: Boolean,
-    onContentClicked: ((file: String) -> Unit)? = null
+    onContentClicked: ((file: String) -> Unit)? = null,
+    onJoinConferenceClicked: ((uri: String) -> Unit)? = null
 ) {
     companion object {
         private const val TAG = "[Event Log Model]"
@@ -68,7 +69,8 @@ class EventLogModel @WorkerThread constructor(
             chatMessage.replyMessageId,
             isGroupedWithPreviousOne,
             isGroupedWithNextOne,
-            onContentClicked
+            onContentClicked,
+            onJoinConferenceClicked
         )
     }
 

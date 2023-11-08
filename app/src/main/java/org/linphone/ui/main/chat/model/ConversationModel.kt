@@ -222,10 +222,22 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
 
     @WorkerThread
     private fun updateLastMessageStatus(message: ChatMessage) {
-        val text = LinphoneUtils.getTextDescribingMessage(message)
-        lastMessageText.postValue(text)
-
         val isOutgoing = message.isOutgoing
+
+        val text = LinphoneUtils.getTextDescribingMessage(message)
+        if (isGroup && !isOutgoing) {
+            val fromAddress = message.fromAddress
+            val sender = coreContext.contactsManager.findContactByAddress(fromAddress)
+            val name = sender?.name ?: LinphoneUtils.getDisplayName(fromAddress)
+            val senderName = AppUtils.getFormattedString(
+                R.string.conversations_last_message_format,
+                name
+            )
+            lastMessageText.postValue("$senderName $text")
+        } else {
+            lastMessageText.postValue(text)
+        }
+
         isLastMessageOutgoing.postValue(isOutgoing)
         if (isOutgoing) {
             lastMessageIcon.postValue(LinphoneUtils.getChatIconResId(message.state))
@@ -258,8 +270,7 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
                 TimestampUtils.timeToString(chatRoom.lastUpdateTime)
             }
             TimestampUtils.isYesterday(timestamp) -> {
-                val time = TimestampUtils.timeToString(chatRoom.lastUpdateTime)
-                AppUtils.getFormattedString(R.string.conversation_yesterday_timestamp, time)
+                AppUtils.getString(R.string.yesterday)
             }
             else -> {
                 TimestampUtils.toString(chatRoom.lastUpdateTime, onlyDate = true)

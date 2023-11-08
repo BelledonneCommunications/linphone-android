@@ -52,7 +52,8 @@ class ChatMessageModel @WorkerThread constructor(
     val replyToMessageId: String?,
     val isGroupedWithPreviousOne: Boolean,
     val isGroupedWithNextOne: Boolean,
-    val onContentClicked: ((file: String) -> Unit)? = null
+    private val onContentClicked: ((file: String) -> Unit)? = null,
+    private val onJoinConferenceClicked: ((uri: String) -> Unit)? = null
 ) {
     companion object {
         private const val TAG = "[Chat Message Model]"
@@ -207,8 +208,12 @@ class ChatMessageModel @WorkerThread constructor(
     fun joinConference() {
         coreContext.postOnCoreThread {
             if (::meetingConferenceUri.isInitialized) {
-                Log.i("$TAG Calling conference URI [${meetingConferenceUri.asStringUriOnly()}]")
-                coreContext.startCall(meetingConferenceUri)
+                val uri = meetingConferenceUri.asStringUriOnly()
+                coreContext.postOnMainThread {
+                    onJoinConferenceClicked?.invoke(uri)
+                }
+                /*Log.i("$TAG Calling conference URI [${meetingConferenceUri.asStringUriOnly()}]")
+                coreContext.startCall(meetingConferenceUri)*/
             }
         }
     }
@@ -347,9 +352,12 @@ class ChatMessageModel @WorkerThread constructor(
             meetingDay.postValue(TimestampUtils.dayOfWeek(timestamp))
             meetingDayNumber.postValue(TimestampUtils.dayOfMonth(timestamp))
 
-            // TODO: fixme
+            var count = 0
+            for (info in conferenceInfo.participantInfos) {
+                count += 1
+            }
             meetingParticipants.postValue(
-                AppUtils.getFormattedString(R.string.conference_participants_list_title, "24")
+                AppUtils.getFormattedString(R.string.conference_participants_list_title, "$count")
             )
 
             meetingFound.postValue(true)

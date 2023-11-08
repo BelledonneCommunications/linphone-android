@@ -55,7 +55,10 @@ class ConversationsFragment : GenericFragment() {
     }
 
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
-        if (findNavController().currentDestination?.id == R.id.startConversationFragment) {
+        if (
+            findNavController().currentDestination?.id == R.id.startConversationFragment ||
+            findNavController().currentDestination?.id == R.id.meetingWaitingRoomFragment
+        ) {
             // Holds fragment in place while new contact fragment slides over it
             return AnimationUtils.loadAnimation(activity, R.anim.hold)
         }
@@ -115,9 +118,12 @@ class ConversationsFragment : GenericFragment() {
 
         sharedViewModel.showStartConversationEvent.observe(viewLifecycleOwner) {
             it.consume {
-                Log.i("$TAG Navigating to start conversation fragment")
-                val action = ConversationsFragmentDirections.actionConversationsFragmentToStartConversationFragment()
-                findNavController().navigate(action)
+                if (findNavController().currentDestination?.id == R.id.conversationsFragment) {
+                    Log.i("$TAG Navigating to start conversation fragment")
+                    val action =
+                        ConversationsFragmentDirections.actionConversationsFragmentToStartConversationFragment()
+                    findNavController().navigate(action)
+                }
             }
         }
 
@@ -133,6 +139,19 @@ class ConversationsFragment : GenericFragment() {
                     remoteSipUri
                 )
                 binding.chatNavContainer.findNavController().navigate(action)
+            }
+        }
+
+        sharedViewModel.goToMeetingWaitingRoomEvent.observe(viewLifecycleOwner) {
+            it.consume { uri ->
+                if (findNavController().currentDestination?.id == R.id.conversationsFragment) {
+                    Log.i("$TAG Navigating to meeting waiting room fragment with URI [$uri]")
+                    val action =
+                        ConversationsFragmentDirections.actionConversationsFragmentToMeetingWaitingRoomFragment(
+                            uri
+                        )
+                    findNavController().navigate(action)
+                }
             }
         }
 
