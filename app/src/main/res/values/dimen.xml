@@ -74,6 +74,7 @@
     <dimen name="chat_bubble_images_rounded_corner_radius">5dp</dimen>
     <dimen name="chat_bubble_start_margin_when_avatar_displayed">10dp</dimen>
 
-    <dimen name="chat_room_emoji_picker_height">290dp</dimen>
+    <dimen name="chat_room_emoji_picker_height">300dp</dimen>
+    <dimen name="chat_room_participants_list_max_height">300dp</dimen>
     <dimen name="chat_bubble_emoji_picker_height">425dp</dimen>
 </resources>

@@ -23,6 +23,8 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Address
@@ -35,6 +37,7 @@ import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.chat.model.ChatMessageModel
 import org.linphone.ui.main.chat.model.EventLogModel
+import org.linphone.ui.main.chat.model.FileModel
 import org.linphone.ui.main.chat.model.ParticipantModel
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.utils.AppUtils
@@ -75,9 +78,9 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     val participants = MutableLiveData<ArrayList<ParticipantModel>>()
 
-    val participantUsernameToAddEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
-    }
+    val isFileAttachmentsListOpen = MutableLiveData<Boolean>()
+
+    val attachments = MutableLiveData<ArrayList<FileModel>>()
 
     val isReplying = MutableLiveData<Boolean>()
 
@@ -104,6 +107,14 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
     }
 
     val openWebBrowserEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
+
+    val emojiToAddEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
+
+    val participantUsernameToAddEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
     }
 
@@ -210,6 +221,12 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
     override fun onCleared() {
         super.onCleared()
 
+        viewModelScope.launch {
+            for (file in attachments.value.orEmpty()) {
+                file.deleteFile()
+            }
+        }
+
         coreContext.postOnCoreThread {
             if (::chatRoom.isInitialized) {
                 chatRoom.removeListener(chatRoomListener)
@@ -309,7 +326,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     @UiThread
     fun insertEmoji(emoji: String) {
-        textToSend.value = "${textToSend.value.orEmpty()}$emoji"
+        emojiToAddEvent.value = Event(emoji)
     }
 
     @UiThread
@@ -375,6 +392,61 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
             Log.i("$TAG Deleting message id [${chatMessageModel.id}]")
             chatRoom.deleteMessage(chatMessageModel.chatMessage)
+        }
+    }
+
+    @UiThread
+    fun closeParticipantsList() {
+        isParticipantsListOpen.value = false
+    }
+
+    @UiThread
+    fun closeFileAttachmentsList() {
+        viewModelScope.launch {
+            for (file in attachments.value.orEmpty()) {
+                file.deleteFile()
+            }
+        }
+        val list = arrayListOf<FileModel>()
+        attachments.value = list
+
+        isFileAttachmentsListOpen.value = false
+    }
+
+    @UiThread
+    fun addAttachment(file: String) {
+        val list = arrayListOf<FileModel>()
+        list.addAll(attachments.value.orEmpty())
+        val model = FileModel(file) { file ->
+            removeAttachment(file)
+        }
+        list.add(model)
+        attachments.value = list
+
+        isFileAttachmentsListOpen.value = true
+    }
+
+    @UiThread
+    fun removeAttachment(file: String, delete: Boolean = true) {
+        val list = arrayListOf<FileModel>()
+        list.addAll(attachments.value.orEmpty())
+        val found = list.find {
+            it.file == file
+        }
+        if (found != null) {
+            if (delete) {
+                viewModelScope.launch {
+                    found.deleteFile()
+                }
+            }
+            list.remove(found)
+        } else {
+            Log.w("$TAG Failed to find file attachment matching [$file]")
+        }
+        attachments.value = list
+
+        if (list.isEmpty()) {
+            isFileAttachmentsListOpen.value = false
         }
     }
 

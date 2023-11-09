@@ -222,30 +222,9 @@
                 android:textSize="12sp"
                 android:textColor="@color/gray_main2_400"
                 android:visibility="@{viewModel.composingLabel.length() == 0 ? View.GONE : View.VISIBLE}"
-                app:layout_constraintBottom_toTopOf="@id/participants"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
-
-            <androidx.core.widget.NestedScrollView
-                android:id="@+id/participants"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/shape_squircle_gray_100_background"
-                android:visibility="@{viewModel.isParticipantsListOpen ? View.VISIBLE : View.GONE, default=gone}"
-                app:layout_constraintHeight_max="300dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:orientation="vertical"
-                    entries="@{viewModel.participants}"
-                    layout="@{@layout/chat_participant_list_cell}"/>
-
-            </androidx.core.widget.NestedScrollView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

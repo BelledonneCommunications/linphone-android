@@ -156,6 +156,25 @@ class FileUtils {
             return false
         }
 
+        suspend fun deleteFile(filePath: String) {
+            withContext(Dispatchers.IO) {
+                val file = File(filePath)
+                if (file.exists()) {
+                    try {
+                        if (file.delete()) {
+                            Log.i("$TAG Deleted $filePath")
+                        } else {
+                            Log.e("$TAG Can't delete $filePath")
+                        }
+                    } catch (e: Exception) {
+                        Log.e("$TAG Can't delete $filePath, exception: $e")
+                    }
+                } else {
+                    Log.e("$TAG File $filePath doesn't exists")
+                }
+            }
+        }
+
         @AnyThread
         suspend fun dumpStringToFile(data: String, to: File): Boolean {
             try {

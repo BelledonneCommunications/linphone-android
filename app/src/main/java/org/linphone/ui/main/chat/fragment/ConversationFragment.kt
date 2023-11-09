@@ -67,11 +67,13 @@ import org.linphone.ui.main.chat.adapter.ConversationEventAdapter
 import org.linphone.ui.main.chat.model.ChatMessageDeliveryModel
 import org.linphone.ui.main.chat.model.ChatMessageModel
 import org.linphone.ui.main.chat.model.ChatMessageReactionsModel
+import org.linphone.ui.main.chat.view.RichEditText
 import org.linphone.ui.main.chat.viewmodel.ConversationViewModel
 import org.linphone.ui.main.chat.viewmodel.ConversationViewModel.Companion.SCROLLING_POSITION_NOT_SET
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
+import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.addCharacterAtPosition
 import org.linphone.utils.hideKeyboard
@@ -98,8 +100,18 @@ class ConversationFragment : GenericFragment() {
         ActivityResultContracts.PickMultipleVisualMedia()
     ) { list ->
         if (!list.isNullOrEmpty()) {
-            for (file in list) {
-                Log.i("$TAG Picked file [$file]")
+            for (uri in list) {
+                lifecycleScope.launch {
+                    withContext(Dispatchers.IO) {
+                        val path = FileUtils.getFilePath(requireContext(), uri, false)
+                        Log.i("$TAG Picked file [$uri] matching path is [$path]")
+                        if (path != null) {
+                            withContext(Dispatchers.Main) {
+                                viewModel.addAttachment(path)
+                            }
+                        }
+                    }
+                }
             }
         } else {
             Log.w("$TAG No file picked")
@@ -288,6 +300,12 @@ class ConversationFragment : GenericFragment() {
             }
         }
 
+        viewModel.emojiToAddEvent.observe(viewLifecycleOwner) {
+            it.consume { emoji ->
+                binding.sendArea.messageToSend.addCharacterAtPosition(emoji)
+            }
+        }
+
         viewModel.participantUsernameToAddEvent.observe(viewLifecycleOwner) {
             it.consume { username ->
                 Log.i("$TAG Adding username [$username] after '@'")
@@ -350,6 +368,33 @@ class ConversationFragment : GenericFragment() {
                 }
             }
         }
+
+        sharedViewModel.richContentUri.observe(
+            viewLifecycleOwner
+        ) {
+            it.consume { uri ->
+                Log.i("$TAG Found rich content URI: $uri")
+                lifecycleScope.launch {
+                    withContext(Dispatchers.IO) {
+                        val path = FileUtils.getFilePath(requireContext(), uri, false)
+                        Log.i("$TAG Rich content URI [$uri] matching path is [$path]")
+                        if (path != null) {
+                            withContext(Dispatchers.Main) {
+                                viewModel.addAttachment(path)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        binding.sendArea.messageToSend.setControlEnterListener(object :
+                RichEditText.RichEditTextSendListener {
+                override fun onControlEnterPressedAndReleased() {
+                    Log.i("$TAG Detected left control + enter key presses, sending message")
+                    viewModel.sendMessage()
+                }
+            })
 
         binding.root.setKeyboardInsetListener { keyboardVisible ->
             if (keyboardVisible) {

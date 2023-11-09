@@ -24,10 +24,9 @@
         <ImageView
             android:id="@+id/cancel"
             android:onClick="@{() -> viewModel.cancelReply()}"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:padding="15dp"
-            android:adjustViewBounds="true"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_marginEnd="10dp"
             android:src="@drawable/x"
             app:tint="@color/icon_color_selector"
             app:layout_constraintEnd_toEndOf="parent"

@@ -232,7 +232,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="16dp"
                     android:nestedScrollingEnabled="true"
-                    app:layout_constraintHeight_max="300dp"
+                    app:layout_constraintHeight_max="@dimen/chat_room_participants_list_max_height"
                     app:layout_constrainedHeight="true"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

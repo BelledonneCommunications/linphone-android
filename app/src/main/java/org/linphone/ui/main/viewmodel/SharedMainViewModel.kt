@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.main.viewmodel
 
+import android.net.Uri
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -106,10 +107,13 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
-    var displayedChatRoom: ChatRoom? = null
+    var displayedChatRoom: ChatRoom? = null // Prevents the need to go look for the chat room
     val showConversationEvent: MutableLiveData<Event<Pair<String, String>>> by lazy {
         MutableLiveData<Event<Pair<String, String>>>()
     }
+
+    // When using keyboard to share gif or other, see RichContentReceiver & RichEditText classes
+    val richContentUri = MutableLiveData<Event<Uri>>()
 
     /* Meetings related */
 
