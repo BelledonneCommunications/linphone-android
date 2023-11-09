@@ -320,18 +320,16 @@ class MainActivity : AppCompatActivity() {
         val navGraph = findNavController().navInflater.inflate(R.navigation.main_nav_graph)
         if (intent.hasExtra("Chat")) {
             Log.i("$TAG New intent with [Chat] extra")
-            coreContext.postOnMainThread {
-                if (isNewIntent) {
-                    Log.i("$TAG Going to Conversations fragment")
-                    findNavController().navigate(
-                        R.id.action_global_conversationsFragment,
-                        intent.extras
-                    )
-                } else {
-                    Log.i("$TAG Going to Conversations fragment instead of default destination")
-                    navGraph.setStartDestination(R.id.conversationsFragment)
-                    findNavController().setGraph(navGraph, intent.extras)
-                }
+            if (isNewIntent) {
+                Log.i("$TAG Going to Conversations fragment")
+                findNavController().navigate(
+                    R.id.action_global_conversationsFragment,
+                    intent.extras
+                )
+            } else {
+                Log.i("$TAG Going to Conversations fragment instead of default destination")
+                navGraph.setStartDestination(R.id.conversationsFragment)
+                findNavController().setGraph(navGraph, intent.extras)
             }
         } else {
             if (!isNewIntent && defaultDestination > 0) {
