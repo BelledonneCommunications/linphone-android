@@ -53,6 +53,49 @@ class FileUtils {
         private const val TAG = "[File Utils]"
 
         @AnyThread
+        fun isExtensionVideo(path: String): Boolean {
+            val extension = getExtensionFromFileName(path)
+            val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+            return getMimeType(type) == MimeType.Video
+        }
+
+        @AnyThread
+        fun getExtensionFromFileName(fileName: String): String {
+            var extension = MimeTypeMap.getFileExtensionFromUrl(fileName)
+            if (extension.isNullOrEmpty()) {
+                val i = fileName.lastIndexOf('.')
+                if (i > 0) {
+                    extension = fileName.substring(i + 1)
+                }
+            }
+
+            return extension.lowercase(Locale.getDefault())
+        }
+
+        @AnyThread
+        fun getMimeType(type: String?): MimeType {
+            if (type.isNullOrEmpty()) return MimeType.Unknown
+            return when {
+                type.startsWith("image/") -> MimeType.Image
+                type.startsWith("text/plain") -> MimeType.PlainText
+                type.startsWith("video/") -> MimeType.Video
+                type.startsWith("audio/") -> MimeType.Audio
+                type.startsWith("application/pdf") -> MimeType.Pdf
+                else -> MimeType.Unknown
+            }
+        }
+
+        @AnyThread
+        fun getNameFromFilePath(filePath: String): String {
+            var name = filePath
+            val i = filePath.lastIndexOf('/')
+            if (i > 0) {
+                name = filePath.substring(i + 1)
+            }
+            return name
+        }
+
+        @AnyThread
         fun getProperFilePath(path: String): String {
             if (path.startsWith("file:") || path.startsWith("content:")) {
                 return path
@@ -270,39 +313,6 @@ class FileUtils {
                 name = uri.lastPathSegment ?: ""
             }
             return name
-        }
-
-        @AnyThread
-        fun isExtensionVideo(path: String): Boolean {
-            val extension = getExtensionFromFileName(path)
-            val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
-            return getMimeType(type) == MimeType.Video
-        }
-
-        @AnyThread
-        private fun getExtensionFromFileName(fileName: String): String {
-            var extension = MimeTypeMap.getFileExtensionFromUrl(fileName)
-            if (extension.isNullOrEmpty()) {
-                val i = fileName.lastIndexOf('.')
-                if (i > 0) {
-                    extension = fileName.substring(i + 1)
-                }
-            }
-
-            return extension.lowercase(Locale.getDefault())
-        }
-
-        @AnyThread
-        private fun getMimeType(type: String?): MimeType {
-            if (type.isNullOrEmpty()) return MimeType.Unknown
-            return when {
-                type.startsWith("image/") -> MimeType.Image
-                type.startsWith("text/plain") -> MimeType.PlainText
-                type.startsWith("video/") -> MimeType.Video
-                type.startsWith("audio/") -> MimeType.Audio
-                type.startsWith("application/pdf") -> MimeType.Pdf
-                else -> MimeType.Unknown
-            }
         }
     }
 }

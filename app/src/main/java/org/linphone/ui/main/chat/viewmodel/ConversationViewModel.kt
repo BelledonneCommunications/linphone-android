@@ -42,6 +42,7 @@ import org.linphone.ui.main.chat.model.ParticipantModel
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
+import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
 
 class ConversationViewModel @UiThread constructor() : ViewModel() {
@@ -364,6 +365,28 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
                 message.addUtf8TextContent(toSend)
             }
 
+            for (attachment in attachments.value.orEmpty()) {
+                val content = Factory.instance().createContent()
+
+                content.type = when (attachment.mimeType) {
+                    FileUtils.MimeType.Image -> "image"
+                    FileUtils.MimeType.Audio -> "audio"
+                    FileUtils.MimeType.Video -> "video"
+                    FileUtils.MimeType.Pdf -> "application"
+                    FileUtils.MimeType.PlainText -> "text"
+                    else -> "file"
+                }
+                content.subtype = if (attachment.mimeType == FileUtils.MimeType.PlainText) {
+                    "plain"
+                } else {
+                    FileUtils.getExtensionFromFileName(attachment.fileName)
+                }
+                content.name = attachment.fileName
+                content.filePath = attachment.file // Let the file body handler take care of the upload
+
+                message.addFileContent(content)
+            }
+
             if (message.contents.isNotEmpty()) {
                 Log.i("$TAG Sending message")
                 message.send()
@@ -372,6 +395,14 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             Log.i("$TAG Message sent, re-setting defaults")
             textToSend.postValue("")
             isReplying.postValue(false)
+            isFileAttachmentsListOpen.postValue(false)
+            isParticipantsListOpen.postValue(false)
+            isEmojiPickerOpen.postValue(false)
+
+            // Warning: do not delete files
+            val attachmentsList = arrayListOf<FileModel>()
+            attachments.postValue(attachmentsList)
+
             chatMessageToReplyTo = null
         }
     }
@@ -545,7 +576,6 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     @WorkerThread
     private fun getEventsListFromHistory(history: Array<EventLog>, filter: String = ""): ArrayList<EventLogModel> {
-        var xFirstEventsSubmitted = false
         val eventsList = arrayListOf<EventLogModel>()
         val groupedEventLogs = arrayListOf<EventLog>()
         for (event in history) {

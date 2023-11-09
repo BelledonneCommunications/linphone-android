@@ -259,7 +259,8 @@ private fun loadImageForChatBubble(imageView: ImageView, file: String?, grid: Bo
             }
         } else {
             imageView.load(file) {
-                transformations(RoundedCornersTransformation(radius))
+                // Can't have a transformation for gif file, breaks animation
+                // transformations(RoundedCornersTransformation(radius))
                 size(width, height)
                 listener(
                     onError = { _, result ->

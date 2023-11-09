@@ -165,6 +165,7 @@ class ConversationFragment : GenericFragment() {
     }
 
     override fun goBack(): Boolean {
+        coreContext.notificationsManager.resetCurrentlyDisplayedChatRoomId()
         sharedViewModel.closeSlidingPaneEvent.value = Event(true)
         // If not done, when going back to ConversationsFragment this fragment will be created again
         return findNavController().popBackStack()
@@ -226,10 +227,6 @@ class ConversationFragment : GenericFragment() {
             (view.parent as? ViewGroup)?.doOnPreDraw {
                 startPostponedEnterTransition()
                 sharedViewModel.openSlidingPaneEvent.value = Event(true)
-            }
-
-            if (currentCount < items.size) {
-                binding.eventsList.scrollToPosition(items.size - 1)
             }
         }
 
@@ -412,6 +409,8 @@ class ConversationFragment : GenericFragment() {
 
         if (viewModel.scrollingPosition != SCROLLING_POSITION_NOT_SET) {
             binding.eventsList.scrollToPosition(viewModel.scrollingPosition)
+        } else {
+            binding.eventsList.scrollToPosition(adapter.itemCount - 1)
         }
 
         try {

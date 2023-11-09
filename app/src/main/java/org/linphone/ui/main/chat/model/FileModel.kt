@@ -1,5 +1,6 @@
 package org.linphone.ui.main.chat.model
 
+import android.webkit.MimeTypeMap
 import androidx.annotation.AnyThread
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
@@ -14,10 +15,18 @@ class FileModel @AnyThread constructor(
         private const val TAG = "[File Model]"
     }
 
+    val fileName: String = FileUtils.getNameFromFilePath(file)
+
     val path = MutableLiveData<String>()
+
+    val mimeType: FileUtils.MimeType
 
     init {
         path.postValue(file)
+
+        val extension = FileUtils.getExtensionFromFileName(file)
+        val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+        mimeType = FileUtils.getMimeType(mime)
     }
 
     @UiThread
