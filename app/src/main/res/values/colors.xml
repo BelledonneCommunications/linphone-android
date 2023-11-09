@@ -25,6 +25,7 @@
     <color name="gray_400">#949494</color>
     <color name="gray_500">#4E4E4E</color>
     <color name="gray_600">#2E3030</color>
+    <color name="gray_800">#0F0F0F</color>
     <color name="gray_900">#070707</color>
 
     <color name="red_danger_200">#F5CCBE</color>
