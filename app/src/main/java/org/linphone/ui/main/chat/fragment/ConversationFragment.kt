@@ -123,6 +123,7 @@ class ConversationFragment : GenericFragment() {
             if (positionStart == 0 && adapter.itemCount == itemCount) {
                 // First time we fill the list with messages
                 Log.i("$TAG [$itemCount] events have been loaded")
+                binding.eventsList.scrollToPosition(adapter.itemCount - 1)
             } else {
                 Log.i("$TAG [$itemCount] new events have been loaded, scrolling to bottom")
                 binding.eventsList.smoothScrollToPosition(adapter.itemCount - 1)
@@ -176,7 +177,7 @@ class ConversationFragment : GenericFragment() {
         isSlidingPaneChild = true
 
         super.onViewCreated(view, savedInstanceState)
-        postponeEnterTransition()
+        // postponeEnterTransition()
 
         binding.lifecycleOwner = viewLifecycleOwner
 
@@ -225,7 +226,7 @@ class ConversationFragment : GenericFragment() {
             }
 
             (view.parent as? ViewGroup)?.doOnPreDraw {
-                startPostponedEnterTransition()
+                // startPostponedEnterTransition()
                 sharedViewModel.openSlidingPaneEvent.value = Event(true)
             }
         }
