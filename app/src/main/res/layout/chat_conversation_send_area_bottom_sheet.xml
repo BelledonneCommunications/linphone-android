@@ -146,7 +146,7 @@
             android:layout_width="40dp"
             android:layout_height="0dp"
             android:layout_marginEnd="4dp"
-            android:enabled="@{viewModel.textToSend.length() > 0 || viewModel.attachments.size() > 0}"
+            android:visibility="@{viewModel.textToSend.length() > 0 || viewModel.attachments.size() > 0 ? View.VISIBLE : View.GONE, default=gone}"
             android:onClick="@{() -> viewModel.sendMessage()}"
             android:padding="8dp"
             android:src="@drawable/paper_plane_tilt"
@@ -154,6 +154,20 @@
             app:layout_constraintEnd_toEndOf="@id/message_area_background"
             app:layout_constraintTop_toTopOf="@id/message_area_background"
             app:tint="@color/icon_primary_color_selector" />
+
+        <ImageView
+            android:id="@+id/record_voice_message"
+            android:layout_width="40dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="4dp"
+            android:visibility="@{viewModel.textToSend.length() > 0 || viewModel.attachments.size() > 0 ? View.GONE : View.VISIBLE}"
+            android:onClick="@{() -> viewModel.startVoiceMessageRecording()}"
+            android:padding="8dp"
+            android:src="@drawable/microphone"
+            app:layout_constraintBottom_toBottomOf="@id/message_area_background"
+            app:layout_constraintEnd_toEndOf="@id/message_area_background"
+            app:layout_constraintTop_toTopOf="@id/message_area_background"
+            app:tint="@color/gray_main2_500" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

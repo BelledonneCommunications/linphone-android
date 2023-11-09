@@ -207,13 +207,14 @@ class MainViewModel @UiThread constructor() : ViewModel() {
                 }
                 callsStatus.postValue(LinphoneUtils.callStateToString(currentCall.state))
             }
+
+            Log.i("$TAG At least a call, asking fragment to change status bar color")
+            changeSystemTopBarColorEvent.postValue(Event(IN_CALL))
         } else {
             callLabel.postValue(
                 AppUtils.getFormattedString(R.string.calls_count_label, core.callsNb)
             )
             callsStatus.postValue("") // TODO: improve ?
         }
-        Log.i("$TAG At least a call, asking fragment to change status bar color")
-        changeSystemTopBarColorEvent.postValue(Event(IN_CALL))
     }
 }

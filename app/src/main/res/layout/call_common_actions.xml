@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/call_main_actions_menu_height"
         android:paddingBottom="5dp"
-        android:background="@color/gray_900">
+        android:background="@drawable/shape_call_bottom_sheet_background">
 
         <com.google.android.material.bottomsheet.BottomSheetDragHandleView
             android:onClick="@{() -> viewModel.toggleExpandActionsMenu()}"
@@ -24,11 +24,12 @@
             android:id="@+id/toggle_expand"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:src="@{viewModel.isActionsMenuExpanded ? @drawable/caret_down : @drawable/caret_up, default=@drawable/caret_up}"
+            android:padding="11dp"
+            android:src="@drawable/shape_drawer_handle"
             app:tint="@color/white"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/hang_up" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:onClick="@{() -> viewModel.hangUp()}"

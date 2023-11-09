@@ -148,7 +148,7 @@
             bind:viewModel="@{viewModel}"
             bind:showExpandToggle="@{false}"
             android:id="@+id/bottom_bar"
-            layout="@layout/call_main_actions"
+            layout="@layout/call_common_actions"
             android:layout_width="0dp"
             android:layout_height="@dimen/call_main_actions_menu_height"
             app:layout_constraintStart_toStartOf="parent"

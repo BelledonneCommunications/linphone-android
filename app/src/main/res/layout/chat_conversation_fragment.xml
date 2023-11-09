@@ -233,7 +233,7 @@
             openFilePickerClickListener="@{openFilePickerClickListener}"
             viewModel="@{viewModel}"
             android:visibility="@{viewModel.isReadOnly ? View.GONE : View.VISIBLE}"
-            layout="@layout/chat_conversation_send_area"/>
+            layout="@layout/chat_conversation_send_area_bottom_sheet"/>
 
         <include
             android:id="@+id/message_bottom_sheet"

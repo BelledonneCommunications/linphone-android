@@ -208,7 +208,7 @@
         <include
             android:id="@+id/bottom_bar"
             android:visibility="@{viewModel.fullScreenMode || viewModel.pipMode ? View.INVISIBLE : View.VISIBLE}"
-            layout="@layout/call_extra_conference_actions"
+            layout="@layout/call_conference_actions_bottom_sheet"
             bind:viewModel="@{viewModel}"
             bind:callsViewModel="@{callsViewModel}"
             bind:participantsListClickListener="@{participantsListClickListener}"

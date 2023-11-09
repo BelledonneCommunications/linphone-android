@@ -483,6 +483,26 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         }
     }
 
+    @UiThread
+    fun startVoiceMessageRecording() {
+    }
+
+    @UiThread
+    fun stopVoiceMessageRecording() {
+    }
+
+    @UiThread
+    fun cancelVoiceMessageRecording() {
+    }
+
+    @UiThread
+    fun playVoiceMessageRecording() {
+    }
+
+    @UiThread
+    fun pauseVoiceMessageRecording() {
+    }
+
     @WorkerThread
     private fun configureChatRoom() {
         scrollingPosition = SCROLLING_POSITION_NOT_SET

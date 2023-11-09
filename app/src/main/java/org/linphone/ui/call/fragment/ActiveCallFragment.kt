@@ -261,22 +261,6 @@ class ActiveCallFragment : GenericCallFragment() {
                 }
             }
         }
-
-        actionsBottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when (newState) {
-                    BottomSheetBehavior.STATE_COLLAPSED, BottomSheetBehavior.STATE_HIDDEN -> {
-                        callViewModel.isActionsMenuExpanded.value = false
-                    }
-                    BottomSheetBehavior.STATE_EXPANDED -> {
-                        callViewModel.isActionsMenuExpanded.value = true
-                    }
-                    else -> {}
-                }
-            }
-
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
-        })
     }
 
     @SuppressLint("ClickableViewAccessibility")

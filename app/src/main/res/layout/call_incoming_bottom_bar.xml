@@ -12,7 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/gray_900"
+        android:background="@drawable/shape_call_bottom_sheet_background"
         android:paddingTop="15dp"
         android:paddingBottom="15dp">
 

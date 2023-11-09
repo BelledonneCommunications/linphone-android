@@ -12,9 +12,6 @@
             name="callsListClickListener"
             type="View.OnClickListener" />
         <variable
-            name="chatClickListener"
-            type="View.OnClickListener" />
-        <variable
             name="viewModel"
             type="org.linphone.ui.call.viewmodel.CurrentCallViewModel" />
         <variable
@@ -25,14 +22,14 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/call_all_actions_menu_height"
-        android:background="@color/gray_900"
+        android:background="@drawable/shape_call_bottom_sheet_background"
         app:behavior_hideable="false"
         app:behavior_peekHeight="@dimen/call_main_actions_menu_height"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <include
             android:id="@+id/main_actions"
-            layout="@layout/call_main_actions"
+            layout="@layout/call_common_actions"
             android:layout_width="0dp"
             android:layout_height="@dimen/call_main_actions_menu_height"
             app:layout_constraintEnd_toEndOf="parent"
@@ -46,14 +43,14 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/call_button_size"
             android:layout_marginTop="@dimen/call_extra_button_top_margin"
-            android:background="@drawable/in_call_button_background"
             android:padding="@dimen/call_button_icon_padding"
+            android:background="@drawable/in_call_button_background"
             android:src="@drawable/transfer"
+            app:tint="@color/in_call_button_tint_color"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="@id/transfer_label"
             app:layout_constraintStart_toStartOf="@id/transfer_label"
-            app:layout_constraintTop_toBottomOf="@id/main_actions"
-            app:tint="@color/in_call_button_tint_color" />
+            app:layout_constraintEnd_toEndOf="@id/transfer_label"
+            app:layout_constraintTop_toBottomOf="@id/main_actions" />
 
         <ImageView
             android:id="@+id/new_call"
@@ -61,14 +58,14 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/call_button_size"
             android:layout_marginTop="@dimen/call_extra_button_top_margin"
-            android:background="@drawable/in_call_button_background"
             android:padding="@dimen/call_button_icon_padding"
+            android:background="@drawable/in_call_button_background"
             android:src="@drawable/phone_plus"
+            app:tint="@color/in_call_button_tint_color"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="@id/new_call_label"
             app:layout_constraintStart_toStartOf="@id/new_call_label"
-            app:layout_constraintTop_toBottomOf="@id/main_actions"
-            app:tint="@color/in_call_button_tint_color" />
+            app:layout_constraintEnd_toEndOf="@id/new_call_label"
+            app:layout_constraintTop_toBottomOf="@id/main_actions" />
 
         <ImageView
             android:id="@+id/calls_list"
@@ -76,14 +73,14 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/call_button_size"
             android:layout_marginTop="@dimen/call_extra_button_top_margin"
-            android:background="@drawable/in_call_button_background"
             android:padding="@dimen/call_button_icon_padding"
+            android:background="@drawable/in_call_button_background"
             android:src="@drawable/calls_list"
+            app:tint="@color/in_call_button_tint_color"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="@id/calls_list_label"
             app:layout_constraintStart_toStartOf="@id/calls_list_label"
-            app:layout_constraintTop_toBottomOf="@id/main_actions"
-            app:tint="@color/in_call_button_tint_color" />
+            app:layout_constraintEnd_toEndOf="@id/calls_list_label"
+            app:layout_constraintTop_toBottomOf="@id/main_actions" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
@@ -109,29 +106,28 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/call_button_size"
             android:layout_marginTop="@dimen/call_extra_button_top_margin"
-            android:background="@drawable/in_call_button_background"
             android:padding="@dimen/call_button_icon_padding"
+            android:background="@drawable/in_call_button_background"
             android:src="@drawable/dialer"
+            app:tint="@color/in_call_button_tint_color"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="@id/layout_label"
             app:layout_constraintStart_toStartOf="@id/layout_label"
-            app:layout_constraintTop_toBottomOf="@id/main_actions"
-            app:tint="@color/in_call_button_tint_color" />
+            app:layout_constraintEnd_toEndOf="@id/layout_label"
+            app:layout_constraintTop_toBottomOf="@id/main_actions" />
 
         <ImageView
             android:id="@+id/chat"
-            android:onClick="@{chatClickListener}"
             android:layout_width="0dp"
             android:layout_height="@dimen/call_button_size"
             android:layout_marginTop="@dimen/call_extra_button_top_margin"
-            android:background="@drawable/in_call_button_background"
             android:padding="@dimen/call_button_icon_padding"
             android:src="@drawable/chat_teardrop_text"
+            android:background="@drawable/shape_round_in_call_disabled_button_background"
+            app:tint="@color/gray_500"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="@id/chat_label"
-            app:layout_constraintStart_toStartOf="@id/chat_label"
-            app:layout_constraintTop_toBottomOf="@id/main_actions"
-            app:tint="@color/in_call_button_tint_color" />
+            app:layout_constraintTop_toBottomOf="@id/transfer_label"
+            app:layout_constraintStart_toStartOf="@id/transfer"
+            app:layout_constraintEnd_toEndOf="@id/transfer"/>
 
         <ImageView
             android:id="@+id/pause_call"
@@ -141,14 +137,14 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/call_button_size"
             android:layout_marginTop="@dimen/call_extra_button_top_margin"
-            android:background="@drawable/in_call_button_background"
             android:padding="@dimen/call_button_icon_padding"
+            android:background="@drawable/in_call_button_background"
             android:src="@drawable/pause_call"
+            app:tint="@color/in_call_button_tint_color"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="@id/pause_call_label"
-            app:layout_constraintStart_toStartOf="@id/pause_call_label"
-            app:layout_constraintTop_toBottomOf="@id/main_actions"
-            app:tint="@color/in_call_button_tint_color" />
+            app:layout_constraintTop_toBottomOf="@id/new_call_label"
+            app:layout_constraintStart_toStartOf="@id/new_call"
+            app:layout_constraintEnd_toEndOf="@id/new_call"/>
 
         <ImageView
             android:id="@+id/record_call"
@@ -156,15 +152,15 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/call_button_size"
             android:layout_marginTop="@dimen/call_extra_button_top_margin"
-            android:background="@drawable/in_call_button_background"
             android:padding="@dimen/call_button_icon_padding"
+            android:background="@drawable/in_call_button_background"
             android:src="@drawable/record_fill"
             android:selected="@{viewModel.isRecording()}"
+            app:tint="@color/in_call_button_tint_color"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="@id/record_call_label"
-            app:layout_constraintStart_toStartOf="@id/record_call_label"
-            app:layout_constraintTop_toBottomOf="@id/main_actions"
-            app:tint="@color/in_call_button_tint_color" />
+            app:layout_constraintTop_toBottomOf="@id/calls_list_label"
+            app:layout_constraintStart_toStartOf="@id/calls_list"
+            app:layout_constraintEnd_toEndOf="@id/calls_list" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/in_call_extra_action_label_style"
@@ -172,11 +168,10 @@
             android:onClick="@{() -> viewModel.transferClicked()}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingBottom="15dp"
             android:text="@{callsViewModel.callsCount == 1 ? @string/call_action_blind_transfer : @string/call_action_attended_transfer, default=@string/call_action_blind_transfer}"
-            app:layout_constraintEnd_toStartOf="@id/new_call_label"
+            app:layout_constraintTop_toBottomOf="@id/transfer"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/transfer"/>
+            app:layout_constraintEnd_toStartOf="@id/new_call_label"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/in_call_extra_action_label_style"
@@ -184,11 +179,10 @@
             android:onClick="@{newCallClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingBottom="15dp"
             android:text="@string/call_action_start_new_call"
-            app:layout_constraintEnd_toStartOf="@id/calls_list_label"
+            app:layout_constraintTop_toBottomOf="@id/new_call"
             app:layout_constraintStart_toEndOf="@id/transfer_label"
-            app:layout_constraintTop_toBottomOf="@id/new_call"/>
+            app:layout_constraintEnd_toStartOf="@id/calls_list_label" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/in_call_extra_action_label_style"
@@ -196,11 +190,10 @@
             android:onClick="@{callsListClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingBottom="15dp"
             android:text="@string/call_action_go_to_calls_list"
-            app:layout_constraintEnd_toStartOf="@id/layout_label"
+            app:layout_constraintTop_toBottomOf="@id/calls_list"
             app:layout_constraintStart_toEndOf="@id/new_call_label"
-            app:layout_constraintTop_toBottomOf="@id/calls_list"/>
+            app:layout_constraintEnd_toStartOf="@id/layout_label" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/in_call_extra_action_label_style"
@@ -208,22 +201,21 @@
             android:onClick="@{() -> viewModel.showNumpad()}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingBottom="15dp"
             android:text="@string/call_action_show_dialer"
-            app:layout_constraintEnd_toStartOf="@id/chat_label"
+            app:layout_constraintTop_toBottomOf="@id/layout"
             app:layout_constraintStart_toEndOf="@id/calls_list_label"
-            app:layout_constraintTop_toBottomOf="@id/chat" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/chat_label"
             style="@style/in_call_extra_action_label_style"
+            android:id="@+id/chat_label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"
             android:text="@string/call_action_show_messages"
-            app:layout_constraintEnd_toStartOf="@id/pause_call_label"
-            app:layout_constraintStart_toEndOf="@id/layout_label"
-            app:layout_constraintTop_toBottomOf="@id/chat" />
+            app:layout_constraintTop_toBottomOf="@id/chat"
+            app:layout_constraintStart_toStartOf="@id/transfer_label"
+            app:layout_constraintEnd_toEndOf="@id/transfer_label" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/in_call_extra_action_label_style"
@@ -233,9 +225,9 @@
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"
             android:text="@string/call_action_pause_call"
-            app:layout_constraintEnd_toStartOf="@id/record_call_label"
-            app:layout_constraintStart_toEndOf="@id/chat_label"
-            app:layout_constraintTop_toBottomOf="@id/pause_call" />
+            app:layout_constraintTop_toBottomOf="@id/pause_call"
+            app:layout_constraintStart_toStartOf="@id/new_call_label"
+            app:layout_constraintEnd_toEndOf="@id/new_call_label" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/in_call_extra_action_label_style"
@@ -245,9 +237,9 @@
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"
             android:text="@string/call_action_record_call"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/pause_call_label"
-            app:layout_constraintTop_toBottomOf="@id/record_call" />
+            app:layout_constraintTop_toBottomOf="@id/record_call"
+            app:layout_constraintStart_toStartOf="@id/calls_list_label"
+            app:layout_constraintEnd_toEndOf="@id/calls_list_label" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

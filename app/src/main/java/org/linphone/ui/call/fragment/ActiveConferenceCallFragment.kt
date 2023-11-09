@@ -98,22 +98,6 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
             sharedViewModel.toggleFullScreenEvent.value = Event(hide)
         }
 
-        actionsBottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when (newState) {
-                    BottomSheetBehavior.STATE_COLLAPSED, BottomSheetBehavior.STATE_HIDDEN -> {
-                        callViewModel.isActionsMenuExpanded.value = false
-                    }
-                    BottomSheetBehavior.STATE_EXPANDED -> {
-                        callViewModel.isActionsMenuExpanded.value = true
-                    }
-                    else -> {}
-                }
-            }
-
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
-        })
-
         binding.setCallsListClickListener {
             Log.i("$TAG Going to calls list fragment")
             val action = ActiveConferenceCallFragmentDirections.actionActiveConferenceCallFragmentToCallsListFragment()

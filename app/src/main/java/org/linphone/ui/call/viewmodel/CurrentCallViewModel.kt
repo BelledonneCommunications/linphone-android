@@ -140,8 +140,6 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     // Extras actions
 
-    val isActionsMenuExpanded = MutableLiveData<Boolean>()
-
     val toggleExtraActionsBottomSheetEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -377,7 +375,6 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         isVideoEnabled.value = false
         isMicrophoneMuted.value = false
         fullScreenMode.value = false
-        isActionsMenuExpanded.value = false
 
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)

@@ -249,7 +249,7 @@
         <include
             android:id="@+id/bottom_bar"
             android:visibility="@{viewModel.fullScreenMode || viewModel.pipMode ? View.INVISIBLE : View.VISIBLE}"
-            layout="@layout/call_extra_actions"
+            layout="@layout/call_actions_bottom_sheet"
             bind:viewModel="@{viewModel}"
             bind:callsViewModel="@{callsViewModel}"
             bind:newCallClickListener="@{newCallClickListener}"
@@ -258,7 +258,7 @@
         <include
             android:id="@+id/call_numpad"
             android:visibility="@{viewModel.fullScreenMode || viewModel.pipMode ? View.INVISIBLE : View.VISIBLE}"
-            layout="@layout/call_numpad"
+            layout="@layout/call_numpad_bottom_sheet"
             bind:model="@{numpadModel}"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
