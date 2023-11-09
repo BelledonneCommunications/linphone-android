@@ -120,12 +120,14 @@ class ImageUtils {
                     null
                 }
 
-                canvas.drawBitmap(
-                    drawables[i].toBitmap(size, size, Bitmap.Config.ARGB_8888),
-                    src,
-                    rectangles[i],
-                    null
-                )
+                try {
+                    canvas.drawBitmap(
+                        drawables[i].toBitmap(size, size, Bitmap.Config.ARGB_8888),
+                        src,
+                        rectangles[i],
+                        null
+                    )
+                } catch (_: Exception) {}
             }
 
             return bitmap

@@ -89,6 +89,8 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     val isReplyingToMessage = MutableLiveData<String>()
 
+    val voiceRecordingInProgress = MutableLiveData<Boolean>()
+
     var scrollingPosition: Int = SCROLLING_POSITION_NOT_SET
 
     val requestKeyboardHidingEvent: MutableLiveData<Event<Boolean>> by lazy {
@@ -485,6 +487,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     @UiThread
     fun startVoiceMessageRecording() {
+        voiceRecordingInProgress.value = true
     }
 
     @UiThread
@@ -493,6 +496,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     @UiThread
     fun cancelVoiceMessageRecording() {
+        voiceRecordingInProgress.value = false
     }
 
     @UiThread
