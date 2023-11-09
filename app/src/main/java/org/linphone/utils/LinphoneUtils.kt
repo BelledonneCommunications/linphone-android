@@ -43,6 +43,7 @@ class LinphoneUtils {
         private const val TAG = "[Linphone Utils]"
 
         private const val RECORDING_DATE_PATTERN = "dd-MM-yyyy-HH-mm-ss"
+        private const val CHAT_ROOM_ID_SEPARATOR = "~"
 
         @WorkerThread
         fun getDefaultAccount(): Account? {
@@ -226,7 +227,23 @@ class LinphoneUtils {
 
         @AnyThread
         fun getChatRoomId(localSipUri: String, remoteSipUri: String): String {
-            return "$localSipUri~$remoteSipUri"
+            return "$localSipUri$CHAT_ROOM_ID_SEPARATOR$remoteSipUri"
+        }
+
+        @AnyThread
+        fun getLocalAndPeerSipUrisFromChatRoomId(id: String): Pair<String, String>? {
+            val split = id.split(CHAT_ROOM_ID_SEPARATOR)
+            if (split.size == 2) {
+                val localAddress = split[0]
+                val peerAddress = split[1]
+                Log.i(
+                    "$TAG Got local [$localAddress] and peer [$peerAddress] SIP URIs from chat room id [$id]"
+                )
+                return Pair(localAddress, peerAddress)
+            } else {
+                Log.e("$TAG Failed to parse chat room id [$id]")
+            }
+            return null
         }
 
         @WorkerThread

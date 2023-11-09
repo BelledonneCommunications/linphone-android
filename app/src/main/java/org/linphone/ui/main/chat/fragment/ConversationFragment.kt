@@ -385,6 +385,17 @@ class ConversationFragment : GenericFragment() {
             }
         }
 
+        sharedViewModel.filesToShareFromIntent.observe(viewLifecycleOwner) { files ->
+            if (files.isNotEmpty()) {
+                Log.i("$TAG Found [${files.size}] files to share from intent")
+                for (path in files) {
+                    viewModel.addAttachment(path)
+                }
+
+                sharedViewModel.filesToShareFromIntent.value = arrayListOf()
+            }
+        }
+
         binding.sendArea.messageToSend.setControlEnterListener(object :
                 RichEditText.RichEditTextSendListener {
                 override fun onControlEnterPressedAndReleased() {

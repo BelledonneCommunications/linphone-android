@@ -143,35 +143,37 @@ class FileUtils {
         }
 
         suspend fun getFilePath(context: Context, uri: Uri, overrideExisting: Boolean): String? {
-            val name: String = getNameFromUri(uri, context)
-            try {
-                if (Os.fstat(
-                        ParcelFileDescriptor.open(
-                                File(uri.path),
-                                ParcelFileDescriptor.MODE_READ_ONLY
-                            ).fileDescriptor
-                    ).st_uid != Process.myUid()
-                ) {
-                    Log.e("$TAG File descriptor UID different from our, denying copy!")
-                    return null
+            return withContext(Dispatchers.IO) {
+                val name: String = getNameFromUri(uri, context)
+                try {
+                    if (Os.fstat(
+                            ParcelFileDescriptor.open(
+                                    File(uri.path),
+                                    ParcelFileDescriptor.MODE_READ_ONLY
+                                ).fileDescriptor
+                        ).st_uid != Process.myUid()
+                    ) {
+                        Log.e("$TAG File descriptor UID different from our, denying copy!")
+                        return@withContext null
+                    }
+                } catch (e: Exception) {
+                    Log.e("$TAG Can't check file ownership: ", e)
                 }
-            } catch (e: Exception) {
-                Log.e("$TAG Can't check file ownership: ", e)
+
+                val extension = getExtensionFromFileName(name)
+                val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+                val isImage = getMimeType(type) == MimeType.Image
+
+                try {
+                    val localFile: File = getFileStoragePath(name, isImage, overrideExisting)
+                    copyFile(uri, localFile)
+                    return@withContext localFile.absolutePath
+                } catch (e: Exception) {
+                    Log.e("$TAG Can't copy file in local storage: ", e)
+                }
+
+                return@withContext null
             }
-
-            val extension = getExtensionFromFileName(name)
-            val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
-            val isImage = getMimeType(type) == MimeType.Image
-
-            try {
-                val localFile: File = getFileStoragePath(name, isImage, overrideExisting)
-                copyFile(uri, localFile)
-                return localFile.absolutePath
-            } catch (e: Exception) {
-                Log.e("$TAG Can't copy file in local storage: ", e)
-            }
-
-            return null
         }
 
         @AnyThread

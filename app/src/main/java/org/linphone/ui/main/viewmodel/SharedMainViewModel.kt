@@ -107,6 +107,8 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    val filesToShareFromIntent = MutableLiveData<ArrayList<String>>()
+
     var displayedChatRoom: ChatRoom? = null // Prevents the need to go look for the chat room
     val showConversationEvent: MutableLiveData<Event<Pair<String, String>>> by lazy {
         MutableLiveData<Event<Pair<String, String>>>()

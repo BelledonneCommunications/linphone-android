@@ -23,7 +23,9 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.Gravity
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
@@ -36,7 +38,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -48,6 +53,8 @@ import org.linphone.databinding.MainActivityBinding
 import org.linphone.ui.main.viewmodel.MainViewModel
 import org.linphone.ui.main.viewmodel.SharedMainViewModel
 import org.linphone.utils.AppUtils
+import org.linphone.utils.FileUtils
+import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.slideInToastFromTop
 import org.linphone.utils.slideInToastFromTopForDuration
 
@@ -292,9 +299,25 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handleIntent(intent: Intent, defaultDestination: Int, isNewIntent: Boolean) {
-        Log.i("$TAG Handling intent [$intent]")
-        val navGraph = findNavController().navInflater.inflate(R.navigation.main_nav_graph)
+        Log.i(
+            "$TAG Handling intent action [${intent.action}], type [${intent.type}] and data [${intent.data}]"
+        )
 
+        when (intent.action) {
+            Intent.ACTION_MAIN -> {
+                handleMainIntent(intent, defaultDestination, isNewIntent)
+            }
+            Intent.ACTION_SEND -> {
+                handleSendIntent(intent, false)
+            }
+            Intent.ACTION_SEND_MULTIPLE -> {
+                handleSendIntent(intent, true)
+            }
+        }
+    }
+
+    private fun handleMainIntent(intent: Intent, defaultDestination: Int, isNewIntent: Boolean) {
+        val navGraph = findNavController().navInflater.inflate(R.navigation.main_nav_graph)
         if (intent.hasExtra("Chat")) {
             Log.i("$TAG New intent with [Chat] extra")
             coreContext.postOnMainThread {
@@ -316,6 +339,69 @@ class MainActivity : AppCompatActivity() {
                 navGraph.setStartDestination(defaultDestination)
                 findNavController().setGraph(navGraph, null)
             }
+        }
+    }
+
+    private fun handleSendIntent(intent: Intent, multiple: Boolean) {
+        val parcelablesUri = arrayListOf<Uri>()
+        if (multiple) {
+            val parcelables = intent.getParcelableArrayListExtra<Parcelable>(Intent.EXTRA_STREAM)
+            for (parcelable in parcelables.orEmpty()) {
+                val uri = parcelable as? Uri
+                if (uri != null) {
+                    Log.i("$TAG Found URI [$uri] in parcelable extra list")
+                    parcelablesUri.add(uri)
+                }
+            }
+        } else {
+            val uri = intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri
+            if (uri != null) {
+                Log.i("$TAG Found URI [$uri] in parcelable extra")
+                parcelablesUri.add(uri)
+            }
+        }
+
+        val list = arrayListOf<String>()
+        lifecycleScope.launch() {
+            val deferred = arrayListOf<Deferred<String?>>()
+            for (uri in parcelablesUri) {
+                deferred.add(async { FileUtils.getFilePath(this@MainActivity, uri, false) })
+            }
+
+            val shortcutId = intent.getStringExtra("android.intent.extra.shortcut.ID") // Intent.EXTRA_SHORTCUT_ID
+            if (shortcutId != null) {
+                Log.i("$TAG Found shortcut ID [$shortcutId]")
+                val pair = LinphoneUtils.getLocalAndPeerSipUrisFromChatRoomId(shortcutId)
+                if (pair != null) {
+                    val localSipUri = pair.first
+                    val remoteSipUri = pair.second
+                    Log.i(
+                        "$TAG Navigating to conversation with local [$localSipUri] and peer [$remoteSipUri] addresses, computed from shortcut ID"
+                    )
+                    intent.putExtra("LocalSipUri", localSipUri)
+                    intent.putExtra("RemoteSipUri", remoteSipUri)
+                } else {
+                    Log.e("$TAG Failed to parse shortcut ID, going to conversations list")
+                }
+            } else {
+                Log.i("$TAG Going into conversations list as no shortcut ID as found")
+            }
+
+            val navGraph = findNavController().navInflater.inflate(R.navigation.main_nav_graph)
+            navGraph.setStartDestination(R.id.conversationsFragment)
+
+            val paths = deferred.awaitAll()
+            for (path in paths) {
+                Log.i("$TAG Found file to share [$path] in intent")
+                if (path != null) list.add(path)
+            }
+            if (list.isNotEmpty()) {
+                sharedViewModel.filesToShareFromIntent.value = list
+            } else {
+                Log.w("$TAG Failed to find at least one file to share!")
+            }
+
+            findNavController().setGraph(navGraph, intent.extras)
         }
     }
 

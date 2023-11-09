@@ -454,7 +454,9 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         list.add(model)
         attachments.value = list
 
-        isFileAttachmentsListOpen.value = true
+        if (list.isNotEmpty()) {
+            isFileAttachmentsListOpen.value = true
+        }
     }
 
     @UiThread
