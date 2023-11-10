@@ -24,14 +24,14 @@
             android:id="@+id/voice_recording"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="@{viewModel.voiceRecordingInProgress ? View.VISIBLE : View.GONE, default=gone}"
-            app:constraint_referenced_ids="cancel_voice_message, voice_record_progress, stop_recording, voice_recording_length" />
+            android:visibility="@{viewModel.voiceRecording ? View.VISIBLE : View.GONE, default=gone}"
+            app:constraint_referenced_ids="cancel_voice_message, voice_record_progress" />
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/standard_messages"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="@{viewModel.voiceRecordingInProgress ? View.INVISIBLE : View.VISIBLE}"
+            android:visibility="@{viewModel.voiceRecording ? View.INVISIBLE : View.VISIBLE}"
             app:constraint_referenced_ids="emoji_picker_toggle, attach_file, message_area_background, message_to_send" />
 
         <include
@@ -181,6 +181,22 @@
             android:padding="8dp"
             android:src="@drawable/stop_fill"
             android:background="@drawable/circle_white_button_background"
+            android:visibility="@{viewModel.voiceRecording &amp;&amp; viewModel.voiceRecordingInProgress ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintBottom_toBottomOf="@id/voice_record_progress"
+            app:layout_constraintStart_toStartOf="@id/voice_record_progress"
+            app:layout_constraintTop_toTopOf="@id/voice_record_progress"
+            app:tint="@color/orange_main_500" />
+
+        <ImageView
+            android:id="@+id/play_pause_voice_record"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:onClick="@{() -> viewModel.togglePlayPauseVoiceRecord()}"
+            android:padding="8dp"
+            android:src="@{viewModel.isPlayingVoiceRecord ? @drawable/pause_fill : @drawable/play_fill, default=@drawable/play_fill}"
+            android:background="@drawable/circle_white_button_background"
+            android:visibility="@{viewModel.voiceRecording &amp;&amp; !viewModel.voiceRecordingInProgress ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintBottom_toBottomOf="@id/voice_record_progress"
             app:layout_constraintStart_toStartOf="@id/voice_record_progress"
             app:layout_constraintTop_toTopOf="@id/voice_record_progress"
@@ -188,7 +204,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
-            android:id="@+id/voice_recording_length"
+            android:id="@+id/voice_recording_duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
@@ -196,10 +212,33 @@
             android:paddingEnd="12dp"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
-            android:text="00:00"
+            android:text="@{viewModel.formattedVoiceRecordingDuration, default=`00:00`}"
             android:textSize="14sp"
             android:textColor="@color/gray_main2_600"
             android:background="@drawable/shape_squircle_white_r50_background"
+            android:visibility="@{viewModel.voiceRecording &amp;&amp; viewModel.voiceRecordingInProgress ? View.VISIBLE : View.GONE, default=gone}"
+            android:drawableStart="@drawable/record_fill"
+            android:drawablePadding="8dp"
+            app:drawableTint="@color/red_danger_500"
+            app:layout_constraintBottom_toBottomOf="@id/voice_record_progress"
+            app:layout_constraintEnd_toEndOf="@id/voice_record_progress"
+            app:layout_constraintTop_toTopOf="@id/voice_record_progress"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/voice_record_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:text="@{viewModel.formattedVoiceRecordingDuration, default=`00:00`}"
+            android:textSize="14sp"
+            android:textColor="@color/gray_main2_600"
+            android:background="@drawable/shape_squircle_white_r50_background"
+            android:visibility="@{viewModel.voiceRecording &amp;&amp; !viewModel.voiceRecordingInProgress ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintBottom_toBottomOf="@id/voice_record_progress"
             app:layout_constraintEnd_toEndOf="@id/voice_record_progress"
             app:layout_constraintTop_toTopOf="@id/voice_record_progress"/>
@@ -209,7 +248,7 @@
             android:layout_width="40dp"
             android:layout_height="0dp"
             android:layout_marginEnd="4dp"
-            android:visibility="@{viewModel.textToSend.length() > 0 || viewModel.attachments.size() > 0 || viewModel.voiceRecordingInProgress ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{viewModel.textToSend.length() > 0 || viewModel.attachments.size() > 0 || viewModel.voiceRecording ? View.VISIBLE : View.GONE, default=gone}"
             android:onClick="@{() -> viewModel.sendMessage()}"
             android:padding="8dp"
             android:src="@drawable/paper_plane_tilt"
@@ -223,7 +262,7 @@
             android:layout_width="40dp"
             android:layout_height="0dp"
             android:layout_marginEnd="4dp"
-            android:visibility="@{viewModel.textToSend.length() > 0 || viewModel.attachments.size() > 0 || viewModel.voiceRecordingInProgress ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.textToSend.length() > 0 || viewModel.attachments.size() > 0 || viewModel.voiceRecording ? View.GONE : View.VISIBLE}"
             android:onClick="@{() -> viewModel.startVoiceMessageRecording()}"
             android:padding="8dp"
             android:src="@drawable/microphone"

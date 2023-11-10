@@ -19,7 +19,13 @@
  */
 package org.linphone.utils
 
+import android.content.Context
+import android.media.AudioManager
+import androidx.annotation.AnyThread
 import androidx.annotation.WorkerThread
+import androidx.media.AudioAttributesCompat
+import androidx.media.AudioFocusRequestCompat
+import androidx.media.AudioManagerCompat
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.AudioDevice
 import org.linphone.core.Call
@@ -192,6 +198,74 @@ class AudioRouteUtils {
                 "$TAG Found headset/headphones/hearingAid sound card [$headphonesCard], bluetooth sound card [$bluetoothCard], speaker sound card [$speakerCard] and earpiece sound card [$earpieceCard]"
             )
             return headphonesCard ?: bluetoothCard ?: speakerCard ?: earpieceCard
+        }
+
+        @WorkerThread
+        fun getAudioRecordingDeviceIdForVoiceMessage(): AudioDevice? {
+            // In case no headset/hearing aid/bluetooth is connected, use microphone sound card
+            // If none are available, default one will be used
+            var headsetCard: AudioDevice? = null
+            var bluetoothCard: AudioDevice? = null
+            var microphoneCard: AudioDevice? = null
+            for (device in coreContext.core.audioDevices) {
+                if (device.hasCapability(AudioDevice.Capabilities.CapabilityRecord)) {
+                    when (device.type) {
+                        AudioDevice.Type.Headphones, AudioDevice.Type.Headset -> {
+                            headsetCard = device
+                        }
+                        AudioDevice.Type.Bluetooth, AudioDevice.Type.HearingAid -> {
+                            bluetoothCard = device
+                        }
+                        AudioDevice.Type.Microphone -> {
+                            microphoneCard = device
+                        }
+                        else -> {}
+                    }
+                }
+            }
+            Log.i(
+                "$TAG Found headset/headphones/hearingAid sound card [$headsetCard], bluetooth sound card [$bluetoothCard] and microphone card [$microphoneCard]"
+            )
+            return headsetCard ?: bluetoothCard ?: microphoneCard
+        }
+
+        @AnyThread
+        fun acquireAudioFocusForVoiceRecordingOrPlayback(context: Context): AudioFocusRequestCompat {
+            val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            val audioAttrs = AudioAttributesCompat.Builder()
+                .setUsage(AudioAttributesCompat.USAGE_MEDIA)
+                .setContentType(AudioAttributesCompat.CONTENT_TYPE_SPEECH)
+                .build()
+
+            val request =
+                AudioFocusRequestCompat.Builder(
+                    AudioManagerCompat.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE
+                )
+                    .setAudioAttributes(audioAttrs)
+                    .setOnAudioFocusChangeListener { }
+                    .build()
+            when (AudioManagerCompat.requestAudioFocus(audioManager, request)) {
+                AudioManager.AUDIOFOCUS_REQUEST_GRANTED -> {
+                    Log.i("$TAG Voice recording/playback audio focus request granted")
+                }
+                AudioManager.AUDIOFOCUS_REQUEST_FAILED -> {
+                    Log.w("$TAG Voice recording/playback audio focus request failed")
+                }
+                AudioManager.AUDIOFOCUS_REQUEST_DELAYED -> {
+                    Log.w("$TAG Voice recording/playback audio focus request delayed")
+                }
+            }
+            return request
+        }
+
+        @AnyThread
+        fun releaseAudioFocusForVoiceRecordingOrPlayback(
+            context: Context,
+            request: AudioFocusRequestCompat
+        ) {
+            val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            AudioManagerCompat.abandonAudioFocusRequest(audioManager, request)
+            Log.i("$TAG Voice recording/playback audio focus request abandoned")
         }
     }
 }

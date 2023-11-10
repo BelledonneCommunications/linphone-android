@@ -93,6 +93,12 @@ class CorePreferences @UiThread constructor(private val context: Context) {
             config.setBool("app", "auto_start_call_record", value)
         }
 
+    /* Voice Recordings */
+
+    var voiceRecordingMaxDuration: Int
+        get() = config.getInt("app", "voice_recording_max_duration", 600000) // in ms
+        set(value) = config.setInt("app", "voice_recording_max_duration", value)
+
     /** -1 means auto, 0 no, 1 yes */
     @get:WorkerThread @set:WorkerThread
     var darkMode: Int

@@ -24,17 +24,27 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.media.AudioFocusRequestCompat
+import java.text.SimpleDateFormat
+import java.util.Locale
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoomListenerStub
 import org.linphone.core.EventLog
 import org.linphone.core.Factory
+import org.linphone.core.Recorder
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.chat.model.ChatMessageModel
 import org.linphone.ui.main.chat.model.FileModel
 import org.linphone.ui.main.chat.model.ParticipantModel
+import org.linphone.utils.AudioRouteUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
@@ -62,7 +72,13 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
 
     val isReplyingToMessage = MutableLiveData<String>()
 
+    val voiceRecording = MutableLiveData<Boolean>()
+
     val voiceRecordingInProgress = MutableLiveData<Boolean>()
+
+    val formattedVoiceRecordingDuration = MutableLiveData<String>()
+
+    val isPlayingVoiceRecord = MutableLiveData<Boolean>()
 
     val requestKeyboardHidingEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
@@ -80,6 +96,10 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
 
     private var chatMessageToReplyTo: ChatMessage? = null
 
+    private lateinit var voiceMessageRecorder: Recorder
+
+    private var voiceRecordAudioFocusRequest: AudioFocusRequestCompat? = null
+
     private val chatRoomListener = object : ChatRoomListenerStub() {
         @WorkerThread
         override fun onParticipantAdded(chatRoom: ChatRoom, eventLog: EventLog) {
@@ -94,6 +114,7 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
 
     init {
         isEmojiPickerOpen.value = false
+        isPlayingVoiceRecord.value = false
     }
 
     override fun onCleared() {
@@ -102,6 +123,12 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
         viewModelScope.launch {
             for (file in attachments.value.orEmpty()) {
                 file.deleteFile()
+            }
+        }
+
+        if (::voiceMessageRecorder.isInitialized) {
+            if (voiceMessageRecorder.state != Recorder.State.Closed) {
+                voiceMessageRecorder.close()
             }
         }
 
@@ -169,26 +196,40 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
                 message.addUtf8TextContent(toSend)
             }
 
-            for (attachment in attachments.value.orEmpty()) {
-                val content = Factory.instance().createContent()
-
-                content.type = when (attachment.mimeType) {
-                    FileUtils.MimeType.Image -> "image"
-                    FileUtils.MimeType.Audio -> "audio"
-                    FileUtils.MimeType.Video -> "video"
-                    FileUtils.MimeType.Pdf -> "application"
-                    FileUtils.MimeType.PlainText -> "text"
-                    else -> "file"
-                }
-                content.subtype = if (attachment.mimeType == FileUtils.MimeType.PlainText) {
-                    "plain"
+            if (voiceRecording.value == true && voiceMessageRecorder.file != null) {
+                stopVoiceRecorder()
+                val content = voiceMessageRecorder.createContent()
+                if (content != null) {
+                    Log.i(
+                        "$TAG Voice recording content created, file name is ${content.name} and duration is ${content.fileDuration}"
+                    )
+                    message.addContent(content)
                 } else {
-                    FileUtils.getExtensionFromFileName(attachment.fileName)
+                    Log.e("$TAG Voice recording content couldn't be created!")
                 }
-                content.name = attachment.fileName
-                content.filePath = attachment.file // Let the file body handler take care of the upload
+            } else {
+                for (attachment in attachments.value.orEmpty()) {
+                    val content = Factory.instance().createContent()
 
-                message.addFileContent(content)
+                    content.type = when (attachment.mimeType) {
+                        FileUtils.MimeType.Image -> "image"
+                        FileUtils.MimeType.Audio -> "audio"
+                        FileUtils.MimeType.Video -> "video"
+                        FileUtils.MimeType.Pdf -> "application"
+                        FileUtils.MimeType.PlainText -> "text"
+                        else -> "file"
+                    }
+                    content.subtype = if (attachment.mimeType == FileUtils.MimeType.PlainText) {
+                        "plain"
+                    } else {
+                        FileUtils.getExtensionFromFileName(attachment.fileName)
+                    }
+                    content.name = attachment.fileName
+                    // Let the file body handler take care of the upload
+                    content.filePath = attachment.file
+
+                    message.addFileContent(content)
+                }
             }
 
             if (message.contents.isNotEmpty()) {
@@ -202,6 +243,9 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
             isFileAttachmentsListOpen.postValue(false)
             isParticipantsListOpen.postValue(false)
             isEmojiPickerOpen.postValue(false)
+
+            stopVoiceRecorder()
+            voiceRecording.postValue(false)
 
             // Warning: do not delete files
             val attachmentsList = arrayListOf<FileModel>()
@@ -270,24 +314,43 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
 
     @UiThread
     fun startVoiceMessageRecording() {
-        voiceRecordingInProgress.value = true
+        // TODO: check microphone permission
+        coreContext.postOnCoreThread {
+            voiceRecording.postValue(true)
+            initVoiceRecorder()
+
+            voiceRecordingInProgress.postValue(true)
+            startVoiceRecorder()
+        }
     }
 
     @UiThread
     fun stopVoiceMessageRecording() {
+        coreContext.postOnCoreThread {
+            stopVoiceRecorder()
+        }
     }
 
     @UiThread
     fun cancelVoiceMessageRecording() {
-        voiceRecordingInProgress.value = false
+        coreContext.postOnCoreThread {
+            stopVoiceRecorder()
+
+            val path = voiceMessageRecorder.file
+            if (path != null) {
+                viewModelScope.launch {
+                    Log.i("$TAG Deleting voice recording file: $path")
+                    FileUtils.deleteFile(path)
+                }
+            }
+
+            voiceRecording.postValue(false)
+        }
     }
 
     @UiThread
-    fun playVoiceMessageRecording() {
-    }
-
-    @UiThread
-    fun pauseVoiceMessageRecording() {
+    fun togglePlayPauseVoiceRecord() {
+        isPlayingVoiceRecord.value = isPlayingVoiceRecord.value == false
     }
 
     @WorkerThread
@@ -308,5 +371,105 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
         }
 
         participants.postValue(participantsList)
+    }
+
+    @WorkerThread
+    private fun initVoiceRecorder() {
+        val core = coreContext.core
+        Log.i("$TAG Creating voice message recorder")
+        val recorderParams = core.createRecorderParams()
+        recorderParams.fileFormat = Recorder.FileFormat.Mkv
+
+        val recordingAudioDevice = AudioRouteUtils.getAudioRecordingDeviceIdForVoiceMessage()
+        recorderParams.audioDevice = recordingAudioDevice
+        Log.i(
+            "$TAG Using device ${recorderParams.audioDevice?.id} to make the voice message recording"
+        )
+
+        voiceMessageRecorder = core.createRecorder(recorderParams)
+        Log.i("$TAG Voice message recorder created")
+    }
+
+    @WorkerThread
+    private fun startVoiceRecorder() {
+        if (voiceRecordAudioFocusRequest == null) {
+            Log.i("$TAG Requesting audio focus for voice message recording")
+            voiceRecordAudioFocusRequest = AudioRouteUtils.acquireAudioFocusForVoiceRecordingOrPlayback(
+                coreContext.context
+            )
+        }
+
+        when (voiceMessageRecorder.state) {
+            Recorder.State.Running -> Log.w("$TAG Recorder is already recording")
+            Recorder.State.Paused -> {
+                Log.w("$TAG Recorder is paused, resuming recording")
+                voiceMessageRecorder.start()
+            }
+            Recorder.State.Closed -> {
+                val extension = when (voiceMessageRecorder.params.fileFormat) {
+                    Recorder.FileFormat.Mkv -> "mkv"
+                    else -> "wav"
+                }
+                val tempFileName = "voice-recording-${System.currentTimeMillis()}.$extension"
+                val file = FileUtils.getFileStoragePath(tempFileName)
+                Log.w(
+                    "$TAG Recorder is closed, starting recording in ${file.absoluteFile}"
+                )
+                voiceMessageRecorder.open(file.absolutePath)
+                voiceMessageRecorder.start()
+            }
+            else -> {}
+        }
+
+        val duration = voiceMessageRecorder.duration
+        val formattedDuration = SimpleDateFormat("mm:ss", Locale.getDefault()).format(duration) // duration is in ms
+        formattedVoiceRecordingDuration.postValue(formattedDuration)
+
+        val maxVoiceRecordDuration = corePreferences.voiceRecordingMaxDuration
+        tickerFlowRecording().onEach {
+            coreContext.postOnCoreThread {
+                val duration = voiceMessageRecorder.duration
+                val formattedDuration = SimpleDateFormat("mm:ss", Locale.getDefault()).format(
+                    duration
+                ) // duration is in ms
+                formattedVoiceRecordingDuration.postValue(formattedDuration)
+
+                if (duration >= maxVoiceRecordDuration) {
+                    Log.w(
+                        "$TAG Max duration for voice recording exceeded (${maxVoiceRecordDuration}ms), stopping."
+                    )
+                    stopVoiceRecorder()
+                    // TOOD: show toast
+                }
+            }
+        }.launchIn(viewModelScope)
+    }
+
+    @WorkerThread
+    private fun stopVoiceRecorder() {
+        if (voiceMessageRecorder.state == Recorder.State.Running) {
+            Log.i("$TAG Closing voice recorder")
+            voiceMessageRecorder.pause()
+            voiceMessageRecorder.close()
+        }
+
+        val request = voiceRecordAudioFocusRequest
+        if (request != null) {
+            Log.i("$TAG Releasing voice recording audio focus request")
+            AudioRouteUtils.releaseAudioFocusForVoiceRecordingOrPlayback(
+                coreContext.context,
+                request
+            )
+            voiceRecordAudioFocusRequest = null
+        }
+
+        voiceRecordingInProgress.postValue(false)
+    }
+
+    private fun tickerFlowRecording() = flow {
+        while (voiceRecordingInProgress.value == true) {
+            emit(Unit)
+            delay(500)
+        }
     }
 }
