@@ -159,13 +159,15 @@
             app:constraint_referenced_ids="record_voice_message, send_message" />
         
         <ProgressBar
-            android:id="@+id/voice_record_progress"
             style="?android:attr/progressBarStyleHorizontal"
+            android:id="@+id/voice_record_progress"
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:progressDrawable="@drawable/voice_recording_gradient_progress"
+            android:progress="@{viewModel.voiceRecordPlayerPosition}"
+            android:max="@{viewModel.voiceRecordingDuration}"
             tools:progress="60"
             app:layout_constraintBottom_toBottomOf="@id/message_to_send"
             app:layout_constraintEnd_toStartOf="@id/send_message"
