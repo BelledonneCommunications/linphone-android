@@ -24,6 +24,9 @@
         <variable
             name="viewModel"
             type="org.linphone.ui.main.chat.viewmodel.ConversationViewModel" />
+        <variable
+            name="sendMessageViewModel"
+            type="org.linphone.ui.main.chat.viewmodel.SendMessageInConversationViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -231,7 +234,7 @@
         <include
             android:id="@+id/send_area"
             openFilePickerClickListener="@{openFilePickerClickListener}"
-            viewModel="@{viewModel}"
+            viewModel="@{sendMessageViewModel}"
             android:visibility="@{viewModel.isReadOnly ? View.GONE : View.VISIBLE}"
             layout="@layout/chat_conversation_send_area_bottom_sheet"/>
 

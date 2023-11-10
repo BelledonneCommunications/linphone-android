@@ -10,7 +10,7 @@
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.main.chat.viewmodel.ConversationViewModel" />
+            type="org.linphone.ui.main.chat.viewmodel.SendMessageInConversationViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,6 +19,20 @@
         android:background="@color/gray_100"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
         <!-- Keep behavior to have it at the bottom -->
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/voice_recording"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewModel.voiceRecordingInProgress ? View.VISIBLE : View.GONE, default=gone}"
+            app:constraint_referenced_ids="cancel_voice_message, voice_record_progress, stop_recording, voice_recording_length" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/standard_messages"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewModel.voiceRecordingInProgress ? View.INVISIBLE : View.VISIBLE}"
+            app:constraint_referenced_ids="emoji_picker_toggle, attach_file, message_area_background, message_to_send" />
 
         <include
             android:id="@+id/reply_area"
@@ -69,7 +83,6 @@
             android:onClick="@{() -> viewModel.toggleEmojiPickerVisibility()}"
             android:padding="8dp"
             android:src="@{viewModel.isEmojiPickerOpen ? @drawable/x : @drawable/smiley, default=@drawable/smiley}"
-            android:visibility="@{viewModel.voiceRecordingInProgress ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="@id/message_area_background"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/message_area_background"
@@ -84,7 +97,6 @@
             android:padding="8dp"
             android:src="@drawable/x"
             android:background="@drawable/circle_white_button_background"
-            android:visibility="@{viewModel.voiceRecordingInProgress ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintBottom_toBottomOf="@id/message_area_background"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/message_area_background"
@@ -99,7 +111,6 @@
             android:onClick="@{openFilePickerClickListener}"
             android:padding="8dp"
             android:src="@drawable/paperclip"
-            android:visibility="@{viewModel.voiceRecordingInProgress ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="@id/message_area_background"
             app:layout_constraintEnd_toStartOf="@id/message_area_background"
             app:layout_constraintStart_toEndOf="@id/emoji_picker_toggle"
@@ -112,7 +123,6 @@
             android:layout_height="0dp"
             android:layout_marginEnd="16dp"
             android:src="@drawable/edit_text_background"
-            android:visibility="@{viewModel.voiceRecordingInProgress ? View.INVISIBLE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="@id/message_to_send"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/attach_file"
@@ -136,7 +146,6 @@
             android:text="@={viewModel.textToSend}"
             android:textColorHint="@color/gray_main2_400"
             android:textSize="14sp"
-            android:visibility="@{viewModel.voiceRecordingInProgress ? View.INVISIBLE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/send_barrier"
             app:layout_constraintStart_toStartOf="@id/message_area_background"
@@ -157,7 +166,6 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:progressDrawable="@drawable/voice_recording_gradient_progress"
-            android:visibility="@{viewModel.voiceRecordingInProgress ? View.VISIBLE : View.GONE, default=gone}"
             tools:progress="60"
             app:layout_constraintBottom_toBottomOf="@id/message_to_send"
             app:layout_constraintEnd_toStartOf="@id/send_message"
@@ -173,7 +181,6 @@
             android:padding="8dp"
             android:src="@drawable/stop_fill"
             android:background="@drawable/circle_white_button_background"
-            android:visibility="@{viewModel.voiceRecordingInProgress ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintBottom_toBottomOf="@id/voice_record_progress"
             app:layout_constraintStart_toStartOf="@id/voice_record_progress"
             app:layout_constraintTop_toTopOf="@id/voice_record_progress"
@@ -193,7 +200,6 @@
             android:textSize="14sp"
             android:textColor="@color/gray_main2_600"
             android:background="@drawable/shape_squircle_white_r50_background"
-            android:visibility="@{viewModel.voiceRecordingInProgress ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintBottom_toBottomOf="@id/voice_record_progress"
             app:layout_constraintEnd_toEndOf="@id/voice_record_progress"
             app:layout_constraintTop_toTopOf="@id/voice_record_progress"/>

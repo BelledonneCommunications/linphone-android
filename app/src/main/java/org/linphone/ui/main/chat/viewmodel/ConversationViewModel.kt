@@ -23,12 +23,9 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Address
-import org.linphone.core.ChatMessage
 import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoomListenerStub
 import org.linphone.core.EventLog
@@ -37,12 +34,9 @@ import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.chat.model.ChatMessageModel
 import org.linphone.ui.main.chat.model.EventLogModel
-import org.linphone.ui.main.chat.model.FileModel
-import org.linphone.ui.main.chat.model.ParticipantModel
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
-import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
 
 class ConversationViewModel @UiThread constructor() : ViewModel() {
@@ -67,29 +61,9 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     val composingLabel = MutableLiveData<String>()
 
-    val textToSend = MutableLiveData<String>()
-
     val searchBarVisible = MutableLiveData<Boolean>()
 
     val searchFilter = MutableLiveData<String>()
-
-    val isEmojiPickerOpen = MutableLiveData<Boolean>()
-
-    val isParticipantsListOpen = MutableLiveData<Boolean>()
-
-    val participants = MutableLiveData<ArrayList<ParticipantModel>>()
-
-    val isFileAttachmentsListOpen = MutableLiveData<Boolean>()
-
-    val attachments = MutableLiveData<ArrayList<FileModel>>()
-
-    val isReplying = MutableLiveData<Boolean>()
-
-    val isReplyingTo = MutableLiveData<String>()
-
-    val isReplyingToMessage = MutableLiveData<String>()
-
-    val voiceRecordingInProgress = MutableLiveData<Boolean>()
 
     var scrollingPosition: Int = SCROLLING_POSITION_NOT_SET
 
@@ -113,19 +87,9 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<String>>()
     }
 
-    val emojiToAddEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
-    }
-
-    val participantUsernameToAddEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
-    }
-
     val chatRoomFoundEvent = MutableLiveData<Event<Boolean>>()
 
     lateinit var chatRoom: ChatRoom
-
-    private var chatMessageToReplyTo: ChatMessage? = null
 
     private val chatRoomListener = object : ChatRoomListenerStub() {
         @WorkerThread
@@ -204,31 +168,14 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
             events.postValue(list)
         }
-
-        @WorkerThread
-        override fun onParticipantAdded(chatRoom: ChatRoom, eventLog: EventLog) {
-            computeParticipantsList()
-        }
-
-        @WorkerThread
-        override fun onParticipantRemoved(chatRoom: ChatRoom, eventLog: EventLog) {
-            computeParticipantsList()
-        }
     }
 
     init {
         searchBarVisible.value = false
-        isEmojiPickerOpen.value = false
     }
 
     override fun onCleared() {
         super.onCleared()
-
-        viewModelScope.launch {
-            for (file in attachments.value.orEmpty()) {
-                file.deleteFile()
-            }
-        }
 
         coreContext.postOnCoreThread {
             if (::chatRoom.isInitialized) {
@@ -320,96 +267,6 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
-    fun toggleEmojiPickerVisibility() {
-        isEmojiPickerOpen.value = isEmojiPickerOpen.value == false
-        if (isEmojiPickerOpen.value == true) {
-            requestKeyboardHidingEvent.value = Event(true)
-        }
-    }
-
-    @UiThread
-    fun insertEmoji(emoji: String) {
-        emojiToAddEvent.value = Event(emoji)
-    }
-
-    @UiThread
-    fun replyToMessage(model: ChatMessageModel) {
-        coreContext.postOnCoreThread {
-            val message = model.chatMessage
-            Log.i("$TAG Pending reply to chat message [${message.messageId}]")
-            chatMessageToReplyTo = message
-            isReplyingTo.postValue(model.avatarModel.friend.name)
-            isReplyingToMessage.postValue(LinphoneUtils.getTextDescribingMessage(message))
-            isReplying.postValue(true)
-        }
-    }
-
-    @UiThread
-    fun cancelReply() {
-        Log.i("$TAG Cancelling reply")
-        isReplying.value = false
-        chatMessageToReplyTo = null
-    }
-
-    @UiThread
-    fun sendMessage() {
-        coreContext.postOnCoreThread {
-            val messageToReplyTo = chatMessageToReplyTo
-            val message = if (messageToReplyTo != null) {
-                Log.i("$TAG Sending message as reply to [${messageToReplyTo.messageId}]")
-                chatRoom.createReplyMessage(messageToReplyTo)
-            } else {
-                chatRoom.createEmptyMessage()
-            }
-
-            val toSend = textToSend.value.orEmpty().trim()
-            if (toSend.isNotEmpty()) {
-                message.addUtf8TextContent(toSend)
-            }
-
-            for (attachment in attachments.value.orEmpty()) {
-                val content = Factory.instance().createContent()
-
-                content.type = when (attachment.mimeType) {
-                    FileUtils.MimeType.Image -> "image"
-                    FileUtils.MimeType.Audio -> "audio"
-                    FileUtils.MimeType.Video -> "video"
-                    FileUtils.MimeType.Pdf -> "application"
-                    FileUtils.MimeType.PlainText -> "text"
-                    else -> "file"
-                }
-                content.subtype = if (attachment.mimeType == FileUtils.MimeType.PlainText) {
-                    "plain"
-                } else {
-                    FileUtils.getExtensionFromFileName(attachment.fileName)
-                }
-                content.name = attachment.fileName
-                content.filePath = attachment.file // Let the file body handler take care of the upload
-
-                message.addFileContent(content)
-            }
-
-            if (message.contents.isNotEmpty()) {
-                Log.i("$TAG Sending message")
-                message.send()
-            }
-
-            Log.i("$TAG Message sent, re-setting defaults")
-            textToSend.postValue("")
-            isReplying.postValue(false)
-            isFileAttachmentsListOpen.postValue(false)
-            isParticipantsListOpen.postValue(false)
-            isEmojiPickerOpen.postValue(false)
-
-            // Warning: do not delete files
-            val attachmentsList = arrayListOf<FileModel>()
-            attachments.postValue(attachmentsList)
-
-            chatMessageToReplyTo = null
-        }
-    }
-
-    @UiThread
     fun deleteChatMessage(chatMessageModel: ChatMessageModel) {
         coreContext.postOnCoreThread {
             val eventsLogs = events.value.orEmpty()
@@ -426,85 +283,6 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             Log.i("$TAG Deleting message id [${chatMessageModel.id}]")
             chatRoom.deleteMessage(chatMessageModel.chatMessage)
         }
-    }
-
-    @UiThread
-    fun closeParticipantsList() {
-        isParticipantsListOpen.value = false
-    }
-
-    @UiThread
-    fun closeFileAttachmentsList() {
-        viewModelScope.launch {
-            for (file in attachments.value.orEmpty()) {
-                file.deleteFile()
-            }
-        }
-        val list = arrayListOf<FileModel>()
-        attachments.value = list
-
-        isFileAttachmentsListOpen.value = false
-    }
-
-    @UiThread
-    fun addAttachment(file: String) {
-        val list = arrayListOf<FileModel>()
-        list.addAll(attachments.value.orEmpty())
-        val model = FileModel(file) { file ->
-            removeAttachment(file)
-        }
-        list.add(model)
-        attachments.value = list
-
-        if (list.isNotEmpty()) {
-            isFileAttachmentsListOpen.value = true
-        }
-    }
-
-    @UiThread
-    fun removeAttachment(file: String, delete: Boolean = true) {
-        val list = arrayListOf<FileModel>()
-        list.addAll(attachments.value.orEmpty())
-        val found = list.find {
-            it.file == file
-        }
-        if (found != null) {
-            if (delete) {
-                viewModelScope.launch {
-                    found.deleteFile()
-                }
-            }
-            list.remove(found)
-        } else {
-            Log.w("$TAG Failed to find file attachment matching [$file]")
-        }
-        attachments.value = list
-
-        if (list.isEmpty()) {
-            isFileAttachmentsListOpen.value = false
-        }
-    }
-
-    @UiThread
-    fun startVoiceMessageRecording() {
-        voiceRecordingInProgress.value = true
-    }
-
-    @UiThread
-    fun stopVoiceMessageRecording() {
-    }
-
-    @UiThread
-    fun cancelVoiceMessageRecording() {
-        voiceRecordingInProgress.value = false
-    }
-
-    @UiThread
-    fun playVoiceMessageRecording() {
-    }
-
-    @UiThread
-    fun pauseVoiceMessageRecording() {
     }
 
     @WorkerThread
@@ -551,7 +329,6 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
         computeEvents()
         chatRoom.markAsRead()
-        computeParticipantsList()
     }
 
     @WorkerThread
@@ -685,25 +462,5 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         } else {
             composingLabel.postValue("")
         }
-    }
-
-    @WorkerThread
-    private fun computeParticipantsList() {
-        val participantsList = arrayListOf<ParticipantModel>()
-
-        for (participant in chatRoom.participants) {
-            val model = ParticipantModel(participant.address, onClicked = { clicked ->
-                Log.i("$TAG Clicked on participant [${clicked.sipUri}]")
-                coreContext.postOnCoreThread {
-                    val username = clicked.address.username
-                    if (!username.isNullOrEmpty()) {
-                        participantUsernameToAddEvent.postValue(Event(username))
-                    }
-                }
-            })
-            participantsList.add(model)
-        }
-
-        participants.postValue(participantsList)
     }
 }

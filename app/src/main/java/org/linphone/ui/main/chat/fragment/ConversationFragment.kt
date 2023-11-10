@@ -70,6 +70,7 @@ import org.linphone.ui.main.chat.model.ChatMessageReactionsModel
 import org.linphone.ui.main.chat.view.RichEditText
 import org.linphone.ui.main.chat.viewmodel.ConversationViewModel
 import org.linphone.ui.main.chat.viewmodel.ConversationViewModel.Companion.SCROLLING_POSITION_NOT_SET
+import org.linphone.ui.main.chat.viewmodel.SendMessageInConversationViewModel
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
@@ -90,6 +91,8 @@ class ConversationFragment : GenericFragment() {
 
     private lateinit var viewModel: ConversationViewModel
 
+    private lateinit var sendMessageViewModel: SendMessageInConversationViewModel
+
     private lateinit var adapter: ConversationEventAdapter
 
     private lateinit var bottomSheetAdapter: ChatMessageBottomSheetAdapter
@@ -107,7 +110,7 @@ class ConversationFragment : GenericFragment() {
                         Log.i("$TAG Picked file [$uri] matching path is [$path]")
                         if (path != null) {
                             withContext(Dispatchers.Main) {
-                                viewModel.addAttachment(path)
+                                sendMessageViewModel.addAttachment(path)
                             }
                         }
                     }
@@ -139,12 +142,13 @@ class ConversationFragment : GenericFragment() {
         }
 
         override fun afterTextChanged(p0: Editable?) {
-            viewModel.isParticipantsListOpen.value = false
+            sendMessageViewModel.isParticipantsListOpen.value = false
 
             val split = p0.toString().split(" ")
             for (part in split) {
                 if (part == "@") {
-                    viewModel.isParticipantsListOpen.value = true
+                    Log.i("$TAG '@' found, opening participants list")
+                    sendMessageViewModel.isParticipantsListOpen.value = true
                 }
             }
         }
@@ -182,7 +186,10 @@ class ConversationFragment : GenericFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
 
         viewModel = ViewModelProvider(this)[ConversationViewModel::class.java]
+        sendMessageViewModel = ViewModelProvider(this)[SendMessageInConversationViewModel::class.java]
+
         binding.viewModel = viewModel
+        binding.sendMessageViewModel = sendMessageViewModel
 
         binding.setBackClickListener {
             goBack()
@@ -212,12 +219,13 @@ class ConversationFragment : GenericFragment() {
                         goBack()
                         // TODO: show toast
                     }
+                } else {
+                    sendMessageViewModel.configureChatRoom(viewModel.chatRoom)
                 }
             }
         }
 
         viewModel.events.observe(viewLifecycleOwner) { items ->
-            val currentCount = adapter.itemCount
             adapter.submitList(items)
             Log.i("$TAG Events (messages) list updated with [${items.size}] items")
 
@@ -298,13 +306,13 @@ class ConversationFragment : GenericFragment() {
             }
         }
 
-        viewModel.emojiToAddEvent.observe(viewLifecycleOwner) {
+        sendMessageViewModel.emojiToAddEvent.observe(viewLifecycleOwner) {
             it.consume { emoji ->
                 binding.sendArea.messageToSend.addCharacterAtPosition(emoji)
             }
         }
 
-        viewModel.participantUsernameToAddEvent.observe(viewLifecycleOwner) {
+        sendMessageViewModel.participantUsernameToAddEvent.observe(viewLifecycleOwner) {
             it.consume { username ->
                 Log.i("$TAG Adding username [$username] after '@'")
                 // Also add a space for convenience
@@ -312,14 +320,14 @@ class ConversationFragment : GenericFragment() {
             }
         }
 
-        viewModel.searchFilter.observe(viewLifecycleOwner) { filter ->
-            viewModel.applyFilter(filter.trim())
-        }
-
-        viewModel.requestKeyboardHidingEvent.observe(viewLifecycleOwner) {
+        sendMessageViewModel.requestKeyboardHidingEvent.observe(viewLifecycleOwner) {
             it.consume {
                 binding.search.hideKeyboard()
             }
+        }
+
+        viewModel.searchFilter.observe(viewLifecycleOwner) { filter ->
+            viewModel.applyFilter(filter.trim())
         }
 
         viewModel.focusSearchBarEvent.observe(viewLifecycleOwner) {
@@ -343,6 +351,13 @@ class ConversationFragment : GenericFragment() {
                         )
                     findNavController().navigate(action)
                 }
+            }
+        }
+
+        viewModel.isGroup.observe(viewLifecycleOwner) { group ->
+            if (group) {
+                Log.i("$TAG Adding text observer to chat message sending area")
+                binding.sendArea.messageToSend.addTextChangedListener(textObserver)
             }
         }
 
@@ -378,7 +393,7 @@ class ConversationFragment : GenericFragment() {
                         Log.i("$TAG Rich content URI [$uri] matching path is [$path]")
                         if (path != null) {
                             withContext(Dispatchers.Main) {
-                                viewModel.addAttachment(path)
+                                sendMessageViewModel.addAttachment(path)
                             }
                         }
                     }
@@ -390,7 +405,7 @@ class ConversationFragment : GenericFragment() {
             if (files.isNotEmpty()) {
                 Log.i("$TAG Found [${files.size}] files to share from intent")
                 for (path in files) {
-                    viewModel.addAttachment(path)
+                    sendMessageViewModel.addAttachment(path)
                 }
 
                 sharedViewModel.filesToShareFromIntent.value = arrayListOf()
@@ -401,13 +416,13 @@ class ConversationFragment : GenericFragment() {
                 RichEditText.RichEditTextSendListener {
                 override fun onControlEnterPressedAndReleased() {
                     Log.i("$TAG Detected left control + enter key presses, sending message")
-                    viewModel.sendMessage()
+                    sendMessageViewModel.sendMessage()
                 }
             })
 
         binding.root.setKeyboardInsetListener { keyboardVisible ->
             if (keyboardVisible) {
-                viewModel.isEmojiPickerOpen.value = false
+                sendMessageViewModel.isEmojiPickerOpen.value = false
             }
         }
     }
@@ -429,10 +444,6 @@ class ConversationFragment : GenericFragment() {
             adapter.registerAdapterDataObserver(dataObserver)
         } catch (e: IllegalStateException) {
             Log.e("$TAG Failed to register data observer to adapter: $e")
-        }
-
-        if (viewModel.isGroup.value == true) {
-            binding.sendArea.messageToSend.addTextChangedListener(textObserver)
         }
     }
 
@@ -497,7 +508,7 @@ class ConversationFragment : GenericFragment() {
 
         layout.setReplyClickListener {
             Log.i("$TAG Updating sending area to reply to selected message")
-            viewModel.replyToMessage(chatMessageModel)
+            sendMessageViewModel.replyToMessage(chatMessageModel)
             dialog.dismiss()
         }
 
