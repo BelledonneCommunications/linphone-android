@@ -62,6 +62,7 @@ class ContactsFragment : GenericFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        postponeEnterTransition()
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
@@ -76,6 +77,15 @@ class ContactsFragment : GenericFragment() {
                 viewLifecycleOwner,
                 SlidingPaneBackPressedCallback(slidingPane)
             )
+        }
+
+        sharedViewModel.contactsReadyEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                (view.parent as? ViewGroup)?.doOnPreDraw {
+                    startPostponedEnterTransition()
+                    sharedViewModel.isFirstFragmentReady = true
+                }
+            }
         }
 
         sharedViewModel.closeSlidingPaneEvent.observe(

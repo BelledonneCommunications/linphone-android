@@ -27,6 +27,9 @@ import org.linphone.core.ChatRoom
 import org.linphone.utils.Event
 
 class SharedMainViewModel @UiThread constructor() : ViewModel() {
+    // When set to true, it will hide the splashscreen
+    var isFirstFragmentReady: Boolean = false
+
     /* Sliding Pane & navigation related */
 
     val isSlidingPaneSlideable = MutableLiveData<Boolean>()
@@ -73,6 +76,8 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
 
     /* Contacts related */
 
+    val contactsReadyEvent = MutableLiveData<Event<Boolean>>()
+
     val showContactEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
     }
@@ -84,6 +89,8 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
     var sipAddressToAddToNewContact: String = ""
 
     /* Call logs related */
+
+    val historyReadyEvent = MutableLiveData<Event<Boolean>>()
 
     val showStartCallEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
@@ -103,6 +110,8 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
 
     /* Conversation related */
 
+    val conversationsReadyEvent = MutableLiveData<Event<Boolean>>()
+
     val showStartConversationEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -118,6 +127,8 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
     val richContentUri = MutableLiveData<Event<Uri>>()
 
     /* Meetings related */
+
+    val meetingsReadyEvent = MutableLiveData<Event<Boolean>>()
 
     val showScheduleMeetingEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()

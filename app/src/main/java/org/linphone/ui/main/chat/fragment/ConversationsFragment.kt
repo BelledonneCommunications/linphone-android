@@ -66,6 +66,7 @@ class ConversationsFragment : GenericFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        postponeEnterTransition()
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
@@ -80,6 +81,15 @@ class ConversationsFragment : GenericFragment() {
                 viewLifecycleOwner,
                 SlidingPaneBackPressedCallback(slidingPane)
             )
+        }
+
+        sharedViewModel.conversationsReadyEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                (view.parent as? ViewGroup)?.doOnPreDraw {
+                    startPostponedEnterTransition()
+                    sharedViewModel.isFirstFragmentReady = true
+                }
+            }
         }
 
         val args = arguments
@@ -194,6 +204,7 @@ class ConversationsFragment : GenericFragment() {
 
     override fun onResume() {
         super.onResume()
+
         sharedViewModel.currentlyDisplayedFragment.value = R.id.conversationsFragment
     }
 }

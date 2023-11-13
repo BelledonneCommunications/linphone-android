@@ -61,8 +61,8 @@ class MeetingsListFragment : AbstractTopBarFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         postponeEnterTransition()
+        super.onViewCreated(view, savedInstanceState)
 
         listViewModel = ViewModelProvider(this)[MeetingsListViewModel::class.java]
 
@@ -100,6 +100,7 @@ class MeetingsListFragment : AbstractTopBarFragment() {
             if (currentCount < it.size) {
                 (view.parent as? ViewGroup)?.doOnPreDraw {
                     startPostponedEnterTransition()
+                    sharedViewModel.meetingsReadyEvent.value = Event(true)
                     scrollToToday()
                 }
             }

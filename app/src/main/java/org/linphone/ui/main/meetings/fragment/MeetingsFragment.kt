@@ -65,6 +65,7 @@ class MeetingsFragment : GenericFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        postponeEnterTransition()
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
@@ -79,6 +80,15 @@ class MeetingsFragment : GenericFragment() {
                 viewLifecycleOwner,
                 SlidingPaneBackPressedCallback(slidingPane)
             )
+        }
+
+        sharedViewModel.meetingsReadyEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                (view.parent as? ViewGroup)?.doOnPreDraw {
+                    startPostponedEnterTransition()
+                    sharedViewModel.isFirstFragmentReady = true
+                }
+            }
         }
 
         sharedViewModel.closeSlidingPaneEvent.observe(

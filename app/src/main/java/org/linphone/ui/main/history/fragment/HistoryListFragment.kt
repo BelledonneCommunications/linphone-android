@@ -30,6 +30,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
 import androidx.annotation.UiThread
+import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -69,6 +70,7 @@ class HistoryListFragment : AbstractTopBarFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        postponeEnterTransition()
         super.onViewCreated(view, savedInstanceState)
 
         listViewModel = ViewModelProvider(this)[HistoryListViewModel::class.java]
@@ -149,6 +151,11 @@ class HistoryListFragment : AbstractTopBarFragment() {
 
             if (currentCount < it.size) {
                 binding.historyList.scrollToPosition(0)
+            }
+
+            (view.parent as? ViewGroup)?.doOnPreDraw {
+                startPostponedEnterTransition()
+                sharedViewModel.historyReadyEvent.value = Event(true)
             }
         }
 

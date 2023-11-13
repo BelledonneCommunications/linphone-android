@@ -25,6 +25,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
+import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.R
@@ -59,6 +60,7 @@ class ConversationsListFragment : AbstractTopBarFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        postponeEnterTransition()
         super.onViewCreated(view, savedInstanceState)
 
         listViewModel = ViewModelProvider(this)[ConversationsListViewModel::class.java]
@@ -126,6 +128,11 @@ class ConversationsListFragment : AbstractTopBarFragment() {
 
             if (currentCount < it.size) {
                 binding.conversationsList.scrollToPosition(0)
+            }
+
+            (view.parent as? ViewGroup)?.doOnPreDraw {
+                startPostponedEnterTransition()
+                sharedViewModel.conversationsReadyEvent.value = Event(true)
             }
         }
 

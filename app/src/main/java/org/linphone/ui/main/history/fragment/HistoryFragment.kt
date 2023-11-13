@@ -62,6 +62,7 @@ class HistoryFragment : GenericFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        postponeEnterTransition()
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
@@ -76,6 +77,15 @@ class HistoryFragment : GenericFragment() {
                 viewLifecycleOwner,
                 SlidingPaneBackPressedCallback(slidingPane)
             )
+        }
+
+        sharedViewModel.historyReadyEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                (view.parent as? ViewGroup)?.doOnPreDraw {
+                    startPostponedEnterTransition()
+                    sharedViewModel.isFirstFragmentReady = true
+                }
+            }
         }
 
         sharedViewModel.closeSlidingPaneEvent.observe(
