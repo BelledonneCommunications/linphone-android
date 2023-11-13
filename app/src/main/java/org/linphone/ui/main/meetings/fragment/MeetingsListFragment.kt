@@ -19,14 +19,17 @@
  */
 package org.linphone.ui.main.meetings.fragment
 
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.annotation.UiThread
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.R
 import org.linphone.core.tools.Log
@@ -35,9 +38,7 @@ import org.linphone.ui.main.fragment.AbstractTopBarFragment
 import org.linphone.ui.main.meetings.adapter.MeetingsListAdapter
 import org.linphone.ui.main.meetings.viewmodel.MeetingsListViewModel
 import org.linphone.utils.AppUtils
-import org.linphone.utils.Event
 import org.linphone.utils.RecyclerViewHeaderDecoration
-import org.linphone.utils.setKeyboardInsetListener
 
 @UiThread
 class MeetingsListFragment : AbstractTopBarFragment() {
@@ -50,6 +51,24 @@ class MeetingsListFragment : AbstractTopBarFragment() {
     private lateinit var listViewModel: MeetingsListViewModel
 
     private lateinit var adapter: MeetingsListAdapter
+
+    override fun onDefaultAccountChanged() {
+        Log.i(
+            "$TAG Default account changed, updating avatar in top bar & re-computing meetings list"
+        )
+        listViewModel.applyFilter()
+    }
+
+    override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
+        if (
+            findNavController().currentDestination?.id == R.id.scheduleMeetingFragment ||
+            findNavController().currentDestination?.id == R.id.meetingWaitingRoomFragment
+        ) {
+            // Holds fragment in place while new contact fragment slides over it
+            return AnimationUtils.loadAnimation(activity, R.anim.hold)
+        }
+        return super.onCreateAnimation(transit, enter, nextAnim)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -78,7 +97,12 @@ class MeetingsListFragment : AbstractTopBarFragment() {
         binding.meetingsList.layoutManager = LinearLayoutManager(requireContext())
 
         binding.setNewMeetingClicked {
-            sharedViewModel.showScheduleMeetingEvent.value = Event(true)
+            if (findNavController().currentDestination?.id == R.id.meetingsListFragment) {
+                Log.i("$TAG Navigating to schedule meeting fragment")
+                val action =
+                    MeetingsListFragmentDirections.actionMeetingsListFragmentToScheduleMeetingFragment()
+                findNavController().navigate(action)
+            }
         }
 
         binding.setTodayClickListener {
@@ -88,7 +112,8 @@ class MeetingsListFragment : AbstractTopBarFragment() {
         adapter.meetingClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
                 Log.i("$TAG Show conversation with ID [${model.id}]")
-                sharedViewModel.showMeetingEvent.value = Event(model.id)
+                val action = MeetingFragmentDirections.actionGlobalMeetingFragment(model.id)
+                binding.meetingsNavContainer.findNavController().navigate(action)
             }
         }
 
@@ -100,7 +125,7 @@ class MeetingsListFragment : AbstractTopBarFragment() {
             if (currentCount < it.size) {
                 (view.parent as? ViewGroup)?.doOnPreDraw {
                     startPostponedEnterTransition()
-                    sharedViewModel.meetingsReadyEvent.value = Event(true)
+                    sharedViewModel.isFirstFragmentReady = true
                     scrollToToday()
                 }
             }
@@ -113,6 +138,19 @@ class MeetingsListFragment : AbstractTopBarFragment() {
             }
         }
 
+        sharedViewModel.goToMeetingWaitingRoomEvent.observe(viewLifecycleOwner) {
+            it.consume { uri ->
+                if (findNavController().currentDestination?.id == R.id.meetingsListFragment) {
+                    Log.i("$TAG Navigating to meeting waiting room fragment with URI [$uri]")
+                    val action =
+                        MeetingsListFragmentDirections.actionMeetingsListFragmentToMeetingWaitingRoomFragment(
+                            uri
+                        )
+                    findNavController().navigate(action)
+                }
+            }
+        }
+
         // TopBarFragment related
 
         setViewModelAndTitle(
@@ -121,19 +159,11 @@ class MeetingsListFragment : AbstractTopBarFragment() {
             getString(R.string.bottom_navigation_meetings_label)
         )
 
-        binding.root.setKeyboardInsetListener { keyboardVisible ->
-            val portraitOrientation = resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
-            binding.bottomNavBar.root.visibility = if (!portraitOrientation || !keyboardVisible) View.VISIBLE else View.GONE
-        }
+        initBottomNavBar(binding.bottomNavBar.root)
 
-        sharedViewModel.defaultAccountChangedEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                Log.i(
-                    "$TAG Default account changed, updating avatar in top bar & re-computing meetings list"
-                )
-                listViewModel.applyFilter()
-            }
-        }
+        initSlidingPane(binding.slidingPaneLayout)
+
+        initNavigation(R.id.meetingsListFragment)
     }
 
     private fun scrollToToday() {

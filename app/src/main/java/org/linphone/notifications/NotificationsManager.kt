@@ -1085,7 +1085,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         return NavDeepLinkBuilder(context)
             .setComponentName(MainActivity::class.java)
             .setGraph(R.navigation.main_nav_graph)
-            .setDestination(R.id.conversationsFragment)
+            .setDestination(R.id.conversationsListFragment)
             .setArguments(args)
             .createPendingIntent()
     }

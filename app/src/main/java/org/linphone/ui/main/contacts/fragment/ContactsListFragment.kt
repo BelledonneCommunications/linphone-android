@@ -20,7 +20,6 @@
 package org.linphone.ui.main.contacts.fragment
 
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.view.Gravity
@@ -33,6 +32,8 @@ import androidx.core.content.FileProvider
 import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import java.io.File
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -44,7 +45,6 @@ import org.linphone.ui.main.contacts.adapter.ContactsListAdapter
 import org.linphone.ui.main.contacts.viewmodel.ContactsListViewModel
 import org.linphone.ui.main.fragment.AbstractTopBarFragment
 import org.linphone.utils.Event
-import org.linphone.utils.setKeyboardInsetListener
 
 @UiThread
 class ContactsListFragment : AbstractTopBarFragment() {
@@ -58,6 +58,14 @@ class ContactsListFragment : AbstractTopBarFragment() {
 
     private lateinit var adapter: ContactsListAdapter
     private lateinit var favouritesAdapter: ContactsListAdapter
+
+    override fun onDefaultAccountChanged() {
+        Log.i(
+            "$TAG Default account changed, updating avatar in top bar & refreshing contacts list"
+        )
+        listViewModel.update()
+        listViewModel.applyCurrentDefaultAccountFilter()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -106,7 +114,7 @@ class ContactsListFragment : AbstractTopBarFragment() {
 
             (view.parent as? ViewGroup)?.doOnPreDraw {
                 startPostponedEnterTransition()
-                sharedViewModel.contactsReadyEvent.value = Event(true)
+                sharedViewModel.isFirstFragmentReady = true
             }
         }
 
@@ -136,6 +144,32 @@ class ContactsListFragment : AbstractTopBarFragment() {
             showFilterPopupMenu(binding.filter)
         }
 
+        sharedViewModel.showContactEvent.observe(
+            viewLifecycleOwner
+        ) {
+            it.consume { refKey ->
+                Log.i("$TAG Displaying contact with ref key [$refKey]")
+                val navController = binding.contactsNavContainer.findNavController()
+                val action = ContactFragmentDirections.actionGlobalContactFragment(
+                    refKey
+                )
+                navController.navigate(action)
+            }
+        }
+
+        sharedViewModel.showNewContactEvent.observe(
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                if (findNavController().currentDestination?.id == R.id.contactsListFragment) {
+                    Log.i("$TAG Opening contact editor for creating new contact")
+                    val action =
+                        ContactsListFragmentDirections.actionContactsListFragmentToNewContactFragment()
+                    findNavController().navigate(action)
+                }
+            }
+        }
+
         // TopBarFragment related
 
         setViewModelAndTitle(
@@ -144,20 +178,11 @@ class ContactsListFragment : AbstractTopBarFragment() {
             getString(R.string.bottom_navigation_contacts_label)
         )
 
-        binding.root.setKeyboardInsetListener { keyboardVisible ->
-            val portraitOrientation = resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
-            binding.bottomNavBar.root.visibility = if (!portraitOrientation || !keyboardVisible) View.VISIBLE else View.GONE
-        }
+        initBottomNavBar(binding.bottomNavBar.root)
 
-        sharedViewModel.defaultAccountChangedEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                Log.i(
-                    "$TAG Default account changed, updating avatar in top bar & refreshing contacts list"
-                )
-                listViewModel.update()
-                listViewModel.applyCurrentDefaultAccountFilter()
-            }
-        }
+        initSlidingPane(binding.slidingPaneLayout)
+
+        initNavigation(R.id.contactsListFragment)
     }
 
     private fun configureAdapter(adapter: ContactsListAdapter) {

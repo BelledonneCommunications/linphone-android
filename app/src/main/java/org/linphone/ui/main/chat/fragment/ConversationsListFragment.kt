@@ -19,14 +19,17 @@
  */
 package org.linphone.ui.main.chat.fragment
 
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.annotation.UiThread
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.R
 import org.linphone.core.tools.Log
@@ -36,7 +39,6 @@ import org.linphone.ui.main.chat.viewmodel.ConversationsListViewModel
 import org.linphone.ui.main.fragment.AbstractTopBarFragment
 import org.linphone.ui.main.history.fragment.HistoryMenuDialogFragment
 import org.linphone.utils.Event
-import org.linphone.utils.setKeyboardInsetListener
 
 @UiThread
 class ConversationsListFragment : AbstractTopBarFragment() {
@@ -49,6 +51,24 @@ class ConversationsListFragment : AbstractTopBarFragment() {
     private lateinit var listViewModel: ConversationsListViewModel
 
     private lateinit var adapter: ConversationsListAdapter
+
+    override fun onDefaultAccountChanged() {
+        Log.i(
+            "$TAG Default account changed, updating avatar in top bar & re-computing conversations"
+        )
+        listViewModel.applyFilter()
+    }
+
+    override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
+        if (
+            findNavController().currentDestination?.id == R.id.startConversationFragment ||
+            findNavController().currentDestination?.id == R.id.meetingWaitingRoomFragment
+        ) {
+            // Holds fragment in place while new contact fragment slides over it
+            return AnimationUtils.loadAnimation(activity, R.anim.hold)
+        }
+        return super.onCreateAnimation(transit, enter, nextAnim)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -118,7 +138,12 @@ class ConversationsListFragment : AbstractTopBarFragment() {
         }
 
         binding.setOnNewConversationClicked {
-            sharedViewModel.showStartConversationEvent.value = Event(true)
+            if (findNavController().currentDestination?.id == R.id.conversationsListFragment) {
+                Log.i("$TAG Navigating to start conversation fragment")
+                val action =
+                    ConversationsListFragmentDirections.actionConversationsListFragmentToStartConversationFragment()
+                findNavController().navigate(action)
+            }
         }
 
         listViewModel.conversations.observe(viewLifecycleOwner) {
@@ -132,7 +157,7 @@ class ConversationsListFragment : AbstractTopBarFragment() {
 
             (view.parent as? ViewGroup)?.doOnPreDraw {
                 startPostponedEnterTransition()
-                sharedViewModel.conversationsReadyEvent.value = Event(true)
+                sharedViewModel.isFirstFragmentReady = true
             }
         }
 
@@ -140,6 +165,36 @@ class ConversationsListFragment : AbstractTopBarFragment() {
             it.consume {
                 Log.i("$TAG Conversations list have been re-ordered, scrolling to top")
                 binding.conversationsList.scrollToPosition(0)
+            }
+        }
+
+        sharedViewModel.showConversationEvent.observe(viewLifecycleOwner) {
+            it.consume { pair ->
+                val localSipUri = pair.first
+                val remoteSipUri = pair.second
+                Log.i(
+                    "${ConversationsListFragment.TAG} Navigating to conversation fragment with local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
+                )
+                if (findNavController().currentDestination?.id == R.id.conversationsListFragment) {
+                    val action = ConversationFragmentDirections.actionGlobalConversationFragment(
+                        localSipUri,
+                        remoteSipUri
+                    )
+                    binding.chatNavContainer.findNavController().navigate(action)
+                }
+            }
+        }
+
+        sharedViewModel.goToMeetingWaitingRoomEvent.observe(viewLifecycleOwner) {
+            it.consume { uri ->
+                if (findNavController().currentDestination?.id == R.id.conversationsListFragment) {
+                    Log.i("$TAG Navigating to meeting waiting room fragment with URI [$uri]")
+                    val action =
+                        ConversationsListFragmentDirections.actionConversationsListFragmentToMeetingWaitingRoomFragment(
+                            uri
+                        )
+                    findNavController().navigate(action)
+                }
             }
         }
 
@@ -151,17 +206,23 @@ class ConversationsListFragment : AbstractTopBarFragment() {
             getString(R.string.bottom_navigation_conversations_label)
         )
 
-        binding.root.setKeyboardInsetListener { keyboardVisible ->
-            val portraitOrientation = resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
-            binding.bottomNavBar.root.visibility = if (!portraitOrientation || !keyboardVisible) View.VISIBLE else View.GONE
-        }
+        initBottomNavBar(binding.bottomNavBar.root)
 
-        sharedViewModel.defaultAccountChangedEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                Log.i(
-                    "$TAG Default account changed, updating avatar in top bar & re-computing conversations"
-                )
-                listViewModel.applyFilter()
+        initSlidingPane(binding.slidingPaneLayout)
+
+        initNavigation(R.id.conversationsListFragment)
+
+        // Handle intent params if any
+
+        val args = arguments
+        if (args != null) {
+            val localSipUri = args.getString("LocalSipUri")
+            val remoteSipUri = args.getString("RemoteSipUri")
+            if (localSipUri != null && remoteSipUri != null) {
+                Log.i("$TAG Found local [$localSipUri] & remote [$remoteSipUri] URIs in arguments")
+                val pair = Pair(localSipUri, remoteSipUri)
+                sharedViewModel.showConversationEvent.value = Event(pair)
+                args.clear()
             }
         }
     }

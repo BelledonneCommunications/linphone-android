@@ -76,8 +76,6 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
 
     /* Contacts related */
 
-    val contactsReadyEvent = MutableLiveData<Event<Boolean>>()
-
     val showContactEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
     }
@@ -90,16 +88,6 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
 
     /* Call logs related */
 
-    val historyReadyEvent = MutableLiveData<Event<Boolean>>()
-
-    val showStartCallEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
-    }
-
-    val showCallLogEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
-    }
-
     val forceRefreshCallLogsListEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -109,12 +97,6 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
     }
 
     /* Conversation related */
-
-    val conversationsReadyEvent = MutableLiveData<Event<Boolean>>()
-
-    val showStartConversationEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
-    }
 
     val filesToShareFromIntent = MutableLiveData<ArrayList<String>>()
 
@@ -127,16 +109,6 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
     val richContentUri = MutableLiveData<Event<Uri>>()
 
     /* Meetings related */
-
-    val meetingsReadyEvent = MutableLiveData<Event<Boolean>>()
-
-    val showScheduleMeetingEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
-    }
-
-    val showMeetingEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
-    }
 
     val forceRefreshMeetingsListEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()

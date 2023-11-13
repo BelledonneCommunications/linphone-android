@@ -22,17 +22,20 @@ package org.linphone.ui.main.history.fragment
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.PopupWindow
 import androidx.annotation.UiThread
 import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
@@ -46,7 +49,6 @@ import org.linphone.ui.main.history.model.ConfirmationDialogModel
 import org.linphone.ui.main.history.viewmodel.HistoryListViewModel
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
-import org.linphone.utils.setKeyboardInsetListener
 
 @UiThread
 class HistoryListFragment : AbstractTopBarFragment() {
@@ -59,6 +61,22 @@ class HistoryListFragment : AbstractTopBarFragment() {
     private lateinit var listViewModel: HistoryListViewModel
 
     private lateinit var adapter: HistoryListAdapter
+
+    override fun onDefaultAccountChanged() {
+        Log.i(
+            "$TAG Default account changed, updating avatar in top bar & re-computing call logs"
+        )
+        listViewModel.update()
+        listViewModel.applyFilter()
+    }
+
+    override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
+        if (findNavController().currentDestination?.id == R.id.startCallFragment) {
+            // Holds fragment in place while new contact fragment slides over it
+            return AnimationUtils.loadAnimation(activity, R.anim.hold)
+        }
+        return super.onCreateAnimation(transit, enter, nextAnim)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -130,8 +148,14 @@ class HistoryListFragment : AbstractTopBarFragment() {
 
         adapter.callLogClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
-                Log.i("$TAG Show details for call log with ID [${model.id}]")
-                sharedViewModel.showCallLogEvent.value = Event(model.id ?: "")
+                val uri = model.id
+                Log.i("$TAG Show details for call log with ID [$uri]")
+                if (!uri.isNullOrEmpty()) {
+                    val navController = binding.historyNavContainer.findNavController()
+                    val action =
+                        HistoryContactFragmentDirections.actionGlobalHistoryContactFragment(uri)
+                    navController.navigate(action)
+                }
             }
         }
 
@@ -155,7 +179,7 @@ class HistoryListFragment : AbstractTopBarFragment() {
 
             (view.parent as? ViewGroup)?.doOnPreDraw {
                 startPostponedEnterTransition()
-                sharedViewModel.historyReadyEvent.value = Event(true)
+                sharedViewModel.isFirstFragmentReady = true
             }
         }
 
@@ -180,7 +204,12 @@ class HistoryListFragment : AbstractTopBarFragment() {
         }
 
         binding.setStartCallClickListener {
-            sharedViewModel.showStartCallEvent.value = Event(true)
+            if (findNavController().currentDestination?.id == R.id.historyListFragment) {
+                Log.i("$TAG Navigating to start call fragment")
+                val action =
+                    HistoryListFragmentDirections.actionHistoryListFragmentToStartCallFragment()
+                findNavController().navigate(action)
+            }
         }
 
         // TopBarFragment related
@@ -191,20 +220,11 @@ class HistoryListFragment : AbstractTopBarFragment() {
             getString(R.string.bottom_navigation_calls_label)
         )
 
-        binding.root.setKeyboardInsetListener { keyboardVisible ->
-            val portraitOrientation = resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
-            binding.bottomNavBar.root.visibility = if (!portraitOrientation || !keyboardVisible) View.VISIBLE else View.GONE
-        }
+        initBottomNavBar(binding.bottomNavBar.root)
 
-        sharedViewModel.defaultAccountChangedEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                Log.i(
-                    "$TAG Default account changed, updating avatar in top bar & re-computing call logs"
-                )
-                listViewModel.update()
-                listViewModel.applyFilter()
-            }
-        }
+        initSlidingPane(binding.slidingPaneLayout)
+
+        initNavigation(R.id.historyListFragment)
     }
 
     override fun onResume() {

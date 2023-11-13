@@ -265,7 +265,9 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
             isParticipantsListOpen.postValue(false)
             isEmojiPickerOpen.postValue(false)
 
-            stopVoiceRecorder()
+            if (::voiceMessageRecorder.isInitialized) {
+                stopVoiceRecorder()
+            }
             voiceRecording.postValue(false)
 
             // Warning: do not delete files

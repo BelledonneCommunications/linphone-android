@@ -194,27 +194,27 @@ class MainActivity : AppCompatActivity() {
             val startDestination = when (corePreferences.defaultFragment) {
                 CONTACTS_FRAGMENT_ID -> {
                     Log.i("$TAG Latest visited page is contacts, setting it as start destination")
-                    R.id.contactsFragment
+                    R.id.contactsListFragment
                 }
                 HISTORY_FRAGMENT_ID -> {
                     Log.i(
                         "$TAG Latest visited page is call history, setting it as start destination"
                     )
-                    R.id.historyFragment
+                    R.id.historyListFragment
                 }
                 CHAT_FRAGMENT_ID -> {
                     Log.i(
                         "$TAG Latest visited page is conversations, setting it as start destination"
                     )
-                    R.id.conversationsFragment
+                    R.id.conversationsListFragment
                 }
                 MEETINGS_FRAGMENT_ID -> {
                     Log.i("$TAG Latest visited page is meetings, setting it as start destination")
-                    R.id.meetingsFragment
+                    R.id.meetingsListFragment
                 }
                 else -> { // Default
                     Log.i("$TAG No latest visited page stored, using default one (call history)")
-                    R.id.historyFragment
+                    R.id.historyListFragment
                 }
             }
             coreContext.postOnMainThread {
@@ -230,16 +230,16 @@ class MainActivity : AppCompatActivity() {
 
     override fun onPause() {
         val defaultFragmentId = when (sharedViewModel.currentlyDisplayedFragment.value) {
-            R.id.contactsFragment -> {
+            R.id.contactsListFragment -> {
                 CONTACTS_FRAGMENT_ID
             }
-            R.id.historyFragment -> {
+            R.id.historyListFragment -> {
                 HISTORY_FRAGMENT_ID
             }
-            R.id.conversationsFragment -> {
+            R.id.conversationsListFragment -> {
                 CHAT_FRAGMENT_ID
             }
-            R.id.meetingsFragment -> {
+            R.id.meetingsListFragment -> {
                 MEETINGS_FRAGMENT_ID
             }
             else -> { // Default
@@ -352,12 +352,12 @@ class MainActivity : AppCompatActivity() {
             if (isNewIntent) {
                 Log.i("$TAG Going to Conversations fragment")
                 findNavController().navigate(
-                    R.id.action_global_conversationsFragment,
+                    R.id.action_global_conversationsListFragment,
                     intent.extras
                 )
             } else {
                 Log.i("$TAG Going to Conversations fragment instead of default destination")
-                navGraph.setStartDestination(R.id.conversationsFragment)
+                navGraph.setStartDestination(R.id.conversationsListFragment)
                 findNavController().setGraph(navGraph, intent.extras)
             }
         } else {
@@ -415,7 +415,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             val navGraph = findNavController().navInflater.inflate(R.navigation.main_nav_graph)
-            navGraph.setStartDestination(R.id.conversationsFragment)
+            navGraph.setStartDestination(R.id.conversationsListFragment)
 
             val paths = deferred.awaitAll()
             for (path in paths) {
