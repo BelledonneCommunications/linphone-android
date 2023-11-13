@@ -26,7 +26,18 @@ import android.util.Patterns
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
+import androidx.media.AudioFocusRequestCompat
+import java.text.SimpleDateFormat
+import java.util.Locale
 import java.util.regex.Pattern
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Address
@@ -35,9 +46,12 @@ import org.linphone.core.ChatMessageListenerStub
 import org.linphone.core.ChatMessageReaction
 import org.linphone.core.Content
 import org.linphone.core.Factory
+import org.linphone.core.Player
+import org.linphone.core.PlayerListener
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.utils.AppUtils
+import org.linphone.utils.AudioRouteUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.PatternClickableSpan
@@ -105,6 +119,31 @@ class ChatMessageModel @WorkerThread constructor(
     private lateinit var meetingConferenceUri: Address
     // End of conference info related fields
 
+    // Voice record related fields
+    val isVoiceRecord = MutableLiveData<Boolean>()
+
+    val isPlayingVoiceRecord = MutableLiveData<Boolean>()
+
+    val voiceRecordPlayerPosition = MutableLiveData<Int>()
+
+    val voiceRecordingDuration = MutableLiveData<Int>()
+
+    val formattedVoiceRecordingDuration = MutableLiveData<String>()
+
+    private var voiceRecordAudioFocusRequest: AudioFocusRequestCompat? = null
+
+    private lateinit var voiceRecordPath: String
+
+    private lateinit var voiceRecordPlayer: Player
+
+    private val playerListener = PlayerListener {
+        Log.i("$TAG End of file reached")
+        stopVoiceRecordPlayer()
+    }
+
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    // End of voice record related fields
+
     val dismissLongPressMenuEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -131,6 +170,8 @@ class ChatMessageModel @WorkerThread constructor(
     }
 
     init {
+        isPlayingVoiceRecord.postValue(false)
+
         chatMessage.addListener(chatMessageListener)
         statusIcon.postValue(LinphoneUtils.getChatIconResId(chatMessage.state))
         updateReactionsList()
@@ -169,6 +210,10 @@ class ChatMessageModel @WorkerThread constructor(
                                 displayableContentFound = true
                             }
                             "audio" -> {
+                                isVoiceRecord.postValue(true)
+                                voiceRecordPath = path
+                                initVoiceRecordPlayer()
+                                displayableContentFound = true
                             }
                             else -> {
                             }
@@ -217,6 +262,17 @@ class ChatMessageModel @WorkerThread constructor(
                 }
                 /*Log.i("$TAG Calling conference URI [${meetingConferenceUri.asStringUriOnly()}]")
                 coreContext.startCall(meetingConferenceUri)*/
+            }
+        }
+    }
+
+    @UiThread
+    fun togglePlayPauseVoiceRecord() {
+        coreContext.postOnCoreThread {
+            if (isPlayingVoiceRecord.value == false) {
+                startVoiceRecordPlayer()
+            } else {
+                pauseVoiceRecordPlayer()
             }
         }
     }
@@ -373,6 +429,122 @@ class ChatMessageModel @WorkerThread constructor(
             )
 
             meetingFound.postValue(true)
+        }
+    }
+
+    @WorkerThread
+    private fun initVoiceRecordPlayer() {
+        if (!::voiceRecordPath.isInitialized) {
+            Log.e("$TAG No voice record path was set!")
+            return
+        }
+
+        Log.i("$TAG Creating player for voice record")
+
+        val playbackSoundCard = AudioRouteUtils.getAudioPlaybackDeviceIdForCallRecordingOrVoiceMessage()
+        Log.i(
+            "$TAG Using device $playbackSoundCard to make the voice message playback"
+        )
+
+        val localPlayer = coreContext.core.createLocalPlayer(playbackSoundCard, null, null)
+        if (localPlayer != null) {
+            voiceRecordPlayer = localPlayer
+        } else {
+            Log.e("$TAG Couldn't create local player!")
+            return
+        }
+        voiceRecordPlayer.addListener(playerListener)
+        Log.i("$TAG Voice record player created")
+
+        val path = voiceRecordPath
+        Log.i("$TAG Opening voice record file [$path]")
+        voiceRecordPlayer.open(path)
+
+        val duration = voiceRecordPlayer.duration
+        voiceRecordingDuration.postValue(duration)
+        val formattedDuration = SimpleDateFormat("mm:ss", Locale.getDefault()).format(duration) // duration is in ms
+        formattedVoiceRecordingDuration.postValue(formattedDuration)
+    }
+
+    @WorkerThread
+    private fun startVoiceRecordPlayer() {
+        if (isPlayerClosed()) {
+            Log.w("$TAG Player closed, let's open it first")
+            initVoiceRecordPlayer()
+        }
+
+        // TODO: check media volume
+
+        if (voiceRecordAudioFocusRequest == null) {
+            voiceRecordAudioFocusRequest = AudioRouteUtils.acquireAudioFocusForVoiceRecordingOrPlayback(
+                coreContext.context
+            )
+        }
+
+        Log.i("$TAG Playing voice record")
+        isPlayingVoiceRecord.postValue(true)
+        voiceRecordPlayer.start()
+
+        playerTickerFlow().onEach {
+            withContext(Dispatchers.Main) {
+                voiceRecordPlayerPosition.value = voiceRecordPlayer.currentPosition
+            }
+        }.launchIn(scope)
+    }
+
+    @WorkerThread
+    private fun pauseVoiceRecordPlayer() {
+        if (!isPlayerClosed()) {
+            Log.i("$TAG Pausing voice record")
+            voiceRecordPlayer.pause()
+        }
+
+        val request = voiceRecordAudioFocusRequest
+        if (request != null) {
+            AudioRouteUtils.releaseAudioFocusForVoiceRecordingOrPlayback(
+                coreContext.context,
+                request
+            )
+            voiceRecordAudioFocusRequest = null
+        }
+
+        isPlayingVoiceRecord.postValue(false)
+    }
+
+    @WorkerThread
+    private fun isPlayerClosed(): Boolean {
+        return !::voiceRecordPlayer.isInitialized || voiceRecordPlayer.state == Player.State.Closed
+    }
+
+    @WorkerThread
+    private fun stopVoiceRecordPlayer() {
+        if (!isPlayerClosed()) {
+            Log.i("$TAG Stopping voice record")
+            voiceRecordPlayer.pause()
+            voiceRecordPlayer.seek(0)
+            voiceRecordPlayerPosition.postValue(0)
+            voiceRecordPlayer.close()
+        }
+
+        voiceRecordPlayerPosition.postValue(0)
+        isPlayingVoiceRecord.postValue(false)
+
+        val request = voiceRecordAudioFocusRequest
+        if (request != null) {
+            AudioRouteUtils.releaseAudioFocusForVoiceRecordingOrPlayback(
+                coreContext.context,
+                request
+            )
+            voiceRecordAudioFocusRequest = null
+        }
+
+        isPlayingVoiceRecord.postValue(false)
+    }
+
+    private fun playerTickerFlow() = flow {
+        while (isPlayingVoiceRecord.value == true) {
+            emit(Unit)
+            delay(50)
         }
     }
 }

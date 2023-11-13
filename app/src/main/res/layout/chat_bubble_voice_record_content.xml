@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="model"
+            type="org.linphone.ui.main.chat.model.ChatMessageModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="@dimen/chat_bubble_voice_record_width"
+        android:layout_height="wrap_content"
+        inflatedLifecycleOwner="@{true}">
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleHorizontal"
+            android:id="@+id/voice_record_progress"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:progressDrawable="@drawable/voice_recording_gradient_progress"
+            android:progress="@{model.voiceRecordPlayerPosition}"
+            android:max="@{model.voiceRecordingDuration}"
+            tools:progress="60"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/play_pause_voice_record"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="10dp"
+            android:onClick="@{() -> model.togglePlayPauseVoiceRecord()}"
+            android:padding="8dp"
+            android:src="@{model.isPlayingVoiceRecord ? @drawable/pause_fill : @drawable/play_fill, default=@drawable/play_fill}"
+            android:background="@drawable/circle_white_button_background"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintBottom_toBottomOf="@id/voice_record_duration"
+            app:layout_constraintStart_toStartOf="@id/voice_record_progress"
+            app:layout_constraintTop_toTopOf="@id/voice_record_duration"
+            app:tint="@color/orange_main_500" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/voice_record_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:text="@{model.formattedVoiceRecordingDuration, default=`00:00`}"
+            android:textSize="14sp"
+            android:textColor="@color/gray_main2_600"
+            android:background="@drawable/shape_squircle_white_r50_background"
+            app:layout_constraintBottom_toBottomOf="@id/voice_record_progress"
+            app:layout_constraintEnd_toEndOf="@id/voice_record_progress"
+            app:layout_constraintTop_toTopOf="@id/voice_record_progress"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

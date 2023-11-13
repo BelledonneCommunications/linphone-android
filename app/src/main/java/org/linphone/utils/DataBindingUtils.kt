@@ -72,6 +72,13 @@ import org.linphone.ui.call.model.ConferenceParticipantDeviceModel
  * This file contains all the data binding necessary for the app
  */
 
+@BindingAdapter("inflatedLifecycleOwner")
+fun setInflatedViewStubLifecycleOwner(view: View, enable: Boolean) {
+    val binding = DataBindingUtil.bind<ViewDataBinding>(view)
+    // This is a bit hacky...
+    binding?.lifecycleOwner = view.context as AppCompatActivity
+}
+
 @UiThread
 @BindingAdapter("entries", "layout")
 fun <T> setEntries(

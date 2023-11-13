@@ -588,6 +588,9 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
             voiceRecordPlayer.close()
         }
 
+        voiceRecordPlayerPosition.postValue(0)
+        isPlayingVoiceRecord.postValue(false)
+
         val request = voiceRecordAudioFocusRequest
         if (request != null) {
             AudioRouteUtils.releaseAudioFocusForVoiceRecordingOrPlayback(

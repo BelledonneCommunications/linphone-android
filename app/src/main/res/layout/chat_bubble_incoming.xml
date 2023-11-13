@@ -176,6 +176,14 @@
                 android:layout="@layout/chat_bubble_meeting_invite_content"
                 model="@{model}"/>
 
+            <ViewStub
+                android:id="@+id/voice_record"
+                android:layout_width="@dimen/chat_bubble_voice_record_width"
+                android:layout_height="wrap_content"
+                android:visibility="@{model.isVoiceRecord ? View.VISIBLE : View.GONE, default=gone}"
+                android:layout="@layout/chat_bubble_voice_record_content"
+                model="@{model}" />
+
             <org.linphone.ui.main.chat.view.ChatBubbleTextView
                 style="@style/default_text_style"
                 android:id="@+id/text_content"

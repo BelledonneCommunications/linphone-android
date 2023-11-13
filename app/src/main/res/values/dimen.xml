@@ -70,6 +70,7 @@
     <dimen name="chat_bubble_grid_image_size">88dp</dimen>
     <dimen name="chat_bubble_big_image_max_size">150dp</dimen>
     <dimen name="chat_bubble_meeting_invite_width">271dp</dimen>
+    <dimen name="chat_bubble_voice_record_width">271dp</dimen>
     <dimen name="chat_bubble_max_reply_width">271dp</dimen>
     <dimen name="chat_bubble_max_width">291dp</dimen>
     <dimen name="chat_bubble_images_rounded_corner_radius">5dp</dimen>
