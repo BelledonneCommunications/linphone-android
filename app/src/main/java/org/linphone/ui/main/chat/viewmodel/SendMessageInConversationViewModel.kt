@@ -30,13 +30,11 @@ import androidx.lifecycle.viewModelScope
 import androidx.media.AudioFocusRequestCompat
 import java.text.SimpleDateFormat
 import java.util.Locale
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.ChatMessage
@@ -553,8 +551,8 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
         isPlayingVoiceRecord.postValue(true)
 
         playerTickerFlow().onEach {
-            withContext(Dispatchers.Main) {
-                voiceRecordPlayerPosition.value = voiceRecordPlayer.currentPosition
+            coreContext.postOnCoreThread {
+                voiceRecordPlayerPosition.postValue(voiceRecordPlayer.currentPosition)
             }
         }.launchIn(viewModelScope)
     }

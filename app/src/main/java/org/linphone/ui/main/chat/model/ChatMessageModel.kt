@@ -33,11 +33,11 @@ import java.util.regex.Pattern
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Address
@@ -210,9 +210,15 @@ class ChatMessageModel @WorkerThread constructor(
                                 displayableContentFound = true
                             }
                             "audio" -> {
-                                isVoiceRecord.postValue(true)
                                 voiceRecordPath = path
-                                initVoiceRecordPlayer()
+                                isVoiceRecord.postValue(true)
+                                val duration = content.fileDuration
+                                voiceRecordingDuration.postValue(duration)
+                                val formattedDuration = SimpleDateFormat(
+                                    "mm:ss",
+                                    Locale.getDefault()
+                                ).format(duration) // duration is in ms
+                                formattedVoiceRecordingDuration.postValue(formattedDuration)
                                 displayableContentFound = true
                             }
                             else -> {
@@ -239,6 +245,13 @@ class ChatMessageModel @WorkerThread constructor(
 
     @WorkerThread
     fun destroy() {
+        scope.cancel()
+
+        if (::voiceRecordPlayer.isInitialized) {
+            stopVoiceRecordPlayer()
+            voiceRecordPlayer.removeListener(playerListener)
+        }
+
         chatMessage.removeListener(chatMessageListener)
     }
 
@@ -486,8 +499,8 @@ class ChatMessageModel @WorkerThread constructor(
         voiceRecordPlayer.start()
 
         playerTickerFlow().onEach {
-            withContext(Dispatchers.Main) {
-                voiceRecordPlayerPosition.value = voiceRecordPlayer.currentPosition
+            coreContext.postOnCoreThread {
+                voiceRecordPlayerPosition.postValue(voiceRecordPlayer.currentPosition)
             }
         }.launchIn(scope)
     }
