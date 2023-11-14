@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -20,11 +19,10 @@ import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.HeaderAdapter
 
-class ContactsAndSuggestionsListAdapter(
-    private val viewLifecycleOwner: LifecycleOwner
-) : ListAdapter<ContactOrSuggestionModel, RecyclerView.ViewHolder>(
-    ContactOrSuggestionDiffCallback()
-),
+class ContactsAndSuggestionsListAdapter :
+    ListAdapter<ContactOrSuggestionModel, RecyclerView.ViewHolder>(
+        ContactOrSuggestionDiffCallback()
+    ),
     HeaderAdapter {
     companion object {
         private const val CONTACT_TYPE = 0
@@ -75,7 +73,6 @@ class ContactsAndSuggestionsListAdapter(
                     parent,
                     false
                 )
-                binding.lifecycleOwner = viewLifecycleOwner
                 ContactViewHolder(binding)
             }
             else -> {
@@ -86,7 +83,6 @@ class ContactsAndSuggestionsListAdapter(
                     false
                 )
                 binding.apply {
-                    lifecycleOwner = viewLifecycleOwner
                     setOnClickListener {
                         contactClickedEvent.value = Event(model!!)
                     }

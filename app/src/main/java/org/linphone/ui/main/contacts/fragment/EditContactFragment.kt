@@ -100,8 +100,8 @@ class EditContactFragment : GenericFragment() {
         // This fragment is displayed in a SlidingPane "child" area
         isSlidingPaneChild = true
 
-        super.onViewCreated(view, savedInstanceState)
         postponeEnterTransition()
+        super.onViewCreated(view, savedInstanceState)
 
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,

@@ -23,7 +23,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -31,9 +30,9 @@ import org.linphone.R
 import org.linphone.databinding.HistoryContactListCellBinding
 import org.linphone.ui.main.history.model.CallLogHistoryModel
 
-class ContactHistoryListAdapter(
-    private val viewLifecycleOwner: LifecycleOwner
-) : ListAdapter<CallLogHistoryModel, RecyclerView.ViewHolder>(CallHistoryDiffCallback()) {
+class ContactHistoryListAdapter : ListAdapter<CallLogHistoryModel, RecyclerView.ViewHolder>(
+    CallHistoryDiffCallback()
+) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val binding: HistoryContactListCellBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
@@ -41,7 +40,7 @@ class ContactHistoryListAdapter(
             parent,
             false
         )
-        binding.lifecycleOwner = viewLifecycleOwner
+        // binding.lifecycleOwner = viewLifecycleOwner
         return ViewHolder(binding)
     }
 

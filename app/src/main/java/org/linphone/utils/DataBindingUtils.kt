@@ -345,8 +345,6 @@ fun ShapeableImageView.loadCallAvatarWithCoil(model: AbstractAvatarModel?) {
 @UiThread
 @BindingAdapter("coilInitials")
 fun ShapeableImageView.loadInitialsAvatarWithCoil(initials: String?) {
-    Log.i("[Data Binding Utils] Displaying initials [$initials] on ImageView")
-    val imageView = this
     (context as AppCompatActivity).lifecycleScope.launch {
         withContext(Dispatchers.IO) {
             val builder = AvatarGenerator(context)

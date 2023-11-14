@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -12,9 +11,9 @@ import org.linphone.R
 import org.linphone.databinding.ChatParticipantListCellBinding
 import org.linphone.ui.main.chat.model.ParticipantModel
 
-class ConversationParticipantsAdapter(
-    private val viewLifecycleOwner: LifecycleOwner
-) : ListAdapter<ParticipantModel, RecyclerView.ViewHolder>(ChatRoomParticipantDiffCallback()) {
+class ConversationParticipantsAdapter : ListAdapter<ParticipantModel, RecyclerView.ViewHolder>(
+    ChatRoomParticipantDiffCallback()
+) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val binding: ChatParticipantListCellBinding = DataBindingUtil.inflate(
@@ -23,7 +22,6 @@ class ConversationParticipantsAdapter(
             parent,
             false
         )
-        binding.lifecycleOwner = viewLifecycleOwner
         return ViewHolder(binding)
     }
 

@@ -37,6 +37,8 @@ class ContactHistoryViewModel @UiThread constructor() : ViewModel() {
 
     val operationInProgress = MutableLiveData<Boolean>()
 
+    val callLogFoundEvent = MutableLiveData<Event<Boolean>>()
+
     val chatRoomCreationErrorEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
     }
@@ -117,6 +119,9 @@ class ContactHistoryViewModel @UiThread constructor() : ViewModel() {
                     history.add(historyModel)
                 }
                 historyCallLogs.postValue(history)
+                callLogFoundEvent.postValue(Event(true))
+            } else {
+                callLogFoundEvent.postValue(Event(false))
             }
         }
     }

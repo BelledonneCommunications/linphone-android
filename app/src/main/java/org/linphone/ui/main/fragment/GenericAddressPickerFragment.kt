@@ -54,6 +54,8 @@ abstract class GenericAddressPickerFragment : GenericFragment() {
 
     protected abstract val viewModel: AddressSelectionViewModel
 
+    private lateinit var recyclerView: RecyclerView
+
     private val listener = object : ContactNumberOrAddressClickListener {
         @UiThread
         override fun onClicked(model: ContactNumberOrAddressModel) {
@@ -79,10 +81,14 @@ abstract class GenericAddressPickerFragment : GenericFragment() {
     @WorkerThread
     abstract fun onSingleAddressSelected(address: Address, friend: Friend)
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        adapter = ContactsAndSuggestionsListAdapter()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        adapter = ContactsAndSuggestionsListAdapter(viewLifecycleOwner)
 
         adapter.contactClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
@@ -104,14 +110,22 @@ abstract class GenericAddressPickerFragment : GenericFragment() {
     }
 
     @UiThread
-    protected fun setupRecyclerView(recyclerView: RecyclerView) {
+    protected fun setupRecyclerView(view: RecyclerView) {
+        recyclerView = view
         recyclerView.setHasFixedSize(true)
-        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter, true)
         recyclerView.addItemDecoration(headerItemDecoration)
+    }
 
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+    @UiThread
+    protected fun attachAdapter() {
+        if (::recyclerView.isInitialized) {
+            if (recyclerView.adapter != adapter) {
+                recyclerView.adapter = adapter
+            }
+        }
     }
 
     @WorkerThread
@@ -127,7 +141,7 @@ abstract class GenericAddressPickerFragment : GenericFragment() {
         }
     }
 
-    protected fun handleClickOnContactModel(model: ContactOrSuggestionModel) {
+    private fun handleClickOnContactModel(model: ContactOrSuggestionModel) {
         coreContext.postOnCoreThread { core ->
             val friend = model.friend
             if (friend == null) {

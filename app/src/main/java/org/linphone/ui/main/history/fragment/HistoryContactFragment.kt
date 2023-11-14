@@ -54,19 +54,12 @@ class HistoryContactFragment : GenericFragment() {
     }
 
     private lateinit var binding: HistoryContactFragmentBinding
+
     private lateinit var viewModel: ContactHistoryViewModel
+
     private lateinit var adapter: ContactHistoryListAdapter
 
     private val args: HistoryContactFragmentArgs by navArgs()
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = HistoryContactFragmentBinding.inflate(layoutInflater)
-        return binding.root
-    }
 
     override fun goBack(): Boolean {
         sharedViewModel.closeSlidingPaneEvent.value = Event(true)
@@ -74,12 +67,28 @@ class HistoryContactFragment : GenericFragment() {
         return findNavController().popBackStack()
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        adapter = ContactHistoryListAdapter()
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = HistoryContactFragmentBinding.inflate(layoutInflater)
+
+        return binding.root
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         // This fragment is displayed in a SlidingPane "child" area
         isSlidingPaneChild = true
 
-        super.onViewCreated(view, savedInstanceState)
         postponeEnterTransition()
+        super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
 
@@ -90,17 +99,26 @@ class HistoryContactFragment : GenericFragment() {
         Log.i("$TAG Looking up for call log with call id [$callId]")
         viewModel.findCallLogByCallId(callId)
 
-        adapter = ContactHistoryListAdapter(viewLifecycleOwner)
         binding.callHistory.setHasFixedSize(true)
-        binding.callHistory.adapter = adapter
         binding.callHistory.layoutManager = LinearLayoutManager(requireContext())
 
-        binding.setBackClickListener {
-            goBack()
-        }
-
-        binding.setMenuClickListener {
-            showPopupMenu()
+        viewModel.callLogFoundEvent.observe(viewLifecycleOwner) {
+            it.consume { found ->
+                if (found) {
+                    Log.i(
+                        "$TAG Found matching call log for call ID [$callId]"
+                    )
+                    (view.parent as? ViewGroup)?.doOnPreDraw {
+                        startPostponedEnterTransition()
+                        sharedViewModel.openSlidingPaneEvent.value = Event(true)
+                    }
+                } else {
+                    (view.parent as? ViewGroup)?.doOnPreDraw {
+                        Log.e("$TAG Failed to find call log, going back")
+                        goBack()
+                    }
+                }
+            }
         }
 
         sharedViewModel.isSlidingPaneSlideable.observe(viewLifecycleOwner) { slideable ->
@@ -111,9 +129,8 @@ class HistoryContactFragment : GenericFragment() {
             Log.i("$TAG Call history list ready with [${it.size}] items")
             adapter.submitList(it)
 
-            (view.parent as? ViewGroup)?.doOnPreDraw {
-                startPostponedEnterTransition()
-                sharedViewModel.openSlidingPaneEvent.value = Event(true)
+            if (binding.callHistory.adapter != adapter) {
+                binding.callHistory.adapter = adapter
             }
         }
 
@@ -135,6 +152,14 @@ class HistoryContactFragment : GenericFragment() {
                 sharedViewModel.showConversationEvent.value = Event(pair)
                 sharedViewModel.navigateToConversationsEvent.value = Event(true)
             }
+        }
+
+        binding.setBackClickListener {
+            goBack()
+        }
+
+        binding.setMenuClickListener {
+            showPopupMenu()
         }
     }
 

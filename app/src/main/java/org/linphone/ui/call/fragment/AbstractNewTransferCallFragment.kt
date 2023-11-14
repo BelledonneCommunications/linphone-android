@@ -83,6 +83,12 @@ abstract class AbstractNewTransferCallFragment : GenericCallFragment() {
 
     abstract val title: String
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        adapter = ContactsAndSuggestionsListAdapter()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -94,7 +100,6 @@ abstract class AbstractNewTransferCallFragment : GenericCallFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        postponeEnterTransition()
 
         binding.lifecycleOwner = viewLifecycleOwner
 
@@ -109,9 +114,7 @@ abstract class AbstractNewTransferCallFragment : GenericCallFragment() {
             viewModel.hideNumpad()
         }
 
-        adapter = ContactsAndSuggestionsListAdapter(viewLifecycleOwner)
         binding.contactsAndSuggestionsList.setHasFixedSize(true)
-        binding.contactsAndSuggestionsList.adapter = adapter
 
         val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter, true)
         binding.contactsAndSuggestionsList.addItemDecoration(headerItemDecoration)
@@ -130,6 +133,10 @@ abstract class AbstractNewTransferCallFragment : GenericCallFragment() {
             Log.i("$TAG Contacts & suggestions list is ready with [${it.size}] items")
             val count = adapter.itemCount
             adapter.submitList(it)
+
+            if (binding.contactsAndSuggestionsList.adapter != adapter) {
+                binding.contactsAndSuggestionsList.adapter = adapter
+            }
 
             if (count == 0) {
                 (view.parent as? ViewGroup)?.doOnPreDraw {

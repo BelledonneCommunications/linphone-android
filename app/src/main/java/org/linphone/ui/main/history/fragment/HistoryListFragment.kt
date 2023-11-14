@@ -78,6 +78,12 @@ class HistoryListFragment : AbstractTopBarFragment() {
         return super.onCreateAnimation(transit, enter, nextAnim)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        adapter = HistoryListAdapter()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -96,9 +102,7 @@ class HistoryListFragment : AbstractTopBarFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = listViewModel
 
-        adapter = HistoryListAdapter(viewLifecycleOwner)
         binding.historyList.setHasFixedSize(true)
-        binding.historyList.adapter = adapter
         binding.historyList.layoutManager = LinearLayoutManager(requireContext())
 
         adapter.callLogLongClickedEvent.observe(viewLifecycleOwner) {
@@ -172,6 +176,10 @@ class HistoryListFragment : AbstractTopBarFragment() {
             val currentCount = adapter.itemCount
             adapter.submitList(it)
             Log.i("$TAG Call logs ready with [${it.size}] items")
+
+            if (binding.historyList.adapter != adapter) {
+                binding.historyList.adapter = adapter
+            }
 
             if (currentCount < it.size) {
                 binding.historyList.scrollToPosition(0)

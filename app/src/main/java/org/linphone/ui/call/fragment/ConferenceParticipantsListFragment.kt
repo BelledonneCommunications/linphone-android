@@ -42,6 +42,12 @@ class ConferenceParticipantsListFragment : GenericCallFragment() {
 
     private lateinit var adapter: ConferenceParticipantsListAdapter
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        adapter = ConferenceParticipantsListAdapter()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -61,9 +67,7 @@ class ConferenceParticipantsListFragment : GenericCallFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
-        adapter = ConferenceParticipantsListAdapter(viewLifecycleOwner)
         binding.participantsList.setHasFixedSize(true)
-        binding.participantsList.adapter = adapter
         binding.participantsList.layoutManager = LinearLayoutManager(requireContext())
 
         binding.setBackClickListener {
@@ -73,6 +77,10 @@ class ConferenceParticipantsListFragment : GenericCallFragment() {
         viewModel.conferenceModel.participants.observe(viewLifecycleOwner) {
             Log.i("$TAG participants list updated with [${it.size}] items")
             adapter.submitList(it)
+
+            if (binding.participantsList.adapter != adapter) {
+                binding.participantsList.adapter = adapter
+            }
         }
     }
 }

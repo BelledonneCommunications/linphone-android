@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -12,9 +11,7 @@ import org.linphone.R
 import org.linphone.databinding.ChatMessageBottomSheetListCellBinding
 import org.linphone.ui.main.chat.model.ChatMessageBottomSheetParticipantModel
 
-class ChatMessageBottomSheetAdapter(
-    private val viewLifecycleOwner: LifecycleOwner
-) : ListAdapter<ChatMessageBottomSheetParticipantModel, RecyclerView.ViewHolder>(
+class ChatMessageBottomSheetAdapter : ListAdapter<ChatMessageBottomSheetParticipantModel, RecyclerView.ViewHolder>(
     ParticipantDiffCallback()
 ) {
 
@@ -25,7 +22,6 @@ class ChatMessageBottomSheetAdapter(
             parent,
             false
         )
-        binding.lifecycleOwner = viewLifecycleOwner
         return ViewHolder(binding)
     }
 

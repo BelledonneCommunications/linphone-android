@@ -70,6 +70,12 @@ class MeetingsListFragment : AbstractTopBarFragment() {
         return super.onCreateAnimation(transit, enter, nextAnim)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        adapter = MeetingsListAdapter()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -88,10 +94,7 @@ class MeetingsListFragment : AbstractTopBarFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = listViewModel
 
-        adapter = MeetingsListAdapter(viewLifecycleOwner)
         binding.meetingsList.setHasFixedSize(true)
-        binding.meetingsList.adapter = adapter
-
         val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter, true)
         binding.meetingsList.addItemDecoration(headerItemDecoration)
         binding.meetingsList.layoutManager = LinearLayoutManager(requireContext())
@@ -119,13 +122,19 @@ class MeetingsListFragment : AbstractTopBarFragment() {
 
         listViewModel.meetings.observe(viewLifecycleOwner) {
             val currentCount = adapter.itemCount
+            val newCount = it.size
             adapter.submitList(it)
-            Log.i("$TAG Meetings list ready with [${it.size}] items")
+            Log.i("$TAG Meetings list ready with [$newCount] items")
 
-            if (currentCount < it.size) {
-                (view.parent as? ViewGroup)?.doOnPreDraw {
-                    startPostponedEnterTransition()
-                    sharedViewModel.isFirstFragmentReady = true
+            if (binding.meetingsList.adapter != adapter) {
+                binding.meetingsList.adapter = adapter
+            }
+
+            (view.parent as? ViewGroup)?.doOnPreDraw {
+                startPostponedEnterTransition()
+                sharedViewModel.isFirstFragmentReady = true
+
+                if (currentCount < newCount) {
                     scrollToToday()
                 }
             }

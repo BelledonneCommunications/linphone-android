@@ -67,8 +67,8 @@ class AddParticipantsFragment : GenericAddressPickerFragment() {
 
         viewModel = ViewModelProvider(this)[AddParticipantsViewModel::class.java]
 
-        super.onViewCreated(view, savedInstanceState)
         postponeEnterTransition()
+        super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
 
@@ -84,13 +84,12 @@ class AddParticipantsFragment : GenericAddressPickerFragment() {
             viewLifecycleOwner
         ) {
             Log.i("$TAG Contacts & suggestions list is ready with [${it.size}] items")
-            val count = adapter.itemCount
             adapter.submitList(it)
 
-            if (count == 0) {
-                (view.parent as? ViewGroup)?.doOnPreDraw {
-                    startPostponedEnterTransition()
-                }
+            attachAdapter()
+
+            (view.parent as? ViewGroup)?.doOnPreDraw {
+                startPostponedEnterTransition()
             }
         }
 

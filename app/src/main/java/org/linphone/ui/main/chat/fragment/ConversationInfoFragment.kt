@@ -57,6 +57,16 @@ class ConversationInfoFragment : GenericFragment() {
 
     private val args: ConversationInfoFragmentArgs by navArgs()
 
+    override fun goBack(): Boolean {
+        return findNavController().popBackStack()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        adapter = ConversationParticipantsAdapter()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -66,16 +76,12 @@ class ConversationInfoFragment : GenericFragment() {
         return binding.root
     }
 
-    override fun goBack(): Boolean {
-        return findNavController().popBackStack()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         // This fragment is displayed in a SlidingPane "child" area
         isSlidingPaneChild = true
 
-        super.onViewCreated(view, savedInstanceState)
         postponeEnterTransition()
+        super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
 
@@ -90,10 +96,8 @@ class ConversationInfoFragment : GenericFragment() {
         val chatRoom = sharedViewModel.displayedChatRoom
         viewModel.findChatRoom(chatRoom, localSipUri, remoteSipUri)
 
-        adapter = ConversationParticipantsAdapter(viewLifecycleOwner)
         binding.participants.setHasFixedSize(true)
         binding.participants.layoutManager = LinearLayoutManager(requireContext())
-        binding.participants.adapter = adapter
 
         viewModel.chatRoomFoundEvent.observe(viewLifecycleOwner) {
             it.consume { found ->
@@ -115,6 +119,10 @@ class ConversationInfoFragment : GenericFragment() {
         viewModel.participants.observe(viewLifecycleOwner) { items ->
             adapter.submitList(items)
             Log.i("$TAG Participants list updated with [${items.size}] items")
+
+            if (binding.participants.adapter != adapter) {
+                binding.participants.adapter = adapter
+            }
         }
 
         viewModel.groupLeftEvent.observe(viewLifecycleOwner) {

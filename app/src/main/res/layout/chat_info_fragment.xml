@@ -333,22 +333,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="@dimen/screen_bottom_margin"
                     android:background="@drawable/action_background"
                     android:text="@string/conversation_info_delete_history_action"
                     android:drawableStart="@drawable/trash_simple"
                     app:layout_constraintVertical_bias="0"
                     app:layout_constraintTop_toBottomOf="@id/action_leave_group"
-                    app:layout_constraintBottom_toTopOf="@id/anchor"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@id/actions_background"
                     app:layout_constraintEnd_toEndOf="@id/actions_background"/>
-
-                <View
-                    android:id="@+id/anchor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/screen_bottom_margin"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

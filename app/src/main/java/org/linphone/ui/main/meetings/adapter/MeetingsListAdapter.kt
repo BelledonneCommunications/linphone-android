@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -18,9 +17,11 @@ import org.linphone.ui.main.meetings.model.MeetingModel
 import org.linphone.utils.Event
 import org.linphone.utils.HeaderAdapter
 
-class MeetingsListAdapter(
-    private val viewLifecycleOwner: LifecycleOwner
-) : ListAdapter<MeetingModel, RecyclerView.ViewHolder>(MeetingDiffCallback()), HeaderAdapter {
+class MeetingsListAdapter :
+    ListAdapter<MeetingModel, RecyclerView.ViewHolder>(
+        MeetingDiffCallback()
+    ),
+    HeaderAdapter {
     val meetingClickedEvent: MutableLiveData<Event<MeetingModel>> by lazy {
         MutableLiveData<Event<MeetingModel>>()
     }
@@ -52,8 +53,6 @@ class MeetingsListAdapter(
             false
         )
         binding.apply {
-            lifecycleOwner = viewLifecycleOwner
-
             setOnClickListener {
                 meetingClickedEvent.value = Event(model!!)
             }

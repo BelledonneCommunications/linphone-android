@@ -158,6 +158,7 @@ class ConversationFragment : GenericFragment() {
         super.onCreate(savedInstanceState)
 
         adapter = ConversationEventAdapter()
+        bottomSheetAdapter = ChatMessageBottomSheetAdapter()
     }
 
     override fun onCreateView(
@@ -238,10 +239,7 @@ class ConversationFragment : GenericFragment() {
             }
         }
 
-        bottomSheetAdapter = ChatMessageBottomSheetAdapter(viewLifecycleOwner)
         binding.messageBottomSheet.bottomSheetList.setHasFixedSize(true)
-        binding.messageBottomSheet.bottomSheetList.adapter = bottomSheetAdapter
-
         val bottomSheetLayoutManager = LinearLayoutManager(requireContext())
         binding.messageBottomSheet.bottomSheetList.layoutManager = bottomSheetLayoutManager
 
@@ -554,6 +552,9 @@ class ConversationFragment : GenericFragment() {
 
         binding.messageBottomSheet.setHandleClickedListener {
             deliveryBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+        if (binding.messageBottomSheet.bottomSheetList.adapter != bottomSheetAdapter) {
+            binding.messageBottomSheet.bottomSheetList.adapter = bottomSheetAdapter
         }
 
         lifecycleScope.launch {

@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -14,9 +13,7 @@ import org.linphone.databinding.HistoryListCellBinding
 import org.linphone.ui.main.history.model.CallLogModel
 import org.linphone.utils.Event
 
-class HistoryListAdapter(
-    private val viewLifecycleOwner: LifecycleOwner
-) : ListAdapter<CallLogModel, RecyclerView.ViewHolder>(CallLogDiffCallback()) {
+class HistoryListAdapter : ListAdapter<CallLogModel, RecyclerView.ViewHolder>(CallLogDiffCallback()) {
     var selectedAdapterPosition = -1
 
     val callLogClickedEvent: MutableLiveData<Event<CallLogModel>> by lazy {
@@ -40,8 +37,6 @@ class HistoryListAdapter(
         )
         val viewHolder = ViewHolder(binding)
         binding.apply {
-            lifecycleOwner = viewLifecycleOwner
-
             setOnClickListener {
                 callLogClickedEvent.value = Event(model!!)
             }
