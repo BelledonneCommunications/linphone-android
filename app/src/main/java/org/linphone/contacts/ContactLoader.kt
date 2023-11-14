@@ -55,7 +55,7 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
         private const val NATIVE_ADDRESS_BOOK_FRIEND_LIST = "Native address-book"
         const val LINPHONE_ADDRESS_BOOK_FRIEND_LIST = "Linphone address-book"
 
-        private const val MAX_INTERVAL_TO_REFRESH = 60000L
+        private const val MAX_INTERVAL_TO_REFRESH = 60000L // 1 minute
     }
 
     @MainThread

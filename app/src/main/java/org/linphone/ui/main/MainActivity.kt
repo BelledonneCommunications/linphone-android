@@ -371,20 +371,28 @@ class MainActivity : AppCompatActivity() {
 
     private fun handleSendIntent(intent: Intent, multiple: Boolean) {
         val parcelablesUri = arrayListOf<Uri>()
-        if (multiple) {
-            val parcelables = intent.getParcelableArrayListExtra<Parcelable>(Intent.EXTRA_STREAM)
-            for (parcelable in parcelables.orEmpty()) {
-                val uri = parcelable as? Uri
-                if (uri != null) {
-                    Log.i("$TAG Found URI [$uri] in parcelable extra list")
-                    parcelablesUri.add(uri)
-                }
+
+        if (intent.type == "text/plain") {
+            intent.getStringExtra(Intent.EXTRA_TEXT)?.let { extraText ->
+                sharedViewModel.textToShareFromIntent.value = extraText
             }
         } else {
-            val uri = intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri
-            if (uri != null) {
-                Log.i("$TAG Found URI [$uri] in parcelable extra")
-                parcelablesUri.add(uri)
+            if (multiple) {
+                val parcelables =
+                    intent.getParcelableArrayListExtra<Parcelable>(Intent.EXTRA_STREAM)
+                for (parcelable in parcelables.orEmpty()) {
+                    val uri = parcelable as? Uri
+                    if (uri != null) {
+                        Log.i("$TAG Found URI [$uri] in parcelable extra list")
+                        parcelablesUri.add(uri)
+                    }
+                }
+            } else {
+                val uri = intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri
+                if (uri != null) {
+                    Log.i("$TAG Found URI [$uri] in parcelable extra")
+                    parcelablesUri.add(uri)
+                }
             }
         }
 
@@ -422,10 +430,15 @@ class MainActivity : AppCompatActivity() {
                 Log.i("$TAG Found file to share [$path] in intent")
                 if (path != null) list.add(path)
             }
+
             if (list.isNotEmpty()) {
                 sharedViewModel.filesToShareFromIntent.value = list
             } else {
-                Log.w("$TAG Failed to find at least one file to share!")
+                if (sharedViewModel.textToShareFromIntent.value.orEmpty().isNotEmpty()) {
+                    Log.i("$TAG Found plain text to share")
+                } else {
+                    Log.w("$TAG Failed to find at least one file or text to share!")
+                }
             }
 
             findNavController().setGraph(navGraph, intent.extras)

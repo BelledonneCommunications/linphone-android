@@ -400,6 +400,15 @@ class ConversationFragment : GenericFragment() {
             }
         }
 
+        sharedViewModel.textToShareFromIntent.observe(viewLifecycleOwner) { text ->
+            if (text.isNotEmpty()) {
+                Log.i("$TAG Found text to share from intent")
+                sendMessageViewModel.textToSend.value = text
+
+                sharedViewModel.textToShareFromIntent.value = ""
+            }
+        }
+
         sharedViewModel.filesToShareFromIntent.observe(viewLifecycleOwner) { files ->
             if (files.isNotEmpty()) {
                 Log.i("$TAG Found [${files.size}] files to share from intent")
