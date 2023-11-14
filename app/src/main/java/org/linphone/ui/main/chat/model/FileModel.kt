@@ -9,6 +9,7 @@ import org.linphone.utils.FileUtils
 
 class FileModel @AnyThread constructor(
     val file: String,
+    val fileSize: String,
     private val onClicked: ((file: String) -> Unit)? = null
 ) {
     companion object {
@@ -21,12 +22,22 @@ class FileModel @AnyThread constructor(
 
     val mimeType: FileUtils.MimeType
 
+    val isImage: Boolean
+
+    val isVideoPreview: Boolean
+
+    val isPdf: Boolean
+
     init {
         path.postValue(file)
 
         val extension = FileUtils.getExtensionFromFileName(file)
+        isPdf = extension == "pdf"
+
         val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
         mimeType = FileUtils.getMimeType(mime)
+        isImage = mimeType == FileUtils.MimeType.Image
+        isVideoPreview = mimeType == FileUtils.MimeType.Video
     }
 
     @UiThread

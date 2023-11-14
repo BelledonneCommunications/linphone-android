@@ -27,6 +27,7 @@ import android.os.ParcelFileDescriptor
 import android.os.Process
 import android.provider.OpenableColumns
 import android.system.Os
+import android.text.format.Formatter
 import android.webkit.MimeTypeMap
 import androidx.annotation.AnyThread
 import java.io.File
@@ -51,6 +52,11 @@ class FileUtils {
 
     companion object {
         private const val TAG = "[File Utils]"
+
+        @AnyThread
+        fun bytesToDisplayableSize(bytes: Long): String {
+            return Formatter.formatShortFileSize(coreContext.context, bytes)
+        }
 
         @AnyThread
         fun isExtensionVideo(path: String): Boolean {

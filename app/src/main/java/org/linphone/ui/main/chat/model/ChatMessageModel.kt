@@ -53,6 +53,7 @@ import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.AudioRouteUtils
 import org.linphone.utils.Event
+import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.PatternClickableSpan
 import org.linphone.utils.SpannableClickedListener
@@ -95,7 +96,7 @@ class ChatMessageModel @WorkerThread constructor(
 
     val reactions = MutableLiveData<String>()
 
-    val imagesList = MutableLiveData<ArrayList<FileModel>>()
+    val filesList = MutableLiveData<ArrayList<FileModel>>()
 
     val firstImage = MutableLiveData<FileModel>()
 
@@ -178,7 +179,7 @@ class ChatMessageModel @WorkerThread constructor(
 
         var displayableContentFound = false
         var filesContentCount = 0
-        val imagesPath = arrayListOf<FileModel>()
+        val filesPath = arrayListOf<FileModel>()
 
         val contents = chatMessage.contents
         for (content in contents) {
@@ -198,10 +199,10 @@ class ChatMessageModel @WorkerThread constructor(
                         )
                         when (content.type) {
                             "image", "video" -> {
-                                val fileModel = FileModel(path) { file ->
+                                val fileModel = FileModel(path, "") { file ->
                                     onContentClicked?.invoke(file)
                                 }
-                                imagesPath.add(fileModel)
+                                filesPath.add(fileModel)
 
                                 if (filesContentCount == 1) {
                                     firstImage.postValue(fileModel)
@@ -222,6 +223,15 @@ class ChatMessageModel @WorkerThread constructor(
                                 displayableContentFound = true
                             }
                             else -> {
+                                val size = FileUtils.bytesToDisplayableSize(
+                                    content.fileSize.toLong()
+                                )
+                                val fileModel = FileModel(path, size) { file ->
+                                    onContentClicked?.invoke(file)
+                                }
+                                filesPath.add(fileModel)
+
+                                displayableContentFound = true
                             }
                         }
                     } else {
@@ -234,7 +244,7 @@ class ChatMessageModel @WorkerThread constructor(
             }
         }
 
-        imagesList.postValue(imagesPath)
+        filesList.postValue(filesPath)
 
         if (!displayableContentFound) { // Temporary workaround to prevent empty bubbles
             val describe = LinphoneUtils.getTextDescribingMessage(chatMessage)

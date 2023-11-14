@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <import type="android.view.View" />
@@ -8,13 +9,101 @@
             type="org.linphone.ui.main.chat.model.FileModel" />
     </data>
 
-    <ImageView
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:onClick="@{() -> model.onClick()}"
-        android:layout_width="@dimen/chat_bubble_grid_image_size"
-        android:layout_height="@dimen/chat_bubble_grid_image_size"
-        android:layout_margin="1dp"
-        android:adjustViewBounds="true"
-        android:scaleType="centerCrop"
-        coilBubbleGrid="@{model.path}"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/file_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{model.isImage || model.isVideoPreview ? View.GONE : View.VISIBLE, default=gone}"
+            app:constraint_referenced_ids="file_name, file_size, file_background, file_icon" />
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="@dimen/chat_bubble_grid_image_size"
+            android:layout_height="@dimen/chat_bubble_grid_image_size"
+            android:layout_margin="1dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:visibility="@{model.isImage || model.isVideoPreview ? View.VISIBLE : View.GONE}"
+            coilBubbleGrid="@{model.path}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageView
+            android:id="@+id/video_preview"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:src="@drawable/play_fill"
+            android:visibility="@{model.isVideoPreview ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintTop_toTopOf="@id/image"
+            app:layout_constraintBottom_toBottomOf="@id/image"
+            app:layout_constraintStart_toStartOf="@id/image"
+            app:layout_constraintEnd_toEndOf="@id/image"
+            app:tint="@color/orange_main_500" />
+
+        <ImageView
+            android:id="@+id/file_icon"
+            android:layout_width="@dimen/chat_bubble_grid_image_size"
+            android:layout_height="@dimen/chat_bubble_grid_image_size"
+            android:adjustViewBounds="true"
+            android:padding="18dp"
+            android:src="@{model.isPdf ? @drawable/file_pdf : @drawable/file, default=@drawable/file_pdf}"
+            android:background="@drawable/shape_squircle_main2_200_left"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <View
+            android:id="@+id/file_background"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/shape_squircle_white_right"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/file_icon"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_700"
+            android:id="@+id/file_name"
+            android:layout_width="@dimen/chat_bubble_grid_file_name_max_width"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@{model.fileName, default=`Lorem_ipsum.pdf`}"
+            android:textColor="@color/gray_main2_600"
+            android:textSize="13sp"
+            android:maxLines="1"
+            android:ellipsize="middle"
+            android:background="@drawable/shape_squircle_white_r10_background"
+            app:layout_constraintStart_toEndOf="@id/file_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/file_size"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_300"
+            android:id="@+id/file_size"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="@{model.fileSize, default=`42 kb`}"
+            android:textColor="@color/gray_main2_600"
+            android:textSize="12sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:background="@drawable/shape_squircle_white_r10_background"
+            app:layout_constraintStart_toStartOf="@id/file_name"
+            app:layout_constraintEnd_toEndOf="@id/file_name"
+            app:layout_constraintTop_toBottomOf="@id/file_name"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

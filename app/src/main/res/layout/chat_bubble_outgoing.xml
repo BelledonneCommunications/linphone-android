@@ -110,11 +110,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onLongClick="@{onLongClickListener}"
-                android:visibility="@{model.imagesList.size() >= 2 ? View.VISIBLE : View.GONE, default=gone}"
+                android:visibility="@{model.filesList.size() >= 2 ? View.VISIBLE : View.GONE, default=gone}"
                 app:alignItems="center"
                 app:flexWrap="wrap"
                 app:justifyContent="@{model.outgoing ? JustifyContent.FLEX_END : JustifyContent.FLEX_START}"
-                entries="@{model.imagesList}"
+                entries="@{model.filesList}"
                 layout="@{@layout/chat_bubble_content_grid_cell}"/>
 
             <ImageView
@@ -126,7 +126,7 @@
                 android:maxHeight="@dimen/chat_bubble_big_image_max_size"
                 android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
-                android:visibility="@{model.imagesList.size() > 1 || model.firstImage.path.length() == 0 ? View.GONE : View.VISIBLE}"
+                android:visibility="@{model.filesList.size() > 1 || model.firstImage.path.length() == 0 ? View.GONE : View.VISIBLE}"
                 coilBubble="@{model.firstImage.path}"/>
 
             <ViewStub
