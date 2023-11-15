@@ -59,6 +59,13 @@ class FileUtils {
         }
 
         @AnyThread
+        fun isExtensionImage(path: String): Boolean {
+            val extension = getExtensionFromFileName(path)
+            val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+            return getMimeType(type) == MimeType.Image
+        }
+
+        @AnyThread
         fun isExtensionVideo(path: String): Boolean {
             val extension = getExtensionFromFileName(path)
             val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)

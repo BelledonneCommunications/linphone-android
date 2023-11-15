@@ -53,6 +53,7 @@ import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.AudioRouteUtils
 import org.linphone.utils.Event
+import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.PatternClickableSpan
 import org.linphone.utils.SpannableClickedListener
@@ -130,6 +131,10 @@ class ChatMessageModel @WorkerThread constructor(
 
     val formattedVoiceRecordingDuration = MutableLiveData<String>()
 
+    val dismissLongPressMenuEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     private var voiceRecordAudioFocusRequest: AudioFocusRequestCompat? = null
 
     private lateinit var voiceRecordPath: String
@@ -140,18 +145,29 @@ class ChatMessageModel @WorkerThread constructor(
         Log.i("$TAG End of file reached")
         stopVoiceRecordPlayer()
     }
-
-    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     // End of voice record related fields
 
-    val dismissLongPressMenuEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
-    }
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+
+    private var downloadingFileModel: FileModel? = null
 
     private val chatMessageListener = object : ChatMessageListenerStub() {
         @WorkerThread
         override fun onMsgStateChanged(message: ChatMessage, messageState: ChatMessage.State?) {
-            statusIcon.postValue(LinphoneUtils.getChatIconResId(chatMessage.state))
+            if (
+                messageState == ChatMessage.State.FileTransferInProgress ||
+                messageState == ChatMessage.State.FileTransferDone ||
+                messageState == ChatMessage.State.FileTransferError
+            ) {
+                statusIcon.postValue(LinphoneUtils.getChatIconResId(chatMessage.state))
+            }
+
+            if (messageState == ChatMessage.State.FileTransferDone) {
+                Log.i("$TAG File transfer is done")
+                downloadingFileModel?.downloadProgress?.postValue(-1)
+                downloadingFileModel = null
+                computeContentsList()
+            }
         }
 
         @WorkerThread
@@ -167,6 +183,33 @@ class ChatMessageModel @WorkerThread constructor(
             Log.i("$TAG A reaction was removed for chat message with ID [$id]")
             updateReactionsList()
         }
+
+        @WorkerThread
+        override fun onFileTransferProgressIndication(
+            message: ChatMessage,
+            content: Content,
+            offset: Int,
+            total: Int
+        ) {
+            val model = downloadingFileModel
+            if (model != null) {
+                val percent = ((offset * 100.0) / total).toInt() // Conversion from int to double and back to int is required
+                model.downloadProgress.postValue(percent)
+            } else {
+                Log.w("$TAG A file is being downloaded but no downloadingFileModel set!")
+                val found = filesList.value.orEmpty().find {
+                    it.fileName == content.name
+                }
+                if (found != null) {
+                    downloadingFileModel = found
+                    Log.i("$TAG Found matching FileModel in files list using content name")
+                } else {
+                    Log.w(
+                        "$TAG Failed to find a matching FileModel in files list with content name [${content.name}]"
+                    )
+                }
+            }
+        }
     }
 
     init {
@@ -176,88 +219,7 @@ class ChatMessageModel @WorkerThread constructor(
         statusIcon.postValue(LinphoneUtils.getChatIconResId(chatMessage.state))
         updateReactionsList()
 
-        var displayableContentFound = false
-        var filesContentCount = 0
-        val filesPath = arrayListOf<FileModel>()
-
-        val contents = chatMessage.contents
-        for (content in contents) {
-            if (content.isIcalendar) {
-                parseConferenceInvite(content)
-                displayableContentFound = true
-            } else if (content.isText) {
-                computeTextContent(content)
-                displayableContentFound = true
-            } else {
-                filesContentCount += 1
-                if (content.isFile) {
-                    val path = content.filePath ?: ""
-                    if (path.isNotEmpty()) {
-                        Log.i(
-                            "$TAG Found file ready to be displayed [$path] with MIME [${content.type}/${content.subtype}] for message [${chatMessage.messageId}]"
-                        )
-                        when (content.type) {
-                            "image", "video" -> {
-                                val fileModel = FileModel(path, content.fileSize.toLong()) { file ->
-                                    onContentClicked?.invoke(file)
-                                }
-                                filesPath.add(fileModel)
-
-                                if (filesContentCount == 1) {
-                                    firstImage.postValue(fileModel)
-                                }
-
-                                displayableContentFound = true
-                            }
-                            "audio" -> {
-                                voiceRecordPath = path
-                                isVoiceRecord.postValue(true)
-                                val duration = content.fileDuration
-                                voiceRecordingDuration.postValue(duration)
-                                val formattedDuration = SimpleDateFormat(
-                                    "mm:ss",
-                                    Locale.getDefault()
-                                ).format(duration) // duration is in ms
-                                formattedVoiceRecordingDuration.postValue(formattedDuration)
-                                displayableContentFound = true
-                            }
-                            else -> {
-                                val fileModel = FileModel(path, content.fileSize.toLong()) { file ->
-                                    onContentClicked?.invoke(file)
-                                }
-                                filesPath.add(fileModel)
-
-                                displayableContentFound = true
-                            }
-                        }
-                    } else {
-                        Log.e("$TAG No path found for File Content!")
-                    }
-                } else if (content.isFileTransfer) {
-                    val name = content.name ?: ""
-                    if (name.isNotEmpty()) {
-                        val fileModel = FileModel(name, content.fileSize.toLong(), true) { file ->
-                            onContentClicked?.invoke(file)
-                        }
-                        filesPath.add(fileModel)
-
-                        displayableContentFound = true
-                    } else {
-                        Log.e("$TAG No name found for FileTransfer Content!")
-                    }
-                } else {
-                    Log.i("$TAG Content is not a File")
-                }
-            }
-        }
-
-        filesList.postValue(filesPath)
-
-        if (!displayableContentFound) { // Temporary workaround to prevent empty bubbles
-            val describe = LinphoneUtils.getTextDescribingMessage(chatMessage)
-            val spannable = Spannable.Factory.getInstance().newSpannable(describe)
-            text.postValue(spannable)
-        }
+        computeContentsList()
     }
 
     @WorkerThread
@@ -290,8 +252,6 @@ class ChatMessageModel @WorkerThread constructor(
                 coreContext.postOnMainThread {
                     onJoinConferenceClicked?.invoke(uri)
                 }
-                /*Log.i("$TAG Calling conference URI [${meetingConferenceUri.asStringUriOnly()}]")
-                coreContext.startCall(meetingConferenceUri)*/
             }
         }
     }
@@ -304,6 +264,111 @@ class ChatMessageModel @WorkerThread constructor(
             } else {
                 pauseVoiceRecordPlayer()
             }
+        }
+    }
+
+    @WorkerThread
+    private fun computeContentsList() {
+        Log.d("$TAG Computing chat message contents list")
+        var displayableContentFound = false
+        var filesContentCount = 0
+        val filesPath = arrayListOf<FileModel>()
+
+        val contents = chatMessage.contents
+        for (content in contents) {
+            if (content.isIcalendar) {
+                parseConferenceInvite(content)
+                displayableContentFound = true
+            } else if (content.isText) {
+                computeTextContent(content)
+                displayableContentFound = true
+            } else {
+                filesContentCount += 1
+                if (content.isFile) {
+                    val path = content.filePath ?: ""
+                    if (path.isNotEmpty()) {
+                        Log.d(
+                            "$TAG Found file ready to be displayed [$path] with MIME [${content.type}/${content.subtype}] for message [${chatMessage.messageId}]"
+                        )
+                        when (content.type) {
+                            "image", "video" -> {
+                                val fileModel = FileModel(path, content.fileSize.toLong()) { model ->
+                                    onContentClicked?.invoke(model.file)
+                                }
+                                filesPath.add(fileModel)
+
+                                if (filesContentCount == 1) {
+                                    firstImage.postValue(fileModel)
+                                }
+
+                                displayableContentFound = true
+                            }
+                            "audio" -> {
+                                voiceRecordPath = path
+                                isVoiceRecord.postValue(true)
+                                val duration = content.fileDuration
+                                voiceRecordingDuration.postValue(duration)
+                                val formattedDuration = SimpleDateFormat(
+                                    "mm:ss",
+                                    Locale.getDefault()
+                                ).format(duration) // duration is in ms
+                                formattedVoiceRecordingDuration.postValue(formattedDuration)
+                                displayableContentFound = true
+                            }
+                            else -> {
+                                val fileModel = FileModel(path, content.fileSize.toLong()) { model ->
+                                    onContentClicked?.invoke(model.file)
+                                }
+                                filesPath.add(fileModel)
+
+                                displayableContentFound = true
+                            }
+                        }
+                    } else {
+                        Log.e("$TAG No path found for File Content!")
+                    }
+                } else if (content.isFileTransfer) {
+                    val name = content.name ?: ""
+                    if (name.isNotEmpty()) {
+                        val fileModel = FileModel(name, content.fileSize.toLong(), true) { model ->
+                            Log.i("$TAG Starting downloading content for file [${model.fileName}]")
+
+                            if (content.filePath.orEmpty().isEmpty()) {
+                                val contentName = content.name
+                                if (contentName != null) {
+                                    val isImage = FileUtils.isExtensionImage(contentName)
+                                    val file = FileUtils.getFileStoragePath(contentName, isImage)
+                                    content.filePath = file.path
+                                    Log.i(
+                                        "$TAG File [$contentName] will be downloaded at [${content.filePath}]"
+                                    )
+
+                                    model.downloadProgress.postValue(0)
+                                    downloadingFileModel = model
+                                    chatMessage.downloadContent(content)
+                                } else {
+                                    Log.e("$TAG Content name is null, can't download it!")
+                                }
+                            }
+                        }
+                        filesPath.add(fileModel)
+
+                        displayableContentFound = true
+                    } else {
+                        Log.e("$TAG No name found for FileTransfer Content!")
+                    }
+                } else {
+                    Log.i("$TAG Content is not a File")
+                }
+            }
+        }
+
+        filesList.postValue(filesPath)
+
+        if (!displayableContentFound) { // Temporary workaround to prevent empty bubbles
+            val describe = LinphoneUtils.getTextDescribingMessage(chatMessage)
+            val spannable = Spannable.Factory.getInstance().newSpannable(describe)
+            text.postValue(spannable)
         }
     }
 
@@ -328,14 +393,13 @@ class ChatMessageModel @WorkerThread constructor(
             }
         }
 
-        Log.i("$TAG Reactions for message [$id] are [$reactionsList]")
+        Log.d("$TAG Reactions for message [$id] are [$reactionsList]")
         reactions.postValue(reactionsList)
     }
 
     @WorkerThread
     private fun computeTextContent(content: Content) {
         val textContent = content.utf8Text.orEmpty().trim()
-        Log.i("$TAG Found text content [$textContent] for message [${chatMessage.messageId}]")
         val spannableBuilder = SpannableStringBuilder(textContent)
 
         // Check for mentions
@@ -345,7 +409,7 @@ class ChatMessageModel @WorkerThread constructor(
             val start = matcher.start()
             val end = matcher.end()
             val source = textContent.subSequence(start + 1, end) // +1 to remove @
-            Log.i("$TAG Found mention [$source]")
+            Log.d("$TAG Found mention [$source]")
 
             // Find address matching username
             val address = if (chatRoom.localAddress.username == source) {
@@ -362,7 +426,7 @@ class ChatMessageModel @WorkerThread constructor(
             // Find display name for address
             if (address != null) {
                 val displayName = coreContext.contactsManager.findDisplayName(address)
-                Log.i(
+                Log.d(
                     "$TAG Using display name [$displayName] instead of username [$source]"
                 )
                 spannableBuilder.replace(start, end, "@$displayName")

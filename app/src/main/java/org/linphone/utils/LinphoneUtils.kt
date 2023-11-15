@@ -199,10 +199,10 @@ class LinphoneUtils {
                 ChatMessage.State.Delivered -> {
                     R.drawable.envelope_simple
                 }
-                ChatMessage.State.InProgress, ChatMessage.State.FileTransferInProgress -> {
+                ChatMessage.State.InProgress -> {
                     R.drawable.in_progress
                 }
-                ChatMessage.State.NotDelivered, ChatMessage.State.FileTransferError -> {
+                ChatMessage.State.NotDelivered -> {
                     R.drawable.warning_circle
                 }
                 else -> {

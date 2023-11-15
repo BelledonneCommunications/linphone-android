@@ -11,7 +11,7 @@ class FileModel @AnyThread constructor(
     val file: String,
     fileSize: Long,
     val isWaitingToBeDownloaded: Boolean = false,
-    private val onClicked: ((file: String) -> Unit)? = null
+    private val onClicked: ((model: FileModel) -> Unit)? = null
 ) {
     companion object {
         private const val TAG = "[File Model]"
@@ -23,6 +23,8 @@ class FileModel @AnyThread constructor(
 
     val path = MutableLiveData<String>()
 
+    val downloadProgress = MutableLiveData<Int>()
+
     val mimeType: FileUtils.MimeType
 
     val isImage: Boolean
@@ -33,6 +35,7 @@ class FileModel @AnyThread constructor(
 
     init {
         path.postValue(file)
+        downloadProgress.postValue(-1)
         formattedFileSize.postValue(FileUtils.bytesToDisplayableSize(fileSize))
 
         if (!isWaitingToBeDownloaded) {
@@ -53,7 +56,7 @@ class FileModel @AnyThread constructor(
 
     @UiThread
     fun onClick() {
-        onClicked?.invoke(file)
+        onClicked?.invoke(this)
     }
 
     @AnyThread

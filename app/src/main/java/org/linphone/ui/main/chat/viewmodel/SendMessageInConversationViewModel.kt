@@ -300,8 +300,8 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
     fun addAttachment(file: String) {
         val list = arrayListOf<FileModel>()
         list.addAll(attachments.value.orEmpty())
-        val model = FileModel(file, 0) { file ->
-            removeAttachment(file)
+        val model = FileModel(file, 0) { model ->
+            removeAttachment(model.file)
         }
         list.add(model)
         attachments.value = list
