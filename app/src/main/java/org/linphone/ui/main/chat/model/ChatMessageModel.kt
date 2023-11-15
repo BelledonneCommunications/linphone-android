@@ -53,7 +53,6 @@ import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.AudioRouteUtils
 import org.linphone.utils.Event
-import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.PatternClickableSpan
 import org.linphone.utils.SpannableClickedListener
@@ -199,7 +198,7 @@ class ChatMessageModel @WorkerThread constructor(
                         )
                         when (content.type) {
                             "image", "video" -> {
-                                val fileModel = FileModel(path, "") { file ->
+                                val fileModel = FileModel(path, content.fileSize.toLong()) { file ->
                                     onContentClicked?.invoke(file)
                                 }
                                 filesPath.add(fileModel)
@@ -223,10 +222,7 @@ class ChatMessageModel @WorkerThread constructor(
                                 displayableContentFound = true
                             }
                             else -> {
-                                val size = FileUtils.bytesToDisplayableSize(
-                                    content.fileSize.toLong()
-                                )
-                                val fileModel = FileModel(path, size) { file ->
+                                val fileModel = FileModel(path, content.fileSize.toLong()) { file ->
                                     onContentClicked?.invoke(file)
                                 }
                                 filesPath.add(fileModel)
@@ -235,8 +231,19 @@ class ChatMessageModel @WorkerThread constructor(
                             }
                         }
                     } else {
-                        Log.i("$TAG Content path is empty : have to download it first")
-                        // TODO: download it
+                        Log.e("$TAG No path found for File Content!")
+                    }
+                } else if (content.isFileTransfer) {
+                    val name = content.name ?: ""
+                    if (name.isNotEmpty()) {
+                        val fileModel = FileModel(name, content.fileSize.toLong(), true) { file ->
+                            onContentClicked?.invoke(file)
+                        }
+                        filesPath.add(fileModel)
+
+                        displayableContentFound = true
+                    } else {
+                        Log.e("$TAG No name found for FileTransfer Content!")
                     }
                 } else {
                     Log.i("$TAG Content is not a File")
