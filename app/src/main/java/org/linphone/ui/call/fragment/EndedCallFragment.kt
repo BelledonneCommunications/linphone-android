@@ -24,6 +24,7 @@ import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.annotation.UiThread
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -56,6 +57,9 @@ class EndedCallFragment : GenericCallFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Disable back gesture / button
+        requireActivity().onBackPressedDispatcher.addCallback { }
 
         callViewModel = requireActivity().run {
             ViewModelProvider(this)[CurrentCallViewModel::class.java]
