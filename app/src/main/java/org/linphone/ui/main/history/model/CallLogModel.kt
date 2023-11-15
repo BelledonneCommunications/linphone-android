@@ -52,21 +52,23 @@ class CallLogModel @WorkerThread constructor(private val callLog: CallLog) {
         dateTime.postValue(displayedDate)
 
         if (callLog.wasConference()) {
-            val fakeFriend = coreContext.core.createFriend()
-            fakeFriend.address = address
 
             val conferenceInfo = coreContext.core.findConferenceInformationFromUri(address)
             if (conferenceInfo != null) {
-                fakeFriend.name = conferenceInfo.subject
+                avatarModel = coreContext.contactsManager.getContactAvatarModelForConferenceInfo(
+                    conferenceInfo
+                )
             } else {
+                val fakeFriend = coreContext.core.createFriend()
+                fakeFriend.address = address
                 fakeFriend.name = LinphoneUtils.getDisplayName(address)
+                avatarModel = ContactAvatarModel(fakeFriend)
+                avatarModel.forceConferenceIcon.postValue(true)
                 Log.w(
                     "$TAG Call log was conference but failed to find matching conference info from it's URI!"
                 )
             }
-            avatarModel = ContactAvatarModel(fakeFriend)
 
-            avatarModel.forceConferenceIcon.postValue(true)
             friendRefKey = null
             friendExists = false
         } else {

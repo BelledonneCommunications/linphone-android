@@ -411,7 +411,7 @@ private suspend fun loadContactPictureWithCoil(
                         coroutineScope {
                             withContext(Dispatchers.IO) {
                                 val initials = model.initials.value.orEmpty()
-                                if (initials.isEmpty() || initials == "+") {
+                                if (initials.isEmpty() || initials == "+" || model.skipInitials.value == true) {
                                     if (model.defaultToConferenceIcon.value == true) {
                                         ResourcesCompat.getDrawable(
                                             context.resources,

@@ -35,6 +35,7 @@ import androidx.core.graphics.drawable.IconCompat
 import androidx.loader.app.LoaderManager
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Address
+import org.linphone.core.ConferenceInfo
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.Friend
@@ -212,6 +213,24 @@ class ContactsManager @UiThread constructor(context: Context) {
             }
         }
 
+        avatarsMap[key] = avatar
+
+        return avatar
+    }
+
+    @WorkerThread
+    fun getContactAvatarModelForConferenceInfo(conferenceInfo: ConferenceInfo): ContactAvatarModel {
+        // Do not clean parameters!
+        val key = conferenceInfo.uri?.asStringUriOnly()
+        if (key == null) {
+            val fakeFriend = coreContext.core.createFriend()
+            return ContactAvatarModel(fakeFriend)
+        }
+
+        val foundInMap = if (avatarsMap.keys.contains(key)) avatarsMap[key] else null
+        if (foundInMap != null) return foundInMap
+
+        val avatar = LinphoneUtils.getAvatarModelForConferenceInfo(conferenceInfo)
         avatarsMap[key] = avatar
 
         return avatar

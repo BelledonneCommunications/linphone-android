@@ -35,8 +35,11 @@ import org.linphone.core.Call.Dir
 import org.linphone.core.Call.Status
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatRoom
+import org.linphone.core.ConferenceInfo
 import org.linphone.core.Core
+import org.linphone.core.Friend
 import org.linphone.core.tools.Log
+import org.linphone.ui.main.contacts.model.ContactAvatarModel
 
 class LinphoneUtils {
     companion object {
@@ -317,6 +320,30 @@ class LinphoneUtils {
             }
 
             return text
+        }
+
+        @WorkerThread
+        fun getAvatarModelForConferenceInfo(conferenceInfo: ConferenceInfo): ContactAvatarModel {
+            val fakeFriend = coreContext.core.createFriend()
+            fakeFriend.address = conferenceInfo.uri
+            fakeFriend.name = conferenceInfo.subject
+
+            val avatarModel = ContactAvatarModel(fakeFriend)
+            avatarModel.defaultToConferenceIcon.postValue(true)
+            avatarModel.skipInitials.postValue(true)
+
+            val list = arrayListOf<Friend>()
+            for (participant in conferenceInfo.participantInfos) {
+                val friend = coreContext.contactsManager.findContactByAddress(
+                    participant.address
+                )
+                if (friend != null) {
+                    list.add(friend)
+                }
+            }
+
+            avatarModel.setPicturesFromFriends(list)
+            return avatarModel
         }
     }
 }

@@ -15,4 +15,6 @@ abstract class AbstractAvatarModel {
     val forceConferenceIcon = MutableLiveData<Boolean>()
 
     val defaultToConferenceIcon = MutableLiveData<Boolean>()
+
+    val skipInitials = MutableLiveData<Boolean>()
 }

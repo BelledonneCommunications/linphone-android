@@ -95,14 +95,6 @@ class ContactHistoryViewModel @UiThread constructor() : ViewModel() {
             if (callLog != null) {
                 val model = CallLogModel(callLog)
                 address = model.address
-
-                // Check if it is a conference
-                val conferenceInfo = coreContext.core.findConferenceInformationFromUri(address)
-                if (conferenceInfo != null) {
-                    model.avatarModel.name.postValue(conferenceInfo.subject)
-                    model.avatarModel.forceConferenceIcon.postValue(true)
-                }
-
                 callLogModel.postValue(model)
 
                 val peerAddress = if (callLog.dir == Call.Dir.Outgoing) callLog.toAddress else callLog.fromAddress
@@ -119,6 +111,7 @@ class ContactHistoryViewModel @UiThread constructor() : ViewModel() {
                     history.add(historyModel)
                 }
                 historyCallLogs.postValue(history)
+
                 callLogFoundEvent.postValue(Event(true))
             } else {
                 callLogFoundEvent.postValue(Event(false))

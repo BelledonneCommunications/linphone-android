@@ -781,25 +781,18 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
         val isDeviceTrusted = updateEncryption()
         val securityLevel = if (isDeviceTrusted) SecurityLevel.Encrypted else SecurityLevel.Safe
-        val friend = coreContext.contactsManager.findContactByAddress(address)
-        if (friend != null) {
-            displayedName.postValue(friend.name)
-            val model = ContactAvatarModel(friend)
-            model.trust.postValue(securityLevel)
-            contact.postValue(model)
+
+        val conferenceInfo = coreContext.core.findConferenceInformationFromUri(
+            call.remoteAddress
+        )
+        val model = if (conferenceInfo != null) {
+            coreContext.contactsManager.getContactAvatarModelForConferenceInfo(conferenceInfo)
         } else {
-            val conferenceInfo = coreContext.core.findConferenceInformationFromUri(
-                call.remoteAddress
-            )
-            val fakeFriend = coreContext.core.createFriend()
-            fakeFriend.name = conferenceInfo?.subject ?: LinphoneUtils.getDisplayName(address)
-            fakeFriend.addAddress(address)
-            val model = ContactAvatarModel(fakeFriend)
-            model.forceConferenceIcon.postValue(conferenceInfo != null)
-            model.trust.postValue(securityLevel)
-            contact.postValue(model)
-            displayedName.postValue(fakeFriend.name)
+            coreContext.contactsManager.getContactAvatarModelForAddress(call.remoteAddress)
         }
+        model.trust.postValue(securityLevel)
+        contact.postValue(model)
+        displayedName.postValue(model.friend.name)
 
         isRecording.postValue(call.params.isRecording)
         isRemoteRecordingEvent.postValue(
