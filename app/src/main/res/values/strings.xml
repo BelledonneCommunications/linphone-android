@@ -369,6 +369,16 @@
     <string name="conversation_info_admin_menu_set_participant_admin">Give admin rights</string>
     <string name="conversation_info_admin_menu_unset_participant_admin">Remove admin rights</string>
 
+    <string name="conversation_event_conference_created">You have joined the group</string>
+    <string name="conversation_event_conference_destroyed">You have left the group</string>
+    <string name="conversation_event_participant_added">%s has joined</string>
+    <string name="conversation_event_participant_removed">%s has left</string>
+    <string name="conversation_event_device_added">new device for %s</string>
+    <string name="conversation_event_device_removed">device for %s removed</string>
+    <string name="conversation_event_subject_changed">new subject: %s</string>
+    <string name="conversation_event_admin_set">%s is admin</string>
+    <string name="conversation_event_admin_unset">%s is no longer admin</string>
+
     <string name="message_delivery_info_read_title">Read %s</string>
     <string name="message_delivery_info_received_title">Received %s</string>
     <string name="message_delivery_info_sent_title">Sent %s</string>

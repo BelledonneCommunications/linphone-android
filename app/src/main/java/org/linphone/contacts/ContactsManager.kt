@@ -172,7 +172,9 @@ class ContactsManager @UiThread constructor(context: Context) {
 
     @WorkerThread
     fun findDisplayName(address: Address): String {
-        return findContactByAddress(address)?.name ?: LinphoneUtils.getDisplayName(address)
+        return getContactAvatarModelForAddress(address).friend.name ?: LinphoneUtils.getDisplayName(
+            address
+        )
     }
 
     @WorkerThread

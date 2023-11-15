@@ -20,8 +20,64 @@
 package org.linphone.ui.main.chat.model
 
 import androidx.annotation.WorkerThread
+import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
 import org.linphone.core.EventLog
+import org.linphone.utils.AppUtils
 
-class EventModel @WorkerThread constructor(eventLog: EventLog) {
-    val text = eventLog.type.name // TODO FIXME: use proper translated string instead
+class EventModel @WorkerThread constructor(private val eventLog: EventLog) {
+    val text: String
+
+    init {
+        text = when (eventLog.type) {
+            EventLog.Type.ConferenceCreated -> AppUtils.getString(
+                R.string.conversation_event_conference_created
+            )
+            EventLog.Type.ConferenceTerminated -> AppUtils.getString(
+                R.string.conversation_event_conference_destroyed
+            )
+            EventLog.Type.ConferenceParticipantAdded -> AppUtils.getFormattedString(
+                R.string.conversation_event_participant_added,
+                getName()
+            )
+            EventLog.Type.ConferenceParticipantRemoved -> AppUtils.getFormattedString(
+                R.string.conversation_event_participant_removed,
+                getName()
+            )
+            EventLog.Type.ConferenceSubjectChanged -> AppUtils.getFormattedString(
+                R.string.conversation_event_subject_changed,
+                getName()
+            )
+            EventLog.Type.ConferenceParticipantSetAdmin -> AppUtils.getFormattedString(
+                R.string.conversation_event_admin_set,
+                getName()
+            )
+            EventLog.Type.ConferenceParticipantUnsetAdmin -> AppUtils.getFormattedString(
+                R.string.conversation_event_admin_unset,
+                getName()
+            )
+            EventLog.Type.ConferenceParticipantDeviceAdded -> AppUtils.getFormattedString(
+                R.string.conversation_event_device_added,
+                getName()
+            )
+            EventLog.Type.ConferenceParticipantDeviceRemoved -> AppUtils.getFormattedString(
+                R.string.conversation_event_device_removed,
+                getName()
+            )
+            else -> {
+                eventLog.type.name
+            }
+        }
+    }
+
+    @WorkerThread
+    fun getName(): String {
+        val address = eventLog.participantAddress ?: eventLog.peerAddress
+        val name = if (address != null) {
+            coreContext.contactsManager.findDisplayName(address)
+        } else {
+            "<?>"
+        }
+        return name
+    }
 }
