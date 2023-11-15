@@ -45,6 +45,7 @@ import androidx.navigation.NavDeepLinkBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -158,16 +159,19 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
             if (ShortcutUtils.isShortcutToChatRoomAlreadyCreated(context, chatRoom)) {
                 Log.i("$TAG Chat room shortcut already exists")
+                showChatRoomNotification(chatRoom, messages)
             } else {
                 Log.i(
-                    "$TAG Ensure chat room shortcut exists for bubble notification"
+                    "$TAG Ensure chat room shortcut exists for 'conversation' notification"
                 )
                 scope.launch {
-                    ShortcutUtils.createShortcutsToChatRooms(context)
+                    val shortcuts = async {
+                        ShortcutUtils.createShortcutsToChatRooms(context)
+                    }
+                    shortcuts.await()
+                    showChatRoomNotification(chatRoom, messages)
                 }
             }
-
-            showChatRoomNotification(chatRoom, messages)
         }
 
         @WorkerThread

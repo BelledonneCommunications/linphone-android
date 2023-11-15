@@ -46,14 +46,14 @@ class ChatMessageBottomSheetAdapter : ListAdapter<ChatMessageBottomSheetParticip
             oldItem: ChatMessageBottomSheetParticipantModel,
             newItem: ChatMessageBottomSheetParticipantModel
         ): Boolean {
-            return oldItem.sipUri == newItem.sipUri
+            return oldItem.sipUri == newItem.sipUri && oldItem.value == newItem.value
         }
 
         override fun areContentsTheSame(
             oldItem: ChatMessageBottomSheetParticipantModel,
             newItem: ChatMessageBottomSheetParticipantModel
         ): Boolean {
-            return oldItem.value == newItem.value
+            return true
         }
     }
 }

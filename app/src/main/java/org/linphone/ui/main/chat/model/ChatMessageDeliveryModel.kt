@@ -6,12 +6,15 @@ import androidx.lifecycle.MutableLiveData
 import org.linphone.R
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatMessage.State
+import org.linphone.core.ChatMessageListenerStub
+import org.linphone.core.ParticipantImdnState
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.TimestampUtils
 
 class ChatMessageDeliveryModel @WorkerThread constructor(
-    private val chatMessage: ChatMessage
+    private val chatMessage: ChatMessage,
+    private val onDeliveryUpdated: ((model: ChatMessageDeliveryModel) -> Unit)? = null
 ) {
     companion object {
         private const val TAG = "[Chat Message Delivery Model]"
@@ -33,10 +36,24 @@ class ChatMessageDeliveryModel @WorkerThread constructor(
 
     private val errorModels = arrayListOf<ChatMessageBottomSheetParticipantModel>()
 
-    init {
-        computeDeliveryStatus()
+    private val chatMessageListener = object : ChatMessageListenerStub() {
+        @WorkerThread
+        override fun onParticipantImdnStateChanged(
+            message: ChatMessage,
+            state: ParticipantImdnState
+        ) {
+            computeDeliveryStatus()
+        }
+    }
 
-        // TODO: add listener to update in real time the lists
+    init {
+        chatMessage.addListener(chatMessageListener)
+        computeDeliveryStatus()
+    }
+
+    @WorkerThread
+    fun destroy() {
+        chatMessage.removeListener(chatMessageListener)
     }
 
     @UiThread
@@ -59,6 +76,11 @@ class ChatMessageDeliveryModel @WorkerThread constructor(
 
     @WorkerThread
     private fun computeDeliveryStatus() {
+        displayedModels.clear()
+        deliveredModels.clear()
+        sentModels.clear()
+        errorModels.clear()
+
         for (participant in chatMessage.getParticipantsByImdnState(State.Displayed)) {
             displayedModels.add(
                 ChatMessageBottomSheetParticipantModel(
@@ -136,5 +158,6 @@ class ChatMessageDeliveryModel @WorkerThread constructor(
         Log.i(
             "$TAG There are [$readCount] that have read this message, [$receivedCount] that have received it, [$sentCount] that haven't received it yet and [$errorCount] that probably won't receive it due to an error"
         )
+        onDeliveryUpdated?.invoke(this)
     }
 }

@@ -3,11 +3,15 @@ package org.linphone.ui.main.chat.model
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.core.Address
 import org.linphone.core.ChatMessage
+import org.linphone.core.ChatMessageListenerStub
+import org.linphone.core.ChatMessageReaction
 import org.linphone.core.tools.Log
 
 class ChatMessageReactionsModel @WorkerThread constructor(
-    private val chatMessage: ChatMessage
+    private val chatMessage: ChatMessage,
+    private val onReactionsUpdated: ((model: ChatMessageReactionsModel) -> Unit)? = null
 ) {
     companion object {
         private const val TAG = "[Chat Message Reactions Model]"
@@ -19,9 +23,28 @@ class ChatMessageReactionsModel @WorkerThread constructor(
 
     val reactionsMap = HashMap<String, Int>()
 
+    private val chatMessageListener = object : ChatMessageListenerStub() {
+        @WorkerThread
+        override fun onReactionRemoved(message: ChatMessage, address: Address) {
+            Log.i("$TAG Reaction has been removed, updating reactions list")
+            computeReactions()
+        }
+
+        @WorkerThread
+        override fun onNewMessageReaction(message: ChatMessage, reaction: ChatMessageReaction) {
+            Log.i("$TAG A new reaction has been received, updating reactions list")
+            computeReactions()
+        }
+    }
+
     init {
+        chatMessage.addListener(chatMessageListener)
         computeReactions()
-        // TODO: add listener to update in real time the lists
+    }
+
+    @WorkerThread
+    fun destroy() {
+        chatMessage.removeListener(chatMessageListener)
     }
 
     fun filterReactions(emoji: String): ArrayList<ChatMessageBottomSheetParticipantModel> {
@@ -75,5 +98,6 @@ class ChatMessageReactionsModel @WorkerThread constructor(
             "$TAG [${differentReactionsList.size}] reactions found on a total of [${allReactions.size}]"
         )
         differentReactions.postValue(differentReactionsList)
+        onReactionsUpdated?.invoke(this)
     }
 }
