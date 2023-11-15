@@ -85,7 +85,7 @@ class ChatMessageDeliveryModel @WorkerThread constructor(
             displayedModels.add(
                 ChatMessageBottomSheetParticipantModel(
                     participant.participant.address,
-                    TimestampUtils.timeToString(participant.stateChangeTime)
+                    TimestampUtils.toString(participant.stateChangeTime)
                 )
             )
         }
@@ -94,7 +94,7 @@ class ChatMessageDeliveryModel @WorkerThread constructor(
             displayedModels.add(
                 ChatMessageBottomSheetParticipantModel(
                     chatMessage.localAddress,
-                    TimestampUtils.timeToString(chatMessage.time)
+                    TimestampUtils.toString(chatMessage.time)
                 )
             )
         }
@@ -110,7 +110,7 @@ class ChatMessageDeliveryModel @WorkerThread constructor(
             deliveredModels.add(
                 ChatMessageBottomSheetParticipantModel(
                     participant.participant.address,
-                    TimestampUtils.timeToString(participant.stateChangeTime)
+                    TimestampUtils.toString(participant.stateChangeTime)
                 )
             )
         }
@@ -126,7 +126,7 @@ class ChatMessageDeliveryModel @WorkerThread constructor(
             sentModels.add(
                 ChatMessageBottomSheetParticipantModel(
                     participant.participant.address,
-                    TimestampUtils.timeToString(participant.stateChangeTime)
+                    TimestampUtils.toString(participant.stateChangeTime)
                 )
             )
         }
@@ -142,7 +142,7 @@ class ChatMessageDeliveryModel @WorkerThread constructor(
             errorModels.add(
                 ChatMessageBottomSheetParticipantModel(
                     participant.participant.address,
-                    TimestampUtils.timeToString(participant.stateChangeTime)
+                    TimestampUtils.toString(participant.stateChangeTime)
                 )
             )
         }

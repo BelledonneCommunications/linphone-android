@@ -99,6 +99,7 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:orientation="vertical"
+            android:gravity="end"
             android:background="@{model.isGroupedWithPreviousOne ? @drawable/shape_chat_bubble_outgoing_full : @drawable/shape_chat_bubble_outgoing_first, default=@drawable/shape_chat_bubble_outgoing_first}"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintWidth_max="@dimen/chat_bubble_max_width"
@@ -158,10 +159,10 @@
                 android:visibility="@{model.text.length() > 0 ? View.VISIBLE : View.GONE}"/>
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:gravity="center_vertical|end"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -181,6 +182,7 @@
                     android:layout_width="@dimen/small_icon_size"
                     android:layout_height="@dimen/small_icon_size"
                     android:layout_marginStart="5dp"
+                    android:layout_marginTop="2dp"
                     android:src="@{model.statusIcon, default=@drawable/checks}"
                     android:visibility="@{model.isGroupedWithNextOne ? View.VISIBLE : View.GONE}"
                     app:tint="@color/orange_main_500" />

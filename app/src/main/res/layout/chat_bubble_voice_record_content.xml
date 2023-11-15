@@ -20,8 +20,6 @@
             android:id="@+id/voice_record_progress"
             android:layout_width="0dp"
             android:layout_height="48dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
             android:progressDrawable="@drawable/voice_recording_gradient_progress"
             android:progress="@{model.voiceRecordPlayerPosition}"
             android:max="@{model.voiceRecordingDuration}"

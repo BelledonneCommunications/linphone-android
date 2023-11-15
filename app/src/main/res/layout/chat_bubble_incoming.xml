@@ -220,6 +220,7 @@
                     android:layout_width="@dimen/small_icon_size"
                     android:layout_height="@dimen/small_icon_size"
                     android:layout_marginStart="5dp"
+                    android:layout_marginTop="2dp"
                     android:src="@{model.statusIcon, default=@drawable/checks}"
                     android:visibility="@{model.isGroupedWithNextOne ? View.VISIBLE : View.GONE}"
                     app:tint="@color/orange_main_500" />
