@@ -42,6 +42,12 @@ class CallsListFragment : GenericCallFragment() {
 
     private lateinit var adapter: CallsListAdapter
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        adapter = CallsListAdapter()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -61,9 +67,7 @@ class CallsListFragment : GenericCallFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
-        adapter = CallsListAdapter(viewLifecycleOwner)
         binding.callsList.setHasFixedSize(true)
-        binding.callsList.adapter = adapter
         binding.callsList.layoutManager = LinearLayoutManager(requireContext())
 
         adapter.callLongClickedEvent.observe(viewLifecycleOwner) {
@@ -89,6 +93,10 @@ class CallsListFragment : GenericCallFragment() {
         viewModel.calls.observe(viewLifecycleOwner) {
             Log.i("$TAG Calls list updated with [${it.size}] items")
             adapter.submitList(it)
+
+            if (binding.callsList.adapter != adapter) {
+                binding.callsList.adapter = adapter
+            }
         }
     }
 }

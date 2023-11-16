@@ -38,7 +38,6 @@ import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnLayout
@@ -53,10 +52,8 @@ import coil.dispose
 import coil.load
 import coil.request.videoFrameMillis
 import coil.size.Dimension
-import coil.transform.RoundedCornersTransformation
 import com.google.android.material.imageview.ShapeableImageView
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.linphone.BR
@@ -246,13 +243,13 @@ private fun loadImageForChatBubble(imageView: ImageView, file: String?, grid: Bo
         }
         val width = if (grid) Dimension(dimen) else Dimension.Undefined
         val height = Dimension(dimen)
-        val radius = imageView.resources.getDimension(
+        /* val radius = imageView.resources.getDimension(
             R.dimen.chat_bubble_images_rounded_corner_radius
-        )
+        ) */
         if (FileUtils.isExtensionVideo(file)) {
             imageView.load(file) {
                 videoFrameMillis(0)
-                transformations(RoundedCornersTransformation(radius))
+                // transformations(RoundedCornersTransformation(radius))
                 size(width, height)
                 listener(
                     onError = { _, result ->
@@ -295,52 +292,37 @@ fun ShapeableImageView.loadCircleFileWithCoil(file: String?) {
 @UiThread
 @BindingAdapter("coilAvatar")
 fun ShapeableImageView.loadAvatarWithCoil(model: AbstractAvatarModel?) {
-    val imageView = this
-    (context as AppCompatActivity).lifecycleScope.launch {
-        loadContactPictureWithCoil(imageView, model)
-    }
+    loadContactPictureWithCoil(this, model)
 }
 
 @UiThread
 @BindingAdapter("coilAvatarNoTrust")
 fun ShapeableImageView.loadAvatarWithCoilWithoutTrust(model: AbstractAvatarModel?) {
-    val imageView = this
-    (context as AppCompatActivity).lifecycleScope.launch {
-        loadContactPictureWithCoil(imageView, model, skipTrust = true)
-    }
+    loadContactPictureWithCoil(this, model, skipTrust = true)
 }
 
 @UiThread
 @BindingAdapter("coilBubbleAvatar")
 fun ShapeableImageView.loadBubbleAvatarWithCoil(model: AbstractAvatarModel?) {
-    val imageView = this
-    (context as AppCompatActivity).lifecycleScope.launch {
-        val size = R.dimen.avatar_bubble_size
-        val initialsSize = R.dimen.avatar_initials_bubble_text_size
-        loadContactPictureWithCoil(imageView, model, size = size, textSize = initialsSize)
-    }
+    val size = R.dimen.avatar_bubble_size
+    val initialsSize = R.dimen.avatar_initials_bubble_text_size
+    loadContactPictureWithCoil(this, model, size = size, textSize = initialsSize)
 }
 
 @UiThread
 @BindingAdapter("coilBigAvatar")
 fun ShapeableImageView.loadBigAvatarWithCoil(model: AbstractAvatarModel?) {
-    val imageView = this
-    (context as AppCompatActivity).lifecycleScope.launch {
-        val size = R.dimen.avatar_big_size
-        val initialsSize = R.dimen.avatar_initials_big_text_size
-        loadContactPictureWithCoil(imageView, model, size = size, textSize = initialsSize)
-    }
+    val size = R.dimen.avatar_big_size
+    val initialsSize = R.dimen.avatar_initials_big_text_size
+    loadContactPictureWithCoil(this, model, size = size, textSize = initialsSize)
 }
 
 @UiThread
 @BindingAdapter("coilCallAvatar")
 fun ShapeableImageView.loadCallAvatarWithCoil(model: AbstractAvatarModel?) {
-    val imageView = this
-    (context as AppCompatActivity).lifecycleScope.launch {
-        val size = R.dimen.avatar_in_call_size
-        val initialsSize = R.dimen.avatar_initials_call_text_size
-        loadContactPictureWithCoil(imageView, model, size = size, textSize = initialsSize)
-    }
+    val size = R.dimen.avatar_in_call_size
+    val initialsSize = R.dimen.avatar_initials_call_text_size
+    loadContactPictureWithCoil(this, model, size = size, textSize = initialsSize)
 }
 
 @UiThread
@@ -356,109 +338,92 @@ fun ShapeableImageView.loadInitialsAvatarWithCoil(initials: String?) {
 }
 
 @SuppressLint("ResourceType")
-private suspend fun loadContactPictureWithCoil(
+private fun loadContactPictureWithCoil(
     imageView: ShapeableImageView,
     model: AbstractAvatarModel?,
     @DimenRes size: Int = 0,
     @DimenRes textSize: Int = 0,
     skipTrust: Boolean = false
 ) {
-    withContext(Dispatchers.IO) {
-        imageView.dispose()
+    imageView.dispose()
 
-        val context = imageView.context
-        if (model != null) {
-            if (model.forceConferenceIcon.value == true) {
-                imageView.load(
-                    ResourcesCompat.getDrawable(
-                        context.resources,
-                        R.drawable.inset_users_three,
-                        context.theme
-                    )
-                )
-                return@withContext
-            }
+    val context = imageView.context
+    if (model != null) {
+        if (model.forceConferenceIcon.value == true) {
+            imageView.load(R.drawable.inset_users_three)
+            return
+        }
 
-            if (!skipTrust) {
-                if (model.showTrust.value == true) {
-                    when (model.trust.value) {
-                        ChatRoom.SecurityLevel.Safe -> {
-                            imageView.setStrokeColorResource(R.color.blue_info_500)
-                            imageView.setStrokeWidthResource(R.dimen.avatar_trust_border_width)
-                        }
-
-                        ChatRoom.SecurityLevel.Unsafe -> {
-                            imageView.setStrokeColorResource(R.color.red_danger_500)
-                            imageView.setStrokeWidthResource(R.dimen.avatar_trust_border_width)
-                        }
-
-                        else -> {
-                            imageView.setStrokeColorResource(R.color.transparent_color)
-                            imageView.setStrokeWidthResource(R.dimen.zero)
-                        }
+        if (!skipTrust) {
+            if (model.showTrust.value == true) {
+                when (model.trust.value) {
+                    ChatRoom.SecurityLevel.Safe -> {
+                        imageView.setStrokeColorResource(R.color.blue_info_500)
+                        imageView.setStrokeWidthResource(R.dimen.avatar_trust_border_width)
                     }
-                } else {
-                    imageView.setStrokeColorResource(R.color.transparent_color)
-                    imageView.setStrokeWidthResource(R.dimen.zero)
-                }
-            }
 
-            val images = model.images.value.orEmpty()
-            val count = images.size
-            if (count == 1) {
-                val image = images.firstOrNull()
+                    ChatRoom.SecurityLevel.Unsafe -> {
+                        imageView.setStrokeColorResource(R.color.red_danger_500)
+                        imageView.setStrokeWidthResource(R.dimen.avatar_trust_border_width)
+                    }
+
+                    else -> {
+                        imageView.setStrokeColorResource(R.color.transparent_color)
+                        imageView.setStrokeWidthResource(R.dimen.zero)
+                    }
+                }
+            } else {
+                imageView.setStrokeColorResource(R.color.transparent_color)
+                imageView.setStrokeWidthResource(R.dimen.zero)
+            }
+        }
+
+        val images = model.images.value.orEmpty()
+        val count = images.size
+        if (count == 1) {
+            val image = images.firstOrNull()
+            if (image != null) {
                 imageView.load(image) {
-                    error(
-                        coroutineScope {
-                            withContext(Dispatchers.IO) {
-                                val initials = model.initials.value.orEmpty()
-                                if (initials.isEmpty() || initials == "+" || model.skipInitials.value == true) {
-                                    if (model.defaultToConferenceIcon.value == true) {
-                                        ResourcesCompat.getDrawable(
-                                            context.resources,
-                                            R.drawable.inset_users_three,
-                                            context.theme
-                                        )
-                                    } else {
-                                        ResourcesCompat.getDrawable(
-                                            context.resources,
-                                            R.drawable.inset_user_circle,
-                                            context.theme
-                                        )
-                                    }
-                                } else {
-                                    val builder = AvatarGenerator(context)
-                                    builder.setInitials(model.initials.value.orEmpty())
-                                    if (size > 0) {
-                                        builder.setAvatarSize(AppUtils.getDimension(size).toInt())
-                                    }
-                                    if (textSize > 0) {
-                                        builder.setTextSize(AppUtils.getDimension(textSize))
-                                    }
-                                    builder.build()
-                                }
-                            }
+                    listener(
+                        onError = { _, _ ->
+                            imageView.load(getErrorImageLoader(context, model, size, textSize))
                         }
                     )
                 }
             } else {
-                val w = if (size > 0) {
-                    AppUtils.getDimension(size).toInt()
-                } else {
-                    AppUtils.getDimension(R.dimen.avatar_list_cell_size).toInt()
-                }
+                imageView.load(getErrorImageLoader(context, model, size, textSize))
+            }
+        } else {
+            val w = if (size > 0) {
+                AppUtils.getDimension(size).toInt()
+            } else {
+                AppUtils.getDimension(R.dimen.avatar_list_cell_size).toInt()
+            }
+            (context as AppCompatActivity).lifecycleScope.launch {
                 val bitmap = ImageUtils.getBitmapFromMultipleAvatars(imageView.context, w, images)
                 imageView.load(bitmap)
             }
-        } else {
-            imageView.load(
-                ResourcesCompat.getDrawable(
-                    context.resources,
-                    R.drawable.inset_user_circle,
-                    context.theme
-                )
-            )
         }
+    } else {
+        imageView.load(R.drawable.smiley)
+    }
+}
+
+private fun getErrorImageLoader(
+    context: Context,
+    model: AbstractAvatarModel,
+    size: Int,
+    textSize: Int
+): Any {
+    val initials = model.initials.value.orEmpty()
+    return if (initials.isEmpty() || initials == "+" || model.skipInitials.value == true) {
+        if (model.defaultToConferenceIcon.value == true) {
+            R.drawable.inset_users_three
+        } else {
+            R.drawable.inset_user_circle
+        }
+    } else {
+        ImageUtils.getGeneratedAvatar(context, size, textSize, initials)
     }
 }
 

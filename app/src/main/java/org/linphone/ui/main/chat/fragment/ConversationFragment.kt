@@ -203,7 +203,6 @@ class ConversationFragment : GenericFragment() {
             viewModel.showBackButton.value = slideable
         }
 
-        adapter.viewLifecycleOwner = viewLifecycleOwner
         binding.eventsList.setHasFixedSize(true)
         binding.eventsList.layoutManager = LinearLayoutManager(requireContext())
 

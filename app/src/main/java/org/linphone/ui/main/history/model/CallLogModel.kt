@@ -52,7 +52,6 @@ class CallLogModel @WorkerThread constructor(private val callLog: CallLog) {
         dateTime.postValue("$date | $time")
 
         if (callLog.wasConference()) {
-
             val conferenceInfo = coreContext.core.findConferenceInformationFromUri(address)
             if (conferenceInfo != null) {
                 avatarModel = coreContext.contactsManager.getContactAvatarModelForConferenceInfo(

@@ -23,6 +23,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -40,7 +41,7 @@ class ContactHistoryListAdapter : ListAdapter<CallLogHistoryModel, RecyclerView.
             parent,
             false
         )
-        // binding.lifecycleOwner = viewLifecycleOwner
+        binding.lifecycleOwner = parent.findViewTreeLifecycleOwner()
         return ViewHolder(binding)
     }
 

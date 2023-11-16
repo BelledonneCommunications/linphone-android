@@ -22,8 +22,8 @@ package org.linphone.ui.main.chat.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -57,8 +57,6 @@ class ConversationEventAdapter : ListAdapter<EventLogModel, RecyclerView.ViewHol
         MutableLiveData<Event<ChatMessageModel>>()
     }
 
-    lateinit var viewLifecycleOwner: LifecycleOwner
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             INCOMING_CHAT_MESSAGE -> createIncomingChatBubble(parent)
@@ -86,6 +84,8 @@ class ConversationEventAdapter : ListAdapter<EventLogModel, RecyclerView.ViewHol
         )
         val viewHolder = IncomingBubbleViewHolder(binding)
         binding.apply {
+            lifecycleOwner = parent.findViewTreeLifecycleOwner()
+
             setOnLongClickListener {
                 chatMessageLongPressEvent.value = Event(model!!)
                 true
@@ -100,7 +100,6 @@ class ConversationEventAdapter : ListAdapter<EventLogModel, RecyclerView.ViewHol
             setScrollToRepliedMessageClickListener {
                 scrollToRepliedMessageEvent.value = Event(model!!)
             }
-            lifecycleOwner = viewLifecycleOwner
         }
         return viewHolder
     }
@@ -114,6 +113,8 @@ class ConversationEventAdapter : ListAdapter<EventLogModel, RecyclerView.ViewHol
         )
         val viewHolder = OutgoingBubbleViewHolder(binding)
         binding.apply {
+            lifecycleOwner = parent.findViewTreeLifecycleOwner()
+
             setOnLongClickListener {
                 chatMessageLongPressEvent.value = Event(model!!)
                 true
@@ -128,7 +129,6 @@ class ConversationEventAdapter : ListAdapter<EventLogModel, RecyclerView.ViewHol
             setScrollToRepliedMessageClickListener {
                 scrollToRepliedMessageEvent.value = Event(model!!)
             }
-            lifecycleOwner = viewLifecycleOwner
         }
         return viewHolder
     }
@@ -140,7 +140,7 @@ class ConversationEventAdapter : ListAdapter<EventLogModel, RecyclerView.ViewHol
             parent,
             false
         )
-        binding.lifecycleOwner = viewLifecycleOwner
+        binding.lifecycleOwner = parent.findViewTreeLifecycleOwner()
         return EventViewHolder(binding)
     }
 

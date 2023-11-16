@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -17,7 +17,6 @@ import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.utils.Event
 
 class ContactsListAdapter(
-    private val viewLifecycleOwner: LifecycleOwner,
     private val favourites: Boolean = false,
     private val disableLongClick: Boolean = false
 ) : ListAdapter<ContactAvatarModel, RecyclerView.ViewHolder>(ContactDiffCallback()) {
@@ -41,7 +40,7 @@ class ContactsListAdapter(
             )
             val viewHolder = FavouriteViewHolder(binding)
             binding.apply {
-                lifecycleOwner = viewLifecycleOwner
+                lifecycleOwner = parent.findViewTreeLifecycleOwner()
 
                 setOnClickListener {
                     contactClickedEvent.value = Event(model!!)
@@ -64,7 +63,7 @@ class ContactsListAdapter(
             )
             val viewHolder = ViewHolder(binding)
             binding.apply {
-                lifecycleOwner = viewLifecycleOwner
+                lifecycleOwner = parent.findViewTreeLifecycleOwner()
 
                 setOnClickListener {
                     contactClickedEvent.value = Event(model!!)

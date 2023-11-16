@@ -23,8 +23,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -33,7 +33,7 @@ import org.linphone.databinding.CallListCellBinding
 import org.linphone.ui.call.model.CallModel
 import org.linphone.utils.Event
 
-class CallsListAdapter(private val viewLifecycleOwner: LifecycleOwner) :
+class CallsListAdapter :
     ListAdapter<CallModel, RecyclerView.ViewHolder>(CallDiffCallback()) {
     var selectedAdapterPosition = -1
 
@@ -54,7 +54,7 @@ class CallsListAdapter(private val viewLifecycleOwner: LifecycleOwner) :
         )
         val viewHolder = ViewHolder(binding)
         binding.apply {
-            lifecycleOwner = viewLifecycleOwner
+            lifecycleOwner = parent.findViewTreeLifecycleOwner()
 
             setOnClickListener {
                 callClickedEvent.value = Event(model!!)

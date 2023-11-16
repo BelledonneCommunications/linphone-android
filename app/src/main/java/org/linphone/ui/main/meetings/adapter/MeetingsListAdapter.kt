@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -53,6 +54,8 @@ class MeetingsListAdapter :
             false
         )
         binding.apply {
+            lifecycleOwner = parent.findViewTreeLifecycleOwner()
+
             setOnClickListener {
                 meetingClickedEvent.value = Event(model!!)
             }

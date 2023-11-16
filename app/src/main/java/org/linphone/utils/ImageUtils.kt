@@ -24,6 +24,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.ImageDecoder
 import android.graphics.Rect
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import androidx.annotation.AnyThread
 import androidx.annotation.WorkerThread
@@ -31,11 +32,27 @@ import androidx.core.graphics.drawable.toBitmap
 import coil.imageLoader
 import coil.request.ImageRequest
 import java.io.FileNotFoundException
+import org.linphone.contacts.AvatarGenerator
 import org.linphone.core.tools.Log
 
 class ImageUtils {
     companion object {
         private const val TAG = "[Image Utils]"
+
+        @WorkerThread
+        fun getGeneratedAvatar(context: Context, size: Int = 0, textSize: Int = 0, initials: String): BitmapDrawable {
+            val builder = AvatarGenerator(context)
+            builder.setInitials(initials)
+            if (size > 0) {
+                builder.setAvatarSize(
+                    AppUtils.getDimension(size).toInt()
+                )
+            }
+            if (textSize > 0) {
+                builder.setTextSize(AppUtils.getDimension(textSize))
+            }
+            return builder.build()
+        }
 
         @WorkerThread
         fun getBitmap(

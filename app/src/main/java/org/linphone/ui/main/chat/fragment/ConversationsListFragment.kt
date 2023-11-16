@@ -59,6 +59,12 @@ class ConversationsListFragment : AbstractTopBarFragment() {
         listViewModel.applyFilter()
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        adapter = ConversationsListAdapter()
+    }
+
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
         if (
             findNavController().currentDestination?.id == R.id.startConversationFragment ||
@@ -88,9 +94,7 @@ class ConversationsListFragment : AbstractTopBarFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = listViewModel
 
-        adapter = ConversationsListAdapter(viewLifecycleOwner)
         binding.conversationsList.setHasFixedSize(true)
-        binding.conversationsList.adapter = adapter
         binding.conversationsList.layoutManager = LinearLayoutManager(requireContext())
 
         adapter.conversationLongClickedEvent.observe(viewLifecycleOwner) {
@@ -150,6 +154,10 @@ class ConversationsListFragment : AbstractTopBarFragment() {
             val currentCount = adapter.itemCount
             adapter.submitList(it)
             Log.i("$TAG Conversations list ready with [${it.size}] items")
+
+            if (binding.conversationsList.adapter != adapter) {
+                binding.conversationsList.adapter = adapter
+            }
 
             if (currentCount < it.size) {
                 binding.conversationsList.scrollToPosition(0)

@@ -67,6 +67,13 @@ class ContactsListFragment : AbstractTopBarFragment() {
         listViewModel.applyCurrentDefaultAccountFilter()
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        adapter = ContactsListAdapter()
+        favouritesAdapter = ContactsListAdapter(favourites = true)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -85,20 +92,16 @@ class ContactsListFragment : AbstractTopBarFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = listViewModel
 
-        adapter = ContactsListAdapter(viewLifecycleOwner)
         binding.contactsList.setHasFixedSize(true)
-        binding.contactsList.adapter = adapter
-        configureAdapter(adapter)
         binding.contactsList.layoutManager = LinearLayoutManager(requireContext())
 
-        favouritesAdapter = ContactsListAdapter(viewLifecycleOwner, favourites = true)
         binding.favouritesContactsList.setHasFixedSize(true)
-        binding.favouritesContactsList.adapter = favouritesAdapter
-        configureAdapter(favouritesAdapter)
-
         val favouritesLayoutManager = LinearLayoutManager(requireContext())
         favouritesLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
         binding.favouritesContactsList.layoutManager = favouritesLayoutManager
+
+        configureAdapter(adapter)
+        configureAdapter(favouritesAdapter)
 
         listViewModel.contactsList.observe(
             viewLifecycleOwner
@@ -106,6 +109,10 @@ class ContactsListFragment : AbstractTopBarFragment() {
             val currentCount = adapter.itemCount
             adapter.submitList(it)
             Log.i("$TAG Contacts list updated with [${it.size}] items")
+
+            if (binding.contactsList.adapter != adapter) {
+                binding.contactsList.adapter = adapter
+            }
 
             if (currentCount < it.size) {
                 Log.i("$TAG Contacts list updated with new items, scrolling to top")
@@ -122,6 +129,10 @@ class ContactsListFragment : AbstractTopBarFragment() {
             viewLifecycleOwner
         ) {
             favouritesAdapter.submitList(it)
+
+            if (binding.favouritesContactsList.adapter != favouritesAdapter) {
+                binding.favouritesContactsList.adapter = favouritesAdapter
+            }
             Log.i("$TAG Favourites contacts list updated with [${it.size}] items")
         }
 

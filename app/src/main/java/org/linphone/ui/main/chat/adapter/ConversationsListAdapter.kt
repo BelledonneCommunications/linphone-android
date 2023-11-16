@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -14,9 +14,9 @@ import org.linphone.databinding.ChatListCellBinding
 import org.linphone.ui.main.chat.model.ConversationModel
 import org.linphone.utils.Event
 
-class ConversationsListAdapter(
-    private val viewLifecycleOwner: LifecycleOwner
-) : ListAdapter<ConversationModel, RecyclerView.ViewHolder>(ChatRoomDiffCallback()) {
+class ConversationsListAdapter : ListAdapter<ConversationModel, RecyclerView.ViewHolder>(
+    ChatRoomDiffCallback()
+) {
     var selectedAdapterPosition = -1
 
     val conversationClickedEvent: MutableLiveData<Event<ConversationModel>> by lazy {
@@ -36,7 +36,7 @@ class ConversationsListAdapter(
         )
         val viewHolder = ViewHolder(binding)
         binding.apply {
-            lifecycleOwner = viewLifecycleOwner
+            lifecycleOwner = parent.findViewTreeLifecycleOwner()
 
             setOnClickListener {
                 conversationClickedEvent.value = Event(model!!)
