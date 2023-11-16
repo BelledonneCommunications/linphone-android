@@ -80,4 +80,6 @@
     <dimen name="chat_room_emoji_picker_height">300dp</dimen>
     <dimen name="chat_room_participants_list_max_height">300dp</dimen>
     <dimen name="chat_bubble_emoji_picker_height">425dp</dimen>
+
+    <dimen name="recycler_view_min_height">200dp</dimen>
 </resources>

@@ -210,17 +210,17 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/mute_label"/>
 
-                <ImageView
+                <View
                     android:id="@+id/participants_background"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:visibility="@{viewModel.isGroup ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginBottom="-16dp"
+                    android:background="@drawable/shape_squircle_white_background"
+                    android:visibility="@{!viewModel.expandParticipants || !viewModel.isMyselfAdmin || !viewModel.isGroup || viewModel.isReadOnly ? View.GONE : View.VISIBLE, default=gone}"
                     app:layout_constraintTop_toTopOf="@id/participants"
-                    app:layout_constraintBottom_toBottomOf="@id/participants_anchor" />
+                    app:layout_constraintBottom_toBottomOf="@id/add_participants" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/participants"
@@ -231,9 +231,10 @@
                     android:layout_marginEnd="16dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="16dp"
+                    android:background="@drawable/shape_squircle_white_background"
                     android:nestedScrollingEnabled="true"
-                    app:layout_constraintHeight_max="@dimen/chat_room_participants_list_max_height"
-                    app:layout_constrainedHeight="true"
+                    app:layout_constraintVertical_weight="1"
+                    app:layout_constraintHeight_min="@dimen/recycler_view_min_height"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/participants_label"
@@ -261,16 +262,8 @@
                     app:drawableTint="@color/orange_main_500"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/participants"/>
-
-                <View
-                    android:id="@+id/participants_anchor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="16dp"
-                    android:visibility="@{!viewModel.expandParticipants || !viewModel.isMyselfAdmin || !viewModel.isGroup || viewModel.isReadOnly ? View.GONE : View.VISIBLE}"
-                    app:layout_constraintTop_toBottomOf="@id/add_participants"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"/>
+                    app:layout_constraintTop_toBottomOf="@id/participants"
+                    app:layout_constraintBottom_toTopOf="@id/actions"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/section_header_style"
@@ -286,7 +279,7 @@
                     app:layout_constraintVertical_bias="0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/participants_anchor"
+                    app:layout_constraintTop_toBottomOf="@id/add_participants"
                     app:layout_constraintBottom_toTopOf="@id/actions_background"/>
 
                 <ImageView
