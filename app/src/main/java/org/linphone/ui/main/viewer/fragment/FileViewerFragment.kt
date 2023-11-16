@@ -1,6 +1,7 @@
 package org.linphone.ui.main.viewer.fragment
 
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import androidx.navigation.fragment.navArgs
 import org.linphone.core.tools.Log
 import org.linphone.databinding.FileImageViewerFragmentBinding
 import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.viewer.adapter.PdfPagesListAdapter
 import org.linphone.ui.main.viewer.viewmodel.FileViewModel
 
 @UiThread
@@ -22,6 +24,8 @@ class FileViewerFragment : GenericFragment() {
     private lateinit var binding: FileImageViewerFragmentBinding
 
     private lateinit var viewModel: FileViewModel
+
+    private lateinit var adapter: PdfPagesListAdapter
 
     private val args: FileViewerFragmentArgs by navArgs()
 
@@ -53,6 +57,20 @@ class FileViewerFragment : GenericFragment() {
 
         binding.setBackClickListener {
             goBack()
+        }
+
+        viewModel.pdfRendererReadyEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i("$TAG PDF renderer is ready, attaching adapter to ViewPager")
+                val displayMetrics = DisplayMetrics()
+                requireActivity().windowManager.defaultDisplay.getMetrics(displayMetrics)
+                viewModel.screenHeight = displayMetrics.heightPixels
+                viewModel.screenWidth = displayMetrics.widthPixels
+
+                adapter = PdfPagesListAdapter(viewModel)
+                binding.pdfViewPager.adapter = adapter
+                binding.dotsIndicator.attachTo(binding.pdfViewPager)
+            }
         }
     }
 }

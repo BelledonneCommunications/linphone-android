@@ -285,8 +285,8 @@ class ConversationFragment : GenericFragment() {
                 if (repliedMessageId.isNullOrEmpty()) {
                     Log.w("$TAG Chat message [${model.id}] doesn't have a reply to ID!")
                 } else {
-                    val originalMessage = adapter.currentList.find {
-                        !it.isEvent && (it.model as ChatMessageModel).id == repliedMessageId
+                    val originalMessage = adapter.currentList.find { eventLog ->
+                        !eventLog.isEvent && (eventLog.model as ChatMessageModel).id == repliedMessageId
                     }
                     if (originalMessage != null) {
                         val position = adapter.currentList.indexOf(originalMessage)
