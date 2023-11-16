@@ -173,7 +173,10 @@ class TimestampUtils {
                 }
             } as SimpleDateFormat
 
-            if (hideYear) {
+            val cal = Calendar.getInstance()
+            cal.timeInMillis = if (timestampInSecs) timestamp * 1000 else timestamp
+            val now = Calendar.getInstance()
+            if (hideYear && isSameYear(cal, now)) {
                 // Remove the year part of the format
                 dateFormat.applyPattern(
                     dateFormat.toPattern().replace(

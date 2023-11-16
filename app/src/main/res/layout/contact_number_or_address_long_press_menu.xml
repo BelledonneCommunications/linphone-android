@@ -29,7 +29,7 @@
             android:id="@+id/copy"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/menu_copy_sip_address"
+            android:text="@{isSip ? @string/menu_copy_sip_address : @string/menu_copy_phone_number, default=@string/menu_copy_sip_address}"
             android:background="@drawable/menu_item_background"
             android:layout_marginBottom="1dp"
             android:drawableStart="@drawable/copy"

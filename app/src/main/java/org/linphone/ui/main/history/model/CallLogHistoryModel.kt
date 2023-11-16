@@ -34,7 +34,7 @@ class CallLogHistoryModel @WorkerThread constructor(val callLog: CallLog) {
         } else if (TimestampUtils.isYesterday(startDate)) {
             AppUtils.getString(R.string.yesterday)
         } else {
-            TimestampUtils.dateToString(callLog.startDate)
+            TimestampUtils.toString(startDate, onlyDate = true, shortDate = false, hideYear = true)
         }
         val time = TimestampUtils.timeToString(startDate)
         dateTime.postValue("$date | $time")

@@ -289,6 +289,7 @@
     <string name="menu_add_address_to_contacts">Add to contacts</string>
     <string name="menu_see_existing_contact">See contact</string>
     <string name="menu_copy_sip_address">Copy SIP address</string>
+    <string name="menu_copy_phone_number">Copy phone number</string>
     <string name="menu_delete_history">Delete history</string>
     <string name="menu_delete_selected_item">Delete</string>
     <string name="menu_invite">Invite</string>

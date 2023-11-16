@@ -41,15 +41,15 @@ class CallLogModel @WorkerThread constructor(private val callLog: CallLog) {
     var friendExists: Boolean = false
 
     init {
-        val timestamp = timestamp
-        val displayedDate = if (TimestampUtils.isToday(timestamp)) {
-            TimestampUtils.timeToString(timestamp)
+        val date = if (TimestampUtils.isToday(timestamp)) {
+            AppUtils.getString(R.string.today)
         } else if (TimestampUtils.isYesterday(timestamp)) {
             AppUtils.getString(R.string.yesterday)
         } else {
-            TimestampUtils.dateToString(timestamp)
+            TimestampUtils.toString(timestamp, onlyDate = true, shortDate = true, hideYear = true)
         }
-        dateTime.postValue(displayedDate)
+        val time = TimestampUtils.timeToString(timestamp)
+        dateTime.postValue("$date | $time")
 
         if (callLog.wasConference()) {
 
