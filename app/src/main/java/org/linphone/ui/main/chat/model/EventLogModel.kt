@@ -49,6 +49,7 @@ class EventLogModel @WorkerThread constructor(
     } else {
         val chatMessage = eventLog.chatMessage!!
         var replyTo = ""
+        var isReply = chatMessage.isReply
         val replyText = if (chatMessage.isReply) {
             val replyMessage = chatMessage.replyMessage
             if (replyMessage != null) {
@@ -62,7 +63,8 @@ class EventLogModel @WorkerThread constructor(
                 Log.e(
                     "$TAG Failed to find the reply message from ID [${chatMessage.replyMessageId}]"
                 )
-                "<?>"
+                isReply = false
+                ""
             }
         } else {
             ""
@@ -72,7 +74,7 @@ class EventLogModel @WorkerThread constructor(
             chatMessage,
             avatarModel,
             isFromGroup,
-            chatMessage.isReply,
+            isReply,
             replyTo,
             replyText,
             chatMessage.replyMessageId,
