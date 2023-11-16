@@ -193,7 +193,7 @@ class LinphoneUtils {
         @IntegerRes
         fun getChatIconResId(chatState: ChatMessage.State): Int {
             return when (chatState) {
-                ChatMessage.State.Displayed -> {
+                ChatMessage.State.Displayed, ChatMessage.State.FileTransferDone -> {
                     R.drawable.checks
                 }
                 ChatMessage.State.DeliveredToUser -> {
@@ -202,14 +202,14 @@ class LinphoneUtils {
                 ChatMessage.State.Delivered -> {
                     R.drawable.envelope_simple
                 }
-                ChatMessage.State.InProgress -> {
-                    R.drawable.in_progress
-                }
-                ChatMessage.State.NotDelivered -> {
+                ChatMessage.State.NotDelivered, ChatMessage.State.FileTransferError -> {
                     R.drawable.warning_circle
                 }
+                ChatMessage.State.InProgress, ChatMessage.State.FileTransferInProgress -> {
+                    R.drawable.animated_in_progress
+                }
                 else -> {
-                    R.drawable.not_trusted
+                    R.drawable.animated_in_progress
                 }
             }
         }

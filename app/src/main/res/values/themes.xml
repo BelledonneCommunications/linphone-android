@@ -1,7 +1,7 @@
 <resources>
     <!-- Base application theme. -->
     <style name="AppSplashScreenTheme" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/black</item>
+        <item name="windowSplashScreenBackground">@color/white</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/linphone</item>
         <item name="postSplashScreenTheme">@style/Theme.Linphone</item>
     </style>

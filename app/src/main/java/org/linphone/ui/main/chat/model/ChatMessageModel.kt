@@ -154,13 +154,7 @@ class ChatMessageModel @WorkerThread constructor(
     private val chatMessageListener = object : ChatMessageListenerStub() {
         @WorkerThread
         override fun onMsgStateChanged(message: ChatMessage, messageState: ChatMessage.State?) {
-            if (
-                messageState == ChatMessage.State.FileTransferInProgress ||
-                messageState == ChatMessage.State.FileTransferDone ||
-                messageState == ChatMessage.State.FileTransferError
-            ) {
-                statusIcon.postValue(LinphoneUtils.getChatIconResId(chatMessage.state))
-            }
+            statusIcon.postValue(LinphoneUtils.getChatIconResId(chatMessage.state))
 
             if (messageState == ChatMessage.State.FileTransferDone) {
                 Log.i("$TAG File transfer is done")
