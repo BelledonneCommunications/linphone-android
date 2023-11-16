@@ -73,6 +73,7 @@
             android:textSize="12sp"
             android:textColor="@color/gray_main2_400"
             android:gravity="center"
+            android:visibility="@{model.isAdmin ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintStart_toEndOf="@id/name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
