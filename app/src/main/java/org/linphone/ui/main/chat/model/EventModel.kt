@@ -46,7 +46,7 @@ class EventModel @WorkerThread constructor(private val eventLog: EventLog) {
             )
             EventLog.Type.ConferenceSubjectChanged -> AppUtils.getFormattedString(
                 R.string.conversation_event_subject_changed,
-                getName()
+                eventLog.subject.orEmpty()
             )
             EventLog.Type.ConferenceParticipantSetAdmin -> AppUtils.getFormattedString(
                 R.string.conversation_event_admin_set,
