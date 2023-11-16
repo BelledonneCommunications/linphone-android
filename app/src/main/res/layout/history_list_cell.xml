@@ -27,6 +27,8 @@
         android:onLongClickListener="@{onLongClickListener}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:background="@drawable/primary_cell_background">
 
         <com.google.android.material.imageview.ShapeableImageView

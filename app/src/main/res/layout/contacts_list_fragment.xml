@@ -115,13 +115,9 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/favourites_contacts_list"
                     android:visibility="@{viewModel.showFavourites &amp;&amp; !viewModel.isListFiltered &amp;&amp; viewModel.favourites.size() > 0 ? View.VISIBLE : View.GONE}"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
                     android:layout_marginTop="4dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/favourites_label" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -141,11 +137,9 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/contactsList"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_marginTop="8dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/all_contacts_label"
                     app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar" />
 

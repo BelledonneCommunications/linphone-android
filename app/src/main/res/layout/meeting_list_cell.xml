@@ -18,7 +18,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_300"

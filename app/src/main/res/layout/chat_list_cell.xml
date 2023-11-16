@@ -24,10 +24,10 @@
         android:onLongClickListener="@{onLongClickListener}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp"
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:background="@drawable/primary_cell_background">
 
         <com.google.android.material.imageview.ShapeableImageView

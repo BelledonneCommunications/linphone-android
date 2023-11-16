@@ -23,6 +23,7 @@
         android:onLongClick="@{onLongClickListener}"
         android:layout_width="75dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
         android:padding="5dp"
         android:background="@drawable/primary_cell_background">
 
