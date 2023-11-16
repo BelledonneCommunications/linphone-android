@@ -119,6 +119,7 @@
 
     <string name="toast_assistant_qr_code_invalid">Invalid QR code!</string>
     <string name="toast_sip_address_copied_to_clipboard">SIP address copied into clipboard</string>
+    <string name="toast_meeting_address_copied_to_clipboard">Meeting address copied into clipboard</string>
     <string name="toast_phone_number_copied_to_clipboard">Number copied into clipboard</string>
     <string name="toast_call_history_deleted">History has been deleted</string>
     <string name="toast_alert_low_wifi_signal">Low Wi-Fi signal!</string>
@@ -410,6 +411,7 @@
     <string name="meeting_info_join_title">Join the meeting now</string>
     <string name="meeting_info_organizer_label">Organizer</string>
     <string name="meeting_info_delete">Delete meeting</string>
+    <string name="meeting_info_export_as_calendar_event">Create calendar event</string>
     <string name="meeting_info_deleted_toast">Meeting has been deleted</string>
     <string name="meeting_schedule_description_title">Description</string>
 

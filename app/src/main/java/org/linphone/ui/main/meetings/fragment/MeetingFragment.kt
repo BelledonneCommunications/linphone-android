@@ -20,6 +20,9 @@
 package org.linphone.ui.main.meetings.fragment
 
 import android.content.ActivityNotFoundException
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.CalendarContract
@@ -93,8 +96,7 @@ class MeetingFragment : GenericFragment() {
         }
 
         binding.setShareClickListener {
-            Log.i("$TAG Sharing conference info as Google Calendar event")
-            shareMeetingInfoAsCalendarEvent()
+            copyMeetingAddressIntoClipboard(uri)
         }
 
         binding.setMenuClickListener {
@@ -159,12 +161,32 @@ class MeetingFragment : GenericFragment() {
             popupWindow.dismiss()
         }
 
+        popupView.setCreateCalendarEventListener {
+            shareMeetingInfoAsCalendarEvent()
+            popupWindow.dismiss()
+        }
+
         // Elevation is for showing a shadow around the popup
         popupWindow.elevation = 20f
         popupWindow.showAsDropDown(binding.menu, 0, 0, Gravity.BOTTOM)
     }
 
+    private fun copyMeetingAddressIntoClipboard(meetingSipUri: String) {
+        Log.i("$TAG Copying conference SIP URI [$meetingSipUri] into clipboard")
+
+        val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val label = "Meeting SIP address"
+        clipboard.setPrimaryClip(ClipData.newPlainText(label, meetingSipUri))
+
+        (requireActivity() as MainActivity).showGreenToast(
+            getString(R.string.toast_meeting_address_copied_to_clipboard),
+            R.drawable.check
+        )
+    }
+
     private fun shareMeetingInfoAsCalendarEvent() {
+        Log.i("$TAG Sharing conference info as Google Calendar event")
+
         val intent = Intent(Intent.ACTION_EDIT)
         intent.type = "vnd.android.cursor.item/event"
         intent.putExtra(CalendarContract.Events.TITLE, viewModel.subject.value)
