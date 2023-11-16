@@ -149,18 +149,9 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
         for (result in results) {
             val friend = result.friend
 
-            var currentLetter = ""
-            val model = if (friend != null) {
-                currentLetter = friend.name?.get(0).toString()
-                ContactAvatarModel(friend)
-            } else {
-                Log.w("$TAG SearchResult [$result] has no Friend!")
-                val fakeFriend =
-                    createFriendFromSearchResult(result)
-                currentLetter = fakeFriend.name?.get(0).toString()
-                ContactAvatarModel(fakeFriend)
-            }
+            val model = coreContext.contactsManager.getContactAvatarModelForAddress(result.address)
 
+            val currentLetter = model.friend.name?.get(0).toString()
             val displayLetter = previousLetter.isEmpty() || currentLetter != previousLetter
             if (currentLetter != previousLetter) {
                 previousLetter = currentLetter

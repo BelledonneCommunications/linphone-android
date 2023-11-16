@@ -72,6 +72,8 @@ import org.linphone.ui.call.model.ConferenceParticipantDeviceModel
  * This file contains all the data binding necessary for the app
  */
 
+private const val TAG = "[Data Binding Utils]"
+
 @BindingAdapter("inflatedLifecycleOwner")
 fun setInflatedViewStubLifecycleOwner(view: View, enable: Boolean) {
     val binding = DataBindingUtil.bind<ViewDataBinding>(view)
@@ -104,7 +106,7 @@ fun <T> setEntries(
                 binding.lifecycleOwner = viewGroup.context as LifecycleOwner
             } else {
                 Log.e(
-                    "[Data Binding Utils] Failed to cast viewGroup's context as an Activity, lifecycle owner hasn't be set!"
+                    "$TAG Failed to cast viewGroup's context as an Activity, lifecycle owner hasn't be set!"
                 )
             }
 
@@ -145,7 +147,7 @@ fun View.setKeyboardInsetListener(lambda: (visible: Boolean) -> Unit) {
             lambda(isKeyboardVisible)
         } catch (ise: IllegalStateException) {
             Log.e(
-                "[Data Binding Utils] Failed to called lambda after keyboard visibility changed: $ise"
+                "$TAG Failed to called lambda after keyboard visibility changed: $ise"
             )
         }
 
@@ -162,7 +164,7 @@ fun View.setKeyboardInsetListener(lambda: (visible: Boolean) -> Unit) {
                     lambda(isKeyboardVisible)
                 } catch (ise: IllegalStateException) {
                     Log.e(
-                        "[Data Binding Utils] Failed to called lambda after keyboard visibility changed: $ise"
+                        "$TAG Failed to called lambda after keyboard visibility changed: $ise"
                     )
                 }
             }
@@ -255,7 +257,7 @@ private fun loadImageForChatBubble(imageView: ImageView, file: String?, grid: Bo
                 listener(
                     onError = { _, result ->
                         Log.e(
-                            "[Data Binding] [Coil] Error getting preview picture from video? [$file]: ${result.throwable}"
+                            "$TAG Error getting preview picture from video? [$file]: ${result.throwable}"
                         )
                         imageView.visibility = View.GONE
                     },
@@ -272,7 +274,7 @@ private fun loadImageForChatBubble(imageView: ImageView, file: String?, grid: Bo
                 listener(
                     onError = { _, result ->
                         Log.e(
-                            "[Data Binding] [Coil] Error getting picture from file [$file]: ${result.throwable}"
+                            "$TAG Error getting picture from file [$file]: ${result.throwable}"
                         )
                         imageView.visibility = View.GONE
                     }
@@ -285,7 +287,6 @@ private fun loadImageForChatBubble(imageView: ImageView, file: String?, grid: Bo
 @UiThread
 @BindingAdapter("coil")
 fun ShapeableImageView.loadCircleFileWithCoil(file: String?) {
-    Log.i("[Data Binding Utils] Loading file [$file] with coil")
     if (file != null) {
         load(file)
     }
