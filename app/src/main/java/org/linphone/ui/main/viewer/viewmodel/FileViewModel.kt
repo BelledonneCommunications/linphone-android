@@ -3,6 +3,7 @@ package org.linphone.ui.main.viewer.viewmodel
 import android.graphics.Bitmap
 import android.graphics.pdf.PdfRenderer
 import android.os.ParcelFileDescriptor
+import android.webkit.MimeTypeMap
 import android.widget.ImageView
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
@@ -29,7 +30,15 @@ class FileViewModel @UiThread constructor() : ViewModel() {
 
     val isPdf = MutableLiveData<Boolean>()
 
+    val isVideo = MutableLiveData<Boolean>()
+
+    val isVideoPlaying = MutableLiveData<Boolean>()
+
     val pdfRendererReadyEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
+    val toggleVideoPlayPauseEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
 
@@ -40,8 +49,11 @@ class FileViewModel @UiThread constructor() : ViewModel() {
     var screenHeight: Int = 0
     // End of PDF viewer required variables
 
-    init {
-        fullScreenMode.value = true
+    override fun onCleared() {
+        if (::pdfRenderer.isInitialized) {
+            pdfRenderer.close()
+        }
+        super.onCleared()
     }
 
     @UiThread
@@ -50,32 +62,36 @@ class FileViewModel @UiThread constructor() : ViewModel() {
         fileName.value = name
 
         val extension = FileUtils.getExtensionFromFileName(name)
-        if (extension == "pdf") {
-            Log.i("$TAG File [$file] seems to be a PDF")
-            isPdf.value = true
-            fullScreenMode.value = false
+        val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+        when (FileUtils.getMimeType(mime)) {
+            FileUtils.MimeType.Pdf -> {
+                Log.i("$TAG File [$file] seems to be a PDF")
+                isPdf.value = true
+                fullScreenMode.value = false
 
-            viewModelScope.launch {
-                withContext(Dispatchers.IO) {
-                    val input = ParcelFileDescriptor.open(
-                        File(file),
-                        ParcelFileDescriptor.MODE_READ_ONLY
-                    )
-                    pdfRenderer = PdfRenderer(input)
-                    Log.i("$TAG ${pdfRenderer.pageCount} pages in file $file")
-                    pdfRendererReadyEvent.postValue(Event(true))
+                viewModelScope.launch {
+                    withContext(Dispatchers.IO) {
+                        val input = ParcelFileDescriptor.open(
+                            File(file),
+                            ParcelFileDescriptor.MODE_READ_ONLY
+                        )
+                        pdfRenderer = PdfRenderer(input)
+                        Log.i("$TAG ${pdfRenderer.pageCount} pages in file $file")
+                        pdfRendererReadyEvent.postValue(Event(true))
+                    }
                 }
             }
-        } else {
-            path.value = file
+            FileUtils.MimeType.Video -> {
+                Log.i("$TAG File [$file] seems to be a video")
+                isVideo.value = true
+                isVideoPlaying.value = false
+                fullScreenMode.value = true
+            }
+            else -> {
+                path.value = file
+                fullScreenMode.value = true
+            }
         }
-    }
-
-    override fun onCleared() {
-        if (::pdfRenderer.isInitialized) {
-            pdfRenderer.close()
-        }
-        super.onCleared()
     }
 
     @UiThread
@@ -114,5 +130,12 @@ class FileViewModel @UiThread constructor() : ViewModel() {
                 }
             }
         }
+    }
+
+    @UiThread
+    fun playPauseVideo() {
+        val playVideo = isVideoPlaying.value == false
+        isVideoPlaying.value = playVideo
+        toggleVideoPlayPauseEvent.value = Event(playVideo)
     }
 }

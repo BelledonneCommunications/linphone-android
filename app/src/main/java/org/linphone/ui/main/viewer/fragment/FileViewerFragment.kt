@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
+import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -72,5 +73,44 @@ class FileViewerFragment : GenericFragment() {
                 binding.dotsIndicator.attachTo(binding.pdfViewPager)
             }
         }
+
+        viewModel.isVideo.observe(viewLifecycleOwner) { isVideo ->
+            if (isVideo) {
+                binding.videoPlayer.setVideoPath(path)
+                binding.videoPlayer.setOnCompletionListener {
+                    Log.i("$TAG End of file reached")
+                    viewModel.isVideoPlaying.value = false
+                }
+                (view.parent as? ViewGroup)?.doOnPreDraw {
+                    binding.videoPlayer.start()
+                    viewModel.isVideoPlaying.value = true
+                }
+            }
+        }
+
+        viewModel.toggleVideoPlayPauseEvent.observe(viewLifecycleOwner) {
+            it.consume { play ->
+                if (play) {
+                    binding.videoPlayer.start()
+                } else {
+                    binding.videoPlayer.pause()
+                }
+            }
+        }
+    }
+
+    override fun onPause() {
+        if (binding.videoPlayer.isPlaying) {
+            binding.videoPlayer.pause()
+            viewModel.isVideoPlaying.value = false
+        }
+
+        super.onPause()
+    }
+
+    override fun onDestroyView() {
+        binding.videoPlayer.stopPlayback()
+
+        super.onDestroyView()
     }
 }
