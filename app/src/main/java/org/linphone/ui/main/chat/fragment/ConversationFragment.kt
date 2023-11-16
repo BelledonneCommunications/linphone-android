@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.main.chat.fragment
 
+import android.Manifest
 import android.app.Dialog
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -150,6 +151,17 @@ class ConversationFragment : GenericFragment() {
                     sendMessageViewModel.isParticipantsListOpen.value = true
                 }
             }
+        }
+    }
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            Log.i("$TAG RECORD_AUDIO permission has been granted, starting voice message recording")
+            sendMessageViewModel.startVoiceMessageRecording()
+        } else {
+            Log.e("$TAG RECORD_AUDIO permission has been denied")
         }
     }
 
@@ -322,6 +334,13 @@ class ConversationFragment : GenericFragment() {
         sendMessageViewModel.requestKeyboardHidingEvent.observe(viewLifecycleOwner) {
             it.consume {
                 binding.search.hideKeyboard()
+            }
+        }
+
+        sendMessageViewModel.askRecordAudioPermissionEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.w("$TAG Asking for RECORD_AUDIO permission")
+                requestPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
             }
         }
 

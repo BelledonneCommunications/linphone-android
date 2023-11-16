@@ -108,6 +108,10 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<String>>()
     }
 
+    val askRecordAudioPermissionEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     lateinit var chatRoom: ChatRoom
 
     private var chatMessageToReplyTo: ChatMessage? = null
@@ -343,9 +347,9 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             Log.w(
-                "$TAG Can't start voice message recording, AUDIO_RECORD permission wasn't granted yet"
+                "$TAG Can't start voice message recording, RECORD_AUDIO permission wasn't granted yet"
             )
-            // TODO: request record audio permission
+            askRecordAudioPermissionEvent.postValue(Event(true))
             return
         }
 
