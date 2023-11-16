@@ -22,7 +22,6 @@ package org.linphone.ui.main.chat.model
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.Spanned
-import android.util.Patterns
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
@@ -77,6 +76,7 @@ class ChatMessageModel @WorkerThread constructor(
         private const val TAG = "[Chat Message Model]"
 
         private const val SIP_URI_REGEXP = "(?:<?sips?:)[a-zA-Z0-9+_.\\-]+(?:@([a-zA-Z0-9+_.\\-;=~]+))+(>)?"
+        private const val HTTP_LINK_REGEXP = "https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)"
         private const val MENTION_REGEXP = "@(?:[A-Za-z0-9._-]+)"
     }
 
@@ -465,7 +465,9 @@ class ChatMessageModel @WorkerThread constructor(
                     }
                 )
                 .add(
-                    Patterns.WEB_URL,
+                    Pattern.compile(
+                        HTTP_LINK_REGEXP
+                    ),
                     object : SpannableClickedListener {
                         override fun onSpanClicked(text: String) {
                             Log.i("$TAG Clicked on web URL: $text")
