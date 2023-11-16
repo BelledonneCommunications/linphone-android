@@ -29,6 +29,11 @@ import android.widget.PopupWindow
 import androidx.annotation.UiThread
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.linphone.R
 import org.linphone.core.Account
 import org.linphone.core.tools.Log
@@ -111,8 +116,17 @@ class DrawerMenuFragment : GenericFragment() {
 
         viewModel.defaultAccountChangedEvent.observe(viewLifecycleOwner) {
             it.consume { identity ->
-                Log.w("$TAG Default account has changed, now is [$identity]")
+                Log.w("$TAG Default account has changed, now is [$identity], closing side menu in 500ms")
                 sharedViewModel.defaultAccountChangedEvent.value = Event(true)
+
+                lifecycleScope.launch {
+                    withContext(Dispatchers.IO) {
+                        delay(500)
+                        withContext(Dispatchers.Main) {
+                            (requireActivity() as MainActivity).closeDrawerMenu()
+                        }
+                    }
+                }
             }
         }
 

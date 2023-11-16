@@ -392,9 +392,9 @@ class ConversationFragment : GenericFragment() {
                 try {
                     val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                     startActivity(browserIntent)
-                } catch (ise: IllegalStateException) {
+                } catch (e: Exception) {
                     Log.e(
-                        "$TAG Can't start ACTION_VIEW intent for URL [$url], IllegalStateException: $ise"
+                        "$TAG Can't start ACTION_VIEW intent for URL [$url]: $e"
                     )
                 }
             }

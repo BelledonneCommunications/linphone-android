@@ -121,13 +121,6 @@ open class AbstractTopBarViewModel @UiThread constructor() : ViewModel() {
     init {
         searchBarVisible.value = false
 
-        coreContext.postOnCoreThread { core ->
-            core.addListener(coreListener)
-            updateMissedCallsCount()
-            updateUnreadMessagesCount()
-        }
-
-        updateAvailableMenus()
         update()
     }
 
@@ -184,6 +177,10 @@ open class AbstractTopBarViewModel @UiThread constructor() : ViewModel() {
 
                 account.value?.destroy()
                 account.postValue(AccountModel(defaultAccount))
+
+                updateUnreadMessagesCount()
+                updateMissedCallsCount()
+                updateAvailableMenus()
             }
         }
     }
@@ -239,16 +236,14 @@ open class AbstractTopBarViewModel @UiThread constructor() : ViewModel() {
         }
     }
 
-    @UiThread
+    @WorkerThread
     fun updateAvailableMenus() {
-        coreContext.postOnCoreThread { core ->
-            hideConversations.postValue(corePreferences.disableChat)
+        hideConversations.postValue(corePreferences.disableChat)
 
-            val hideGroupCall =
-                corePreferences.disableMeetings || !LinphoneUtils.isRemoteConferencingAvailable(
-                    core
-                )
-            hideMeetings.postValue(hideGroupCall)
-        }
+        val hideGroupCall =
+            corePreferences.disableMeetings || !LinphoneUtils.isRemoteConferencingAvailable(
+                coreContext.core
+            )
+        hideMeetings.postValue(hideGroupCall)
     }
 }

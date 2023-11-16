@@ -181,15 +181,13 @@ class ConversationsListFragment : AbstractTopBarFragment() {
                 val localSipUri = pair.first
                 val remoteSipUri = pair.second
                 Log.i(
-                    "${ConversationsListFragment.TAG} Navigating to conversation fragment with local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
+                    "$TAG Navigating to conversation fragment with local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
                 )
-                if (findNavController().currentDestination?.id == R.id.conversationsListFragment) {
-                    val action = ConversationFragmentDirections.actionGlobalConversationFragment(
-                        localSipUri,
-                        remoteSipUri
-                    )
-                    binding.chatNavContainer.findNavController().navigate(action)
-                }
+                val action = ConversationFragmentDirections.actionGlobalConversationFragment(
+                    localSipUri,
+                    remoteSipUri
+                )
+                binding.chatNavContainer.findNavController().navigate(action)
             }
         }
 

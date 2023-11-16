@@ -162,7 +162,7 @@ abstract class AbstractTopBarFragment : GenericFragment() {
         sharedViewModel.defaultAccountChangedEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.i("$TAG Default account changed")
-                viewModel.updateAvailableMenus()
+                viewModel.update()
                 onDefaultAccountChanged()
             }
         }
