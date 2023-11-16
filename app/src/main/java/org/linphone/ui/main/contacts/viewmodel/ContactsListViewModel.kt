@@ -106,7 +106,6 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
         coreContext.postOnCoreThread {
             magicSearch.removeListener(magicSearchListener)
             coreContext.contactsManager.removeListener(contactsListener)
-            contactsList.value.orEmpty().forEach(ContactAvatarModel::destroy)
         }
         super.onCleared()
     }
@@ -139,7 +138,6 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
     @WorkerThread
     fun processMagicSearchResults(results: Array<SearchResult>) {
         Log.i("$TAG Processing [${results.size}] results")
-        contactsList.value.orEmpty().forEach(ContactAvatarModel::destroy)
 
         val list = arrayListOf<ContactAvatarModel>()
         val favouritesList = arrayListOf<ContactAvatarModel>()
@@ -149,7 +147,11 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
         for (result in results) {
             val friend = result.friend
 
-            val model = coreContext.contactsManager.getContactAvatarModelForAddress(result.address)
+            val model = if (friend != null) {
+                coreContext.contactsManager.getContactAvatarModelForFriend(friend)
+            } else {
+                coreContext.contactsManager.getContactAvatarModelForAddress(result.address)
+            }
 
             val currentLetter = model.friend.name?.get(0).toString()
             val displayLetter = previousLetter.isEmpty() || currentLetter != previousLetter

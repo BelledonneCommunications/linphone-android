@@ -219,6 +219,29 @@ class ContactsManager @UiThread constructor(context: Context) {
     }
 
     @WorkerThread
+    fun getContactAvatarModelForFriend(friend: Friend?): ContactAvatarModel {
+        if (friend == null) {
+            val fakeFriend = coreContext.core.createFriend()
+            return ContactAvatarModel(fakeFriend)
+        }
+
+        val address = friend.address ?: friend.addresses.firstOrNull()
+            ?: return ContactAvatarModel(friend)
+
+        val clone = address.clone()
+        clone.clean()
+        val key = clone.asStringUriOnly()
+
+        val foundInMap = if (avatarsMap.keys.contains(key)) avatarsMap[key] else null
+        if (foundInMap != null) return foundInMap
+
+        val avatar = ContactAvatarModel(friend)
+        avatarsMap[key] = avatar
+
+        return avatar
+    }
+
+    @WorkerThread
     fun getContactAvatarModelForConferenceInfo(conferenceInfo: ConferenceInfo): ContactAvatarModel {
         // Do not clean parameters!
         val key = conferenceInfo.uri?.asStringUriOnly()
