@@ -127,10 +127,10 @@ class ContactsManager @UiThread constructor(context: Context) {
     fun onNativeContactsLoaded() {
         nativeContactsLoaded = true
 
-        avatarsMap.values.forEach(ContactAvatarModel::destroy)
-        avatarsMap.clear()
-
         coreContext.postOnCoreThread {
+            avatarsMap.values.forEach(ContactAvatarModel::destroy)
+            avatarsMap.clear()
+
             notifyContactsListChanged()
         }
     }

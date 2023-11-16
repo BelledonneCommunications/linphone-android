@@ -116,7 +116,9 @@ class DrawerMenuFragment : GenericFragment() {
 
         viewModel.defaultAccountChangedEvent.observe(viewLifecycleOwner) {
             it.consume { identity ->
-                Log.w("$TAG Default account has changed, now is [$identity], closing side menu in 500ms")
+                Log.w(
+                    "$TAG Default account has changed, now is [$identity], closing side menu in 500ms"
+                )
                 sharedViewModel.defaultAccountChangedEvent.value = Event(true)
 
                 lifecycleScope.launch {

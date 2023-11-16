@@ -121,6 +121,10 @@ open class AbstractTopBarViewModel @UiThread constructor() : ViewModel() {
     init {
         searchBarVisible.value = false
 
+        coreContext.postOnCoreThread { core ->
+            core.addListener(coreListener)
+        }
+
         update()
     }
 
