@@ -125,4 +125,8 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
     val listOfSelectedSipUrisEvent: MutableLiveData<Event<ArrayList<String>>> by lazy {
         MutableLiveData<Event<ArrayList<String>>>()
     }
+
+    val displayFileEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
 }

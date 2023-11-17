@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import org.linphone.core.tools.Log
-import org.linphone.databinding.FileImageViewerFragmentBinding
+import org.linphone.databinding.FileViewerFragmentBinding
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.ui.main.viewer.adapter.PdfPagesListAdapter
 import org.linphone.ui.main.viewer.viewmodel.FileViewModel
@@ -22,7 +22,7 @@ class FileViewerFragment : GenericFragment() {
         private const val TAG = "[File Viewer Fragment]"
     }
 
-    private lateinit var binding: FileImageViewerFragmentBinding
+    private lateinit var binding: FileViewerFragmentBinding
 
     private lateinit var viewModel: FileViewModel
 
@@ -35,7 +35,7 @@ class FileViewerFragment : GenericFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FileImageViewerFragmentBinding.inflate(layoutInflater)
+        binding = FileViewerFragmentBinding.inflate(layoutInflater)
         return binding.root
     }
 

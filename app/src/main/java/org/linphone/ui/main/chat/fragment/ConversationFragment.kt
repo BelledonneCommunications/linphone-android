@@ -361,14 +361,8 @@ class ConversationFragment : GenericFragment() {
 
         viewModel.fileToDisplayEvent.observe(viewLifecycleOwner) {
             it.consume { file ->
-                if (findNavController().currentDestination?.id == R.id.conversationFragment) {
-                    Log.i("$TAG User clicked on file [$file], let's display it in file viewer")
-                    val action =
-                        ConversationFragmentDirections.actionConversationFragmentToFileViewerFragment(
-                            file
-                        )
-                    findNavController().navigate(action)
-                }
+                Log.i("$TAG User clicked on file [$file], let's display it in file viewer")
+                sharedViewModel.displayFileEvent.value = Event(file)
             }
         }
 

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="backClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="shareClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="saveClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.main.viewer.viewmodel.FileViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black">
+
+        <VideoView
+            android:id="@+id/video_player"
+            android:onClick="@{() -> viewModel.toggleFullScreen()}"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:visibility="@{viewModel.isVideo ? View.VISIBLE : View.GONE}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <ImageView
+            android:id="@+id/play_pause_video_playback"
+            android:onClick="@{() -> viewModel.playPauseVideo()}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:padding="8dp"
+            android:src="@{viewModel.isVideoPlaying ? @drawable/pause_fill : @drawable/play_fill, default=@drawable/play_fill}"
+            android:visibility="@{viewModel.isVideo &amp;&amp; !viewModel.fullScreenMode ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintBottom_toTopOf="@id/file_name"
+            app:layout_constraintStart_toStartOf="@id/pdf_view_pager"
+            app:layout_constraintEnd_toEndOf="@id/pdf_view_pager"
+            app:tint="@color/orange_main_500"/>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/pdf_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:visibility="@{viewModel.isPdf ? View.VISIBLE : View.GONE, default=gone}" />
+
+        <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+            android:id="@+id/dots_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:visibility="@{viewModel.isPdf ? View.VISIBLE : View.GONE, default=gone}"
+            app:dotsColor="@color/gray_main2_200"
+            app:dotsCornerRadius="8dp"
+            app:dotsSize="13dp"
+            app:dotsSpacing="5dp"
+            app:dotsWidthFactor="2.5"
+            app:selectedDotColor="@color/orange_main_500"
+            app:progressMode="false"
+            app:layout_constraintBottom_toTopOf="@id/file_name"
+            app:layout_constraintStart_toStartOf="@id/pdf_view_pager"
+            app:layout_constraintEnd_toEndOf="@id/pdf_view_pager" />
+
+        <com.github.chrisbanes.photoview.PhotoView
+            android:id="@+id/image"
+            android:onClick="@{() -> viewModel.toggleFullScreen()}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/illu"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            coilFile="@{viewModel.path}"
+            android:visibility="@{viewModel.isPdf || viewModel.isVideo ? View.GONE : View.VISIBLE}" />
+
+        <ImageView
+            android:id="@+id/back"
+            android:onClick="@{backClickListener}"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:background="@color/white"
+            android:adjustViewBounds="true"
+            android:padding="15dp"
+            android:src="@drawable/caret_left"
+            android:visibility="@{viewModel.fullScreenMode ? View.GONE : View.VISIBLE}"
+            app:tint="@color/orange_main_500"
+            app:layout_constraintBottom_toBottomOf="@id/title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/title" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/main_page_title_style"
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/top_bar_height"
+            android:background="@color/white"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text=""
+            android:visibility="@{viewModel.fullScreenMode ? View.GONE : View.VISIBLE}"
+            app:layout_constraintEnd_toStartOf="@id/share"
+            app:layout_constraintStart_toEndOf="@id/back"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageView
+            android:id="@+id/share"
+            android:onClick="@{shareClickListener}"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:background="@color/white"
+            android:adjustViewBounds="true"
+            android:padding="15dp"
+            android:src="@drawable/share_network"
+            android:visibility="@{viewModel.fullScreenMode ? View.GONE : View.VISIBLE}"
+            app:tint="@color/orange_main_500"
+            app:layout_constraintBottom_toBottomOf="@id/title"
+            app:layout_constraintEnd_toStartOf="@id/save"
+            app:layout_constraintTop_toTopOf="@id/title" />
+
+        <ImageView
+            android:id="@+id/save"
+            android:onClick="@{saveClickListener}"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:background="@color/white"
+            android:adjustViewBounds="true"
+            android:padding="15dp"
+            android:src="@drawable/download_simple"
+            android:visibility="@{viewModel.fullScreenMode ? View.GONE : View.VISIBLE}"
+            app:tint="@color/orange_main_500"
+            app:layout_constraintBottom_toBottomOf="@id/title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/title" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_300"
+            android:id="@+id/file_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:text="@{viewModel.fileName, default=`nomdufichier.jpg\nenvoyé le 02/05/2023 à 11h05`}"
+            android:textSize="12sp"
+            android:textColor="@color/gray_main2_400"
+            android:textAlignment="center"
+            android:visibility="@{viewModel.fullScreenMode ? View.GONE : View.VISIBLE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

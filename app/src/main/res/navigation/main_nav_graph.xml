@@ -304,4 +304,21 @@
             app:argType="string" />
     </fragment>
 
+    <fragment
+        android:id="@+id/fileViewerFragment"
+        android:name="org.linphone.ui.main.viewer.fragment.FileViewerFragment"
+        android:label="FileViewerFragment"
+        tools:layout="@layout/file_viewer_fragment">
+        <argument
+            android:name="path"
+            app:argType="string" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_fileViewerFragment"
+        app:destination="@id/fileViewerFragment"
+        app:enterAnim="@anim/slide_in"
+        app:popExitAnim="@anim/slide_out"
+        app:launchSingleTop="true"/>
+
 </navigation>

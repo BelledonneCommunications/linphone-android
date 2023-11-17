@@ -38,6 +38,7 @@ import org.linphone.ui.main.chat.adapter.ConversationsListAdapter
 import org.linphone.ui.main.chat.viewmodel.ConversationsListViewModel
 import org.linphone.ui.main.fragment.AbstractTopBarFragment
 import org.linphone.ui.main.history.fragment.HistoryMenuDialogFragment
+import org.linphone.ui.main.viewer.fragment.FileViewerFragmentDirections
 import org.linphone.utils.Event
 
 @UiThread
@@ -199,6 +200,17 @@ class ConversationsListFragment : AbstractTopBarFragment() {
                         ConversationsListFragmentDirections.actionConversationsListFragmentToMeetingWaitingRoomFragment(
                             uri
                         )
+                    findNavController().navigate(action)
+                }
+            }
+        }
+
+        sharedViewModel.displayFileEvent.observe(viewLifecycleOwner) {
+            it.consume { path ->
+                if (findNavController().currentDestination?.id == R.id.conversationsListFragment) {
+                    Log.i("$TAG Navigating to file viewer fragment with path [$path]")
+                    val action =
+                        FileViewerFragmentDirections.actionGlobalFileViewerFragment(path)
                     findNavController().navigate(action)
                 }
             }
