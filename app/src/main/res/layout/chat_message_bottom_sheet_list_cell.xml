@@ -16,9 +16,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="@{() -> model.clicked()}"
-        android:background="@drawable/primary_cell_background"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp">
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/primary_cell_background">
 
         <com.google.android.material.imageview.ShapeableImageView
             style="@style/avatar_imageview"

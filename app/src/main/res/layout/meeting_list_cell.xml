@@ -82,7 +82,7 @@
             app:layout_constraintBottom_toBottomOf="@id/today_background"
             app:layout_constraintTop_toBottomOf="@id/header_day"/>
 
-        <androidx.cardview.widget.CardView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cardview"
             android:onClick="@{onClickListener}"
             android:onLongClick="@{onLongClickListener}"
@@ -92,59 +92,52 @@
             android:layout_marginEnd="5dp"
             android:layout_marginTop="@{model.firstMeetingOfTheDay ? @dimen/meeting_margin : @dimen/zero, default=@dimen/zero}"
             android:layout_marginBottom="8dp"
-            app:cardBackgroundColor="@color/list_cell_background_color"
-            app:cardElevation="5dp"
-            app:cardCornerRadius="10dp"
+            android:background="@drawable/primary_cell_r10_background"
+            android:elevation="5dp"
             app:layout_constraintStart_toEndOf="@id/header_day"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/today_separator"
             app:layout_constraintBottom_toBottomOf="parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_700"
+                android:id="@+id/title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@{model.subject, default=`Meeting with John`}"
+                android:textSize="13sp"
+                android:textColor="@color/gray_main2_600"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:drawableStart="@{model.isBroadcast ? @drawable/slideshow : @drawable/users_three, default=@drawable/users_three}"
+                android:drawablePadding="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style_700"
-                    android:id="@+id/title"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:text="@{model.subject, default=`Meeting with John`}"
-                    android:textSize="13sp"
-                    android:textColor="@color/gray_main2_600"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:drawableStart="@{model.isBroadcast ? @drawable/slideshow : @drawable/users_three, default=@drawable/users_three}"
-                    android:drawablePadding="8dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:id="@+id/time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@{model.time, default=`10:00 - 12:00`}"
+                android:textSize="14sp"
+                android:textColor="@color/gray_main2_500"
+                android:maxLines="1"
+                android:ellipsize="end"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style"
-                    android:id="@+id/time"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="3dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:text="@{model.time, default=`10:00 - 12:00`}"
-                    android:textSize="14sp"
-                    android:textColor="@color/gray_main2_500"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/title"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </androidx.cardview.widget.CardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

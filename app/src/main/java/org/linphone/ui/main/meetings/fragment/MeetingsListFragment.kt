@@ -140,6 +140,22 @@ class MeetingsListFragment : AbstractTopBarFragment() {
             }
         }
 
+        adapter.meetingLongClickedEvent.observe(viewLifecycleOwner) {
+            it.consume { model ->
+                val modalBottomSheet = MeetingsMenuDialogFragment(
+                    { // onDismiss
+                        adapter.resetSelection()
+                    },
+                    { // onDelete
+                        Log.i("$TAG Deleting meeting [${model.id}]")
+                        model.delete()
+                        listViewModel.applyFilter()
+                    }
+                )
+                modalBottomSheet.show(parentFragmentManager, MeetingsMenuDialogFragment.TAG)
+            }
+        }
+
         sharedViewModel.forceRefreshMeetingsListEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.i("$TAG We were asked to refresh the meetings list, doing it now")

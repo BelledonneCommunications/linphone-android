@@ -23,6 +23,8 @@ class MeetingsListAdapter :
         MeetingDiffCallback()
     ),
     HeaderAdapter {
+    var selectedAdapterPosition = -1
+
     val meetingClickedEvent: MutableLiveData<Event<MeetingModel>> by lazy {
         MutableLiveData<Event<MeetingModel>>()
     }
@@ -53,6 +55,7 @@ class MeetingsListAdapter :
             parent,
             false
         )
+        val viewHolder = ViewHolder(binding)
         binding.apply {
             lifecycleOwner = parent.findViewTreeLifecycleOwner()
 
@@ -61,16 +64,22 @@ class MeetingsListAdapter :
             }
 
             setOnLongClickListener {
+                selectedAdapterPosition = viewHolder.bindingAdapterPosition
                 root.isSelected = true
                 meetingLongClickedEvent.value = Event(model!!)
                 true
             }
         }
-        return ViewHolder(binding)
+        return viewHolder
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         (holder as ViewHolder).bind(getItem(position))
+    }
+
+    fun resetSelection() {
+        notifyItemChanged(selectedAdapterPosition)
+        selectedAdapterPosition = -1
     }
 
     inner class ViewHolder(
@@ -80,6 +89,9 @@ class MeetingsListAdapter :
         fun bind(meetingModel: MeetingModel) {
             with(binding) {
                 model = meetingModel
+
+                binding.root.isSelected = bindingAdapterPosition == selectedAdapterPosition
+
                 executePendingBindings()
             }
         }

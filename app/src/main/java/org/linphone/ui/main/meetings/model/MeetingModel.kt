@@ -19,13 +19,20 @@
  */
 package org.linphone.ui.main.meetings.model
 
+import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.ConferenceInfo
 import org.linphone.core.Participant
+import org.linphone.core.tools.Log
 import org.linphone.utils.TimestampUtils
 
-class MeetingModel @WorkerThread constructor(conferenceInfo: ConferenceInfo) {
+class MeetingModel @WorkerThread constructor(private val conferenceInfo: ConferenceInfo) {
+    companion object {
+        private const val TAG = "[Meeting Model]"
+    }
+
     val id = conferenceInfo.uri?.asStringUriOnly() ?: ""
 
     val timestamp = conferenceInfo.dateTime
@@ -64,5 +71,13 @@ class MeetingModel @WorkerThread constructor(conferenceInfo: ConferenceInfo) {
         }
 
         isBroadcast.postValue(!allSpeaker)
+    }
+
+    @UiThread
+    fun delete() {
+        coreContext.postOnCoreThread { core ->
+            Log.w("$TAG Deleting conference info [${conferenceInfo.uri?.asStringUriOnly()}]")
+            core.deleteConferenceInformation(conferenceInfo)
+        }
     }
 }
