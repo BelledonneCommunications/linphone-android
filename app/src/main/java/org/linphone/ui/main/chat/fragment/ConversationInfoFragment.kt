@@ -42,6 +42,7 @@ import org.linphone.ui.main.chat.model.ParticipantModel
 import org.linphone.ui.main.chat.viewmodel.ConversationInfoViewModel
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.DialogUtils
+import org.linphone.utils.Event
 
 @UiThread
 class ConversationInfoFragment : GenericFragment() {
@@ -212,6 +213,9 @@ class ConversationInfoFragment : GenericFragment() {
         val address = participantModel.sipUri
         val isAdmin = participantModel.isParticipantAdmin
         popupView.isParticipantAdmin = isAdmin
+        popupView.isMeAdmin = participantModel.isMyselfAdmin
+        val friendRefKey = participantModel.avatarModel.friend.refKey
+        popupView.isParticipantContact = !friendRefKey.isNullOrEmpty()
 
         popupView.setRemoveParticipantClickListener {
             Log.w("$TAG Trying to remove participant [$address]")
@@ -228,6 +232,26 @@ class ConversationInfoFragment : GenericFragment() {
         popupView.setUnsetAdminClickListener {
             Log.w("$TAG Trying to remove admin rights from participant [$address]")
             viewModel.removeAdminRightsFrom(participantModel)
+            popupWindow.dismiss()
+        }
+
+        popupView.setSeeContactProfileClickListener {
+            Log.w("$TAG Trying to display participant [$address] contact page")
+            if (!friendRefKey.isNullOrEmpty()) {
+                sharedViewModel.navigateToContactsEvent.value = Event(true)
+                sharedViewModel.showContactEvent.value = Event(friendRefKey)
+            } else {
+                Log.e("$TAG Can't go to contact page, friend ref key is null or empty!")
+                // TODO: show toast
+            }
+            popupWindow.dismiss()
+        }
+
+        popupView.setAddToContactsClickListener {
+            Log.w("$TAG Trying to add participant [${participantModel.sipUri}] to contacts")
+            sharedViewModel.sipAddressToAddToNewContact = participantModel.sipUri
+            sharedViewModel.navigateToContactsEvent.value = Event(true)
+            sharedViewModel.showNewContactEvent.value = Event(true)
             popupWindow.dismiss()
         }
 

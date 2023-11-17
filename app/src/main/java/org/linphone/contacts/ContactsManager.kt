@@ -106,6 +106,7 @@ class ContactsManager @UiThread constructor(context: Context) {
             try {
                 listeners.add(listener)
             } catch (cme: ConcurrentModificationException) {
+                Log.e("$TAG Can't add listener: $cme")
             }
         }
     }
@@ -118,6 +119,7 @@ class ContactsManager @UiThread constructor(context: Context) {
                 try {
                     listeners.remove(listener)
                 } catch (cme: ConcurrentModificationException) {
+                    Log.e("$TAG Can't remove listener: $cme")
                 }
             }
         }
@@ -157,16 +159,30 @@ class ContactsManager @UiThread constructor(context: Context) {
         clonedAddress.clean()
         val sipUri = clonedAddress.asStringUriOnly()
 
-        Log.d("$TAG Looking for friend with address [$sipUri]")
+        Log.d("$TAG Looking for friend with SIP URI [$sipUri]")
         val username = clonedAddress.username
         val found = coreContext.core.findFriend(clonedAddress)
-        return found ?: if (!username.isNullOrEmpty() && username.startsWith("+")) {
+        return if (found != null) {
+            Log.i("$TAG Friend [${found.name}] was found using SIP URI [$sipUri]")
+            found
+        } else if (!username.isNullOrEmpty() && username.startsWith("+")) {
             Log.i("$TAG Looking for friend with phone number [$username]")
-            val foundUsingPhoneNumber = coreContext.core.findFriendByPhoneNumber(
-                username
-            )
-            foundUsingPhoneNumber ?: findNativeContact(sipUri, true, username)
+            val foundUsingPhoneNumber = coreContext.core.findFriendByPhoneNumber(username)
+            if (foundUsingPhoneNumber != null) {
+                Log.i(
+                    "$TAG Friend [${foundUsingPhoneNumber.name}] was found using phone number [$username]"
+                )
+                foundUsingPhoneNumber
+            } else {
+                Log.i(
+                    "$TAG Friend wasn't found using phone number [$username], looking in native address book directly"
+                )
+                findNativeContact(sipUri, true, username)
+            }
         } else {
+            Log.i(
+                "$TAG Friend wasn't  found using SIP URI [$sipUri] and username [$username] isn't a phone number, looking in native address book directly"
+            )
             findNativeContact(sipUri, false)
         }
     }

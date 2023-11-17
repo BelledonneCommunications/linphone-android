@@ -370,6 +370,8 @@
     <string name="conversation_info_admin_menu_remove_participant">Remove from the group</string>
     <string name="conversation_info_admin_menu_set_participant_admin">Give admin rights</string>
     <string name="conversation_info_admin_menu_unset_participant_admin">Remove admin rights</string>
+    <string name="conversation_info_menu_go_to_contact">See contact profile</string>
+    <string name="conversation_info_menu_add_to_contacts">Add to contacts</string>
 
     <string name="conversation_event_conference_created">You have joined the group</string>
     <string name="conversation_event_conference_destroyed">You have left the group</string>

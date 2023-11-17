@@ -16,7 +16,7 @@
         android:onClick="@{() -> model.onClicked()}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/primary_cell_background"
+        android:background="@color/white"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp">
 
@@ -87,7 +87,6 @@
             android:layout_width="@dimen/icon_size"
             android:layout_height="@dimen/icon_size"
             android:src="@drawable/dots_three_vertical"
-            android:visibility="@{model.isMyselfAdmin ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/name"
             app:layout_constraintTop_toTopOf="parent"
