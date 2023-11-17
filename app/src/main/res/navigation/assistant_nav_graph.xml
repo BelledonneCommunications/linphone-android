@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/assistant_nav_graph"
-    app:startDestination="@id/permissionsFragment">
+    app:startDestination="@id/loginFragment">
 
     <fragment
         android:id="@+id/loginFragment"
@@ -145,6 +145,6 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
             app:launchSingleTop="true" />
-    </fragment>
+    </fragment><action android:id="@+id/action_global_permissionsFragment" app:destination="@id/permissionsFragment"/>
 
 </navigation>

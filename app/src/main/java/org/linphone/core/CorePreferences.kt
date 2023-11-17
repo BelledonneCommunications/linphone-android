@@ -49,6 +49,13 @@ class CorePreferences @UiThread constructor(private val context: Context) {
         }
 
     @get:WorkerThread @set:WorkerThread
+    var firstLaunch: Boolean
+        get() = config.getBool("app", "first_6.0_launch", true)
+        set(value) {
+            config.setBool("app", "first_6.0_launch", value)
+        }
+
+    @get:WorkerThread @set:WorkerThread
     var defaultFragment: Int
         get() = config.getInt("app", "default_page", -1)
         set(value) {

@@ -45,6 +45,7 @@
                 android:layout_height="@dimen/top_bar_height"
                 android:padding="15dp"
                 android:src="@drawable/caret_left"
+                android:visibility="@{viewModel.showBackButton ? View.VISIBLE : View.INVISIBLE, default=invisible}"
                 app:tint="@color/gray_main2_500"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>

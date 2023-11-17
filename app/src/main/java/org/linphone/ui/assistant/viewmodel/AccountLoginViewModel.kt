@@ -43,6 +43,8 @@ class AccountLoginViewModel @UiThread constructor() : ViewModel() {
         private const val TAG = "[Account Login ViewModel]"
     }
 
+    val showBackButton = MutableLiveData<Boolean>()
+
     val username = MutableLiveData<String>()
 
     val password = MutableLiveData<String>()
@@ -55,9 +57,13 @@ class AccountLoginViewModel @UiThread constructor() : ViewModel() {
 
     val registrationInProgress = MutableLiveData<Boolean>()
 
-    val accountLoggedInEvent = MutableLiveData<Event<Boolean>>()
+    val accountLoggedInEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
 
-    val accountLoginErrorEvent = MutableLiveData<Event<String>>()
+    val accountLoginErrorEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
 
     var conditionsAndPrivacyPolicyAccepted = false
 
@@ -111,7 +117,9 @@ class AccountLoginViewModel @UiThread constructor() : ViewModel() {
         showPassword.value = false
         registrationInProgress.value = false
 
-        coreContext.postOnCoreThread {
+        coreContext.postOnCoreThread { core ->
+            // Prevent user from leaving assistant if no account was configured yet
+            showBackButton.postValue(core.accountList.isNotEmpty())
             conditionsAndPrivacyPolicyAccepted = corePreferences.conditionsAndPrivacyPolicyAccepted
         }
 

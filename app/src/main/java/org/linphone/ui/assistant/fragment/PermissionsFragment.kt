@@ -32,18 +32,12 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantPermissionsFragmentBinding
+import org.linphone.ui.assistant.AssistantActivity
 
 @UiThread
 class PermissionsFragment : Fragment() {
     companion object {
         private const val TAG = "[Permissions Fragment]"
-
-        private val PERMISSIONS = arrayOf(
-            Manifest.permission.POST_NOTIFICATIONS,
-            Manifest.permission.READ_CONTACTS,
-            Manifest.permission.RECORD_AUDIO,
-            Manifest.permission.CAMERA
-        )
     }
 
     private lateinit var binding: AssistantPermissionsFragmentBinding
@@ -94,7 +88,7 @@ class PermissionsFragment : Fragment() {
         binding.setGrantAllClickListener {
             Log.i("$TAG Requesting all permissions")
             requestPermissionLauncher.launch(
-                PERMISSIONS
+                AssistantActivity.PERMISSIONS
             )
         }
 
@@ -113,7 +107,7 @@ class PermissionsFragment : Fragment() {
     }
 
     private fun areAllPermissionsGranted(): Boolean {
-        for (permission in PERMISSIONS) {
+        for (permission in AssistantActivity.PERMISSIONS) {
             if (ContextCompat.checkSelfPermission(requireContext(), permission) != PackageManager.PERMISSION_GRANTED) {
                 return false
             }

@@ -22,6 +22,7 @@ package org.linphone.ui.welcome
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.databinding.DataBindingUtil
@@ -58,6 +59,9 @@ class WelcomeActivity : AppCompatActivity() {
         while (!coreContext.isReady()) {
             Thread.sleep(20)
         }
+
+        // Disable back gesture / button
+        onBackPressedDispatcher.addCallback { }
 
         binding = DataBindingUtil.setContentView(this, R.layout.welcome_activity)
         binding.lifecycleOwner = this

@@ -50,8 +50,10 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.MainActivityBinding
+import org.linphone.ui.assistant.AssistantActivity
 import org.linphone.ui.main.viewmodel.MainViewModel
 import org.linphone.ui.main.viewmodel.SharedMainViewModel
+import org.linphone.ui.welcome.WelcomeActivity
 import org.linphone.utils.AppUtils
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
@@ -173,8 +175,20 @@ class MainActivity : AppCompatActivity() {
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
 
-        // TODO FIXME: uncomment
-        // startActivity(Intent(this, WelcomeActivity::class.java))
+        coreContext.postOnCoreThread { core ->
+            if (corePreferences.firstLaunch) {
+                Log.i("$TAG First time Linphone 6.0 has been started, showing Welcome activity")
+                corePreferences.firstLaunch = false
+                coreContext.postOnMainThread {
+                    startActivity(Intent(this, WelcomeActivity::class.java))
+                }
+            } else if (core.accountList.isEmpty()) {
+                Log.w("$TAG No account found, showing Assistant activity")
+                coreContext.postOnMainThread {
+                    startActivity(Intent(this, AssistantActivity::class.java))
+                }
+            }
+        }
 
         coreContext.greenToastToShowEvent.observe(this) {
             it.consume { pair ->

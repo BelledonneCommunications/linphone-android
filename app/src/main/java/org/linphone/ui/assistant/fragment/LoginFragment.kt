@@ -25,7 +25,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
 import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -34,6 +33,7 @@ import androidx.navigation.navGraphViewModels
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantLoginFragmentBinding
@@ -56,12 +56,6 @@ class LoginFragment : Fragment() {
         R.id.assistant_nav_graph
     )
 
-    private val onBackPressedCallback = object : OnBackPressedCallback(true) {
-        override fun handleOnBackPressed() {
-            goBack()
-        }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -77,13 +71,8 @@ class LoginFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            onBackPressedCallback
-        )
-
         binding.setBackClickListener {
-            goBack()
+            requireActivity().finish()
         }
 
         binding.setRegisterClickListener {
@@ -156,10 +145,6 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun goBack() {
-        requireActivity().finish()
-    }
-
     private fun goToRegisterFragment() {
         val action = LoginFragmentDirections.actionLoginFragmentToRegisterFragment()
         findNavController().navigate(action)
@@ -190,8 +175,7 @@ class LoginFragment : Fragment() {
             it.consume {
                 Log.i("$TAG Conditions & Privacy policy have been accepted")
                 coreContext.postOnCoreThread {
-                    // TODO FIXME: uncomment
-                    // corePreferences.conditionsAndPrivacyPolicyAccepted = true
+                    corePreferences.conditionsAndPrivacyPolicyAccepted = true
                 }
                 dialog.dismiss()
 
