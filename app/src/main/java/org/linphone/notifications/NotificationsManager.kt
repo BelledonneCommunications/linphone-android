@@ -79,8 +79,6 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         const val INTENT_ANSWER_CALL_NOTIF_ACTION = "org.linphone.ANSWER_CALL_ACTION"
         const val INTENT_REPLY_MESSAGE_NOTIF_ACTION = "org.linphone.REPLY_ACTION"
         const val INTENT_MARK_MESSAGE_AS_READ_NOTIF_ACTION = "org.linphone.MARK_AS_READ_ACTION"
-
-        const val INTENT_CALL_ID = "CALL_ID"
         const val INTENT_NOTIF_ID = "NOTIFICATION_ID"
 
         const val KEY_TEXT_REPLY = "key_text_reply"
@@ -640,7 +638,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         var notifiable: Notifiable? = callNotificationsMap[address]
         if (notifiable == null) {
             notifiable = Notifiable(getNotificationIdForCall(call))
-            notifiable.callId = call.callLog.callId
+            notifiable.remoteAddress = call.remoteAddress.asStringUriOnly()
 
             callNotificationsMap[address] = notifiable
         }
@@ -897,7 +895,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         val hangupIntent = Intent(context, NotificationBroadcastReceiver::class.java)
         hangupIntent.action = INTENT_HANGUP_CALL_NOTIF_ACTION
         hangupIntent.putExtra(INTENT_NOTIF_ID, notifiable.notificationId)
-        hangupIntent.putExtra(INTENT_CALL_ID, notifiable.callId)
+        hangupIntent.putExtra(INTENT_REMOTE_ADDRESS, notifiable.remoteAddress)
 
         return PendingIntent.getBroadcast(
             context,
@@ -912,7 +910,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         val answerIntent = Intent(context, NotificationBroadcastReceiver::class.java)
         answerIntent.action = INTENT_ANSWER_CALL_NOTIF_ACTION
         answerIntent.putExtra(INTENT_NOTIF_ID, notifiable.notificationId)
-        answerIntent.putExtra(INTENT_CALL_ID, notifiable.callId)
+        answerIntent.putExtra(INTENT_REMOTE_ADDRESS, notifiable.remoteAddress)
 
         return PendingIntent.getBroadcast(
             context,
@@ -1096,7 +1094,6 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
     class Notifiable(val notificationId: Int) {
         var myself: String? = null
-        var callId: String? = null
 
         var localIdentity: String? = null
         var remoteAddress: String? = null
