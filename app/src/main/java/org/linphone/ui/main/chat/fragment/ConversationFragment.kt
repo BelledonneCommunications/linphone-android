@@ -532,6 +532,12 @@ class ConversationFragment : GenericFragment() {
             emojiSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
 
+        layout.setResendClickListener {
+            Log.i("$TAG Re-sending chat message in error state")
+            chatMessageModel.resend()
+            dialog.dismiss()
+        }
+
         layout.setReplyClickListener {
             Log.i("$TAG Updating sending area to reply to selected message")
             sendMessageViewModel.replyToMessage(chatMessageModel)

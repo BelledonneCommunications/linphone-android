@@ -84,6 +84,8 @@ class ChatMessageModel @WorkerThread constructor(
 
     val isOutgoing = chatMessage.isOutgoing
 
+    val isInError = chatMessage.state == ChatMessage.State.NotDelivered
+
     val statusIcon = MutableLiveData<Int>()
 
     val text = MutableLiveData<Spannable>()
@@ -235,6 +237,14 @@ class ChatMessageModel @WorkerThread constructor(
             val reaction = chatMessage.createReaction(emoji)
             reaction.send()
             dismissLongPressMenuEvent.postValue(Event(true))
+        }
+    }
+
+    @UiThread
+    fun resend() {
+        coreContext.postOnCoreThread {
+            Log.i("$TAG Re-sending message with ID [$id]")
+            chatMessage.send()
         }
     }
 
