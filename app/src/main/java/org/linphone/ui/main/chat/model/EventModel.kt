@@ -20,6 +20,7 @@
 package org.linphone.ui.main.chat.model
 
 import androidx.annotation.WorkerThread
+import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.EventLog
@@ -64,6 +65,18 @@ class EventModel @WorkerThread constructor(private val eventLog: EventLog) {
                 R.string.conversation_event_device_removed,
                 getName()
             )
+            EventLog.Type.ConferenceEphemeralMessageEnabled -> AppUtils.getString(
+                R.string.conversation_event_ephemeral_messages_enabled
+            )
+            EventLog.Type.ConferenceEphemeralMessageDisabled -> AppUtils.getString(
+                R.string.conversation_event_ephemeral_messages_disabled
+            )
+            EventLog.Type.ConferenceEphemeralMessageLifetimeChanged -> AppUtils.getFormattedString(
+                R.string.conversation_event_ephemeral_messages_lifetime_changed,
+                formatEphemeralExpiration(eventLog.ephemeralMessageLifetime).lowercase(
+                    Locale.getDefault()
+                )
+            )
             else -> {
                 eventLog.type.name
             }
@@ -79,5 +92,30 @@ class EventModel @WorkerThread constructor(private val eventLog: EventLog) {
             "<?>"
         }
         return name
+    }
+
+    @WorkerThread
+    private fun formatEphemeralExpiration(duration: Long): String {
+        return when (duration) {
+            0L -> AppUtils.getString(
+                R.string.dialog_conversation_message_ephemeral_duration_disabled
+            )
+            60L -> AppUtils.getString(
+                R.string.dialog_conversation_message_ephemeral_duration_one_minute
+            )
+            3600L -> AppUtils.getString(
+                R.string.dialog_conversation_message_ephemeral_duration_one_hour
+            )
+            86400L -> AppUtils.getString(
+                R.string.dialog_conversation_message_ephemeral_duration_one_day
+            )
+            259200L -> AppUtils.getString(
+                R.string.dialog_conversation_message_ephemeral_duration_three_days
+            )
+            604800L -> AppUtils.getString(
+                R.string.dialog_conversation_message_ephemeral_duration_one_week
+            )
+            else -> "$duration s"
+        }
     }
 }

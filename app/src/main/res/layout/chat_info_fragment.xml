@@ -19,6 +19,9 @@
             name="addParticipantsClickListener"
             type="View.OnClickListener" />
         <variable
+            name="configureEphemeralMessagesClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.main.chat.viewmodel.ConversationInfoViewModel" />
     </data>
@@ -80,6 +83,18 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <ImageView
+                    android:id="@+id/presence_badge"
+                    android:layout_width="@dimen/avatar_presence_badge_big_size"
+                    android:layout_height="@dimen/avatar_presence_badge_big_size"
+                    android:layout_marginEnd="@dimen/avatar_presence_badge_big_end_margin"
+                    android:background="@drawable/led_background"
+                    android:padding="@dimen/avatar_presence_badge_big_padding"
+                    app:presenceIcon="@{viewModel.avatarModel.presenceStatus}"
+                    android:visibility="@{viewModel.avatarModel.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE, default=gone}"
+                    app:layout_constraintEnd_toEndOf="@id/avatar"
+                    app:layout_constraintBottom_toBottomOf="@id/avatar"/>
+
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/default_text_style"
                     android:id="@+id/title"
@@ -111,6 +126,36 @@
                     app:layout_constraintStart_toEndOf="@id/title"
                     app:layout_constraintEnd_toEndOf="parent"/>
 
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style"
+                    android:id="@+id/address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="@{viewModel.sipUri, default=`sip:john.doe@sip.example.org`}"
+                    android:textColor="@color/gray_main2_700"
+                    android:textSize="14sp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:visibility="@{viewModel.isGroup ? View.GONE : View.VISIBLE, default=gone}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/title" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style_300"
+                    android:id="@+id/status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{viewModel.avatarModel.lastPresenceInfo, default=@string/friend_presence_status_online}"
+                    android:textColor="@{viewModel.avatarModel.presenceStatus == ConsolidatedPresence.Online ? @color/green_success_500 : @color/orange_warning_600, default=@color/green_success_500}"
+                    android:textSize="14sp"
+                    android:visibility="@{viewModel.isGroup || viewModel.avatarModel.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE, default=gone}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/address" />
+
                 <ImageView
                     android:id="@+id/mute"
                     android:onClick="@{() -> viewModel.toggleMute()}"
@@ -123,7 +168,7 @@
                     app:tint="@color/gray_main2_500"
                     app:layout_constraintEnd_toStartOf="@id/call"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/title" />
+                    app:layout_constraintTop_toBottomOf="@id/status" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/default_text_style"
@@ -150,7 +195,7 @@
                     app:tint="@color/gray_main2_500"
                     app:layout_constraintStart_toEndOf="@id/mute"
                     app:layout_constraintEnd_toStartOf="@id/meeting"
-                    app:layout_constraintTop_toBottomOf="@id/title" />
+                    app:layout_constraintTop_toBottomOf="@id/status" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/default_text_style"
@@ -177,7 +222,7 @@
                     app:tint="@color/gray_main2_500"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/call"
-                    app:layout_constraintTop_toBottomOf="@id/title" />
+                    app:layout_constraintTop_toBottomOf="@id/status" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/default_text_style"
@@ -226,7 +271,7 @@
                     android:id="@+id/participants"
                     android:visibility="@{viewModel.expandParticipants &amp;&amp; viewModel.isGroup ? View.VISIBLE : View.GONE}"
                     android:layout_width="0dp"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginTop="8dp"
@@ -234,7 +279,7 @@
                     android:background="@drawable/shape_squircle_white_background"
                     android:nestedScrollingEnabled="true"
                     app:layout_constraintVertical_weight="1"
-                    app:layout_constraintHeight_min="@dimen/recycler_view_min_height"
+                    app:layout_constraintHeight_max="@dimen/chat_room_participants_list_max_height"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/participants_label"
@@ -296,6 +341,30 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/context_menu_action_label_style"
+                    android:id="@+id/action_ephemeral_messages"
+                    android:onClick="@{configureEphemeralMessagesClickListener}"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="@string/conversation_action_configure_ephemeral_messages"
+                    android:drawableStart="@drawable/clock_countdown"
+                    android:background="@drawable/action_background"
+                    android:visibility="@{!viewModel.isReadOnly ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintTop_toTopOf="@id/actions_background"
+                    app:layout_constraintStart_toStartOf="@id/actions_background"
+                    app:layout_constraintEnd_toEndOf="@id/actions_background"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:background="@color/gray_main2_200"
+                    app:layout_constraintStart_toStartOf="@id/action_ephemeral_messages"
+                    app:layout_constraintEnd_toEndOf="@id/action_ephemeral_messages"
+                    app:layout_constraintTop_toBottomOf="@+id/action_ephemeral_messages"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/context_menu_action_label_style"
                     android:id="@+id/action_leave_group"
                     android:onClick="@{() -> viewModel.leaveGroup()}"
                     android:layout_width="0dp"
@@ -306,7 +375,7 @@
                     android:drawableStart="@drawable/sign_out"
                     android:background="@drawable/action_background"
                     android:visibility="@{viewModel.isGroup &amp;&amp; !viewModel.isReadOnly ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintTop_toTopOf="@id/actions_background"
+                    app:layout_constraintTop_toBottomOf="@id/action_ephemeral_messages"
                     app:layout_constraintStart_toStartOf="@id/actions_background"
                     app:layout_constraintEnd_toEndOf="@id/actions_background"/>
 

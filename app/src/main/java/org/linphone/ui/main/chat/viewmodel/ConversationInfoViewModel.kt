@@ -50,11 +50,15 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
 
     val subject = MutableLiveData<String>()
 
+    val sipUri = MutableLiveData<String>()
+
     val isReadOnly = MutableLiveData<Boolean>()
 
     val isMyselfAdmin = MutableLiveData<Boolean>()
 
     val isMuted = MutableLiveData<Boolean>()
+
+    val ephemeralLifetime = MutableLiveData<Int>()
 
     val expandParticipants = MutableLiveData<Boolean>()
 
@@ -324,6 +328,16 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
         }
     }
 
+    @UiThread
+    fun updateEphemeralLifetime(lifetime: Int) {
+        coreContext.postOnCoreThread {
+            Log.i("$TAG Updating chat messages ephemeral lifetime to [$lifetime]")
+            chatRoom.ephemeralLifetime = lifetime.toLong()
+            chatRoom.isEphemeralEnabled = lifetime != 0
+            ephemeralLifetime.postValue(chatRoom.ephemeralLifetime.toInt())
+        }
+    }
+
     @WorkerThread
     private fun configureChatRoom() {
         isMuted.postValue(chatRoom.muted)
@@ -341,6 +355,9 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
         }
 
         subject.postValue(chatRoom.subject)
+        sipUri.postValue(chatRoom.participants.firstOrNull()?.address?.asStringUriOnly())
+
+        ephemeralLifetime.postValue(chatRoom.ephemeralLifetime.toInt())
 
         computeParticipantsList()
     }

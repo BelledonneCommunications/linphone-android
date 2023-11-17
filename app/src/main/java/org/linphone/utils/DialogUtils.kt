@@ -35,6 +35,7 @@ import org.linphone.databinding.DialogAccountModesExplanationBinding
 import org.linphone.databinding.DialogAssistantAcceptConditionsAndPolicyBinding
 import org.linphone.databinding.DialogAssistantCreateAccountConfirmPhoneNumberBinding
 import org.linphone.databinding.DialogCancelContactChangesBinding
+import org.linphone.databinding.DialogConfigureConversationEphemeralMessagesBinding
 import org.linphone.databinding.DialogConfirmZrtpSasBinding
 import org.linphone.databinding.DialogContactConfirmTrustCallBinding
 import org.linphone.databinding.DialogContactTrustProcessBinding
@@ -49,6 +50,7 @@ import org.linphone.databinding.DialogUpdateAvailableBinding
 import org.linphone.ui.assistant.model.AcceptConditionsAndPolicyDialogModel
 import org.linphone.ui.assistant.model.ConfirmPhoneNumberDialogModel
 import org.linphone.ui.call.model.ZrtpSasConfirmationDialogModel
+import org.linphone.ui.main.chat.model.ConversationConfigureEphemeralDurationDialogModel
 import org.linphone.ui.main.chat.model.ConversationEditSubjectDialogModel
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
 import org.linphone.ui.main.contacts.model.TrustCallDialogModel
@@ -284,6 +286,22 @@ class DialogUtils {
         }
 
         @UiThread
+        fun getConfigureChatMessagesEphemeralDurationDialog(
+            context: Context,
+            viewModel: ConversationConfigureEphemeralDurationDialogModel
+        ): Dialog {
+            val binding: DialogConfigureConversationEphemeralMessagesBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.dialog_configure_conversation_ephemeral_messages,
+                null,
+                false
+            )
+            binding.viewModel = viewModel
+
+            return getDialog(context, binding)
+        }
+
+        @UiThread
         fun getUpdateAvailableDialog(
             context: Context,
             viewModel: ConfirmationDialogModel,
@@ -329,7 +347,7 @@ class DialogUtils {
                     WindowManager.LayoutParams.MATCH_PARENT
                 )
             val d: Drawable = ColorDrawable(
-                AppUtils.getColor(R.color.gray_300)
+                AppUtils.getColor(R.color.gray_main2_800)
             )
             d.alpha = 102
             dialog.window?.setBackgroundDrawable(d)

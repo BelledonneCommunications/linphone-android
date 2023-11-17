@@ -146,13 +146,6 @@ class TimestampUtils {
         }
 
         @AnyThread
-        private fun isSameYear(timestamp: Long, timestampInSecs: Boolean = true): Boolean {
-            val cal = Calendar.getInstance()
-            cal.timeInMillis = if (timestampInSecs) timestamp * 1000 else timestamp
-            return isSameYear(cal, Calendar.getInstance())
-        }
-
-        @AnyThread
         fun toString(
             timestamp: Long,
             onlyDate: Boolean = false,

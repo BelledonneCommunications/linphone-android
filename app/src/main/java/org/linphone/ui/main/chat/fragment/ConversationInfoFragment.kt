@@ -37,6 +37,7 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatInfoFragmentBinding
 import org.linphone.databinding.ChatParticipantAdminPopupMenuBinding
 import org.linphone.ui.main.chat.adapter.ConversationParticipantsAdapter
+import org.linphone.ui.main.chat.model.ConversationConfigureEphemeralDurationDialogModel
 import org.linphone.ui.main.chat.model.ConversationEditSubjectDialogModel
 import org.linphone.ui.main.chat.model.ParticipantModel
 import org.linphone.ui.main.chat.viewmodel.ConversationInfoViewModel
@@ -191,6 +192,40 @@ class ConversationInfoFragment : GenericFragment() {
             }
 
             Log.i("$TAG Showing dialog to edit conversation subject")
+            dialog.show()
+        }
+
+        binding.setConfigureEphemeralMessagesClickListener {
+            val currentValue = viewModel.ephemeralLifetime.value ?: 0
+            val model = ConversationConfigureEphemeralDurationDialogModel(currentValue)
+
+            val dialog = DialogUtils.getConfigureChatMessagesEphemeralDurationDialog(
+                requireContext(),
+                model
+            )
+
+            model.dismissEvent.observe(viewLifecycleOwner) {
+                it.consume {
+                    Log.i("$TAG Ephemeral lifetime value wasn't changed")
+                    dialog.dismiss()
+                }
+            }
+
+            model.newValueSelectedEvent.observe(viewLifecycleOwner) {
+                it.consume { duration ->
+                    if (duration != currentValue) {
+                        Log.i(
+                            "$TAG Conversation chat message lifetime updated to [$duration] (previous one was [$currentValue])"
+                        )
+                        viewModel.updateEphemeralLifetime(duration)
+                    }
+                    dialog.dismiss()
+                }
+            }
+
+            Log.i(
+                "$TAG Showing dialog to change chat messages ephemeral duration (currently [$currentValue])"
+            )
             dialog.show()
         }
     }
