@@ -42,12 +42,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -107,20 +104,17 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.changeSystemTopBarColorEvent.observe(this) {
             it.consume { mode ->
-                val color = when (mode) {
-                    MainViewModel.IN_CALL -> AppUtils.getColor(R.color.green_success_500)
-                    MainViewModel.ACCOUNT_REGISTRATION_FAILURE -> AppUtils.getColor(
-                        R.color.red_danger_500
-                    )
-                    else -> AppUtils.getColor(R.color.orange_main_500)
-                }
-                lifecycleScope.launch {
-                    withContext(Dispatchers.IO) {
-                        delay(if (mode == MainViewModel.IN_CALL) 1000 else 0)
-                        withContext(Dispatchers.Main) {
-                            window.statusBarColor = color
-                        }
+                window.statusBarColor = when (mode) {
+                    MainViewModel.SINGLE_CALL, MainViewModel.MULTIPLE_CALLS -> {
+                        AppUtils.getColor(R.color.green_success_500)
                     }
+                    MainViewModel.NETWORK_NOT_REACHABLE, MainViewModel.NON_DEFAULT_ACCOUNT_NOT_CONNECTED -> {
+                        AppUtils.getColor(R.color.red_danger_500)
+                    }
+                    MainViewModel.NON_DEFAULT_ACCOUNT_NOTIFICATIONS -> {
+                        AppUtils.getColor(R.color.gray_main2_500)
+                    }
+                    else -> AppUtils.getColor(R.color.orange_main_500)
                 }
             }
         }

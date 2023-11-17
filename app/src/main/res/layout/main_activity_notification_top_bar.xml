@@ -16,53 +16,45 @@
         android:background="@{viewModel.atLeastOneCall ? @color/green_success_500 : @color/red_danger_500, default=@color/red_danger_500}"
         android:onClick="@{() -> viewModel.onTopBarClicked()}">
 
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:src="@{viewModel.alertIcon, default=@drawable/bell_simple}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:tint="@color/white" />
+
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_300"
-            android:id="@+id/error_label"
+            android:id="@+id/label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="5dp"
             android:layout_marginEnd="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:gravity="center_vertical"
-            android:text="@string/connection_error_for_non_default_account"
+            android:text="@{viewModel.alertLabel, default=@string/connection_error_for_non_default_account}"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:maxLines="1"
             android:ellipsize="end"
-            android:drawableStart="@drawable/bell_simple"
-            android:drawablePadding="10dp"
-            android:drawableTint="@color/white"
-            android:visibility="@{viewModel.atLeastOneCall ? View.GONE : View.VISIBLE}"
-            app:layout_constraintEnd_toStartOf="@id/close_notif"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/end_barrier"
+            app:layout_constraintStart_toEndOf="@id/icon"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_800"
-            android:id="@+id/call_display_name"
-            android:layout_width="0dp"
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/end_barrier"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:gravity="center_vertical"
-            android:text="@{viewModel.callLabel, default=`John Doe`}"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:drawableStart="@drawable/phone"
-            android:drawablePadding="10dp"
-            android:drawableTint="@color/white"
-            android:visibility="@{viewModel.atLeastOneCall ? View.VISIBLE : View.GONE, default=gone}"
-            app:layout_constraintEnd_toStartOf="@id/call_time"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:barrierDirection="start"
+            app:constraint_referenced_ids="call_time, close_notif" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
@@ -76,7 +68,7 @@
             android:textSize="14sp"
             android:visibility="@{viewModel.atLeastOneCall ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/call_display_name"
+            app:layout_constraintStart_toEndOf="@id/label"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
