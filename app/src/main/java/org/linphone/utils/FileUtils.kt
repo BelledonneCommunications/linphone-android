@@ -30,6 +30,7 @@ import android.system.Os
 import android.text.format.Formatter
 import android.webkit.MimeTypeMap
 import androidx.annotation.AnyThread
+import androidx.core.content.FileProvider
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -38,6 +39,7 @@ import java.util.Locale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
 import org.linphone.core.tools.Log
 
 class FileUtils {
@@ -153,6 +155,41 @@ class FileUtils {
                 }
             }
             return file
+        }
+
+        fun getPublicFilePath(context: Context, path: String): Uri {
+            val contentUri: Uri
+            when {
+                path.startsWith("file://") -> {
+                    val file = File(path.substring("file://".length))
+                    contentUri = FileProvider.getUriForFile(
+                        context,
+                        context.getString(R.string.file_provider),
+                        file
+                    )
+                }
+                path.startsWith("content://") -> {
+                    contentUri = Uri.parse(path)
+                }
+                else -> {
+                    val file = File(path)
+                    contentUri = try {
+                        FileProvider.getUriForFile(
+                            context,
+                            context.getString(R.string.file_provider),
+                            file
+                        )
+                    } catch (e: Exception) {
+                        Log.e(
+                            "$TAG Couldn't get URI for file $file using file provider ${context.getString(
+                                R.string.file_provider
+                            )}"
+                        )
+                        Uri.parse(path)
+                    }
+                }
+            }
+            return contentUri
         }
 
         suspend fun getFilePath(context: Context, uri: Uri, overrideExisting: Boolean): String? {

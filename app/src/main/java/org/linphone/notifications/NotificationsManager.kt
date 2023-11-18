@@ -32,6 +32,7 @@ import android.content.pm.ServiceInfo
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.webkit.MimeTypeMap
 import androidx.annotation.AnyThread
 import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
@@ -68,6 +69,7 @@ import org.linphone.core.tools.Log
 import org.linphone.ui.call.CallActivity
 import org.linphone.ui.main.MainActivity
 import org.linphone.utils.AppUtils
+import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.ShortcutUtils
 
@@ -661,27 +663,22 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         )
 
         for (content in message.contents) {
-            /*if (content.isFile) { // TODO: show image in notif if possible
+            if (content.isFile) {
                 val path = content.filePath
                 if (path != null) {
-                    val contentUri: Uri = FileUtils.getFilePath(context, path)
-                    val filePath: String = contentUri.toString()
+                    val contentUri = FileUtils.getPublicFilePath(context, path)
+                    val filePath = contentUri.toString()
                     val extension = FileUtils.getExtensionFromFileName(filePath)
                     if (extension.isNotEmpty()) {
-                        val mime =
-                            MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+                        val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
                         notifiableMessage.filePath = contentUri
                         notifiableMessage.fileMime = mime
-                        Log.i(
-                            "$TAG Added file $contentUri with MIME $mime to notification"
-                        )
+                        Log.i("$TAG Added file $contentUri with MIME $mime to notification")
                     } else {
-                        Log.e(
-                            "$TAG Couldn't find extension for incoming message with file $path"
-                        )
+                        Log.e("$TAG Couldn't find extension for incoming message with file $path")
                     }
                 }
-            }*/
+            }
         }
 
         return notifiableMessage
