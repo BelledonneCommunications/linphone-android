@@ -36,6 +36,7 @@ import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.ShortcutUtils
 import org.linphone.utils.TimestampUtils
 
 class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
@@ -214,6 +215,7 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
     @UiThread
     fun delete() {
         coreContext.postOnCoreThread { core ->
+            ShortcutUtils.removeShortcutToChatRoom(chatRoom)
             core.deleteChatRoom(chatRoom)
             Log.i("$TAG Conversation [$id] has been deleted")
         }

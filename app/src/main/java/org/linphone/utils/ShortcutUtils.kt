@@ -30,7 +30,6 @@ import androidx.core.content.LocusIdCompat
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
-import kotlin.math.min
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.contacts.AvatarGenerator
@@ -45,30 +44,32 @@ class ShortcutUtils {
         private const val TAG = "[Shortcut Utils]"
 
         @WorkerThread
+        fun removeShortcutToChatRoom(chatRoom: ChatRoom) {
+            val id = LinphoneUtils.getChatRoomId(chatRoom)
+            Log.i("$TAG Removing shortcut to chat room [$id]")
+            ShortcutManagerCompat.removeLongLivedShortcuts(coreContext.context, arrayListOf(id))
+        }
+
+        @WorkerThread
         suspend fun createShortcutsToChatRooms(context: Context) {
-            val shortcuts = ArrayList<ShortcutInfoCompat>()
             if (ShortcutManagerCompat.isRateLimitingActive(context)) {
                 Log.e("$TAG Rate limiting is active, aborting")
                 return
             }
             Log.i("$TAG Creating launcher shortcuts for chat rooms")
-            val maxShortcuts = min(ShortcutManagerCompat.getMaxShortcutCountPerActivity(context), 5)
             var count = 0
             for (room in coreContext.core.chatRooms) {
-                // Android can usually only have around 4-5 shortcuts at a time
-                if (count >= maxShortcuts) {
-                    Log.w("$TAG Max amount of shortcuts reached ($count)")
-                    break
-                }
-
                 val shortcut: ShortcutInfoCompat? = createChatRoomShortcut(context, room)
                 if (shortcut != null) {
                     Log.i("$TAG Created launcher shortcut for ${shortcut.shortLabel}")
-                    shortcuts.add(shortcut)
-                    count += 1
+                    val keepGoing = ShortcutManagerCompat.pushDynamicShortcut(context, shortcut)
+                    if (!keepGoing) {
+                        count += 1
+                    } else {
+                        break
+                    }
                 }
             }
-            ShortcutManagerCompat.setDynamicShortcuts(context, shortcuts)
             Log.i("$TAG Created $count launcher shortcuts")
         }
 
