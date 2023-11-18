@@ -34,9 +34,9 @@ class AccountSettingsFragment : GenericFragment() {
     private val dropdownListener = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             val transport = viewModel.availableTransports[position]
-            val transportType = when {
-                transport == TransportType.Tcp.name.uppercase(Locale.getDefault()) -> TransportType.Tcp
-                transport == TransportType.Tls.name.uppercase(Locale.getDefault()) -> TransportType.Tls
+            val transportType = when (transport) {
+                TransportType.Tcp.name.uppercase(Locale.getDefault()) -> TransportType.Tcp
+                TransportType.Tls.name.uppercase(Locale.getDefault()) -> TransportType.Tls
                 else -> TransportType.Udp
             }
             Log.i("$TAG Selected transport updated [$transport] -> [${transportType.name}]")

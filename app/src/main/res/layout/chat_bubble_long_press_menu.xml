@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View" />
@@ -164,7 +165,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/bottom_barrier"
-                model="@{model}"
+                bind:model="@{model}"
                 layout="@layout/chat_bubble_outgoing"/>
 
             <include
@@ -178,7 +179,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/bottom_barrier"
-                model="@{model}"
+                bind:model="@{model}"
                 layout="@layout/chat_bubble_incoming"/>
 
             <View
@@ -273,7 +274,7 @@
         <include
             android:id="@+id/emoji_picker_bottom_sheet"
             layout="@layout/chat_bubble_emoji_picker_bottom_sheet"
-            model="@{model}"/>
+            bind:model="@{model}"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

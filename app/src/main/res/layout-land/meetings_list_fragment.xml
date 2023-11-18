@@ -44,7 +44,7 @@
                     android:layout_width="@dimen/landscape_nav_bar_width"
                     android:layout_height="match_parent"
                     layout="@layout/bottom_nav_bar"
-                    viewModel="@{viewModel}"
+                    bind:viewModel="@{viewModel}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent" />

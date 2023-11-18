@@ -39,7 +39,6 @@
     <string name="sip_address">SIP address</string>
     <string name="sip_address_display_name">Display name</string>
     <string name="sip_address_domain">Domain</string>
-    <string name="cancel">Cancel</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="phone_number">Phone number</string>
@@ -139,8 +138,7 @@
 
     <string name="assistant_account_login">Login</string>
     <string name="assistant_scan_qr_code">Scan QR code</string>
-    <string name="assistant_qr_code_provisioning_done">Configuration successfully applied</string>
-    <string name="assistant_qr_code_provisioning_error">Remote configuration failed!</string>
+    <string name="assistant_qr_code_provisioning_done">Configuration successfully applied</string>+
     <string name="assistant_login_third_party_sip_account">Use a third party SIP account</string>
     <string name="assistant_login_using_single_sign_on">Single sign on</string>
     <string name="assistant_no_account_yet">No account yet?</string>

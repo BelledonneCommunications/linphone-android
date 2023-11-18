@@ -30,21 +30,11 @@ import org.linphone.R
 import org.linphone.utils.AppUtils
 
 class AvatarGenerator(private val context: Context) {
-    private var textSize: Float
-    private var textColor: Int
-    private var avatarSize: Int
+    private var textSize: Float = AppUtils.getDimension(R.dimen.avatar_initials_text_size)
+    private var textColor: Int = ContextCompat.getColor(context, R.color.gray_main2_600)
+    private var avatarSize: Int = AppUtils.getDimension(R.dimen.avatar_list_cell_size).toInt()
     private var initials = " "
-    private var backgroundColor: Int
-
-    init {
-        backgroundColor = ContextCompat.getColor(context, R.color.gray_main2_200)
-
-        textColor = ContextCompat.getColor(context, R.color.gray_main2_600)
-
-        textSize = AppUtils.getDimension(R.dimen.avatar_initials_text_size)
-
-        avatarSize = AppUtils.getDimension(R.dimen.avatar_list_cell_size).toInt()
-    }
+    private var backgroundColor: Int = ContextCompat.getColor(context, R.color.gray_main2_200)
 
     fun setTextSize(size: Float) = apply {
         textSize = size

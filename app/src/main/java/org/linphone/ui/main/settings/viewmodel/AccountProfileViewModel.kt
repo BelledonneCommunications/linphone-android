@@ -115,7 +115,7 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
                 val prefix = account.params.internationalPrefix
                 if (!prefix.isNullOrEmpty()) {
                     Log.i(
-                        "$TAG Account [${account.params?.identityAddress?.asStringUriOnly()}] prefix is [$prefix]"
+                        "$TAG Account [${account.params.identityAddress?.asStringUriOnly()}] prefix is [$prefix]"
                     )
                     val dialPlan = Factory.instance().dialPlans.find {
                         it.countryCallingCode == prefix

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View" />
@@ -30,14 +30,14 @@
         <include
             android:id="@+id/reply_area"
             layout="@layout/chat_conversation_reply_area"
-            viewModel="@{viewModel}"
+            bind:viewModel="@{viewModel}"
             android:visibility="@{viewModel.isReplying ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintTop_toTopOf="parent" />
 
         <include
             android:id="@+id/attachments"
             layout="@layout/chat_conversation_attachments_area"
-            viewModel="@{viewModel}"
+            bind:viewModel="@{viewModel}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="@{viewModel.isFileAttachmentsListOpen ? View.VISIBLE : View.GONE, default=gone}"
@@ -46,7 +46,7 @@
         <include
             android:id="@+id/participants"
             layout="@layout/chat_conversation_participants_area"
-            viewModel="@{viewModel}"
+            bind:viewModel="@{viewModel}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="@{viewModel.isParticipantsListOpen ? View.VISIBLE : View.GONE, default=gone}"
@@ -170,7 +170,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             layout="@layout/chat_conversation_record_voice_message_area"
-            viewModel="@{viewModel}"
+            bind:viewModel="@{viewModel}"
             android:visibility="@{viewModel.voiceRecording ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintTop_toTopOf="@id/message_area_background"
             app:layout_constraintBottom_toBottomOf="@id/message_area_background"/>

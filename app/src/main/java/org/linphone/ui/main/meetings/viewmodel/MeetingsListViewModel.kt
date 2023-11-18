@@ -125,9 +125,7 @@ class MeetingsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
                 TimestampUtils.isAfterToday(it.timestamp)
             }
             Log.i("$TAG $firstMeetingAfterToday")
-            if (firstMeetingAfterToday != null) {
-                firstMeetingAfterToday.displayTodayIndicator.postValue(true)
-            }
+            firstMeetingAfterToday?.displayTodayIndicator?.postValue(true)
         }
 
         meetings.postValue(list)

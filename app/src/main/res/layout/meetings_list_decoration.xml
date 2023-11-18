@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
+<layout xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
@@ -15,9 +15,11 @@
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
         android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:text="October"
         android:textSize="20sp"
         android:textColor="@color/gray_main2_600"
-        android:gravity="center_vertical"/>
+        android:gravity="center_vertical"
+        tools:ignore="HardcodedText" />
 
 </layout>

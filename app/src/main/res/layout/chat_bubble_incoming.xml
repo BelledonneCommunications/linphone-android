@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View" />
@@ -174,7 +174,7 @@
                 android:layout_height="wrap_content"
                 android:visibility="@{model.meetingFound ? View.VISIBLE : View.GONE, default=gone}"
                 android:layout="@layout/chat_bubble_meeting_invite_content"
-                model="@{model}"/>
+                bind:model="@{model}"/>
 
             <ViewStub
                 android:id="@+id/voice_record"
@@ -182,7 +182,7 @@
                 android:layout_height="wrap_content"
                 android:visibility="@{model.isVoiceRecord ? View.VISIBLE : View.GONE, default=gone}"
                 android:layout="@layout/chat_bubble_voice_record_content"
-                model="@{model}" />
+                bind:model="@{model}" />
 
             <org.linphone.ui.main.chat.view.ChatBubbleTextView
                 style="@style/default_text_style"

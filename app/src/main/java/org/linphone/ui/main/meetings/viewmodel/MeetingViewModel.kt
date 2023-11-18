@@ -72,9 +72,6 @@ class MeetingViewModel @UiThread constructor() : ViewModel() {
 
     private lateinit var conferenceInfo: ConferenceInfo
 
-    init {
-    }
-
     override fun onCleared() {
         super.onCleared()
 

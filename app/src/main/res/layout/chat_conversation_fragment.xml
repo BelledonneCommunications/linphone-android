@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View" />
@@ -233,8 +234,8 @@
 
         <include
             android:id="@+id/send_area"
-            openFilePickerClickListener="@{openFilePickerClickListener}"
-            viewModel="@{sendMessageViewModel}"
+            bind:openFilePickerClickListener="@{openFilePickerClickListener}"
+            bind:viewModel="@{sendMessageViewModel}"
             android:visibility="@{viewModel.isReadOnly ? View.GONE : View.VISIBLE}"
             layout="@layout/chat_conversation_send_area_bottom_sheet"/>
 

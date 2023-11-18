@@ -174,7 +174,7 @@ class RegisterFragment : Fragment() {
                 viewModel.dialPlansLabelList
             ) {
                 override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                    val view = convertView ?: super.getView(position, convertView, parent)
+                    val view = convertView ?: super.getView(position, null, parent)
                     val label = viewModel.dialPlansShortLabelList[position]
                     (view as? AppCompatTextView)?.text = label
                     return view
