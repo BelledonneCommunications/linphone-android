@@ -705,8 +705,14 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                     "$TAG Current call media encryption is ZRTP, auth token is ${if (isDeviceTrusted) "trusted" else "not trusted yet"}"
                 )
                 isRemoteDeviceTrusted.postValue(isDeviceTrusted)
-                val securityLevel = if (isDeviceTrusted) SecurityLevel.Encrypted else SecurityLevel.Safe
-                contact.value?.trust?.postValue(securityLevel)
+                val securityLevel = if (isDeviceTrusted) SecurityLevel.Safe else SecurityLevel.Encrypted
+                val avatarModel = contact.value
+                if (avatarModel != null) {
+                    avatarModel.trust.postValue(securityLevel)
+                    contact.postValue(avatarModel)
+                } else {
+                    Log.e("$TAG No avatar model found!")
+                }
 
                 isMediaEncrypted.postValue(true)
                 // When Post Quantum is available, ZRTP is Post Quantum
@@ -779,18 +785,26 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         address.clean()
         displayedAddress.postValue(address.asStringUriOnly())
 
-        val isDeviceTrusted = updateEncryption()
-        val securityLevel = if (isDeviceTrusted) SecurityLevel.Encrypted else SecurityLevel.Safe
-
         val conferenceInfo = coreContext.core.findConferenceInformationFromUri(
             call.remoteAddress
         )
         val model = if (conferenceInfo != null) {
             coreContext.contactsManager.getContactAvatarModelForConferenceInfo(conferenceInfo)
         } else {
-            coreContext.contactsManager.getContactAvatarModelForAddress(call.remoteAddress)
+            // Do not use contact avatar model from ContactsManager
+            // coreContext.contactsManager.getContactAvatarModelForAddress(call.remoteAddress)
+            val friend = coreContext.contactsManager.findContactByAddress(call.remoteAddress)
+            if (friend != null) {
+                ContactAvatarModel(friend)
+            } else {
+                val fakeFriend = coreContext.core.createFriend()
+                fakeFriend.name = LinphoneUtils.getDisplayName(address)
+                fakeFriend.address = call.remoteAddress
+                ContactAvatarModel(fakeFriend)
+            }
         }
-        model.trust.postValue(securityLevel)
+        updateEncryption()
+
         contact.postValue(model)
         displayedName.postValue(model.friend.name)
 

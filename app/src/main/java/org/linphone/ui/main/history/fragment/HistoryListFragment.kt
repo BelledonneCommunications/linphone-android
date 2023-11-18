@@ -240,6 +240,9 @@ class HistoryListFragment : AbstractTopBarFragment() {
 
         Log.i("$TAG Fragment is resumed, resetting missed calls count")
         sharedViewModel.resetMissedCallsCountEvent.value = Event(true)
+
+        // Scroll to top to display latest call logs
+        binding.historyList.scrollToPosition(0)
     }
 
     private fun copyNumberOrAddressToClipboard(value: String) {
