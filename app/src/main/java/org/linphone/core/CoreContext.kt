@@ -53,7 +53,7 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
 
     val emojiCompat: EmojiCompat
 
-    val contactsManager = ContactsManager(context)
+    val contactsManager = ContactsManager()
 
     val notificationsManager = NotificationsManager(context)
 

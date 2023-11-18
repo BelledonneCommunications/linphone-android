@@ -21,7 +21,6 @@ package org.linphone.contacts
 
 import android.Manifest
 import android.content.ContentUris
-import android.content.Context
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.graphics.Bitmap
@@ -52,7 +51,7 @@ import org.linphone.utils.ImageUtils
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.PhoneNumberUtils
 
-class ContactsManager @UiThread constructor(context: Context) {
+class ContactsManager @UiThread constructor() {
     companion object {
         private const val TAG = "[Contacts Manager]"
     }
@@ -125,16 +124,14 @@ class ContactsManager @UiThread constructor(context: Context) {
         }
     }
 
-    @UiThread
+    @WorkerThread
     fun onNativeContactsLoaded() {
         nativeContactsLoaded = true
 
-        coreContext.postOnCoreThread {
-            avatarsMap.values.forEach(ContactAvatarModel::destroy)
-            avatarsMap.clear()
+        avatarsMap.values.forEach(ContactAvatarModel::destroy)
+        avatarsMap.clear()
 
-            notifyContactsListChanged()
-        }
+        notifyContactsListChanged()
     }
 
     @WorkerThread
@@ -181,7 +178,7 @@ class ContactsManager @UiThread constructor(context: Context) {
             }
         } else {
             Log.i(
-                "$TAG Friend wasn't  found using SIP URI [$sipUri] and username [$username] isn't a phone number, looking in native address book directly"
+                "$TAG Friend wasn't found using SIP URI [$sipUri] and username [$username] isn't a phone number, looking in native address book directly"
             )
             findNativeContact(sipUri, false)
         }
