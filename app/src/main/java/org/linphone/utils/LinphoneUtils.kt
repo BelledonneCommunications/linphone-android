@@ -33,6 +33,7 @@ import org.linphone.core.Address
 import org.linphone.core.Call
 import org.linphone.core.Call.Dir
 import org.linphone.core.Call.Status
+import org.linphone.core.CallLog
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatRoom
 import org.linphone.core.ConferenceInfo
@@ -157,6 +158,14 @@ class LinphoneUtils {
 
             Log.i("$TAG Push notifications seems to be available")
             return true
+        }
+
+        @WorkerThread
+        fun isCallLogMissed(callLog: CallLog): Boolean {
+            if (callLog.dir == Dir.Outgoing) return false
+            return callLog.status == Status.Missed ||
+                callLog.status == Status.Aborted ||
+                callLog.status == Status.EarlyAborted
         }
 
         @AnyThread

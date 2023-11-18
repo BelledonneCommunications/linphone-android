@@ -88,7 +88,10 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         const val INTENT_REMOTE_ADDRESS = "REMOTE_ADDRESS"
 
         const val CHAT_TAG = "Chat"
+        private const val MISSED_CALL_TAG = "Missed call"
         const val CHAT_NOTIFICATIONS_GROUP = "CHAT_NOTIF_GROUP"
+
+        private const val MISSED_CALL_ID = 10
     }
 
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
@@ -123,6 +126,11 @@ class NotificationsManager @MainThread constructor(private val context: Context)
                         "$TAG Removing terminated call notification for [${call.remoteAddress.asStringUriOnly()}]"
                     )
                     dismissCallNotification(call)
+                }
+                Call.State.Released -> {
+                    if (LinphoneUtils.isCallLogMissed(call.callLog)) {
+                        showMissedCallNotification(call)
+                    }
                 }
                 else -> {
                 }
@@ -320,6 +328,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
     init {
         createServiceChannel()
         createIncomingCallNotificationChannel()
+        createMissedCallNotificationChannel()
         createActiveCallNotificationChannel()
         createMessageChannel()
 
@@ -407,6 +416,47 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             isIncoming
         )
         notify(notifiable.notificationId, notification)
+    }
+
+    @WorkerThread
+    private fun showMissedCallNotification(call: Call) {
+        val missedCallCount: Int = coreContext.core.missedCallsCount
+        val body: String
+        if (missedCallCount > 1) {
+            body = context.getString(R.string.notification_missed_calls)
+                .format(missedCallCount.toString())
+            Log.i("$TAG Updating missed calls notification count to $missedCallCount")
+        } else {
+            val remoteAddress = call.remoteAddress
+            val friend: Friend? = coreContext.contactsManager.findContactByAddress(remoteAddress)
+            body = context.getString(R.string.notification_missed_call)
+                .format(friend?.name ?: LinphoneUtils.getDisplayName(remoteAddress))
+            Log.i("$TAG Creating missed call notification")
+        }
+
+        val pendingIntent = NavDeepLinkBuilder(context)
+            .setComponentName(MainActivity::class.java)
+            .setGraph(R.navigation.main_nav_graph)
+            .setDestination(R.id.historyListFragment)
+            .createPendingIntent()
+
+        val builder = NotificationCompat.Builder(
+            context,
+            context.getString(R.string.notification_channel_missed_call_id)
+        )
+            .setContentTitle(context.getString(R.string.notification_missed_call_title))
+            .setContentText(body)
+            .setSmallIcon(R.drawable.phone_x)
+            .setAutoCancel(true)
+            .setCategory(NotificationCompat.CATEGORY_MISSED_CALL)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setWhen(System.currentTimeMillis())
+            .setShowWhen(true)
+            .setNumber(missedCallCount)
+            .setContentIntent(pendingIntent)
+
+        val notification = builder.build()
+        notify(MISSED_CALL_ID, notification, MISSED_CALL_TAG)
     }
 
     @WorkerThread
@@ -828,7 +878,6 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             .setSmallIcon(R.drawable.chat_teardrop_text)
             .setAutoCancel(true)
             .setLargeIcon(largeIcon)
-            .setColor(AppUtils.getColor(R.color.orange_main_500))
             .setCategory(NotificationCompat.CATEGORY_MESSAGE)
             .setGroup(CHAT_NOTIFICATIONS_GROUP)
             .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
@@ -1023,6 +1072,21 @@ class NotificationsManager @MainThread constructor(private val context: Context)
     private fun createIncomingCallNotificationChannel() {
         val id = context.getString(R.string.notification_channel_incoming_call_id)
         val name = context.getString(R.string.notification_channel_incoming_call_name)
+
+        val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH)
+        channel.description = name
+        channel.lightColor = context.getColor(R.color.orange_main_500)
+        channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+        channel.enableVibration(true)
+        channel.enableLights(true)
+        channel.setShowBadge(false)
+        notificationManager.createNotificationChannel(channel)
+    }
+
+    @MainThread
+    private fun createMissedCallNotificationChannel() {
+        val id = context.getString(R.string.notification_channel_missed_call_id)
+        val name = context.getString(R.string.notification_channel_missed_call_name)
 
         val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH)
         channel.description = name

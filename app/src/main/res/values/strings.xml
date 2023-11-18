@@ -12,6 +12,7 @@
     <string name="assistant_linphone_contact_us_link" translatable="false">linphone.org/contact</string>
     <string name="notification_channel_call_id" translatable="false">linphone_notification_call_id</string>
     <string name="notification_channel_incoming_call_id" translatable="false">linphone_notification_incoming_call_id</string>
+    <string name="notification_channel_missed_call_id" translatable="false">linphone_notification_missed_call_id</string>
     <string name="notification_channel_service_id" translatable="false">linphone_notification_service_id</string>
     <string name="notification_channel_chat_id" translatable="false">linphone_notification_chat_id</string>
 
@@ -56,11 +57,15 @@
 
     <string name="notification_channel_call_name">&appName; active calls notifications</string>
     <string name="notification_channel_incoming_call_name">&appName; incoming calls notifications</string>
+    <string name="notification_channel_missed_call_name">&appName; missed calls notifications</string>
     <string name="notification_channel_service_name">&appName; service notification</string>
     <string name="notification_channel_chat_name">&appName; instant messages notifications</string>
     <string name="notification_chat_message_reaction_received">%s has reacted by %s to: %s</string>
     <string name="notification_mark_message_as_read">Mark as read</string>
     <string name="notification_reply_to_message">Reply</string>
+    <string name="notification_missed_call">Missed call from %s</string>
+    <string name="notification_missed_calls">%s missed calls</string>
+    <string name="notification_missed_call_title">Missed call</string>
 
     <string name="welcome_page_title">Welcome</string>
     <string name="welcome_page_subtitle">in Linphone</string>
