@@ -22,6 +22,7 @@ package org.linphone.utils
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.PorterDuff
+import android.graphics.drawable.AnimatedVectorDrawable
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -48,14 +49,13 @@ import androidx.emoji2.emojipicker.EmojiPickerView
 import androidx.emoji2.emojipicker.EmojiViewItem
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import coil.dispose
 import coil.load
 import coil.request.videoFrameMillis
 import coil.size.Dimension
 import com.google.android.material.imageview.ShapeableImageView
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.linphone.BR
 import org.linphone.R
 import org.linphone.contacts.AbstractAvatarModel
@@ -282,6 +282,17 @@ private fun loadImageForChatBubble(imageView: ImageView, file: String?, grid: Bo
 }
 
 @UiThread
+fun ImageView.startAnimatedDrawable() {
+    drawable.apply {
+        when (this) {
+            is AnimatedVectorDrawableCompat -> start()
+            is AnimatedVectorDrawable -> start()
+            else -> { /* not an animated icon */ }
+        }
+    }
+}
+
+@UiThread
 @BindingAdapter("coil")
 fun ShapeableImageView.loadCircleFileWithCoil(file: String?) {
     if (file != null) {
@@ -328,13 +339,9 @@ fun ShapeableImageView.loadCallAvatarWithCoil(model: AbstractAvatarModel?) {
 @UiThread
 @BindingAdapter("coilInitials")
 fun ShapeableImageView.loadInitialsAvatarWithCoil(initials: String?) {
-    (context as AppCompatActivity).lifecycleScope.launch {
-        withContext(Dispatchers.IO) {
-            val builder = AvatarGenerator(context)
-            builder.setInitials(initials.orEmpty())
-            load(builder.build())
-        }
-    }
+    val builder = AvatarGenerator(context)
+    builder.setInitials(initials.orEmpty())
+    load(builder.build())
 }
 
 @SuppressLint("ResourceType")

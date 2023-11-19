@@ -224,6 +224,7 @@ abstract class AddressSelectionViewModel @UiThread constructor() : ViewModel() {
                     val model = ContactOrSuggestionModel(address) {
                         coreContext.startCall(address)
                     }
+
                     suggestionsList.add(model)
                 }
             }

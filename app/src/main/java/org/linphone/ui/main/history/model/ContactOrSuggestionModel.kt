@@ -39,7 +39,11 @@ class ContactOrSuggestionModel @WorkerThread constructor(
 
     val id = friend?.refKey ?: address.asStringUriOnly().hashCode()
 
-    val name = LinphoneUtils.getDisplayName(address)
+    val name = if (friend != null) {
+        friend.name ?: LinphoneUtils.getDisplayName(address)
+    } else {
+        address.username.orEmpty()
+    }
 
     val initials = AppUtils.getInitials(name)
 

@@ -20,6 +20,7 @@
 package org.linphone.utils
 
 import androidx.annotation.AnyThread
+import androidx.annotation.DrawableRes
 import androidx.annotation.IntegerRes
 import androidx.annotation.WorkerThread
 import java.text.DateFormat
@@ -199,7 +200,7 @@ class LinphoneUtils {
         }
 
         @AnyThread
-        @IntegerRes
+        @DrawableRes
         fun getChatIconResId(chatState: ChatMessage.State): Int {
             return when (chatState) {
                 ChatMessage.State.Displayed, ChatMessage.State.FileTransferDone -> {

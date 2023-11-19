@@ -35,6 +35,7 @@ import org.linphone.ui.main.chat.model.ChatMessageModel
 import org.linphone.ui.main.chat.model.EventLogModel
 import org.linphone.ui.main.chat.model.EventModel
 import org.linphone.utils.Event
+import org.linphone.utils.startAnimatedDrawable
 
 class ConversationEventAdapter : ListAdapter<EventLogModel, RecyclerView.ViewHolder>(
     EventLogDiffCallback()
@@ -160,6 +161,8 @@ class ConversationEventAdapter : ListAdapter<EventLogModel, RecyclerView.ViewHol
             with(binding) {
                 model = message
                 executePendingBindings()
+
+                binding.deliveryStatus.startAnimatedDrawable()
             }
         }
     }
@@ -171,6 +174,8 @@ class ConversationEventAdapter : ListAdapter<EventLogModel, RecyclerView.ViewHol
             with(binding) {
                 model = message
                 executePendingBindings()
+
+                binding.deliveryStatus.startAnimatedDrawable()
             }
         }
     }

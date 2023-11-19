@@ -42,6 +42,7 @@ enable_simple_group_chat_message_state=0
 aggregate_imdn=1
 notify_each_friend_individually_when_presence_received=0
 store_friends=0
+hide_empty_chat_rooms=0
 
 [app]
 activation_code_length=4

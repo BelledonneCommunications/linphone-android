@@ -13,6 +13,7 @@ import org.linphone.R
 import org.linphone.databinding.ChatListCellBinding
 import org.linphone.ui.main.chat.model.ConversationModel
 import org.linphone.utils.Event
+import org.linphone.utils.startAnimatedDrawable
 
 class ConversationsListAdapter : ListAdapter<ConversationModel, RecyclerView.ViewHolder>(
     ChatRoomDiffCallback()
@@ -72,6 +73,8 @@ class ConversationsListAdapter : ListAdapter<ConversationModel, RecyclerView.Vie
                 binding.root.isSelected = bindingAdapterPosition == selectedAdapterPosition
 
                 executePendingBindings()
+
+                binding.lastSentMessageStatus.startAnimatedDrawable()
             }
         }
     }

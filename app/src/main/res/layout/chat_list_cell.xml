@@ -151,7 +151,7 @@
             android:layout_width="@dimen/small_icon_size"
             android:layout_height="@dimen/small_icon_size"
             android:layout_marginEnd="10dp"
-            android:src="@{model.lastMessageIcon, default=@drawable/check}"
+            android:src="@{model.lastMessageIcon, default=@drawable/animated_in_progress}"
             android:visibility="@{model.isLastMessageOutgoing ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/date_time"
