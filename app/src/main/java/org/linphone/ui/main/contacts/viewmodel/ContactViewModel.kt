@@ -51,6 +51,10 @@ import org.linphone.utils.LinphoneUtils
 class ContactViewModel @UiThread constructor() : ViewModel() {
     companion object {
         private const val TAG = "[Contact ViewModel]"
+
+        private const val START_AUDIO_CALL = 0
+        private const val START_VIDEO_CALL = 1
+        private const val START_CONVERSATION = 2
     }
 
     val contact = MutableLiveData<ContactAvatarModel>()
@@ -119,15 +123,33 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    private var expectedAction: Int = START_AUDIO_CALL
     private val listener = object : ContactNumberOrAddressClickListener {
         @UiThread
         override fun onClicked(model: ContactNumberOrAddressModel) {
             val address = model.address
             if (model.isEnabled && address != null) {
-                // TODO FIXME: handle chat action & video call as well
-                coreContext.postOnCoreThread {
-                    Log.i("$TAG Calling SIP address [${address.asStringUriOnly()}]")
-                    coreContext.startCall(address)
+                coreContext.postOnCoreThread { core ->
+                    when (expectedAction) {
+                        START_AUDIO_CALL -> {
+                            Log.i("$TAG Audio calling SIP address [${address.asStringUriOnly()}]")
+                            val params = core.createCallParams(null)
+                            params?.isVideoEnabled = false
+                            coreContext.startCall(address, params)
+                        }
+                        START_VIDEO_CALL -> {
+                            Log.i("$TAG Video calling SIP address [${address.asStringUriOnly()}]")
+                            val params = core.createCallParams(null)
+                            params?.isVideoEnabled = true
+                            coreContext.startCall(address, params)
+                        }
+                        START_CONVERSATION -> {
+                            Log.i(
+                                "$TAG Going to conversation with SIP address [${address.asStringUriOnly()}]"
+                            )
+                            goToConversation(address)
+                        }
+                    }
                 }
             } else if (!model.isEnabled) {
                 Log.w(
@@ -383,6 +405,7 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                     Log.e("$TAG Failed to interpret phone number [$number] as SIP address")
                 }
             } else {
+                expectedAction = START_AUDIO_CALL
                 val list = sipAddressesAndPhoneNumbers.value.orEmpty()
                 Log.i(
                     "$TAG [${list.size}] numbers or addresses found for contact [${friend.name}], showing selection dialog"
@@ -423,6 +446,7 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                     Log.e("$TAG Failed to interpret phone number [$number] as SIP address")
                 }
             } else {
+                expectedAction = START_VIDEO_CALL
                 val list = sipAddressesAndPhoneNumbers.value.orEmpty()
                 Log.i(
                     "$TAG [${list.size}] numbers or addresses found for contact [${friend.name}], showing selection dialog"
@@ -458,6 +482,7 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                     Log.e("$TAG Failed to interpret phone number [$number] as SIP address")
                 }
             } else {
+                expectedAction = START_CONVERSATION
                 val list = sipAddressesAndPhoneNumbers.value.orEmpty()
                 Log.i(
                     "$TAG [${list.size}] numbers or addresses found for contact [${friend.name}], showing selection dialog"

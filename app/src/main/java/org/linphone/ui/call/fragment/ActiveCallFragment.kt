@@ -166,9 +166,6 @@ class ActiveCallFragment : GenericCallFragment() {
                     R.drawable.trusted,
                     doNotTint = true
                 )
-                /*binding.avatar.avatarBorderWidth = AppUtils.getDimension(
-                    R.dimen.avatar_trust_border_width
-                ).toInt()*/ // TODO FIXME: show blue border
             }
         }
 
