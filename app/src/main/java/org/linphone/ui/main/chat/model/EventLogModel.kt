@@ -29,9 +29,9 @@ import org.linphone.utils.LinphoneUtils
 class EventLogModel @WorkerThread constructor(
     val eventLog: EventLog,
     avatarModel: ContactAvatarModel,
-    isFromGroup: Boolean,
-    isGroupedWithPreviousOne: Boolean,
-    isGroupedWithNextOne: Boolean,
+    isFromGroup: Boolean = false,
+    isGroupedWithPreviousOne: Boolean = false,
+    isGroupedWithNextOne: Boolean = false,
     onContentClicked: ((file: String) -> Unit)? = null,
     onJoinConferenceClicked: ((uri: String) -> Unit)? = null,
     onWebUrlClicked: ((url: String) -> Unit)? = null

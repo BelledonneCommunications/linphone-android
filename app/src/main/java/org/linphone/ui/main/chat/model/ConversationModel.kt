@@ -107,9 +107,22 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
             unreadMessageCount.postValue(chatRoom.unreadMessagesCount)
         }
 
+        @WorkerThread
         override fun onSubjectChanged(chatRoom: ChatRoom, eventLog: EventLog) {
             subject.postValue(chatRoom.subject)
             updateLastUpdatedTime()
+        }
+
+        @WorkerThread
+        override fun onEphemeralEvent(chatRoom: ChatRoom, eventLog: EventLog) {
+            Log.i("$TAG Ephemeral event received [${eventLog.type}]")
+            isEphemeral.postValue(chatRoom.isEphemeralEnabled)
+        }
+
+        @WorkerThread
+        override fun onEphemeralMessageDeleted(chatRoom: ChatRoom, eventLog: EventLog) {
+            Log.i("$TAG An ephemeral message lifetime has expired, updating last displayed message")
+            updateLastMessage()
         }
     }
 
@@ -165,6 +178,9 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
 
         isMuted.postValue(chatRoom.muted)
         isEphemeral.postValue(chatRoom.isEphemeralEnabled)
+        Log.i(
+            "$TAG Ephemeral chat messages are [${if (chatRoom.isEphemeralEnabled) "enabled" else "disabled"}], lifetime is [${chatRoom.ephemeralLifetime}]"
+        )
 
         updateLastMessage()
         updateLastUpdatedTime()

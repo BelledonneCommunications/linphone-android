@@ -168,6 +168,54 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
             events.postValue(list)
         }
+
+        @WorkerThread
+        override fun onNewEvents(chatRoom: ChatRoom, eventLogs: Array<out EventLog>) {
+            Log.i("$TAG Adding [${eventLogs.size}] new events")
+            val list = arrayListOf<EventLogModel>()
+            list.addAll(events.value.orEmpty())
+            val fakeFriend = chatRoom.core.createFriend()
+            val avatarModel = ContactAvatarModel(fakeFriend)
+            for (eventLog in eventLogs) {
+                Log.i("$TAG New event [${eventLog.type}] added")
+                list.add(EventLogModel(eventLog, avatarModel))
+            }
+            events.postValue(list)
+        }
+
+        @WorkerThread
+        override fun onEphemeralEvent(chatRoom: ChatRoom, eventLog: EventLog) {
+            Log.i("$TAG Adding new ephemeral event [${eventLog.type}]")
+            // Warning: when 2 ephemeral events are dispatched quickly one after the other,
+            // one will be missing because events.postValue() hasn't completed yet !
+            // TODO FIXME: Missing event !!!
+            val list = arrayListOf<EventLogModel>()
+            list.addAll(events.value.orEmpty())
+            val fakeFriend = chatRoom.core.createFriend()
+            val avatarModel = ContactAvatarModel(fakeFriend)
+            list.add(EventLogModel(eventLog, avatarModel))
+            events.postValue(list)
+        }
+
+        @WorkerThread
+        override fun onEphemeralMessageDeleted(chatRoom: ChatRoom, eventLog: EventLog) {
+            val eventsLogs = events.value.orEmpty()
+            val message = eventLog.chatMessage
+            Log.i("$TAG Message [${message?.messageId}] ephemeral lifetime has expired")
+
+            val found = eventsLogs.find {
+                (it.model as? ChatMessageModel)?.chatMessage == message
+            }
+            if (found != null) {
+                val list = arrayListOf<EventLogModel>()
+                list.addAll(eventsLogs)
+                list.remove(found)
+                events.postValue(list)
+                Log.i("$TAG Message was removed from events list")
+            } else {
+                Log.w("$TAG Failed to find matching message in events list")
+            }
+        }
     }
 
     init {

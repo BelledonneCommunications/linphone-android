@@ -111,6 +111,12 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
             // TODO: show toast
             subject.postValue(chatRoom.subject)
         }
+
+        @WorkerThread
+        override fun onEphemeralEvent(chatRoom: ChatRoom, eventLog: EventLog) {
+            Log.i("$TAG Ephemeral event [${eventLog.type}]")
+            // TODO: show toast
+        }
     }
 
     init {
@@ -331,10 +337,29 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun updateEphemeralLifetime(lifetime: Int) {
         coreContext.postOnCoreThread {
-            Log.i("$TAG Updating chat messages ephemeral lifetime to [$lifetime]")
-            chatRoom.ephemeralLifetime = lifetime.toLong()
-            chatRoom.isEphemeralEnabled = lifetime != 0
-            ephemeralLifetime.postValue(chatRoom.ephemeralLifetime.toInt())
+            if (lifetime == 0) {
+                if (chatRoom.isEphemeralEnabled) {
+                    Log.i("$TAG Disabling ephemeral messages")
+                    chatRoom.isEphemeralEnabled = false
+                }
+            } else {
+                if (!chatRoom.isEphemeralEnabled) {
+                    Log.i("$TAG Enabling ephemeral messages")
+                    chatRoom.isEphemeralEnabled = true
+                }
+
+                val longLifetime = lifetime.toLong()
+                if (chatRoom.ephemeralLifetime != longLifetime) {
+                    Log.i("$TAG Updating lifetime to [$longLifetime]")
+                    chatRoom.ephemeralLifetime = longLifetime
+                }
+            }
+            ephemeralLifetime.postValue(
+                if (!chatRoom.isEphemeralEnabled) 0 else chatRoom.ephemeralLifetime.toInt()
+            )
+            Log.i(
+                "$TAG Ephemeral chat messages are [${if (chatRoom.isEphemeralEnabled) "enabled" else "disabled"}], lifetime is [${chatRoom.ephemeralLifetime}]"
+            )
         }
     }
 
@@ -357,7 +382,9 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
         subject.postValue(chatRoom.subject)
         sipUri.postValue(chatRoom.participants.firstOrNull()?.address?.asStringUriOnly())
 
-        ephemeralLifetime.postValue(chatRoom.ephemeralLifetime.toInt())
+        ephemeralLifetime.postValue(
+            if (!chatRoom.isEphemeralEnabled) 0 else chatRoom.ephemeralLifetime.toInt()
+        )
 
         computeParticipantsList()
     }
