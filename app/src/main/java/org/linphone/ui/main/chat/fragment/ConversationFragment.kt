@@ -433,6 +433,13 @@ class ConversationFragment : GenericFragment() {
             }
         }
 
+        sharedViewModel.forceRefreshConversationEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i("$TAG Force refreshing chat messages list")
+                viewModel.applyFilter("")
+            }
+        }
+
         binding.sendArea.messageToSend.setControlEnterListener(object :
                 RichEditText.RichEditTextSendListener {
                 override fun onControlEnterPressedAndReleased() {

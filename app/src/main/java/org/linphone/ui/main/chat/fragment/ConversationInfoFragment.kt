@@ -114,6 +114,7 @@ class ConversationInfoFragment : GenericFragment() {
                     (view.parent as? ViewGroup)?.doOnPreDraw {
                         Log.e("$TAG Failed to find chat room, going back")
                         goBack()
+                        // TODO: show toast ?
                     }
                 }
             }
@@ -139,6 +140,7 @@ class ConversationInfoFragment : GenericFragment() {
             it.consume {
                 // TODO: show toast ?
                 Log.i("$TAG History has been deleted, leaving conversation info...")
+                sharedViewModel.forceRefreshConversationEvent.value = Event(true)
                 goBack()
             }
         }
