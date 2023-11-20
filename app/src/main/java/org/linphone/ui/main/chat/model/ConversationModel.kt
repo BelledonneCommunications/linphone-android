@@ -94,6 +94,7 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
         override fun onMessagesReceived(chatRoom: ChatRoom, chatMessages: Array<out ChatMessage>) {
             updateLastMessage()
             updateLastUpdatedTime()
+            unreadMessageCount.postValue(chatRoom.unreadMessagesCount)
         }
 
         @WorkerThread
@@ -115,7 +116,7 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
 
         @WorkerThread
         override fun onEphemeralEvent(chatRoom: ChatRoom, eventLog: EventLog) {
-            Log.i("$TAG Ephemeral event received [${eventLog.type}]")
+            Log.i("$TAG Ephemeral event [${eventLog.type}]")
             isEphemeral.postValue(chatRoom.isEphemeralEnabled)
         }
 
