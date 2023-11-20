@@ -1,0 +1,68 @@
+package org.linphone.ui.main.chat.fragment
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.annotation.UiThread
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import org.linphone.core.tools.Log
+import org.linphone.databinding.ChatEphemeralLifetimeFragmentBinding
+import org.linphone.ui.main.chat.viewmodel.ConversationEphemeralLifetimeViewModel
+import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.utils.Event
+
+@UiThread
+class ConversationEphemeralLifetimeFragment : GenericFragment() {
+    companion object {
+        private const val TAG = "[Conversation Ephemeral Lifetime Fragment]"
+    }
+
+    private lateinit var binding: ChatEphemeralLifetimeFragmentBinding
+
+    private lateinit var viewModel: ConversationEphemeralLifetimeViewModel
+
+    private val args: ConversationEphemeralLifetimeFragmentArgs by navArgs()
+
+    override fun goBack(): Boolean {
+        return findNavController().popBackStack()
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = ChatEphemeralLifetimeFragmentBinding.inflate(layoutInflater)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        // This fragment is displayed in a SlidingPane "child" area
+        isSlidingPaneChild = true
+
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.lifecycleOwner = viewLifecycleOwner
+
+        viewModel = ViewModelProvider(this)[ConversationEphemeralLifetimeViewModel::class.java]
+        binding.viewModel = viewModel
+
+        val lifetime = args.currentEphemeralLifetime
+        Log.i("$TAG Current lifetime for ephemeral messages is [$lifetime]")
+        viewModel.currentlySelectedValue.value = lifetime
+
+        binding.setBackClickListener {
+            goBack()
+        }
+    }
+
+    override fun onPause() {
+        sharedViewModel.newChatMessageEphemeralLifetimeToSet.value = Event(
+            viewModel.currentlySelectedValue.value ?: 0L
+        )
+        super.onPause()
+    }
+}

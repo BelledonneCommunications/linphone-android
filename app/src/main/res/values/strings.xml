@@ -120,14 +120,6 @@
     <string name="dialog_account_international_prefix_help_message">Blah blah blah</string>
     <string name="dialog_group_conversation_edit_subject">Edit conversation subject</string>
     <string name="dialog_group_conversation_edit_subject_confirm_button">Confirm</string>
-    <string name="dialog_configure_conversation_messages_ephemeral_duration_title">Enable ephemeral messages</string>
-    <string name="dialog_configure_conversation_messages_ephemeral_duration_subtitle">New messages will be automatically deleted once read by everyone.\nChoose a duration:</string>
-    <string name="dialog_conversation_message_ephemeral_duration_disabled">Disabled</string>
-    <string name="dialog_conversation_message_ephemeral_duration_one_minute">1 minute</string>
-    <string name="dialog_conversation_message_ephemeral_duration_one_hour">1 hour</string>
-    <string name="dialog_conversation_message_ephemeral_duration_one_day">1 day</string>
-    <string name="dialog_conversation_message_ephemeral_duration_three_days">3 days</string>
-    <string name="dialog_conversation_message_ephemeral_duration_one_week">1 week</string>
 
     <string name="toast_assistant_qr_code_invalid">Invalid QR code!</string>
     <string name="toast_sip_address_copied_to_clipboard">SIP address copied into clipboard</string>
@@ -362,6 +354,14 @@
     <string name="conversation_action_delete">Delete conversation</string>
     <string name="conversation_action_leave_group">Leave the group</string>
     <string name="conversation_action_configure_ephemeral_messages">Configure ephemeral messages</string>
+    <string name="conversation_ephemeral_messages_title">Ephemeral messages</string>
+    <string name="conversation_ephemeral_messages_subtitle">New messages will be automatically deleted once read by everyone.\nChoose a duration:</string>
+    <string name="conversation_ephemeral_messages_duration_disabled">Disabled</string>
+    <string name="conversation_ephemeral_messages_duration_one_minute">1 minute</string>
+    <string name="conversation_ephemeral_messages_duration_one_hour">1 hour</string>
+    <string name="conversation_ephemeral_messages_duration_one_day">1 day</string>
+    <string name="conversation_ephemeral_messages_duration_three_days">3 days</string>
+    <string name="conversation_ephemeral_messages_duration_one_week">1 week</string>
     <string name="new_conversation_title">New conversation</string>
     <string name="new_conversation_search_bar_filter_hint">Search contact</string>
     <string name="new_conversation_create_group">Create a group conversation</string>

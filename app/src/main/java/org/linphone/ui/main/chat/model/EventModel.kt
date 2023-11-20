@@ -98,22 +98,22 @@ class EventModel @WorkerThread constructor(private val eventLog: EventLog) {
     private fun formatEphemeralExpiration(duration: Long): String {
         return when (duration) {
             0L -> AppUtils.getString(
-                R.string.dialog_conversation_message_ephemeral_duration_disabled
+                R.string.conversation_ephemeral_messages_duration_disabled
             )
             60L -> AppUtils.getString(
-                R.string.dialog_conversation_message_ephemeral_duration_one_minute
+                R.string.conversation_ephemeral_messages_duration_one_minute
             )
             3600L -> AppUtils.getString(
-                R.string.dialog_conversation_message_ephemeral_duration_one_hour
+                R.string.conversation_ephemeral_messages_duration_one_hour
             )
             86400L -> AppUtils.getString(
-                R.string.dialog_conversation_message_ephemeral_duration_one_day
+                R.string.conversation_ephemeral_messages_duration_one_day
             )
             259200L -> AppUtils.getString(
-                R.string.dialog_conversation_message_ephemeral_duration_three_days
+                R.string.conversation_ephemeral_messages_duration_three_days
             )
             604800L -> AppUtils.getString(
-                R.string.dialog_conversation_message_ephemeral_duration_one_week
+                R.string.conversation_ephemeral_messages_duration_one_week
             )
             else -> "$duration s"
         }

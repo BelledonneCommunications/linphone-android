@@ -17,26 +17,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.main.chat.model
+package org.linphone.ui.main.chat.viewmodel
 
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
-import org.linphone.utils.Event
+import androidx.lifecycle.ViewModel
 
-class ConversationConfigureEphemeralDurationDialogModel @UiThread constructor(
-    val currentlySelectedValue: Int
-) {
-    val dismissEvent = MutableLiveData<Event<Boolean>>()
+class ConversationEphemeralLifetimeViewModel @UiThread constructor() : ViewModel() {
+    val currentlySelectedValue = MutableLiveData<Long>()
 
-    val newValueSelectedEvent = MutableLiveData<Event<Int>>()
-
-    @UiThread
-    fun dismiss() {
-        dismissEvent.value = Event(true)
+    init {
+        currentlySelectedValue.value = 0
     }
 
     @UiThread
-    fun onValueSelected(value: Int) {
-        newValueSelectedEvent.value = Event(value)
+    fun onValueSelected(value: Long) {
+        currentlySelectedValue.value = value
     }
 }

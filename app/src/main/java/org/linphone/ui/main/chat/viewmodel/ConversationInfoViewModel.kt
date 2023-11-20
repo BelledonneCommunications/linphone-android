@@ -58,7 +58,7 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
 
     val isMuted = MutableLiveData<Boolean>()
 
-    val ephemeralLifetime = MutableLiveData<Int>()
+    val ephemeralLifetime = MutableLiveData<Long>()
 
     val expandParticipants = MutableLiveData<Boolean>()
 
@@ -335,9 +335,9 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
-    fun updateEphemeralLifetime(lifetime: Int) {
+    fun updateEphemeralLifetime(lifetime: Long) {
         coreContext.postOnCoreThread {
-            if (lifetime == 0) {
+            if (lifetime == 0L) {
                 if (chatRoom.isEphemeralEnabled) {
                     Log.i("$TAG Disabling ephemeral messages")
                     chatRoom.isEphemeralEnabled = false
@@ -348,14 +348,13 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
                     chatRoom.isEphemeralEnabled = true
                 }
 
-                val longLifetime = lifetime.toLong()
-                if (chatRoom.ephemeralLifetime != longLifetime) {
-                    Log.i("$TAG Updating lifetime to [$longLifetime]")
-                    chatRoom.ephemeralLifetime = longLifetime
+                if (chatRoom.ephemeralLifetime != lifetime) {
+                    Log.i("$TAG Updating lifetime to [$lifetime]")
+                    chatRoom.ephemeralLifetime = lifetime
                 }
             }
             ephemeralLifetime.postValue(
-                if (!chatRoom.isEphemeralEnabled) 0 else chatRoom.ephemeralLifetime.toInt()
+                if (!chatRoom.isEphemeralEnabled) 0L else chatRoom.ephemeralLifetime
             )
             Log.i(
                 "$TAG Ephemeral chat messages are [${if (chatRoom.isEphemeralEnabled) "enabled" else "disabled"}], lifetime is [${chatRoom.ephemeralLifetime}]"
@@ -383,7 +382,7 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
         sipUri.postValue(chatRoom.participants.firstOrNull()?.address?.asStringUriOnly())
 
         ephemeralLifetime.postValue(
-            if (!chatRoom.isEphemeralEnabled) 0 else chatRoom.ephemeralLifetime.toInt()
+            if (!chatRoom.isEphemeralEnabled) 0L else chatRoom.ephemeralLifetime
         )
 
         computeParticipantsList()

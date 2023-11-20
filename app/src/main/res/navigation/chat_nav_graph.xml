@@ -54,6 +54,13 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_conversationInfoFragment_to_conversationEphemeralLifetimeFragment"
+            app:destination="@id/conversationEphemeralLifetimeFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
@@ -61,5 +68,15 @@
         android:name="org.linphone.ui.main.fragment.AddParticipantsFragment"
         android:label="AddParticipantsFragment"
         tools:layout="@layout/generic_add_participants_fragment" />
+
+    <fragment
+        android:id="@+id/conversationEphemeralLifetimeFragment"
+        android:name="org.linphone.ui.main.chat.fragment.ConversationEphemeralLifetimeFragment"
+        android:label="ConversationEphemeralLifetimeFragment"
+        tools:layout="@layout/chat_ephemeral_lifetime_fragment">
+        <argument
+            android:name="currentEphemeralLifetime"
+            app:argType="long" />
+    </fragment>
 
 </navigation>

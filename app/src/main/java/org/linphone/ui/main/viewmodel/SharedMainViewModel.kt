@@ -114,6 +114,10 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    val newChatMessageEphemeralLifetimeToSet: MutableLiveData<Event<Long>> by lazy {
+        MutableLiveData<Event<Long>>()
+    }
+
     /* Meetings related */
 
     val forceRefreshMeetingsListEvent: MutableLiveData<Event<Boolean>> by lazy {

@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="backClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.main.chat.viewmodel.ConversationEphemeralLifetimeViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:adjustViewBounds="true"
+            android:padding="15dp"
+            android:onClick="@{backClickListener}"
+            android:src="@drawable/caret_left"
+            app:tint="@color/orange_main_500"
+            app:layout_constraintBottom_toBottomOf="@id/title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/title"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/main_page_title_style"
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/top_bar_height"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/conversation_ephemeral_messages_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/back"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:fillViewport="true"
+            android:background="@color/gray_100"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style"
+                    android:id="@+id/subtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginTop="25dp"
+                    android:text="@string/conversation_ephemeral_messages_subtitle"
+                    android:textColor="@color/gray_main2_600"
+                    android:textSize="14sp"
+                    android:textAlignment="center"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <RadioGroup
+                    android:id="@+id/values"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/shape_squircle_white_background"
+                    app:layout_constraintTop_toBottomOf="@id/subtitle">
+
+                    <RadioButton
+                        style="@style/default_text_style"
+                        android:onClick="@{() -> viewModel.onValueSelected(60)}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:checked="@{viewModel.currentlySelectedValue == 60}"
+                        android:text="@string/conversation_ephemeral_messages_duration_one_minute"
+                        android:textSize="17sp"
+                        android:textColor="@color/gray_main2_500"
+                        android:textAlignment="textStart"
+                        app:useMaterialThemeColors="false"
+                        app:buttonTint="@color/orange_main_500" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@color/gray_main2_300"/>
+
+                    <RadioButton
+                        style="@style/default_text_style"
+                        android:onClick="@{() -> viewModel.onValueSelected(3600)}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:checked="@{viewModel.currentlySelectedValue == 3600}"
+                        android:text="@string/conversation_ephemeral_messages_duration_one_hour"
+                        android:textSize="17sp"
+                        android:textColor="@color/gray_main2_500"
+                        android:textAlignment="textStart"
+                        app:useMaterialThemeColors="false"
+                        app:buttonTint="@color/orange_main_500" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@color/gray_main2_300"/>
+
+                    <RadioButton
+                        style="@style/default_text_style"
+                        android:onClick="@{() -> viewModel.onValueSelected(86400)}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:checked="@{viewModel.currentlySelectedValue == 86400}"
+                        android:text="@string/conversation_ephemeral_messages_duration_one_day"
+                        android:textSize="17sp"
+                        android:textColor="@color/gray_main2_500"
+                        android:textAlignment="textStart"
+                        app:useMaterialThemeColors="false"
+                        app:buttonTint="@color/orange_main_500" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@color/gray_main2_300"/>
+
+                    <RadioButton
+                        style="@style/default_text_style"
+                        android:onClick="@{() -> viewModel.onValueSelected(259200)}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:checked="@{viewModel.currentlySelectedValue == 259200}"
+                        android:text="@string/conversation_ephemeral_messages_duration_three_days"
+                        android:textSize="17sp"
+                        android:textColor="@color/gray_main2_500"
+                        android:textAlignment="textStart"
+                        app:useMaterialThemeColors="false"
+                        app:buttonTint="@color/orange_main_500" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@color/gray_main2_300"/>
+
+                    <RadioButton
+                        style="@style/default_text_style"
+                        android:onClick="@{() -> viewModel.onValueSelected(604800)}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:checked="@{viewModel.currentlySelectedValue == 604800}"
+                        android:text="@string/conversation_ephemeral_messages_duration_one_week"
+                        android:textSize="17sp"
+                        android:textColor="@color/gray_main2_500"
+                        android:textAlignment="textStart"
+                        app:useMaterialThemeColors="false"
+                        app:buttonTint="@color/orange_main_500" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@color/gray_main2_300"/>
+
+                    <RadioButton
+                        style="@style/default_text_style"
+                        android:onClick="@{() -> viewModel.onValueSelected(0)}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:checked="@{viewModel.currentlySelectedValue == 0}"
+                        android:text="@string/conversation_ephemeral_messages_duration_disabled"
+                        android:textSize="17sp"
+                        android:textColor="@color/gray_main2_500"
+                        android:textAlignment="textStart"
+                        app:useMaterialThemeColors="false"
+                        app:buttonTint="@color/orange_main_500" />
+
+                </RadioGroup>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
