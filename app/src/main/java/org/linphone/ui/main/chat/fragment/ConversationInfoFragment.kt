@@ -205,6 +205,31 @@ class ConversationInfoFragment : GenericFragment() {
             dialog.show()
         }
 
+        binding.setGoToContactClickListener {
+            val refKey = viewModel.oneToOneParticipantRefKey.value
+            Log.i("$TAG Trying to display participant [$refKey] contact page")
+            if (!refKey.isNullOrEmpty()) {
+                sharedViewModel.navigateToContactsEvent.value = Event(true)
+                sharedViewModel.showContactEvent.value = Event(refKey)
+            } else {
+                Log.e("$TAG Can't go to contact page, friend ref key is null or empty!")
+                // TODO: show toast
+            }
+        }
+
+        binding.setAddToContactsClickListener {
+            val sipUri = viewModel.sipUri.value
+            if (!sipUri.isNullOrEmpty()) {
+                Log.i("$TAG Trying to add participant [$sipUri] to contacts")
+                sharedViewModel.sipAddressToAddToNewContact = sipUri
+                sharedViewModel.navigateToContactsEvent.value = Event(true)
+                sharedViewModel.showNewContactEvent.value = Event(true)
+            } else {
+                Log.e("$TAG Can't add empty/null SIP URI to contacts!")
+                // TODO: show toast
+            }
+        }
+
         binding.setConfigureEphemeralMessagesClickListener {
             val currentValue = viewModel.ephemeralLifetime.value ?: 0L
             if (findNavController().currentDestination?.id == R.id.conversationInfoFragment) {
@@ -241,25 +266,25 @@ class ConversationInfoFragment : GenericFragment() {
         popupView.isParticipantContact = !friendRefKey.isNullOrEmpty()
 
         popupView.setRemoveParticipantClickListener {
-            Log.w("$TAG Trying to remove participant [$address]")
+            Log.i("$TAG Trying to remove participant [$address]")
             viewModel.removeParticipant(participantModel)
             popupWindow.dismiss()
         }
 
         popupView.setSetAdminClickListener {
-            Log.w("$TAG Trying to give admin rights to participant [$address]")
+            Log.i("$TAG Trying to give admin rights to participant [$address]")
             viewModel.giveAdminRightsTo(participantModel)
             popupWindow.dismiss()
         }
 
         popupView.setUnsetAdminClickListener {
-            Log.w("$TAG Trying to remove admin rights from participant [$address]")
+            Log.i("$TAG Trying to remove admin rights from participant [$address]")
             viewModel.removeAdminRightsFrom(participantModel)
             popupWindow.dismiss()
         }
 
         popupView.setSeeContactProfileClickListener {
-            Log.w("$TAG Trying to display participant [$address] contact page")
+            Log.i("$TAG Trying to display participant [$address] contact page")
             if (!friendRefKey.isNullOrEmpty()) {
                 sharedViewModel.navigateToContactsEvent.value = Event(true)
                 sharedViewModel.showContactEvent.value = Event(friendRefKey)
@@ -271,7 +296,7 @@ class ConversationInfoFragment : GenericFragment() {
         }
 
         popupView.setAddToContactsClickListener {
-            Log.w("$TAG Trying to add participant [${participantModel.sipUri}] to contacts")
+            Log.i("$TAG Trying to add participant [${participantModel.sipUri}] to contacts")
             sharedViewModel.sipAddressToAddToNewContact = participantModel.sipUri
             sharedViewModel.navigateToContactsEvent.value = Event(true)
             sharedViewModel.showNewContactEvent.value = Event(true)

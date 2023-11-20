@@ -64,6 +64,8 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
 
     val chatRoomFoundEvent = MutableLiveData<Event<Boolean>>()
 
+    val oneToOneParticipantRefKey = MutableLiveData<String>()
+
     val groupLeftEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -379,7 +381,14 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
         }
 
         subject.postValue(chatRoom.subject)
-        sipUri.postValue(chatRoom.participants.firstOrNull()?.address?.asStringUriOnly())
+
+        val firstParticipant = chatRoom.participants.firstOrNull()
+        if (firstParticipant != null) {
+            val address = firstParticipant.address
+            sipUri.postValue(address.asStringUriOnly())
+            val friend = coreContext.contactsManager.findContactByAddress(address)
+            oneToOneParticipantRefKey.postValue(friend?.refKey ?: "")
+        }
 
         ephemeralLifetime.postValue(
             if (!chatRoom.isEphemeralEnabled) 0L else chatRoom.ephemeralLifetime
