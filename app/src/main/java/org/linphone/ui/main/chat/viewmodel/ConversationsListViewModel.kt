@@ -33,7 +33,6 @@ import org.linphone.core.tools.Log
 import org.linphone.ui.main.chat.model.ConversationModel
 import org.linphone.ui.main.model.isInSecureMode
 import org.linphone.ui.main.viewmodel.AbstractTopBarViewModel
-import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
 class ConversationsListViewModel @UiThread constructor() : AbstractTopBarViewModel() {
@@ -44,10 +43,6 @@ class ConversationsListViewModel @UiThread constructor() : AbstractTopBarViewMod
     val conversations = MutableLiveData<ArrayList<ConversationModel>>()
 
     val fetchInProgress = MutableLiveData<Boolean>()
-
-    val chatRoomsReOrderedEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
-    }
 
     private val coreListener = object : CoreListenerStub() {
         @WorkerThread
@@ -172,9 +167,8 @@ class ConversationsListViewModel @UiThread constructor() : AbstractTopBarViewMod
         val sortedList = arrayListOf<ConversationModel>()
         sortedList.addAll(conversations.value.orEmpty())
         sortedList.sortByDescending {
-            it.lastUpdateTime.value
+            it.chatRoom.lastUpdateTime
         }
         conversations.postValue(sortedList)
-        chatRoomsReOrderedEvent.postValue(Event(true))
     }
 }

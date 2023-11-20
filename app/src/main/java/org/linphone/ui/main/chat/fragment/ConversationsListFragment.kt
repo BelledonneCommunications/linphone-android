@@ -31,6 +31,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatListFragmentBinding
@@ -52,6 +53,23 @@ class ConversationsListFragment : AbstractTopBarFragment() {
     private lateinit var listViewModel: ConversationsListViewModel
 
     private lateinit var adapter: ConversationsListAdapter
+
+    private val dataObserver = object : RecyclerView.AdapterDataObserver() {
+        override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+            Log.i("$TAG [$itemCount] added, scrolling to top")
+            binding.conversationsList.scrollToPosition(0)
+        }
+
+        override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
+            Log.i("$TAG [$itemCount] moved, scrolling to top")
+            binding.conversationsList.scrollToPosition(0)
+        }
+
+        override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
+            Log.i("$TAG [$itemCount] removed, scrolling to top")
+            binding.conversationsList.scrollToPosition(0)
+        }
+    }
 
     override fun onDefaultAccountChanged() {
         Log.i(
@@ -170,13 +188,6 @@ class ConversationsListFragment : AbstractTopBarFragment() {
             }
         }
 
-        listViewModel.chatRoomsReOrderedEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                Log.i("$TAG Conversations list have been re-ordered, scrolling to top")
-                binding.conversationsList.scrollToPosition(0)
-            }
-        }
-
         sharedViewModel.showConversationEvent.observe(viewLifecycleOwner) {
             it.consume { pair ->
                 val localSipUri = pair.first
@@ -242,6 +253,29 @@ class ConversationsListFragment : AbstractTopBarFragment() {
                 sharedViewModel.showConversationEvent.value = Event(pair)
                 args.clear()
             }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        try {
+            adapter.registerAdapterDataObserver(dataObserver)
+        } catch (e: IllegalStateException) {
+            Log.e("$TAG Failed to unregister data observer to adapter: $e")
+        }
+
+        // Scroll to top when fragment is resumed
+        binding.conversationsList.scrollToPosition(0)
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        try {
+            adapter.unregisterAdapterDataObserver(dataObserver)
+        } catch (e: IllegalStateException) {
+            Log.e("$TAG Failed to unregister data observer to adapter: $e")
         }
     }
 }
