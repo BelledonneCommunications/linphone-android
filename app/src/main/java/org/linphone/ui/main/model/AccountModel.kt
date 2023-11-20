@@ -39,8 +39,7 @@ import org.linphone.utils.LinphoneUtils
 
 class AccountModel @WorkerThread constructor(
     val account: Account,
-    private val onMenuClicked: ((view: View, account: Account) -> Unit)? = null,
-    private val onSetAsDefault: ((account: Account) -> Unit)? = null
+    private val onMenuClicked: ((view: View, account: Account) -> Unit)? = null
 ) : AbstractAvatarModel() {
     companion object {
         private const val TAG = "[Account Model]"
@@ -109,22 +108,23 @@ class AccountModel @WorkerThread constructor(
     @UiThread
     fun setAsDefault() {
         coreContext.postOnCoreThread { core ->
-            core.defaultAccount = account
+            if (core.defaultAccount != account) {
+                core.defaultAccount = account
 
-            for (friendList in core.friendsLists) {
-                if (friendList.isSubscriptionsEnabled) {
-                    Log.i(
-                        "$TAG Default account has changed, refreshing friend list [${friendList.displayName}] subscriptions"
-                    )
-                    // friendList.updateSubscriptions() won't trigger a refresh unless a friend has changed
-                    friendList.isSubscriptionsEnabled = false
-                    friendList.isSubscriptionsEnabled = true
+                for (friendList in core.friendsLists) {
+                    if (friendList.isSubscriptionsEnabled) {
+                        Log.i(
+                            "$TAG Default account has changed, refreshing friend list [${friendList.displayName}] subscriptions"
+                        )
+                        // friendList.updateSubscriptions() won't trigger a refresh unless a friend has changed
+                        friendList.isSubscriptionsEnabled = false
+                        friendList.isSubscriptionsEnabled = true
+                    }
                 }
             }
         }
 
         isDefault.value = true
-        onSetAsDefault?.invoke(account)
     }
 
     @UiThread

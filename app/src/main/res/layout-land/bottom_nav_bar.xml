@@ -101,7 +101,7 @@
             android:onClick="@{() -> viewModel.navigateToMeetings()}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:drawableTop="@drawable/users_three"
+            android:drawableTop="@drawable/meeting"
             android:drawablePadding="10dp"
             android:drawableTint="@{viewModel.meetingsSelected ? @color/orange_main_500 : @color/gray_main2_600, default=@color/gray_main2_600}"
             android:text="@string/bottom_navigation_meetings_label"

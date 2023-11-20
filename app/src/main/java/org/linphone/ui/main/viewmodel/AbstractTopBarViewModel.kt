@@ -25,6 +25,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
+import org.linphone.core.Account
 import org.linphone.core.Call
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatRoom
@@ -115,6 +116,20 @@ open class AbstractTopBarViewModel @UiThread constructor() : ViewModel() {
         @WorkerThread
         override fun onChatRoomRead(core: Core, chatRoom: ChatRoom) {
             updateUnreadMessagesCount()
+        }
+
+        @WorkerThread
+        override fun onDefaultAccountChanged(core: Core, defaultAccount: Account) {
+            Log.i(
+                "$TAG Default account has changed [${defaultAccount.params.identityAddress?.asStringUriOnly()}]"
+            )
+
+            account.value?.destroy()
+            account.postValue(AccountModel(defaultAccount))
+
+            updateUnreadMessagesCount()
+            updateMissedCallsCount()
+            updateAvailableMenus()
         }
     }
 

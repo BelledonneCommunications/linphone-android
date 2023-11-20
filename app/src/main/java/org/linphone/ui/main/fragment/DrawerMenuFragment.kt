@@ -170,9 +170,4 @@ class DrawerMenuFragment : GenericFragment() {
         popupWindow.elevation = 20f
         popupWindow.showAsDropDown(view, 0, 0, Gravity.BOTTOM)
     }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.updateAccountsList()
-    }
 }

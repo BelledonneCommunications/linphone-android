@@ -357,7 +357,7 @@ private fun loadContactPictureWithCoil(
     val context = imageView.context
     if (model != null) {
         if (model.forceConferenceIcon.value == true) {
-            imageView.load(R.drawable.inset_users_three)
+            imageView.load(R.drawable.inset_meeting)
             return
         }
 
@@ -425,7 +425,7 @@ private fun getErrorImageLoader(
     val initials = model.initials.value.orEmpty()
     return if (initials.isEmpty() || initials == "+" || model.skipInitials.value == true) {
         if (model.defaultToConferenceIcon.value == true) {
-            R.drawable.inset_users_three
+            R.drawable.inset_meeting
         } else {
             R.drawable.inset_user_circle
         }

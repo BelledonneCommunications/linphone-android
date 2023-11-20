@@ -66,7 +66,6 @@ class HistoryListFragment : AbstractTopBarFragment() {
         Log.i(
             "$TAG Default account changed, updating avatar in top bar & re-computing call logs"
         )
-        listViewModel.update()
         listViewModel.applyFilter()
     }
 

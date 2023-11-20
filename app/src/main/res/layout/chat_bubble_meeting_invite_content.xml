@@ -87,7 +87,7 @@
             android:textColor="@color/gray_main2_600"
             android:maxLines="1"
             android:ellipsize="end"
-            android:drawableStart="@drawable/users_three"
+            android:drawableStart="@drawable/meeting"
             android:drawablePadding="8dp"
             app:drawableTint="@color/gray_main2_600"
             app:layout_constraintStart_toEndOf="@id/day_background"

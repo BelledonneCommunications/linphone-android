@@ -63,7 +63,6 @@ class ContactsListFragment : AbstractTopBarFragment() {
         Log.i(
             "$TAG Default account changed, updating avatar in top bar & refreshing contacts list"
         )
-        listViewModel.update()
         listViewModel.applyCurrentDefaultAccountFilter()
     }
 

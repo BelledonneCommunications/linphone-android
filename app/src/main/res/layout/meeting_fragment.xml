@@ -105,7 +105,7 @@
                     android:textColor="@color/gray_main2_600"
                     android:maxLines="2"
                     android:ellipsize="end"
-                    android:drawableStart="@{viewModel.isBroadcast ? @drawable/slideshow : @drawable/users_three, default=@drawable/users_three}"
+                    android:drawableStart="@{viewModel.isBroadcast ? @drawable/slideshow : @drawable/meeting, default=@drawable/meeting}"
                     android:drawablePadding="8dp"
                     android:drawableTint="@color/gray_main2_600"
                     android:background="@color/transparent_color"

@@ -26,6 +26,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Account
+import org.linphone.core.Core
+import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.model.AccountModel
 import org.linphone.utils.Event
@@ -53,9 +55,43 @@ class DrawerMenuViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<String>>()
     }
 
+    private val coreListener = object : CoreListenerStub() {
+        @WorkerThread
+        override fun onDefaultAccountChanged(core: Core, account: Account) {
+            Log.i(
+                "$TAG Account [${account.params.identityAddress?.asStringUriOnly()}] has been set as default"
+            )
+            for (model in accounts.value.orEmpty()) {
+                if (model.account != account) {
+                    model.isDefault.postValue(false)
+                }
+            }
+            defaultAccountChangedEvent.postValue(
+                Event(account.params.identityAddress?.asStringUriOnly() ?: "")
+            )
+        }
+
+        @WorkerThread
+        override fun onNewAccountAdded(core: Core, account: Account) {
+            Log.i(
+                "$TAG Account [${account.params.identityAddress?.asStringUriOnly()}] has been added to the Core"
+            )
+            computeAccountsList()
+        }
+    }
+
+    init {
+        coreContext.postOnCoreThread { core ->
+            core.addListener(coreListener)
+
+            computeAccountsList()
+        }
+    }
+
     @UiThread
     override fun onCleared() {
-        coreContext.postOnCoreThread {
+        coreContext.postOnCoreThread { core ->
+            core.removeListener(coreListener)
             accounts.value.orEmpty().forEach(AccountModel::destroy)
         }
 
@@ -85,23 +121,10 @@ class DrawerMenuViewModel @UiThread constructor() : ViewModel() {
 
         val list = arrayListOf<AccountModel>()
         for (account in coreContext.core.accountList) {
-            val model = AccountModel(account, { view, account ->
+            val model = AccountModel(account) { view, account ->
                 // onClicked
                 showAccountPopupMenuEvent.postValue(Event(Pair(view, account)))
-            }, { account ->
-                // onSetAsDefault
-                Log.i(
-                    "$TAG Account [${account.params.identityAddress?.asStringUriOnly()}] has been set as default by user"
-                )
-                for (model in accounts.value.orEmpty()) {
-                    if (model.account != account) {
-                        model.isDefault.value = false
-                    }
-                }
-                defaultAccountChangedEvent.postValue(
-                    Event(account.params.identityAddress?.asStringUriOnly() ?: "")
-                )
-            })
+            }
             list.add(model)
         }
         accounts.postValue(list)

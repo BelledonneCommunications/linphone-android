@@ -138,7 +138,7 @@
                 android:layout_marginTop="28dp"
                 android:background="@drawable/shape_orange_round"
                 android:padding="10dp"
-                android:src="@drawable/users_three"
+                android:src="@drawable/meeting"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/search_bar"
                 app:tint="@color/white" />

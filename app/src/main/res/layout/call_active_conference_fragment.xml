@@ -123,7 +123,7 @@
                 android:layout_height="@dimen/icon_size"
                 android:layout_marginStart="10dp"
                 android:adjustViewBounds="true"
-                android:src="@drawable/users_three"
+                android:src="@drawable/meeting"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/conference_subject"
                 app:layout_constraintBottom_toBottomOf="@id/conference_subject"
