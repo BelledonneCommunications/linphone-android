@@ -99,34 +99,26 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
             val list = arrayListOf<EventLogModel>()
             list.addAll(events.value.orEmpty())
-
-            val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(
-                message?.localAddress
-            )
             val lastEvent = events.value.orEmpty().lastOrNull()
-            val group = if (lastEvent != null) {
-                shouldWeGroupTwoEvents(eventLog, lastEvent.eventLog)
-            } else {
-                false
-            }
-            list.add(
-                EventLogModel(
-                    eventLog,
-                    avatarModel,
-                    LinphoneUtils.isChatRoomAGroup(chatRoom),
-                    group,
-                    true,
-                    { file ->
-                        fileToDisplayEvent.postValue(Event(file))
-                    },
-                    { conferenceUri ->
-                        conferenceToJoinEvent.postValue(Event(conferenceUri))
-                    },
-                    { url ->
-                        openWebBrowserEvent.postValue(Event(url))
-                    }
+            if (lastEvent != null && shouldWeGroupTwoEvents(eventLog, lastEvent.eventLog)) {
+                list.remove(lastEvent)
+
+                val eventsLogsArray = arrayOf<EventLog>()
+                eventsLogsArray[0] = lastEvent.eventLog
+                eventsLogsArray[1] = eventLog
+
+                val newList = getEventsListFromHistory(
+                    eventsLogsArray,
+                    searchFilter.value.orEmpty().trim()
                 )
-            )
+                list.addAll(newList)
+            } else {
+                val newList = getEventsListFromHistory(
+                    arrayOf(eventLog),
+                    searchFilter.value.orEmpty().trim()
+                )
+                list.addAll(newList)
+            }
 
             events.postValue(list)
         }
@@ -157,29 +149,32 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
             val list = arrayListOf<EventLogModel>()
             list.addAll(events.value.orEmpty())
+            val lastEvent = list.lastOrNull()
 
-            val newList = getEventsListFromHistory(
-                eventLogs,
-                searchFilter.value.orEmpty().trim()
-            )
-            list.addAll(newList)
+            if (lastEvent != null && shouldWeGroupTwoEvents(eventLogs.first(), lastEvent.eventLog)) {
+                list.remove(lastEvent)
 
-            // TODO: handle case when first one of the newly received messages should be grouped with last one of the current list
+                val eventsLogsArray = arrayOf<EventLog>()
+                eventsLogsArray[0] = lastEvent.eventLog
+                var index = 1
+                for (eventLog in eventLogs) {
+                    eventsLogsArray[index] = eventLog
+                    index += 1
+                }
 
-            events.postValue(list)
-        }
-
-        @WorkerThread
-        override fun onNewEvents(chatRoom: ChatRoom, eventLogs: Array<out EventLog>) {
-            Log.i("$TAG Adding [${eventLogs.size}] new events")
-            val list = arrayListOf<EventLogModel>()
-            list.addAll(events.value.orEmpty())
-            val fakeFriend = chatRoom.core.createFriend()
-            val avatarModel = ContactAvatarModel(fakeFriend)
-            for (eventLog in eventLogs) {
-                Log.i("$TAG New event [${eventLog.type}] added")
-                list.add(EventLogModel(eventLog, avatarModel))
+                val newList = getEventsListFromHistory(
+                    eventsLogsArray,
+                    searchFilter.value.orEmpty().trim()
+                )
+                list.addAll(newList)
+            } else {
+                val newList = getEventsListFromHistory(
+                    eventLogs,
+                    searchFilter.value.orEmpty().trim()
+                )
+                list.addAll(newList)
             }
+
             events.postValue(list)
         }
 

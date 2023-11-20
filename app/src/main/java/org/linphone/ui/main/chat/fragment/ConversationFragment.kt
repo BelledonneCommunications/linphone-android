@@ -451,6 +451,9 @@ class ConversationFragment : GenericFragment() {
         binding.root.setKeyboardInsetListener { keyboardVisible ->
             if (keyboardVisible) {
                 sendMessageViewModel.isEmojiPickerOpen.value = false
+
+                // Scroll to bottom when keyboard is opened so latest message is visible
+                binding.eventsList.scrollToPosition(adapter.itemCount - 1)
             }
         }
     }
@@ -549,6 +552,9 @@ class ConversationFragment : GenericFragment() {
             Log.i("$TAG Updating sending area to reply to selected message")
             sendMessageViewModel.replyToMessage(chatMessageModel)
             dialog.dismiss()
+
+            // Open keyboard & focus edit text
+            binding.sendArea.messageToSend.showKeyboard()
         }
 
         layout.model = chatMessageModel
