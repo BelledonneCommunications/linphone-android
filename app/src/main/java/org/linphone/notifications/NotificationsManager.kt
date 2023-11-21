@@ -51,6 +51,7 @@ import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.compatibility.Compatibility
 import org.linphone.contacts.AvatarGenerator
 import org.linphone.contacts.getAvatarBitmap
 import org.linphone.contacts.getPerson
@@ -487,18 +488,14 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         val service = coreService
         if (service != null) {
             Log.i("$TAG Service found, starting it as foreground using notification")
-            // TODO FIXME: API LEVEL, add compatibility
-            try {
-                service.startForeground(
-                    notifiable.notificationId,
-                    notification.notification,
-                    ServiceInfo.FOREGROUND_SERVICE_TYPE_PHONE_CALL
-                        or ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE
-                        or ServiceInfo.FOREGROUND_SERVICE_TYPE_CAMERA
-                )
-            } catch (e: Exception) {
-                Log.e("$TAG Can't start service as foreground! $e")
-            }
+            Compatibility.startServiceForeground(
+                service,
+                notifiable.notificationId,
+                notification.notification,
+                Compatibility.FOREGROUND_SERVICE_TYPE_PHONE_CALL
+                    or Compatibility.FOREGROUND_SERVICE_TYPE_MICROPHONE
+                    or Compatibility.FOREGROUND_SERVICE_TYPE_CAMERA
+            )
         } else {
             Log.w("$TAG Core Foreground Service hasn't started yet...")
         }
