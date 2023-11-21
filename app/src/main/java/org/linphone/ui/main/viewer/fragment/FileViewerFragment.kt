@@ -44,7 +44,6 @@ class FileViewerFragment : GenericFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        isSlidingPaneChild = true
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProvider(this)[FileViewModel::class.java]

@@ -150,6 +150,16 @@ class ConversationInfoFragment : GenericFragment() {
             }
         }
 
+        viewModel.goToScheduleMeetingEvent.observe(viewLifecycleOwner) {
+            it.consume { participants ->
+                Log.i(
+                    "$TAG Forward participants list of size [${participants.size}] to schedule meeting fragment"
+                )
+                sharedViewModel.goToScheduleMeetingEvent.postValue(Event(participants))
+                sharedViewModel.navigateToMeetingsEvent.postValue(Event(true))
+            }
+        }
+
         sharedViewModel.listOfSelectedSipUrisEvent.observe(viewLifecycleOwner) {
             it.consume { list ->
                 Log.i("$TAG Found [${list.size}] new participants to add to the group, let's do it")

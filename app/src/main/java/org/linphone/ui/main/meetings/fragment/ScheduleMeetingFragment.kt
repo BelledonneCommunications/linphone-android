@@ -27,6 +27,7 @@ import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -49,6 +50,8 @@ class ScheduleMeetingFragment : GenericFragment() {
 
     private lateinit var viewModel: ScheduleMeetingViewModel
 
+    private val args: ScheduleMeetingFragmentArgs by navArgs()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -69,6 +72,12 @@ class ScheduleMeetingFragment : GenericFragment() {
 
         viewModel = ViewModelProvider(this)[ScheduleMeetingViewModel::class.java]
         binding.viewModel = viewModel
+
+        val participants = args.participants
+        if (!participants.isNullOrEmpty()) {
+            Log.i("$TAG Found pre-populated array of participants of size [${participants.size}]")
+            viewModel.addParticipants(participants.toList())
+        }
 
         binding.setBackClickListener {
             goBack()

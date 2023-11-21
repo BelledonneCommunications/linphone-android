@@ -128,6 +128,10 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<String>>()
     }
 
+    val goToScheduleMeetingEvent: MutableLiveData<Event<ArrayList<String>>> by lazy {
+        MutableLiveData<Event<ArrayList<String>>>()
+    }
+
     /* Other */
 
     val listOfSelectedSipUrisEvent: MutableLiveData<Event<ArrayList<String>>> by lazy {

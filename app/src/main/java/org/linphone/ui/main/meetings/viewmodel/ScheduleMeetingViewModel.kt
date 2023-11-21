@@ -264,9 +264,11 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
-    fun addParticipants(toAdd: ArrayList<String>) {
+    fun addParticipants(toAdd: List<String>) {
         coreContext.postOnCoreThread {
             val list = arrayListOf<SelectedAddressModel>()
+            list.addAll(participants.value.orEmpty())
+
             for (participant in toAdd) {
                 val address = Factory.instance().createAddress(participant)
                 if (address == null) {
@@ -279,8 +281,13 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
                         // onRemoveFromSelection
                     }
                     list.add(model)
+                    Log.i("$TAG Added participant [${address.asStringUriOnly()}]")
                 }
             }
+
+            Log.i(
+                "$TAG [${toAdd.size}] participants added, now there are [${list.size}] participants in list"
+            )
             participants.postValue(list)
         }
     }

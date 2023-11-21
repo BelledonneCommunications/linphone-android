@@ -13,9 +13,6 @@
             name="editSubjectClickListener"
             type="View.OnClickListener" />
         <variable
-            name="scheduleMeetingClickListener"
-            type="View.OnClickListener" />
-        <variable
             name="addParticipantsClickListener"
             type="View.OnClickListener" />
         <variable
@@ -222,7 +219,7 @@
                     android:layout_height="56dp"
                     android:layout_marginTop="40dp"
                     android:background="@drawable/circle_light_blue_button_background"
-                    android:onClick="@{scheduleMeetingClickListener}"
+                    android:onClick="@{() -> viewModel.scheduleMeeting()}"
                     android:padding="16dp"
                     android:src="@drawable/meeting"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -236,7 +233,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:onClick="@{scheduleMeetingClickListener}"
+                    android:onClick="@{() -> viewModel.scheduleMeeting()}"
                     android:text="@string/meeting_schedule_meeting_label"
                     android:textSize="14sp"
                     app:layout_constraintEnd_toEndOf="@id/meeting"

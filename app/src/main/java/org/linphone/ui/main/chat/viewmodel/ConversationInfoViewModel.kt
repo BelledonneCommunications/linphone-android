@@ -78,6 +78,10 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Pair<View, ParticipantModel>>>()
     }
 
+    val goToScheduleMeetingEvent: MutableLiveData<Event<ArrayList<String>>> by lazy {
+        MutableLiveData<Event<ArrayList<String>>>()
+    }
+
     private lateinit var chatRoom: ChatRoom
 
     private val chatRoomListener = object : ChatRoomListenerStub() {
@@ -224,7 +228,43 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
 
     @UiThread
     fun call() {
-        // TODO
+        coreContext.postOnCoreThread { core ->
+            if (LinphoneUtils.isChatRoomAGroup(chatRoom)) {
+                // TODO
+            } else {
+                val firstParticipant = chatRoom.participants.firstOrNull()
+                val address = firstParticipant?.address
+                if (address != null) {
+                    val params = core.createCallParams(null)
+                    params?.isVideoEnabled = false
+                    coreContext.startCall(address, params)
+                } else {
+                    Log.e("$TAG Failed to find participant to call!")
+                }
+            }
+        }
+    }
+
+    @UiThread
+    fun scheduleMeeting() {
+        coreContext.postOnCoreThread {
+            if (LinphoneUtils.isChatRoomAGroup(chatRoom)) {
+                val participantsList = arrayListOf<String>()
+                for (participant in chatRoom.participants) {
+                    participantsList.add(participant.address.asStringUriOnly())
+                    goToScheduleMeetingEvent.postValue(Event(participantsList))
+                }
+            } else {
+                val firstParticipant = chatRoom.participants.firstOrNull()
+                val address = firstParticipant?.address
+                if (address != null) {
+                    val participantsList = arrayListOf(address.asStringUriOnly())
+                    goToScheduleMeetingEvent.postValue(Event(participantsList))
+                } else {
+                    Log.e("$TAG Failed to find participant to call!")
+                }
+            }
+        }
     }
 
     @UiThread

@@ -176,6 +176,22 @@ class MeetingsListFragment : AbstractTopBarFragment() {
             }
         }
 
+        sharedViewModel.goToScheduleMeetingEvent.observe(viewLifecycleOwner) {
+            it.consume { participants ->
+                if (findNavController().currentDestination?.id == R.id.meetingsListFragment) {
+                    val participantsArray = participants.toTypedArray()
+                    Log.i(
+                        "$TAG Going to schedule meeting fragment with pre-populated participants array of size [${participantsArray.size}]"
+                    )
+                    val action =
+                        MeetingsListFragmentDirections.actionMeetingsListFragmentToScheduleMeetingFragment(
+                            participantsArray
+                        )
+                    findNavController().navigate(action)
+                }
+            }
+        }
+
         // TopBarFragment related
 
         setViewModelAndTitle(
