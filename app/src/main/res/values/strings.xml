@@ -152,7 +152,7 @@
     <string name="assistant_third_party_sip_account_warning_ok">I understand</string>
     <string name="assistant_account_secure_mode_title">Personalize your profile mode</string>
     <string name="assistant_account_secure_mode_subtitle">You may change that mode later</string>
-    <string name="assistant_secure_mode_default_title">Default</string>
+    <string name="assistant_secure_mode_default_title">End-to-end encrypted</string>
     <string name="assistant_secure_mode_interoperable_title">Interoperable</string>
     <string name="assistant_secure_mode_finish_account_login">Continue</string>
     <string name="assistant_account_register_unavailable_no_push_toast">Push notifications not available, account creation disabled</string>
@@ -176,7 +176,7 @@
     <string name="assistant_account_login_forbidden_error">Wrong username or password</string>
     <string name="assistant_account_login_error">Failed to login: error code is %i</string>
     <string name="assistant_permissions_title">Grant permissions</string>
-    <string name="assistant_permissions_grant_all_of_them">Grant all</string>
+    <string name="assistant_permissions_grant_all_of_them">OK</string>
     <string name="assistant_permissions_skip_permissions">Do it later</string>
 
     <string name="assistant_permissions_subtitle">To fully enjoy &appName; we need you to grant us the following permissions :</string>
@@ -262,8 +262,8 @@
     <string name="manage_account_choose_mode_apply_label">Apply</string>
     <string name="manage_account_secure_mode_default_title">Default mode</string>
     <string name="manage_account_secure_mode_interoperable_title">Interoperable mode</string>
-    <string name="manage_account_secure_mode_default_summary">End-to-end encryption of your communications</string>
-    <string name="manage_account_secure_mode_interoperable_summary">Allows to communicate with other SIP services, point to point encryption</string>
+    <string name="manage_account_secure_mode_default_summary">This mode guarantee your data confidentiality. Our end-to-end encryption technology provide the highest level or security for your communications.</string>
+    <string name="manage_account_secure_mode_interoperable_summary">This mode allows you to enjoy all &appName; features while staying interoperable with any SIP service through point-to-point encryption.</string>
     <string name="manage_account_device_remove">Remove</string>
     <string name="manage_account_device_last_connection">Last connection:</string>
 

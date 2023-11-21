@@ -17,6 +17,9 @@
         <variable
             name="continueClickListener"
             type="View.OnClickListener" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.assistant.viewmodel.AccountLoginViewModel" />
     </data>
 
     <ScrollView
@@ -81,6 +84,7 @@
             <com.google.android.material.radiobutton.MaterialRadioButton
                 android:id="@+id/default_mode"
                 style="@style/default_text_style_800"
+                android:onClick="@{() -> viewModel.switchToSecureMode()}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
@@ -88,9 +92,10 @@
                 android:text="@string/assistant_secure_mode_default_title"
                 android:textSize="16sp"
                 android:textColor="@color/black"
-                android:checked="true"
+                android:checked="@{viewModel.isCurrentlySelectedModeSecure}"
+                android:enabled="@{!viewModel.isCurrentlySelectedModeSecure}"
                 app:useMaterialThemeColors="false"
-                app:buttonTint="@color/orange_main_500"
+                app:buttonTint="@color/blue_info_500"
                 app:layout_constraintTop_toBottomOf="@id/sub_title"
                 app:layout_constraintStart_toStartOf="parent" />
 
@@ -121,7 +126,9 @@
                 android:paddingEnd="16dp"
                 android:text="@string/manage_account_secure_mode_default_summary"
                 android:textSize="14sp"
-                android:gravity="center"
+                android:gravity="start"
+                android:drawableEnd="@drawable/profile_secure_logo"
+                android:drawablePadding="10dp"
                 app:layout_constraintTop_toBottomOf="@id/default_mode"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
@@ -132,7 +139,7 @@
                 android:layout_height="@dimen/avatar_list_cell_size"
                 android:adjustViewBounds="true"
                 android:layout_marginEnd="16dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/shape_circle_light_blue_background"
                 android:src="@drawable/user_circle"
                 coilInitials="@{`JD`}"
@@ -201,6 +208,7 @@
             <com.google.android.material.radiobutton.MaterialRadioButton
                 android:id="@+id/interop_mode"
                 style="@style/default_text_style_800"
+                android:onClick="@{() -> viewModel.switchToInteropMode()}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
@@ -208,6 +216,8 @@
                 android:text="@string/assistant_secure_mode_interoperable_title"
                 android:textSize="16sp"
                 android:textColor="@color/black"
+                android:checked="@{!viewModel.isCurrentlySelectedModeSecure}"
+                android:enabled="@{viewModel.isCurrentlySelectedModeSecure}"
                 app:useMaterialThemeColors="false"
                 app:buttonTint="@color/orange_main_500"
                 app:layout_constraintTop_toBottomOf="@id/image1"
@@ -240,7 +250,9 @@
                 android:paddingEnd="16dp"
                 android:text="@string/manage_account_secure_mode_interoperable_summary"
                 android:textSize="14sp"
-                android:gravity="center"
+                android:gravity="start"
+                android:drawableEnd="@drawable/profile_interop_logo"
+                android:drawablePadding="10dp"
                 app:layout_constraintTop_toBottomOf="@id/interop_mode"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>

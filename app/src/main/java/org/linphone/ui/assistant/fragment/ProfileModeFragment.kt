@@ -26,7 +26,10 @@ import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
+import org.linphone.R
 import org.linphone.databinding.AssistantSecureModeFragmentBinding
+import org.linphone.ui.assistant.viewmodel.AccountLoginViewModel
 import org.linphone.utils.DialogUtils
 
 @UiThread
@@ -36,6 +39,10 @@ class ProfileModeFragment : Fragment() {
     }
 
     private lateinit var binding: AssistantSecureModeFragmentBinding
+
+    private val viewModel: AccountLoginViewModel by navGraphViewModels(
+        R.id.assistant_nav_graph
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater,

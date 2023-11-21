@@ -57,6 +57,8 @@ class AccountLoginViewModel @UiThread constructor() : ViewModel() {
 
     val registrationInProgress = MutableLiveData<Boolean>()
 
+    val isCurrentlySelectedModeSecure = MutableLiveData<Boolean>()
+
     val accountLoggedInEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -129,6 +131,8 @@ class AccountLoginViewModel @UiThread constructor() : ViewModel() {
         loginEnabled.addSource(password) {
             loginEnabled.value = isLoginButtonEnabled()
         }
+
+        isCurrentlySelectedModeSecure.value = true
     }
 
     @UiThread
@@ -177,6 +181,16 @@ class AccountLoginViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun toggleShowPassword() {
         showPassword.value = showPassword.value == false
+    }
+
+    @UiThread
+    fun switchToSecureMode() {
+        isCurrentlySelectedModeSecure.value = true
+    }
+
+    @UiThread
+    fun switchToInteropMode() {
+        isCurrentlySelectedModeSecure.value = false
     }
 
     @UiThread

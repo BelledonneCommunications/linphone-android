@@ -67,20 +67,30 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp">
 
+                <View
+                    android:id="@+id/default_mode_background"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="@{viewModel.isCurrentlySelectedModeSecure ? @drawable/shape_squircle_white_background_blue_border : @drawable/shape_squircle_white_background, default=@drawable/shape_squircle_white_background_blue_border}"
+                    app:layout_constraintTop_toTopOf="@id/default_mode"
+                    app:layout_constraintStart_toStartOf="@id/default_mode_summary"
+                    app:layout_constraintEnd_toEndOf="@id/default_mode_summary"
+                    app:layout_constraintBottom_toBottomOf="@id/default_mode_summary" />
+
                 <com.google.android.material.radiobutton.MaterialRadioButton
                     style="@style/default_text_style_800"
                     android:id="@+id/default_mode"
                     android:onClick="@{() -> viewModel.switchToSecureMode()}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="20dp"
                     android:text="@string/assistant_secure_mode_default_title"
                     android:textSize="16sp"
                     android:textColor="@color/black"
                     android:checked="@{viewModel.isCurrentlySelectedModeSecure}"
                     android:enabled="@{!viewModel.isCurrentlySelectedModeSecure}"
                     app:useMaterialThemeColors="false"
-                    app:buttonTint="@color/orange_main_500"
+                    app:buttonTint="@color/blue_info_500"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 
@@ -99,19 +109,20 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/default_text_style"
                     android:id="@+id/default_mode_summary"
+                    android:onClick="@{() -> viewModel.switchToSecureMode()}"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/shape_squircle_white_background"
                     android:paddingTop="20dp"
-                    android:paddingBottom="20dp"
+                    android:paddingBottom="10dp"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:text="@string/manage_account_secure_mode_default_summary"
                     android:textSize="14sp"
-                    android:gravity="center"
+                    android:gravity="start"
+                    android:drawableEnd="@drawable/profile_secure_logo"
+                    android:drawablePadding="10dp"
                     app:layout_constraintTop_toBottomOf="@id/default_mode"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
@@ -122,7 +133,8 @@
                     android:layout_width="@dimen/avatar_list_cell_size"
                     android:layout_height="@dimen/avatar_list_cell_size"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
+                    android:visibility="gone"
                     coilAvatarNoTrust="@{viewModel.accountModel}"
                     app:strokeWidth="0dp"
                     app:strokeColor="@color/transparent_color"
@@ -139,6 +151,7 @@
                     android:background="@drawable/led_background"
                     android:padding="@dimen/avatar_presence_badge_padding"
                     android:src="@drawable/led_online"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="@id/image1"
                     app:layout_constraintBottom_toBottomOf="@id/image1"/>
 
@@ -149,6 +162,7 @@
                     android:layout_marginEnd="16dp"
                     android:src="@drawable/arrow_right_fill"
                     app:tint="@color/black"
+                    android:visibility="gone"
                     app:layout_constraintStart_toEndOf="@id/image1"
                     app:layout_constraintEnd_toStartOf="@id/image2"
                     app:layout_constraintTop_toTopOf="@id/image1"
@@ -159,6 +173,7 @@
                     android:id="@+id/image2"
                     android:layout_width="@dimen/avatar_list_cell_size"
                     android:layout_height="@dimen/avatar_list_cell_size"
+                    android:visibility="gone"
                     coilAvatarNoTrust="@{viewModel.accountModel}"
                     app:strokeWidth="@dimen/avatar_trust_border_width"
                     app:strokeColor="@color/blue_info_500"
@@ -172,6 +187,7 @@
                     android:layout_width="@dimen/avatar_presence_badge_size"
                     android:layout_height="@dimen/avatar_presence_badge_size"
                     android:src="@drawable/trusted"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="@id/image2"
                     app:layout_constraintBottom_toBottomOf="@id/image2"/>
 
@@ -183,8 +199,19 @@
                     android:background="@drawable/led_background"
                     android:padding="@dimen/avatar_presence_badge_padding"
                     android:src="@drawable/led_online"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="@id/image2"
                     app:layout_constraintBottom_toBottomOf="@id/image2"/>
+
+                <View
+                    android:id="@+id/interop_mode_background"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="@{!viewModel.isCurrentlySelectedModeSecure ? @drawable/shape_squircle_white_background_orange_border : @drawable/shape_squircle_white_background, default=@drawable/shape_squircle_white_background}"
+                    app:layout_constraintTop_toTopOf="@id/interop_mode"
+                    app:layout_constraintStart_toStartOf="@id/interop_mode_summary"
+                    app:layout_constraintEnd_toEndOf="@id/interop_mode_summary"
+                    app:layout_constraintBottom_toBottomOf="@id/interop_mode_summary" />
 
                 <com.google.android.material.radiobutton.MaterialRadioButton
                     style="@style/default_text_style_800"
@@ -193,7 +220,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="32dp"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="20dp"
                     android:text="@string/assistant_secure_mode_interoperable_title"
                     android:textSize="16sp"
                     android:textColor="@color/black"
@@ -219,19 +246,20 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/default_text_style"
                     android:id="@+id/interop_mode_summary"
+                    android:onClick="@{() -> viewModel.switchToInteropMode()}"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/shape_squircle_white_background"
                     android:paddingTop="20dp"
                     android:paddingBottom="20dp"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:text="@string/manage_account_secure_mode_interoperable_summary"
                     android:textSize="14sp"
-                    android:gravity="center"
+                    android:gravity="start"
+                    android:drawableEnd="@drawable/profile_interop_logo"
+                    android:drawablePadding="10dp"
                     app:layout_constraintTop_toBottomOf="@id/interop_mode"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
