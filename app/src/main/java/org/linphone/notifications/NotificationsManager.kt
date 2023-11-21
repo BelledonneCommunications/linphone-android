@@ -28,7 +28,6 @@ import android.app.Service.STOP_FOREGROUND_REMOVE
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.pm.ServiceInfo
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle

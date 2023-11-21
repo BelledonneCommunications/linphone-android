@@ -12,7 +12,11 @@ abstract class AbstractAvatarModel {
 
     val images = MutableLiveData<ArrayList<String>>()
 
+    val forceConversationIcon = MutableLiveData<Boolean>()
+
     val forceConferenceIcon = MutableLiveData<Boolean>()
+
+    val defaultToConversationIcon = MutableLiveData<Boolean>()
 
     val defaultToConferenceIcon = MutableLiveData<Boolean>()
 

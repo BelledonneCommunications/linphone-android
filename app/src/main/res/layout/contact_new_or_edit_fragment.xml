@@ -22,7 +22,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="@color/gray_100">
 
         <ImageView
             android:id="@+id/back"
@@ -32,6 +32,7 @@
             android:adjustViewBounds="true"
             android:padding="15dp"
             android:src="@drawable/caret_left"
+            android:background="@color/white"
             app:tint="@color/orange_main_500"
             app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintStart_toStartOf="parent"
@@ -42,36 +43,23 @@
             android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="@dimen/top_bar_height"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
+            android:paddingStart="10dp"
+            android:background="@color/white"
             android:text="@{viewModel.isEdit ? @string/contact_edit_title : @string/contact_new_title, default=@string/contact_new_title}"
-            app:layout_constraintEnd_toStartOf="@id/save"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/back"
             app:layout_constraintTop_toTopOf="parent"/>
-
-        <ImageView
-            android:onClick="@{() -> viewModel.saveChanges()}"
-            android:id="@+id/save"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:padding="15dp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/check"
-            app:tint="@color/primary_color_selector"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/title"
-            app:layout_constraintTop_toTopOf="@id/title" />
 
         <ScrollView
             android:id="@+id/scrollView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@color/gray_100"
+            android:layout_marginBottom="16dp"
             android:fillViewport="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintBottom_toTopOf="@id/save">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -342,6 +330,23 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </ScrollView>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/primary_button_label_style"
+            android:id="@+id/save"
+            android:onClick="@{() -> viewModel.saveChanges()}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="@string/contact_editor_save_title"
+            app:layout_constraintWidth_max="@dimen/button_max_width"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

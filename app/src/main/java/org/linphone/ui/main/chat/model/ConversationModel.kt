@@ -170,7 +170,7 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
         if (isGroup) {
             val fakeFriend = coreContext.core.createFriend()
             val model = ContactAvatarModel(fakeFriend)
-            model.defaultToConferenceIcon.postValue(true)
+            model.defaultToConversationIcon.postValue(true)
             model.setPicturesFromFriends(friends)
             avatarModel.postValue(model)
         } else {

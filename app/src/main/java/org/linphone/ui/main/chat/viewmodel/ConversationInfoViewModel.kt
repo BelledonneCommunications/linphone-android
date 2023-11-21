@@ -466,7 +466,7 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
         val avatar = if (groupChatRoom) {
             val fakeFriend = coreContext.core.createFriend()
             val model = ContactAvatarModel(fakeFriend)
-            model.defaultToConferenceIcon.postValue(true)
+            model.defaultToConversationIcon.postValue(true)
             model.setPicturesFromFriends(friends)
             model
         } else {

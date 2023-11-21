@@ -42,23 +42,9 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:text="@string/conversation_add_participants_title"
-                app:layout_constraintEnd_toStartOf="@id/add_participants"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/back"
                 app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/add_participants"
-                android:onClick="@{() -> viewModel.addParticipants()}"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:padding="15dp"
-                android:adjustViewBounds="true"
-                android:src="@drawable/check"
-                android:enabled="@{viewModel.selection.size() > 0}"
-                app:tint="@color/primary_color_selector"
-                app:layout_constraintBottom_toBottomOf="@id/title"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/title" />
 
             <View
                 android:id="@+id/background"
@@ -151,7 +137,7 @@
                 app:layout_constraintVertical_bias="0.3"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/search_bar"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintBottom_toTopOf="@id/add_participants" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/section_header_style"
@@ -170,11 +156,30 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
                 android:visibility="@{viewModel.contactsAndSuggestionsList.size() == 0 ? View.GONE : View.VISIBLE}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/search_bar"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintBottom_toTopOf="@id/add_participants" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/primary_button_label_style"
+                android:id="@+id/add_participants"
+                android:onClick="@{() -> viewModel.addParticipants()}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="@string/dialog_continue"
+                android:enabled="@{viewModel.selection.size() > 0}"
+                app:layout_constraintWidth_max="@dimen/button_max_width"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

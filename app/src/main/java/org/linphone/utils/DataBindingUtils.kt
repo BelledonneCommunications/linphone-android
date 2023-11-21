@@ -360,6 +360,9 @@ private fun loadContactPictureWithCoil(
         if (model.forceConferenceIcon.value == true) {
             imageView.load(R.drawable.inset_meeting)
             return
+        } else if (model.forceConversationIcon.value == true) {
+            imageView.load(R.drawable.inset_users_three)
+            return
         }
 
         if (!skipTrust) {
@@ -427,6 +430,8 @@ private fun getErrorImageLoader(
     return if (initials.isEmpty() || initials == "+" || model.skipInitials.value == true) {
         if (model.defaultToConferenceIcon.value == true) {
             R.drawable.inset_meeting
+        } else if (model.defaultToConversationIcon.value == true) {
+            R.drawable.inset_users_three
         } else {
             R.drawable.inset_user_circle
         }

@@ -326,6 +326,7 @@
     <string name="contact_editor_error_saving_changes_toast">Failed to save changes!</string>
     <string name="contact_editor_saved_contact_toast">Contact was successfully created</string>
     <string name="contact_editor_error_saving_contact_toast">Failed to create contact!</string>
+    <string name="contact_editor_save_title">Save</string>
 
     <string name="contact_details_numbers_and_addresses_title">Phone numbers &amp; SIP addresses</string>
     <string name="contact_details_company_name">Company:</string>
@@ -434,6 +435,7 @@
     <string name="meeting_info_export_as_calendar_event">Create calendar event</string>
     <string name="meeting_info_deleted_toast">Meeting has been deleted</string>
     <string name="meeting_schedule_description_title">Description</string>
+    <string name="meeting_schedule_create_title">Create</string>
 
     <string name="meeting_waiting_room_join">Join</string>
 

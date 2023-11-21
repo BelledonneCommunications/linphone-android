@@ -48,25 +48,10 @@
                 android:layout_width="0dp"
                 android:layout_height="@dimen/top_bar_height"
                 android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
                 android:text="@string/new_conversation_title"
-                app:layout_constraintEnd_toStartOf="@id/create_group"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/back"
                 app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/create_group"
-                android:onClick="@{() -> viewModel.createGroupChatRoom()}"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:padding="15dp"
-                android:adjustViewBounds="true"
-                android:src="@drawable/check"
-                android:enabled="@{viewModel.groupChatRoomCreateButtonEnabled}"
-                app:tint="@color/primary_color_selector"
-                app:layout_constraintBottom_toBottomOf="@id/title"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/title" />
 
             <View
                 android:id="@+id/background"
@@ -219,7 +204,7 @@
                 android:layout_marginTop="28dp"
                 android:background="@drawable/shape_orange_round"
                 android:padding="10dp"
-                android:src="@drawable/meeting"
+                android:src="@drawable/users_three"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/search_bar"
                 app:tint="@color/white" />
@@ -255,7 +240,7 @@
                 app:layout_constraintVertical_bias="0.3"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/group_chat_icon"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintBottom_toTopOf="@id/create_group" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/section_header_style"
@@ -278,7 +263,27 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/group_chat_icon"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintBottom_toTopOf="@id/create_group" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/primary_button_label_style"
+                android:id="@+id/create_group"
+                android:onClick="@{() -> viewModel.createGroupChatRoom()}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="@string/dialog_continue"
+                android:enabled="@{viewModel.groupChatRoomCreateButtonEnabled}"
+                app:layout_constraintWidth_max="@dimen/button_max_width"
+                app:layout_constraintTop_toBottomOf="@id/contacts_list"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
