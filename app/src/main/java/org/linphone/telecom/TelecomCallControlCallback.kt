@@ -54,8 +54,9 @@ class TelecomCallControlCallback constructor(
             Log.i("$TAG Call [${call.remoteAddress.asStringUriOnly()}] state changed [$state]")
             if (state == Call.State.Connected) {
                 if (call.dir == Call.Dir.Incoming) {
+                    val videoEnabled = call.currentParams.isVideoEnabled
                     scope.launch {
-                        val type = if (call.currentParams.isVideoEnabled) {
+                        val type = if (videoEnabled) {
                             CallAttributesCompat.CALL_TYPE_VIDEO_CALL
                         } else {
                             CallAttributesCompat.CALL_TYPE_AUDIO_CALL
