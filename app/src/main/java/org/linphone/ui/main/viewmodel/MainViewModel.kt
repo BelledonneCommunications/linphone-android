@@ -149,7 +149,7 @@ class MainViewModel @UiThread constructor() : ViewModel() {
                         val label = AppUtils.getString(
                             R.string.connection_error_for_non_default_account
                         )
-                        addAlert(SINGLE_CALL, label)
+                        addAlert(NON_DEFAULT_ACCOUNT_NOT_CONNECTED, label)
                     }
                 }
                 RegistrationState.Ok -> {
