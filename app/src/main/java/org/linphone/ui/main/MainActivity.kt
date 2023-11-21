@@ -51,6 +51,7 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.MainActivityBinding
 import org.linphone.ui.assistant.AssistantActivity
+import org.linphone.ui.main.help.fragment.DebugFragmentDirections
 import org.linphone.ui.main.viewmodel.MainViewModel
 import org.linphone.ui.main.viewmodel.SharedMainViewModel
 import org.linphone.ui.welcome.WelcomeActivity
@@ -428,6 +429,19 @@ class MainActivity : AppCompatActivity() {
                 }
             } else {
                 Log.i("$TAG Going into conversations list as no shortcut ID as found")
+            }
+
+            if (binding.drawerMenu.isOpen) {
+                Log.i("$TAG Drawer menu is opened, closing it")
+                closeDrawerMenu()
+            }
+
+            if (findNavController().currentDestination?.id == R.id.debugFragment) {
+                Log.i(
+                    "$TAG App is already started and in debug fragment, navigating to conversations list"
+                )
+                val action = DebugFragmentDirections.actionDebugFragmentToConversationsListFragment()
+                findNavController().navigate(action)
             }
 
             val navGraph = findNavController().navInflater.inflate(R.navigation.main_nav_graph)
