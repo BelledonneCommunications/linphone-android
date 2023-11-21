@@ -97,6 +97,7 @@
     <string name="dialog_contact_new_or_edit_abort_confirmation_title">Don\'t save changes?</string>
     <string name="dialog_contact_new_or_edit_abort_confirmation_message">All changes will be lost</string>
     <string name="dialog_zrtp_validate_trust_title">Validate the device</string>
+    <string name="dialog_zrtp_validate_trust_subtitle">Say %s and click on the letters given by your correspondent:</string>
     <string name="dialog_zrtp_validate_trust_message">Blah</string> <!-- TODO FIXME -->
     <string name="dialog_zrtp_validate_trust_letters_do_not_match">Letters don\'t match!</string>
     <string name="dialog_contact_increase_trust_level_title">Increase trust level</string>
@@ -482,4 +483,8 @@
     <string name="welcome_carousel_skip"><u>Skip</u></string>
     <string name="assistant_forgotten_password"><u>Forgotten password?</u></string>
     <string name="call_zrtp_sas_validation_skip"><u>Skip</u></string>
+
+    <!-- Keep <i></i> in following strings translations! -->
+    <string name="message_meeting_invitation_content_description"><i>meeting invite</i></string>
+    <string name="message_voice_message_content_description"><i>voice message</i></string>
 </resources>

@@ -257,9 +257,6 @@ private fun loadImageForChatBubble(imageView: ImageView, file: String?, grid: Bo
                             "$TAG Error getting preview picture from video? [$file]: ${result.throwable}"
                         )
                         imageView.visibility = View.GONE
-                    },
-                    onSuccess = { _, _ ->
-                        // TODO: Display "play" button above video preview
                     }
                 )
             }

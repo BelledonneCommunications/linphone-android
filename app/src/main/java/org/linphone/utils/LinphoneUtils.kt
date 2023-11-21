@@ -316,9 +316,11 @@ class LinphoneUtils {
             if (text.isEmpty()) {
                 val firstContent = message.contents.firstOrNull()
                 if (firstContent?.isIcalendar == true) {
-                    text = "meeting invite" // TODO: use translated string
+                    text = AppUtils.getString(
+                        R.string.message_meeting_invitation_content_description
+                    )
                 } else if (firstContent?.isVoiceRecording == true) {
-                    text = "voice message" // TODO: use translated string
+                    text = AppUtils.getString(R.string.message_voice_message_content_description)
                 } else {
                     for (content in message.contents) {
                         if (text.isNotEmpty()) {

@@ -23,7 +23,9 @@ import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import java.util.Random
+import org.linphone.R
 import org.linphone.core.tools.Log
+import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
 class ZrtpSasConfirmationDialogModel @UiThread constructor(
@@ -46,7 +48,10 @@ class ZrtpSasConfirmationDialogModel @UiThread constructor(
     val dismissEvent = MutableLiveData<Event<Boolean>>()
 
     init {
-        message.value = "Dites $authTokenToRead et cliquez sur les lettres données par votre interlocuteur :"
+        message.value = AppUtils.getFormattedString(
+            R.string.dialog_zrtp_validate_trust_subtitle,
+            authTokenToRead
+        )
 
         // TODO: improve algo?
         val rnd = Random()

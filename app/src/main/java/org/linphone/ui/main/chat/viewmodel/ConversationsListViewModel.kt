@@ -58,7 +58,7 @@ class ConversationsListViewModel @UiThread constructor() : AbstractTopBarViewMod
             when (state) {
                 ChatRoom.State.Created, ChatRoom.State.Instantiated, ChatRoom.State.Deleted -> {
                     computeChatRoomsList(currentFilter)
-                    // TODO: display toast
+                    // TODO: show toast
                 }
                 else -> {}
             }

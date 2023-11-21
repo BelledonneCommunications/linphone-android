@@ -25,8 +25,6 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import android.graphics.RenderEffect
-import android.graphics.Shader
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -58,6 +56,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.compatibility.Compatibility
 import org.linphone.core.ChatMessage
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatBubbleLongPressMenuBinding
@@ -502,9 +501,7 @@ class ConversationFragment : GenericFragment() {
     }
 
     private fun showChatMessageLongPressMenu(chatMessageModel: ChatMessageModel) {
-        // TODO: handle backward compat for blurring
-        val blurEffect = RenderEffect.createBlurEffect(16F, 16F, Shader.TileMode.MIRROR)
-        binding.root.setRenderEffect(blurEffect)
+        Compatibility.setBlurRenderEffect(binding.root)
 
         val dialog = Dialog(requireContext(), R.style.Theme_LinphoneDialog)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -564,7 +561,7 @@ class ConversationFragment : GenericFragment() {
 
         dialog.setContentView(layout.root)
         dialog.setOnDismissListener {
-            binding.root.setRenderEffect(null)
+            Compatibility.removeBlurRenderEffect(binding.root)
         }
 
         dialog.window

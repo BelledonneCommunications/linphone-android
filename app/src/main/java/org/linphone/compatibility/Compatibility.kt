@@ -22,6 +22,7 @@ package org.linphone.compatibility
 import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.Service
+import android.view.View
 import org.linphone.mediastream.Version
 
 @SuppressLint("NewApi")
@@ -48,6 +49,18 @@ class Compatibility {
                 )
             } else {
                 Api28Compatibility.startServiceForeground(service, id, notification)
+            }
+        }
+
+        fun setBlurRenderEffect(view: View) {
+            if (Version.sdkAboveOrEqual(Version.API31_ANDROID_12)) {
+                Api31Compatibility.setBlurRenderEffect(view)
+            }
+        }
+
+        fun removeBlurRenderEffect(view: View) {
+            if (Version.sdkAboveOrEqual(Version.API31_ANDROID_12)) {
+                Api31Compatibility.removeBlurRenderEffect(view)
             }
         }
     }
