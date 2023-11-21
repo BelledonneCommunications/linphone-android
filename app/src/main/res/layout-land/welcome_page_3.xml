@@ -45,7 +45,7 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/welcome_icon_size"
         android:layout_marginStart="32dp"
-        android:src="@drawable/open_source"
+        android:src="@drawable/welcome_open_source_logo"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintTop_toBottomOf="@id/title_second_line"
         app:layout_constraintBottom_toBottomOf="parent"
