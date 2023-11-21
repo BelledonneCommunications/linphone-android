@@ -62,6 +62,18 @@
             app:layout_constraintStart_toStartOf="@id/avatar"
             app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 
+        <ImageView
+            android:id="@+id/removal_in_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/animated_in_progress"
+            android:visibility="@{model.isBeingDeleted ? View.VISIBLE : View.GONE, default=gone}"
+            animatedDrawable="@{true}"
+            app:layout_constraintBottom_toBottomOf="@id/avatar"
+            app:layout_constraintStart_toStartOf="@id/avatar"
+            app:layout_constraintTop_toTopOf="@id/avatar"
+            app:layout_constraintEnd_toEndOf="@id/avatar"/>
+
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/unread_count_right_border"
             android:layout_width="wrap_content"
@@ -105,10 +117,10 @@
             android:gravity="center_vertical|start"
             android:maxLines="2"
             android:ellipsize="end"
-            android:text="@{model.isComposing ? model.composingLabel : model.lastMessageText, default=`Hello there!`}"
+            android:text="@{model.isBeingDeleted ? @string/conversations_list_is_being_removed_label : model.isComposing ? model.composingLabel : model.lastMessageText, default=`Hello there!`}"
             android:textSize="14sp"
             android:textColor="@color/gray_main2_400"
-            android:textStyle="@{model.unreadMessageCount > 0 ? Typeface.BOLD : Typeface.NORMAL}"
+            android:textStyle="@{model.isBeingDeleted || model.unreadMessageCount > 0 ? Typeface.BOLD : Typeface.NORMAL}"
             app:layout_constraintStart_toStartOf="@id/name"
             app:layout_constraintEnd_toStartOf="@id/right_border"
             app:layout_constraintTop_toBottomOf="@id/name"

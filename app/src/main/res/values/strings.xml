@@ -346,6 +346,7 @@
     <string name="call_incoming_for_account">Incoming call for %s</string>
 
     <string name="conversations_list_empty">No conversation for the moment…</string>
+    <string name="conversations_list_is_being_removed_label">Removal in progress</string>
     <string name="conversations_last_message_format">%s:</string>
     <string name="conversation_action_mark_as_read">Mark as read</string>
     <string name="conversation_action_mute">Mute</string>

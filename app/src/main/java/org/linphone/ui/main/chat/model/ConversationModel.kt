@@ -78,6 +78,8 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
 
     val avatarModel = MutableLiveData<ContactAvatarModel>()
 
+    val isBeingDeleted = MutableLiveData<Boolean>()
+
     private var lastMessage: ChatMessage? = null
 
     private val chatRoomListener = object : ChatRoomListenerStub() {
@@ -232,9 +234,12 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
     @UiThread
     fun delete() {
         coreContext.postOnCoreThread { core ->
+            Log.i("$TAG Deleting conversation [$id]")
+            isBeingDeleted.postValue(true)
             ShortcutUtils.removeShortcutToChatRoom(chatRoom)
             core.deleteChatRoom(chatRoom)
             Log.i("$TAG Conversation [$id] has been deleted")
+            isBeingDeleted.postValue(false)
         }
     }
 

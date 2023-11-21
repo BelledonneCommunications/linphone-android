@@ -282,7 +282,8 @@ private fun loadImageForChatBubble(imageView: ImageView, file: String?, grid: Bo
 }
 
 @UiThread
-fun ImageView.startAnimatedDrawable() {
+@BindingAdapter("animatedDrawable")
+fun ImageView.startAnimatedDrawable(start: Boolean = true) {
     drawable.apply {
         when (this) {
             is AnimatedVectorDrawableCompat -> start()
