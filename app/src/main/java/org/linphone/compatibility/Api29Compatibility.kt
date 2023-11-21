@@ -21,7 +21,9 @@ package org.linphone.compatibility
 
 import android.app.Notification
 import android.app.Service
+import android.net.Uri
 import android.os.Build
+import android.provider.MediaStore
 import androidx.annotation.RequiresApi
 import org.linphone.core.tools.Log
 
@@ -44,6 +46,27 @@ class Api29Compatibility {
                 )
             } catch (e: Exception) {
                 Log.e("$TAG Can't start service as foreground! $e")
+            }
+        }
+
+        fun getMediaCollectionUri(isImage: Boolean, isVideo: Boolean, isAudio: Boolean): Uri {
+            return when {
+                isImage -> {
+                    MediaStore.Images.Media.getContentUri(
+                        MediaStore.VOLUME_EXTERNAL_PRIMARY
+                    )
+                }
+                isVideo -> {
+                    MediaStore.Video.Media.getContentUri(
+                        MediaStore.VOLUME_EXTERNAL_PRIMARY
+                    )
+                }
+                isAudio -> {
+                    MediaStore.Audio.Media.getContentUri(
+                        MediaStore.VOLUME_EXTERNAL_PRIMARY
+                    )
+                }
+                else -> Uri.EMPTY
             }
         }
     }

@@ -12,9 +12,6 @@
             name="shareClickListener"
             type="View.OnClickListener" />
         <variable
-            name="saveClickListener"
-            type="View.OnClickListener" />
-        <variable
             name="viewModel"
             type="org.linphone.ui.main.viewer.viewmodel.FileViewModel" />
     </data>
@@ -130,7 +127,7 @@
 
         <ImageView
             android:id="@+id/save"
-            android:onClick="@{saveClickListener}"
+            android:onClick="@{() -> viewModel.exportToMediaStore()}"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:background="@color/white"

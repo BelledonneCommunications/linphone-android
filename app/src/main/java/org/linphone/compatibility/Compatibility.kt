@@ -22,6 +22,7 @@ package org.linphone.compatibility
 import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.Service
+import android.net.Uri
 import android.view.View
 import org.linphone.mediastream.Version
 
@@ -61,6 +62,18 @@ class Compatibility {
         fun removeBlurRenderEffect(view: View) {
             if (Version.sdkAboveOrEqual(Version.API31_ANDROID_12)) {
                 Api31Compatibility.removeBlurRenderEffect(view)
+            }
+        }
+
+        fun getMediaCollectionUri(
+            isImage: Boolean = false,
+            isVideo: Boolean = false,
+            isAudio: Boolean = false
+        ): Uri {
+            return if (Version.sdkAboveOrEqual(Version.API29_ANDROID_10)) {
+                Api29Compatibility.getMediaCollectionUri(isImage, isVideo, isAudio)
+            } else {
+                Api28Compatibility.getMediaCollectionUri(isImage, isVideo, isAudio)
             }
         }
     }

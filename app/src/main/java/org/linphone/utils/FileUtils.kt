@@ -35,6 +35,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
+import java.io.OutputStream
 import java.util.Locale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -72,6 +73,13 @@ class FileUtils {
             val extension = getExtensionFromFileName(path)
             val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
             return getMimeType(type) == MimeType.Video
+        }
+
+        @AnyThread
+        fun isExtensionAudio(path: String): Boolean {
+            val extension = getExtensionFromFileName(path)
+            val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+            return getMimeType(type) == MimeType.Audio
         }
 
         @AnyThread
@@ -247,6 +255,34 @@ class FileUtils {
                 return true
             } catch (e: IOException) {
                 Log.e("$TAG copyFile [$from] to [$to] exception: $e")
+            }
+            return false
+        }
+
+        suspend fun copyFileTo(filePath: String, outputStream: OutputStream?): Boolean {
+            if (outputStream == null) {
+                Log.e("$TAG Can't copy file $filePath to given null output stream")
+                return false
+            }
+
+            val file = File(filePath)
+            if (!file.exists()) {
+                Log.e("$TAG Can't copy file $filePath, it doesn't exists")
+                return false
+            }
+
+            try {
+                withContext(Dispatchers.IO) {
+                    val inputStream = FileInputStream(file)
+                    val buffer = ByteArray(4096)
+                    var bytesRead: Int
+                    while (inputStream.read(buffer).also { bytesRead = it } >= 0) {
+                        outputStream.write(buffer, 0, bytesRead)
+                    }
+                }
+                return true
+            } catch (e: IOException) {
+                Log.e("$TAG copyFileTo exception: $e")
             }
             return false
         }
