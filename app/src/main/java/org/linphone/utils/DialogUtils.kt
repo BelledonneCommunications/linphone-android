@@ -329,9 +329,9 @@ class DialogUtils {
                     WindowManager.LayoutParams.MATCH_PARENT
                 )
             val d: Drawable = ColorDrawable(
-                AppUtils.getColor(R.color.gray_main2_800)
+                AppUtils.getColor(R.color.black)
             )
-            d.alpha = 102
+            d.alpha = 153 // 60%
             dialog.window?.setBackgroundDrawable(d)
             return dialog
         }
