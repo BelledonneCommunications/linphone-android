@@ -76,6 +76,8 @@ import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
+import org.linphone.utils.RecyclerViewSwipeUtils
+import org.linphone.utils.RecyclerViewSwipeUtilsCallback
 import org.linphone.utils.addCharacterAtPosition
 import org.linphone.utils.hideKeyboard
 import org.linphone.utils.setKeyboardInsetListener
@@ -217,6 +219,29 @@ class ConversationFragment : GenericFragment() {
 
         binding.eventsList.setHasFixedSize(true)
         binding.eventsList.layoutManager = LinearLayoutManager(requireContext())
+
+        val callbacks = RecyclerViewSwipeUtilsCallback(
+            R.drawable.reply,
+            ConversationEventAdapter.EventViewHolder::class.java
+        ) { viewHolder ->
+            val index = viewHolder.bindingAdapterPosition
+            if (index < 0 || index >= adapter.currentList.size) {
+                Log.e("$TAG Swipe viewHolder index [$index] is out of bounds!")
+            } else {
+                adapter.notifyItemChanged(index)
+
+                val chatMessageEventLog = adapter.currentList[index]
+                val chatMessageModel = (chatMessageEventLog.model as? ChatMessageModel)
+                if (chatMessageModel != null) {
+                    sendMessageViewModel.replyToMessage(chatMessageModel)
+                } else {
+                    Log.e(
+                        "$TAG Can't reply, failed to get a ChatMessageModel from adapter item #[$index]"
+                    )
+                }
+            }
+        }
+        RecyclerViewSwipeUtils(callbacks).attachToRecyclerView(binding.eventsList)
 
         val localSipUri = args.localSipUri
         val remoteSipUri = args.remoteSipUri

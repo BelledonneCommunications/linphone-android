@@ -21,41 +21,30 @@ package org.linphone.utils
 
 import android.annotation.SuppressLint
 import android.graphics.Canvas
-import android.view.MotionEvent
-import android.view.View
+import androidx.annotation.DrawableRes
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_SWIPE
-import androidx.recyclerview.widget.ItemTouchHelper.LEFT
 import androidx.recyclerview.widget.ItemTouchHelper.RIGHT
 import androidx.recyclerview.widget.RecyclerView
 
-class RecyclerViewSwipeUtils(callbacks: RecyclerViewSwipeUtilsCallback) : ItemTouchHelper(callbacks)
+class RecyclerViewSwipeUtils(
+    callbacks: RecyclerViewSwipeUtilsCallback
+) : ItemTouchHelper(callbacks)
 
-class RecyclerViewSwipeUtilsCallback(val rightButton: View? = null) : ItemTouchHelper.Callback() {
-    companion object {
-        private const val TAG = "[RecyclerViewSwipeUtilsCallback]"
-    }
-
-    private var swipeBack: Boolean = false
-    private var rightButtonWidth: Int = 0
-
-    init {
-        if (rightButton != null) {
-            val widthSpec = View.MeasureSpec.makeMeasureSpec(
-                0,
-                View.MeasureSpec.UNSPECIFIED
-            )
-            val heightSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
-            rightButton.measure(widthSpec, heightSpec)
-            rightButtonWidth = rightButton.measuredWidth
-        }
-    }
-
+class RecyclerViewSwipeUtilsCallback(
+    @DrawableRes private val icon: Int,
+    private val disableActionForViewHolderClass: Class<*>? = null,
+    private val onSwiped: ((viewHolder: RecyclerView.ViewHolder) -> Unit)? = null
+) : ItemTouchHelper.Callback() {
     override fun getMovementFlags(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder
     ): Int {
-        return makeMovementFlags(0, LEFT or RIGHT)
+        if (disableActionForViewHolderClass?.isInstance(viewHolder) == true) {
+            return makeMovementFlags(0, 0)
+        }
+        return makeMovementFlags(0, RIGHT)
     }
 
     override fun onMove(
@@ -66,7 +55,17 @@ class RecyclerViewSwipeUtilsCallback(val rightButton: View? = null) : ItemTouchH
         return false
     }
 
-    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+    override fun onSwiped(
+        viewHolder: RecyclerView.ViewHolder,
+        direction: Int
+    ) {
+        if (direction == RIGHT) {
+            onSwiped?.invoke(viewHolder)
+        }
+    }
+
+    override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float {
+        return .2f // Percentage of the screen width the swipe action has to reach to validate swipe move (default is .5f)
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -80,45 +79,33 @@ class RecyclerViewSwipeUtilsCallback(val rightButton: View? = null) : ItemTouchH
         isCurrentlyActive: Boolean
     ) {
         if (actionState == ACTION_STATE_SWIPE) {
-            recyclerView.setOnTouchListener { _, event ->
-                swipeBack =
-                    event.action == MotionEvent.ACTION_CANCEL || event.action == MotionEvent.ACTION_UP
+            val iconDrawable = ContextCompat.getDrawable(recyclerView.context, icon)
+            val iconWidth = iconDrawable?.intrinsicWidth ?: 0
+            val margin = 20
+            if (iconDrawable != null && dX > iconWidth + margin) {
+                val halfIcon = iconDrawable.intrinsicHeight / 2
+                val top =
+                    viewHolder.itemView.top + ((viewHolder.itemView.bottom - viewHolder.itemView.top) / 2 - halfIcon)
 
-                val showRightButton = (rightButtonWidth != 0 && dX < -rightButtonWidth)
-                val position = viewHolder.bindingAdapterPosition
-                val clickable = !showRightButton || swipeBack
-                try {
-                    recyclerView.getChildAt(position).isClickable = clickable
-                } catch (e: IndexOutOfBoundsException) {
-                }
-                if (rightButton != null && showRightButton) {
-                    val itemView = viewHolder.itemView
-                    val left = (itemView.right - rightButton.measuredWidth)
-                    val top = itemView.top
-
-                    canvas.save()
-                    canvas.translate(left.toFloat(), top.toFloat())
-                    rightButton.layout(
-                        0,
-                        0,
-                        rightButton.width,
-                        rightButton.height
-                    )
-                    rightButton.draw(canvas)
-                    canvas.restore()
+                // Icon won't move past the swipe threshold, thus indicating to the user
+                // it has reached the required distance for swipe action to be done
+                val threshold = getSwipeThreshold(viewHolder) * viewHolder.itemView.right
+                val left = if (dX < threshold) {
+                    viewHolder.itemView.left + dX.toInt() - iconWidth - margin
+                } else {
+                    viewHolder.itemView.left + threshold.toInt() - iconWidth - margin
                 }
 
-                false
+                iconDrawable.setBounds(
+                    left,
+                    top,
+                    left + iconWidth,
+                    top + iconDrawable.intrinsicHeight
+                )
+                iconDrawable.draw(canvas)
             }
         }
-        super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-    }
 
-    override fun convertToAbsoluteDirection(flags: Int, layoutDirection: Int): Int {
-        if (swipeBack) {
-            swipeBack = false
-            return 0
-        }
-        return super.convertToAbsoluteDirection(flags, layoutDirection)
+        super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
     }
 }
