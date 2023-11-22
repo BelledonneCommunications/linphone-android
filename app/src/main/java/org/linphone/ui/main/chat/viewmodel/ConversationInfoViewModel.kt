@@ -25,6 +25,7 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
 import org.linphone.core.Address
 import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoomListenerStub
@@ -34,6 +35,7 @@ import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.chat.model.ParticipantModel
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
+import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
@@ -74,6 +76,10 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    val infoChangedEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     val showParticipantAdminPopupMenuEvent: MutableLiveData<Event<Pair<View, ParticipantModel>>> by lazy {
         MutableLiveData<Event<Pair<View, ParticipantModel>>>()
     }
@@ -82,21 +88,39 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<ArrayList<String>>>()
     }
 
+    val showGreenToastEvent: MutableLiveData<Event<Pair<String, Int>>> by lazy {
+        MutableLiveData<Event<Pair<String, Int>>>()
+    }
+
+    val showRedToastEvent: MutableLiveData<Event<Pair<String, Int>>> by lazy {
+        MutableLiveData<Event<Pair<String, Int>>>()
+    }
+
     private lateinit var chatRoom: ChatRoom
 
     private val chatRoomListener = object : ChatRoomListenerStub() {
         @WorkerThread
         override fun onParticipantAdded(chatRoom: ChatRoom, eventLog: EventLog) {
             Log.i("$TAG A participant has been added to the group [${chatRoom.subject}]")
-            // TODO: show toast
+            val message = AppUtils.getString(
+                R.string.toast_participant_added_to_conversation
+            )
+            showGreenToastEvent.postValue(Event(Pair(message, R.drawable.user_circle)))
+
             computeParticipantsList()
+            infoChangedEvent.postValue(Event(true))
         }
 
         @WorkerThread
         override fun onParticipantRemoved(chatRoom: ChatRoom, eventLog: EventLog) {
             Log.i("$TAG A participant has been removed from the group [${chatRoom.subject}]")
-            // TODO: show toast
+            val message = AppUtils.getString(
+                R.string.toast_participant_removed_from_conversation
+            )
+            showGreenToastEvent.postValue(Event(Pair(message, R.drawable.user_circle)))
+
             computeParticipantsList()
+            infoChangedEvent.postValue(Event(true))
         }
 
         @WorkerThread
@@ -104,7 +128,17 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
             Log.i(
                 "$TAG A participant has been given/removed administration rights for group [${chatRoom.subject}]"
             )
-            // TODO: show toast
+            val message = if (eventLog.type == EventLog.Type.ConferenceParticipantSetAdmin) {
+                AppUtils.getString(
+                    R.string.toast_participant_has_been_granted_admin_rights
+                )
+            } else {
+                AppUtils.getString(
+                    R.string.toast_participant_no_longer_has_admin_rights
+                )
+            }
+            showGreenToastEvent.postValue(Event(Pair(message, R.drawable.user_circle)))
+
             // TODO FIXME: list doesn't have the changes...
             computeParticipantsList()
         }
@@ -114,14 +148,36 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
             Log.i(
                 "$TAG Chat room [${LinphoneUtils.getChatRoomId(chatRoom)}] has a new subject [${chatRoom.subject}]"
             )
-            // TODO: show toast
+            val message = AppUtils.getString(
+                R.string.toast_conversation_subject_changed
+            )
+            showGreenToastEvent.postValue(Event(Pair(message, R.drawable.check)))
+
             subject.postValue(chatRoom.subject)
+            infoChangedEvent.postValue(Event(true))
         }
 
         @WorkerThread
         override fun onEphemeralEvent(chatRoom: ChatRoom, eventLog: EventLog) {
             Log.i("$TAG Ephemeral event [${eventLog.type}]")
-            // TODO: show toast
+            val message = when (eventLog.type) {
+                EventLog.Type.ConferenceEphemeralMessageEnabled -> {
+                    AppUtils.getString(
+                        R.string.toast_conversation_ephemeral_messages_enabled
+                    )
+                }
+                EventLog.Type.ConferenceEphemeralMessageDisabled -> {
+                    AppUtils.getString(
+                        R.string.toast_conversation_ephemeral_messages_disabled
+                    )
+                }
+                else -> {
+                    AppUtils.getString(
+                        R.string.toast_conversation_ephemeral_messages_lifetime_changed
+                    )
+                }
+            }
+            showGreenToastEvent.postValue(Event(Pair(message, R.drawable.clock_countdown)))
         }
     }
 
@@ -360,7 +416,10 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
                 val ok = chatRoom.addParticipants(participantsToAdd)
                 if (!ok) {
                     Log.w("$TAG Failed to add some/all participants to the group!")
-                    // TODO: show toast
+                    val message = AppUtils.getString(
+                        R.string.toast_failed_to_add_participant_to_group_conversation
+                    )
+                    showRedToastEvent.postValue(Event(Pair(message, R.drawable.x)))
                 }
             }
         }

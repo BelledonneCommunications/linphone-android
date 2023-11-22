@@ -133,6 +133,24 @@
     <string name="toast_alert_low_cellular_signal_cleared">Cellular signal is no longer low</string>
     <string name="toast_call_can_be_trusted">This call can be trusted</string>
     <string name="toast_default_account_connection_state_error">Connection error!</string>
+    <string name="toast_file_successfully_exported_to_media_store">File has been exported to native gallery</string>
+    <string name="toast_export_file_to_media_store_error">Error trying to export file to native gallery</string>
+    <string name="toast_participant_added_to_conversation">Someone joined the conversation</string>
+    <string name="toast_participant_removed_from_conversation">Someone left the conversation</string>
+    <string name="toast_participant_has_been_granted_admin_rights">Someone is now admin</string>
+    <string name="toast_participant_no_longer_has_admin_rights">Someone is no longer admin</string>
+    <string name="toast_conversation_subject_changed">Conversation subject has changed</string>
+    <string name="toast_conversation_ephemeral_messages_enabled">Ephemeral messages have been enabled</string>
+    <string name="toast_conversation_ephemeral_messages_disabled">Ephemeral messages have been disabled</string>
+    <string name="toast_conversation_ephemeral_messages_lifetime_changed">Ephemeral messages lifetime changed</string>
+    <string name="toast_cant_find_contact_to_display">Contact was not found</string>
+    <string name="toast_no_address_to_add_to_contact">No address to add to contact</string>
+    <string name="toast_cant_find_conversation_to_display">Conversation was not found</string>
+    <string name="toast_voice_recording_max_duration_reached">Max duration reached</string>
+    <string name="toast_failed_to_add_participant_to_group_conversation">Failed to add participant(s) to conversation</string>
+    <string name="toast_conversation_deleted">Conversation was successfully deleted</string>
+    <string name="toast_conversation_history_deleted">History has been successfully deleted</string>
+    <string name="toast_group_conversation_left">You have left the group</string>
 
     <string name="assistant_account_login">Login</string>
     <string name="assistant_scan_qr_code">Scan QR code</string>

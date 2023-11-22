@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import org.linphone.core.tools.Log
 import org.linphone.databinding.FileViewerFragmentBinding
+import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.ui.main.viewer.adapter.PdfPagesListAdapter
 import org.linphone.ui.main.viewer.viewmodel.FileViewModel
@@ -94,6 +95,22 @@ class FileViewerFragment : GenericFragment() {
                 } else {
                     binding.videoPlayer.pause()
                 }
+            }
+        }
+
+        viewModel.showGreenToastEvent.observe(viewLifecycleOwner) {
+            it.consume { pair ->
+                val message = pair.first
+                val icon = pair.second
+                (requireActivity() as MainActivity).showGreenToast(message, icon)
+            }
+        }
+
+        viewModel.showRedToastEvent.observe(viewLifecycleOwner) {
+            it.consume { pair ->
+                val message = pair.first
+                val icon = pair.second
+                (requireActivity() as MainActivity).showRedToast(message, icon)
             }
         }
     }

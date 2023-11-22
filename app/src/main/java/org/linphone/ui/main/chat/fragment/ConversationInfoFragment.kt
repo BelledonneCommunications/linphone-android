@@ -36,6 +36,7 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatInfoFragmentBinding
 import org.linphone.databinding.ChatParticipantAdminPopupMenuBinding
+import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.chat.adapter.ConversationParticipantsAdapter
 import org.linphone.ui.main.chat.model.ConversationEditSubjectDialogModel
 import org.linphone.ui.main.chat.model.ParticipantModel
@@ -113,7 +114,8 @@ class ConversationInfoFragment : GenericFragment() {
                     (view.parent as? ViewGroup)?.doOnPreDraw {
                         Log.e("$TAG Failed to find chat room, going back")
                         goBack()
-                        // TODO: show toast ?
+                        val message = getString(R.string.toast_cant_find_conversation_to_display)
+                        (requireActivity() as MainActivity).showRedToast(message, R.drawable.x)
                     }
                 }
             }
@@ -129,18 +131,26 @@ class ConversationInfoFragment : GenericFragment() {
 
         viewModel.groupLeftEvent.observe(viewLifecycleOwner) {
             it.consume {
-                // TODO: show toast ?
                 Log.i("$TAG Group has been left, leaving conversation info...")
                 goBack()
+                val message = getString(R.string.toast_group_conversation_left)
+                (requireActivity() as MainActivity).showGreenToast(
+                    message,
+                    R.drawable.chat_teardrop_text
+                )
             }
         }
 
         viewModel.historyDeletedEvent.observe(viewLifecycleOwner) {
             it.consume {
-                // TODO: show toast ?
                 Log.i("$TAG History has been deleted, leaving conversation info...")
                 sharedViewModel.forceRefreshConversationEvent.value = Event(true)
                 goBack()
+                val message = getString(R.string.toast_conversation_history_deleted)
+                (requireActivity() as MainActivity).showGreenToast(
+                    message,
+                    R.drawable.chat_teardrop_text
+                )
             }
         }
 
@@ -157,6 +167,28 @@ class ConversationInfoFragment : GenericFragment() {
                 )
                 sharedViewModel.goToScheduleMeetingEvent.postValue(Event(participants))
                 sharedViewModel.navigateToMeetingsEvent.postValue(Event(true))
+            }
+        }
+
+        viewModel.infoChangedEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                sharedViewModel.forceRefreshConversationInfo.postValue(Event(true))
+            }
+        }
+
+        viewModel.showGreenToastEvent.observe(viewLifecycleOwner) {
+            it.consume { pair ->
+                val message = pair.first
+                val icon = pair.second
+                (requireActivity() as MainActivity).showGreenToast(message, icon)
+            }
+        }
+
+        viewModel.showRedToastEvent.observe(viewLifecycleOwner) {
+            it.consume { pair ->
+                val message = pair.first
+                val icon = pair.second
+                (requireActivity() as MainActivity).showRedToast(message, icon)
             }
         }
 
@@ -223,7 +255,8 @@ class ConversationInfoFragment : GenericFragment() {
                 sharedViewModel.showContactEvent.value = Event(refKey)
             } else {
                 Log.e("$TAG Can't go to contact page, friend ref key is null or empty!")
-                // TODO: show toast
+                val message = getString(R.string.toast_cant_find_contact_to_display)
+                (requireActivity() as MainActivity).showRedToast(message, R.drawable.x)
             }
         }
 
@@ -236,7 +269,8 @@ class ConversationInfoFragment : GenericFragment() {
                 sharedViewModel.showNewContactEvent.value = Event(true)
             } else {
                 Log.e("$TAG Can't add empty/null SIP URI to contacts!")
-                // TODO: show toast
+                val message = getString(R.string.toast_no_address_to_add_to_contact)
+                (requireActivity() as MainActivity).showRedToast(message, R.drawable.x)
             }
         }
 
@@ -300,16 +334,24 @@ class ConversationInfoFragment : GenericFragment() {
                 sharedViewModel.showContactEvent.value = Event(friendRefKey)
             } else {
                 Log.e("$TAG Can't go to contact page, friend ref key is null or empty!")
-                // TODO: show toast
+                val message = getString(R.string.toast_cant_find_contact_to_display)
+                (requireActivity() as MainActivity).showRedToast(message, R.drawable.x)
             }
             popupWindow.dismiss()
         }
 
         popupView.setAddToContactsClickListener {
-            Log.i("$TAG Trying to add participant [${participantModel.sipUri}] to contacts")
-            sharedViewModel.sipAddressToAddToNewContact = participantModel.sipUri
-            sharedViewModel.navigateToContactsEvent.value = Event(true)
-            sharedViewModel.showNewContactEvent.value = Event(true)
+            val sipUri = participantModel.sipUri
+            if (sipUri.isNotEmpty()) {
+                Log.i("$TAG Trying to add participant [${participantModel.sipUri}] to contacts")
+                sharedViewModel.sipAddressToAddToNewContact = sipUri
+                sharedViewModel.navigateToContactsEvent.value = Event(true)
+                sharedViewModel.showNewContactEvent.value = Event(true)
+            } else {
+                Log.e("$TAG Can't add empty/null SIP URI to contacts!")
+                val message = getString(R.string.toast_no_address_to_add_to_contact)
+                (requireActivity() as MainActivity).showRedToast(message, R.drawable.x)
+            }
             popupWindow.dismiss()
         }
 

@@ -23,6 +23,7 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
 import org.linphone.contacts.ContactsManager
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatRoom
@@ -33,6 +34,8 @@ import org.linphone.core.tools.Log
 import org.linphone.ui.main.chat.model.ConversationModel
 import org.linphone.ui.main.model.isInSecureMode
 import org.linphone.ui.main.viewmodel.AbstractTopBarViewModel
+import org.linphone.utils.AppUtils
+import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
 class ConversationsListViewModel @UiThread constructor() : AbstractTopBarViewModel() {
@@ -43,6 +46,10 @@ class ConversationsListViewModel @UiThread constructor() : AbstractTopBarViewMod
     val conversations = MutableLiveData<ArrayList<ConversationModel>>()
 
     val fetchInProgress = MutableLiveData<Boolean>()
+
+    val showGreenToastEvent: MutableLiveData<Event<Pair<String, Int>>> by lazy {
+        MutableLiveData<Event<Pair<String, Int>>>()
+    }
 
     private val coreListener = object : CoreListenerStub() {
         @WorkerThread
@@ -56,9 +63,16 @@ class ConversationsListViewModel @UiThread constructor() : AbstractTopBarViewMod
             )
 
             when (state) {
-                ChatRoom.State.Created, ChatRoom.State.Instantiated, ChatRoom.State.Deleted -> {
+                ChatRoom.State.Created, ChatRoom.State.Instantiated -> {
                     computeChatRoomsList(currentFilter)
-                    // TODO: show toast
+                }
+                ChatRoom.State.Deleted -> {
+                    computeChatRoomsList(currentFilter)
+
+                    val message = AppUtils.getString(R.string.toast_conversation_deleted)
+                    showGreenToastEvent.postValue(
+                        Event(Pair(message, R.drawable.chat_teardrop_text))
+                    )
                 }
                 else -> {}
             }

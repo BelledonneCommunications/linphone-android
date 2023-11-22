@@ -51,6 +51,14 @@ class FileViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    val showGreenToastEvent: MutableLiveData<Event<Pair<String, Int>>> by lazy {
+        MutableLiveData<Event<Pair<String, Int>>>()
+    }
+
+    val showRedToastEvent: MutableLiveData<Event<Pair<String, Int>>> by lazy {
+        MutableLiveData<Event<Pair<String, Int>>>()
+    }
+
     // Below are required for PDF viewer
     private lateinit var pdfRenderer: PdfRenderer
 
@@ -157,12 +165,19 @@ class FileViewModel @UiThread constructor() : ViewModel() {
             viewModelScope.launch {
                 withContext(Dispatchers.IO) {
                     Log.i("$TAG Export file [$filePath] to Android's MediaStore")
-                    if (addContentToMediaStore(filePath)) {
+                    val mediaStorePath = addContentToMediaStore(filePath)
+                    if (mediaStorePath.isNotEmpty()) {
                         Log.i("$TAG File [$filePath] has been successfully exported to MediaStore")
-                        // TODO: show toast
+                        val message = AppUtils.getString(
+                            R.string.toast_file_successfully_exported_to_media_store
+                        )
+                        showGreenToastEvent.postValue(Event(Pair(message, R.drawable.check)))
                     } else {
                         Log.e("$TAG Failed to export file [$filePath] to MediaStore!")
-                        // TODO: show toast
+                        val message = AppUtils.getString(
+                            R.string.toast_export_file_to_media_store_error
+                        )
+                        showRedToastEvent.postValue(Event(Pair(message, R.drawable.x)))
                     }
                 }
             }
@@ -174,10 +189,10 @@ class FileViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     private suspend fun addContentToMediaStore(
         path: String
-    ): Boolean {
+    ): String {
         if (path.isEmpty()) {
             Log.e("$TAG No file path to export to MediaStore!")
-            return false
+            return ""
         }
 
         val isImage = FileUtils.isExtensionImage(path)
@@ -254,10 +269,10 @@ class FileViewModel @UiThread constructor() : ViewModel() {
 
         if (mediaStoreFilePath.isNotEmpty()) {
             Log.i("$TAG Exported file path to MediaStore is: $mediaStoreFilePath")
-            return true
+            return mediaStoreFilePath
         }
 
-        return false
+        return ""
     }
 
     @UiThread

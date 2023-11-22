@@ -61,6 +61,7 @@ import org.linphone.core.ChatMessage
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatBubbleLongPressMenuBinding
 import org.linphone.databinding.ChatConversationFragmentBinding
+import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.chat.adapter.ChatMessageBottomSheetAdapter
 import org.linphone.ui.main.chat.adapter.ConversationEventAdapter
 import org.linphone.ui.main.chat.model.ChatMessageDeliveryModel
@@ -231,7 +232,8 @@ class ConversationFragment : GenericFragment() {
                     (view.parent as? ViewGroup)?.doOnPreDraw {
                         Log.e("$TAG Failed to find chat room, going back")
                         goBack()
-                        // TODO: show toast
+                        val message = getString(R.string.toast_cant_find_conversation_to_display)
+                        (requireActivity() as MainActivity).showRedToast(message, R.drawable.x)
                     }
                 } else {
                     sendMessageViewModel.configureChatRoom(viewModel.chatRoom)
@@ -343,6 +345,14 @@ class ConversationFragment : GenericFragment() {
             }
         }
 
+        sendMessageViewModel.showRedToastEvent.observe(viewLifecycleOwner) {
+            it.consume { pair ->
+                val message = pair.first
+                val icon = pair.second
+                (requireActivity() as MainActivity).showRedToast(message, icon)
+            }
+        }
+
         viewModel.searchFilter.observe(viewLifecycleOwner) { filter ->
             viewModel.applyFilter(filter.trim())
         }
@@ -429,6 +439,13 @@ class ConversationFragment : GenericFragment() {
                 }
 
                 sharedViewModel.filesToShareFromIntent.value = arrayListOf()
+            }
+        }
+
+        sharedViewModel.forceRefreshConversationInfo.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i("$TAG Force refreshing conversation info")
+                viewModel.refresh()
             }
         }
 

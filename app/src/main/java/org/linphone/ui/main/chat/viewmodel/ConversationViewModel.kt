@@ -303,6 +303,14 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
+    fun refresh() {
+        coreContext.postOnCoreThread {
+            Log.i("$TAG Refreshing conversation info (subject, participants, etc...)")
+            computeConversationInfo()
+        }
+    }
+
+    @UiThread
     fun applyFilter(filter: String) {
         coreContext.postOnCoreThread {
             computeEvents(filter)
@@ -340,6 +348,14 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             Log.w("$TAG Chat room with subject [${chatRoom.subject}] is read only!")
         }
 
+        computeConversationInfo()
+
+        computeEvents()
+        chatRoom.markAsRead()
+    }
+
+    @WorkerThread
+    private fun computeConversationInfo() {
         val group = LinphoneUtils.isChatRoomAGroup(chatRoom)
         isGroup.postValue(group)
 
@@ -369,9 +385,6 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             coreContext.contactsManager.getContactAvatarModelForAddress(address)
         }
         avatarModel.postValue(avatar)
-
-        computeEvents()
-        chatRoom.markAsRead()
     }
 
     @WorkerThread

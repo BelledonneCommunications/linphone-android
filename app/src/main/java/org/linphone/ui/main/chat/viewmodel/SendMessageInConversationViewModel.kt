@@ -37,6 +37,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
+import org.linphone.R
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoomListenerStub
@@ -49,6 +50,7 @@ import org.linphone.core.tools.Log
 import org.linphone.ui.main.chat.model.ChatMessageModel
 import org.linphone.ui.main.chat.model.FileModel
 import org.linphone.ui.main.chat.model.ParticipantModel
+import org.linphone.utils.AppUtils
 import org.linphone.utils.AudioRouteUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
@@ -110,6 +112,10 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
 
     val askRecordAudioPermissionEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
+    }
+
+    val showRedToastEvent: MutableLiveData<Event<Pair<String, Int>>> by lazy {
+        MutableLiveData<Event<Pair<String, Int>>>()
     }
 
     lateinit var chatRoom: ChatRoom
@@ -483,7 +489,10 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
                         "$TAG Max duration for voice recording exceeded (${maxVoiceRecordDuration}ms), stopping."
                     )
                     stopVoiceRecorder()
-                    // TOOD: show toast
+                    val message = AppUtils.getString(
+                        R.string.toast_voice_recording_max_duration_reached
+                    )
+                    showRedToastEvent.postValue(Event(Pair(message, R.drawable.x)))
                 }
             }
         }.launchIn(viewModelScope)
