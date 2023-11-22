@@ -19,10 +19,8 @@
  */
 package org.linphone.contacts
 
-import android.content.ContentUris
 import android.database.Cursor
 import android.database.StaleDataException
-import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.util.Patterns
@@ -134,13 +132,10 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                                 )
                             friend.name = displayName
 
-                            friend.photo = Uri.withAppendedPath(
-                                ContentUris.withAppendedId(
-                                    ContactsContract.Contacts.CONTENT_URI,
-                                    id.toLong()
-                                ),
-                                ContactsContract.Contacts.Photo.CONTENT_DIRECTORY
-                            ).toString()
+                            val uri = friend.getNativeContactPictureUri()
+                            if (uri != null) {
+                                friend.photo = uri.toString()
+                            }
 
                             val starred =
                                 cursor.getInt(

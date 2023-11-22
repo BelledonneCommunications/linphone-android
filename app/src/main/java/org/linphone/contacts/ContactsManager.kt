@@ -32,6 +32,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.Person
 import androidx.core.graphics.drawable.IconCompat
 import androidx.loader.app.LoaderManager
+import java.io.IOException
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Address
 import org.linphone.core.ConferenceInfo
@@ -374,14 +375,10 @@ class ContactsManager @UiThread constructor() {
                         }
 
                         if (friend.photo.isNullOrEmpty()) {
-                            val picture = Uri.withAppendedPath(
-                                ContentUris.withAppendedId(
-                                    ContactsContract.Contacts.CONTENT_URI,
-                                    id.toLong()
-                                ),
-                                ContactsContract.Contacts.Photo.CONTENT_DIRECTORY
-                            ).toString()
-                            friend.photo = picture
+                            val uri = friend.getNativeContactPictureUri()
+                            if (uri != null) {
+                                friend.photo = uri.toString()
+                            }
                         }
 
                         if (friend.nativeUri.isNullOrEmpty()) {
@@ -448,6 +445,42 @@ class ContactsManager @UiThread constructor() {
 @WorkerThread
 fun Friend.getAvatarBitmap(): Bitmap? {
     return ImageUtils.getBitmap(coreContext.context, photo)
+}
+
+@WorkerThread
+fun Friend.getNativeContactPictureUri(): Uri? {
+    val contactId = refKey
+    if (contactId != null) {
+        try {
+            val lookupUri = ContentUris.withAppendedId(
+                ContactsContract.Contacts.CONTENT_URI,
+                contactId.toLong()
+            )
+
+            val pictureUri = Uri.withAppendedPath(
+                lookupUri,
+                ContactsContract.Contacts.Photo.DISPLAY_PHOTO
+            )
+            // Check that the URI points to a real file
+            val contentResolver = coreContext.context.contentResolver
+            try {
+                val fd = contentResolver.openAssetFileDescriptor(pictureUri, "r")
+                if (fd != null) {
+                    fd.close()
+                    return pictureUri
+                }
+            } catch (_: IOException) { }
+
+            // Fallback to thumbnail
+            return Uri.withAppendedPath(
+                lookupUri,
+                ContactsContract.Contacts.Photo.CONTENT_DIRECTORY
+            )
+        } catch (numberFormatException: NumberFormatException) {
+            // Expected for contacts created by Linphone
+        }
+    }
+    return null
 }
 
 @WorkerThread

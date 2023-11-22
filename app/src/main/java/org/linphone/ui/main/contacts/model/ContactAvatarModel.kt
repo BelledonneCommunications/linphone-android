@@ -19,14 +19,13 @@
  */
 package org.linphone.ui.main.contacts.model
 
-import android.content.ContentUris
 import android.net.Uri
-import android.provider.ContactsContract
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.contacts.AbstractAvatarModel
+import org.linphone.contacts.getNativeContactPictureUri
 import org.linphone.core.ChatRoom.SecurityLevel
 import org.linphone.core.ConsolidatedPresence
 import org.linphone.core.Friend
@@ -107,14 +106,7 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) : Abstrac
         val refKey = friend.refKey
         if (refKey != null) {
             try {
-                val lookupUri = ContentUris.withAppendedId(
-                    ContactsContract.Contacts.CONTENT_URI,
-                    refKey.toLong()
-                )
-                return Uri.withAppendedPath(
-                    lookupUri,
-                    ContactsContract.Contacts.Photo.CONTENT_DIRECTORY
-                )
+                return friend.getNativeContactPictureUri()
             } catch (numberFormatException: NumberFormatException) {
                 // Expected for contacts created by Linphone
             }
