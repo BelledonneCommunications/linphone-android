@@ -8,7 +8,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.navigation.navGraphViewModels
+import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
@@ -24,9 +24,7 @@ class SettingsFragment : GenericFragment() {
 
     private lateinit var binding: SettingsFragmentBinding
 
-    private val viewModel: SettingsViewModel by navGraphViewModels(
-        R.id.main_nav_graph
-    )
+    private lateinit var viewModel: SettingsViewModel
 
     private val ringtoneListener = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -72,6 +70,8 @@ class SettingsFragment : GenericFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         postponeEnterTransition()
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel = ViewModelProvider(this)[SettingsViewModel::class.java]
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
