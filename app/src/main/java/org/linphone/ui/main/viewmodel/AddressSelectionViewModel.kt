@@ -23,6 +23,8 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import java.text.Collator
+import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -178,67 +180,6 @@ abstract class AddressSelectionViewModel @UiThread constructor() : ViewModel() {
         }
     }
 
-    @WorkerThread
-    fun processMagicSearchResults(results: Array<SearchResult>) {
-        Log.i("$TAG Processing [${results.size}] results")
-
-        val contactsList = arrayListOf<ContactOrSuggestionModel>()
-        val suggestionsList = arrayListOf<ContactOrSuggestionModel>()
-        var previousLetter = ""
-
-        for (result in results) {
-            val address = result.address
-            if (address != null) {
-                val friend = coreContext.contactsManager.findContactByAddress(address)
-                if (friend != null) {
-                    val model = ContactOrSuggestionModel(address, friend)
-                    val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(
-                        address
-                    )
-                    model.avatarModel.postValue(avatarModel)
-
-                    val currentLetter = friend.name?.get(0).toString()
-                    val displayLetter = previousLetter.isEmpty() || currentLetter != previousLetter
-                    if (currentLetter != previousLetter) {
-                        previousLetter = currentLetter
-                    }
-                    avatarModel.firstContactStartingByThatLetter.postValue(
-                        displayLetter
-                    )
-
-                    contactsList.add(model)
-                } else {
-                    // If user-input generated result (always last) already exists, don't show it again
-                    if (result.sourceFlags == MagicSearch.Source.Request.toInt()) {
-                        val found = suggestionsList.find {
-                            it.address.weakEqual(address)
-                        }
-                        if (found != null) {
-                            Log.i(
-                                "$TAG Result generated from user input is a duplicate of an existing solution, preventing double"
-                            )
-                            continue
-                        }
-                    }
-
-                    val model = ContactOrSuggestionModel(address) {
-                        coreContext.startCall(address)
-                    }
-
-                    suggestionsList.add(model)
-                }
-            }
-        }
-
-        val list = arrayListOf<ContactOrSuggestionModel>()
-        list.addAll(contactsList)
-        list.addAll(suggestionsList)
-        contactsAndSuggestionsList.postValue(list)
-        Log.i(
-            "$TAG Processed [${results.size}] results, extracted [${suggestionsList.size}] suggestions"
-        )
-    }
-
     @UiThread
     fun applyFilter(filter: String) {
         coreContext.postOnCoreThread {
@@ -276,6 +217,65 @@ abstract class AddressSelectionViewModel @UiThread constructor() : ViewModel() {
             domain,
             sources,
             aggregation
+        )
+    }
+
+    @WorkerThread
+    private fun processMagicSearchResults(results: Array<SearchResult>) {
+        Log.i("$TAG Processing [${results.size}] results")
+
+        val contactsList = arrayListOf<ContactOrSuggestionModel>()
+        val suggestionsList = arrayListOf<ContactOrSuggestionModel>()
+
+        for (result in results) {
+            val address = result.address
+            if (address != null) {
+                val friend = coreContext.contactsManager.findContactByAddress(address)
+                if (friend != null) {
+                    val model = ContactOrSuggestionModel(address, friend)
+                    val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(
+                        address
+                    )
+                    model.avatarModel.postValue(avatarModel)
+
+                    contactsList.add(model)
+                } else {
+                    // If user-input generated result (always last) already exists, don't show it again
+                    if (result.sourceFlags == MagicSearch.Source.Request.toInt()) {
+                        val found = suggestionsList.find {
+                            it.address.weakEqual(address)
+                        }
+                        if (found != null) {
+                            Log.i(
+                                "$TAG Result generated from user input is a duplicate of an existing solution, preventing double"
+                            )
+                            continue
+                        }
+                    }
+
+                    val model = ContactOrSuggestionModel(address) {
+                        coreContext.startCall(address)
+                    }
+
+                    suggestionsList.add(model)
+                }
+            }
+        }
+
+        val collator = Collator.getInstance(Locale.getDefault())
+        contactsList.sortWith { model1, model2 ->
+            collator.compare(model1.name, model2.name)
+        }
+        suggestionsList.sortWith { model1, model2 ->
+            collator.compare(model1.name, model2.name)
+        }
+
+        val list = arrayListOf<ContactOrSuggestionModel>()
+        list.addAll(contactsList)
+        list.addAll(suggestionsList)
+        contactsAndSuggestionsList.postValue(list)
+        Log.i(
+            "$TAG Processed [${results.size}] results, extracted [${suggestionsList.size}] suggestions"
         )
     }
 }

@@ -110,9 +110,22 @@ class ContactsAndSuggestionsListAdapter :
         fun bind(contactOrSuggestionModel: ContactOrSuggestionModel) {
             with(binding) {
                 model = contactOrSuggestionModel.avatarModel.value
+
                 setOnClickListener {
                     contactClickedEvent.value = Event(contactOrSuggestionModel)
                 }
+
+                val previousItem = bindingAdapterPosition - 1
+                val previousLetter = if (previousItem >= 0) {
+                    getItem(previousItem).name[0].toString()
+                } else {
+                    ""
+                }
+
+                val currentLetter = contactOrSuggestionModel.name[0].toString()
+                val displayLetter = previousLetter.isEmpty() || currentLetter != previousLetter
+                firstContactStartingByThatLetter = displayLetter
+
                 executePendingBindings()
             }
         }

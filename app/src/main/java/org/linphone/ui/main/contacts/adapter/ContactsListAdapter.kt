@@ -105,6 +105,17 @@ class ContactsListAdapter(
 
                 binding.root.isSelected = bindingAdapterPosition == selectedAdapterPosition
 
+                val previousItem = bindingAdapterPosition - 1
+                val previousLetter = if (previousItem >= 0) {
+                    getItem(previousItem).contactName?.get(0).toString()
+                } else {
+                    ""
+                }
+
+                val currentLetter = contactModel.contactName?.get(0).toString()
+                val displayLetter = previousLetter.isEmpty() || currentLetter != previousLetter
+                firstContactStartingByThatLetter = displayLetter
+
                 executePendingBindings()
             }
         }
@@ -127,12 +138,11 @@ class ContactsListAdapter(
 
     private class ContactDiffCallback : DiffUtil.ItemCallback<ContactAvatarModel>() {
         override fun areItemsTheSame(oldItem: ContactAvatarModel, newItem: ContactAvatarModel): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.id == newItem.id && oldItem.contactName == newItem.contactName
         }
 
         override fun areContentsTheSame(oldItem: ContactAvatarModel, newItem: ContactAvatarModel): Boolean {
-            return oldItem.firstContactStartingByThatLetter.value == newItem.firstContactStartingByThatLetter.value &&
-                oldItem.presenceStatus.value == newItem.presenceStatus.value &&
+            return oldItem.presenceStatus.value == newItem.presenceStatus.value &&
                 (newItem.presenceStatus.value == ConsolidatedPresence.Busy || newItem.presenceStatus.value == ConsolidatedPresence.Online)
         }
     }

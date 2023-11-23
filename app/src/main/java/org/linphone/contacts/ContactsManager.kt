@@ -90,7 +90,7 @@ class ContactsManager @UiThread constructor() {
 
         @WorkerThread
         override fun onFriendListRemoved(core: Core, friendList: FriendList) {
-            Log.i("$TAG Friend list [${friendList.displayName}] remoed")
+            Log.i("$TAG Friend list [${friendList.displayName}] removed")
             friendList.removeListener(friendListListener)
         }
     }

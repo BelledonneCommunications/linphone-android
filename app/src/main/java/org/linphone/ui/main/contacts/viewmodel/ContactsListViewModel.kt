@@ -24,6 +24,7 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import java.io.File
+import java.text.Collator
 import java.util.ArrayList
 import java.util.Locale
 import kotlinx.coroutines.launch
@@ -111,6 +112,18 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
     }
 
     @UiThread
+    override fun filter() {
+        isListFiltered.value = currentFilter.isNotEmpty()
+        coreContext.postOnCoreThread {
+            applyFilter(
+                currentFilter,
+                if (limitSearchToLinphoneAccounts) corePreferences.defaultDomain else "",
+                MagicSearch.Source.Friends.toInt() or MagicSearch.Source.LdapServers.toInt()
+            )
+        }
+    }
+
+    @UiThread
     fun applyCurrentDefaultAccountFilter() {
         coreContext.postOnCoreThread { core ->
             val defaultAccount = core.defaultAccount
@@ -133,63 +146,6 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
     @UiThread
     fun toggleFavouritesVisibility() {
         showFavourites.value = showFavourites.value == false
-    }
-
-    @WorkerThread
-    fun processMagicSearchResults(results: Array<SearchResult>) {
-        Log.i("$TAG Processing [${results.size}] results")
-
-        val list = arrayListOf<ContactAvatarModel>()
-        val favouritesList = arrayListOf<ContactAvatarModel>()
-        var previousLetter = ""
-        var count = 0
-
-        for (result in results) {
-            val friend = result.friend
-
-            val model = if (friend != null) {
-                coreContext.contactsManager.getContactAvatarModelForFriend(friend)
-            } else {
-                coreContext.contactsManager.getContactAvatarModelForAddress(result.address)
-            }
-
-            val currentLetter = model.friend.name?.get(0).toString()
-            val displayLetter = previousLetter.isEmpty() || currentLetter != previousLetter
-            if (currentLetter != previousLetter) {
-                previousLetter = currentLetter
-            }
-            model.firstContactStartingByThatLetter.postValue(displayLetter)
-
-            list.add(model)
-            count += 1
-
-            if (friend?.starred == true) {
-                favouritesList.add(model)
-            }
-
-            if (count == 20) {
-                contactsList.postValue(list)
-                fetchInProgress.postValue(false)
-            }
-        }
-
-        favourites.postValue(favouritesList)
-        contactsList.postValue(list)
-        fetchInProgress.postValue(false)
-
-        Log.i("$TAG Processed [${results.size}] results")
-    }
-
-    @UiThread
-    override fun filter() {
-        isListFiltered.value = currentFilter.isNotEmpty()
-        coreContext.postOnCoreThread {
-            applyFilter(
-                currentFilter,
-                if (limitSearchToLinphoneAccounts) corePreferences.defaultDomain else "",
-                MagicSearch.Source.Friends.toInt() or MagicSearch.Source.LdapServers.toInt()
-            )
-        }
     }
 
     @UiThread
@@ -251,26 +207,47 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
     }
 
     @WorkerThread
-    private fun createFriendFromSearchResult(searchResult: SearchResult): Friend {
-        val searchResultFriend = searchResult.friend
-        if (searchResultFriend != null) return searchResultFriend
+    private fun processMagicSearchResults(results: Array<SearchResult>) {
+        Log.i("$TAG Processing [${results.size}] results")
 
-        val friend = coreContext.core.createFriend()
+        val list = arrayListOf<ContactAvatarModel>()
+        val favouritesList = arrayListOf<ContactAvatarModel>()
+        var count = 0
 
-        val address = searchResult.address
-        if (address != null) {
-            friend.address = address
-        }
+        for (result in results) {
+            val friend = result.friend
 
-        val number = searchResult.phoneNumber
-        if (number != null) {
-            friend.addPhoneNumber(number)
+            val model = if (friend != null) {
+                coreContext.contactsManager.getContactAvatarModelForFriend(friend)
+            } else {
+                coreContext.contactsManager.getContactAvatarModelForAddress(result.address)
+            }
 
-            if (address != null && address.username == number) {
-                friend.removeAddress(address)
+            list.add(model)
+            count += 1
+
+            if (friend?.starred == true) {
+                favouritesList.add(model)
+            }
+
+            if (count == 20) {
+                contactsList.postValue(list)
+                fetchInProgress.postValue(false)
             }
         }
 
-        return friend
+        val collator = Collator.getInstance(Locale.getDefault())
+        favouritesList.sortWith { model1, model2 ->
+            collator.compare(model1.friend.name, model2.friend.name)
+        }
+        list.sortWith { model1, model2 ->
+            collator.compare(model1.friend.name, model2.friend.name)
+        }
+
+        favourites.postValue(favouritesList)
+        contactsList.postValue(list)
+        fetchInProgress.postValue(false)
+
+        Log.i("$TAG Processed [${results.size}] results")
     }
 }

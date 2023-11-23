@@ -42,6 +42,8 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) : Abstrac
 
     val id = friend.refKey ?: friend.name
 
+    val contactName = friend.name
+
     val starred = friend.starred
 
     val lastPresenceInfo = MutableLiveData<String>()
@@ -51,8 +53,6 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) : Abstrac
     val name = MutableLiveData<String>()
 
     val firstLetter: String = AppUtils.getFirstLetter(friend.name.orEmpty())
-
-    val firstContactStartingByThatLetter = MutableLiveData<Boolean>()
 
     private val friendListener = object : FriendListenerStub() {
         @WorkerThread
