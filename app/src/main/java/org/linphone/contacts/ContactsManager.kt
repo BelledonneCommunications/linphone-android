@@ -63,20 +63,50 @@ class ContactsManager @UiThread constructor() {
 
     private val knownContactsAvatarsMap = hashMapOf<String, ContactAvatarModel>()
     private val unknownContactsAvatarsMap = hashMapOf<String, ContactAvatarModel>()
+    private val conferenceAvatarMap = hashMapOf<String, ContactAvatarModel>()
 
     private val friendListListener: FriendListListenerStub = object : FriendListListenerStub() {
         @WorkerThread
         override fun onPresenceReceived(list: FriendList, friends: Array<Friend>) {
             Log.i(
-                "$TAG Presence received for list [${list.displayName}] and [${friends.size}] friends, cleaning avatars map"
+                "$TAG Presence received for list [${list.displayName}] and [${friends.size}] friends"
             )
 
-            // Do not clear the already known contacts avatars!
-            unknownContactsAvatarsMap.values.forEach(ContactAvatarModel::destroy)
-            unknownContactsAvatarsMap.clear()
+            // TODO FIXME: doesn't work if a SIP address wasn't added to unknownContactsAvatarsMap yet
+            // For example if it was displayed so far in any list
+            var atLeastSomeoneNew = false
+            if (unknownContactsAvatarsMap.isNotEmpty()) {
+                for (friend in friends) {
+                    for (phoneNumber in friend.phoneNumbers) {
+                        val presence = friend.getPresenceModelForUriOrTel(phoneNumber)
+                        if (presence != null) {
+                            val contactAddress = presence.contact
+                            if (unknownContactsAvatarsMap.keys.contains(contactAddress)) {
+                                Log.i(
+                                    "$TAG Found a new SIP Address: [$contactAddress] matching phone number [$phoneNumber]"
+                                )
 
-            for (listener in listeners) {
-                listener.onContactsLoaded()
+                                val oldModel = unknownContactsAvatarsMap[contactAddress]
+                                oldModel?.destroy()
+
+                                unknownContactsAvatarsMap.remove(contactAddress)
+                                atLeastSomeoneNew = true
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (atLeastSomeoneNew) {
+                Log.i("$TAG At least a new SIP address was discovered, reloading contacts")
+                conferenceAvatarMap.values.forEach(ContactAvatarModel::destroy)
+                conferenceAvatarMap.clear()
+
+                for (listener in listeners) {
+                    listener.onContactsLoaded()
+                }
+            } else {
+                Log.i("$TAG Presence has been received but no new SIP URI was found, doing nothing")
             }
         }
     }
@@ -130,12 +160,14 @@ class ContactsManager @UiThread constructor() {
     @WorkerThread
     fun onNativeContactsLoaded() {
         nativeContactsLoaded = true
-        Log.i("$TAG Native contacts have been loaded, cleaning avatars map")
+        Log.i("$TAG Native contacts have been loaded, cleaning avatars maps")
 
         knownContactsAvatarsMap.values.forEach(ContactAvatarModel::destroy)
         knownContactsAvatarsMap.clear()
         unknownContactsAvatarsMap.values.forEach(ContactAvatarModel::destroy)
         unknownContactsAvatarsMap.clear()
+        conferenceAvatarMap.values.forEach(ContactAvatarModel::destroy)
+        conferenceAvatarMap.clear()
 
         notifyContactsListChanged()
     }
@@ -294,11 +326,11 @@ class ContactsManager @UiThread constructor() {
             return ContactAvatarModel(fakeFriend)
         }
 
-        val foundInMap = getAvatarModelFromCache(key)
+        val foundInMap = conferenceAvatarMap[key] ?: conferenceAvatarMap[key]
         if (foundInMap != null) return foundInMap
 
         val avatar = LinphoneUtils.getAvatarModelForConferenceInfo(conferenceInfo)
-        unknownContactsAvatarsMap[key] = avatar
+        conferenceAvatarMap[key] = avatar
 
         return avatar
     }
