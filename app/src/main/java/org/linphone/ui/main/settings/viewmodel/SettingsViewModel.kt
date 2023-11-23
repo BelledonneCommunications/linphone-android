@@ -38,7 +38,7 @@ import org.linphone.core.Player
 import org.linphone.core.PlayerListener
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
-import org.linphone.utils.AudioRouteUtils
+import org.linphone.utils.AudioUtils
 
 class SettingsViewModel @UiThread constructor() : ViewModel() {
     companion object {
@@ -208,7 +208,7 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
         coreContext.postOnCoreThread { core ->
             if (!::ringtonePlayer.isInitialized) {
                 // Also works for ringtone
-                val playbackDevice = AudioRouteUtils.getAudioPlaybackDeviceIdForCallRecordingOrVoiceMessage()
+                val playbackDevice = AudioUtils.getAudioPlaybackDeviceIdForCallRecordingOrVoiceMessage()
                 val player = core.createLocalPlayer(playbackDevice, null, null)
                 ringtonePlayer = player ?: return@postOnCoreThread
                 ringtonePlayer.addListener(playerListener)

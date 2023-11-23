@@ -20,34 +20,26 @@
 package org.linphone.utils
 
 import android.app.Activity
-import android.content.ActivityNotFoundException
 import android.content.Context
-import android.content.Intent
 import android.os.Build
 import android.provider.Settings
 import android.util.DisplayMetrics
 import android.util.Rational
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.AnyThread
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
-import androidx.annotation.DrawableRes
 import androidx.annotation.MainThread
 import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
 import androidx.annotation.UiThread
 import androidx.core.content.ContextCompat
 import androidx.core.view.SoftwareKeyboardControllerCompat
-import androidx.databinding.DataBindingUtil
 import androidx.emoji2.text.EmojiCompat
 import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.R
 import org.linphone.core.tools.Log
-import org.linphone.databinding.ToastBinding
 
 @UiThread
 fun View.showKeyboard() {
@@ -194,99 +186,6 @@ class AppUtils {
                 name = Build.MANUFACTURER + " " + Build.MODEL
             }
             return name
-        }
-
-        @MainThread
-        fun getRedToast(
-            context: Context,
-            parent: ViewGroup,
-            message: String,
-            @DrawableRes icon: Int,
-            doNotTint: Boolean = false
-        ): ToastBinding {
-            val redToast: ToastBinding = DataBindingUtil.inflate(
-                LayoutInflater.from(context),
-                R.layout.toast,
-                parent,
-                false
-            )
-            redToast.doNotTint = doNotTint
-            redToast.message = message
-            redToast.icon = icon
-            redToast.shadowColor = R.drawable.shape_toast_red_background
-            redToast.textColor = R.color.red_danger_500
-            redToast.root.visibility = View.GONE
-            return redToast
-        }
-
-        @MainThread
-        fun getGreenToast(
-            context: Context,
-            parent: ViewGroup,
-            message: String,
-            @DrawableRes icon: Int,
-            doNotTint: Boolean = false
-        ): ToastBinding {
-            val greenToast: ToastBinding = DataBindingUtil.inflate(
-                LayoutInflater.from(context),
-                R.layout.toast,
-                parent,
-                false
-            )
-            greenToast.doNotTint = doNotTint
-            greenToast.message = message
-            greenToast.icon = icon
-            greenToast.shadowColor = R.drawable.shape_toast_green_background
-            greenToast.textColor = R.color.green_success_500
-            greenToast.root.visibility = View.GONE
-            return greenToast
-        }
-
-        @MainThread
-        fun getBlueToast(
-            context: Context,
-            parent: ViewGroup,
-            message: String,
-            @DrawableRes icon: Int,
-            doNotTint: Boolean = false
-        ): ToastBinding {
-            val blueToast: ToastBinding = DataBindingUtil.inflate(
-                LayoutInflater.from(context),
-                R.layout.toast,
-                parent,
-                false
-            )
-            blueToast.doNotTint = doNotTint
-            blueToast.message = message
-            blueToast.icon = icon
-            blueToast.shadowColor = R.drawable.shape_toast_blue_background
-            blueToast.textColor = R.color.blue_info_500
-            blueToast.root.visibility = View.GONE
-            return blueToast
-        }
-
-        @AnyThread
-        fun shareUploadedLogsUrl(activity: Activity, info: String) {
-            val appName = activity.getString(R.string.app_name)
-            val intent = Intent(Intent.ACTION_SEND)
-            intent.putExtra(
-                Intent.EXTRA_EMAIL,
-                arrayOf(activity.getString(R.string.help_advanced_send_debug_logs_email_address))
-            )
-            intent.putExtra(Intent.EXTRA_SUBJECT, "$appName Logs")
-            intent.putExtra(Intent.EXTRA_TEXT, info)
-            intent.type = "text/plain"
-
-            try {
-                activity.startActivity(
-                    Intent.createChooser(
-                        intent,
-                        activity.getString(R.string.help_troubleshooting_share_logs_dialog_title)
-                    )
-                )
-            } catch (ex: ActivityNotFoundException) {
-                Log.e(ex)
-            }
         }
     }
 }

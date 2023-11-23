@@ -50,7 +50,7 @@ import org.linphone.core.PlayerListener
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.utils.AppUtils
-import org.linphone.utils.AudioRouteUtils
+import org.linphone.utils.AudioUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
@@ -101,6 +101,8 @@ class ChatMessageModel @WorkerThread constructor(
     val filesList = MutableLiveData<ArrayList<FileModel>>()
 
     val firstImage = MutableLiveData<FileModel>()
+
+    val isSelected = MutableLiveData<Boolean>()
 
     // Below are for conferences info
     val meetingFound = MutableLiveData<Boolean>()
@@ -439,7 +441,7 @@ class ChatMessageModel @WorkerThread constructor(
                         SpannableClickedListener {
                         override fun onSpanClicked(text: String) {
                             Log.i("$TAG Clicked on [$text] span")
-                            // TODO
+                            // TODO: go to contact page if not ourselves
                         }
                     }
                 )
@@ -541,7 +543,7 @@ class ChatMessageModel @WorkerThread constructor(
 
         Log.i("$TAG Creating player for voice record")
 
-        val playbackSoundCard = AudioRouteUtils.getAudioPlaybackDeviceIdForCallRecordingOrVoiceMessage()
+        val playbackSoundCard = AudioUtils.getAudioPlaybackDeviceIdForCallRecordingOrVoiceMessage()
         Log.i(
             "$TAG Using device $playbackSoundCard to make the voice message playback"
         )
@@ -574,9 +576,10 @@ class ChatMessageModel @WorkerThread constructor(
         }
 
         // TODO: check media volume
+        val lowMediaVolume = AudioUtils.isMediaVolumeLow(coreContext.context)
 
         if (voiceRecordAudioFocusRequest == null) {
-            voiceRecordAudioFocusRequest = AudioRouteUtils.acquireAudioFocusForVoiceRecordingOrPlayback(
+            voiceRecordAudioFocusRequest = AudioUtils.acquireAudioFocusForVoiceRecordingOrPlayback(
                 coreContext.context
             )
         }
@@ -601,7 +604,7 @@ class ChatMessageModel @WorkerThread constructor(
 
         val request = voiceRecordAudioFocusRequest
         if (request != null) {
-            AudioRouteUtils.releaseAudioFocusForVoiceRecordingOrPlayback(
+            AudioUtils.releaseAudioFocusForVoiceRecordingOrPlayback(
                 coreContext.context,
                 request
             )
@@ -631,7 +634,7 @@ class ChatMessageModel @WorkerThread constructor(
 
         val request = voiceRecordAudioFocusRequest
         if (request != null) {
-            AudioRouteUtils.releaseAudioFocusForVoiceRecordingOrPlayback(
+            AudioUtils.releaseAudioFocusForVoiceRecordingOrPlayback(
                 coreContext.context,
                 request
             )

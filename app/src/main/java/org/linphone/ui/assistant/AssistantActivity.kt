@@ -38,7 +38,7 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantActivityBinding
 import org.linphone.ui.assistant.fragment.PermissionsFragmentDirections
-import org.linphone.utils.AppUtils
+import org.linphone.utils.ToastUtils
 import org.linphone.utils.slideInToastFromTopForDuration
 
 @UiThread
@@ -89,7 +89,7 @@ class AssistantActivity : AppCompatActivity() {
     }
 
     fun showGreenToast(message: String, @DrawableRes icon: Int) {
-        val greenToast = AppUtils.getGreenToast(this, binding.toastsArea, message, icon)
+        val greenToast = ToastUtils.getGreenToast(this, binding.toastsArea, message, icon)
         binding.toastsArea.addView(greenToast.root)
 
         greenToast.root.slideInToastFromTopForDuration(
@@ -99,7 +99,7 @@ class AssistantActivity : AppCompatActivity() {
     }
 
     fun showRedToast(message: String, @DrawableRes icon: Int) {
-        val redToast = AppUtils.getRedToast(this, binding.toastsArea, message, icon)
+        val redToast = ToastUtils.getRedToast(this, binding.toastsArea, message, icon)
         binding.toastsArea.addView(redToast.root)
 
         redToast.root.slideInToastFromTopForDuration(

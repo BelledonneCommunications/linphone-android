@@ -51,7 +51,7 @@ import org.linphone.ui.main.chat.model.ChatMessageModel
 import org.linphone.ui.main.chat.model.FileModel
 import org.linphone.ui.main.chat.model.ParticipantModel
 import org.linphone.utils.AppUtils
-import org.linphone.utils.AudioRouteUtils
+import org.linphone.utils.AudioUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
@@ -430,7 +430,7 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
         val recorderParams = core.createRecorderParams()
         recorderParams.fileFormat = Recorder.FileFormat.Mkv
 
-        val recordingAudioDevice = AudioRouteUtils.getAudioRecordingDeviceIdForVoiceMessage()
+        val recordingAudioDevice = AudioUtils.getAudioRecordingDeviceIdForVoiceMessage()
         recorderParams.audioDevice = recordingAudioDevice
         Log.i(
             "$TAG Using device ${recorderParams.audioDevice?.id} to make the voice message recording"
@@ -444,7 +444,7 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
     private fun startVoiceRecorder() {
         if (voiceRecordAudioFocusRequest == null) {
             Log.i("$TAG Requesting audio focus for voice message recording")
-            voiceRecordAudioFocusRequest = AudioRouteUtils.acquireAudioFocusForVoiceRecordingOrPlayback(
+            voiceRecordAudioFocusRequest = AudioUtils.acquireAudioFocusForVoiceRecordingOrPlayback(
                 coreContext.context
             )
         }
@@ -509,7 +509,7 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
         val request = voiceRecordAudioFocusRequest
         if (request != null) {
             Log.i("$TAG Releasing voice recording audio focus request")
-            AudioRouteUtils.releaseAudioFocusForVoiceRecordingOrPlayback(
+            AudioUtils.releaseAudioFocusForVoiceRecordingOrPlayback(
                 coreContext.context,
                 request
             )
@@ -523,7 +523,7 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
     private fun initVoiceRecordPlayer() {
         Log.i("$TAG Creating player for voice record")
 
-        val playbackSoundCard = AudioRouteUtils.getAudioPlaybackDeviceIdForCallRecordingOrVoiceMessage()
+        val playbackSoundCard = AudioUtils.getAudioPlaybackDeviceIdForCallRecordingOrVoiceMessage()
         Log.i(
             "$TAG Using device $playbackSoundCard to make the voice message playback"
         )
@@ -553,11 +553,16 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
             initVoiceRecordPlayer()
         }
 
-        // TODO: check media volume
+        val context = coreContext.context
+        val lowMediaVolume = AudioUtils.isMediaVolumeLow(context)
+        if (lowMediaVolume) {
+            val message = AppUtils.getString(R.string.toast_low_media_volume)
+            showRedToastEvent.postValue(Event(Pair(message, R.drawable.speaker_slash)))
+        }
 
         if (voiceRecordAudioFocusRequest == null) {
-            voiceRecordAudioFocusRequest = AudioRouteUtils.acquireAudioFocusForVoiceRecordingOrPlayback(
-                coreContext.context
+            voiceRecordAudioFocusRequest = AudioUtils.acquireAudioFocusForVoiceRecordingOrPlayback(
+                context
             )
         }
 
@@ -581,7 +586,7 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
 
         val request = voiceRecordAudioFocusRequest
         if (request != null) {
-            AudioRouteUtils.releaseAudioFocusForVoiceRecordingOrPlayback(
+            AudioUtils.releaseAudioFocusForVoiceRecordingOrPlayback(
                 coreContext.context,
                 request
             )
@@ -606,7 +611,7 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
 
         val request = voiceRecordAudioFocusRequest
         if (request != null) {
-            AudioRouteUtils.releaseAudioFocusForVoiceRecordingOrPlayback(
+            AudioUtils.releaseAudioFocusForVoiceRecordingOrPlayback(
                 coreContext.context,
                 request
             )

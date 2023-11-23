@@ -19,17 +19,19 @@
  */
 package org.linphone.ui.main.help.fragment
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.navGraphViewModels
 import org.linphone.R
+import org.linphone.core.tools.Log
 import org.linphone.databinding.HelpDebugFragmentBinding
 import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.ui.main.help.viewmodel.HelpViewModel
-import org.linphone.utils.AppUtils
 
 class DebugFragment : GenericFragment() {
     companion object {
@@ -78,7 +80,32 @@ class DebugFragment : GenericFragment() {
                     R.drawable.info
                 )
 
-                AppUtils.shareUploadedLogsUrl(requireActivity(), url)
+                val appName = requireContext().getString(R.string.app_name)
+                val intent = Intent(Intent.ACTION_SEND)
+                intent.putExtra(
+                    Intent.EXTRA_EMAIL,
+                    arrayOf(
+                        requireContext().getString(
+                            R.string.help_advanced_send_debug_logs_email_address
+                        )
+                    )
+                )
+                intent.putExtra(Intent.EXTRA_SUBJECT, "$appName Logs")
+                intent.putExtra(Intent.EXTRA_TEXT, url)
+                intent.type = "text/plain"
+
+                try {
+                    requireContext().startActivity(
+                        Intent.createChooser(
+                            intent,
+                            requireContext().getString(
+                                R.string.help_troubleshooting_share_logs_dialog_title
+                            )
+                        )
+                    )
+                } catch (ex: ActivityNotFoundException) {
+                    Log.e(ex)
+                }
             }
         }
 

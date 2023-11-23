@@ -31,9 +31,9 @@ import org.linphone.core.AudioDevice
 import org.linphone.core.Call
 import org.linphone.core.tools.Log
 
-class AudioRouteUtils {
+class AudioUtils {
     companion object {
-        private const val TAG = "[Audio Route Utils]"
+        private const val TAG = "[Audio Utils]"
 
         @WorkerThread
         fun routeAudioToEarpiece(call: Call? = null) {
@@ -266,6 +266,15 @@ class AudioRouteUtils {
             val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
             AudioManagerCompat.abandonAudioFocusRequest(audioManager, request)
             Log.i("$TAG Voice recording/playback audio focus request abandoned")
+        }
+
+        @AnyThread
+        fun isMediaVolumeLow(context: Context): Boolean {
+            val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            val currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
+            val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+            Log.i("$TAG Current media volume value is $currentVolume, max value is $maxVolume")
+            return currentVolume <= maxVolume * 0.5
         }
     }
 }

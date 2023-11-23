@@ -47,7 +47,7 @@ import org.linphone.ui.call.model.ConferenceModel
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.history.model.NumpadModel
 import org.linphone.utils.AppUtils
-import org.linphone.utils.AudioRouteUtils
+import org.linphone.utils.AudioUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
@@ -223,7 +223,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                 if (videoEnabled && isVideoEnabled.value == false) {
                     if (corePreferences.routeAudioToSpeakerWhenVideoIsEnabled) {
                         Log.i("$TAG Video is now enabled, routing audio to speaker")
-                        AudioRouteUtils.routeAudioToSpeaker(call)
+                        AudioUtils.routeAudioToSpeaker(call)
                     }
                 }
                 isVideoEnabled.postValue(videoEnabled)
@@ -491,10 +491,10 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                         Log.i("$TAG Selected audio device with ID [${device.id}]")
                         if (::currentCall.isInitialized) {
                             when {
-                                isHeadset -> AudioRouteUtils.routeAudioToHeadset(currentCall)
-                                isBluetooth -> AudioRouteUtils.routeAudioToBluetooth(currentCall)
-                                isSpeaker -> AudioRouteUtils.routeAudioToSpeaker(currentCall)
-                                else -> AudioRouteUtils.routeAudioToEarpiece(currentCall)
+                                isHeadset -> AudioUtils.routeAudioToHeadset(currentCall)
+                                isBluetooth -> AudioUtils.routeAudioToBluetooth(currentCall)
+                                isSpeaker -> AudioUtils.routeAudioToSpeaker(currentCall)
+                                else -> AudioUtils.routeAudioToEarpiece(currentCall)
                             }
                         }
                     }
@@ -512,9 +512,9 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                 )
                 if (::currentCall.isInitialized) {
                     if (routeAudioToSpeaker) {
-                        AudioRouteUtils.routeAudioToSpeaker(currentCall)
+                        AudioUtils.routeAudioToSpeaker(currentCall)
                     } else {
-                        AudioRouteUtils.routeAudioToEarpiece(currentCall)
+                        AudioUtils.routeAudioToEarpiece(currentCall)
                     }
                 }
             }

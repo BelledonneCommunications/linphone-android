@@ -48,6 +48,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import kotlinx.coroutines.Dispatchers
@@ -154,6 +155,18 @@ class ConversationFragment : GenericFragment() {
                 }
             }
         }
+    }
+
+    private var currentChatMessageModelForBottomSheet: ChatMessageModel? = null
+    private val bottomSheetCallback = object : BottomSheetCallback() {
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+            Log.i("$TAG Bottom sheet state is [$newState]")
+            if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                currentChatMessageModelForBottomSheet?.isSelected?.value = false
+            }
+        }
+
+        override fun onSlide(bottomSheet: View, slideOffset: Float) { }
     }
 
     private val requestPermissionLauncher = registerForActivityResult(
@@ -295,13 +308,13 @@ class ConversationFragment : GenericFragment() {
 
         adapter.showDeliveryForChatMessageModelEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
-                showDeliveryBottomSheetDialog(model, showDelivery = true)
+                showBottomSheetDialog(model, showDelivery = true)
             }
         }
 
         adapter.showReactionForChatMessageModelEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
-                showDeliveryBottomSheetDialog(model, showReactions = true)
+                showBottomSheetDialog(model, showReactions = true)
             }
         }
 
@@ -517,6 +530,9 @@ class ConversationFragment : GenericFragment() {
         } catch (e: IllegalStateException) {
             Log.e("$TAG Failed to register data observer to adapter: $e")
         }
+
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.messageBottomSheet.root)
+        bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
     }
 
     override fun onPause() {
@@ -538,6 +554,10 @@ class ConversationFragment : GenericFragment() {
 
         val layoutManager = binding.eventsList.layoutManager as LinearLayoutManager
         viewModel.scrollingPosition = layoutManager.findFirstVisibleItemPosition()
+
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.messageBottomSheet.root)
+        bottomSheetBehavior.removeBottomSheetCallback(bottomSheetCallback)
+        currentChatMessageModelForBottomSheet = null
 
         super.onPause()
     }
@@ -620,20 +640,25 @@ class ConversationFragment : GenericFragment() {
     }
 
     @UiThread
-    private fun showDeliveryBottomSheetDialog(
+    private fun showBottomSheetDialog(
         chatMessageModel: ChatMessageModel,
         showDelivery: Boolean = false,
         showReactions: Boolean = false
     ) {
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.messageBottomSheet.root)
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         binding.messageBottomSheet.setHandleClickedListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
+
         if (binding.messageBottomSheet.bottomSheetList.adapter != bottomSheetAdapter) {
             binding.messageBottomSheet.bottomSheetList.adapter = bottomSheetAdapter
         }
+
+        currentChatMessageModelForBottomSheet?.isSelected?.value = false
+        currentChatMessageModelForBottomSheet = chatMessageModel
+        chatMessageModel.isSelected.value = true
 
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {

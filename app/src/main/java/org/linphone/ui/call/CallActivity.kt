@@ -53,6 +53,7 @@ import org.linphone.ui.call.viewmodel.CallsViewModel
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
 import org.linphone.ui.call.viewmodel.SharedCallViewModel
 import org.linphone.utils.AppUtils
+import org.linphone.utils.ToastUtils
 import org.linphone.utils.slideInToastFromTop
 import org.linphone.utils.slideInToastFromTopForDuration
 
@@ -322,7 +323,7 @@ class CallActivity : AppCompatActivity() {
     }
 
     fun showBlueToast(message: String, @DrawableRes icon: Int, doNotTint: Boolean = false) {
-        val blueToast = AppUtils.getBlueToast(this, binding.toastsArea, message, icon, doNotTint)
+        val blueToast = ToastUtils.getBlueToast(this, binding.toastsArea, message, icon, doNotTint)
         binding.toastsArea.addView(blueToast.root)
 
         blueToast.root.slideInToastFromTopForDuration(
@@ -337,7 +338,7 @@ class CallActivity : AppCompatActivity() {
         duration: Long = 4000,
         doNotTint: Boolean = false
     ) {
-        val redToast = AppUtils.getRedToast(this, binding.toastsArea, message, icon, doNotTint)
+        val redToast = ToastUtils.getRedToast(this, binding.toastsArea, message, icon, doNotTint)
         binding.toastsArea.addView(redToast.root)
 
         redToast.root.slideInToastFromTopForDuration(
@@ -353,7 +354,7 @@ class CallActivity : AppCompatActivity() {
         tag: String,
         doNotTint: Boolean = false
     ) {
-        val redToast = AppUtils.getRedToast(this, binding.toastsArea, message, icon, doNotTint)
+        val redToast = ToastUtils.getRedToast(this, binding.toastsArea, message, icon, doNotTint)
         redToast.root.tag = tag
         binding.toastsArea.addView(redToast.root)
 
@@ -377,7 +378,13 @@ class CallActivity : AppCompatActivity() {
         duration: Long = 4000,
         doNotTint: Boolean = false
     ) {
-        val greenToast = AppUtils.getGreenToast(this, binding.toastsArea, message, icon, doNotTint)
+        val greenToast = ToastUtils.getGreenToast(
+            this,
+            binding.toastsArea,
+            message,
+            icon,
+            doNotTint
+        )
         binding.toastsArea.addView(greenToast.root)
 
         greenToast.root.slideInToastFromTopForDuration(

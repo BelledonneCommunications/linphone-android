@@ -35,7 +35,7 @@ import org.linphone.core.AudioDevice
 import org.linphone.core.Call
 import org.linphone.core.CallListenerStub
 import org.linphone.core.tools.Log
-import org.linphone.utils.AudioRouteUtils
+import org.linphone.utils.AudioUtils
 
 class TelecomCallControlCallback constructor(
     private val call: Call,
@@ -143,7 +143,7 @@ class TelecomCallControlCallback constructor(
             }
             if (route.isNotEmpty()) {
                 coreContext.postOnCoreThread {
-                    AudioRouteUtils.applyAudioRouteChangeInLinphone(call, route)
+                    AudioUtils.applyAudioRouteChangeInLinphone(call, route)
                 }
             }
         }.launchIn(scope)

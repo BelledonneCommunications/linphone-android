@@ -151,6 +151,7 @@
     <string name="toast_conversation_deleted">Conversation was successfully deleted</string>
     <string name="toast_conversation_history_deleted">History has been successfully deleted</string>
     <string name="toast_group_conversation_left">You have left the group</string>
+    <string name="toast_low_media_volume">Media volume is low, you may not hear anything!</string>
 
     <string name="assistant_account_login">Login</string>
     <string name="assistant_scan_qr_code">Scan QR code</string>
