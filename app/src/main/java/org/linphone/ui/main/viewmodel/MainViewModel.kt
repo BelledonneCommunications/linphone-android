@@ -170,6 +170,27 @@ class MainViewModel @UiThread constructor() : ViewModel() {
                 else -> {}
             }
         }
+
+        @WorkerThread
+        override fun onDefaultAccountChanged(core: Core, account: Account) {
+            Log.i(
+                "$TAG Default account changed, now is [${account.params.identityAddress?.asStringUriOnly()}]"
+            )
+            removeAlert(NON_DEFAULT_ACCOUNT_NOTIFICATIONS)
+
+            if (defaultAccountRegistrationFailed && account.state != RegistrationState.Failed) {
+                Log.i(
+                    "$TAG Newly set default account isn't in failed registration state, clearing alert"
+                )
+                defaultAccountRegistrationFailed = false
+                defaultAccountRegistrationErrorEvent.postValue(Event(false))
+
+                // Refresh REGISTER to re-compute alerts regarding accounts registration state
+                core.refreshRegisters()
+            }
+
+            // TODO: compute other calls notifications count
+        }
     }
 
     init {
@@ -204,6 +225,13 @@ class MainViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun closeTopBar() {
         showAlert.value = false
+
+        coreContext.postOnCoreThread {
+            Log.i("$TAG User closed alerts top bar, clearing alerts")
+            cancelAlertJob()
+            alertsList.clear()
+            updateDisplayedAlert()
+        }
     }
 
     @UiThread

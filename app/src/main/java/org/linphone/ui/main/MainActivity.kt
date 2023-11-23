@@ -138,7 +138,7 @@ class MainActivity : AppCompatActivity() {
             it.consume { error ->
                 val tag = "DEFAULT_ACCOUNT_REGISTRATION_ERROR"
                 if (error) {
-                    // First remove any already existing connection error toat
+                    // First remove any already existing connection error toast
                     removePersistentRedToast(tag)
 
                     val message = getString(R.string.toast_default_account_connection_state_error)

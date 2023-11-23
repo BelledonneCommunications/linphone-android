@@ -61,7 +61,8 @@ class ContactsManager @UiThread constructor() {
 
     private val listeners = arrayListOf<ContactsListener>()
 
-    private val avatarsMap = hashMapOf<String, ContactAvatarModel>()
+    private val knownContactsAvatarsMap = hashMapOf<String, ContactAvatarModel>()
+    private val unknownContactsAvatarsMap = hashMapOf<String, ContactAvatarModel>()
 
     private val friendListListener: FriendListListenerStub = object : FriendListListenerStub() {
         @WorkerThread
@@ -70,8 +71,9 @@ class ContactsManager @UiThread constructor() {
                 "$TAG Presence received for list [${list.displayName}] and [${friends.size}] friends, cleaning avatars map"
             )
 
-            avatarsMap.values.forEach(ContactAvatarModel::destroy)
-            avatarsMap.clear()
+            // Do not clear the already known contacts avatars!
+            unknownContactsAvatarsMap.values.forEach(ContactAvatarModel::destroy)
+            unknownContactsAvatarsMap.clear()
 
             for (listener in listeners) {
                 listener.onContactsLoaded()
@@ -130,8 +132,10 @@ class ContactsManager @UiThread constructor() {
         nativeContactsLoaded = true
         Log.i("$TAG Native contacts have been loaded, cleaning avatars map")
 
-        avatarsMap.values.forEach(ContactAvatarModel::destroy)
-        avatarsMap.clear()
+        knownContactsAvatarsMap.values.forEach(ContactAvatarModel::destroy)
+        knownContactsAvatarsMap.clear()
+        unknownContactsAvatarsMap.values.forEach(ContactAvatarModel::destroy)
+        unknownContactsAvatarsMap.clear()
 
         notifyContactsListChanged()
     }
@@ -210,7 +214,7 @@ class ContactsManager @UiThread constructor() {
         clone.clean()
         val key = clone.asStringUriOnly()
 
-        val foundInMap = if (avatarsMap.keys.contains(key)) avatarsMap[key] else null
+        val foundInMap = getAvatarModelFromCache(key)
         if (foundInMap != null) {
             Log.i("$TAG Avatar model found in map for SIP URI [$key]")
             return foundInMap
@@ -225,23 +229,27 @@ class ContactsManager @UiThread constructor() {
             fakeFriend.address = clone
             fakeFriend.name = LinphoneUtils.getDisplayName(localAccount.params.identityAddress)
             fakeFriend.photo = localAccount.params.pictureUri
-            ContactAvatarModel(fakeFriend)
+            val model = ContactAvatarModel(fakeFriend)
+            unknownContactsAvatarsMap[key] = model
+            model
         } else {
             Log.i("$TAG Looking for friend matching SIP URI [$key]")
             val friend = coreContext.contactsManager.findContactByAddress(clone)
             if (friend != null) {
                 Log.i("$TAG Matching friend [${friend.name}] found for SIP URI [$key]")
-                ContactAvatarModel(friend)
+                val model = ContactAvatarModel(friend)
+                knownContactsAvatarsMap[key] = model
+                model
             } else {
                 Log.i("$TAG No matching friend found for SIP URI [$key]...")
                 val fakeFriend = coreContext.core.createFriend()
                 fakeFriend.name = LinphoneUtils.getDisplayName(address)
                 fakeFriend.address = clone
-                ContactAvatarModel(fakeFriend)
+                val model = ContactAvatarModel(fakeFriend)
+                unknownContactsAvatarsMap[key] = model
+                model
             }
         }
-
-        avatarsMap[key] = avatar
 
         return avatar
     }
@@ -264,7 +272,7 @@ class ContactsManager @UiThread constructor() {
         clone.clean()
         val key = clone.asStringUriOnly()
 
-        val foundInMap = if (avatarsMap.keys.contains(key)) avatarsMap[key] else null
+        val foundInMap = getAvatarModelFromCache(key)
         if (foundInMap != null) {
             Log.i("$TAG Found avatar model in map using SIP URI [$key]")
             return foundInMap
@@ -272,7 +280,7 @@ class ContactsManager @UiThread constructor() {
 
         Log.w("$TAG Avatar model not found in map with SIP URI [$key]")
         val avatar = ContactAvatarModel(friend)
-        avatarsMap[key] = avatar
+        knownContactsAvatarsMap[key] = avatar
 
         return avatar
     }
@@ -286,11 +294,11 @@ class ContactsManager @UiThread constructor() {
             return ContactAvatarModel(fakeFriend)
         }
 
-        val foundInMap = if (avatarsMap.keys.contains(key)) avatarsMap[key] else null
+        val foundInMap = getAvatarModelFromCache(key)
         if (foundInMap != null) return foundInMap
 
         val avatar = LinphoneUtils.getAvatarModelForConferenceInfo(conferenceInfo)
-        avatarsMap[key] = avatar
+        unknownContactsAvatarsMap[key] = avatar
 
         return avatar
     }
@@ -435,6 +443,11 @@ class ContactsManager @UiThread constructor() {
         personBuilder.setKey(identity)
         personBuilder.setImportant(false)
         return personBuilder.build()
+    }
+
+    @WorkerThread
+    private fun getAvatarModelFromCache(key: String): ContactAvatarModel? {
+        return knownContactsAvatarsMap[key] ?: unknownContactsAvatarsMap[key]
     }
 
     interface ContactsListener {
