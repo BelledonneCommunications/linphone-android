@@ -154,6 +154,13 @@ class HistoryContactFragment : GenericFragment() {
             }
         }
 
+        viewModel.conferenceToJoinEvent.observe(viewLifecycleOwner) {
+            it.consume { conferenceUri ->
+                Log.i("$TAG Requesting to go to waiting room for conference URI [$conferenceUri]")
+                sharedViewModel.goToMeetingWaitingRoomEvent.value = Event(conferenceUri)
+            }
+        }
+
         binding.setBackClickListener {
             goBack()
         }
@@ -190,6 +197,7 @@ class HistoryContactFragment : GenericFragment() {
         )
 
         popupView.contactExists = viewModel.callLogModel.value?.friendExists == true
+        popupView.isConferenceCallLog = viewModel.isConferenceCallLog.value == true
 
         popupView.setAddToContactsListener {
             sharedViewModel.sipAddressToAddToNewContact = viewModel.callLogModel.value?.displayedAddress.orEmpty()
@@ -214,7 +222,7 @@ class HistoryContactFragment : GenericFragment() {
 
         popupView.setCopyNumberClickListener {
             popupWindow.dismiss()
-            copyNumberOrAddressToClipboard(viewModel.callLogModel.value?.displayedAddress.orEmpty())
+            copyNumberOrAddressToClipboard(viewModel.callLogModel.value?.sipUri.orEmpty())
         }
 
         // Elevation is for showing a shadow around the popup

@@ -65,6 +65,12 @@
             app:enterAnim="@anim/slide_in"
             app:popExitAnim="@anim/slide_out"
             app:launchSingleTop="true" />
+        <action
+            android:id="@+id/action_historyListFragment_to_meetingWaitingRoomFragment"
+            app:destination="@id/meetingWaitingRoomFragment"
+            app:enterAnim="@anim/slide_in"
+            app:popExitAnim="@anim/slide_out"
+            app:launchSingleTop="true" />
     </fragment>
 
     <fragment

@@ -741,26 +741,38 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         val declineIntent = getCallDeclinePendingIntent(notifiable)
         val answerIntent = getCallAnswerPendingIntent(notifiable)
 
-        val contact =
-            coreContext.contactsManager.findContactByAddress(call.remoteAddress)
-        val displayName = contact?.name ?: LinphoneUtils.getDisplayName(call.remoteAddress)
+        val remoteAddress = call.remoteAddress
+        val conference = call.conference
+        val isConference = conference != null
 
-        val person = getPerson(contact, displayName)
-        val caller = Person.Builder()
-            .setName(person.name)
-            .setIcon(person.icon)
-            .setUri(person.uri)
-            .setKey(person.key)
-            .setImportant(person.isImportant)
-            .build()
+        val caller = if (conference != null) {
+            val subject = conference.subject ?: LinphoneUtils.getDisplayName(remoteAddress)
+            Person.Builder()
+                .setName(subject)
+                .setIcon(
+                    AvatarGenerator(context).setInitials(AppUtils.getInitials(subject)).buildIcon()
+                )
+                .setImportant(false)
+                .build()
+        } else {
+            val contact =
+                coreContext.contactsManager.findContactByAddress(remoteAddress)
+            val displayName = contact?.name ?: LinphoneUtils.getDisplayName(remoteAddress)
 
-        val isVideo = if (isIncoming) {
+            getPerson(contact, displayName)
+        }
+
+        val isVideo = if (isConference) {
+            true
+        } else if (isIncoming) {
             call.remoteParams?.isVideoEnabled ?: false
         } else {
             call.currentParams.isVideoEnabled
         }
 
-        val smallIcon = if (isVideo) {
+        val smallIcon = if (isConference) {
+            R.drawable.meeting
+        } else if (isVideo) {
             R.drawable.video_camera
         } else {
             R.drawable.phone
@@ -789,7 +801,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         }
 
         Log.i(
-            "Creating notification for ${if (isIncoming) "incoming" else "outgoing"} call with video ${if (isVideo) "enabled" else "disabled"} on channel [$channel]"
+            "Creating notification for ${if (isIncoming) "incoming" else "outgoing"} ${if (isConference) "conference" else "call"} with video ${if (isVideo) "enabled" else "disabled"} on channel [$channel]"
         )
 
         val builder = NotificationCompat.Builder(

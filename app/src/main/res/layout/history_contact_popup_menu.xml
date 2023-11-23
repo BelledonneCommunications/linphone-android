@@ -21,6 +21,9 @@
         <variable
             name="contactExists"
             type="Boolean" />
+        <variable
+            name="isConferenceCallLog"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,7 +33,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{addToContactsListener}"
-            android:visibility="@{contactExists ? View.GONE : View.VISIBLE}"
+            android:visibility="@{contactExists || isConferenceCallLog ? View.GONE : View.VISIBLE}"
             style="@style/default_text_style"
             android:id="@+id/add_to_contact"
             android:layout_width="0dp"

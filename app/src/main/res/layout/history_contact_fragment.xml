@@ -81,6 +81,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
+                    <androidx.constraintlayout.widget.Barrier
+                        android:id="@+id/actions_barrier"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:constraint_referenced_ids="call, call_label, chat, chat_label, video_call, video_call_label, meeting, meeting_label"
+                        app:barrierDirection="bottom" />
+
                     <com.google.android.material.imageview.ShapeableImageView
                         style="@style/avatar_imageview"
                         android:id="@+id/avatar"
@@ -142,6 +149,7 @@
                         android:textSize="14sp"
                         android:maxLines="1"
                         android:ellipsize="end"
+                        android:visibility="@{viewModel.isConferenceCallLog ? View.GONE : View.VISIBLE}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/name" />
@@ -168,6 +176,7 @@
                         android:background="@drawable/circle_light_blue_button_background"
                         android:padding="16dp"
                         android:src="@drawable/phone"
+                        android:visibility="@{viewModel.isConferenceCallLog ? View.GONE : View.VISIBLE}"
                         app:tint="@color/gray_main2_500"
                         app:layout_constraintEnd_toStartOf="@id/chat"
                         app:layout_constraintStart_toStartOf="parent"
@@ -182,6 +191,7 @@
                         android:layout_marginTop="8dp"
                         android:text="@string/friend_call_action"
                         android:textSize="14sp"
+                        android:visibility="@{viewModel.isConferenceCallLog ? View.GONE : View.VISIBLE}"
                         app:layout_constraintTop_toBottomOf="@id/call"
                         app:layout_constraintStart_toStartOf="@id/call"
                         app:layout_constraintEnd_toEndOf="@id/call"/>
@@ -189,13 +199,13 @@
                     <ImageView
                         android:id="@+id/chat"
                         android:onClick="@{() -> viewModel.goToConversation()}"
-                        android:visibility="@{viewModel.chatDisabled ? View.GONE : View.VISIBLE}"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
                         android:layout_marginTop="20dp"
                         android:background="@drawable/circle_light_blue_button_background"
                         android:padding="16dp"
                         android:src="@drawable/chat_teardrop_text"
+                        android:visibility="@{viewModel.chatDisabled || viewModel.isConferenceCallLog ? View.GONE : View.VISIBLE}"
                         app:tint="@color/gray_main2_500"
                         app:layout_constraintEnd_toStartOf="@id/video_call"
                         app:layout_constraintStart_toEndOf="@id/call"
@@ -205,12 +215,12 @@
                         style="@style/default_text_style"
                         android:id="@+id/chat_label"
                         android:onClick="@{() -> viewModel.goToConversation()}"
-                        android:visibility="@{viewModel.chatDisabled ? View.GONE : View.VISIBLE}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="@string/friend_message_action"
                         android:textSize="14sp"
+                        android:visibility="@{viewModel.chatDisabled || viewModel.isConferenceCallLog ? View.GONE : View.VISIBLE}"
                         app:layout_constraintTop_toBottomOf="@id/chat"
                         app:layout_constraintStart_toStartOf="@id/chat"
                         app:layout_constraintEnd_toEndOf="@id/chat"/>
@@ -218,13 +228,13 @@
                     <ImageView
                         android:id="@+id/video_call"
                         android:onClick="@{() -> viewModel.startVideoCall()}"
-                        android:visibility="@{viewModel.videoCallDisabled ? View.GONE : View.VISIBLE}"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
                         android:layout_marginTop="20dp"
                         android:background="@drawable/circle_light_blue_button_background"
                         android:padding="16dp"
                         android:src="@drawable/video_camera"
+                        android:visibility="@{viewModel.videoCallDisabled || viewModel.isConferenceCallLog ? View.GONE : View.VISIBLE}"
                         app:tint="@color/gray_main2_500"
                         app:layout_constraintStart_toEndOf="@id/chat"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -234,15 +244,44 @@
                         style="@style/default_text_style"
                         android:id="@+id/video_call_label"
                         android:onClick="@{() -> viewModel.startVideoCall()}"
-                        android:visibility="@{viewModel.videoCallDisabled ? View.GONE : View.VISIBLE}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="@string/friend_video_call_action"
                         android:textSize="14sp"
+                        android:visibility="@{viewModel.videoCallDisabled || viewModel.isConferenceCallLog ? View.GONE : View.VISIBLE}"
                         app:layout_constraintTop_toBottomOf="@id/video_call"
                         app:layout_constraintStart_toStartOf="@id/video_call"
                         app:layout_constraintEnd_toEndOf="@id/video_call"/>
+
+                    <ImageView
+                        android:id="@+id/meeting"
+                        android:onClick="@{() -> viewModel.goToMeetingWaitingRoom()}"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/circle_light_blue_button_background"
+                        android:padding="16dp"
+                        android:src="@drawable/meeting"
+                        android:visibility="@{viewModel.isConferenceCallLog ? View.VISIBLE : View.GONE, default=gone}"
+                        app:tint="@color/gray_main2_500"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/status" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/default_text_style"
+                        android:id="@+id/meeting_label"
+                        android:onClick="@{() -> viewModel.goToMeetingWaitingRoom()}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/meeting_waiting_room_join"
+                        android:textSize="14sp"
+                        android:visibility="@{viewModel.isConferenceCallLog ? View.VISIBLE : View.GONE, default=gone}"
+                        app:layout_constraintTop_toBottomOf="@id/meeting"
+                        app:layout_constraintStart_toStartOf="@id/meeting"
+                        app:layout_constraintEnd_toEndOf="@id/meeting"/>
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/call_history"
@@ -259,7 +298,7 @@
                         app:layout_constraintHeight_min="@dimen/recycler_view_min_height"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/call_label"
+                        app:layout_constraintTop_toBottomOf="@id/actions_barrier"
                         app:layout_constraintBottom_toBottomOf="parent"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -70,7 +70,9 @@ class HistoryListFragment : AbstractTopBarFragment() {
     }
 
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
-        if (findNavController().currentDestination?.id == R.id.startCallFragment) {
+        if (findNavController().currentDestination?.id == R.id.startCallFragment ||
+            findNavController().currentDestination?.id == R.id.meetingWaitingRoomFragment
+        ) {
             // Holds fragment in place while new contact fragment slides over it
             return AnimationUtils.loadAnimation(activity, R.anim.hold)
         }
@@ -203,6 +205,19 @@ class HistoryListFragment : AbstractTopBarFragment() {
         sharedViewModel.forceRefreshCallLogsListEvent.observe(viewLifecycleOwner) {
             it.consume {
                 listViewModel.applyFilter()
+            }
+        }
+
+        sharedViewModel.goToMeetingWaitingRoomEvent.observe(viewLifecycleOwner) {
+            it.consume { uri ->
+                if (findNavController().currentDestination?.id == R.id.historyListFragment) {
+                    Log.i("$TAG Navigating to meeting waiting room fragment with URI [$uri]")
+                    val action =
+                        HistoryListFragmentDirections.actionHistoryListFragmentToMeetingWaitingRoomFragment(
+                            uri
+                        )
+                    findNavController().navigate(action)
+                }
             }
         }
 

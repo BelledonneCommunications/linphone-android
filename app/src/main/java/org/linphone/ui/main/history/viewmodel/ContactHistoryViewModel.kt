@@ -37,6 +37,8 @@ class ContactHistoryViewModel @UiThread constructor() : ViewModel() {
 
     val operationInProgress = MutableLiveData<Boolean>()
 
+    val isConferenceCallLog = MutableLiveData<Boolean>()
+
     val callLogFoundEvent = MutableLiveData<Event<Boolean>>()
 
     val chatRoomCreationErrorEvent: MutableLiveData<Event<String>> by lazy {
@@ -45,6 +47,10 @@ class ContactHistoryViewModel @UiThread constructor() : ViewModel() {
 
     val goToConversationEvent: MutableLiveData<Event<Pair<String, String>>> by lazy {
         MutableLiveData<Event<Pair<String, String>>>()
+    }
+
+    val conferenceToJoinEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
     }
 
     val historyDeletedEvent: MutableLiveData<Event<Boolean>> by lazy {
@@ -96,6 +102,8 @@ class ContactHistoryViewModel @UiThread constructor() : ViewModel() {
                 val model = CallLogModel(callLog)
                 address = model.address
                 callLogModel.postValue(model)
+
+                isConferenceCallLog.postValue(callLog.wasConference())
 
                 val peerAddress = if (callLog.dir == Call.Dir.Outgoing) callLog.toAddress else callLog.fromAddress
                 val history = arrayListOf<CallLogHistoryModel>()
@@ -249,6 +257,15 @@ class ContactHistoryViewModel @UiThread constructor() : ViewModel() {
                         chatRoomCreationErrorEvent.postValue(Event("Error!")) // TODO FIXME: use translated string
                     }
                 }
+            }
+        }
+    }
+
+    @UiThread
+    fun goToMeetingWaitingRoom() {
+        coreContext.postOnCoreThread {
+            if (::address.isInitialized) {
+                conferenceToJoinEvent.postValue(Event(address.asStringUriOnly()))
             }
         }
     }
