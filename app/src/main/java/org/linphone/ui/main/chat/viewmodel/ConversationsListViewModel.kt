@@ -144,7 +144,7 @@ class ConversationsListViewModel @UiThread constructor() : AbstractTopBarViewMod
         for (chatRoom in chatRooms) {
             // TODO: remove when SDK will do it automatically
             if (account?.isInSecureMode() == true) {
-                if (!chatRoom.hasCapability(Capabilities.Encrypted.toInt())) {
+                if (!chatRoom.hasCapability(Capabilities.Encrypted.toInt()) && chatRoom.unreadMessagesCount == 0) { // TODO: remove message count check later
                     Log.w(
                         "$TAG Skipping chat room [${LinphoneUtils.getChatRoomId(chatRoom)}] as it is not E2E encrypted and default account requires it"
                     )
