@@ -31,9 +31,7 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import androidx.annotation.DrawableRes
 import androidx.annotation.UiThread
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.WindowCompat
 import androidx.core.view.children
 import androidx.core.view.doOnAttach
 import androidx.databinding.DataBindingUtil
@@ -50,6 +48,7 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.MainActivityBinding
+import org.linphone.ui.GenericActivity
 import org.linphone.ui.assistant.AssistantActivity
 import org.linphone.ui.main.help.fragment.DebugFragmentDirections
 import org.linphone.ui.main.viewmodel.MainViewModel
@@ -63,7 +62,7 @@ import org.linphone.utils.slideInToastFromTop
 import org.linphone.utils.slideInToastFromTopForDuration
 
 @UiThread
-class MainActivity : AppCompatActivity() {
+class MainActivity : GenericActivity() {
     companion object {
         private const val TAG = "[Main Activity]"
 
@@ -83,12 +82,7 @@ class MainActivity : AppCompatActivity() {
         // Must be done before the setContentView
         installSplashScreen()
 
-        WindowCompat.setDecorFitsSystemWindows(window, true)
         super.onCreate(savedInstanceState)
-
-        while (!coreContext.isReady()) {
-            Thread.sleep(20)
-        }
 
         if (checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
             loadContacts()

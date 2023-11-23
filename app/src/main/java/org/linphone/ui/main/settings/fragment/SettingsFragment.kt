@@ -109,9 +109,7 @@ class SettingsFragment : GenericFragment() {
         binding.themeSpinner.adapter = themeAdapter
 
         viewModel.theme.observe(viewLifecycleOwner) { theme ->
-            viewModel.availableThemesValues.indexOf(
-                theme
-            )
+            binding.themeSpinner.setSelection(viewModel.availableThemesValues.indexOf(theme))
         }
 
         binding.themeSpinner.onItemSelectedListener = themeListener

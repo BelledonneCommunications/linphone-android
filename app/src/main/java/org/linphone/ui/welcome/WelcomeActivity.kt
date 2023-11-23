@@ -23,24 +23,22 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.addCallback
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.WelcomeActivityBinding
+import org.linphone.ui.GenericActivity
 import org.linphone.ui.assistant.AssistantActivity
 import org.linphone.ui.welcome.fragment.WelcomePage1Fragment
 import org.linphone.ui.welcome.fragment.WelcomePage2Fragment
 import org.linphone.ui.welcome.fragment.WelcomePage3Fragment
 import org.linphone.utils.AppUtils
 
-class WelcomeActivity : AppCompatActivity() {
+class WelcomeActivity : GenericActivity() {
     companion object {
         private const val TAG = "[Welcome Activity]"
         private const val PAGES = 3
@@ -53,12 +51,7 @@ class WelcomeActivity : AppCompatActivity() {
     private val pageChangedCallback = PageChangedCallback()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        WindowCompat.setDecorFitsSystemWindows(window, true)
         super.onCreate(savedInstanceState)
-
-        while (!coreContext.isReady()) {
-            Thread.sleep(20)
-        }
 
         // Disable back gesture / button
         onBackPressedDispatcher.addCallback { }

@@ -25,7 +25,6 @@ import android.os.Bundle
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.annotation.UiThread
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -39,10 +38,10 @@ import androidx.window.layout.WindowInfoTracker
 import androidx.window.layout.WindowLayoutInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.linphone.LinphoneApplication
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.CallActivityBinding
+import org.linphone.ui.GenericActivity
 import org.linphone.ui.call.fragment.ActiveCallFragmentDirections
 import org.linphone.ui.call.fragment.ActiveConferenceCallFragmentDirections
 import org.linphone.ui.call.fragment.AudioDevicesMenuDialogFragment
@@ -58,7 +57,7 @@ import org.linphone.utils.slideInToastFromTop
 import org.linphone.utils.slideInToastFromTopForDuration
 
 @UiThread
-class CallActivity : AppCompatActivity() {
+class CallActivity : GenericActivity() {
     companion object {
         private const val TAG = "[Call Activity]"
     }
@@ -70,12 +69,7 @@ class CallActivity : AppCompatActivity() {
     private lateinit var callViewModel: CurrentCallViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        WindowCompat.setDecorFitsSystemWindows(window, true)
         super.onCreate(savedInstanceState)
-
-        while (!LinphoneApplication.coreContext.isReady()) {
-            Thread.sleep(20)
-        }
 
         binding = DataBindingUtil.setContentView(this, R.layout.call_activity)
         binding.lifecycleOwner = this

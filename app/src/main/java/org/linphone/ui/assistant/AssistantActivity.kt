@@ -27,9 +27,7 @@ import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.annotation.DrawableRes
 import androidx.annotation.UiThread
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.WindowCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
@@ -37,12 +35,13 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantActivityBinding
+import org.linphone.ui.GenericActivity
 import org.linphone.ui.assistant.fragment.PermissionsFragmentDirections
 import org.linphone.utils.ToastUtils
 import org.linphone.utils.slideInToastFromTopForDuration
 
 @UiThread
-class AssistantActivity : AppCompatActivity() {
+class AssistantActivity : GenericActivity() {
     companion object {
         private const val TAG = "[Assistant Activity]"
 
@@ -57,12 +56,7 @@ class AssistantActivity : AppCompatActivity() {
     private lateinit var binding: AssistantActivityBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        WindowCompat.setDecorFitsSystemWindows(window, true)
         super.onCreate(savedInstanceState)
-
-        while (!coreContext.isReady()) {
-            Thread.sleep(20)
-        }
 
         binding = DataBindingUtil.setContentView(this, R.layout.assistant_activity)
         binding.lifecycleOwner = this

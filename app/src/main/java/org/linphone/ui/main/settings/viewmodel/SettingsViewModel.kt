@@ -310,8 +310,12 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
-    fun setTheme(theme: Int) {
-        corePreferences.darkMode = theme
+    fun setTheme(themeValue: Int) {
+        coreContext.postOnCoreThread {
+            corePreferences.darkMode = themeValue
+            Log.i("$TAG Theme [$theme] saved")
+            theme.postValue(themeValue)
+        }
     }
 
     @WorkerThread

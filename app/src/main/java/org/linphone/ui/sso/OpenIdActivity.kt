@@ -24,7 +24,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.UiThread
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import java.io.File
@@ -41,11 +40,12 @@ import net.openid.appauth.ResponseTypeValues
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.SingleSignOnOpenIdActivityBinding
+import org.linphone.ui.GenericActivity
 import org.linphone.utils.FileUtils
 import org.linphone.utils.TimestampUtils
 
 @UiThread
-class OpenIdActivity : AppCompatActivity() {
+class OpenIdActivity : GenericActivity() {
     companion object {
         private const val TAG = "[Open ID Activity]"
 
