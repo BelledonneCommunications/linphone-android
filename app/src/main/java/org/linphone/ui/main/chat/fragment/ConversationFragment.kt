@@ -247,6 +247,8 @@ class ConversationFragment : GenericFragment() {
                 val chatMessageModel = (chatMessageEventLog.model as? ChatMessageModel)
                 if (chatMessageModel != null) {
                     sendMessageViewModel.replyToMessage(chatMessageModel)
+                    // Open keyboard & focus edit text
+                    binding.sendArea.messageToSend.showKeyboard()
                 } else {
                     Log.e(
                         "$TAG Can't reply, failed to get a ChatMessageModel from adapter item #[$index]"
