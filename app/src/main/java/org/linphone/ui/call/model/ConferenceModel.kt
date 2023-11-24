@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.call.model
 
+import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.R
@@ -29,6 +30,7 @@ import org.linphone.core.Participant
 import org.linphone.core.ParticipantDevice
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
+import org.linphone.utils.Event
 
 class ConferenceModel {
     companion object {
@@ -45,9 +47,13 @@ class ConferenceModel {
 
     val participantsLabel = MutableLiveData<String>()
 
-    private lateinit var conference: Conference
-
     val isCurrentCallInConference = MutableLiveData<Boolean>()
+
+    val showLayoutMenuEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
+    private lateinit var conference: Conference
 
     private val conferenceListener = object : ConferenceListenerStub() {
         @WorkerThread
@@ -154,6 +160,11 @@ class ConferenceModel {
         }
     }
 
+    @UiThread
+    fun showLayoutMenu() {
+        showLayoutMenuEvent.value = Event(true)
+    }
+
     @WorkerThread
     private fun computeParticipants() {
         participants.value.orEmpty().forEach(ConferenceParticipantModel::destroy)
@@ -209,6 +220,7 @@ class ConferenceModel {
         )
     }
 
+    @WorkerThread
     private fun sortParticipantDevicesList(devices: List<ConferenceParticipantDeviceModel>): ArrayList<ConferenceParticipantDeviceModel> {
         val sortedList = arrayListOf<ConferenceParticipantDeviceModel>()
         sortedList.addAll(devices)

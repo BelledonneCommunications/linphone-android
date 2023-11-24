@@ -4,6 +4,18 @@
 
     <data>
         <import type="android.view.View" />
+        <variable
+            name="gridClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="activeSpeakerClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="audioOnlyClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.call.model.ConferenceModel" />
     </data>
 
     <LinearLayout
@@ -14,6 +26,7 @@
 
         <com.google.android.material.radiobutton.MaterialRadioButton
             style="@style/context_menu_action_label_style"
+            android:onClick="@{gridClickListener}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -30,6 +43,7 @@
 
         <com.google.android.material.radiobutton.MaterialRadioButton
             style="@style/context_menu_action_label_style"
+            android:onClick="@{activeSpeakerClickListener}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -46,6 +60,7 @@
 
         <com.google.android.material.radiobutton.MaterialRadioButton
             style="@style/context_menu_action_label_style"
+            android:onClick="@{audioOnlyClickListener}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"

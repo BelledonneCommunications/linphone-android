@@ -45,6 +45,7 @@ import org.linphone.ui.GenericActivity
 import org.linphone.ui.call.fragment.ActiveCallFragmentDirections
 import org.linphone.ui.call.fragment.ActiveConferenceCallFragmentDirections
 import org.linphone.ui.call.fragment.AudioDevicesMenuDialogFragment
+import org.linphone.ui.call.fragment.ConferenceLayoutMenuDialogFragment
 import org.linphone.ui.call.fragment.IncomingCallFragmentDirections
 import org.linphone.ui.call.fragment.OutgoingCallFragmentDirections
 import org.linphone.ui.call.model.AudioDeviceModel
@@ -100,6 +101,12 @@ class CallActivity : GenericActivity() {
         callViewModel.showAudioDevicesListEvent.observe(this) {
             it.consume { devices ->
                 showAudioRoutesMenu(devices)
+            }
+        }
+
+        callViewModel.conferenceModel.showLayoutMenuEvent.observe(this) {
+            it.consume {
+                showConferenceLayoutMenu()
             }
         }
 
@@ -407,5 +414,10 @@ class CallActivity : GenericActivity() {
     private fun showAudioRoutesMenu(devicesList: List<AudioDeviceModel>) {
         val modalBottomSheet = AudioDevicesMenuDialogFragment(devicesList)
         modalBottomSheet.show(supportFragmentManager, AudioDevicesMenuDialogFragment.TAG)
+    }
+
+    private fun showConferenceLayoutMenu() {
+        val modalBottomSheet = ConferenceLayoutMenuDialogFragment(callViewModel.conferenceModel)
+        modalBottomSheet.show(supportFragmentManager, ConferenceLayoutMenuDialogFragment.TAG)
     }
 }
