@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@color/gray_500"
+        android:background="@drawable/shape_squircle_gray_600_top_background"
         entries="@{devices}"
         layout="@{@layout/call_audio_device_list_cell}">
 

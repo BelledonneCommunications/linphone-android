@@ -489,11 +489,22 @@
     <string name="calls_count_label">%s calls</string>
     <string name="calls_paused_count_label">%s paused calls</string>
 
+    <string name="call_audio_device_type_earpiece">Earpiece</string>
+    <string name="call_audio_device_type_speaker">Speaker</string>
+    <string name="call_audio_device_type_bluetooth">Bluetooth (%s)</string>
+    <string name="call_audio_device_type_hearing_aid">Hearing aid (%s)</string>
+    <string name="call_audio_device_type_headset">Headset</string>
+    <string name="call_audio_device_type_headphones">Headphones</string>
+
     <string name="conference_share_link_title">Share invitation</string>
     <string name="conference_call_empty">Waiting for other participants…</string>
     <string name="conference_action_screen_sharing">Screen share</string>
     <string name="conference_action_show_participants">Participants</string>
     <string name="conference_participants_list_title">%s participants</string>
+
+    <string name="conference_layout_grid">Mosaic</string>
+    <string name="conference_layout_active_speaker">Speaker</string>
+    <string name="conference_layout_audio_only">Audio only</string>
 
     <string name="connection_error_for_non_default_account">Account connection error</string>
     <string name="network_not_reachable">You aren\'t connected to internet</string>

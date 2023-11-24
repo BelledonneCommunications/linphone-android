@@ -4,30 +4,27 @@
 
     <data>
         <import type="android.view.View" />
+        <import type="org.linphone.core.AudioDevice.Type" />
         <variable
             name="model"
             type="org.linphone.ui.call.model.AudioDeviceModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.google.android.material.radiobutton.MaterialRadioButton
+        style="@style/context_menu_action_label_style"
         android:onClick="@{() -> model.onClicked()}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/black">
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/context_menu_action_label_style"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@{model.name, default=`Speaker`}"
-            android:textColor="@color/white"
-            android:layout_marginBottom="1dp"
-            android:drawableStart="@{model.isHeadset ? @drawable/headset : model.isBluetooth ? @drawable/bluetooth : model.isSpeaker ? @drawable/speaker_high : @drawable/ear, default=@drawable/speaker_high}"
-            android:drawableTint="@color/gray_main2_300"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="@{model.name, default=`Speaker`}"
+        android:textColor="@color/white"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="1dp"
+        android:drawableEnd="@{model.type == Type.Speaker ? @drawable/speaker_high : model.type == Type.Bluetooth || model.type == Type.HearingAid ? @drawable/bluetooth : model.type == Type.Headphones || model.type == Type.Headset ? @drawable/headset : @drawable/ear, default=@drawable/speaker_high}"
+        android:drawableTint="@color/white"
+        android:checked="@{model.isCurrentlySelected}"
+        app:useMaterialThemeColors="false"
+        app:buttonTint="@color/white"/>
 
 </layout>

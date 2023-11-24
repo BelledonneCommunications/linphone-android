@@ -482,18 +482,50 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                 // Only list output audio devices
                 if (!device.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) continue
 
-                val isSpeaker = device.type == AudioDevice.Type.Speaker
-                val isHeadset = device.type == AudioDevice.Type.Headset || device.type == AudioDevice.Type.Headphones
-                val isBluetooth = device.type == AudioDevice.Type.Bluetooth
-                val model = AudioDeviceModel(device, device.id, isSpeaker, isHeadset, isBluetooth) {
+                val name = when (device.type) {
+                    AudioDevice.Type.Earpiece -> {
+                        AppUtils.getString(R.string.call_audio_device_type_earpiece)
+                    }
+                    AudioDevice.Type.Speaker -> {
+                        AppUtils.getString(R.string.call_audio_device_type_speaker)
+                    }
+                    AudioDevice.Type.Headset -> {
+                        AppUtils.getString(R.string.call_audio_device_type_headset)
+                    }
+                    AudioDevice.Type.Headphones -> {
+                        AppUtils.getString(R.string.call_audio_device_type_headphones)
+                    }
+                    AudioDevice.Type.Bluetooth -> {
+                        AppUtils.getFormattedString(
+                            R.string.call_audio_device_type_bluetooth,
+                            device.deviceName
+                        )
+                    }
+                    AudioDevice.Type.HearingAid -> {
+                        AppUtils.getFormattedString(
+                            R.string.call_audio_device_type_hearing_aid,
+                            device.deviceName
+                        )
+                    }
+                    else -> device.deviceName
+                }
+                val currentDevice = currentCall.outputAudioDevice
+                val isCurrentlyInUse = device.type == currentDevice?.type && device.deviceName == currentDevice?.deviceName
+                val model = AudioDeviceModel(device, name, device.type, isCurrentlyInUse) {
                     // onSelected
                     coreContext.postOnCoreThread {
                         Log.i("$TAG Selected audio device with ID [${device.id}]")
                         if (::currentCall.isInitialized) {
-                            when {
-                                isHeadset -> AudioUtils.routeAudioToHeadset(currentCall)
-                                isBluetooth -> AudioUtils.routeAudioToBluetooth(currentCall)
-                                isSpeaker -> AudioUtils.routeAudioToSpeaker(currentCall)
+                            when (device.type) {
+                                AudioDevice.Type.Headset, AudioDevice.Type.Headphones -> AudioUtils.routeAudioToHeadset(
+                                    currentCall
+                                )
+                                AudioDevice.Type.Bluetooth, AudioDevice.Type.HearingAid -> AudioUtils.routeAudioToBluetooth(
+                                    currentCall
+                                )
+                                AudioDevice.Type.Speaker -> AudioUtils.routeAudioToSpeaker(
+                                    currentCall
+                                )
                                 else -> AudioUtils.routeAudioToEarpiece(currentCall)
                             }
                         }

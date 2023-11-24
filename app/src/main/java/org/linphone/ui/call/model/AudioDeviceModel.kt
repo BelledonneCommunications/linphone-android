@@ -19,14 +19,14 @@
  */
 package org.linphone.ui.call.model
 
+import androidx.annotation.WorkerThread
 import org.linphone.core.AudioDevice
 
-data class AudioDeviceModel(
+data class AudioDeviceModel @WorkerThread constructor(
     val audioDevice: AudioDevice,
     val name: String,
-    val isSpeaker: Boolean,
-    val isHeadset: Boolean,
-    val isBluetooth: Boolean,
+    val type: AudioDevice.Type,
+    val isCurrentlySelected: Boolean,
     private val onAudioDeviceSelected: (() -> Unit)? = null
 ) {
     var dismissDialog: (() -> Unit)? = null
