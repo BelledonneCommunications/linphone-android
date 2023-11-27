@@ -14,11 +14,23 @@ Group changes to describe their impact on the project, as follows:
 
 ### Added
 - Chat messages emoji "reactions"
+- Broadcast mode for scheduled meetings (beta, you have to enable it in the settings first)
 - Hearing aids should be working the same way bluetooth headset does
-- Hardware video codecs (H264, H265) are now used in priority when possible
+- Hardware video codecs (H264, H265) are now used in priority when possible (SDK)
 
 ### Fixed
 - Connection status & color when in refreshing state
+- Sent content type for files attached to a chat message
+- Toggle mute mic while in conference
+- Calling right after creating a chat room
+
+## [5.1.4] - 2023-10-20
+
+### Fixed
+- Various fixes in the SDK (5.2.110)
+
+### Changed
+- Updated translations from Weblate
 
 ## [5.1.3] - 2023-09-23
 
