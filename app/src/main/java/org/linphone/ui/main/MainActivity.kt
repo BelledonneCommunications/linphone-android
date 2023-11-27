@@ -30,6 +30,7 @@ import android.view.Gravity
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import androidx.annotation.DrawableRes
+import androidx.annotation.MainThread
 import androidx.annotation.UiThread
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.children
@@ -331,6 +332,7 @@ class MainActivity : GenericActivity() {
         }
     }
 
+    @MainThread
     private fun handleIntent(intent: Intent, defaultDestination: Int, isNewIntent: Boolean) {
         Log.i(
             "$TAG Handling intent action [${intent.action}], type [${intent.type}] and data [${intent.data}]"
@@ -346,9 +348,13 @@ class MainActivity : GenericActivity() {
             Intent.ACTION_SEND_MULTIPLE -> {
                 handleSendIntent(intent, true)
             }
+            Intent.ACTION_VIEW, Intent.ACTION_DIAL, Intent.ACTION_CALL -> {
+                handleCallIntent(intent)
+            }
         }
     }
 
+    @MainThread
     private fun handleMainIntent(intent: Intent, defaultDestination: Int, isNewIntent: Boolean) {
         val navGraph = findNavController().navInflater.inflate(R.navigation.main_nav_graph)
         if (intent.hasExtra("Chat")) {
@@ -373,6 +379,7 @@ class MainActivity : GenericActivity() {
         }
     }
 
+    @MainThread
     private fun handleSendIntent(intent: Intent, multiple: Boolean) {
         val parcelablesUri = arrayListOf<Uri>()
 
@@ -459,6 +466,34 @@ class MainActivity : GenericActivity() {
             }
 
             findNavController().setGraph(navGraph, intent.extras)
+        }
+    }
+
+    @MainThread
+    private fun handleCallIntent(intent: Intent) {
+        val uri = intent.data?.toString()
+        if (uri.isNullOrEmpty()) {
+            Log.e("$TAG Intent data is null or empty, can't process [${intent.action}] intent")
+            return
+        }
+
+        Log.i("$TAG Found URI [$uri] as data for intent [${intent.action}]")
+        val sipUriToCall = if (uri.startsWith("tel:")) {
+            uri.substring("tel:".length)
+        } else {
+            uri
+        }.replace("%40", "@") // Unescape @ character if needed
+
+        coreContext.postOnCoreThread {
+            val applyPrefix = LinphoneUtils.getDefaultAccount()?.params?.useInternationalPrefixForCallsAndChats ?: false
+            val address = coreContext.core.interpretUrl(
+                sipUriToCall,
+                applyPrefix
+            )
+            Log.i("$TAG Interpreted SIP URI is [${address?.asStringUriOnly()}]")
+            if (address != null) {
+                coreContext.startCall(address)
+            }
         }
     }
 
