@@ -104,7 +104,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.10.0'
 
     // https://github.com/coil-kt/coil/blob/main/LICENSE.txt Apache v2.0
-    def coil_version = "2.4.0"
+    def coil_version = "2.5.0"
     implementation("io.coil-kt:coil:$coil_version")
     implementation("io.coil-kt:coil-gif:$coil_version")
     implementation("io.coil-kt:coil-svg:$coil_version")
@@ -116,7 +116,7 @@ dependencies {
     // https://github.com/Baseflow/PhotoView/blob/master/LICENSE Apache v2.0
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
 
-    implementation platform('com.google.firebase:firebase-bom:32.3.1')
+    implementation platform('com.google.firebase:firebase-bom:32.5.0')
     implementation 'com.google.firebase:firebase-messaging'
 
     implementation 'net.openid:appauth:0.11.1'
