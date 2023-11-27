@@ -30,7 +30,6 @@ project.tasks['preBuild'].dependsOn 'linphoneSdkSource'
 android {
     namespace 'org.linphone'
     compileSdk 34
-    compileSdkPreview 'UpsideDownCake'
 
     defaultConfig {
         applicationId packageName
@@ -38,17 +37,24 @@ android {
         targetSdk 34
         versionCode 60000
         versionName "6.0.0"
+    }
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    applicationVariants.configureEach { variant ->
+        variant.outputs.configureEach {
+            outputFileName = "linphone-android-${variant.buildType.name}-${project.version}.apk"
+        }
     }
 
     buildTypes {
         debug {
+            debuggable true
+            jniDebuggable true
+
             resValue "string", "file_provider", packageName + ".fileprovider"
         }
 
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             resValue "string", "file_provider", packageName + ".fileprovider"

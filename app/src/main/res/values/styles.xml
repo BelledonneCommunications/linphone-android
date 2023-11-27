@@ -131,7 +131,7 @@
         <item name="android:textSize">32sp</item>
         <item name="android:gravity">center</item>
         <item name="android:elevation">3dp</item>
-        <item name="android:background">@drawable/in_call_button_background</item>
+        <item name="android:background">@drawable/in_call_button_background_red</item>
     </style>
     <style name="in_call_extra_action_label_style">
         <item name="android:fontFamily">@font/noto_sans</item>

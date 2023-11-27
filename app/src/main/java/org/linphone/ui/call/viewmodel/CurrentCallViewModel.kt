@@ -877,7 +877,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
     @WorkerThread
     private fun canCallBePaused(): Boolean {
         return ::currentCall.isInitialized && !currentCall.mediaInProgress() && when (currentCall.state) {
-            Call.State.StreamsRunning, Call.State.PausedByRemote, Call.State.Paused -> true
+            Call.State.StreamsRunning, Call.State.Pausing, Call.State.Paused -> true
             else -> false
         }
     }
