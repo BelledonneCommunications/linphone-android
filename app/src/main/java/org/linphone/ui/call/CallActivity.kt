@@ -157,7 +157,7 @@ class CallActivity : GenericActivity() {
             it.consume { remote ->
                 showGreenToast(
                     getString(R.string.toast_call_transfer_in_progress, remote),
-                    R.drawable.transfer
+                    R.drawable.phone_transfer
                 )
             }
         }

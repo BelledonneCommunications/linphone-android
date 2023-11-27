@@ -155,7 +155,7 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
                     org.linphone.R.string.toast_call_transfer_successful,
                     displayName
                 )
-                val icon = org.linphone.R.drawable.transfer
+                val icon = org.linphone.R.drawable.phone_transfer
 
                 greenToastToShowEvent.postValue(Event(Pair(message, icon)))
             }

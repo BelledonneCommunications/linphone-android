@@ -45,7 +45,7 @@
             android:layout_marginTop="@dimen/call_extra_button_top_margin"
             android:padding="@dimen/call_button_icon_padding"
             android:background="@drawable/in_call_button_background_red"
-            android:src="@drawable/transfer"
+            android:src="@drawable/phone_transfer"
             app:tint="@color/in_call_button_tint_color"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="@id/transfer_label"
@@ -228,7 +228,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"
-            android:text="@string/call_action_pause_call"
+            android:text="@{viewModel.isPaused ? @string/call_action_resume_call : @string/call_action_pause_call, default=@string/call_action_pause_call}"
             app:layout_constraintTop_toBottomOf="@id/pause_call"
             app:layout_constraintStart_toStartOf="@id/new_call_label"
             app:layout_constraintEnd_toEndOf="@id/new_call_label" />
