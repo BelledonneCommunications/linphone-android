@@ -460,7 +460,7 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
                 if (!chatRoom.isEphemeralEnabled) 0L else chatRoom.ephemeralLifetime
             )
             Log.i(
-                "$TAG Ephemeral chat messages are [${if (chatRoom.isEphemeralEnabled) "enabled" else "disabled"}], lifetime is [${chatRoom.ephemeralLifetime}]"
+                "$TAG Ephemeral messages are [${if (chatRoom.isEphemeralEnabled) "enabled" else "disabled"}], lifetime is [${chatRoom.ephemeralLifetime}]"
             )
         }
     }

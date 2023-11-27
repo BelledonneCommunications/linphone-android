@@ -47,8 +47,8 @@ import org.linphone.core.Player
 import org.linphone.core.PlayerListener
 import org.linphone.core.Recorder
 import org.linphone.core.tools.Log
-import org.linphone.ui.main.chat.model.ChatMessageModel
 import org.linphone.ui.main.chat.model.FileModel
+import org.linphone.ui.main.chat.model.MessageModel
 import org.linphone.ui.main.chat.model.ParticipantModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.AudioUtils
@@ -193,10 +193,10 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
-    fun replyToMessage(model: ChatMessageModel) {
+    fun replyToMessage(model: MessageModel) {
         coreContext.postOnCoreThread {
             val message = model.chatMessage
-            Log.i("$TAG Pending reply to chat message [${message.messageId}]")
+            Log.i("$TAG Pending reply to message [${message.messageId}]")
             chatMessageToReplyTo = message
             isReplyingTo.postValue(model.avatarModel.friend.name)
             isReplyingToMessage.postValue(LinphoneUtils.getTextDescribingMessage(message))

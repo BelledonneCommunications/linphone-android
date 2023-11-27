@@ -58,7 +58,7 @@ import org.linphone.utils.PatternClickableSpan
 import org.linphone.utils.SpannableClickedListener
 import org.linphone.utils.TimestampUtils
 
-class ChatMessageModel @WorkerThread constructor(
+class MessageModel @WorkerThread constructor(
     val chatMessage: ChatMessage,
     val avatarModel: ContactAvatarModel,
     val isFromGroup: Boolean,
@@ -73,7 +73,7 @@ class ChatMessageModel @WorkerThread constructor(
     private val onWebUrlClicked: ((url: String) -> Unit)? = null
 ) {
     companion object {
-        private const val TAG = "[Chat Message Model]"
+        private const val TAG = "[Message Model]"
 
         private const val SIP_URI_REGEXP = "(?:<?sips?:)[a-zA-Z0-9+_.\\-]+(?:@([a-zA-Z0-9+_.\\-;=~]+))+(>)?"
         private const val HTTP_LINK_REGEXP = "https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)"
@@ -171,14 +171,14 @@ class ChatMessageModel @WorkerThread constructor(
         @WorkerThread
         override fun onNewMessageReaction(message: ChatMessage, reaction: ChatMessageReaction) {
             Log.i(
-                "$TAG New reaction [${reaction.body}] from [${reaction.fromAddress.asStringUriOnly()}] for chat message with ID [$id]"
+                "$TAG New reaction [${reaction.body}] from [${reaction.fromAddress.asStringUriOnly()}] for message with ID [$id]"
             )
             updateReactionsList()
         }
 
         @WorkerThread
         override fun onReactionRemoved(message: ChatMessage, address: Address) {
-            Log.i("$TAG A reaction was removed for chat message with ID [$id]")
+            Log.i("$TAG A reaction was removed for message with ID [$id]")
             updateReactionsList()
         }
 
@@ -235,7 +235,7 @@ class ChatMessageModel @WorkerThread constructor(
     @UiThread
     fun sendReaction(emoji: String) {
         coreContext.postOnCoreThread {
-            Log.i("$TAG Sending reaction [$emoji] to chat message with ID [$id]")
+            Log.i("$TAG Sending reaction [$emoji] to message with ID [$id]")
             val reaction = chatMessage.createReaction(emoji)
             reaction.send()
             dismissLongPressMenuEvent.postValue(Event(true))
@@ -275,7 +275,7 @@ class ChatMessageModel @WorkerThread constructor(
 
     @WorkerThread
     private fun computeContentsList() {
-        Log.d("$TAG Computing chat message contents list")
+        Log.d("$TAG Computing message contents list")
         var displayableContentFound = false
         var filesContentCount = 0
         val filesPath = arrayListOf<FileModel>()

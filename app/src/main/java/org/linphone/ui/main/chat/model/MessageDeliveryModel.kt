@@ -12,12 +12,12 @@ import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.TimestampUtils
 
-class ChatMessageDeliveryModel @WorkerThread constructor(
+class MessageDeliveryModel @WorkerThread constructor(
     private val chatMessage: ChatMessage,
-    private val onDeliveryUpdated: ((model: ChatMessageDeliveryModel) -> Unit)? = null
+    private val onDeliveryUpdated: ((model: MessageDeliveryModel) -> Unit)? = null
 ) {
     companion object {
-        private const val TAG = "[Chat Message Delivery Model]"
+        private const val TAG = "[Message Delivery Model]"
     }
 
     val readLabel = MutableLiveData<String>()
@@ -28,13 +28,13 @@ class ChatMessageDeliveryModel @WorkerThread constructor(
 
     val errorLabel = MutableLiveData<String>()
 
-    val displayedModels = arrayListOf<ChatMessageBottomSheetParticipantModel>()
+    val displayedModels = arrayListOf<MessageBottomSheetParticipantModel>()
 
-    private val deliveredModels = arrayListOf<ChatMessageBottomSheetParticipantModel>()
+    private val deliveredModels = arrayListOf<MessageBottomSheetParticipantModel>()
 
-    private val sentModels = arrayListOf<ChatMessageBottomSheetParticipantModel>()
+    private val sentModels = arrayListOf<MessageBottomSheetParticipantModel>()
 
-    private val errorModels = arrayListOf<ChatMessageBottomSheetParticipantModel>()
+    private val errorModels = arrayListOf<MessageBottomSheetParticipantModel>()
 
     private val chatMessageListener = object : ChatMessageListenerStub() {
         @WorkerThread
@@ -57,7 +57,7 @@ class ChatMessageDeliveryModel @WorkerThread constructor(
     }
 
     @UiThread
-    fun computeListForState(state: State): ArrayList<ChatMessageBottomSheetParticipantModel> {
+    fun computeListForState(state: State): ArrayList<MessageBottomSheetParticipantModel> {
         return when (state) {
             State.DeliveredToUser -> {
                 deliveredModels
@@ -83,7 +83,7 @@ class ChatMessageDeliveryModel @WorkerThread constructor(
 
         for (participant in chatMessage.getParticipantsByImdnState(State.Displayed)) {
             displayedModels.add(
-                ChatMessageBottomSheetParticipantModel(
+                MessageBottomSheetParticipantModel(
                     participant.participant.address,
                     TimestampUtils.toString(participant.stateChangeTime)
                 )
@@ -92,7 +92,7 @@ class ChatMessageDeliveryModel @WorkerThread constructor(
         if (!chatMessage.isOutgoing) {
             // Always add ourselves to prevent empty list
             displayedModels.add(
-                ChatMessageBottomSheetParticipantModel(
+                MessageBottomSheetParticipantModel(
                     chatMessage.localAddress,
                     TimestampUtils.toString(chatMessage.time)
                 )
@@ -108,7 +108,7 @@ class ChatMessageDeliveryModel @WorkerThread constructor(
 
         for (participant in chatMessage.getParticipantsByImdnState(State.DeliveredToUser)) {
             deliveredModels.add(
-                ChatMessageBottomSheetParticipantModel(
+                MessageBottomSheetParticipantModel(
                     participant.participant.address,
                     TimestampUtils.toString(participant.stateChangeTime)
                 )
@@ -124,7 +124,7 @@ class ChatMessageDeliveryModel @WorkerThread constructor(
 
         for (participant in chatMessage.getParticipantsByImdnState(State.Delivered)) {
             sentModels.add(
-                ChatMessageBottomSheetParticipantModel(
+                MessageBottomSheetParticipantModel(
                     participant.participant.address,
                     TimestampUtils.toString(participant.stateChangeTime)
                 )
@@ -140,7 +140,7 @@ class ChatMessageDeliveryModel @WorkerThread constructor(
 
         for (participant in chatMessage.getParticipantsByImdnState(State.NotDelivered)) {
             errorModels.add(
-                ChatMessageBottomSheetParticipantModel(
+                MessageBottomSheetParticipantModel(
                     participant.participant.address,
                     TimestampUtils.toString(participant.stateChangeTime)
                 )

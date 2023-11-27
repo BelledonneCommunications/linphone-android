@@ -31,9 +31,9 @@ import org.linphone.R
 import org.linphone.databinding.ChatBubbleIncomingBinding
 import org.linphone.databinding.ChatBubbleOutgoingBinding
 import org.linphone.databinding.ChatEventBinding
-import org.linphone.ui.main.chat.model.ChatMessageModel
 import org.linphone.ui.main.chat.model.EventLogModel
 import org.linphone.ui.main.chat.model.EventModel
+import org.linphone.ui.main.chat.model.MessageModel
 import org.linphone.utils.Event
 import org.linphone.utils.startAnimatedDrawable
 
@@ -46,16 +46,16 @@ class ConversationEventAdapter : ListAdapter<EventLogModel, RecyclerView.ViewHol
         const val EVENT = 3
     }
 
-    val chatMessageLongPressEvent = MutableLiveData<Event<ChatMessageModel>>()
+    val chatMessageLongPressEvent = MutableLiveData<Event<MessageModel>>()
 
-    val showDeliveryForChatMessageModelEvent: MutableLiveData<Event<ChatMessageModel>> by lazy {
-        MutableLiveData<Event<ChatMessageModel>>()
+    val showDeliveryForChatMessageModelEvent: MutableLiveData<Event<MessageModel>> by lazy {
+        MutableLiveData<Event<MessageModel>>()
     }
-    val showReactionForChatMessageModelEvent: MutableLiveData<Event<ChatMessageModel>> by lazy {
-        MutableLiveData<Event<ChatMessageModel>>()
+    val showReactionForChatMessageModelEvent: MutableLiveData<Event<MessageModel>> by lazy {
+        MutableLiveData<Event<MessageModel>>()
     }
-    val scrollToRepliedMessageEvent: MutableLiveData<Event<ChatMessageModel>> by lazy {
-        MutableLiveData<Event<ChatMessageModel>>()
+    val scrollToRepliedMessageEvent: MutableLiveData<Event<MessageModel>> by lazy {
+        MutableLiveData<Event<MessageModel>>()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -70,7 +70,7 @@ class ConversationEventAdapter : ListAdapter<EventLogModel, RecyclerView.ViewHol
         val data = getItem(position)
         if (data.isEvent) return EVENT
 
-        if ((data.model as ChatMessageModel).isOutgoing) {
+        if ((data.model as MessageModel).isOutgoing) {
             return OUTGOING_CHAT_MESSAGE
         }
         return INCOMING_CHAT_MESSAGE
@@ -148,8 +148,8 @@ class ConversationEventAdapter : ListAdapter<EventLogModel, RecyclerView.ViewHol
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val eventLog = getItem(position)
         when (holder) {
-            is IncomingBubbleViewHolder -> holder.bind(eventLog.model as ChatMessageModel)
-            is OutgoingBubbleViewHolder -> holder.bind(eventLog.model as ChatMessageModel)
+            is IncomingBubbleViewHolder -> holder.bind(eventLog.model as MessageModel)
+            is OutgoingBubbleViewHolder -> holder.bind(eventLog.model as MessageModel)
             is EventViewHolder -> holder.bind(eventLog.model as EventModel)
         }
     }
@@ -157,7 +157,7 @@ class ConversationEventAdapter : ListAdapter<EventLogModel, RecyclerView.ViewHol
     inner class IncomingBubbleViewHolder(
         val binding: ChatBubbleIncomingBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(message: ChatMessageModel) {
+        fun bind(message: MessageModel) {
             with(binding) {
                 model = message
                 executePendingBindings()
@@ -170,7 +170,7 @@ class ConversationEventAdapter : ListAdapter<EventLogModel, RecyclerView.ViewHol
     inner class OutgoingBubbleViewHolder(
         val binding: ChatBubbleOutgoingBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(message: ChatMessageModel) {
+        fun bind(message: MessageModel) {
             with(binding) {
                 model = message
                 executePendingBindings()
@@ -193,8 +193,8 @@ class ConversationEventAdapter : ListAdapter<EventLogModel, RecyclerView.ViewHol
     private class EventLogDiffCallback : DiffUtil.ItemCallback<EventLogModel>() {
         override fun areItemsTheSame(oldItem: EventLogModel, newItem: EventLogModel): Boolean {
             return if (!oldItem.isEvent && !newItem.isEvent) {
-                val oldData = (oldItem.model as ChatMessageModel)
-                val newData = (newItem.model as ChatMessageModel)
+                val oldData = (oldItem.model as MessageModel)
+                val newData = (newItem.model as MessageModel)
                 oldData.id == newData.id &&
                     oldData.timestamp == newData.timestamp &&
                     oldData.isOutgoing == newData.isOutgoing
@@ -207,8 +207,8 @@ class ConversationEventAdapter : ListAdapter<EventLogModel, RecyclerView.ViewHol
             return if (oldItem.isEvent && newItem.isEvent) {
                 true
             } else if (!oldItem.isEvent && !newItem.isEvent) {
-                val oldModel = (oldItem.model as ChatMessageModel)
-                val newModel = (newItem.model as ChatMessageModel)
+                val oldModel = (oldItem.model as MessageModel)
+                val newModel = (newItem.model as MessageModel)
                 oldModel.statusIcon.value == newModel.statusIcon.value
             } else {
                 false

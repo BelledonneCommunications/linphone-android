@@ -9,15 +9,15 @@ import org.linphone.core.ChatMessageListenerStub
 import org.linphone.core.ChatMessageReaction
 import org.linphone.core.tools.Log
 
-class ChatMessageReactionsModel @WorkerThread constructor(
+class MessageReactionsModel @WorkerThread constructor(
     private val chatMessage: ChatMessage,
-    private val onReactionsUpdated: ((model: ChatMessageReactionsModel) -> Unit)? = null
+    private val onReactionsUpdated: ((model: MessageReactionsModel) -> Unit)? = null
 ) {
     companion object {
-        private const val TAG = "[Chat Message Reactions Model]"
+        private const val TAG = "[Message Reactions Model]"
     }
 
-    val allReactions = arrayListOf<ChatMessageBottomSheetParticipantModel>()
+    val allReactions = arrayListOf<MessageBottomSheetParticipantModel>()
 
     val differentReactions = MutableLiveData<ArrayList<String>>()
 
@@ -47,8 +47,8 @@ class ChatMessageReactionsModel @WorkerThread constructor(
         chatMessage.removeListener(chatMessageListener)
     }
 
-    fun filterReactions(emoji: String): ArrayList<ChatMessageBottomSheetParticipantModel> {
-        val filteredList = arrayListOf<ChatMessageBottomSheetParticipantModel>()
+    fun filterReactions(emoji: String): ArrayList<MessageBottomSheetParticipantModel> {
+        val filteredList = arrayListOf<MessageBottomSheetParticipantModel>()
 
         for (reaction in allReactions) {
             if (reaction.value == emoji) {
@@ -72,7 +72,7 @@ class ChatMessageReactionsModel @WorkerThread constructor(
 
             val isOurOwn = reaction.fromAddress.weakEqual(chatMessage.chatRoom.localAddress)
             allReactions.add(
-                ChatMessageBottomSheetParticipantModel(
+                MessageBottomSheetParticipantModel(
                     reaction.fromAddress,
                     body,
                     isOurOwn
@@ -80,7 +80,7 @@ class ChatMessageReactionsModel @WorkerThread constructor(
                     if (isOurOwn) {
                         coreContext.postOnCoreThread {
                             Log.i(
-                                "$TAG Removing our own reaction for chat message [${chatMessage.messageId}]"
+                                "$TAG Removing our own reaction for message [${chatMessage.messageId}]"
                             )
                             val removeReaction = chatMessage.createReaction("")
                             removeReaction.send()

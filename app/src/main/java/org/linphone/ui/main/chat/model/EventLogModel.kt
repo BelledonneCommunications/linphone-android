@@ -70,7 +70,7 @@ class EventLogModel @WorkerThread constructor(
             ""
         }
 
-        ChatMessageModel(
+        MessageModel(
             chatMessage,
             avatarModel,
             isFromGroup,
@@ -90,6 +90,6 @@ class EventLogModel @WorkerThread constructor(
 
     @WorkerThread
     fun destroy() {
-        (model as? ChatMessageModel)?.destroy()
+        (model as? MessageModel)?.destroy()
     }
 }

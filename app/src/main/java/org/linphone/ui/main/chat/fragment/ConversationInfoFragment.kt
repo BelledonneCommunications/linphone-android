@@ -202,7 +202,7 @@ class ConversationInfoFragment : GenericFragment() {
         sharedViewModel.newChatMessageEphemeralLifetimeToSet.observe(viewLifecycleOwner) {
             it.consume { ephemeralLifetime ->
                 Log.i(
-                    "$TAG Setting [$ephemeralLifetime] as new ephemeral lifetime for chat messages"
+                    "$TAG Setting [$ephemeralLifetime] as new ephemeral lifetime for messages"
                 )
                 viewModel.updateEphemeralLifetime(ephemeralLifetime)
             }

@@ -32,8 +32,8 @@ import org.linphone.core.EventLog
 import org.linphone.core.Factory
 import org.linphone.core.Friend
 import org.linphone.core.tools.Log
-import org.linphone.ui.main.chat.model.ChatMessageModel
 import org.linphone.ui.main.chat.model.EventLogModel
+import org.linphone.ui.main.chat.model.MessageModel
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
@@ -99,7 +99,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         @WorkerThread
         override fun onChatMessageSending(chatRoom: ChatRoom, eventLog: EventLog) {
             val message = eventLog.chatMessage
-            Log.i("$TAG Chat message [$message] is being sent")
+            Log.i("$TAG Message [$message] is being sent")
 
             val list = arrayListOf<EventLogModel>()
             list.addAll(events.value.orEmpty())
@@ -130,7 +130,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         @WorkerThread
         override fun onChatMessageSent(chatRoom: ChatRoom, eventLog: EventLog) {
             val message = eventLog.chatMessage
-            Log.i("$TAG Chat message [$message] has been sent")
+            Log.i("$TAG Message [$message] has been sent")
         }
 
         @WorkerThread
@@ -203,7 +203,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             Log.i("$TAG Message [${message?.messageId}] ephemeral lifetime has expired")
 
             val found = eventsLogs.find {
-                (it.model as? ChatMessageModel)?.chatMessage == message
+                (it.model as? MessageModel)?.chatMessage == message
             }
             if (found != null) {
                 val list = arrayListOf<EventLogModel>()
@@ -322,7 +322,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
-    fun deleteChatMessage(chatMessageModel: ChatMessageModel) {
+    fun deleteChatMessage(chatMessageModel: MessageModel) {
         coreContext.postOnCoreThread {
             val eventsLogs = events.value.orEmpty()
             val found = eventsLogs.find {

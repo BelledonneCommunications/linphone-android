@@ -10,9 +10,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
 import org.linphone.databinding.ChatMessageBottomSheetListCellBinding
-import org.linphone.ui.main.chat.model.ChatMessageBottomSheetParticipantModel
+import org.linphone.ui.main.chat.model.MessageBottomSheetParticipantModel
 
-class ChatMessageBottomSheetAdapter : ListAdapter<ChatMessageBottomSheetParticipantModel, RecyclerView.ViewHolder>(
+class MessageBottomSheetAdapter : ListAdapter<MessageBottomSheetParticipantModel, RecyclerView.ViewHolder>(
     ParticipantDiffCallback()
 ) {
 
@@ -35,7 +35,7 @@ class ChatMessageBottomSheetAdapter : ListAdapter<ChatMessageBottomSheetParticip
         val binding: ChatMessageBottomSheetListCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         @UiThread
-        fun bind(bottomSheetModel: ChatMessageBottomSheetParticipantModel) {
+        fun bind(bottomSheetModel: MessageBottomSheetParticipantModel) {
             with(binding) {
                 model = bottomSheetModel
                 executePendingBindings()
@@ -43,17 +43,17 @@ class ChatMessageBottomSheetAdapter : ListAdapter<ChatMessageBottomSheetParticip
         }
     }
 
-    private class ParticipantDiffCallback : DiffUtil.ItemCallback<ChatMessageBottomSheetParticipantModel>() {
+    private class ParticipantDiffCallback : DiffUtil.ItemCallback<MessageBottomSheetParticipantModel>() {
         override fun areItemsTheSame(
-            oldItem: ChatMessageBottomSheetParticipantModel,
-            newItem: ChatMessageBottomSheetParticipantModel
+            oldItem: MessageBottomSheetParticipantModel,
+            newItem: MessageBottomSheetParticipantModel
         ): Boolean {
             return oldItem.sipUri == newItem.sipUri && oldItem.value == newItem.value
         }
 
         override fun areContentsTheSame(
-            oldItem: ChatMessageBottomSheetParticipantModel,
-            newItem: ChatMessageBottomSheetParticipantModel
+            oldItem: MessageBottomSheetParticipantModel,
+            newItem: MessageBottomSheetParticipantModel
         ): Boolean {
             return true
         }

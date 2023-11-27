@@ -195,7 +195,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             if (defaultAccountAddress != null && defaultAccountAddress.weakEqual(address)) return
 
             Log.i(
-                "$TAG Reaction received [${reaction.body}] from [${address.asStringUriOnly()}] for chat message [$message]"
+                "$TAG Reaction received [${reaction.body}] from [${address.asStringUriOnly()}] for message [$message]"
             )
             if (corePreferences.disableChat) return
 
@@ -229,7 +229,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             address: Address
         ) {
             Log.i(
-                "$TAG [${address.asStringUriOnly()}] removed it's previously sent reaction for chat message [$message]"
+                "$TAG [${address.asStringUriOnly()}] removed it's previously sent reaction for message [$message]"
             )
             if (corePreferences.disableChat) return
 

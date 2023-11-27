@@ -63,11 +63,11 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatBubbleLongPressMenuBinding
 import org.linphone.databinding.ChatConversationFragmentBinding
 import org.linphone.ui.main.MainActivity
-import org.linphone.ui.main.chat.adapter.ChatMessageBottomSheetAdapter
 import org.linphone.ui.main.chat.adapter.ConversationEventAdapter
-import org.linphone.ui.main.chat.model.ChatMessageDeliveryModel
-import org.linphone.ui.main.chat.model.ChatMessageModel
-import org.linphone.ui.main.chat.model.ChatMessageReactionsModel
+import org.linphone.ui.main.chat.adapter.MessageBottomSheetAdapter
+import org.linphone.ui.main.chat.model.MessageDeliveryModel
+import org.linphone.ui.main.chat.model.MessageModel
+import org.linphone.ui.main.chat.model.MessageReactionsModel
 import org.linphone.ui.main.chat.view.RichEditText
 import org.linphone.ui.main.chat.viewmodel.ConversationViewModel
 import org.linphone.ui.main.chat.viewmodel.ConversationViewModel.Companion.SCROLLING_POSITION_NOT_SET
@@ -98,7 +98,7 @@ class ConversationFragment : GenericFragment() {
 
     private lateinit var adapter: ConversationEventAdapter
 
-    private lateinit var bottomSheetAdapter: ChatMessageBottomSheetAdapter
+    private lateinit var bottomSheetAdapter: MessageBottomSheetAdapter
 
     private val args: ConversationFragmentArgs by navArgs()
 
@@ -157,7 +157,7 @@ class ConversationFragment : GenericFragment() {
         }
     }
 
-    private var currentChatMessageModelForBottomSheet: ChatMessageModel? = null
+    private var currentChatMessageModelForBottomSheet: MessageModel? = null
     private val bottomSheetCallback = object : BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
             Log.i("$TAG Bottom sheet state is [$newState]")
@@ -180,15 +180,15 @@ class ConversationFragment : GenericFragment() {
         }
     }
 
-    private var bottomSheetDeliveryModel: ChatMessageDeliveryModel? = null
+    private var bottomSheetDeliveryModel: MessageDeliveryModel? = null
 
-    private var bottomSheetReactionsModel: ChatMessageReactionsModel? = null
+    private var bottomSheetReactionsModel: MessageReactionsModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         adapter = ConversationEventAdapter()
-        bottomSheetAdapter = ChatMessageBottomSheetAdapter()
+        bottomSheetAdapter = MessageBottomSheetAdapter()
     }
 
     override fun onCreateView(
@@ -244,7 +244,7 @@ class ConversationFragment : GenericFragment() {
                 adapter.notifyItemChanged(index)
 
                 val chatMessageEventLog = adapter.currentList[index]
-                val chatMessageModel = (chatMessageEventLog.model as? ChatMessageModel)
+                val chatMessageModel = (chatMessageEventLog.model as? MessageModel)
                 if (chatMessageModel != null) {
                     sendMessageViewModel.replyToMessage(chatMessageModel)
                     // Open keyboard & focus edit text
@@ -324,10 +324,10 @@ class ConversationFragment : GenericFragment() {
             it.consume { model ->
                 val repliedMessageId = model.replyToMessageId
                 if (repliedMessageId.isNullOrEmpty()) {
-                    Log.w("$TAG Chat message [${model.id}] doesn't have a reply to ID!")
+                    Log.w("$TAG Message [${model.id}] doesn't have a reply to ID!")
                 } else {
                     val originalMessage = adapter.currentList.find { eventLog ->
-                        !eventLog.isEvent && (eventLog.model as ChatMessageModel).id == repliedMessageId
+                        !eventLog.isEvent && (eventLog.model as MessageModel).id == repliedMessageId
                     }
                     if (originalMessage != null) {
                         val position = adapter.currentList.indexOf(originalMessage)
@@ -417,7 +417,7 @@ class ConversationFragment : GenericFragment() {
 
         viewModel.isGroup.observe(viewLifecycleOwner) { group ->
             if (group) {
-                Log.i("$TAG Adding text observer to chat message sending area")
+                Log.i("$TAG Adding text observer to message sending area")
                 binding.sendArea.messageToSend.addTextChangedListener(textObserver)
             }
         }
@@ -491,7 +491,7 @@ class ConversationFragment : GenericFragment() {
 
         sharedViewModel.forceRefreshConversationEvents.observe(viewLifecycleOwner) {
             it.consume {
-                Log.i("$TAG Force refreshing chat messages list")
+                Log.i("$TAG Force refreshing messages list")
                 viewModel.applyFilter("")
             }
         }
@@ -519,7 +519,7 @@ class ConversationFragment : GenericFragment() {
 
         val id = LinphoneUtils.getChatRoomId(args.localSipUri, args.remoteSipUri)
         Log.i(
-            "$TAG Asking notifications manager not to notify chat messages for conversation [$id]"
+            "$TAG Asking notifications manager not to notify messages for conversation [$id]"
         )
         coreContext.notificationsManager.setCurrentlyDisplayedChatRoomId(id)
 
@@ -566,7 +566,7 @@ class ConversationFragment : GenericFragment() {
         super.onPause()
     }
 
-    private fun showChatMessageLongPressMenu(chatMessageModel: ChatMessageModel) {
+    private fun showChatMessageLongPressMenu(chatMessageModel: MessageModel) {
         Compatibility.setBlurRenderEffect(binding.root)
 
         val dialog = Dialog(requireContext(), R.style.Theme_LinphoneDialog)
@@ -606,7 +606,7 @@ class ConversationFragment : GenericFragment() {
         }
 
         layout.setResendClickListener {
-            Log.i("$TAG Re-sending chat message in error state")
+            Log.i("$TAG Re-sending message in error state")
             chatMessageModel.resend()
             dialog.dismiss()
         }
@@ -645,7 +645,7 @@ class ConversationFragment : GenericFragment() {
 
     @UiThread
     private fun showBottomSheetDialog(
-        chatMessageModel: ChatMessageModel,
+        chatMessageModel: MessageModel,
         showDelivery: Boolean = false,
         showReactions: Boolean = false
     ) {
@@ -683,11 +683,11 @@ class ConversationFragment : GenericFragment() {
     }
 
     @UiThread
-    private fun prepareBottomSheetForDeliveryStatus(chatMessageModel: ChatMessageModel) {
+    private fun prepareBottomSheetForDeliveryStatus(chatMessageModel: MessageModel) {
         coreContext.postOnCoreThread {
             bottomSheetDeliveryModel?.destroy()
 
-            val model = ChatMessageDeliveryModel(chatMessageModel.chatMessage) { deliveryModel ->
+            val model = MessageDeliveryModel(chatMessageModel.chatMessage) { deliveryModel ->
                 coreContext.postOnMainThread {
                     displayDeliveryStatuses(deliveryModel)
                 }
@@ -697,11 +697,11 @@ class ConversationFragment : GenericFragment() {
     }
 
     @UiThread
-    private fun prepareBottomSheetForReactions(chatMessageModel: ChatMessageModel) {
+    private fun prepareBottomSheetForReactions(chatMessageModel: MessageModel) {
         coreContext.postOnCoreThread {
             bottomSheetReactionsModel?.destroy()
 
-            val model = ChatMessageReactionsModel(chatMessageModel.chatMessage) { reactionsModel ->
+            val model = MessageReactionsModel(chatMessageModel.chatMessage) { reactionsModel ->
                 coreContext.postOnMainThread {
                     if (reactionsModel.allReactions.isEmpty()) {
                         Log.i("$TAG No reaction to display, closing bottom sheet")
@@ -719,7 +719,7 @@ class ConversationFragment : GenericFragment() {
     }
 
     @UiThread
-    private fun displayDeliveryStatuses(model: ChatMessageDeliveryModel) {
+    private fun displayDeliveryStatuses(model: MessageDeliveryModel) {
         val tabs = binding.messageBottomSheet.tabs
         tabs.removeAllTabs()
         tabs.addTab(
@@ -768,7 +768,7 @@ class ConversationFragment : GenericFragment() {
     }
 
     @UiThread
-    private fun displayReactions(model: ChatMessageReactionsModel) {
+    private fun displayReactions(model: MessageReactionsModel) {
         val totalCount = model.allReactions.size
         val label = getString(R.string.message_reactions_info_all_title, totalCount.toString())
 
