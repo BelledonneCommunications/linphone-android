@@ -54,6 +54,7 @@ import coil.dispose
 import coil.load
 import coil.request.videoFrameMillis
 import coil.size.Dimension
+import coil.transform.RoundedCornersTransformation
 import com.google.android.material.imageview.ShapeableImageView
 import kotlinx.coroutines.launch
 import org.linphone.BR
@@ -243,13 +244,14 @@ private fun loadImageForChatBubble(imageView: ImageView, file: String?, grid: Bo
         }
         val width = if (grid) Dimension(dimen) else Dimension.Undefined
         val height = Dimension(dimen)
-        /* val radius = imageView.resources.getDimension(
+        val radius = imageView.resources.getDimension(
             R.dimen.chat_bubble_images_rounded_corner_radius
-        ) */
+        )
         if (FileUtils.isExtensionVideo(file)) {
             imageView.load(file) {
+                placeholder(R.drawable.image_square)
                 videoFrameMillis(0)
-                // transformations(RoundedCornersTransformation(radius))
+                transformations(RoundedCornersTransformation(radius))
                 size(width, height)
                 listener(
                     onError = { _, result ->
@@ -262,8 +264,11 @@ private fun loadImageForChatBubble(imageView: ImageView, file: String?, grid: Bo
             }
         } else {
             imageView.load(file) {
+                placeholder(R.drawable.image_square)
                 // Can't have a transformation for gif file, breaks animation
-                // transformations(RoundedCornersTransformation(radius))
+                if (FileUtils.getExtensionFromFileName(file) != "gif") {
+                    transformations(RoundedCornersTransformation(radius))
+                }
                 size(width, height)
                 listener(
                     onError = { _, result ->
