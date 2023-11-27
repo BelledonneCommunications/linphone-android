@@ -144,7 +144,7 @@ class ConversationInfoFragment : GenericFragment() {
         viewModel.historyDeletedEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.i("$TAG History has been deleted, leaving conversation info...")
-                sharedViewModel.forceRefreshConversationEvent.value = Event(true)
+                sharedViewModel.forceRefreshConversationEvents.value = Event(true)
                 goBack()
                 val message = getString(R.string.toast_conversation_history_deleted)
                 (requireActivity() as MainActivity).showGreenToast(

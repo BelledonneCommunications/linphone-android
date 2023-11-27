@@ -67,10 +67,6 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     var scrollingPosition: Int = SCROLLING_POSITION_NOT_SET
 
-    val requestKeyboardHidingEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
-    }
-
     val focusSearchBarEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -92,6 +88,14 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
     lateinit var chatRoom: ChatRoom
 
     private val chatRoomListener = object : ChatRoomListenerStub() {
+        @WorkerThread
+        override fun onStateChanged(chatRoom: ChatRoom, newState: ChatRoom.State?) {
+            Log.i("$TAG Chat room state changed [${chatRoom.state}]")
+            if (chatRoom.state == ChatRoom.State.Created) {
+                computeConversationInfo()
+            }
+        }
+
         @WorkerThread
         override fun onChatMessageSending(chatRoom: ChatRoom, eventLog: EventLog) {
             val message = eventLog.chatMessage
@@ -144,7 +148,6 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         @WorkerThread
         override fun onChatMessagesReceived(chatRoom: ChatRoom, eventLogs: Array<EventLog>) {
             Log.i("$TAG Received [${eventLogs.size}] new message(s)")
-            chatRoom.markAsRead()
             computeComposingLabel()
 
             val list = arrayListOf<EventLogModel>()
@@ -176,6 +179,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             }
 
             events.postValue(list)
+            chatRoom.markAsRead()
         }
 
         @WorkerThread

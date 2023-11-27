@@ -84,6 +84,15 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
 
     private val chatRoomListener = object : ChatRoomListenerStub() {
         @WorkerThread
+        override fun onStateChanged(chatRoom: ChatRoom, newState: ChatRoom.State?) {
+            Log.i("$TAG Chat room state changed [${chatRoom.state}]")
+            if (chatRoom.state == ChatRoom.State.Created) {
+                subject.postValue(chatRoom.subject)
+                computeParticipants()
+            }
+        }
+
+        @WorkerThread
         override fun onIsComposingReceived(
             chatRoom: ChatRoom,
             remoteAddress: Address,
@@ -112,6 +121,7 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
 
         @WorkerThread
         override fun onSubjectChanged(chatRoom: ChatRoom, eventLog: EventLog) {
+            Log.i("$TAG Chat room subject changed [${chatRoom.subject}]")
             subject.postValue(chatRoom.subject)
             updateLastUpdatedTime()
         }
@@ -139,45 +149,9 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
     init {
         chatRoom.addListener(chatRoomListener)
 
-        subject.postValue(chatRoom.subject)
-        lastUpdateTime.postValue(chatRoom.lastUpdateTime)
         computeComposingLabel()
-
-        val friends = arrayListOf<Friend>()
-        val address = if (chatRoom.hasCapability(Capabilities.Basic.toInt())) {
-            Log.i("$TAG Chat room [$id] is 'Basic'")
-            chatRoom.peerAddress
-        } else {
-            val firstParticipant = chatRoom.participants.firstOrNull()
-            if (isGroup) {
-                Log.i("$TAG Group chat room [$id] has [${chatRoom.nbParticipants}] participant(s)")
-                for (participant in chatRoom.participants) {
-                    val friend = coreContext.contactsManager.findContactByAddress(
-                        participant.address
-                    )
-                    if (friend != null && !friends.contains(friend)) {
-                        friends.add(friend)
-                    }
-                }
-            } else {
-                Log.i(
-                    "$TAG Chat room [$id] is with participant [${firstParticipant?.address?.asStringUriOnly()}]"
-                )
-            }
-            firstParticipant?.address ?: chatRoom.peerAddress
-        }
-
-        if (isGroup) {
-            val fakeFriend = coreContext.core.createFriend()
-            val model = ContactAvatarModel(fakeFriend)
-            model.defaultToConversationIcon.postValue(true)
-            model.setPicturesFromFriends(friends)
-            avatarModel.postValue(model)
-        } else {
-            avatarModel.postValue(
-                coreContext.contactsManager.getContactAvatarModelForAddress(address)
-            )
-        }
+        subject.postValue(chatRoom.subject)
+        computeParticipants()
 
         isMuted.postValue(chatRoom.muted)
         isEphemeral.postValue(chatRoom.isEphemeralEnabled)
@@ -308,6 +282,46 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
             }
         }
         dateTime.postValue(humanReadableTimestamp)
+        lastUpdateTime.postValue(timestamp)
+    }
+
+    @WorkerThread
+    private fun computeParticipants() {
+        val friends = arrayListOf<Friend>()
+        val address = if (chatRoom.hasCapability(Capabilities.Basic.toInt())) {
+            Log.i("$TAG Chat room [$id] is 'Basic'")
+            chatRoom.peerAddress
+        } else {
+            val firstParticipant = chatRoom.participants.firstOrNull()
+            if (isGroup) {
+                Log.i("$TAG Group chat room [$id] has [${chatRoom.nbParticipants}] participant(s)")
+                for (participant in chatRoom.participants) {
+                    val friend = coreContext.contactsManager.findContactByAddress(
+                        participant.address
+                    )
+                    if (friend != null && !friends.contains(friend)) {
+                        friends.add(friend)
+                    }
+                }
+            } else {
+                Log.i(
+                    "$TAG Chat room [$id] is with participant [${firstParticipant?.address?.asStringUriOnly()}]"
+                )
+            }
+            firstParticipant?.address ?: chatRoom.peerAddress
+        }
+
+        if (isGroup) {
+            val fakeFriend = coreContext.core.createFriend()
+            val model = ContactAvatarModel(fakeFriend)
+            model.defaultToConversationIcon.postValue(true)
+            model.setPicturesFromFriends(friends)
+            avatarModel.postValue(model)
+        } else {
+            avatarModel.postValue(
+                coreContext.contactsManager.getContactAvatarModelForAddress(address)
+            )
+        }
     }
 
     @WorkerThread

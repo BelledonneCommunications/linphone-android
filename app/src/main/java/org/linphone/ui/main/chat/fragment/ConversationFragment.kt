@@ -489,7 +489,7 @@ class ConversationFragment : GenericFragment() {
             }
         }
 
-        sharedViewModel.forceRefreshConversationEvent.observe(viewLifecycleOwner) {
+        sharedViewModel.forceRefreshConversationEvents.observe(viewLifecycleOwner) {
             it.consume {
                 Log.i("$TAG Force refreshing chat messages list")
                 viewModel.applyFilter("")

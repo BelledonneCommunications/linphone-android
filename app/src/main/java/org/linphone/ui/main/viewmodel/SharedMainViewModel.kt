@@ -114,7 +114,7 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
-    val forceRefreshConversationEvent: MutableLiveData<Event<Boolean>> by lazy {
+    val forceRefreshConversationEvents: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
 
