@@ -46,7 +46,7 @@ class ShortcutUtils {
         @WorkerThread
         fun removeShortcutToChatRoom(chatRoom: ChatRoom) {
             val id = LinphoneUtils.getChatRoomId(chatRoom)
-            Log.i("$TAG Removing shortcut to chat room [$id]")
+            Log.i("$TAG Removing shortcut to conversation [$id]")
             ShortcutManagerCompat.removeLongLivedShortcuts(coreContext.context, arrayListOf(id))
         }
 
@@ -56,7 +56,7 @@ class ShortcutUtils {
                 Log.e("$TAG Rate limiting is active, aborting")
                 return
             }
-            Log.i("$TAG Creating launcher shortcuts for chat rooms")
+            Log.i("$TAG Creating launcher shortcuts for conversations")
             var count = 0
             for (room in coreContext.core.chatRooms) {
                 val shortcut: ShortcutInfoCompat? = createChatRoomShortcut(context, room)

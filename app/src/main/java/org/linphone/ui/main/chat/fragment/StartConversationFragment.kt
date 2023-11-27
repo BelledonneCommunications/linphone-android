@@ -88,7 +88,7 @@ class StartConversationFragment : GenericAddressPickerFragment() {
         viewModel.chatRoomCreatedEvent.observe(viewLifecycleOwner) {
             it.consume { pair ->
                 Log.i(
-                    "$TAG Chat room [${pair.second}] for local address [${pair.first}] has been created, navigating to it"
+                    "$TAG Conversation [${pair.second}] for local address [${pair.first}] has been created, navigating to it"
                 )
                 sharedViewModel.showConversationEvent.value = Event(pair)
                 goBack()
@@ -97,7 +97,7 @@ class StartConversationFragment : GenericAddressPickerFragment() {
 
         viewModel.chatRoomCreationErrorEvent.observe(viewLifecycleOwner) {
             it.consume { error ->
-                Log.i("$TAG Chat room creation error, showing red toast")
+                Log.i("$TAG Conversation creation error, showing red toast")
                 (requireActivity() as MainActivity).showRedToast(error, R.drawable.warning_circle)
             }
         }

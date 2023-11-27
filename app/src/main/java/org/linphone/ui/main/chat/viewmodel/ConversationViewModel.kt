@@ -90,7 +90,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
     private val chatRoomListener = object : ChatRoomListenerStub() {
         @WorkerThread
         override fun onStateChanged(chatRoom: ChatRoom, newState: ChatRoom.State?) {
-            Log.i("$TAG Chat room state changed [${chatRoom.state}]")
+            Log.i("$TAG Conversation state changed [${chatRoom.state}]")
             if (chatRoom.state == ChatRoom.State.Created) {
                 computeConversationInfo()
             }
@@ -254,10 +254,10 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
     fun findChatRoom(room: ChatRoom?, localSipUri: String, remoteSipUri: String) {
         coreContext.postOnCoreThread { core ->
             Log.i(
-                "$TAG Looking for chat room with local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
+                "$TAG Looking for conversation with local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
             )
             if (room != null && ::chatRoom.isInitialized && chatRoom == room) {
-                Log.i("$TAG Chat room object already in memory, skipping")
+                Log.i("$TAG Conversation object already in memory, skipping")
                 chatRoomFoundEvent.postValue(Event(true))
                 return@postOnCoreThread
             }
@@ -270,7 +270,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
                         room.peerAddress
                     ) == true
                 ) {
-                    Log.i("$TAG Chat room object available in sharedViewModel, using it")
+                    Log.i("$TAG Conversation object available in sharedViewModel, using it")
                     chatRoom = room
                     chatRoom.addListener(chatRoomListener)
                     configureChatRoom()
@@ -280,7 +280,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             }
 
             if (localAddress != null && remoteAddress != null) {
-                Log.i("$TAG Searching for chat room in Core using local & peer SIP addresses")
+                Log.i("$TAG Searching for conversation in Core using local & peer SIP addresses")
                 val found = core.searchChatRoom(
                     null,
                     localAddress,
@@ -296,7 +296,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
                     configureChatRoom()
                     chatRoomFoundEvent.postValue(Event(true))
                 } else {
-                    Log.e("$TAG Failed to find chat room given local & remote addresses!")
+                    Log.e("$TAG Failed to find conversation given local & remote addresses!")
                     chatRoomFoundEvent.postValue(Event(false))
                 }
             } else {
@@ -349,7 +349,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         val readOnly = chatRoom.isReadOnly || empty
         isReadOnly.postValue(readOnly)
         if (readOnly) {
-            Log.w("$TAG Chat room with subject [${chatRoom.subject}] is read only!")
+            Log.w("$TAG Conversation with subject [${chatRoom.subject}] is read only!")
         }
 
         computeConversationInfo()

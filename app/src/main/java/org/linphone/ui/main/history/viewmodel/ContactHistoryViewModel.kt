@@ -64,10 +64,10 @@ class ContactHistoryViewModel @UiThread constructor() : ViewModel() {
         override fun onStateChanged(chatRoom: ChatRoom, newState: ChatRoom.State?) {
             val state = chatRoom.state
             val id = LinphoneUtils.getChatRoomId(chatRoom)
-            Log.i("$TAG Chat room [$id] (${chatRoom.subject}) state changed: [$state]")
+            Log.i("$TAG Conversation [$id] (${chatRoom.subject}) state changed: [$state]")
 
             if (state == ChatRoom.State.Created) {
-                Log.i("$TAG Chat room [$id] successfully created")
+                Log.i("$TAG Conversation [$id] successfully created")
                 chatRoom.removeListener(this)
                 operationInProgress.postValue(false)
                 goToConversationEvent.postValue(
@@ -79,7 +79,7 @@ class ContactHistoryViewModel @UiThread constructor() : ViewModel() {
                     )
                 )
             } else if (state == ChatRoom.State.CreationFailed) {
-                Log.e("$TAG Chat room [$id] creation has failed!")
+                Log.e("$TAG Conversation [$id] creation has failed!")
                 chatRoom.removeListener(this)
                 operationInProgress.postValue(false)
                 chatRoomCreationErrorEvent.postValue(Event("Error!")) // TODO FIXME: use translated string
@@ -164,7 +164,7 @@ class ContactHistoryViewModel @UiThread constructor() : ViewModel() {
                 val remote = address
                 val remoteSipUri = remote.asStringUriOnly()
                 Log.i(
-                    "$TAG Looking for existing chat room between [$localSipUri] and [$remoteSipUri]"
+                    "$TAG Looking for existing conversation between [$localSipUri] and [$remoteSipUri]"
                 )
 
                 val params: ChatRoomParams = coreContext.core.createDefaultChatRoomParams()
@@ -175,20 +175,20 @@ class ContactHistoryViewModel @UiThread constructor() : ViewModel() {
                 val sameDomain = remote.domain == corePreferences.defaultDomain && remote.domain == account.params.domain
                 if (account.isInSecureMode() && sameDomain) {
                     Log.i(
-                        "$TAG Account is in secure mode & domain matches, creating a E2E chat room"
+                        "$TAG Account is in secure mode & domain matches, creating a E2E conversation"
                     )
                     params.backend = ChatRoom.Backend.FlexisipChat
                     params.isEncryptionEnabled = true
                 } else if (!account.isInSecureMode()) {
                     if (LinphoneUtils.isEndToEndEncryptedChatAvailable(core)) {
                         Log.i(
-                            "$TAG Account is in interop mode but LIME is available, creating a E2E chat room"
+                            "$TAG Account is in interop mode but LIME is available, creating a E2E conversation"
                         )
                         params.backend = ChatRoom.Backend.FlexisipChat
                         params.isEncryptionEnabled = true
                     } else {
                         Log.i(
-                            "$TAG Account is in interop mode but LIME isn't available, creating a SIP simple chat room"
+                            "$TAG Account is in interop mode but LIME isn't available, creating a SIP simple conversation"
                         )
                         params.backend = ChatRoom.Backend.Basic
                         params.isEncryptionEnabled = false
@@ -205,7 +205,7 @@ class ContactHistoryViewModel @UiThread constructor() : ViewModel() {
                 val existingChatRoom = core.searchChatRoom(params, localAddress, null, participants)
                 if (existingChatRoom != null) {
                     Log.i(
-                        "$TAG Found existing chat room [${LinphoneUtils.getChatRoomId(
+                        "$TAG Found existing conversation [${LinphoneUtils.getChatRoomId(
                             existingChatRoom
                         )}], going to it"
                     )
@@ -214,7 +214,7 @@ class ContactHistoryViewModel @UiThread constructor() : ViewModel() {
                     )
                 } else {
                     Log.i(
-                        "$TAG No existing chat room between [$localSipUri] and [$remoteSipUri] was found, let's create it"
+                        "$TAG No existing conversation between [$localSipUri] and [$remoteSipUri] was found, let's create it"
                     )
                     operationInProgress.postValue(true)
                     val chatRoom = core.createChatRoom(params, localAddress, participants)
@@ -222,7 +222,7 @@ class ContactHistoryViewModel @UiThread constructor() : ViewModel() {
                         if (params.backend == ChatRoom.Backend.FlexisipChat) {
                             if (chatRoom.state == ChatRoom.State.Created) {
                                 val id = LinphoneUtils.getChatRoomId(chatRoom)
-                                Log.i("$TAG 1-1 chat room [$id] has been created")
+                                Log.i("$TAG 1-1 conversation [$id] has been created")
                                 operationInProgress.postValue(false)
                                 goToConversationEvent.postValue(
                                     Event(
@@ -233,12 +233,12 @@ class ContactHistoryViewModel @UiThread constructor() : ViewModel() {
                                     )
                                 )
                             } else {
-                                Log.i("$TAG Chat room isn't in Created state yet, wait for it")
+                                Log.i("$TAG Conversation isn't in Created state yet, wait for it")
                                 chatRoom.addListener(chatRoomListener)
                             }
                         } else {
                             val id = LinphoneUtils.getChatRoomId(chatRoom)
-                            Log.i("$TAG Chat room successfully created [$id]")
+                            Log.i("$TAG Conversation successfully created [$id]")
                             operationInProgress.postValue(false)
                             goToConversationEvent.postValue(
                                 Event(
@@ -251,7 +251,7 @@ class ContactHistoryViewModel @UiThread constructor() : ViewModel() {
                         }
                     } else {
                         Log.e(
-                            "$TAG Failed to create 1-1 chat room with [${remote.asStringUriOnly()}]!"
+                            "$TAG Failed to create 1-1 conversation with [${remote.asStringUriOnly()}]!"
                         )
                         operationInProgress.postValue(false)
                         chatRoomCreationErrorEvent.postValue(Event("Error!")) // TODO FIXME: use translated string

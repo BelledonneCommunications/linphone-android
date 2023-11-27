@@ -146,7 +146,7 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
         @WorkerThread
         override fun onSubjectChanged(chatRoom: ChatRoom, eventLog: EventLog) {
             Log.i(
-                "$TAG Chat room [${LinphoneUtils.getChatRoomId(chatRoom)}] has a new subject [${chatRoom.subject}]"
+                "$TAG Conversation [${LinphoneUtils.getChatRoomId(chatRoom)}] has a new subject [${chatRoom.subject}]"
             )
             val message = AppUtils.getString(
                 R.string.toast_conversation_subject_changed
@@ -199,10 +199,10 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
     fun findChatRoom(room: ChatRoom?, localSipUri: String, remoteSipUri: String) {
         coreContext.postOnCoreThread { core ->
             Log.i(
-                "$TAG Looking for chat room with local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
+                "$TAG Looking for conversation with local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
             )
             if (room != null && ::chatRoom.isInitialized && chatRoom == room) {
-                Log.i("$TAG Chat room object already in memory, skipping")
+                Log.i("$TAG Conversation object already in memory, skipping")
                 chatRoomFoundEvent.postValue(Event(true))
                 return@postOnCoreThread
             }
@@ -215,7 +215,7 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
                         room.peerAddress
                     ) == true
                 ) {
-                    Log.i("$TAG Chat room object available in sharedViewModel, using it")
+                    Log.i("$TAG Conversation object available in sharedViewModel, using it")
                     chatRoom = room
                     chatRoom.addListener(chatRoomListener)
                     configureChatRoom()
@@ -225,7 +225,7 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
             }
 
             if (localAddress != null && remoteAddress != null) {
-                Log.i("$TAG Searching for chat room in Core using local & peer SIP addresses")
+                Log.i("$TAG Searching for conversation in Core using local & peer SIP addresses")
                 val found = core.searchChatRoom(
                     null,
                     localAddress,
@@ -241,7 +241,7 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
                     configureChatRoom()
                     chatRoomFoundEvent.postValue(Event(true))
                 } else {
-                    Log.e("$TAG Failed to find chat room given local & remote addresses!")
+                    Log.e("$TAG Failed to find conversation given local & remote addresses!")
                     chatRoomFoundEvent.postValue(Event(false))
                 }
             } else {
@@ -255,7 +255,7 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
     fun leaveGroup() {
         coreContext.postOnCoreThread {
             if (::chatRoom.isInitialized) {
-                Log.i("$TAG Leaving chat room [${LinphoneUtils.getChatRoomId(chatRoom)}]")
+                Log.i("$TAG Leaving conversation [${LinphoneUtils.getChatRoomId(chatRoom)}]")
                 chatRoom.leave()
             }
             groupLeftEvent.postValue(Event(true))
@@ -267,7 +267,9 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
         coreContext.postOnCoreThread {
             // TODO: confirmation dialog ?
             if (::chatRoom.isInitialized) {
-                Log.i("$TAG Cleaning chat room [${LinphoneUtils.getChatRoomId(chatRoom)}] history")
+                Log.i(
+                    "$TAG Cleaning conversation [${LinphoneUtils.getChatRoomId(chatRoom)}] history"
+                )
                 chatRoom.deleteHistory()
             }
             historyDeletedEvent.postValue(Event(true))
@@ -396,7 +398,7 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
         coreContext.postOnCoreThread {
             if (::chatRoom.isInitialized) {
                 if (!LinphoneUtils.isChatRoomAGroup(chatRoom)) {
-                    Log.e("$TAG Can't add participants to a chat room that's not a group!")
+                    Log.e("$TAG Can't add participants to a conversation that's not a group!")
                     return@postOnCoreThread
                 }
 
@@ -412,7 +414,7 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
 
                 val participantsToAdd = arrayOfNulls<Address>(list.size)
                 list.toArray(participantsToAdd)
-                Log.i("$TAG Adding [${participantsToAdd.size}] new participants to chat room")
+                Log.i("$TAG Adding [${participantsToAdd.size}] new participants to conversation")
                 val ok = chatRoom.addParticipants(participantsToAdd)
                 if (!ok) {
                     Log.w("$TAG Failed to add some/all participants to the group!")
@@ -429,7 +431,7 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
     fun updateSubject(newSubject: String) {
         coreContext.postOnCoreThread {
             if (::chatRoom.isInitialized) {
-                Log.i("$TAG Updating chat room subject to [$newSubject]")
+                Log.i("$TAG Updating conversation subject to [$newSubject]")
                 chatRoom.subject = newSubject
             }
         }
@@ -476,7 +478,7 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
         val readOnly = chatRoom.isReadOnly || empty
         isReadOnly.postValue(readOnly)
         if (readOnly) {
-            Log.w("$TAG Chat room with subject [${chatRoom.subject}] is read only!")
+            Log.w("$TAG Conversation with subject [${chatRoom.subject}] is read only!")
         }
 
         subject.postValue(chatRoom.subject)

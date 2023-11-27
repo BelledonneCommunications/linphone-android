@@ -270,7 +270,7 @@ class ConversationFragment : GenericFragment() {
             it.consume { found ->
                 if (!found) {
                     (view.parent as? ViewGroup)?.doOnPreDraw {
-                        Log.e("$TAG Failed to find chat room, going back")
+                        Log.e("$TAG Failed to find conversation, going back")
                         goBack()
                         val message = getString(R.string.toast_cant_find_conversation_to_display)
                         (requireActivity() as MainActivity).showRedToast(message, R.drawable.x)
@@ -518,7 +518,9 @@ class ConversationFragment : GenericFragment() {
         super.onResume()
 
         val id = LinphoneUtils.getChatRoomId(args.localSipUri, args.remoteSipUri)
-        Log.i("$TAG Asking notifications manager not to notify chat messages for chat room [$id]")
+        Log.i(
+            "$TAG Asking notifications manager not to notify chat messages for conversation [$id]"
+        )
         coreContext.notificationsManager.setCurrentlyDisplayedChatRoomId(id)
 
         if (viewModel.scrollingPosition != SCROLLING_POSITION_NOT_SET) {

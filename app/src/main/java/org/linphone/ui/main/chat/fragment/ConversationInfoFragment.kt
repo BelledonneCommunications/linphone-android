@@ -105,14 +105,14 @@ class ConversationInfoFragment : GenericFragment() {
             it.consume { found ->
                 if (found) {
                     Log.i(
-                        "$TAG Found matching chat room for local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
+                        "$TAG Found matching conversation for local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
                     )
                     (view.parent as? ViewGroup)?.doOnPreDraw {
                         startPostponedEnterTransition()
                     }
                 } else {
                     (view.parent as? ViewGroup)?.doOnPreDraw {
-                        Log.e("$TAG Failed to find chat room, going back")
+                        Log.e("$TAG Failed to find conversation, going back")
                         goBack()
                         val message = getString(R.string.toast_cant_find_conversation_to_display)
                         (requireActivity() as MainActivity).showRedToast(message, R.drawable.x)

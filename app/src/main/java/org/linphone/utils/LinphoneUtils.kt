@@ -250,11 +250,11 @@ class LinphoneUtils {
                 val localAddress = split[0]
                 val peerAddress = split[1]
                 Log.i(
-                    "$TAG Got local [$localAddress] and peer [$peerAddress] SIP URIs from chat room id [$id]"
+                    "$TAG Got local [$localAddress] and peer [$peerAddress] SIP URIs from conversation id [$id]"
                 )
                 return Pair(localAddress, peerAddress)
             } else {
-                Log.e("$TAG Failed to parse chat room id [$id]")
+                Log.e("$TAG Failed to parse conversation id [$id]")
             }
             return null
         }

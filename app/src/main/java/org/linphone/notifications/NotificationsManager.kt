@@ -155,22 +155,22 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             val id = LinphoneUtils.getChatRoomId(chatRoom.localAddress, chatRoom.peerAddress)
             if (id == currentlyDisplayedChatRoomId) {
                 Log.i(
-                    "$TAG Do not notify received messages for currently displayed chat room [$id]"
+                    "$TAG Do not notify received messages for currently displayed conversation [$id]"
                 )
                 return
             }
 
             if (chatRoom.muted) {
-                Log.i("$TAG Chat room $id has been muted")
+                Log.i("$TAG Conversation $id has been muted")
                 return
             }
 
             if (ShortcutUtils.isShortcutToChatRoomAlreadyCreated(context, chatRoom)) {
-                Log.i("$TAG Chat room shortcut already exists")
+                Log.i("$TAG Conversation shortcut already exists")
                 showChatRoomNotification(chatRoom, messages)
             } else {
                 Log.i(
-                    "$TAG Ensure chat room shortcut exists for 'conversation' notification"
+                    "$TAG Ensure conversation shortcut exists for notification"
                 )
                 scope.launch {
                     val shortcuts = async {
@@ -202,13 +202,13 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             val id = LinphoneUtils.getChatRoomId(chatRoom.localAddress, chatRoom.peerAddress)
             if (id == currentlyDisplayedChatRoomId) {
                 Log.i(
-                    "$TAG Do not notify received reaction for currently displayed chat room [$id]"
+                    "$TAG Do not notify received reaction for currently displayed conversation [$id]"
                 )
                 return
             }
 
             if (chatRoom.muted) {
-                Log.i("$TAG Chat room $id has been muted")
+                Log.i("$TAG Conversation $id has been muted")
                 return
             }
             if (coreContext.isAddressMyself(address)) {
@@ -235,14 +235,14 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
             if (chatRoom.muted) {
                 val id = LinphoneUtils.getChatRoomId(chatRoom.localAddress, chatRoom.peerAddress)
-                Log.i("$TAG Chat room $id has been muted")
+                Log.i("$TAG Conversation $id has been muted")
                 return
             }
 
             val chatRoomPeerAddress = chatRoom.peerAddress.asStringUriOnly()
             val notifiable: Notifiable? = chatNotificationsMap[chatRoomPeerAddress]
             if (notifiable == null) {
-                Log.i("$TAG No notification for chat room [$chatRoomPeerAddress], nothing to do")
+                Log.i("$TAG No notification for conversation [$chatRoomPeerAddress], nothing to do")
                 return
             }
 
@@ -280,7 +280,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         @WorkerThread
         override fun onChatRoomRead(core: Core, chatRoom: ChatRoom) {
             Log.i(
-                "$TAG Chat room [$chatRoom] has been marked as read, removing notification if any"
+                "$TAG Conversation [$chatRoom] has been marked as read, removing notification if any"
             )
             dismissChatNotification(chatRoom)
         }
@@ -307,7 +307,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
                     }
                     displayReplyMessageNotification(message, notifiable)
                 } else {
-                    Log.e("$TAG Couldn't find notification for chat room $address")
+                    Log.e("$TAG Couldn't find notification for conversation $address")
                     cancelNotification(id, CHAT_TAG)
                 }
             } else if (state == ChatMessage.State.NotDelivered) {
@@ -924,7 +924,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         val notifiable: Notifiable? = chatNotificationsMap[address]
         if (notifiable != null) {
             Log.i(
-                "$TAG Dismissing notification for chat room $chatRoom with id ${notifiable.notificationId}"
+                "$TAG Dismissing notification for conversation $chatRoom with id ${notifiable.notificationId}"
             )
             notifiable.messages.clear()
             cancelNotification(notifiable.notificationId, CHAT_TAG)

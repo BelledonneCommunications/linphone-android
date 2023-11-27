@@ -85,11 +85,21 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
     private val chatRoomListener = object : ChatRoomListenerStub() {
         @WorkerThread
         override fun onStateChanged(chatRoom: ChatRoom, newState: ChatRoom.State?) {
-            Log.i("$TAG Chat room state changed [${chatRoom.state}]")
+            Log.i("$TAG Conversation state changed [${chatRoom.state}]")
             if (chatRoom.state == ChatRoom.State.Created) {
                 subject.postValue(chatRoom.subject)
                 computeParticipants()
+            } else if (chatRoom.state == ChatRoom.State.Deleted) {
+                Log.i("$TAG Conversation [$id] has been deleted")
+                isBeingDeleted.postValue(false)
             }
+        }
+
+        override fun onConferenceJoined(chatRoom: ChatRoom, eventLog: EventLog) {
+            // This is required as a Created chat room may not have the participants list yet
+            Log.i("$TAG Conversation has been joined")
+            subject.postValue(chatRoom.subject)
+            computeParticipants()
         }
 
         @WorkerThread
@@ -121,7 +131,7 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
 
         @WorkerThread
         override fun onSubjectChanged(chatRoom: ChatRoom, eventLog: EventLog) {
-            Log.i("$TAG Chat room subject changed [${chatRoom.subject}]")
+            Log.i("$TAG Conversation subject changed [${chatRoom.subject}]")
             subject.postValue(chatRoom.subject)
             updateLastUpdatedTime()
         }
@@ -210,10 +220,13 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
         coreContext.postOnCoreThread { core ->
             Log.i("$TAG Deleting conversation [$id]")
             isBeingDeleted.postValue(true)
+            val basic = chatRoom.hasCapability(Capabilities.Basic.toInt())
             ShortcutUtils.removeShortcutToChatRoom(chatRoom)
             core.deleteChatRoom(chatRoom)
-            Log.i("$TAG Conversation [$id] has been deleted")
-            isBeingDeleted.postValue(false)
+            if (basic) {
+                Log.i("$TAG Conversation [$id] has been deleted")
+                isBeingDeleted.postValue(false)
+            }
         }
     }
 
@@ -263,7 +276,7 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
                 lastMessage = message
             }
         } else {
-            Log.w("$TAG No last message to display for chat room [$id]")
+            Log.w("$TAG No last message to display for conversation [$id]")
         }
     }
 
@@ -289,12 +302,14 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
     private fun computeParticipants() {
         val friends = arrayListOf<Friend>()
         val address = if (chatRoom.hasCapability(Capabilities.Basic.toInt())) {
-            Log.i("$TAG Chat room [$id] is 'Basic'")
+            Log.i("$TAG Conversation [$id] is 'Basic'")
             chatRoom.peerAddress
         } else {
             val firstParticipant = chatRoom.participants.firstOrNull()
             if (isGroup) {
-                Log.i("$TAG Group chat room [$id] has [${chatRoom.nbParticipants}] participant(s)")
+                Log.i(
+                    "$TAG Group conversation [$id] has [${chatRoom.nbParticipants}] participant(s)"
+                )
                 for (participant in chatRoom.participants) {
                     val friend = coreContext.contactsManager.findContactByAddress(
                         participant.address
@@ -305,7 +320,7 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
                 }
             } else {
                 Log.i(
-                    "$TAG Chat room [$id] is with participant [${firstParticipant?.address?.asStringUriOnly()}]"
+                    "$TAG Conversation [$id] is with participant [${firstParticipant?.address?.asStringUriOnly()}]"
                 )
             }
             firstParticipant?.address ?: chatRoom.peerAddress

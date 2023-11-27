@@ -113,7 +113,7 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
             val room = core.searchChatRoom(null, localAddress, remoteAddress, arrayOfNulls(0))
             if (room == null) {
                 Log.e(
-                    "$TAG Couldn't find chat room for remote address $remoteSipAddress and local address $localIdentity"
+                    "$TAG Couldn't find conversation for remote address $remoteSipAddress and local address $localIdentity"
                 )
                 return@postOnCoreThread
             }

@@ -59,7 +59,7 @@ class ConversationsListViewModel @UiThread constructor() : AbstractTopBarViewMod
             state: ChatRoom.State?
         ) {
             Log.i(
-                "$TAG Chat room [${LinphoneUtils.getChatRoomId(chatRoom)}] state changed [$state]"
+                "$TAG Conversation [${LinphoneUtils.getChatRoomId(chatRoom)}] state changed [$state]"
             )
 
             when (state) {
@@ -146,7 +146,7 @@ class ConversationsListViewModel @UiThread constructor() : AbstractTopBarViewMod
             if (account?.isInSecureMode() == true) {
                 if (!chatRoom.hasCapability(Capabilities.Encrypted.toInt()) && chatRoom.unreadMessagesCount == 0) { // TODO: remove message count check later
                     Log.w(
-                        "$TAG Skipping chat room [${LinphoneUtils.getChatRoomId(chatRoom)}] as it is not E2E encrypted and default account requires it"
+                        "$TAG Skipping conversation [${LinphoneUtils.getChatRoomId(chatRoom)}] as it is not E2E encrypted and default account requires it"
                     )
                     continue
                 }
@@ -178,7 +178,7 @@ class ConversationsListViewModel @UiThread constructor() : AbstractTopBarViewMod
 
     @WorkerThread
     private fun reorderChatRooms() {
-        Log.i("$TAG Re-ordering chat rooms")
+        Log.i("$TAG Re-ordering conversations")
         val sortedList = arrayListOf<ConversationModel>()
         sortedList.addAll(conversations.value.orEmpty())
         sortedList.sortByDescending {
