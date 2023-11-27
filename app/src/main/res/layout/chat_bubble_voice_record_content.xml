@@ -8,11 +8,15 @@
         <variable
             name="model"
             type="org.linphone.ui.main.chat.model.ChatMessageModel" />
+        <variable
+            name="inflatedVisibility"
+            type="Integer" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="@dimen/chat_bubble_voice_record_width"
         android:layout_height="wrap_content"
+        android:visibility="@{inflatedVisibility == View.VISIBLE ? View.VISIBLE : View.GONE}"
         inflatedLifecycleOwner="@{true}">
 
         <ProgressBar

@@ -135,16 +135,18 @@
                 android:id="@+id/meeting_info"
                 android:layout_width="@dimen/chat_bubble_meeting_invite_width"
                 android:layout_height="wrap_content"
-                android:visibility="@{model.meetingFound ? View.VISIBLE : View.GONE, default=gone}"
                 android:layout="@layout/chat_bubble_meeting_invite_content"
+                android:visibility="@{model.meetingFound ? View.VISIBLE : View.GONE, default=gone}"
+                bind:inflatedVisibility="@{model.meetingFound ? View.VISIBLE : View.GONE}"
                 bind:model="@{model}"/>
 
             <ViewStub
                 android:id="@+id/voice_record"
                 android:layout_width="@dimen/chat_bubble_voice_record_width"
                 android:layout_height="wrap_content"
-                android:visibility="@{model.isVoiceRecord ? View.VISIBLE : View.GONE, default=gone}"
                 android:layout="@layout/chat_bubble_voice_record_content"
+                android:visibility="@{model.isVoiceRecord ? View.VISIBLE : View.GONE, default=gone}"
+                bind:inflatedVisibility="@{model.isVoiceRecord ? View.VISIBLE : View.GONE}"
                 bind:model="@{model}" />
 
             <org.linphone.ui.main.chat.view.ChatBubbleTextView

@@ -7,12 +7,17 @@
         <variable
             name="model"
             type="org.linphone.ui.main.chat.model.ChatMessageModel" />
+        <variable
+            name="inflatedVisibility"
+            type="Integer" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="@dimen/chat_bubble_meeting_invite_width"
         android:layout_height="wrap_content"
-        android:background="@drawable/shape_squircle_white_r10_background">
+        android:background="@drawable/shape_squircle_white_r10_background"
+        android:visibility="@{inflatedVisibility == View.VISIBLE ? View.VISIBLE : View.GONE}"
+        inflatedLifecycleOwner="@{true}">
 
         <View
             android:id="@+id/header_background"
