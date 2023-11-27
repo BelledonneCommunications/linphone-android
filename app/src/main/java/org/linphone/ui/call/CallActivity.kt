@@ -36,6 +36,7 @@ import androidx.navigation.findNavController
 import androidx.window.layout.FoldingFeature
 import androidx.window.layout.WindowInfoTracker
 import androidx.window.layout.WindowLayoutInfo
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.linphone.R
@@ -68,6 +69,8 @@ class CallActivity : GenericActivity() {
     private lateinit var sharedViewModel: SharedCallViewModel
     private lateinit var callsViewModel: CallsViewModel
     private lateinit var callViewModel: CurrentCallViewModel
+
+    private var bottomSheetDialog: BottomSheetDialogFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -272,6 +275,13 @@ class CallActivity : GenericActivity() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+
+        bottomSheetDialog?.dismiss()
+        bottomSheetDialog = null
+    }
+
     override fun onResume() {
         super.onResume()
 
@@ -414,10 +424,12 @@ class CallActivity : GenericActivity() {
     private fun showAudioRoutesMenu(devicesList: List<AudioDeviceModel>) {
         val modalBottomSheet = AudioDevicesMenuDialogFragment(devicesList)
         modalBottomSheet.show(supportFragmentManager, AudioDevicesMenuDialogFragment.TAG)
+        bottomSheetDialog = modalBottomSheet
     }
 
     private fun showConferenceLayoutMenu() {
         val modalBottomSheet = ConferenceLayoutMenuDialogFragment(callViewModel.conferenceModel)
         modalBottomSheet.show(supportFragmentManager, ConferenceLayoutMenuDialogFragment.TAG)
+        bottomSheetDialog = modalBottomSheet
     }
 }

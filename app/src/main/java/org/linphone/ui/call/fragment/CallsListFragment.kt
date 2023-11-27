@@ -26,6 +26,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.linphone.core.tools.Log
 import org.linphone.databinding.CallsListFragmentBinding
 import org.linphone.ui.call.adapter.CallsListAdapter
@@ -41,6 +42,8 @@ class CallsListFragment : GenericCallFragment() {
     private lateinit var viewModel: CallsViewModel
 
     private lateinit var adapter: CallsListAdapter
+
+    private var bottomSheetDialog: BottomSheetDialogFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,6 +80,7 @@ class CallsListFragment : GenericCallFragment() {
                     adapter.resetSelection()
                 }
                 modalBottomSheet.show(parentFragmentManager, CallMenuDialogFragment.TAG)
+                bottomSheetDialog = modalBottomSheet
             }
         }
 
@@ -98,5 +102,12 @@ class CallsListFragment : GenericCallFragment() {
                 binding.callsList.adapter = adapter
             }
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        bottomSheetDialog?.dismiss()
+        bottomSheetDialog = null
     }
 }

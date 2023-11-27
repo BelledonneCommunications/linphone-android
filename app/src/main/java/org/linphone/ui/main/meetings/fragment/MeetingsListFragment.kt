@@ -31,6 +31,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.MeetingsListFragmentBinding
@@ -51,6 +52,8 @@ class MeetingsListFragment : AbstractTopBarFragment() {
     private lateinit var listViewModel: MeetingsListViewModel
 
     private lateinit var adapter: MeetingsListAdapter
+
+    private var bottomSheetDialog: BottomSheetDialogFragment? = null
 
     override fun onDefaultAccountChanged() {
         Log.i(
@@ -153,6 +156,7 @@ class MeetingsListFragment : AbstractTopBarFragment() {
                     }
                 )
                 modalBottomSheet.show(parentFragmentManager, MeetingsMenuDialogFragment.TAG)
+                bottomSheetDialog = modalBottomSheet
             }
         }
 
@@ -205,6 +209,13 @@ class MeetingsListFragment : AbstractTopBarFragment() {
         initSlidingPane(binding.slidingPaneLayout)
 
         initNavigation(R.id.meetingsListFragment)
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        bottomSheetDialog?.dismiss()
+        bottomSheetDialog = null
     }
 
     private fun scrollToToday() {

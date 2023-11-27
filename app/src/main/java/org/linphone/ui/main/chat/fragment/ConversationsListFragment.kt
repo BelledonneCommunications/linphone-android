@@ -32,6 +32,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatListFragmentBinding
@@ -53,6 +54,8 @@ class ConversationsListFragment : AbstractTopBarFragment() {
     private lateinit var listViewModel: ConversationsListViewModel
 
     private lateinit var adapter: ConversationsListAdapter
+
+    private var bottomSheetDialog: BottomSheetDialogFragment? = null
 
     private val dataObserver = object : RecyclerView.AdapterDataObserver() {
         override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
@@ -147,6 +150,7 @@ class ConversationsListFragment : AbstractTopBarFragment() {
                     }
                 )
                 modalBottomSheet.show(parentFragmentManager, HistoryMenuDialogFragment.TAG)
+                bottomSheetDialog = modalBottomSheet
             }
         }
 
@@ -271,6 +275,9 @@ class ConversationsListFragment : AbstractTopBarFragment() {
 
     override fun onPause() {
         super.onPause()
+
+        bottomSheetDialog?.dismiss()
+        bottomSheetDialog = null
 
         try {
             adapter.unregisterAdapterDataObserver(dataObserver)

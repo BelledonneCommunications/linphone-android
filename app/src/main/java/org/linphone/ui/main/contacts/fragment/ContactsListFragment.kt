@@ -35,6 +35,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.io.File
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
@@ -58,6 +59,8 @@ class ContactsListFragment : AbstractTopBarFragment() {
 
     private lateinit var adapter: ContactsListAdapter
     private lateinit var favouritesAdapter: ContactsListAdapter
+
+    private var bottomSheetDialog: BottomSheetDialogFragment? = null
 
     override fun onDefaultAccountChanged() {
         Log.i(
@@ -230,6 +233,7 @@ class ContactsListFragment : AbstractTopBarFragment() {
                     }
                 )
                 modalBottomSheet.show(parentFragmentManager, ContactsListMenuDialogFragment.TAG)
+                bottomSheetDialog = modalBottomSheet
             }
         }
 
@@ -238,6 +242,13 @@ class ContactsListFragment : AbstractTopBarFragment() {
                 sharedViewModel.showContactEvent.value = Event(model.id ?: "")
             }
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        bottomSheetDialog?.dismiss()
+        bottomSheetDialog = null
     }
 
     private fun shareContact(name: String, file: File) {

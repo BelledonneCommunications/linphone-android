@@ -36,6 +36,7 @@ import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.io.File
 import org.linphone.R
 import org.linphone.core.tools.Log
@@ -62,6 +63,8 @@ class ContactFragment : GenericFragment() {
     private val args: ContactFragmentArgs by navArgs()
 
     private var numberOrAddressPickerDialog: Dialog? = null
+
+    private var bottomSheetDialog: BottomSheetDialogFragment? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -138,6 +141,7 @@ class ContactFragment : GenericFragment() {
                     parentFragmentManager,
                     ContactNumberOrAddressMenuDialogFragment.TAG
                 )
+                bottomSheetDialog = modalBottomSheet
             }
         }
 
@@ -224,6 +228,9 @@ class ContactFragment : GenericFragment() {
 
         numberOrAddressPickerDialog?.dismiss()
         numberOrAddressPickerDialog = null
+
+        bottomSheetDialog?.dismiss()
+        bottomSheetDialog = null
     }
 
     private fun copyNumberOrAddressToClipboard(value: String, isSip: Boolean) {

@@ -37,6 +37,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
@@ -61,6 +62,8 @@ class HistoryListFragment : AbstractTopBarFragment() {
     private lateinit var listViewModel: HistoryListViewModel
 
     private lateinit var adapter: HistoryListAdapter
+
+    private var bottomSheetDialog: BottomSheetDialogFragment? = null
 
     override fun onDefaultAccountChanged() {
         Log.i(
@@ -148,6 +151,7 @@ class HistoryListFragment : AbstractTopBarFragment() {
                     }
                 )
                 modalBottomSheet.show(parentFragmentManager, HistoryMenuDialogFragment.TAG)
+                bottomSheetDialog = modalBottomSheet
             }
         }
 
@@ -247,6 +251,13 @@ class HistoryListFragment : AbstractTopBarFragment() {
         initSlidingPane(binding.slidingPaneLayout)
 
         initNavigation(R.id.historyListFragment)
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        bottomSheetDialog?.dismiss()
+        bottomSheetDialog = null
     }
 
     override fun onResume() {
