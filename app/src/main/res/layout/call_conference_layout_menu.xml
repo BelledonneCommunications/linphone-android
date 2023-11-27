@@ -37,7 +37,7 @@
             android:layout_marginBottom="1dp"
             android:drawableEnd="@drawable/squares_four"
             android:drawableTint="@color/white"
-            android:checked="true"
+            android:checked="@{viewModel.conferenceLayout == 0}"
             app:useMaterialThemeColors="false"
             app:buttonTint="@color/white"/>
 
@@ -54,7 +54,7 @@
             android:layout_marginBottom="1dp"
             android:drawableEnd="@drawable/picture_in_picture"
             android:drawableTint="@color/white"
-            android:checked="false"
+            android:checked="@{viewModel.conferenceLayout == 1}"
             app:useMaterialThemeColors="false"
             app:buttonTint="@color/white"/>
 
@@ -71,7 +71,7 @@
             android:layout_marginBottom="1dp"
             android:drawableEnd="@drawable/waveform"
             android:drawableTint="@color/white"
-            android:checked="false"
+            android:checked="@{viewModel.conferenceLayout == -1}"
             app:useMaterialThemeColors="false"
             app:buttonTint="@color/white"/>
 

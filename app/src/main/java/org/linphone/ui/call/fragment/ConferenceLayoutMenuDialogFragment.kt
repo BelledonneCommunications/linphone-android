@@ -58,12 +58,15 @@ class ConferenceLayoutMenuDialogFragment(
         view.viewModel = conferenceModel
 
         view.setGridClickListener {
+            conferenceModel.changeLayout(ConferenceModel.GRID_LAYOUT)
             dismiss()
         }
         view.setActiveSpeakerClickListener {
+            conferenceModel.changeLayout(ConferenceModel.ACTIVE_SPEAKER_LAYOUT)
             dismiss()
         }
         view.setAudioOnlyClickListener {
+            conferenceModel.changeLayout(ConferenceModel.AUDIO_ONLY_LAYOUT)
             dismiss()
         }
 

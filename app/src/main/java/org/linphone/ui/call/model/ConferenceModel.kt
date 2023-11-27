@@ -22,10 +22,12 @@ package org.linphone.ui.call.model
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Call
 import org.linphone.core.Conference
 import org.linphone.core.ConferenceListenerStub
+import org.linphone.core.MediaDirection
 import org.linphone.core.Participant
 import org.linphone.core.ParticipantDevice
 import org.linphone.core.tools.Log
@@ -35,6 +37,10 @@ import org.linphone.utils.Event
 class ConferenceModel {
     companion object {
         private const val TAG = "[Conference ViewModel]"
+
+        const val AUDIO_ONLY_LAYOUT = -1
+        const val GRID_LAYOUT = 0 // Conference.Layout.Grid
+        const val ACTIVE_SPEAKER_LAYOUT = 1 // Conference.Layout.ActiveSpeaker
     }
 
     val subject = MutableLiveData<String>()
@@ -48,6 +54,8 @@ class ConferenceModel {
     val participantsLabel = MutableLiveData<String>()
 
     val isCurrentCallInConference = MutableLiveData<Boolean>()
+
+    val conferenceLayout = MutableLiveData<Int>()
 
     val showLayoutMenuEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
@@ -158,11 +166,88 @@ class ConferenceModel {
         if (conference.state == Conference.State.Created) {
             computeParticipants()
         }
+
+        val currentLayout = getCurrentLayout(call)
+        conferenceLayout.postValue(currentLayout)
     }
 
     @UiThread
     fun showLayoutMenu() {
         showLayoutMenuEvent.value = Event(true)
+    }
+
+    @UiThread
+    fun changeLayout(newLayout: Int) {
+        coreContext.postOnCoreThread {
+            val call = conference.call
+            if (call != null) {
+                val params = call.core.createCallParams(call)
+                if (params != null) {
+                    val currentLayout = getCurrentLayout(call)
+                    if (currentLayout != newLayout) {
+                        when (newLayout) {
+                            AUDIO_ONLY_LAYOUT -> {
+                                Log.i("$TAG Changing conference layout to [Audio Only]")
+                                params.isVideoEnabled = false
+                            }
+                            ACTIVE_SPEAKER_LAYOUT -> {
+                                Log.i("$TAG Changing conference layout to [Active Speaker]")
+                                params.conferenceVideoLayout = Conference.Layout.ActiveSpeaker
+                            }
+                            GRID_LAYOUT -> {
+                                Log.i("$TAG Changing conference layout to [Grid]")
+                                params.conferenceVideoLayout = Conference.Layout.Grid
+                            }
+                        }
+
+                        if (currentLayout == AUDIO_ONLY_LAYOUT) {
+                            // Previous layout was audio only, make sure video isn't sent without user consent when switching layout
+                            Log.i(
+                                "$TAG Previous layout was [Audio Only], enabling video but in receive only direction"
+                            )
+                            params.isVideoEnabled = true
+                            params.videoDirection = MediaDirection.RecvOnly
+                        }
+
+                        Log.i("$TAG Updating conference's call params")
+                        call.update(params)
+                        conferenceLayout.postValue(newLayout)
+                    } else {
+                        Log.w(
+                            "$TAG The conference is already using selected layout, aborting layout change"
+                        )
+                    }
+                } else {
+                    Log.e("$TAG Failed to create call params, aborting layout change")
+                }
+            } else {
+                Log.e("$TAG Failed to get call from conference, aborting layout change")
+            }
+        }
+    }
+
+    @WorkerThread
+    private fun getCurrentLayout(call: Call): Int {
+        // DO NOT USE call.currentParams, information won't be reliable !
+        return if (!call.params.isVideoEnabled) {
+            Log.i("$TAG Current conference layout is [Audio Only]")
+            AUDIO_ONLY_LAYOUT
+        } else {
+            when (val layout = call.params.conferenceVideoLayout) {
+                Conference.Layout.Grid -> {
+                    Log.i("$TAG Current conference layout is [Grid]")
+                    GRID_LAYOUT
+                }
+                Conference.Layout.ActiveSpeaker -> {
+                    Log.i("$TAG Current conference layout is [Active Speaker]")
+                    ACTIVE_SPEAKER_LAYOUT
+                }
+                else -> {
+                    Log.e("$TAG Unexpected conference layout value [$layout]")
+                    -2
+                }
+            }
+        }
     }
 
     @WorkerThread
