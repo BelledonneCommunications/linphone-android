@@ -214,7 +214,7 @@
                     android:layout_height="wrap_content"
                     android:text="@{model.time, default=`13:40`}"
                     android:textSize="12sp"
-                    android:visibility="@{model.isGroupedWithNextOne ? View.VISIBLE : View.GONE}"/>
+                    android:visibility="@{!model.isGroupedWithNextOne ? View.VISIBLE : View.GONE}"/>
 
                 <ImageView
                     style="@style/default_text_style_300"
@@ -225,7 +225,7 @@
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="2dp"
                     android:src="@{model.statusIcon, default=@drawable/checks}"
-                    android:visibility="@{model.isGroupedWithNextOne ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{!model.isGroupedWithNextOne ? View.VISIBLE : View.GONE}"
                     app:tint="@color/orange_main_500" />
 
             </LinearLayout>

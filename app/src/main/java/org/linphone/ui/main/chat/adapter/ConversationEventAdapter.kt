@@ -209,7 +209,9 @@ class ConversationEventAdapter : ListAdapter<EventLogModel, RecyclerView.ViewHol
             } else if (!oldItem.isEvent && !newItem.isEvent) {
                 val oldModel = (oldItem.model as MessageModel)
                 val newModel = (newItem.model as MessageModel)
-                oldModel.statusIcon.value == newModel.statusIcon.value
+                oldModel.statusIcon.value == newModel.statusIcon.value &&
+                    oldModel.isGroupedWithNextOne == newModel.isGroupedWithNextOne &&
+                    oldModel.isGroupedWithPreviousOne == newModel.isGroupedWithPreviousOne
             } else {
                 false
             }

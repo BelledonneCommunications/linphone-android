@@ -106,11 +106,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             val lastEvent = events.value.orEmpty().lastOrNull()
             if (lastEvent != null && shouldWeGroupTwoEvents(eventLog, lastEvent.eventLog)) {
                 list.remove(lastEvent)
-
-                val eventsLogsArray = arrayOf<EventLog>()
-                eventsLogsArray[0] = lastEvent.eventLog
-                eventsLogsArray[1] = eventLog
-
+                val eventsLogsArray = arrayOf(lastEvent.eventLog, eventLog)
                 val newList = getEventsListFromHistory(
                     eventsLogsArray,
                     searchFilter.value.orEmpty().trim()
@@ -156,15 +152,8 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
             if (lastEvent != null && shouldWeGroupTwoEvents(eventLogs.first(), lastEvent.eventLog)) {
                 list.remove(lastEvent)
-
-                val eventsLogsArray = arrayOf<EventLog>()
-                eventsLogsArray[0] = lastEvent.eventLog
-                var index = 1
-                for (eventLog in eventLogs) {
-                    eventsLogsArray[index] = eventLog
-                    index += 1
-                }
-
+                val firstElement = arrayOf(lastEvent.eventLog)
+                val eventsLogsArray = firstElement.plus(eventLogs)
                 val newList = getEventsListFromHistory(
                     eventsLogsArray,
                     searchFilter.value.orEmpty().trim()
@@ -418,7 +407,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
                 avatar,
                 groupChatRoom,
                 index > 0,
-                index == groupedEventLogs.size - 1,
+                index != groupedEventLogs.size - 1,
                 { file ->
                     fileToDisplayEvent.postValue(Event(file))
                 },
