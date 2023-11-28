@@ -30,7 +30,7 @@ import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
 import org.linphone.databinding.ChatBubbleIncomingBinding
 import org.linphone.databinding.ChatBubbleOutgoingBinding
-import org.linphone.databinding.ChatEventBinding
+import org.linphone.databinding.ChatConversationEventBinding
 import org.linphone.ui.main.chat.model.EventLogModel
 import org.linphone.ui.main.chat.model.EventModel
 import org.linphone.ui.main.chat.model.MessageModel
@@ -135,9 +135,9 @@ class ConversationEventAdapter : ListAdapter<EventLogModel, RecyclerView.ViewHol
     }
 
     private fun createEvent(parent: ViewGroup): EventViewHolder {
-        val binding: ChatEventBinding = DataBindingUtil.inflate(
+        val binding: ChatConversationEventBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
-            R.layout.chat_event,
+            R.layout.chat_conversation_event,
             parent,
             false
         )
@@ -180,7 +180,7 @@ class ConversationEventAdapter : ListAdapter<EventLogModel, RecyclerView.ViewHol
         }
     }
     inner class EventViewHolder(
-        val binding: ChatEventBinding
+        val binding: ChatConversationEventBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(event: EventModel) {
             with(binding) {

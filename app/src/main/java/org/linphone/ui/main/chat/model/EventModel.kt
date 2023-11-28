@@ -19,7 +19,9 @@
  */
 package org.linphone.ui.main.chat.model
 
+import android.graphics.drawable.Drawable
 import androidx.annotation.WorkerThread
+import androidx.core.content.res.ResourcesCompat
 import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
@@ -28,6 +30,8 @@ import org.linphone.utils.AppUtils
 
 class EventModel @WorkerThread constructor(private val eventLog: EventLog) {
     val text: String
+
+    val icon: Drawable?
 
     init {
         text = when (eventLog.type) {
@@ -81,6 +85,25 @@ class EventModel @WorkerThread constructor(private val eventLog: EventLog) {
                 eventLog.type.name
             }
         }
+
+        icon = ResourcesCompat.getDrawable(
+            coreContext.context.resources,
+            when (eventLog.type) {
+                EventLog.Type.ConferenceEphemeralMessageEnabled,
+                EventLog.Type.ConferenceEphemeralMessageDisabled,
+                EventLog.Type.ConferenceEphemeralMessageLifetimeChanged -> {
+                    R.drawable.clock_countdown
+                }
+                EventLog.Type.ConferenceTerminated -> {
+                    R.drawable.x
+                }
+                EventLog.Type.ConferenceSubjectChanged -> {
+                    R.drawable.pencil_simple
+                }
+                else -> R.drawable.user_circle
+            },
+            coreContext.context.theme
+        )
     }
 
     @WorkerThread

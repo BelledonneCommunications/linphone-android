@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="model"
+            type="org.linphone.ui.main.chat.model.EventModel" />
+    </data>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/default_text_style_300"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:text="@{model.text, default=`You have left the group`}"
+        android:textColor="@color/gray_400"
+        android:textSize="12sp"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:textAlignment="center"
+        android:drawableStart="@{model.icon, default=@drawable/clock_countdown}"
+        android:drawablePadding="4dp"
+        android:drawableTint="@color/gray_400"/>
+
+</layout>

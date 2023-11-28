@@ -1024,7 +1024,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
         )
         return NotificationCompat.Action.Builder(
-            R.drawable.paper_plane_tilt,
+            R.drawable.paper_plane_right,
             context.getString(R.string.notification_reply_to_message),
             replyPendingIntent
         )

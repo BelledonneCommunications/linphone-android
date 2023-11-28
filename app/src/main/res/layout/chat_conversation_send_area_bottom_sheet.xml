@@ -145,7 +145,7 @@
             android:visibility="@{viewModel.textToSend.length() > 0 || viewModel.attachments.size() > 0 ? View.VISIBLE : View.GONE, default=gone}"
             android:onClick="@{() -> viewModel.sendMessage()}"
             android:padding="8dp"
-            android:src="@drawable/paper_plane_tilt"
+            android:src="@drawable/paper_plane_right"
             app:layout_constraintBottom_toBottomOf="@id/message_area_background"
             app:layout_constraintEnd_toEndOf="@id/message_area_background"
             app:layout_constraintTop_toTopOf="@id/message_area_background"
