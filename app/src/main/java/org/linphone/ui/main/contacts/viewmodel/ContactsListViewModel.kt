@@ -78,6 +78,7 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
         @WorkerThread
         override fun onContactsLoaded() {
             Log.i("$TAG Contacts have been (re)loaded, updating list")
+            magicSearch.resetSearchCache()
             applyFilter(
                 currentFilter,
                 if (limitSearchToLinphoneAccounts) corePreferences.defaultDomain else "",
@@ -226,7 +227,9 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
             list.add(model)
             count += 1
 
-            if (friend?.starred == true) {
+            val starred = friend?.starred ?: false
+            model.isFavourite.postValue(starred)
+            if (starred) {
                 favouritesList.add(model)
             }
 

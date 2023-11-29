@@ -44,7 +44,7 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) : Abstrac
 
     val contactName = friend.name
 
-    val starred = friend.starred
+    val isFavourite = MutableLiveData<Boolean>()
 
     val lastPresenceInfo = MutableLiveData<String>()
 
@@ -69,6 +69,7 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) : Abstrac
             friend.addListener(friendListener)
         }
 
+        isFavourite.postValue(friend.starred)
         initials.postValue(AppUtils.getInitials(friend.name.orEmpty()))
         trust.postValue(SecurityLevel.Encrypted) // TODO FIXME: use API
         showTrust.postValue(coreContext.core.defaultAccount?.isInSecureMode())

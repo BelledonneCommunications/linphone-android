@@ -202,7 +202,7 @@ class ContactsListFragment : AbstractTopBarFragment() {
         adapter.contactLongClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
                 val modalBottomSheet = ContactsListMenuDialogFragment(
-                    model.starred,
+                    model.isFavourite.value == true,
                     { // onDismiss
                         adapter.resetSelection()
                     },
@@ -211,7 +211,7 @@ class ContactsListFragment : AbstractTopBarFragment() {
                             model.friend.edit()
                             val starred = !model.friend.starred
                             Log.i(
-                                "$TAG Friend [${model.name.value}] will be ${if (starred) "added" else "removed"} from favourites"
+                                "$TAG Friend [${model.name.value}] will be ${if (starred) "added to" else "removed from"} favourites"
                             )
                             model.friend.starred = starred
                             model.friend.done()

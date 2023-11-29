@@ -143,6 +143,7 @@ class ContactsListAdapter(
 
         override fun areContentsTheSame(oldItem: ContactAvatarModel, newItem: ContactAvatarModel): Boolean {
             return oldItem.presenceStatus.value == newItem.presenceStatus.value &&
+                oldItem.isFavourite.value == newItem.isFavourite.value &&
                 (newItem.presenceStatus.value == ConsolidatedPresence.Busy || newItem.presenceStatus.value == ConsolidatedPresence.Online)
         }
     }
