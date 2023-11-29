@@ -103,22 +103,27 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
             val list = arrayListOf<EventLogModel>()
             list.addAll(events.value.orEmpty())
+
+            val newList = getEventsListFromHistory(
+                arrayOf(eventLog),
+                searchFilter.value.orEmpty().trim()
+            )
+
             val lastEvent = events.value.orEmpty().lastOrNull()
-            if (lastEvent != null && shouldWeGroupTwoEvents(eventLog, lastEvent.eventLog)) {
-                list.remove(lastEvent)
-                val eventsLogsArray = arrayOf(lastEvent.eventLog, eventLog)
-                val newList = getEventsListFromHistory(
-                    eventsLogsArray,
-                    searchFilter.value.orEmpty().trim()
+            val newEvent = newList.lastOrNull()
+            if (lastEvent != null && newEvent != null && shouldWeGroupTwoEvents(
+                    newEvent.eventLog,
+                    lastEvent.eventLog
                 )
-                list.addAll(newList)
-            } else {
-                val newList = getEventsListFromHistory(
-                    arrayOf(eventLog),
-                    searchFilter.value.orEmpty().trim()
-                )
-                list.addAll(newList)
+            ) {
+                if (lastEvent.model is MessageModel) {
+                    lastEvent.model.groupedWithNextMessage.postValue(true)
+                }
+                if (newEvent.model is MessageModel) {
+                    newEvent.model.groupedWithPreviousMessage.postValue(true)
+                }
             }
+            list.addAll(newList)
 
             events.postValue(list)
         }
@@ -150,23 +155,25 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             list.addAll(events.value.orEmpty())
             val lastEvent = list.lastOrNull()
 
-            if (lastEvent != null && shouldWeGroupTwoEvents(eventLogs.first(), lastEvent.eventLog)) {
-                list.remove(lastEvent)
-                val firstElement = arrayOf(lastEvent.eventLog)
-                val eventsLogsArray = firstElement.plus(eventLogs)
-                val newList = getEventsListFromHistory(
-                    eventsLogsArray,
-                    searchFilter.value.orEmpty().trim()
+            val newList = getEventsListFromHistory(
+                eventLogs,
+                searchFilter.value.orEmpty().trim()
+            )
+            val newEvent = newList.firstOrNull()
+            if (lastEvent != null && newEvent != null && shouldWeGroupTwoEvents(
+                    newEvent.eventLog,
+                    lastEvent.eventLog
                 )
-                list.addAll(newList)
-            } else {
-                val newList = getEventsListFromHistory(
-                    eventLogs,
-                    searchFilter.value.orEmpty().trim()
-                )
-                list.addAll(newList)
+            ) {
+                if (lastEvent.model is MessageModel) {
+                    lastEvent.model.groupedWithNextMessage.postValue(true)
+                }
+                if (newEvent.model is MessageModel) {
+                    newEvent.model.groupedWithPreviousMessage.postValue(true)
+                }
             }
 
+            list.addAll(newList)
             events.postValue(list)
             chatRoom.markAsRead()
         }
@@ -197,8 +204,13 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             if (found != null) {
                 val list = arrayListOf<EventLogModel>()
                 list.addAll(eventsLogs)
+
+                // Update previous & next messages if needed
+                updatePreviousAndNextMessages(list, found)
+
                 list.remove(found)
                 events.postValue(list)
+
                 Log.i("$TAG Message was removed from events list")
             } else {
                 Log.w("$TAG Failed to find matching message in events list")
@@ -320,6 +332,10 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             if (found != null) {
                 val list = arrayListOf<EventLogModel>()
                 list.addAll(eventsLogs)
+
+                // Update previous & next messages if needed
+                updatePreviousAndNextMessages(list, found)
+
                 list.remove(found)
                 events.postValue(list)
             }
@@ -486,6 +502,38 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
                 kotlin.math.abs(chatMessage.time - previousChatMessage.time) < MAX_TIME_TO_GROUP_MESSAGES
         } else {
             false
+        }
+    }
+
+    @WorkerThread
+    private fun updatePreviousAndNextMessages(list: ArrayList<EventLogModel>, found: EventLogModel) {
+        val index = list.indexOf(found)
+        if (found.model is MessageModel) {
+            val messageModel = found.model
+            if (messageModel.groupedWithNextMessage.value == true && messageModel.groupedWithPreviousMessage.value == true) {
+                Log.i(
+                    "$TAG Deleted message was grouped with both next and previous one; nothing to do"
+                )
+                // Nothing to do
+            } else if (messageModel.groupedWithPreviousMessage.value == true) {
+                Log.i("$TAG Deleted message was grouped with previous one")
+                if (index > 0) {
+                    val previous = list[index - 1]
+                    if (previous.model is MessageModel) {
+                        previous.model.groupedWithNextMessage.postValue(false)
+                        Log.i("$TAG Previous message at [${index - 1}] was updated")
+                    }
+                }
+            } else if (messageModel.groupedWithNextMessage.value == true) {
+                Log.i("$TAG Deleted message was grouped with next one")
+                if (index < list.size - 1) {
+                    val next = list[index + 1]
+                    if (next.model is MessageModel) {
+                        next.model.groupedWithPreviousMessage.postValue(false)
+                        Log.i("$TAG Next message at [${index + 1}] was updated")
+                    }
+                }
+            }
         }
     }
 

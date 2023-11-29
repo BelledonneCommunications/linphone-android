@@ -31,14 +31,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginTop="@{model.isGroupedWithPreviousOne ? @dimen/chat_bubble_grouped_top_margin : @dimen/chat_bubble_top_margin, default=@dimen/chat_bubble_top_margin}">
+        android:layout_marginTop="@{model.groupedWithPreviousMessage ? @dimen/chat_bubble_grouped_top_margin : @dimen/chat_bubble_top_margin, default=@dimen/chat_bubble_top_margin}">
 
         <com.google.android.material.imageview.ShapeableImageView
             style="@style/avatar_imageview"
             android:id="@+id/avatar"
             android:layout_width="@dimen/avatar_bubble_size"
             android:layout_height="@dimen/avatar_bubble_size"
-            android:visibility="@{!model.isFromGroup ? View.GONE: model.isGroupedWithPreviousOne ? View.INVISIBLE : View.VISIBLE}"
+            android:visibility="@{!model.isFromGroup ? View.GONE: model.groupedWithPreviousMessage ? View.INVISIBLE : View.VISIBLE}"
             coilBubbleAvatar="@{model.avatarModel}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/name" />
@@ -50,7 +50,7 @@
             android:layout_marginEnd="1dp"
             android:background="@drawable/led_background"
             android:padding="1dp"
-            android:visibility="@{model.isGroupedWithPreviousOne || !model.isFromGroup || model.avatarModel.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE}"
+            android:visibility="@{model.groupedWithPreviousMessage || !model.isFromGroup || model.avatarModel.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE}"
             app:presenceIcon="@{model.avatarModel.presenceStatus}"
             app:layout_constraintEnd_toEndOf="@id/avatar"
             app:layout_constraintBottom_toBottomOf="@id/avatar"/>
@@ -65,7 +65,7 @@
             android:textColor="@color/gray_main2_700"
             android:maxLines="1"
             android:ellipsize="end"
-            android:visibility="@{!model.isFromGroup ? View.GONE: model.isGroupedWithPreviousOne ? View.GONE : View.VISIBLE}"
+            android:visibility="@{!model.isFromGroup ? View.GONE: model.groupedWithPreviousMessage ? View.GONE : View.VISIBLE}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/reply_icon"
             app:layout_constraintStart_toStartOf="@id/bubble" />
@@ -139,7 +139,7 @@
             android:padding="10dp"
             android:orientation="vertical"
             android:selected="@{model.isSelected}"
-            android:background="@{model.isGroupedWithPreviousOne ? @drawable/chat_bubble_incoming_full_background : @drawable/chat_bubble_incoming_first_background, default=@drawable/chat_bubble_incoming_first_background}"
+            android:background="@{model.groupedWithPreviousMessage ? @drawable/chat_bubble_incoming_full_background : @drawable/chat_bubble_incoming_first_background, default=@drawable/chat_bubble_incoming_first_background}"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintWidth_max="@dimen/chat_bubble_max_width"
             app:layout_constraintTop_toBottomOf="@id/reply"
@@ -214,7 +214,7 @@
                     android:layout_height="wrap_content"
                     android:text="@{model.time, default=`13:40`}"
                     android:textSize="12sp"
-                    android:visibility="@{!model.isGroupedWithNextOne ? View.VISIBLE : View.GONE}"/>
+                    android:visibility="@{!model.groupedWithNextMessage ? View.VISIBLE : View.GONE}"/>
 
                 <ImageView
                     style="@style/default_text_style_300"
@@ -225,7 +225,7 @@
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="2dp"
                     android:src="@{model.statusIcon, default=@drawable/checks}"
-                    android:visibility="@{!model.isGroupedWithNextOne ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{!model.groupedWithNextMessage ? View.VISIBLE : View.GONE}"
                     app:tint="@color/orange_main_500" />
 
             </LinearLayout>

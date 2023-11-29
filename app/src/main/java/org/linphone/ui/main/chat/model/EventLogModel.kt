@@ -28,13 +28,13 @@ import org.linphone.utils.LinphoneUtils
 
 class EventLogModel @WorkerThread constructor(
     val eventLog: EventLog,
-    avatarModel: ContactAvatarModel,
-    isFromGroup: Boolean = false,
+    val avatarModel: ContactAvatarModel,
+    val isFromGroup: Boolean = false,
     isGroupedWithPreviousOne: Boolean = false,
     isGroupedWithNextOne: Boolean = false,
-    onContentClicked: ((file: String) -> Unit)? = null,
-    onJoinConferenceClicked: ((uri: String) -> Unit)? = null,
-    onWebUrlClicked: ((url: String) -> Unit)? = null
+    val onContentClicked: ((file: String) -> Unit)? = null,
+    val onJoinConferenceClicked: ((uri: String) -> Unit)? = null,
+    val onWebUrlClicked: ((url: String) -> Unit)? = null
 ) {
     companion object {
         private const val TAG = "[Event Log Model]"

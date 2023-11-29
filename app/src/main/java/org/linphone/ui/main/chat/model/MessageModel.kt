@@ -66,8 +66,8 @@ class MessageModel @WorkerThread constructor(
     val replyTo: String,
     val replyText: String,
     val replyToMessageId: String?,
-    val isGroupedWithPreviousOne: Boolean,
-    val isGroupedWithNextOne: Boolean,
+    isGroupedWithPreviousOne: Boolean,
+    isGroupedWithNextOne: Boolean,
     private val onContentClicked: ((file: String) -> Unit)? = null,
     private val onJoinConferenceClicked: ((uri: String) -> Unit)? = null,
     private val onWebUrlClicked: ((url: String) -> Unit)? = null
@@ -95,6 +95,10 @@ class MessageModel @WorkerThread constructor(
     val time = TimestampUtils.toString(timestamp)
 
     val chatRoomIsReadOnly = chatMessage.chatRoom.isReadOnly
+
+    val groupedWithNextMessage = MutableLiveData<Boolean>()
+
+    val groupedWithPreviousMessage = MutableLiveData<Boolean>()
 
     val reactions = MutableLiveData<String>()
 
@@ -211,6 +215,8 @@ class MessageModel @WorkerThread constructor(
     }
 
     init {
+        groupedWithNextMessage.postValue(isGroupedWithNextOne)
+        groupedWithPreviousMessage.postValue(isGroupedWithPreviousOne)
         isPlayingVoiceRecord.postValue(false)
 
         chatMessage.addListener(chatMessageListener)
