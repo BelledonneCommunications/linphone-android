@@ -73,7 +73,6 @@ import org.linphone.ui.main.chat.viewmodel.ConversationViewModel
 import org.linphone.ui.main.chat.viewmodel.ConversationViewModel.Companion.SCROLLING_POSITION_NOT_SET
 import org.linphone.ui.main.chat.viewmodel.SendMessageInConversationViewModel
 import org.linphone.ui.main.fragment.GenericFragment
-import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
@@ -636,7 +635,7 @@ class ConversationFragment : GenericFragment() {
                 WindowManager.LayoutParams.MATCH_PARENT
             )
         val d: Drawable = ColorDrawable(
-            AppUtils.getColor(R.color.gray_300)
+            requireContext().getColor(R.color.grey_300)
         )
         d.alpha = 102
         dialog.window?.setBackgroundDrawable(d)

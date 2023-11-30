@@ -35,7 +35,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white">
+            android:background="?attr/color_main2_000">
 
             <ImageView
                 android:id="@+id/back"
@@ -45,7 +45,7 @@
                 android:adjustViewBounds="true"
                 android:onClick="@{backClickListener}"
                 android:src="@drawable/caret_left"
-                app:tint="@color/orange_main_500"
+                app:tint="?attr/color_main1_500"
                 app:layout_constraintBottom_toBottomOf="@id/title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/title"/>
@@ -193,7 +193,7 @@
                         android:paddingEnd="16dp"
                         android:text="@string/meeting_schedule_broadcast_help"
                         android:textSize="14sp"
-                        android:textColor="@color/gray_main2_500"
+                        android:textColor="?attr/color_main2_500"
                         android:drawableStart="@drawable/info"
                         android:drawablePadding="5dp"
                         android:gravity="center"
@@ -224,14 +224,14 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
                         android:hint="@string/meeting_schedule_subject_hint"
-                        android:textColorHint="@color/gray_main2_600"
+                        android:textColorHint="?attr/color_main2_600"
                         android:text="@={viewModel.subject}"
                         android:textSize="20sp"
-                        android:textColor="@color/gray_main2_600"
+                        android:textColor="?attr/color_main2_600"
                         android:inputType="text|textCapSentences"
                         android:drawableStart="@{viewModel.isBroadcastSelected ? @drawable/slideshow : @drawable/meeting, default=@drawable/meeting}"
                         android:drawablePadding="8dp"
-                        android:drawableTint="@color/gray_main2_600"
+                        android:drawableTint="?attr/color_main2_600"
                         android:background="@color/transparent_color"
                         app:layout_constraintTop_toBottomOf="@id/broadcast_help"
                         app:layout_constraintStart_toStartOf="parent"
@@ -245,7 +245,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/subject"
-                        android:background="@color/gray_main2_200" />
+                        android:background="?attr/color_main2_200" />
 
                     <com.google.android.material.materialswitch.MaterialSwitch
                         style="@style/material_switch_style"
@@ -267,11 +267,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:text="@string/meeting_schedule_date_all_day_title"
-                        android:textColor="@color/gray_main2_600"
+                        android:textColor="?attr/color_main2_600"
                         android:textSize="14sp"
                         android:drawableStart="@drawable/clock"
                         android:drawablePadding="8dp"
-                        android:drawableTint="@color/gray_main2_600"
+                        android:drawableTint="?attr/color_main2_600"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/all_day_switch"
                         app:layout_constraintTop_toTopOf="@id/all_day_switch"
@@ -287,7 +287,7 @@
                         android:layout_marginTop="16dp"
                         android:text="@{viewModel.fromDate, default=`Tue. October 10th, 2023`}"
                         android:textSize="14sp"
-                        android:textColor="@color/gray_main2_600"
+                        android:textColor="?attr/color_main2_600"
                         app:layout_constraintStart_toStartOf="@id/all_day"
                         app:layout_constraintTop_toBottomOf="@id/all_day_switch" />
 
@@ -299,7 +299,7 @@
                         android:layout_height="wrap_content"
                         android:text="@{viewModel.fromTime, default=`17:00`}"
                         android:textSize="14sp"
-                        android:textColor="@color/gray_main2_600"
+                        android:textColor="?attr/color_main2_600"
                         android:visibility="@{viewModel.allDayMeeting ? View.GONE : View.VISIBLE}"
                         app:layout_constraintEnd_toEndOf="@id/all_day_switch"
                         app:layout_constraintTop_toTopOf="@id/from_date" />
@@ -313,7 +313,7 @@
                         android:layout_marginTop="16dp"
                         android:text="@{viewModel.toDate, default=`Tue. October 10th, 2023`}"
                         android:textSize="14sp"
-                        android:textColor="@color/gray_main2_600"
+                        android:textColor="?attr/color_main2_600"
                         android:visibility="@{viewModel.allDayMeeting ? View.GONE : View.VISIBLE}"
                         app:layout_constraintStart_toStartOf="@id/from_date"
                         app:layout_constraintTop_toBottomOf="@id/from_date" />
@@ -326,7 +326,7 @@
                         android:layout_height="wrap_content"
                         android:text="@{viewModel.toTime, default=`17:00`}"
                         android:textSize="14sp"
-                        android:textColor="@color/gray_main2_600"
+                        android:textColor="?attr/color_main2_600"
                         android:visibility="@{viewModel.allDayMeeting ? View.GONE : View.VISIBLE}"
                         app:layout_constraintEnd_toEndOf="@id/all_day_switch"
                         app:layout_constraintTop_toTopOf="@id/to_date" />
@@ -340,13 +340,13 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
                         android:text="@{viewModel.timezone, default=@string/meeting_schedule_timezone_title}"
-                        android:textColor="@color/gray_main2_600"
+                        android:textColor="?attr/color_main2_600"
                         android:textSize="14sp"
                         android:maxLines="1"
                         android:ellipsize="end"
                         android:drawableStart="@drawable/globe_hemisphere_west"
                         android:drawablePadding="8dp"
-                        android:drawableTint="@color/gray_main2_600"
+                        android:drawableTint="?attr/color_main2_600"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/to_date" />
@@ -360,11 +360,11 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
                         android:text="@string/meeting_schedule_one_time_label"
-                        android:textColor="@color/gray_main2_600"
+                        android:textColor="?attr/color_main2_600"
                         android:textSize="14sp"
                         android:drawableStart="@drawable/arrow_clockwise"
                         android:drawablePadding="8dp"
-                        android:drawableTint="@color/gray_main2_600"
+                        android:drawableTint="?attr/color_main2_600"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/timezone" />
@@ -377,7 +377,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/repeat"
-                        android:background="@color/gray_main2_200" />
+                        android:background="?attr/color_main2_200" />
 
                     <androidx.appcompat.widget.AppCompatEditText
                         style="@style/default_text_style_700"
@@ -388,14 +388,14 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
                         android:hint="@string/meeting_schedule_description_hint"
-                        android:textColorHint="@color/gray_main2_600"
+                        android:textColorHint="?attr/color_main2_600"
                         android:text="@={viewModel.description}"
                         android:textSize="14sp"
-                        android:textColor="@color/gray_main2_600"
+                        android:textColor="?attr/color_main2_600"
                         android:inputType="text|textCapSentences"
                         android:drawableStart="@drawable/file_text"
                         android:drawablePadding="8dp"
-                        android:drawableTint="@color/gray_main2_600"
+                        android:drawableTint="?attr/color_main2_600"
                         android:background="@color/transparent_color"
                         app:layout_constraintTop_toBottomOf="@id/separator_2"
                         app:layout_constraintStart_toStartOf="parent"
@@ -410,7 +410,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/description"
-                        android:background="@color/gray_main2_200" />
+                        android:background="?attr/color_main2_200" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/default_text_style_700"
@@ -421,11 +421,11 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
                         android:text="@string/meeting_schedule_add_speaker_title"
-                        android:textColor="@color/gray_main2_600"
+                        android:textColor="?attr/color_main2_600"
                         android:textSize="14sp"
                         android:drawableStart="@drawable/user_square"
                         android:drawablePadding="8dp"
-                        android:drawableTint="@color/gray_main2_600"
+                        android:drawableTint="?attr/color_main2_600"
                         android:visibility="@{viewModel.isBroadcastSelected ? View.VISIBLE : View.GONE}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -439,7 +439,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/speakers"
-                        android:background="@color/gray_main2_200" />
+                        android:background="?attr/color_main2_200" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/default_text_style_700"
@@ -451,7 +451,7 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
                         android:text="@string/meeting_schedule_add_participants_title"
-                        android:textColor="@color/gray_main2_600"
+                        android:textColor="?attr/color_main2_600"
                         android:textSize="14sp"
                         android:drawableStart="@drawable/users"
                         android:drawablePadding="8dp"
@@ -509,7 +509,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/add_more_participants"
-                        android:background="@color/gray_main2_200" />
+                        android:background="?attr/color_main2_200" />
 
                     <com.google.android.material.materialswitch.MaterialSwitch
                         style="@style/material_switch_style"

@@ -162,7 +162,7 @@
             android:background="@drawable/shape_red_outlined_button_background"
             android:text="@string/dialog_zrtp_validate_trust_letters_do_not_match"
             android:textSize="18sp"
-            android:textColor="@color/red_danger_500"
+            android:textColor="?attr/color_danger_500"
             app:layout_constraintStart_toStartOf="@id/dialog_background"
             app:layout_constraintEnd_toEndOf="@id/dialog_background"
             app:layout_constraintTop_toBottomOf="@id/skip"

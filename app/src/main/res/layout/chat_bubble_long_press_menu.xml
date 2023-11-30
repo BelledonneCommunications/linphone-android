@@ -186,7 +186,7 @@
                 android:id="@+id/actions_background"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:background="@color/gray_main2_200"
+                android:background="?attr/color_main2_200"
                 app:layout_constraintTop_toTopOf="@id/bottom_barrier"
                 app:layout_constraintBottom_toBottomOf="parent" />
 

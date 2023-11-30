@@ -57,7 +57,7 @@
             android:src="@drawable/x"
             android:padding="5dp"
             android:background="@drawable/shape_circle_gray_100_background"
-            app:tint="@color/gray_main2_500"
+            app:tint="?attr/color_main2_500"
             app:layout_constraintTop_toTopOf="@id/avatar"
             app:layout_constraintEnd_toEndOf="parent"/>
 

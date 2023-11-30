@@ -30,7 +30,7 @@
             android:layout_marginStart="10dp"
             android:text="@string/meetings_list_today_indicator"
             android:textSize="12sp"
-            android:textColor="@color/orange_main_500"
+            android:textColor="?attr/color_main1_500"
             android:visibility="@{model.displayTodayIndicator ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -38,7 +38,7 @@
             android:id="@+id/today_separator"
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:background="@color/orange_main_500"
+            android:background="?attr/color_main1_500"
             android:visibility="@{model.displayTodayIndicator ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintTop_toBottomOf="@id/today_indicator" />
 
@@ -51,7 +51,7 @@
             android:layout_marginStart="5dp"
             android:text="@{model.day, default=`Mon.`}"
             android:visibility="@{model.firstMeetingOfTheDay ? View.VISIBLE : View.INVISIBLE}"
-            android:textColor="@color/gray_main2_500"
+            android:textColor="?attr/color_main2_500"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="@id/header_day_number"
             app:layout_constraintEnd_toEndOf="@id/header_day_number"
@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:text="@{model.dayNumber, default=`19`}"
             android:visibility="@{model.firstMeetingOfTheDay ? View.VISIBLE : View.INVISIBLE}"
-            android:textColor="@{model.isToday ? @color/white : @color/gray_main2_500, default=@color/gray_main2_500}"
+            android:textColor="@{model.isToday ? @color/main2_000 : @color/main2_500, default=@color/main2_500}"
             android:textSize="20sp"
             android:paddingBottom="4dp"
             app:layout_constraintStart_toStartOf="@id/today_background"
@@ -109,7 +109,7 @@
                 android:layout_marginEnd="16dp"
                 android:text="@{model.subject, default=`Meeting with John`}"
                 android:textSize="13sp"
-                android:textColor="@color/gray_main2_600"
+                android:textColor="?attr/color_main2_600"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:drawableStart="@{model.isBroadcast ? @drawable/slideshow : @drawable/meeting, default=@drawable/meeting}"
@@ -129,7 +129,7 @@
                 android:layout_marginEnd="16dp"
                 android:text="@{model.time, default=`10:00 - 12:00`}"
                 android:textSize="14sp"
-                android:textColor="@color/gray_main2_500"
+                android:textColor="?attr/color_main2_500"
                 android:maxLines="1"
                 android:ellipsize="end"
                 app:layout_constraintStart_toStartOf="parent"

@@ -45,7 +45,7 @@
             app:layout_constraintBottom_toBottomOf="@id/image"
             app:layout_constraintStart_toStartOf="@id/image"
             app:layout_constraintEnd_toEndOf="@id/image"
-            app:tint="@color/orange_main_500" />
+            app:tint="?attr/color_main1_500" />
 
         <ImageView
             android:id="@+id/file_icon"
@@ -67,8 +67,8 @@
             android:progress="@{model.downloadProgress}"
             android:max="100"
             android:visibility="@{!model.isWaitingToBeDownloaded || model.downloadProgress == -1 || model.downloadProgress >= 100 ? View.GONE : View.VISIBLE}"
-            app:trackColor="@color/orange_main_100"
-            app:indicatorColor="@color/orange_main_500"
+            app:trackColor="?attr/color_main1_100"
+            app:indicatorColor="?attr/color_main1_500"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -94,7 +94,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginTop="16dp"
             android:text="@{model.fileName, default=`Lorem_ipsum.pdf`}"
-            android:textColor="@color/gray_main2_600"
+            android:textColor="?attr/color_main2_600"
             android:textSize="13sp"
             android:maxLines="1"
             android:ellipsize="middle"
@@ -111,7 +111,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:text="@{model.formattedFileSize, default=`42 kb`}"
-            android:textColor="@color/gray_main2_600"
+            android:textColor="?attr/color_main2_600"
             android:textSize="12sp"
             android:maxLines="1"
             android:ellipsize="end"

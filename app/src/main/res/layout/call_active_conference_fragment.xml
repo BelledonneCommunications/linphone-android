@@ -37,7 +37,7 @@
             android:id="@+id/constraint_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/gray_900">
+            android:background="?attr/color_grey_900">
 
             <ImageView
                 android:id="@+id/background"
@@ -63,7 +63,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
                 android:text="@string/conference_call_empty"
-                android:textColor="@color/white"
+                android:textColor="?attr/color_main2_000"
                 android:textSize="22sp"
                 android:gravity="center"
                 android:visibility="@{conferenceViewModel.participantDevices.size() > 1 ? View.GONE : View.VISIBLE}"
@@ -86,11 +86,11 @@
                 android:background="@drawable/shape_squircle_main2_400_border"
                 android:text="@string/conference_share_link_title"
                 android:textSize="18sp"
-                android:textColor="@color/gray_main2_400"
+                android:textColor="?attr/color_main2_400"
                 android:visibility="@{conferenceViewModel.participantDevices.size() > 1 || viewModel.pipMode ? View.GONE : View.VISIBLE}"
                 android:drawableStart="@drawable/share_network"
                 android:drawablePadding="8dp"
-                app:drawableTint="@color/gray_main2_400"
+                app:drawableTint="?attr/color_main2_400"
                 app:layout_constraintTop_toBottomOf="@id/waiting_for_others"
                 app:layout_constraintStart_toStartOf="@id/background"
                 app:layout_constraintEnd_toEndOf="@id/background"/>
@@ -127,7 +127,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/conference_subject"
                 app:layout_constraintBottom_toBottomOf="@id/conference_subject"
-                app:tint="@color/orange_main_500" />
+                app:tint="?attr/color_main1_500" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/call_header_style"
@@ -186,7 +186,7 @@
                 android:layout_marginEnd="10dp"
                 android:src="@drawable/camera_rotate"
                 android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; viewModel.isVideoEnabled &amp;&amp; viewModel.showSwitchCamera ? View.VISIBLE : View.GONE}"
-                app:tint="@color/white"
+                app:tint="?attr/color_main2_000"
                 app:layout_constraintTop_toTopOf="@id/conference_subject"
                 app:layout_constraintBottom_toBottomOf="@id/conference_subject"
                 app:layout_constraintEnd_toEndOf="parent" />
@@ -201,7 +201,7 @@
                 android:visibility="@{viewModel.isRecording ? View.VISIBLE : View.GONE, default=gone}"
                 app:layout_constraintTop_toTopOf="@id/background"
                 app:layout_constraintStart_toStartOf="@id/background"
-                app:tint="@color/red_danger_500" />
+                app:tint="?attr/color_danger_500" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

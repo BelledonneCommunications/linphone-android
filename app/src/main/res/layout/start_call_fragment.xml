@@ -23,7 +23,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white">
+            android:background="?attr/color_main2_000">
 
             <ImageView
                 android:id="@+id/back"
@@ -33,7 +33,7 @@
                 android:onClick="@{backClickListener}"
                 android:padding="15dp"
                 android:src="@drawable/caret_left"
-                app:tint="@color/orange_main_500"
+                app:tint="?attr/color_main1_500"
                 app:layout_constraintBottom_toBottomOf="@id/title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/title" />
@@ -70,7 +70,7 @@
                 android:background="@drawable/edit_text_background"
                 android:drawableStart="@drawable/magnifying_glass"
                 android:drawablePadding="10dp"
-                android:drawableTint="@color/gray_main2_600"
+                android:drawableTint="?attr/color_main2_600"
                 android:hint="@string/history_call_start_search_bar_filter_hint"
                 android:inputType="textPersonName|textNoSuggestions"
                 android:paddingStart="15dp"
@@ -96,7 +96,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/search_bar"
                 app:layout_constraintEnd_toEndOf="@id/search_bar"
                 app:layout_constraintTop_toTopOf="@id/search_bar"
-                app:tint="@color/gray_main2_600" />
+                app:tint="?attr/color_main2_600" />
 
             <ImageView
                 android:id="@+id/clear_field"
@@ -109,7 +109,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/search_bar"
                 app:layout_constraintEnd_toEndOf="@id/search_bar"
                 app:layout_constraintTop_toTopOf="@id/search_bar"
-                app:tint="@color/gray_main2_600" />
+                app:tint="?attr/color_main2_600" />
 
             <androidx.constraintlayout.widget.Group
                 android:id="@+id/group_call"
@@ -141,7 +141,7 @@
                 android:src="@drawable/meeting"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/search_bar"
-                app:tint="@color/white" />
+                app:tint="?attr/color_main2_000" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style_800"

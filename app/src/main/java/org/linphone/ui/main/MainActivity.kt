@@ -55,7 +55,6 @@ import org.linphone.ui.main.help.fragment.DebugFragmentDirections
 import org.linphone.ui.main.viewmodel.MainViewModel
 import org.linphone.ui.main.viewmodel.SharedMainViewModel
 import org.linphone.ui.welcome.WelcomeActivity
-import org.linphone.utils.AppUtils
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.ToastUtils
@@ -105,15 +104,15 @@ class MainActivity : GenericActivity() {
             it.consume { mode ->
                 window.statusBarColor = when (mode) {
                     MainViewModel.SINGLE_CALL, MainViewModel.MULTIPLE_CALLS -> {
-                        AppUtils.getColor(R.color.green_success_500)
+                        getColor(R.color.success_500)
                     }
                     MainViewModel.NETWORK_NOT_REACHABLE, MainViewModel.NON_DEFAULT_ACCOUNT_NOT_CONNECTED -> {
-                        AppUtils.getColor(R.color.red_danger_500)
+                        getColor(R.color.danger_500)
                     }
                     MainViewModel.NON_DEFAULT_ACCOUNT_NOTIFICATIONS -> {
-                        AppUtils.getColor(R.color.gray_main2_500)
+                        getColor(R.color.main2_500)
                     }
-                    else -> AppUtils.getColor(R.color.orange_main_500)
+                    else -> getColor(R.color.main1_500)
                 }
             }
         }

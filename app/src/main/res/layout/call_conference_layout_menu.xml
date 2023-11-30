@@ -32,14 +32,14 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:text="@string/conference_layout_grid"
-            android:textColor="@color/white"
+            android:textColor="?attr/color_main2_000"
             android:gravity="center_vertical"
             android:layout_marginBottom="1dp"
             android:drawableEnd="@drawable/squares_four"
-            android:drawableTint="@color/white"
+            android:drawableTint="?attr/color_main2_000"
             android:checked="@{viewModel.conferenceLayout == 0}"
             app:useMaterialThemeColors="false"
-            app:buttonTint="@color/white"/>
+            app:buttonTint="?attr/color_main2_000"/>
 
         <com.google.android.material.radiobutton.MaterialRadioButton
             style="@style/context_menu_action_label_style"
@@ -49,14 +49,14 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:text="@string/conference_layout_active_speaker"
-            android:textColor="@color/white"
+            android:textColor="?attr/color_main2_000"
             android:gravity="center_vertical"
             android:layout_marginBottom="1dp"
             android:drawableEnd="@drawable/picture_in_picture"
-            android:drawableTint="@color/white"
+            android:drawableTint="?attr/color_main2_000"
             android:checked="@{viewModel.conferenceLayout == 1}"
             app:useMaterialThemeColors="false"
-            app:buttonTint="@color/white"/>
+            app:buttonTint="?attr/color_main2_000"/>
 
         <com.google.android.material.radiobutton.MaterialRadioButton
             style="@style/context_menu_action_label_style"
@@ -66,14 +66,14 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:text="@string/conference_layout_audio_only"
-            android:textColor="@color/white"
+            android:textColor="?attr/color_main2_000"
             android:gravity="center_vertical"
             android:layout_marginBottom="1dp"
             android:drawableEnd="@drawable/waveform"
-            android:drawableTint="@color/white"
+            android:drawableTint="?attr/color_main2_000"
             android:checked="@{viewModel.conferenceLayout == -1}"
             app:useMaterialThemeColors="false"
-            app:buttonTint="@color/white"/>
+            app:buttonTint="?attr/color_main2_000"/>
 
     </LinearLayout>
 

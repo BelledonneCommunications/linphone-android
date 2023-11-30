@@ -16,7 +16,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="?attr/color_main2_000">
 
         <ImageView
             android:id="@+id/back"
@@ -26,7 +26,7 @@
             android:adjustViewBounds="true"
             android:padding="15dp"
             android:src="@drawable/caret_left"
-            app:tint="@color/orange_main_500"
+            app:tint="?attr/color_main1_500"
             app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/title" />
@@ -47,7 +47,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:fillViewport="true"
-            android:background="@color/gray_100"
+            android:background="?attr/color_grey_100"
             app:layout_constraintTop_toBottomOf="@id/title"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -69,7 +69,7 @@
                     android:layout_marginTop="16dp"
                     android:text="@string/settings_calls_title"
                     android:drawableEnd="@{viewModel.expandCalls ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
-                    android:drawableTint="@color/gray_main2_600"
+                    android:drawableTint="?attr/color_main2_600"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"/>

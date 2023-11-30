@@ -260,9 +260,9 @@ class CallActivity : GenericActivity() {
         callsViewModel.changeSystemTopBarColorToMultipleCallsEvent.observe(this) {
             it.consume { useInCallColor ->
                 val color = if (useInCallColor) {
-                    AppUtils.getColor(R.color.green_success_500)
+                    getColor(R.color.success_500)
                 } else {
-                    AppUtils.getColor(R.color.orange_main_500)
+                    getColor(R.color.main1_500)
                 }
                 window.statusBarColor = color
             }

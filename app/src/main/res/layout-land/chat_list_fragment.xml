@@ -28,7 +28,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/orange_main_500">
+                android:background="?attr/color_main1_500">
 
                 <androidx.constraintlayout.widget.Group
                     android:layout_width="wrap_content"
@@ -61,7 +61,7 @@
                     android:id="@+id/background"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:src="@color/white"
+                    android:src="?attr/color_main2_000"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
@@ -106,8 +106,8 @@
                     android:layout_gravity="end|bottom"
                     android:layout_margin="16dp"
                     android:src="@drawable/plus_circle"
-                    app:tint="@color/gray_main2_700"
-                    app:backgroundTint="@color/white"
+                    app:tint="?attr/color_main2_700"
+                    app:backgroundTint="?attr/color_main2_000"
                     app:shapeAppearanceOverlay="@style/rounded"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent" />

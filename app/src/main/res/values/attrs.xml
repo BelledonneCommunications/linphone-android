@@ -9,4 +9,44 @@
         </attr>
         <attr name="radius" format="float" />
     </declare-styleable>
+
+    <declare-styleable name="LinphoneAppTheme">
+        <attr name="color_main1_100" format="color"/>
+        <attr name="color_main1_300" format="color"/>
+        <attr name="color_main1_500" format="color"/>
+        <attr name="color_main1_700" format="color"/>
+
+        <attr name="color_main2_000" format="color"/>
+        <attr name="color_main2_100" format="color"/>
+        <attr name="color_main2_200" format="color"/>
+        <attr name="color_main2_300" format="color"/>
+        <attr name="color_main2_400" format="color"/>
+        <attr name="color_main2_500" format="color"/>
+        <attr name="color_main2_600" format="color"/>
+        <attr name="color_main2_700" format="color"/>
+        <attr name="color_main2_800" format="color"/>
+
+        <attr name="color_grey_100" format="color"/>
+        <attr name="color_grey_200" format="color"/>
+        <attr name="color_grey_300" format="color"/>
+        <attr name="color_grey_400" format="color"/>
+        <attr name="color_grey_500" format="color"/>
+        <attr name="color_grey_600" format="color"/>
+        <attr name="color_grey_800" format="color"/>
+        <attr name="color_grey_900" format="color"/>
+
+        <attr name="color_danger_500" format="color"/>
+        <attr name="color_danger_700" format="color"/>
+        <attr name="color_danger_900" format="color"/>
+
+        <attr name="color_success_200" format="color"/>
+        <attr name="color_success_500" format="color"/>
+        <attr name="color_success_700" format="color"/>
+
+        <attr name="color_info_500" format="color"/>
+
+        <attr name="color_warning_600" format="color"/>
+
+        <attr name="color_on_main" format="color"/>
+    </declare-styleable>
 </resources>

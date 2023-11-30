@@ -206,13 +206,13 @@ fun ImageView.setPresenceIcon(presence: ConsolidatedPresence?) {
 @BindingAdapter("tint", "disableTint")
 fun ImageView.setTintColor(@ColorRes color: Int, disable: Boolean) {
     if (!disable) {
-        setColorFilter(AppUtils.getColor(color), PorterDuff.Mode.SRC_IN)
+        setColorFilter(context.getColor(color), PorterDuff.Mode.SRC_IN)
     }
 }
 
 @BindingAdapter("textColor")
 fun AppCompatTextView.setColor(@ColorRes color: Int) {
-    setTextColor(AppUtils.getColor(color))
+    setTextColor(context.getColor(color))
 }
 
 @UiThread
@@ -371,12 +371,12 @@ private fun loadContactPictureWithCoil(
             if (model.showTrust.value == true) {
                 when (model.trust.value) {
                     ChatRoom.SecurityLevel.Safe -> {
-                        imageView.setStrokeColorResource(R.color.blue_info_500)
+                        imageView.setStrokeColorResource(R.color.info_500)
                         imageView.setStrokeWidthResource(R.dimen.avatar_trust_border_width)
                     }
 
                     ChatRoom.SecurityLevel.Unsafe -> {
-                        imageView.setStrokeColorResource(R.color.red_danger_500)
+                        imageView.setStrokeColorResource(R.color.danger_500)
                         imageView.setStrokeWidthResource(R.dimen.avatar_trust_border_width)
                     }
 

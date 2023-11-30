@@ -74,7 +74,7 @@
             android:layout_marginStart="10dp"
             android:text="@{model.avatarModel.name, default=`John Doe`}"
             android:textSize="14sp"
-            android:textColor="@color/gray_main2_700"
+            android:textColor="?attr/color_main2_700"
             app:layout_constraintStart_toEndOf="@id/avatar"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/date_time"/>
@@ -110,7 +110,7 @@
             android:layout_height="@dimen/icon_size"
             android:layout_marginEnd="6dp"
             android:src="@drawable/phone"
-            app:tint="@color/gray_main2_500"
+            app:tint="?attr/color_main2_500"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/name"
             app:layout_constraintBottom_toBottomOf="@id/date_time" />
@@ -120,7 +120,7 @@
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_marginEnd="10dp"
-            android:background="@color/gray_main2_200"
+            android:background="?attr/color_main2_200"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="@id/name"
             app:layout_constraintEnd_toEndOf="parent"

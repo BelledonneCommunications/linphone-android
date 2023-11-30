@@ -22,7 +22,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/gray_100">
+        android:background="?attr/color_grey_100">
 
         <ImageView
             android:id="@+id/back"
@@ -32,8 +32,8 @@
             android:adjustViewBounds="true"
             android:padding="15dp"
             android:src="@drawable/caret_left"
-            android:background="@color/white"
-            app:tint="@color/orange_main_500"
+            android:background="?attr/color_main2_000"
+            app:tint="?attr/color_main1_500"
             app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/title" />
@@ -44,7 +44,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/top_bar_height"
             android:paddingStart="10dp"
-            android:background="@color/white"
+            android:background="?attr/color_main2_000"
             android:text="@{viewModel.isEdit ? @string/contact_edit_title : @string/contact_new_title, default=@string/contact_new_title}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/back"

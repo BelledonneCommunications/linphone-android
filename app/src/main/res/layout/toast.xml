@@ -64,7 +64,7 @@
             android:paddingBottom="8dp"
             android:text="@{message, default=@string/assistant_account_register_push_notification_not_received_error}"
             android:textSize="14sp"
-            textColor="@{text_color, default=@color/blue_info_500}"
+            textColor="@{text_color, default=@color/info_500}"
             app:layout_constraintWidth_max="@dimen/toast_text_max_width"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

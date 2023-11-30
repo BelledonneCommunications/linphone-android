@@ -32,7 +32,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="?attr/color_main2_000">
 
         <ImageView
             android:id="@+id/back"
@@ -42,7 +42,7 @@
             android:padding="15dp"
             android:onClick="@{backClickListener}"
             android:src="@drawable/caret_left"
-            app:tint="@color/orange_main_500"
+            app:tint="?attr/color_main1_500"
             app:layout_constraintBottom_toBottomOf="@id/invisible_title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/invisible_title"/>
@@ -63,7 +63,7 @@
             android:id="@+id/scrollView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@color/gray_100"
+            android:background="?attr/color_grey_100"
             android:fillViewport="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -111,7 +111,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text="@{viewModel.isGroup ? viewModel.subject : viewModel.avatarModel.name, default=`John Doe`}"
-                    android:textColor="@color/gray_main2_700"
+                    android:textColor="?attr/color_main2_700"
                     android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -139,7 +139,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text="@{viewModel.sipUri, default=`sip:john.doe@sip.example.org`}"
-                    android:textColor="@color/gray_main2_700"
+                    android:textColor="?attr/color_main2_700"
                     android:textSize="14sp"
                     android:visibility="@{viewModel.isGroup ? View.GONE : View.VISIBLE, default=gone}"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -152,7 +152,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@{viewModel.avatarModel.lastPresenceInfo, default=@string/friend_presence_status_online}"
-                    android:textColor="@{viewModel.avatarModel.presenceStatus == ConsolidatedPresence.Online ? @color/green_success_500 : @color/orange_warning_600, default=@color/green_success_500}"
+                    android:textColor="@{viewModel.avatarModel.presenceStatus == ConsolidatedPresence.Online ? @color/success_500 : @color/warning_600, default=@color/success_500}"
                     android:textSize="14sp"
                     android:visibility="@{viewModel.isGroup || viewModel.avatarModel.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE, default=gone}"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -171,7 +171,7 @@
                     app:layout_constraintEnd_toStartOf="@id/call"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/status"
-                    app:tint="@color/gray_main2_500" />
+                    app:tint="?attr/color_main2_500" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/mute_label"
@@ -198,7 +198,7 @@
                     app:layout_constraintEnd_toStartOf="@id/meeting"
                     app:layout_constraintStart_toEndOf="@id/mute"
                     app:layout_constraintTop_toBottomOf="@id/status"
-                    app:tint="@color/gray_main2_500" />
+                    app:tint="?attr/color_main2_500" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/call_label"
@@ -225,7 +225,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/call"
                     app:layout_constraintTop_toBottomOf="@id/status"
-                    app:tint="@color/gray_main2_500" />
+                    app:tint="?attr/color_main2_500" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/meeting_label"
@@ -249,7 +249,7 @@
                     android:layout_marginTop="32dp"
                     android:layout_marginEnd="26dp"
                     android:drawableEnd="@{viewModel.expandParticipants ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
-                    android:drawableTint="@color/gray_main2_600"
+                    android:drawableTint="?attr/color_main2_600"
                     android:onClick="@{() -> viewModel.toggleParticipantsExpand()}"
                     android:padding="5dp"
                     android:text="@string/conversation_info_participants_list_title"
@@ -307,7 +307,7 @@
                     android:paddingBottom="10dp"
                     android:text="@string/conversation_info_add_participants_label"
                     android:visibility="@{!viewModel.expandParticipants || !viewModel.isMyselfAdmin || !viewModel.isGroup || viewModel.isReadOnly ? View.GONE : View.VISIBLE, default=gone}"
-                    app:drawableTint="@color/orange_main_500"
+                    app:drawableTint="?attr/color_main1_500"
                     app:layout_constraintBottom_toTopOf="@id/actions"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -361,7 +361,7 @@
                 <View
                     android:layout_width="0dp"
                     android:layout_height="1dp"
-                    android:background="@color/gray_main2_200"
+                    android:background="?attr/color_main2_200"
                     app:layout_constraintEnd_toEndOf="@id/action_see_contact"
                     app:layout_constraintStart_toStartOf="@id/action_see_contact"
                     app:layout_constraintTop_toBottomOf="@+id/action_see_contact" />
@@ -385,7 +385,7 @@
                 <View
                     android:layout_width="0dp"
                     android:layout_height="1dp"
-                    android:background="@color/gray_main2_200"
+                    android:background="?attr/color_main2_200"
                     app:layout_constraintEnd_toEndOf="@id/action_add_to_contacts"
                     app:layout_constraintStart_toStartOf="@id/action_add_to_contacts"
                     app:layout_constraintTop_toBottomOf="@+id/action_add_to_contacts" />
@@ -409,7 +409,7 @@
                 <View
                     android:layout_width="0dp"
                     android:layout_height="1dp"
-                    android:background="@color/gray_main2_200"
+                    android:background="?attr/color_main2_200"
                     app:layout_constraintEnd_toEndOf="@id/action_ephemeral_messages"
                     app:layout_constraintStart_toStartOf="@id/action_ephemeral_messages"
                     app:layout_constraintTop_toBottomOf="@+id/action_ephemeral_messages" />
@@ -433,7 +433,7 @@
                 <View
                     android:layout_width="0dp"
                     android:layout_height="1dp"
-                    android:background="@color/gray_main2_200"
+                    android:background="?attr/color_main2_200"
                     app:layout_constraintEnd_toEndOf="@id/action_leave_group"
                     app:layout_constraintStart_toStartOf="@id/action_leave_group"
                     app:layout_constraintTop_toBottomOf="@+id/action_leave_group" />

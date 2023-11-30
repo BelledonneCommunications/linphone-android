@@ -53,7 +53,7 @@
             android:layout_marginEnd="10dp"
             android:src="@drawable/phone"
             android:visibility="@{model.enabled ? View.VISIBLE : View.GONE}"
-            app:tint="@color/gray_main2_600"
+            app:tint="?attr/color_main2_600"
             app:layout_constraintTop_toTopOf="@id/header"
             app:layout_constraintBottom_toBottomOf="@id/number_or_address"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -64,7 +64,7 @@
             android:layout_height="1dp"
             android:layout_marginEnd="10dp"
             android:layout_marginTop="10dp"
-            android:background="@color/gray_main2_200"
+            android:background="?attr/color_main2_200"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

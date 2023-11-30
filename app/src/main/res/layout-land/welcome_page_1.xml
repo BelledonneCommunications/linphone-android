@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="65dp"
         android:text="@string/welcome_page_title"
-        android:textColor="@color/white"
+        android:textColor="?attr/color_main2_000"
         android:textSize="36sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:text="@string/welcome_page_subtitle"
-        android:textColor="@color/white"
+        android:textColor="?attr/color_main2_000"
         android:textSize="26sp"
         app:layout_constraintBottom_toBottomOf="@id/title_first_line"
         app:layout_constraintStart_toEndOf="@id/title_first_line"/>

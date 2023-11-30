@@ -32,7 +32,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/answer_call"
             app:layout_constraintStart_toStartOf="parent"
-            app:tint="@color/white" />
+            app:tint="?attr/color_main2_000" />
 
         <ImageView
             android:id="@+id/answer_call"
@@ -48,7 +48,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/hang_up"
-            app:tint="@color/white" />
+            app:tint="?attr/color_main2_000" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

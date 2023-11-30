@@ -23,12 +23,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        android:background="@color/white">
+        android:background="?attr/color_main2_000">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:onClick="@{backClickListener}"
@@ -37,7 +36,7 @@
                 android:layout_height="@dimen/top_bar_height"
                 android:padding="15dp"
                 android:src="@drawable/caret_left"
-                app:tint="@color/gray_main2_500"
+                app:tint="?attr/color_main2_500"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
 
@@ -48,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="100dp"
                 android:text="@string/assistant_login_third_party_sip_account"
-                android:textColor="@color/gray_main2_600"
+                android:textColor="?attr/color_main2_600"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
@@ -62,7 +61,7 @@
                 android:background="@drawable/circle_light_blue_button_background"
                 android:padding="16dp"
                 android:src="@drawable/chat_teardrop_text"
-                app:tint="@color/gray_main2_500"
+                app:tint="?attr/color_main2_500"
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/no_video"
@@ -76,7 +75,7 @@
                 android:background="@drawable/circle_light_blue_button_background"
                 android:padding="16dp"
                 android:src="@drawable/video_camera_slash"
-                app:tint="@color/gray_main2_500"
+                app:tint="?attr/color_main2_500"
                 app:layout_constraintStart_toEndOf="@id/no_chat"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title"/>

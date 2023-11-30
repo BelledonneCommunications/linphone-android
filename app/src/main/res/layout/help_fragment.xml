@@ -29,7 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        android:background="@color/white">
+        android:background="?attr/color_main2_000">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -43,7 +43,7 @@
                 android:adjustViewBounds="true"
                 android:padding="15dp"
                 android:src="@drawable/caret_left"
-                app:tint="@color/orange_main_500"
+                app:tint="?attr/color_main1_500"
                 app:layout_constraintBottom_toBottomOf="@id/title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/title" />
@@ -80,7 +80,7 @@
                 android:layout_height="32dp"
                 android:layout_marginStart="16dp"
                 android:src="@drawable/detective"
-                app:tint="@color/orange_main_500"
+                app:tint="?attr/color_main1_500"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/privacy_policy_title"
                 app:layout_constraintTop_toTopOf="@id/privacy_policy_title"
@@ -110,7 +110,7 @@
                 android:layout_marginEnd="16dp"
                 android:text="@string/help_about_privacy_policy_subtitle"
                 android:textSize="14sp"
-                android:textColor="@color/gray_main2_600"
+                android:textColor="?attr/color_main2_600"
                 app:layout_constraintTop_toBottomOf="@id/privacy_policy_title"
                 app:layout_constraintStart_toEndOf="@id/privacy_policy_icon"
                 app:layout_constraintEnd_toEndOf="parent" />
@@ -121,7 +121,7 @@
                 android:layout_height="32dp"
                 android:layout_marginStart="16dp"
                 android:src="@drawable/info"
-                app:tint="@color/orange_main_500"
+                app:tint="?attr/color_main1_500"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/version_title"
                 app:layout_constraintTop_toTopOf="@id/version_title"
@@ -149,7 +149,7 @@
                 android:layout_marginEnd="16dp"
                 android:text="@{viewModel.version, default=`6.0.0`}"
                 android:textSize="14sp"
-                android:textColor="@color/gray_main2_600"
+                android:textColor="?attr/color_main2_600"
                 app:layout_constraintTop_toBottomOf="@id/version_title"
                 app:layout_constraintStart_toEndOf="@id/version_icon"
                 app:layout_constraintEnd_toStartOf="@id/check_for_update" />
@@ -182,7 +182,7 @@
                 android:layout_height="32dp"
                 android:layout_marginStart="16dp"
                 android:src="@drawable/check_square_offset"
-                app:tint="@color/orange_main_500"
+                app:tint="?attr/color_main1_500"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/open_source_licenses_title"
                 app:layout_constraintTop_toTopOf="@id/open_source_licenses_title"
@@ -212,7 +212,7 @@
                 android:layout_marginEnd="16dp"
                 android:text="@string/help_about_open_source_licenses_subtitle"
                 android:textSize="14sp"
-                android:textColor="@color/gray_main2_600"
+                android:textColor="?attr/color_main2_600"
                 app:layout_constraintTop_toBottomOf="@id/open_source_licenses_title"
                 app:layout_constraintStart_toEndOf="@id/open_source_licenses_icon"
                 app:layout_constraintEnd_toEndOf="parent" />
@@ -224,7 +224,7 @@
                 android:layout_height="32dp"
                 android:layout_marginStart="16dp"
                 android:src="@drawable/globe_hemisphere_west"
-                app:tint="@color/orange_main_500"
+                app:tint="?attr/color_main1_500"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/translate_title"
                 app:layout_constraintTop_toTopOf="@id/translate_title"
@@ -263,7 +263,7 @@
                 android:layout_height="32dp"
                 android:layout_marginStart="16dp"
                 android:src="@drawable/wrench"
-                app:tint="@color/orange_main_500"
+                app:tint="?attr/color_main1_500"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/debug_title"
                 app:layout_constraintTop_toTopOf="@id/debug_title"
@@ -282,7 +282,7 @@
                 android:text="@string/help_troubleshooting_title"
                 android:drawableEnd="@drawable/caret_right"
                 android:drawablePadding="8dp"
-                app:drawableTint="@color/gray_main2_500"
+                app:drawableTint="?attr/color_main2_500"
                 app:layout_constraintVertical_bias="0"
                 app:layout_constraintTop_toBottomOf="@id/advanced_title"
                 app:layout_constraintBottom_toBottomOf="parent"

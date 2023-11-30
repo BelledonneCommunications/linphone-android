@@ -12,13 +12,13 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:background="?attr/color_main2_000">
 
         <View
             android:id="@+id/separator"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/gray_main2_300"
+            android:background="?attr/color_main2_300"
             app:layout_constraintTop_toTopOf="parent"/>
 
         <com.google.android.flexbox.FlexboxLayout

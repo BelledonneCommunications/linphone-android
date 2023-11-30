@@ -12,13 +12,13 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:background="?attr/color_main2_000">
 
         <View
             android:id="@+id/separator"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/gray_main2_300"
+            android:background="?attr/color_main2_300"
             app:layout_constraintTop_toTopOf="parent"/>
 
         <ImageView
@@ -42,7 +42,7 @@
             android:layout_marginTop="10dp"
             android:text="@string/conversation_reply_to_message_title"
             android:textSize="12sp"
-            android:textColor="@color/gray_main2_500"
+            android:textColor="?attr/color_main2_500"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -55,7 +55,7 @@
             android:layout_marginStart="5dp"
             android:text="@{viewModel.isReplyingTo, default=`John Doe`}"
             android:textSize="12sp"
-            android:textColor="@color/gray_main2_500"
+            android:textColor="?attr/color_main2_500"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/reply_header"
             app:layout_constraintEnd_toStartOf="@id/cancel" />
@@ -69,7 +69,7 @@
             android:layout_marginBottom="10dp"
             android:text="@{viewModel.isReplyingToMessage, default=`Hello this is John! How are you?`}"
             android:textSize="12sp"
-            android:textColor="@color/gray_main2_400"
+            android:textColor="?attr/color_main2_400"
             android:maxLines="1"
             android:ellipsize="end"
             app:layout_constraintTop_toBottomOf="@id/reply_header"

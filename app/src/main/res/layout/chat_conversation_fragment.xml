@@ -38,7 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="80dp"
-            android:background="@color/white">
+            android:background="?attr/color_main2_000">
 
             <androidx.constraintlayout.widget.Group
                 android:layout_width="wrap_content"
@@ -68,7 +68,7 @@
                 android:onClick="@{backClickListener}"
                 android:visibility="@{viewModel.showBackButton &amp;&amp; !viewModel.searchBarVisible ? View.VISIBLE : View.GONE}"
                 android:src="@drawable/caret_left"
-                app:tint="@color/orange_main_500"
+                app:tint="?attr/color_main1_500"
                 app:layout_constraintBottom_toBottomOf="@id/title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/title"/>
@@ -120,7 +120,7 @@
                 android:ellipsize="end"
                 android:text="@{viewModel.isGroup ? viewModel.subject : viewModel.avatarModel.name, default=`John Doe`}"
                 android:textSize="16sp"
-                android:textColor="@color/gray_main2_600"
+                android:textColor="?attr/color_main2_600"
                 android:gravity="center_vertical"
                 app:layout_constraintEnd_toStartOf="@id/search_toggle"
                 app:layout_constraintStart_toEndOf="@id/avatar"
@@ -137,7 +137,7 @@
                 app:layout_constraintTop_toTopOf="@id/title"
                 app:layout_constraintBottom_toBottomOf="@id/title"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:tint="@color/gray_main2_500"/>
+                app:tint="?attr/color_main2_500"/>
 
             <ImageView
                 android:id="@+id/search_toggle"
@@ -149,7 +149,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/title"
                 app:layout_constraintEnd_toStartOf="@id/info"
                 app:layout_constraintTop_toTopOf="@id/title"
-                app:tint="@color/gray_main2_500" />
+                app:tint="?attr/color_main2_500" />
 
             <ImageView
                 android:id="@+id/cancel_search"
@@ -161,7 +161,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/search"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/search"
-                app:tint="@color/gray_main2_500" />
+                app:tint="?attr/color_main2_500" />
 
             <com.google.android.material.textfield.TextInputLayout
                 style="?attr/textInputFilledStyle"
@@ -169,10 +169,10 @@
                 android:layout_width="0dp"
                 android:layout_height="@dimen/top_bar_height"
                 android:gravity="center_vertical"
-                android:textColorHint="@color/gray_main2_400"
+                android:textColorHint="?attr/color_main2_400"
                 app:hintEnabled="false"
                 app:hintAnimationEnabled="false"
-                app:hintTextColor="@color/gray_main2_400"
+                app:hintTextColor="?attr/color_main2_400"
                 app:boxStrokeWidth="0dp"
                 app:boxStrokeWidthFocused="0dp"
                 app:layout_constraintEnd_toStartOf="@id/clear_field"
@@ -203,7 +203,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/search"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/search"
-                app:tint="@color/gray_main2_500" />
+                app:tint="?attr/color_main2_500" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/events_list"
@@ -221,10 +221,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:paddingBottom="5dp"
-                android:background="@color/white"
+                android:background="?attr/color_main2_000"
                 android:text="@{viewModel.composingLabel, default=`John Doe is composing...`}"
                 android:textSize="12sp"
-                android:textColor="@color/gray_main2_400"
+                android:textColor="?attr/color_main2_400"
                 android:visibility="@{viewModel.composingLabel.length() == 0 ? View.GONE : View.VISIBLE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

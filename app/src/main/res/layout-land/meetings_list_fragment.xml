@@ -31,7 +31,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/orange_main_500">
+                android:background="?attr/color_main1_500">
 
                 <androidx.constraintlayout.widget.Group
                     android:layout_width="wrap_content"
@@ -68,7 +68,7 @@
                     android:layout_marginEnd="9dp"
                     android:src="@drawable/calendar"
                     android:visibility="@{viewModel.searchBarVisible ? View.GONE : View.VISIBLE}"
-                    app:tint="@color/white"
+                    app:tint="?attr/color_on_main"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/top_bar"
                     app:layout_constraintBottom_toBottomOf="@id/top_bar" />
@@ -77,7 +77,7 @@
                     android:id="@+id/background"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:src="@color/white"
+                    android:src="?attr/color_main2_000"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/bottom_nav_bar"
@@ -122,8 +122,8 @@
                     android:layout_gravity="end|bottom"
                     android:layout_margin="16dp"
                     android:src="@drawable/plus_circle"
-                    app:tint="@color/gray_main2_700"
-                    app:backgroundTint="@color/white"
+                    app:tint="?attr/color_main2_700"
+                    app:backgroundTint="?attr/color_main2_000"
                     app:shapeAppearanceOverlay="@style/rounded"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent" />

@@ -62,7 +62,7 @@
             android:layout_marginEnd="10dp"
             android:text="@string/meeting_info_organizer_label"
             android:textSize="12sp"
-            android:textColor="@color/gray_main2_400"
+            android:textColor="?attr/color_main2_400"
             android:gravity="center"
             android:visibility="@{model.isOrganizer ? View.VISIBLE : View.GONE}"
             app:layout_constraintHorizontal_bias="0.5"

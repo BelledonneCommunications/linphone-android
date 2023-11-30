@@ -35,7 +35,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="?attr/color_main2_000">
 
             <ImageView
                 android:id="@+id/back"
@@ -45,7 +45,7 @@
                 android:adjustViewBounds="true"
                 android:padding="15dp"
                 android:src="@drawable/caret_left"
-                app:tint="@color/orange_main_500"
+                app:tint="?attr/color_main1_500"
                 app:layout_constraintBottom_toBottomOf="@id/title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/title" />
@@ -59,7 +59,7 @@
                 android:layout_marginEnd="10dp"
                 android:gravity="center_vertical"
                 android:text="@string/manage_account_title"
-                android:textColor="@color/orange_main_500"
+                android:textColor="?attr/color_main1_500"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/back"
@@ -69,7 +69,7 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:fillViewport="true"
-                android:background="@color/gray_100"
+                android:background="?attr/color_grey_100"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title"
@@ -176,7 +176,7 @@
                         android:layout_marginTop="32dp"
                         android:text="@string/manage_account_details_title"
                         android:drawableEnd="@{viewModel.expandDetails ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
-                        android:drawableTint="@color/gray_main2_600"
+                        android:drawableTint="?attr/color_main2_600"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/avatar_barrier"/>
@@ -507,7 +507,7 @@
                     <View
                         android:layout_width="0dp"
                         android:layout_height="1dp"
-                        android:background="@color/gray_main2_200"
+                        android:background="?attr/color_main2_200"
                         app:layout_constraintStart_toStartOf="@id/action_settings"
                         app:layout_constraintEnd_toEndOf="@id/action_settings"
                         app:layout_constraintTop_toBottomOf="@+id/action_settings"/>

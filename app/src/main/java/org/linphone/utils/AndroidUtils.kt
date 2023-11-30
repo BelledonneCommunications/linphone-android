@@ -27,14 +27,11 @@ import android.util.DisplayMetrics
 import android.util.Rational
 import android.view.View
 import androidx.annotation.AnyThread
-import androidx.annotation.ColorInt
-import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
 import androidx.annotation.MainThread
 import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
 import androidx.annotation.UiThread
-import androidx.core.content.ContextCompat
 import androidx.core.view.SoftwareKeyboardControllerCompat
 import androidx.emoji2.text.EmojiCompat
 import java.util.Locale
@@ -81,14 +78,6 @@ class AppUtils {
         @AnyThread
         fun getStringWithPlural(@PluralsRes id: Int, count: Int, value: String): String {
             return coreContext.context.resources.getQuantityString(id, count, value)
-        }
-
-        @AnyThread @ColorInt
-        fun getColor(@ColorRes colorId: Int): Int {
-            return ContextCompat.getColor(
-                coreContext.context,
-                colorId
-            )
         }
 
         @MainThread

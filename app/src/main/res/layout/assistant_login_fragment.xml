@@ -32,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        android:background="@color/white">
+        android:background="?attr/color_main2_000">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -46,7 +46,7 @@
                 android:padding="15dp"
                 android:src="@drawable/caret_left"
                 android:visibility="@{viewModel.showBackButton ? View.VISIBLE : View.INVISIBLE, default=invisible}"
-                app:tint="@color/gray_main2_500"
+                app:tint="?attr/color_main2_500"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
 
@@ -97,7 +97,7 @@
                 android:paddingEnd="20dp"
                 android:text="@={viewModel.username, default=`johndoe`}"
                 android:textSize="14sp"
-                android:textColor="@color/gray_main2_600"
+                android:textColor="?attr/color_main2_600"
                 android:background="@drawable/edit_text_background"
                 android:inputType="text"
                 android:hint="@string/username"
@@ -129,7 +129,7 @@
                 android:paddingEnd="20dp"
                 android:text="@={viewModel.password, default=`johndoe`}"
                 android:textSize="14sp"
-                android:textColor="@color/gray_main2_600"
+                android:textColor="?attr/color_main2_600"
                 android:background="@drawable/edit_text_background"
                 android:hint="@string/password"
                 app:layout_constraintWidth_max="@dimen/text_input_max_width"
@@ -146,7 +146,7 @@
                 android:padding="4dp"
                 android:layout_marginEnd="20dp"
                 android:src="@{viewModel.showPassword ? @drawable/eye_slash : @drawable/eye, default=@drawable/eye}"
-                app:tint="@color/gray_main2_500"
+                app:tint="?attr/color_main2_500"
                 app:layout_constraintEnd_toEndOf="@id/password"
                 app:layout_constraintTop_toTopOf="@id/password"
                 app:layout_constraintBottom_toBottomOf="@id/password" />
@@ -182,7 +182,7 @@
                 android:paddingEnd="20dp"
                 android:text="@string/assistant_forgotten_password"
                 android:textSize="13sp"
-                android:textColor="@color/gray_main2_500"
+                android:textColor="?attr/color_main2_500"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/login"/>
@@ -197,7 +197,7 @@
                 android:paddingEnd="10dp"
                 android:text="@string/or"
                 android:textSize="14sp"
-                android:textColor="@color/gray_main2_500"
+                android:textColor="?attr/color_main2_500"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/forgotten_password"/>
@@ -206,7 +206,7 @@
                 android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:layout_marginStart="16dp"
-                android:background="@color/gray_main2_200"
+                android:background="?attr/color_main2_200"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/or"
                 app:layout_constraintTop_toTopOf="@id/or"
@@ -216,7 +216,7 @@
                 android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:layout_marginEnd="16dp"
-                android:background="@color/gray_main2_200"
+                android:background="?attr/color_main2_200"
                 app:layout_constraintStart_toEndOf="@id/or"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/or"
@@ -285,7 +285,7 @@
                 android:paddingEnd="20dp"
                 android:text="@string/assistant_no_account_yet"
                 android:textSize="14sp"
-                android:textColor="@color/gray_main2_700"
+                android:textColor="?attr/color_main2_700"
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/register"

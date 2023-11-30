@@ -26,7 +26,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/orange_main_500" />
+            app:tint="?attr/color_main1_500" />
 
         <ProgressBar
             style="?android:attr/progressBarStyleHorizontal"
@@ -58,7 +58,7 @@
             app:layout_constraintBottom_toBottomOf="@id/voice_recording_duration"
             app:layout_constraintStart_toStartOf="@id/voice_record_progress"
             app:layout_constraintTop_toTopOf="@id/voice_recording_duration"
-            app:tint="@color/orange_main_500" />
+            app:tint="?attr/color_main1_500" />
 
         <ImageView
             android:id="@+id/play_pause_voice_record"
@@ -74,7 +74,7 @@
             app:layout_constraintBottom_toBottomOf="@id/voice_record_duration"
             app:layout_constraintStart_toStartOf="@id/voice_record_progress"
             app:layout_constraintTop_toTopOf="@id/voice_record_duration"
-            app:tint="@color/orange_main_500" />
+            app:tint="?attr/color_main1_500" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
@@ -88,7 +88,7 @@
             android:paddingBottom="5dp"
             android:text="@{viewModel.formattedVoiceRecordingDuration, default=`00:00`}"
             android:textSize="14sp"
-            android:textColor="@color/gray_main2_600"
+            android:textColor="?attr/color_main2_600"
             android:background="@drawable/shape_squircle_white_r50_background"
             android:visibility="@{viewModel.voiceRecordingInProgress ? View.VISIBLE : View.GONE}"
             android:drawableStart="@drawable/record_fill"
@@ -110,7 +110,7 @@
             android:paddingBottom="5dp"
             android:text="@{viewModel.formattedVoiceRecordingDuration, default=`00:00`}"
             android:textSize="14sp"
-            android:textColor="@color/gray_main2_600"
+            android:textColor="?attr/color_main2_600"
             android:background="@drawable/shape_squircle_white_r50_background"
             android:visibility="@{!viewModel.voiceRecordingInProgress ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@id/voice_record_progress"

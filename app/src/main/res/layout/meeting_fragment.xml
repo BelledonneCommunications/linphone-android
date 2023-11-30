@@ -24,7 +24,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="?attr/color_main2_000">
 
         <ImageView
             android:id="@+id/back"
@@ -34,7 +34,7 @@
             android:adjustViewBounds="true"
             android:padding="15dp"
             android:src="@drawable/caret_left"
-            app:tint="@color/orange_main_500"
+            app:tint="?attr/color_main1_500"
             app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/title" />
@@ -102,12 +102,12 @@
                     android:layout_marginEnd="16dp"
                     android:text="@{viewModel.subject, default=`Broadcast about agility in software development`}"
                     android:textSize="20sp"
-                    android:textColor="@color/gray_main2_600"
+                    android:textColor="?attr/color_main2_600"
                     android:maxLines="2"
                     android:ellipsize="end"
                     android:drawableStart="@{viewModel.isBroadcast ? @drawable/slideshow : @drawable/meeting, default=@drawable/meeting}"
                     android:drawablePadding="8dp"
-                    android:drawableTint="@color/gray_main2_600"
+                    android:drawableTint="?attr/color_main2_600"
                     android:background="@color/transparent_color"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -118,7 +118,7 @@
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:layout_marginTop="16dp"
-                    android:background="@color/gray_main2_200"
+                    android:background="?attr/color_main2_200"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/subject" />
@@ -133,12 +133,12 @@
                     android:layout_marginEnd="16dp"
                     android:text="@{viewModel.sipUri, default=`linphone.com/wjre.fr`}"
                     android:textSize="14sp"
-                    android:textColor="@color/gray_main2_600"
+                    android:textColor="?attr/color_main2_600"
                     android:maxLines="1"
                     android:ellipsize="end"
                     android:drawableStart="@drawable/video_camera"
                     android:drawablePadding="8dp"
-                    android:drawableTint="@color/gray_main2_600"
+                    android:drawableTint="?attr/color_main2_600"
                     app:layout_constraintTop_toBottomOf="@id/separator"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/share" />
@@ -165,12 +165,12 @@
                     android:layout_marginEnd="16dp"
                     android:text="@{viewModel.dateTime, default=`October 11th, 2023 | 17:00 - 18:00`}"
                     android:textSize="14sp"
-                    android:textColor="@color/gray_main2_600"
+                    android:textColor="?attr/color_main2_600"
                     android:maxLines="1"
                     android:ellipsize="end"
                     android:drawableStart="@drawable/clock"
                     android:drawablePadding="8dp"
-                    android:drawableTint="@color/gray_main2_600"
+                    android:drawableTint="?attr/color_main2_600"
                     app:layout_constraintTop_toBottomOf="@id/sip_uri"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
@@ -185,12 +185,12 @@
                     android:layout_marginEnd="16dp"
                     android:text="@{viewModel.timezone, default=@string/meeting_schedule_timezone_title}"
                     android:textSize="14sp"
-                    android:textColor="@color/gray_main2_600"
+                    android:textColor="?attr/color_main2_600"
                     android:maxLines="1"
                     android:ellipsize="end"
                     android:drawableStart="@drawable/globe_hemisphere_west"
                     android:drawablePadding="8dp"
-                    android:drawableTint="@color/gray_main2_600"
+                    android:drawableTint="?attr/color_main2_600"
                     app:layout_constraintTop_toBottomOf="@id/date_time"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
@@ -200,7 +200,7 @@
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:layout_marginTop="16dp"
-                    android:background="@color/gray_main2_200"
+                    android:background="?attr/color_main2_200"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/timezone" />
@@ -215,12 +215,12 @@
                     android:layout_marginEnd="16dp"
                     android:text="@{viewModel.description, default=`Lorem ipsum dolor sit amet`}"
                     android:textSize="14sp"
-                    android:textColor="@color/gray_main2_600"
+                    android:textColor="?attr/color_main2_600"
                     android:maxLines="3"
                     android:ellipsize="end"
                     android:drawableStart="@drawable/file_text"
                     android:drawablePadding="8dp"
-                    android:drawableTint="@color/gray_main2_600"
+                    android:drawableTint="?attr/color_main2_600"
                     android:visibility="@{viewModel.description.length() > 0 ? View.VISIBLE : View.GONE}"
                     app:layout_constraintTop_toBottomOf="@id/separator_2"
                     app:layout_constraintStart_toStartOf="parent"
@@ -231,7 +231,7 @@
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:layout_marginTop="16dp"
-                    android:background="@color/gray_main2_200"
+                    android:background="?attr/color_main2_200"
                     android:visibility="@{viewModel.description.length() > 0 ? View.VISIBLE : View.GONE}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -254,7 +254,7 @@
                     android:visibility="@{viewModel.isBroadcast ? View.VISIBLE : View.GONE}"
                     app:layout_constraintTop_toBottomOf="@id/separator_3"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:tint="@color/gray_main2_600" />
+                    app:tint="?attr/color_main2_600" />
 
                 <LinearLayout
                     android:id="@+id/speakers"
@@ -276,7 +276,7 @@
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:layout_marginTop="16dp"
-                    android:background="@color/gray_main2_200"
+                    android:background="?attr/color_main2_200"
                     android:visibility="@{viewModel.isBroadcast ? View.VISIBLE : View.GONE}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -291,7 +291,7 @@
                     android:src="@drawable/users"
                     app:layout_constraintTop_toBottomOf="@id/separator_4"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:tint="@color/gray_main2_600"/>
+                    app:tint="?attr/color_main2_600"/>
 
                 <LinearLayout
                     android:id="@+id/participants"
@@ -319,7 +319,7 @@
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:layout_marginTop="16dp"
-                    android:background="@color/gray_main2_200"
+                    android:background="?attr/color_main2_200"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/participants_bottom_barrier" />

@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:padding="11dp"
             android:src="@drawable/shape_drawer_handle"
-            app:tint="@color/gray_main2_300"
+            app:tint="?attr/color_main2_300"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -40,13 +40,13 @@
             app:layout_constraintBottom_toTopOf="@id/bottom_sheet_list"
             app:tabMode="fixed"
             app:tabUnboundedRipple="true"
-            app:tabRippleColor="@color/orange_main_100"
+            app:tabRippleColor="?attr/color_main1_100"
             app:tabGravity="fill"
             app:tabPadding="0dp"
             app:tabInlineLabel="true"
-            app:tabIndicatorColor="@color/orange_main_500"
-            app:tabTextColor="@color/gray_main2_400"
-            app:tabSelectedTextColor="@color/gray_main2_600" />
+            app:tabIndicatorColor="?attr/color_main1_500"
+            app:tabTextColor="?attr/color_main2_400"
+            app:tabSelectedTextColor="?attr/color_main2_600" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/bottom_sheet_list"

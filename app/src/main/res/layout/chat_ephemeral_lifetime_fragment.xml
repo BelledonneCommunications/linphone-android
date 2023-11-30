@@ -15,7 +15,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="?attr/color_main2_000">
 
         <ImageView
             android:id="@+id/back"
@@ -25,7 +25,7 @@
             android:padding="15dp"
             android:onClick="@{backClickListener}"
             android:src="@drawable/caret_left"
-            app:tint="@color/orange_main_500"
+            app:tint="?attr/color_main1_500"
             app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/title"/>
@@ -47,7 +47,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:fillViewport="true"
-            android:background="@color/gray_100"
+            android:background="?attr/color_grey_100"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title"
@@ -76,7 +76,7 @@
                     android:layout_marginEnd="25dp"
                     android:layout_marginTop="25dp"
                     android:text="@string/conversation_ephemeral_messages_subtitle"
-                    android:textColor="@color/gray_main2_600"
+                    android:textColor="?attr/color_main2_600"
                     android:textSize="14sp"
                     android:textAlignment="center"
                     app:layout_constraintTop_toBottomOf="@id/illu"/>
@@ -103,17 +103,17 @@
                         android:checked="@{viewModel.currentlySelectedValue == 60}"
                         android:text="@string/conversation_ephemeral_messages_duration_one_minute"
                         android:textSize="17sp"
-                        android:textColor="@color/gray_main2_500"
+                        android:textColor="?attr/color_main2_500"
                         android:textAlignment="textStart"
                         app:useMaterialThemeColors="false"
-                        app:buttonTint="@color/orange_main_500" />
+                        app:buttonTint="?attr/color_main1_500" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
-                        android:background="@color/gray_main2_300"/>
+                        android:background="?attr/color_main2_300"/>
 
                     <RadioButton
                         style="@style/default_text_style"
@@ -127,17 +127,17 @@
                         android:checked="@{viewModel.currentlySelectedValue == 3600}"
                         android:text="@string/conversation_ephemeral_messages_duration_one_hour"
                         android:textSize="17sp"
-                        android:textColor="@color/gray_main2_500"
+                        android:textColor="?attr/color_main2_500"
                         android:textAlignment="textStart"
                         app:useMaterialThemeColors="false"
-                        app:buttonTint="@color/orange_main_500" />
+                        app:buttonTint="?attr/color_main1_500" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
-                        android:background="@color/gray_main2_300"/>
+                        android:background="?attr/color_main2_300"/>
 
                     <RadioButton
                         style="@style/default_text_style"
@@ -151,17 +151,17 @@
                         android:checked="@{viewModel.currentlySelectedValue == 86400}"
                         android:text="@string/conversation_ephemeral_messages_duration_one_day"
                         android:textSize="17sp"
-                        android:textColor="@color/gray_main2_500"
+                        android:textColor="?attr/color_main2_500"
                         android:textAlignment="textStart"
                         app:useMaterialThemeColors="false"
-                        app:buttonTint="@color/orange_main_500" />
+                        app:buttonTint="?attr/color_main1_500" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
-                        android:background="@color/gray_main2_300"/>
+                        android:background="?attr/color_main2_300"/>
 
                     <RadioButton
                         style="@style/default_text_style"
@@ -175,17 +175,17 @@
                         android:checked="@{viewModel.currentlySelectedValue == 259200}"
                         android:text="@string/conversation_ephemeral_messages_duration_three_days"
                         android:textSize="17sp"
-                        android:textColor="@color/gray_main2_500"
+                        android:textColor="?attr/color_main2_500"
                         android:textAlignment="textStart"
                         app:useMaterialThemeColors="false"
-                        app:buttonTint="@color/orange_main_500" />
+                        app:buttonTint="?attr/color_main1_500" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
-                        android:background="@color/gray_main2_300"/>
+                        android:background="?attr/color_main2_300"/>
 
                     <RadioButton
                         style="@style/default_text_style"
@@ -199,17 +199,17 @@
                         android:checked="@{viewModel.currentlySelectedValue == 604800}"
                         android:text="@string/conversation_ephemeral_messages_duration_one_week"
                         android:textSize="17sp"
-                        android:textColor="@color/gray_main2_500"
+                        android:textColor="?attr/color_main2_500"
                         android:textAlignment="textStart"
                         app:useMaterialThemeColors="false"
-                        app:buttonTint="@color/orange_main_500" />
+                        app:buttonTint="?attr/color_main1_500" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
-                        android:background="@color/gray_main2_300"/>
+                        android:background="?attr/color_main2_300"/>
 
                     <RadioButton
                         style="@style/default_text_style"
@@ -223,10 +223,10 @@
                         android:checked="@{viewModel.currentlySelectedValue == 0}"
                         android:text="@string/conversation_ephemeral_messages_duration_disabled"
                         android:textSize="17sp"
-                        android:textColor="@color/gray_main2_500"
+                        android:textColor="?attr/color_main2_500"
                         android:textAlignment="textStart"
                         app:useMaterialThemeColors="false"
-                        app:buttonTint="@color/orange_main_500" />
+                        app:buttonTint="?attr/color_main1_500" />
 
                 </RadioGroup>
 

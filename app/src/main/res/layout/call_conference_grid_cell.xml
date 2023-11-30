@@ -80,7 +80,7 @@
             android:layout_marginStart="12dp"
             android:layout_marginBottom="8dp"
             android:text="@{model.avatarModel.name, default=`John Doe`}"
-            android:textColor="@color/white"
+            android:textColor="?attr/color_main2_000"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

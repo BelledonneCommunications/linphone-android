@@ -48,8 +48,8 @@
             android:layout_marginEnd="8dp"
             android:text="@{model.replyTo, default=`John Doe`}"
             android:textSize="12sp"
-            android:textColor="@color/gray_main2_500"
-            app:drawableTint="@color/gray_main2_500"
+            android:textColor="?attr/color_main2_500"
+            app:drawableTint="?attr/color_main2_500"
             app:layout_constraintEnd_toEndOf="@id/reply"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/reply" />
@@ -83,7 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:text="@{model.replyText, default=`Reply`}"
-            android:textColor="@color/gray_main2_500"
+            android:textColor="?attr/color_main2_500"
             android:textSize="14sp"
             android:maxLines="2"
             android:ellipsize="end"
@@ -157,7 +157,7 @@
                 android:layout_height="wrap_content"
                 android:text="@{model.text, default=`Lorem ipsum dolor sit amet`}"
                 android:textSize="14sp"
-                android:textColor="@color/gray_main2_700"
+                android:textColor="?attr/color_main2_700"
                 android:gravity="center_vertical|start"
                 android:visibility="@{model.text.length() > 0 ? View.VISIBLE : View.GONE}"/>
 
@@ -188,7 +188,7 @@
                     android:layout_marginTop="2dp"
                     android:src="@{model.statusIcon, default=@drawable/checks}"
                     android:visibility="@{!model.groupedWithNextMessage ? View.VISIBLE : View.GONE}"
-                    app:tint="@color/orange_main_500" />
+                    app:tint="?attr/color_main1_500" />
 
             </LinearLayout>
 
@@ -205,7 +205,7 @@
             android:background="@drawable/shape_chat_bubble_reactions_background"
             android:text="@{model.reactions, default=@string/emoji_love}"
             android:textSize="20sp"
-            android:textColor="@color/gray_main2_600"
+            android:textColor="?attr/color_main2_600"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:paddingTop="12dp"

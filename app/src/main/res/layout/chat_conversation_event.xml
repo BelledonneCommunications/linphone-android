@@ -16,13 +16,13 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:text="@{model.text, default=`You have left the group`}"
-        android:textColor="@color/gray_400"
+        android:textColor="?attr/color_grey_400"
         android:textSize="12sp"
         android:maxLines="2"
         android:ellipsize="end"
         android:textAlignment="center"
         android:drawableStart="@{model.icon, default=@drawable/clock_countdown}"
         android:drawablePadding="4dp"
-        android:drawableTint="@color/gray_400"/>
+        android:drawableTint="?attr/color_grey_400"/>
 
 </layout>

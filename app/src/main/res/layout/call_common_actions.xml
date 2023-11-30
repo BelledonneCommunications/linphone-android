@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:padding="11dp"
             android:src="@drawable/shape_drawer_handle"
-            app:tint="@color/white"
+            app:tint="?attr/color_main2_000"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -43,7 +43,7 @@
             android:paddingBottom="15dp"
             android:src="@drawable/phone_disconnect"
             android:background="@drawable/squircle_red_button_background"
-            app:tint="@color/white"
+            app:tint="?attr/color_main2_000"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
 

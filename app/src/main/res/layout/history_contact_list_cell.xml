@@ -36,7 +36,7 @@
             android:layout_marginStart="8dp"
             android:text="@{model.isOutgoing() ? @string/call_outgoing : @string/call_incoming, default=@string/call_outgoing}"
             android:textSize="14sp"
-            android:textColor="@color/gray_main2_700"
+            android:textColor="?attr/color_main2_700"
             app:layout_constraintStart_toEndOf="@id/call_status"
             app:layout_constraintTop_toTopOf="@id/call_status"
             app:layout_constraintBottom_toBottomOf="@id/call_status"/>
@@ -50,7 +50,7 @@
             android:gravity="center"
             android:text="@{model.dateTime, default=`August 13th 2023 | 07:47 PM`}"
             android:textSize="12sp"
-            android:textColor="@{model.isSuccessful ? @color/gray_main2_600 : @color/red_danger_500, default=@color/gray_main2_600}"
+            android:textColor="@{model.isSuccessful ? @color/main2_600 : @color/danger_500, default=@color/main2_600}"
             app:layout_constraintStart_toStartOf="@id/direction_label"
             app:layout_constraintTop_toBottomOf="@id/direction_label"
             app:layout_constraintBottom_toTopOf="@id/separator"/>
@@ -74,7 +74,7 @@
             android:layout_height="1dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="11dp"
-            android:background="@color/gray_main2_200"
+            android:background="?attr/color_main2_200"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

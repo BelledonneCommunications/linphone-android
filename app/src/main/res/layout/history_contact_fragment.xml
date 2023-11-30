@@ -25,7 +25,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white">
+            android:background="?attr/color_main2_000">
 
             <ImageView
                 android:id="@+id/back"
@@ -36,7 +36,7 @@
                 android:onClick="@{backClickListener}"
                 android:visibility="@{viewModel.showBackButton ? View.VISIBLE : View.GONE}"
                 android:src="@drawable/caret_left"
-                app:tint="@color/orange_main_500"
+                app:tint="?attr/color_main1_500"
                 app:layout_constraintBottom_toBottomOf="@id/title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/title"/>
@@ -61,7 +61,7 @@
                 android:padding="15dp"
                 android:adjustViewBounds="true"
                 android:src="@drawable/dots_three_vertical"
-                app:tint="@color/orange_main_500"
+                app:tint="?attr/color_main1_500"
                 app:layout_constraintBottom_toBottomOf="@id/title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/title" />
@@ -70,7 +70,7 @@
                 android:id="@+id/scrollView"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:background="@color/gray_100"
+                android:background="?attr/color_grey_100"
                 android:fillViewport="true"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -129,7 +129,7 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
                         android:text="@{viewModel.callLogModel.avatarModel.name, default=`John Doe`}"
-                        android:textColor="@color/gray_main2_700"
+                        android:textColor="?attr/color_main2_700"
                         android:textSize="14sp"
                         android:maxLines="1"
                         android:ellipsize="end"
@@ -145,7 +145,7 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
                         android:text="@{viewModel.callLogModel.displayedAddress, default=`+33601020304`}"
-                        android:textColor="@color/gray_main2_700"
+                        android:textColor="?attr/color_main2_700"
                         android:textSize="14sp"
                         android:maxLines="1"
                         android:ellipsize="end"
@@ -161,7 +161,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@{viewModel.callLogModel.avatarModel.lastPresenceInfo, default=@string/friend_presence_status_online}"
-                        android:textColor="@{viewModel.callLogModel.avatarModel.presenceStatus == ConsolidatedPresence.Online ? @color/green_success_500 : @color/orange_warning_600, default=@color/green_success_500}"
+                        android:textColor="@{viewModel.callLogModel.avatarModel.presenceStatus == ConsolidatedPresence.Online ? @color/success_500 : @color/warning_600, default=@color/success_500}"
                         android:textSize="14sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -177,7 +177,7 @@
                         android:padding="16dp"
                         android:src="@drawable/phone"
                         android:visibility="@{viewModel.isConferenceCallLog ? View.GONE : View.VISIBLE}"
-                        app:tint="@color/gray_main2_500"
+                        app:tint="?attr/color_main2_500"
                         app:layout_constraintEnd_toStartOf="@id/chat"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/status" />
@@ -206,7 +206,7 @@
                         android:padding="16dp"
                         android:src="@drawable/chat_teardrop_text"
                         android:visibility="@{viewModel.chatDisabled || viewModel.isConferenceCallLog ? View.GONE : View.VISIBLE}"
-                        app:tint="@color/gray_main2_500"
+                        app:tint="?attr/color_main2_500"
                         app:layout_constraintEnd_toStartOf="@id/video_call"
                         app:layout_constraintStart_toEndOf="@id/call"
                         app:layout_constraintTop_toBottomOf="@id/status" />
@@ -235,7 +235,7 @@
                         android:padding="16dp"
                         android:src="@drawable/video_camera"
                         android:visibility="@{viewModel.videoCallDisabled || viewModel.isConferenceCallLog ? View.GONE : View.VISIBLE}"
-                        app:tint="@color/gray_main2_500"
+                        app:tint="?attr/color_main2_500"
                         app:layout_constraintStart_toEndOf="@id/chat"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/status" />
@@ -264,7 +264,7 @@
                         android:padding="16dp"
                         android:src="@drawable/meeting"
                         android:visibility="@{viewModel.isConferenceCallLog ? View.VISIBLE : View.GONE, default=gone}"
-                        app:tint="@color/gray_main2_500"
+                        app:tint="?attr/color_main2_500"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/status" />

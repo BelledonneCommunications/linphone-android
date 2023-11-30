@@ -16,7 +16,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="?attr/color_main2_000">
 
         <ImageView
             android:id="@+id/back"
@@ -26,7 +26,7 @@
             android:adjustViewBounds="true"
             android:padding="15dp"
             android:src="@drawable/caret_left"
-            app:tint="@color/orange_main_500"
+            app:tint="?attr/color_main1_500"
             app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/title" />
@@ -65,7 +65,7 @@
             android:layout_marginEnd="16dp"
             android:text="@string/help_troubleshooting_debug_subtitle"
             android:textSize="14sp"
-            android:textColor="@color/gray_main2_600"
+            android:textColor="?attr/color_main2_600"
             app:layout_constraintTop_toBottomOf="@id/debug_title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/debug_mode_switch" />
@@ -134,7 +134,7 @@
             android:layout_height="32dp"
             android:layout_marginStart="16dp"
             android:src="@drawable/info"
-            app:tint="@color/orange_main_500"
+            app:tint="?attr/color_main1_500"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/version_title"
             app:layout_constraintTop_toTopOf="@id/version_title"

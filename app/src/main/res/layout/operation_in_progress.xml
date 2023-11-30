@@ -12,7 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/gray_300"
+        android:background="?attr/color_grey_300"
         android:alpha="102"
         android:visibility="@{visibility ? View.VISIBLE : View.GONE, default=gone}">
 
@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            app:indicatorColor="@color/orange_main_500"
+            app:indicatorColor="?attr/color_main1_500"
             android:indeterminate="true"
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintTop_toTopOf="@id/dialog_background"
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/operation_in_progress_overlay"
-            android:textColor="@color/orange_main_500"
+            android:textColor="?attr/color_main1_500"
             android:textSize="18sp"
             android:layout_below="@id/progress"
             android:layout_centerHorizontal="true"

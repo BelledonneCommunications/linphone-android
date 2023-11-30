@@ -16,6 +16,44 @@
         <!-- Customize your theme here. -->
         <item name="android:windowActivityTransitions">true</item>
         <item name="android:windowBackground">@color/white</item>
+
+        <item name="color_main1_100">@color/orange_main_100</item>
+        <item name="color_main1_300">@color/orange_main_300</item>
+        <item name="color_main1_500">@color/orange_main_500</item>
+        <item name="color_main1_700">@color/orange_main_700</item>
+
+        <item name="color_main2_000">@color/white</item>
+        <item name="color_main2_100">@color/gray_main2_100</item>
+        <item name="color_main2_200">@color/gray_main2_200</item>
+        <item name="color_main2_300">@color/gray_main2_300</item>
+        <item name="color_main2_400">@color/gray_main2_400</item>
+        <item name="color_main2_500">@color/gray_main2_500</item>
+        <item name="color_main2_600">@color/gray_main2_600</item>
+        <item name="color_main2_700">@color/gray_main2_700</item>
+        <item name="color_main2_800">@color/gray_main2_800</item>
+
+        <item name="color_grey_100">@color/gray_100</item>
+        <item name="color_grey_200">@color/gray_200</item>
+        <item name="color_grey_300">@color/gray_300</item>
+        <item name="color_grey_400">@color/gray_400</item>
+        <item name="color_grey_500">@color/gray_500</item>
+        <item name="color_grey_600">@color/gray_600</item>
+        <item name="color_grey_800">@color/gray_800</item>
+        <item name="color_grey_900">@color/gray_900</item>
+
+        <item name="color_danger_500">@color/red_danger_500</item>
+        <item name="color_danger_700">@color/red_danger_700</item>
+        <item name="color_danger_900">@color/red_danger_900</item>
+
+        <item name="color_success_200">@color/green_success_200</item>
+        <item name="color_success_500">@color/green_success_500</item>
+        <item name="color_success_700">@color/green_success_700</item>
+
+        <item name="color_info_500">@color/blue_info_500</item>
+
+        <item name="color_warning_600">@color/orange_warning_600</item>
+
+        <item name="color_on_main">@color/white</item>
     </style>
 
     <style name="Theme.LinphoneDialog" parent="Theme.Linphone">

@@ -13,7 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/gray_900">
+        android:background="?attr/color_grey_900">
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/single_call_group"
@@ -61,7 +61,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/conference_subject"
             app:layout_constraintBottom_toBottomOf="@id/conference_subject"
-            app:tint="@color/orange_main_500" />
+            app:tint="?attr/color_main1_500" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/call_header_style"
@@ -156,7 +156,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:text="@{viewModel.displayedName, default=`John Doe`}"
-            android:textColor="@color/white"
+            android:textColor="?attr/color_main2_000"
             android:textSize="22sp"
             app:layout_constraintTop_toBottomOf="@id/avatar"
             app:layout_constraintStart_toStartOf="parent"
@@ -168,7 +168,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{viewModel.displayedAddress, default=`sip:johndoe@sip.linphone.org`}"
-            android:textColor="@color/white"
+            android:textColor="?attr/color_main2_000"
             android:textSize="14sp"
             android:visibility="@{viewModel.conferenceModel.isCurrentCallInConference ? View.GONE : View.VISIBLE}"
             app:layout_constraintTop_toBottomOf="@id/name"

@@ -56,7 +56,7 @@
             android:paddingEnd="20dp"
             android:text="@={viewModel.subject, default=`Lorem Ipsum`}"
             android:textSize="14sp"
-            android:textColor="@color/gray_main2_600"
+            android:textColor="?attr/color_main2_600"
             android:maxLines="1"
             android:background="@drawable/edit_text_background"
             android:inputType="text|textCapSentences"
