@@ -57,22 +57,26 @@ class DrawerMenuViewModel @UiThread constructor() : ViewModel() {
 
     private val coreListener = object : CoreListenerStub() {
         @WorkerThread
-        override fun onDefaultAccountChanged(core: Core, account: Account) {
-            Log.i(
-                "$TAG Account [${account.params.identityAddress?.asStringUriOnly()}] has been set as default"
-            )
-            for (model in accounts.value.orEmpty()) {
-                if (model.account != account) {
-                    model.isDefault.postValue(false)
+        override fun onDefaultAccountChanged(core: Core, account: Account?) {
+            if (account == null) {
+                Log.w("$TAG Default account is now null!")
+            } else {
+                Log.i(
+                    "$TAG Account [${account.params.identityAddress?.asStringUriOnly()}] has been set as default"
+                )
+                for (model in accounts.value.orEmpty()) {
+                    if (model.account != account) {
+                        model.isDefault.postValue(false)
+                    }
                 }
+                defaultAccountChangedEvent.postValue(
+                    Event(account.params.identityAddress?.asStringUriOnly() ?: "")
+                )
             }
-            defaultAccountChangedEvent.postValue(
-                Event(account.params.identityAddress?.asStringUriOnly() ?: "")
-            )
         }
 
         @WorkerThread
-        override fun onNewAccountAdded(core: Core, account: Account) {
+        override fun onAccountAdded(core: Core, account: Account) {
             Log.i(
                 "$TAG Account [${account.params.identityAddress?.asStringUriOnly()}] has been added to the Core"
             )

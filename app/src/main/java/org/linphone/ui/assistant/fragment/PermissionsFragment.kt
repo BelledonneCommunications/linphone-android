@@ -30,9 +30,9 @@ import androidx.annotation.UiThread
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantPermissionsFragmentBinding
-import org.linphone.ui.assistant.AssistantActivity
 
 @UiThread
 class PermissionsFragment : Fragment() {
@@ -71,11 +71,6 @@ class PermissionsFragment : Fragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        if (areAllPermissionsGranted()) {
-            Log.i("$TAG All permissions have been granted, skipping")
-            goToLoginFragment()
-        }
-
         binding.setBackClickListener {
             findNavController().popBackStack()
         }
@@ -88,7 +83,7 @@ class PermissionsFragment : Fragment() {
         binding.setGrantAllClickListener {
             Log.i("$TAG Requesting all permissions")
             requestPermissionLauncher.launch(
-                AssistantActivity.PERMISSIONS
+                Compatibility.getAllRequiredPermissionsArray()
             )
         }
 
@@ -99,6 +94,22 @@ class PermissionsFragment : Fragment() {
         ) {
             requestPermissionLauncher.launch(arrayOf(Manifest.permission.MANAGE_OWN_CALLS))
         }
+
+        if (!Compatibility.hasFullScreenIntentPermission(requireContext())) {
+            Log.w(
+                "$TAG Android 14 or newer detected & full screen intent permission hasn't been granted!"
+            )
+            Compatibility.requestFullScreenIntentPermission(requireContext())
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        if (areAllPermissionsGranted()) {
+            Log.i("$TAG All permissions have been granted, skipping")
+            goToLoginFragment()
+        }
     }
 
     private fun goToLoginFragment() {
@@ -107,11 +118,12 @@ class PermissionsFragment : Fragment() {
     }
 
     private fun areAllPermissionsGranted(): Boolean {
-        for (permission in AssistantActivity.PERMISSIONS) {
+        for (permission in Compatibility.getAllRequiredPermissionsArray()) {
             if (ContextCompat.checkSelfPermission(requireContext(), permission) != PackageManager.PERMISSION_GRANTED) {
+                Log.w("$TAG Permission [$permission] hasn't been granted yet!")
                 return false
             }
         }
-        return true
+        return Compatibility.hasFullScreenIntentPermission(requireContext())
     }
 }

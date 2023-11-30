@@ -779,6 +779,11 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         }
 
         val style = if (isIncoming) {
+            if (!Compatibility.hasFullScreenIntentPermission(context)) {
+                Log.e(
+                    "$TAG Android >= 14 & full screen intent permission wasn't granted, incoming call may not be visible!"
+                )
+            }
             NotificationCompat.CallStyle.forIncomingCall(
                 caller,
                 declineIntent,

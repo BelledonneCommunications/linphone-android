@@ -19,20 +19,20 @@
  */
 package org.linphone.ui.assistant
 
-import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.annotation.DrawableRes
 import androidx.annotation.UiThread
 import androidx.core.content.ContextCompat
+import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantActivityBinding
 import org.linphone.ui.GenericActivity
@@ -44,13 +44,6 @@ import org.linphone.utils.slideInToastFromTopForDuration
 class AssistantActivity : GenericActivity() {
     companion object {
         private const val TAG = "[Assistant Activity]"
-
-        val PERMISSIONS = arrayOf(
-            Manifest.permission.POST_NOTIFICATIONS,
-            Manifest.permission.READ_CONTACTS,
-            Manifest.permission.RECORD_AUDIO,
-            Manifest.permission.CAMERA
-        )
     }
 
     private lateinit var binding: AssistantActivityBinding
@@ -70,15 +63,13 @@ class AssistantActivity : GenericActivity() {
                 }
             }
         }
-    }
 
-    override fun onPostCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onPostCreate(savedInstanceState, persistentState)
-
-        if (!areAllPermissionsGranted()) {
-            Log.w("$TAG Not all required permissions are granted, showing Permissions fragment")
-            val action = PermissionsFragmentDirections.actionGlobalPermissionsFragment()
-            binding.assistantNavContainer.findNavController().navigate(action)
+        (binding.root as? ViewGroup)?.doOnPreDraw {
+            if (!areAllPermissionsGranted()) {
+                Log.w("$TAG Not all required permissions are granted, showing Permissions fragment")
+                val action = PermissionsFragmentDirections.actionGlobalPermissionsFragment()
+                binding.assistantNavContainer.findNavController().navigate(action)
+            }
         }
     }
 
@@ -103,11 +94,17 @@ class AssistantActivity : GenericActivity() {
     }
 
     private fun areAllPermissionsGranted(): Boolean {
-        for (permission in PERMISSIONS) {
+        for (permission in Compatibility.getAllRequiredPermissionsArray()) {
             if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                Log.w("$TAG Permission [$permission] hasn't been granted yet!")
                 return false
             }
         }
-        return true
+
+        val granted = Compatibility.hasFullScreenIntentPermission(this)
+        if (granted) {
+            Log.i("$TAG All permissions have been granted!")
+        }
+        return granted
     }
 }

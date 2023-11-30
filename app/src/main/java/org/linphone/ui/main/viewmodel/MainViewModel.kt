@@ -172,22 +172,27 @@ class MainViewModel @UiThread constructor() : ViewModel() {
         }
 
         @WorkerThread
-        override fun onDefaultAccountChanged(core: Core, account: Account) {
-            Log.i(
-                "$TAG Default account changed, now is [${account.params.identityAddress?.asStringUriOnly()}]"
-            )
-            removeAlert(NON_DEFAULT_ACCOUNT_NOTIFICATIONS)
-
-            if (defaultAccountRegistrationFailed && account.state != RegistrationState.Failed) {
+        override fun onDefaultAccountChanged(core: Core, account: Account?) {
+            if (account == null) {
+                Log.w("$TAG Default account is now null!")
+            } else {
                 Log.i(
-                    "$TAG Newly set default account isn't in failed registration state, clearing alert"
+                    "$TAG Default account changed, now is [${account.params.identityAddress?.asStringUriOnly()}]"
                 )
-                defaultAccountRegistrationFailed = false
-                defaultAccountRegistrationErrorEvent.postValue(Event(false))
 
-                // Refresh REGISTER to re-compute alerts regarding accounts registration state
-                core.refreshRegisters()
+                if (defaultAccountRegistrationFailed && account.state != RegistrationState.Failed) {
+                    Log.i(
+                        "$TAG Newly set default account isn't in failed registration state, clearing alert"
+                    )
+                    defaultAccountRegistrationFailed = false
+                    defaultAccountRegistrationErrorEvent.postValue(Event(false))
+
+                    // Refresh REGISTER to re-compute alerts regarding accounts registration state
+                    core.refreshRegisters()
+                }
             }
+
+            removeAlert(NON_DEFAULT_ACCOUNT_NOTIFICATIONS)
 
             // TODO: compute other calls notifications count
         }

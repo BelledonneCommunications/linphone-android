@@ -119,13 +119,18 @@ open class AbstractTopBarViewModel @UiThread constructor() : ViewModel() {
         }
 
         @WorkerThread
-        override fun onDefaultAccountChanged(core: Core, defaultAccount: Account) {
-            Log.i(
-                "$TAG Default account has changed [${defaultAccount.params.identityAddress?.asStringUriOnly()}]"
-            )
-
+        override fun onDefaultAccountChanged(core: Core, defaultAccount: Account?) {
             account.value?.destroy()
-            account.postValue(AccountModel(defaultAccount))
+
+            if (defaultAccount == null) {
+                Log.w("$TAG Default account is now null!")
+            } else {
+                Log.i(
+                    "$TAG Default account has changed [${defaultAccount.params.identityAddress?.asStringUriOnly()}]"
+                )
+
+                account.postValue(AccountModel(defaultAccount))
+            }
 
             updateUnreadMessagesCount()
             updateMissedCallsCount()

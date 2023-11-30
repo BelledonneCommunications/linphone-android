@@ -19,9 +19,11 @@
  */
 package org.linphone.compatibility
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.Service
+import android.content.Context
 import android.net.Uri
 import android.view.View
 import org.linphone.mediastream.Version
@@ -75,6 +77,32 @@ class Compatibility {
             } else {
                 Api28Compatibility.getMediaCollectionUri(isImage, isVideo, isAudio)
             }
+        }
+
+        fun getAllRequiredPermissionsArray(): Array<String> {
+            if (Version.sdkAboveOrEqual(Version.API33_ANDROID_13_TIRAMISU)) {
+                return Api33Compatibility.getAllRequiredPermissionsArray()
+            }
+            return arrayOf(
+                Manifest.permission.READ_CONTACTS,
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.CAMERA
+            )
+        }
+
+        fun hasFullScreenIntentPermission(context: Context): Boolean {
+            if (Version.sdkAboveOrEqual(Version.API34_ANDROID_14_UPSIDE_DOWN_CAKE)) {
+                return Api34Compatibility.hasFullScreenIntentPermission(context)
+            }
+            return true
+        }
+
+        fun requestFullScreenIntentPermission(context: Context): Boolean {
+            if (Version.sdkAboveOrEqual(Version.API34_ANDROID_14_UPSIDE_DOWN_CAKE)) {
+                Api34Compatibility.requestFullScreenIntentPermission(context)
+                return true
+            }
+            return false
         }
     }
 }
