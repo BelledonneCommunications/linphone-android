@@ -86,10 +86,6 @@ class MessageModel @WorkerThread constructor(
 
     val isInError = chatMessage.state == ChatMessage.State.NotDelivered
 
-    val statusIcon = MutableLiveData<Int>()
-
-    val text = MutableLiveData<Spannable>()
-
     val timestamp = chatMessage.time
 
     val time = TimestampUtils.toString(timestamp)
@@ -100,11 +96,15 @@ class MessageModel @WorkerThread constructor(
 
     val groupedWithPreviousMessage = MutableLiveData<Boolean>()
 
+    val statusIcon = MutableLiveData<Int>()
+
+    val text = MutableLiveData<Spannable>()
+
     val reactions = MutableLiveData<String>()
 
     val filesList = MutableLiveData<ArrayList<FileModel>>()
 
-    val firstImage = MutableLiveData<FileModel>()
+    val firstImagePath = MutableLiveData<String>()
 
     val isSelected = MutableLiveData<Boolean>()
 
@@ -164,7 +164,7 @@ class MessageModel @WorkerThread constructor(
         override fun onMsgStateChanged(message: ChatMessage, messageState: ChatMessage.State?) {
             statusIcon.postValue(LinphoneUtils.getChatIconResId(chatMessage.state))
 
-            if (messageState == ChatMessage.State.FileTransferDone) {
+            if (messageState == ChatMessage.State.FileTransferDone && !message.isOutgoing) {
                 Log.i("$TAG File transfer is done")
                 downloadingFileModel?.downloadProgress?.postValue(-1)
                 downloadingFileModel = null
@@ -279,9 +279,18 @@ class MessageModel @WorkerThread constructor(
         }
     }
 
+    @UiThread
+    fun firstImageClicked() {
+        filesList.value.orEmpty().firstOrNull()?.onClick()
+    }
+
     @WorkerThread
     private fun computeContentsList() {
         Log.d("$TAG Computing message contents list")
+        text.postValue(Spannable.Factory.getInstance().newSpannable(""))
+        filesList.postValue(arrayListOf())
+        firstImagePath.postValue("")
+
         var displayableContentFound = false
         var filesContentCount = 0
         val filesPath = arrayListOf<FileModel>()
@@ -295,8 +304,8 @@ class MessageModel @WorkerThread constructor(
                 computeTextContent(content)
                 displayableContentFound = true
             } else {
-                filesContentCount += 1
                 if (content.isFile) {
+                    filesContentCount += 1
                     val path = content.filePath ?: ""
                     if (path.isNotEmpty()) {
                         Log.d(
@@ -310,7 +319,7 @@ class MessageModel @WorkerThread constructor(
                                 filesPath.add(fileModel)
 
                                 if (filesContentCount == 1) {
-                                    firstImage.postValue(fileModel)
+                                    firstImagePath.postValue(path)
                                 }
 
                                 displayableContentFound = true
@@ -340,6 +349,7 @@ class MessageModel @WorkerThread constructor(
                         Log.e("$TAG No path found for File Content!")
                     }
                 } else if (content.isFileTransfer) {
+                    filesContentCount += 1
                     val name = content.name ?: ""
                     if (name.isNotEmpty()) {
                         val fileModel = FileModel(name, content.fileSize.toLong(), true) { model ->
@@ -472,7 +482,7 @@ class MessageModel @WorkerThread constructor(
                         override fun onSpanClicked(text: String) {
                             coreContext.postOnCoreThread {
                                 Log.i("$TAG Clicked on SIP URI: $text")
-                                val address = coreContext.core.interpretUrl(text)
+                                val address = coreContext.core.interpretUrl(text, false)
                                 if (address != null) {
                                     coreContext.startCall(address)
                                 } else {

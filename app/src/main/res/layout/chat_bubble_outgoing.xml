@@ -112,7 +112,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onLongClick="@{onLongClickListener}"
-                android:visibility="@{model.filesList.size() >= 2 || (model.filesList.size() >= 1 &amp;&amp; model.firstImage.path.length() == 0) ? View.VISIBLE : View.GONE, default=gone}"
+                android:visibility="@{model.filesList.size() >= 2 || (model.filesList.size() >= 1 &amp;&amp; model.firstImagePath.length() == 0) ? View.VISIBLE : View.GONE, default=gone}"
                 app:alignItems="center"
                 app:flexWrap="wrap"
                 app:justifyContent="@{model.outgoing ? JustifyContent.FLEX_END : JustifyContent.FLEX_START}"
@@ -121,15 +121,15 @@
 
             <ImageView
                 android:id="@+id/single_image"
-                android:onClick="@{() -> model.firstImage.onClick()}"
+                android:onClick="@{() -> model.firstImageClicked()}"
                 android:onLongClick="@{onLongClickListener}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxHeight="@dimen/chat_bubble_big_image_max_size"
                 android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
-                android:visibility="@{model.filesList.size() > 1 || model.firstImage.path.length() == 0 ? View.GONE : View.VISIBLE}"
-                coilBubble="@{model.firstImage.path}"/>
+                android:visibility="@{model.filesList.size() == 1 &amp;&amp; model.firstImagePath.length() >= 0 ? View.VISIBLE : View.GONE}"
+                coilBubble="@{model.firstImagePath}"/>
 
             <ViewStub
                 android:id="@+id/meeting_info"
