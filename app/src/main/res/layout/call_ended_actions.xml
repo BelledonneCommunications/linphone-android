@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/call_main_actions_menu_height"
         android:paddingBottom="5dp"
-        android:background="?attr/color_grey_900">
+        android:background="@color/gray_900">
 
         <ImageView
             android:id="@+id/hang_up"
@@ -23,7 +23,7 @@
             android:paddingBottom="15dp"
             android:src="@drawable/phone_disconnect"
             android:background="@drawable/shape_squircle_red_disabled_background"
-            app:tint="?attr/color_grey_400"
+            app:tint="@color/gray_400"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
 

@@ -5,5 +5,5 @@
     <item android:state_pressed="true"
         android:drawable="@drawable/shape_circle_white_pressed_background" />
     <item
-        android:drawable="@drawable/shape_circle_white_background" />
+        android:drawable="@drawable/shape_circle_white_call_background" />
 </selector>

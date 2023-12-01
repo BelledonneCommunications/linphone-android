@@ -67,7 +67,7 @@
             android:layout_marginEnd="10dp"
             android:padding="2dp"
             android:src="@drawable/microphone_slash"
-            android:background="@drawable/shape_circle_white_background"
+            android:background="@drawable/shape_circle_white_call_background"
             android:visibility="@{model.isMuted ? View.VISIBLE : View.GONE}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -80,7 +80,7 @@
             android:layout_marginStart="12dp"
             android:layout_marginBottom="8dp"
             android:text="@{model.avatarModel.name, default=`John Doe`}"
-            android:textColor="?attr/color_main2_000"
+            android:textColor="@color/white"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -89,7 +89,7 @@
             android:id="@+id/speaking"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/shape_squircle_main2_200_border"
+            android:src="@drawable/shape_squircle_main2_200_call_border"
             android:visibility="@{model.isSpeaking ? View.VISIBLE : View.GONE}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
