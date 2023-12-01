@@ -14,6 +14,42 @@ configurations {
     customImplementation.extendsFrom implementation
 }
 
+def gitBranch = new ByteArrayOutputStream()
+def gitVersion = new ByteArrayOutputStream()
+task getGitVersion() {
+    def gitVersionStream = new ByteArrayOutputStream()
+    def gitCommitsCount = new ByteArrayOutputStream()
+    def gitCommitHash = new ByteArrayOutputStream()
+
+    try {
+        exec {
+            executable "git" args "describe", "--abbrev=0"
+            standardOutput = gitVersionStream
+        }
+        exec {
+            executable "git" args "rev-list", gitVersionStream.toString().trim() + "..HEAD", "--count"
+            standardOutput = gitCommitsCount
+        }
+        exec {
+            executable "git" args "rev-parse", "--short", "HEAD"
+            standardOutput = gitCommitHash
+        }
+        exec {
+            executable "git" args "name-rev", "--name-only", "HEAD"
+            standardOutput = gitBranch
+        }
+
+        if (gitCommitsCount.toString().toInteger() == 0) {
+            gitVersion = gitVersionStream.toString().trim()
+        } else {
+            gitVersion = gitVersionStream.toString().trim() + "." + gitCommitsCount.toString().trim() + "+" + gitCommitHash.toString().trim()
+        }
+        println("Git version: " + gitVersion)
+    } catch (ignored) {
+        println("Git not found [" + ignored + "], using " + gitVersion)
+    }
+}
+
 task linphoneSdkSource() {
     doLast {
         configurations.customImplementation.getIncoming().each {
@@ -25,6 +61,8 @@ task linphoneSdkSource() {
         }
     }
 }
+
+project.tasks['preBuild'].dependsOn 'getGitVersion'
 project.tasks['preBuild'].dependsOn 'linphoneSdkSource'
 
 android {
@@ -51,6 +89,8 @@ android {
             jniDebuggable true
 
             resValue "string", "file_provider", packageName + ".fileprovider"
+            resValue "string", "linphone_app_version", gitVersion.toString().trim()
+            resValue "string", "linphone_app_branch", gitBranch.toString().trim()
         }
 
         release {
@@ -58,6 +98,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             resValue "string", "file_provider", packageName + ".fileprovider"
+            resValue "string", "linphone_app_version", gitVersion.toString().trim()
+            resValue "string", "linphone_app_branch", gitBranch.toString().trim()
         }
     }
     compileOptions {

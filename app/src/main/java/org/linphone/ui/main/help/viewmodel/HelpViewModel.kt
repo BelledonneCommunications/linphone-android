@@ -26,12 +26,14 @@ import androidx.lifecycle.ViewModel
 import org.linphone.BuildConfig
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
+import org.linphone.R
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.Factory
 import org.linphone.core.LogLevel
 import org.linphone.core.VersionUpdateCheckResult
 import org.linphone.core.tools.Log
+import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
 class HelpViewModel @UiThread constructor() : ViewModel() {
@@ -40,6 +42,8 @@ class HelpViewModel @UiThread constructor() : ViewModel() {
     }
 
     val version = MutableLiveData<String>()
+
+    val appVersion = MutableLiveData<String>()
 
     val sdkVersion = MutableLiveData<String>()
 
@@ -113,6 +117,9 @@ class HelpViewModel @UiThread constructor() : ViewModel() {
     init {
         val currentVersion = BuildConfig.VERSION_NAME
         version.value = currentVersion
+        appVersion.value = "${AppUtils.getString(R.string.linphone_app_version)} (${AppUtils.getString(
+            R.string.linphone_app_branch
+        )})"
         sdkVersion.value = coreContext.sdkVersion
 
         coreContext.postOnCoreThread { core ->

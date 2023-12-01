@@ -232,6 +232,7 @@
     <string name="help_troubleshooting_debug_subtitle">Blah</string> <!-- TODO -->
     <string name="help_troubleshooting_clean_logs">Clean logs</string>
     <string name="help_troubleshooting_share_logs">Share logs</string>
+    <string name="help_troubleshooting_app_version_title">Linphone app version</string>
     <string name="help_troubleshooting_sdk_version_title">Linphone SDK version</string>
     <string name="help_troubleshooting_share_logs_dialog_title">Share debug logs link using…</string>
     <string name="help_troubleshooting_debug_logs_cleaned_toast_message">Debug logs have been cleaned</string>

@@ -129,42 +129,81 @@
             app:layout_constraintTop_toBottomOf="@id/debug_subtitle"/>
 
         <ImageView
-            android:id="@+id/version_icon"
+            android:id="@+id/app_version_icon"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_marginStart="16dp"
             android:src="@drawable/info"
             app:tint="?attr/color_main1_500"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/version_title"
-            app:layout_constraintTop_toTopOf="@id/version_title"
-            app:layout_constraintBottom_toBottomOf="@id/version_subtitle"/>
+            app:layout_constraintEnd_toStartOf="@id/app_version_title"
+            app:layout_constraintTop_toTopOf="@id/app_version_title"
+            app:layout_constraintBottom_toBottomOf="@id/app_version_subtitle"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/header_style"
-            android:id="@+id/version_title"
+            android:id="@+id/app_version_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/help_troubleshooting_app_version_title"
+            app:layout_constraintTop_toBottomOf="@id/send_logs"
+            app:layout_constraintStart_toEndOf="@id/app_version_icon"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/app_version_subtitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="@{viewModel.appVersion, default=`6.0.0 (master)`}"
+            android:textSize="14sp"
+            android:textColor="@color/gray_main2_600"
+            app:layout_constraintTop_toBottomOf="@id/app_version_title"
+            app:layout_constraintStart_toEndOf="@id/app_version_icon"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageView
+            android:id="@+id/sdk_version_icon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/info"
+            app:tint="?attr/color_main1_500"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/sdk_version_title"
+            app:layout_constraintTop_toTopOf="@id/sdk_version_title"
+            app:layout_constraintBottom_toBottomOf="@id/sdk_version_subtitle"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/header_style"
+            android:id="@+id/sdk_version_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginTop="24dp"
             android:text="@string/help_troubleshooting_sdk_version_title"
-            app:layout_constraintTop_toBottomOf="@id/send_logs"
-            app:layout_constraintStart_toEndOf="@id/version_icon"
+            app:layout_constraintTop_toBottomOf="@id/app_version_icon"
+            app:layout_constraintStart_toEndOf="@id/sdk_version_icon"
             app:layout_constraintEnd_toEndOf="parent"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
-            android:id="@+id/version_subtitle"
+            android:id="@+id/sdk_version_subtitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:text="@{viewModel.sdkVersion, default=`5.3.0`}"
+            android:text="@{viewModel.sdkVersion, default=`5.4.0 (master)`}"
             android:textSize="14sp"
             android:textColor="@color/gray_main2_600"
-            app:layout_constraintTop_toBottomOf="@id/version_title"
-            app:layout_constraintStart_toEndOf="@id/version_icon"
+            app:layout_constraintTop_toBottomOf="@id/sdk_version_title"
+            app:layout_constraintStart_toEndOf="@id/sdk_version_icon"
             app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
