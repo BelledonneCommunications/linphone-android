@@ -82,6 +82,14 @@ class DrawerMenuViewModel @UiThread constructor() : ViewModel() {
             )
             computeAccountsList()
         }
+
+        @WorkerThread
+        override fun onAccountRemoved(core: Core, account: Account) {
+            Log.i(
+                "$TAG Account [${account.params.identityAddress?.asStringUriOnly()}] has been removed from the Core"
+            )
+            computeAccountsList()
+        }
     }
 
     init {

@@ -180,8 +180,6 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         core.isAutoIterateEnabled = true
         core.addListener(coreListener)
 
-        core.friendsDatabasePath = corePreferences.friendsDatabasePath
-
         computeUserAgent()
 
         core.start()
@@ -193,6 +191,7 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         Looper.loop()
     }
 
+    @Deprecated("Deprecated in Java")
     @WorkerThread
     override fun destroy() {
         core.stop()
