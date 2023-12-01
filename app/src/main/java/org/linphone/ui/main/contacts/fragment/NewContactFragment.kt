@@ -60,7 +60,7 @@ class NewContactFragment : GenericFragment() {
 
     private val backPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
-            showAbortConfirmationDialog()
+            showAbortConfirmationDialogIfNeededOrGoBack()
         }
     }
 
@@ -119,7 +119,7 @@ class NewContactFragment : GenericFragment() {
         viewModel.findFriendByRefKey("")
 
         binding.setBackClickListener {
-            showAbortConfirmationDialog()
+            showAbortConfirmationDialogIfNeededOrGoBack()
         }
 
         binding.setPickImageClickListener {
@@ -210,7 +210,13 @@ class NewContactFragment : GenericFragment() {
         pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
     }
 
-    private fun showAbortConfirmationDialog() {
+    private fun showAbortConfirmationDialogIfNeededOrGoBack() {
+        if (!viewModel.isPendingChanges()) {
+            backPressedCallback.isEnabled = false
+            findNavController().popBackStack()
+            return
+        }
+
         val model = ConfirmationDialogModel()
         val dialog = DialogUtils.getCancelContactChangesConfirmationDialog(
             requireActivity(),

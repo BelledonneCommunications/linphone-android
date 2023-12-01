@@ -38,7 +38,7 @@ class EmptyFragment : Fragment() {
 
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
         if (findNavController().currentDestination?.id == R.id.newContactFragment) {
-            // Holds fragment in place while new contact fragment slides over it
+            // Holds fragment in place while new fragment slides over it
             return AnimationUtils.loadAnimation(activity, R.anim.hold)
         }
         return super.onCreateAnimation(transit, enter, nextAnim)

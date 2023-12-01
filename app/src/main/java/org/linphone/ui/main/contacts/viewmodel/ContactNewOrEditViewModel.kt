@@ -276,4 +276,20 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
         company.value = ""
         jobTitle.value = ""
     }
+
+    @UiThread
+    fun isPendingChanges(): Boolean {
+        if (isEdit.value == true) {
+            // TODO: check if values of each field match friend values
+            return true
+        }
+
+        return !picturePath.value.isNullOrEmpty() ||
+            !firstName.value.isNullOrEmpty() ||
+            !lastName.value.isNullOrEmpty() ||
+            !sipAddresses.firstOrNull()?.value?.value.isNullOrEmpty() ||
+            !phoneNumbers.firstOrNull()?.value?.value.isNullOrEmpty() ||
+            !company.value.isNullOrEmpty() ||
+            !jobTitle.value.isNullOrEmpty()
+    }
 }

@@ -67,7 +67,7 @@ class MeetingsListFragment : AbstractTopBarFragment() {
             findNavController().currentDestination?.id == R.id.scheduleMeetingFragment ||
             findNavController().currentDestination?.id == R.id.meetingWaitingRoomFragment
         ) {
-            // Holds fragment in place while new contact fragment slides over it
+            // Holds fragment in place while new fragment slides over it
             return AnimationUtils.loadAnimation(activity, R.anim.hold)
         }
         return super.onCreateAnimation(transit, enter, nextAnim)
