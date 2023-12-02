@@ -23,26 +23,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.transition.AutoTransition
-import org.linphone.R
 import org.linphone.databinding.EmptyFragmentBinding
 
 @UiThread
 class EmptyFragment : Fragment() {
     private lateinit var binding: EmptyFragmentBinding
-
-    override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
-        if (findNavController().currentDestination?.id == R.id.newContactFragment) {
-            // Holds fragment in place while new fragment slides over it
-            return AnimationUtils.loadAnimation(activity, R.anim.hold)
-        }
-        return super.onCreateAnimation(transit, enter, nextAnim)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,7 +38,6 @@ class EmptyFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = EmptyFragmentBinding.inflate(layoutInflater)
-        sharedElementEnterTransition = AutoTransition()
         return binding.root
     }
 
@@ -58,5 +45,11 @@ class EmptyFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        findNavController().popBackStack()
     }
 }
