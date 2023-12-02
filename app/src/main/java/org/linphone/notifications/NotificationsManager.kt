@@ -42,11 +42,6 @@ import androidx.core.app.Person
 import androidx.core.app.RemoteInput
 import androidx.core.content.LocusIdCompat
 import androidx.navigation.NavDeepLinkBuilder
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -93,8 +88,6 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
         private const val MISSED_CALL_ID = 10
     }
-
-    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     private val notificationManager: NotificationManagerCompat by lazy {
         NotificationManagerCompat.from(context)
@@ -152,7 +145,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             Log.i("$TAG Received ${messages.size} aggregated messages")
             if (corePreferences.disableChat) return
 
-            val id = LinphoneUtils.getChatRoomId(chatRoom.localAddress, chatRoom.peerAddress)
+            val id = LinphoneUtils.getChatRoomId(chatRoom)
             if (id == currentlyDisplayedChatRoomId) {
                 Log.i(
                     "$TAG Do not notify received messages for currently displayed conversation [$id]"
@@ -172,13 +165,8 @@ class NotificationsManager @MainThread constructor(private val context: Context)
                 Log.i(
                     "$TAG Ensure conversation shortcut exists for notification"
                 )
-                scope.launch {
-                    val shortcuts = async {
-                        ShortcutUtils.createShortcutsToChatRooms(context)
-                    }
-                    shortcuts.await()
-                    showChatRoomNotification(chatRoom, messages)
-                }
+                ShortcutUtils.createShortcutsToChatRooms(context)
+                showChatRoomNotification(chatRoom, messages)
             }
         }
 
@@ -199,7 +187,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             )
             if (corePreferences.disableChat) return
 
-            val id = LinphoneUtils.getChatRoomId(chatRoom.localAddress, chatRoom.peerAddress)
+            val id = LinphoneUtils.getChatRoomId(chatRoom)
             if (id == currentlyDisplayedChatRoomId) {
                 Log.i(
                     "$TAG Do not notify received reaction for currently displayed conversation [$id]"
@@ -234,7 +222,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             if (corePreferences.disableChat) return
 
             if (chatRoom.muted) {
-                val id = LinphoneUtils.getChatRoomId(chatRoom.localAddress, chatRoom.peerAddress)
+                val id = LinphoneUtils.getChatRoomId(chatRoom)
                 Log.i("$TAG Conversation $id has been muted")
                 return
             }
@@ -384,9 +372,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         Log.i("$TAG Core has been started")
         core.addListener(coreListener)
 
-        scope.launch {
-            ShortcutUtils.createShortcutsToChatRooms(context)
-        }
+        ShortcutUtils.createShortcutsToChatRooms(context)
     }
 
     @WorkerThread
@@ -512,6 +498,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         }
     }
 
+    @WorkerThread
     private fun getNotifiableForRoom(chatRoom: ChatRoom): Notifiable {
         val address = chatRoom.peerAddress.asStringUriOnly()
         var notifiable: Notifiable? = chatNotificationsMap[address]
@@ -521,14 +508,14 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             notifiable.localIdentity = chatRoom.localAddress.asStringUriOnly()
             notifiable.remoteAddress = chatRoom.peerAddress.asStringUriOnly()
 
-            chatNotificationsMap[address] = notifiable
-
             if (chatRoom.hasCapability(ChatRoom.Capabilities.OneToOne.toInt())) {
                 notifiable.isGroup = false
             } else {
                 notifiable.isGroup = true
                 notifiable.groupTitle = chatRoom.subject
             }
+
+            chatNotificationsMap[address] = notifiable
         }
         return notifiable
     }
@@ -545,11 +532,14 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             updated = true
         }
 
-        if (chatRoom.hasCapability(ChatRoom.Capabilities.OneToOne.toInt())) {
-            notifiable.isGroup = false
-        } else {
-            notifiable.isGroup = true
-            notifiable.groupTitle = chatRoom.subject
+        if (!chatRoom.hasCapability(ChatRoom.Capabilities.OneToOne.toInt())) {
+            if (chatRoom.subject != notifiable.groupTitle) {
+                Log.i(
+                    "$TAG Updating notification subject from [${notifiable.groupTitle}] to [${chatRoom.subject}]"
+                )
+                notifiable.groupTitle = chatRoom.subject
+                updated = true
+            }
         }
         if (!updated) {
             Log.w("$TAG No changes made to notifiable, do not display it again")

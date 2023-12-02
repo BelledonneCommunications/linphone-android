@@ -89,15 +89,6 @@ class MessageDeliveryModel @WorkerThread constructor(
                 )
             )
         }
-        if (!chatMessage.isOutgoing) {
-            // Always add ourselves to prevent empty list
-            displayedModels.add(
-                MessageBottomSheetParticipantModel(
-                    chatMessage.localAddress,
-                    TimestampUtils.toString(chatMessage.time)
-                )
-            )
-        }
         val readCount = displayedModels.size.toString()
         readLabel.postValue(
             AppUtils.getFormattedString(

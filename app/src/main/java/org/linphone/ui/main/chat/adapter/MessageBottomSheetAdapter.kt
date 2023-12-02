@@ -48,14 +48,14 @@ class MessageBottomSheetAdapter : ListAdapter<MessageBottomSheetParticipantModel
             oldItem: MessageBottomSheetParticipantModel,
             newItem: MessageBottomSheetParticipantModel
         ): Boolean {
-            return oldItem.sipUri == newItem.sipUri && oldItem.value == newItem.value
+            return oldItem.sipUri == newItem.sipUri
         }
 
         override fun areContentsTheSame(
             oldItem: MessageBottomSheetParticipantModel,
             newItem: MessageBottomSheetParticipantModel
         ): Boolean {
-            return true
+            return oldItem.value == newItem.value
         }
     }
 }

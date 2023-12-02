@@ -81,21 +81,22 @@ class ConversationsListFragment : AbstractTopBarFragment() {
         listViewModel.applyFilter()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        adapter = ConversationsListAdapter()
-    }
-
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
         if (
             findNavController().currentDestination?.id == R.id.startConversationFragment ||
-            findNavController().currentDestination?.id == R.id.meetingWaitingRoomFragment
+            findNavController().currentDestination?.id == R.id.meetingWaitingRoomFragment ||
+            findNavController().currentDestination?.id == R.id.fileViewerFragment
         ) {
             // Holds fragment in place while new fragment slides over it
             return AnimationUtils.loadAnimation(activity, R.anim.hold)
         }
         return super.onCreateAnimation(transit, enter, nextAnim)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        adapter = ConversationsListAdapter()
     }
 
     override fun onCreateView(

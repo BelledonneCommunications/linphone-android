@@ -51,7 +51,7 @@ class ShortcutUtils {
         }
 
         @WorkerThread
-        suspend fun createShortcutsToChatRooms(context: Context) {
+        fun createShortcutsToChatRooms(context: Context) {
             if (ShortcutManagerCompat.isRateLimitingActive(context)) {
                 Log.e("$TAG Rate limiting is active, aborting")
                 return
@@ -74,7 +74,7 @@ class ShortcutUtils {
         }
 
         @WorkerThread
-        private suspend fun createChatRoomShortcut(context: Context, chatRoom: ChatRoom): ShortcutInfoCompat? {
+        private fun createChatRoomShortcut(context: Context, chatRoom: ChatRoom): ShortcutInfoCompat? {
             val localAddress = chatRoom.localAddress
             val peerAddress = chatRoom.peerAddress
             val id = LinphoneUtils.getChatRoomId(localAddress, peerAddress)
@@ -85,8 +85,10 @@ class ShortcutUtils {
 
                 val personsList = arrayListOf<Person>()
                 val subject: String
-                val icon: IconCompat
-                if (chatRoom.hasCapability(ChatRoom.Capabilities.Basic.toInt())) {
+                val icon: IconCompat = if (chatRoom.hasCapability(
+                        ChatRoom.Capabilities.Basic.toInt()
+                    )
+                ) {
                     val contact =
                         coreContext.contactsManager.findContactByAddress(peerAddress)
                     val person = contact?.getPerson()
@@ -95,7 +97,7 @@ class ShortcutUtils {
                     }
 
                     subject = contact?.name ?: LinphoneUtils.getDisplayName(peerAddress)
-                    icon = person?.icon ?: AvatarGenerator(context).setInitials(
+                    person?.icon ?: AvatarGenerator(context).setInitials(
                         AppUtils.getInitials(subject)
                     ).buildIcon()
                 } else if (chatRoom.hasCapability(ChatRoom.Capabilities.OneToOne.toInt()) && chatRoom.participants.isNotEmpty()) {
@@ -108,11 +110,14 @@ class ShortcutUtils {
                     }
 
                     subject = contact?.name ?: LinphoneUtils.getDisplayName(address)
-                    icon = person?.icon ?: AvatarGenerator(context).setInitials(
+                    person?.icon ?: AvatarGenerator(context).setInitials(
                         AppUtils.getInitials(subject)
                     ).buildIcon()
                 } else {
-                    val list = arrayListOf<String>()
+                    subject = chatRoom.subject.orEmpty()
+                    IconCompat.createWithResource(context, R.drawable.users_three)
+                    // TODO FIXME: use generated chat room avatar
+                    /*val list = arrayListOf<String>()
                     for (participant in chatRoom.participants) {
                         val contact =
                             coreContext.contactsManager.findContactByAddress(participant.address)
@@ -125,15 +130,16 @@ class ShortcutUtils {
                             }
                         }
                     }
-                    subject = chatRoom.subject.orEmpty()
-                    icon = if (list.isNotEmpty()) {
+                    AvatarGenerator(context).setInitials(subject).buildIcon()
+                    if (list.isNotEmpty()) {
                         val iconSize = AppUtils.getDimension(R.dimen.avatar_list_cell_size).toInt()
+
                         IconCompat.createWithAdaptiveBitmap(
                             ImageUtils.getBitmapFromMultipleAvatars(context, iconSize, list)
                         )
                     } else {
                         AvatarGenerator(context).setInitials(subject).buildIcon()
-                    }
+                    }*/
                 }
 
                 val persons = arrayOfNulls<Person>(personsList.size)
