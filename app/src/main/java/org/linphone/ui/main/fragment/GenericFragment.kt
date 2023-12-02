@@ -82,7 +82,11 @@ abstract class GenericFragment : Fragment() {
         }
 
         sharedViewModel.isSlidingPaneSlideable.observe(viewLifecycleOwner) {
-            onBackPressedCallback.isEnabled = backPressedCallBackEnabled()
+            val enabled = backPressedCallBackEnabled()
+            onBackPressedCallback.isEnabled = enabled
+            Log.d(
+                "$TAG ${getFragmentRealClassName()} Our own back press callback is ${if (enabled) "enabled" else "disabled"}"
+            )
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(
@@ -103,6 +107,7 @@ abstract class GenericFragment : Fragment() {
 
     protected open fun goBack(): Boolean {
         try {
+            Log.d("$TAG ${getFragmentRealClassName()} Calling onBackPressed on activity dispatcher")
             requireActivity().onBackPressedDispatcher.onBackPressed()
         } catch (ise: IllegalStateException) {
             Log.w("$TAG ${getFragmentRealClassName()}.goBack() can't go back: $ise")
@@ -115,14 +120,15 @@ abstract class GenericFragment : Fragment() {
         // This allow to navigate a SlidingPane child nav graph.
         // This only concerns fragments for which the nav graph is inside a SlidingPane layout.
         // In our case it's all graphs except the main one.
-        if (!isSlidingPaneChild) return false
+        if (!isSlidingPaneChild) {
+            Log.d("$TAG ${getFragmentRealClassName()} isn't a sliding pane child, disable callback")
+            return false
+        }
 
         val isSlidingPaneFlat = sharedViewModel.isSlidingPaneSlideable.value == false
         Log.d(
             "$TAG ${getFragmentRealClassName()} isSlidingPaneFlat ? $isSlidingPaneFlat"
         )
-        if (isSlidingPaneFlat) return false
-
-        return true
+        return !isSlidingPaneFlat
     }
 }

@@ -52,15 +52,16 @@ abstract class AbstractTopBarFragment : GenericFragment() {
     abstract fun onDefaultAccountChanged()
 
     fun initSlidingPane(slidingPane: SlidingPaneLayout) {
+        val slidingPaneBackPressedCallback = SlidingPaneBackPressedCallback(slidingPane)
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            slidingPaneBackPressedCallback
+        )
+
         view?.doOnPreDraw {
             slidingPane.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
-
             sharedViewModel.isSlidingPaneSlideable.value = slidingPane.isSlideable
-
-            requireActivity().onBackPressedDispatcher.addCallback(
-                viewLifecycleOwner,
-                SlidingPaneBackPressedCallback(slidingPane)
-            )
+            slidingPaneBackPressedCallback.isEnabled = slidingPane.isSlideable
         }
 
         sharedViewModel.closeSlidingPaneEvent.observe(

@@ -23,6 +23,7 @@ import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.UiThread
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
+import org.linphone.core.tools.Log
 
 @UiThread
 class SlidingPaneBackPressedCallback(private val slidingPaneLayout: SlidingPaneLayout) :
@@ -30,25 +31,32 @@ class SlidingPaneBackPressedCallback(private val slidingPaneLayout: SlidingPaneL
         slidingPaneLayout.isSlideable && slidingPaneLayout.isOpen
     ),
     SlidingPaneLayout.PanelSlideListener {
+    companion object {
+        private const val TAG = "[Sliding Pane Back Pressed Callback]"
+    }
 
     init {
         slidingPaneLayout.addPanelSlideListener(this)
     }
 
     override fun handleOnBackPressed() {
+        Log.d("$TAG handleOnBackPressed: hiding keyboard & closing pane")
         slidingPaneLayout.hideKeyboard()
         slidingPaneLayout.closePane()
     }
 
     override fun onPanelOpened(panel: View) {
+        Log.d("$TAG Panel is opened, enabling back press callback")
         isEnabled = true
     }
 
     override fun onPanelClosed(panel: View) {
+        Log.d("$TAG Panel is closed, disabled back press callback")
         isEnabled = false
     }
 
     override fun onPanelSlide(panel: View, slideOffset: Float) {
+        Log.d("$TAG Panel is sliding, enabling back press callback")
         isEnabled = true
     }
 }
