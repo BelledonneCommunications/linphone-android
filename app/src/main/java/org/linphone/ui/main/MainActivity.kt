@@ -437,17 +437,6 @@ class MainActivity : GenericActivity() {
                 closeDrawerMenu()
             }
 
-            if (findNavController().currentDestination?.id == R.id.debugFragment) {
-                Log.i(
-                    "$TAG App is already started and in debug fragment, navigating to conversations list"
-                )
-                val action = DebugFragmentDirections.actionDebugFragmentToConversationsListFragment()
-                findNavController().navigate(action)
-            }
-
-            val navGraph = findNavController().navInflater.inflate(R.navigation.main_nav_graph)
-            navGraph.setStartDestination(R.id.conversationsListFragment)
-
             val paths = deferred.awaitAll()
             for (path in paths) {
                 Log.i("$TAG Found file to share [$path] in intent")
@@ -464,7 +453,17 @@ class MainActivity : GenericActivity() {
                 }
             }
 
-            findNavController().setGraph(navGraph, intent.extras)
+            if (findNavController().currentDestination?.id == R.id.debugFragment) {
+                Log.i(
+                    "$TAG App is already started and in debug fragment, navigating to conversations list"
+                )
+                val action = DebugFragmentDirections.actionDebugFragmentToConversationsListFragment()
+                findNavController().navigate(action)
+            } else {
+                val navGraph = findNavController().navInflater.inflate(R.navigation.main_nav_graph)
+                navGraph.setStartDestination(R.id.conversationsListFragment)
+                findNavController().setGraph(navGraph, intent.extras)
+            }
         }
     }
 

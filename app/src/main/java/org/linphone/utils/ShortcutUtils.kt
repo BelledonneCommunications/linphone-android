@@ -154,6 +154,7 @@ class ShortcutUtils {
 
                 val intent = Intent(Intent.ACTION_MAIN)
                 intent.setClass(context, MainActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 intent.putExtra("Chat", true)
                 intent.putExtra("RemoteSipUri", peerSipUri)
                 intent.putExtra("LocalSipUri", localSipUri)

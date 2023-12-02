@@ -140,7 +140,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         override fun onMessagesReceived(
             core: Core,
             chatRoom: ChatRoom,
-            messages: Array<out ChatMessage>
+            messages: Array<ChatMessage>
         ) {
             Log.i("$TAG Received ${messages.size} aggregated messages")
             if (corePreferences.disableChat) return
@@ -499,7 +499,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
     }
 
     @WorkerThread
-    private fun getNotifiableForRoom(chatRoom: ChatRoom): Notifiable {
+    private fun getNotifiableForRoom(chatRoom: ChatRoom, messages: Array<ChatMessage>): Notifiable {
         val address = chatRoom.peerAddress.asStringUriOnly()
         var notifiable: Notifiable? = chatNotificationsMap[address]
         if (notifiable == null) {
@@ -515,22 +515,26 @@ class NotificationsManager @MainThread constructor(private val context: Context)
                 notifiable.groupTitle = chatRoom.subject
             }
 
-            chatNotificationsMap[address] = notifiable
+            for (message in chatRoom.unreadHistory) {
+                if (message.isRead || message.isOutgoing) continue
+                val notifiableMessage = getNotifiableForChatMessage(message)
+                notifiable.messages.add(notifiableMessage)
+            }
+        } else {
+            for (message in messages) {
+                if (message.isRead || message.isOutgoing) continue
+                val notifiableMessage = getNotifiableForChatMessage(message)
+                notifiable.messages.add(notifiableMessage)
+            }
         }
+
+        chatNotificationsMap[address] = notifiable
         return notifiable
     }
 
     @WorkerThread
-    private fun showChatRoomNotification(chatRoom: ChatRoom, messages: Array<out ChatMessage>) {
-        val notifiable = getNotifiableForRoom(chatRoom)
-
-        var updated = false
-        for (message in messages) {
-            if (message.isRead || message.isOutgoing) continue
-            val notifiableMessage = getNotifiableForChatMessage(message)
-            notifiable.messages.add(notifiableMessage)
-            updated = true
-        }
+    private fun showChatRoomNotification(chatRoom: ChatRoom, messages: Array<ChatMessage>) {
+        val notifiable = getNotifiableForRoom(chatRoom, messages)
 
         if (!chatRoom.hasCapability(ChatRoom.Capabilities.OneToOne.toInt())) {
             if (chatRoom.subject != notifiable.groupTitle) {
@@ -538,12 +542,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
                     "$TAG Updating notification subject from [${notifiable.groupTitle}] to [${chatRoom.subject}]"
                 )
                 notifiable.groupTitle = chatRoom.subject
-                updated = true
             }
-        }
-        if (!updated) {
-            Log.w("$TAG No changes made to notifiable, do not display it again")
-            return
         }
 
         if (notifiable.messages.isNotEmpty()) {
@@ -570,7 +569,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         address: Address,
         message: ChatMessage
     ) {
-        val notifiable = getNotifiableForRoom(chatRoom)
+        val notifiable = getNotifiableForRoom(chatRoom, arrayOf(message))
 
         // Check if a previous reaction notifiable exists from the same person & for the same message
         val from = address.asStringUriOnly()
