@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
+import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatBubbleIncomingBinding
 import org.linphone.databinding.ChatBubbleOutgoingBinding
 import org.linphone.databinding.ChatConversationEventBinding
@@ -41,6 +42,8 @@ class ConversationEventAdapter : ListAdapter<EventLogModel, RecyclerView.ViewHol
     EventLogDiffCallback()
 ) {
     companion object {
+        private const val TAG = "[Conversation Event Adapter]"
+
         const val INCOMING_CHAT_MESSAGE = 1
         const val OUTGOING_CHAT_MESSAGE = 2
         const val EVENT = 3
@@ -74,6 +77,21 @@ class ConversationEventAdapter : ListAdapter<EventLogModel, RecyclerView.ViewHol
             return OUTGOING_CHAT_MESSAGE
         }
         return INCOMING_CHAT_MESSAGE
+    }
+
+    fun getFirstUnreadMessagePosition(): Int {
+        var index = 0
+        for (eventLog in currentList) {
+            if (eventLog.model is MessageModel) {
+                if (!eventLog.model.isRead) {
+                    Log.i("$TAG First unread message is [${eventLog.model.id}] at index [$index]")
+                    return index
+                }
+            }
+            index += 1
+        }
+        Log.i("$TAG No unread message found in list of [${currentList.size}] events")
+        return -1
     }
 
     private fun createIncomingChatBubble(parent: ViewGroup): IncomingBubbleViewHolder {

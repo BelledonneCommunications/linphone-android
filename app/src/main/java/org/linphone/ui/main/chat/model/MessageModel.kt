@@ -82,6 +82,8 @@ class MessageModel @WorkerThread constructor(
 
     val id = chatMessage.messageId
 
+    val isRead = chatMessage.isRead
+
     val isOutgoing = chatMessage.isOutgoing
 
     val isInError = chatMessage.state == ChatMessage.State.NotDelivered

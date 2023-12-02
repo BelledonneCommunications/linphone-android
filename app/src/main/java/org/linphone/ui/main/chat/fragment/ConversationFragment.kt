@@ -127,11 +127,15 @@ class ConversationFragment : GenericFragment() {
         override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
             if (positionStart == 0 && adapter.itemCount == itemCount) {
                 // First time we fill the list with messages
-                Log.i("$TAG [$itemCount] events have been loaded")
-                binding.eventsList.scrollToPosition(adapter.itemCount - 1)
+                Log.i(
+                    "$TAG [$itemCount] events have been loaded, scrolling to first unread message"
+                )
+                scrollToFirstUnreadMessageOrBottom(false)
             } else {
-                Log.i("$TAG [$itemCount] new events have been loaded, scrolling to bottom")
-                binding.eventsList.smoothScrollToPosition(adapter.itemCount - 1)
+                Log.i(
+                    "$TAG [$itemCount] new events have been loaded, scrolling to first unread message"
+                )
+                scrollToFirstUnreadMessageOrBottom(true)
             }
         }
     }
@@ -563,6 +567,36 @@ class ConversationFragment : GenericFragment() {
         currentChatMessageModelForBottomSheet = null
 
         super.onPause()
+    }
+
+    private fun scrollToFirstUnreadMessageOrBottom(smooth: Boolean): Boolean {
+        if (adapter.itemCount > 0) {
+            val recyclerView = binding.eventsList
+
+            // Scroll to first unread message if any, unless we are already on it
+            val firstUnreadMessagePosition = adapter.getFirstUnreadMessagePosition()
+            val currentPosition = (recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
+            val indexToScrollTo = if (firstUnreadMessagePosition != -1 && firstUnreadMessagePosition != currentPosition) {
+                firstUnreadMessagePosition
+            } else {
+                adapter.itemCount - 1
+            }
+
+            Log.i(
+                "$TAG Scrolling to position $indexToScrollTo, first unread message is at $firstUnreadMessagePosition"
+            )
+            if (smooth) {
+                recyclerView.smoothScrollToPosition(indexToScrollTo)
+            } else {
+                recyclerView.scrollToPosition(indexToScrollTo)
+            }
+
+            if (firstUnreadMessagePosition == 0) {
+                // Return true only if all unread messages don't fit in the recyclerview height
+                return recyclerView.computeVerticalScrollRange() > recyclerView.height
+            }
+        }
+        return false
     }
 
     private fun showChatMessageLongPressMenu(chatMessageModel: MessageModel) {
