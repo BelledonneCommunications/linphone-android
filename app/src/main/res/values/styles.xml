@@ -125,6 +125,19 @@
         <item name="android:elevation">3dp</item>
         <item name="android:background">@drawable/circle_white_button_background</item>
     </style>
+    <style name="message_reaction_style">
+        <item name="android:fontFamily">@font/noto_sans</item>
+        <item name="android:textColor">?attr/color_main2_600</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:paddingStart">10dp</item>
+        <item name="android:paddingEnd">10dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:paddingTop">2dp</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:layout_marginTop">-15dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:background">@drawable/shape_chat_bubble_reactions_background</item>
+    </style>
     <style name="call_numpad_digits_style">
         <item name="android:fontFamily">@font/noto_sans</item>
         <item name="android:textColor">@color/white</item>

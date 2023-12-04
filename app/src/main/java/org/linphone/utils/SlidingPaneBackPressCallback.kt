@@ -48,7 +48,10 @@ class SlidingPaneBackPressedCallback(private val slidingPaneLayout: SlidingPaneL
             slidingPaneLayout.hideKeyboard()
             slidingPaneLayout.closePane()
         } else {
-            Log.w("$TAG handleOnBackPressed: sliding pane is not open!")
+            Log.w(
+                "$TAG handleOnBackPressed: sliding pane is not open, disabling back press callback!"
+            )
+            isEnabled = true
         }
     }
 

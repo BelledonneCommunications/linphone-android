@@ -195,21 +195,12 @@
         </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatTextView
+            style="@style/message_reaction_style"
             android:id="@+id/reactions"
             android:onClick="@{showReactionInfoClickListener}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="-5dp"
-            android:layout_marginBottom="5dp"
-            android:orientation="horizontal"
-            android:background="@drawable/shape_chat_bubble_reactions_background"
             android:text="@{model.reactions, default=@string/emoji_love}"
-            android:textSize="20sp"
-            android:textColor="?attr/color_main2_600"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:paddingTop="12dp"
-            android:paddingBottom="12dp"
             android:visibility="@{model.reactions.length() > 0 ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintEnd_toEndOf="@id/bubble"
             app:layout_constraintTop_toBottomOf="@id/bubble"

@@ -413,7 +413,8 @@ class MessageModel @WorkerThread constructor(
             }
 
             if (sameReactionTwiceOrMore) {
-                reactionsList += allReactions.size.toString()
+                val count = allReactions.size.toString()
+                reactionsList += " $count"
             }
         }
 
