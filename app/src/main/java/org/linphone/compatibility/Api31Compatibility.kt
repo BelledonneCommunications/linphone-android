@@ -19,11 +19,15 @@
  */
 package org.linphone.compatibility
 
+import android.app.UiModeManager
+import android.content.Context
 import android.graphics.RenderEffect
 import android.graphics.Shader
 import android.os.Build
 import android.view.View
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
+import org.linphone.core.tools.Log
 
 @RequiresApi(Build.VERSION_CODES.S)
 class Api31Compatibility {
@@ -37,6 +41,30 @@ class Api31Compatibility {
 
         fun removeBlurRenderEffect(view: View) {
             view.setRenderEffect(null)
+        }
+
+        fun forceDarkMode(context: Context) {
+            val uiManager = ContextCompat.getSystemService(context, UiModeManager::class.java)
+            if (uiManager == null) {
+                Log.e("$TAG Failed to get UiModeManager system service!")
+            }
+            uiManager?.setApplicationNightMode(UiModeManager.MODE_NIGHT_YES)
+        }
+
+        fun forceLightMode(context: Context) {
+            val uiManager = ContextCompat.getSystemService(context, UiModeManager::class.java)
+            if (uiManager == null) {
+                Log.e("$TAG Failed to get UiModeManager system service!")
+            }
+            uiManager?.setApplicationNightMode(UiModeManager.MODE_NIGHT_NO)
+        }
+
+        fun setAutoLightDarkMode(context: Context) {
+            val uiManager = ContextCompat.getSystemService(context, UiModeManager::class.java)
+            if (uiManager == null) {
+                Log.e("$TAG Failed to get UiModeManager system service!")
+            }
+            uiManager?.setApplicationNightMode(UiModeManager.MODE_NIGHT_AUTO)
         }
     }
 }

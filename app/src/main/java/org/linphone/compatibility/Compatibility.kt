@@ -26,6 +26,8 @@ import android.app.Service
 import android.content.Context
 import android.net.Uri
 import android.view.View
+import androidx.appcompat.app.AppCompatDelegate
+import org.linphone.core.tools.Log
 import org.linphone.mediastream.Version
 
 @SuppressLint("NewApi")
@@ -103,6 +105,33 @@ class Compatibility {
                 return true
             }
             return false
+        }
+
+        fun forceDarkMode(context: Context) {
+            Log.i("$TAG Forcing dark/night theme")
+            if (Version.sdkAboveOrEqual(Version.API31_ANDROID_12)) {
+                Api31Compatibility.forceDarkMode(context)
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            }
+        }
+
+        fun forceLightMode(context: Context) {
+            Log.i("$TAG Forcing light/day theme")
+            if (Version.sdkAboveOrEqual(Version.API31_ANDROID_12)) {
+                Api31Compatibility.forceLightMode(context)
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+        }
+
+        fun setAutoLightDarkMode(context: Context) {
+            Log.i("$TAG Following Android's choice for light/dark theme")
+            if (Version.sdkAboveOrEqual(Version.API31_ANDROID_12)) {
+                Api31Compatibility.setAutoLightDarkMode(context)
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            }
         }
     }
 }

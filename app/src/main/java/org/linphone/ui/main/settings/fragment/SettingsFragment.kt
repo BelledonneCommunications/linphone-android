@@ -7,10 +7,10 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.annotation.UiThread
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsFragmentBinding
 import org.linphone.ui.main.fragment.GenericFragment
@@ -45,13 +45,11 @@ class SettingsFragment : GenericFragment() {
             Log.i("$TAG Selected theme is now [$label] ($value)")
             viewModel.setTheme(value)
 
-            AppCompatDelegate.setDefaultNightMode(
-                when (value) {
-                    0 -> AppCompatDelegate.MODE_NIGHT_NO
-                    1 -> AppCompatDelegate.MODE_NIGHT_YES
-                    else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-                }
-            )
+            when (value) {
+                0 -> Compatibility.forceLightMode(requireContext())
+                1 -> Compatibility.forceDarkMode(requireContext())
+                else -> Compatibility.setAutoLightDarkMode(requireContext())
+            }
         }
 
         override fun onNothingSelected(parent: AdapterView<*>?) {

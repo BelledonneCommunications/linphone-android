@@ -23,10 +23,10 @@ import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.WindowCompat
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
+import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 
 open class GenericActivity : AppCompatActivity() {
@@ -44,20 +44,18 @@ open class GenericActivity : AppCompatActivity() {
 
         val nightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         val darkModeEnabled = corePreferences.darkMode
-        Log.i("$TAG Theme selected in config file is [$darkModeEnabled]")
+        Log.i(
+            "$TAG Theme selected in config file is [${if (darkModeEnabled == -1) "auto" else if (darkModeEnabled == 0) "light" else "dark"}]"
+        )
         when (nightMode) {
             Configuration.UI_MODE_NIGHT_NO, Configuration.UI_MODE_NIGHT_UNDEFINED -> {
                 if (darkModeEnabled == 1) {
-                    // Force dark mode
-                    Log.w("$TAG Forcing night mode")
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                    Compatibility.forceDarkMode(this)
                 }
             }
             Configuration.UI_MODE_NIGHT_YES -> {
                 if (darkModeEnabled == 0) {
-                    // Force light mode
-                    Log.w("$TAG Forcing day mode")
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                    Compatibility.forceLightMode(this)
                 }
             }
         }
