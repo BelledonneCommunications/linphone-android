@@ -602,7 +602,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             text,
             contact,
             displayName,
-            message.time,
+            message.time * 1000, /* Linphone timestamps are in seconds */
             isOutgoing = false,
             isReaction = true,
             reactionToMessageId = message.messageId,
