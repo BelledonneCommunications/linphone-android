@@ -45,13 +45,13 @@ import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
 import org.linphone.ui.main.contacts.model.TrustCallDialogModel
 import org.linphone.ui.main.contacts.viewmodel.ContactViewModel
-import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.fragment.SlidingPaneChildFragment
 import org.linphone.ui.main.history.model.ConfirmationDialogModel
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 
 @UiThread
-class ContactFragment : GenericFragment() {
+class ContactFragment : SlidingPaneChildFragment() {
     companion object {
         private const val TAG = "[Contact Fragment]"
     }
@@ -82,9 +82,6 @@ class ContactFragment : GenericFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // This fragment is displayed in a SlidingPane "child" area
-        isSlidingPaneChild = true
-
         postponeEnterTransition()
         super.onViewCreated(view, savedInstanceState)
 

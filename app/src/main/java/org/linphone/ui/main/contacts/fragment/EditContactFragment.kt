@@ -43,13 +43,13 @@ import org.linphone.databinding.ContactNewOrEditFragmentBinding
 import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.contacts.model.NewOrEditNumberOrAddressModel
 import org.linphone.ui.main.contacts.viewmodel.ContactNewOrEditViewModel
-import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.fragment.SlidingPaneChildFragment
 import org.linphone.ui.main.history.model.ConfirmationDialogModel
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.FileUtils
 
 @UiThread
-class EditContactFragment : GenericFragment() {
+class EditContactFragment : SlidingPaneChildFragment() {
     companion object {
         private const val TAG = "[Edit Contact Fragment]"
     }
@@ -97,9 +97,6 @@ class EditContactFragment : GenericFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // This fragment is displayed in a SlidingPane "child" area
-        isSlidingPaneChild = true
-
         postponeEnterTransition()
         super.onViewCreated(view, savedInstanceState)
 

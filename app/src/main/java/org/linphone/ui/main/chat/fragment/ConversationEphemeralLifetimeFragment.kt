@@ -11,11 +11,11 @@ import androidx.navigation.fragment.navArgs
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatEphemeralLifetimeFragmentBinding
 import org.linphone.ui.main.chat.viewmodel.ConversationEphemeralLifetimeViewModel
-import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.fragment.SlidingPaneChildFragment
 import org.linphone.utils.Event
 
 @UiThread
-class ConversationEphemeralLifetimeFragment : GenericFragment() {
+class ConversationEphemeralLifetimeFragment : SlidingPaneChildFragment() {
     companion object {
         private const val TAG = "[Conversation Ephemeral Lifetime Fragment]"
     }
@@ -40,9 +40,6 @@ class ConversationEphemeralLifetimeFragment : GenericFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // This fragment is displayed in a SlidingPane "child" area
-        isSlidingPaneChild = true
-
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner

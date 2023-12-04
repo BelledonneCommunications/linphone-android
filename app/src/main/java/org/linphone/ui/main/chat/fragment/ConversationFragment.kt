@@ -72,7 +72,7 @@ import org.linphone.ui.main.chat.view.RichEditText
 import org.linphone.ui.main.chat.viewmodel.ConversationViewModel
 import org.linphone.ui.main.chat.viewmodel.ConversationViewModel.Companion.SCROLLING_POSITION_NOT_SET
 import org.linphone.ui.main.chat.viewmodel.SendMessageInConversationViewModel
-import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.fragment.SlidingPaneChildFragment
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
@@ -84,7 +84,7 @@ import org.linphone.utils.setKeyboardInsetListener
 import org.linphone.utils.showKeyboard
 
 @UiThread
-class ConversationFragment : GenericFragment() {
+class ConversationFragment : SlidingPaneChildFragment() {
     companion object {
         private const val TAG = "[Conversation Fragment]"
     }
@@ -212,9 +212,6 @@ class ConversationFragment : GenericFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // This fragment is displayed in a SlidingPane "child" area
-        isSlidingPaneChild = true
-
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner

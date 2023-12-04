@@ -41,12 +41,12 @@ import org.linphone.ui.main.chat.adapter.ConversationParticipantsAdapter
 import org.linphone.ui.main.chat.model.ConversationEditSubjectDialogModel
 import org.linphone.ui.main.chat.model.ParticipantModel
 import org.linphone.ui.main.chat.viewmodel.ConversationInfoViewModel
-import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.fragment.SlidingPaneChildFragment
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 
 @UiThread
-class ConversationInfoFragment : GenericFragment() {
+class ConversationInfoFragment : SlidingPaneChildFragment() {
     companion object {
         private const val TAG = "[Conversation Info Fragment]"
     }
@@ -79,9 +79,6 @@ class ConversationInfoFragment : GenericFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // This fragment is displayed in a SlidingPane "child" area
-        isSlidingPaneChild = true
-
         postponeEnterTransition()
         super.onViewCreated(view, savedInstanceState)
 

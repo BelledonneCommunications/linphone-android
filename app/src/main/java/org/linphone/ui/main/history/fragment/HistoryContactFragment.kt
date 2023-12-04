@@ -40,7 +40,7 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.HistoryContactFragmentBinding
 import org.linphone.databinding.HistoryContactPopupMenuBinding
 import org.linphone.ui.main.MainActivity
-import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.fragment.SlidingPaneChildFragment
 import org.linphone.ui.main.history.adapter.ContactHistoryListAdapter
 import org.linphone.ui.main.history.model.ConfirmationDialogModel
 import org.linphone.ui.main.history.viewmodel.ContactHistoryViewModel
@@ -48,7 +48,7 @@ import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 
 @UiThread
-class HistoryContactFragment : GenericFragment() {
+class HistoryContactFragment : SlidingPaneChildFragment() {
     companion object {
         private const val TAG = "[Call Fragment]"
     }
@@ -84,9 +84,6 @@ class HistoryContactFragment : GenericFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // This fragment is displayed in a SlidingPane "child" area
-        isSlidingPaneChild = true
-
         postponeEnterTransition()
         super.onViewCreated(view, savedInstanceState)
 

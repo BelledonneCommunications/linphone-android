@@ -42,12 +42,12 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.MeetingFragmentBinding
 import org.linphone.databinding.MeetingPopupMenuBinding
 import org.linphone.ui.main.MainActivity
-import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.fragment.SlidingPaneChildFragment
 import org.linphone.ui.main.meetings.viewmodel.MeetingViewModel
 import org.linphone.utils.Event
 
 @UiThread
-class MeetingFragment : GenericFragment() {
+class MeetingFragment : SlidingPaneChildFragment() {
     companion object {
         private const val TAG = "[Meeting Fragment]"
     }
@@ -74,9 +74,6 @@ class MeetingFragment : GenericFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // This fragment is displayed in a SlidingPane "child" area
-        isSlidingPaneChild = true
-
         postponeEnterTransition()
         super.onViewCreated(view, savedInstanceState)
 

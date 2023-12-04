@@ -21,11 +21,9 @@ package org.linphone.ui.main.fragment
 
 import android.os.Bundle
 import android.view.View
-import androidx.activity.OnBackPressedCallback
 import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.viewmodel.SharedMainViewModel
 
@@ -37,71 +35,15 @@ abstract class GenericFragment : Fragment() {
 
     protected lateinit var sharedViewModel: SharedMainViewModel
 
-    protected var isSlidingPaneChild: Boolean = false
-
-    private val onBackPressedCallback = object : OnBackPressedCallback(false) {
-        override fun handleOnBackPressed() {
-            Log.d("$TAG ${getFragmentRealClassName()} handleOnBackPressed")
-            try {
-                if (!goBack()) {
-                    Log.d(
-                        "$TAG ${getFragmentRealClassName()}'s goBack() method returned false, trying other things"
-                    )
-                    val navController = findNavController()
-                    if (!navController.popBackStack()) {
-                        Log.d("$TAG ${getFragmentRealClassName()} couldn't pop")
-                        if (!navController.navigateUp()) {
-                            Log.d(
-                                "$TAG ${getFragmentRealClassName()} couldn't navigate up"
-                            )
-                            // Disable this callback & start a new back press event
-                            isEnabled = false
-                            try {
-                                requireActivity().onBackPressedDispatcher.onBackPressed()
-                            } catch (ise: IllegalStateException) {
-                                Log.w(
-                                    "$TAG ${getFragmentRealClassName()}.goBack() can't go back: $ise"
-                                )
-                            }
-                        }
-                    }
-                }
-            } catch (ise: IllegalStateException) {
-                Log.e(
-                    "$TAG ${getFragmentRealClassName()}.handleOnBackPressed() Can't go back: $ise"
-                )
-            }
-        }
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         sharedViewModel = requireActivity().run {
             ViewModelProvider(this)[SharedMainViewModel::class.java]
         }
-
-        sharedViewModel.isSlidingPaneSlideable.observe(viewLifecycleOwner) {
-            val enabled = backPressedCallBackEnabled()
-            onBackPressedCallback.isEnabled = enabled
-            Log.d(
-                "$TAG ${getFragmentRealClassName()} Our own back press callback is ${if (enabled) "enabled" else "disabled"}"
-            )
-        }
-
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            onBackPressedCallback
-        )
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-
-        onBackPressedCallback.remove()
-    }
-
-    private fun getFragmentRealClassName(): String {
+    protected fun getFragmentRealClassName(): String {
         return this.javaClass.name
     }
 
@@ -111,24 +53,8 @@ abstract class GenericFragment : Fragment() {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         } catch (ise: IllegalStateException) {
             Log.w("$TAG ${getFragmentRealClassName()}.goBack() can't go back: $ise")
-            onBackPressedCallback.handleOnBackPressed()
-        }
-        return true
-    }
-
-    private fun backPressedCallBackEnabled(): Boolean {
-        // This allow to navigate a SlidingPane child nav graph.
-        // This only concerns fragments for which the nav graph is inside a SlidingPane layout.
-        // In our case it's all graphs except the main one.
-        if (!isSlidingPaneChild) {
-            Log.d("$TAG ${getFragmentRealClassName()} isn't a sliding pane child, disable callback")
             return false
         }
-
-        val isSlidingPaneFlat = sharedViewModel.isSlidingPaneSlideable.value == false
-        Log.d(
-            "$TAG ${getFragmentRealClassName()} isSlidingPaneFlat ? $isSlidingPaneFlat"
-        )
-        return !isSlidingPaneFlat
+        return true
     }
 }

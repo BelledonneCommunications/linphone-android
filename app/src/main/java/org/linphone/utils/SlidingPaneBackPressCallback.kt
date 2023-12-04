@@ -27,9 +27,7 @@ import org.linphone.core.tools.Log
 
 @UiThread
 class SlidingPaneBackPressedCallback(private val slidingPaneLayout: SlidingPaneLayout) :
-    OnBackPressedCallback(
-        slidingPaneLayout.isSlideable && slidingPaneLayout.isOpen
-    ),
+    OnBackPressedCallback(false),
     SlidingPaneLayout.PanelSlideListener {
     companion object {
         private const val TAG = "[Sliding Pane Back Pressed Callback]"
@@ -37,12 +35,21 @@ class SlidingPaneBackPressedCallback(private val slidingPaneLayout: SlidingPaneL
 
     init {
         slidingPaneLayout.addPanelSlideListener(this)
+        val enableCallback = slidingPaneLayout.isSlideable && slidingPaneLayout.isOpen
+        Log.d(
+            "$TAG Sliding pane layout created, back press callback is ${if (enableCallback) "enabled" else "disabled"}"
+        )
+        isEnabled = enableCallback
     }
 
     override fun handleOnBackPressed() {
-        Log.d("$TAG handleOnBackPressed: hiding keyboard & closing pane")
-        slidingPaneLayout.hideKeyboard()
-        slidingPaneLayout.closePane()
+        if (slidingPaneLayout.isOpen) {
+            Log.d("$TAG handleOnBackPressed: hiding keyboard & closing pane")
+            slidingPaneLayout.hideKeyboard()
+            slidingPaneLayout.closePane()
+        } else {
+            Log.w("$TAG handleOnBackPressed: sliding pane is not open!")
+        }
     }
 
     override fun onPanelOpened(panel: View) {
@@ -56,7 +63,6 @@ class SlidingPaneBackPressedCallback(private val slidingPaneLayout: SlidingPaneL
     }
 
     override fun onPanelSlide(panel: View, slideOffset: Float) {
-        Log.d("$TAG Panel is sliding, enabling back press callback")
         isEnabled = true
     }
 }

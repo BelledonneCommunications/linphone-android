@@ -60,8 +60,10 @@ abstract class AbstractTopBarFragment : GenericFragment() {
 
         view?.doOnPreDraw {
             slidingPane.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
-            sharedViewModel.isSlidingPaneSlideable.value = slidingPane.isSlideable
-            slidingPaneBackPressedCallback.isEnabled = slidingPane.isSlideable
+            val slideable = slidingPane.isSlideable
+            sharedViewModel.isSlidingPaneSlideable.value = slideable
+            slidingPaneBackPressedCallback.isEnabled = slideable && slidingPane.isOpen
+            Log.d("$TAG Sliding Pane is ${if (slideable) "slideable" else "flat"}")
         }
 
         sharedViewModel.closeSlidingPaneEvent.observe(
@@ -69,7 +71,7 @@ abstract class AbstractTopBarFragment : GenericFragment() {
         ) {
             it.consume {
                 if (slidingPane.isOpen && slidingPane.isSlideable) {
-                    Log.i("$TAG Closing sliding pane")
+                    Log.d("$TAG Closing sliding pane")
                     slidingPane.closePane()
                 }
             }
@@ -80,7 +82,7 @@ abstract class AbstractTopBarFragment : GenericFragment() {
         ) {
             it.consume {
                 if (!slidingPane.isOpen) {
-                    Log.i("$TAG Opening sliding pane")
+                    Log.d("$TAG Opening sliding pane")
                     slidingPane.openPane()
                 }
             }

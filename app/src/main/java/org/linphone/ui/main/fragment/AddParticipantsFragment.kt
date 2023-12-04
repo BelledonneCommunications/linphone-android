@@ -62,9 +62,6 @@ class AddParticipantsFragment : GenericAddressPickerFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // This fragment is displayed in a SlidingPane "child" area
-        isSlidingPaneChild = true
-
         viewModel = ViewModelProvider(this)[AddParticipantsViewModel::class.java]
 
         postponeEnterTransition()
