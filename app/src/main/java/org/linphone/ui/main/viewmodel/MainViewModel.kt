@@ -80,6 +80,12 @@ class MainViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    val showNewAccountToastEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
+    var accountsFound = -1
+
     private var defaultAccountRegistrationFailed = false
 
     private val alertsList = arrayListOf<Pair<Int, String>>()
@@ -196,6 +202,17 @@ class MainViewModel @UiThread constructor() : ViewModel() {
 
             // TODO: compute other calls notifications count
         }
+
+        override fun onAccountRemoved(core: Core, account: Account) {
+            accountsFound -= 1
+
+            if (core.defaultAccount == null) {
+                Log.i(
+                    "$TAG Default account was removed, setting first available account (if any) as default"
+                )
+                core.defaultAccount = core.accountList.firstOrNull()
+            }
+        }
     }
 
     init {
@@ -203,6 +220,8 @@ class MainViewModel @UiThread constructor() : ViewModel() {
         showAlert.value = false
 
         coreContext.postOnCoreThread { core ->
+            accountsFound = core.accountList.size
+
             core.addListener(coreListener)
 
             if (!core.isNetworkReachable) {
@@ -224,6 +243,17 @@ class MainViewModel @UiThread constructor() : ViewModel() {
 
         coreContext.postOnCoreThread { core ->
             core.removeListener(coreListener)
+        }
+    }
+
+    @UiThread
+    fun checkForNewAccount() {
+        coreContext.postOnCoreThread { core ->
+            val count = core.accountList.size
+            if (count > accountsFound) {
+                showNewAccountToastEvent.postValue(Event(true))
+            }
+            accountsFound = count
         }
     }
 

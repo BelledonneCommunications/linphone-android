@@ -144,6 +144,13 @@ class MainActivity : GenericActivity() {
             }
         }
 
+        viewModel.showNewAccountToastEvent.observe(this) {
+            it.consume {
+                val message = getString(R.string.toast_new_account_configured)
+                showGreenToast(message, R.drawable.user_circle)
+            }
+        }
+
         binding.root.doOnAttach {
             Log.i("$TAG Report UI has been fully drawn (TTFD)")
             try {
@@ -259,8 +266,15 @@ class MainActivity : GenericActivity() {
         super.onPause()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        viewModel.checkForNewAccount()
+    }
+
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
+
         if (intent != null) {
             handleIntent(intent, -1, true)
         }
