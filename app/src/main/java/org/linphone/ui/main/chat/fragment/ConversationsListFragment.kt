@@ -79,6 +79,17 @@ class ConversationsListFragment : AbstractTopBarFragment() {
             "$TAG Default account changed, updating avatar in top bar & re-computing conversations"
         )
         listViewModel.applyFilter()
+
+        val slidingPane = binding.slidingPaneLayout
+        if (slidingPane.isOpen) {
+            if (slidingPane.isSlideable) {
+                Log.i("$TAG Default account changed, closing sliding pane")
+                slidingPane.close()
+            } else {
+                Log.i("$TAG Default account changed, going back to empty fragment")
+                // TODO: clear displayed conversation
+            }
+        }
     }
 
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
