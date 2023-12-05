@@ -28,6 +28,11 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
             app:launchSingleTop="true" />
+        <action
+            android:id="@+id/action_contactFragment_to_emptyFragment"
+            app:destination="@id/emptyFragment"
+            app:popUpTo="@id/contactFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <action

@@ -26,6 +26,8 @@ import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Address
+import org.linphone.core.ChatMessage
+import org.linphone.core.ChatMessageReaction
 import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoomListenerStub
 import org.linphone.core.EventLog
@@ -83,6 +85,10 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<String>>()
     }
 
+    val scrollToBottomEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     val chatRoomFoundEvent = MutableLiveData<Event<Boolean>>()
 
     lateinit var chatRoom: ChatRoom
@@ -132,18 +138,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         override fun onChatMessageSent(chatRoom: ChatRoom, eventLog: EventLog) {
             val message = eventLog.chatMessage
             Log.i("$TAG Message [$message] has been sent")
-        }
-
-        @WorkerThread
-        override fun onIsComposingReceived(
-            chatRoom: ChatRoom,
-            remoteAddress: Address,
-            isComposing: Boolean
-        ) {
-            Log.i(
-                "$TAG Remote [${remoteAddress.asStringUriOnly()}] is ${if (isComposing) "composing" else "no longer composing"}"
-            )
-            computeComposingLabel()
+            scrollToBottomEvent.postValue(Event(true))
         }
 
         @WorkerThread
@@ -176,6 +171,33 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             list.addAll(newList)
             events.postValue(list)
             chatRoom.markAsRead()
+        }
+
+        @WorkerThread
+        override fun onNewMessageReaction(
+            chatRoom: ChatRoom,
+            message: ChatMessage,
+            reaction: ChatMessageReaction
+        ) {
+            Log.i(
+                "$TAG A reaction [${reaction.body}] was received from [${reaction.fromAddress.asStringUriOnly()}]"
+            )
+            if (message == (events.value.orEmpty().lastOrNull()?.model as? MessageModel)?.chatMessage) {
+                // Scrolling to bottom to ensure reaction is visible
+                scrollToBottomEvent.postValue(Event(true))
+            }
+        }
+
+        @WorkerThread
+        override fun onIsComposingReceived(
+            chatRoom: ChatRoom,
+            remoteAddress: Address,
+            isComposing: Boolean
+        ) {
+            Log.i(
+                "$TAG Remote [${remoteAddress.asStringUriOnly()}] is ${if (isComposing) "composing" else "no longer composing"}"
+            )
+            computeComposingLabel()
         }
 
         @WorkerThread

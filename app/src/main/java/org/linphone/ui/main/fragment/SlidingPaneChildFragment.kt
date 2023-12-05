@@ -38,30 +38,20 @@ abstract class SlidingPaneChildFragment : GenericFragment() {
             try {
                 if (!goBack()) {
                     Log.d(
-                        "$TAG ${getFragmentRealClassName()}'s goBack() method returned false, trying other things"
+                        "$TAG ${getFragmentRealClassName()}'s goBack() method returned false, disabling back pressed callback and trying again"
                     )
-                    val navController = findNavController()
-                    if (!navController.popBackStack()) {
-                        Log.d("$TAG ${getFragmentRealClassName()} couldn't pop")
-                        if (!navController.navigateUp()) {
-                            Log.d(
-                                "$TAG ${getFragmentRealClassName()} couldn't navigate up"
-                            )
-                            // Disable this callback & start a new back press event
-                            isEnabled = false
-                            try {
-                                requireActivity().onBackPressedDispatcher.onBackPressed()
-                            } catch (ise: IllegalStateException) {
-                                Log.w(
-                                    "$TAG ${getFragmentRealClassName()}.goBack() can't go back: $ise"
-                                )
-                            }
-                        }
+                    isEnabled = false
+                    try {
+                        requireActivity().onBackPressedDispatcher.onBackPressed()
+                    } catch (ise: IllegalStateException) {
+                        Log.w(
+                            "$TAG ${getFragmentRealClassName()} Can't go back: $ise"
+                        )
                     }
                 }
             } catch (ise: IllegalStateException) {
                 Log.e(
-                    "$TAG ${getFragmentRealClassName()}.handleOnBackPressed() Can't go back: $ise"
+                    "$TAG ${getFragmentRealClassName()} Can't go back: $ise"
                 )
             }
         }
@@ -91,14 +81,16 @@ abstract class SlidingPaneChildFragment : GenericFragment() {
     }
 
     override fun goBack(): Boolean {
-        if (!super.goBack()) {
-            if (onBackPressedCallback.isEnabled) {
-                onBackPressedCallback.handleOnBackPressed()
-                return true
+        if (!findNavController().popBackStack()) {
+            Log.d("$TAG ${getFragmentRealClassName()} Couldn't pop back stack")
+            if (!findNavController().navigateUp()) {
+                Log.d("$TAG ${getFragmentRealClassName()} Couldn't navigate up")
+                onBackPressedCallback.isEnabled = false
+                return super.goBack()
             }
             return false
         }
-        return true
+        return false
     }
 
     private fun backPressedCallBackEnabled(slideable: Boolean): Boolean {

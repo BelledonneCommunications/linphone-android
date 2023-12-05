@@ -146,7 +146,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             if (corePreferences.disableChat) return
 
             val id = LinphoneUtils.getChatRoomId(chatRoom)
-            if (id == currentlyDisplayedChatRoomId) {
+            if (currentlyDisplayedChatRoomId.isNotEmpty() && id == currentlyDisplayedChatRoomId) {
                 Log.i(
                     "$TAG Do not notify received messages for currently displayed conversation [$id]"
                 )
@@ -188,12 +188,12 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             if (corePreferences.disableChat) return
 
             val id = LinphoneUtils.getChatRoomId(chatRoom)
-            if (id == currentlyDisplayedChatRoomId) {
+            /*if (id == currentlyDisplayedChatRoomId) {
                 Log.i(
                     "$TAG Do not notify received reaction for currently displayed conversation [$id]"
                 )
                 return
-            }
+            }*/
 
             if (chatRoom.muted) {
                 Log.i("$TAG Conversation $id has been muted")
@@ -337,12 +337,16 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
     @AnyThread
     fun setCurrentlyDisplayedChatRoomId(id: String) {
+        Log.i(
+            "$TAG Currently displayed conversation is [$id], messages received in it won't be notified"
+        )
         currentlyDisplayedChatRoomId = id
     }
 
     @AnyThread
     fun resetCurrentlyDisplayedChatRoomId() {
         currentlyDisplayedChatRoomId = ""
+        Log.i("$TAG Reset currently displayed conversation")
     }
 
     @MainThread

@@ -204,11 +204,13 @@ class ConversationFragment : SlidingPaneChildFragment() {
     }
 
     override fun goBack(): Boolean {
-        coreContext.notificationsManager.resetCurrentlyDisplayedChatRoomId()
         sharedViewModel.closeSlidingPaneEvent.value = Event(true)
         coreContext.notificationsManager.resetCurrentlyDisplayedChatRoomId()
-        // If not done, when going back to ConversationsListFragment this fragment will be created again
-        return findNavController().popBackStack()
+
+        // If not done this fragment won't be paused, which will cause us issues
+        val action = ConversationFragmentDirections.actionConversationFragmentToEmptyFragment()
+        findNavController().navigate(action)
+        return true
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -291,6 +293,12 @@ class ConversationFragment : SlidingPaneChildFragment() {
 
             (view.parent as? ViewGroup)?.doOnPreDraw {
                 sharedViewModel.openSlidingPaneEvent.value = Event(true)
+            }
+        }
+
+        viewModel.scrollToBottomEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                binding.eventsList.scrollToPosition(adapter.itemCount - 1)
             }
         }
 
@@ -540,6 +548,8 @@ class ConversationFragment : SlidingPaneChildFragment() {
     }
 
     override fun onPause() {
+        super.onPause()
+
         coreContext.postOnCoreThread {
             bottomSheetReactionsModel?.destroy()
             bottomSheetDeliveryModel?.destroy()
@@ -562,8 +572,6 @@ class ConversationFragment : SlidingPaneChildFragment() {
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.messageBottomSheet.root)
         bottomSheetBehavior.removeBottomSheetCallback(bottomSheetCallback)
         currentChatMessageModelForBottomSheet = null
-
-        super.onPause()
     }
 
     private fun scrollToFirstUnreadMessageOrBottom(smooth: Boolean): Boolean {

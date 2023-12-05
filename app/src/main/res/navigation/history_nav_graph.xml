@@ -20,6 +20,11 @@
         <argument
             android:name="callId"
             app:argType="string" />
+        <action
+            android:id="@+id/action_historyContactFragment_to_emptyFragment"
+            app:destination="@id/emptyFragment"
+            app:popUpTo="@id/historyContactFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <action

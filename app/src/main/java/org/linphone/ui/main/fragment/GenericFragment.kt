@@ -44,15 +44,16 @@ abstract class GenericFragment : Fragment() {
     }
 
     protected fun getFragmentRealClassName(): String {
-        return this.javaClass.name
+        return "[${this.javaClass.name}]"
     }
 
     protected open fun goBack(): Boolean {
+        Log.d("$TAG ${getFragmentRealClassName()} Going back")
         try {
             Log.d("$TAG ${getFragmentRealClassName()} Calling onBackPressed on activity dispatcher")
             requireActivity().onBackPressedDispatcher.onBackPressed()
         } catch (ise: IllegalStateException) {
-            Log.w("$TAG ${getFragmentRealClassName()}.goBack() can't go back: $ise")
+            Log.w("$TAG ${getFragmentRealClassName()} Can't go back: $ise")
             return false
         }
         return true

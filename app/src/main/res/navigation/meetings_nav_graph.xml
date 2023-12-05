@@ -19,6 +19,11 @@
         <argument
             android:name="conferenceUri"
             app:argType="string" />
+        <action
+            android:id="@+id/action_meetingFragment_to_emptyFragment"
+            app:destination="@id/emptyFragment"
+            app:popUpTo="@id/meetingFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <action

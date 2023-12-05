@@ -30,12 +30,17 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_conversationFragment_to_emptyFragment"
+            app:destination="@id/emptyFragment"
+            app:popUpTo="@id/conversationFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
 
     <action
         android:id="@+id/action_global_conversationFragment"
         app:destination="@id/conversationFragment"
-        app:launchSingleTop="true" />
+        app:launchSingleTop="true"/>
 
     <fragment
         android:id="@+id/conversationInfoFragment"

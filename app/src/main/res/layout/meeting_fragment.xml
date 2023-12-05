@@ -34,6 +34,7 @@
             android:adjustViewBounds="true"
             android:padding="15dp"
             android:src="@drawable/caret_left"
+            android:visibility="@{viewModel.showBackButton ? View.VISIBLE : View.GONE}"
             app:tint="?attr/color_main1_500"
             app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintStart_toStartOf="parent"

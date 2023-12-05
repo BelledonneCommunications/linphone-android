@@ -77,8 +77,11 @@ class ContactFragment : SlidingPaneChildFragment() {
 
     override fun goBack(): Boolean {
         sharedViewModel.closeSlidingPaneEvent.value = Event(true)
-        // If not done, when going back to ContactsFragment this fragment will be created again
-        return findNavController().popBackStack()
+
+        // If not done this fragment won't be paused, which will cause us issues
+        val action = ContactFragmentDirections.actionContactFragmentToEmptyFragment()
+        findNavController().navigate(action)
+        return true
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
