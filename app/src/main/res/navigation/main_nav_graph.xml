@@ -330,6 +330,11 @@
         <argument
             android:name="path"
             app:argType="string" />
+        <action
+            android:id="@+id/action_fileViewerFragment_to_conversationsListFragment"
+            app:destination="@id/conversationsListFragment"
+            app:popUpTo="@id/conversationsListFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
 
     <action

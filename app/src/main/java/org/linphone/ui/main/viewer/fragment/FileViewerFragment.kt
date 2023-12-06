@@ -2,6 +2,7 @@ package org.linphone.ui.main.viewer.fragment
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
@@ -10,14 +11,17 @@ import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import kotlinx.coroutines.launch
 import org.linphone.core.tools.Log
 import org.linphone.databinding.FileViewerFragmentBinding
 import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.ui.main.viewer.adapter.PdfPagesListAdapter
 import org.linphone.ui.main.viewer.viewmodel.FileViewModel
+import org.linphone.utils.FileUtils
 
 @UiThread
 class FileViewerFragment : GenericFragment() {
@@ -62,6 +66,22 @@ class FileViewerFragment : GenericFragment() {
 
         binding.setBackClickListener {
             goBack()
+        }
+
+        binding.setShareClickListener {
+            lifecycleScope.launch {
+                val filePath = FileUtils.getProperFilePath(path)
+                val copy = FileUtils.getFilePath(requireContext(), Uri.parse(filePath), false)
+                if (!copy.isNullOrEmpty()) {
+                    sharedViewModel.filesToShareFromIntent.value = arrayListOf(copy)
+                    Log.i("$TAG Sharing file [$copy], going back to conversations list")
+                    val action =
+                        FileViewerFragmentDirections.actionFileViewerFragmentToConversationsListFragment()
+                    findNavController().navigate(action)
+                } else {
+                    Log.e("$TAG Failed to copy file [$filePath] to share!")
+                }
+            }
         }
 
         viewModel.pdfRendererReadyEvent.observe(viewLifecycleOwner) {
