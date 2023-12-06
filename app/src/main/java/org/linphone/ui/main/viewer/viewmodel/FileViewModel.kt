@@ -15,6 +15,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import java.io.File
+import java.lang.IllegalStateException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -66,17 +67,24 @@ class FileViewModel @UiThread constructor() : ViewModel() {
 
     var screenWidth: Int = 0
     var screenHeight: Int = 0
+    var currentPdfPage: PdfRenderer.Page? = null
     // End of PDF viewer required variables
 
     override fun onCleared() {
         if (::pdfRenderer.isInitialized) {
-            pdfRenderer.close()
+            try {
+                pdfRenderer.close()
+            } catch (ise: IllegalStateException) {
+                Log.e("$TAG Failed to close PDF renderer:  $ise")
+            }
         }
         super.onCleared()
     }
 
     @UiThread
     fun loadFile(file: String) {
+        fullScreenMode.value = true
+
         filePath = file
         val name = FileUtils.getNameFromFilePath(file)
         fileName.value = name
@@ -87,7 +95,6 @@ class FileViewModel @UiThread constructor() : ViewModel() {
             FileUtils.MimeType.Pdf -> {
                 Log.i("$TAG File [$file] seems to be a PDF")
                 isPdf.value = true
-                fullScreenMode.value = false
 
                 viewModelScope.launch {
                     withContext(Dispatchers.IO) {
@@ -105,11 +112,9 @@ class FileViewModel @UiThread constructor() : ViewModel() {
                 Log.i("$TAG File [$file] seems to be a video")
                 isVideo.value = true
                 isVideoPlaying.value = false
-                fullScreenMode.value = true
             }
             else -> {
                 path.value = file
-                fullScreenMode.value = true
             }
         }
     }
@@ -132,11 +137,20 @@ class FileViewModel @UiThread constructor() : ViewModel() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 try {
+                    try {
+                        currentPdfPage?.close()
+                        currentPdfPage = null
+                    } catch (_: IllegalStateException) {}
+
                     val page: PdfRenderer.Page = pdfRenderer.openPage(index)
-                    val width = if (screenWidth <= screenHeight) screenWidth else screenHeight
+                    currentPdfPage = page
+
+                    Log.i(
+                        "$TAG Page size is ${page.width}/${page.height}, screen size is $screenWidth/$screenHeight"
+                    )
                     val bm = Bitmap.createBitmap(
-                        width,
-                        (width / page.width * page.height),
+                        page.width,
+                        page.height,
                         Bitmap.Config.ARGB_8888
                     )
                     page.render(bm, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
@@ -147,6 +161,10 @@ class FileViewModel @UiThread constructor() : ViewModel() {
                     }
                 } catch (e: Exception) {
                     Log.e("$TAG Exception: $e")
+                    try {
+                        currentPdfPage?.close()
+                        currentPdfPage = null
+                    } catch (_: IllegalStateException) {}
                 }
             }
         }

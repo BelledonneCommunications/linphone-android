@@ -22,6 +22,7 @@ package org.linphone.ui.main.viewer.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
 import org.linphone.ui.main.viewer.viewmodel.FileViewModel
@@ -46,7 +47,11 @@ class PdfPagesListAdapter(private val viewModel: FileViewModel) : RecyclerView.A
 
     inner class PdfPageViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         fun bind(index: Int) {
-            viewModel.loadPdfPageInto(index, view.findViewById(R.id.pdf_image))
+            val pdfImage: ImageView = view.findViewById(R.id.pdf_image)
+            pdfImage.setOnClickListener {
+                viewModel.toggleFullScreen()
+            }
+            viewModel.loadPdfPageInto(index, pdfImage)
         }
     }
 }

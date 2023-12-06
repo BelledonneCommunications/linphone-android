@@ -63,10 +63,9 @@ class FileViewerFragment : GenericFragment() {
         viewModel.pdfRendererReadyEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.i("$TAG PDF renderer is ready, attaching adapter to ViewPager")
-                val displayMetrics = DisplayMetrics()
-                requireActivity().windowManager.defaultDisplay.getMetrics(displayMetrics)
-                viewModel.screenHeight = displayMetrics.heightPixels
-                viewModel.screenWidth = displayMetrics.widthPixels
+                if (viewModel.screenWidth == 0 || viewModel.screenHeight == 0) {
+                    updateScreenSize()
+                }
 
                 adapter = PdfPagesListAdapter(viewModel)
                 binding.pdfViewPager.adapter = adapter
@@ -115,6 +114,11 @@ class FileViewerFragment : GenericFragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        updateScreenSize()
+    }
+
     override fun onPause() {
         if (binding.videoPlayer.isPlaying) {
             binding.videoPlayer.pause()
@@ -128,5 +132,15 @@ class FileViewerFragment : GenericFragment() {
         binding.videoPlayer.stopPlayback()
 
         super.onDestroyView()
+    }
+
+    private fun updateScreenSize() {
+        val displayMetrics = DisplayMetrics()
+        requireActivity().windowManager.defaultDisplay.getMetrics(displayMetrics)
+        viewModel.screenHeight = displayMetrics.heightPixels
+        viewModel.screenWidth = displayMetrics.widthPixels
+        Log.i(
+            "$TAG Setting screen size ${viewModel.screenWidth}/${viewModel.screenHeight} for PDF renderer"
+        )
     }
 }
