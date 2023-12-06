@@ -33,6 +33,7 @@ import androidx.annotation.AnyThread
 import androidx.core.content.FileProvider
 import java.io.File
 import java.io.FileInputStream
+import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
@@ -255,6 +256,33 @@ class FileUtils {
                 return true
             } catch (e: IOException) {
                 Log.e("$TAG copyFile [$from] to [$to] exception: $e")
+            }
+            return false
+        }
+
+        @AnyThread
+        fun copyFile(from: Uri, to: Uri): Boolean {
+            try {
+                coreContext.context.contentResolver.openFileDescriptor(to, "w")?.use { fd ->
+                    FileOutputStream(fd.fileDescriptor).use { outputStream ->
+                        val fileDescriptor = coreContext.context.contentResolver.openFileDescriptor(
+                            from,
+                            "r"
+                        )
+                        val inputStream = FileInputStream(fileDescriptor?.fileDescriptor)
+                        val buffer = ByteArray(4096)
+                        var bytesRead: Int
+                        while (inputStream.read(buffer).also { bytesRead = it } >= 0) {
+                            outputStream.write(buffer, 0, bytesRead)
+                        }
+                        fileDescriptor?.close()
+                    }
+                }
+                return true
+            } catch (e: FileNotFoundException) {
+                Log.e("$TAG Failed to find dest file: $e")
+            } catch (e: IOException) {
+                Log.e("$TAG Error copying file: $e")
             }
             return false
         }

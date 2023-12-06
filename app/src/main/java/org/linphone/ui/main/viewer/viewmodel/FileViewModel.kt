@@ -48,6 +48,10 @@ class FileViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    val exportPdfEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
+
     val toggleVideoPlayPauseEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -67,7 +71,7 @@ class FileViewModel @UiThread constructor() : ViewModel() {
 
     var screenWidth: Int = 0
     var screenHeight: Int = 0
-    var currentPdfPage: PdfRenderer.Page? = null
+    private var currentPdfPage: PdfRenderer.Page? = null
     // End of PDF viewer required variables
 
     override fun onCleared() {
@@ -180,27 +184,60 @@ class FileViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun exportToMediaStore() {
         if (::filePath.isInitialized) {
-            viewModelScope.launch {
-                withContext(Dispatchers.IO) {
-                    Log.i("$TAG Export file [$filePath] to Android's MediaStore")
-                    val mediaStorePath = addContentToMediaStore(filePath)
-                    if (mediaStorePath.isNotEmpty()) {
-                        Log.i("$TAG File [$filePath] has been successfully exported to MediaStore")
-                        val message = AppUtils.getString(
-                            R.string.toast_file_successfully_exported_to_media_store
-                        )
-                        showGreenToastEvent.postValue(Event(Pair(message, R.drawable.check)))
-                    } else {
-                        Log.e("$TAG Failed to export file [$filePath] to MediaStore!")
-                        val message = AppUtils.getString(
-                            R.string.toast_export_file_to_media_store_error
-                        )
-                        showRedToastEvent.postValue(Event(Pair(message, R.drawable.x)))
+            if (isPdf.value == true) {
+                Log.i("$TAG Exporting PDF as document")
+                exportPdfEvent.postValue(Event(fileName.value.orEmpty()))
+            } else {
+                viewModelScope.launch {
+                    withContext(Dispatchers.IO) {
+                        Log.i("$TAG Export file [$filePath] to Android's MediaStore")
+                        val mediaStorePath = addContentToMediaStore(filePath)
+                        if (mediaStorePath.isNotEmpty()) {
+                            Log.i(
+                                "$TAG File [$filePath] has been successfully exported to MediaStore"
+                            )
+                            val message = AppUtils.getString(
+                                R.string.toast_file_successfully_exported_to_media_store
+                            )
+                            showGreenToastEvent.postValue(Event(Pair(message, R.drawable.check)))
+                        } else {
+                            Log.e("$TAG Failed to export file [$filePath] to MediaStore!")
+                            val message = AppUtils.getString(
+                                R.string.toast_export_file_to_media_store_error
+                            )
+                            showRedToastEvent.postValue(Event(Pair(message, R.drawable.x)))
+                        }
                     }
                 }
             }
         } else {
             Log.e("$TAG Filepath wasn't initialized!")
+        }
+    }
+
+    @UiThread
+    fun copyPdfToUri(dest: Uri) {
+        val source = Uri.parse(FileUtils.getProperFilePath(filePath))
+        Log.i("$TAG Copying file URI [$source] to [$dest]")
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val result = FileUtils.copyFile(source, dest)
+                if (result) {
+                    Log.i(
+                        "$TAG File [$filePath] has been successfully exported to documents"
+                    )
+                    val message = AppUtils.getString(
+                        R.string.toast_file_successfully_exported_to_documents
+                    )
+                    showGreenToastEvent.postValue(Event(Pair(message, R.drawable.check)))
+                } else {
+                    Log.e("$TAG Failed to export file [$filePath] to documents!")
+                    val message = AppUtils.getString(
+                        R.string.toast_export_file_to_documents_error
+                    )
+                    showRedToastEvent.postValue(Event(Pair(message, R.drawable.x)))
+                }
+            }
         }
     }
 

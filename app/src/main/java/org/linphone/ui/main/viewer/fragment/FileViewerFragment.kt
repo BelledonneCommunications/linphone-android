@@ -1,5 +1,7 @@
 package org.linphone.ui.main.viewer.fragment
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
@@ -21,6 +23,8 @@ import org.linphone.ui.main.viewer.viewmodel.FileViewModel
 class FileViewerFragment : GenericFragment() {
     companion object {
         private const val TAG = "[File Viewer Fragment]"
+
+        private const val EXPORT_PDF = 10
     }
 
     private lateinit var binding: FileViewerFragmentBinding
@@ -70,6 +74,17 @@ class FileViewerFragment : GenericFragment() {
                 adapter = PdfPagesListAdapter(viewModel)
                 binding.pdfViewPager.adapter = adapter
                 binding.dotsIndicator.attachTo(binding.pdfViewPager)
+            }
+        }
+
+        viewModel.exportPdfEvent.observe(viewLifecycleOwner) {
+            it.consume { name ->
+                val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                    type = "application/pdf"
+                    putExtra(Intent.EXTRA_TITLE, name)
+                }
+                startActivityForResult(intent, EXPORT_PDF)
             }
         }
 
@@ -132,6 +147,17 @@ class FileViewerFragment : GenericFragment() {
         binding.videoPlayer.stopPlayback()
 
         super.onDestroyView()
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == EXPORT_PDF && resultCode == Activity.RESULT_OK) {
+            data?.data?.also { documentUri ->
+                Log.i("$TAG Exported PDF should be stored in URI [$documentUri]")
+                viewModel.copyPdfToUri(documentUri)
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun updateScreenSize() {
