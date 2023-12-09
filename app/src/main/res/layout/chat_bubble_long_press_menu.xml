@@ -37,116 +37,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.constraintlayout.widget.Group
-                android:id="@+id/emojis_group"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:constraint_referenced_ids="thumbs_up, love, laughing, surprised, tear, plus, emojis_background"
-                android:visibility="@{model.chatRoomIsReadOnly ? View.GONE : View.VISIBLE}" />
-
-            <ImageView
-                android:id="@+id/emojis_background"
-                android:layout_width="0dp"
-                android:layout_height="60dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="12dp"
-                android:src="@drawable/shape_squircle_white_background"
-                app:layout_constraintVertical_bias="1"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/bubble_top_barrier"/>
-
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/default_text_style"
-                android:id="@+id/thumbs_up"
-                android:onClick="@{() -> model.sendReaction(@string/emoji_thumbs_up)}"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="10dp"
-                android:text="@string/emoji_thumbs_up"
-                android:textSize="@dimen/chat_bubble_long_press_emoji_reaction_size"
-                app:layout_constraintHorizontal_chainStyle="spread_inside"
-                app:layout_constraintTop_toTopOf="@id/emojis_background"
-                app:layout_constraintBottom_toBottomOf="@id/emojis_background"
-                app:layout_constraintStart_toStartOf="@id/emojis_background"
-                app:layout_constraintEnd_toStartOf="@id/love"/>
-
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/default_text_style"
-                android:id="@+id/love"
-                android:onClick="@{() -> model.sendReaction(@string/emoji_love)}"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:text="@string/emoji_love"
-                android:textSize="@dimen/chat_bubble_long_press_emoji_reaction_size"
-                app:layout_constraintTop_toTopOf="@id/thumbs_up"
-                app:layout_constraintBottom_toBottomOf="@id/emojis_background"
-                app:layout_constraintStart_toEndOf="@id/thumbs_up"
-                app:layout_constraintEnd_toStartOf="@id/laughing"/>
-
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/default_text_style"
-                android:id="@+id/laughing"
-                android:onClick="@{() -> model.sendReaction(@string/emoji_laughing)}"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:text="@string/emoji_laughing"
-                android:textSize="@dimen/chat_bubble_long_press_emoji_reaction_size"
-                app:layout_constraintTop_toTopOf="@id/thumbs_up"
-                app:layout_constraintBottom_toBottomOf="@id/emojis_background"
-                app:layout_constraintStart_toEndOf="@id/love"
-                app:layout_constraintEnd_toStartOf="@id/surprised"/>
-
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/default_text_style"
-                android:id="@+id/surprised"
-                android:onClick="@{() -> model.sendReaction(@string/emoji_surprised)}"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:text="@string/emoji_surprised"
-                android:textSize="@dimen/chat_bubble_long_press_emoji_reaction_size"
-                app:layout_constraintTop_toTopOf="@id/thumbs_up"
-                app:layout_constraintBottom_toBottomOf="@id/emojis_background"
-                app:layout_constraintStart_toEndOf="@id/laughing"
-                app:layout_constraintEnd_toStartOf="@id/tear"/>
-
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/default_text_style"
-                android:id="@+id/tear"
-                android:onClick="@{() -> model.sendReaction(@string/emoji_tear)}"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:text="@string/emoji_tear"
-                android:textSize="@dimen/chat_bubble_long_press_emoji_reaction_size"
-                app:layout_constraintTop_toTopOf="@id/thumbs_up"
-                app:layout_constraintBottom_toBottomOf="@id/emojis_background"
-                app:layout_constraintStart_toEndOf="@id/surprised"
-                app:layout_constraintEnd_toStartOf="@id/plus"/>
-
-            <ImageView
-                android:id="@+id/plus"
-                android:onClick="@{pickEmojiClickListener}"
-                android:layout_width="30dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="16dp"
-                android:src="@drawable/plus_circle"
-                app:layout_constraintStart_toEndOf="@id/tear"
-                app:layout_constraintEnd_toEndOf="@id/emojis_background"
-                app:layout_constraintTop_toTopOf="@id/thumbs_up"
-                app:layout_constraintBottom_toBottomOf="@id/emojis_background" />
-
             <androidx.constraintlayout.widget.Barrier
                 android:id="@+id/bubble_top_barrier"
                 android:layout_width="wrap_content"
@@ -154,17 +44,24 @@
                 app:barrierDirection="top"
                 app:constraint_referenced_ids="incoming_bubble, outgoing_bubble" />
 
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/bottom_barrier"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="top"
+                app:constraint_referenced_ids="reply, resend" />
+
             <include
                 android:id="@+id/outgoing_bubble"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="12dp"
                 android:visibility="@{model.outgoing ? View.VISIBLE : View.GONE, default=gone}"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/emojis"
                 app:layout_constraintBottom_toTopOf="@id/bottom_barrier"
+                app:layout_constraintHeight_max="@dimen/chat_bubble_max_height_long_press"
                 bind:model="@{model}"
                 layout="@layout/chat_bubble_outgoing"/>
 
@@ -172,15 +69,30 @@
                 android:id="@+id/incoming_bubble"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="12dp"
                 android:visibility="@{model.outgoing ? View.GONE : View.VISIBLE}"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/bottom_barrier"
+                app:layout_constraintTop_toBottomOf="@id/emojis"
+                app:layout_constraintBottom_toBottomOf="@id/bottom_barrier"
+                app:layout_constraintHeight_max="@dimen/chat_bubble_max_height_long_press"
                 bind:model="@{model}"
                 layout="@layout/chat_bubble_incoming"/>
+
+            <include
+                android:id="@+id/emojis"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:visibility="@{model.chatRoomIsReadOnly ? View.GONE : View.VISIBLE}"
+                layout="@layout/chat_emoji_reaction_picker"
+                bind:model="@{model}"
+                bind:pickEmojiClickListener="@{pickEmojiClickListener}"
+                app:layout_constraintVertical_bias="1"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/bubble_top_barrier"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
             <View
                 android:id="@+id/actions_background"
@@ -189,13 +101,6 @@
                 android:background="?attr/color_main2_200"
                 app:layout_constraintTop_toTopOf="@id/bottom_barrier"
                 app:layout_constraintBottom_toBottomOf="parent" />
-
-            <androidx.constraintlayout.widget.Barrier
-                android:id="@+id/bottom_barrier"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:barrierDirection="top"
-                app:constraint_referenced_ids="reply, resend" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/context_menu_action_label_style"
