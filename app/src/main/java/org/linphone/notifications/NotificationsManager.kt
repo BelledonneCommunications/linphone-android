@@ -30,7 +30,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
-import android.os.Bundle
 import android.webkit.MimeTypeMap
 import androidx.annotation.AnyThread
 import androidx.annotation.MainThread
@@ -1147,15 +1146,18 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
     @WorkerThread
     private fun getChatRoomPendingIntent(chatRoom: ChatRoom): PendingIntent {
-        val args = Bundle()
-        args.putString("RemoteSipUri", chatRoom.peerAddress.asStringUriOnly())
-        args.putString("LocalSipUri", chatRoom.localAddress.asStringUriOnly())
-        return NavDeepLinkBuilder(context)
-            .setComponentName(MainActivity::class.java)
-            .setGraph(R.navigation.main_nav_graph)
-            .setDestination(R.id.conversationsListFragment)
-            .setArguments(args)
-            .createPendingIntent()
+        val mainActivityIntent = Intent(context, MainActivity::class.java)
+        mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        mainActivityIntent.setAction(Intent.ACTION_MAIN)
+        mainActivityIntent.putExtra("Chat", true)
+        mainActivityIntent.putExtra("RemoteSipUri", chatRoom.peerAddress.asStringUriOnly())
+        mainActivityIntent.putExtra("LocalSipUri", chatRoom.localAddress.asStringUriOnly())
+        return PendingIntent.getActivity(
+            context,
+            0,
+            mainActivityIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
     }
 
     class Notifiable(val notificationId: Int) {

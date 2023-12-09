@@ -205,7 +205,6 @@ class ConversationFragment : SlidingPaneChildFragment() {
 
     override fun goBack(): Boolean {
         sharedViewModel.closeSlidingPaneEvent.value = Event(true)
-        coreContext.notificationsManager.resetCurrentlyDisplayedChatRoomId()
 
         // If not done this fragment won't be paused, which will cause us issues
         val action = ConversationFragmentDirections.actionConversationFragmentToEmptyFragment()

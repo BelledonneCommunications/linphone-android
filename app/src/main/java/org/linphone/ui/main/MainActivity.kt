@@ -369,7 +369,6 @@ class MainActivity : GenericActivity() {
 
     @MainThread
     private fun handleMainIntent(intent: Intent, defaultDestination: Int, isNewIntent: Boolean) {
-        val navGraph = findNavController().navInflater.inflate(R.navigation.main_nav_graph)
         if (intent.hasExtra("Chat")) {
             Log.i("$TAG New intent with [Chat] extra")
             if (isNewIntent) {
@@ -380,12 +379,14 @@ class MainActivity : GenericActivity() {
                 )
             } else {
                 Log.i("$TAG Going to Conversations fragment instead of default destination")
+                val navGraph = findNavController().navInflater.inflate(R.navigation.main_nav_graph)
                 navGraph.setStartDestination(R.id.conversationsListFragment)
                 findNavController().setGraph(navGraph, intent.extras)
             }
         } else {
             if (!isNewIntent && defaultDestination > 0) {
                 Log.i("$TAG Setting nav graph with expected default destination")
+                val navGraph = findNavController().navInflater.inflate(R.navigation.main_nav_graph)
                 navGraph.setStartDestination(defaultDestination)
                 findNavController().setGraph(navGraph, null)
             }
