@@ -46,11 +46,6 @@
     <!-- Needed to check current Do not disturb policy -->
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
 
-    <!-- Needed starting Android 12 for broadcast receiver
-    to be triggered when BT device is connected / disconnected
-    (https://developer.android.com/guide/topics/connectivity/bluetooth/permissions) -->
-    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-
     <!-- Needed for foreground service
     (https://developer.android.com/guide/components/foreground-services) -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>

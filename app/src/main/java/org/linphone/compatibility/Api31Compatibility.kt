@@ -19,7 +19,6 @@
  */
 package org.linphone.compatibility
 
-import android.Manifest
 import android.annotation.TargetApi
 import android.app.*
 import android.content.Context
@@ -301,10 +300,6 @@ class Api31Compatibility {
                     Log.e("[Call] Can't build PiP params: $e")
                 }
             }
-        }
-
-        fun hasBluetoothConnectPermission(context: Context): Boolean {
-            return Compatibility.hasPermission(context, Manifest.permission.BLUETOOTH_CONNECT)
         }
     }
 }

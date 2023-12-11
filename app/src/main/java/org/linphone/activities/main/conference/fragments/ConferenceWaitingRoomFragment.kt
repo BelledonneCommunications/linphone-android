@@ -29,10 +29,8 @@ import org.linphone.R
 import org.linphone.activities.GenericFragment
 import org.linphone.activities.main.MainActivity
 import org.linphone.activities.main.conference.viewmodels.ConferenceWaitingRoomViewModel
-import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ConferenceWaitingRoomFragmentBinding
-import org.linphone.mediastream.Version
 import org.linphone.utils.PermissionHelper
 
 class ConferenceWaitingRoomFragment : GenericFragment<ConferenceWaitingRoomFragmentBinding>() {
@@ -173,11 +171,6 @@ class ConferenceWaitingRoomFragment : GenericFragment<ConferenceWaitingRoomFragm
             permissionsRequiredList.add(Manifest.permission.CAMERA)
         }
 
-        if (Version.sdkAboveOrEqual(Version.API31_ANDROID_12) && !PermissionHelper.get().hasBluetoothConnectPermission()) {
-            Log.i("[Conference Waiting Room] Asking for BLUETOOTH_CONNECT permission")
-            permissionsRequiredList.add(Compatibility.BLUETOOTH_CONNECT)
-        }
-
         if (permissionsRequiredList.isNotEmpty()) {
             val permissionsRequired = arrayOfNulls<String>(permissionsRequiredList.size)
             permissionsRequiredList.toArray(permissionsRequired)
@@ -202,11 +195,6 @@ class ConferenceWaitingRoomFragment : GenericFragment<ConferenceWaitingRoomFragm
                         Log.i("[Conference Waiting Room] CAMERA permission has been granted")
                         coreContext.core.reloadVideoDevices()
                         viewModel.enableVideo()
-                    }
-                    Compatibility.BLUETOOTH_CONNECT -> if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                        Log.i(
-                            "[Conference Waiting Room] BLUETOOTH_CONNECT permission has been granted"
-                        )
                     }
                 }
             }
