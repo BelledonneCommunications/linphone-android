@@ -23,6 +23,9 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.content.Intent
+import android.media.AudioDeviceCallback
+import android.media.AudioDeviceInfo
+import android.media.AudioManager
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
@@ -81,6 +84,32 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
 
     @SuppressLint("HandlerLeak")
     private lateinit var coreThread: Handler
+
+    private val audioDeviceCallback = object : AudioDeviceCallback() {
+        @WorkerThread
+        override fun onAudioDevicesAdded(addedDevices: Array<out AudioDeviceInfo>?) {
+            if (!addedDevices.isNullOrEmpty()) {
+                Log.i("$TAG [${addedDevices.size}] new device(s) have been added:")
+                for (device in addedDevices) {
+                    Log.i("$TAG Added device [${device.id}][${device.productName}][${device.type}]")
+                }
+                core.reloadSoundDevices()
+            }
+        }
+
+        @WorkerThread
+        override fun onAudioDevicesRemoved(removedDevices: Array<out AudioDeviceInfo>?) {
+            if (!removedDevices.isNullOrEmpty()) {
+                Log.i("$TAG [${removedDevices.size}] existing device(s) have been removed")
+                for (device in removedDevices) {
+                    Log.i(
+                        "$TAG Removed device [${device.id}][${device.productName}][${device.type}]"
+                    )
+                }
+                core.reloadSoundDevices()
+            }
+        }
+    }
 
     private val coreListener = object : CoreListenerStub() {
         @WorkerThread
@@ -171,6 +200,7 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
 
     @WorkerThread
     override fun run() {
+        Log.i("$TAG Creating Core")
         Looper.prepare()
 
         val looper = Looper.myLooper() ?: return
@@ -182,11 +212,15 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
 
         computeUserAgent()
 
+        Log.i("$TAG Core has been created with user-agent [${core.userAgent}], starting it")
         core.start()
 
         contactsManager.onCoreStarted(core)
         telecomManager.onCoreStarted(core)
         notificationsManager.onCoreStarted(core)
+
+        val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        audioManager.registerAudioDeviceCallback(audioDeviceCallback, coreThread)
 
         Looper.loop()
     }
@@ -194,6 +228,11 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
     @Deprecated("Deprecated in Java")
     @WorkerThread
     override fun destroy() {
+        Log.i("$TAG Stopping Core")
+
+        val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        audioManager.unregisterAudioDeviceCallback(audioDeviceCallback)
+
         core.stop()
 
         contactsManager.onCoreStopped(core)
@@ -204,6 +243,7 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
             (context as Application).unregisterActivityLifecycleCallbacks(activityMonitor)
         }
 
+        Log.i("$TAG Core has been stopped, app can gracefully quit")
         quitSafely()
     }
 
