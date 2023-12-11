@@ -217,13 +217,17 @@ class ChatMessagesListAdapter(
         previousList: MutableList<EventLogData>,
         currentList: MutableList<EventLogData>
     ) {
-        Log.i("[Chat Messages Adapter] List has changed, clearing previous first unread message position")
+        Log.i(
+            "[Chat Messages Adapter] List has changed, clearing previous first unread message position"
+        )
         // Need to wait for messages to be added before computing new first unread message position
         firstUnreadMessagePosition = -1
     }
 
     override fun displayHeaderForPosition(position: Int): Boolean {
-        Log.i("[Chat Messages Adapter] Unread message count is [$unreadMessagesCount], first unread message position is [$firstUnreadMessagePosition]")
+        Log.i(
+            "[Chat Messages Adapter] Unread message count is [$unreadMessagesCount], first unread message position is [$firstUnreadMessagePosition]"
+        )
         if (unreadMessagesCount > 0 && firstUnreadMessagePosition == -1) {
             computeFirstUnreadMessagePosition()
         }
@@ -255,16 +259,22 @@ class ChatMessagesListAdapter(
         // when new messages are added to the history whilst it is visible
         unreadMessagesCount = if (itemCount == 0 || forceUpdate) count else 0
         firstUnreadMessagePosition = -1
-        Log.i("[Chat Messages Adapter] Set [$unreadMessagesCount] unread message(s) for current chat room")
+        Log.i(
+            "[Chat Messages Adapter] Set [$unreadMessagesCount] unread message(s) for current chat room"
+        )
     }
 
     fun getFirstUnreadMessagePosition(): Int {
-        Log.i("[Chat Messages Adapter] First unread message position is [$firstUnreadMessagePosition]")
+        Log.i(
+            "[Chat Messages Adapter] First unread message position is [$firstUnreadMessagePosition]"
+        )
         return firstUnreadMessagePosition
     }
 
     private fun computeFirstUnreadMessagePosition() {
-        Log.i("[Chat Messages Adapter] [$unreadMessagesCount] unread message(s) for current chat room")
+        Log.i(
+            "[Chat Messages Adapter] [$unreadMessagesCount] unread message(s) for current chat room"
+        )
         if (unreadMessagesCount > 0) {
             Log.i("[Chat Messages Adapter] Computing first unread message position")
             var messageCount = 0
@@ -275,7 +285,9 @@ class ChatMessagesListAdapter(
                     messageCount += 1
                     if (messageCount == unreadMessagesCount) {
                         firstUnreadMessagePosition = position
-                        Log.i("[Chat Messages Adapter] First unread message position found [$firstUnreadMessagePosition]")
+                        Log.i(
+                            "[Chat Messages Adapter] First unread message position found [$firstUnreadMessagePosition]"
+                        )
                         break
                     }
                 }

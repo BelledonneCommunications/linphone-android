@@ -130,6 +130,7 @@ class ControlsViewModel : ViewModel() {
                     fullScreenMode.value = false
                 }
                 isVideoUpdateInProgress.value = false
+                proximitySensorEnabled.value = shouldProximitySensorBeEnabled()
             } else if (state == Call.State.PausedByRemote) {
                 fullScreenMode.value = false
             }
@@ -550,6 +551,25 @@ class ControlsViewModel : ViewModel() {
     }
 
     private fun shouldProximitySensorBeEnabled(): Boolean {
+        val currentCall = coreContext.core.currentCall ?: coreContext.core.calls.firstOrNull()
+        if (currentCall != null) {
+            when (val state = currentCall.state) {
+                Call.State.OutgoingEarlyMedia, Call.State.OutgoingProgress, Call.State.OutgoingRinging, Call.State.OutgoingInit -> {
+                    Log.i(
+                        "[Call Controls] Call is in outgoing state [$state], enabling proximity sensor"
+                    )
+                    return true
+                }
+                Call.State.IncomingEarlyMedia, Call.State.IncomingReceived -> {
+                    Log.i(
+                        "[Call Controls] Call is in incoming state [$state], enabling proximity sensor"
+                    )
+                    return true
+                }
+                else -> { }
+            }
+        }
+
         if (forceDisableProximitySensor.value == true) {
             Log.i(
                 "[Call Controls] Forcing proximity sensor to be disabled (usually in incoming/outgoing call fragments)"
