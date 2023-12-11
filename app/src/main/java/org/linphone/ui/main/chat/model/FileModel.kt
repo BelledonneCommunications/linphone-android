@@ -46,6 +46,9 @@ class FileModel @AnyThread constructor(
             mimeType = FileUtils.getMimeType(mime)
             isImage = mimeType == FileUtils.MimeType.Image
             isVideoPreview = mimeType == FileUtils.MimeType.Video
+            Log.d(
+                "$TAG File has already been downloaded, extension is [$extension], MIME is [$mime]"
+            )
         } else {
             mimeType = FileUtils.MimeType.Unknown
             isPdf = false

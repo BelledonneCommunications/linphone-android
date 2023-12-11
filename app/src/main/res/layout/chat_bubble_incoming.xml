@@ -166,7 +166,7 @@
                 android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
                 android:visibility="@{model.filesList.size() == 1 &amp;&amp; model.firstImagePath.length() >= 0 ? View.VISIBLE : View.GONE}"
-                coilBubble="@{model.firstImagePath}"/>/>
+                coilBubble="@{model.firstImagePath}"/>
 
             <ViewStub
                 android:id="@+id/meeting_info"

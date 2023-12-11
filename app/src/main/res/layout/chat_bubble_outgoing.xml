@@ -108,7 +108,7 @@
             app:layout_constraintEnd_toEndOf="parent">
 
             <com.google.android.flexbox.FlexboxLayout
-                android:id="@+id/images_grid"
+                android:id="@+id/files_grid"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onLongClick="@{onLongClickListener}"

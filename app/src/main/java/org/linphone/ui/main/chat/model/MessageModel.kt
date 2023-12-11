@@ -166,10 +166,12 @@ class MessageModel @WorkerThread constructor(
         override fun onMsgStateChanged(message: ChatMessage, messageState: ChatMessage.State?) {
             statusIcon.postValue(LinphoneUtils.getChatIconResId(chatMessage.state))
 
-            if (messageState == ChatMessage.State.FileTransferDone && !message.isOutgoing) {
+            if (messageState == ChatMessage.State.FileTransferDone) {
                 Log.i("$TAG File transfer is done")
-                downloadingFileModel?.downloadProgress?.postValue(-1)
-                downloadingFileModel = null
+                if (!message.isOutgoing) {
+                    downloadingFileModel?.downloadProgress?.postValue(-1)
+                    downloadingFileModel = null
+                }
                 computeContentsList()
             }
         }
@@ -300,13 +302,16 @@ class MessageModel @WorkerThread constructor(
         val contents = chatMessage.contents
         for (content in contents) {
             if (content.isIcalendar) {
+                Log.d("$TAG Found iCal content")
                 parseConferenceInvite(content)
                 displayableContentFound = true
             } else if (content.isText) {
+                Log.d("$TAG Found plain text content")
                 computeTextContent(content)
                 displayableContentFound = true
             } else {
                 if (content.isFile) {
+                    Log.d("$TAG Found file content with type [${content.type}/${content.subtype}]")
                     filesContentCount += 1
                     val path = content.filePath ?: ""
                     if (path.isNotEmpty()) {
@@ -351,11 +356,14 @@ class MessageModel @WorkerThread constructor(
                         Log.e("$TAG No path found for File Content!")
                     }
                 } else if (content.isFileTransfer) {
+                    Log.d(
+                        "$TAG Found file content (not downloaded yet) with type [${content.type}/${content.subtype}] and name [${content.name}]"
+                    )
                     filesContentCount += 1
                     val name = content.name ?: ""
                     if (name.isNotEmpty()) {
                         val fileModel = FileModel(name, content.fileSize.toLong(), true) { model ->
-                            Log.i("$TAG Starting downloading content for file [${model.fileName}]")
+                            Log.d("$TAG Starting downloading content for file [${model.fileName}]")
 
                             if (content.filePath.orEmpty().isEmpty()) {
                                 val contentName = content.name
@@ -390,6 +398,7 @@ class MessageModel @WorkerThread constructor(
         filesList.postValue(filesPath)
 
         if (!displayableContentFound) { // Temporary workaround to prevent empty bubbles
+            Log.w("$TAG No displayable content found, generating text based description")
             val describe = LinphoneUtils.getTextDescribingMessage(chatMessage)
             val spannable = Spannable.Factory.getInstance().newSpannable(describe)
             text.postValue(spannable)
