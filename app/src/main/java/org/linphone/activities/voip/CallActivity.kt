@@ -284,11 +284,6 @@ class CallActivity : ProximitySensorActivity() {
             permissionsRequiredList.add(Manifest.permission.CAMERA)
         }
 
-        if (Version.sdkAboveOrEqual(Version.API31_ANDROID_12) && !PermissionHelper.get().hasBluetoothConnectPermission()) {
-            Log.i("[Call Activity] Asking for BLUETOOTH_CONNECT permission")
-            permissionsRequiredList.add(Compatibility.BLUETOOTH_CONNECT)
-        }
-
         if (permissionsRequiredList.isNotEmpty()) {
             val permissionsRequired = arrayOfNulls<String>(permissionsRequiredList.size)
             permissionsRequiredList.toArray(permissionsRequired)
@@ -312,9 +307,6 @@ class CallActivity : ProximitySensorActivity() {
                         Log.i("[Call Activity] CAMERA permission has been granted")
                         coreContext.core.reloadVideoDevices()
                         controlsViewModel.toggleVideo()
-                    }
-                    Compatibility.BLUETOOTH_CONNECT -> if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                        Log.i("[Call Activity] BLUETOOTH_CONNECT permission has been granted")
                     }
                     Manifest.permission.WRITE_EXTERNAL_STORAGE -> if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
                         Log.i(

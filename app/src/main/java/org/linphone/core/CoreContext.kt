@@ -24,6 +24,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.PixelFormat
+import android.media.AudioDeviceCallback
+import android.media.AudioDeviceInfo
+import android.media.AudioManager
 import android.os.Handler
 import android.os.Looper
 import android.security.keystore.KeyGenParameterSpec
@@ -348,6 +351,22 @@ class CoreContext(
         Log.i("[Context] Ready")
     }
 
+    private val audioDeviceCallback = object : AudioDeviceCallback() {
+        override fun onAudioDevicesAdded(addedDevices: Array<out AudioDeviceInfo>?) {
+            if (!addedDevices.isNullOrEmpty()) {
+                Log.i("[Context] [${addedDevices.size}] new device(s) have been added")
+                core.reloadSoundDevices()
+            }
+        }
+
+        override fun onAudioDevicesRemoved(removedDevices: Array<out AudioDeviceInfo>?) {
+            if (!removedDevices.isNullOrEmpty()) {
+                Log.i("[Context] [${removedDevices.size}] existing device(s) have been removed")
+                core.reloadSoundDevices()
+            }
+        }
+    }
+
     fun start() {
         Log.i("[Context] Starting")
 
@@ -397,6 +416,9 @@ class CoreContext(
         }
 
         _lifecycleRegistry.currentState = Lifecycle.State.RESUMED
+
+        val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        audioManager.registerAudioDeviceCallback(audioDeviceCallback, handler)
         Log.i("[Context] Started")
     }
 
@@ -414,6 +436,9 @@ class CoreContext(
             TelecomHelper.get().destroy()
             TelecomHelper.destroy()
         }
+
+        val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        audioManager.unregisterAudioDeviceCallback(audioDeviceCallback)
 
         core.stop()
         core.removeListener(listener)
