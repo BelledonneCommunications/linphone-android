@@ -267,7 +267,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         @WorkerThread
         override fun onChatRoomRead(core: Core, chatRoom: ChatRoom) {
             Log.i(
-                "$TAG Conversation [$chatRoom] has been marked as read, removing notification if any"
+                "$TAG Conversation [${LinphoneUtils.getChatRoomId(chatRoom)}] has been marked as read, removing notification if any"
             )
             dismissChatNotification(chatRoom)
         }

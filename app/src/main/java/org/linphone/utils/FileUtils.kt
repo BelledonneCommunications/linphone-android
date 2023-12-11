@@ -142,7 +142,7 @@ class FileUtils {
                 var prefix = 1
                 while (file.exists()) {
                     file = File(path, prefix.toString() + "_" + fileName)
-                    Log.w("$TAG File with that name already exists, renamed to ${file.name}")
+                    Log.w("$TAG File with that name already exists, renamed to [${file.name}]")
                     prefix += 1
                 }
             }
@@ -159,7 +159,7 @@ class FileUtils {
                 var prefix = 1
                 while (file.exists()) {
                     file = File(path, prefix.toString() + "_" + fileName)
-                    Log.w("$TAG File with that name already exists, renamed to ${file.name}")
+                    Log.w("$TAG File with that name already exists, renamed to [${file.name}]")
                     prefix += 1
                 }
             }
@@ -190,7 +190,7 @@ class FileUtils {
                         )
                     } catch (e: Exception) {
                         Log.e(
-                            "$TAG Couldn't get URI for file $file using file provider ${context.getString(
+                            "$TAG Couldn't get URI for file [$file] using file provider ${context.getString(
                                 R.string.file_provider
                             )}"
                         )
@@ -289,13 +289,13 @@ class FileUtils {
 
         suspend fun copyFileTo(filePath: String, outputStream: OutputStream?): Boolean {
             if (outputStream == null) {
-                Log.e("$TAG Can't copy file $filePath to given null output stream")
+                Log.e("$TAG Can't copy file [$filePath] to given null output stream")
                 return false
             }
 
             val file = File(filePath)
             if (!file.exists()) {
-                Log.e("$TAG Can't copy file $filePath, it doesn't exists")
+                Log.e("$TAG Can't copy file [$filePath], it doesn't exists")
                 return false
             }
 
@@ -315,21 +315,52 @@ class FileUtils {
             return false
         }
 
+        fun renameFile(from: String, to: String): String {
+            val source = File(from)
+            val isImage = isExtensionImage(to)
+            val dest = getFileStoragePath(to, isImage = isImage, overrideExisting = true)
+
+            if (!source.exists()) {
+                if (dest.exists()) {
+                    Log.w(
+                        "$TAG Source file doesn't exists but destination does, considering renaming done"
+                    )
+                    return dest.absolutePath
+                }
+                Log.e("$TAG Can't rename file [${source.absoluteFile}], it doesn't exists!")
+                return ""
+            }
+
+            val destination = if (dest.exists()) {
+                getFileStoragePath(to, isImage = isImage, overrideExisting = false)
+            } else {
+                dest
+            }
+            if (source.renameTo(destination)) {
+                return destination.absolutePath
+            }
+
+            Log.e(
+                "$TAG Failed to rename file [${source.absoluteFile}] to [${destination.absoluteFile}]"
+            )
+            return ""
+        }
+
         suspend fun deleteFile(filePath: String) {
             withContext(Dispatchers.IO) {
                 val file = File(filePath)
                 if (file.exists()) {
                     try {
                         if (file.delete()) {
-                            Log.i("$TAG Deleted $filePath")
+                            Log.i("$TAG Deleted [$filePath]")
                         } else {
-                            Log.e("$TAG Can't delete $filePath")
+                            Log.e("$TAG Can't delete [$filePath]")
                         }
                     } catch (e: Exception) {
-                        Log.e("$TAG Can't delete $filePath, exception: $e")
+                        Log.e("$TAG Can't delete [$filePath], exception: $e")
                     }
                 } else {
-                    Log.e("$TAG File $filePath doesn't exists")
+                    Log.e("$TAG File [$filePath] doesn't exists")
                 }
             }
         }

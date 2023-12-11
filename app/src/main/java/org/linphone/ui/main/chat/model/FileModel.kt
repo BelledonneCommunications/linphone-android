@@ -9,6 +9,7 @@ import org.linphone.utils.FileUtils
 
 class FileModel @AnyThread constructor(
     val file: String,
+    val fileName: String,
     fileSize: Long,
     val isWaitingToBeDownloaded: Boolean = false,
     private val onClicked: ((model: FileModel) -> Unit)? = null
@@ -16,8 +17,6 @@ class FileModel @AnyThread constructor(
     companion object {
         private const val TAG = "[File Model]"
     }
-
-    val fileName: String = FileUtils.getNameFromFilePath(file)
 
     val formattedFileSize = MutableLiveData<String>()
 

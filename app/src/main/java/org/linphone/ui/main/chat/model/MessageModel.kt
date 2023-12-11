@@ -313,14 +313,19 @@ class MessageModel @WorkerThread constructor(
                 if (content.isFile) {
                     Log.d("$TAG Found file content with type [${content.type}/${content.subtype}]")
                     filesContentCount += 1
+
+                    checkAndRepairFilePathIfNeeded(content)
+
                     val path = content.filePath ?: ""
+                    val name = content.name ?: ""
                     if (path.isNotEmpty()) {
                         Log.d(
                             "$TAG Found file ready to be displayed [$path] with MIME [${content.type}/${content.subtype}] for message [${chatMessage.messageId}]"
                         )
+
                         when (content.type) {
                             "image", "video" -> {
-                                val fileModel = FileModel(path, content.fileSize.toLong()) { model ->
+                                val fileModel = FileModel(path, name, content.fileSize.toLong()) { model ->
                                     onContentClicked?.invoke(model.file)
                                 }
                                 filesPath.add(fileModel)
@@ -344,7 +349,7 @@ class MessageModel @WorkerThread constructor(
                                 displayableContentFound = true
                             }
                             else -> {
-                                val fileModel = FileModel(path, content.fileSize.toLong()) { model ->
+                                val fileModel = FileModel(path, name, content.fileSize.toLong()) { model ->
                                     onContentClicked?.invoke(model.file)
                                 }
                                 filesPath.add(fileModel)
@@ -362,7 +367,7 @@ class MessageModel @WorkerThread constructor(
                     filesContentCount += 1
                     val name = content.name ?: ""
                     if (name.isNotEmpty()) {
-                        val fileModel = FileModel(name, content.fileSize.toLong(), true) { model ->
+                        val fileModel = FileModel(name, name, content.fileSize.toLong(), true) { model ->
                             Log.d("$TAG Starting downloading content for file [${model.fileName}]")
 
                             if (content.filePath.orEmpty().isEmpty()) {
@@ -677,5 +682,34 @@ class MessageModel @WorkerThread constructor(
             emit(Unit)
             delay(50)
         }
+    }
+
+    @WorkerThread
+    private fun checkAndRepairFilePathIfNeeded(content: Content): String {
+        val path = content.filePath ?: ""
+        if (path.isEmpty()) return ""
+        val name = content.name ?: ""
+        if (name.isEmpty()) return ""
+
+        val extension = FileUtils.getExtensionFromFileName(path)
+        if (extension.contains("/")) {
+            Log.w(
+                "$TAG Weird extension [$extension] found for file [$path], trying with file name [$name]"
+            )
+            val fileExtension = FileUtils.getExtensionFromFileName(name)
+            if (!fileExtension.contains("/")) {
+                Log.w("$TAG File extension [$fileExtension] seems better, renaming file")
+                val newPath = FileUtils.renameFile(path, name)
+                if (newPath.isNotEmpty()) {
+                    content.filePath = newPath
+                    Log.w("$TAG File [$path] has been renamed [${content.filePath}]")
+                    return newPath
+                } else {
+                    Log.e("$TAG Failed to rename file!")
+                }
+            }
+        }
+
+        return ""
     }
 }
