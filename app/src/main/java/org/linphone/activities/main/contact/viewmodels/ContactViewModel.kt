@@ -50,7 +50,7 @@ class ContactViewModelFactory(private val friend: Friend) :
     }
 }
 
-class ContactViewModel(friend: Friend, async: Boolean = false) : MessageNotifierViewModel(), ContactDataInterface {
+class ContactViewModel(friend: Friend) : MessageNotifierViewModel(), ContactDataInterface {
     override val contact: MutableLiveData<Friend> = MutableLiveData<Friend>()
     override val displayName: MutableLiveData<String> = MutableLiveData<String>()
     override val securityLevel: MutableLiveData<ChatRoom.SecurityLevel> = MutableLiveData<ChatRoom.SecurityLevel>()
@@ -143,21 +143,12 @@ class ContactViewModel(friend: Friend, async: Boolean = false) : MessageNotifier
     init {
         fullName = friend.name ?: ""
 
-        if (async) {
-            contact.postValue(friend)
-            displayName.postValue(friend.name)
-            isNativeContact.postValue(friend.refKey != null)
-            presenceStatus.postValue(friend.consolidatedPresence)
-            readOnlyNativeAddressBook.postValue(corePreferences.readOnlyNativeContacts)
-            hasLongTermPresence.postValue(friend.hasLongTermPresence())
-        } else {
-            contact.value = friend
-            displayName.value = friend.name
-            isNativeContact.value = friend.refKey != null
-            presenceStatus.value = friend.consolidatedPresence
-            readOnlyNativeAddressBook.value = corePreferences.readOnlyNativeContacts
-            hasLongTermPresence.value = friend.hasLongTermPresence()
-        }
+        contact.value = friend
+        displayName.value = friend.name
+        isNativeContact.value = friend.refKey != null
+        presenceStatus.value = friend.consolidatedPresence
+        readOnlyNativeAddressBook.value = corePreferences.readOnlyNativeContacts
+        hasLongTermPresence.value = friend.hasLongTermPresence()
 
         friend.addListener {
             presenceStatus.value = it.consolidatedPresence
