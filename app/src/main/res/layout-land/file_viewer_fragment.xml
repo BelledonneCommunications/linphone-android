@@ -53,19 +53,22 @@
             android:orientation="horizontal"
             android:visibility="@{viewModel.isPdf ? View.VISIBLE : View.GONE, default=gone}" />
 
-        <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
-            android:id="@+id/dots_indicator"
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/pages_indicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:visibility="@{viewModel.isPdf ? View.VISIBLE : View.GONE, default=gone}"
-            app:dotsColor="?attr/color_main2_200"
-            app:dotsCornerRadius="8dp"
-            app:dotsSize="13dp"
-            app:dotsSpacing="5dp"
-            app:dotsWidthFactor="2.5"
-            app:selectedDotColor="?attr/color_main1_500"
-            app:progressMode="false"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:visibility="@{viewModel.isPdf ? View.VISIBLE : View.GONE}"
+            android:text="@{viewModel.pdfCurrentPage + ` / ` + viewModel.pdfPages, default=`1 / 30`}"
+            android:textColor="@color/white"
+            android:background="#80000000"
             app:layout_constraintBottom_toTopOf="@id/file_name"
             app:layout_constraintStart_toStartOf="@id/pdf_view_pager"
             app:layout_constraintEnd_toEndOf="@id/pdf_view_pager" />

@@ -40,6 +40,10 @@ class FileViewModel @UiThread constructor() : ViewModel() {
 
     val isPdf = MutableLiveData<Boolean>()
 
+    val pdfCurrentPage = MutableLiveData<String>()
+
+    val pdfPages = MutableLiveData<String>()
+
     val isVideo = MutableLiveData<Boolean>()
 
     val isVideoPlaying = MutableLiveData<Boolean>()
@@ -107,7 +111,10 @@ class FileViewModel @UiThread constructor() : ViewModel() {
                             ParcelFileDescriptor.MODE_READ_ONLY
                         )
                         pdfRenderer = PdfRenderer(input)
-                        Log.i("$TAG ${pdfRenderer.pageCount} pages in file $file")
+                        val count = pdfRenderer.pageCount
+                        Log.i("$TAG $count pages in file $file")
+                        pdfPages.postValue(count.toString())
+                        pdfCurrentPage.postValue("1")
                         pdfRendererReadyEvent.postValue(Event(true))
                     }
                 }
@@ -119,6 +126,7 @@ class FileViewModel @UiThread constructor() : ViewModel() {
             }
             else -> {
                 path.value = file
+                // TODO FIXME : handle audio & plain text files, open native app for unsupported files
             }
         }
     }

@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import kotlinx.coroutines.launch
 import org.linphone.core.tools.Log
 import org.linphone.databinding.FileViewerFragmentBinding
@@ -38,6 +39,12 @@ class FileViewerFragment : GenericFragment() {
     private lateinit var adapter: PdfPagesListAdapter
 
     private val args: FileViewerFragmentArgs by navArgs()
+
+    private val pageChangedListener = object : OnPageChangeCallback() {
+        override fun onPageSelected(position: Int) {
+            viewModel.pdfCurrentPage.value = (position + 1).toString()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -93,7 +100,6 @@ class FileViewerFragment : GenericFragment() {
 
                 adapter = PdfPagesListAdapter(viewModel)
                 binding.pdfViewPager.adapter = adapter
-                binding.dotsIndicator.attachTo(binding.pdfViewPager)
             }
         }
 
@@ -152,9 +158,12 @@ class FileViewerFragment : GenericFragment() {
     override fun onResume() {
         super.onResume()
         updateScreenSize()
+        binding.pdfViewPager.registerOnPageChangeCallback(pageChangedListener)
     }
 
     override fun onPause() {
+        binding.pdfViewPager.unregisterOnPageChangeCallback(pageChangedListener)
+
         if (binding.videoPlayer.isPlaying) {
             binding.videoPlayer.pause()
             viewModel.isVideoPlaying.value = false
