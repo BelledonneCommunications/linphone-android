@@ -595,7 +595,7 @@ class ConferenceViewModel : ViewModel() {
             val deviceData = devices.first()
             speakingParticipant.value = deviceData
             deviceData.isActiveSpeaker.value = true
-            speakingParticipantFound.value = false
+            speakingParticipantFound.value = true
         }
 
         for (device in conference.me.devices) {
