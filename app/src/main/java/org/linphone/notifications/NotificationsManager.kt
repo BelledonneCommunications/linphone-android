@@ -139,7 +139,10 @@ class NotificationsManager(private val context: Context) {
                         displayMissedCallNotification(call.remoteAddress)
                     }
                 }
-                else -> displayCallNotification(call)
+                Call.State.OutgoingInit, Call.State.OutgoingProgress, Call.State.OutgoingRinging -> {
+                    displayCallNotification(call, false)
+                }
+                else -> displayCallNotification(call, true)
             }
         }
 
@@ -556,32 +559,32 @@ class NotificationsManager(private val context: Context) {
         )
     }
 
-    private fun startForeground(notificationId: Int, callNotification: Notification) {
-        if (currentForegroundServiceNotificationId == 0 && service != null) {
+    private fun startForeground(
+        notificationId: Int,
+        callNotification: Notification,
+        isCallActive: Boolean
+    ) {
+        val coreService = service
+        if (coreService != null && (currentForegroundServiceNotificationId == 0 || currentForegroundServiceNotificationId == notificationId)) {
             Log.i(
                 "[Notifications Manager] Starting service as foreground using call notification [$notificationId]"
             )
             try {
                 currentForegroundServiceNotificationId = notificationId
 
-                val coreService = service
-                if (coreService != null) {
-                    Compatibility.startCallForegroundService(
-                        coreService,
-                        currentForegroundServiceNotificationId,
-                        callNotification
-                    )
-                } else {
-                    Log.w("[Notifications Manager] No Service found, can't start it as foreground")
-                    currentForegroundServiceNotificationId = 0
-                }
+                Compatibility.startCallForegroundService(
+                    coreService,
+                    currentForegroundServiceNotificationId,
+                    callNotification,
+                    isCallActive
+                )
             } catch (e: Exception) {
                 Log.e("[Notifications Manager] Foreground service wasn't allowed! $e")
                 currentForegroundServiceNotificationId = 0
             }
         } else {
             Log.w(
-                "[Notifications Manager] Can't start foreground service using notification id [$notificationId] (current foreground service notification id is [$currentForegroundServiceNotificationId]) and service [$service]"
+                "[Notifications Manager] Can't start foreground service using notification id [$notificationId] (current foreground service notification id is [$currentForegroundServiceNotificationId]) and service [$coreService]"
             )
         }
     }
@@ -759,7 +762,7 @@ class NotificationsManager(private val context: Context) {
             Log.i(
                 "[Notifications Manager] Notifying incoming call notification for foreground service [${notifiable.notificationId}]"
             )
-            startForeground(notifiable.notificationId, notification)
+            startForeground(notifiable.notificationId, notification, false)
         }
     }
 
@@ -812,7 +815,7 @@ class NotificationsManager(private val context: Context) {
         cancel(MISSED_CALLS_NOTIF_ID, MISSED_CALL_TAG)
     }
 
-    fun displayCallNotification(call: Call, useAsForeground: Boolean = false) {
+    private fun displayCallNotification(call: Call, isCallActive: Boolean) {
         val notifiable = getNotifiableForCall(call)
 
         val serviceChannel = context.getString(R.string.notification_channel_service_id)
@@ -861,11 +864,11 @@ class NotificationsManager(private val context: Context) {
         Log.i("[Notifications Manager] Notifying call notification [${notifiable.notificationId}]")
         notify(notifiable.notificationId, notification)
 
-        if (useAsForeground || (service != null && currentForegroundServiceNotificationId == 0)) {
+        if (service != null && (currentForegroundServiceNotificationId == 0 || currentForegroundServiceNotificationId == notifiable.notificationId)) {
             Log.i(
                 "[Notifications Manager] Notifying call notification for foreground service [${notifiable.notificationId}]"
             )
-            startForeground(notifiable.notificationId, notification)
+            startForeground(notifiable.notificationId, notification, isCallActive)
         }
     }
 
