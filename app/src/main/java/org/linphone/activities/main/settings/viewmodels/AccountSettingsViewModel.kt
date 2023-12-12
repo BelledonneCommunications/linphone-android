@@ -313,7 +313,6 @@ class AccountSettingsViewModel(val account: Account) : GenericSettingsViewModel(
             newNatPolicy.isStunEnabled = newValue.isNotEmpty()
             params.natPolicy = newNatPolicy
             account.params = params
-            if (newValue.isEmpty()) ice.value = false
             stunServer.value = newValue
         }
     }

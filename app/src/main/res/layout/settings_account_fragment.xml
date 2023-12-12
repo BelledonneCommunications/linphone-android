@@ -188,8 +188,7 @@
                     layout="@layout/settings_widget_switch"
                     linphone:title="@{@string/account_settings_ice_title}"
                     linphone:listener="@{viewModel.iceListener}"
-                    linphone:checked="@={viewModel.ice}"
-                    linphone:enabled="@{viewModel.stunServer.length() > 0}"/>
+                    linphone:checked="@={viewModel.ice}"/>
 
                 <include
                     layout="@layout/settings_widget_switch"
