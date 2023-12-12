@@ -44,6 +44,8 @@ class FileViewModel @UiThread constructor() : ViewModel() {
 
     val pdfPages = MutableLiveData<String>()
 
+    val isImage = MutableLiveData<Boolean>()
+
     val isVideo = MutableLiveData<Boolean>()
 
     val isVideoPlaying = MutableLiveData<Boolean>()
@@ -119,14 +121,24 @@ class FileViewModel @UiThread constructor() : ViewModel() {
                     }
                 }
             }
+            FileUtils.MimeType.Image -> {
+                Log.i("$TAG File [$file] seems to be an image")
+                isImage.value = true
+                path.value = file
+            }
             FileUtils.MimeType.Video -> {
                 Log.i("$TAG File [$file] seems to be a video")
                 isVideo.value = true
                 isVideoPlaying.value = false
             }
+            FileUtils.MimeType.Audio -> {
+                // TODO: handle audio files
+            }
+            FileUtils.MimeType.PlainText -> {
+                // TODO: handle plain text files
+            }
             else -> {
-                path.value = file
-                // TODO FIXME : handle audio & plain text files, open native app for unsupported files
+                // TODO: open native app for unsupported files
             }
         }
     }

@@ -19,12 +19,16 @@
  */
 package org.linphone.ui.main.chat.fragment
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.webkit.MimeTypeMap
 import androidx.annotation.UiThread
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
@@ -36,12 +40,14 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatListFragmentBinding
+import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.chat.adapter.ConversationsListAdapter
 import org.linphone.ui.main.chat.viewmodel.ConversationsListViewModel
 import org.linphone.ui.main.fragment.AbstractTopBarFragment
 import org.linphone.ui.main.history.fragment.HistoryMenuDialogFragment
 import org.linphone.ui.main.viewer.fragment.FileViewerFragmentDirections
 import org.linphone.utils.Event
+import org.linphone.utils.FileUtils
 
 @UiThread
 class ConversationsListFragment : AbstractTopBarFragment() {
@@ -236,9 +242,32 @@ class ConversationsListFragment : AbstractTopBarFragment() {
             it.consume { path ->
                 if (findNavController().currentDestination?.id == R.id.conversationsListFragment) {
                     Log.i("$TAG Navigating to file viewer fragment with path [$path]")
-                    val action =
-                        FileViewerFragmentDirections.actionGlobalFileViewerFragment(path)
-                    findNavController().navigate(action)
+                    val extension = FileUtils.getExtensionFromFileName(path)
+                    val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+                    when (FileUtils.getMimeType(mime)) {
+                        FileUtils.MimeType.Image, FileUtils.MimeType.Video, FileUtils.MimeType.Pdf -> {
+                            val action =
+                                FileViewerFragmentDirections.actionGlobalFileViewerFragment(path)
+                            findNavController().navigate(action)
+                        }
+                        else -> {
+                            val intent = Intent(Intent.ACTION_VIEW)
+                            val contentUri: Uri =
+                                FileUtils.getPublicFilePath(requireContext(), path)
+                            intent.setDataAndType(contentUri, "file/$mime")
+                            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                            try {
+                                requireContext().startActivity(intent)
+                            } catch (anfe: ActivityNotFoundException) {
+                                Log.e("$TAG Can't open file [$path] in third party app: $anfe")
+                                val message = getString(
+                                    R.string.toast_no_app_registered_to_handle_content_type_error
+                                )
+                                val icon = R.drawable.file
+                                (requireActivity() as MainActivity).showRedToast(message, icon)
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -26,7 +26,7 @@
             android:onClick="@{() -> viewModel.toggleFullScreen()}"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:visibility="@{viewModel.isVideo ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.isVideo ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -65,7 +65,7 @@
             android:paddingEnd="5dp"
             android:paddingTop="2dp"
             android:paddingBottom="2dp"
-            android:visibility="@{viewModel.isPdf ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.isPdf ? View.VISIBLE : View.GONE, default=gone}"
             android:text="@{viewModel.pdfCurrentPage + ` / ` + viewModel.pdfPages, default=`1 / 30`}"
             android:textColor="@color/white"
             android:background="#80000000"
@@ -82,7 +82,7 @@
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             coilFile="@{viewModel.path}"
-            android:visibility="@{viewModel.isPdf || viewModel.isVideo ? View.GONE : View.VISIBLE}" />
+            android:visibility="@{viewModel.isImage ? View.VISIBLE : View.GONE, default=gone}" />
 
         <ImageView
             android:id="@+id/back"
