@@ -45,8 +45,8 @@ class Compatibility {
             notification: Notification,
             foregroundServiceType: Int
         ) {
-            if (Version.sdkAboveOrEqual(Version.API29_ANDROID_10)) {
-                Api29Compatibility.startServiceForeground(
+            if (Version.sdkAboveOrEqual(Version.API34_ANDROID_14_UPSIDE_DOWN_CAKE)) {
+                Api34Compatibility.startServiceForeground(
                     service,
                     id,
                     notification,

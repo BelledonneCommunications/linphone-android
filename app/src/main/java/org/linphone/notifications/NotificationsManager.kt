@@ -88,6 +88,8 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         private const val MISSED_CALL_ID = 10
     }
 
+    private var currentForegroundServiceNotificationId = -1
+
     private val notificationManager: NotificationManagerCompat by lazy {
         NotificationManagerCompat.from(context)
     }
@@ -359,7 +361,8 @@ class NotificationsManager @MainThread constructor(private val context: Context)
                 stopCallForeground()
             } else {
                 Log.i("$TAG At least a call is still running")
-                startCallForeground()
+                val call = core.currentCall ?: core.calls.first()
+                startCallForeground(call)
             }
         }
     }
@@ -405,6 +408,10 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             isIncoming
         )
         notify(notifiable.notificationId, notification)
+
+        if (notifiable.notificationId == currentForegroundServiceNotificationId) {
+            startCallForeground(call)
+        }
     }
 
     @WorkerThread
@@ -449,8 +456,8 @@ class NotificationsManager @MainThread constructor(private val context: Context)
     }
 
     @WorkerThread
-    private fun startCallForeground() {
-        Log.i("$TAG Trying to start foreground Service using call notification")
+    private fun startCallForeground(call: Call) {
+        Log.i("$TAG Trying to start/update foreground Service using call notification")
 
         val channelId = context.getString(R.string.notification_channel_call_id)
         val channel = notificationManager.getNotificationChannel(channelId)
@@ -473,17 +480,48 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         }
         Log.i("$TAG Found notification [${notification.id}] for current Call")
 
+        var mask = Compatibility.FOREGROUND_SERVICE_TYPE_PHONE_CALL
+        val callState = call.state
+        if (!LinphoneUtils.isCallIncoming(callState) && !LinphoneUtils.isCallOutgoing(callState) && !LinphoneUtils.isCallEnding(
+                callState
+            )
+        ) {
+            if (ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.RECORD_AUDIO
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                mask = mask or Compatibility.FOREGROUND_SERVICE_TYPE_MICROPHONE
+                Log.i(
+                    "$TAG RECORD_AUDIO permission has been granted, adding FOREGROUND_SERVICE_TYPE_MICROPHONE"
+                )
+            }
+            if (call.currentParams.isVideoEnabled) {
+                if (ActivityCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.CAMERA
+                    ) == PackageManager.PERMISSION_GRANTED
+                ) {
+                    mask = mask or Compatibility.FOREGROUND_SERVICE_TYPE_CAMERA
+                    Log.i(
+                        "$TAG CAMERA permission has been granted, adding FOREGROUND_SERVICE_TYPE_CAMERA"
+                    )
+                }
+            }
+        }
+
         val service = coreService
         if (service != null) {
-            Log.i("$TAG Service found, starting it as foreground using notification")
+            Log.i(
+                "$TAG Service found, starting it as foreground using notification ID [${notifiable.notificationId}] with type(s) [$mask]"
+            )
             Compatibility.startServiceForeground(
                 service,
                 notifiable.notificationId,
                 notification.notification,
-                Compatibility.FOREGROUND_SERVICE_TYPE_PHONE_CALL
-                    or Compatibility.FOREGROUND_SERVICE_TYPE_MICROPHONE
-                    or Compatibility.FOREGROUND_SERVICE_TYPE_CAMERA
+                mask
             )
+            currentForegroundServiceNotificationId = notifiable.notificationId
         } else {
             Log.w("$TAG Core Foreground Service hasn't started yet...")
         }
@@ -493,9 +531,12 @@ class NotificationsManager @MainThread constructor(private val context: Context)
     private fun stopCallForeground() {
         val service = coreService
         if (service != null) {
-            Log.i("$TAG Stopping foreground service")
+            Log.i(
+                "$TAG Stopping foreground service (was using notification ID [$currentForegroundServiceNotificationId])"
+            )
             service.stopForeground(STOP_FOREGROUND_REMOVE)
             service.stopSelf()
+            currentForegroundServiceNotificationId = -1
         } else {
             Log.w("$TAG Can't stop foreground service & notif, no service was found")
         }

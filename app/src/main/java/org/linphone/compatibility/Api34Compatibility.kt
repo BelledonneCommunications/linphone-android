@@ -19,7 +19,9 @@
  */
 package org.linphone.compatibility
 
+import android.app.Notification
 import android.app.NotificationManager
+import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -33,6 +35,23 @@ import org.linphone.core.tools.Log
 class Api34Compatibility {
     companion object {
         private const val TAG = "[API 34 Compatibility]"
+
+        fun startServiceForeground(
+            service: Service,
+            id: Int,
+            notification: Notification,
+            foregroundServiceType: Int
+        ) {
+            try {
+                service.startForeground(
+                    id,
+                    notification,
+                    foregroundServiceType
+                )
+            } catch (e: Exception) {
+                Log.e("$TAG Can't start service as foreground! $e")
+            }
+        }
 
         fun hasFullScreenIntentPermission(context: Context): Boolean {
             val notificationManager = context.getSystemService(NotificationManager::class.java) as NotificationManager

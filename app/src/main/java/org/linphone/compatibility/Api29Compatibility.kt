@@ -19,35 +19,15 @@
  */
 package org.linphone.compatibility
 
-import android.app.Notification
-import android.app.Service
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
-import org.linphone.core.tools.Log
 
 @RequiresApi(Build.VERSION_CODES.Q)
 class Api29Compatibility {
     companion object {
         private const val TAG = "[API 29 Compatibility]"
-
-        fun startServiceForeground(
-            service: Service,
-            id: Int,
-            notification: Notification,
-            foregroundServiceType: Int
-        ) {
-            try {
-                service.startForeground(
-                    id,
-                    notification,
-                    foregroundServiceType
-                )
-            } catch (e: Exception) {
-                Log.e("$TAG Can't start service as foreground! $e")
-            }
-        }
 
         fun getMediaCollectionUri(isImage: Boolean, isVideo: Boolean, isAudio: Boolean): Uri {
             return when {
