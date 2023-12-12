@@ -31,6 +31,7 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.core.content.ContextCompat
 import org.linphone.core.tools.Log
+import org.linphone.utils.PermissionHelper
 
 @TargetApi(34)
 class Api34Compatibility {
@@ -50,12 +51,42 @@ class Api34Compatibility {
             ContextCompat.startActivity(context, intent, null)
         }
 
-        fun startCallForegroundService(service: Service, notifId: Int, notif: Notification) {
+        fun startCallForegroundService(
+            service: Service,
+            notifId: Int,
+            notif: Notification,
+            isCallActive: Boolean
+        ) {
+            val mask = if (isCallActive) {
+                Log.i(
+                    "[Api34 Compatibility] Trying to start service as foreground using at least FOREGROUND_SERVICE_TYPE_PHONE_CALL"
+                )
+                var computeMask = ServiceInfo.FOREGROUND_SERVICE_TYPE_PHONE_CALL
+                if (PermissionHelper.get().hasCameraPermission()) {
+                    Log.i(
+                        "[Api34 Compatibility] CAMERA permission has been granted, adding FOREGROUND_SERVICE_TYPE_CAMERA"
+                    )
+                    computeMask = computeMask or ServiceInfo.FOREGROUND_SERVICE_TYPE_CAMERA
+                }
+                if (PermissionHelper.get().hasRecordAudioPermission()) {
+                    Log.i(
+                        "[Api34 Compatibility] RECORD_AUDIO permission has been granted, adding FOREGROUND_SERVICE_TYPE_MICROPHONE"
+                    )
+                    computeMask = computeMask or ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE
+                }
+                computeMask
+            } else {
+                Log.i(
+                    "[Api34 Compatibility] Trying to start service as foreground using only FOREGROUND_SERVICE_TYPE_PHONE_CALL because call isn't active yet"
+                )
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_PHONE_CALL
+            }
+
             try {
                 service.startForeground(
                     notifId,
                     notif,
-                    ServiceInfo.FOREGROUND_SERVICE_TYPE_PHONE_CALL or ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE or ServiceInfo.FOREGROUND_SERVICE_TYPE_CAMERA
+                    mask
                 )
             } catch (fssnae: ForegroundServiceStartNotAllowedException) {
                 Log.e("[Api34 Compatibility] Can't start service as foreground! $fssnae")

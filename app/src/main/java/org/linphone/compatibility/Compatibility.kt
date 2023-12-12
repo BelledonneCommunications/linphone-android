@@ -290,9 +290,14 @@ class Compatibility {
             }
         }
 
-        fun startCallForegroundService(service: Service, notifId: Int, notif: Notification) {
+        fun startCallForegroundService(
+            service: Service,
+            notifId: Int,
+            notif: Notification,
+            isCallActive: Boolean
+        ) {
             if (Version.sdkAboveOrEqual(Version.API34_ANDROID_14_UPSIDE_DOWN_CAKE)) {
-                Api34Compatibility.startCallForegroundService(service, notifId, notif)
+                Api34Compatibility.startCallForegroundService(service, notifId, notif, isCallActive)
             } else {
                 startForegroundService(service, notifId, notif)
             }
