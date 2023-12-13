@@ -278,6 +278,14 @@ class ConversationFragment : SlidingPaneChildFragment() {
                     }
                 } else {
                     sendMessageViewModel.configureChatRoom(viewModel.chatRoom)
+
+                    // Wait for chat room to be ready before trying to forward a message in it
+                    sharedViewModel.messageToForwardEvent.observe(viewLifecycleOwner) {
+                        it.consume { toForward ->
+                            Log.i("$TAG Found message to forward")
+                            sendMessageViewModel.forwardMessage(toForward)
+                        }
+                    }
                 }
             }
         }
@@ -297,7 +305,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
 
         viewModel.scrollToBottomEvent.observe(viewLifecycleOwner) {
             it.consume {
-                binding.eventsList.scrollToPosition(adapter.itemCount - 1)
+                scrollToBottom()
             }
         }
 
@@ -516,7 +524,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
                 sendMessageViewModel.isEmojiPickerOpen.value = false
 
                 // Scroll to bottom when keyboard is opened so latest message is visible
-                binding.eventsList.scrollToPosition(adapter.itemCount - 1)
+                scrollToBottom()
             }
         }
     }
@@ -533,7 +541,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
         if (viewModel.scrollingPosition != SCROLLING_POSITION_NOT_SET) {
             binding.eventsList.scrollToPosition(viewModel.scrollingPosition)
         } else {
-            binding.eventsList.scrollToPosition(adapter.itemCount - 1)
+            scrollToBottom()
         }
 
         try {
@@ -573,34 +581,40 @@ class ConversationFragment : SlidingPaneChildFragment() {
         currentChatMessageModelForBottomSheet = null
     }
 
-    private fun scrollToFirstUnreadMessageOrBottom(smooth: Boolean): Boolean {
-        if (adapter.itemCount > 0) {
-            val recyclerView = binding.eventsList
+    private fun scrollToBottom() {
+        if (adapter.itemCount == 0) return
 
-            // Scroll to first unread message if any, unless we are already on it
-            val firstUnreadMessagePosition = adapter.getFirstUnreadMessagePosition()
-            val currentPosition = (recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
-            val indexToScrollTo = if (firstUnreadMessagePosition != -1 && firstUnreadMessagePosition != currentPosition) {
-                firstUnreadMessagePosition
-            } else {
-                adapter.itemCount - 1
-            }
-
-            Log.i(
-                "$TAG Scrolling to position $indexToScrollTo, first unread message is at $firstUnreadMessagePosition"
-            )
-            if (smooth) {
-                recyclerView.smoothScrollToPosition(indexToScrollTo)
-            } else {
-                recyclerView.scrollToPosition(indexToScrollTo)
-            }
-
-            if (firstUnreadMessagePosition == 0) {
-                // Return true only if all unread messages don't fit in the recyclerview height
-                return recyclerView.computeVerticalScrollRange() > recyclerView.height
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                delay(100)
+                withContext(Dispatchers.Main) {
+                    binding.eventsList.scrollToPosition(adapter.itemCount - 1)
+                }
             }
         }
-        return false
+    }
+
+    private fun scrollToFirstUnreadMessageOrBottom(smooth: Boolean) {
+        if (adapter.itemCount == 0) return
+
+        val recyclerView = binding.eventsList
+        // Scroll to first unread message if any, unless we are already on it
+        val firstUnreadMessagePosition = adapter.getFirstUnreadMessagePosition()
+        val currentPosition = (recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
+        val indexToScrollTo = if (firstUnreadMessagePosition != -1 && firstUnreadMessagePosition != currentPosition) {
+            firstUnreadMessagePosition
+        } else {
+            adapter.itemCount - 1
+        }
+
+        Log.i(
+            "$TAG Scrolling to position $indexToScrollTo, first unread message is at $firstUnreadMessagePosition"
+        )
+        if (smooth) {
+            recyclerView.smoothScrollToPosition(indexToScrollTo)
+        } else {
+            recyclerView.scrollToPosition(indexToScrollTo)
+        }
     }
 
     private fun showChatMessageLongPressMenu(chatMessageModel: MessageModel) {
@@ -646,6 +660,16 @@ class ConversationFragment : SlidingPaneChildFragment() {
             Log.i("$TAG Re-sending message in error state")
             chatMessageModel.resend()
             dialog.dismiss()
+        }
+
+        layout.setForwardClickListener {
+            Log.i("$TAG Forwarding message, going back to conversations list")
+            // Remove observer before setting the message to forward
+            // as we don't want to forward it in this chat room
+            sharedViewModel.messageToForwardEvent.removeObservers(viewLifecycleOwner)
+            sharedViewModel.messageToForwardEvent.postValue(Event(chatMessageModel))
+            dialog.dismiss()
+            goBack()
         }
 
         layout.setReplyClickListener {

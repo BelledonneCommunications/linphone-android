@@ -82,7 +82,7 @@
             android:id="@+id/reply_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="5dp"
             android:text="@{model.replyTo, default=`John Doe`}"
             android:textSize="12sp"
             android:textColor="?attr/color_main2_500"
@@ -135,7 +135,7 @@
             android:id="@+id/forward_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="5dp"
             android:text="@string/message_forwarded_label"
             android:textSize="12sp"
             android:textColor="?attr/color_main2_500"
@@ -187,11 +187,10 @@
                 android:onClick="@{() -> model.firstImageClicked()}"
                 android:onLongClick="@{onLongClickListener}"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxHeight="@dimen/chat_bubble_big_image_max_size"
+                android:layout_height="@dimen/chat_bubble_big_image_max_size"
                 android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
-                android:visibility="@{model.filesList.size() == 1 &amp;&amp; model.firstImagePath.length() >= 0 ? View.VISIBLE : View.GONE}"
+                android:visibility="@{model.filesList.size() == 1 &amp;&amp; model.firstImagePath.length() >= 0 ? View.VISIBLE : View.GONE, default=gone}"
                 coilBubble="@{model.firstImagePath}"/>
 
             <ViewStub

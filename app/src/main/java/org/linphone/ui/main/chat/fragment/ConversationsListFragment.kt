@@ -273,6 +273,39 @@ class ConversationsListFragment : AbstractTopBarFragment() {
             }
         }
 
+        sharedViewModel.messageToForwardEvent.observe(viewLifecycleOwner) { event ->
+            if (!event.consumed()) {
+                // Do not consume it yet
+                val message = getString(R.string.toast_message_waiting_to_be_forwarded)
+                val icon = R.drawable.forward
+                (requireActivity() as MainActivity).showGreenToast(message, icon)
+                Log.i("$TAG Found a message waiting to be forwarded")
+            }
+        }
+
+        sharedViewModel.filesToShareFromIntent.observe(viewLifecycleOwner) { filesToShare ->
+            val count = filesToShare.size
+            if (count > 0) {
+                val message = AppUtils.getStringWithPlural(
+                    R.plurals.toast_files_waiting_to_be_shared,
+                    count,
+                    filesToShare.size.toString()
+                )
+                val icon = R.drawable.file
+                (requireActivity() as MainActivity).showGreenToast(message, icon)
+                Log.i("$TAG Found [$count] files waiting to be shared")
+            }
+        }
+
+        sharedViewModel.textToShareFromIntent.observe(viewLifecycleOwner) { textToShare ->
+            if (textToShare.isNotEmpty()) {
+                val message = getString(R.string.toast_text_waiting_to_be_shared)
+                val icon = R.drawable.file
+                (requireActivity() as MainActivity).showGreenToast(message, icon)
+                Log.i("$TAG Found text waiting to be shared")
+            }
+        }
+
         // TopBarFragment related
 
         setViewModelAndTitle(
@@ -309,19 +342,6 @@ class ConversationsListFragment : AbstractTopBarFragment() {
             adapter.registerAdapterDataObserver(dataObserver)
         } catch (e: IllegalStateException) {
             Log.e("$TAG Failed to unregister data observer to adapter: $e")
-        }
-
-        val filesToShare = sharedViewModel.filesToShareFromIntent.value.orEmpty()
-        if (filesToShare.isNotEmpty()) {
-            val count = filesToShare.size
-            val message = AppUtils.getStringWithPlural(
-                R.plurals.toast_files_waiting_to_be_shared,
-                count,
-                filesToShare.size.toString()
-            )
-            val icon = R.drawable.file
-            (requireActivity() as MainActivity).showGreenToast(message, icon)
-            Log.i("$TAG Found [$count] files waiting to be shared")
         }
 
         // Scroll to top when fragment is resumed

@@ -160,6 +160,8 @@
         <item quantity="one">%s file waiting to be shared</item>
         <item quantity="other">%s files waiting to be shared</item>
     </plurals>
+    <string name="toast_text_waiting_to_be_shared">Text is waiting to be shared</string>
+    <string name="toast_message_waiting_to_be_forwarded">A message is waiting to be forwarded</string>
 
     <string name="assistant_account_login">Login</string>
     <string name="assistant_scan_qr_code">Scan QR code</string>

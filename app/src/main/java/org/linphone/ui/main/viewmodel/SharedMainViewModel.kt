@@ -24,6 +24,7 @@ import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.core.ChatRoom
+import org.linphone.ui.main.chat.model.MessageModel
 import org.linphone.utils.Event
 
 class SharedMainViewModel @UiThread constructor() : ViewModel() {
@@ -101,6 +102,8 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
     val textToShareFromIntent = MutableLiveData<String>()
 
     val filesToShareFromIntent = MutableLiveData<ArrayList<String>>()
+
+    val messageToForwardEvent = MutableLiveData<Event<MessageModel>>()
 
     var displayedChatRoom: ChatRoom? = null // Prevents the need to go look for the chat room
     val showConversationEvent: MutableLiveData<Event<Pair<String, String>>> by lazy {

@@ -349,6 +349,18 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
+    fun forwardMessage(toForward: MessageModel) {
+        coreContext.postOnCoreThread {
+            if (::chatRoom.isInitialized) {
+                val messageToForward = toForward.chatMessage
+                val forwardedMessage = chatRoom.createForwardMessage(messageToForward)
+                Log.i("$TAG Sending forwarded message")
+                forwardedMessage.send()
+            }
+        }
+    }
+
+    @UiThread
     fun startVoiceMessageRecording() {
         if (ActivityCompat.checkSelfPermission(
                 coreContext.context,

@@ -37,4 +37,9 @@ open class Event<out T> @AnyThread constructor(private val content: T) {
             handleContent(content)
         }
     }
+
+    @UiThread
+    fun consumed(): Boolean {
+        return handled.get()
+    }
 }
