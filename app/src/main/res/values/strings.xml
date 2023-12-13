@@ -156,6 +156,10 @@
     <string name="toast_group_conversation_left">You have left the group</string>
     <string name="toast_low_media_volume">Media volume is low, you may not hear anything!</string>
     <string name="toast_no_app_registered_to_handle_content_type_error">No app found to open this kind of file</string>
+    <plurals name="toast_files_waiting_to_be_shared">
+        <item quantity="one">%s file waiting to be shared</item>
+        <item quantity="other">%s files waiting to be shared</item>
+    </plurals>
 
     <string name="assistant_account_login">Login</string>
     <string name="assistant_scan_qr_code">Scan QR code</string>

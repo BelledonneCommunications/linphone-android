@@ -46,6 +46,7 @@ import org.linphone.ui.main.chat.viewmodel.ConversationsListViewModel
 import org.linphone.ui.main.fragment.AbstractTopBarFragment
 import org.linphone.ui.main.history.fragment.HistoryMenuDialogFragment
 import org.linphone.ui.main.viewer.fragment.FileViewerFragmentDirections
+import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 
@@ -308,6 +309,19 @@ class ConversationsListFragment : AbstractTopBarFragment() {
             adapter.registerAdapterDataObserver(dataObserver)
         } catch (e: IllegalStateException) {
             Log.e("$TAG Failed to unregister data observer to adapter: $e")
+        }
+
+        val filesToShare = sharedViewModel.filesToShareFromIntent.value.orEmpty()
+        if (filesToShare.isNotEmpty()) {
+            val count = filesToShare.size
+            val message = AppUtils.getStringWithPlural(
+                R.plurals.toast_files_waiting_to_be_shared,
+                count,
+                filesToShare.size.toString()
+            )
+            val icon = R.drawable.file
+            (requireActivity() as MainActivity).showGreenToast(message, icon)
+            Log.i("$TAG Found [$count] files waiting to be shared")
         }
 
         // Scroll to top when fragment is resumed
