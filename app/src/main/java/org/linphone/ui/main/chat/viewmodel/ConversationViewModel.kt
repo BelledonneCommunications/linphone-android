@@ -85,10 +85,6 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<String>>()
     }
 
-    val scrollToBottomEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
-    }
-
     val chatRoomFoundEvent = MutableLiveData<Event<Boolean>>()
 
     lateinit var chatRoom: ChatRoom
@@ -138,7 +134,6 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         override fun onChatMessageSent(chatRoom: ChatRoom, eventLog: EventLog) {
             val message = eventLog.chatMessage
             Log.i("$TAG Message [$message] has been sent")
-            scrollToBottomEvent.postValue(Event(true))
         }
 
         @WorkerThread
@@ -182,10 +177,6 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             Log.i(
                 "$TAG A reaction [${reaction.body}] was received from [${reaction.fromAddress.asStringUriOnly()}]"
             )
-            if (message == (events.value.orEmpty().lastOrNull()?.model as? MessageModel)?.chatMessage) {
-                // Scrolling to bottom to ensure reaction is visible
-                scrollToBottomEvent.postValue(Event(true))
-            }
         }
 
         @WorkerThread

@@ -303,12 +303,6 @@ class ConversationFragment : SlidingPaneChildFragment() {
             }
         }
 
-        viewModel.scrollToBottomEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                scrollToBottom()
-            }
-        }
-
         binding.messageBottomSheet.bottomSheetList.setHasFixedSize(true)
         val bottomSheetLayoutManager = LinearLayoutManager(requireContext())
         binding.messageBottomSheet.bottomSheetList.layoutManager = bottomSheetLayoutManager
@@ -518,9 +512,6 @@ class ConversationFragment : SlidingPaneChildFragment() {
         binding.root.setKeyboardInsetListener { keyboardVisible ->
             if (keyboardVisible) {
                 sendMessageViewModel.isEmojiPickerOpen.value = false
-
-                // Scroll to bottom when keyboard is opened so latest message is visible
-                scrollToBottom()
             }
         }
     }
@@ -536,8 +527,6 @@ class ConversationFragment : SlidingPaneChildFragment() {
 
         if (viewModel.scrollingPosition != SCROLLING_POSITION_NOT_SET) {
             binding.eventsList.scrollToPosition(viewModel.scrollingPosition)
-        } else {
-            scrollToBottom()
         }
 
         try {
@@ -575,19 +564,6 @@ class ConversationFragment : SlidingPaneChildFragment() {
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.messageBottomSheet.root)
         bottomSheetBehavior.removeBottomSheetCallback(bottomSheetCallback)
         currentChatMessageModelForBottomSheet = null
-    }
-
-    private fun scrollToBottom() {
-        if (adapter.itemCount == 0) return
-
-        lifecycleScope.launch {
-            withContext(Dispatchers.IO) {
-                delay(100)
-                withContext(Dispatchers.Main) {
-                    binding.eventsList.scrollToPosition(adapter.itemCount - 1)
-                }
-            }
-        }
     }
 
     private fun scrollToFirstUnreadMessageOrBottom(smooth: Boolean) {
