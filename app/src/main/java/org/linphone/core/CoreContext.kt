@@ -34,6 +34,7 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.emoji2.text.EmojiCompat
 import androidx.lifecycle.MutableLiveData
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import java.util.*
 import org.linphone.BuildConfig
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -191,6 +192,25 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         }
     }
 
+    private val loggingServiceListener = object : LoggingServiceListenerStub() {
+        @WorkerThread
+        override fun onLogMessageWritten(
+            logService: LoggingService,
+            domain: String,
+            level: LogLevel,
+            message: String
+        ) {
+            when (level) {
+                LogLevel.Error -> android.util.Log.e(domain, message)
+                LogLevel.Warning -> android.util.Log.w(domain, message)
+                LogLevel.Message -> android.util.Log.i(domain, message)
+                LogLevel.Fatal -> android.util.Log.wtf(domain, message)
+                else -> android.util.Log.d(domain, message)
+            }
+            FirebaseCrashlytics.getInstance().log("[$domain] [${level.name}] $message")
+        }
+    }
+
     init {
         EmojiCompat.init(context)
         emojiCompat = EmojiCompat.get()
@@ -202,6 +222,16 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
     override fun run() {
         Log.i("$TAG Creating Core")
         Looper.prepare()
+
+        Factory.instance().loggingService.addListener(loggingServiceListener)
+        Log.i("$TAG Crashlytics enabled, register logging service listener")
+
+        Log.i("=========================================")
+        Log.i("==== Linphone-android information dump ====")
+        Log.i("VERSION=${BuildConfig.VERSION_NAME} / ${BuildConfig.VERSION_CODE}")
+        Log.i("PACKAGE=${BuildConfig.APPLICATION_ID}")
+        Log.i("BUILD TYPE=${BuildConfig.BUILD_TYPE}")
+        Log.i("=========================================")
 
         val looper = Looper.myLooper() ?: return
         coreThread = Handler(looper)
@@ -244,6 +274,7 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         }
 
         Log.i("$TAG Core has been stopped, app can gracefully quit")
+        Factory.instance().loggingService.removeListener(loggingServiceListener)
         quitSafely()
     }
 

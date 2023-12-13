@@ -6,6 +6,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'com.google.gms.google-services'
     id 'androidx.navigation.safeargs.kotlin'
+    id 'com.google.firebase.crashlytics'
 }
 
 def packageName = "org.linphone"
@@ -91,6 +92,11 @@ android {
             resValue "string", "file_provider", packageName + ".fileprovider"
             resValue "string", "linphone_app_version", gitVersion.toString().trim()
             resValue "string", "linphone_app_branch", gitBranch.toString().trim()
+
+            firebaseCrashlytics {
+                nativeSymbolUploadEnabled true
+                unstrippedNativeLibsDir file(LinphoneSdkBuildDir + '/libs-debug/').toString()
+            }
         }
 
         release {
@@ -160,6 +166,7 @@ dependencies {
 
     implementation platform('com.google.firebase:firebase-bom:32.5.0')
     implementation 'com.google.firebase:firebase-messaging'
+    implementation 'com.google.firebase:firebase-crashlytics-ndk'
 
     implementation 'net.openid:appauth:0.11.1'
     android.defaultConfig.manifestPlaceholders = [appAuthRedirectScheme: 'org.linphone.sso']
@@ -174,3 +181,8 @@ ktlint {
 }
 
 project.tasks['preBuild'].dependsOn 'ktlintFormat'
+
+afterEvaluate {
+    assembleDebug.finalizedBy(uploadCrashlyticsSymbolFileDebug)
+    packageDebug.finalizedBy(uploadCrashlyticsSymbolFileDebug)
+}
