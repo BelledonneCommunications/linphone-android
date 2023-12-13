@@ -83,7 +83,7 @@ class MessageModel @WorkerThread constructor(
 
     val id = chatMessage.messageId
 
-    val isRead = chatMessage.isRead
+    var isRead = chatMessage.isRead
 
     val isOutgoing = chatMessage.isOutgoing
 
@@ -174,6 +174,9 @@ class MessageModel @WorkerThread constructor(
                     downloadingFileModel = null
                 }
                 computeContentsList()
+            } else if (messageState == ChatMessage.State.Displayed) {
+                Log.i("$TAG Message was marked as read")
+                isRead = true
             }
         }
 

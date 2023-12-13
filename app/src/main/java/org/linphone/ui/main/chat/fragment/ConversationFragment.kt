@@ -46,7 +46,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.google.android.material.tabs.TabLayout
@@ -100,6 +102,8 @@ class ConversationFragment : SlidingPaneChildFragment() {
     private lateinit var bottomSheetAdapter: MessageBottomSheetAdapter
 
     private val args: ConversationFragmentArgs by navArgs()
+
+    private var isUserScrollingUp: Boolean = false
 
     private val pickMedia = registerForActivityResult(
         ActivityResultContracts.PickMultipleVisualMedia()
@@ -512,8 +516,20 @@ class ConversationFragment : SlidingPaneChildFragment() {
         binding.root.setKeyboardInsetListener { keyboardVisible ->
             if (keyboardVisible) {
                 sendMessageViewModel.isEmojiPickerOpen.value = false
+
+                // Scroll to bottom if was already at the bottom
+                if (!isUserScrollingUp) {
+                    binding.eventsList.scrollToPosition(adapter.itemCount - 1)
+                }
             }
         }
+
+        binding.eventsList.addOnScrollListener(object : OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                val layoutManager = binding.eventsList.layoutManager as LinearLayoutManager
+                isUserScrollingUp = layoutManager.findLastCompletelyVisibleItemPosition() != adapter.itemCount - 1
+            }
+        })
     }
 
     override fun onResume() {
