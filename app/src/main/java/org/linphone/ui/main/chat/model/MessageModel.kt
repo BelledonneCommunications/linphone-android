@@ -66,6 +66,7 @@ class MessageModel @WorkerThread constructor(
     val replyTo: String,
     val replyText: String,
     val replyToMessageId: String?,
+    val isForward: Boolean,
     isGroupedWithPreviousOne: Boolean,
     isGroupedWithNextOne: Boolean,
     private val onContentClicked: ((file: String) -> Unit)? = null,

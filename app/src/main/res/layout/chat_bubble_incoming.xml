@@ -130,6 +130,32 @@
             app:layout_constraintStart_toStartOf="@id/bubble"
             app:layout_constraintTop_toBottomOf="@id/reply_name" />
 
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_300"
+            android:id="@+id/forward_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/message_forwarded_label"
+            android:textSize="12sp"
+            android:textColor="?attr/color_main2_500"
+            android:visibility="@{model.isForward ? View.VISIBLE : View.GONE, default=gone}"
+            app:drawableTint="?attr/color_main2_500"
+            app:layout_constraintStart_toEndOf="@id/forward_icon"
+            app:layout_constraintTop_toBottomOf="@id/name"
+            app:layout_constraintBottom_toTopOf="@id/bubble" />
+
+        <ImageView
+            android:id="@+id/forward_icon"
+            android:layout_width="@dimen/small_icon_size"
+            android:layout_height="@dimen/small_icon_size"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/forward"
+            android:visibility="@{model.isForward ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintStart_toStartOf="@id/bubble"
+            app:layout_constraintTop_toTopOf="@id/forward_label"
+            app:layout_constraintBottom_toBottomOf="@id/forward_label" />
+
         <LinearLayout
             android:id="@+id/bubble"
             android:layout_width="wrap_content"
