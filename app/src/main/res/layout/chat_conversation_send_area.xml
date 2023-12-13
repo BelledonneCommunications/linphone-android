@@ -16,8 +16,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/color_grey_100"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+        android:background="?attr/color_grey_100">
         <!-- Keep behavior to have it at the bottom -->
 
         <androidx.constraintlayout.widget.Group

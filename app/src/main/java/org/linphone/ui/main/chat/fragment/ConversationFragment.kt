@@ -313,10 +313,6 @@ class ConversationFragment : SlidingPaneChildFragment() {
         val bottomSheetLayoutManager = LinearLayoutManager(requireContext())
         binding.messageBottomSheet.bottomSheetList.layoutManager = bottomSheetLayoutManager
 
-        val emojisBottomSheetBehavior = BottomSheetBehavior.from(binding.sendArea.root)
-        emojisBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        emojisBottomSheetBehavior.isDraggable = false // To allow scrolling through the emojis
-
         adapter.chatMessageLongPressEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
                 showChatMessageLongPressMenu(model)

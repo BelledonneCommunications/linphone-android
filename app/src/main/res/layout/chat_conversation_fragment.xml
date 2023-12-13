@@ -37,7 +37,6 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="80dp"
             android:background="?attr/color_main2_000">
 
             <androidx.constraintlayout.widget.Group
@@ -226,18 +225,21 @@
                 android:textSize="12sp"
                 android:textColor="?attr/color_main2_400"
                 android:visibility="@{viewModel.composingLabel.length() == 0 ? View.GONE : View.VISIBLE}"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/send_area"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            <include
+                android:id="@+id/send_area"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="@{viewModel.isReadOnly ? View.GONE : View.VISIBLE}"
+                layout="@layout/chat_conversation_send_area"
+                app:layout_constraintBottom_toBottomOf="parent"
+                bind:openFilePickerClickListener="@{openFilePickerClickListener}"
+                bind:viewModel="@{sendMessageViewModel}"/>
 
-        <include
-            android:id="@+id/send_area"
-            bind:openFilePickerClickListener="@{openFilePickerClickListener}"
-            bind:viewModel="@{sendMessageViewModel}"
-            android:visibility="@{viewModel.isReadOnly ? View.GONE : View.VISIBLE}"
-            layout="@layout/chat_conversation_send_area_bottom_sheet"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <include
             android:id="@+id/message_bottom_sheet"
