@@ -82,7 +82,7 @@ android {
 
     applicationVariants.configureEach { variant ->
         variant.outputs.configureEach {
-            outputFileName = "linphone-android-${variant.buildType.name}-${project.version}.apk"
+            outputFileName = "linphone-android-${variant.buildType.name}-${versionName}.apk"
         }
     }
 

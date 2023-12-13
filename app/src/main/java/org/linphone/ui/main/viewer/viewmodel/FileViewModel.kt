@@ -8,7 +8,6 @@ import android.net.Uri
 import android.os.Environment
 import android.os.ParcelFileDescriptor
 import android.provider.MediaStore
-import android.text.PrecomputedText
 import android.widget.ImageView
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
