@@ -30,7 +30,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
-import android.webkit.MimeTypeMap
 import androidx.annotation.AnyThread
 import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
@@ -749,7 +748,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
                     val filePath = contentUri.toString()
                     val extension = FileUtils.getExtensionFromFileName(filePath)
                     if (extension.isNotEmpty()) {
-                        val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+                        val mime = FileUtils.getMimeTypeFromExtension(extension)
                         notifiableMessage.filePath = contentUri
                         notifiableMessage.fileMime = mime
                         Log.i("$TAG Added file $contentUri with MIME $mime to notification")

@@ -65,21 +65,21 @@ class FileUtils {
         @AnyThread
         fun isExtensionImage(path: String): Boolean {
             val extension = getExtensionFromFileName(path)
-            val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+            val type = getMimeTypeFromExtension(extension)
             return getMimeType(type) == MimeType.Image
         }
 
         @AnyThread
         fun isExtensionVideo(path: String): Boolean {
             val extension = getExtensionFromFileName(path)
-            val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+            val type = getMimeTypeFromExtension(extension)
             return getMimeType(type) == MimeType.Video
         }
 
         @AnyThread
         fun isExtensionAudio(path: String): Boolean {
             val extension = getExtensionFromFileName(path)
-            val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+            val type = getMimeTypeFromExtension(extension)
             return getMimeType(type) == MimeType.Audio
         }
 
@@ -97,11 +97,17 @@ class FileUtils {
         }
 
         @AnyThread
+        fun getMimeTypeFromExtension(extension: String): String {
+            return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension) ?: "file/$extension"
+        }
+
+        @AnyThread
         fun getMimeType(type: String?): MimeType {
             if (type.isNullOrEmpty()) return MimeType.Unknown
             return when {
                 type.startsWith("image/") -> MimeType.Image
-                type.startsWith("text/plain") -> MimeType.PlainText
+                type.startsWith("text/") -> MimeType.PlainText
+                type.endsWith("/log") -> MimeType.PlainText
                 type.startsWith("video/") -> MimeType.Video
                 type.startsWith("audio/") -> MimeType.Audio
                 type.startsWith("application/pdf") -> MimeType.Pdf
@@ -220,7 +226,7 @@ class FileUtils {
                 }
 
                 val extension = getExtensionFromFileName(name)
-                val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+                val type = getMimeTypeFromExtension(extension)
                 val isImage = getMimeType(type) == MimeType.Image
 
                 try {

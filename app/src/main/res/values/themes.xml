@@ -29,6 +29,7 @@
         <item name="color_main2_600">@color/gray_main2_600</item>
         <item name="color_main2_700">@color/gray_main2_700</item>
         <item name="color_main2_800">@color/gray_main2_800</item>
+        <item name="color_main2_900">@color/black</item>
 
         <item name="color_grey_100">@color/gray_100</item>
         <item name="color_grey_200">@color/gray_200</item>

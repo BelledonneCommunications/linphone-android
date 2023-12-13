@@ -82,6 +82,27 @@
             coilFile="@{viewModel.path}"
             android:visibility="@{viewModel.isImage ? View.VISIBLE : View.GONE, default=gone}" />
 
+        <ScrollView
+            android:id="@+id/text"
+            android:background="?attr/color_main2_000"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="@{viewModel.isText ? View.VISIBLE : View.GONE, default=gone}" >
+
+            <TextView
+                style="@style/default_text_style"
+                android:onClick="@{() -> viewModel.toggleFullScreen()}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:singleLine="false"
+                android:textIsSelectable="true"
+                android:textColor="?attr/color_main2_900"
+                android:text="@{viewModel.text}"/>
+
+        </ScrollView>
+
         <ImageView
             android:id="@+id/back"
             android:onClick="@{backClickListener}"
@@ -159,4 +180,5 @@
             app:layout_constraintEnd_toEndOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

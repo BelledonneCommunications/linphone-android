@@ -28,7 +28,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.webkit.MimeTypeMap
 import androidx.annotation.UiThread
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
@@ -244,9 +243,9 @@ class ConversationsListFragment : AbstractTopBarFragment() {
                 if (findNavController().currentDestination?.id == R.id.conversationsListFragment) {
                     Log.i("$TAG Navigating to file viewer fragment with path [$path]")
                     val extension = FileUtils.getExtensionFromFileName(path)
-                    val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+                    val mime = FileUtils.getMimeTypeFromExtension(extension)
                     when (FileUtils.getMimeType(mime)) {
-                        FileUtils.MimeType.Image, FileUtils.MimeType.Video, FileUtils.MimeType.Pdf -> {
+                        FileUtils.MimeType.Image, FileUtils.MimeType.Video, FileUtils.MimeType.Pdf, FileUtils.MimeType.PlainText -> {
                             val action =
                                 FileViewerFragmentDirections.actionGlobalFileViewerFragment(path)
                             findNavController().navigate(action)

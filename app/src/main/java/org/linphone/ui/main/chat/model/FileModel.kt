@@ -1,6 +1,5 @@
 package org.linphone.ui.main.chat.model
 
-import android.webkit.MimeTypeMap
 import androidx.annotation.AnyThread
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
@@ -41,7 +40,7 @@ class FileModel @AnyThread constructor(
             val extension = FileUtils.getExtensionFromFileName(file)
             isPdf = extension == "pdf"
 
-            val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+            val mime = FileUtils.getMimeTypeFromExtension(extension)
             mimeType = FileUtils.getMimeType(mime)
             isImage = mimeType == FileUtils.MimeType.Image
             isVideoPreview = mimeType == FileUtils.MimeType.Video

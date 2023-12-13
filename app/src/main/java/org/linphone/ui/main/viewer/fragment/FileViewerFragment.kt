@@ -60,6 +60,7 @@ class FileViewerFragment : GenericFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        postponeEnterTransition()
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProvider(this)[FileViewModel::class.java]
@@ -73,6 +74,21 @@ class FileViewerFragment : GenericFragment() {
 
         binding.setBackClickListener {
             goBack()
+        }
+
+        viewModel.fileReadyEvent.observe(viewLifecycleOwner) {
+            it.consume { done ->
+                if (done) {
+                    (view.parent as? ViewGroup)?.doOnPreDraw {
+                        startPostponedEnterTransition()
+                    }
+                } else {
+                    (view.parent as? ViewGroup)?.doOnPreDraw {
+                        Log.e("$TAG Failed to open file, going back")
+                        goBack()
+                    }
+                }
+            }
         }
 
         binding.setShareClickListener {

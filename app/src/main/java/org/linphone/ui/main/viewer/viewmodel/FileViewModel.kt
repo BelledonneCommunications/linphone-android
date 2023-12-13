@@ -8,14 +8,17 @@ import android.net.Uri
 import android.os.Environment
 import android.os.ParcelFileDescriptor
 import android.provider.MediaStore
-import android.webkit.MimeTypeMap
+import android.text.PrecomputedText
 import android.widget.ImageView
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import java.io.BufferedReader
 import java.io.File
+import java.io.FileReader
 import java.lang.IllegalStateException
+import java.lang.StringBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -49,6 +52,12 @@ class FileViewModel @UiThread constructor() : ViewModel() {
     val isVideo = MutableLiveData<Boolean>()
 
     val isVideoPlaying = MutableLiveData<Boolean>()
+
+    val isText = MutableLiveData<Boolean>()
+
+    val text = MutableLiveData<String>()
+
+    val fileReadyEvent = MutableLiveData<Event<Boolean>>()
 
     val pdfRendererReadyEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
@@ -100,45 +109,34 @@ class FileViewModel @UiThread constructor() : ViewModel() {
         fileName.value = name
 
         val extension = FileUtils.getExtensionFromFileName(name)
-        val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+        val mime = FileUtils.getMimeTypeFromExtension(extension)
         when (FileUtils.getMimeType(mime)) {
             FileUtils.MimeType.Pdf -> {
                 Log.i("$TAG File [$file] seems to be a PDF")
-                isPdf.value = true
-
-                viewModelScope.launch {
-                    withContext(Dispatchers.IO) {
-                        val input = ParcelFileDescriptor.open(
-                            File(file),
-                            ParcelFileDescriptor.MODE_READ_ONLY
-                        )
-                        pdfRenderer = PdfRenderer(input)
-                        val count = pdfRenderer.pageCount
-                        Log.i("$TAG $count pages in file $file")
-                        pdfPages.postValue(count.toString())
-                        pdfCurrentPage.postValue("1")
-                        pdfRendererReadyEvent.postValue(Event(true))
-                    }
-                }
+                loadPdf()
             }
             FileUtils.MimeType.Image -> {
                 Log.i("$TAG File [$file] seems to be an image")
                 isImage.value = true
                 path.value = file
+                fileReadyEvent.value = Event(true)
             }
             FileUtils.MimeType.Video -> {
                 Log.i("$TAG File [$file] seems to be a video")
                 isVideo.value = true
                 isVideoPlaying.value = false
+                fileReadyEvent.value = Event(true)
             }
             FileUtils.MimeType.Audio -> {
                 // TODO: handle audio files
+                fileReadyEvent.value = Event(true)
             }
             FileUtils.MimeType.PlainText -> {
-                // TODO: handle plain text files
+                Log.i("$TAG File [$file] seems to be plain text")
+                loadPlainText()
             }
             else -> {
-                // TODO: open native app for unsupported files
+                fileReadyEvent.value = Event(false)
             }
         }
     }
@@ -261,6 +259,51 @@ class FileViewModel @UiThread constructor() : ViewModel() {
         }
     }
 
+    private fun loadPdf() {
+        isPdf.value = true
+
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val input = ParcelFileDescriptor.open(
+                    File(filePath),
+                    ParcelFileDescriptor.MODE_READ_ONLY
+                )
+                pdfRenderer = PdfRenderer(input)
+                val count = pdfRenderer.pageCount
+                Log.i("$TAG $count pages in file $filePath")
+                pdfPages.postValue(count.toString())
+                pdfCurrentPage.postValue("1")
+                pdfRendererReadyEvent.postValue(Event(true))
+                fileReadyEvent.postValue(Event(true))
+            }
+        }
+    }
+
+    private fun loadPlainText() {
+        isText.value = true
+
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                try {
+                    val br = BufferedReader(FileReader(filePath))
+                    var line: String?
+                    val textBuilder = StringBuilder()
+                    while (br.readLine().also { line = it } != null) {
+                        textBuilder.append(line)
+                        textBuilder.append('\n')
+                    }
+                    br.close()
+                    text.postValue(textBuilder.toString())
+                    Log.i("$TAG Finished reading file [$filePath]")
+                    fileReadyEvent.postValue(Event(true))
+                    // TODO FIXME : improve performances !
+                } catch (e: Exception) {
+                    Log.e("$TAG Exception trying to read file [$filePath] as text: $e")
+                }
+            }
+        }
+    }
+
     @UiThread
     private suspend fun addContentToMediaStore(
         path: String
@@ -285,7 +328,7 @@ class FileViewModel @UiThread constructor() : ViewModel() {
         val relativePath = "$directory/$appName"
         val fileName = FileUtils.getNameFromFilePath(path)
         val extension = FileUtils.getExtensionFromFileName(fileName)
-        val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+        val mime = FileUtils.getMimeTypeFromExtension(extension)
 
         val context = coreContext.context
         val mediaStoreFilePath = when {

@@ -25,6 +25,7 @@
         <attr name="color_main2_600" format="color"/>
         <attr name="color_main2_700" format="color"/>
         <attr name="color_main2_800" format="color"/>
+        <attr name="color_main2_900" format="color"/>
 
         <attr name="color_grey_100" format="color"/>
         <attr name="color_grey_200" format="color"/>
