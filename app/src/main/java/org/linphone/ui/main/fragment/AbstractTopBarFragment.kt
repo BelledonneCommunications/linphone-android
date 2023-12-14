@@ -70,7 +70,7 @@ abstract class AbstractTopBarFragment : GenericFragment() {
             viewLifecycleOwner
         ) {
             it.consume {
-                if (slidingPane.isOpen && slidingPane.isSlideable) {
+                if (slidingPane.isSlideable) {
                     Log.d("$TAG Closing sliding pane")
                     slidingPane.closePane()
                 }

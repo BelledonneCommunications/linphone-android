@@ -181,15 +181,15 @@ class ContactsManager @UiThread constructor() {
 
     @WorkerThread
     fun findContactById(id: String): Friend? {
-        Log.i("$TAG Looking for a friend with ref key [$id]")
+        Log.d("$TAG Looking for a friend with ref key [$id]")
         for (friendList in coreContext.core.friendsLists) {
             val found = friendList.findFriendByRefKey(id)
             if (found != null) {
-                Log.i("$TAG Found friend [${found.name}] matching ref key [$id]")
+                Log.d("$TAG Found friend [${found.name}] matching ref key [$id]")
                 return found
             }
         }
-        Log.i("$TAG No friend matching ref key [$id] has been found")
+        Log.d("$TAG No friend matching ref key [$id] has been found")
         return null
     }
 
@@ -199,28 +199,28 @@ class ContactsManager @UiThread constructor() {
         clonedAddress.clean()
         val sipUri = clonedAddress.asStringUriOnly()
 
-        Log.i("$TAG Looking for friend with SIP URI [$sipUri]")
+        Log.d("$TAG Looking for friend with SIP URI [$sipUri]")
         val username = clonedAddress.username
         val found = coreContext.core.findFriend(clonedAddress)
         return if (found != null) {
-            Log.i("$TAG Friend [${found.name}] was found using SIP URI [$sipUri]")
+            Log.d("$TAG Friend [${found.name}] was found using SIP URI [$sipUri]")
             found
         } else if (!username.isNullOrEmpty() && username.startsWith("+")) {
-            Log.i("$TAG Looking for friend with phone number [$username]")
+            Log.d("$TAG Looking for friend with phone number [$username]")
             val foundUsingPhoneNumber = coreContext.core.findFriendByPhoneNumber(username)
             if (foundUsingPhoneNumber != null) {
-                Log.i(
+                Log.d(
                     "$TAG Friend [${foundUsingPhoneNumber.name}] was found using phone number [$username]"
                 )
                 foundUsingPhoneNumber
             } else {
-                Log.i(
+                Log.d(
                     "$TAG Friend wasn't found using phone number [$username], looking in native address book directly"
                 )
                 findNativeContact(sipUri, true, username)
             }
         } else {
-            Log.i(
+            Log.d(
                 "$TAG Friend wasn't found using SIP URI [$sipUri] and username [$username] isn't a phone number, looking in native address book directly"
             )
             findNativeContact(sipUri, false)
@@ -248,7 +248,7 @@ class ContactsManager @UiThread constructor() {
 
         val foundInMap = getAvatarModelFromCache(key)
         if (foundInMap != null) {
-            Log.i("$TAG Avatar model found in map for SIP URI [$key]")
+            Log.d("$TAG Avatar model found in map for SIP URI [$key]")
             return foundInMap
         }
 
@@ -256,7 +256,7 @@ class ContactsManager @UiThread constructor() {
             it.params.identityAddress?.weakEqual(clone) == true
         }
         val avatar = if (localAccount != null) {
-            Log.i("$TAG [$key] SIP URI matches one of the local account")
+            Log.d("$TAG [$key] SIP URI matches one of the local account")
             val fakeFriend = coreContext.core.createFriend()
             fakeFriend.address = clone
             fakeFriend.name = LinphoneUtils.getDisplayName(localAccount.params.identityAddress)
@@ -265,15 +265,15 @@ class ContactsManager @UiThread constructor() {
             unknownContactsAvatarsMap[key] = model
             model
         } else {
-            Log.i("$TAG Looking for friend matching SIP URI [$key]")
+            Log.d("$TAG Looking for friend matching SIP URI [$key]")
             val friend = coreContext.contactsManager.findContactByAddress(clone)
             if (friend != null) {
-                Log.i("$TAG Matching friend [${friend.name}] found for SIP URI [$key]")
+                Log.d("$TAG Matching friend [${friend.name}] found for SIP URI [$key]")
                 val model = ContactAvatarModel(friend)
                 knownContactsAvatarsMap[key] = model
                 model
             } else {
-                Log.i("$TAG No matching friend found for SIP URI [$key]...")
+                Log.d("$TAG No matching friend found for SIP URI [$key]...")
                 val fakeFriend = coreContext.core.createFriend()
                 fakeFriend.name = LinphoneUtils.getDisplayName(address)
                 fakeFriend.address = clone
@@ -296,7 +296,7 @@ class ContactsManager @UiThread constructor() {
 
         val address = friend.address ?: friend.addresses.firstOrNull()
             ?: return ContactAvatarModel(friend)
-        Log.i(
+        Log.d(
             "$TAG Looking for avatar model for friend [${friend.name}] using SIP URI  [${address.asStringUriOnly()}]"
         )
 
@@ -306,7 +306,7 @@ class ContactsManager @UiThread constructor() {
 
         val foundInMap = getAvatarModelFromCache(key)
         if (foundInMap != null) {
-            Log.i("$TAG Found avatar model in map using SIP URI [$key]")
+            Log.d("$TAG Found avatar model in map using SIP URI [$key]")
             return foundInMap
         }
 
@@ -366,7 +366,7 @@ class ContactsManager @UiThread constructor() {
                 Manifest.permission.READ_CONTACTS
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            Log.i(
+            Log.d(
                 "$TAG Looking for native contact with address [$address] ${if (searchAsPhoneNumber) "or phone number [$number]" else ""}"
             )
 
@@ -435,7 +435,7 @@ class ContactsManager @UiThread constructor() {
 
                     friend.done()
 
-                    Log.i("$TAG Found native contact [${friend.name}] with address [$address]")
+                    Log.d("$TAG Found native contact [${friend.name}] with address [$address]")
                     cursor.close()
                     return friend
                 }
