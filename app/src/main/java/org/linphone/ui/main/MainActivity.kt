@@ -372,20 +372,45 @@ class MainActivity : GenericActivity() {
         if (intent.hasExtra("Chat")) {
             Log.i("$TAG New intent with [Chat] extra")
             if (isNewIntent) {
-                Log.i("$TAG Going to Conversations fragment")
-                findNavController().navigate(
-                    R.id.action_global_conversationsListFragment,
-                    intent.extras
-                )
+                try {
+                    val navGraphId = findNavController().graph.id
+                    if (navGraphId == R.navigation.main_nav_graph) {
+                        Log.i("$TAG Graph is already loaded, going to Conversations fragment")
+                        findNavController().navigate(
+                            R.id.action_global_conversationsListFragment,
+                            intent.extras
+                        )
+                    } else {
+                        Log.i(
+                            "$TAG Loading graph & set start destination to Conversations fragment instead of default"
+                        )
+                        val navGraph = findNavController().navInflater.inflate(
+                            R.navigation.main_nav_graph
+                        )
+                        navGraph.setStartDestination(R.id.conversationsListFragment)
+                        findNavController().setGraph(navGraph, intent.extras)
+                    }
+                } catch (ise: IllegalStateException) {
+                    Log.i(
+                        "$TAG Nav graph not set yet, loading it & set start destination to Conversations fragment instead of default"
+                    )
+                    val navGraph = findNavController().navInflater.inflate(
+                        R.navigation.main_nav_graph
+                    )
+                    navGraph.setStartDestination(R.id.conversationsListFragment)
+                    findNavController().setGraph(navGraph, intent.extras)
+                }
             } else {
-                Log.i("$TAG Going to Conversations fragment instead of default destination")
+                Log.i(
+                    "$TAG Loading graph & set start destination to Conversations fragment instead of default"
+                )
                 val navGraph = findNavController().navInflater.inflate(R.navigation.main_nav_graph)
                 navGraph.setStartDestination(R.id.conversationsListFragment)
                 findNavController().setGraph(navGraph, intent.extras)
             }
         } else {
             if (!isNewIntent && defaultDestination > 0) {
-                Log.i("$TAG Setting nav graph with expected default destination")
+                Log.i("$TAG Setting nav graph with expected start destination")
                 val navGraph = findNavController().navInflater.inflate(R.navigation.main_nav_graph)
                 navGraph.setStartDestination(defaultDestination)
                 findNavController().setGraph(navGraph, null)
