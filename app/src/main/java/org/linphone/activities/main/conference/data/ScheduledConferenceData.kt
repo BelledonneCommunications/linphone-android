@@ -172,6 +172,7 @@ class ScheduledConferenceData(val conferenceInfo: ConferenceInfo, private val is
                 }
                 else -> { // For meetings created before 5.3 SDK
                     participantsListExpanded += "$name ($address)\n"
+                    allSpeaker = false
                 }
             }
         }
@@ -180,11 +181,15 @@ class ScheduledConferenceData(val conferenceInfo: ConferenceInfo, private val is
         speakersListExpanded = speakersListExpanded.dropLast(1)
 
         participantsShort.value = participantsListShort
-        participantsExpanded.value = participantsListExpanded
-        speakersExpanded.value = speakersListExpanded
-
         // If all participants have Speaker role then it is a meeting, else it is a broadcast
-        isBroadcast.value = allSpeaker == false
+        if (!allSpeaker) {
+            participantsExpanded.value = participantsListExpanded
+            speakersExpanded.value = speakersListExpanded
+            isBroadcast.value = true
+        } else {
+            participantsExpanded.value = speakersListExpanded
+            isBroadcast.value = false
+        }
         Log.i(
             "[Scheduled Conference] Conference [${subject.value}] is a ${if (allSpeaker) "meeting" else "broadcast"}"
         )
