@@ -67,6 +67,8 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     val searchFilter = MutableLiveData<String>()
 
+    val isUserScrollingUp = MutableLiveData<Boolean>()
+
     var scrollingPosition: Int = SCROLLING_POSITION_NOT_SET
 
     val focusSearchBarEvent: MutableLiveData<Event<Boolean>> by lazy {
@@ -233,6 +235,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     init {
         searchBarVisible.value = false
+        isUserScrollingUp.value = false
     }
 
     override fun onCleared() {

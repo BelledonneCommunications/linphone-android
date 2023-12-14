@@ -103,8 +103,6 @@ class ConversationFragment : SlidingPaneChildFragment() {
 
     private val args: ConversationFragmentArgs by navArgs()
 
-    private var isUserScrollingUp: Boolean = false
-
     private val pickMedia = registerForActivityResult(
         ActivityResultContracts.PickMultipleVisualMedia()
     ) { list ->
@@ -367,6 +365,10 @@ class ConversationFragment : SlidingPaneChildFragment() {
             }
         }
 
+        binding.setScrollToBottomClickListener {
+            scrollToFirstUnreadMessageOrBottom(true)
+        }
+
         sendMessageViewModel.emojiToAddEvent.observe(viewLifecycleOwner) {
             it.consume { emoji ->
                 binding.sendArea.messageToSend.addCharacterAtPosition(emoji)
@@ -518,7 +520,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
                 sendMessageViewModel.isEmojiPickerOpen.value = false
 
                 // Scroll to bottom if was already at the bottom
-                if (!isUserScrollingUp) {
+                if (viewModel.isUserScrollingUp.value == false) {
                     binding.eventsList.scrollToPosition(adapter.itemCount - 1)
                 }
             }
@@ -527,7 +529,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
         binding.eventsList.addOnScrollListener(object : OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 val layoutManager = binding.eventsList.layoutManager as LinearLayoutManager
-                isUserScrollingUp = layoutManager.findLastCompletelyVisibleItemPosition() != adapter.itemCount - 1
+                viewModel.isUserScrollingUp.value = layoutManager.findLastCompletelyVisibleItemPosition() != adapter.itemCount - 1
             }
         })
     }
@@ -575,7 +577,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
         coreContext.notificationsManager.resetCurrentlyDisplayedChatRoomId()
 
         val layoutManager = binding.eventsList.layoutManager as LinearLayoutManager
-        viewModel.scrollingPosition = layoutManager.findFirstVisibleItemPosition()
+        viewModel.scrollingPosition = layoutManager.findFirstCompletelyVisibleItemPosition()
 
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.messageBottomSheet.root)
         bottomSheetBehavior.removeBottomSheetCallback(bottomSheetCallback)
