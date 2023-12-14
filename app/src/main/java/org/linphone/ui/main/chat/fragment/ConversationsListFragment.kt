@@ -299,7 +299,7 @@ class ConversationsListFragment : AbstractTopBarFragment() {
         sharedViewModel.textToShareFromIntent.observe(viewLifecycleOwner) { textToShare ->
             if (textToShare.isNotEmpty()) {
                 val message = getString(R.string.toast_text_waiting_to_be_shared)
-                val icon = R.drawable.file
+                val icon = R.drawable.file_text
                 (requireActivity() as MainActivity).showGreenToast(message, icon)
                 Log.i("$TAG Found text waiting to be shared")
             }

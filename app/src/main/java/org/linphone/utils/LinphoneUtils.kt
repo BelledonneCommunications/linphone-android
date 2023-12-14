@@ -48,7 +48,7 @@ class LinphoneUtils {
         private const val TAG = "[Linphone Utils]"
 
         private const val RECORDING_DATE_PATTERN = "dd-MM-yyyy-HH-mm-ss"
-        private const val CHAT_ROOM_ID_SEPARATOR = "~"
+        private const val CHAT_ROOM_ID_SEPARATOR = "#~#"
 
         @WorkerThread
         fun getDefaultAccount(): Account? {
@@ -254,7 +254,9 @@ class LinphoneUtils {
                 )
                 return Pair(localAddress, peerAddress)
             } else {
-                Log.e("$TAG Failed to parse conversation id [$id]")
+                Log.e(
+                    "$TAG Failed to parse conversation id [$id] with separator [$CHAT_ROOM_ID_SEPARATOR]"
+                )
             }
             return null
         }

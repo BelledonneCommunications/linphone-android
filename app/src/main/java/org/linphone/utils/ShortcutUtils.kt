@@ -38,6 +38,7 @@ import org.linphone.core.ChatRoom
 import org.linphone.core.tools.Log
 import org.linphone.mediastream.Version
 import org.linphone.ui.main.MainActivity
+import org.linphone.ui.main.model.isInSecureMode
 
 class ShortcutUtils {
     companion object {
@@ -56,21 +57,50 @@ class ShortcutUtils {
                 Log.e("$TAG Rate limiting is active, aborting")
                 return
             }
-            Log.i("$TAG Creating launcher shortcuts for conversations")
+
+            Log.i("$TAG Creating dynamic shortcuts for conversations")
+            val defaultAccount = coreContext.core.defaultAccount
+            if (defaultAccount == null) {
+                Log.w("$TAG No default account found, skipping...")
+                return
+            }
+
             var count = 0
-            for (room in coreContext.core.chatRooms) {
-                val shortcut: ShortcutInfoCompat? = createChatRoomShortcut(context, room)
+            for (chatRoom in defaultAccount.chatRooms) {
+                if (defaultAccount.isInSecureMode() && !chatRoom.currentParams.isEncryptionEnabled) {
+                    Log.w(
+                        "$TAG Account is in secure mode, skipping not encrypted conversation [${LinphoneUtils.getChatRoomId(
+                            chatRoom
+                        )}]"
+                    )
+                    continue
+                }
+
+                if (isShortcutToChatRoomAlreadyCreated(context, chatRoom)) {
+                    continue
+                }
+
+                if (count >= 5) {
+                    Log.i("$TAG We already created [$count] shortcuts, stopping here")
+                    break
+                }
+
+                val shortcut: ShortcutInfoCompat? = createChatRoomShortcut(context, chatRoom)
                 if (shortcut != null) {
-                    Log.i("$TAG Created launcher shortcut for ${shortcut.shortLabel}")
-                    val keepGoing = ShortcutManagerCompat.pushDynamicShortcut(context, shortcut)
-                    if (!keepGoing) {
-                        count += 1
-                    } else {
-                        break
+                    Log.i("$TAG Created dynamic shortcut for ${shortcut.shortLabel}")
+                    try {
+                        val keepGoing = ShortcutManagerCompat.pushDynamicShortcut(context, shortcut)
+                        if (keepGoing) {
+                            count += 1
+                        } else {
+                            break
+                        }
+                    } catch (e: Exception) {
+                        Log.e("$TAG Failed to push dynamic shortcut for ${shortcut.shortLabel}: $e")
                     }
                 }
             }
-            Log.i("$TAG Created $count launcher shortcuts")
+            Log.i("$TAG Created $count dynamic shortcuts")
         }
 
         @WorkerThread

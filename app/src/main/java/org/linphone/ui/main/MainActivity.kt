@@ -55,6 +55,7 @@ import org.linphone.ui.main.help.fragment.DebugFragmentDirections
 import org.linphone.ui.main.viewmodel.MainViewModel
 import org.linphone.ui.main.viewmodel.SharedMainViewModel
 import org.linphone.ui.welcome.WelcomeActivity
+import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.ToastUtils
@@ -453,25 +454,6 @@ class MainActivity : GenericActivity() {
                 deferred.add(async { FileUtils.getFilePath(this@MainActivity, uri, false) })
             }
 
-            val shortcutId = intent.getStringExtra("android.intent.extra.shortcut.ID") // Intent.EXTRA_SHORTCUT_ID
-            if (shortcutId != null) {
-                Log.i("$TAG Found shortcut ID [$shortcutId]")
-                val pair = LinphoneUtils.getLocalAndPeerSipUrisFromChatRoomId(shortcutId)
-                if (pair != null) {
-                    val localSipUri = pair.first
-                    val remoteSipUri = pair.second
-                    Log.i(
-                        "$TAG Navigating to conversation with local [$localSipUri] and peer [$remoteSipUri] addresses, computed from shortcut ID"
-                    )
-                    intent.putExtra("LocalSipUri", localSipUri)
-                    intent.putExtra("RemoteSipUri", remoteSipUri)
-                } else {
-                    Log.e("$TAG Failed to parse shortcut ID, going to conversations list")
-                }
-            } else {
-                Log.i("$TAG Going into conversations list as no shortcut ID as found")
-            }
-
             if (binding.drawerMenu.isOpen) {
                 Log.i("$TAG Drawer menu is opened, closing it")
                 closeDrawerMenu()
@@ -497,14 +479,45 @@ class MainActivity : GenericActivity() {
                 Log.i(
                     "$TAG App is already started and in debug fragment, navigating to conversations list"
                 )
+                val pair = parseShortcutIfAny(intent)
+                if (pair != null) {
+                    Log.i(
+                        "$TAG Navigating to conversation with local [${pair.first}] and peer [${pair.second}] addresses, computed from shortcut ID"
+                    )
+                    sharedViewModel.showConversationEvent.value = Event(pair)
+                }
+
                 val action = DebugFragmentDirections.actionDebugFragmentToConversationsListFragment()
                 findNavController().navigate(action)
             } else {
+                val pair = parseShortcutIfAny(intent)
+                if (pair != null) {
+                    val localSipUri = pair.first
+                    val remoteSipUri = pair.second
+                    Log.i(
+                        "$TAG Navigating to conversation with local [$localSipUri] and peer [$remoteSipUri] addresses, computed from shortcut ID"
+                    )
+                    intent.putExtra("LocalSipUri", localSipUri)
+                    intent.putExtra("RemoteSipUri", remoteSipUri)
+                }
+
                 val navGraph = findNavController().navInflater.inflate(R.navigation.main_nav_graph)
                 navGraph.setStartDestination(R.id.conversationsListFragment)
                 findNavController().setGraph(navGraph, intent.extras)
             }
         }
+    }
+
+    @MainThread
+    private fun parseShortcutIfAny(intent: Intent): Pair<String, String>? {
+        val shortcutId = intent.getStringExtra("android.intent.extra.shortcut.ID") // Intent.EXTRA_SHORTCUT_ID
+        if (shortcutId != null) {
+            Log.i("$TAG Found shortcut ID [$shortcutId]")
+            return LinphoneUtils.getLocalAndPeerSipUrisFromChatRoomId(shortcutId)
+        } else {
+            Log.i("$TAG No shortcut ID as found")
+        }
+        return null
     }
 
     @MainThread
