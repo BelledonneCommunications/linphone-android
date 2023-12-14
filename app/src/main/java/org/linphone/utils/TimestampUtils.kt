@@ -146,6 +146,14 @@ class TimestampUtils {
         }
 
         @AnyThread
+        fun toFullString(time: Long, timestampInSecs: Boolean = true): String {
+            val calendar = Calendar.getInstance()
+            calendar.timeInMillis = if (timestampInSecs) time * 1000 else time
+
+            return SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(calendar.time)
+        }
+
+        @AnyThread
         fun toString(
             timestamp: Long,
             onlyDate: Boolean = false,

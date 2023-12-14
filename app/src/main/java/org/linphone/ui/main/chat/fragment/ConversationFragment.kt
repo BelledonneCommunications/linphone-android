@@ -25,6 +25,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -39,6 +40,8 @@ import android.view.WindowManager
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
+import androidx.core.app.ActivityCompat
+import androidx.core.content.FileProvider
 import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -53,6 +56,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
+import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -80,6 +84,7 @@ import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.RecyclerViewSwipeUtils
 import org.linphone.utils.RecyclerViewSwipeUtilsCallback
+import org.linphone.utils.TimestampUtils
 import org.linphone.utils.addCharacterAtPosition
 import org.linphone.utils.hideKeyboard
 import org.linphone.utils.setKeyboardInsetListener
@@ -122,6 +127,49 @@ class ConversationFragment : SlidingPaneChildFragment() {
             }
         } else {
             Log.w("$TAG No file picked")
+        }
+    }
+
+    private var pendingImageCaptureFile: File? = null
+
+    private val startCameraCapture = registerForActivityResult(
+        ActivityResultContracts.TakePicture()
+    ) { captured ->
+        val path = pendingImageCaptureFile?.absolutePath
+        if (path != null) {
+            if (captured) {
+                Log.i("$TAG Image was captured and saved in [$path]")
+                sendMessageViewModel.addAttachment(path)
+            } else {
+                Log.w("$TAG Image capture was aborted")
+                lifecycleScope.launch {
+                    FileUtils.deleteFile(path)
+                }
+            }
+            pendingImageCaptureFile = null
+        } else {
+            Log.e("$TAG No pending captured image file!")
+        }
+    }
+
+    private val requestCameraPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            Log.i("$TAG CAMERA permission has been granted")
+        } else {
+            Log.e("$TAG CAMERA permission has been denied")
+        }
+    }
+
+    private val requestRecordAudioPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            Log.i("$TAG RECORD_AUDIO permission has been granted, starting voice message recording")
+            sendMessageViewModel.startVoiceMessageRecording()
+        } else {
+            Log.e("$TAG RECORD_AUDIO permission has been denied")
         }
     }
 
@@ -172,17 +220,6 @@ class ConversationFragment : SlidingPaneChildFragment() {
         }
 
         override fun onSlide(bottomSheet: View, slideOffset: Float) { }
-    }
-
-    private val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            Log.i("$TAG RECORD_AUDIO permission has been granted, starting voice message recording")
-            sendMessageViewModel.startVoiceMessageRecording()
-        } else {
-            Log.e("$TAG RECORD_AUDIO permission has been denied")
-        }
     }
 
     private var bottomSheetDeliveryModel: MessageDeliveryModel? = null
@@ -354,6 +391,40 @@ class ConversationFragment : SlidingPaneChildFragment() {
             )
         }
 
+        binding.setOpenCameraClickListener {
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.CAMERA
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                Log.w("$TAG Asking for CAMERA permission")
+                requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+            } else {
+                val timeStamp = TimestampUtils.toFullString(
+                    System.currentTimeMillis(),
+                    timestampInSecs = false
+                )
+                val tempFileName = "$timeStamp.jpg"
+                Log.i(
+                    "$TAG Opening camera to take a picture, will be stored in file [$tempFileName]"
+                )
+                val file = FileUtils.getFileStoragePath(tempFileName)
+                try {
+                    val publicUri = FileProvider.getUriForFile(
+                        requireContext(),
+                        requireContext().getString(R.string.file_provider),
+                        file
+                    )
+                    pendingImageCaptureFile = file
+                    startCameraCapture.launch(publicUri)
+                } catch (e: Exception) {
+                    Log.e(
+                        "$TAG Failed to get public URI for file in which to store captured image: $e"
+                    )
+                }
+            }
+        }
+
         binding.setGoToInfoClickListener {
             if (findNavController().currentDestination?.id == R.id.conversationFragment) {
                 val action =
@@ -392,7 +463,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
         sendMessageViewModel.askRecordAudioPermissionEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.w("$TAG Asking for RECORD_AUDIO permission")
-                requestPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+                requestRecordAudioPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
             }
         }
 
@@ -516,6 +587,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
             })
 
         binding.root.setKeyboardInsetListener { keyboardVisible ->
+            sendMessageViewModel.isKeyboardOpen.value = keyboardVisible
             if (keyboardVisible) {
                 sendMessageViewModel.isEmojiPickerOpen.value = false
 

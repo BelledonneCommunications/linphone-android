@@ -79,9 +79,11 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
 
     val isReplyingToMessage = MutableLiveData<String>()
 
-    val voiceRecording = MutableLiveData<Boolean>()
+    val isKeyboardOpen = MutableLiveData<Boolean>()
 
-    val voiceRecordingInProgress = MutableLiveData<Boolean>()
+    val isVoiceRecording = MutableLiveData<Boolean>()
+
+    val isVoiceRecordingInProgress = MutableLiveData<Boolean>()
 
     val voiceRecordingDuration = MutableLiveData<Int>()
 
@@ -227,7 +229,7 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
                 message.addUtf8TextContent(toSend)
             }
 
-            if (voiceRecording.value == true && voiceMessageRecorder.file != null) {
+            if (isVoiceRecording.value == true && voiceMessageRecorder.file != null) {
                 stopVoiceRecorder()
                 val content = voiceMessageRecorder.createContent()
                 if (content != null) {
@@ -278,7 +280,7 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
             if (::voiceMessageRecorder.isInitialized) {
                 stopVoiceRecorder()
             }
-            voiceRecording.postValue(false)
+            isVoiceRecording.postValue(false)
 
             // Warning: do not delete files
             val attachmentsList = arrayListOf<FileModel>()
@@ -375,10 +377,10 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
         }
 
         coreContext.postOnCoreThread {
-            voiceRecording.postValue(true)
+            isVoiceRecording.postValue(true)
             initVoiceRecorder()
 
-            voiceRecordingInProgress.postValue(true)
+            isVoiceRecordingInProgress.postValue(true)
             startVoiceRecorder()
         }
     }
@@ -403,7 +405,7 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
                 }
             }
 
-            voiceRecording.postValue(false)
+            isVoiceRecording.postValue(false)
         }
     }
 
@@ -531,7 +533,7 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
             voiceRecordAudioFocusRequest = null
         }
 
-        voiceRecordingInProgress.postValue(false)
+        isVoiceRecordingInProgress.postValue(false)
     }
 
     @WorkerThread
@@ -642,7 +644,7 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
     }
 
     private fun recorderTickerFlow() = flow {
-        while (voiceRecordingInProgress.value == true) {
+        while (isVoiceRecordingInProgress.value == true) {
             emit(Unit)
             delay(500)
         }

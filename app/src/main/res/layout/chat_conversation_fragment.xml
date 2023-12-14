@@ -23,6 +23,9 @@
             name="openFilePickerClickListener"
             type="View.OnClickListener" />
         <variable
+            name="openCameraClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="scrollToBottomClickListener"
             type="View.OnClickListener" />
         <variable
@@ -240,6 +243,7 @@
                 layout="@layout/chat_conversation_send_area"
                 app:layout_constraintBottom_toBottomOf="parent"
                 bind:openFilePickerClickListener="@{openFilePickerClickListener}"
+                bind:openCameraClickListener="@{openCameraClickListener}"
                 bind:viewModel="@{sendMessageViewModel}"/>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
