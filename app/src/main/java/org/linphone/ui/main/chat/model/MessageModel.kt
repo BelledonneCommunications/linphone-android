@@ -201,6 +201,8 @@ class MessageModel @WorkerThread constructor(
             offset: Int,
             total: Int
         ) {
+            if (message.isOutgoing) return
+
             val model = downloadingFileModel
             if (model != null) {
                 val percent = ((offset * 100.0) / total).toInt() // Conversion from int to double and back to int is required
@@ -371,25 +373,14 @@ class MessageModel @WorkerThread constructor(
                     filesContentCount += 1
                     val name = content.name ?: ""
                     if (name.isNotEmpty()) {
-                        val fileModel = FileModel(name, name, content.fileSize.toLong(), true) { model ->
-                            Log.d("$TAG Starting downloading content for file [${model.fileName}]")
-
-                            if (content.filePath.orEmpty().isEmpty()) {
-                                val contentName = content.name
-                                if (contentName != null) {
-                                    val isImage = FileUtils.isExtensionImage(contentName)
-                                    val file = FileUtils.getFileStoragePath(contentName, isImage)
-                                    content.filePath = file.path
-                                    Log.i(
-                                        "$TAG File [$contentName] will be downloaded at [${content.filePath}]"
-                                    )
-
-                                    model.downloadProgress.postValue(0)
-                                    downloadingFileModel = model
-                                    chatMessage.downloadContent(content)
-                                } else {
-                                    Log.e("$TAG Content name is null, can't download it!")
-                                }
+                        val fileModel = if (isOutgoing && chatMessage.isFileTransferInProgress) {
+                            val path = content.filePath ?: ""
+                            FileModel(path, name, content.fileSize.toLong(), false) { model ->
+                                onContentClicked?.invoke(model.file)
+                            }
+                        } else {
+                            FileModel(name, name, content.fileSize.toLong(), true) { model ->
+                                downloadContent(model, content)
                             }
                         }
                         filesPath.add(fileModel)
@@ -407,10 +398,35 @@ class MessageModel @WorkerThread constructor(
         filesList.postValue(filesPath)
 
         if (!displayableContentFound) { // Temporary workaround to prevent empty bubbles
-            Log.w("$TAG No displayable content found, generating text based description")
             val describe = LinphoneUtils.getTextDescribingMessage(chatMessage)
+            Log.w(
+                "$TAG No displayable content found, generating text based description [$describe]"
+            )
             val spannable = Spannable.Factory.getInstance().newSpannable(describe)
             text.postValue(spannable)
+        }
+    }
+
+    @WorkerThread
+    private fun downloadContent(model: FileModel, content: Content) {
+        Log.d("$TAG Starting downloading content for file [${model.fileName}]")
+
+        if (content.filePath.orEmpty().isEmpty()) {
+            val contentName = content.name
+            if (contentName != null) {
+                val isImage = FileUtils.isExtensionImage(contentName)
+                val file = FileUtils.getFileStoragePath(contentName, isImage)
+                content.filePath = file.path
+                Log.i(
+                    "$TAG File [$contentName] will be downloaded at [${content.filePath}]"
+                )
+
+                model.downloadProgress.postValue(0)
+                downloadingFileModel = model
+                chatMessage.downloadContent(content)
+            } else {
+                Log.e("$TAG Content name is null, can't download it!")
+            }
         }
     }
 
