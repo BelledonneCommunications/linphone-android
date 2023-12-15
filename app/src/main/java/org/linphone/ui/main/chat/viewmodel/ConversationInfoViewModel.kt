@@ -506,19 +506,31 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
         val friends = arrayListOf<Friend>()
         val participantsList = arrayListOf<ParticipantModel>()
         if (chatRoom.hasCapability(ChatRoom.Capabilities.Basic.toInt())) {
-            val model = ParticipantModel(chatRoom.peerAddress, selfAdmin, false) { view, model ->
-                // openMenu
-                showParticipantAdminPopupMenuEvent.postValue(Event(Pair(view, model)))
-            }
+            val model = ParticipantModel(
+                chatRoom.peerAddress,
+                selfAdmin,
+                isParticipantAdmin = false,
+                showMenu = true,
+                onMenuClicked = { view, model ->
+                    // openMenu
+                    showParticipantAdminPopupMenuEvent.postValue(Event(Pair(view, model)))
+                }
+            )
             friends.add(model.avatarModel.friend)
             participantsList.add(model)
         } else {
             for (participant in chatRoom.participants) {
                 val isParticipantAdmin = if (groupChatRoom) participant.isAdmin else false
-                val model = ParticipantModel(participant.address, selfAdmin, isParticipantAdmin, onMenuClicked = { view, model ->
-                    // openMenu
-                    showParticipantAdminPopupMenuEvent.postValue(Event(Pair(view, model)))
-                })
+                val model = ParticipantModel(
+                    participant.address,
+                    selfAdmin,
+                    isParticipantAdmin = isParticipantAdmin,
+                    showMenu = true,
+                    onMenuClicked = { view, model ->
+                        // openMenu
+                        showParticipantAdminPopupMenuEvent.postValue(Event(Pair(view, model)))
+                    }
+                )
                 friends.add(model.avatarModel.friend)
                 participantsList.add(model)
             }
