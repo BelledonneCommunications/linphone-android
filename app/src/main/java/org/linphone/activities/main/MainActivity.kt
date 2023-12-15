@@ -691,6 +691,14 @@ class MainActivity : GenericActivity(), SnackBarActivity, NavController.OnDestin
     ) {
         authenticationRequiredDialog?.dismiss()
 
+        val accountFound = coreContext.core.accountList.find {
+            it.params.identityAddress?.username == authInfo.username && it.params.identityAddress?.domain == authInfo.domain
+        }
+        if (accountFound == null) {
+            Log.w("[Main Activity] Failed to find account matching auth info, aborting auth dialog")
+            return
+        }
+
         val identity = "${authInfo.username}@${authInfo.domain}"
         Log.i("[Main Activity] Showing authentication required dialog for account [$identity]")
 
