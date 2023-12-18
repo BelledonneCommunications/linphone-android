@@ -39,6 +39,7 @@ import org.linphone.ui.main.chat.model.MessageModel
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
+import org.linphone.utils.ImageUtils
 import org.linphone.utils.LinphoneUtils
 
 class ConversationViewModel @UiThread constructor() : ViewModel() {
@@ -436,8 +437,9 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
         val avatar = if (group) {
             val fakeFriend = coreContext.core.createFriend()
+            fakeFriend.name = chatRoom.subject
+            fakeFriend.photo = ImageUtils.generateBitmapForChatRoom(chatRoom)
             val model = ContactAvatarModel(fakeFriend)
-            model.setPicturesFromFriends(friends)
             model
         } else {
             coreContext.contactsManager.getContactAvatarModelForAddress(address)

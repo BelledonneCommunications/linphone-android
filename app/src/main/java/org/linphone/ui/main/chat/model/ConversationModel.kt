@@ -35,6 +35,7 @@ import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.utils.AppUtils
+import org.linphone.utils.ImageUtils
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.ShortcutUtils
 import org.linphone.utils.TimestampUtils
@@ -328,9 +329,10 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
 
         if (isGroup) {
             val fakeFriend = coreContext.core.createFriend()
+            fakeFriend.name = chatRoom.subject
+            fakeFriend.photo = ImageUtils.generateBitmapForChatRoom(chatRoom)
             val model = ContactAvatarModel(fakeFriend)
             model.defaultToConversationIcon.postValue(true)
-            model.setPicturesFromFriends(friends)
             avatarModel.postValue(model)
         } else {
             avatarModel.postValue(

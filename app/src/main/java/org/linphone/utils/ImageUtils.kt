@@ -30,7 +30,12 @@ import android.net.Uri
 import androidx.annotation.AnyThread
 import androidx.annotation.WorkerThread
 import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import java.io.OutputStream
+import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
 import org.linphone.contacts.AvatarGenerator
+import org.linphone.core.ChatRoom
 import org.linphone.core.tools.Log
 
 class ImageUtils {
@@ -84,6 +89,50 @@ class ImageUtils {
 
             Log.e("$TAG Can't get bitmap from null URI")
             return null
+        }
+
+        @WorkerThread
+        fun generateBitmapForChatRoom(chatRoom: ChatRoom): String {
+            val id = LinphoneUtils.getChatRoomId(chatRoom)
+            val hash = id.hashCode().toString()
+            val file = FileUtils.getFileStorageCacheDir("$hash.jpg", overrideExisting = true)
+            if (file.exists()) {
+                Log.i("$TAG Bitmap for conversation [$id]($hash) exists, using it")
+                return FileUtils.getProperFilePath(file.absolutePath)
+            }
+
+            val list = arrayListOf<String>()
+            for (participant in chatRoom.participants) {
+                val contact =
+                    coreContext.contactsManager.findContactByAddress(participant.address)
+                val picture = contact?.photo
+                if (picture != null) {
+                    list.add(picture)
+                }
+            }
+            if (list.isNotEmpty()) {
+                Log.i(
+                    "$TAG Found at [${list.size}] participant(s) with a picture for conversation [$id]($hash), creating avatar"
+                )
+                val bitmap = generateBitmapFromList(list)
+                val outputStream: OutputStream = FileOutputStream(file)
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                outputStream.close()
+                val generatedPath = FileUtils.getProperFilePath(file.absolutePath)
+                Log.i("$TAG Avatar for conversation [$id]($hash) was generated at [$generatedPath]")
+                return generatedPath
+            } else {
+                Log.w(
+                    "$TAG Not once picture found for conversation [$id], couldn't generate avatar"
+                )
+            }
+            return ""
+        }
+
+        @WorkerThread
+        fun generateBitmapFromList(list: ArrayList<String>): Bitmap {
+            val size = AppUtils.getDimension(R.dimen.avatar_in_call_size).toInt()
+            return getBitmapFromMultipleAvatars(coreContext.context, size, list)
         }
 
         @AnyThread

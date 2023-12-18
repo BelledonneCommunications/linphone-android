@@ -87,17 +87,6 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) : Abstrac
     }
 
     @WorkerThread
-    fun setPicturesFromFriends(friends: List<Friend>) {
-        if (friends.isNotEmpty()) {
-            val list = arrayListOf<String>()
-            for (friend in friends) {
-                list.add(getAvatarUri(friend).toString())
-            }
-            images.postValue(list)
-        }
-    }
-
-    @WorkerThread
     private fun getAvatarUri(friend: Friend): Uri? {
         val picturePath = friend.photo
         if (!picturePath.isNullOrEmpty()) {

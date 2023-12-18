@@ -22,6 +22,7 @@ package org.linphone.utils
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ShortcutInfo
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.annotation.WorkerThread
 import androidx.collection.ArraySet
@@ -31,7 +32,6 @@ import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.R
 import org.linphone.contacts.AvatarGenerator
 import org.linphone.contacts.getPerson
 import org.linphone.core.ChatRoom
@@ -77,6 +77,7 @@ class ShortcutUtils {
                 }
 
                 if (isShortcutToChatRoomAlreadyCreated(context, chatRoom)) {
+                    count += 1
                     continue
                 }
 
@@ -145,25 +146,10 @@ class ShortcutUtils {
                     ).buildIcon()
                 } else {
                     subject = chatRoom.subject.orEmpty()
-                    val list = arrayListOf<String>()
-                    for (participant in chatRoom.participants) {
-                        val contact =
-                            coreContext.contactsManager.findContactByAddress(participant.address)
-                        if (contact != null) {
-                            personsList.add(contact.getPerson())
-
-                            val picture = contact.photo
-                            if (picture != null) {
-                                list.add(picture)
-                            }
-                        }
-                    }
-                    AvatarGenerator(context).setInitials(subject).buildIcon()
-                    if (list.isNotEmpty()) {
-                        val iconSize = AppUtils.getDimension(R.dimen.avatar_list_cell_size).toInt()
-
+                    val picture = ImageUtils.generateBitmapForChatRoom(chatRoom)
+                    if (picture.isNotEmpty()) {
                         IconCompat.createWithAdaptiveBitmap(
-                            ImageUtils.getBitmapFromMultipleAvatars(context, iconSize, list)
+                            BitmapFactory.decodeFile(picture)
                         )
                     } else {
                         AvatarGenerator(context).setInitials(subject).buildIcon()

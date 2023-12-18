@@ -19,10 +19,13 @@
  */
 package org.linphone.utils
 
+import android.graphics.Bitmap
 import androidx.annotation.AnyThread
 import androidx.annotation.DrawableRes
 import androidx.annotation.IntegerRes
 import androidx.annotation.WorkerThread
+import java.io.FileOutputStream
+import java.io.OutputStream
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -39,7 +42,6 @@ import org.linphone.core.ChatMessage
 import org.linphone.core.ChatRoom
 import org.linphone.core.ConferenceInfo
 import org.linphone.core.Core
-import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 
@@ -342,21 +344,34 @@ class LinphoneUtils {
             fakeFriend.address = conferenceInfo.uri
             fakeFriend.name = conferenceInfo.subject
 
+            val hash = conferenceInfo.uri?.asStringUriOnly().hashCode().toString()
+            val file = FileUtils.getFileStorageCacheDir("$hash.jpg", overrideExisting = true)
+            if (!file.exists()) {
+                val list = arrayListOf<String>()
+                for (participant in conferenceInfo.participantInfos) {
+                    val friend = coreContext.contactsManager.findContactByAddress(
+                        participant.address
+                    )
+                    if (friend != null) {
+                        val picture = friend.photo
+                        if (picture != null) {
+                            list.add(picture)
+                        }
+                    }
+                }
+                if (list.isNotEmpty()) {
+                    val bitmap = ImageUtils.generateBitmapFromList(list)
+                    val outputStream: OutputStream = FileOutputStream(file)
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                    outputStream.close()
+                }
+            }
+            fakeFriend.photo = FileUtils.getProperFilePath(file.absolutePath)
+
             val avatarModel = ContactAvatarModel(fakeFriend)
             avatarModel.defaultToConferenceIcon.postValue(true)
             avatarModel.skipInitials.postValue(true)
 
-            val list = arrayListOf<Friend>()
-            for (participant in conferenceInfo.participantInfos) {
-                val friend = coreContext.contactsManager.findContactByAddress(
-                    participant.address
-                )
-                if (friend != null) {
-                    list.add(friend)
-                }
-            }
-
-            avatarModel.setPicturesFromFriends(list)
             return avatarModel
         }
     }
