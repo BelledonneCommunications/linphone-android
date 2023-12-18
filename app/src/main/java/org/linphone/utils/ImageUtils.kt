@@ -21,6 +21,7 @@ package org.linphone.utils
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.ImageDecoder
 import android.graphics.Rect
@@ -28,9 +29,6 @@ import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import androidx.annotation.AnyThread
 import androidx.annotation.WorkerThread
-import androidx.core.graphics.drawable.toBitmap
-import coil.imageLoader
-import coil.request.ImageRequest
 import java.io.FileNotFoundException
 import org.linphone.contacts.AvatarGenerator
 import org.linphone.core.tools.Log
@@ -39,7 +37,7 @@ class ImageUtils {
     companion object {
         private const val TAG = "[Image Utils]"
 
-        @WorkerThread
+        @AnyThread
         fun getGeneratedAvatar(context: Context, size: Int = 0, textSize: Int = 0, initials: String): BitmapDrawable {
             val builder = AvatarGenerator(context)
             builder.setInitials(initials)
@@ -89,17 +87,20 @@ class ImageUtils {
         }
 
         @AnyThread
-        suspend fun getBitmapFromMultipleAvatars(context: Context, size: Int, images: List<String>): Bitmap {
-            val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
-            val canvas = Canvas(bitmap)
-
+        fun getBitmapFromMultipleAvatars(context: Context, size: Int, images: List<String>): Bitmap {
             val drawables = images.mapNotNull {
-                val request = ImageRequest.Builder(context)
-                    .data(it)
-                    .size(size / 2)
-                    .allowHardware(false)
-                    .build()
-                context.imageLoader.execute(request).drawable
+                try {
+                    val uri = Uri.parse(it)
+                    val stream = context.contentResolver.openInputStream(uri)
+                    val bm = BitmapFactory.decodeStream(stream)
+                    if (bm != null) {
+                        Bitmap.createScaledBitmap(bm, size, size, false)
+                    } else {
+                        null
+                    }
+                } catch (e: Exception) {
+                    null
+                }
             }
 
             val rectangles = if (drawables.size == 2) {
@@ -124,6 +125,9 @@ class ImageUtils {
                 arrayListOf(Rect(0, 0, size, size))
             }
 
+            val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bitmap)
+
             for (i in 0 until rectangles.size) {
                 val src = if (drawables.size == 3 && i == 2) {
                     // To prevent deformation for the bottom image when merging 3 of them
@@ -139,7 +143,7 @@ class ImageUtils {
 
                 try {
                     canvas.drawBitmap(
-                        drawables[i].toBitmap(size, size, Bitmap.Config.ARGB_8888),
+                        drawables[i]/*.toBitmap(size, size, Bitmap.Config.ARGB_8888)*/,
                         src,
                         rectangles[i],
                         null

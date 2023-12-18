@@ -207,13 +207,19 @@ class FileUtils {
             return contentUri
         }
 
-        suspend fun getFilePath(context: Context, uri: Uri, overrideExisting: Boolean): String? {
+        suspend fun getFilePath(
+            context: Context,
+            uri: Uri,
+            overrideExisting: Boolean,
+            copyToCache: Boolean = false
+        ): String? {
             return withContext(Dispatchers.IO) {
-                val name: String = getNameFromUri(uri, context)
                 try {
+                    val path = uri.path
+                    if (path.isNullOrEmpty()) return@withContext null
                     if (Os.fstat(
                             ParcelFileDescriptor.open(
-                                    File(uri.path),
+                                    File(path),
                                     ParcelFileDescriptor.MODE_READ_ONLY
                                 ).fileDescriptor
                         ).st_uid != Process.myUid()
@@ -225,12 +231,17 @@ class FileUtils {
                     Log.e("$TAG Can't check file ownership: ", e)
                 }
 
+                val name: String = getNameFromUri(uri, context)
                 val extension = getExtensionFromFileName(name)
                 val type = getMimeTypeFromExtension(extension)
                 val isImage = getMimeType(type) == MimeType.Image
 
                 try {
-                    val localFile: File = getFileStoragePath(name, isImage, overrideExisting)
+                    val localFile: File = if (copyToCache) {
+                        getFileStorageCacheDir(name, overrideExisting)
+                    } else {
+                        getFileStoragePath(name, isImage, overrideExisting)
+                    }
                     copyFile(uri, localFile)
                     return@withContext localFile.absolutePath
                 } catch (e: Exception) {

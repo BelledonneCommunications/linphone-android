@@ -145,9 +145,7 @@ class ShortcutUtils {
                     ).buildIcon()
                 } else {
                     subject = chatRoom.subject.orEmpty()
-                    IconCompat.createWithResource(context, R.drawable.users_three)
-                    // TODO FIXME: use generated chat room avatar
-                    /*val list = arrayListOf<String>()
+                    val list = arrayListOf<String>()
                     for (participant in chatRoom.participants) {
                         val contact =
                             coreContext.contactsManager.findContactByAddress(participant.address)
@@ -169,7 +167,7 @@ class ShortcutUtils {
                         )
                     } else {
                         AvatarGenerator(context).setInitials(subject).buildIcon()
-                    }*/
+                    }
                 }
 
                 val persons = arrayOfNulls<Person>(personsList.size)

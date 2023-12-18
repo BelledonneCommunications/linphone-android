@@ -21,6 +21,7 @@ package org.linphone.ui.main.chat.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.findViewTreeLifecycleOwner
@@ -180,7 +181,9 @@ class ConversationEventAdapter : ListAdapter<EventLogModel, RecyclerView.ViewHol
                 model = message
                 executePendingBindings()
 
-                binding.deliveryStatus.startAnimatedDrawable()
+                binding.root.doOnPreDraw {
+                    binding.deliveryStatus.startAnimatedDrawable()
+                }
             }
         }
     }
@@ -193,7 +196,9 @@ class ConversationEventAdapter : ListAdapter<EventLogModel, RecyclerView.ViewHol
                 model = message
                 executePendingBindings()
 
-                binding.deliveryStatus.startAnimatedDrawable()
+                binding.root.doOnPreDraw {
+                    binding.deliveryStatus.startAnimatedDrawable()
+                }
             }
         }
     }

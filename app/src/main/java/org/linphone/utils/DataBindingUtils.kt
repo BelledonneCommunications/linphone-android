@@ -48,7 +48,6 @@ import androidx.databinding.ViewDataBinding
 import androidx.emoji2.emojipicker.EmojiPickerView
 import androidx.emoji2.emojipicker.EmojiViewItem
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.lifecycleScope
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import coil.dispose
 import coil.load
@@ -56,7 +55,6 @@ import coil.request.videoFrameMillis
 import coil.size.Dimension
 import coil.transform.RoundedCornersTransformation
 import com.google.android.material.imageview.ShapeableImageView
-import kotlinx.coroutines.launch
 import org.linphone.BR
 import org.linphone.R
 import org.linphone.contacts.AbstractAvatarModel
@@ -412,10 +410,8 @@ private fun loadContactPictureWithCoil(
             } else {
                 AppUtils.getDimension(R.dimen.avatar_list_cell_size).toInt()
             }
-            (context as AppCompatActivity).lifecycleScope.launch {
-                val bitmap = ImageUtils.getBitmapFromMultipleAvatars(imageView.context, w, images)
-                imageView.load(bitmap)
-            }
+            val bitmap = ImageUtils.getBitmapFromMultipleAvatars(imageView.context, w, images)
+            imageView.load(bitmap)
         }
     } else {
         imageView.load(R.drawable.smiley)

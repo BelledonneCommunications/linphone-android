@@ -60,11 +60,11 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
 
     val isComposing = MutableLiveData<Boolean>()
 
+    val composingLabel = MutableLiveData<String>()
+
     val isMuted = MutableLiveData<Boolean>()
 
     val isEphemeral = MutableLiveData<Boolean>()
-
-    val composingLabel = MutableLiveData<Boolean>()
 
     val lastMessageText = MutableLiveData<String>()
 
@@ -341,6 +341,32 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
 
     @WorkerThread
     private fun computeComposingLabel() {
-        // TODO
+        val composing = chatRoom.isRemoteComposing
+        isComposing.postValue(composing)
+        if (!composing) {
+            composingLabel.postValue("")
+            return
+        }
+
+        val composingFriends = arrayListOf<String>()
+        var label = ""
+        for (address in chatRoom.composingAddresses) {
+            val avatar = coreContext.contactsManager.getContactAvatarModelForAddress(address)
+            val name = avatar.name.value ?: LinphoneUtils.getDisplayName(address)
+            composingFriends.add(name)
+            label += "$name, "
+        }
+        if (composingFriends.size > 0) {
+            label = label.dropLast(2)
+
+            val format = AppUtils.getStringWithPlural(
+                R.plurals.conversation_composing_label,
+                composingFriends.size,
+                label
+            )
+            composingLabel.postValue(format)
+        } else {
+            composingLabel.postValue("")
+        }
     }
 }

@@ -3,6 +3,7 @@ package org.linphone.ui.main.chat.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.UiThread
+import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.findViewTreeLifecycleOwner
@@ -74,7 +75,9 @@ class ConversationsListAdapter : ListAdapter<ConversationModel, RecyclerView.Vie
 
                 executePendingBindings()
 
-                binding.lastSentMessageStatus.startAnimatedDrawable()
+                binding.root.doOnPreDraw {
+                    binding.lastSentMessageStatus.startAnimatedDrawable()
+                }
             }
         }
     }
