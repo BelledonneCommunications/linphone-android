@@ -32,11 +32,13 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import android.widget.PopupWindow
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
@@ -68,6 +70,7 @@ import org.linphone.core.ChatMessage
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatBubbleLongPressMenuBinding
 import org.linphone.databinding.ChatConversationFragmentBinding
+import org.linphone.databinding.ChatConversationPopupMenuBinding
 import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.chat.adapter.ConversationEventAdapter
 import org.linphone.ui.main.chat.adapter.MessageBottomSheetAdapter
@@ -180,13 +183,12 @@ class ConversationFragment : SlidingPaneChildFragment() {
                 Log.i(
                     "$TAG [$itemCount] events have been loaded, scrolling to first unread message"
                 )
-                scrollToFirstUnreadMessageOrBottom(false)
             } else {
                 Log.i(
                     "$TAG [$itemCount] new events have been loaded, scrolling to first unread message"
                 )
-                scrollToFirstUnreadMessageOrBottom(true)
             }
+            scrollToFirstUnreadMessageOrBottom(false)
         }
     }
 
@@ -384,6 +386,10 @@ class ConversationFragment : SlidingPaneChildFragment() {
             }
         }
 
+        binding.setShowMenuClickListener {
+            showPopupMenu(binding.showMenu)
+        }
+
         binding.setOpenFilePickerClickListener {
             Log.i("$TAG Opening media picker")
             pickMedia.launch(
@@ -426,14 +432,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
         }
 
         binding.setGoToInfoClickListener {
-            if (findNavController().currentDestination?.id == R.id.conversationFragment) {
-                val action =
-                    ConversationFragmentDirections.actionConversationFragmentToConversationInfoFragment(
-                        localSipUri,
-                        remoteSipUri
-                    )
-                findNavController().navigate(action)
-            }
+            goToInfoFragment()
         }
 
         binding.setScrollToBottomClickListener {
@@ -677,6 +676,49 @@ class ConversationFragment : SlidingPaneChildFragment() {
         } else {
             recyclerView.scrollToPosition(indexToScrollTo)
         }
+    }
+
+    private fun goToInfoFragment() {
+        Log.i("TAG Navigating to info fragment")
+        if (findNavController().currentDestination?.id == R.id.conversationFragment) {
+            val action =
+                ConversationFragmentDirections.actionConversationFragmentToConversationInfoFragment(
+                    viewModel.localSipUri,
+                    viewModel.remoteSipUri
+                )
+            findNavController().navigate(action)
+        }
+    }
+
+    private fun showPopupMenu(view: View) {
+        val popupView: ChatConversationPopupMenuBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(requireContext()),
+            R.layout.chat_conversation_popup_menu,
+            null,
+            false
+        )
+
+        val popupWindow = PopupWindow(
+            popupView.root,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            true
+        )
+
+        popupView.setGoToInfoClickListener {
+            goToInfoFragment()
+            popupWindow.dismiss()
+        }
+
+        popupView.setSearchClickListener {
+            Log.i("$TAG Opening search bar")
+            viewModel.openSearchBar()
+            popupWindow.dismiss()
+        }
+
+        // Elevation is for showing a shadow around the popup
+        popupWindow.elevation = 20f
+        popupWindow.showAsDropDown(view, 0, 0, Gravity.BOTTOM)
     }
 
     private fun showChatMessageLongPressMenu(chatMessageModel: MessageModel) {

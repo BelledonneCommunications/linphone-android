@@ -288,11 +288,12 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
     fun call() {
         coreContext.postOnCoreThread { core ->
             if (LinphoneUtils.isChatRoomAGroup(chatRoom)) {
-                // TODO
+                // TODO: group chat room call
             } else {
                 val firstParticipant = chatRoom.participants.firstOrNull()
                 val address = firstParticipant?.address
                 if (address != null) {
+                    Log.i("$TAG Audio calling SIP address [${address.asStringUriOnly()}]")
                     val params = core.createCallParams(null)
                     params?.isVideoEnabled = false
                     coreContext.startCall(address, params)

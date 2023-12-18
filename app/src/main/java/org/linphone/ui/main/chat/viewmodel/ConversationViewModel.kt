@@ -91,6 +91,10 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     lateinit var chatRoom: ChatRoom
 
+    lateinit var localSipUri: String
+
+    lateinit var remoteSipUri: String
+
     private val chatRoomListener = object : ChatRoomListenerStub() {
         @WorkerThread
         override fun onStateChanged(chatRoom: ChatRoom, newState: ChatRoom.State?) {
@@ -269,6 +273,9 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     @UiThread
     fun findChatRoom(room: ChatRoom?, localSipUri: String, remoteSipUri: String) {
+        this.localSipUri = localSipUri
+        this.remoteSipUri = remoteSipUri
+
         coreContext.postOnCoreThread { core ->
             Log.i(
                 "$TAG Looking for conversation with local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
@@ -358,6 +365,24 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
             Log.i("$TAG Deleting message id [${chatMessageModel.id}]")
             chatRoom.deleteMessage(chatMessageModel.chatMessage)
+        }
+    }
+
+    @UiThread
+    fun startCall() {
+        coreContext.postOnCoreThread { core ->
+            if (LinphoneUtils.isChatRoomAGroup(chatRoom)) {
+                // TODO: group chat room call
+            } else {
+                val firstParticipant = chatRoom.participants.firstOrNull()
+                val address = firstParticipant?.address
+                if (address != null) {
+                    Log.i("$TAG Audio calling SIP address [${address.asStringUriOnly()}]")
+                    val params = core.createCallParams(null)
+                    params?.isVideoEnabled = false
+                    coreContext.startCall(address, params)
+                }
+            }
         }
     }
 

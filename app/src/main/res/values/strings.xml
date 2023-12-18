@@ -408,6 +408,8 @@
     </plurals>
     <string name="conversation_add_participants_title">Add participants</string>
     <string name="conversation_reply_to_message_title">Replying to:</string>
+    <string name="conversation_menu_search_in_messages">Search</string>
+    <string name="conversation_menu_go_to_info">Conversation info</string>
 
     <string name="conversation_info_participants_list_title">Group members</string>
     <string name="conversation_info_add_participants_label">Add participants</string>

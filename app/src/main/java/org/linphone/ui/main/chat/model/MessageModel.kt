@@ -375,6 +375,9 @@ class MessageModel @WorkerThread constructor(
                     if (name.isNotEmpty()) {
                         val fileModel = if (isOutgoing && chatMessage.isFileTransferInProgress) {
                             val path = content.filePath ?: ""
+                            if (filesContentCount == 1) {
+                                firstImagePath.postValue(path)
+                            }
                             FileModel(path, name, content.fileSize.toLong(), false) { model ->
                                 onContentClicked?.invoke(model.file)
                             }

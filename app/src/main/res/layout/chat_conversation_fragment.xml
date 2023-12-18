@@ -11,13 +11,10 @@
             name="backClickListener"
             type="View.OnClickListener" />
         <variable
-            name="startCallClickListener"
-            type="View.OnClickListener" />
-        <variable
-            name="startVideoCallClickListener"
-            type="View.OnClickListener" />
-        <variable
             name="goToInfoClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="showMenuClickListener"
             type="View.OnClickListener" />
         <variable
             name="openFilePickerClickListener"
@@ -48,7 +45,7 @@
             <androidx.constraintlayout.widget.Group
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:constraint_referenced_ids="avatar, title, search_toggle, info"
+                app:constraint_referenced_ids="avatar, title, start_call, show_menu"
                 android:visibility="@{viewModel.searchBarVisible ? View.GONE : View.VISIBLE}" />
 
             <androidx.constraintlayout.widget.Group
@@ -127,32 +124,32 @@
                 android:textSize="16sp"
                 android:textColor="?attr/color_main2_600"
                 android:gravity="center_vertical"
-                app:layout_constraintEnd_toStartOf="@id/search_toggle"
+                app:layout_constraintEnd_toStartOf="@id/start_call"
                 app:layout_constraintStart_toEndOf="@id/avatar"
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <ImageView
-                android:id="@+id/info"
-                android:onClick="@{goToInfoClickListener}"
+                android:id="@+id/show_menu"
+                android:onClick="@{showMenuClickListener}"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:padding="15dp"
                 android:adjustViewBounds="true"
-                android:src="@drawable/info"
+                android:src="@drawable/dots_three_vertical"
                 app:layout_constraintTop_toTopOf="@id/title"
                 app:layout_constraintBottom_toBottomOf="@id/title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:tint="?attr/color_main2_500"/>
 
             <ImageView
-                android:id="@+id/search_toggle"
-                android:onClick="@{() -> viewModel.openSearchBar()}"
+                android:id="@+id/start_call"
+                android:onClick="@{() -> viewModel.startCall()}"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:padding="15dp"
-                android:src="@drawable/magnifying_glass"
+                android:src="@drawable/phone_call"
                 app:layout_constraintBottom_toBottomOf="@id/title"
-                app:layout_constraintEnd_toStartOf="@id/info"
+                app:layout_constraintEnd_toStartOf="@id/show_menu"
                 app:layout_constraintTop_toTopOf="@id/title"
                 app:tint="?attr/color_main2_500" />
 
