@@ -87,6 +87,14 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<String>>()
     }
 
+    val contactToDisplayEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
+
+    val showRedToastEvent: MutableLiveData<Event<Pair<String, Int>>> by lazy {
+        MutableLiveData<Event<Pair<String, Int>>>()
+    }
+
     val chatRoomFoundEvent = MutableLiveData<Event<Boolean>>()
 
     lateinit var chatRoom: ChatRoom
@@ -473,6 +481,12 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
                 },
                 { url ->
                     openWebBrowserEvent.postValue(Event(url))
+                },
+                { friendRefKey ->
+                    contactToDisplayEvent.postValue(Event(friendRefKey))
+                },
+                { redToast ->
+                    showRedToastEvent.postValue(Event(redToast))
                 }
             )
             eventsList.add(model)

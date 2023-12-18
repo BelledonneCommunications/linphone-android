@@ -71,7 +71,9 @@ class MessageModel @WorkerThread constructor(
     isGroupedWithNextOne: Boolean,
     private val onContentClicked: ((file: String) -> Unit)? = null,
     private val onJoinConferenceClicked: ((uri: String) -> Unit)? = null,
-    private val onWebUrlClicked: ((url: String) -> Unit)? = null
+    private val onWebUrlClicked: ((url: String) -> Unit)? = null,
+    private val onContactClicked: ((friendRefKey: String) -> Unit)? = null,
+    private val onRedToastToShow: ((pair: Pair<String, Int>) -> Unit)? = null
 ) {
     companion object {
         private const val TAG = "[Message Model]"
@@ -487,17 +489,27 @@ class MessageModel @WorkerThread constructor(
             }
             // Find display name for address
             if (address != null) {
-                val displayName = coreContext.contactsManager.findDisplayName(address)
+                val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(
+                    address
+                )
+                val friend = avatarModel.friend
+                val displayName = friend.name ?: LinphoneUtils.getDisplayName(address)
                 Log.d(
                     "$TAG Using display name [$displayName] instead of username [$source]"
                 )
+
                 spannableBuilder.replace(start, end, "@$displayName")
                 val span = PatternClickableSpan.StyledClickableSpan(
                     object :
                         SpannableClickedListener {
                         override fun onSpanClicked(text: String) {
-                            Log.i("$TAG Clicked on [$text] span")
-                            // TODO: go to contact page if not ourselves
+                            val friendRefKey = friend.refKey ?: ""
+                            Log.i(
+                                "$TAG Clicked on [$text] span, matching friend ref key is [$friendRefKey]"
+                            )
+                            if (friendRefKey.isNotEmpty()) {
+                                onContactClicked?.invoke(friendRefKey)
+                            }
                         }
                     }
                 )
@@ -631,8 +643,12 @@ class MessageModel @WorkerThread constructor(
             initVoiceRecordPlayer()
         }
 
-        // TODO: check media volume
         val lowMediaVolume = AudioUtils.isMediaVolumeLow(coreContext.context)
+        if (lowMediaVolume) {
+            Log.w("$TAG Media volume is low, notifying user as they may not hear voice message")
+            val message = AppUtils.getString(R.string.toast_low_media_volume)
+            onRedToastToShow?.invoke(Pair(message, R.drawable.speaker_slash))
+        }
 
         if (voiceRecordAudioFocusRequest == null) {
             voiceRecordAudioFocusRequest = AudioUtils.acquireAudioFocusForVoiceRecordingOrPlayback(

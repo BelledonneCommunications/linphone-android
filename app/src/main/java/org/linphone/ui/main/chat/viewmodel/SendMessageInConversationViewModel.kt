@@ -573,6 +573,7 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
         val context = coreContext.context
         val lowMediaVolume = AudioUtils.isMediaVolumeLow(context)
         if (lowMediaVolume) {
+            Log.w("$TAG Media volume is low, notifying user as they may not hear voice message")
             val message = AppUtils.getString(R.string.toast_low_media_volume)
             showRedToastEvent.postValue(Event(Pair(message, R.drawable.speaker_slash)))
         }

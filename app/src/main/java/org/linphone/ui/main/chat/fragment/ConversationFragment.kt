@@ -524,6 +524,22 @@ class ConversationFragment : SlidingPaneChildFragment() {
             }
         }
 
+        viewModel.contactToDisplayEvent.observe(viewLifecycleOwner) {
+            it.consume { friendRefKey ->
+                Log.i("$TAG Navigating to contact with ref key [$friendRefKey]")
+                sharedViewModel.navigateToContactsEvent.value = Event(true)
+                sharedViewModel.showContactEvent.value = Event(friendRefKey)
+            }
+        }
+
+        viewModel.showRedToastEvent.observe(viewLifecycleOwner) {
+            it.consume { pair ->
+                val message = pair.first
+                val icon = pair.second
+                (requireActivity() as MainActivity).showRedToast(message, icon)
+            }
+        }
+
         sharedViewModel.richContentUri.observe(
             viewLifecycleOwner
         ) {
