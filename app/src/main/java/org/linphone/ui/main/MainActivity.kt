@@ -34,7 +34,6 @@ import androidx.annotation.MainThread
 import androidx.annotation.UiThread
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.children
-import androidx.core.view.doOnAttach
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -152,20 +151,17 @@ class MainActivity : GenericActivity() {
             }
         }
 
-        binding.root.doOnAttach {
-            Log.i("$TAG Report UI has been fully drawn (TTFD)")
-            try {
-                reportFullyDrawn()
-            } catch (se: SecurityException) {
-                Log.e("$TAG Security exception when doing reportFullyDrawn(): $se")
-            }
-        }
-
         // Wait for fragment to be displayed before hiding the splashscreen
         binding.root.viewTreeObserver.addOnPreDrawListener(
             object : ViewTreeObserver.OnPreDrawListener {
                 override fun onPreDraw(): Boolean {
                     return if (sharedViewModel.isFirstFragmentReady) {
+                        Log.i("$TAG Report UI has been fully drawn (TTFD)")
+                        try {
+                            reportFullyDrawn()
+                        } catch (se: SecurityException) {
+                            Log.e("$TAG Security exception when doing reportFullyDrawn(): $se")
+                        }
                         binding.root.viewTreeObserver.removeOnPreDrawListener(this)
                         true
                     } else {
