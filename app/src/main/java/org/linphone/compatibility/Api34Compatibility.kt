@@ -97,12 +97,42 @@ class Api34Compatibility {
             }
         }
 
-        fun startDataSyncForegroundService(service: Service, notifId: Int, notif: Notification) {
+        fun startDataSyncForegroundService(
+            service: Service,
+            notifId: Int,
+            notif: Notification,
+            isCallActive: Boolean
+        ) {
+            val mask = if (isCallActive) {
+                Log.i(
+                    "[Api34 Compatibility] Trying to start service as foreground using at least FOREGROUND_SERVICE_TYPE_PHONE_CALL or FOREGROUND_SERVICE_TYPE_DATA_SYNC"
+                )
+                var computeMask = ServiceInfo.FOREGROUND_SERVICE_TYPE_PHONE_CALL or ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+                if (PermissionHelper.get().hasCameraPermission()) {
+                    Log.i(
+                        "[Api34 Compatibility] CAMERA permission has been granted, adding FOREGROUND_SERVICE_TYPE_CAMERA"
+                    )
+                    computeMask = computeMask or ServiceInfo.FOREGROUND_SERVICE_TYPE_CAMERA
+                }
+                if (PermissionHelper.get().hasRecordAudioPermission()) {
+                    Log.i(
+                        "[Api34 Compatibility] RECORD_AUDIO permission has been granted, adding FOREGROUND_SERVICE_TYPE_MICROPHONE"
+                    )
+                    computeMask = computeMask or ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE
+                }
+                computeMask
+            } else {
+                Log.i(
+                    "[Api34 Compatibility] Trying to start service as foreground using only FOREGROUND_SERVICE_TYPE_DATA_SYNC because no call at the time"
+                )
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+            }
+
             try {
                 service.startForeground(
                     notifId,
                     notif,
-                    ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+                    mask
                 )
             } catch (fssnae: ForegroundServiceStartNotAllowedException) {
                 Log.e("[Api34 Compatibility] Can't start service as foreground! $fssnae")

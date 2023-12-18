@@ -552,10 +552,22 @@ class NotificationsManager(private val context: Context) {
             "[Notifications Manager] Starting service as foreground [$currentForegroundServiceNotificationId]"
         )
 
+        val core = coreContext.core
+        val isActiveCall = if (core.callsNb > 0) {
+            val currentCall = core.currentCall ?: core.calls.first()
+            when (currentCall.state) {
+                Call.State.IncomingReceived, Call.State.IncomingEarlyMedia, Call.State.OutgoingInit, Call.State.OutgoingProgress, Call.State.OutgoingRinging -> false
+                else -> true
+            }
+        } else {
+            false
+        }
+
         Compatibility.startDataSyncForegroundService(
             coreService,
             currentForegroundServiceNotificationId,
-            notification
+            notification,
+            isActiveCall
         )
     }
 
@@ -864,11 +876,15 @@ class NotificationsManager(private val context: Context) {
         Log.i("[Notifications Manager] Notifying call notification [${notifiable.notificationId}]")
         notify(notifiable.notificationId, notification)
 
-        if (service != null && (currentForegroundServiceNotificationId == 0 || currentForegroundServiceNotificationId == notifiable.notificationId)) {
+        val coreService = service
+        if (coreService != null && (currentForegroundServiceNotificationId == 0 || currentForegroundServiceNotificationId == notifiable.notificationId)) {
             Log.i(
                 "[Notifications Manager] Notifying call notification for foreground service [${notifiable.notificationId}]"
             )
             startForeground(notifiable.notificationId, notification, isCallActive)
+        } else if (coreService != null && currentForegroundServiceNotificationId == SERVICE_NOTIF_ID) {
+            // To add microphone & camera foreground service use to foreground service if needed
+            startForeground(coreService, useAutoStartDescription = false)
         }
     }
 
@@ -880,6 +896,12 @@ class NotificationsManager(private val context: Context) {
             callNotificationsMap.remove(address)
         } else {
             Log.w("[Notifications Manager] No notification found for call ${call.callLog.callId}")
+        }
+
+        // To remove microphone & camera foreground service use to foreground service if needed
+        val coreService = service
+        if (coreService != null && currentForegroundServiceNotificationId == SERVICE_NOTIF_ID) {
+            startForeground(coreService, useAutoStartDescription = false)
         }
     }
 
