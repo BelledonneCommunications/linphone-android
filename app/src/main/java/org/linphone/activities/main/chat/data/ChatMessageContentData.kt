@@ -232,12 +232,19 @@ class ChatMessageContentData(
             "[Content] Is ${if (content.isFile) "file" else "file transfer"} content encrypted ? $isFileEncrypted"
         )
 
-        filePath.value = ""
-        fileName.value = if (content.name.isNullOrEmpty() && !content.filePath.isNullOrEmpty()) {
-            FileUtils.getNameFromFilePath(content.filePath!!)
+        val contentName = content.name
+        val contentFilePath = content.filePath
+        val name = if (contentName.isNullOrEmpty()) {
+            if (!contentFilePath.isNullOrEmpty()) {
+                FileUtils.getNameFromFilePath(contentFilePath)
+            } else {
+                "<unknown>"
+            }
         } else {
-            content.name
+            contentName
         }
+        fileName.value = name
+        filePath.value = ""
 
         // Display download size and underline text
         val fileSize = AppUtils.bytesToDisplayableSize(content.fileSize.toLong())
@@ -324,7 +331,7 @@ class ChatMessageContentData(
             }
         } else if (content.isFileTransfer) {
             downloadable.value = true
-            val extension = FileUtils.getExtensionFromFileName(fileName.value!!)
+            val extension = FileUtils.getExtensionFromFileName(name)
             val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
             when (FileUtils.getMimeType(mime)) {
                 FileUtils.MimeType.Image -> {
@@ -354,9 +361,9 @@ class ChatMessageContentData(
 
     private fun parseConferenceInvite(content: Content) {
         val conferenceInfo = Factory.instance().createConferenceInfoFromIcalendarContent(content)
-        val conferenceUri = conferenceInfo?.uri?.asStringUriOnly()
-        if (conferenceInfo != null && conferenceUri != null) {
-            conferenceAddress = conferenceUri!!
+        val conferenceUri = conferenceInfo?.uri?.asStringUriOnly() ?: ""
+        if (conferenceInfo != null && conferenceUri.isNotEmpty()) {
+            conferenceAddress = conferenceUri
             Log.i(
                 "[Content] Created conference info from ICS with address $conferenceAddress"
             )
