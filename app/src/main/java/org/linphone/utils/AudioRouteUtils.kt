@@ -114,40 +114,6 @@ class AudioRouteUtils {
             }
         }
 
-        private fun changeCaptureDeviceToMatchAudioRoute(call: Call?, types: List<AudioDevice.Type>) {
-            when (types.first()) {
-                AudioDevice.Type.Bluetooth, AudioDevice.Type.HearingAid -> {
-                    if (isBluetoothAudioRecorderAvailable()) {
-                        Log.i(
-                            "[Audio Route Helper] Bluetooth device is able to record audio, also change input audio device"
-                        )
-                        applyAudioRouteChange(call, arrayListOf(AudioDevice.Type.Bluetooth), false)
-                    }
-                }
-                AudioDevice.Type.Headset, AudioDevice.Type.Headphones -> {
-                    if (isHeadsetAudioRecorderAvailable()) {
-                        Log.i(
-                            "[Audio Route Helper] Headphones/Headset device is able to record audio, also change input audio device"
-                        )
-                        applyAudioRouteChange(
-                            call,
-                            (arrayListOf(AudioDevice.Type.Headphones, AudioDevice.Type.Headset)),
-                            false
-                        )
-                    }
-                }
-                AudioDevice.Type.Earpiece, AudioDevice.Type.Speaker -> {
-                    Log.i(
-                        "[Audio Route Helper] Audio route requested to Earpiece or Speaker, setting input to Microphone"
-                    )
-                    applyAudioRouteChange(call, (arrayListOf(AudioDevice.Type.Microphone)), false)
-                }
-                else -> {
-                    Log.w("[Audio Route Helper] Unexpected audio device type: ${types.first()}")
-                }
-            }
-        }
-
         private fun routeAudioTo(
             call: Call?,
             types: List<AudioDevice.Type>,
@@ -179,16 +145,13 @@ class AudioRouteUtils {
                             "[Audio Route Helper] Connection is already using this route internally, make the change!"
                         )
                         applyAudioRouteChange(currentCall, types)
-                        changeCaptureDeviceToMatchAudioRoute(currentCall, types)
                     }
                 } else {
                     Log.w("[Audio Route Helper] Telecom Helper found but no matching connection!")
                     applyAudioRouteChange(currentCall, types)
-                    changeCaptureDeviceToMatchAudioRoute(currentCall, types)
                 }
             } else {
                 applyAudioRouteChange(call, types)
-                changeCaptureDeviceToMatchAudioRoute(call, types)
             }
         }
 
