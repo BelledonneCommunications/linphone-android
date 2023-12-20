@@ -54,9 +54,9 @@ open class StatusViewModel : ViewModel() {
             core: Core,
             event: Event,
             notifiedEvent: String,
-            body: Content
+            body: Content?
         ) {
-            if (body.type == "application" && body.subtype == "simple-message-summary" && body.size > 0) {
+            if (body?.type == "application" && body.subtype == "simple-message-summary" && body.size > 0) {
                 val data = body.utf8Text?.lowercase(Locale.getDefault())
                 val voiceMail = data?.split("voice-message: ")
                 if ((voiceMail?.size ?: 0) >= 2) {
