@@ -102,9 +102,10 @@ class StartConversationFragment : GenericAddressPickerFragment() {
             }
         }
 
-        sharedViewModel.defaultAccountChangedEvent.observe(viewLifecycleOwner) {
-            // Do not consume it!
-            viewModel.updateGroupChatButtonVisibility()
+        viewModel.defaultAccountChangedEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                viewModel.updateGroupChatButtonVisibility()
+            }
         }
     }
 

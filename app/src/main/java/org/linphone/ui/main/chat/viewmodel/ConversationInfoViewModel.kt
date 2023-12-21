@@ -140,7 +140,6 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
             }
             showGreenToastEvent.postValue(Event(Pair(message, R.drawable.user_circle)))
 
-            // TODO FIXME: list doesn't have the changes...
             computeParticipantsList()
         }
 

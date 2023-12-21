@@ -44,7 +44,6 @@ import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.settings.fragment.AccountProfileFragmentDirections
 import org.linphone.ui.main.viewmodel.DrawerMenuViewModel
 import org.linphone.ui.welcome.WelcomeActivity
-import org.linphone.utils.Event
 
 @UiThread
 class DrawerMenuFragment : GenericFragment() {
@@ -119,7 +118,6 @@ class DrawerMenuFragment : GenericFragment() {
                 Log.w(
                     "$TAG Default account has changed, now is [$identity], closing side menu in 500ms"
                 )
-                sharedViewModel.defaultAccountChangedEvent.value = Event(true)
 
                 lifecycleScope.launch {
                     withContext(Dispatchers.IO) {

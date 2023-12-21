@@ -128,15 +128,16 @@ class StartCallFragment : GenericAddressPickerFragment() {
             }
         }
 
+        viewModel.defaultAccountChangedEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                viewModel.updateGroupCallButtonVisibility()
+            }
+        }
+
         binding.root.setKeyboardInsetListener { keyboardVisible ->
             if (keyboardVisible) {
                 viewModel.isNumpadVisible.value = false
             }
-        }
-
-        sharedViewModel.defaultAccountChangedEvent.observe(viewLifecycleOwner) {
-            // Do not consume it!
-            viewModel.updateGroupCallButtonVisibility()
         }
     }
 

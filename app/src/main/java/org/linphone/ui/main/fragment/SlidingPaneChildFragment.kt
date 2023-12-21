@@ -23,14 +23,18 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.UiThread
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.core.tools.Log
+import org.linphone.ui.main.viewmodel.DefaultAccountChangedViewModel
 
 @UiThread
 abstract class SlidingPaneChildFragment : GenericFragment() {
     companion object {
         private const val TAG = "[Sliding Pane Child Fragment]"
     }
+
+    private lateinit var defaultAccountChangedViewModel: DefaultAccountChangedViewModel
 
     private val onBackPressedCallback = object : OnBackPressedCallback(false) {
         override fun handleOnBackPressed() {
@@ -64,6 +68,14 @@ abstract class SlidingPaneChildFragment : GenericFragment() {
             viewLifecycleOwner,
             onBackPressedCallback
         )
+
+        defaultAccountChangedViewModel = ViewModelProvider(this)[DefaultAccountChangedViewModel::class.java]
+        defaultAccountChangedViewModel.defaultAccountChangedEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i("$TAG Default account changed, leaving fragment")
+                goBack()
+            }
+        }
 
         sharedViewModel.isSlidingPaneSlideable.observe(viewLifecycleOwner) { slideable ->
             val enabled = backPressedCallBackEnabled(slideable)

@@ -149,6 +149,12 @@ abstract class AbstractTopBarFragment : GenericFragment() {
             }
         }
 
+        viewModel.defaultAccountChangedEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                onDefaultAccountChanged()
+            }
+        }
+
         sharedViewModel.currentlyDisplayedFragment.observe(viewLifecycleOwner) {
             viewModel.contactsSelected.value = it == R.id.contactsListFragment
             viewModel.callsSelected.value = it == R.id.historyListFragment
@@ -159,13 +165,6 @@ abstract class AbstractTopBarFragment : GenericFragment() {
         sharedViewModel.resetMissedCallsCountEvent.observe(viewLifecycleOwner) {
             it.consume {
                 viewModel.resetMissedCallsCount()
-            }
-        }
-
-        sharedViewModel.defaultAccountChangedEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                Log.i("$TAG Default account changed")
-                onDefaultAccountChanged()
             }
         }
     }

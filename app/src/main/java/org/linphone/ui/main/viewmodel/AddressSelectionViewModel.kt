@@ -22,7 +22,6 @@ package org.linphone.ui.main.viewmodel
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import java.text.Collator
 import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -38,7 +37,7 @@ import org.linphone.ui.main.model.SelectedAddressModel
 import org.linphone.ui.main.model.isInSecureMode
 import org.linphone.utils.AppUtils
 
-abstract class AddressSelectionViewModel @UiThread constructor() : ViewModel() {
+abstract class AddressSelectionViewModel @UiThread constructor() : DefaultAccountChangedViewModel() {
     companion object {
         private const val TAG = "[Address Selection ViewModel]"
     }

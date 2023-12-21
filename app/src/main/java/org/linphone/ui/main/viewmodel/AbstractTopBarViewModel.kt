@@ -89,6 +89,10 @@ open class AbstractTopBarViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    val defaultAccountChangedEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     protected var currentFilter = ""
 
     private val coreListener = object : CoreListenerStub() {
@@ -131,6 +135,8 @@ open class AbstractTopBarViewModel @UiThread constructor() : ViewModel() {
 
                 account.postValue(AccountModel(defaultAccount))
             }
+
+            defaultAccountChangedEvent.postValue(Event(true))
 
             updateUnreadMessagesCount()
             updateMissedCallsCount()
