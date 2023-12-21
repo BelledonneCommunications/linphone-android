@@ -252,8 +252,11 @@ class CallActivity : GenericActivity() {
         callsViewModel.goToCallsListEvent.observe(this) {
             it.consume {
                 val navController = findNavController(R.id.call_nav_container)
-                val action = ActiveCallFragmentDirections.actionActiveCallFragmentToCallsListFragment()
-                navController.navigate(action)
+                if (navController.currentDestination?.id == R.id.activeCallFragment) {
+                    val action =
+                        ActiveCallFragmentDirections.actionActiveCallFragmentToCallsListFragment()
+                    navController.navigate(action)
+                }
             }
         }
 

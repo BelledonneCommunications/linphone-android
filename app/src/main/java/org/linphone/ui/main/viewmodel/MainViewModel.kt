@@ -122,6 +122,9 @@ class MainViewModel @UiThread constructor() : ViewModel() {
             ) {
                 updateCallAlert()
             } else if (core.callsNb == 1) {
+                if (LinphoneUtils.isCallEnding(call.state)) {
+                    removeAlert(MULTIPLE_CALLS)
+                }
                 callsStatus.postValue(LinphoneUtils.callStateToString(call.state))
             }
         }

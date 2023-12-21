@@ -91,7 +91,7 @@ class ActiveCallFragment : GenericCallFragment() {
     }
 
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
-        if (findNavController().currentDestination?.id == R.id.newCallFragment) {
+        if (findNavController().currentDestination?.id == R.id.newCallFragment || findNavController().currentDestination?.id == R.id.callsListFragment) {
             // Holds fragment in place while new fragment slides over it
             return AnimationUtils.loadAnimation(activity, R.anim.hold)
         }
