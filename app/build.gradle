@@ -176,7 +176,7 @@ dependencies {
     android.defaultConfig.manifestPlaceholders = [appAuthRedirectScheme: 'org.linphone.sso']
 
     //noinspection GradleDynamicVersion
-    implementation 'org.linphone:linphone-sdk-android:5.3.0-alpha+'
+    implementation 'org.linphone:linphone-sdk-android:5.4.+'
 }
 
 ktlint {
