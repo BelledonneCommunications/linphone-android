@@ -53,8 +53,6 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
     val echoCancellerEnabled = MutableLiveData<Boolean>()
     val routeAudioToBluetooth = MutableLiveData<Boolean>()
     val videoEnabled = MutableLiveData<Boolean>()
-    val autoInitiateVideoCalls = MutableLiveData<Boolean>()
-    val autoAcceptVideoRequests = MutableLiveData<Boolean>()
 
     val availableRingtonesPaths = arrayListOf<String>()
     val availableRingtonesNames = arrayListOf<String>()
@@ -112,8 +110,6 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
             echoCancellerEnabled.postValue(core.isEchoCancellationEnabled)
             routeAudioToBluetooth.postValue(corePreferences.routeAudioToBluetoothIfAvailable)
             videoEnabled.postValue(core.isVideoEnabled)
-            autoInitiateVideoCalls.postValue(core.videoActivationPolicy.automaticallyInitiate)
-            autoAcceptVideoRequests.postValue(core.videoActivationPolicy.automaticallyAccept)
             vibrateDuringIncomingCall.postValue(core.isVibrationOnIncomingCallEnabled)
             autoRecordCalls.postValue(corePreferences.automaticallyStartCallRecording)
 
@@ -164,28 +160,6 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
             core.isVideoCaptureEnabled = newValue
             core.isVideoDisplayEnabled = newValue
             videoEnabled.postValue(newValue)
-        }
-    }
-
-    @UiThread
-    fun toggleAutoInitiateVideoCalls() {
-        val newValue = autoInitiateVideoCalls.value == false
-        coreContext.postOnCoreThread { core ->
-            val policy = core.videoActivationPolicy
-            policy.automaticallyInitiate = newValue
-            core.videoActivationPolicy = policy
-            autoInitiateVideoCalls.postValue(newValue)
-        }
-    }
-
-    @UiThread
-    fun toggleAutoAcceptVideoRequests() {
-        val newValue = autoAcceptVideoRequests.value == false
-        coreContext.postOnCoreThread { core ->
-            val policy = core.videoActivationPolicy
-            policy.automaticallyAccept = newValue
-            core.videoActivationPolicy = policy
-            autoAcceptVideoRequests.postValue(newValue)
         }
     }
 
@@ -355,8 +329,10 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
         try {
             uri =
                 RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_RINGTONE)
-        } catch (exception: SecurityException) {
+        } catch (e: SecurityException) {
+            Log.e("$TAG Can't get default ringtone URI: $e")
         }
+
         if (uri == null) {
             Log.w("$TAG Failed to get actual default ringtone URI, trying to get a valid one")
             uri = RingtoneManager.getValidRingtoneUri(context)

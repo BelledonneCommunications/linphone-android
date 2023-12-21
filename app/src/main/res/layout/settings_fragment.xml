@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View" />
@@ -74,349 +74,17 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"/>
 
-                <ImageView
-                    android:id="@+id/calls_background"
-                    android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
-                    android:layout_width="0dp"
+                <include
+                    android:id="@+id/calls_settings"
+                    layout="@layout/settings_calls"
+                    android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:src="@drawable/shape_squircle_white_background"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
                     app:layout_constraintTop_toBottomOf="@id/calls"
-                    app:layout_constraintBottom_toBottomOf="@id/calls_bottom_anchor"/>
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_title_style"
-                    android:onClick="@{() -> viewModel.toggleEchoCanceller()}"
-                    android:id="@+id/echo_canceller_title"
-                    android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/settings_calls_echo_canceller_title"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    app:layout_constraintTop_toTopOf="@id/echo_canceller_switch"
-                    app:layout_constraintBottom_toTopOf="@id/echo_canceller_subtitle"
-                    app:layout_constraintStart_toStartOf="@id/calls_background"
-                    app:layout_constraintEnd_toStartOf="@id/echo_canceller_switch"/>
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_subtitle_style"
-                    android:onClick="@{() -> viewModel.toggleEchoCanceller()}"
-                    android:id="@+id/echo_canceller_subtitle"
-                    android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/settings_calls_echo_canceller_subtitle"
-                    app:layout_constraintTop_toBottomOf="@id/echo_canceller_title"
-                    app:layout_constraintBottom_toBottomOf="@id/echo_canceller_switch"
-                    app:layout_constraintStart_toStartOf="@id/calls_background"
-                    app:layout_constraintEnd_toStartOf="@id/echo_canceller_switch"/>
-
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    style="@style/material_switch_style"
-                    android:id="@+id/echo_canceller_switch"
-                    android:onClick="@{() -> viewModel.toggleEchoCanceller()}"
-                    android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="16dp"
-                    android:checked="@{viewModel.echoCancellerEnabled}"
-                    app:layout_constraintEnd_toEndOf="@id/calls_background"
-                    app:layout_constraintTop_toTopOf="@id/calls_background" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_title_style"
-                    android:onClick="@{() -> viewModel.toggleRouteAudioToBluetooth()}"
-                    android:id="@+id/route_audio_to_bluetooth_title"
-                    android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/settings_calls_route_audio_to_bluetooth_title"
-                    android:maxLines="2"
-                    android:ellipsize="end"
-                    app:layout_constraintTop_toTopOf="@id/route_audio_to_bluetooth_switch"
-                    app:layout_constraintBottom_toBottomOf="@id/route_audio_to_bluetooth_switch"
-                    app:layout_constraintStart_toStartOf="@id/calls_background"
-                    app:layout_constraintEnd_toStartOf="@id/route_audio_to_bluetooth_switch"/>
-
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    style="@style/material_switch_style"
-                    android:id="@+id/route_audio_to_bluetooth_switch"
-                    android:onClick="@{() -> viewModel.toggleRouteAudioToBluetooth()}"
-                    android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="16dp"
-                    android:checked="@{viewModel.routeAudioToBluetooth}"
-                    app:layout_constraintEnd_toEndOf="@id/calls_background"
-                    app:layout_constraintTop_toBottomOf="@id/echo_canceller_switch" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_title_style"
-                    android:onClick="@{() -> viewModel.toggleEnableVideo()}"
-                    android:id="@+id/enable_video_title"
-                    android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/settings_calls_enable_video_title"
-                    android:maxLines="2"
-                    android:ellipsize="end"
-                    app:layout_constraintTop_toTopOf="@id/enable_video_switch"
-                    app:layout_constraintBottom_toBottomOf="@id/enable_video_switch"
-                    app:layout_constraintStart_toStartOf="@id/calls_background"
-                    app:layout_constraintEnd_toStartOf="@id/enable_video_switch"/>
-
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    style="@style/material_switch_style"
-                    android:id="@+id/enable_video_switch"
-                    android:onClick="@{() -> viewModel.toggleEnableVideo()}"
-                    android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="16dp"
-                    android:checked="@{viewModel.videoEnabled}"
-                    app:layout_constraintEnd_toEndOf="@id/calls_background"
-                    app:layout_constraintTop_toBottomOf="@id/route_audio_to_bluetooth_switch" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_title_style"
-                    android:onClick="@{() -> viewModel.toggleAutoInitiateVideoCalls()}"
-                    android:id="@+id/auto_initiate_video_title"
-                    android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/settings_calls_auto_initiate_video_title"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    app:layout_constraintTop_toTopOf="@id/auto_initiate_video_switch"
-                    app:layout_constraintBottom_toTopOf="@id/auto_initiate_video_subtitle"
-                    app:layout_constraintStart_toStartOf="@id/calls_background"
-                    app:layout_constraintEnd_toStartOf="@id/auto_initiate_video_switch"/>
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_subtitle_style"
-                    android:onClick="@{() -> viewModel.toggleAutoInitiateVideoCalls()}"
-                    android:id="@+id/auto_initiate_video_subtitle"
-                    android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/settings_calls_auto_initiate_video_subtitle"
-                    app:layout_constraintTop_toBottomOf="@id/auto_initiate_video_title"
-                    app:layout_constraintBottom_toBottomOf="@id/auto_initiate_video_switch"
-                    app:layout_constraintStart_toStartOf="@id/calls_background"
-                    app:layout_constraintEnd_toStartOf="@id/auto_initiate_video_switch"/>
-
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    style="@style/material_switch_style"
-                    android:id="@+id/auto_initiate_video_switch"
-                    android:onClick="@{() -> viewModel.toggleAutoInitiateVideoCalls()}"
-                    android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="16dp"
-                    android:checked="@{viewModel.autoInitiateVideoCalls}"
-                    app:layout_constraintEnd_toEndOf="@id/calls_background"
-                    app:layout_constraintTop_toBottomOf="@id/enable_video_switch" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_title_style"
-                    android:id="@+id/auto_accept_video_title"
-                    android:onClick="@{() -> viewModel.toggleAutoAcceptVideoRequests()}"
-                    android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/settings_calls_auto_accept_video_title"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    app:layout_constraintTop_toTopOf="@id/auto_accept_video_switch"
-                    app:layout_constraintBottom_toTopOf="@id/auto_accept_video_subtitle"
-                    app:layout_constraintStart_toStartOf="@id/calls_background"
-                    app:layout_constraintEnd_toStartOf="@id/auto_accept_video_switch"/>
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_subtitle_style"
-                    android:id="@+id/auto_accept_video_subtitle"
-                    android:onClick="@{() -> viewModel.toggleAutoAcceptVideoRequests()}"
-                    android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/settings_calls_auto_accept_video_subtitle"
-                    app:layout_constraintTop_toBottomOf="@id/auto_accept_video_title"
-                    app:layout_constraintBottom_toBottomOf="@id/auto_accept_video_switch"
-                    app:layout_constraintStart_toStartOf="@id/calls_background"
-                    app:layout_constraintEnd_toStartOf="@id/auto_accept_video_switch"/>
-
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    style="@style/material_switch_style"
-                    android:id="@+id/auto_accept_video_switch"
-                    android:onClick="@{() -> viewModel.toggleAutoAcceptVideoRequests()}"
-                    android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="16dp"
-                    android:checked="@{viewModel.autoAcceptVideoRequests}"
-                    app:layout_constraintEnd_toEndOf="@id/calls_background"
-                    app:layout_constraintTop_toBottomOf="@id/auto_initiate_video_switch" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_title_style"
-                    android:id="@+id/device_ringtone_title"
-                    android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/settings_calls_ringtones_title"
-                    android:maxLines="2"
-                    android:ellipsize="end"
-                    app:layout_constraintTop_toBottomOf="@id/auto_accept_video_switch"
-                    app:layout_constraintStart_toStartOf="@id/calls_background"
-                    app:layout_constraintEnd_toStartOf="@id/device_ringtone_player"/>
-
-                <androidx.appcompat.widget.AppCompatSpinner
-                    style="@style/material_switch_style"
-                    android:id="@+id/device_ringtone_spinner"
-                    android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_marginEnd="10dp"
-                    android:background="@drawable/edit_text_background"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"
-                    app:layout_constraintTop_toBottomOf="@id/device_ringtone_title"
-                    app:layout_constraintStart_toStartOf="@id/device_ringtone_title"
-                    app:layout_constraintEnd_toStartOf="@id/device_ringtone_player" />
-
-                <ImageView
-                    android:id="@+id/device_ringtone_spinner_caret"
-                    android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="20dp"
-                    android:src="@drawable/caret_down"
-                    app:layout_constraintTop_toTopOf="@id/device_ringtone_spinner"
-                    app:layout_constraintBottom_toBottomOf="@id/device_ringtone_spinner"
-                    app:layout_constraintEnd_toEndOf="@id/device_ringtone_spinner"/>
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/tertiary_button_label_style"
-                    android:id="@+id/device_ringtone_player"
-                    android:onClick="@{() -> viewModel.playPauseRingtone()}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:background="@drawable/tertiary_button_background"
-                    android:paddingStart="12dp"
-                    android:paddingEnd="12dp"
-                    android:paddingTop="6dp"
-                    android:paddingBottom="6dp"
-                    android:gravity="center"
-                    android:text="@{viewModel.isRingtonePlaying ? @string/settings_calls_pause_ringtone_label : @string/settings_calls_play_ringtone_label, default=@string/settings_calls_play_ringtone_label}"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:drawableStart="@{viewModel.isRingtonePlaying ? @drawable/pause : @drawable/play, default=@drawable/play}"
-                    android:drawableTint="@color/tertiary_button_label_color"
-                    android:drawablePadding="8dp"
-                    android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintStart_toEndOf="@id/device_ringtone_spinner"
-                    app:layout_constraintEnd_toEndOf="@id/calls_background"
-                    app:layout_constraintTop_toTopOf="@id/device_ringtone_spinner"
-                    app:layout_constraintBottom_toBottomOf="@id/device_ringtone_spinner"/>
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_title_style"
-                    android:onClick="@{() -> viewModel.toggleVibrateOnIncomingCalls()}"
-                    android:id="@+id/vibrate_title"
-                    android:visibility="@{viewModel.expandCalls &amp;&amp; viewModel.isVibrationAvailable ? View.VISIBLE : View.GONE}"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/settings_calls_vibrate_while_ringing_title"
-                    android:maxLines="2"
-                    android:ellipsize="end"
-                    app:layout_constraintTop_toTopOf="@id/vibrate_switch"
-                    app:layout_constraintBottom_toBottomOf="@id/vibrate_switch"
-                    app:layout_constraintStart_toStartOf="@id/calls_background"
-                    app:layout_constraintEnd_toStartOf="@id/vibrate_switch"/>
-
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    style="@style/material_switch_style"
-                    android:id="@+id/vibrate_switch"
-                    android:onClick="@{() -> viewModel.toggleVibrateOnIncomingCalls()}"
-                    android:visibility="@{viewModel.expandCalls &amp;&amp; viewModel.isVibrationAvailable ? View.VISIBLE : View.GONE}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="16dp"
-                    android:checked="@{viewModel.vibrateDuringIncomingCall}"
-                    app:layout_constraintEnd_toEndOf="@id/calls_background"
-                    app:layout_constraintTop_toBottomOf="@id/device_ringtone_spinner" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_title_style"
-                    android:onClick="@{() -> viewModel.toggleAutoRecordCall()}"
-                    android:id="@+id/auto_record_title"
-                    android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/settings_calls_auto_record_title"
-                    android:maxLines="2"
-                    android:ellipsize="end"
-                    app:layout_constraintTop_toTopOf="@id/auto_record_switch"
-                    app:layout_constraintBottom_toBottomOf="@id/auto_record_switch"
-                    app:layout_constraintStart_toStartOf="@id/calls_background"
-                    app:layout_constraintEnd_toStartOf="@id/auto_record_switch"/>
-
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    style="@style/material_switch_style"
-                    android:id="@+id/auto_record_switch"
-                    android:onClick="@{() -> viewModel.toggleAutoRecordCall()}"
-                    android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="16dp"
-                    android:checked="@{viewModel.autoRecordCalls}"
-                    app:layout_constraintEnd_toEndOf="@id/calls_background"
-                    app:layout_constraintTop_toBottomOf="@id/vibrate_switch" />
-
-                <View
-                    android:id="@+id/calls_bottom_anchor"
-                    android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
-                    android:layout_width="1dp"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="20dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/auto_record_switch"/>
+                    bind:viewModel="@{viewModel}"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/section_header_style"
@@ -433,60 +101,19 @@
                     android:drawableTint="@color/gray_main2_600"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/calls_background"/>
+                    app:layout_constraintTop_toBottomOf="@id/calls_settings"/>
 
-                <ImageView
-                    android:id="@+id/network_background"
-                    android:visibility="@{viewModel.expandNetwork ? View.VISIBLE : View.GONE}"
-                    android:layout_width="0dp"
+                <include
+                    android:id="@+id/network_settings"
+                    layout="@layout/settings_network"
+                    android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:src="@drawable/shape_squircle_white_background"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:visibility="@{viewModel.expandNetwork ? View.VISIBLE : View.GONE}"
                     app:layout_constraintTop_toBottomOf="@id/network"
-                    app:layout_constraintBottom_toBottomOf="@id/network_bottom_anchor"/>
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_title_style"
-                    android:onClick="@{() -> viewModel.toggleEnableVideo()}"
-                    android:id="@+id/wifi_only_title"
-                    android:visibility="@{viewModel.expandNetwork ? View.VISIBLE : View.GONE}"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/settings_network_use_wifi_only"
-                    android:maxLines="2"
-                    android:ellipsize="end"
-                    app:layout_constraintTop_toTopOf="@id/wifi_only_switch"
-                    app:layout_constraintBottom_toBottomOf="@id/wifi_only_switch"
-                    app:layout_constraintStart_toStartOf="@id/network_background"
-                    app:layout_constraintEnd_toStartOf="@id/wifi_only_switch"/>
-
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    style="@style/material_switch_style"
-                    android:id="@+id/wifi_only_switch"
-                    android:onClick="@{() -> viewModel.toggleUseWifiOnly()}"
-                    android:visibility="@{viewModel.expandNetwork ? View.VISIBLE : View.GONE}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="16dp"
-                    android:checked="@{viewModel.useWifiOnly}"
-                    app:layout_constraintEnd_toEndOf="@id/network_background"
-                    app:layout_constraintTop_toTopOf="@id/network_background" />
-
-                <View
-                    android:id="@+id/network_bottom_anchor"
-                    android:visibility="@{viewModel.expandNetwork ? View.VISIBLE : View.GONE}"
-                    android:layout_width="1dp"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="20dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/wifi_only_switch"/>
+                    bind:viewModel="@{viewModel}"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/section_header_style"
@@ -503,71 +130,19 @@
                     android:drawableTint="@color/gray_main2_600"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/network_background"/>
+                    app:layout_constraintTop_toBottomOf="@id/network_settings"/>
 
-                <ImageView
-                    android:id="@+id/user_interface_background"
-                    android:visibility="@{viewModel.expandUserInterface ? View.VISIBLE : View.GONE}"
-                    android:layout_width="0dp"
+                <include
+                    android:id="@+id/user_interface_settings"
+                    layout="@layout/settings_user_interface"
+                    android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:src="@drawable/shape_squircle_white_background"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:visibility="@{viewModel.expandUserInterface ? View.VISIBLE : View.GONE}"
                     app:layout_constraintTop_toBottomOf="@id/user_interface"
-                    app:layout_constraintBottom_toBottomOf="@id/user_interface_bottom_anchor"/>
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/settings_title_style"
-                    android:id="@+id/theme_title"
-                    android:visibility="@{viewModel.expandUserInterface ? View.VISIBLE : View.GONE}"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/settings_user_interface_theme_title"
-                    android:maxLines="2"
-                    android:ellipsize="end"
-                    app:layout_constraintTop_toBottomOf="@id/user_interface"
-                    app:layout_constraintStart_toStartOf="@id/user_interface_background"
-                    app:layout_constraintEnd_toEndOf="@id/user_interface_background"/>
-
-                <androidx.appcompat.widget.AppCompatSpinner
-                    style="@style/material_switch_style"
-                    android:id="@+id/theme_spinner"
-                    android:visibility="@{viewModel.expandUserInterface ? View.VISIBLE : View.GONE}"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_marginEnd="10dp"
-                    android:background="@drawable/edit_text_background"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"
-                    app:layout_constraintTop_toBottomOf="@id/theme_title"
-                    app:layout_constraintStart_toStartOf="@id/theme_title"
-                    app:layout_constraintEnd_toEndOf="@id/theme_title" />
-
-                <ImageView
-                    android:id="@+id/theme_spinner_caret"
-                    android:visibility="@{viewModel.expandUserInterface ? View.VISIBLE : View.GONE}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="20dp"
-                    android:src="@drawable/caret_down"
-                    app:layout_constraintTop_toTopOf="@id/theme_spinner"
-                    app:layout_constraintBottom_toBottomOf="@id/theme_spinner"
-                    app:layout_constraintEnd_toEndOf="@id/theme_spinner"/>
-
-                <View
-                    android:id="@+id/user_interface_bottom_anchor"
-                    android:visibility="@{viewModel.expandUserInterface ? View.VISIBLE : View.GONE}"
-                    android:layout_width="1dp"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="20dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/theme_spinner"/>
+                    bind:viewModel="@{viewModel}"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/section_header_style"
@@ -585,7 +160,7 @@
                     app:layout_constraintVertical_bias="0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/user_interface_background"
+                    app:layout_constraintTop_toBottomOf="@id/user_interface_settings"
                     app:layout_constraintBottom_toBottomOf="parent"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>

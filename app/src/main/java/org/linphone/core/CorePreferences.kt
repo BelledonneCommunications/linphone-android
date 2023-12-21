@@ -144,10 +144,6 @@ class CorePreferences @UiThread constructor(private val context: Context) {
         get() = context.filesDir.absolutePath + "/linphonerc"
 
     @get:AnyThread
-    val friendsDatabasePath: String
-        get() = context.filesDir.absolutePath + "/friends.db"
-
-    @get:AnyThread
     val linphoneDefaultValuesPath: String
         get() = context.filesDir.absolutePath + "/assistant_linphone_default_values"
 

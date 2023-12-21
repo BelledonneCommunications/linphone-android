@@ -85,17 +85,17 @@ class SettingsFragment : GenericFragment() {
             viewModel.availableRingtonesNames
         )
         ringtonesAdapter.setDropDownViewResource(R.layout.generic_dropdown_cell)
-        binding.deviceRingtoneSpinner.adapter = ringtonesAdapter
+        binding.callsSettings.deviceRingtoneSpinner.adapter = ringtonesAdapter
 
         viewModel.selectedRingtone.observe(viewLifecycleOwner) { ringtone ->
-            binding.deviceRingtoneSpinner.setSelection(
+            binding.callsSettings.deviceRingtoneSpinner.setSelection(
                 viewModel.availableRingtonesPaths.indexOf(
                     ringtone
                 )
             )
         }
 
-        binding.deviceRingtoneSpinner.onItemSelectedListener = ringtoneListener
+        binding.callsSettings.deviceRingtoneSpinner.onItemSelectedListener = ringtoneListener
 
         // Light/Dark theme related
         val themeAdapter = ArrayAdapter(
@@ -104,13 +104,15 @@ class SettingsFragment : GenericFragment() {
             viewModel.availableThemesNames
         )
         themeAdapter.setDropDownViewResource(R.layout.generic_dropdown_cell)
-        binding.themeSpinner.adapter = themeAdapter
+        binding.userInterfaceSettings.themeSpinner.adapter = themeAdapter
 
         viewModel.theme.observe(viewLifecycleOwner) { theme ->
-            binding.themeSpinner.setSelection(viewModel.availableThemesValues.indexOf(theme))
+            binding.userInterfaceSettings.themeSpinner.setSelection(
+                viewModel.availableThemesValues.indexOf(theme)
+            )
         }
 
-        binding.themeSpinner.onItemSelectedListener = themeListener
+        binding.userInterfaceSettings.themeSpinner.onItemSelectedListener = themeListener
 
         startPostponedEnterTransition()
     }
