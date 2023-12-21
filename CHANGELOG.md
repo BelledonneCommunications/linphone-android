@@ -10,15 +10,22 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
-## [5.2.0] - Unreleased
+## [5.2.0] - 2023-12-21
 
 ### Added
 - Chat messages emoji "reactions"
-- Broadcast mode for scheduled meetings (beta, you have to enable it in the settings first)
 - Hearing aids should be working the same way bluetooth headset does
 - Hardware video codecs (H264, H265) are now used in priority when possible (SDK)
+- Broadcast mode for scheduled meetings (hidden)
+- Android 14 support
+
+### Changed
+- BLUETOOTH_CONNECT permission is no longer required
 
 ### Fixed
+- Correctly switching to either bottom or back microphone depending on wether the earpiece or the speaker is used, 
+and also use the same device for input and output if the one set as output as RECORD capability 
+(fixes echo issue while on speakerphone on some devices such as Samsung's)
 - Connection status & color when in refreshing state
 - Sent content type for files attached to a chat message
 - Toggle mute mic while in conference
