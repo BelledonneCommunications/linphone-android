@@ -76,11 +76,6 @@ class ShortcutUtils {
                     continue
                 }
 
-                if (isShortcutToChatRoomAlreadyCreated(context, chatRoom)) {
-                    count += 1
-                    continue
-                }
-
                 if (count >= 5) {
                     Log.i("$TAG We already created [$count] shortcuts, stopping here")
                     break
@@ -148,9 +143,13 @@ class ShortcutUtils {
                     subject = chatRoom.subject.orEmpty()
                     val picture = ImageUtils.generateBitmapForChatRoom(chatRoom)
                     if (picture.isNotEmpty()) {
-                        IconCompat.createWithAdaptiveBitmap(
-                            BitmapFactory.decodeFile(picture)
-                        )
+                        // BitmapFactory.decodeFile() doesn't handle file:/ URIs
+                        val file = if (picture.startsWith("file:/")) {
+                            picture.substring("file:/".length)
+                        } else {
+                            picture
+                        }
+                        IconCompat.createWithAdaptiveBitmap(BitmapFactory.decodeFile(file))
                     } else {
                         AvatarGenerator(context).setInitials(subject).buildIcon()
                     }
@@ -182,7 +181,7 @@ class ShortcutUtils {
                     .setLongLived(Version.sdkAboveOrEqual(Version.API30_ANDROID_11))
                     .setLocusId(LocusIdCompat(id))
                     .build()
-            } catch (e: Exception) {
+            } catch (e: NumberFormatException) {
                 Log.e("$TAG createChatRoomShortcut for id [$id] exception: $e")
             }
 
