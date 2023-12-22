@@ -484,7 +484,7 @@ class NotificationsManager(private val context: Context) {
 
         val coreService = service
         if (coreService != null) {
-            startForeground(coreService, useAutoStartDescription = false)
+            startForeground(coreService)
         } else {
             Log.w(
                 "[Notifications Manager] Can't start service as foreground without a service, starting it now"
@@ -536,10 +536,10 @@ class NotificationsManager(private val context: Context) {
         }
     }
 
-    fun startForeground(coreService: CoreService, useAutoStartDescription: Boolean = true) {
+    private fun startForeground(coreService: CoreService) {
         service = coreService
 
-        val notification = serviceNotification ?: createServiceNotification(useAutoStartDescription)
+        val notification = serviceNotification ?: createServiceNotification(false)
         if (notification == null) {
             Log.e(
                 "[Notifications Manager] Failed to create service notification, aborting foreground service!"
@@ -568,6 +568,33 @@ class NotificationsManager(private val context: Context) {
             currentForegroundServiceNotificationId,
             notification,
             isActiveCall
+        )
+    }
+
+    fun startForegroundToKeepAppAlive(
+        coreService: CoreService,
+        useAutoStartDescription: Boolean = true
+    ) {
+        service = coreService
+
+        val notification = serviceNotification ?: createServiceNotification(useAutoStartDescription)
+        if (notification == null) {
+            Log.e(
+                "[Notifications Manager] Failed to create service notification, aborting foreground service!"
+            )
+            return
+        }
+
+        currentForegroundServiceNotificationId = SERVICE_NOTIF_ID
+        Log.i(
+            "[Notifications Manager] Starting service as foreground [$currentForegroundServiceNotificationId]"
+        )
+
+        Compatibility.startDataSyncForegroundService(
+            coreService,
+            currentForegroundServiceNotificationId,
+            notification,
+            false
         )
     }
 
@@ -884,7 +911,7 @@ class NotificationsManager(private val context: Context) {
             startForeground(notifiable.notificationId, notification, isCallActive)
         } else if (coreService != null && currentForegroundServiceNotificationId == SERVICE_NOTIF_ID) {
             // To add microphone & camera foreground service use to foreground service if needed
-            startForeground(coreService, useAutoStartDescription = false)
+            startForeground(coreService)
         }
     }
 
@@ -901,7 +928,7 @@ class NotificationsManager(private val context: Context) {
         // To remove microphone & camera foreground service use to foreground service if needed
         val coreService = service
         if (coreService != null && currentForegroundServiceNotificationId == SERVICE_NOTIF_ID) {
-            startForeground(coreService, useAutoStartDescription = false)
+            startForeground(coreService)
         }
     }
 

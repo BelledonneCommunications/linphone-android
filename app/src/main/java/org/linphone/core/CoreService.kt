@@ -46,7 +46,7 @@ class CoreService : CoreService() {
             )
             if (!contextCreated) {
                 // Only start foreground notification if context already exists, otherwise context will do it itself
-                coreContext.notificationsManager.startForeground(this, false)
+                coreContext.notificationsManager.startForegroundToKeepAppAlive(this, false)
             }
         } else if (intent?.extras?.get("StartForeground") == true) {
             Log.i("[Service] Starting as foreground due to device boot or app update")
@@ -61,7 +61,7 @@ class CoreService : CoreService() {
                 coreContext.start()
             } else {
                 // Only start foreground notification if context already exists, otherwise context will do it itself
-                coreContext.notificationsManager.startForeground(this, true)
+                coreContext.notificationsManager.startForegroundToKeepAppAlive(this, true)
             }
             coreContext.checkIfForegroundServiceNotificationCanBeRemovedAfterDelay(5000)
         } else {
