@@ -59,11 +59,19 @@ class AccountProfileFragment : GenericFragment() {
 
     private val dropdownListener = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            val dialPlan = viewModel.dialPlansList[position]
-            Log.i(
-                "$TAG Selected dialplan updated [+${dialPlan.countryCallingCode}] / [${dialPlan.country}]"
-            )
-            viewModel.setDialPlan(dialPlan)
+            if (position == 0) {
+                Log.i("$TAG Removing selected dial plan")
+                viewModel.removeDialPlan()
+                viewModel.selectedDialPlan.value = 0
+            } else {
+                val index = position - 1
+                val dialPlan = viewModel.dialPlansList[index]
+                Log.i(
+                    "$TAG Selected dialplan updated [+${dialPlan.countryCallingCode}] / [${dialPlan.country}]"
+                )
+                viewModel.setDialPlan(dialPlan)
+                viewModel.selectedDialPlan.value = index
+            }
         }
 
         override fun onNothingSelected(parent: AdapterView<*>?) {

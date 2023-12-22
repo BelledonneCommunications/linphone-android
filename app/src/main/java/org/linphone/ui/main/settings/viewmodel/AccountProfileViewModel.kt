@@ -53,6 +53,8 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
         expandDevices.value = false // TODO: set to true when feature will be available
 
         coreContext.postOnCoreThread {
+            dialPlansLabelList.add("") // To allow removing selected dial plan
+
             val dialPlans = Factory.instance().dialPlans.toList()
             for (dialPlan in dialPlans) {
                 dialPlansList.add(dialPlan)
@@ -121,7 +123,7 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
                         it.countryCallingCode == prefix
                     }
                     if (dialPlan != null) {
-                        val index = dialPlansList.indexOf(dialPlan)
+                        val index = dialPlansList.indexOf(dialPlan) + 1
                         Log.i(
                             "$TAG Found matching dial plan [${dialPlan.country}] at index [$index]"
                         )
@@ -238,7 +240,20 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
             copy.internationalPrefix = dialPlan.countryCallingCode
             account.params = copy
             Log.i(
-                "$TAG Updated internation prefix for account [${account.params.identityAddress?.asStringUriOnly()}] to [${copy.internationalPrefix}]"
+                "$TAG Updated international prefix for account [${account.params.identityAddress?.asStringUriOnly()}] to [${copy.internationalPrefix}]"
+            )
+        }
+    }
+
+    @UiThread
+    fun removeDialPlan() {
+        coreContext.postOnCoreThread {
+            val params = account.params
+            val copy = params.clone()
+            copy.internationalPrefix = ""
+            account.params = copy
+            Log.i(
+                "$TAG Removed international prefix for account [${account.params.identityAddress?.asStringUriOnly()}]"
             )
         }
     }
