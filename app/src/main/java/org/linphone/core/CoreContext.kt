@@ -339,7 +339,7 @@ class CoreContext(
 
         if (service != null) {
             Log.i("[Context] Starting foreground service")
-            notificationsManager.startForeground(service, useAutoStartDescription)
+            notificationsManager.startForegroundToKeepAppAlive(service, useAutoStartDescription)
         }
 
         core = Factory.instance().createCoreWithConfig(coreConfig, context)
