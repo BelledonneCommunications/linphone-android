@@ -21,6 +21,7 @@
         <com.google.android.material.imageview.ShapeableImageView
             style="@style/avatar_imageview"
             android:id="@+id/avatar"
+            android:onClick="@{() -> model.removeFromSelection()}"
             android:layout_width="@dimen/avatar_favorite_list_cell_size"
             android:layout_height="@dimen/avatar_favorite_list_cell_size"
             coilAvatar="@{model.avatarModel}"
