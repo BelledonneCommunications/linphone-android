@@ -257,7 +257,6 @@
 
         <include
             android:id="@+id/call_numpad"
-            android:visibility="@{viewModel.fullScreenMode || viewModel.pipMode ? View.INVISIBLE : View.VISIBLE}"
             layout="@layout/call_numpad_bottom_sheet"
             bind:model="@{numpadModel}"/>
 

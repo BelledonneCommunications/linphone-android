@@ -90,6 +90,18 @@ class ActiveCallFragment : GenericCallFragment() {
         }
     }
 
+    private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+            Log.i("$TAG Bottom sheet state is [$newState]")
+            if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                val numpadBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+                numpadBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            }
+        }
+
+        override fun onSlide(bottomSheet: View, slideOffset: Float) { }
+    }
+
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
         if (findNavController().currentDestination?.id == R.id.newCallFragment || findNavController().currentDestination?.id == R.id.callsListFragment) {
             // Holds fragment in place while new fragment slides over it
@@ -127,7 +139,8 @@ class ActiveCallFragment : GenericCallFragment() {
         actionsBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
         val numpadBottomSheetBehavior = BottomSheetBehavior.from(binding.callNumpad.root)
-        numpadBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        numpadBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        numpadBottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
 
         binding.setNewCallClickListener {
             val action = ActiveCallFragmentDirections.actionActiveCallFragmentToNewCallFragment()
@@ -157,6 +170,7 @@ class ActiveCallFragment : GenericCallFragment() {
         callViewModel.fullScreenMode.observe(viewLifecycleOwner) { hide ->
             Log.i("$TAG Switching full screen mode to ${if (hide) "ON" else "OFF"}")
             sharedViewModel.toggleFullScreenEvent.value = Event(hide)
+            numpadBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
         callViewModel.isRemoteDeviceTrusted.observe(viewLifecycleOwner) { trusted ->
