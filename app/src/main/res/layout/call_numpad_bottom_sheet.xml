@@ -186,7 +186,6 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{() -> model.onDigitClicked(`0`)}"
-            android:onLongClick="@{() -> model.onDigitLongClicked(`+`)}"
             style="@style/call_numpad_digits_style"
             android:id="@+id/digit_0"
             android:layout_width="wrap_content"
