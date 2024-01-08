@@ -134,8 +134,8 @@
         <item name="android:paddingBottom">5dp</item>
         <item name="android:paddingTop">2dp</item>
         <item name="android:orientation">horizontal</item>
-        <item name="android:layout_marginTop">-15dp</item>
-        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:layout_marginTop">-10dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
         <item name="android:background">@drawable/shape_chat_bubble_reactions_background</item>
     </style>
     <style name="call_numpad_digits_style">

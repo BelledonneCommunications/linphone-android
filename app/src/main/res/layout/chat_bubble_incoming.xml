@@ -263,10 +263,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{model.reactions, default=@string/emoji_love}"
-            android:visibility="@{model.reactions.length() > 0 ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{model.reactions.length() > 0 ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="@id/bubble"
-            app:layout_constraintTop_toBottomOf="@id/bubble"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/bubble" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -154,7 +154,12 @@ class ConversationsListViewModel @UiThread constructor() : AbstractTopBarViewMod
 
             val participants = chatRoom.participants
             val found = participants.find {
-                it.address.asStringUriOnly().contains(filter, ignoreCase = true)
+                // Search in address but also in contact name if exists
+                val model = coreContext.contactsManager.getContactAvatarModelForAddress(it.address)
+                model.contactName?.contains(filter, ignoreCase = true) == true || it.address.asStringUriOnly().contains(
+                    filter,
+                    ignoreCase = true
+                )
             }
             if (
                 found != null ||
