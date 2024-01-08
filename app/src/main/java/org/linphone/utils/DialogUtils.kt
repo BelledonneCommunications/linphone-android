@@ -39,17 +39,17 @@ import org.linphone.databinding.DialogConfirmZrtpSasBinding
 import org.linphone.databinding.DialogContactConfirmTrustCallBinding
 import org.linphone.databinding.DialogContactTrustProcessBinding
 import org.linphone.databinding.DialogDeleteContactBinding
-import org.linphone.databinding.DialogEditGroupConversationSubjectBinding
 import org.linphone.databinding.DialogManageAccountInternationalPrefixHelpBinding
 import org.linphone.databinding.DialogPickNumberOrAddressBinding
 import org.linphone.databinding.DialogRemoveAccountBinding
 import org.linphone.databinding.DialogRemoveAllCallLogsBinding
 import org.linphone.databinding.DialogRemoveCallLogsBinding
+import org.linphone.databinding.DialogSetOrEditGroupConversationSubjectBindingImpl
 import org.linphone.databinding.DialogUpdateAvailableBinding
 import org.linphone.ui.assistant.model.AcceptConditionsAndPolicyDialogModel
 import org.linphone.ui.assistant.model.ConfirmPhoneNumberDialogModel
 import org.linphone.ui.call.model.ZrtpSasConfirmationDialogModel
-import org.linphone.ui.main.chat.model.ConversationEditSubjectDialogModel
+import org.linphone.ui.main.chat.model.ConversationSetOrEditSubjectDialogModel
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
 import org.linphone.ui.main.contacts.model.TrustCallDialogModel
 import org.linphone.ui.main.history.model.ConfirmationDialogModel
@@ -268,13 +268,13 @@ class DialogUtils {
         }
 
         @UiThread
-        fun getEditConversationSubjectDialog(
+        fun getSetOrEditConversationSubjectDialog(
             context: Context,
-            viewModel: ConversationEditSubjectDialogModel
+            viewModel: ConversationSetOrEditSubjectDialogModel
         ): Dialog {
-            val binding: DialogEditGroupConversationSubjectBinding = DataBindingUtil.inflate(
+            val binding: DialogSetOrEditGroupConversationSubjectBindingImpl = DataBindingUtil.inflate(
                 LayoutInflater.from(context),
-                R.layout.dialog_edit_group_conversation_subject,
+                R.layout.dialog_set_or_edit_group_conversation_subject,
                 null,
                 false
             )
@@ -323,16 +323,20 @@ class DialogUtils {
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setContentView(binding.root)
 
-            dialog.window
-                ?.setLayout(
+            dialog.window?.apply {
+                setLayout(
                     WindowManager.LayoutParams.MATCH_PARENT,
                     WindowManager.LayoutParams.MATCH_PARENT
                 )
-            val d: Drawable = ColorDrawable(
-                context.getColor(R.color.black)
-            )
-            d.alpha = 153 // 60%
-            dialog.window?.setBackgroundDrawable(d)
+                setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+
+                val d: Drawable = ColorDrawable(
+                    context.getColor(R.color.black)
+                )
+                d.alpha = 153 // 60%
+                setBackgroundDrawable(d)
+            }
+
             return dialog
         }
     }

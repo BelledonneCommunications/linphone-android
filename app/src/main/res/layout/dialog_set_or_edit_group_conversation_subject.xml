@@ -8,7 +8,7 @@
         <import type="android.graphics.Typeface" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.main.chat.model.ConversationEditSubjectDialogModel" />
+            type="org.linphone.ui.main.chat.model.ConversationSetOrEditSubjectDialogModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:paddingTop="@dimen/dialog_top_bottom_margin"
-            android:text="@string/dialog_group_conversation_edit_subject"
+            android:text="@{viewModel.isEdit ? @string/dialog_group_conversation_edit_subject : @string/dialog_group_conversation_set_subject, default=@string/dialog_group_conversation_set_subject}"
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintBottom_toTopOf="@id/subject"
             app:layout_constraintStart_toStartOf="@id/dialog_background"
@@ -54,6 +54,7 @@
             android:layout_marginTop="5dp"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
+            android:hint="@string/dialog_group_conversation_subject_hint"
             android:text="@={viewModel.subject, default=`Lorem Ipsum`}"
             android:textSize="14sp"
             android:textColor="?attr/color_main2_600"
@@ -86,7 +87,6 @@
             android:onClick="@{() -> viewModel.confirm()}"
             style="@style/primary_button_label_style"
             android:id="@+id/confirm"
-            android:enabled="@{viewModel.subject.length() > 0}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"

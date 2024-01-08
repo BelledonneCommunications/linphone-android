@@ -23,7 +23,9 @@ import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.utils.Event
 
-class ConversationEditSubjectDialogModel @UiThread constructor(initialSubject: String) {
+class ConversationSetOrEditSubjectDialogModel @UiThread constructor(initialSubject: String) {
+    val isEdit = initialSubject.isNotEmpty()
+
     val subject = MutableLiveData<String>()
 
     val dismissEvent = MutableLiveData<Event<Boolean>>()

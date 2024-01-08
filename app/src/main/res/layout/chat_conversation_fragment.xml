@@ -252,8 +252,8 @@
                 android:layout_margin="16dp"
                 android:src="@drawable/caret_double_down"
                 android:visibility="@{viewModel.isUserScrollingUp ? View.VISIBLE : View.GONE}"
-                app:tint="?attr/color_main2_700"
-                app:backgroundTint="?attr/color_main2_000"
+                app:tint="?attr/color_main2_000"
+                app:backgroundTint="?attr/color_main1_500"
                 app:shapeAppearanceOverlay="@style/rounded"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/send_area" />

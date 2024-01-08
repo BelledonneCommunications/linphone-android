@@ -33,9 +33,12 @@ import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.databinding.StartChatFragmentBinding
 import org.linphone.ui.main.MainActivity
+import org.linphone.ui.main.chat.model.ConversationSetOrEditSubjectDialogModel
 import org.linphone.ui.main.chat.viewmodel.StartConversationViewModel
 import org.linphone.ui.main.fragment.GenericAddressPickerFragment
+import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
+import org.linphone.utils.hideKeyboard
 
 @UiThread
 class StartConversationFragment : GenericAddressPickerFragment() {
@@ -68,6 +71,10 @@ class StartConversationFragment : GenericAddressPickerFragment() {
 
         binding.setBackClickListener {
             goBack()
+        }
+
+        binding.setAskForGroupConversationSubjectClickListener {
+            showGroupConversationSubjectDialog()
         }
 
         setupRecyclerView(binding.contactsList)
@@ -112,5 +119,41 @@ class StartConversationFragment : GenericAddressPickerFragment() {
     @WorkerThread
     override fun onSingleAddressSelected(address: Address, friend: Friend) {
         viewModel.createOneToOneChatRoomWith(address)
+    }
+
+    private fun showGroupConversationSubjectDialog() {
+        val model = ConversationSetOrEditSubjectDialogModel("")
+
+        val dialog = DialogUtils.getSetOrEditConversationSubjectDialog(
+            requireContext(),
+            model
+        )
+
+        model.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i("$TAG Set conversation subject cancelled")
+                dialog.dismiss()
+            }
+        }
+
+        model.confirmEvent.observe(viewLifecycleOwner) {
+            it.consume { newSubject ->
+                if (newSubject.isNotEmpty()) {
+                    Log.i(
+                        "$TAG Conversation subject has been set to [$newSubject]"
+                    )
+                    viewModel.subject.value = newSubject
+                    viewModel.createGroupChatRoom()
+
+                    dialog.currentFocus?.hideKeyboard()
+                    dialog.dismiss()
+                } else {
+                    // TODO: show error
+                }
+            }
+        }
+
+        Log.i("$TAG Showing dialog to set conversation subject")
+        dialog.show()
     }
 }

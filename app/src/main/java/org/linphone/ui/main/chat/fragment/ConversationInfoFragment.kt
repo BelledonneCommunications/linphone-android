@@ -38,7 +38,7 @@ import org.linphone.databinding.ChatInfoFragmentBinding
 import org.linphone.databinding.ChatParticipantAdminPopupMenuBinding
 import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.chat.adapter.ConversationParticipantsAdapter
-import org.linphone.ui.main.chat.model.ConversationEditSubjectDialogModel
+import org.linphone.ui.main.chat.model.ConversationSetOrEditSubjectDialogModel
 import org.linphone.ui.main.chat.model.ParticipantModel
 import org.linphone.ui.main.chat.viewmodel.ConversationInfoViewModel
 import org.linphone.ui.main.fragment.SlidingPaneChildFragment
@@ -216,9 +216,9 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
 
         binding.setEditSubjectClickListener {
             val currentSubject = viewModel.subject.value.orEmpty()
-            val model = ConversationEditSubjectDialogModel(currentSubject)
+            val model = ConversationSetOrEditSubjectDialogModel(currentSubject)
 
-            val dialog = DialogUtils.getEditConversationSubjectDialog(
+            val dialog = DialogUtils.getSetOrEditConversationSubjectDialog(
                 requireContext(),
                 model
             )

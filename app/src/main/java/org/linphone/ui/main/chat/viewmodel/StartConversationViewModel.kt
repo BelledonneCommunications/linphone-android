@@ -89,14 +89,7 @@ class StartConversationViewModel @UiThread constructor() : AddressSelectionViewM
     init {
         groupChatRoomCreateButtonEnabled.postValue(false)
         groupChatRoomCreateButtonEnabled.addSource(selection) {
-            groupChatRoomCreateButtonEnabled.postValue(
-                subject.value.orEmpty().isNotEmpty() && selection.value.orEmpty().isNotEmpty()
-            )
-        }
-        groupChatRoomCreateButtonEnabled.addSource(subject) {
-            groupChatRoomCreateButtonEnabled.postValue(
-                subject.value.orEmpty().isNotEmpty() && selection.value.orEmpty().isNotEmpty()
-            )
+            groupChatRoomCreateButtonEnabled.postValue(it.isNotEmpty())
         }
 
         updateGroupChatButtonVisibility()
