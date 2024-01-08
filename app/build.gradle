@@ -153,7 +153,7 @@ dependencies {
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
 
     // https://github.com/material-components/material-components-android/blob/master/LICENSE Apache v2.0
-    implementation 'com.google.android.material:material:1.10.0'
+    implementation 'com.google.android.material:material:1.11.0'
 
     // https://github.com/coil-kt/coil/blob/main/LICENSE.txt Apache v2.0
     def coil_version = "2.5.0"

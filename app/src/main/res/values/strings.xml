@@ -529,6 +529,6 @@
     <string name="call_zrtp_sas_validation_skip"><u>Skip</u></string>
 
     <!-- Keep <i></i> in following strings translations! -->
-    <string name="message_meeting_invitation_content_description"><i>meeting invite</i></string>
+    <string name="message_meeting_invitation_content_description"><i>meeting invite: </i>%s</string>
     <string name="message_voice_message_content_description"><i>voice message</i></string>
 </resources>

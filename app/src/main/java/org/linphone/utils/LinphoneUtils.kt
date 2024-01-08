@@ -42,6 +42,7 @@ import org.linphone.core.ChatMessage
 import org.linphone.core.ChatRoom
 import org.linphone.core.ConferenceInfo
 import org.linphone.core.Core
+import org.linphone.core.Factory
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 
@@ -320,8 +321,12 @@ class LinphoneUtils {
             if (text.isEmpty()) {
                 val firstContent = message.contents.firstOrNull()
                 if (firstContent?.isIcalendar == true) {
-                    text = AppUtils.getString(
-                        R.string.message_meeting_invitation_content_description
+                    val conferenceInfo = Factory.instance().createConferenceInfoFromIcalendarContent(
+                        firstContent
+                    )
+                    text = AppUtils.getFormattedString(
+                        R.string.message_meeting_invitation_content_description,
+                        conferenceInfo?.subject.orEmpty()
                     )
                 } else if (firstContent?.isVoiceRecording == true) {
                     text = AppUtils.getString(R.string.message_voice_message_content_description)
