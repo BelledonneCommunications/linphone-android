@@ -118,6 +118,9 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             val message = eventLog.chatMessage
             Log.i("$TAG Message [$message] is being sent")
 
+            // Prevents auto scroll to go to latest received message
+            chatRoom.markAsRead()
+
             val list = arrayListOf<EventLogModel>()
             list.addAll(events.value.orEmpty())
 
