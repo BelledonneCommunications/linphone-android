@@ -84,7 +84,6 @@ import org.linphone.ui.main.chat.viewmodel.SendMessageInConversationViewModel
 import org.linphone.ui.main.fragment.SlidingPaneChildFragment
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
-import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.RecyclerViewSwipeUtils
 import org.linphone.utils.RecyclerViewSwipeUtilsCallback
 import org.linphone.utils.TimestampUtils
@@ -178,6 +177,13 @@ class ConversationFragment : SlidingPaneChildFragment() {
 
     private val dataObserver = object : AdapterDataObserver() {
         override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+            if (viewModel.isUserScrollingUp.value == true) {
+                Log.i(
+                    "$TAG [$itemCount] events have been loaded but user was scrolling up in conversation, do not scroll"
+                )
+                return
+            }
+
             if (positionStart == 0 && adapter.itemCount == itemCount) {
                 // First time we fill the list with messages
                 Log.i(
@@ -616,7 +622,13 @@ class ConversationFragment : SlidingPaneChildFragment() {
         binding.eventsList.addOnScrollListener(object : OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 val layoutManager = binding.eventsList.layoutManager as LinearLayoutManager
-                viewModel.isUserScrollingUp.value = layoutManager.findLastCompletelyVisibleItemPosition() != adapter.itemCount - 1
+                val scrollingUp = layoutManager.findLastCompletelyVisibleItemPosition() != adapter.itemCount - 1
+                viewModel.isUserScrollingUp.value = scrollingUp
+
+                if (!scrollingUp) {
+                    Log.i("$TAG Last message is visible, considering conversation as read")
+                    viewModel.markAsRead()
+                }
             }
         })
     }
@@ -624,11 +636,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
     override fun onResume() {
         super.onResume()
 
-        val id = LinphoneUtils.getChatRoomId(args.localSipUri, args.remoteSipUri)
-        Log.i(
-            "$TAG Asking notifications manager not to notify messages for conversation [$id]"
-        )
-        coreContext.notificationsManager.setCurrentlyDisplayedChatRoomId(id)
+        viewModel.updateCurrentlyDisplayedConversation()
 
         if (viewModel.scrollingPosition != SCROLLING_POSITION_NOT_SET) {
             binding.eventsList.scrollToPosition(viewModel.scrollingPosition)
@@ -650,6 +658,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
         coreContext.postOnCoreThread {
             bottomSheetReactionsModel?.destroy()
             bottomSheetDeliveryModel?.destroy()
+            coreContext.notificationsManager.resetCurrentlyDisplayedChatRoomId()
         }
 
         if (viewModel.isGroup.value == true) {
@@ -661,7 +670,6 @@ class ConversationFragment : SlidingPaneChildFragment() {
         } catch (e: IllegalStateException) {
             Log.e("$TAG Failed to unregister data observer to adapter: $e")
         }
-        coreContext.notificationsManager.resetCurrentlyDisplayedChatRoomId()
 
         val layoutManager = binding.eventsList.layoutManager as LinearLayoutManager
         viewModel.scrollingPosition = layoutManager.findFirstCompletelyVisibleItemPosition()

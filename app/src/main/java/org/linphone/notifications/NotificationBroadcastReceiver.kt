@@ -97,7 +97,7 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
             val remoteAddress = core.interpretUrl(remoteSipAddress, false)
             if (remoteAddress == null) {
                 Log.e(
-                    "$TAG Couldn't interpret remote address $remoteSipAddress"
+                    "$TAG Couldn't interpret remote address [$remoteSipAddress]"
                 )
                 return@postOnCoreThread
             }
@@ -105,7 +105,7 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
             val localAddress = core.interpretUrl(localIdentity, false)
             if (localAddress == null) {
                 Log.e(
-                    "$TAG Couldn't interpret local address $localIdentity"
+                    "$TAG Couldn't interpret local address [$localIdentity]"
                 )
                 return@postOnCoreThread
             }
@@ -113,7 +113,7 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
             val room = core.searchChatRoom(null, localAddress, remoteAddress, arrayOfNulls(0))
             if (room == null) {
                 Log.e(
-                    "$TAG Couldn't find conversation for remote address $remoteSipAddress and local address $localIdentity"
+                    "$TAG Couldn't find conversation for remote address [$remoteSipAddress] and local address [$localIdentity]"
                 )
                 return@postOnCoreThread
             }
@@ -123,8 +123,9 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
                 msg.userData = notificationId
                 msg.addListener(coreContext.notificationsManager.chatListener)
                 msg.send()
-                Log.i("$TAG Reply sent for notif id $notificationId")
+                Log.i("$TAG Reply sent for notif id [$notificationId]")
             } else if (intent.action == NotificationsManager.INTENT_MARK_MESSAGE_AS_READ_NOTIF_ACTION) {
+                Log.i("$TAG Marking chat room from notification id [$notificationId] as read")
                 room.markAsRead()
                 if (!coreContext.notificationsManager.dismissChatNotification(room)) {
                     Log.w(

@@ -234,6 +234,7 @@
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
                 android:text="@string/assistant_login_using_single_sign_on"
+                android:visibility="gone"
                 app:layout_constraintWidth_max="@dimen/button_max_width"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

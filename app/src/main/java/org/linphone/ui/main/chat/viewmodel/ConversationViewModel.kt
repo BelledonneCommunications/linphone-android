@@ -116,7 +116,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         @WorkerThread
         override fun onChatMessageSending(chatRoom: ChatRoom, eventLog: EventLog) {
             val message = eventLog.chatMessage
-            Log.i("$TAG Message [$message] is being sent")
+            Log.i("$TAG Message [$message] is being sent, marking conversation as read")
 
             // Prevents auto scroll to go to latest received message
             chatRoom.markAsRead()
@@ -183,7 +183,6 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
             list.addAll(newList)
             events.postValue(list)
-            chatRoom.markAsRead()
         }
 
         @WorkerThread
@@ -398,6 +397,23 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         }
     }
 
+    @UiThread
+    fun markAsRead() {
+        coreContext.postOnCoreThread {
+            Log.i("$TAG Marking chat room as read")
+            chatRoom.markAsRead()
+        }
+    }
+
+    @UiThread
+    fun updateCurrentlyDisplayedConversation() {
+        coreContext.postOnCoreThread {
+            val id = LinphoneUtils.getChatRoomId(chatRoom)
+            Log.i("$TAG Asking notifications manager not to notify messages for conversation [$id]")
+            coreContext.notificationsManager.setCurrentlyDisplayedChatRoomId(id)
+        }
+    }
+
     @WorkerThread
     private fun configureChatRoom() {
         scrollingPosition = SCROLLING_POSITION_NOT_SET
@@ -414,6 +430,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
         computeEvents()
         chatRoom.markAsRead()
+        Log.i("$TAG Conversation was marked as read")
     }
 
     @WorkerThread

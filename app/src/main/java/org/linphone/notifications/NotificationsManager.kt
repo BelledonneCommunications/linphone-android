@@ -335,7 +335,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         }
     }
 
-    @AnyThread
+    @WorkerThread
     fun setCurrentlyDisplayedChatRoomId(id: String) {
         Log.i(
             "$TAG Currently displayed conversation is [$id], messages received in it won't be notified"
@@ -343,7 +343,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         currentlyDisplayedChatRoomId = id
     }
 
-    @AnyThread
+    @WorkerThread
     fun resetCurrentlyDisplayedChatRoomId() {
         currentlyDisplayedChatRoomId = ""
         Log.i("$TAG Reset currently displayed conversation")
