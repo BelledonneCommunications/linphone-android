@@ -19,7 +19,7 @@ configurations {
 
 def gitBranch = new ByteArrayOutputStream()
 def gitVersion = new ByteArrayOutputStream()
-task getGitVersion() {
+tasks.register('getGitVersion') {
     def gitVersionStream = new ByteArrayOutputStream()
     def gitCommitsCount = new ByteArrayOutputStream()
     def gitCommitHash = new ByteArrayOutputStream()
@@ -53,7 +53,7 @@ task getGitVersion() {
     }
 }
 
-task linphoneSdkSource() {
+tasks.register('linphoneSdkSource') {
     doLast {
         configurations.customImplementation.getIncoming().each {
             it.getResolutionResult().allComponents.each {
@@ -65,8 +65,8 @@ task linphoneSdkSource() {
     }
 }
 
-project.tasks['preBuild'].dependsOn 'getGitVersion'
-project.tasks['preBuild'].dependsOn 'linphoneSdkSource'
+project.tasks.preBuild.dependsOn 'getGitVersion'
+project.tasks.preBuild.dependsOn 'linphoneSdkSource'
 
 android {
     namespace 'org.linphone'
@@ -168,7 +168,7 @@ dependencies {
     // https://github.com/Baseflow/PhotoView/blob/master/LICENSE Apache v2.0
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
 
-    implementation platform('com.google.firebase:firebase-bom:32.5.0')
+    implementation platform('com.google.firebase:firebase-bom:32.7.0')
     implementation 'com.google.firebase:firebase-messaging'
     implementation 'com.google.firebase:firebase-crashlytics-ndk'
 
@@ -184,7 +184,7 @@ ktlint {
     ignoreFailures = true
 }
 
-project.tasks['preBuild'].dependsOn 'ktlintFormat'
+project.tasks.preBuild.dependsOn 'ktlintFormat'
 
 if (crashlyticsAvailable) {
     afterEvaluate {
