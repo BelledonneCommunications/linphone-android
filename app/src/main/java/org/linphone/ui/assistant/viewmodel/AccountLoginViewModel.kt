@@ -101,7 +101,7 @@ class AccountLoginViewModel @UiThread constructor() : ViewModel() {
                         else -> {
                             AppUtils.getFormattedString(
                                 R.string.assistant_account_login_error,
-                                account.error.toInt()
+                                account.error.toString()
                             )
                         }
                     }

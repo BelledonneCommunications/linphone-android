@@ -206,7 +206,7 @@
     <string name="assistant_account_register_push_notification_not_received_error">Push notification with auth token not received in 5 seconds, please try again later</string>
     <string name="assistant_account_register_unexpected_error">Unexpected error occurred, please try again later</string>
     <string name="assistant_account_login_forbidden_error">Wrong username or password</string>
-    <string name="assistant_account_login_error">Failed to login: error code is %i</string>
+    <string name="assistant_account_login_error">Failed to login: error code is %s</string>
     <string name="assistant_permissions_title">Grant permissions</string>
     <string name="assistant_permissions_grant_all_of_them">OK</string>
     <string name="assistant_permissions_skip_permissions">Do it later</string>
