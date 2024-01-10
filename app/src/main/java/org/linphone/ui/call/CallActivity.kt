@@ -91,15 +91,15 @@ class CallActivity : GenericActivity() {
             ViewModelProvider(this)[SharedCallViewModel::class.java]
         }
 
-        callsViewModel = run {
-            ViewModelProvider(this)[CallsViewModel::class.java]
-        }
-        binding.callsViewModel = callsViewModel
-
         callViewModel = run {
             ViewModelProvider(this)[CurrentCallViewModel::class.java]
         }
         binding.callViewModel = callViewModel
+
+        callsViewModel = run {
+            ViewModelProvider(this)[CallsViewModel::class.java]
+        }
+        binding.callsViewModel = callsViewModel
 
         callViewModel.showAudioDevicesListEvent.observe(this) {
             it.consume { devices ->

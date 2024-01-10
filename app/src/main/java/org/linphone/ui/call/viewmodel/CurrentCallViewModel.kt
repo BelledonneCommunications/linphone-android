@@ -99,6 +99,8 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     val isMediaEncrypted = MutableLiveData<Boolean>()
 
+    val hideVideo = MutableLiveData<Boolean>()
+
     val incomingCallTitle: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
@@ -372,12 +374,12 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
     }
 
     init {
-        isVideoEnabled.value = false
-        isMicrophoneMuted.value = false
-        fullScreenMode.value = false
-
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
+
+            hideVideo.postValue(!core.isVideoEnabled)
+            showSwitchCamera.postValue(coreContext.showSwitchCameraButton())
+
             val call = core.currentCall ?: core.calls.firstOrNull()
 
             if (call != null) {
@@ -386,9 +388,11 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
             } else {
                 Log.e("$TAG Failed to find call!")
             }
-
-            showSwitchCamera.postValue(coreContext.showSwitchCameraButton())
         }
+
+        isVideoEnabled.value = false
+        isMicrophoneMuted.value = false
+        fullScreenMode.value = false
 
         numpadModel = NumpadModel(
             { digit -> // onDigitClicked
@@ -771,6 +775,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     @WorkerThread
     private fun configureCall(call: Call) {
+        Log.i("$TAG Configuring call [$call] as current")
         contact.value?.destroy()
 
         currentCall = call

@@ -149,7 +149,7 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         ) {
             Log.i("$TAG Call [${call.remoteAddress.asStringUriOnly()}] state changed [$state]")
             when (state) {
-                Call.State.OutgoingProgress -> {
+                Call.State.OutgoingInit -> {
                     val conferenceInfo = core.findConferenceInformationFromUri(call.remoteAddress)
                     // Do not show outgoing call view for conference calls, wait for connected state
                     if (conferenceInfo == null) {
@@ -163,8 +163,11 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
                     }
                 }
                 Call.State.Connected -> {
-                    postOnMainThread {
-                        showCallActivity()
+                    val conferenceInfo = core.findConferenceInformationFromUri(call.remoteAddress)
+                    if (conferenceInfo != null) {
+                        postOnMainThread {
+                            showCallActivity()
+                        }
                     }
                 }
                 else -> {
@@ -415,7 +418,7 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
 
     @WorkerThread
     fun showSwitchCameraButton(): Boolean {
-        return core.videoDevicesList.size > 2 // Count StaticImage camera
+        return core.isVideoCaptureEnabled && core.videoDevicesList.size > 2 // Count StaticImage camera
     }
 
     @WorkerThread

@@ -91,7 +91,7 @@
             android:textColor="?attr/color_main2_000"
             android:textSize="13sp"
             android:paddingBottom="2dp"
-            android:visibility="@{viewModel.unreadMessages > 0 ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.unreadMessages > 0 &amp;&amp; !viewModel.hideConversations ? View.VISIBLE : View.GONE}"
             app:layout_constraintTop_toTopOf="@id/conversations"
             app:layout_constraintEnd_toEndOf="@id/conversations"/>
 

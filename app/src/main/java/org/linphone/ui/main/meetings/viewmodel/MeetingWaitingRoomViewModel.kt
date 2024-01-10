@@ -54,6 +54,8 @@ class MeetingWaitingRoomViewModel @UiThread constructor() : ViewModel() {
 
     val isSwitchCameraAvailable = MutableLiveData<Boolean>()
 
+    val hideVideo = MutableLiveData<Boolean>()
+
     val conferenceInfoFoundEvent = MutableLiveData<Event<Boolean>>()
 
     val conferenceCreatedEvent: MutableLiveData<Event<Boolean>> by lazy {
@@ -78,6 +80,8 @@ class MeetingWaitingRoomViewModel @UiThread constructor() : ViewModel() {
     init {
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
+
+            hideVideo.postValue(!core.isVideoEnabled)
         }
     }
 
