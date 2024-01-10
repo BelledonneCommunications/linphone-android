@@ -70,6 +70,8 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     val isUserScrollingUp = MutableLiveData<Boolean>()
 
+    val noMatchingResultForFilter = MutableLiveData<Boolean>()
+
     var scrollingPosition: Int = SCROLLING_POSITION_NOT_SET
 
     val focusSearchBarEvent: MutableLiveData<Event<Boolean>> by lazy {
@@ -474,6 +476,12 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         val history = chatRoom.getHistoryEvents(0)
         val eventsList = getEventsListFromHistory(history, filter)
         events.postValue(eventsList)
+
+        if (filter.isNotEmpty() && eventsList.isEmpty()) {
+            noMatchingResultForFilter.postValue(true)
+        } else {
+            noMatchingResultForFilter.postValue(false)
+        }
     }
 
     @WorkerThread

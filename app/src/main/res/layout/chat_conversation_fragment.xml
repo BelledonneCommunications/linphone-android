@@ -147,7 +147,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:padding="15dp"
-                android:src="@drawable/phone_call"
+                android:src="@drawable/phone"
                 app:layout_constraintBottom_toBottomOf="@id/title"
                 app:layout_constraintEnd_toStartOf="@id/show_menu"
                 app:layout_constraintTop_toTopOf="@id/title"
@@ -215,6 +215,20 @@
                 android:paddingBottom="5dp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/composing"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_800"
+                android:id="@+id/no_result"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/conversation_filter_no_matching_result"
+                android:textColor="?attr/color_main2_600"
+                android:textSize="16sp"
+                android:visibility="@{viewModel.noMatchingResultForFilter ? View.VISIBLE : View.GONE}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/search"
+                app:layout_constraintBottom_toTopOf="@id/send_area"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style_300"
