@@ -19,10 +19,12 @@
  */
 package org.linphone.ui.call
 
+import android.Manifest
 import android.app.PictureInPictureParams
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.DrawableRes
 import androidx.annotation.UiThread
 import androidx.core.view.WindowCompat
@@ -71,6 +73,28 @@ class CallActivity : GenericActivity() {
     private lateinit var callViewModel: CurrentCallViewModel
 
     private var bottomSheetDialog: BottomSheetDialogFragment? = null
+
+    private val requestCameraPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            Log.i("$TAG CAMERA permission has been granted, enabling video")
+            callViewModel.toggleVideo()
+        } else {
+            Log.e("$TAG CAMERA permission has been denied")
+        }
+    }
+
+    private val requestRecordAudioPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            Log.i("$TAG RECORD_AUDIO permission has been granted, un-muting microphone")
+            callViewModel.toggleMuteMicrophone()
+        } else {
+            Log.e("$TAG RECORD_AUDIO permission has been denied")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -175,6 +199,20 @@ class CallActivity : GenericActivity() {
             it.consume {
                 val action = ActiveCallFragmentDirections.actionGlobalEndedCallFragment()
                 findNavController(R.id.call_nav_container).navigate(action)
+            }
+        }
+
+        callViewModel.requestRecordAudioPermission.observe(this) {
+            it.consume {
+                Log.w("$TAG Asking for RECORD_AUDIO permission")
+                requestRecordAudioPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+            }
+        }
+
+        callViewModel.requestCameraPermission.observe(this) {
+            it.consume {
+                Log.w("$TAG Asking for CAMERA permission")
+                requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA)
             }
         }
 

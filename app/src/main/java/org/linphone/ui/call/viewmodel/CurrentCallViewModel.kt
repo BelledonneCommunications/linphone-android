@@ -117,6 +117,14 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    val requestRecordAudioPermission: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
+    val requestCameraPermission: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     // To synchronize chronometers in UI
     val callDuration = MutableLiveData<Int>()
 
@@ -391,8 +399,11 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         }
 
         isVideoEnabled.value = false
-        isMicrophoneMuted.value = false
         fullScreenMode.value = false
+        isMicrophoneMuted.value = ActivityCompat.checkSelfPermission(
+            coreContext.context,
+            Manifest.permission.RECORD_AUDIO
+        ) != PackageManager.PERMISSION_GRANTED
 
         numpadModel = NumpadModel(
             { digit -> // onDigitClicked
@@ -463,7 +474,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                 Manifest.permission.RECORD_AUDIO
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            // TODO: request record audio permission
+            requestRecordAudioPermission.postValue(Event(true))
             return
         }
 
@@ -564,7 +575,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                 Manifest.permission.CAMERA
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            // TODO: request video permission
+            requestCameraPermission.postValue(Event(true))
             return
         }
 
@@ -808,7 +819,19 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
             isVideoEnabled.postValue(call.currentParams.isVideoEnabled)
         }
 
-        isMicrophoneMuted.postValue(call.microphoneMuted)
+        if (ActivityCompat.checkSelfPermission(
+                coreContext.context,
+                Manifest.permission.RECORD_AUDIO
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            Log.w(
+                "$TAG RECORD_AUDIO permission wasn't granted yet, considering microphone as muted!"
+            )
+            isMicrophoneMuted.postValue(false)
+        } else {
+            isMicrophoneMuted.postValue(call.microphoneMuted)
+        }
+
         val audioDevice = call.outputAudioDevice
         updateOutputAudioDevice(audioDevice)
 
