@@ -19,7 +19,6 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/settings_title_style"
             android:id="@+id/theme_title"
-            android:visibility="@{viewModel.expandUserInterface ? View.VISIBLE : View.GONE}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -35,7 +34,6 @@
         <androidx.appcompat.widget.AppCompatSpinner
             style="@style/material_switch_style"
             android:id="@+id/theme_spinner"
-            android:visibility="@{viewModel.expandUserInterface ? View.VISIBLE : View.GONE}"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_marginEnd="10dp"
@@ -48,7 +46,6 @@
 
         <ImageView
             android:id="@+id/theme_spinner_caret"
-            android:visibility="@{viewModel.expandUserInterface ? View.VISIBLE : View.GONE}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"

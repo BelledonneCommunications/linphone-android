@@ -266,6 +266,8 @@
     <string name="settings_calls_pause_ringtone_label">Pause</string>
     <string name="settings_calls_vibrate_while_ringing_title">Vibrate while incoming call is ringing</string>
     <string name="settings_calls_auto_record_title">Automatically start recording calls</string>
+    <string name="settings_conversations_title">Conversations</string>
+    <string name="settings_meetings_title">Meetings</string>
     <string name="settings_network_title">Network</string>
     <string name="settings_network_use_wifi_only">Use only Wi-Fi networks</string>
     <string name="settings_user_interface_title">User interface</string>

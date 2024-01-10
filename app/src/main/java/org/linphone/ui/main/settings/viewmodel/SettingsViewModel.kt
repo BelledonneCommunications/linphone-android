@@ -46,10 +46,14 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
     }
 
     val expandCalls = MutableLiveData<Boolean>()
+    val expandConversations = MutableLiveData<Boolean>()
+    val expandMeetings = MutableLiveData<Boolean>()
     val expandNetwork = MutableLiveData<Boolean>()
     val expandUserInterface = MutableLiveData<Boolean>()
 
     // Calls settings
+    val hideVideoCallSetting = MutableLiveData<Boolean>()
+
     val echoCancellerEnabled = MutableLiveData<Boolean>()
     val routeAudioToBluetooth = MutableLiveData<Boolean>()
     val videoEnabled = MutableLiveData<Boolean>()
@@ -63,6 +67,12 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
     val vibrateDuringIncomingCall = MutableLiveData<Boolean>()
 
     val autoRecordCalls = MutableLiveData<Boolean>()
+
+    // Conversations settings
+    val showConversationsSettings = MutableLiveData<Boolean>()
+
+    // Meetings settings
+    val showMeetingsSettings = MutableLiveData<Boolean>()
 
     // Network settings
     val useWifiOnly = MutableLiveData<Boolean>()
@@ -84,7 +94,15 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
     }
 
     init {
+        coreContext.postOnCoreThread { core ->
+            hideVideoCallSetting.postValue(!core.isVideoEnabled)
+            showConversationsSettings.postValue(!corePreferences.disableChat)
+            showMeetingsSettings.postValue(!corePreferences.disableMeetings)
+        }
+
         expandCalls.value = false
+        expandConversations.value = false
+        expandMeetings.value = false
         expandNetwork.value = false
         expandUserInterface.value = false
 
@@ -271,6 +289,16 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun toggleCallsExpand() {
         expandCalls.value = expandCalls.value == false
+    }
+
+    @UiThread
+    fun toggleConversationsExpand() {
+        expandConversations.value = expandConversations.value == false
+    }
+
+    @UiThread
+    fun toggleMeetingsExpand() {
+        expandMeetings.value = expandMeetings.value == false
     }
 
     @UiThread

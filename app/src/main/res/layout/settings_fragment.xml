@@ -88,6 +88,66 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/section_header_style"
+                    android:onClick="@{() -> viewModel.toggleConversationsExpand()}"
+                    android:id="@+id/chat"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:layout_marginStart="26dp"
+                    android:layout_marginEnd="26dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/settings_conversations_title"
+                    android:drawableEnd="@{viewModel.expandConversations ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
+                    android:drawableTint="@color/gray_main2_600"
+                    android:visibility="@{viewModel.showConversationsSettings ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/calls_settings"/>
+
+                <include
+                    android:id="@+id/conversation_settings"
+                    layout="@layout/settings_chat"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:visibility="@{viewModel.expandConversations &amp;&amp; viewModel.showConversationsSettings ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintTop_toBottomOf="@id/chat"
+                    bind:viewModel="@{viewModel}"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/section_header_style"
+                    android:onClick="@{() -> viewModel.toggleMeetingsExpand()}"
+                    android:id="@+id/meetings"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:layout_marginStart="26dp"
+                    android:layout_marginEnd="26dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/settings_meetings_title"
+                    android:drawableEnd="@{viewModel.expandMeetings ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
+                    android:drawableTint="@color/gray_main2_600"
+                    android:visibility="@{viewModel.showMeetingsSettings ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/conversation_settings"/>
+
+                <include
+                    android:id="@+id/meetings_settings"
+                    layout="@layout/settings_meetings"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:visibility="@{viewModel.expandMeetings &amp;&amp; viewModel.showMeetingsSettings ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintTop_toBottomOf="@id/meetings"
+                    bind:viewModel="@{viewModel}"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/section_header_style"
                     android:onClick="@{() -> viewModel.toggleNetworkExpand()}"
                     android:id="@+id/network"
                     android:layout_width="0dp"
@@ -101,7 +161,7 @@
                     android:drawableTint="@color/gray_main2_600"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/calls_settings"/>
+                    app:layout_constraintTop_toBottomOf="@id/meetings_settings"/>
 
                 <include
                     android:id="@+id/network_settings"
