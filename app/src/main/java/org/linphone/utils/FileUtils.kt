@@ -19,17 +19,20 @@
  */
 package org.linphone.utils
 
+import android.content.ContentValues
 import android.content.Context
 import android.database.CursorIndexOutOfBoundsException
 import android.net.Uri
 import android.os.Environment
 import android.os.ParcelFileDescriptor
 import android.os.Process
+import android.provider.MediaStore
 import android.provider.OpenableColumns
 import android.system.Os
 import android.text.format.Formatter
 import android.webkit.MimeTypeMap
 import androidx.annotation.AnyThread
+import androidx.annotation.UiThread
 import androidx.core.content.FileProvider
 import java.io.File
 import java.io.FileInputStream
@@ -42,6 +45,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 
 class FileUtils {
@@ -477,6 +481,122 @@ class FileUtils {
                 name = uri.lastPathSegment ?: ""
             }
             return name
+        }
+
+        suspend fun addContentToMediaStore(path: String): String {
+            if (path.isEmpty()) {
+                Log.e("$TAG No file path to export to MediaStore!")
+                return ""
+            }
+
+            val isImage = isExtensionImage(path)
+            val isVideo = isExtensionVideo(path)
+            val isAudio = isExtensionAudio(path)
+
+            val directory = when {
+                isImage -> Environment.DIRECTORY_PICTURES
+                isVideo -> Environment.DIRECTORY_MOVIES
+                isAudio -> Environment.DIRECTORY_MUSIC
+                else -> Environment.DIRECTORY_DOWNLOADS
+            }
+
+            val appName = AppUtils.getString(R.string.app_name)
+            val relativePath = "$directory/$appName"
+            val fileName = getNameFromFilePath(path)
+            val extension = getExtensionFromFileName(fileName)
+            val mime = getMimeTypeFromExtension(extension)
+
+            val context = coreContext.context
+            val mediaStoreFilePath = when {
+                isImage -> {
+                    val values = ContentValues().apply {
+                        put(MediaStore.Images.Media.DISPLAY_NAME, fileName)
+                        put(MediaStore.Images.Media.MIME_TYPE, mime)
+                        put(MediaStore.Images.Media.RELATIVE_PATH, relativePath)
+                        put(MediaStore.Images.Media.IS_PENDING, 1)
+                    }
+                    val collection = Compatibility.getMediaCollectionUri(isImage = true)
+                    addContentValuesToCollection(
+                        context,
+                        path,
+                        collection,
+                        values,
+                        MediaStore.Images.Media.IS_PENDING
+                    )
+                }
+                isVideo -> {
+                    val values = ContentValues().apply {
+                        put(MediaStore.Video.Media.TITLE, fileName)
+                        put(MediaStore.Video.Media.DISPLAY_NAME, fileName)
+                        put(MediaStore.Video.Media.MIME_TYPE, mime)
+                        put(MediaStore.Video.Media.RELATIVE_PATH, relativePath)
+                        put(MediaStore.Video.Media.IS_PENDING, 1)
+                    }
+                    val collection = Compatibility.getMediaCollectionUri(isVideo = true)
+                    addContentValuesToCollection(
+                        context,
+                        path,
+                        collection,
+                        values,
+                        MediaStore.Video.Media.IS_PENDING
+                    )
+                }
+                isAudio -> {
+                    val values = ContentValues().apply {
+                        put(MediaStore.Audio.Media.TITLE, fileName)
+                        put(MediaStore.Audio.Media.DISPLAY_NAME, fileName)
+                        put(MediaStore.Audio.Media.MIME_TYPE, mime)
+                        put(MediaStore.Audio.Media.RELATIVE_PATH, relativePath)
+                        put(MediaStore.Audio.Media.IS_PENDING, 1)
+                    }
+                    val collection = Compatibility.getMediaCollectionUri(isAudio = true)
+                    addContentValuesToCollection(
+                        context,
+                        path,
+                        collection,
+                        values,
+                        MediaStore.Audio.Media.IS_PENDING
+                    )
+                }
+                else -> ""
+            }
+
+            if (mediaStoreFilePath.isNotEmpty()) {
+                Log.i("$TAG Exported file path to MediaStore is: $mediaStoreFilePath")
+                return mediaStoreFilePath
+            }
+
+            return ""
+        }
+
+        @UiThread
+        private suspend fun addContentValuesToCollection(
+            context: Context,
+            filePath: String,
+            collection: Uri,
+            values: ContentValues,
+            pendingKey: String
+        ): String {
+            try {
+                val fileUri = context.contentResolver.insert(collection, values)
+                if (fileUri == null) {
+                    Log.e("$TAG Failed to get a URI to where store the file, aborting")
+                    return ""
+                }
+
+                context.contentResolver.openOutputStream(fileUri).use { out ->
+                    if (copyFileTo(filePath, out)) {
+                        values.clear()
+                        values.put(pendingKey, 0)
+                        context.contentResolver.update(fileUri, values, null, null)
+
+                        return fileUri.toString()
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("$TAG Exception: $e")
+            }
+            return ""
         }
     }
 }

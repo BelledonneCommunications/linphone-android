@@ -38,6 +38,18 @@ class SettingsFragment : GenericFragment() {
         }
     }
 
+    private val layoutListener = object : AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            val label = viewModel.availableLayoutsNames[position]
+            val value = viewModel.availableLayoutsValues[position]
+            Log.i("$TAG Selected meeting default layout is now [$label] ($value)")
+            viewModel.setDefaultLayout(value)
+        }
+
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+        }
+    }
+
     private val themeListener = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             val label = viewModel.availableThemesNames[position]
@@ -96,6 +108,22 @@ class SettingsFragment : GenericFragment() {
         }
 
         binding.callsSettings.deviceRingtoneSpinner.onItemSelectedListener = ringtoneListener
+
+        // Meeting default layout related
+        val layoutAdapter = ArrayAdapter(
+            requireContext(),
+            R.layout.drop_down_item,
+            viewModel.availableLayoutsNames
+        )
+        layoutAdapter.setDropDownViewResource(R.layout.generic_dropdown_cell)
+        binding.meetingsSettings.layoutSpinner.adapter = layoutAdapter
+
+        viewModel.defaultLayout.observe(viewLifecycleOwner) { layout ->
+            binding.meetingsSettings.layoutSpinner.setSelection(
+                viewModel.availableLayoutsValues.indexOf(layout)
+            )
+        }
+        binding.meetingsSettings.layoutSpinner.onItemSelectedListener = layoutListener
 
         // Light/Dark theme related
         val themeAdapter = ArrayAdapter(

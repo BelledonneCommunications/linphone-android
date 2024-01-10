@@ -34,6 +34,7 @@ import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.core.Conference
 import org.linphone.core.Player
 import org.linphone.core.PlayerListener
 import org.linphone.core.tools.Log
@@ -71,16 +72,32 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
     // Conversations settings
     val showConversationsSettings = MutableLiveData<Boolean>()
 
+    val autoDownloadEnabled = MutableLiveData<Boolean>()
+    val exportMediaEnabled = MutableLiveData<Boolean>()
+
     // Meetings settings
     val showMeetingsSettings = MutableLiveData<Boolean>()
+
+    val defaultLayout = MutableLiveData<Int>()
+    val availableLayoutsNames = arrayListOf(
+        AppUtils.getString(R.string.settings_meetings_layout_active_speaker_label),
+        AppUtils.getString(R.string.settings_meetings_layout_mosaic_label)
+    )
+    val availableLayoutsValues = arrayListOf(
+        Conference.Layout.ActiveSpeaker.toInt(),
+        Conference.Layout.Grid.toInt()
+    )
 
     // Network settings
     val useWifiOnly = MutableLiveData<Boolean>()
 
     // User Interface settings
-
     val theme = MutableLiveData<Int>()
-    val availableThemesNames = arrayListOf<String>()
+    val availableThemesNames = arrayListOf(
+        AppUtils.getString(R.string.settings_user_interface_auto_theme_label),
+        AppUtils.getString(R.string.settings_user_interface_light_theme_label),
+        AppUtils.getString(R.string.settings_user_interface_dark_theme_label)
+    )
     val availableThemesValues = arrayListOf(-1, 0, 1)
 
     // Other
@@ -114,16 +131,6 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
 
         computeAvailableRingtones()
 
-        availableThemesNames.add(
-            AppUtils.getString(R.string.settings_user_interface_auto_theme_label)
-        )
-        availableThemesNames.add(
-            AppUtils.getString(R.string.settings_user_interface_light_theme_label)
-        )
-        availableThemesNames.add(
-            AppUtils.getString(R.string.settings_user_interface_dark_theme_label)
-        )
-
         coreContext.postOnCoreThread { core ->
             echoCancellerEnabled.postValue(core.isEchoCancellationEnabled)
             routeAudioToBluetooth.postValue(corePreferences.routeAudioToBluetoothIfAvailable)
@@ -136,6 +143,11 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
             val ringtone = core.ring.orEmpty()
             Log.i("Currently configured ringtone in Core is [$ringtone]")
             selectedRingtone.postValue(ringtone)
+
+            autoDownloadEnabled.postValue(core.maxSizeForAutoDownloadIncomingFiles == 0)
+            exportMediaEnabled.postValue(corePreferences.exportMediaToNativeGallery)
+
+            defaultLayout.postValue(core.defaultConferenceLayout.toInt())
 
             theme.postValue(corePreferences.darkMode)
         }
@@ -297,8 +309,36 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
+    fun toggleAutoDownload() {
+        val newValue = autoDownloadEnabled.value == false
+        coreContext.postOnCoreThread { core ->
+            core.maxSizeForAutoDownloadIncomingFiles = if (newValue) 0 else -1
+            autoDownloadEnabled.postValue(newValue)
+        }
+    }
+
+    @UiThread
+    fun toggleExportMedia() {
+        val newValue = exportMediaEnabled.value == false
+        coreContext.postOnCoreThread {
+            corePreferences.exportMediaToNativeGallery = newValue
+            exportMediaEnabled.postValue(newValue)
+        }
+    }
+
+    @UiThread
     fun toggleMeetingsExpand() {
         expandMeetings.value = expandMeetings.value == false
+    }
+
+    @UiThread
+    fun setDefaultLayout(layoutValue: Int) {
+        coreContext.postOnCoreThread { core ->
+            val newDefaultLayout = Conference.Layout.fromInt(layoutValue)
+            core.defaultConferenceLayout = newDefaultLayout
+            Log.i("$TAG Default meeting layout [$newDefaultLayout] saved")
+            defaultLayout.postValue(layoutValue)
+        }
     }
 
     @UiThread

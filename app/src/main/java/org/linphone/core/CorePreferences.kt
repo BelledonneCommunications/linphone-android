@@ -100,6 +100,15 @@ class CorePreferences @UiThread constructor(private val context: Context) {
             config.setBool("app", "auto_start_call_record", value)
         }
 
+    // Conversation settings
+
+    var exportMediaToNativeGallery: Boolean // TODO: use it!
+        // Keep old name for backward compatibility
+        get() = config.getBool("app", "make_downloaded_images_public_in_gallery", true)
+        set(value) {
+            config.setBool("app", "make_downloaded_images_public_in_gallery", value)
+        }
+
     /* Voice Recordings */
 
     var voiceRecordingMaxDuration: Int

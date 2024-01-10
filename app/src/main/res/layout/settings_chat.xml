@@ -16,6 +16,76 @@
         android:paddingBottom="20dp"
         android:background="@drawable/shape_squircle_white_background">
 
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/settings_title_style"
+            android:onClick="@{() -> viewModel.toggleAutoDownload()}"
+            android:id="@+id/auto_download_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/settings_conversations_auto_download_title"
+            android:maxLines="2"
+            android:ellipsize="end"
+            app:layout_constraintTop_toTopOf="@id/auto_download_switch"
+            app:layout_constraintBottom_toBottomOf="@id/auto_download_switch"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/auto_download_switch"/>
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            style="@style/material_switch_style"
+            android:id="@+id/auto_download_switch"
+            android:onClick="@{() -> viewModel.toggleAutoDownload()}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="16dp"
+            android:checked="@{viewModel.autoDownloadEnabled}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/settings_title_style"
+            android:onClick="@{() -> viewModel.toggleExportMedia()}"
+            android:id="@+id/export_media_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/settings_conversations_export_media_title"
+            android:maxLines="2"
+            android:ellipsize="end"
+            app:layout_constraintTop_toTopOf="@id/export_media_switch"
+            app:layout_constraintBottom_toTopOf="@id/export_media_subtitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/export_media_switch"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/settings_subtitle_style"
+            android:onClick="@{() -> viewModel.toggleExportMedia()}"
+            android:id="@+id/export_media_subtitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/settings_conversations_export_media_subtitle"
+            app:layout_constraintTop_toBottomOf="@id/export_media_title"
+            app:layout_constraintBottom_toBottomOf="@id/export_media_switch"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/export_media_switch"/>
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            style="@style/material_switch_style"
+            android:id="@+id/export_media_switch"
+            android:onClick="@{() -> viewModel.toggleExportMedia()}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="16dp"
+            android:checked="@{viewModel.exportMediaEnabled}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/auto_download_switch" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

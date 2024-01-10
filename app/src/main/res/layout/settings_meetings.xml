@@ -16,6 +16,44 @@
         android:paddingBottom="20dp"
         android:background="@drawable/shape_squircle_white_background">
 
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/settings_title_style"
+            android:id="@+id/layout_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/settings_meetings_default_layout_title"
+            android:maxLines="2"
+            android:ellipsize="end"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            style="@style/material_switch_style"
+            android:id="@+id/layout_spinner"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/edit_text_background"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            app:layout_constraintTop_toBottomOf="@id/layout_title"
+            app:layout_constraintStart_toStartOf="@id/layout_title"
+            app:layout_constraintEnd_toEndOf="@id/layout_title" />
+
+        <ImageView
+            android:id="@+id/layout_spinner_caret"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/caret_down"
+            app:layout_constraintTop_toTopOf="@id/layout_spinner"
+            app:layout_constraintBottom_toBottomOf="@id/layout_spinner"
+            app:layout_constraintEnd_toEndOf="@id/layout_spinner"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
