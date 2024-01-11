@@ -163,11 +163,8 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
                     }
                 }
                 Call.State.Connected -> {
-                    val conferenceInfo = core.findConferenceInformationFromUri(call.remoteAddress)
-                    if (conferenceInfo != null) {
-                        postOnMainThread {
-                            showCallActivity()
-                        }
+                    postOnMainThread {
+                        showCallActivity()
                     }
                 }
                 else -> {

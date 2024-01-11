@@ -19,7 +19,7 @@ configurations {
 
 def gitBranch = new ByteArrayOutputStream()
 def gitVersion = new ByteArrayOutputStream()
-tasks.register('getGitVersion') {
+task getGitVersion() {
     def gitVersionStream = new ByteArrayOutputStream()
     def gitCommitsCount = new ByteArrayOutputStream()
     def gitCommitHash = new ByteArrayOutputStream()
