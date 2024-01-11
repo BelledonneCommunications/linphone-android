@@ -300,11 +300,19 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
         @WorkerThread
         override fun onNewAlertTriggered(core: Core, alert: Alert) {
-            val remote = alert.call.remoteAddress.asStringUriOnly()
+            val call = alert.call
+            if (call == null) {
+                Log.w(
+                    "$TAG Alert of type [${alert.type}] triggered but with null call, ignoring..."
+                )
+                return
+            }
+
+            val remote = call.remoteAddress.asStringUriOnly()
             Log.w("$TAG Alert of type [${alert.type}] triggered for call from [$remote]")
             alert.addListener(alertListener)
 
-            if (alert.call != currentCall) {
+            if (call != currentCall) {
                 Log.w("$TAG Terminated alert wasn't for current call, do not display it")
                 return
             }
@@ -352,11 +360,19 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
     private val alertListener = object : AlertListenerStub() {
         @WorkerThread
         override fun onTerminated(alert: Alert) {
-            val remote = alert.call.remoteAddress.asStringUriOnly()
+            val call = alert.call
+            if (call == null) {
+                Log.w(
+                    "$TAG Alert of type [${alert.type}] dismissed but with null call, ignoring..."
+                )
+                return
+            }
+
+            val remote = call.remoteAddress.asStringUriOnly()
             Log.w("$TAG Alert of type [${alert.type}] dismissed for call from [$remote]")
             alert.removeListener(this)
 
-            if (alert.call != currentCall) {
+            if (call != currentCall) {
                 Log.w("$TAG Terminated alert wasn't for current call, do not display it")
                 return
             }
