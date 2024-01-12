@@ -72,6 +72,8 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     val noMatchingResultForFilter = MutableLiveData<Boolean>()
 
+    val unreadMessagesCount = MutableLiveData<Int>()
+
     var scrollingPosition: Int = SCROLLING_POSITION_NOT_SET
 
     val focusSearchBarEvent: MutableLiveData<Event<Boolean>> by lazy {
@@ -113,6 +115,12 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             if (chatRoom.state == ChatRoom.State.Created) {
                 computeConversationInfo()
             }
+        }
+
+        @WorkerThread
+        override fun onChatRoomRead(chatRoom: ChatRoom) {
+            unreadMessagesCount.postValue(0)
+            Log.i("$TAG Conversation was marked as read")
         }
 
         @WorkerThread
@@ -185,6 +193,8 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
             list.addAll(newList)
             events.postValue(list)
+
+            unreadMessagesCount.postValue(chatRoom.unreadMessagesCount)
         }
 
         @WorkerThread
@@ -431,8 +441,9 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         computeConversationInfo()
 
         computeEvents()
+
+        Log.i("$TAG Marking chat room as read")
         chatRoom.markAsRead()
-        Log.i("$TAG Conversation was marked as read")
     }
 
     @WorkerThread
