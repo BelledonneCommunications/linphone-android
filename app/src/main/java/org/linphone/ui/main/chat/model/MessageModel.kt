@@ -176,10 +176,9 @@ class MessageModel @WorkerThread constructor(
                     downloadingFileModel = null
                 }
                 computeContentsList()
-            } else if (messageState == ChatMessage.State.Displayed) {
-                Log.i("$TAG Message was marked as read")
-                isRead = true
             }
+
+            isRead = chatMessage.isRead
         }
 
         @WorkerThread

@@ -120,6 +120,18 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         @WorkerThread
         override fun onChatRoomRead(chatRoom: ChatRoom) {
             unreadMessagesCount.postValue(0)
+
+            // Make sure message models are aware that they were read,
+            // required for scroll to bottom or first unread message behaves as expected
+            for (eventLog in events.value.orEmpty().reversed()) {
+                if (eventLog.model is MessageModel) {
+                    if (!eventLog.model.isRead) {
+                        eventLog.model.isRead = true
+                    } else {
+                        break
+                    }
+                }
+            }
             Log.i("$TAG Conversation was marked as read")
         }
 
