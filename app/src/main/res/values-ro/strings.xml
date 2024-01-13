@@ -1,2 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<!DOCTYPE resources [
+<!ENTITY appName "Linphone">
+]>
+<resources>
+    <string name="service_auto_start_description">&appName; a fost pornit automat</string>
+    <string name="sync_account_name">&appName; contacte</string>
+    <string name="logs_upload_failure">Nu s-a reușit încărcarea logurilor!</string>
+    <string name="logs_reset_complete">Jurnalele au fost șterse</string>
+    <string name="logs_url_copied_to_clipboard">Jurnale URL copiat în clipboard</string>
+    <string name="phone_number">Număr de telefon</string>
+    <string name="phone_numbers">Numere de telefon</string>
+    <string name="select_your_country">Selectați țara dumneavoastră</string>
+    <string name="international_prefix">Prefix</string>
+    <string name="assistant_choose_country">Selectați o țară</string>
+    <string name="username">Nume utilizator</string>
+    <string name="password">Parolă</string>
+    <string name="email">Email</string>
+    <string name="domain">Domeniu</string>
+    <string name="sip_address">Adresă SIP</string>
+    <string name="cancel">Anulează</string>
+    <plurals name="days">
+        <item quantity="one">%d zi</item>
+        <item quantity="few">%d zile</item>
+        <item quantity="other">%d de zile</item>
+    </plurals>
+    <string name="yes">Da</string>
+    <string name="no">Nu</string>
+    <string name="error_unexpected">Eroare neașteptată…</string>
+    <string name="today">Azi</string>
+    <string name="yesterday">Ieri</string>
+    <string name="transport">Transport</string>
+    <string name="transport_udp">UDP</string>
+    <string name="transport_tcp">TCP</string>
+    <string name="transport_tls">TLS</string>
+    <string name="app_description"><i>libre</i> clientul SIP</string>
+    <string name="status_connected">Conectat</string>
+    <string name="status_not_connected">Nu este conectat</string>
+    <string name="status_in_progress">Conexiune în curs de realizare</string>
+    <string name="status_error">Conexiunea a eșuat</string>
+    <string name="about">Despre</string>
+    <string name="assistant">Asistent</string>
+    <string name="recordings">Înregistrări</string>
+    <string name="settings">Setări</string>
+    <string name="quit">Renunță la</string>
+    <string name="history_calls_list">Apeluri</string>
+    <string name="no_call_history">Nici un apel în istoricul tău</string>
+    <string name="no_conference_call_history">Nici un apel de întâlnire în istoricul dumneavoastră</string>
+    <string name="history_delete_one_dialog">Doriți să ștergeți această înregistrare\?</string>
+    <string name="history_delete_many_dialog">Doriți să ștergeți aceste înregistrări\?</string>
+    <string name="contact_invite_friend">Invitați</string>
+    <string name="no_sip_contact">Nu există niciun contact SIP în agenda dumneavoastră.</string>
+    <string name="contact_filter_hint">Căutați contacte</string>
+    <string name="contact_last_name">Numele de familie</string>
+    <string name="contact_first_name">Nume și prenume</string>
+    <string name="contact_organization">Organizația</string>
+    <string name="contact_choose_existing_or_new_to_add_number">Selectați un contact sau creați unul nou</string>
+    <string name="contact_editor_write_permission_denied">Permisiune de scriere a contactelor refuzată, nu se poate edita contactul</string>
+    <string name="contact_new_choose_sync_account">Alegeți unde să salvați contactul</string>
+    <string name="contact_local_sync_account">Stocați local</string>
+    <string name="contact_cant_be_deleted">Acest contact nu poate fi șters</string>
+    <string name="dialer_address_bar_hint">Introduceți un număr sau o adresă</string>
+    <string name="debug_popup_title">Depanare</string>
+    <string name="debug_popup_enable_logs">Activați jurnalele</string>
+    <string name="debug_popup_disable_logs">Dezactivați jurnalele</string>
+    <string name="debug_popup_send_logs">Trimiteți jurnalele</string>
+    <string name="debug_popup_show_config_file">Vizualizați fișierul de configurare</string>
+    <string name="dialer_transfer_succeded">Apelul este în curs de transfer</string>
+    <string name="dialer_transfer_failed">Nu se poate transfera apelul</string>
+    <string name="no_chat_history">Fără conversații</string>
+    <string name="chat_room_last_message_sender_format">%s:</string>
+    <string name="chat_remote_is_composing">Remote scrie…</string>
+    <string name="chat_event_conference_created">V-ați alăturat grupului</string>
+    <string name="chat_event_conference_destroyed">Ați părăsit grupul</string>
+    <string name="chat_event_participant_removed">%s a plecat</string>
+    <string name="chat_event_device_added">dispozitiv nou pentru %s</string>
+    <string name="chat_event_device_removed">dispozitiv pentru %s eliminat</string>
+    <string name="service_name">&appName; Servici</string>
+    <string name="service_description">Acest lucru este necesar pentru a primi apeluri în timp ce se află în fundal</string>
+    <string name="about_privacy_policy">Vizitați politica noastră de confidențialitate</string>
+    <string name="about_weblate_translation">Ajutați-ne să traducem &appName;</string>
+    <string name="assistant_choose_country_title">Numele sau prefixul țării</string>
+    <string name="sip_addresses">Adrese SIP</string>
+    <string name="share_uploaded_logs_link">Partajați linkul jurnalelor folosind…</string>
+    <string name="no_account_configured">Nici un cont configurat</string>
+    <string name="no_missed_call_history">Nici un apel ratat în istoricul dumneavoastră</string>
+    <string name="no_contact">Nu aveți niciun contact în agendă.</string>
+    <string name="contact_send_sms_invite_text">Bună ziua, alăturați-vă mie pe &appName;! O puteți descărca gratuit la %s</string>
+    <string name="contact_delete_one_dialog">Doriți să ștergeți acest contact\?
+\nAcesta va fi, de asemenea, eliminat din agenda dispozitivului dumneavoastră</string>
+    <string name="contact_delete_many_dialog">Sunteți sigur că doriți să ștergeți aceste contacte\?
+\nAcestea vor fi, de asemenea, eliminate din agenda dispozitivului dumneavoastră</string>
+    <string name="contacts_ldap_query_more_results_available">Sunt disponibile mai multe rezultate, rafinați căutarea</string>
+    <string name="contacts_new_contact_wont_be_visible_warning_dialog">Sunteți pe cale să creați un nou contact fără un SIP URI sau un număr de telefon, astfel încât acesta nu va fi vizibil în &appName;.
+\n
+\nDoriți să îl creați oricum\?</string>
+    <string name="chat_event_participant_added">%s s-a alăturat</string>
+</resources>
