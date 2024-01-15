@@ -160,12 +160,12 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
-    val transferInProgressEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
+    val transferInProgressEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
     }
 
-    val transferFailedEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
+    val transferFailedEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
     }
 
     val numpadModel: NumpadModel
@@ -344,17 +344,10 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                 "$TAG Transferred call [${transfered.remoteAddress.asStringUriOnly()}] state changed [$state]"
             )
 
-            // TODO FIXME: Remote is call being transferred, not transferee !
             if (state == Call.State.OutgoingProgress) {
-                val displayName = coreContext.contactsManager.findDisplayName(
-                    transfered.remoteAddress
-                )
-                transferInProgressEvent.postValue(Event(displayName))
+                transferInProgressEvent.postValue(Event(true))
             } else if (LinphoneUtils.isCallEnding(state)) {
-                val displayName = coreContext.contactsManager.findDisplayName(
-                    transfered.remoteAddress
-                )
-                transferFailedEvent.postValue(Event(displayName))
+                transferFailedEvent.postValue(Event(true))
             }
         }
     }
@@ -721,8 +714,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                 Log.i("$TAG Blind call transfer is successful")
             } else {
                 Log.e("$TAG Failed to make blind call transfer!")
-                val displayName = coreContext.contactsManager.findDisplayName(to)
-                transferFailedEvent.postValue(Event(displayName))
+                transferFailedEvent.postValue(Event(true))
             }
         }
     }

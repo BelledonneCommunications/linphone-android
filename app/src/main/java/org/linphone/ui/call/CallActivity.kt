@@ -178,18 +178,18 @@ class CallActivity : GenericActivity() {
         }
 
         callViewModel.transferInProgressEvent.observe(this) {
-            it.consume { remote ->
+            it.consume {
                 showGreenToast(
-                    getString(R.string.toast_call_transfer_in_progress, remote),
+                    getString(R.string.toast_call_transfer_in_progress),
                     R.drawable.phone_transfer
                 )
             }
         }
 
         callViewModel.transferFailedEvent.observe(this) {
-            it.consume { remote ->
+            it.consume {
                 showRedToast(
-                    getString(R.string.toast_call_transfer_failed, remote),
+                    getString(R.string.toast_call_transfer_failed),
                     R.drawable.warning_circle
                 )
             }

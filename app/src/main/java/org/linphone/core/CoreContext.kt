@@ -178,12 +178,8 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
                 "$TAG Transferred call [${transfered.remoteAddress.asStringUriOnly()}] state changed [$state]"
             )
             if (state == Call.State.Connected) {
-                // TODO FIXME: Remote is call being transferred, not transferee !
-                val displayName = contactsManager.findDisplayName(transfered.remoteAddress)
-
                 val message = context.getString(
-                    org.linphone.R.string.toast_call_transfer_successful,
-                    displayName
+                    org.linphone.R.string.toast_call_transfer_successful
                 )
                 val icon = org.linphone.R.drawable.phone_transfer
 

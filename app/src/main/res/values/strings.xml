@@ -165,9 +165,9 @@
     <string name="toast_text_waiting_to_be_shared">Text is waiting to be shared</string>
     <string name="toast_message_waiting_to_be_forwarded">A message is waiting to be forwarded</string>
     <string name="toast_end_to_end_encrypted_conversation">Conversation is end-to-end encrypted</string>
-    <string name="toast_call_transfer_in_progress">Call is being transferred to %s</string>
-    <string name="toast_call_transfer_successful">Call has been transferred to %s</string>
-    <string name="toast_call_transfer_failed">Call transfer to %s failed!</string>
+    <string name="toast_call_transfer_in_progress">Call is being transferred</string>
+    <string name="toast_call_transfer_successful">Call has been successfully transferred</string>
+    <string name="toast_call_transfer_failed">Call transfer failed!</string>
 
     <string name="assistant_account_login">Login</string>
     <string name="assistant_scan_qr_code">Scan QR code</string>
