@@ -171,10 +171,8 @@ class MessageModel @WorkerThread constructor(
 
             if (messageState == ChatMessage.State.FileTransferDone) {
                 Log.i("$TAG File transfer is done")
-                if (!message.isOutgoing) {
-                    downloadingFileModel?.downloadProgress?.postValue(-1)
-                    downloadingFileModel = null
-                }
+                downloadingFileModel?.downloadProgress?.postValue(-1)
+                downloadingFileModel = null
                 computeContentsList()
             }
 
@@ -202,8 +200,6 @@ class MessageModel @WorkerThread constructor(
             offset: Int,
             total: Int
         ) {
-            if (message.isOutgoing) return
-
             val model = downloadingFileModel
             if (model != null) {
                 val percent = ((offset * 100.0) / total).toInt() // Conversion from int to double and back to int is required
