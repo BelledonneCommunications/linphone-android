@@ -10,6 +10,11 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [5.2.2] - 2024-01-15
+
+### Fixed
+- Local conference created my merging audio streams
+
 ## [5.2.1] - 2023-12-23
 
 ### Fixed
