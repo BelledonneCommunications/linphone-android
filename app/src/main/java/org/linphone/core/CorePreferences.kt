@@ -120,7 +120,7 @@ class CorePreferences @UiThread constructor(private val context: Context) {
     var darkMode: Int
         get() {
             if (!darkModeAllowed) return 0
-            return config.getInt("app", "dark_mode", -1)
+            return config.getInt("app", "dark_mode", 0) // TODO FIXME: set back to -1 when dark mode will be available
         }
         set(value) {
             config.setInt("app", "dark_mode", value)
@@ -133,12 +133,12 @@ class CorePreferences @UiThread constructor(private val context: Context) {
     // Will disable chat feature completely
     @get:WorkerThread
     val disableChat: Boolean
-        get() = config.getBool("app", "disable_chat_feature", false) // TODO FIXME: set it to true for first "release" without chat
+        get() = config.getBool("app", "disable_chat_feature", true) // TODO FIXME: set it to true for first "release" without chat
 
     // Will disable meetings feature completely
     @get:WorkerThread
     val disableMeetings: Boolean
-        get() = config.getBool("app", "disable_meetings_feature", false) // TODO FIXME: set it to true for first "release" without meetings
+        get() = config.getBool("app", "disable_meetings_feature", true) // TODO FIXME: set it to true for first "release" without meetings
 
     @get:WorkerThread
     val defaultDomain: String

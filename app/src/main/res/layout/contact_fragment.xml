@@ -100,7 +100,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:constraint_referenced_ids="trusted_devices_count, trust_background, trusted_devices_progress, devices, trusted_devices_progress_label"
-                        android:visibility="@{viewModel.expandDevicesTrust ? View.VISIBLE : View.GONE}" />
+                        android:visibility="@{viewModel.expandDevicesTrust ? View.VISIBLE : View.GONE, default=gone}" />
 
                     <com.google.android.material.imageview.ShapeableImageView
                         style="@style/avatar_imageview"
@@ -362,6 +362,7 @@
                         android:drawableEnd="@drawable/question"
                         android:drawableTint="?attr/color_main2_600"
                         android:drawablePadding="8dp"
+                        android:visibility="gone"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/info_background"/>
 

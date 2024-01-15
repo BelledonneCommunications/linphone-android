@@ -124,6 +124,7 @@
             android:padding="@dimen/call_button_icon_padding"
             android:src="@drawable/chat_teardrop_text"
             android:background="@drawable/shape_round_in_call_disabled_button_background"
+            android:visibility="gone"
             app:tint="?attr/color_grey_500"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintTop_toBottomOf="@id/transfer_label"
@@ -141,6 +142,7 @@
             android:padding="@dimen/call_button_icon_padding"
             android:background="@drawable/in_call_button_background_green"
             android:src="@{viewModel.isPaused ? @drawable/play : @drawable/pause, default=@drawable/pause}"
+            android:visibility="gone"
             app:tint="@color/in_call_button_tint_color"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintTop_toBottomOf="@id/new_call_label"
@@ -158,6 +160,7 @@
             android:background="@drawable/in_call_button_background_red"
             android:src="@drawable/record_fill"
             android:selected="@{viewModel.isRecording()}"
+            android:visibility="gone"
             app:tint="@color/in_call_button_tint_color"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintTop_toBottomOf="@id/calls_list_label"
@@ -216,6 +219,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"
             android:text="@string/call_action_show_messages"
+            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/chat"
             app:layout_constraintStart_toStartOf="@id/transfer_label"
             app:layout_constraintEnd_toEndOf="@id/transfer_label" />
@@ -229,6 +233,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"
             android:text="@{viewModel.isPaused ? @string/call_action_resume_call : @string/call_action_pause_call, default=@string/call_action_pause_call}"
+            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/pause_call"
             app:layout_constraintStart_toStartOf="@id/new_call_label"
             app:layout_constraintEnd_toEndOf="@id/new_call_label" />
@@ -242,6 +247,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"
             android:text="@string/call_action_record_call"
+            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/record_call"
             app:layout_constraintStart_toStartOf="@id/calls_list_label"
             app:layout_constraintEnd_toEndOf="@id/calls_list_label" />

@@ -43,7 +43,8 @@
     <dimen name="call_top_bar_text_height">28dp</dimen>
     <dimen name="call_top_bar_info_height">48dp</dimen> <!-- Size of top text + top & bottom margins -->
     <dimen name="call_main_actions_menu_height">110dp</dimen>
-    <dimen name="call_all_actions_menu_height">345dp</dimen> <!-- sum of above two -->
+    <!--<dimen name="call_all_actions_menu_height">345dp</dimen>--> <!-- sum of above two -->
+    <dimen name="call_all_actions_menu_height">235dp</dimen>
     <dimen name="call_main_actions_menu_margin">120dp</dimen>
     <dimen name="call_round_corners_texture_view_radius">20dp</dimen>
     <dimen name="call_button_size">55dp</dimen>
