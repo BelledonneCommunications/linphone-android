@@ -122,6 +122,7 @@ class ThirdPartySipAccountLoginFragment : Fragment() {
             val dialPlan = PhoneNumberUtils.getDeviceDialPlan(requireContext())
             if (dialPlan != null) {
                 viewModel.internationalPrefix.postValue(dialPlan.countryCallingCode)
+                viewModel.internationalPrefixIsoCountryCode.postValue(dialPlan.isoCountryCode)
             }
         }
     }

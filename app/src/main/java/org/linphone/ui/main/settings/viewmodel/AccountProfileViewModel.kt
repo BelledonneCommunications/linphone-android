@@ -115,11 +115,14 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
                 devices.postValue(devicesList)
 
                 val prefix = account.params.internationalPrefix
-                if (!prefix.isNullOrEmpty()) {
+                val isoCountryCode = account.params.internationalPrefixIsoCountryCode
+                if (!prefix.isNullOrEmpty() || !isoCountryCode.isNullOrEmpty()) {
                     Log.i(
-                        "$TAG Account [${account.params.identityAddress?.asStringUriOnly()}] prefix is [$prefix]"
+                        "$TAG Account [${account.params.identityAddress?.asStringUriOnly()}] prefix is [$prefix]($isoCountryCode)"
                     )
                     val dialPlan = Factory.instance().dialPlans.find {
+                        it.isoCountryCode == isoCountryCode
+                    } ?: Factory.instance().dialPlans.find {
                         it.countryCallingCode == prefix
                     }
                     if (dialPlan != null) {
@@ -238,9 +241,10 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
             val params = account.params
             val copy = params.clone()
             copy.internationalPrefix = dialPlan.countryCallingCode
+            copy.internationalPrefixIsoCountryCode = dialPlan.isoCountryCode
             account.params = copy
             Log.i(
-                "$TAG Updated international prefix for account [${account.params.identityAddress?.asStringUriOnly()}] to [${copy.internationalPrefix}]"
+                "$TAG Updated international prefix for account [${account.params.identityAddress?.asStringUriOnly()}] to [${copy.internationalPrefix} (${copy.internationalPrefixIsoCountryCode})]"
             )
         }
     }
@@ -251,6 +255,7 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
             val params = account.params
             val copy = params.clone()
             copy.internationalPrefix = ""
+            copy.internationalPrefixIsoCountryCode = ""
             account.params = copy
             Log.i(
                 "$TAG Removed international prefix for account [${account.params.identityAddress?.asStringUriOnly()}]"

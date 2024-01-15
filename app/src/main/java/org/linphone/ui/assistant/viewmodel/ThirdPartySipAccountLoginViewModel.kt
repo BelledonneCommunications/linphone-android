@@ -57,6 +57,8 @@ class ThirdPartySipAccountLoginViewModel @UiThread constructor() : ViewModel() {
 
     val internationalPrefix = MutableLiveData<String>()
 
+    val internationalPrefixIsoCountryCode = MutableLiveData<String>()
+
     val showPassword = MutableLiveData<Boolean>()
 
     val loginEnabled = MediatorLiveData<Boolean>()
@@ -171,6 +173,7 @@ class ThirdPartySipAccountLoginViewModel @UiThread constructor() : ViewModel() {
             accountParams.serverAddress = serverAddress
 
             val prefix = internationalPrefix.value.orEmpty().trim()
+            val isoCountryCode = internationalPrefixIsoCountryCode.value.orEmpty()
             if (prefix.isNotEmpty()) {
                 val prefixDigits = if (prefix.startsWith("+")) {
                     prefix.substring(1)
@@ -178,8 +181,11 @@ class ThirdPartySipAccountLoginViewModel @UiThread constructor() : ViewModel() {
                     prefix
                 }
                 if (prefixDigits.isNotEmpty()) {
-                    Log.i("$TAG Setting international prefix [$prefixDigits] in account params")
+                    Log.i(
+                        "$TAG Setting international prefix [$prefixDigits]($isoCountryCode) in account params"
+                    )
                     accountParams.internationalPrefix = prefixDigits
+                    accountParams.internationalPrefixIsoCountryCode = isoCountryCode
                 }
             }
 
