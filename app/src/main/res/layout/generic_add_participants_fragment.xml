@@ -24,24 +24,24 @@
             <ImageView
                 android:id="@+id/back"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="@dimen/top_bar_height"
                 android:adjustViewBounds="true"
                 android:onClick="@{backClickListener}"
                 android:padding="15dp"
                 android:src="@drawable/caret_left"
                 app:tint="?attr/color_main1_500"
-                app:layout_constraintBottom_toBottomOf="@id/title"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/title" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/main_page_title_style"
                 android:id="@+id/title"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/top_bar_height"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:text="@string/conversation_add_participants_title"
+                app:layout_constraintBottom_toBottomOf="@id/back"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/back"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -53,20 +53,19 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/title" />
+                app:layout_constraintTop_toBottomOf="@id/back" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style_300"
                 android:id="@+id/multiple_selection_count"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="16dp"
                 android:text="@{viewModel.selectionCount, default=`0 selected`}"
                 android:textSize="12sp"
                 android:textColor="@color/black"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/background" />
+                app:layout_constraintStart_toStartOf="@id/title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title" />
 
             <HorizontalScrollView
                 android:id="@+id/multiple_selection"
@@ -156,30 +155,26 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp"
                 android:visibility="@{viewModel.contactsAndSuggestionsList.size() == 0 ? View.GONE : View.VISIBLE}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/search_bar"
-                app:layout_constraintBottom_toTopOf="@id/add_participants" />
+                app:layout_constraintBottom_toBottomOf="parent" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/primary_button_label_style"
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/add_participants"
                 android:onClick="@{() -> viewModel.addParticipants()}"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                android:text="@string/dialog_continue"
-                android:enabled="@{viewModel.selection.size() > 0}"
-                app:layout_constraintWidth_max="@dimen/button_max_width"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                android:layout_gravity="end|bottom"
+                android:layout_margin="16dp"
+                android:visibility="@{viewModel.selection.size() > 0 ? View.VISIBLE : View.GONE}"
+                android:src="@drawable/check"
+                app:tint="?attr/color_main2_000"
+                app:backgroundTint="?attr/color_main1_500"
+                app:shapeAppearanceOverlay="@style/rounded"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
