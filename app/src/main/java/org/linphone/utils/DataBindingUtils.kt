@@ -44,6 +44,7 @@ import coil.dispose
 import coil.load
 import coil.request.CachePolicy
 import coil.request.videoFrameMillis
+import coil.size.Dimension
 import coil.transform.CircleCropTransformation
 import com.google.android.material.switchmaterial.SwitchMaterial
 import kotlinx.coroutines.*
@@ -353,11 +354,39 @@ fun loadRoundImageWithCoil(imageView: ImageView, path: String?) {
     }
 }
 
+@BindingAdapter("coilBubble")
+fun loadImageInChatBubbleWithCoil(imageView: ImageView, path: String?) {
+    val height = Dimension(
+        imageView.resources.getDimension(
+            R.dimen.chat_message_bubble_image_height_big
+        ).toInt()
+    )
+    val width = Dimension.Undefined
+
+    loadImageWithCoil(imageView, path, width, height)
+}
+
+@BindingAdapter("coilGrid")
+fun loadImageInChatGridBubbleWithCoil(imageView: ImageView, path: String?) {
+    val size = Dimension(
+        imageView.resources.getDimension(
+            R.dimen.chat_message_bubble_file_size
+        ).toInt()
+    )
+
+    loadImageWithCoil(imageView, path, size, size)
+}
+
 @BindingAdapter("coil")
 fun loadImageWithCoil(imageView: ImageView, path: String?) {
+    loadImageWithCoil(imageView, path, Dimension.Undefined, Dimension.Undefined)
+}
+
+fun loadImageWithCoil(imageView: ImageView, path: String?, width: Dimension, height: Dimension) {
     if (!path.isNullOrEmpty() && FileUtils.isExtensionImage(path)) {
         if (corePreferences.vfsEnabled && path.startsWith(corePreferences.vfsCachePath)) {
             imageView.load(path) {
+                size(width, height)
                 diskCachePolicy(CachePolicy.DISABLED)
                 listener(
                     onError = { _, result ->
@@ -369,6 +398,7 @@ fun loadImageWithCoil(imageView: ImageView, path: String?) {
             }
         } else {
             imageView.load(path) {
+                size(width, height)
                 listener(
                     onError = { _, result ->
                         Log.e("[Data Binding] [Coil] Error loading [$path]: ${result.throwable}")

@@ -230,7 +230,7 @@ dependencies {
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
 
     // https://github.com/coil-kt/coil/blob/main/LICENSE.txt Apache v2.0
-    def coil_version = "2.4.0"
+    def coil_version = "2.5.0"
     implementation("io.coil-kt:coil:$coil_version")
     implementation("io.coil-kt:coil-gif:$coil_version")
     implementation("io.coil-kt:coil-svg:$coil_version")

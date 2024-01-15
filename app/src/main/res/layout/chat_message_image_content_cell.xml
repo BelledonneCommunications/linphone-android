@@ -31,9 +31,19 @@
             android:layout_height="wrap_content"
             app:layout_constraintHeight_max="@dimen/chat_message_bubble_image_height_big"
             app:layout_constraintHeight_min="@dimen/chat_message_bubble_image_height_small"
-            android:layout_size="@{data.alone ? 0f : @dimen/chat_message_bubble_file_size}"
-            coil="@{data.filePath}"
-            android:scaleType="@{data.alone ? ScaleType.FIT_CENTER : ScaleType.CENTER_CROP}"
+            coilBubble="@{data.filePath}"
+            android:visibility="@{data.alone ? View.VISIBLE : View.GONE}"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            tools:ignore="MissingConstraints" />
+
+        <ImageView
+            android:contentDescription="@string/content_description_downloaded_file_transfer"
+            android:layout_width="@dimen/chat_message_bubble_file_size"
+            android:layout_height="@dimen/chat_message_bubble_file_size"
+            coilGrid="@{data.filePath}"
+            android:visibility="@{data.alone ? View.GONE : View.VISIBLE}"
+            android:scaleType="centerCrop"
             android:adjustViewBounds="true"
             tools:ignore="MissingConstraints" />
 
