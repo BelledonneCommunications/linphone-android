@@ -176,7 +176,7 @@ open class CallData(val call: Call) : GenericContactData(call.remoteAddress) {
     }
 
     fun isActiveAndNotInConference(): Boolean {
-        return isPaused.value == false && isRemotelyPaused.value == false && isInRemoteConference.value == false
+        return isPaused.value == false && isRemotelyPaused.value == false && call.conference?.call != null && isInRemoteConference.value == false
     }
 
     private fun isCallPaused(): Boolean {
@@ -238,7 +238,7 @@ open class CallData(val call: Call) : GenericContactData(call.remoteAddress) {
 
     private fun updateConferenceInfo() {
         val conference = call.conference
-        isInRemoteConference.value = conference != null
+        isInRemoteConference.value = conference != null && conference.call != null
         if (conference != null) {
             Log.d("[Call] Found conference attached to call")
             remoteConferenceSubject.value = LinphoneUtils.getConferenceSubject(conference)

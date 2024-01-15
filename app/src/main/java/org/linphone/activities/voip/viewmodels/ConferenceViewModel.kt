@@ -377,7 +377,7 @@ class ConferenceViewModel : ViewModel() {
             moreThanTwoParticipantsJoinedEvent.value = Event(true)
         }
 
-        isConferenceLocallyPaused.value = !conference.isIn
+        isConferenceLocallyPaused.value = if (conference.call == null) false else !conference.isIn
         isMeAdmin.value = conference.me.isAdmin
         isVideoConference.value = conference.currentParams.isVideoEnabled && !corePreferences.disableVideo
         subject.value = LinphoneUtils.getConferenceSubject(conference)
@@ -459,18 +459,21 @@ class ConferenceViewModel : ViewModel() {
 
     private fun updateConferenceLayout(conference: Conference) {
         val call = conference.call
-        if (call == null) {
-            Log.e("[Conference] Call is null!")
-            return
-        }
+        var videoDirection = MediaDirection.Inactive
 
-        val params = call.params
-        conferenceDisplayMode.value = if (!params.isVideoEnabled) {
-            ConferenceDisplayMode.AUDIO_ONLY
+        if (call == null) {
+            conferenceDisplayMode.value = ConferenceDisplayMode.AUDIO_ONLY
+            Log.w("[Conference] Call is null, assuming audio only layout for local conference")
         } else {
-            when (params.conferenceVideoLayout) {
-                Conference.Layout.Grid -> ConferenceDisplayMode.GRID
-                else -> ConferenceDisplayMode.ACTIVE_SPEAKER
+            val params = call.params
+            videoDirection = params.videoDirection
+            conferenceDisplayMode.value = if (!params.isVideoEnabled) {
+                ConferenceDisplayMode.AUDIO_ONLY
+            } else {
+                when (params.conferenceVideoLayout) {
+                    Conference.Layout.Grid -> ConferenceDisplayMode.GRID
+                    else -> ConferenceDisplayMode.ACTIVE_SPEAKER
+                }
             }
         }
 
@@ -478,7 +481,7 @@ class ConferenceViewModel : ViewModel() {
         conferenceParticipantDevices.value = list
 
         Log.i(
-            "[Conference] Current layout is [${conferenceDisplayMode.value}], video direction is [${params.videoDirection}]"
+            "[Conference] Current layout is [${conferenceDisplayMode.value}], video direction is [$videoDirection]"
         )
     }
 
