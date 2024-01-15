@@ -56,6 +56,8 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     val events = MutableLiveData<ArrayList<EventLogModel>>()
 
+    var isEndToEndEncrypted = MutableLiveData<Boolean>()
+
     val isGroup = MutableLiveData<Boolean>()
 
     val subject = MutableLiveData<String>()
@@ -453,6 +455,9 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         if (readOnly) {
             Log.w("$TAG Conversation with subject [${chatRoom.subject}] is read only!")
         }
+        isEndToEndEncrypted.postValue(
+            chatRoom.hasCapability(ChatRoom.Capabilities.Encrypted.toInt())
+        )
 
         computeConversationInfo()
 

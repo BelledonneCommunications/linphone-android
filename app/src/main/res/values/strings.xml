@@ -164,6 +164,10 @@
     </plurals>
     <string name="toast_text_waiting_to_be_shared">Text is waiting to be shared</string>
     <string name="toast_message_waiting_to_be_forwarded">A message is waiting to be forwarded</string>
+    <string name="toast_end_to_end_encrypted_conversation">Conversation is end-to-end encrypted</string>
+    <string name="toast_call_transfer_in_progress">Call is being transferred to %s</string>
+    <string name="toast_call_transfer_successful">Call has been transferred to %s</string>
+    <string name="toast_call_transfer_failed">Call transfer to %s failed!</string>
 
     <string name="assistant_account_login">Login</string>
     <string name="assistant_scan_qr_code">Scan QR code</string>
@@ -509,9 +513,6 @@
     <string name="calls_list_title">Calls list</string>
     <string name="call_transfer_title">Transfer call to</string>
     <string name="call_remote_is_recording">%s is recording</string>
-    <string name="toast_call_transfer_in_progress">Call is being transferred to %s</string>
-    <string name="toast_call_transfer_successful">Call has been transferred to %s</string>
-    <string name="toast_call_transfer_failed">Call transfer to %s failed!</string>
     <string name="calls_count_label">%s calls</string>
     <string name="calls_paused_count_label">%s paused calls</string>
 

@@ -308,6 +308,16 @@ class MainActivity : GenericActivity() {
         )
     }
 
+    fun showBlueToast(message: String, @DrawableRes icon: Int) {
+        val blueToast = ToastUtils.getBlueToast(this, binding.toastsArea, message, icon)
+        binding.toastsArea.addView(blueToast.root)
+
+        blueToast.root.slideInToastFromTopForDuration(
+            binding.toastsArea as ViewGroup,
+            lifecycleScope
+        )
+    }
+
     fun showRedToast(message: String, @DrawableRes icon: Int) {
         val redToast = ToastUtils.getRedToast(this, binding.toastsArea, message, icon)
         binding.toastsArea.addView(redToast.root)
