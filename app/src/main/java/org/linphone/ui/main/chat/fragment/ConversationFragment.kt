@@ -279,7 +279,9 @@ class ConversationFragment : SlidingPaneChildFragment() {
         }
 
         binding.eventsList.setHasFixedSize(true)
-        binding.eventsList.layoutManager = LinearLayoutManager(requireContext())
+        val layoutManager = LinearLayoutManager(requireContext())
+        layoutManager.stackFromEnd = true
+        binding.eventsList.layoutManager = layoutManager
 
         val callbacks = RecyclerViewSwipeUtilsCallback(
             R.drawable.reply,
@@ -611,17 +613,11 @@ class ConversationFragment : SlidingPaneChildFragment() {
             sendMessageViewModel.isKeyboardOpen.value = keyboardVisible
             if (keyboardVisible) {
                 sendMessageViewModel.isEmojiPickerOpen.value = false
-
-                // Scroll to bottom if was already at the bottom
-                if (viewModel.isUserScrollingUp.value == false) {
-                    binding.eventsList.scrollToPosition(adapter.itemCount - 1)
-                }
             }
         }
 
         binding.eventsList.addOnScrollListener(object : OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val layoutManager = binding.eventsList.layoutManager as LinearLayoutManager
                 val scrollingUp = layoutManager.findLastCompletelyVisibleItemPosition() != adapter.itemCount - 1
                 viewModel.isUserScrollingUp.value = scrollingUp
 

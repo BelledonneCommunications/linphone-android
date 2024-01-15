@@ -108,6 +108,8 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     lateinit var remoteSipUri: String
 
+    private var eventsList = arrayListOf<EventLogModel>()
+
     private val chatRoomListener = object : ChatRoomListenerStub() {
         @WorkerThread
         override fun onStateChanged(chatRoom: ChatRoom, newState: ChatRoom.State?) {
@@ -123,7 +125,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
             // Make sure message models are aware that they were read,
             // required for scroll to bottom or first unread message behaves as expected
-            for (eventLog in events.value.orEmpty().reversed()) {
+            for (eventLog in eventsList.reversed()) {
                 if (eventLog.model is MessageModel) {
                     if (!eventLog.model.isRead) {
                         eventLog.model.isRead = true
@@ -144,14 +146,14 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             chatRoom.markAsRead()
 
             val list = arrayListOf<EventLogModel>()
-            list.addAll(events.value.orEmpty())
+            list.addAll(eventsList)
 
             val newList = getEventsListFromHistory(
                 arrayOf(eventLog),
                 searchFilter.value.orEmpty().trim()
             )
 
-            val lastEvent = events.value.orEmpty().lastOrNull()
+            val lastEvent = eventsList.lastOrNull()
             val newEvent = newList.lastOrNull()
             if (lastEvent != null && newEvent != null && shouldWeGroupTwoEvents(
                     newEvent.eventLog,
@@ -167,7 +169,8 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             }
             list.addAll(newList)
 
-            events.postValue(list)
+            eventsList = list
+            events.postValue(eventsList)
         }
 
         @WorkerThread
@@ -182,7 +185,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             computeComposingLabel()
 
             val list = arrayListOf<EventLogModel>()
-            list.addAll(events.value.orEmpty())
+            list.addAll(eventsList)
             val lastEvent = list.lastOrNull()
 
             val newList = getEventsListFromHistory(
@@ -204,7 +207,8 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             }
 
             list.addAll(newList)
-            events.postValue(list)
+            eventsList = list
+            events.postValue(eventsList)
 
             unreadMessagesCount.postValue(chatRoom.unreadMessagesCount)
         }
@@ -235,20 +239,18 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         @WorkerThread
         override fun onEphemeralEvent(chatRoom: ChatRoom, eventLog: EventLog) {
             Log.i("$TAG Adding new ephemeral event [${eventLog.type}]")
-            // Warning: when 2 ephemeral events are dispatched quickly one after the other,
-            // one will be missing because events.postValue() hasn't completed yet !
-            // TODO FIXME: Missing event !!!
             val list = arrayListOf<EventLogModel>()
-            list.addAll(events.value.orEmpty())
+            list.addAll(eventsList)
             val fakeFriend = chatRoom.core.createFriend()
             val avatarModel = ContactAvatarModel(fakeFriend)
             list.add(EventLogModel(eventLog, avatarModel))
-            events.postValue(list)
+            eventsList = list
+            events.postValue(eventsList)
         }
 
         @WorkerThread
         override fun onEphemeralMessageDeleted(chatRoom: ChatRoom, eventLog: EventLog) {
-            val eventsLogs = events.value.orEmpty()
+            val eventsLogs = eventsList
             val message = eventLog.chatMessage
             Log.i("$TAG Message [${message?.messageId}] ephemeral lifetime has expired")
 
@@ -263,7 +265,8 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
                 updatePreviousAndNextMessages(list, found)
 
                 list.remove(found)
-                events.postValue(list)
+                eventsList = list
+                events.postValue(eventsList)
 
                 Log.i("$TAG Message was removed from events list")
             } else {
@@ -284,7 +287,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             if (::chatRoom.isInitialized) {
                 chatRoom.removeListener(chatRoomListener)
             }
-            events.value.orEmpty().forEach(EventLogModel::destroy)
+            eventsList.forEach(EventLogModel::destroy)
         }
     }
 
@@ -383,7 +386,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun deleteChatMessage(chatMessageModel: MessageModel) {
         coreContext.postOnCoreThread {
-            val eventsLogs = events.value.orEmpty()
+            val eventsLogs = eventsList
             val found = eventsLogs.find {
                 it.model == chatMessageModel
             }
@@ -395,7 +398,8 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
                 updatePreviousAndNextMessages(list, found)
 
                 list.remove(found)
-                events.postValue(list)
+                eventsList = list
+                events.postValue(eventsList)
             }
 
             Log.i("$TAG Deleting message id [${chatMessageModel.id}]")
@@ -494,10 +498,11 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     @WorkerThread
     private fun computeEvents(filter: String = "") {
-        events.value.orEmpty().forEach(EventLogModel::destroy)
+        eventsList.forEach(EventLogModel::destroy)
 
         val history = chatRoom.getHistoryEvents(0)
-        val eventsList = getEventsListFromHistory(history, filter)
+        val list = getEventsListFromHistory(history, filter)
+        eventsList = list
         events.postValue(eventsList)
 
         if (filter.isNotEmpty() && eventsList.isEmpty()) {
