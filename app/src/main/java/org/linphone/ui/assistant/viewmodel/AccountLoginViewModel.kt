@@ -154,7 +154,20 @@ class AccountLoginViewModel @UiThread constructor() : ViewModel() {
             core.addAuthInfo(newlyCreatedAuthInfo)
 
             val accountParams = core.createAccountParams()
-            val identityAddress = Factory.instance().createAddress("sip:$user@$domain")
+            val identity = if (user.startsWith("sip:")) {
+                if (user.contains("@")) {
+                    user
+                } else {
+                    "$user@$domain"
+                }
+            } else {
+                if (user.contains("@")) {
+                    "sip:$user"
+                } else {
+                    "sip:$user@$domain"
+                }
+            }
+            val identityAddress = Factory.instance().createAddress(identity)
             accountParams.identityAddress = identityAddress
 
             val prefix = internationalPrefix.value.orEmpty().trim()
