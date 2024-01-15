@@ -105,6 +105,8 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<String>()
     }
 
+    var terminatedByUsed = false
+
     val isRemoteRecordingEvent: MutableLiveData<Event<Pair<Boolean, String>>> by lazy {
         MutableLiveData<Event<Pair<Boolean, String>>>()
     }
@@ -469,6 +471,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         coreContext.postOnCoreThread {
             if (::currentCall.isInitialized) {
                 Log.i("$TAG Terminating call [${currentCall.remoteAddress.asStringUriOnly()}]")
+                terminatedByUsed = true
                 currentCall.terminate()
             }
         }
@@ -805,6 +808,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         Log.i("$TAG Configuring call [$call] as current")
         contact.value?.destroy()
 
+        terminatedByUsed = false
         currentCall = call
         call.addListener(callListener)
 

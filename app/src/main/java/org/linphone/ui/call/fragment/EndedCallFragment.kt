@@ -72,7 +72,7 @@ class EndedCallFragment : GenericCallFragment() {
 
         callViewModel.callDuration.observe(viewLifecycleOwner) { duration ->
             binding.chronometer.base = SystemClock.elapsedRealtime() - (1000 * duration)
-            // Do not start it!
+            binding.chronometer.stop() // Do not start it and make sure it is stopped
         }
     }
 
@@ -81,8 +81,18 @@ class EndedCallFragment : GenericCallFragment() {
 
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
-                Log.i("$TAG Waiting 2 seconds before finishing activity")
-                delay(2000)
+                if (callViewModel.terminatedByUsed) {
+                    Log.i(
+                        "$TAG Call terminated by user, waiting 1 second before finishing activity"
+                    )
+                    delay(1000)
+                } else {
+                    Log.i(
+                        "$TAG Call terminated by remote end, waiting 2 seconds before finishing activity"
+                    )
+                    delay(2000)
+                }
+
                 withContext(Dispatchers.Main) {
                     Log.i("$TAG Finishing activity")
                     requireActivity().finish()
