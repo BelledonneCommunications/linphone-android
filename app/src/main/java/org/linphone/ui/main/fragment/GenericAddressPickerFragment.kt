@@ -139,6 +139,11 @@ abstract class GenericAddressPickerFragment : GenericFragment() {
         } else {
             onSingleAddressSelected(address, friend)
         }
+
+        // Clear filter after it was used
+        coreContext.postOnMainThread {
+            viewModel.clearFilter()
+        }
     }
 
     private fun handleClickOnContactModel(model: ContactOrSuggestionModel) {
