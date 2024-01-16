@@ -14,6 +14,7 @@
         <!-- Customize your theme here. -->
         <item name="android:windowActivityTransitions">true</item>
         <item name="android:windowBackground">@color/white</item>
+        <item name="android:navigationBarColor">@color/white</item>
 
         <item name="color_main1_100">@color/orange_main_100</item>
         <item name="color_main1_300">@color/orange_main_300</item>
@@ -53,6 +54,11 @@
         <item name="color_warning_600">@color/orange_warning_600</item>
 
         <item name="color_on_main">@color/white</item>
+    </style>
+
+    <!-- In-call application theme. -->
+    <style name="Theme.LinphoneInCall" parent="Theme.Linphone">
+        <item name="android:navigationBarColor">@color/gray_600</item>
     </style>
 
     <style name="Theme.LinphoneDialog" parent="Theme.Linphone">

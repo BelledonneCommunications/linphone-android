@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/call_main_actions_menu_height"
         android:paddingBottom="5dp"
-        android:background="@color/gray_900">
+        android:background="@drawable/shape_call_bottom_sheet_background">
 
         <ImageView
             android:id="@+id/hang_up"

@@ -117,6 +117,7 @@
 
         <activity
             android:name=".ui.call.CallActivity"
+            android:theme="@style/Theme.LinphoneInCall"
             android:launchMode="singleTask"
             android:turnScreenOn="true"
             android:showWhenLocked="true"

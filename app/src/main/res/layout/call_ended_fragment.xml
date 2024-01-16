@@ -133,13 +133,18 @@
         <com.google.android.material.imageview.ShapeableImageView
             style="@style/avatar_imageview"
             android:id="@+id/avatar"
-            android:layout_width="@dimen/avatar_in_call_size"
-            android:layout_height="@dimen/avatar_in_call_size"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="5dp"
             coilCallAvatar="@{viewModel.contact}"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintWidth_max="@dimen/avatar_in_call_size"
+            app:layout_constraintHeight_max="@dimen/avatar_in_call_size"
+            app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintEnd_toEndOf="@id/background"
             app:layout_constraintStart_toStartOf="@id/background"
             app:layout_constraintTop_toTopOf="@id/background"
-            app:layout_constraintBottom_toBottomOf="@id/background"/>
+            app:layout_constraintBottom_toTopOf="@id/name"/>
 
         <ImageView
             android:id="@+id/trust_badge"
@@ -160,6 +165,7 @@
             android:textColor="@color/white"
             android:textSize="22sp"
             app:layout_constraintTop_toBottomOf="@id/avatar"
+            app:layout_constraintBottom_toTopOf="@id/address"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -168,11 +174,12 @@
             android:id="@+id/address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:text="@{viewModel.displayedAddress, default=`sip:johndoe@sip.linphone.org`}"
             android:textColor="@color/white"
             android:textSize="14sp"
-            android:visibility="@{viewModel.conferenceModel.isCurrentCallInConference ? View.GONE : View.VISIBLE}"
             app:layout_constraintTop_toBottomOf="@id/name"
+            app:layout_constraintBottom_toBottomOf="@id/background"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 

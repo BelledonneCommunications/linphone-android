@@ -13,6 +13,7 @@
         <!-- Customize your theme here. -->
         <item name="android:windowActivityTransitions">true</item>
         <item name="android:windowBackground">@color/black</item>
+        <item name="android:navigationBarColor">@color/black</item>
 
         <item name="color_main1_100">@color/orange_main_100</item>
         <item name="color_main1_300">@color/orange_main_300</item>
