@@ -474,7 +474,11 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
     fun updateZrtpSas(verified: Boolean) {
         coreContext.postOnCoreThread {
             if (::currentCall.isInitialized) {
-                currentCall.authenticationTokenVerified = verified
+                if (!verified && !currentCall.authenticationTokenVerified) {
+                    Log.w("$TAG ZRTP SAS validation failed")
+                } else {
+                    currentCall.authenticationTokenVerified = verified
+                }
             }
         }
     }
