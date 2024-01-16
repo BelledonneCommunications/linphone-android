@@ -122,9 +122,11 @@ class LoginFragment : Fragment() {
 
         viewModel.accountLoggedInEvent.observe(viewLifecycleOwner) {
             it.consume {
-                Log.i("$TAG Account successfully logged-in, go to profile mode fragment")
+                // TODO FIXME: uncomment when mode secure/interop will work
+                /*Log.i("$TAG Account successfully logged-in, go to profile mode fragment")
                 val action = LoginFragmentDirections.actionLoginFragmentToProfileModeFragment()
-                findNavController().navigate(action)
+                findNavController().navigate(action)*/
+                requireActivity().finish()
             }
         }
 

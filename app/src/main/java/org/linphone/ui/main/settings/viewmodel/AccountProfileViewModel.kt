@@ -30,6 +30,8 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
 
     val selectedDialPlan = MutableLiveData<Int>()
 
+    val pushNotificationsEnabled = MutableLiveData<Boolean>()
+
     val registerEnabled = MutableLiveData<Boolean>()
 
     val isCurrentlySelectedModeSecure = MutableLiveData<Boolean>()
@@ -86,6 +88,7 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
                 accountModel.postValue(AccountModel(account))
                 isCurrentlySelectedModeSecure.postValue(account.isInSecureMode())
                 registerEnabled.postValue(account.params.isRegisterEnabled)
+                pushNotificationsEnabled.postValue(account.params.pushNotificationAllowed)
 
                 sipAddress.postValue(account.params.identityAddress?.asStringUriOnly())
                 displayName.postValue(account.params.identityAddress?.displayName)
@@ -192,6 +195,7 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
             if (::account.isInitialized) {
                 val params = account.params
                 val copy = params.clone()
+                copy.pushNotificationAllowed = pushNotificationsEnabled.value == true
 
                 val address = params.identityAddress?.clone()
                 if (address != null) {

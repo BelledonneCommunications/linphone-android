@@ -41,8 +41,6 @@ class AccountSettingsViewModel @UiThread constructor() : ViewModel() {
 
     val selectedTransport = MutableLiveData<TransportType>()
 
-    val pushNotificationsEnabled = MutableLiveData<Boolean>()
-
     val sipProxyServer = MutableLiveData<String>()
 
     val outboundProxyEnabled = MutableLiveData<Boolean>()
@@ -84,8 +82,6 @@ class AccountSettingsViewModel @UiThread constructor() : ViewModel() {
 
                 val params = account.params
 
-                pushNotificationsEnabled.postValue(params.pushNotificationAllowed)
-
                 val transportType = params.serverAddress?.transport ?: TransportType.Tls
                 selectedTransport.postValue(transportType)
 
@@ -123,8 +119,6 @@ class AccountSettingsViewModel @UiThread constructor() : ViewModel() {
 
             if (::account.isInitialized) {
                 val newParams = account.params.clone()
-
-                newParams.pushNotificationAllowed = pushNotificationsEnabled.value == true
 
                 val server = sipProxyServer.value.orEmpty()
                 if (server.isNotEmpty()) {

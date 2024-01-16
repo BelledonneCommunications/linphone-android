@@ -77,12 +77,13 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/screen_bottom_margin">
 
                     <androidx.constraintlayout.widget.Group
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:constraint_referenced_ids="sip_address, sip_address_label, display_name, display_name_label, details_background"
+                        app:constraint_referenced_ids="details_background, sip_address, sip_address_label, display_name, display_name_label, prefix, prefix_caret, prefix_label, prefix_label_tooltip, push_notifications_switch, push_notifications_title"
                         android:visibility="@{viewModel.expandDetails ? View.VISIBLE : View.GONE}" />
 
                     <com.google.android.material.imageview.ShapeableImageView
@@ -188,11 +189,12 @@
                         android:layout_marginTop="8dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="-20dp"
                         android:src="@drawable/shape_squircle_white_background"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/details"
-                        app:layout_constraintBottom_toBottomOf="@id/details_bottom_anchor"/>
+                        app:layout_constraintBottom_toBottomOf="@id/push_notifications_switch"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/header_style"
@@ -200,6 +202,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
+                        android:layout_marginTop="20dp"
                         android:paddingTop="8dp"
                         android:paddingBottom="8dp"
                         android:text="@string/sip_address"
@@ -313,13 +316,31 @@
                         app:layout_constraintBottom_toBottomOf="@id/prefix"
                         app:layout_constraintEnd_toEndOf="@id/prefix"/>
 
-                    <View
-                        android:id="@+id/details_bottom_anchor"
-                        android:layout_width="1dp"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="20dp"
-                        app:layout_constraintStart_toStartOf="parent"
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        style="@style/material_switch_style"
+                        android:id="@+id/push_notifications_switch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:checked="@={viewModel.pushNotificationsEnabled}"
+                        app:layout_constraintEnd_toEndOf="@id/details_background"
                         app:layout_constraintTop_toBottomOf="@id/prefix"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/settings_title_style"
+                        android:id="@+id/push_notifications_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="10dp"
+                        android:text="@string/account_settings_push_notification_title"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        app:layout_constraintTop_toTopOf="@id/push_notifications_switch"
+                        app:layout_constraintBottom_toBottomOf="@id/push_notifications_switch"
+                        app:layout_constraintStart_toStartOf="@id/details_background"
+                        app:layout_constraintEnd_toStartOf="@id/push_notifications_switch"/>
 
                     <ImageView
                         android:id="@+id/connection_background"
@@ -332,7 +353,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/details_background"
-                        app:layout_constraintBottom_toBottomOf="@id/connection_bottom_anchor"/>
+                        app:layout_constraintBottom_toBottomOf="@id/connected_summary"/>
 
                     <com.google.android.material.materialswitch.MaterialSwitch
                         style="@style/material_switch_style"
@@ -366,18 +387,11 @@
                         android:layout_marginEnd="16dp"
                         android:layout_marginTop="16dp"
                         android:textSize="14sp"
+                        android:paddingBottom="20dp"
                         android:text="@{viewModel.accountModel.registrationStateSummary, default=@string/manage_account_status_connected_summary}"
                         app:layout_constraintStart_toStartOf="@id/connection_background"
                         app:layout_constraintEnd_toEndOf="@id/connection_background"
                         app:layout_constraintTop_toBottomOf="@id/connected_label" />
-
-                    <View
-                        android:id="@+id/connection_bottom_anchor"
-                        android:layout_width="1dp"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="20dp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/connected_summary"/>
 
                     <ImageView
                         android:id="@+id/mode_background"
@@ -387,6 +401,7 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
                         android:src="@drawable/shape_squircle_white_background"
+                        android:visibility="gone"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/connection_background"
@@ -400,6 +415,7 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
                         android:text="@{viewModel.isCurrentlySelectedModeSecure ? @string/manage_account_secure_mode_default_title : @string/manage_account_secure_mode_interoperable_title, default=@string/manage_account_secure_mode_default_title}"
+                        android:visibility="gone"
                         app:layout_constraintTop_toTopOf="@id/mode_background"
                         app:layout_constraintStart_toStartOf="@id/mode_background"
                         app:layout_constraintBottom_toBottomOf="@id/mode_background"/>
@@ -420,6 +436,7 @@
                         android:text="@string/manage_account_change_mode"
                         android:maxLines="1"
                         android:ellipsize="end"
+                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="@id/mode_background"
                         app:layout_constraintTop_toTopOf="@id/mode_background"
                         app:layout_constraintBottom_toBottomOf="@id/mode_background"/>
@@ -527,7 +544,6 @@
                         android:text="@string/manage_account_delete"
                         android:drawableStart="@drawable/trash_simple"
                         app:layout_constraintTop_toBottomOf="@id/action_settings"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="@id/actions_background"
                         app:layout_constraintEnd_toEndOf="@id/actions_background"/>
 
