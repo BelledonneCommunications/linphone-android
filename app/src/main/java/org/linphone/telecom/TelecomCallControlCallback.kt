@@ -34,6 +34,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.AudioDevice
 import org.linphone.core.Call
 import org.linphone.core.CallListenerStub
+import org.linphone.core.MediaDirection
 import org.linphone.core.tools.Log
 import org.linphone.utils.AudioUtils
 
@@ -54,7 +55,7 @@ class TelecomCallControlCallback constructor(
             Log.i("$TAG Call [${call.remoteAddress.asStringUriOnly()}] state changed [$state]")
             if (state == Call.State.Connected) {
                 if (call.dir == Call.Dir.Incoming) {
-                    val videoEnabled = call.currentParams.isVideoEnabled
+                    val videoEnabled = call.currentParams.isVideoEnabled && call.currentParams.videoDirection != MediaDirection.Inactive
                     scope.launch {
                         val type = if (videoEnabled) {
                             CallAttributesCompat.CALL_TYPE_VIDEO_CALL

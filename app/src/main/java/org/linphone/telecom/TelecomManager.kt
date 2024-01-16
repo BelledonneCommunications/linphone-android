@@ -33,6 +33,7 @@ import org.linphone.core.AudioDevice
 import org.linphone.core.Call
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
+import org.linphone.core.MediaDirection
 import org.linphone.core.tools.Log
 import org.linphone.utils.LinphoneUtils
 
@@ -55,17 +56,26 @@ class TelecomManager @WorkerThread constructor(context: Context) {
             val address = call.remoteAddress
             val friend = coreContext.contactsManager.findContactByAddress(address)
             val displayName = friend?.name ?: LinphoneUtils.getDisplayName(address)
+
             val uri = Uri.parse(address.asStringUriOnly())
+
             val direction = if (call.dir == Call.Dir.Outgoing) {
                 CallAttributesCompat.DIRECTION_OUTGOING
             } else {
                 CallAttributesCompat.DIRECTION_INCOMING
             }
-            val type = if (core.isVideoEnabled) {
+
+            val params = if (call.dir == Call.Dir.Outgoing) {
+                call.params
+            } else {
+                call.remoteParams
+            }
+            val type = if (params?.isVideoEnabled == true && params.videoDirection != MediaDirection.Inactive) {
                 CallAttributesCompat.CALL_TYPE_VIDEO_CALL
             } else {
                 CallAttributesCompat.CALL_TYPE_AUDIO_CALL
             }
+
             val capabilities = CallAttributesCompat.SUPPORTS_SET_INACTIVE or CallAttributesCompat.SUPPORTS_TRANSFER
 
             val callAttributes = CallAttributesCompat(
@@ -138,9 +148,13 @@ class TelecomManager @WorkerThread constructor(context: Context) {
 
     init {
         callsManager.registerAppWithTelecom(
-            CallsManager.Companion.CAPABILITY_SUPPORTS_VIDEO_CALLING
+            CallsManager.CAPABILITY_BASELINE or
+                CallsManager.Companion.CAPABILITY_SUPPORTS_VIDEO_CALLING
         )
-        Log.i("$TAG App has been registered with Telecom")
+        val hasTelecomFeature = context.packageManager.hasSystemFeature("android.software.telecom")
+        Log.i(
+            "$TAG App has been registered with Telecom, android.software.telecom feature is [${if (hasTelecomFeature) "available" else "not available"}]"
+        )
     }
 
     @WorkerThread

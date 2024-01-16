@@ -473,7 +473,7 @@ class ContactsManager @UiThread constructor() {
 
         val identity = account?.params?.identityAddress?.asStringUriOnly() ?: localAddress.asStringUriOnly()
         personBuilder.setKey(identity)
-        personBuilder.setImportant(false)
+        personBuilder.setImportant(true)
         return personBuilder.build()
     }
 
@@ -546,7 +546,7 @@ fun Friend.getPerson(): Person {
 
     personBuilder.setKey(refKey)
     personBuilder.setUri(nativeUri)
-    personBuilder.setImportant(starred)
+    personBuilder.setImportant(true)
     return personBuilder.build()
 }
 

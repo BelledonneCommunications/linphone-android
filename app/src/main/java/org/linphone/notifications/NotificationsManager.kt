@@ -58,6 +58,7 @@ import org.linphone.core.Core
 import org.linphone.core.CoreForegroundService
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.Friend
+import org.linphone.core.MediaDirection
 import org.linphone.core.tools.Log
 import org.linphone.ui.call.CallActivity
 import org.linphone.ui.main.MainActivity
@@ -797,9 +798,9 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         val isVideo = if (isConference) {
             true
         } else if (isIncoming) {
-            call.remoteParams?.isVideoEnabled ?: false
+            call.remoteParams?.isVideoEnabled == true && call.remoteParams?.videoDirection != MediaDirection.Inactive
         } else {
-            call.currentParams.isVideoEnabled
+            call.currentParams.isVideoEnabled && call.currentParams.videoDirection != MediaDirection.Inactive
         }
 
         val smallIcon = if (isConference) {
@@ -864,7 +865,6 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             setWhen(System.currentTimeMillis())
             setAutoCancel(false)
-            setShowWhen(true)
             setOngoing(true)
             setFullScreenIntent(pendingIntent, true)
         }
@@ -1109,6 +1109,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
                     AvatarGenerator(context).setInitials(AppUtils.getInitials(displayName)).buildIcon()
                 )
                 .setKey(displayName)
+                .setImportant(false)
                 .build()
     }
 
@@ -1117,13 +1118,14 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         val id = context.getString(R.string.notification_channel_incoming_call_id)
         val name = context.getString(R.string.notification_channel_incoming_call_name)
 
-        val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH)
-        channel.description = name
-        channel.lightColor = context.getColor(R.color.main1_500)
-        channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-        channel.enableVibration(true)
-        channel.enableLights(true)
-        channel.setShowBadge(false)
+        val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH).apply {
+            description = name
+            lightColor = context.getColor(R.color.main1_500)
+            lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+            enableVibration(true)
+            enableLights(true)
+            setShowBadge(false)
+        }
         notificationManager.createNotificationChannel(channel)
     }
 
@@ -1132,13 +1134,14 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         val id = context.getString(R.string.notification_channel_missed_call_id)
         val name = context.getString(R.string.notification_channel_missed_call_name)
 
-        val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH)
-        channel.description = name
-        channel.lightColor = context.getColor(R.color.main1_500)
-        channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-        channel.enableVibration(true)
-        channel.enableLights(true)
-        channel.setShowBadge(false)
+        val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH).apply {
+            description = name
+            lightColor = context.getColor(R.color.main1_500)
+            lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+            enableVibration(true)
+            enableLights(true)
+            setShowBadge(false)
+        }
         notificationManager.createNotificationChannel(channel)
     }
 
@@ -1147,12 +1150,13 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         val id = context.getString(R.string.notification_channel_call_id)
         val name = context.getString(R.string.notification_channel_call_name)
 
-        val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_DEFAULT)
-        channel.description = name
-        channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-        channel.enableVibration(false)
-        channel.enableLights(false)
-        channel.setShowBadge(false)
+        val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_DEFAULT).apply {
+            description = name
+            lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+            enableVibration(false)
+            enableLights(false)
+            setShowBadge(false)
+        }
         notificationManager.createNotificationChannel(channel)
     }
 
@@ -1161,13 +1165,14 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         val id = context.getString(R.string.notification_channel_chat_id)
         val name = context.getString(R.string.notification_channel_chat_name)
 
-        val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH)
-        channel.description = name
-        channel.lightColor = context.getColor(R.color.main1_500)
-        channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-        channel.enableLights(true)
-        channel.enableVibration(true)
-        channel.setShowBadge(true)
+        val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH).apply {
+            description = name
+            lightColor = context.getColor(R.color.main1_500)
+            lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+            enableLights(true)
+            enableVibration(true)
+            setShowBadge(true)
+        }
         notificationManager.createNotificationChannel(channel)
     }
 
@@ -1176,11 +1181,12 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         val id = context.getString(R.string.notification_channel_service_id)
         val name = context.getString(R.string.notification_channel_service_name)
 
-        val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_LOW)
-        channel.description = name
-        channel.enableVibration(false)
-        channel.enableLights(false)
-        channel.setShowBadge(false)
+        val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_LOW).apply {
+            description = name
+            enableVibration(false)
+            enableLights(false)
+            setShowBadge(false)
+        }
         notificationManager.createNotificationChannel(channel)
     }
 
