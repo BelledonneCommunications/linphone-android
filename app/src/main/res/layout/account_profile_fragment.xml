@@ -401,7 +401,6 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
                         android:src="@drawable/shape_squircle_white_background"
-                        android:visibility="gone"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/connection_background"
@@ -415,7 +414,6 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
                         android:text="@{viewModel.isCurrentlySelectedModeSecure ? @string/manage_account_secure_mode_default_title : @string/manage_account_secure_mode_interoperable_title, default=@string/manage_account_secure_mode_default_title}"
-                        android:visibility="gone"
                         app:layout_constraintTop_toTopOf="@id/mode_background"
                         app:layout_constraintStart_toStartOf="@id/mode_background"
                         app:layout_constraintBottom_toBottomOf="@id/mode_background"/>
@@ -436,7 +434,6 @@
                         android:text="@string/manage_account_change_mode"
                         android:maxLines="1"
                         android:ellipsize="end"
-                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="@id/mode_background"
                         app:layout_constraintTop_toTopOf="@id/mode_background"
                         app:layout_constraintBottom_toBottomOf="@id/mode_background"/>
@@ -518,7 +515,6 @@
                         android:background="@drawable/action_background"
                         android:text="@string/manage_account_settings"
                         android:drawableStart="@drawable/gear"
-                        android:visibility="gone"
                         app:layout_constraintTop_toTopOf="@id/actions_background"
                         app:layout_constraintStart_toStartOf="@id/actions_background"
                         app:layout_constraintEnd_toEndOf="@id/actions_background"/>
