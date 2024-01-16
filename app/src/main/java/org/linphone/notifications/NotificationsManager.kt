@@ -393,6 +393,12 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
         val callNotificationIntent = Intent(context, CallActivity::class.java)
         callNotificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        if (isIncoming) {
+            callNotificationIntent.putExtra("IncomingCall", true)
+        } else {
+            callNotificationIntent.putExtra("ActiveCall", true)
+        }
+
         val pendingIntent = PendingIntent.getActivity(
             context,
             0,
@@ -866,6 +872,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             setWhen(System.currentTimeMillis())
             setAutoCancel(false)
             setOngoing(true)
+            setContentIntent(pendingIntent)
             setFullScreenIntent(pendingIntent, true)
         }
 

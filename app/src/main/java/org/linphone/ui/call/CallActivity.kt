@@ -21,6 +21,7 @@ package org.linphone.ui.call
 
 import android.Manifest
 import android.app.PictureInPictureParams
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.ViewGroup
@@ -232,52 +233,7 @@ class CallActivity : GenericActivity() {
 
         callsViewModel.goToActiveCallEvent.observe(this) {
             it.consume { singleCall ->
-                val navController = findNavController(R.id.call_nav_container)
-                val action = when (navController.currentDestination?.id) {
-                    R.id.outgoingCallFragment -> {
-                        if (singleCall) {
-                            Log.i("$TAG Going from outgoing call fragment to call fragment")
-                            OutgoingCallFragmentDirections.actionOutgoingCallFragmentToActiveCallFragment()
-                        } else {
-                            Log.i(
-                                "$TAG Going from outgoing call fragment to conference call fragment"
-                            )
-                            OutgoingCallFragmentDirections.actionOutgoingCallFragmentToActiveConferenceCallFragment()
-                        }
-                    }
-                    R.id.incomingCallFragment -> {
-                        if (singleCall) {
-                            Log.i("$TAG Going from incoming call fragment to call fragment")
-                            IncomingCallFragmentDirections.actionIncomingCallFragmentToActiveCallFragment()
-                        } else {
-                            Log.i(
-                                "$TAG Going from incoming call fragment to conference call fragment"
-                            )
-                            IncomingCallFragmentDirections.actionIncomingCallFragmentToActiveConferenceCallFragment()
-                        }
-                    }
-                    R.id.activeConferenceCallFragment -> {
-                        if (singleCall) {
-                            Log.i("$TAG Going from conference call fragment to call fragment")
-                            ActiveConferenceCallFragmentDirections.actionActiveConferenceCallFragmentToActiveCallFragment()
-                        } else {
-                            Log.i(
-                                "$TAG Going from conference call fragment to conference call fragment"
-                            )
-                            ActiveConferenceCallFragmentDirections.actionGlobalActiveConferenceCallFragment()
-                        }
-                    }
-                    else -> {
-                        if (singleCall) {
-                            Log.i("$TAG Going from call fragment to call fragment")
-                            ActiveCallFragmentDirections.actionGlobalActiveCallFragment()
-                        } else {
-                            Log.i("$TAG Going from call fragment to conference call fragment")
-                            ActiveCallFragmentDirections.actionActiveCallFragmentToActiveConferenceCallFragment()
-                        }
-                    }
-                }
-                navController.navigate(action)
+                navigateToActiveCall(singleCall)
             }
         }
 
@@ -330,6 +286,19 @@ class CallActivity : GenericActivity() {
         if (::callViewModel.isInitialized) {
             Log.i("$TAG onResume: is in PiP mode? $isInPipMode")
             callViewModel.pipMode.value = isInPipMode
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+
+        if (intent?.extras?.getBoolean("ActiveCall", false) == true) {
+            navigateToActiveCall(
+                callViewModel.conferenceModel.isCurrentCallInConference.value == false
+            )
+        } else if (intent?.extras?.getBoolean("IncomingCall", false) == true) {
+            val action = IncomingCallFragmentDirections.actionGlobalIncomingCallFragment()
+            findNavController(R.id.call_nav_container).navigate(action)
         }
     }
 
@@ -444,6 +413,55 @@ class CallActivity : GenericActivity() {
             lifecycleScope,
             duration
         )
+    }
+
+    private fun navigateToActiveCall(notInConference: Boolean) {
+        val navController = findNavController(R.id.call_nav_container)
+        val action = when (navController.currentDestination?.id) {
+            R.id.outgoingCallFragment -> {
+                if (notInConference) {
+                    Log.i("$TAG Going from outgoing call fragment to call fragment")
+                    OutgoingCallFragmentDirections.actionOutgoingCallFragmentToActiveCallFragment()
+                } else {
+                    Log.i(
+                        "$TAG Going from outgoing call fragment to conference call fragment"
+                    )
+                    OutgoingCallFragmentDirections.actionOutgoingCallFragmentToActiveConferenceCallFragment()
+                }
+            }
+            R.id.incomingCallFragment -> {
+                if (notInConference) {
+                    Log.i("$TAG Going from incoming call fragment to call fragment")
+                    IncomingCallFragmentDirections.actionIncomingCallFragmentToActiveCallFragment()
+                } else {
+                    Log.i(
+                        "$TAG Going from incoming call fragment to conference call fragment"
+                    )
+                    IncomingCallFragmentDirections.actionIncomingCallFragmentToActiveConferenceCallFragment()
+                }
+            }
+            R.id.activeConferenceCallFragment -> {
+                if (notInConference) {
+                    Log.i("$TAG Going from conference call fragment to call fragment")
+                    ActiveConferenceCallFragmentDirections.actionActiveConferenceCallFragmentToActiveCallFragment()
+                } else {
+                    Log.i(
+                        "$TAG Going from conference call fragment to conference call fragment"
+                    )
+                    ActiveConferenceCallFragmentDirections.actionGlobalActiveConferenceCallFragment()
+                }
+            }
+            else -> {
+                if (notInConference) {
+                    Log.i("$TAG Going from call fragment to call fragment")
+                    ActiveCallFragmentDirections.actionGlobalActiveCallFragment()
+                } else {
+                    Log.i("$TAG Going from call fragment to conference call fragment")
+                    ActiveCallFragmentDirections.actionActiveCallFragmentToActiveConferenceCallFragment()
+                }
+            }
+        }
+        navController.navigate(action)
     }
 
     private fun hideUI(hide: Boolean) {
