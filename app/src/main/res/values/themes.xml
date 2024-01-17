@@ -59,10 +59,12 @@
     <!-- In-call application theme. -->
     <style name="Theme.LinphoneInCall" parent="Theme.Linphone">
         <item name="android:navigationBarColor">@color/gray_600</item>
+        <item name="android:windowBackground">@color/black</item>
     </style>
 
     <style name="Theme.LinphoneDialog" parent="Theme.Linphone">
         <item name="android:windowAnimationStyle">@null</item>
         <item name="android:windowBackground">@color/transparent_color</item>
+        <item name="android:navigationBarColor">@color/transparent_color</item>
     </style>
 </resources>
