@@ -326,13 +326,6 @@ class ConversationFragment : SlidingPaneChildFragment() {
                         (requireActivity() as MainActivity).showRedToast(message, R.drawable.x)
                     }
                 } else {
-                    if (viewModel.isEndToEndEncrypted.value == true) {
-                        Log.i("$TAG Conversation is end-to-end encrypted, showing toast")
-                        val message = getString(R.string.toast_end_to_end_encrypted_conversation)
-                        val icon = R.drawable.media_encryption_srtp
-                        (requireActivity() as MainActivity).showBlueToast(message, icon)
-                    }
-
                     sendMessageViewModel.configureChatRoom(viewModel.chatRoom)
 
                     // Wait for chat room to be ready before trying to forward a message in it
