@@ -141,7 +141,7 @@
                 android:src="@drawable/meeting"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/search_bar"
-                app:tint="?attr/color_main2_000" />
+                app:tint="?attr/color_on_main" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style_800"
@@ -153,7 +153,7 @@
                 android:drawableEnd="@drawable/caret_right"
                 android:padding="5dp"
                 android:text="@string/history_call_start_create_group_call"
-                android:textColor="@color/black"
+                android:textColor="?attr/color_main2_900"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="@id/group_call_icon"
                 app:layout_constraintEnd_toEndOf="parent"

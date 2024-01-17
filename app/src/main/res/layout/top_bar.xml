@@ -114,7 +114,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textCursorDrawable="@null"
-                android:textColor="?attr/color_grey_200"
+                android:textColor="?attr/color_on_main"
                 android:textSize="16sp"
                 android:inputType="text"
                 android:paddingVertical="1dp"

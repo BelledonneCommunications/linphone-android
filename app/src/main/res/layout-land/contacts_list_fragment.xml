@@ -154,7 +154,7 @@
                     android:layout_gravity="end|bottom"
                     android:layout_margin="16dp"
                     android:src="@drawable/user_plus"
-                    app:tint="?attr/color_main2_000"
+                    app:tint="?attr/color_on_main"
                     app:backgroundTint="?attr/color_main1_500"
                     app:shapeAppearanceOverlay="@style/rounded"
                     app:layout_constraintEnd_toEndOf="parent"

@@ -72,7 +72,7 @@
                 android:layout_height="wrap_content"
                 android:text="@{viewModel.selectionCount, default=`0 selected`}"
                 android:textSize="12sp"
-                android:textColor="@color/black"
+                android:textColor="?attr/color_main2_900"
                 app:layout_constraintStart_toStartOf="@id/title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title" />
@@ -164,7 +164,7 @@
                 android:src="@drawable/users_three"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/search_bar"
-                app:tint="?attr/color_main2_000" />
+                app:tint="?attr/color_on_main" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style_800"
@@ -177,7 +177,7 @@
                 android:drawableEnd="@drawable/caret_right"
                 android:padding="5dp"
                 android:text="@string/new_conversation_create_group"
-                android:textColor="@color/black"
+                android:textColor="?attr/color_main2_900"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="@id/group_chat_icon"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -231,7 +231,7 @@
                 android:layout_margin="16dp"
                 android:visibility="@{viewModel.multipleSelectionMode &amp;&amp; viewModel.groupChatRoomCreateButtonEnabled ? View.VISIBLE : View.GONE, default=gone}"
                 android:src="@drawable/check"
-                app:tint="?attr/color_main2_000"
+                app:tint="?attr/color_on_main"
                 app:backgroundTint="?attr/color_main1_500"
                 app:shapeAppearanceOverlay="@style/rounded"
                 app:layout_constraintEnd_toEndOf="parent"
