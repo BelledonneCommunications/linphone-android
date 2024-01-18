@@ -261,10 +261,6 @@ class ConferenceModel {
         val conferenceParticipants = conference.participantList
         Log.i("$TAG [${conferenceParticipants.size}] participant in conference")
 
-        val meParticipant = conference.me
-        val meParticipantModel = ConferenceParticipantModel(meParticipant)
-        participantsList.add(meParticipantModel)
-
         for (participant in conferenceParticipants) {
             val devices = participant.devices
             val role = participant.role
@@ -287,6 +283,10 @@ class ConferenceModel {
         Log.i(
             "$TAG [${devicesList.size}] participant devices for [${participantsList.size}] participants will be displayed (not counting ourselves)"
         )
+
+        val meParticipant = conference.me
+        val meParticipantModel = ConferenceParticipantModel(meParticipant)
+        participantsList.add(meParticipantModel)
 
         val ourDevices = conference.me.devices
         Log.i("$TAG We have [${ourDevices.size}] devices")

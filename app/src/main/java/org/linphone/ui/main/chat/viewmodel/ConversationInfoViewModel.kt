@@ -535,6 +535,22 @@ class ConversationInfoViewModel @UiThread constructor() : ViewModel() {
                 friends.add(model.avatarModel.friend)
                 participantsList.add(model)
             }
+
+            // Add ourselves at the end of the list
+            val meParticipant = chatRoom.me
+            if (meParticipant != null) {
+                val model = ParticipantModel(
+                    meParticipant.address,
+                    selfAdmin,
+                    isParticipantAdmin = selfAdmin,
+                    showMenu = false,
+                    onMenuClicked = { view, model ->
+                        // openMenu
+                        showParticipantAdminPopupMenuEvent.postValue(Event(Pair(view, model)))
+                    }
+                )
+                participantsList.add(model)
+            }
         }
 
         val avatar = if (groupChatRoom) {
