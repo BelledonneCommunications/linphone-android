@@ -114,6 +114,7 @@
                 android:ellipsize="end"
                 android:drawableStart="@{model.isBroadcast ? @drawable/slideshow : @drawable/meeting, default=@drawable/meeting}"
                 android:drawablePadding="8dp"
+                android:drawableTint="?attr/color_main2_600"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>

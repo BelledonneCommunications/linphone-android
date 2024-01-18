@@ -57,7 +57,8 @@
             android:background="@drawable/shape_squircle_main2_200_left"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:tint="?attr/color_main2_600" />
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/download_progress"

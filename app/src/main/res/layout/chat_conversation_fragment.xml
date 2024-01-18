@@ -280,7 +280,7 @@
                 android:gravity="center"
                 android:background="@drawable/shape_red_round"
                 android:text="@{String.valueOf(viewModel.unreadMessagesCount), default=`1`}"
-                android:textColor="?attr/color_main2_000"
+                android:textColor="?attr/color_on_main"
                 android:textSize="13sp"
                 android:visibility="@{viewModel.isUserScrollingUp &amp;&amp; viewModel.unreadMessagesCount > 0 ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toTopOf="@id/scroll_to_bottom"

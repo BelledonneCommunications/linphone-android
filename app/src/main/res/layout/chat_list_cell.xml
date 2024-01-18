@@ -135,7 +135,7 @@
             android:gravity="center"
             android:background="@drawable/shape_red_round"
             android:text="@{String.valueOf(model.unreadMessageCount), default=`1`}"
-            android:textColor="?attr/color_main2_000"
+            android:textColor="?attr/color_on_main"
             android:textSize="13sp"
             android:paddingBottom="2dp"
             android:visibility="@{model.unreadMessageCount > 0 ? View.VISIBLE : View.GONE}"

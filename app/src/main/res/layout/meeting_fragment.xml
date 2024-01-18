@@ -154,7 +154,8 @@
                     app:layout_constraintTop_toTopOf="@id/sip_uri"
                     app:layout_constraintBottom_toBottomOf="@id/sip_uri"
                     app:layout_constraintStart_toEndOf="@id/sip_uri"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:tint="?attr/color_main2_600" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/default_text_style"

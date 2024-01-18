@@ -15,20 +15,19 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/color_grey_900">
+        android:background="@color/gray_900">
 
         <ImageView
             android:id="@+id/back"
             android:onClick="@{backClickListener}"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="@dimen/top_bar_height"
             android:adjustViewBounds="true"
             android:padding="15dp"
             android:src="@drawable/caret_left"
-            app:tint="?attr/color_main1_500"
-            app:layout_constraintBottom_toBottomOf="@id/subtitle"
+            app:tint="@color/main1_500"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/title" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/main_page_title_style"
@@ -38,10 +37,11 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:text="@{viewModel.subject, default=`Meeting with John Doe`}"
-            android:textColor="?attr/color_main2_000"
+            android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/back"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="@id/back"
+            app:layout_constraintBottom_toTopOf="@id/subtitle"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_300"
@@ -52,10 +52,11 @@
             android:layout_marginEnd="10dp"
             android:text="@{viewModel.dateTime, default=`Wed. 25 Oct. 14:00 - 15:00`}"
             android:textSize="12sp"
-            android:textColor="?attr/color_main2_000"
+            android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/back"
-            app:layout_constraintTop_toBottomOf="@id/title"/>
+            app:layout_constraintTop_toBottomOf="@id/title"
+            app:layout_constraintBottom_toBottomOf="@id/back"/>
 
         <View
             android:id="@+id/no_video_background"
@@ -101,7 +102,7 @@
             android:layout_marginStart="12dp"
             android:layout_marginBottom="8dp"
             android:text="@{viewModel.selfAvatar.name, default=`John Doe`}"
-            android:textColor="?attr/color_main2_000"
+            android:textColor="@color/white"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="@id/no_video_background"
             app:layout_constraintStart_toStartOf="@id/no_video_background" />
@@ -115,7 +116,7 @@
             android:layout_marginTop="10dp"
             android:visibility="@{viewModel.isVideoAvailable &amp;&amp; viewModel.isVideoEnabled &amp;&amp; viewModel.isSwitchCameraAvailable ? View.VISIBLE : View.GONE}"
             android:src="@drawable/camera_rotate"
-            app:tint="?attr/color_main2_000"
+            app:tint="@color/white"
             app:layout_constraintTop_toTopOf="@id/video_preview"
             app:layout_constraintEnd_toEndOf="@id/video_preview" />
 

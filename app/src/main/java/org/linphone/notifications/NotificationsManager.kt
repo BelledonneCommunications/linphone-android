@@ -550,7 +550,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
     }
 
     @WorkerThread
-    private fun getNotifiableForRoom(chatRoom: ChatRoom, messages: Array<ChatMessage>): Notifiable {
+    private fun getNotifiableForConversation(chatRoom: ChatRoom, messages: Array<ChatMessage>): Notifiable {
         val address = chatRoom.peerAddress.asStringUriOnly()
         var notifiable: Notifiable? = chatNotificationsMap[address]
         if (notifiable == null) {
@@ -585,7 +585,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
     @WorkerThread
     private fun showChatRoomNotification(chatRoom: ChatRoom, messages: Array<ChatMessage>) {
-        val notifiable = getNotifiableForRoom(chatRoom, messages)
+        val notifiable = getNotifiableForConversation(chatRoom, messages)
 
         if (!chatRoom.hasCapability(ChatRoom.Capabilities.OneToOne.toInt())) {
             if (chatRoom.subject != notifiable.groupTitle) {
@@ -620,7 +620,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         address: Address,
         message: ChatMessage
     ) {
-        val notifiable = getNotifiableForRoom(chatRoom, arrayOf(message))
+        val notifiable = getNotifiableForConversation(chatRoom, arrayOf(message))
 
         // Check if a previous reaction notifiable exists from the same person & for the same message
         val from = address.asStringUriOnly()
@@ -657,7 +657,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             isOutgoing = false,
             isReaction = true,
             reactionToMessageId = message.messageId,
-            reactionFrom = address.asStringUriOnly()
+            reactionFrom = from
         )
         notifiable.messages.add(notifiableMessage)
 

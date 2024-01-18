@@ -262,6 +262,7 @@
             android:onClick="@{showReactionInfoClickListener}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/shape_chat_bubble_incoming_reactions_background"
             android:text="@{model.reactions, default=@string/emoji_love}"
             android:visibility="@{model.reactions.length() > 0 ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="@id/bubble"

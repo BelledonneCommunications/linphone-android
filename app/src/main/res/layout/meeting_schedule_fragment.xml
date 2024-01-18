@@ -455,7 +455,7 @@
                         android:textSize="14sp"
                         android:drawableStart="@drawable/users"
                         android:drawablePadding="8dp"
-                        android:drawableTint="@color/gray_main2_600"
+                        android:drawableTint="?attr/color_main2_600"
                         android:visibility="@{viewModel.participants.size() > 0 ? View.GONE : View.VISIBLE}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
