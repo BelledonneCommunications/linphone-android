@@ -135,7 +135,7 @@
         <include
             bind:viewModel="@{viewModel}"
             android:id="@+id/bottom_bar"
-            layout="@layout/call_incoming_bottom_bar"
+            layout="@layout/call_incoming_actions"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"

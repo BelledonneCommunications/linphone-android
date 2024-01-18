@@ -233,7 +233,11 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
             } else {
                 val videoEnabled = call.currentParams.isVideoEnabled
                 if (videoEnabled && isVideoEnabled.value == false) {
-                    if (corePreferences.routeAudioToSpeakerWhenVideoIsEnabled) {
+                    if (isBluetoothEnabled.value == true || isHeadsetEnabled.value == true) {
+                        Log.i(
+                            "$TAG Audio is routed to bluetooth or headset, do not change it to speaker because video was enabled"
+                        )
+                    } else if (corePreferences.routeAudioToSpeakerWhenVideoIsEnabled) {
                         Log.i("$TAG Video is now enabled, routing audio to speaker")
                         AudioUtils.routeAudioToSpeaker(call)
                     }

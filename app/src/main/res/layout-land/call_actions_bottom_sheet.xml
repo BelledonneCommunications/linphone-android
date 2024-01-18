@@ -37,7 +37,6 @@
             android:layout_height="@dimen/call_main_actions_menu_height"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            bind:showExpandToggle="@{true}"
             bind:viewModel="@{viewModel}" />
 
         <ImageView

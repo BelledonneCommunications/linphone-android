@@ -15,18 +15,6 @@
         android:paddingBottom="5dp"
         android:background="@drawable/shape_call_bottom_sheet_background">
 
-        <com.google.android.material.bottomsheet.BottomSheetDragHandleView
-            android:onClick="@{() -> viewModel.toggleExpandActionsMenu()}"
-            android:id="@+id/toggle_expand"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:padding="11dp"
-            android:src="@drawable/shape_drawer_handle"
-            app:tint="@color/white"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <ImageView
             android:onClick="@{() -> viewModel.hangUp()}"
             android:id="@+id/hang_up"
@@ -44,17 +32,15 @@
             app:layout_constraintStart_toStartOf="parent"/>
 
         <ImageView
-            android:onClick="@{() -> viewModel.toggleVideo()}"
             android:id="@+id/toggle_video"
             android:layout_width="@dimen/call_button_size"
             android:layout_height="@dimen/call_button_size"
             android:layout_marginEnd="16dp"
             android:padding="@dimen/call_button_icon_padding"
-            android:enabled="@{!viewModel.isPaused &amp;&amp; !viewModel.isPausedByRemote}"
             android:visibility="@{viewModel.hideVideo ? View.GONE : View.VISIBLE}"
             android:src="@{viewModel.isVideoEnabled ? @drawable/video_camera : @drawable/video_camera_slash, default=@drawable/video_camera}"
-            android:background="@drawable/in_call_button_background_red"
-            app:tint="@color/in_call_button_tint_color"
+            android:background="@drawable/shape_round_in_call_disabled_button_background"
+            app:tint="@color/gray_500"
             app:layout_constraintHorizontal_bias="1"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintBottom_toBottomOf="parent"
