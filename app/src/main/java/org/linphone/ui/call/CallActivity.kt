@@ -138,46 +138,6 @@ class CallActivity : GenericActivity() {
             }
         }
 
-        callViewModel.showLowWifiSignalEvent.observe(this) {
-            it.consume { show ->
-                val tag = "LOW_WIFI_SIGNAL"
-                if (show) {
-                    showPersistentRedToast(
-                        getString(R.string.toast_alert_low_wifi_signal),
-                        R.drawable.wifi_low,
-                        tag
-                    )
-                } else {
-                    removePersistentRedToast(tag)
-                    showGreenToast(
-                        getString(R.string.toast_alert_low_wifi_signal_cleared),
-                        R.drawable.wifi_high,
-                        2000
-                    )
-                }
-            }
-        }
-
-        callViewModel.showLowCellularSignalEvent.observe(this) {
-            it.consume { show ->
-                val tag = "LOW_CELLULAR_SIGNAL"
-                if (show) {
-                    showPersistentRedToast(
-                        getString(R.string.toast_alert_low_cellular_signal),
-                        R.drawable.cell_signal_low,
-                        tag
-                    )
-                } else {
-                    removePersistentRedToast(tag)
-                    showGreenToast(
-                        getString(R.string.toast_alert_low_cellular_signal_cleared),
-                        R.drawable.cell_signal_full,
-                        2000
-                    )
-                }
-            }
-        }
-
         callViewModel.transferInProgressEvent.observe(this) {
             it.consume {
                 showGreenToast(

@@ -31,8 +31,6 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.Address
-import org.linphone.core.Alert
-import org.linphone.core.AlertListenerStub
 import org.linphone.core.AudioDevice
 import org.linphone.core.Call
 import org.linphone.core.CallListenerStub
@@ -54,11 +52,6 @@ import org.linphone.utils.LinphoneUtils
 class CurrentCallViewModel @UiThread constructor() : ViewModel() {
     companion object {
         private const val TAG = "[Current Call ViewModel]"
-
-        // Keys are hardcoded in SDK
-        private const val ALERT_NETWORK_TYPE_KEY = "network-type"
-        private const val ALERT_NETWORK_TYPE_WIFI = "wifi"
-        private const val ALERT_NETWORK_TYPE_CELLULAR = "mobile"
     }
 
     val contact = MutableLiveData<ContactAvatarModel>()
@@ -177,12 +170,6 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
     val removedCharacterAtCurrentPositionEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
-
-    // Alerts related
-
-    val showLowWifiSignalEvent = MutableLiveData<Event<Boolean>>()
-
-    val showLowCellularSignalEvent = MutableLiveData<Event<Boolean>>()
 
     private lateinit var currentCall: Call
 
@@ -305,44 +292,6 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         }
 
         @WorkerThread
-        override fun onNewAlertTriggered(core: Core, alert: Alert) {
-            val call = alert.call
-            if (call == null) {
-                Log.w(
-                    "$TAG Alert of type [${alert.type}] triggered but with null call, ignoring..."
-                )
-                return
-            }
-
-            val remote = call.remoteAddress.asStringUriOnly()
-            Log.w("$TAG Alert of type [${alert.type}] triggered for call from [$remote]")
-            alert.addListener(alertListener)
-
-            if (call != currentCall) {
-                Log.w("$TAG Terminated alert wasn't for current call, do not display it")
-                return
-            }
-
-            if (alert.type == Alert.Type.QoSLowSignal) {
-                when (val networkType = alert.informations?.getString(ALERT_NETWORK_TYPE_KEY)) {
-                    ALERT_NETWORK_TYPE_WIFI -> {
-                        Log.i("$TAG Triggered low signal alert is for Wi-Fi")
-                        showLowWifiSignalEvent.postValue(Event(true))
-                    }
-                    ALERT_NETWORK_TYPE_CELLULAR -> {
-                        Log.i("$TAG Triggered low signal alert is for cellular")
-                        showLowCellularSignalEvent.postValue(Event(true))
-                    }
-                    else -> {
-                        Log.w(
-                            "$TAG Unexpected type of signal [$networkType] found in alert information"
-                        )
-                    }
-                }
-            }
-        }
-
-        @WorkerThread
         override fun onTransferStateChanged(core: Core, transfered: Call, state: Call.State) {
             Log.i(
                 "$TAG Transferred call [${transfered.remoteAddress.asStringUriOnly()}] state changed [$state]"
@@ -352,46 +301,6 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                 transferInProgressEvent.postValue(Event(true))
             } else if (LinphoneUtils.isCallEnding(state)) {
                 transferFailedEvent.postValue(Event(true))
-            }
-        }
-    }
-
-    private val alertListener = object : AlertListenerStub() {
-        @WorkerThread
-        override fun onTerminated(alert: Alert) {
-            val call = alert.call
-            if (call == null) {
-                Log.w(
-                    "$TAG Alert of type [${alert.type}] dismissed but with null call, ignoring..."
-                )
-                return
-            }
-
-            val remote = call.remoteAddress.asStringUriOnly()
-            Log.w("$TAG Alert of type [${alert.type}] dismissed for call from [$remote]")
-            alert.removeListener(this)
-
-            if (call != currentCall) {
-                Log.w("$TAG Terminated alert wasn't for current call, do not display it")
-                return
-            }
-
-            if (alert.type == Alert.Type.QoSLowSignal) {
-                when (val signalType = alert.informations?.getString(ALERT_NETWORK_TYPE_KEY)) {
-                    ALERT_NETWORK_TYPE_WIFI -> {
-                        Log.i("$TAG Wi-Fi signal no longer low")
-                        showLowWifiSignalEvent.postValue(Event(false))
-                    }
-                    ALERT_NETWORK_TYPE_CELLULAR -> {
-                        Log.i("$TAG Cellular signal no longer low")
-                        showLowCellularSignalEvent.postValue(Event(false))
-                    }
-                    else -> {
-                        Log.w(
-                            "$TAG Unexpected type of signal [$signalType] found in alert information"
-                        )
-                    }
-                }
             }
         }
     }
