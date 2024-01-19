@@ -405,10 +405,15 @@ class MainActivity : GenericActivity() {
             }
         } else {
             if (!isNewIntent && defaultDestination > 0) {
-                Log.i("$TAG Setting nav graph with expected start destination")
-                val navGraph = findNavController().navInflater.inflate(R.navigation.main_nav_graph)
-                navGraph.setStartDestination(defaultDestination)
-                findNavController().setGraph(navGraph, null)
+                try {
+                    Log.i("$TAG Setting nav graph with expected start destination")
+                    val navGraph =
+                        findNavController().navInflater.inflate(R.navigation.main_nav_graph)
+                    navGraph.setStartDestination(defaultDestination)
+                    findNavController().setGraph(navGraph, null)
+                } catch (ise: IllegalStateException) {
+                    Log.i("$TAG Failed to handle intent: $ise")
+                }
             }
         }
     }

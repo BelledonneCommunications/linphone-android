@@ -73,7 +73,7 @@ class ContactsManager @UiThread constructor() {
             )
 
             // TODO FIXME: doesn't work if a SIP address wasn't added to unknownContactsAvatarsMap yet
-            // For example if it was displayed so far in any list
+            // For example if it wasn't displayed so far in any list
             var atLeastSomeoneNew = false
             if (unknownContactsAvatarsMap.isNotEmpty()) {
                 for (friend in friends) {
