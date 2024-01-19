@@ -498,6 +498,7 @@
     <string name="call_action_go_to_calls_list">Calls list</string>
     <string name="call_action_show_dialer">Dialer</string>
     <string name="call_action_show_messages">Messages</string>
+    <string name="call_action_show_statistics">Statistics</string>
     <string name="call_action_pause_call">Pause</string>
     <string name="call_action_resume_call">Resume</string>
     <string name="call_action_record_call">Record</string>
@@ -523,6 +524,14 @@
     <string name="call_audio_device_type_hearing_aid">Hearing aid (%s)</string>
     <string name="call_audio_device_type_headset">Headset</string>
     <string name="call_audio_device_type_headphones">Headphones</string>
+
+    <string name="call_stats_media_encryption">Media encryption: %s</string>
+    <string name="call_stats_media_encryption_zrtp_post_quantum">Post Quantum ZRTP</string>
+    <string name="call_stats_zrtp_cipher_algo">Cipher algorithm: %s</string>
+    <string name="call_stats_zrtp_key_agreement_algo">Key agreement algorithm: %s</string>
+    <string name="call_stats_zrtp_hash_algo">Hash algorithm: %s</string>
+    <string name="call_stats_zrtp_auth_tag_algo">Authentication algorithm: %s</string>
+    <string name="call_stats_zrtp_sas_algo">SAS algorithm: %s</string>
 
     <string name="conference_share_link_title">Share invitation</string>
     <string name="conference_call_empty">Waiting for other participants…</string>

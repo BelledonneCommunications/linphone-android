@@ -41,6 +41,7 @@ import org.linphone.core.MediaDirection
 import org.linphone.core.MediaEncryption
 import org.linphone.core.tools.Log
 import org.linphone.ui.call.model.AudioDeviceModel
+import org.linphone.ui.call.model.CallMediaEncryptionModel
 import org.linphone.ui.call.model.ConferenceModel
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.history.model.NumpadModel
@@ -133,6 +134,10 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     val showZrtpSasDialogEvent: MutableLiveData<Event<Pair<String, String>>> by lazy {
         MutableLiveData<Event<Pair<String, String>>>()
+    }
+
+    val showMediaEncryptionStatisticsEvent: MutableLiveData<Event<CallMediaEncryptionModel>> by lazy {
+        MutableLiveData<Event<CallMediaEncryptionModel>>()
     }
 
     // Conference
@@ -650,6 +655,16 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                 }
             }
         }
+    }
+
+    @UiThread
+    fun showMediaEncryptionStatisticsIfPossible(): Boolean {
+        coreContext.postOnCoreThread {
+            val model = CallMediaEncryptionModel(currentCall)
+            showMediaEncryptionStatisticsEvent.postValue(Event(model))
+        }
+
+        return true
     }
 
     @WorkerThread

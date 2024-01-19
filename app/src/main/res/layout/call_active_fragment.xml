@@ -13,6 +13,9 @@
             name="callsListClickListener"
             type="View.OnClickListener" />
         <variable
+            name="callStatisticsClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.call.viewmodel.CurrentCallViewModel" />
         <variable
@@ -195,6 +198,7 @@
             <ImageView
                 android:id="@+id/media_encryption"
                 android:onClick="@{() -> viewModel.showZrtpSasDialogIfPossible()}"
+                android:onLongClick="@{() -> viewModel.showMediaEncryptionStatisticsIfPossible()}"
                 android:layout_width="@dimen/call_top_bar_info_height"
                 android:layout_height="@dimen/call_top_bar_info_height"
                 android:padding="10dp"
@@ -253,7 +257,8 @@
             bind:viewModel="@{viewModel}"
             bind:callsViewModel="@{callsViewModel}"
             bind:newCallClickListener="@{newCallClickListener}"
-            bind:callsListClickListener="@{callsListClickListener}"/>
+            bind:callsListClickListener="@{callsListClickListener}"
+            bind:callStatisticsClickListener="@{callStatisticsClickListener}"/>
 
         <include
             android:id="@+id/call_numpad"

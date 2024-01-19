@@ -35,11 +35,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.window.layout.FoldingFeature
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.CallActiveFragmentBinding
 import org.linphone.ui.call.CallActivity
+import org.linphone.ui.call.model.CallMediaEncryptionModel
 import org.linphone.ui.call.model.ZrtpSasConfirmationDialogModel
 import org.linphone.ui.call.viewmodel.CallsViewModel
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
@@ -62,6 +64,8 @@ class ActiveCallFragment : GenericCallFragment() {
     private lateinit var callsViewModel: CallsViewModel
 
     private var zrtpSasDialog: Dialog? = null
+
+    private var bottomSheetDialog: BottomSheetDialogFragment? = null
 
     // For moving video preview purposes
 
@@ -150,6 +154,10 @@ class ActiveCallFragment : GenericCallFragment() {
         binding.setCallsListClickListener {
             val action = ActiveCallFragmentDirections.actionActiveCallFragmentToCallsListFragment()
             findNavController().navigate(action)
+        }
+
+        binding.setCallStatisticsClickListener {
+            showCallStatistics()
         }
 
         sharedViewModel = requireActivity().run {
@@ -272,6 +280,12 @@ class ActiveCallFragment : GenericCallFragment() {
                 }
             }
         }
+
+        callViewModel.showMediaEncryptionStatisticsEvent.observe(viewLifecycleOwner) {
+            it.consume { model ->
+                showMediaEncryptionStatistics(model)
+            }
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -295,6 +309,9 @@ class ActiveCallFragment : GenericCallFragment() {
         zrtpSasDialog?.dismiss()
         zrtpSasDialog = null
 
+        bottomSheetDialog?.dismiss()
+        bottomSheetDialog = null
+
         binding.localPreviewVideoSurface.setOnTouchListener(null)
     }
 
@@ -316,5 +333,18 @@ class ActiveCallFragment : GenericCallFragment() {
         }
 
         set.applyTo(constraintLayout)
+    }
+
+    private fun showCallStatistics() {
+        // TODO
+    }
+
+    private fun showMediaEncryptionStatistics(model: CallMediaEncryptionModel) {
+        val modalBottomSheet = MediaEncryptionStatisticsDialogFragment(model)
+        modalBottomSheet.show(
+            requireActivity().supportFragmentManager,
+            MediaEncryptionStatisticsDialogFragment.TAG
+        )
+        bottomSheetDialog = modalBottomSheet
     }
 }
