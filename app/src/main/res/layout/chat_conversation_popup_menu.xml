@@ -7,27 +7,62 @@
         <import type="android.view.View" />
         <import type="android.graphics.Typeface" />
         <variable
+            name="goToInfoClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="searchClickListener"
             type="View.OnClickListener" />
         <variable
-            name="goToInfoClickListener"
+            name="muteClickListener"
             type="View.OnClickListener" />
+        <variable
+            name="unmuteClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="configureEphemeralMessagesClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="conversationMuted"
+            type="Boolean" />
+        <variable
+            name="ephemeralMessagesAvailable"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingEnd="20dp"
+        android:paddingStart="20dp"
+        android:paddingBottom="20dp"
         android:background="@drawable/shape_round_popup_menu_background">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/info"
+            android:onClick="@{goToInfoClickListener}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/conversation_menu_go_to_info"
+            android:textSize="14sp"
+            android:textColor="?attr/color_main2_500"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:drawableStart="@drawable/info"
+            android:drawablePadding="5dp"
+            app:drawableTint="?attr/color_main2_700"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/search"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
             android:id="@+id/search"
             android:onClick="@{searchClickListener}"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
             android:text="@string/conversation_menu_search_in_messages"
             android:textSize="14sp"
             android:textColor="?attr/color_main2_500"
@@ -37,31 +72,67 @@
             android:drawablePadding="5dp"
             app:drawableTint="?attr/color_main2_700"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/info"/>
+            app:layout_constraintTop_toBottomOf="@id/info"
+            app:layout_constraintBottom_toTopOf="@id/mute"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
-            android:id="@+id/info"
-            android:onClick="@{goToInfoClickListener}"
-            android:layout_width="match_parent"
+            android:id="@+id/mute"
+            android:onClick="@{muteClickListener}"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="20dp"
-            android:text="@string/conversation_menu_go_to_info"
+            android:layout_marginTop="20dp"
+            android:text="@string/conversation_action_mute"
             android:textSize="14sp"
             android:textColor="?attr/color_main2_500"
             android:maxLines="1"
             android:ellipsize="end"
-            android:drawableStart="@drawable/info"
+            android:drawableStart="@drawable/bell_simple_slash"
             android:drawablePadding="5dp"
+            android:visibility="@{conversationMuted ? View.GONE : View.VISIBLE}"
             app:drawableTint="?attr/color_main2_700"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/search"
+            app:layout_constraintBottom_toTopOf="@id/unmute"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/unmute"
+            android:onClick="@{unmuteClickListener}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/conversation_action_unmute"
+            android:textSize="14sp"
+            android:textColor="?attr/color_main2_500"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:drawableStart="@drawable/bell_simple"
+            android:drawablePadding="5dp"
+            android:visibility="@{conversationMuted ? View.VISIBLE : View.GONE, default=gone}"
+            app:drawableTint="?attr/color_main2_700"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/mute"
+            app:layout_constraintBottom_toTopOf="@id/ephemeral"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/ephemeral"
+            android:onClick="@{configureEphemeralMessagesClickListener}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/conversation_menu_configure_ephemeral_messages"
+            android:textSize="14sp"
+            android:textColor="?attr/color_main2_500"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:drawableStart="@drawable/clock_countdown"
+            android:drawablePadding="5dp"
+            android:visibility="@{ephemeralMessagesAvailable ? View.VISIBLE : View.GONE}"
+            app:drawableTint="?attr/color_main2_700"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/unmute"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

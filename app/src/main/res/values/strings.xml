@@ -425,6 +425,7 @@
     <string name="conversation_reply_to_message_title">Replying to:</string>
     <string name="conversation_menu_search_in_messages">Search</string>
     <string name="conversation_menu_go_to_info">Conversation info</string>
+    <string name="conversation_menu_configure_ephemeral_messages">Ephemeral messages</string>
     <string name="conversation_filter_no_matching_result">No matching result</string>
 
     <string name="conversation_info_participants_list_title">Group members</string>

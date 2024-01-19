@@ -56,7 +56,9 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     val events = MutableLiveData<ArrayList<EventLogModel>>()
 
-    var isEndToEndEncrypted = MutableLiveData<Boolean>()
+    val isMuted = MutableLiveData<Boolean>()
+
+    val isEndToEndEncrypted = MutableLiveData<Boolean>()
 
     val isGroup = MutableLiveData<Boolean>()
 
@@ -436,6 +438,22 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
+    fun mute() {
+        coreContext.postOnCoreThread {
+            chatRoom.muted = true
+            isMuted.postValue(chatRoom.muted)
+        }
+    }
+
+    @UiThread
+    fun unmute() {
+        coreContext.postOnCoreThread {
+            chatRoom.muted = false
+            isMuted.postValue(chatRoom.muted)
+        }
+    }
+
+    @UiThread
     fun updateCurrentlyDisplayedConversation() {
         coreContext.postOnCoreThread {
             val id = LinphoneUtils.getChatRoomId(chatRoom)
@@ -458,6 +476,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         isEndToEndEncrypted.postValue(
             chatRoom.hasCapability(ChatRoom.Capabilities.Encrypted.toInt())
         )
+        isMuted.postValue(chatRoom.muted)
 
         computeConversationInfo()
 

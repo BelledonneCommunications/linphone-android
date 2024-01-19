@@ -725,6 +725,9 @@ class ConversationFragment : SlidingPaneChildFragment() {
             true
         )
 
+        popupView.conversationMuted = viewModel.isMuted.value == true
+        popupView.ephemeralMessagesAvailable = viewModel.isEndToEndEncrypted.value == true || viewModel.isGroup.value == true
+
         popupView.setGoToInfoClickListener {
             goToInfoFragment()
             popupWindow.dismiss()
@@ -733,6 +736,23 @@ class ConversationFragment : SlidingPaneChildFragment() {
         popupView.setSearchClickListener {
             Log.i("$TAG Opening search bar")
             viewModel.openSearchBar()
+            popupWindow.dismiss()
+        }
+
+        popupView.setMuteClickListener {
+            Log.i("$TAG Muting conversation")
+            viewModel.mute()
+            popupWindow.dismiss()
+        }
+
+        popupView.setUnmuteClickListener {
+            Log.i("$TAG Un-muting conversation")
+            viewModel.unmute()
+            popupWindow.dismiss()
+        }
+
+        popupView.setConfigureEphemeralMessagesClickListener {
+            // TODO: go to configure ephemeral messages
             popupWindow.dismiss()
         }
 
