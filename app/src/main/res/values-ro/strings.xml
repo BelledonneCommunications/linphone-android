@@ -2,7 +2,7 @@
 <!DOCTYPE resources [
 <!ENTITY appName "Linphone">
 ]>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="service_auto_start_description">&appName; a fost pornit automat</string>
     <string name="sync_account_name">&appName; contacte</string>
     <string name="logs_upload_failure">Nu s-a reușit încărcarea logurilor!</string>
@@ -203,4 +203,66 @@
     <string name="recordings_export">Exportați înregistrarea folosind…</string>
     <string name="conference_schedule_later">Doriți să programați o întâlnire pentru mai târziu\?</string>
     <string name="conference_schedule_broadcast_address_title">Adresa de difuzare</string>
+    <string name="conference_schedule_description_title">Adăugați o descriere</string>
+    <string name="conference_schedule_description_hint">Descriere</string>
+    <string name="conference_schedule_date">Data</string>
+    <string name="conference_schedule_time">Timp</string>
+    <string name="conference_schedule_duration">Durata</string>
+    <string name="conference_schedule_mode">Mod</string>
+    <string name="conference_schedule_mode_meeting">Reuniune</string>
+    <string name="conference_schedule_mode_broadcast">Emisiune</string>
+    <string name="conference_schedule_timezone">Fus orar</string>
+    <string name="conference_schedule_send_updated_invite_chat">Trimiteți actualizarea prin intermediul &appName;</string>
+    <string name="conference_schedule_send_invite_email">Trimiteți invitația prin e-mail</string>
+    <string name="conference_schedule_send_updated_invite_email">Trimiteți o actualizare prin e-mail</string>
+    <string name="conference_schedule_encryption">Doriți să codificați ședința\?</string>
+    <string name="conference_schedule_speakers_list">Lista vorbitorilor</string>
+    <string name="conference_schedule_participants_list_empty">Selectați cel puțin un participant</string>
+    <string name="conference_organizer">Organizator</string>
+    <string name="conference_schedule_summary">Informații despre întâlnire</string>
+    <string name="conference_group_call_summary">Informații privind apelurile de grup</string>
+    <string name="conference_schedule_broadcast_summary">Informații de difuzare</string>
+    <string name="conference_schedule_start">Programarea întâlnirii</string>
+    <string name="conference_schedule_edit">Editați ședința</string>
+    <string name="conference_broadcast_edit">Editați emisiunea</string>
+    <string name="conference_group_call_create">Start apel de grup</string>
+    <string name="conference_schedule_address_copied_to_clipboard">Adresa de întâlnire copiată în clipboard</string>
+    <string name="conference_paused_title">În momentul de față nu sunteți în ședință.</string>
+    <string name="conference_default_title">Apel de grup la distanță</string>
+    <string name="conference_local_title">Apel de grup local</string>
+    <string name="conference_broadcast_invite_title">Invitație la emisiune:</string>
+    <string name="conference_broadcast_invite_you_are_speaker">(sunteți un vorbitor)</string>
+    <string name="conference_update_title">Ședința a fost actualizată:</string>
+    <string name="conference_cancel_title">Ședința a fost anulată:</string>
+    <string name="conference_description_title">Descriere</string>
+    <string name="conference_invite_join">Alăturați-vă</string>
+    <string name="conference_display_mode_mosaic">Modul mozaic</string>
+    <string name="conference_display_mode_active_speaker">Modul difuzor activ</string>
+    <string name="conference_display_mode_audio_only">Mod numai audio</string>
+    <string name="conference_waiting_room_start_call">Start</string>
+    <string name="conference_waiting_room_cancel_call">Anulați</string>
+    <string name="conference_waiting_room_video_disabled">Video este în prezent dezactivat</string>
+    <string name="conference_scheduled">Ședințe</string>
+    <string name="conference_too_many_participants_for_mosaic_layout">Există prea mulți participanți pentru aspectul mozaic, trecerea la difuzor activ</string>
+    <string name="conference_participant_paused">(pauză)</string>
+    <string name="conference_no_schedule">Încă nu este programată nicio reuniune.</string>
+    <string name="conference_no_terminated_schedule">Încă nu s-a încheiat nicio reuniune.</string>
+    <string name="conference_schedule_organizer">Organizator:</string>
+    <string name="conference_go_to_chat">Sala de chat a reuniunii</string>
+    <string name="conference_creation_failed">Nu a reușit să creeze ședința</string>
+    <string name="conference_admin_set">%s este acum administrator</string>
+    <string name="conference_admin_unset">%s nu mai este administrator</string>
+    <string name="conference_info_removed">Informațiile despre ședință au fost șterse</string>
+    <string name="conference_schedule_send_invite_chat">Trimiteți invitația prin intermediul &appName;</string>
+    <string name="conference_schedule_send_invite_chat_summary">Invitația va fi trimisă din contul meu &appName; cont</string>
+    <string name="conference_schedule_participants_list">Lista participanților</string>
+    <string name="conference_schedule_speakers_list_empty">Selectați cel puțin un vorbitor</string>
+    <string name="conference_broadcast_start">Program de difuzare</string>
+    <string name="conference_schedule_info_not_sent_to_participant">Nu a reușit să trimită informații despre întâlnire unui participant</string>
+    <string name="conference_paused_subtitle">Faceți clic pe butonul de redare pentru a vă alătura înapoi.</string>
+    <string name="conference_invite_title">Invitație la ședință:</string>
+    <string name="conference_invite_participants_count" tools:ignore="PluralsCandidate">%d participanți</string>
+    <string name="conference_waiting_room_listener_broadcast">Nu ești un vorbitor în această emisiune</string>
+    <string name="conference_layout_too_many_participants_for_mosaic">Nu puteți schimba aspectul apelului de grup deoarece există prea mulți participanți</string>
+    <string name="conference_schedule_info_created">Ședința a fost programată</string>
 </resources>
