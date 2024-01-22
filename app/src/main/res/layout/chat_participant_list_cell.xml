@@ -88,6 +88,7 @@
             android:layout_height="@dimen/icon_size"
             android:src="@drawable/dots_three_vertical"
             android:visibility="@{model.showMenu ? View.VISIBLE : View.GONE}"
+            app:tint="?attr/color_grey_600"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/name"
             app:layout_constraintTop_toTopOf="parent"

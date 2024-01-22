@@ -125,6 +125,7 @@
                     android:onClick="@{editSubjectClickListener}"
                     android:src="@drawable/pencil_simple"
                     android:visibility="@{!viewModel.isGroup || viewModel.isReadOnly || !viewModel.isMyselfAdmin ? View.GONE : View.VISIBLE}"
+                    app:tint="?attr/color_grey_600"
                     app:layout_constraintBottom_toBottomOf="@id/title"
                     app:layout_constraintStart_toEndOf="@id/title"
                     app:layout_constraintTop_toTopOf="@id/title" />

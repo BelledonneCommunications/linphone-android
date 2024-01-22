@@ -19,8 +19,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:text="@{model.mediaEncryption}"
-            android:textColor="@color/black"
+            android:text="@{model.mediaEncryption, default=`Media Encryption: Post Quantum ZRTP`}"
+            android:textColor="?attr/color_grey_900"
             android:gravity="center_vertical" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -30,7 +30,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:text="@{model.zrtpCipher}"
-            android:textColor="@color/black"
+            android:textColor="?attr/color_grey_900"
             android:gravity="center_vertical"
             android:visibility="@{model.isMediaEncryptionZrtp ? View.VISIBLE : View.GONE}"/>
 
@@ -41,7 +41,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:text="@{model.zrtpKeyAgreement}"
-            android:textColor="@color/black"
+            android:textColor="?attr/color_grey_900"
             android:gravity="center_vertical"
             android:visibility="@{model.isMediaEncryptionZrtp ? View.VISIBLE : View.GONE}" />
 
@@ -52,7 +52,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:text="@{model.zrtpHash}"
-            android:textColor="@color/black"
+            android:textColor="?attr/color_grey_900"
             android:gravity="center_vertical"
             android:visibility="@{model.isMediaEncryptionZrtp ? View.VISIBLE : View.GONE}" />
 
@@ -63,7 +63,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:text="@{model.zrtpAuthTag}"
-            android:textColor="@color/black"
+            android:textColor="?attr/color_grey_900"
             android:gravity="center_vertical"
             android:visibility="@{model.isMediaEncryptionZrtp ? View.VISIBLE : View.GONE}" />
 
@@ -74,7 +74,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:text="@{model.zrtpAuthSas}"
-            android:textColor="@color/black"
+            android:textColor="?attr/color_grey_900"
             android:gravity="center_vertical"
             android:visibility="@{model.isMediaEncryptionZrtp ? View.VISIBLE : View.GONE}" />
 
