@@ -195,13 +195,11 @@ class ContactsManager @UiThread constructor() {
 
     @WorkerThread
     fun findContactByAddress(address: Address): Friend? {
-        val clonedAddress = address.clone()
-        clonedAddress.clean()
-        val sipUri = clonedAddress.asStringUriOnly()
-
+        val sipUri = address.asStringUriOnly()
         Log.d("$TAG Looking for friend with SIP URI [$sipUri]")
-        val username = clonedAddress.username
-        val found = coreContext.core.findFriend(clonedAddress)
+
+        val username = address.username
+        val found = coreContext.core.findFriend(address)
         return if (found != null) {
             Log.d("$TAG Friend [${found.name}] was found using SIP URI [$sipUri]")
             found
@@ -354,7 +352,7 @@ class ContactsManager @UiThread constructor() {
     @WorkerThread
     fun findNativeContact(address: String, searchAsPhoneNumber: Boolean, number: String = ""): Friend? {
         if (nativeContactsLoaded) {
-            Log.i(
+            Log.d(
                 "$TAG Native contacts already loaded, no need to search further, no native contact matches address [$address]"
             )
             return null
