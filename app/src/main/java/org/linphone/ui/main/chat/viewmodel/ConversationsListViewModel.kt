@@ -152,23 +152,33 @@ class ConversationsListViewModel @UiThread constructor() : AbstractTopBarViewMod
                 }
             }
 
-            val participants = chatRoom.participants
-            val found = participants.find {
-                // Search in address but also in contact name if exists
-                val model = coreContext.contactsManager.getContactAvatarModelForAddress(it.address)
-                model.contactName?.contains(filter, ignoreCase = true) == true || it.address.asStringUriOnly().contains(
-                    filter,
-                    ignoreCase = true
-                )
-            }
-            if (
-                found != null ||
-                chatRoom.peerAddress.asStringUriOnly().contains(filter, ignoreCase = true) ||
-                chatRoom.subject.orEmpty().contains(filter, ignoreCase = true)
-            ) {
+            if (filter.isEmpty()) {
                 val model = ConversationModel(chatRoom)
                 list.add(model)
                 count += 1
+            } else {
+                val participants = chatRoom.participants
+                val found = participants.find {
+                    // Search in address but also in contact name if exists
+                    val model =
+                        coreContext.contactsManager.getContactAvatarModelForAddress(it.address)
+                    model.contactName?.contains(
+                        filter,
+                        ignoreCase = true
+                    ) == true || it.address.asStringUriOnly().contains(
+                        filter,
+                        ignoreCase = true
+                    )
+                }
+                if (
+                    found != null ||
+                    chatRoom.peerAddress.asStringUriOnly().contains(filter, ignoreCase = true) ||
+                    chatRoom.subject.orEmpty().contains(filter, ignoreCase = true)
+                ) {
+                    val model = ConversationModel(chatRoom)
+                    list.add(model)
+                    count += 1
+                }
             }
 
             if (count == 20) {
