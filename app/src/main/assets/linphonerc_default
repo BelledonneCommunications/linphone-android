@@ -23,6 +23,7 @@ size=vga
 [app]
 tunnel=disabled
 auto_start=1
+record_aware=1
 auto_download_incoming_voice_recordings=1
 auto_download_incoming_icalendars=1
 
@@ -35,7 +36,8 @@ log_collection_upload_server_url=https://www.linphone.org:444/lft.php
 file_transfer_server_url=https://www.linphone.org:444/lft.php
 version_check_url_root=https://www.linphone.org/releases
 max_calls=10
-conference_layout=0
+history_max_size=100
+conference_layout=1
 hide_empty_chat_rooms=0
 
 ## End of default rc
