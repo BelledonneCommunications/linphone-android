@@ -590,7 +590,11 @@ class MessageModel @WorkerThread constructor(
                 count += 1
             }
             meetingParticipants.postValue(
-                AppUtils.getFormattedString(R.string.conference_participants_list_title, "$count")
+                AppUtils.getStringWithPlural(
+                    R.plurals.conference_participants_list_title,
+                    count,
+                    "$count"
+                )
             )
 
             meetingFound.postValue(true)

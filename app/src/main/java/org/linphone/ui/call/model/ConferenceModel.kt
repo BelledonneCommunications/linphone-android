@@ -298,9 +298,10 @@ class ConferenceModel {
         participantDevices.postValue(sortParticipantDevicesList(devicesList))
         participants.postValue(participantsList)
         participantsLabel.postValue(
-            AppUtils.getFormattedString(
-                R.string.conference_participants_list_title,
-                participantsList.size
+            AppUtils.getStringWithPlural(
+                R.plurals.conference_participants_list_title,
+                participantsList.size,
+                "${participantsList.size}"
             )
         )
     }
@@ -338,7 +339,11 @@ class ConferenceModel {
 
         participants.postValue(list)
         participantsLabel.postValue(
-            AppUtils.getFormattedString(R.string.conference_participants_list_title, list.size)
+            AppUtils.getStringWithPlural(
+                R.plurals.conference_participants_list_title,
+                list.size,
+                "${list.size}"
+            )
         )
     }
 
@@ -368,7 +373,11 @@ class ConferenceModel {
 
         participants.postValue(list)
         participantsLabel.postValue(
-            AppUtils.getFormattedString(R.string.conference_participants_list_title, list.size)
+            AppUtils.getStringWithPlural(
+                R.plurals.conference_participants_list_title,
+                list.size,
+                "${list.size}"
+            )
         )
     }
 
