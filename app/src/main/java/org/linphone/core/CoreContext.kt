@@ -236,8 +236,9 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         core.isAutoIterateEnabled = true
         core.addListener(coreListener)
 
-        computeUserAgent()
+        core.videoCodecPriorityPolicy = CodecPriorityPolicy.Auto
 
+        computeUserAgent()
         Log.i("$TAG Core has been created with user-agent [${core.userAgent}], starting it")
         core.start()
 
