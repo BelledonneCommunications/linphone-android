@@ -674,10 +674,6 @@ class ConversationFragment : SlidingPaneChildFragment() {
             coreContext.notificationsManager.resetCurrentlyDisplayedChatRoomId()
         }
 
-        if (viewModel.isGroup.value == true) {
-            binding.sendArea.messageToSend.removeTextChangedListener(textObserver)
-        }
-
         try {
             adapter.unregisterAdapterDataObserver(dataObserver)
         } catch (e: IllegalStateException) {
