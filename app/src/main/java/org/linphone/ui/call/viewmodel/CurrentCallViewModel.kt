@@ -694,7 +694,9 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                 Log.i(
                     "$TAG Current call media encryption is ZRTP, auth token is ${if (isDeviceTrusted) "trusted" else "not trusted yet"}"
                 )
-                isRemoteDeviceTrusted.postValue(isDeviceTrusted)
+                if (isDeviceTrusted != isRemoteDeviceTrusted.value) {
+                    isRemoteDeviceTrusted.postValue(isDeviceTrusted)
+                }
                 val securityLevel = if (isDeviceTrusted) SecurityLevel.Safe else SecurityLevel.Encrypted
                 val avatarModel = contact.value
                 if (avatarModel != null) {

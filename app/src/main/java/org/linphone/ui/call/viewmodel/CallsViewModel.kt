@@ -224,7 +224,7 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
                 }
             } else {
                 otherCallsLabel.postValue(
-                    AppUtils.getFormattedString(R.string.calls_paused_count_label, core.callsNb)
+                    AppUtils.getFormattedString(R.string.calls_paused_count_label, core.callsNb - 1)
                 )
                 otherCallsStatus.postValue("") // TODO: improve ?
             }
