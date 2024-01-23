@@ -51,9 +51,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
-import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.google.android.material.tabs.TabLayout
@@ -72,6 +70,7 @@ import org.linphone.databinding.ChatBubbleLongPressMenuBinding
 import org.linphone.databinding.ChatConversationFragmentBinding
 import org.linphone.databinding.ChatConversationPopupMenuBinding
 import org.linphone.ui.main.MainActivity
+import org.linphone.ui.main.chat.ConversationScrollListener
 import org.linphone.ui.main.chat.adapter.ConversationEventAdapter
 import org.linphone.ui.main.chat.adapter.MessageBottomSheetAdapter
 import org.linphone.ui.main.chat.model.MessageDeliveryModel
@@ -177,6 +176,10 @@ class ConversationFragment : SlidingPaneChildFragment() {
 
     private val dataObserver = object : AdapterDataObserver() {
         override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+            if (positionStart > 0) {
+                adapter.notifyItemChanged(positionStart - 1) // For grouping purposes
+            }
+
             if (viewModel.isUserScrollingUp.value == true) {
                 Log.i(
                     "$TAG [$itemCount] events have been loaded but user was scrolling up in conversation, do not scroll"
@@ -217,6 +220,8 @@ class ConversationFragment : SlidingPaneChildFragment() {
             }
         }
     }
+
+    private lateinit var scrollListener: ConversationScrollListener
 
     private var currentChatMessageModelForBottomSheet: MessageModel? = null
     private val bottomSheetCallback = object : BottomSheetCallback() {
@@ -616,17 +621,25 @@ class ConversationFragment : SlidingPaneChildFragment() {
             }
         }
 
-        binding.eventsList.addOnScrollListener(object : OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val scrollingUp = layoutManager.findLastCompletelyVisibleItemPosition() != adapter.itemCount - 1
-                viewModel.isUserScrollingUp.value = scrollingUp
-
-                if (!scrollingUp) {
-                    Log.i("$TAG Last message is visible, considering conversation as read")
-                    viewModel.markAsRead()
-                }
+        scrollListener = object : ConversationScrollListener(layoutManager) {
+            @UiThread
+            override fun onLoadMore(totalItemsCount: Int) {
+                viewModel.loadMoreData(totalItemsCount)
             }
-        })
+
+            @UiThread
+            override fun onScrolledUp() {
+                viewModel.isUserScrollingUp.value = true
+            }
+
+            @UiThread
+            override fun onScrolledToEnd() {
+                viewModel.isUserScrollingUp.value = false
+                Log.i("$TAG Last message is visible, considering conversation as read")
+                viewModel.markAsRead()
+            }
+        }
+        binding.eventsList.addOnScrollListener(scrollListener)
     }
 
     override fun onResume() {
@@ -650,6 +663,10 @@ class ConversationFragment : SlidingPaneChildFragment() {
 
     override fun onPause() {
         super.onPause()
+
+        if (::scrollListener.isInitialized) {
+            binding.eventsList.removeOnScrollListener(scrollListener)
+        }
 
         coreContext.postOnCoreThread {
             bottomSheetReactionsModel?.destroy()

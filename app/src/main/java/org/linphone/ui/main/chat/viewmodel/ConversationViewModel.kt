@@ -45,6 +45,7 @@ import org.linphone.utils.LinphoneUtils
 class ConversationViewModel @UiThread constructor() : ViewModel() {
     companion object {
         private const val TAG = "[Conversation ViewModel]"
+        private const val MESSAGES_PER_PAGE = 30
 
         const val MAX_TIME_TO_GROUP_MESSAGES = 60 // 1 minute
         const val SCROLLING_POSITION_NOT_SET = -1
@@ -158,7 +159,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             )
 
             val lastEvent = eventsList.lastOrNull()
-            val newEvent = newList.lastOrNull()
+            val newEvent = newList.firstOrNull()
             if (lastEvent != null && newEvent != null && shouldWeGroupTwoEvents(
                     newEvent.eventLog,
                     lastEvent.eventLog
@@ -462,6 +463,43 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         }
     }
 
+    @UiThread
+    fun loadMoreData(totalItemsCount: Int) {
+        coreContext.postOnCoreThread {
+            val maxSize: Int = chatRoom.historyEventsSize
+            Log.i("$TAG Loading more data, current total is $totalItemsCount, max size is $maxSize")
+
+            if (totalItemsCount < maxSize) {
+                var upperBound: Int = totalItemsCount + MESSAGES_PER_PAGE
+                if (upperBound > maxSize) {
+                    upperBound = maxSize
+                }
+
+                val history = chatRoom.getHistoryRangeEvents(totalItemsCount, upperBound)
+                val list = getEventsListFromHistory(history, searchFilter.value.orEmpty())
+
+                val lastEvent = list.lastOrNull()
+                val newEvent = eventsList.firstOrNull()
+                if (lastEvent != null && newEvent != null && shouldWeGroupTwoEvents(
+                        newEvent.eventLog,
+                        lastEvent.eventLog
+                    )
+                ) {
+                    if (lastEvent.model is MessageModel) {
+                        lastEvent.model.groupedWithNextMessage.postValue(true)
+                    }
+                    if (newEvent.model is MessageModel) {
+                        newEvent.model.groupedWithPreviousMessage.postValue(true)
+                    }
+                }
+
+                list.addAll(eventsList)
+                eventsList = list
+                events.postValue(eventsList)
+            }
+        }
+    }
+
     @WorkerThread
     private fun configureChatRoom() {
         scrollingPosition = SCROLLING_POSITION_NOT_SET
@@ -524,7 +562,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
     private fun computeEvents(filter: String = "") {
         eventsList.forEach(EventLogModel::destroy)
 
-        val history = chatRoom.getHistoryEvents(0)
+        val history = chatRoom.getHistoryEvents(MESSAGES_PER_PAGE)
         val list = getEventsListFromHistory(history, filter)
         eventsList = list
         events.postValue(eventsList)
