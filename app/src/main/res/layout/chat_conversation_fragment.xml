@@ -45,7 +45,7 @@
             <androidx.constraintlayout.widget.Group
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:constraint_referenced_ids="avatar, title, start_call, show_menu"
+                app:constraint_referenced_ids="avatar, title, show_menu"
                 android:visibility="@{viewModel.searchBarVisible ? View.GONE : View.VISIBLE}" />
 
             <androidx.constraintlayout.widget.Group
@@ -159,6 +159,7 @@
                 android:layout_height="0dp"
                 android:padding="15dp"
                 android:src="@drawable/phone"
+                android:visibility="@{viewModel.isReadOnly || viewModel.searchBarVisible ? View.GONE : View.VISIBLE}"
                 app:layout_constraintTop_toTopOf="@id/back"
                 app:layout_constraintBottom_toBottomOf="@id/back"
                 app:layout_constraintEnd_toStartOf="@id/show_menu"

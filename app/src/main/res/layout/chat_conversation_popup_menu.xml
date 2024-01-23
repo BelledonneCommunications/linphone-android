@@ -27,6 +27,9 @@
         <variable
             name="ephemeralMessagesAvailable"
             type="Boolean" />
+        <variable
+            name="readOnlyConversation"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -89,7 +92,7 @@
             android:ellipsize="end"
             android:drawableStart="@drawable/bell_simple_slash"
             android:drawablePadding="5dp"
-            android:visibility="@{conversationMuted ? View.GONE : View.VISIBLE}"
+            android:visibility="@{conversationMuted || readOnlyConversation ? View.GONE : View.VISIBLE}"
             app:drawableTint="?attr/color_main2_700"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/search"
@@ -109,7 +112,7 @@
             android:ellipsize="end"
             android:drawableStart="@drawable/bell_simple"
             android:drawablePadding="5dp"
-            android:visibility="@{conversationMuted ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{conversationMuted &amp;&amp; !readOnlyConversation ? View.VISIBLE : View.GONE, default=gone}"
             app:drawableTint="?attr/color_main2_700"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/mute"
@@ -129,7 +132,7 @@
             android:ellipsize="end"
             android:drawableStart="@drawable/clock_countdown"
             android:drawablePadding="5dp"
-            android:visibility="@{ephemeralMessagesAvailable ? View.VISIBLE : View.GONE}"
+            android:visibility="@{ephemeralMessagesAvailable &amp;&amp; !readOnlyConversation ? View.VISIBLE : View.GONE}"
             app:drawableTint="?attr/color_main2_700"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/unmute"

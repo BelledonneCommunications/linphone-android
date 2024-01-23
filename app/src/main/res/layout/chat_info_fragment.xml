@@ -169,6 +169,7 @@
                     android:onClick="@{() -> viewModel.toggleMute()}"
                     android:padding="16dp"
                     android:src="@{viewModel.isMuted ? @drawable/bell_simple : @drawable/bell_simple_slash, default=@drawable/bell_simple_slash}"
+                    android:visibility="@{viewModel.isReadOnly ? View.GONE : View.VISIBLE}"
                     app:layout_constraintEnd_toStartOf="@id/call"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/status"
@@ -183,6 +184,7 @@
                     android:onClick="@{() -> viewModel.toggleMute()}"
                     android:text="@{viewModel.isMuted ? @string/conversation_action_unmute : @string/conversation_action_mute, default=@string/conversation_action_mute}"
                     android:textSize="14sp"
+                    android:visibility="@{viewModel.isReadOnly ? View.GONE : View.VISIBLE}"
                     app:layout_constraintEnd_toEndOf="@id/mute"
                     app:layout_constraintStart_toStartOf="@id/mute"
                     app:layout_constraintTop_toBottomOf="@id/mute" />
@@ -196,6 +198,7 @@
                     android:onClick="@{() -> viewModel.call()}"
                     android:padding="16dp"
                     android:src="@drawable/phone"
+                    android:visibility="@{viewModel.isReadOnly ? View.GONE : View.VISIBLE}"
                     app:layout_constraintEnd_toStartOf="@id/meeting"
                     app:layout_constraintStart_toEndOf="@id/mute"
                     app:layout_constraintTop_toBottomOf="@id/status"
@@ -210,6 +213,7 @@
                     android:onClick="@{() -> viewModel.call()}"
                     android:text="@string/conversation_action_call"
                     android:textSize="14sp"
+                    android:visibility="@{viewModel.isReadOnly ? View.GONE : View.VISIBLE}"
                     app:layout_constraintEnd_toEndOf="@id/call"
                     app:layout_constraintStart_toStartOf="@id/call"
                     app:layout_constraintTop_toBottomOf="@id/call" />
@@ -223,6 +227,7 @@
                     android:onClick="@{() -> viewModel.scheduleMeeting()}"
                     android:padding="16dp"
                     android:src="@drawable/meeting"
+                    android:visibility="@{viewModel.isReadOnly ? View.GONE : View.VISIBLE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/call"
                     app:layout_constraintTop_toBottomOf="@id/status"
@@ -237,6 +242,7 @@
                     android:onClick="@{() -> viewModel.scheduleMeeting()}"
                     android:text="@string/meeting_schedule_meeting_label"
                     android:textSize="14sp"
+                    android:visibility="@{viewModel.isReadOnly ? View.GONE : View.VISIBLE}"
                     app:layout_constraintEnd_toEndOf="@id/meeting"
                     app:layout_constraintStart_toStartOf="@id/meeting"
                     app:layout_constraintTop_toBottomOf="@id/meeting" />

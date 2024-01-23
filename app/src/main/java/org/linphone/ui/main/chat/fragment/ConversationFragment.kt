@@ -744,6 +744,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
 
         popupView.conversationMuted = viewModel.isMuted.value == true
         popupView.ephemeralMessagesAvailable = viewModel.isEndToEndEncrypted.value == true || viewModel.isGroup.value == true
+        popupView.readOnlyConversation = viewModel.isReadOnly.value == true
 
         popupView.setGoToInfoClickListener {
             goToInfoFragment()
