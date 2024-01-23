@@ -129,6 +129,7 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
         viewModel.groupLeftEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.i("$TAG Group has been left, leaving conversation info...")
+                sharedViewModel.forceRefreshConversationInfo.value = Event(true)
                 goBack()
                 val message = getString(R.string.toast_group_conversation_left)
                 (requireActivity() as MainActivity).showGreenToast(

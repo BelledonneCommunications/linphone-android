@@ -505,12 +505,6 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         scrollingPosition = SCROLLING_POSITION_NOT_SET
         computeComposingLabel()
 
-        val empty = chatRoom.hasCapability(ChatRoom.Capabilities.Conference.toInt()) && chatRoom.participants.isEmpty()
-        val readOnly = chatRoom.isReadOnly || empty
-        isReadOnly.postValue(readOnly)
-        if (readOnly) {
-            Log.w("$TAG Conversation with subject [${chatRoom.subject}] is read only!")
-        }
         isEndToEndEncrypted.postValue(
             chatRoom.hasCapability(ChatRoom.Capabilities.Encrypted.toInt())
         )
@@ -528,6 +522,13 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
     private fun computeConversationInfo() {
         val group = LinphoneUtils.isChatRoomAGroup(chatRoom)
         isGroup.postValue(group)
+
+        val empty = chatRoom.hasCapability(ChatRoom.Capabilities.Conference.toInt()) && chatRoom.participants.isEmpty()
+        val readOnly = chatRoom.isReadOnly || empty
+        isReadOnly.postValue(readOnly)
+        if (readOnly) {
+            Log.w("$TAG Conversation with subject [${chatRoom.subject}] is read only!")
+        }
 
         subject.postValue(chatRoom.subject)
 
