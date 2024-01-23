@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/default_text_style_300"
+        android:id="@+id/today_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="@string/meetings_list_today_indicator"
+        android:textSize="12sp"
+        android:textColor="?attr/color_main1_500" />
+
+    <View
+        android:id="@+id/today_separator"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="?attr/color_main1_500" />
+
+</LinearLayout>

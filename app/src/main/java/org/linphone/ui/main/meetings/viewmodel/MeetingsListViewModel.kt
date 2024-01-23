@@ -27,16 +27,16 @@ import org.linphone.core.ConferenceInfo
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
+import org.linphone.ui.main.meetings.model.MeetingListItemModel
 import org.linphone.ui.main.meetings.model.MeetingModel
 import org.linphone.ui.main.viewmodel.AbstractTopBarViewModel
-import org.linphone.utils.TimestampUtils
 
 class MeetingsListViewModel @UiThread constructor() : AbstractTopBarViewModel() {
     companion object {
         private const val TAG = "[Meetings List ViewModel]"
     }
 
-    val meetings = MutableLiveData<ArrayList<MeetingModel>>()
+    val meetings = MutableLiveData<ArrayList<MeetingListItemModel>>()
 
     val fetchInProgress = MutableLiveData<Boolean>()
 
@@ -74,7 +74,7 @@ class MeetingsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
 
     @WorkerThread
     private fun computeMeetingsList(filter: String) {
-        val list = arrayListOf<MeetingModel>()
+        val list = arrayListOf<MeetingListItemModel>()
 
         var source = coreContext.core.defaultAccount?.conferenceInformationList
         if (source == null) {
@@ -85,7 +85,7 @@ class MeetingsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
         }
 
         var previousModel: MeetingModel? = null
-        var firstMeetingOfTodayFound = false
+        var meetingForTodayFound = false
         for (info: ConferenceInfo in source) {
             val add = if (filter.isNotEmpty()) {
                 val organizerCheck = info.organizer?.asStringUriOnly()?.contains(
@@ -101,6 +101,7 @@ class MeetingsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
             } else {
                 true
             }
+
             if (add) {
                 val model = MeetingModel(info)
                 val firstMeetingOfTheDay = if (previousModel != null) {
@@ -110,22 +111,26 @@ class MeetingsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
                 }
                 model.firstMeetingOfTheDay.postValue(firstMeetingOfTheDay)
 
+                // Insert "Today" fake model before the first one of today
                 if (firstMeetingOfTheDay && model.isToday) {
-                    firstMeetingOfTodayFound = true
-                    model.displayTodayIndicator.postValue(true)
+                    list.add(MeetingListItemModel(null))
+                    meetingForTodayFound = true
                 }
 
-                list.add(model)
+                // If no meeting was found for today, insert "Today" fake model before the next meeting to come
+                if (!meetingForTodayFound && model.isAfterToday) {
+                    list.add(MeetingListItemModel(null))
+                    meetingForTodayFound = true
+                }
+
+                list.add(MeetingListItemModel(model))
                 previousModel = model
             }
         }
 
-        if (!firstMeetingOfTodayFound) {
-            val firstMeetingAfterToday = list.find {
-                TimestampUtils.isAfterToday(it.timestamp)
-            }
-            Log.i("$TAG $firstMeetingAfterToday")
-            firstMeetingAfterToday?.displayTodayIndicator?.postValue(true)
+        // If no meeting was found after today, insert "Today" fake model at the end
+        if (!meetingForTodayFound) {
+            list.add(MeetingListItemModel(null))
         }
 
         meetings.postValue(list)

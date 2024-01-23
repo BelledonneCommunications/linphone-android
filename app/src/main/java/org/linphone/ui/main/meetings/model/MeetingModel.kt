@@ -45,6 +45,8 @@ class MeetingModel @WorkerThread constructor(private val conferenceInfo: Confere
 
     val isToday = TimestampUtils.isToday(timestamp)
 
+    val isAfterToday = TimestampUtils.isAfterToday(timestamp)
+
     private val startTime = TimestampUtils.timeToString(timestamp)
 
     private val endTime = TimestampUtils.timeToString(timestamp + (conferenceInfo.duration * 60))
@@ -56,8 +58,6 @@ class MeetingModel @WorkerThread constructor(private val conferenceInfo: Confere
     val subject = MutableLiveData<String>()
 
     val firstMeetingOfTheDay = MutableLiveData<Boolean>()
-
-    val displayTodayIndicator = MutableLiveData<Boolean>()
 
     init {
         subject.postValue(conferenceInfo.subject)

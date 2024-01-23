@@ -38,7 +38,6 @@ import org.linphone.databinding.MeetingsListFragmentBinding
 import org.linphone.ui.main.fragment.AbstractTopBarFragment
 import org.linphone.ui.main.meetings.adapter.MeetingsListAdapter
 import org.linphone.ui.main.meetings.viewmodel.MeetingsListViewModel
-import org.linphone.utils.AppUtils
 import org.linphone.utils.RecyclerViewHeaderDecoration
 
 @UiThread
@@ -219,14 +218,11 @@ class MeetingsListFragment : AbstractTopBarFragment() {
     }
 
     private fun scrollToToday() {
-        Log.i("$TAG Scrolling to today's meeting (if any)")
         val todayMeeting = listViewModel.meetings.value.orEmpty().find {
-            it.displayTodayIndicator.value == true
+            it.isToday
         }
         val index = listViewModel.meetings.value.orEmpty().indexOf(todayMeeting)
-        (binding.meetingsList.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(
-            index,
-            AppUtils.getDimension(R.dimen.meeting_list_decoration_height).toInt()
-        )
+        Log.i("$TAG Scrolling to 'today' at position [$index]")
+        (binding.meetingsList.layoutManager as LinearLayoutManager).scrollToPosition(index)
     }
 }

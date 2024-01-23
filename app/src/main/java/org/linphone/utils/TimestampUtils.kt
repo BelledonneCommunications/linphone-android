@@ -110,13 +110,21 @@ class TimestampUtils {
         fun month(timestamp: Long, timestampInSecs: Boolean = true): String {
             val calendar = Calendar.getInstance()
             calendar.timeInMillis = if (timestampInSecs) timestamp * 1000 else timestamp
-            return calendar.getDisplayName(
+            val month = calendar.getDisplayName(
                 Calendar.MONTH,
                 TextStyle.SHORT.ordinal,
                 Locale.getDefault()
             )
                 ?.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
                 ?: "?"
+
+            val now = Calendar.getInstance()
+            if (isSameYear(now, calendar)) {
+                return month
+            }
+
+            val year = calendar.get(Calendar.YEAR)
+            return "$month $year"
         }
 
         @AnyThread
@@ -197,9 +205,9 @@ class TimestampUtils {
             cal1: Calendar,
             cal2: Calendar
         ): Boolean {
-            return cal1[Calendar.ERA] == cal2[Calendar.ERA] &&
-                cal1[Calendar.YEAR] == cal2[Calendar.YEAR] &&
-                cal1[Calendar.DAY_OF_YEAR] == cal2[Calendar.DAY_OF_YEAR]
+            return cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA) &&
+                cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
         }
 
         @AnyThread
@@ -207,8 +215,8 @@ class TimestampUtils {
             cal1: Calendar,
             cal2: Calendar
         ): Boolean {
-            return cal1[Calendar.ERA] == cal2[Calendar.ERA] &&
-                cal1[Calendar.YEAR] == cal2[Calendar.YEAR]
+            return cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA) &&
+                cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
         }
     }
 }
