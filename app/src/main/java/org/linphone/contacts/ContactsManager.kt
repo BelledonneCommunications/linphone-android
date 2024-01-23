@@ -564,9 +564,6 @@ fun Friend.getListOfSipAddressesAndPhoneNumbers(listener: ContactNumberOrAddress
         addressesAndNumbers.add(data)
     }
     val indexOfLastSipAddress = addressesAndNumbers.count()
-    Log.i(
-        "[Friend] Contact [$name] has [$indexOfLastSipAddress] SIP ${if (indexOfLastSipAddress > 1) "addresses" else "address"}"
-    )
 
     for (number in phoneNumbersWithLabel) {
         val presenceModel = getPresenceModelForUriOrTel(number.phoneNumber)
@@ -574,7 +571,7 @@ fun Friend.getListOfSipAddressesAndPhoneNumbers(listener: ContactNumberOrAddress
         var presenceAddress: Address? = null
 
         if (presenceModel != null && hasPresenceInfo) {
-            Log.i("[Friend] Phone number [${number.phoneNumber}] has presence information")
+            Log.d("[Friend] Phone number [${number.phoneNumber}] has presence information")
             // Show linked SIP address if not already stored as-is
             val contact = presenceModel.contact
             val found = addressesAndNumbers.find {
@@ -594,20 +591,20 @@ fun Friend.getListOfSipAddressesAndPhoneNumbers(listener: ContactNumberOrAddress
                         true
                     )
                     addressesAndNumbers.add(indexOfLastSipAddress, data)
-                    Log.i(
+                    Log.d(
                         "[Friend] Phone number [${number.phoneNumber}] is linked to SIP address [${presenceAddress.asStringUriOnly()}]"
                     )
                 }
             } else if (found != null) {
                 presenceAddress = found.address
-                Log.i(
+                Log.d(
                     "[Friend] Phone number [${number.phoneNumber}] is linked to existing SIP address [${presenceAddress?.asStringUriOnly()}]"
                 )
             }
         }
 
         // phone numbers are disabled is secure mode unless linked to a SIP address
-        val enablePhoneNumbers = hasPresenceInfo || core.defaultAccount?.isInSecureMode() != true
+        val enablePhoneNumbers = hasPresenceInfo || core.defaultAccount?.isInSecureMode() == false
         val address = presenceAddress ?: core.interpretUrl(number.phoneNumber, true)
         val label = PhoneNumberUtils.vcardParamStringToAddressBookLabel(
             coreContext.context.resources,
@@ -626,9 +623,5 @@ fun Friend.getListOfSipAddressesAndPhoneNumbers(listener: ContactNumberOrAddress
         addressesAndNumbers.add(data)
     }
 
-    val phoneNumbersCount = addressesAndNumbers.count() - indexOfLastSipAddress
-    Log.i(
-        "[Friend] Contact [$name] has [$phoneNumbersCount] phone ${if (phoneNumbersCount > 1) "numbers" else "number"}"
-    )
     return addressesAndNumbers
 }
