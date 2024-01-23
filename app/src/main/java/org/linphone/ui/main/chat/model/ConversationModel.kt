@@ -55,6 +55,8 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
         Capabilities.Conference.toInt()
     )
 
+    val isReadOnly = chatRoom.isReadOnly
+
     val subject = MutableLiveData<String>()
 
     val lastUpdateTime = MutableLiveData<Long>()

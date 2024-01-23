@@ -35,6 +35,7 @@ import org.linphone.databinding.ChatLongPressMenuBinding
 class ConversationDialogFragment(
     private val isMuted: Boolean,
     private val isGroup: Boolean,
+    private val isReadOnly: Boolean,
     private val onDismiss: (() -> Unit)? = null,
     private val onMarkConversationAsRead: (() -> Unit)? = null,
     private val onToggleMute: (() -> Unit)? = null,
@@ -72,6 +73,7 @@ class ConversationDialogFragment(
         val view = ChatLongPressMenuBinding.inflate(layoutInflater)
         view.isMuted = isMuted
         view.isGroup = isGroup
+        view.isReadOnly = isReadOnly
 
         view.setMarkAsReadClickListener {
             onMarkConversationAsRead?.invoke()

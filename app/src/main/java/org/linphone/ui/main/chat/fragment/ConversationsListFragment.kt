@@ -131,6 +131,7 @@ class ConversationsListFragment : AbstractTopBarFragment() {
                 val modalBottomSheet = ConversationDialogFragment(
                     model.isMuted.value == true,
                     model.isGroup,
+                    model.isReadOnly,
                     { // onDismiss
                         adapter.resetSelection()
                     },

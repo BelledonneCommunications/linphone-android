@@ -25,6 +25,9 @@
         <variable
             name="isGroup"
             type="Boolean" />
+        <variable
+            name="isReadOnly"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -56,6 +59,7 @@
             android:background="@drawable/menu_item_background"
             android:layout_marginBottom="1dp"
             android:drawableStart="@{isMuted ? @drawable/bell_simple : @drawable/bell_simple_slash, default=@drawable/bell_simple_slash}"
+            android:visibility="@{isReadOnly ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toTopOf="@id/call"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
@@ -70,7 +74,7 @@
             android:background="@drawable/menu_item_background"
             android:layout_marginBottom="1dp"
             android:drawableStart="@drawable/phone"
-            android:visibility="@{isGroup ? View.GONE : View.VISIBLE}"
+            android:visibility="@{isGroup || isReadOnly ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toTopOf="@id/delete_chat_room"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
@@ -92,7 +96,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{leaveClickListener}"
             style="@style/context_menu_action_label_style"
-            android:visibility="@{isGroup ? View.VISIBLE : View.GONE}"
+            android:visibility="@{isGroup &amp;&amp; !isReadOnly ? View.VISIBLE : View.GONE}"
             android:id="@+id/leave_group"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
