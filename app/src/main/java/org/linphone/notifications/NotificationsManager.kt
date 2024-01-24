@@ -39,6 +39,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.Person
 import androidx.core.app.RemoteInput
+import androidx.core.app.TaskStackBuilder
 import androidx.core.content.LocusIdCompat
 import androidx.navigation.NavDeepLinkBuilder
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -1205,12 +1206,19 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         args.putString("RemoteSipUri", chatRoom.peerAddress.asStringUriOnly())
         args.putString("LocalSipUri", chatRoom.localAddress.asStringUriOnly())
 
-        return NavDeepLinkBuilder(context)
-            .setComponentName(MainActivity::class.java)
-            .setGraph(R.navigation.main_nav_graph)
-            .setDestination(R.id.conversationsListFragment)
-            .setArguments(args)
-            .createPendingIntent()
+        // Not using NavDeepLinkBuilder to prevent stacking a ConversationsListFragment above another one
+        return TaskStackBuilder.create(context).run {
+            addNextIntentWithParentStack(
+                Intent(context, MainActivity::class.java).apply {
+                    putExtras(args) // Need to pass args here for Chat extra
+                }
+            )
+            getPendingIntent(
+                0,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+                args // Need to pass args here too for Remote & Local SIP URIs
+            )!!
+        }
     }
 
     class Notifiable(val notificationId: Int) {

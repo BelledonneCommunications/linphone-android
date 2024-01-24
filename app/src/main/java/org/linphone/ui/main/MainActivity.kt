@@ -359,9 +359,6 @@ class MainActivity : GenericActivity() {
         )
 
         when (intent.action) {
-            Intent.ACTION_MAIN -> {
-                handleMainIntent(intent, defaultDestination, isNewIntent)
-            }
             Intent.ACTION_SEND -> {
                 handleSendIntent(intent, false)
             }
@@ -370,6 +367,9 @@ class MainActivity : GenericActivity() {
             }
             Intent.ACTION_VIEW, Intent.ACTION_DIAL, Intent.ACTION_CALL -> {
                 handleCallIntent(intent)
+            }
+            else -> {
+                handleMainIntent(intent, defaultDestination, isNewIntent)
             }
         }
     }
