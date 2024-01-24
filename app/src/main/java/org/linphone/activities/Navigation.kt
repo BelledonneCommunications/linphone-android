@@ -844,7 +844,11 @@ internal fun ContactsSettingsFragment.navigateToLdapSettings(configIndex: Int) {
 
 internal fun SideMenuFragment.navigateToAccountSettings(identity: String) {
     val deepLink = "linphone-android://settings/$identity"
-    findNavController().navigate(Uri.parse(deepLink))
+    try {
+        findNavController().navigate(Uri.parse(deepLink))
+    } catch (iae: IllegalArgumentException) {
+        Log.e("[Navigation] Failed to navigate to deeplink [$deepLink]")
+    }
 }
 
 internal fun SideMenuFragment.navigateToSettings() {
