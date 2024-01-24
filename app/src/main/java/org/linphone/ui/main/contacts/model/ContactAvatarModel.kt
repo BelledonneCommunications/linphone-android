@@ -87,6 +87,12 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) : Abstrac
     }
 
     @WorkerThread
+    fun updatePresence() {
+        Log.i("$TAG Force update presence information for friend [${friend.name}]")
+        computePresence()
+    }
+
+    @WorkerThread
     private fun getAvatarUri(friend: Friend): Uri? {
         val picturePath = friend.photo
         if (!picturePath.isNullOrEmpty()) {

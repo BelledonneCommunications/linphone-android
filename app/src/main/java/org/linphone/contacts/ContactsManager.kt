@@ -33,6 +33,13 @@ import androidx.core.app.Person
 import androidx.core.graphics.drawable.IconCompat
 import androidx.loader.app.LoaderManager
 import java.io.IOException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Address
 import org.linphone.core.ConferenceInfo
@@ -55,6 +62,8 @@ import org.linphone.utils.PhoneNumberUtils
 class ContactsManager @UiThread constructor() {
     companion object {
         private const val TAG = "[Contacts Manager]"
+
+        private const val DELAY_BEFORE_RELOADING_CONTACTS_AFTER_PRESENCE_RECEIVED = 1000L // 1 second
     }
 
     private var nativeContactsLoaded = false
@@ -65,48 +74,43 @@ class ContactsManager @UiThread constructor() {
     private val unknownContactsAvatarsMap = hashMapOf<String, ContactAvatarModel>()
     private val conferenceAvatarMap = hashMapOf<String, ContactAvatarModel>()
 
+    private val coroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private var reloadContactsJob: Job? = null
+
     private val friendListListener: FriendListListenerStub = object : FriendListListenerStub() {
         @WorkerThread
-        override fun onPresenceReceived(list: FriendList, friends: Array<Friend>) {
-            Log.i(
-                "$TAG Presence received for list [${list.displayName}] and [${friends.size}] friends"
+        override fun onNewSipAddressDiscovered(
+            friendList: FriendList,
+            friend: Friend,
+            sipUri: String
+        ) {
+            reloadContactsJob?.cancel()
+            Log.d(
+                "$TAG Newly discovered SIP Address [$sipUri] for friend [${friend.name}] in list [${friendList.displayName}]"
             )
 
-            // TODO FIXME: doesn't work if a SIP address wasn't added to unknownContactsAvatarsMap yet
-            // For example if it wasn't displayed so far in any list
-            var atLeastSomeoneNew = false
-            if (unknownContactsAvatarsMap.isNotEmpty()) {
-                for (friend in friends) {
-                    for (phoneNumber in friend.phoneNumbers) {
-                        val presence = friend.getPresenceModelForUriOrTel(phoneNumber)
-                        if (presence != null) {
-                            val contactAddress = presence.contact
-                            if (unknownContactsAvatarsMap.keys.contains(contactAddress)) {
-                                Log.i(
-                                    "$TAG Found a new SIP Address: [$contactAddress] matching phone number [$phoneNumber]"
-                                )
-
-                                val oldModel = unknownContactsAvatarsMap[contactAddress]
-                                oldModel?.destroy()
-
-                                unknownContactsAvatarsMap.remove(contactAddress)
-                                atLeastSomeoneNew = true
-                            }
-                        }
-                    }
-                }
+            if (unknownContactsAvatarsMap.keys.contains(sipUri)) {
+                Log.d("$TAG Found SIP Address in unknownContactsAvatarsMap, removing it")
+                val oldModel = unknownContactsAvatarsMap[sipUri]
+                oldModel?.destroy()
+                unknownContactsAvatarsMap.remove(sipUri)
+            } else if (knownContactsAvatarsMap.keys.contains(sipUri)) {
+                Log.d("$TAG Found SIP Address in knownContactsAvatarsMap, forcing presence update")
+                val oldModel = knownContactsAvatarsMap[sipUri]
+                oldModel?.updatePresence()
             }
 
-            if (atLeastSomeoneNew) {
-                Log.i("$TAG At least a new SIP address was discovered, reloading contacts")
-                conferenceAvatarMap.values.forEach(ContactAvatarModel::destroy)
-                conferenceAvatarMap.clear()
+            reloadContactsJob = coroutineScope.launch {
+                delay(DELAY_BEFORE_RELOADING_CONTACTS_AFTER_PRESENCE_RECEIVED)
+                coreContext.postOnCoreThread {
+                    Log.i("$TAG At least a new SIP address was discovered, reloading contacts")
+                    conferenceAvatarMap.values.forEach(ContactAvatarModel::destroy)
+                    conferenceAvatarMap.clear()
 
-                for (listener in listeners) {
-                    listener.onContactsLoaded()
+                    for (listener in listeners) {
+                        listener.onContactsLoaded()
+                    }
                 }
-            } else {
-                Log.i("$TAG Presence has been received but no new SIP URI was found, doing nothing")
             }
         }
     }
@@ -343,6 +347,7 @@ class ContactsManager @UiThread constructor() {
 
     @WorkerThread
     fun onCoreStopped(core: Core) {
+        coroutineScope.cancel()
         core.removeListener(coreListener)
         for (list in core.friendsLists) {
             list.removeListener(friendListListener)
