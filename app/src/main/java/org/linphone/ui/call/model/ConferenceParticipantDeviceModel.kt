@@ -63,7 +63,7 @@ class ConferenceParticipantDeviceModel @WorkerThread constructor(
 
         @WorkerThread
         override fun onIsMuted(participantDevice: ParticipantDevice, muted: Boolean) {
-            Log.i(
+            Log.d(
                 "$TAG Participant device [${participantDevice.address.asStringUriOnly()}] is ${if (participantDevice.isMuted) "muted" else "no longer muted"}"
             )
             isMuted.postValue(participantDevice.isMuted)
@@ -74,10 +74,10 @@ class ConferenceParticipantDeviceModel @WorkerThread constructor(
             participantDevice: ParticipantDevice,
             speaking: Boolean
         ) {
-            Log.i(
+            Log.d(
                 "$TAG Participant device [${participantDevice.address.asStringUriOnly()}] is ${if (participantDevice.isSpeaking) "speaking" else "no longer speaking"}"
             )
-            isSpeaking.postValue(participantDevice.isSpeaking)
+            isSpeaking.postValue(speaking)
         }
 
         @WorkerThread
@@ -86,11 +86,10 @@ class ConferenceParticipantDeviceModel @WorkerThread constructor(
             available: Boolean,
             streamType: StreamType?
         ) {
-            Log.i(
+            Log.d(
                 "$TAG Participant device [${participantDevice.address.asStringUriOnly()}] stream [$streamType] availability changed to ${if (available) "available" else "not available"}"
             )
             if (streamType == StreamType.Video) {
-                val available = participantDevice.getStreamAvailability(StreamType.Video)
                 isVideoAvailable.postValue(available)
                 if (available) {
                     updateWindowId(textureView)
@@ -104,13 +103,12 @@ class ConferenceParticipantDeviceModel @WorkerThread constructor(
             direction: MediaDirection?,
             streamType: StreamType?
         ) {
-            Log.i(
+            Log.d(
                 "$TAG Participant device [${participantDevice.address.asStringUriOnly()}] stream [$streamType] capability changed to [$direction]"
             )
             if (streamType == StreamType.Video) {
-                val videoCapability = participantDevice.getStreamCapability(StreamType.Video)
                 isSendingVideo.postValue(
-                    videoCapability == MediaDirection.SendRecv || videoCapability == MediaDirection.SendOnly
+                    direction == MediaDirection.SendRecv || direction == MediaDirection.SendOnly
                 )
             }
         }

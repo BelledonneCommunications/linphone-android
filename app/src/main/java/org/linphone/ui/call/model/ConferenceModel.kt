@@ -53,6 +53,8 @@ class ConferenceModel {
 
     val participantsLabel = MutableLiveData<String>()
 
+    val activeSpeakerName = MutableLiveData<String>()
+
     val isCurrentCallInConference = MutableLiveData<Boolean>()
 
     val conferenceLayout = MutableLiveData<Int>()
@@ -78,6 +80,24 @@ class ConferenceModel {
                 "$TAG Participant removed: ${participant.address.asStringUriOnly()}"
             )
             removeParticipant(participant)
+        }
+
+        @WorkerThread
+        override fun onActiveSpeakerParticipantDevice(
+            conference: Conference,
+            participantDevice: ParticipantDevice
+        ) {
+            val found = participantDevices.value.orEmpty().find {
+                it.device == participantDevice
+            }
+            if (found != null) {
+                val name = found.avatarModel.contactName ?: participantDevice.name ?: participantDevice.address.username
+                Log.i("$TAG Newly active speaker participant is [$name]")
+                activeSpeakerName.postValue(name.orEmpty())
+            } else {
+                Log.i("$TAG Failed to find actively speaking participant...")
+                activeSpeakerName.postValue(participantDevice.name)
+            }
         }
 
         @WorkerThread
@@ -278,6 +298,12 @@ class ConferenceModel {
             for (device in participant.devices) {
                 val model = ConferenceParticipantDeviceModel(device)
                 devicesList.add(model)
+
+                if (device.isSpeaking) {
+                    val name = model.avatarModel.contactName ?: device.name ?: device.address.username
+                    Log.i("$TAG Using participant is [$name] as current active speaker")
+                    activeSpeakerName.postValue(name.orEmpty())
+                }
             }
         }
         Log.i(

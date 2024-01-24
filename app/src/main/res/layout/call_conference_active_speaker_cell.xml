@@ -11,10 +11,9 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="8dp"
-        app:layout_constraintDimensionRatio="1:1">
+        android:layout_width="@dimen/call_conference_active_speaker_miniature_size"
+        android:layout_height="@dimen/call_conference_active_speaker_miniature_size"
+        android:padding="2dp">
 
         <ImageView
             android:id="@+id/participant_device_background"
@@ -31,8 +30,8 @@
             android:visibility="@{model.isSendingVideo ? View.GONE : View.VISIBLE}"
             coilCallAvatar="@{model.avatarModel}"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintWidth_max="@dimen/avatar_in_call_size"
-            app:layout_constraintHeight_max="@dimen/avatar_in_call_size"
+            app:layout_constraintWidth_max="@dimen/avatar_in_active_speaker_miniature_conference_call_size"
+            app:layout_constraintHeight_max="@dimen/avatar_in_active_speaker_miniature_conference_call_size"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -40,8 +39,8 @@
 
         <ImageView
             android:id="@+id/trust_badge"
-            android:layout_width="@dimen/avatar_presence_badge_in_call_size"
-            android:layout_height="@dimen/avatar_presence_badge_in_call_size"
+            android:layout_width="@dimen/avatar_presence_badge_in_active_speaker_miniature_conference_call_size"
+            android:layout_height="@dimen/avatar_presence_badge_in_active_speaker_miniature_conference_call_size"
             android:src="@{model.avatarModel.trust == SecurityLevel.Safe ? @drawable/trusted : @drawable/not_trusted, default=@drawable/trusted}"
             android:visibility="@{model.avatarModel.trust == SecurityLevel.Safe || model.avatarModel.trust == SecurityLevel.Unsafe ? View.VISIBLE : View.GONE}"
             app:layout_constraintStart_toStartOf="@id/avatar"
@@ -62,8 +61,8 @@
 
         <ImageView
             android:id="@+id/muted"
-            android:layout_width="@dimen/icon_size"
-            android:layout_height="@dimen/icon_size"
+            android:layout_width="@dimen/small_icon_size"
+            android:layout_height="@dimen/small_icon_size"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:padding="2dp"
@@ -82,7 +81,7 @@
             android:layout_marginBottom="8dp"
             android:text="@{model.avatarModel.name, default=`John Doe`}"
             android:textColor="@color/white"
-            android:textSize="20sp"
+            android:textSize="11sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 

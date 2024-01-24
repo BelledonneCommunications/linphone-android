@@ -6,6 +6,7 @@
     <data>
         <import type="android.view.View" />
         <import type="org.linphone.core.ChatRoom.SecurityLevel" />
+        <import type="org.linphone.ui.call.model.ConferenceModel" />
         <variable
             name="shareConferenceClickListener"
             type="View.OnClickListener" />
@@ -63,7 +64,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
                 android:text="@string/conference_call_empty"
-                android:textColor="?attr/color_main2_000"
+                android:textColor="@color/white"
                 android:textSize="22sp"
                 android:gravity="center"
                 android:visibility="@{conferenceViewModel.participantDevices.size() > 1 ? View.GONE : View.VISIBLE}"
@@ -102,13 +103,60 @@
                 android:layout_marginBottom="@{viewModel.fullScreenMode || viewModel.pipMode ? @dimen/zero : @dimen/call_main_actions_menu_margin, default=@dimen/call_main_actions_menu_margin}"
                 android:layout_marginTop="@{viewModel.fullScreenMode || viewModel.pipMode ? @dimen/zero : @dimen/call_top_bar_info_height, default=@dimen/call_top_bar_info_height}"
                 android:onClick="@{() -> viewModel.toggleFullScreen()}"
-                android:visibility="@{conferenceViewModel.participantDevices.size() > 1 ? View.VISIBLE : View.GONE, default=gone}"
+                android:visibility="@{conferenceViewModel.conferenceLayout == ConferenceModel.GRID_LAYOUT &amp;&amp; conferenceViewModel.participantDevices.size() > 1 ? View.VISIBLE : View.GONE, default=gone}"
                 entries="@{conferenceViewModel.participantDevices}"
                 layout="@{@layout/call_conference_grid_cell}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
+
+            <org.linphone.ui.call.view.RoundCornersTextureView
+                android:id="@+id/active_speaker_surface"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginBottom="@{viewModel.fullScreenMode || viewModel.pipMode || viewModel.halfOpenedFolded ? @dimen/zero : @dimen/call_main_actions_menu_margin, default=@dimen/call_main_actions_menu_margin}"
+                android:layout_marginTop="@{viewModel.fullScreenMode || viewModel.pipMode || viewModel.halfOpenedFolded ? @dimen/zero : @dimen/call_top_bar_info_height, default=@dimen/call_top_bar_info_height}"
+                android:onClick="@{() -> viewModel.toggleFullScreen()}"
+                android:visibility="@{conferenceViewModel.conferenceLayout == ConferenceModel.ACTIVE_SPEAKER_LAYOUT &amp;&amp; conferenceViewModel.participantDevices.size() > 1 ? View.VISIBLE : View.GONE, default=gone}"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_500"
+                android:id="@+id/active_speaker_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginBottom="10dp"
+                android:text="@{conferenceViewModel.activeSpeakerName, default=`John Doe`}"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toTopOf="@id/active_speaker_miniatures_layout"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <HorizontalScrollView
+                android:id="@+id/active_speaker_miniatures_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@{viewModel.fullScreenMode || viewModel.pipMode ? @dimen/zero : @dimen/call_main_actions_menu_margin, default=@dimen/call_main_actions_menu_margin}"
+                android:onClick="@{() -> viewModel.toggleFullScreen()}"
+                android:visibility="@{conferenceViewModel.conferenceLayout == ConferenceModel.ACTIVE_SPEAKER_LAYOUT &amp;&amp; conferenceViewModel.participantDevices.size() > 1 ? View.VISIBLE : View.GONE, default=gone}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:orientation="horizontal"
+                    entries="@{conferenceViewModel.participantDevices}"
+                    layout="@{@layout/call_conference_active_speaker_cell}"/>
+
+            </HorizontalScrollView>
 
             <androidx.constraintlayout.widget.Group
                 android:id="@+id/header_info_visibility"

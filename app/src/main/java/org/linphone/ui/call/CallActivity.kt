@@ -42,6 +42,7 @@ import androidx.window.layout.WindowLayoutInfo
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.CallActivityBinding
@@ -237,6 +238,15 @@ class CallActivity : GenericActivity() {
 
         bottomSheetDialog?.dismiss()
         bottomSheetDialog = null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        coreContext.postOnCoreThread { core ->
+            Log.i("$TAG Activity destroyed, removing native video window ID")
+            core.nativeVideoWindowId = null
+        }
     }
 
     override fun onResume() {
