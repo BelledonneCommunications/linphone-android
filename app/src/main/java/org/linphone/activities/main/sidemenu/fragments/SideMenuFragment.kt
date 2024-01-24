@@ -80,9 +80,7 @@ class SideMenuFragment : GenericFragment<SideMenuFragmentBinding>() {
 
         viewModel.accountsSettingsListener = object : SettingListenerStub() {
             override fun onAccountClicked(identity: String) {
-                val args = Bundle()
-                args.putString("Identity", identity)
-                Log.i("[Side Menu] Navigation to settings for account with identity: $identity")
+                Log.i("[Side Menu] Navigating to settings for account with identity: $identity")
 
                 sharedViewModel.toggleDrawerEvent.value = Event(true)
 
