@@ -116,7 +116,7 @@ abstract class AbstractNewTransferCallFragment : GenericCallFragment() {
 
         binding.contactsAndSuggestionsList.setHasFixedSize(true)
 
-        val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter, true)
+        val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
         binding.contactsAndSuggestionsList.addItemDecoration(headerItemDecoration)
 
         adapter.contactClickedEvent.observe(viewLifecycleOwner) {

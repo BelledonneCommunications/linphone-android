@@ -47,9 +47,17 @@ class TimestampUtils {
             cal.timeInMillis = if (timestampInSecs) timestamp * 1000 else timestamp
 
             val tomorrow = Calendar.getInstance()
-            return cal[Calendar.ERA] >= tomorrow[Calendar.ERA] &&
-                cal[Calendar.YEAR] >= tomorrow[Calendar.YEAR] &&
-                cal[Calendar.DAY_OF_YEAR] >= tomorrow[Calendar.DAY_OF_YEAR]
+            tomorrow.timeInMillis = System.currentTimeMillis()
+
+            if (cal.get(Calendar.ERA) > tomorrow.get(Calendar.ERA)) return true
+            if (cal.get(Calendar.ERA) == tomorrow.get(Calendar.ERA) &&
+                cal.get(Calendar.YEAR) > tomorrow.get(Calendar.YEAR)
+            ) {
+                return true
+            }
+            return cal.get(Calendar.ERA) == tomorrow.get(Calendar.ERA) &&
+                cal.get(Calendar.YEAR) == tomorrow.get(Calendar.YEAR) &&
+                cal.get(Calendar.DAY_OF_YEAR) >= tomorrow.get(Calendar.DAY_OF_YEAR)
         }
 
         @AnyThread

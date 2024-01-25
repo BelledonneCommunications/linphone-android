@@ -3,7 +3,6 @@ package org.linphone.ui.main.history.model
 import androidx.annotation.IntegerRes
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
-import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Call.Dir

@@ -115,7 +115,7 @@ abstract class GenericAddressPickerFragment : GenericFragment() {
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter, true)
+        val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
         recyclerView.addItemDecoration(headerItemDecoration)
     }
 

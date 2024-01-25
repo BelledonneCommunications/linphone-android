@@ -36,13 +36,12 @@ class ContactsAndSuggestionsListAdapter :
 
     override fun displayHeaderForPosition(position: Int): Boolean {
         val model = getItem(position)
-        if (model.friend == null) {
-            if (position == 0) {
-                return true
-            }
+        if (position == 0) {
+            return true
+        } else if (model.friend == null) {
             val previousModel = getItem(position - 1)
             return previousModel.friend != null
-        } else if (position == 0) return true
+        }
         return false
     }
 

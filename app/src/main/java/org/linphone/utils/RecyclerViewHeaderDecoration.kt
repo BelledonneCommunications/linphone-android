@@ -30,7 +30,7 @@ import androidx.recyclerview.widget.RecyclerView
 class RecyclerViewHeaderDecoration(
     private val context: Context,
     private val adapter: HeaderAdapter,
-    private val sticky: Boolean = false
+    private val sticky: Boolean = true
 ) : RecyclerView.ItemDecoration() {
     private val headers: SparseArray<View> = SparseArray()
 

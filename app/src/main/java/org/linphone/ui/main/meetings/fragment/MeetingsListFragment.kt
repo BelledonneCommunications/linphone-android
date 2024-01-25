@@ -97,9 +97,9 @@ class MeetingsListFragment : AbstractTopBarFragment() {
         binding.viewModel = listViewModel
 
         binding.meetingsList.setHasFixedSize(true)
-        val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter, true)
-        binding.meetingsList.addItemDecoration(headerItemDecoration)
         binding.meetingsList.layoutManager = LinearLayoutManager(requireContext())
+        val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
+        binding.meetingsList.addItemDecoration(headerItemDecoration)
 
         binding.setNewMeetingClicked {
             if (findNavController().currentDestination?.id == R.id.meetingsListFragment) {

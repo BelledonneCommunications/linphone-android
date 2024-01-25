@@ -88,7 +88,7 @@ class HistoryListAdapter : ListAdapter<CallLogModel, RecyclerView.ViewHolder>(Ca
         }
 
         override fun areContentsTheSame(oldItem: CallLogModel, newItem: CallLogModel): Boolean {
-            return oldItem.avatarModel.id == newItem.avatarModel.id && oldItem.iconResId.value == newItem.iconResId.value
+            return oldItem.avatarModel.id == newItem.avatarModel.id && oldItem.iconResId == newItem.iconResId
         }
     }
 }

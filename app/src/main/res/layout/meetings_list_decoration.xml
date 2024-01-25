@@ -7,18 +7,16 @@
     </data>
 
     <androidx.appcompat.widget.AppCompatTextView
-        style="@style/default_text_style_800"
+        style="@style/section_header_style"
         android:id="@+id/header"
         android:background="?attr/color_main2_000"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
         android:text="October"
-        android:textSize="20sp"
-        android:textColor="@color/gray_main2_600"
         android:gravity="center_vertical"
         tools:ignore="HardcodedText" />
 
