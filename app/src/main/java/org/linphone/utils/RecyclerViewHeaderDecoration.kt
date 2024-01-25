@@ -104,7 +104,7 @@ class RecyclerViewHeaderDecoration(
         var latestPositionHeaderFound = -1
         var nextHeaderTopPosition = -1f
 
-        for (index in parent.childCount downTo 0) {
+        for (index in parent.childCount downTo 1) { // Ignore top/first item
             val child = parent.getChildAt(index)
             val position = parent.getChildAdapterPosition(child)
             if (position != RecyclerView.NO_POSITION && adapter.displayHeaderForPosition(position)) {
