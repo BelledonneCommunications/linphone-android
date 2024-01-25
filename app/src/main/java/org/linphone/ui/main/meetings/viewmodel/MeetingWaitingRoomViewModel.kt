@@ -19,8 +19,11 @@
  */
 package org.linphone.ui.main.meetings.viewmodel
 
+import android.Manifest
+import android.content.pm.PackageManager
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -215,9 +218,12 @@ class MeetingWaitingRoomViewModel @UiThread constructor() : ViewModel() {
     private fun configureWaitingRoom() {
         val core = coreContext.core
 
-        isVideoEnabled.postValue(
-            core.isVideoEnabled && core.videoActivationPolicy.automaticallyInitiate
-        )
+        val cameraPermissionGranted = ActivityCompat.checkSelfPermission(
+            coreContext.context,
+            Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED
+        isVideoEnabled.postValue(core.isVideoEnabled && cameraPermissionGranted)
+
         isSwitchCameraAvailable.postValue(coreContext.showSwitchCameraButton())
 
         isMicrophoneMuted.postValue(!core.isMicEnabled)

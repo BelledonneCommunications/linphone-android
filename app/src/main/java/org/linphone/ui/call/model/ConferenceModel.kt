@@ -342,7 +342,7 @@ class ConferenceModel {
         }
         if (meDeviceData != null) {
             val index = sortedList.indexOf(meDeviceData)
-            val expectedIndex = sortedList.size - 1
+            val expectedIndex = sortedList.size - 1 // TODO FIXME : use different order for active speaker layout & grid layout
             if (index != expectedIndex) {
                 Log.i(
                     "$TAG Me device data is at index $index, moving it to index $expectedIndex"

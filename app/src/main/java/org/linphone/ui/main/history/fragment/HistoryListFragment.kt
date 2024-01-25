@@ -170,9 +170,19 @@ class HistoryListFragment : AbstractTopBarFragment() {
 
         adapter.callLogCallBackClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
-                coreContext.postOnCoreThread {
-                    Log.i("$TAG Starting call to [${model.address.asStringUriOnly()}]")
-                    coreContext.startCall(model.address)
+                coreContext.postOnCoreThread { core ->
+                    val conferenceInfo = core.findConferenceInformationFromUri(model.address)
+                    if (conferenceInfo != null) {
+                        Log.i(
+                            "$TAG Going to waiting room for conference [${conferenceInfo.subject}]"
+                        )
+                        sharedViewModel.goToMeetingWaitingRoomEvent.postValue(
+                            Event(model.address.asStringUriOnly())
+                        )
+                    } else {
+                        Log.i("$TAG Starting call to [${model.address.asStringUriOnly()}]")
+                        coreContext.startCall(model.address)
+                    }
                 }
             }
         }
