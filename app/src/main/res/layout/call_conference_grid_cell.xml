@@ -20,7 +20,7 @@
             android:id="@+id/participant_device_background"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/shape_round_in_call_gray_background" />
+            android:background="@drawable/shape_round_in_call_cell_gray_background" />
 
         <com.google.android.material.imageview.ShapeableImageView
             style="@style/avatar_imageview"

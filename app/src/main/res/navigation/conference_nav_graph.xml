@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/conference_nav_graph"
+    app:startDestination="@id/conferenceActiveSpeakerFragment">
+
+    <fragment
+        android:id="@+id/conferenceGridFragment"
+        android:name="org.linphone.ui.call.fragment.ConferenceGridFragment"
+        android:label="ConferenceGridFragment"
+        tools:layout="@layout/call_conference_grid_fragment">
+        <action
+            android:id="@+id/action_conferenceGridFragment_to_conferenceActiveSpeakerFragment"
+            app:destination="@id/conferenceActiveSpeakerFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/conferenceActiveSpeakerFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/conferenceActiveSpeakerFragment"
+        android:name="org.linphone.ui.call.fragment.ConferenceActiveSpeakerFragment"
+        android:label="ConferenceActiveSpeakerFragment"
+        tools:layout="@layout/call_conference_active_speaker_fragment">
+        <action
+            android:id="@+id/action_conferenceActiveSpeakerFragment_to_conferenceGridFragment"
+            app:destination="@id/conferenceGridFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/conferenceGridFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+</navigation>

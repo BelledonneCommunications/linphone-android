@@ -244,7 +244,7 @@ class CallActivity : GenericActivity() {
         super.onDestroy()
 
         coreContext.postOnCoreThread { core ->
-            Log.i("$TAG Activity destroyed, removing native video window ID")
+            Log.i("$TAG Clearing native video window ID")
             core.nativeVideoWindowId = null
         }
     }

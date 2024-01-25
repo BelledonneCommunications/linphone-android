@@ -33,7 +33,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.tools.Log
 import org.linphone.databinding.CallActiveConferenceFragmentBinding
-import org.linphone.ui.call.model.ConferenceModel
 import org.linphone.ui.call.viewmodel.CallsViewModel
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
 import org.linphone.utils.Event
@@ -100,23 +99,6 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
         }
 
         callViewModel.conferenceModel.conferenceLayout.observe(viewLifecycleOwner) { layout ->
-            coreContext.postOnCoreThread { core ->
-                when (layout) {
-                    ConferenceModel.ACTIVE_SPEAKER_LAYOUT -> {
-                        Log.i(
-                            "$TAG Current layout is active speaker, setting native video window ID"
-                        )
-                        core.nativeVideoWindowId = binding.activeSpeakerSurface
-                    }
-                    else -> {
-                        Log.i(
-                            "$TAG Current layout isn't active speaker, removing native video window ID"
-                        )
-                        core.nativeVideoWindowId = null
-                    }
-                }
-            }
-
             // Collapse bottom sheet after changing conference layout
             actionsBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
