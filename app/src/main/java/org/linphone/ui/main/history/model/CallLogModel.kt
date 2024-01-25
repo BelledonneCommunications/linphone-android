@@ -31,10 +31,12 @@ class CallLogModel @WorkerThread constructor(private val callLog: CallLog) {
 
     val avatarModel: ContactAvatarModel
 
-    @IntegerRes
-    val iconResId = MutableLiveData<Int>()
+    val wasConference: Boolean
 
-    val dateTime = MutableLiveData<String>()
+    @IntegerRes
+    val iconResId: Int
+
+    val dateTime: String
 
     val friendRefKey: String?
 
@@ -49,9 +51,10 @@ class CallLogModel @WorkerThread constructor(private val callLog: CallLog) {
             TimestampUtils.toString(timestamp, onlyDate = true, shortDate = true, hideYear = true)
         }
         val time = TimestampUtils.timeToString(timestamp)
-        dateTime.postValue("$date | $time")
+        dateTime = "$date | $time"
 
-        if (callLog.wasConference()) {
+        wasConference = callLog.wasConference()
+        if (wasConference) {
             val conferenceInfo = coreContext.core.findConferenceInformationFromUri(address)
             if (conferenceInfo != null) {
                 avatarModel = coreContext.contactsManager.getContactAvatarModelForConferenceInfo(
@@ -78,7 +81,7 @@ class CallLogModel @WorkerThread constructor(private val callLog: CallLog) {
         }
         displayedAddress = avatarModel.friend.address?.asStringUriOnly() ?: address.asStringUriOnly()
 
-        iconResId.postValue(LinphoneUtils.getCallIconResId(callLog.status, callLog.dir))
+        iconResId = LinphoneUtils.getCallIconResId(callLog.status, callLog.dir)
     }
 
     @UiThread
