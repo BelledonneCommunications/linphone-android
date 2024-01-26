@@ -84,7 +84,6 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginStart="5dp"
                 coilAvatar="@{viewModel.avatarModel}"
-                app:layout_constraintBottom_toBottomOf="@id/back"
                 app:layout_constraintStart_toEndOf="@id/back"
                 app:layout_constraintTop_toTopOf="@id/back" />
 
@@ -125,7 +124,7 @@
                 android:gravity="center_vertical"
                 app:layout_constraintEnd_toStartOf="@id/start_call"
                 app:layout_constraintStart_toEndOf="@id/avatar"
-                app:layout_constraintTop_toTopOf="@id/back"
+                app:layout_constraintTop_toTopOf="@id/avatar"
                 app:layout_constraintBottom_toTopOf="@id/muted"/>
 
             <ImageView
@@ -136,7 +135,7 @@
                 android:visibility="@{viewModel.isMuted ? View.VISIBLE : View.GONE, default=gone}"
                 app:layout_constraintStart_toStartOf="@id/title"
                 app:layout_constraintTop_toBottomOf="@id/title"
-                app:layout_constraintBottom_toBottomOf="@id/back"
+                app:layout_constraintBottom_toBottomOf="@id/avatar"
                 app:tint="@color/orange_main_400"/>
 
             <ImageView
@@ -147,8 +146,8 @@
                 android:padding="15dp"
                 android:adjustViewBounds="true"
                 android:src="@drawable/dots_three_vertical"
-                app:layout_constraintTop_toTopOf="@id/back"
-                app:layout_constraintBottom_toBottomOf="@id/back"
+                app:layout_constraintTop_toTopOf="@id/avatar"
+                app:layout_constraintBottom_toBottomOf="@id/avatar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:tint="?attr/color_main2_500"/>
 

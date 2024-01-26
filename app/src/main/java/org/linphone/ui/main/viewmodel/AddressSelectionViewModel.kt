@@ -251,6 +251,11 @@ abstract class AddressSelectionViewModel @UiThread constructor() : DefaultAccoun
                             continue
                         }
                     }
+                    val defaultAccountAddress = coreContext.core.defaultAccount?.params?.identityAddress
+                    if (defaultAccountAddress != null && address.weakEqual(defaultAccountAddress)) {
+                        Log.i("$TAG Removing from suggestions current default account address")
+                        continue
+                    }
 
                     val model = ContactOrSuggestionModel(address) {
                         coreContext.startCall(address)

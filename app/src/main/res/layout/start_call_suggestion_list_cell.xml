@@ -38,7 +38,7 @@
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{model.name, default=`John Doe`}"
+            android:text="@{model.sipUri, default=`john.doe@sip.linphone.org`}"
             android:textSize="14sp"
             android:layout_marginStart="10dp"
             app:layout_constraintStart_toEndOf="@id/avatar"

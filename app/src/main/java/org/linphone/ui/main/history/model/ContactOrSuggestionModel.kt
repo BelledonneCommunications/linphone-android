@@ -45,6 +45,8 @@ class ContactOrSuggestionModel @WorkerThread constructor(
         address.username.orEmpty()
     }
 
+    val sipUri = address.asStringUriOnly()
+
     val initials = AppUtils.getInitials(name)
 
     val avatarModel = MutableLiveData<ContactAvatarModel>()
