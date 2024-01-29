@@ -38,6 +38,7 @@ import org.linphone.databinding.MeetingsListFragmentBinding
 import org.linphone.ui.main.fragment.AbstractTopBarFragment
 import org.linphone.ui.main.meetings.adapter.MeetingsListAdapter
 import org.linphone.ui.main.meetings.viewmodel.MeetingsListViewModel
+import org.linphone.utils.AppUtils
 import org.linphone.utils.RecyclerViewHeaderDecoration
 
 @UiThread
@@ -97,7 +98,9 @@ class MeetingsListFragment : AbstractTopBarFragment() {
         binding.viewModel = listViewModel
 
         binding.meetingsList.setHasFixedSize(true)
-        binding.meetingsList.layoutManager = LinearLayoutManager(requireContext())
+        val layoutManager = LinearLayoutManager(requireContext())
+        layoutManager.stackFromEnd = true
+        binding.meetingsList.layoutManager = layoutManager
         val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
         binding.meetingsList.addItemDecoration(headerItemDecoration)
 
@@ -222,7 +225,10 @@ class MeetingsListFragment : AbstractTopBarFragment() {
             it.isToday
         }
         val index = listViewModel.meetings.value.orEmpty().indexOf(todayMeeting)
-        Log.i("$TAG Scrolling to 'today' at position [$index]")
-        (binding.meetingsList.layoutManager as LinearLayoutManager).scrollToPosition(index)
+        Log.i("$TAG 'Today' is at position [$index]")
+        (binding.meetingsList.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(
+            index,
+            AppUtils.getDimension(R.dimen.meeting_list_decoration_height).toInt()
+        )
     }
 }
