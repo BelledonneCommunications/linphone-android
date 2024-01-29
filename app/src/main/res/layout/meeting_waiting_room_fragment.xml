@@ -157,12 +157,12 @@
 
         <ImageView
             android:id="@+id/change_audio_output"
-            android:onClick="@{() -> viewModel.toggleSpeaker()}"
+            android:onClick="@{() -> viewModel.changeAudioOutputDevice()}"
             android:layout_width="@dimen/call_button_size"
             android:layout_height="@dimen/call_button_size"
             android:layout_marginEnd="16dp"
             android:padding="@dimen/call_button_icon_padding"
-            android:src="@drawable/speaker_slash"
+            android:src="@{viewModel.isHeadsetEnabled ? @drawable/headset : viewModel.isBluetoothEnabled ? @drawable/bluetooth : viewModel.isSpeakerEnabled ? @drawable/speaker_high : @drawable/speaker_slash, default=@drawable/speaker_slash}"
             android:background="@drawable/in_call_button_background_red"
             app:tint="@color/in_call_button_tint_color"
             app:layout_constraintTop_toTopOf="@id/toggle_mute_mic"

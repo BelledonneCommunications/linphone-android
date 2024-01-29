@@ -32,7 +32,7 @@
 
         <include
             android:id="@+id/main_actions"
-            layout="@layout/call_common_actions"
+            layout="@layout/call_actions_generic"
             android:layout_width="0dp"
             android:layout_height="@dimen/call_main_actions_menu_height"
             app:layout_constraintEnd_toEndOf="parent"

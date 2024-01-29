@@ -32,10 +32,13 @@ import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.MeetingWaitingRoomFragmentBinding
+import org.linphone.ui.call.fragment.AudioDevicesMenuDialogFragment
+import org.linphone.ui.call.model.AudioDeviceModel
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.ui.main.meetings.viewmodel.MeetingWaitingRoomViewModel
 
@@ -62,6 +65,8 @@ class MeetingWaitingRoomFragment : GenericFragment() {
             goBack()
         }
     }
+
+    private var bottomSheetDialog: BottomSheetDialogFragment? = null
 
     private var navBarDefaultColor: Int = -1
 
@@ -97,6 +102,12 @@ class MeetingWaitingRoomFragment : GenericFragment() {
 
         binding.setBackClickListener {
             goBack()
+        }
+
+        viewModel.showAudioDevicesListEvent.observe(viewLifecycleOwner) {
+            it.consume { devices ->
+                showAudioRoutesMenu(devices)
+            }
         }
 
         viewModel.conferenceInfoFoundEvent.observe(viewLifecycleOwner) {
@@ -144,6 +155,9 @@ class MeetingWaitingRoomFragment : GenericFragment() {
     }
 
     override fun onPause() {
+        bottomSheetDialog?.dismiss()
+        bottomSheetDialog = null
+
         coreContext.postOnCoreThread { core ->
             core.nativePreviewWindowId = null
             core.isVideoPreviewEnabled = false
@@ -176,5 +190,11 @@ class MeetingWaitingRoomFragment : GenericFragment() {
                 core.isVideoPreviewEnabled = true
             }
         }
+    }
+
+    private fun showAudioRoutesMenu(devicesList: List<AudioDeviceModel>) {
+        val modalBottomSheet = AudioDevicesMenuDialogFragment(devicesList)
+        modalBottomSheet.show(parentFragmentManager, AudioDevicesMenuDialogFragment.TAG)
+        bottomSheetDialog = modalBottomSheet
     }
 }
