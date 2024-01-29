@@ -238,6 +238,8 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
 
         core.videoCodecPriorityPolicy = CodecPriorityPolicy.Auto
 
+        updateFriendListsSubscriptionDependingOnDefaultAccount()
+
         computeUserAgent()
         Log.i("$TAG Core has been created with user-agent [${core.userAgent}], starting it")
         core.start()
@@ -471,6 +473,22 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
             Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
         )
         context.startActivity(intent)
+    }
+
+    @WorkerThread
+    fun updateFriendListsSubscriptionDependingOnDefaultAccount() {
+        val account = core.defaultAccount
+        if (account != null) {
+            val enabled = account.params.domain == corePreferences.defaultDomain
+            if (enabled != core.isFriendListSubscriptionEnabled) {
+                core.isFriendListSubscriptionEnabled = enabled
+                Log.i(
+                    "$TAG Friend list(s) subscription are now ${if (enabled) "enabled" else "disabled"}"
+                )
+            }
+        } else {
+            Log.e("$TAG Default account is null, do not touch friend lists subscription")
+        }
     }
 
     @WorkerThread

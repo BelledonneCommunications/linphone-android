@@ -188,6 +188,7 @@ class MainViewModel @UiThread constructor() : ViewModel() {
                 Log.i(
                     "$TAG Default account changed, now is [${account.params.identityAddress?.asStringUriOnly()}]"
                 )
+                coreContext.updateFriendListsSubscriptionDependingOnDefaultAccount()
 
                 if (defaultAccountRegistrationFailed && account.state != RegistrationState.Failed) {
                     Log.i(

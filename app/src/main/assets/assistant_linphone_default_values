@@ -30,7 +30,4 @@
     <entry name="media_encryption" overwrite="true">zrtp</entry>
     <entry name="media_encryption_mandatory" overwrite="true">1</entry>
   </section>
-  <section name="net">
-    <entry name="friendlist_subscription_enabled" overwrite="true">1</entry>
-  </section>
 </config>
