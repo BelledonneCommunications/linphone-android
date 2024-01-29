@@ -251,6 +251,7 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         audioManager.registerAudioDeviceCallback(audioDeviceCallback, coreThread)
 
+        Log.i("$TAG Report Core created and started")
         Looper.loop()
     }
 

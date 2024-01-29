@@ -104,6 +104,10 @@ class MeetingsListFragment : AbstractTopBarFragment() {
         val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
         binding.meetingsList.addItemDecoration(headerItemDecoration)
 
+        if (binding.meetingsList.adapter != adapter) {
+            binding.meetingsList.adapter = adapter
+        }
+
         binding.setNewMeetingClicked {
             if (findNavController().currentDestination?.id == R.id.meetingsListFragment) {
                 Log.i("$TAG Navigating to schedule meeting fragment")
@@ -130,10 +134,6 @@ class MeetingsListFragment : AbstractTopBarFragment() {
             val newCount = it.size
             adapter.submitList(it)
             Log.i("$TAG Meetings list ready with [$newCount] items")
-
-            if (binding.meetingsList.adapter != adapter) {
-                binding.meetingsList.adapter = adapter
-            }
 
             (view.parent as? ViewGroup)?.doOnPreDraw {
                 startPostponedEnterTransition()

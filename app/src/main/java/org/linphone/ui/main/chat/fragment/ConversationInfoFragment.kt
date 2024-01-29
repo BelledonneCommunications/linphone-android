@@ -98,6 +98,10 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
         binding.participants.setHasFixedSize(true)
         binding.participants.layoutManager = LinearLayoutManager(requireContext())
 
+        if (binding.participants.adapter != adapter) {
+            binding.participants.adapter = adapter
+        }
+
         viewModel.chatRoomFoundEvent.observe(viewLifecycleOwner) {
             it.consume { found ->
                 if (found) {
@@ -120,10 +124,6 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
         viewModel.participants.observe(viewLifecycleOwner) { items ->
             adapter.submitList(items)
             Log.i("$TAG Participants list updated with [${items.size}] items")
-
-            if (binding.participants.adapter != adapter) {
-                binding.participants.adapter = adapter
-            }
         }
 
         viewModel.groupLeftEvent.observe(viewLifecycleOwner) {

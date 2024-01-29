@@ -36,6 +36,7 @@ import org.linphone.core.CorePreferences
 import org.linphone.core.Factory
 import org.linphone.core.LogCollectionState
 import org.linphone.core.LogLevel
+import org.linphone.core.tools.Log
 
 @MainThread
 class LinphoneApplication : Application(), ImageLoaderFactory {
@@ -70,6 +71,8 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
         if (corePreferences.debugLogs) {
             Factory.instance().loggingService.setLogLevel(LogLevel.Message)
         }
+
+        Log.i("[Linphone Application] Report Core preferences initialized")
 
         coreContext = CoreContext(context)
         coreContext.start()

@@ -73,6 +73,10 @@ class CallsListFragment : GenericCallFragment() {
         binding.callsList.setHasFixedSize(true)
         binding.callsList.layoutManager = LinearLayoutManager(requireContext())
 
+        if (binding.callsList.adapter != adapter) {
+            binding.callsList.adapter = adapter
+        }
+
         adapter.callLongClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
                 val modalBottomSheet = CallMenuDialogFragment(model) {
@@ -97,10 +101,6 @@ class CallsListFragment : GenericCallFragment() {
         viewModel.calls.observe(viewLifecycleOwner) {
             Log.i("$TAG Calls list updated with [${it.size}] items")
             adapter.submitList(it)
-
-            if (binding.callsList.adapter != adapter) {
-                binding.callsList.adapter = adapter
-            }
         }
     }
 

@@ -102,6 +102,10 @@ class HistoryContactFragment : SlidingPaneChildFragment() {
         binding.callHistory.setHasFixedSize(true)
         binding.callHistory.layoutManager = LinearLayoutManager(requireContext())
 
+        if (binding.callHistory.adapter != adapter) {
+            binding.callHistory.adapter = adapter
+        }
+
         viewModel.callLogFoundEvent.observe(viewLifecycleOwner) {
             it.consume { found ->
                 if (found) {
@@ -128,10 +132,6 @@ class HistoryContactFragment : SlidingPaneChildFragment() {
         viewModel.historyCallLogs.observe(viewLifecycleOwner) {
             Log.i("$TAG Call history list ready with [${it.size}] items")
             adapter.submitList(it)
-
-            if (binding.callHistory.adapter != adapter) {
-                binding.callHistory.adapter = adapter
-            }
         }
 
         viewModel.historyDeletedEvent.observe(viewLifecycleOwner) {

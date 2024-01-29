@@ -119,6 +119,10 @@ abstract class AbstractNewTransferCallFragment : GenericCallFragment() {
         val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
         binding.contactsAndSuggestionsList.addItemDecoration(headerItemDecoration)
 
+        if (binding.contactsAndSuggestionsList.adapter != adapter) {
+            binding.contactsAndSuggestionsList.adapter = adapter
+        }
+
         adapter.contactClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
                 startCall(model)
@@ -133,10 +137,6 @@ abstract class AbstractNewTransferCallFragment : GenericCallFragment() {
             Log.i("$TAG Contacts & suggestions list is ready with [${it.size}] items")
             val count = adapter.itemCount
             adapter.submitList(it)
-
-            if (binding.contactsAndSuggestionsList.adapter != adapter) {
-                binding.contactsAndSuggestionsList.adapter = adapter
-            }
 
             if (count == 0) {
                 (view.parent as? ViewGroup)?.doOnPreDraw {

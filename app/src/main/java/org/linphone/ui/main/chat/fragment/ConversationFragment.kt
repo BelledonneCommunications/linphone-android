@@ -288,6 +288,10 @@ class ConversationFragment : SlidingPaneChildFragment() {
         layoutManager.stackFromEnd = true
         binding.eventsList.layoutManager = layoutManager
 
+        if (binding.eventsList.adapter != adapter) {
+            binding.eventsList.adapter = adapter
+        }
+
         val callbacks = RecyclerViewSwipeUtilsCallback(
             R.drawable.reply,
             ConversationEventAdapter.EventViewHolder::class.java
@@ -347,10 +351,6 @@ class ConversationFragment : SlidingPaneChildFragment() {
         viewModel.events.observe(viewLifecycleOwner) { items ->
             adapter.submitList(items)
             Log.i("$TAG Events (messages) list updated with [${items.size}] items")
-
-            if (binding.eventsList.adapter != adapter) {
-                binding.eventsList.adapter = adapter
-            }
 
             (view.parent as? ViewGroup)?.doOnPreDraw {
                 sharedViewModel.openSlidingPaneEvent.value = Event(true)

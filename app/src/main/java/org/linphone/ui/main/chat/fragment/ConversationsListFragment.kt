@@ -126,6 +126,10 @@ class ConversationsListFragment : AbstractTopBarFragment() {
         binding.conversationsList.setHasFixedSize(true)
         binding.conversationsList.layoutManager = LinearLayoutManager(requireContext())
 
+        if (binding.conversationsList.adapter != adapter) {
+            binding.conversationsList.adapter = adapter
+        }
+
         adapter.conversationLongClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
                 val modalBottomSheet = ConversationDialogFragment(
@@ -182,17 +186,8 @@ class ConversationsListFragment : AbstractTopBarFragment() {
         }
 
         listViewModel.conversations.observe(viewLifecycleOwner) {
-            val currentCount = adapter.itemCount
             adapter.submitList(it)
             Log.i("$TAG Conversations list ready with [${it.size}] items")
-
-            if (binding.conversationsList.adapter != adapter) {
-                binding.conversationsList.adapter = adapter
-            }
-
-            if (currentCount < it.size) {
-                binding.conversationsList.scrollToPosition(0)
-            }
 
             (view.parent as? ViewGroup)?.doOnPreDraw {
                 startPostponedEnterTransition()

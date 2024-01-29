@@ -109,6 +109,10 @@ class HistoryListFragment : AbstractTopBarFragment() {
         binding.historyList.setHasFixedSize(true)
         binding.historyList.layoutManager = LinearLayoutManager(requireContext())
 
+        if (binding.historyList.adapter != adapter) {
+            binding.historyList.adapter = adapter
+        }
+
         adapter.callLogLongClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
                 val modalBottomSheet = HistoryMenuDialogFragment(
@@ -188,17 +192,8 @@ class HistoryListFragment : AbstractTopBarFragment() {
         }
 
         listViewModel.callLogs.observe(viewLifecycleOwner) {
-            val currentCount = adapter.itemCount
             adapter.submitList(it)
             Log.i("$TAG Call logs ready with [${it.size}] items")
-
-            if (binding.historyList.adapter != adapter) {
-                binding.historyList.adapter = adapter
-            }
-
-            if (currentCount < it.size) {
-                binding.historyList.scrollToPosition(0)
-            }
 
             (view.parent as? ViewGroup)?.doOnPreDraw {
                 startPostponedEnterTransition()

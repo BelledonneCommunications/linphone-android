@@ -70,6 +70,10 @@ class ConferenceParticipantsListFragment : GenericCallFragment() {
         binding.participantsList.setHasFixedSize(true)
         binding.participantsList.layoutManager = LinearLayoutManager(requireContext())
 
+        if (binding.participantsList.adapter != adapter) {
+            binding.participantsList.adapter = adapter
+        }
+
         binding.setBackClickListener {
             findNavController().popBackStack()
         }
@@ -77,10 +81,6 @@ class ConferenceParticipantsListFragment : GenericCallFragment() {
         viewModel.conferenceModel.participants.observe(viewLifecycleOwner) {
             Log.i("$TAG participants list updated with [${it.size}] items")
             adapter.submitList(it)
-
-            if (binding.participantsList.adapter != adapter) {
-                binding.participantsList.adapter = adapter
-            }
         }
     }
 }

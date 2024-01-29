@@ -116,21 +116,18 @@ class ContactsListFragment : AbstractTopBarFragment() {
         configureAdapter(adapter)
         configureAdapter(favouritesAdapter)
 
+        if (binding.contactsList.adapter != adapter) {
+            binding.contactsList.adapter = adapter
+        }
+        if (binding.favouritesContactsList.adapter != favouritesAdapter) {
+            binding.favouritesContactsList.adapter = favouritesAdapter
+        }
+
         listViewModel.contactsList.observe(
             viewLifecycleOwner
         ) {
-            val currentCount = adapter.itemCount
             adapter.submitList(it)
             Log.i("$TAG Contacts list updated with [${it.size}] items")
-
-            if (binding.contactsList.adapter != adapter) {
-                binding.contactsList.adapter = adapter
-            }
-
-            if (currentCount < it.size) {
-                Log.i("$TAG Contacts list updated with new items, scrolling to top")
-                binding.contactsList.smoothScrollToPosition(0)
-            }
 
             (view.parent as? ViewGroup)?.doOnPreDraw {
                 startPostponedEnterTransition()
@@ -142,10 +139,6 @@ class ContactsListFragment : AbstractTopBarFragment() {
             viewLifecycleOwner
         ) {
             favouritesAdapter.submitList(it)
-
-            if (binding.favouritesContactsList.adapter != favouritesAdapter) {
-                binding.favouritesContactsList.adapter = favouritesAdapter
-            }
             Log.i("$TAG Favourites contacts list updated with [${it.size}] items")
         }
 

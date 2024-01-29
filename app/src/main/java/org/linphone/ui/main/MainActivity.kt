@@ -389,28 +389,19 @@ class MainActivity : GenericActivity() {
                     Log.i(
                         "$TAG Nav graph not set yet, loading it & set start destination to Conversations fragment instead of default"
                     )
-                    val navGraph = findNavController().navInflater.inflate(
-                        R.navigation.main_nav_graph
-                    )
-                    navGraph.setStartDestination(R.id.conversationsListFragment)
-                    findNavController().setGraph(navGraph, intent.extras)
+                    findNavController().navigate(R.id.conversationsListFragment)
                 }
             } else {
                 Log.i(
                     "$TAG Loading graph & set start destination to Conversations fragment instead of default"
                 )
-                val navGraph = findNavController().navInflater.inflate(R.navigation.main_nav_graph)
-                navGraph.setStartDestination(R.id.conversationsListFragment)
-                findNavController().setGraph(navGraph, intent.extras)
+                findNavController().navigate(R.id.conversationsListFragment)
             }
         } else {
             if (!isNewIntent && defaultDestination > 0) {
                 try {
                     Log.i("$TAG Setting nav graph with expected start destination")
-                    val navGraph =
-                        findNavController().navInflater.inflate(R.navigation.main_nav_graph)
-                    navGraph.setStartDestination(defaultDestination)
-                    findNavController().setGraph(navGraph, null)
+                    findNavController().navigate(defaultDestination)
                 } catch (ise: IllegalStateException) {
                     Log.i("$TAG Failed to handle intent: $ise")
                 }
@@ -499,10 +490,7 @@ class MainActivity : GenericActivity() {
                     intent.putExtra("LocalSipUri", localSipUri)
                     intent.putExtra("RemoteSipUri", remoteSipUri)
                 }
-
-                val navGraph = findNavController().navInflater.inflate(R.navigation.main_nav_graph)
-                navGraph.setStartDestination(R.id.conversationsListFragment)
-                findNavController().setGraph(navGraph, intent.extras)
+                findNavController().navigate(R.id.conversationsListFragment)
             }
         }
     }
