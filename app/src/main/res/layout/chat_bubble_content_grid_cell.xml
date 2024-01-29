@@ -53,7 +53,7 @@
             android:layout_height="@dimen/chat_bubble_grid_image_size"
             android:adjustViewBounds="true"
             android:padding="18dp"
-            android:src="@{model.isWaitingToBeDownloaded ? @drawable/download_simple : model.isPdf ? @drawable/file_pdf : @drawable/file, default=@drawable/file_pdf}"
+            android:src="@{model.isWaitingToBeDownloaded ? @drawable/download_simple : model.isPdf ? @drawable/file_pdf : model.isAudio ? @drawable/file_audio : @drawable/file, default=@drawable/file_pdf}"
             android:background="@drawable/shape_squircle_main2_200_left"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

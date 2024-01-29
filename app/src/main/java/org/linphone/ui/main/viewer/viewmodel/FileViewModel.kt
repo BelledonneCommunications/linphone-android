@@ -42,6 +42,8 @@ class FileViewModel @UiThread constructor() : ViewModel() {
 
     val isImage = MutableLiveData<Boolean>()
 
+    val isAudio = MutableLiveData<Boolean>()
+
     val isVideo = MutableLiveData<Boolean>()
 
     val isVideoPlaying = MutableLiveData<Boolean>()
@@ -121,7 +123,9 @@ class FileViewModel @UiThread constructor() : ViewModel() {
                 fileReadyEvent.value = Event(true)
             }
             FileUtils.MimeType.Audio -> {
+                Log.i("$TAG File [$file] seems to be an audio")
                 // TODO: handle audio files
+                isAudio.value = true
                 fileReadyEvent.value = Event(true)
             }
             FileUtils.MimeType.PlainText -> {

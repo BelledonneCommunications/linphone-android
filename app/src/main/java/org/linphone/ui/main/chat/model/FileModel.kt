@@ -31,6 +31,8 @@ class FileModel @AnyThread constructor(
 
     val isPdf: Boolean
 
+    val isAudio: Boolean
+
     init {
         path.postValue(file)
         downloadProgress.postValue(-1)
@@ -44,6 +46,7 @@ class FileModel @AnyThread constructor(
             mimeType = FileUtils.getMimeType(mime)
             isImage = mimeType == FileUtils.MimeType.Image
             isVideoPreview = mimeType == FileUtils.MimeType.Video
+            isAudio = mimeType == FileUtils.MimeType.Audio
             Log.d(
                 "$TAG File has already been downloaded, extension is [$extension], MIME is [$mime]"
             )
@@ -52,6 +55,7 @@ class FileModel @AnyThread constructor(
             isPdf = false
             isImage = false
             isVideoPreview = false
+            isAudio = false
         }
     }
 

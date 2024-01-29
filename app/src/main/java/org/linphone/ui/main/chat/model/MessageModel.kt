@@ -307,10 +307,26 @@ class MessageModel @WorkerThread constructor(
             if (content.isIcalendar) {
                 Log.d("$TAG Found iCal content")
                 parseConferenceInvite(content)
+
                 displayableContentFound = true
             } else if (content.isText) {
                 Log.d("$TAG Found plain text content")
                 computeTextContent(content)
+
+                displayableContentFound = true
+            } else if (content.isVoiceRecording) {
+                Log.d("$TAG Found voice recording content")
+                isVoiceRecord.postValue(true)
+                voiceRecordPath = content.filePath ?: ""
+
+                val duration = content.fileDuration
+                voiceRecordingDuration.postValue(duration)
+
+                val formattedDuration = SimpleDateFormat(
+                    "mm:ss",
+                    Locale.getDefault()
+                ).format(duration) // duration is in ms
+                formattedVoiceRecordingDuration.postValue(formattedDuration)
                 displayableContentFound = true
             } else {
                 if (content.isFile) {
@@ -337,18 +353,6 @@ class MessageModel @WorkerThread constructor(
                                     firstImagePath.postValue(path)
                                 }
 
-                                displayableContentFound = true
-                            }
-                            "audio" -> {
-                                voiceRecordPath = path
-                                isVoiceRecord.postValue(true)
-                                val duration = content.fileDuration
-                                voiceRecordingDuration.postValue(duration)
-                                val formattedDuration = SimpleDateFormat(
-                                    "mm:ss",
-                                    Locale.getDefault()
-                                ).format(duration) // duration is in ms
-                                formattedVoiceRecordingDuration.postValue(formattedDuration)
                                 displayableContentFound = true
                             }
                             else -> {
