@@ -342,7 +342,17 @@ class ConferenceModel {
         }
         if (meDeviceData != null) {
             val index = sortedList.indexOf(meDeviceData)
-            val expectedIndex = sortedList.size - 1 // TODO FIXME : use different order for active speaker layout & grid layout
+            val expectedIndex = if (conferenceLayout.value == ACTIVE_SPEAKER_LAYOUT) {
+                Log.i(
+                    "$TAG Current conference layout is [Active Speaker], expecting our device to be at the beginning of the list"
+                )
+                0
+            } else {
+                Log.i(
+                    "$TAG Current conference layout isn't [Active Speaker], expecting our device to be at the end of the list"
+                )
+                sortedList.size - 1
+            }
             if (index != expectedIndex) {
                 Log.i(
                     "$TAG Me device data is at index $index, moving it to index $expectedIndex"
