@@ -78,9 +78,9 @@ class MessageModel @WorkerThread constructor(
     companion object {
         private const val TAG = "[Message Model]"
 
-        private const val SIP_URI_REGEXP = "(?:<?sips?:)[a-zA-Z0-9+_.\\-]+(?:@([a-zA-Z0-9+_.\\-;=~]+))+(>)?"
-        private const val HTTP_LINK_REGEXP = "https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)"
-        private const val MENTION_REGEXP = "@(?:[A-Za-z0-9._-]+)"
+        private const val SIP_URI_REGEXP = "(<?sips?:)[a-zA-Z0-9+_.\\-]+(?:@([a-zA-Z0-9+_.\\-;=~]+))+(>)?"
+        private const val HTTP_LINK_REGEXP = "https?://(www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)"
+        private const val MENTION_REGEXP = "@([A-Za-z0-9._-]+)"
     }
 
     val id = chatMessage.messageId
