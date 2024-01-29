@@ -20,12 +20,18 @@
 package org.linphone.ui.main.history.viewmodel
 
 import androidx.annotation.UiThread
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
+import org.linphone.core.ConferenceScheduler
+import org.linphone.core.ConferenceSchedulerListenerStub
+import org.linphone.core.Factory
+import org.linphone.core.Participant
+import org.linphone.core.ParticipantInfo
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.history.model.NumpadModel
 import org.linphone.ui.main.viewmodel.AddressSelectionViewModel
@@ -45,7 +51,11 @@ class StartCallViewModel @UiThread constructor() : AddressSelectionViewModel() {
 
     val isNumpadVisible = MutableLiveData<Boolean>()
 
-    val isGroupCallAvailable = MutableLiveData<Boolean>()
+    val startGroupCallButtonEnabled = MediatorLiveData<Boolean>()
+
+    val subject = MutableLiveData<String>()
+
+    val operationInProgress = MutableLiveData<Boolean>()
 
     val appendDigitToSearchBarEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
@@ -57,6 +67,35 @@ class StartCallViewModel @UiThread constructor() : AddressSelectionViewModel() {
 
     val requestKeyboardVisibilityChangedEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
+    }
+
+    private val conferenceSchedulerListener = object : ConferenceSchedulerListenerStub() {
+        override fun onStateChanged(
+            conferenceScheduler: ConferenceScheduler,
+            state: ConferenceScheduler.State
+        ) {
+            Log.i("$TAG Conference scheduler state is $state")
+            if (state == ConferenceScheduler.State.Ready) {
+                conferenceScheduler.removeListener(this)
+
+                val conferenceAddress = conferenceScheduler.info?.uri
+                if (conferenceAddress != null) {
+                    Log.i(
+                        "$TAG Conference info created, address is ${conferenceAddress.asStringUriOnly()}"
+                    )
+                    coreContext.startCall(conferenceAddress)
+                } else {
+                    Log.e("$TAG Conference info URI is null!")
+                    // TODO: notify error to user
+                }
+                operationInProgress.postValue(false)
+            } else if (state == ConferenceScheduler.State.Error) {
+                conferenceScheduler.removeListener(this)
+                Log.e("$TAG Failed to create group call!")
+                // TODO: notify error to user
+                operationInProgress.postValue(false)
+            }
+        }
     }
 
     init {
@@ -89,6 +128,11 @@ class StartCallViewModel @UiThread constructor() : AddressSelectionViewModel() {
             }
         )
 
+        startGroupCallButtonEnabled.value = false
+        startGroupCallButtonEnabled.addSource(selection) {
+            startGroupCallButtonEnabled.value = it.isNotEmpty()
+        }
+
         updateGroupCallButtonVisibility()
     }
 
@@ -115,5 +159,44 @@ class StartCallViewModel @UiThread constructor() : AddressSelectionViewModel() {
     @UiThread
     fun hideNumpad() {
         isNumpadVisible.value = false
+    }
+
+    @UiThread
+    fun createGroupCall() {
+        coreContext.postOnCoreThread { core ->
+            val account = core.defaultAccount
+            if (account == null) {
+                Log.e(
+                    "$TAG No default account found, can't create group call!"
+                )
+                return@postOnCoreThread
+            }
+
+            operationInProgress.postValue(true)
+
+            val conferenceInfo = Factory.instance().createConferenceInfo()
+            conferenceInfo.organizer = account.params.identityAddress
+            conferenceInfo.subject = subject.value
+
+            val participants = arrayOfNulls<ParticipantInfo>(selection.value.orEmpty().size)
+            var index = 0
+            for (participant in selection.value.orEmpty()) {
+                val info = Factory.instance().createParticipantInfo(participant.address)
+                // For meetings, all participants must have Speaker role
+                info?.role = Participant.Role.Speaker
+                participants[index] = info
+                index += 1
+            }
+            conferenceInfo.setParticipantInfos(participants)
+
+            Log.i(
+                "$TAG Creating group call with subject ${subject.value} and ${participants.size} participant(s)"
+            )
+            val conferenceScheduler = core.createConferenceScheduler()
+            conferenceScheduler.addListener(conferenceSchedulerListener)
+            conferenceScheduler.account = account
+            // Will trigger the conference creation/update automatically
+            conferenceScheduler.info = conferenceInfo
+        }
     }
 }

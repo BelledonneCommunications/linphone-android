@@ -109,8 +109,9 @@
             android:layout_width="@dimen/icon_size"
             android:layout_height="@dimen/icon_size"
             android:layout_marginEnd="6dp"
-            android:src="@{model.wasConference ? @drawable/meeting : @drawable/phone, default=@drawable/phone}"
+            android:src="@drawable/phone"
             app:tint="?attr/color_main2_500"
+            android:visibility="@{model.wasConference ? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/name"
             app:layout_constraintBottom_toBottomOf="@id/date_time" />

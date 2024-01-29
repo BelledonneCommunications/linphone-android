@@ -123,6 +123,8 @@
     <string name="dialog_group_conversation_edit_subject">Edit conversation subject</string>
     <string name="dialog_group_conversation_subject_hint">Conversation subject</string>
     <string name="dialog_group_conversation_edit_subject_confirm_button">Confirm</string>
+    <string name="dialog_group_call_set_subject">Set group call subject</string>
+    <string name="dialog_group_call_subject_hint">Group call subject</string>
 
     <string name="toast_assistant_qr_code_invalid">Invalid QR code!</string>
     <string name="toast_sip_address_copied_to_clipboard">SIP address copied into clipboard</string>

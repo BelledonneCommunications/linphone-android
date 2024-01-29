@@ -35,7 +35,9 @@ import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.databinding.StartCallFragmentBinding
 import org.linphone.ui.main.fragment.GenericAddressPickerFragment
+import org.linphone.ui.main.fragment.GroupSetOrEditSubjectDialogModel
 import org.linphone.ui.main.history.viewmodel.StartCallViewModel
+import org.linphone.utils.DialogUtils
 import org.linphone.utils.addCharacterAtPosition
 import org.linphone.utils.hideKeyboard
 import org.linphone.utils.removeCharacterAtPosition
@@ -78,6 +80,11 @@ class StartCallFragment : GenericAddressPickerFragment() {
 
         binding.setHideNumpadClickListener {
             viewModel.hideNumpad()
+        }
+
+        binding.setAskForGroupCallSubjectClickListener {
+            viewModel.hideNumpad()
+            showGroupCallSubjectDialog()
         }
 
         setupRecyclerView(binding.contactsAndSuggestionsList)
@@ -150,5 +157,41 @@ class StartCallFragment : GenericAddressPickerFragment() {
         super.onPause()
 
         viewModel.isNumpadVisible.value = false
+    }
+
+    private fun showGroupCallSubjectDialog() {
+        val model = GroupSetOrEditSubjectDialogModel("", isGroupConversation = false)
+
+        val dialog = DialogUtils.getSetOrEditGroupSubjectDialog(
+            requireContext(),
+            model
+        )
+
+        model.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i("$TAG Set group call subject cancelled")
+                dialog.dismiss()
+            }
+        }
+
+        model.confirmEvent.observe(viewLifecycleOwner) {
+            it.consume { newSubject ->
+                if (newSubject.isNotEmpty()) {
+                    Log.i(
+                        "$TAG Group call subject has been set to [$newSubject]"
+                    )
+                    viewModel.subject.value = newSubject
+                    viewModel.createGroupCall()
+
+                    dialog.currentFocus?.hideKeyboard()
+                    dialog.dismiss()
+                } else {
+                    // TODO: show error
+                }
+            }
+        }
+
+        Log.i("$TAG Showing dialog to set group call subject")
+        dialog.show()
     }
 }

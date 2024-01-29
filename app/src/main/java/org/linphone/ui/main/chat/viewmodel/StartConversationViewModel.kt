@@ -46,7 +46,7 @@ class StartConversationViewModel @UiThread constructor() : AddressSelectionViewM
 
     val subject = MutableLiveData<String>()
 
-    val groupChatRoomCreateButtonEnabled = MediatorLiveData<Boolean>()
+    val createGroupConversationButtonEnabled = MediatorLiveData<Boolean>()
 
     val operationInProgress = MutableLiveData<Boolean>()
 
@@ -87,9 +87,9 @@ class StartConversationViewModel @UiThread constructor() : AddressSelectionViewM
     }
 
     init {
-        groupChatRoomCreateButtonEnabled.postValue(false)
-        groupChatRoomCreateButtonEnabled.addSource(selection) {
-            groupChatRoomCreateButtonEnabled.postValue(it.isNotEmpty())
+        createGroupConversationButtonEnabled.value = false
+        createGroupConversationButtonEnabled.addSource(selection) {
+            createGroupConversationButtonEnabled.value = it.isNotEmpty()
         }
 
         updateGroupChatButtonVisibility()

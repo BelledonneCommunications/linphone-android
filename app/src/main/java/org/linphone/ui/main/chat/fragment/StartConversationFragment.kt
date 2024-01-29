@@ -33,9 +33,9 @@ import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.databinding.StartChatFragmentBinding
 import org.linphone.ui.main.MainActivity
-import org.linphone.ui.main.chat.model.ConversationSetOrEditSubjectDialogModel
 import org.linphone.ui.main.chat.viewmodel.StartConversationViewModel
 import org.linphone.ui.main.fragment.GenericAddressPickerFragment
+import org.linphone.ui.main.fragment.GroupSetOrEditSubjectDialogModel
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 import org.linphone.utils.hideKeyboard
@@ -122,9 +122,9 @@ class StartConversationFragment : GenericAddressPickerFragment() {
     }
 
     private fun showGroupConversationSubjectDialog() {
-        val model = ConversationSetOrEditSubjectDialogModel("")
+        val model = GroupSetOrEditSubjectDialogModel("", isGroupConversation = true)
 
-        val dialog = DialogUtils.getSetOrEditConversationSubjectDialog(
+        val dialog = DialogUtils.getSetOrEditGroupSubjectDialog(
             requireContext(),
             model
         )

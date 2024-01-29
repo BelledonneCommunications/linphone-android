@@ -17,13 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.main.chat.model
+package org.linphone.ui.main.fragment
 
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.utils.Event
 
-class ConversationSetOrEditSubjectDialogModel @UiThread constructor(initialSubject: String) {
+class GroupSetOrEditSubjectDialogModel @UiThread constructor(
+    initialSubject: String,
+    val isGroupConversation: Boolean
+) {
     val isEdit = initialSubject.isNotEmpty()
 
     val subject = MutableLiveData<String>()

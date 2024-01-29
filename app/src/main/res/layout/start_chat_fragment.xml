@@ -229,7 +229,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|bottom"
                 android:layout_margin="16dp"
-                android:visibility="@{viewModel.multipleSelectionMode &amp;&amp; viewModel.groupChatRoomCreateButtonEnabled ? View.VISIBLE : View.GONE, default=gone}"
+                android:visibility="@{viewModel.multipleSelectionMode &amp;&amp; viewModel.createGroupConversationButtonEnabled ? View.VISIBLE : View.GONE, default=gone}"
                 android:src="@drawable/check"
                 app:tint="?attr/color_on_main"
                 app:backgroundTint="?attr/color_main1_500"

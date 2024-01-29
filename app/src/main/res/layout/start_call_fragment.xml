@@ -12,6 +12,9 @@
             name="hideNumpadClickListener"
             type="View.OnClickListener" />
         <variable
+            name="askForGroupCallSubjectClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.main.history.viewmodel.StartCallViewModel" />
     </data>
@@ -25,27 +28,34 @@
             android:layout_height="match_parent"
             android:background="?attr/color_main2_000">
 
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/multiple_selection_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="multiple_selection, multiple_selection_count"
+                android:visibility="@{viewModel.multipleSelectionMode ? View.VISIBLE : View.GONE, default=gone}" />
+
             <ImageView
                 android:id="@+id/back"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="@dimen/top_bar_height"
                 android:adjustViewBounds="true"
                 android:onClick="@{backClickListener}"
                 android:padding="15dp"
                 android:src="@drawable/caret_left"
                 app:tint="?attr/color_main1_500"
-                app:layout_constraintBottom_toBottomOf="@id/title"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/title" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/main_page_title_style"
                 android:id="@+id/title"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/top_bar_height"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:text="@{viewModel.title, default=@string/history_call_start_title}"
+                app:layout_constraintBottom_toBottomOf="@id/back"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/back"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -57,7 +67,36 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/back" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_300"
+                android:id="@+id/multiple_selection_count"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.selectionCount, default=`0 selected`}"
+                android:textSize="12sp"
+                android:textColor="?attr/color_main2_900"
+                app:layout_constraintStart_toStartOf="@id/title"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title" />
+
+            <HorizontalScrollView
+                android:id="@+id/multiple_selection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/multiple_selection_count">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    entries="@{viewModel.selection}"
+                    layout="@{@layout/address_selected_list_cell}"/>
+
+            </HorizontalScrollView>
 
             <androidx.appcompat.widget.AppCompatEditText
                 style="@style/default_text_style"
@@ -65,7 +104,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/edit_text_background"
                 android:drawableStart="@drawable/magnifying_glass"
@@ -83,7 +122,7 @@
                 app:layout_constraintWidth_max="@dimen/text_input_max_width"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/title" />
+                app:layout_constraintTop_toBottomOf="@id/multiple_selection" />
 
             <ImageView
                 android:id="@+id/numpad"
@@ -116,7 +155,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:constraint_referenced_ids="group_call_icon, gradient_background, group_call_label"
-                android:visibility="@{viewModel.hideGroupCallButton || viewModel.searchFilter.length() > 0 ? View.GONE : View.VISIBLE}" />
+                android:visibility="@{viewModel.hideGroupCallButton || viewModel.multipleSelectionMode || viewModel.searchFilter.length() > 0 ? View.GONE : View.VISIBLE}" />
 
             <!-- margin start must be half the size of the group_call_icon below -->
             <View
@@ -132,6 +171,7 @@
 
             <ImageView
                 android:id="@+id/group_call_icon"
+                android:onClick="@{() -> viewModel.switchToMultipleSelectionMode()}"
                 android:layout_width="44dp"
                 android:layout_height="44dp"
                 android:layout_marginStart="16dp"
@@ -146,6 +186,7 @@
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style_800"
                 android:id="@+id/group_call_label"
+                android:onClick="@{() -> viewModel.switchToMultipleSelectionMode()}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -198,6 +239,21 @@
                 app:layout_constraintTop_toBottomOf="@id/group_call_icon"
                 app:layout_constraintBottom_toBottomOf="parent" />
 
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/create_group"
+                android:onClick="@{askForGroupCallSubjectClickListener}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|bottom"
+                android:layout_margin="16dp"
+                android:visibility="@{viewModel.multipleSelectionMode &amp;&amp; viewModel.startGroupCallButtonEnabled ? View.VISIBLE : View.GONE, default=gone}"
+                android:src="@drawable/check"
+                app:tint="?attr/color_on_main"
+                app:backgroundTint="?attr/color_main1_500"
+                app:shapeAppearanceOverlay="@style/rounded"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <include
@@ -205,6 +261,10 @@
             bind:handleClickedListener="@{hideNumpadClickListener}"
             bind:model="@{viewModel.numpadModel}"
             layout="@layout/start_call_numpad_bottom_sheet" />
+
+        <include
+            layout="@layout/operation_in_progress"
+            bind:visibility="@{viewModel.operationInProgress}" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

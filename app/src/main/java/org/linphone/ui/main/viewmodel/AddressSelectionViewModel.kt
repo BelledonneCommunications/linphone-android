@@ -76,8 +76,7 @@ abstract class AddressSelectionViewModel @UiThread constructor() : DefaultAccoun
             applyFilter(
                 currentFilter,
                 if (limitSearchToLinphoneAccounts) corePreferences.defaultDomain else "",
-                magicSearchSourceFlags,
-                MagicSearch.Aggregation.Friend
+                magicSearchSourceFlags
             )
         }
     }
@@ -109,7 +108,9 @@ abstract class AddressSelectionViewModel @UiThread constructor() : DefaultAccoun
 
     @UiThread
     fun clearFilter() {
-        searchFilter.value = ""
+        if (searchFilter.value.orEmpty().isNotEmpty()) {
+            searchFilter.value = ""
+        }
     }
 
     @UiThread
@@ -185,8 +186,7 @@ abstract class AddressSelectionViewModel @UiThread constructor() : DefaultAccoun
             applyFilter(
                 filter,
                 if (limitSearchToLinphoneAccounts) corePreferences.defaultDomain else "",
-                magicSearchSourceFlags,
-                MagicSearch.Aggregation.Friend
+                magicSearchSourceFlags
             )
         }
     }
@@ -195,8 +195,7 @@ abstract class AddressSelectionViewModel @UiThread constructor() : DefaultAccoun
     private fun applyFilter(
         filter: String,
         domain: String,
-        sources: Int,
-        aggregation: MagicSearch.Aggregation
+        sources: Int
     ) {
         if (previousFilter.isNotEmpty() && (
             previousFilter.length > filter.length ||
@@ -215,7 +214,7 @@ abstract class AddressSelectionViewModel @UiThread constructor() : DefaultAccoun
             filter,
             domain,
             sources,
-            aggregation
+            MagicSearch.Aggregation.Friend
         )
     }
 

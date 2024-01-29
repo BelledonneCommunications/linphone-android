@@ -44,14 +44,14 @@ import org.linphone.databinding.DialogPickNumberOrAddressBinding
 import org.linphone.databinding.DialogRemoveAccountBinding
 import org.linphone.databinding.DialogRemoveAllCallLogsBinding
 import org.linphone.databinding.DialogRemoveCallLogsBinding
-import org.linphone.databinding.DialogSetOrEditGroupConversationSubjectBindingImpl
+import org.linphone.databinding.DialogSetOrEditGroupSubjectBindingImpl
 import org.linphone.databinding.DialogUpdateAvailableBinding
 import org.linphone.ui.assistant.model.AcceptConditionsAndPolicyDialogModel
 import org.linphone.ui.assistant.model.ConfirmPhoneNumberDialogModel
 import org.linphone.ui.call.model.ZrtpSasConfirmationDialogModel
-import org.linphone.ui.main.chat.model.ConversationSetOrEditSubjectDialogModel
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
 import org.linphone.ui.main.contacts.model.TrustCallDialogModel
+import org.linphone.ui.main.fragment.GroupSetOrEditSubjectDialogModel
 import org.linphone.ui.main.history.model.ConfirmationDialogModel
 
 class DialogUtils {
@@ -268,13 +268,13 @@ class DialogUtils {
         }
 
         @UiThread
-        fun getSetOrEditConversationSubjectDialog(
+        fun getSetOrEditGroupSubjectDialog(
             context: Context,
-            viewModel: ConversationSetOrEditSubjectDialogModel
+            viewModel: GroupSetOrEditSubjectDialogModel
         ): Dialog {
-            val binding: DialogSetOrEditGroupConversationSubjectBindingImpl = DataBindingUtil.inflate(
+            val binding: DialogSetOrEditGroupSubjectBindingImpl = DataBindingUtil.inflate(
                 LayoutInflater.from(context),
-                R.layout.dialog_set_or_edit_group_conversation_subject,
+                R.layout.dialog_set_or_edit_group_subject,
                 null,
                 false
             )
