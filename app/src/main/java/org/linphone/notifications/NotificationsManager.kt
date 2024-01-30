@@ -379,8 +379,6 @@ class NotificationsManager @MainThread constructor(private val context: Context)
     fun onCoreStarted(core: Core) {
         Log.i("$TAG Core has been started")
         core.addListener(coreListener)
-
-        ShortcutUtils.createShortcutsToChatRooms(context)
     }
 
     @WorkerThread

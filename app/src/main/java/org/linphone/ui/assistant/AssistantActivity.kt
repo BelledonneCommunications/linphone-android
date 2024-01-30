@@ -54,10 +54,6 @@ class AssistantActivity : GenericActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.assistant_activity)
         binding.lifecycleOwner = this
 
-        while (!coreContext.isReady()) {
-            Thread.sleep(20)
-        }
-
         coreContext.postOnCoreThread { core ->
             if (core.accountList.isEmpty()) {
                 Log.i("$TAG No account configured, disabling back gesture")

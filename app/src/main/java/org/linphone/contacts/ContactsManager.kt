@@ -58,6 +58,7 @@ import org.linphone.utils.AppUtils
 import org.linphone.utils.ImageUtils
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.PhoneNumberUtils
+import org.linphone.utils.ShortcutUtils
 
 class ContactsManager @UiThread constructor() {
     companion object {
@@ -174,6 +175,9 @@ class ContactsManager @UiThread constructor() {
         conferenceAvatarMap.clear()
 
         notifyContactsListChanged()
+
+        Log.i("$TAG Native contacts have been loaded, creating chat rooms shortcuts")
+        ShortcutUtils.createShortcutsToChatRooms(coreContext.context)
     }
 
     @WorkerThread
@@ -342,6 +346,16 @@ class ContactsManager @UiThread constructor() {
         core.addListener(coreListener)
         for (list in core.friendsLists) {
             list.addListener(friendListListener)
+        }
+
+        val context = coreContext.context
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.READ_CONTACTS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            Log.w("$TAG READ_CONTACTS permission was denied, creating chat rooms shortcuts")
+            ShortcutUtils.createShortcutsToChatRooms(context)
         }
     }
 

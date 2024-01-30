@@ -137,7 +137,6 @@ class MeetingsListFragment : AbstractTopBarFragment() {
 
             (view.parent as? ViewGroup)?.doOnPreDraw {
                 startPostponedEnterTransition()
-                sharedViewModel.isFirstFragmentReady = true
 
                 if (currentCount < newCount) {
                     scrollToToday()

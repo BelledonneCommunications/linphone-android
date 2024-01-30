@@ -29,12 +29,12 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.view.Gravity
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import androidx.annotation.DrawableRes
 import androidx.annotation.MainThread
 import androidx.annotation.UiThread
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.children
+import androidx.core.view.doOnAttach
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -91,7 +91,7 @@ class MainActivity : GenericActivity() {
         binding.lifecycleOwner = this
 
         while (!coreContext.isReady()) {
-            Thread.sleep(20)
+            Thread.sleep(50)
         }
 
         if (checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
@@ -158,25 +158,14 @@ class MainActivity : GenericActivity() {
             }
         }
 
-        // Wait for fragment to be displayed before hiding the splashscreen
-        binding.root.viewTreeObserver.addOnPreDrawListener(
-            object : ViewTreeObserver.OnPreDrawListener {
-                override fun onPreDraw(): Boolean {
-                    return if (sharedViewModel.isFirstFragmentReady) {
-                        Log.i("$TAG Report UI has been fully drawn (TTFD)")
-                        try {
-                            reportFullyDrawn()
-                        } catch (se: SecurityException) {
-                            Log.e("$TAG Security exception when doing reportFullyDrawn(): $se")
-                        }
-                        binding.root.viewTreeObserver.removeOnPreDrawListener(this)
-                        true
-                    } else {
-                        false
-                    }
-                }
+        binding.root.doOnAttach {
+            Log.i("$TAG Report UI has been fully drawn (TTFD)")
+            try {
+                reportFullyDrawn()
+            } catch (se: SecurityException) {
+                Log.e("$TAG Security exception when doing reportFullyDrawn(): $se")
             }
-        )
+        }
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {

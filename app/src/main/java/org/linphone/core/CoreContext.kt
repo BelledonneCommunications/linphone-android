@@ -236,12 +236,20 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         core.isAutoIterateEnabled = true
         core.addListener(coreListener)
 
+        coreThread.postDelayed({ startCore() }, 50)
+
+        Looper.loop()
+    }
+
+    @WorkerThread
+    fun startCore() {
+        Log.i("$TAG Configuring Core")
         core.videoCodecPriorityPolicy = CodecPriorityPolicy.Auto
 
         updateFriendListsSubscriptionDependingOnDefaultAccount()
 
         computeUserAgent()
-        Log.i("$TAG Core has been created with user-agent [${core.userAgent}], starting it")
+        Log.i("$TAG Core has been configured with user-agent [${core.userAgent}], starting it")
         core.start()
 
         contactsManager.onCoreStarted(core)
@@ -252,7 +260,6 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         audioManager.registerAudioDeviceCallback(audioDeviceCallback, coreThread)
 
         Log.i("$TAG Report Core created and started")
-        Looper.loop()
     }
 
     @Deprecated("Deprecated in Java")

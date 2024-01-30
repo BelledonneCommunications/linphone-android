@@ -197,7 +197,6 @@ class HistoryListFragment : AbstractTopBarFragment() {
 
             (view.parent as? ViewGroup)?.doOnPreDraw {
                 startPostponedEnterTransition()
-                sharedViewModel.isFirstFragmentReady = true
             }
         }
 

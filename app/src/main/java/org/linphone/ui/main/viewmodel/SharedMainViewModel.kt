@@ -28,9 +28,6 @@ import org.linphone.ui.main.chat.model.MessageModel
 import org.linphone.utils.Event
 
 class SharedMainViewModel @UiThread constructor() : ViewModel() {
-    // When set to true, it will hide the splashscreen
-    var isFirstFragmentReady: Boolean = false
-
     /* Sliding Pane & navigation related */
 
     val isSlidingPaneSlideable = MutableLiveData<Boolean>()
