@@ -16,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import kotlinx.coroutines.launch
+import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.FileViewerFragmentBinding
 import org.linphone.ui.main.MainActivity
@@ -46,6 +47,8 @@ class FileViewerFragment : GenericFragment() {
         }
     }
 
+    private var navBarDefaultColor: Int = -1
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -62,6 +65,8 @@ class FileViewerFragment : GenericFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         postponeEnterTransition()
         super.onViewCreated(view, savedInstanceState)
+
+        navBarDefaultColor = requireActivity().window.navigationBarColor
 
         viewModel = ViewModelProvider(this)[FileViewModel::class.java]
 
@@ -172,7 +177,11 @@ class FileViewerFragment : GenericFragment() {
     }
 
     override fun onResume() {
+        // Force this navigation bar color
+        requireActivity().window.navigationBarColor = requireContext().getColor(R.color.gray_900)
+
         super.onResume()
+
         updateScreenSize()
         binding.pdfViewPager.registerOnPageChangeCallback(pageChangedListener)
     }
@@ -192,6 +201,13 @@ class FileViewerFragment : GenericFragment() {
         binding.videoPlayer.stopPlayback()
 
         super.onDestroyView()
+    }
+
+    override fun onDestroy() {
+        // Reset default navigation bar color
+        requireActivity().window.navigationBarColor = navBarDefaultColor
+
+        super.onDestroy()
     }
 
     @Deprecated("Deprecated in Java")
