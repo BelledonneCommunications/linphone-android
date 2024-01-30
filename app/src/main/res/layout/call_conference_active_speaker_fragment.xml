@@ -4,6 +4,7 @@
 
     <data>
         <import type="android.view.View" />
+        <import type="org.linphone.core.ChatRoom.SecurityLevel" />
         <import type="org.linphone.ui.call.model.ConferenceModel" />
         <variable
             name="viewModel"
@@ -16,13 +17,32 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraint_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/gray_900">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            style="@style/avatar_imageview"
+            android:id="@+id/avatar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="5dp"
+            coilCallAvatar="@{conferenceViewModel.activeSpeaker.avatarModel}"
+            android:visibility="@{conferenceViewModel.activeSpeaker.isSendingVideo ? View.GONE : View.VISIBLE}"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintWidth_max="@dimen/avatar_in_call_size"
+            app:layout_constraintHeight_max="@dimen/avatar_in_call_size"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <org.linphone.ui.call.view.RoundCornersTextureView
             android:id="@+id/active_speaker_surface"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:onClick="@{() -> viewModel.toggleFullScreen()}"
+            android:visibility="@{conferenceViewModel.activeSpeaker.isSendingVideo ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -35,11 +55,24 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginBottom="10dp"
-            android:text="@{conferenceViewModel.activeSpeakerName, default=`John Doe`}"
+            android:text="@{conferenceViewModel.activeSpeaker.name, default=`John Doe`}"
             android:textColor="@color/white"
             android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@id/active_speaker_miniatures_layout"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/muted"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:padding="2dp"
+            android:src="@drawable/microphone_slash"
+            android:background="@drawable/shape_circle_white_call_background"
+            android:visibility="@{conferenceViewModel.activeSpeaker.isMuted ? View.VISIBLE : View.GONE}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <HorizontalScrollView
             android:id="@+id/active_speaker_miniatures_layout"

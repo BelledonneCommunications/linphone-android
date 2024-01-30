@@ -53,7 +53,7 @@ class ConferenceModel {
 
     val participantsLabel = MutableLiveData<String>()
 
-    val activeSpeakerName = MutableLiveData<String>()
+    val activeSpeaker = MutableLiveData<ConferenceParticipantDeviceModel>()
 
     val isCurrentCallInConference = MutableLiveData<Boolean>()
 
@@ -87,16 +87,20 @@ class ConferenceModel {
             conference: Conference,
             participantDevice: ParticipantDevice
         ) {
+            activeSpeaker.value?.isActiveSpeaker?.postValue(false)
+
             val found = participantDevices.value.orEmpty().find {
                 it.device == participantDevice
             }
             if (found != null) {
-                val name = found.avatarModel.contactName ?: participantDevice.name ?: participantDevice.address.username
-                Log.i("$TAG Newly active speaker participant is [$name]")
-                activeSpeakerName.postValue(name.orEmpty())
+                Log.i("$TAG Newly active speaker participant is [${found.name}]")
+                found.isActiveSpeaker.postValue(true)
+                activeSpeaker.postValue(found)
             } else {
                 Log.i("$TAG Failed to find actively speaking participant...")
-                activeSpeakerName.postValue(participantDevice.name)
+                val model = ConferenceParticipantDeviceModel(participantDevice)
+                model.isActiveSpeaker.postValue(true)
+                activeSpeaker.postValue(model)
             }
         }
 
@@ -299,10 +303,10 @@ class ConferenceModel {
                 val model = ConferenceParticipantDeviceModel(device)
                 devicesList.add(model)
 
-                if (device.isSpeaking) {
-                    val name = model.avatarModel.contactName ?: device.name ?: device.address.username
-                    Log.i("$TAG Using participant is [$name] as current active speaker")
-                    activeSpeakerName.postValue(name.orEmpty())
+                if (device == conference.activeSpeakerParticipantDevice) {
+                    Log.i("$TAG Using participant is [${model.name}] as current active speaker")
+                    model.isActiveSpeaker.postValue(true)
+                    activeSpeaker.postValue(model)
                 }
             }
         }

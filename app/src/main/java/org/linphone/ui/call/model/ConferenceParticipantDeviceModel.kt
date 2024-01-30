@@ -29,6 +29,7 @@ import org.linphone.core.ParticipantDevice
 import org.linphone.core.ParticipantDeviceListenerStub
 import org.linphone.core.StreamType
 import org.linphone.core.tools.Log
+import org.linphone.utils.LinphoneUtils
 
 class ConferenceParticipantDeviceModel @WorkerThread constructor(
     val device: ParticipantDevice,
@@ -40,9 +41,15 @@ class ConferenceParticipantDeviceModel @WorkerThread constructor(
 
     val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(device.address)
 
+    val name = avatarModel.contactName ?: device.name ?: LinphoneUtils.getDisplayName(
+        device.address
+    )
+
     val isMuted = MutableLiveData<Boolean>()
 
     val isSpeaking = MutableLiveData<Boolean>()
+
+    val isActiveSpeaker = MutableLiveData<Boolean>()
 
     val isVideoAvailable = MutableLiveData<Boolean>()
 
@@ -119,6 +126,7 @@ class ConferenceParticipantDeviceModel @WorkerThread constructor(
 
         isMuted.postValue(device.isMuted)
         isSpeaking.postValue(device.isSpeaking)
+        isActiveSpeaker.postValue(false)
         Log.i(
             "$TAG Participant [${device.address.asStringUriOnly()}] is in state [${device.state}]"
         )

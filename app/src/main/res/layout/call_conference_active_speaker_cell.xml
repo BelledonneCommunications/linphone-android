@@ -13,12 +13,14 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="@dimen/call_conference_active_speaker_miniature_size"
         android:layout_height="@dimen/call_conference_active_speaker_miniature_size"
+        android:visibility="@{model.isActiveSpeaker ? View.GONE : View.VISIBLE}"
         android:padding="2dp">
 
         <ImageView
             android:id="@+id/participant_device_background"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:contentDescription="@null"
             android:background="@drawable/shape_round_in_call_cell_gray_background" />
 
         <com.google.android.material.imageview.ShapeableImageView
@@ -79,7 +81,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginBottom="8dp"
-            android:text="@{model.avatarModel.name, default=`John Doe`}"
+            android:text="@{model.name, default=`John Doe`}"
             android:textColor="@color/white"
             android:textSize="11sp"
             app:layout_constraintBottom_toBottomOf="parent"
