@@ -409,8 +409,17 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
         coreContext.postOnCoreThread {
             if (::currentCall.isInitialized) {
-                currentCall.microphoneMuted = !currentCall.microphoneMuted
-                isMicrophoneMuted.postValue(currentCall.microphoneMuted)
+                val micMuted = if (currentCall.conference != null) {
+                    currentCall.conference?.microphoneMuted ?: false
+                } else {
+                    currentCall.microphoneMuted
+                }
+                if (currentCall.conference != null) {
+                    currentCall.conference?.microphoneMuted = !micMuted
+                } else {
+                    currentCall.microphoneMuted = !micMuted
+                }
+                isMicrophoneMuted.postValue(!micMuted)
             }
         }
     }
@@ -770,7 +779,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
             )
             isMicrophoneMuted.postValue(true)
         } else {
-            isMicrophoneMuted.postValue(call.microphoneMuted)
+            isMicrophoneMuted.postValue(call.conference?.microphoneMuted ?: call.microphoneMuted)
         }
 
         val audioDevice = call.outputAudioDevice

@@ -90,7 +90,7 @@ class ConferenceModel {
             activeSpeaker.value?.isActiveSpeaker?.postValue(false)
 
             val found = participantDevices.value.orEmpty().find {
-                it.device == participantDevice
+                it.device.address.equal(participantDevice.address)
             }
             if (found != null) {
                 Log.i("$TAG Newly active speaker participant is [${found.name}]")
@@ -285,6 +285,7 @@ class ConferenceModel {
         val conferenceParticipants = conference.participantList
         Log.i("$TAG [${conferenceParticipants.size}] participant in conference")
 
+        var activeSpeakerParticipantDeviceFound = false
         for (participant in conferenceParticipants) {
             val devices = participant.devices
             val role = participant.role
@@ -307,6 +308,7 @@ class ConferenceModel {
                     Log.i("$TAG Using participant is [${model.name}] as current active speaker")
                     model.isActiveSpeaker.postValue(true)
                     activeSpeaker.postValue(model)
+                    activeSpeakerParticipantDeviceFound = true
                 }
             }
         }
@@ -323,6 +325,22 @@ class ConferenceModel {
         for (device in ourDevices) {
             val model = ConferenceParticipantDeviceModel(device, true)
             devicesList.add(model)
+
+            if (device == conference.activeSpeakerParticipantDevice) {
+                Log.i("$TAG Using our device [${model.name}] as current active speaker")
+                model.isActiveSpeaker.postValue(true)
+                activeSpeaker.postValue(model)
+                activeSpeakerParticipantDeviceFound = true
+            }
+        }
+
+        if (!activeSpeakerParticipantDeviceFound) {
+            val first = devicesList.first()
+            Log.w(
+                "$TAG Failed to find current active speaker participant device, using first one [${first.name}]"
+            )
+            first.isActiveSpeaker.postValue(true)
+            activeSpeaker.postValue(first)
         }
 
         participantDevices.postValue(sortParticipantDevicesList(devicesList))
