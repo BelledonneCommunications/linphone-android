@@ -648,6 +648,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
         viewModel.updateCurrentlyDisplayedConversation()
 
         if (viewModel.scrollingPosition != SCROLLING_POSITION_NOT_SET) {
+            Log.d("$TAG Restoring previous scrolling position: ${viewModel.scrollingPosition}")
             binding.eventsList.scrollToPosition(viewModel.scrollingPosition)
         }
 
@@ -680,8 +681,13 @@ class ConversationFragment : SlidingPaneChildFragment() {
             Log.e("$TAG Failed to unregister data observer to adapter: $e")
         }
 
-        val layoutManager = binding.eventsList.layoutManager as LinearLayoutManager
-        viewModel.scrollingPosition = layoutManager.findFirstCompletelyVisibleItemPosition()
+        if (viewModel.isUserScrollingUp.value == true) {
+            val layoutManager = binding.eventsList.layoutManager as LinearLayoutManager
+            viewModel.scrollingPosition = layoutManager.findFirstCompletelyVisibleItemPosition()
+            Log.d("$TAG Storing current scrolling position: ${viewModel.scrollingPosition}")
+        } else {
+            viewModel.scrollingPosition = SCROLLING_POSITION_NOT_SET
+        }
 
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.messageBottomSheet.root)
         bottomSheetBehavior.removeBottomSheetCallback(bottomSheetCallback)
