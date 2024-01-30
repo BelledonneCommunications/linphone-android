@@ -311,6 +311,8 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
     }
 
     init {
+        fullScreenMode.value = false
+
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
 
@@ -326,13 +328,6 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                 Log.e("$TAG Failed to find call!")
             }
         }
-
-        isVideoEnabled.value = false
-        fullScreenMode.value = false
-        isMicrophoneMuted.value = ActivityCompat.checkSelfPermission(
-            coreContext.context,
-            Manifest.permission.RECORD_AUDIO
-        ) != PackageManager.PERMISSION_GRANTED
 
         numpadModel = NumpadModel(
             { digit -> // onDigitClicked
@@ -773,7 +768,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
             Log.w(
                 "$TAG RECORD_AUDIO permission wasn't granted yet, considering microphone as muted!"
             )
-            isMicrophoneMuted.postValue(false)
+            isMicrophoneMuted.postValue(true)
         } else {
             isMicrophoneMuted.postValue(call.microphoneMuted)
         }

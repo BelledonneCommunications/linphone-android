@@ -85,7 +85,7 @@
                 android:layout_marginStart="5dp"
                 coilAvatar="@{viewModel.avatarModel}"
                 app:layout_constraintStart_toEndOf="@id/back"
-                app:layout_constraintTop_toTopOf="@id/back" />
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <ImageView
                 android:id="@+id/presence_badge"
@@ -142,12 +142,11 @@
                 android:id="@+id/show_menu"
                 android:onClick="@{showMenuClickListener}"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="@dimen/top_bar_height"
                 android:padding="15dp"
                 android:adjustViewBounds="true"
                 android:src="@drawable/dots_three_vertical"
-                app:layout_constraintTop_toTopOf="@id/avatar"
-                app:layout_constraintBottom_toBottomOf="@id/avatar"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:tint="?attr/color_main2_500"/>
 
@@ -155,12 +154,11 @@
                 android:id="@+id/start_call"
                 android:onClick="@{() -> viewModel.startCall()}"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="@dimen/top_bar_height"
                 android:padding="15dp"
                 android:src="@drawable/phone"
                 android:visibility="@{viewModel.isReadOnly || viewModel.searchBarVisible ? View.GONE : View.VISIBLE}"
-                app:layout_constraintTop_toTopOf="@id/back"
-                app:layout_constraintBottom_toBottomOf="@id/back"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/show_menu"
                 app:tint="?attr/color_main2_500" />
 

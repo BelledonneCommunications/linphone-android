@@ -69,8 +69,12 @@ class ConferenceLayoutMenuDialogFragment(
         view.viewModel = conferenceModel
 
         view.setGridClickListener {
-            conferenceModel.changeLayout(ConferenceModel.GRID_LAYOUT)
-            dismiss()
+            if (conferenceModel.participantDevices.value.orEmpty().size < 6) {
+                conferenceModel.changeLayout(ConferenceModel.GRID_LAYOUT)
+                dismiss()
+            } else {
+                // TODO: notify user
+            }
         }
         view.setActiveSpeakerClickListener {
             conferenceModel.changeLayout(ConferenceModel.ACTIVE_SPEAKER_LAYOUT)
