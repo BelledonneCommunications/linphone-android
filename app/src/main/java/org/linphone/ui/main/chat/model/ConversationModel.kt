@@ -168,7 +168,7 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
 
         isMuted.postValue(chatRoom.muted)
         isEphemeral.postValue(chatRoom.isEphemeralEnabled)
-        Log.i(
+        Log.d(
             "$TAG Ephemeral messages are [${if (chatRoom.isEphemeralEnabled) "enabled" else "disabled"}], lifetime is [${chatRoom.ephemeralLifetime}]"
         )
 
@@ -305,12 +305,12 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
     private fun computeParticipants() {
         val friends = arrayListOf<Friend>()
         val address = if (chatRoom.hasCapability(Capabilities.Basic.toInt())) {
-            Log.i("$TAG Conversation [$id] is 'Basic'")
+            Log.d("$TAG Conversation [$id] is 'Basic'")
             chatRoom.peerAddress
         } else {
             val firstParticipant = chatRoom.participants.firstOrNull()
             if (isGroup) {
-                Log.i(
+                Log.d(
                     "$TAG Group conversation [$id] has [${chatRoom.nbParticipants}] participant(s)"
                 )
                 for (participant in chatRoom.participants) {
@@ -322,7 +322,7 @@ class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
                     }
                 }
             } else {
-                Log.i(
+                Log.d(
                     "$TAG Conversation [$id] is with participant [${firstParticipant?.address?.asStringUriOnly()}]"
                 )
             }

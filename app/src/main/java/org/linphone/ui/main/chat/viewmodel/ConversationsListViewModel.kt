@@ -145,7 +145,7 @@ class ConversationsListViewModel @UiThread constructor() : AbstractTopBarViewMod
             // TODO: remove when SDK will do it automatically
             if (account?.isInSecureMode() == true) {
                 if (!chatRoom.hasCapability(Capabilities.Encrypted.toInt()) && chatRoom.unreadMessagesCount == 0) { // TODO: remove message count check later
-                    Log.w(
+                    Log.d(
                         "$TAG Skipping conversation [${LinphoneUtils.getChatRoomId(chatRoom)}] as it is not E2E encrypted and default account requires it"
                     )
                     continue
@@ -181,7 +181,7 @@ class ConversationsListViewModel @UiThread constructor() : AbstractTopBarViewMod
                 }
             }
 
-            if (count == 20) {
+            if (count == 15) {
                 conversations.postValue(list)
                 fetchInProgress.postValue(false)
             }

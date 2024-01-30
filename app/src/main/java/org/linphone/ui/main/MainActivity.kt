@@ -21,6 +21,7 @@ package org.linphone.ui.main
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -38,6 +39,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
@@ -66,6 +68,7 @@ class MainActivity : GenericActivity() {
     companion object {
         private const val TAG = "[Main Activity]"
 
+        private const val DEFAULT_FRAGMENT_KEY = "default_fragment"
         private const val CONTACTS_FRAGMENT_ID = 1
         private const val HISTORY_FRAGMENT_ID = 2
         private const val CHAT_FRAGMENT_ID = 3
@@ -84,12 +87,16 @@ class MainActivity : GenericActivity() {
 
         super.onCreate(savedInstanceState)
 
+        binding = DataBindingUtil.setContentView(this, R.layout.main_activity)
+        binding.lifecycleOwner = this
+
+        while (!coreContext.isReady()) {
+            Thread.sleep(20)
+        }
+
         if (checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
             loadContacts()
         }
-
-        binding = DataBindingUtil.setContentView(this, R.layout.main_activity)
-        binding.lifecycleOwner = this
 
         viewModel = run {
             ViewModelProvider(this)[MainViewModel::class.java]
@@ -198,41 +205,11 @@ class MainActivity : GenericActivity() {
             }
         }
 
-        coreContext.postOnCoreThread {
-            val startDestination = when (corePreferences.defaultFragment) {
-                CONTACTS_FRAGMENT_ID -> {
-                    Log.i("$TAG Latest visited page is contacts, setting it as start destination")
-                    R.id.contactsListFragment
-                }
-                HISTORY_FRAGMENT_ID -> {
-                    Log.i(
-                        "$TAG Latest visited page is call history, setting it as start destination"
-                    )
-                    R.id.historyListFragment
-                }
-                CHAT_FRAGMENT_ID -> {
-                    Log.i(
-                        "$TAG Latest visited page is conversations, setting it as start destination"
-                    )
-                    R.id.conversationsListFragment
-                }
-                MEETINGS_FRAGMENT_ID -> {
-                    Log.i("$TAG Latest visited page is meetings, setting it as start destination")
-                    R.id.meetingsListFragment
-                }
-                else -> { // Default
-                    Log.i("$TAG No latest visited page stored, using default one (call history)")
-                    R.id.historyListFragment
-                }
-            }
-            coreContext.postOnMainThread {
-                if (intent != null) {
-                    handleIntent(intent, startDestination, false)
-                } else {
-                    // This should never happen!
-                    Log.e("$TAG onPostCreate called without intent !")
-                }
-            }
+        if (intent != null) {
+            handleIntent(intent, false)
+        } else {
+            // This should never happen!
+            Log.e("$TAG onPostCreate called without intent !")
         }
     }
 
@@ -254,11 +231,11 @@ class MainActivity : GenericActivity() {
                 HISTORY_FRAGMENT_ID
             }
         }
-        coreContext.postOnCoreThread {
-            Log.i("$TAG Storing default page [$defaultFragmentId]")
-            corePreferences.defaultFragment = defaultFragmentId
-            corePreferences.config.sync()
+        with(getPreferences(Context.MODE_PRIVATE).edit()) {
+            putInt(DEFAULT_FRAGMENT_KEY, defaultFragmentId)
+            apply()
         }
+        Log.i("$TAG Stored [$defaultFragmentId] as default page")
 
         super.onPause()
     }
@@ -273,7 +250,7 @@ class MainActivity : GenericActivity() {
         super.onNewIntent(intent)
 
         if (intent != null) {
-            handleIntent(intent, -1, true)
+            handleIntent(intent, true)
         }
     }
 
@@ -353,7 +330,7 @@ class MainActivity : GenericActivity() {
     }
 
     @MainThread
-    private fun handleIntent(intent: Intent, defaultDestination: Int, isNewIntent: Boolean) {
+    private fun handleIntent(intent: Intent, isNewIntent: Boolean) {
         Log.i(
             "$TAG Handling intent action [${intent.action}], type [${intent.type}] and data [${intent.data}]"
         )
@@ -369,42 +346,58 @@ class MainActivity : GenericActivity() {
                 handleCallIntent(intent)
             }
             else -> {
-                handleMainIntent(intent, defaultDestination, isNewIntent)
+                handleMainIntent(intent, isNewIntent)
             }
         }
     }
 
     @MainThread
-    private fun handleMainIntent(intent: Intent, defaultDestination: Int, isNewIntent: Boolean) {
+    private fun handleMainIntent(intent: Intent, isNewIntent: Boolean) {
         if (intent.hasExtra("Chat")) {
-            Log.i("$TAG New intent with [Chat] extra")
-            if (isNewIntent) {
-                try {
-                    Log.i("$TAG Trying to go to Conversations fragment")
-                    findNavController().navigate(
-                        R.id.action_global_conversationsListFragment,
-                        intent.extras
-                    )
-                } catch (ise: IllegalStateException) {
-                    Log.i(
-                        "$TAG Nav graph not set yet, loading it & set start destination to Conversations fragment instead of default"
-                    )
-                    findNavController().navigate(R.id.conversationsListFragment)
-                }
-            } else {
-                Log.i(
-                    "$TAG Loading graph & set start destination to Conversations fragment instead of default"
-                )
-                findNavController().navigate(R.id.conversationsListFragment)
+            Log.i("$TAG Intent has [Chat] extra")
+            try {
+                Log.i("$TAG Trying to go to Conversations fragment")
+                val args = intent.extras
+                findNavController().navigate(R.id.conversationsListFragment, args)
+            } catch (ise: IllegalStateException) {
+                Log.e("$TAG Can't navigate to Conversations fragment: $ise")
             }
-        } else {
-            if (!isNewIntent && defaultDestination > 0) {
+        } else if (!isNewIntent) {
+            try {
+                val defaultFragmentId = getPreferences(Context.MODE_PRIVATE).getInt(
+                    DEFAULT_FRAGMENT_KEY,
+                    CONTACTS_FRAGMENT_ID
+                )
+                Log.i("$TAG Trying to navigate to set default destination [$defaultFragmentId]")
+                val args = intent.extras
                 try {
-                    Log.i("$TAG Setting nav graph with expected start destination")
-                    findNavController().navigate(defaultDestination)
+                    val navOptionsBuilder = NavOptions.Builder()
+                    navOptionsBuilder.setPopUpTo(R.id.contactsListFragment, true)
+                    val navOptions = navOptionsBuilder.build()
+                    when (defaultFragmentId) {
+                        HISTORY_FRAGMENT_ID -> {
+                            findNavController().navigate(R.id.historyListFragment, args, navOptions)
+                        }
+                        CHAT_FRAGMENT_ID -> {
+                            findNavController().navigate(
+                                R.id.conversationsListFragment,
+                                args,
+                                navOptions
+                            )
+                        }
+                        MEETINGS_FRAGMENT_ID -> {
+                            findNavController().navigate(
+                                R.id.meetingsListFragment,
+                                args,
+                                navOptions
+                            )
+                        }
+                    }
                 } catch (ise: IllegalStateException) {
-                    Log.i("$TAG Failed to handle intent: $ise")
+                    Log.e("$TAG Can't navigate to Conversations fragment: $ise")
                 }
+            } catch (ise: IllegalStateException) {
+                Log.i("$TAG Failed to handle intent: $ise")
             }
         }
     }
