@@ -201,8 +201,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@{model.time, default=`13:40`}"
-                    android:textSize="12sp"
-                    android:visibility="@{!model.groupedWithNextMessage ? View.VISIBLE : View.GONE}"/>
+                    android:textSize="12sp" />
 
                 <ImageView
                     style="@style/default_text_style_300"
@@ -213,7 +212,6 @@
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="2dp"
                     android:src="@{model.statusIcon, default=@drawable/checks}"
-                    android:visibility="@{!model.groupedWithNextMessage ? View.VISIBLE : View.GONE}"
                     app:tint="?attr/color_main1_500" />
 
             </LinearLayout>
