@@ -693,4 +693,15 @@
     <string name="zrtp_dialog_title">Securitatea comunicațiilor</string>
     <string name="zrtp_dialog_explanation">Pentru a crește nivelul de securitate, puteți verifica următoarele coduri cu corespondentul dumneavoastră.</string>
     <string name="dialog_lime_security_message">Mesajele instantanee sunt criptate de la un capăt la altul în conversații securizate. Este posibil să se îmbunătățească nivelul de securitate al unei conversații prin autentificarea participanților. Pentru a face acest lucru, apelați persoana de contact și urmați procesul de autentificare.</string>
+    <string name="dialog_apply_remote_provisioning_title">Doriți să descărcați și să aplicați configurația de la acest URL\?</string>
+    <string name="dialog_authentication_required_title">Autentificare necesară</string>
+    <string name="dialog_authentication_required_change_password_label">Confirmați</string>
+    <string name="android_14_full_screen_intent_permission_not_granted">Permisiunea necesară pentru a afișa apelurile primite nu a fost acordată încă</string>
+    <string name="android_14_go_to_full_screen_intent_permission_setting">Afișați</string>
+    <string name="content_description_add_sip_address_field">Adăugați un câmp de adresă SIP</string>
+    <string name="dialog_apply_remote_provisioning_button">Aplicați</string>
+    <string name="dialog_authentication_required_message">Conexiunea a eșuat deoarece autentificarea lipsește sau nu este valabilă pentru cont
+\n%s.
+\n
+\nPuteți furniza din nou parola sau puteți verifica configurația contului în setări.</string>
 </resources>
