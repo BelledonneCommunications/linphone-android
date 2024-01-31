@@ -94,13 +94,20 @@ class ActiveCallFragment : GenericCallFragment() {
         }
     }
 
-    private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
+    private val numpadBottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
-            Log.i("$TAG Bottom sheet state is [$newState]")
             if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
                 val numpadBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
                 numpadBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             }
+        }
+
+        override fun onSlide(bottomSheet: View, slideOffset: Float) { }
+    }
+
+    private val actionsBottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+            callViewModel.extraActionsBottomSheetVisible.value = newState != BottomSheetBehavior.STATE_COLLAPSED
         }
 
         override fun onSlide(bottomSheet: View, slideOffset: Float) { }
@@ -141,10 +148,15 @@ class ActiveCallFragment : GenericCallFragment() {
 
         val actionsBottomSheetBehavior = BottomSheetBehavior.from(binding.bottomBar.root)
         actionsBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        actionsBottomSheetBehavior.addBottomSheetCallback(actionsBottomSheetCallback)
 
         val numpadBottomSheetBehavior = BottomSheetBehavior.from(binding.callNumpad.root)
         numpadBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        numpadBottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
+        numpadBottomSheetBehavior.addBottomSheetCallback(numpadBottomSheetCallback)
+
+        binding.setBackClickListener {
+            requireActivity().finish()
+        }
 
         binding.setNewCallClickListener {
             val action = ActiveCallFragmentDirections.actionActiveCallFragmentToNewCallFragment()

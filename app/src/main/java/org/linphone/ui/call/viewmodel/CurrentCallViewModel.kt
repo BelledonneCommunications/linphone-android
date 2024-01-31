@@ -39,6 +39,7 @@ import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.MediaDirection
 import org.linphone.core.MediaEncryption
+import org.linphone.core.StreamType
 import org.linphone.core.tools.Log
 import org.linphone.ui.call.model.AudioDeviceModel
 import org.linphone.ui.call.model.CallMediaEncryptionModel
@@ -149,6 +150,8 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
     }
 
     // Extras actions
+
+    val extraActionsBottomSheetVisible = MutableLiveData<Boolean>()
 
     val toggleExtraActionsBottomSheetEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
@@ -711,8 +714,12 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                 }
 
                 isMediaEncrypted.postValue(true)
-                // When Post Quantum is available, ZRTP is Post Quantum
-                isZrtpPq.postValue(coreContext.core.postQuantumAvailable)
+
+                // When Post Quantum is available, ZRTP is Post Quantum if key exchange was made with Post Quantum algorithm
+                val stats = currentCall.getStats(StreamType.Audio)
+                isZrtpPq.postValue(
+                    coreContext.core.postQuantumAvailable && stats?.isZrtpKeyAgreementAlgoPostQuantum == true
+                )
 
                 if (!isDeviceTrusted && !authToken.isNullOrEmpty()) {
                     Log.i("$TAG Showing ZRTP SAS confirmation dialog")

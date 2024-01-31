@@ -21,7 +21,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="11dp"
-            android:src="@drawable/shape_drawer_handle"
+            android:src="@{viewModel.extraActionsBottomSheetVisible ? @drawable/caret_down : @drawable/handle, default=@drawable/handle}"
             app:tint="@color/white"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

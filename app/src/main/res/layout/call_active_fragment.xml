@@ -7,6 +7,9 @@
         <import type="android.view.View" />
         <import type="org.linphone.core.ChatRoom.SecurityLevel" />
         <variable
+            name="backClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="newCallClickListener"
             type="View.OnClickListener" />
         <variable
@@ -58,7 +61,7 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginEnd="12dp"
                 android:layout_marginBottom="@dimen/call_main_actions_menu_margin"
-                app:layout_constraintTop_toBottomOf="@id/call_direction_label"
+                app:layout_constraintTop_toBottomOf="@id/media_encryption"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
@@ -77,7 +80,7 @@
                 app:layout_constraintEnd_toEndOf="@id/background"
                 app:layout_constraintStart_toStartOf="@id/background"
                 app:layout_constraintTop_toTopOf="@id/background"
-                app:layout_constraintBottom_toTopOf="@id/name"/>
+                app:layout_constraintBottom_toTopOf="@id/address"/>
 
             <ImageView
                 android:id="@+id/trust_badge"
@@ -89,29 +92,16 @@
                 app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 
             <androidx.appcompat.widget.AppCompatTextView
-                style="@style/default_text_style_300"
-                android:id="@+id/name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:text="@{viewModel.displayedName, default=`John Doe`}"
-                android:textColor="@color/white"
-                android:textSize="22sp"
-                app:layout_constraintTop_toBottomOf="@id/avatar"
-                app:layout_constraintBottom_toTopOf="@id/address"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-            <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style"
                 android:id="@+id/address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:layout_marginBottom="5dp"
                 android:text="@{viewModel.displayedAddress, default=`sip:johndoe@sip.linphone.org`}"
                 android:textColor="@color/white"
                 android:textSize="14sp"
-                app:layout_constraintTop_toBottomOf="@id/name"
+                app:layout_constraintTop_toBottomOf="@id/avatar"
                 app:layout_constraintBottom_toBottomOf="@id/background"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
@@ -134,31 +124,30 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="@{viewModel.fullScreenMode || viewModel.pipMode ? View.INVISIBLE : View.VISIBLE}"
-                app:constraint_referenced_ids="call_direction_icon, call_direction_label, separator, chronometer" />
+                app:constraint_referenced_ids="back, name, separator, chronometer" />
 
             <ImageView
-                android:id="@+id/call_direction_icon"
-                android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:layout_marginStart="10dp"
+                android:id="@+id/back"
+                android:onClick="@{backClickListener}"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/top_bar_height"
                 android:adjustViewBounds="true"
-                android:src="@{viewModel.isOutgoing ? @drawable/outgoing_call : @drawable/incoming_call, default=@drawable/outgoing_call}"
+                android:padding="15dp"
+                android:src="@drawable/caret_left"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/call_direction_label"
-                app:layout_constraintBottom_toBottomOf="@id/call_direction_label"/>
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/white" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/call_header_style"
-                android:id="@+id/call_direction_label"
+                android:id="@+id/name"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/call_top_bar_text_height"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:text="@{viewModel.isOutgoing ? @string/call_outgoing : viewModel.incomingCallTitle, default=@string/call_outgoing}"
-                app:layout_constraintStart_toEndOf="@id/call_direction_icon"
-                app:layout_constraintTop_toTopOf="@id/hinge_top"
-                app:layout_constraintBottom_toTopOf="@id/background"/>
+                android:text="@{viewModel.displayedName, default=`John Doe`}"
+                app:layout_constraintStart_toEndOf="@id/back"
+                app:layout_constraintTop_toTopOf="@id/back"
+                app:layout_constraintBottom_toBottomOf="@id/back"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/call_header_style"
@@ -167,8 +156,8 @@
                 android:layout_height="@dimen/call_top_bar_text_height"
                 android:layout_marginStart="5dp"
                 android:text="@string/vertical_separator"
-                app:layout_constraintStart_toEndOf="@id/call_direction_label"
-                app:layout_constraintTop_toTopOf="@id/call_direction_label"/>
+                app:layout_constraintStart_toEndOf="@id/name"
+                app:layout_constraintTop_toTopOf="@id/name"/>
 
             <Chronometer
                 style="@style/call_header_style"
@@ -179,8 +168,8 @@
                 android:visibility="@{viewModel.isPaused || viewModel.isPausedByRemote ? View.GONE : View.VISIBLE}"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toEndOf="@id/separator"
-                app:layout_constraintEnd_toStartOf="@id/media_encryption"
-                app:layout_constraintTop_toTopOf="@id/call_direction_label"/>
+                app:layout_constraintEnd_toStartOf="@id/switch_camera"
+                app:layout_constraintTop_toTopOf="@id/name"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/call_header_style"
@@ -193,20 +182,39 @@
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toEndOf="@id/separator"
                 app:layout_constraintEnd_toStartOf="@id/media_encryption"
-                app:layout_constraintTop_toTopOf="@id/call_direction_label"/>
+                app:layout_constraintTop_toTopOf="@id/name"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:id="@+id/media_encryption"
+                android:onClick="@{() -> viewModel.showMediaEncryptionStatisticsIfPossible()}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@{viewModel.isZrtpPq ? @string/call_post_quantum_zrtp_end_to_end_encrypted : @string/call_zrtp_end_to_end_encrypted, default=@string/call_post_quantum_zrtp_end_to_end_encrypted}"
+                android:textSize="12sp"
+                android:textColor="@color/blue_info_500"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:drawableStart="@{viewModel.isZrtpPq ? @drawable/atom : @drawable/lock_simple, default=@drawable/atom}"
+                android:drawablePadding="5dp"
+                android:drawableTint="@color/blue_info_500"
+                android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; viewModel.isMediaEncrypted ? View.VISIBLE : View.GONE}"
+                app:layout_constraintStart_toEndOf="@id/back"
+                app:layout_constraintTop_toBottomOf="@id/name"/>
 
             <ImageView
-                android:id="@+id/media_encryption"
-                android:onClick="@{() -> viewModel.showZrtpSasDialogIfPossible()}"
-                android:onLongClick="@{() -> viewModel.showMediaEncryptionStatisticsIfPossible()}"
+                android:id="@+id/stats"
+                android:onClick="@{callStatisticsClickListener}"
                 android:layout_width="@dimen/call_top_bar_info_height"
                 android:layout_height="@dimen/call_top_bar_info_height"
                 android:padding="10dp"
-                android:src="@{viewModel.isZrtpPq ? @drawable/media_encryption_zrtp_pq : @drawable/media_encryption_srtp, default=@drawable/media_encryption_zrtp_pq}"
-                android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; viewModel.isMediaEncrypted ? View.VISIBLE : View.GONE}"
-                app:layout_constraintTop_toTopOf="@id/call_direction_label"
-                app:layout_constraintBottom_toBottomOf="@id/call_direction_label"
-                app:layout_constraintEnd_toStartOf="@id/switch_camera" />
+                android:src="@drawable/cell_signal_full"
+                android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode ? View.VISIBLE : View.GONE}"
+                app:tint="@color/white"
+                app:layout_constraintTop_toTopOf="@id/back"
+                app:layout_constraintBottom_toBottomOf="@id/back"
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <ImageView
                 android:onClick="@{() -> viewModel.switchCamera()}"
@@ -214,13 +222,13 @@
                 android:layout_width="@dimen/call_top_bar_info_height"
                 android:layout_height="@dimen/call_top_bar_info_height"
                 android:padding="10dp"
-                android:layout_marginEnd="10dp"
+                android:layout_marginEnd="5dp"
                 android:src="@drawable/camera_rotate"
                 android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; viewModel.isVideoEnabled &amp;&amp; viewModel.showSwitchCamera ? View.VISIBLE : View.GONE}"
                 app:tint="@color/white"
-                app:layout_constraintTop_toTopOf="@id/call_direction_label"
-                app:layout_constraintBottom_toBottomOf="@id/call_direction_label"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintTop_toTopOf="@id/back"
+                app:layout_constraintBottom_toBottomOf="@id/back"
+                app:layout_constraintEnd_toStartOf="@+id/stats" />
 
             <org.linphone.ui.call.view.RoundCornersTextureView
                 android:id="@+id/local_preview_video_surface"
@@ -252,13 +260,11 @@
 
         <include
             android:id="@+id/bottom_bar"
-            android:visibility="@{viewModel.fullScreenMode || viewModel.pipMode ? View.INVISIBLE : View.VISIBLE}"
             layout="@layout/call_actions_bottom_sheet"
             bind:viewModel="@{viewModel}"
             bind:callsViewModel="@{callsViewModel}"
             bind:newCallClickListener="@{newCallClickListener}"
-            bind:callsListClickListener="@{callsListClickListener}"
-            bind:callStatisticsClickListener="@{callStatisticsClickListener}"/>
+            bind:callsListClickListener="@{callsListClickListener}"/>
 
         <include
             android:id="@+id/call_numpad"

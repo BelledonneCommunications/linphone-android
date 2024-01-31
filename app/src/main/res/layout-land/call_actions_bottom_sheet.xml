@@ -12,9 +12,6 @@
             name="callsListClickListener"
             type="View.OnClickListener" />
         <variable
-            name="callStatisticsClickListener"
-            type="View.OnClickListener" />
-        <variable
             name="viewModel"
             type="org.linphone.ui.call.viewmodel.CurrentCallViewModel" />
         <variable
@@ -26,6 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/call_all_actions_menu_height"
         android:background="@drawable/shape_call_bottom_sheet_background"
+        android:visibility="@{viewModel.fullScreenMode || viewModel.pipMode ? View.INVISIBLE : View.VISIBLE}"
         app:behavior_hideable="false"
         app:behavior_peekHeight="@dimen/call_main_actions_menu_height"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
@@ -126,27 +124,11 @@
             android:background="@drawable/shape_round_in_call_disabled_button_background"
             android:padding="@dimen/call_button_icon_padding"
             android:src="@drawable/chat_teardrop_text"
-            android:visibility="gone"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="@id/chat_label"
             app:layout_constraintStart_toStartOf="@id/chat_label"
             app:layout_constraintTop_toBottomOf="@id/main_actions"
             app:tint="@color/gray_500" />
-
-        <ImageView
-            android:id="@+id/stats"
-            android:onClick="@{callStatisticsClickListener}"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/call_button_size"
-            android:layout_marginTop="@dimen/call_extra_button_top_margin"
-            android:background="@drawable/in_call_button_background_red"
-            android:padding="@dimen/call_button_icon_padding"
-            android:src="@drawable/chart_bar"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="@id/stats_label"
-            app:layout_constraintStart_toStartOf="@id/stats_label"
-            app:layout_constraintTop_toBottomOf="@id/main_actions"
-            app:tint="@color/in_call_button_tint_color" />
 
         <ImageView
             android:id="@+id/pause_call"
@@ -227,7 +209,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"
             android:text="@string/call_action_show_dialer"
-            app:layout_constraintEnd_toStartOf="@id/stats_label"
+            app:layout_constraintEnd_toStartOf="@id/chat_label"
             app:layout_constraintStart_toEndOf="@id/calls_list_label"
             app:layout_constraintTop_toBottomOf="@id/numpad" />
 
@@ -238,22 +220,9 @@
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"
             android:text="@string/call_action_show_messages"
-            android:visibility="gone"
             app:layout_constraintEnd_toStartOf="@id/pause_call_label"
             app:layout_constraintStart_toEndOf="@id/numpad_label"
             app:layout_constraintTop_toBottomOf="@id/chat" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/stats_label"
-            android:onClick="@{callStatisticsClickListener}"
-            style="@style/in_call_extra_action_label_style"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:paddingBottom="15dp"
-            android:text="@string/call_action_show_statistics"
-            app:layout_constraintEnd_toStartOf="@id/pause_call_label"
-            app:layout_constraintStart_toEndOf="@id/numpad_label"
-            app:layout_constraintTop_toBottomOf="@id/stats" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/in_call_extra_action_label_style"
@@ -265,7 +234,7 @@
             android:paddingBottom="15dp"
             android:text="@{viewModel.isPaused ? @string/call_action_resume_call : @string/call_action_pause_call, default=@string/call_action_pause_call}"
             app:layout_constraintEnd_toStartOf="@id/record_call_label"
-            app:layout_constraintStart_toEndOf="@id/stats_label"
+            app:layout_constraintStart_toEndOf="@id/chat_label"
             app:layout_constraintTop_toBottomOf="@id/pause_call" />
 
         <androidx.appcompat.widget.AppCompatTextView
