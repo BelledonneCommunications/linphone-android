@@ -6,8 +6,8 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
-def appVersionName = "5.2.2"
-def appVersionCode = 52002
+def appVersionName = "5.2.3"
+def appVersionCode = 52003
 
 def packageName = "org.linphone"
 
@@ -214,7 +214,7 @@ dependencies {
     implementation "androidx.emoji2:emoji2:$emoji_version"
     implementation "androidx.emoji2:emoji2-emojipicker:$emoji_version"
 
-    def nav_version = "2.7.5"
+    def nav_version = "2.7.6"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
