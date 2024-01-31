@@ -337,7 +337,7 @@
     <string name="call_stats_zrtp_sas_algo">Algoritm SAS:</string>
     <string name="assistant_welcome_title">Bine ați venit</string>
     <string name="assistant_create_account">Creați un cont</string>
-    <string name="assistant_login_linphone">Utilizați &amp;appName; cont</string>
+    <string name="assistant_login_linphone">Utilizați &appName; cont</string>
     <string name="assistant_login_generic">Utilizați contul SIP</string>
     <string name="assistant_remote_provisioning">Preluarea configurației la distanță</string>
     <string name="assistant_ec_calibration">Calibrarea anulatorului de ecou în curs de desfășurare</string>
@@ -363,7 +363,7 @@
     <string name="assistant_continue_even_if_credentials_invalid">Continuați</string>
     <string name="assistant_generic_account">Utilizați contul SIP</string>
     <string name="assistant_display_name_optional">Numele de afișare (opțional)</string>
-    <string name="assistant_create_account_part_email">Vă rugăm să introduceți un nume de utilizator, un e-mail și o parolă pentru contul &amp;appName; dumneavoastră</string>
+    <string name="assistant_create_account_part_email">Vă rugăm să introduceți un nume de utilizator, un e-mail și o parolă pentru contul &appName; dumneavoastră</string>
     <string name="assistant_confirm_password">Confirmarea parolei</string>
     <string name="assistant_validate_account_2">După ce ați terminat, reveniți aici și faceți clic pe buton.</string>
     <string name="assistant_create_account_part_2">V-am trimis un SMS cu un cod de validare la numărul dumneavoastră de telefon:</string>
@@ -451,22 +451,22 @@
     <string name="assistant_phone_number_link_info_content">"
 \nPrietenii tăi te vor găsi mai ușor dacă îți legi contul de numărul de telefon.
 \n
-\nVeți vedea în agenda dumneavoastră cine folosește &amp;appName; iar prietenii dumneavoastră vor ști că vă pot contacta și pe &amp;appName; de asemenea.
+\nVeți vedea în agenda dumneavoastră cine folosește &appName; iar prietenii dumneavoastră vor ști că vă pot contacta și pe &appName; de asemenea.
 \n"</string>
-    <string name="assistant_phone_number_link_info_content_already_account">Puteți utiliza numărul dumneavoastră de telefon doar cu un singur cont &amp;appName;.
+    <string name="assistant_phone_number_link_info_content_already_account">Puteți utiliza numărul dumneavoastră de telefon doar cu un singur cont &appName;.
 \n
 \nDacă v-ați conectat deja numărul la un alt cont, dar preferați să îl folosiți pe acesta, pur și simplu conectați-l acum și numărul dumneavoastră va fi mutat automat în acest cont.</string>
     <string name="assistant_general_terms">termeni de utilizare</string>
     <string name="assistant_read_and_agree_terms">Accept %1$s și %2$s de la Belledonne Communications</string>
-    <string name="assistant_generic_account_warning">Unele caracteristici necesită un cont &amp;appName;, cum ar fi mesageria de grup sau mesageria efemeră.
+    <string name="assistant_generic_account_warning">Unele caracteristici necesită un cont &appName;, cum ar fi mesageria de grup sau mesageria efemeră.
 \n
 \nAceste caracteristici sunt ascunse atunci când vă înregistrați cu un cont SIP al unei terțe părți.
 \n
 \nPentru a le activa într-un proiect comercial, vă rugăm să ne contactați.</string>
     <string name="assistant_error_username_already_exists">Nume de utilizator deja utilizat</string>
     <string name="assistant_error_passwords_dont_match">Parolele nu se potrivesc</string>
-    <string name="assistant_linphone_account">Utilizați &amp;appName; contul dumneavoastră</string>
-    <string name="assistant_linphone_login_desc">Vă rugăm să introduceți numele de utilizator și parola contului &amp;appName; dumneavoastră</string>
+    <string name="assistant_linphone_account">Utilizați &appName; contul dumneavoastră</string>
+    <string name="assistant_linphone_login_desc">Vă rugăm să introduceți numele de utilizator și parola contului &appName; dumneavoastră</string>
     <string name="assistant_login_with_username">Utilizați numele de utilizator și parola în loc de numărul de telefon</string>
     <string name="assistant_login_desc">Vă rugăm să introduceți numele dumneavoastră de utilizator și parola cu domeniul dumneavoastră SIP</string>
     <string name="assistant_validate_account_1">Contul dumneavoastră este creat. Vă rugăm să vă verificați e-mailurile pentru a vă valida contul:</string>
@@ -628,8 +628,8 @@
     <string name="conferences_settings_layout_title">Dispunere implicită</string>
     <string name="conferences_settings_enable_broadcast_title">Permiteți transmisiunile</string>
     <string name="conferences_settings_enable_broadcast_summary">Funcția este în prezent în versiune beta!</string>
-    <string name="notification_channel_missed_call_name">&amp;appName; notificări de apeluri ratate</string>
-    <string name="notification_channel_chat_name">&amp;appName; notificări de mesaje instantanee</string>
+    <string name="notification_channel_missed_call_name">&appName; notificări de apeluri ratate</string>
+    <string name="notification_channel_chat_name">&appName; notificări de mesaje instantanee</string>
     <string name="incoming_call_notification_title">Apel primit</string>
     <string name="incoming_group_call_notification_title">Apel de grup primit</string>
     <string name="incoming_call_notification_hangup_action_label">Închideți</string>
@@ -666,7 +666,7 @@
     <string name="chat_settings_use_in_app_file_viewer_title">Deschideți întotdeauna fișiere în această aplicație</string>
     <string name="contacts_settings_friendlist_subscribe_title">Abonare listă de prieteni</string>
     <string name="contacts_settings_native_presence_title">Informații de prezență în contactul nativ</string>
-    <string name="contacts_settings_native_presence_summary">Inserarea scurtăturilor de informații din contactul &amp;appName; în contactele native Android</string>
+    <string name="contacts_settings_native_presence_summary">Inserarea scurtăturilor de informații din contactul &appName; în contactele native Android</string>
     <string name="contacts_settings_show_new_contact_account_dialog_title">Întrebați întotdeauna în ce cont salvați contactul nou creat</string>
     <string name="contacts_settings_ldap_bind_dn_title">Legătura DN</string>
     <string name="contacts_settings_ldap_search_base_title">Baza de căutare</string>
@@ -688,8 +688,8 @@
     <string name="account_setting_delete_dialog_title">Doriți să vă ștergeți contul\?</string>
     <string name="account_setting_delete_generic_confirmation_dialog">Contul dumneavoastră va fi șters doar la nivel local.
 \nPentru a-l șterge definitiv, accesați site-ul web al furnizorului dumneavoastră SIP.</string>
-    <string name="notification_channel_service_name">&amp;appName; notificare de serviciu</string>
-    <string name="notification_channel_incoming_call_name">&amp;appName; notificări de apeluri primite</string>
+    <string name="notification_channel_service_name">&appName; notificare de serviciu</string>
+    <string name="notification_channel_incoming_call_name">&appName; notificări de apeluri primite</string>
     <string name="zrtp_dialog_title">Securitatea comunicațiilor</string>
     <string name="zrtp_dialog_explanation">Pentru a crește nivelul de securitate, puteți verifica următoarele coduri cu corespondentul dumneavoastră.</string>
     <string name="dialog_lime_security_message">Mesajele instantanee sunt criptate de la un capăt la altul în conversații securizate. Este posibil să se îmbunătățească nivelul de securitate al unei conversații prin autentificarea participanților. Pentru a face acest lucru, apelați persoana de contact și urmați procesul de autentificare.</string>

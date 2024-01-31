@@ -12,8 +12,8 @@
     <string name="missed_calls_notification_body" tools:ignore="PluralsCandidate">%d nieodebranych połączeń</string>
     <string name="dialog_do_not_ask_again">Nie pokazuj ponownie</string>
     <string name="dialog_accept">Akceptuj</string>
-    <string name="service_auto_start_description">&amp;appName; uruchomiło się automatycznie</string>
-    <string name="sync_account_name">&amp;appName; kontakty</string>
+    <string name="service_auto_start_description">&appName; uruchomiło się automatycznie</string>
+    <string name="sync_account_name">&appName; kontakty</string>
     <string name="logs_upload_failure">Błąd wczytywania dziwnnika</string>
     <string name="logs_reset_complete">Dziennik został wyczyszczony</string>
     <string name="phone_numbers">Numery telefonu</string>
@@ -68,7 +68,7 @@
     <string name="conference_schedule_description_hint">Opis</string>
     <string name="conference_schedule_date">Data</string>
     <string name="conference_schedule_time">Czas</string>
-    <string name="conference_schedule_send_updated_invite_chat">Wyślij aktualizację za pomocą &amp;appName;</string>
+    <string name="conference_schedule_send_updated_invite_chat">Wyślij aktualizację za pomocą &appName;</string>
     <string name="conference_schedule_send_invite_email">Wyślij zaproszenie mailem</string>
     <string name="conference_organizer">Organizator</string>
     <string name="conference_schedule_start">Zaplanowane spotkanie</string>
@@ -80,10 +80,10 @@
     <string name="conference_invite_title">Zaproszenie do spotkania:</string>
     <string name="conference_display_mode_mosaic">Tryb mozaiki</string>
     <string name="conference_waiting_room_cancel_call">Anuluj</string>
-    <string name="service_name">&amp;appName; Usługa</string>
+    <string name="service_name">&appName; Usługa</string>
     <string name="service_description">Wymagane jest do odbierania połączeń, gdy aplikacja działa w tle</string>
     <string name="about_privacy_policy">Zobacz naszą Politykę prywatności</string>
-    <string name="about_weblate_translation">Pomóż nam przetłumaczyć &amp;appName;</string>
+    <string name="about_weblate_translation">Pomóż nam przetłumaczyć &appName;</string>
     <string name="logs_url_copied_to_clipboard">Skopiowano adres dziennika do schowka</string>
     <string name="phone_number">Numer telefonu</string>
     <string name="sip_address">Adres SIP</string>
@@ -93,12 +93,12 @@
     <string name="about">O</string>
     <string name="history_delete_one_dialog">Usunąć ten wpis\?</string>
     <string name="history_delete_many_dialog">Usunąć te wpisy\?</string>
-    <string name="contact_send_sms_invite_text">Cześć, dołącz do mnie w &amp;appName;! Możesz pobrać za darmo w %s</string>
+    <string name="contact_send_sms_invite_text">Cześć, dołącz do mnie w &appName;! Możesz pobrać za darmo w %s</string>
     <string name="contact_first_name">Imię</string>
     <string name="contact_delete_one_dialog">Usunąć ten kontakty\?
 \nZostanie on również usunięty z książki na urządzeniu</string>
     <string name="contact_cant_be_deleted">Tego kontaktu nie można usunąć</string>
-    <string name="contacts_new_contact_wont_be_visible_warning_dialog">Zamierzasz utworzyć kontakt bez numer SIP lub numeru telefonu, nie będzie on widoczny w &amp;appName;.
+    <string name="contacts_new_contact_wont_be_visible_warning_dialog">Zamierzasz utworzyć kontakt bez numer SIP lub numeru telefonu, nie będzie on widoczny w &appName;.
 \n
 \nKontynuować\?</string>
     <string name="chat_event_device_added">nowe urządzenie %s</string>
@@ -246,9 +246,9 @@
     </plurals>
     <string name="conference_schedule_broadcast_address_title">Adres transmisji</string>
     <string name="conference_schedule_mode_broadcast">Transmisja</string>
-    <string name="conference_schedule_send_invite_chat">Wyślij zaproszenie za pomocną &amp;appName;</string>
+    <string name="conference_schedule_send_invite_chat">Wyślij zaproszenie za pomocną &appName;</string>
     <string name="conference_schedule_send_updated_invite_email">Wyślij aktualizację mailem</string>
-    <string name="conference_schedule_send_invite_chat_summary">Zaproszenie zostanie wysłane za pomocą konta w &amp;appName;</string>
+    <string name="conference_schedule_send_invite_chat_summary">Zaproszenie zostanie wysłane za pomocą konta w &appName;</string>
     <string name="conference_schedule_participants_list">Lista uczestników</string>
     <string name="conference_schedule_speakers_list">Lista mówców</string>
     <string name="conference_schedule_speakers_list_empty">Wybierz co najmniej jednego mówiącego</string>
