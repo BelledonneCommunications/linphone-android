@@ -704,4 +704,33 @@
 \n%s.
 \n
 \nPuteți furniza din nou parola sau puteți verifica configurația contului în setări.</string>
+    <string name="content_description_add_phone_number_field">Adăugați un câmp pentru numărul de telefon</string>
+    <string name="content_description_go_back">Înapoi</string>
+    <string name="content_description_phone_number_use">Arătați pentru ce va fi folosit numărul dumneavoastră de telefon</string>
+    <string name="content_description_clear_field">Goliți câmpul de text de lângă el</string>
+    <string name="content_description_switch_camera">Treceți de la camera frontală la cea din spate și viceversa</string>
+    <string name="content_description_pause_call">Întrerupeți apelul</string>
+    <string name="content_description_terminate_call">Terminarea apelului</string>
+    <string name="content_description_answer_call">Răspundeți la apel</string>
+    <string name="content_description_disable_mic_mute">Scoateți microfonul din modul silențios</string>
+    <string name="content_description_enable_speaker">Rutarea audio către difuzor</string>
+    <string name="content_description_disable_speaker">Rutați sunetul către cască</string>
+    <string name="content_description_go_back_to_call">Reveniți la vizualizarea apelurilor</string>
+    <string name="content_description_enable_video">Activare video în apel</string>
+    <string name="content_description_toggle_audio_menu">Afișați sau ascundeți meniul de ieșire audio</string>
+    <string name="content_description_use_bluetooth_headset">Utilizați căștile bluetooth ca ieșire audio</string>
+    <string name="content_description_use_earpiece">Utilizați căștile ca ieșire audio</string>
+    <string name="content_description_add_call">Începeți un nou apel</string>
+    <string name="content_description_transfer_call">Transferați apelul curent către altcineva</string>
+    <string name="content_description_pending_file_transfer">Transfer de fișiere în așteptare</string>
+    <string name="content_description_remove_pending_file_transfer">Eliminați transferul de fișiere în așteptare</string>
+    <string name="content_description_downloaded_file_transfer">Fișier atașat</string>
+    <string name="content_description_delivery_status">Starea de livrare a mesajelor</string>
+    <string name="content_description_linphone_user">Contact este un &amp;appName; utilizator</string>
+    <string name="content_description_toggle_recording">Activați sau dezactivați înregistrarea apelului</string>
+    <string name="content_description_enable_mic_mute">Dezactivați microfonul</string>
+    <string name="content_description_disable_video">Dezactivarea imaginii video în timpul apelului</string>
+    <string name="content_description_use_speaker">Utilizați difuzorul ca ieșire audio</string>
+    <string name="content_description_forward_message">Transmiteți mesajul în această conversație</string>
+    <string name="content_description_ephemeral_message">Mesajul este efemer</string>
 </resources>
