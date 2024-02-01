@@ -29,13 +29,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.CallActiveConferenceFragmentBinding
+import org.linphone.ui.call.model.CallMediaEncryptionModel
 import org.linphone.ui.call.viewmodel.CallsViewModel
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
 import org.linphone.utils.Event
+import org.linphone.utils.startAnimatedDrawable
 
 class ActiveConferenceCallFragment : GenericCallFragment() {
     companion object {
@@ -47,6 +52,28 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
     private lateinit var callViewModel: CurrentCallViewModel
 
     private lateinit var callsViewModel: CallsViewModel
+
+    private val actionsBottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+            if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                val drawable = AnimatedVectorDrawableCompat.create(
+                    requireContext(),
+                    R.drawable.animated_handle_to_caret
+                )
+                binding.bottomBar.mainActions.handle.setImageDrawable(drawable)
+            } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                val drawable = AnimatedVectorDrawableCompat.create(
+                    requireContext(),
+                    R.drawable.animated_caret_to_handle
+                )
+                binding.bottomBar.mainActions.handle.setImageDrawable(drawable)
+            }
+        }
+
+        override fun onSlide(bottomSheet: View, slideOffset: Float) { }
+    }
+
+    private var bottomSheetDialog: BottomSheetDialogFragment? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -76,6 +103,7 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
 
         val actionsBottomSheetBehavior = BottomSheetBehavior.from(binding.bottomBar.root)
         actionsBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        actionsBottomSheetBehavior.addBottomSheetCallback(actionsBottomSheetCallback)
 
         callViewModel.callDuration.observe(viewLifecycleOwner) { duration ->
             binding.chronometer.base = SystemClock.elapsedRealtime() - (1000 * duration)
@@ -86,8 +114,20 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
             it.consume {
                 val state = actionsBottomSheetBehavior.state
                 if (state == BottomSheetBehavior.STATE_COLLAPSED) {
+                    val drawable = AnimatedVectorDrawableCompat.create(
+                        requireContext(),
+                        R.drawable.animated_caret_to_handle
+                    )
+                    binding.bottomBar.mainActions.handle.setImageDrawable(drawable)
+                    binding.bottomBar.mainActions.handle.startAnimatedDrawable()
                     actionsBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
                 } else if (state == BottomSheetBehavior.STATE_EXPANDED) {
+                    val drawable = AnimatedVectorDrawableCompat.create(
+                        requireContext(),
+                        R.drawable.animated_handle_to_caret
+                    )
+                    binding.bottomBar.mainActions.handle.setImageDrawable(drawable)
+                    binding.bottomBar.mainActions.handle.startAnimatedDrawable()
                     actionsBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                 }
             }
@@ -101,6 +141,16 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
         callViewModel.conferenceModel.conferenceLayout.observe(viewLifecycleOwner) { layout ->
             // Collapse bottom sheet after changing conference layout
             actionsBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+
+        callViewModel.showMediaEncryptionStatisticsEvent.observe(viewLifecycleOwner) {
+            it.consume { model ->
+                showMediaEncryptionStatistics(model)
+            }
+        }
+
+        binding.setBackClickListener {
+            requireActivity().finish()
         }
 
         binding.setCallsListClickListener {
@@ -125,6 +175,10 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
                 clipboard.setPrimaryClip(ClipData.newPlainText(label, sipUri))
             }
         }
+
+        binding.setCallStatisticsClickListener {
+            showCallStatistics()
+        }
     }
 
     override fun onResume() {
@@ -134,5 +188,18 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
             // Need to be done manually
             callViewModel.updateCallDuration()
         }
+    }
+
+    private fun showCallStatistics() {
+        // TODO
+    }
+
+    private fun showMediaEncryptionStatistics(model: CallMediaEncryptionModel) {
+        val modalBottomSheet = MediaEncryptionStatisticsDialogFragment(model)
+        modalBottomSheet.show(
+            requireActivity().supportFragmentManager,
+            MediaEncryptionStatisticsDialogFragment.TAG
+        )
+        bottomSheetDialog = modalBottomSheet
     }
 }

@@ -53,33 +53,19 @@
                 android:orientation="horizontal"
                 app:layout_constraintGuide_percent="1" />
 
-            <ImageView
-                android:id="@+id/background"
-                android:src="@drawable/shape_round_in_call_gray_background"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
-                android:layout_marginBottom="@dimen/call_main_actions_menu_margin"
-                app:layout_constraintTop_toBottomOf="@id/media_encryption_icon"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
-
             <com.google.android.material.imageview.ShapeableImageView
                 style="@style/avatar_imageview"
                 android:id="@+id/avatar"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginTop="5dp"
                 coilCallAvatar="@{viewModel.contact}"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintWidth_max="@dimen/avatar_in_call_size"
                 app:layout_constraintHeight_max="@dimen/avatar_in_call_size"
                 app:layout_constraintVertical_chainStyle="packed"
-                app:layout_constraintEnd_toEndOf="@id/background"
-                app:layout_constraintStart_toStartOf="@id/background"
-                app:layout_constraintTop_toTopOf="@id/background"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/media_encryption_icon"
                 app:layout_constraintBottom_toTopOf="@id/display_name"/>
 
             <ImageView
@@ -115,7 +101,7 @@
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 app:layout_constraintTop_toBottomOf="@id/display_name"
-                app:layout_constraintBottom_toBottomOf="@id/background"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
@@ -261,12 +247,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
-                android:layout_marginBottom="40dp"
+                android:layout_marginBottom="20dp"
                 android:visibility="@{viewModel.isVideoEnabled ? View.VISIBLE : View.GONE}"
                 app:alignTopRight="true"
                 app:displayMode="black_bars"
-                app:layout_constraintBottom_toBottomOf="@id/background"
-                app:layout_constraintEnd_toEndOf="@id/background"
+                app:layout_constraintBottom_toBottomOf="@id/remote_video_surface"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHeight_max="200dp"
                 app:layout_constraintWidth_max="200dp" />
 
@@ -278,8 +264,8 @@
                 android:layout_marginStart="10dp"
                 android:src="@drawable/record_fill"
                 android:visibility="@{viewModel.isRecording ? View.VISIBLE : View.GONE, default=gone}"
-                app:layout_constraintTop_toTopOf="@id/background"
-                app:layout_constraintStart_toStartOf="@id/background"
+                app:layout_constraintTop_toBottomOf="@id/media_encryption_icon"
+                app:layout_constraintStart_toStartOf="parent"
                 app:tint="?attr/color_danger_500" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,30 +16,16 @@
         android:layout_height="match_parent"
         android:background="@color/gray_900">
 
-        <androidx.constraintlayout.widget.Group
-            android:id="@+id/single_call_group"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:constraint_referenced_ids="call_direction_label, call_direction_icon"
-            android:visibility="@{viewModel.conferenceModel.isCurrentCallInConference ? View.GONE : View.VISIBLE}" />
-
-        <androidx.constraintlayout.widget.Group
-            android:id="@+id/conference_group"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:constraint_referenced_ids="conference_icon, conference_subject"
-            android:visibility="@{viewModel.conferenceModel.isCurrentCallInConference ? View.VISIBLE : View.GONE, default=gone}" />
-
         <ImageView
-            android:id="@+id/call_direction_icon"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            android:layout_marginStart="10dp"
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/top_bar_height"
             android:adjustViewBounds="true"
-            android:src="@{viewModel.isOutgoing ? @drawable/outgoing_call : @drawable/incoming_call, default=@drawable/outgoing_call}"
+            android:padding="15dp"
+            android:src="@drawable/caret_left"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/call_direction_label"
-            app:layout_constraintBottom_toBottomOf="@id/call_direction_label"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/white" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/call_header_style"
@@ -48,41 +34,10 @@
             android:layout_height="@dimen/call_top_bar_text_height"
             android:layout_marginStart="10dp"
             android:text="@string/call_ended"
-            app:layout_constraintStart_toEndOf="@id/call_direction_icon"
-            app:layout_constraintTop_toTopOf="@id/separator"
-            app:layout_constraintBottom_toBottomOf="@id/separator"/>
-
-        <ImageView
-            android:id="@+id/conference_icon"
-            android:layout_width="@dimen/icon_size"
-            android:layout_height="@dimen/icon_size"
-            android:layout_marginStart="10dp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/meeting"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/conference_subject"
-            app:layout_constraintBottom_toBottomOf="@id/conference_subject"
-            app:tint="?attr/color_main1_500" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/call_header_style"
-            android:id="@+id/conference_subject"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/call_top_bar_text_height"
-            android:layout_marginStart="10dp"
-            android:text="@{viewModel.conferenceModel.subject, default=`Meeting with John Doe`}"
-            android:maxLines="1"
-            android:ellipsize="end"
-            app:layout_constraintStart_toEndOf="@id/conference_icon"
-            app:layout_constraintTop_toTopOf="@id/separator"
-            app:layout_constraintBottom_toBottomOf="@id/separator"/>
-
-        <androidx.constraintlayout.widget.Barrier
-            android:id="@+id/header_end_barrier"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:barrierDirection="end"
-            app:constraint_referenced_ids="call_direction_label, conference_subject" />
+            android:visibility="@{viewModel.conferenceModel.isCurrentCallInConference ? View.GONE : View.VISIBLE}"
+            app:layout_constraintStart_toEndOf="@id/back"
+            app:layout_constraintTop_toTopOf="@id/back"
+            app:layout_constraintBottom_toBottomOf="@id/back"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/call_header_style"
@@ -90,10 +45,10 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/call_top_bar_text_height"
             android:layout_marginStart="5dp"
-            android:layout_marginTop="10dp"
             android:text="@string/vertical_separator"
-            app:layout_constraintStart_toEndOf="@id/header_end_barrier"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintStart_toEndOf="@id/call_direction_label"
+            app:layout_constraintTop_toTopOf="@id/call_direction_label"
+            app:layout_constraintBottom_toBottomOf="@id/call_direction_label"/>
 
         <Chronometer
             style="@style/call_header_style"
@@ -103,47 +58,55 @@
             android:layout_marginStart="5dp"
             android:visibility="@{viewModel.isPaused || viewModel.isPausedByRemote ? View.GONE : View.VISIBLE}"
             app:layout_constraintStart_toEndOf="@id/separator"
-            app:layout_constraintTop_toTopOf="@id/separator"/>
+            app:layout_constraintTop_toTopOf="@id/call_direction_label"
+            app:layout_constraintBottom_toBottomOf="@id/call_direction_label"/>
 
         <ImageView
-            android:id="@+id/media_encryption"
-            android:layout_width="@dimen/call_top_bar_info_height"
-            android:layout_height="@dimen/call_top_bar_info_height"
-            android:padding="10dp"
-            android:src="@{viewModel.isZrtpPq ? @drawable/media_encryption_zrtp_pq : @drawable/media_encryption_srtp, default=@drawable/media_encryption_zrtp_pq}"
-            android:visibility="@{viewModel.isMediaEncrypted ? View.VISIBLE : View.GONE}"
-            app:layout_constraintTop_toTopOf="@id/separator"
-            app:layout_constraintBottom_toBottomOf="@id/separator"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <ImageView
-            android:id="@+id/background"
-            android:src="@drawable/shape_round_in_call_gray_background"
-            android:layout_width="0dp"
+            style="@style/default_text_style"
+            android:id="@+id/media_encryption_icon"
+            android:onClick="@{() -> viewModel.showMediaEncryptionStatisticsIfPossible()}"
+            android:layout_width="@dimen/small_icon_size"
             android:layout_height="0dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="12dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            app:layout_constraintTop_toBottomOf="@id/separator"
-            app:layout_constraintBottom_toTopOf="@id/bottom_bar"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:layout_marginStart="10dp"
+            android:adjustViewBounds="true"
+            android:paddingTop="3dp"
+            android:contentDescription="@null"
+            android:src="@{viewModel.isZrtpPq ? @drawable/atom : @drawable/lock_simple, default=@drawable/atom}"
+            android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; viewModel.isMediaEncrypted ? View.VISIBLE : View.GONE}"
+            app:layout_constraintStart_toEndOf="@id/back"
+            app:layout_constraintTop_toTopOf="@id/media_encryption_label"
+            app:layout_constraintBottom_toBottomOf="@id/media_encryption_label"
+            app:tint="@color/blue_info_500" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/media_encryption_label"
+            android:onClick="@{() -> viewModel.showMediaEncryptionStatisticsIfPossible()}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="@{viewModel.isZrtpPq ? @string/call_post_quantum_zrtp_end_to_end_encrypted : @string/call_zrtp_end_to_end_encrypted, default=@string/call_post_quantum_zrtp_end_to_end_encrypted}"
+            android:textSize="12sp"
+            android:textColor="@color/blue_info_500"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; viewModel.isMediaEncrypted ? View.VISIBLE : View.GONE}"
+            app:layout_constraintStart_toEndOf="@id/media_encryption_icon"
+            app:layout_constraintTop_toBottomOf="@id/call_direction_label"/>
 
         <com.google.android.material.imageview.ShapeableImageView
             style="@style/avatar_imageview"
             android:id="@+id/avatar"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="5dp"
             coilCallAvatar="@{viewModel.contact}"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintWidth_max="@dimen/avatar_in_call_size"
             app:layout_constraintHeight_max="@dimen/avatar_in_call_size"
             app:layout_constraintVertical_chainStyle="packed"
-            app:layout_constraintEnd_toEndOf="@id/background"
-            app:layout_constraintStart_toStartOf="@id/background"
-            app:layout_constraintTop_toTopOf="@id/background"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/media_encryption_icon"
             app:layout_constraintBottom_toTopOf="@id/name"/>
 
         <ImageView
@@ -179,7 +142,7 @@
             android:textColor="@color/white"
             android:textSize="14sp"
             app:layout_constraintTop_toBottomOf="@id/name"
-            app:layout_constraintBottom_toBottomOf="@id/background"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 

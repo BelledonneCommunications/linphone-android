@@ -37,46 +37,7 @@
             android:layout_marginBottom="10dp"
             android:text="@string/call_outgoing"
             app:layout_constraintStart_toEndOf="@id/call_direction_icon"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/background"/>
-
-        <ImageView
-            android:id="@+id/media_encryption"
-            android:layout_width="@dimen/call_top_bar_info_height"
-            android:layout_height="@dimen/call_top_bar_info_height"
-            android:padding="10dp"
-            android:src="@{viewModel.isZrtpPq ? @drawable/media_encryption_zrtp_pq : @drawable/media_encryption_srtp, default=@drawable/media_encryption_zrtp_pq}"
-            android:visibility="@{viewModel.isMediaEncrypted ? View.VISIBLE : View.GONE}"
-            app:layout_constraintTop_toTopOf="@id/call_direction_label"
-            app:layout_constraintBottom_toBottomOf="@id/call_direction_label"
-            app:layout_constraintEnd_toStartOf="@id/switch_camera" />
-
-        <ImageView
-            android:onClick="@{() -> viewModel.switchCamera()}"
-            android:id="@+id/switch_camera"
-            android:layout_width="@dimen/icon_size"
-            android:layout_height="@dimen/icon_size"
-            android:layout_marginEnd="10dp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/camera_rotate"
-            android:visibility="@{viewModel.isVideoEnabled() ? View.VISIBLE : View.GONE}"
-            app:layout_constraintTop_toTopOf="@id/call_direction_label"
-            app:layout_constraintBottom_toBottomOf="@id/call_direction_label"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:tint="@color/white" />
-
-        <ImageView
-            android:id="@+id/background"
-            android:src="@drawable/shape_round_in_call_gray_background"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="12dp"
-            android:layout_marginBottom="10dp"
-            app:layout_constraintTop_toBottomOf="@id/call_direction_label"
-            app:layout_constraintBottom_toTopOf="@id/bottom_bar"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <com.google.android.material.imageview.ShapeableImageView
             style="@style/avatar_imageview"
@@ -84,10 +45,11 @@
             android:layout_width="@dimen/avatar_in_call_size"
             android:layout_height="@dimen/avatar_in_call_size"
             coilCallAvatar="@{viewModel.contact}"
-            app:layout_constraintEnd_toEndOf="@id/background"
-            app:layout_constraintStart_toStartOf="@id/background"
-            app:layout_constraintTop_toTopOf="@id/background"
-            app:layout_constraintBottom_toBottomOf="@id/background"/>
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/call_direction_label"
+            app:layout_constraintBottom_toTopOf="@id/name"/>
 
         <ImageView
             android:id="@+id/trust_badge"
@@ -117,7 +79,7 @@
             android:textSize="30sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/background"
+            app:layout_constraintTop_toBottomOf="@id/call_direction_label"
             app:layout_constraintBottom_toTopOf="@id/avatar" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -130,6 +92,7 @@
             android:textColor="@color/white"
             android:textSize="22sp"
             app:layout_constraintTop_toBottomOf="@id/avatar"
+            app:layout_constraintBottom_toTopOf="@id/address"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -142,6 +105,7 @@
             android:textColor="@color/white"
             android:textSize="14sp"
             app:layout_constraintTop_toBottomOf="@id/name"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 

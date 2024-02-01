@@ -8,6 +8,9 @@
         <import type="org.linphone.core.ChatRoom.SecurityLevel" />
         <import type="org.linphone.ui.call.model.ConferenceModel" />
         <variable
+            name="backClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="shareConferenceClickListener"
             type="View.OnClickListener" />
         <variable
@@ -15,6 +18,9 @@
             type="View.OnClickListener" />
         <variable
             name="participantsListClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="callStatisticsClickListener"
             type="View.OnClickListener" />
         <variable
             name="viewModel"
@@ -40,27 +46,11 @@
             android:layout_height="match_parent"
             android:background="@color/gray_900">
 
-            <ImageView
-                android:id="@+id/background"
-                android:src="@drawable/shape_round_in_call_gray_background"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
-                android:layout_marginTop="@dimen/call_top_bar_info_height"
-                android:layout_marginBottom="@dimen/call_main_actions_menu_margin"
-                android:visibility="@{conferenceViewModel.participantDevices.size() > 1 || viewModel.pipMode ? View.GONE : View.VISIBLE}"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
-
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style_300"
                 android:id="@+id/waiting_for_others"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
                 android:text="@string/conference_call_empty"
@@ -68,8 +58,8 @@
                 android:textSize="22sp"
                 android:gravity="center"
                 android:visibility="@{conferenceViewModel.participantDevices.size() > 1 ? View.GONE : View.VISIBLE}"
-                app:layout_constraintTop_toTopOf="@id/background"
-                app:layout_constraintBottom_toBottomOf="@id/background"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
@@ -93,8 +83,8 @@
                 android:drawablePadding="8dp"
                 app:drawableTint="@color/gray_main2_400"
                 app:layout_constraintTop_toBottomOf="@id/waiting_for_others"
-                app:layout_constraintStart_toStartOf="@id/background"
-                app:layout_constraintEnd_toEndOf="@id/background"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/conference_layout_nav_host_fragment"
@@ -102,32 +92,31 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginBottom="@{viewModel.fullScreenMode || viewModel.pipMode ? @dimen/zero : @dimen/call_main_actions_menu_margin, default=@dimen/call_main_actions_menu_margin}"
-                android:layout_marginTop="@{viewModel.fullScreenMode || viewModel.pipMode ? @dimen/zero : @dimen/call_top_bar_info_height, default=@dimen/call_top_bar_info_height}"
                 android:visibility="@{conferenceViewModel.participantDevices.size() > 1 ? View.VISIBLE : View.GONE}"
                 app:navGraph="@navigation/conference_nav_graph"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintBottom_toBottomOf="@id/media_encryption_icon"/>
 
             <androidx.constraintlayout.widget.Group
                 android:id="@+id/header_info_visibility"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="@{viewModel.fullScreenMode || viewModel.pipMode ? View.INVISIBLE : View.VISIBLE}"
-                app:constraint_referenced_ids="conference_icon, conference_subject, separator, chronometer" />
+                app:constraint_referenced_ids="back, conference_subject, separator, chronometer" />
 
             <ImageView
-                android:id="@+id/conference_icon"
-                android:layout_width="@dimen/icon_size"
-                android:layout_height="@dimen/icon_size"
-                android:layout_marginStart="10dp"
+                android:id="@+id/back"
+                android:onClick="@{backClickListener}"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/top_bar_height"
                 android:adjustViewBounds="true"
-                android:src="@drawable/meeting"
+                android:padding="15dp"
+                android:src="@drawable/caret_left"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/conference_subject"
-                app:layout_constraintBottom_toBottomOf="@id/conference_subject"
-                app:tint="?attr/color_main1_500" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/white" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/call_header_style"
@@ -139,7 +128,7 @@
                 android:text="@{conferenceViewModel.subject, default=`Meeting with John Doe`}"
                 android:maxLines="1"
                 android:ellipsize="end"
-                app:layout_constraintStart_toEndOf="@id/conference_icon"
+                app:layout_constraintStart_toEndOf="@id/back"
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -178,18 +167,64 @@
                 app:layout_constraintTop_toTopOf="@id/conference_subject"/>
 
             <ImageView
-                android:onClick="@{() -> viewModel.switchCamera()}"
-                android:id="@+id/switch_camera"
+                style="@style/default_text_style"
+                android:id="@+id/media_encryption_icon"
+                android:onClick="@{() -> viewModel.showMediaEncryptionStatisticsIfPossible()}"
+                android:layout_width="@dimen/small_icon_size"
+                android:layout_height="0dp"
+                android:layout_marginStart="10dp"
+                android:adjustViewBounds="true"
+                android:paddingTop="3dp"
+                android:contentDescription="@null"
+                android:src="@{viewModel.isZrtpPq ? @drawable/atom : @drawable/lock_simple, default=@drawable/atom}"
+                android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; viewModel.isMediaEncrypted ? View.VISIBLE : View.GONE}"
+                app:layout_constraintStart_toEndOf="@id/back"
+                app:layout_constraintTop_toTopOf="@id/media_encryption_label"
+                app:layout_constraintBottom_toBottomOf="@id/media_encryption_label"
+                app:tint="@color/blue_info_500" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:id="@+id/media_encryption_label"
+                android:onClick="@{() -> viewModel.showMediaEncryptionStatisticsIfPossible()}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="@{viewModel.isZrtpPq ? @string/call_post_quantum_zrtp_end_to_end_encrypted : @string/call_zrtp_end_to_end_encrypted, default=@string/call_post_quantum_zrtp_end_to_end_encrypted}"
+                android:textSize="12sp"
+                android:textColor="@color/blue_info_500"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; viewModel.isMediaEncrypted ? View.VISIBLE : View.GONE}"
+                app:layout_constraintStart_toEndOf="@id/media_encryption_icon"
+                app:layout_constraintTop_toBottomOf="@id/conference_subject"/>
+
+            <ImageView
+                android:id="@+id/stats"
+                android:onClick="@{callStatisticsClickListener}"
                 android:layout_width="@dimen/call_top_bar_info_height"
                 android:layout_height="@dimen/call_top_bar_info_height"
                 android:padding="10dp"
-                android:layout_marginEnd="10dp"
+                android:src="@drawable/cell_signal_full"
+                android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode ? View.VISIBLE : View.GONE}"
+                app:tint="@color/white"
+                app:layout_constraintTop_toTopOf="@id/conference_subject"
+                app:layout_constraintBottom_toBottomOf="@id/conference_subject"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <ImageView
+                android:id="@+id/switch_camera"
+                android:onClick="@{() -> viewModel.switchCamera()}"
+                android:layout_width="@dimen/call_top_bar_info_height"
+                android:layout_height="@dimen/call_top_bar_info_height"
+                android:padding="10dp"
+                android:layout_marginEnd="5dp"
                 android:src="@drawable/camera_rotate"
                 android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; viewModel.isVideoEnabled &amp;&amp; viewModel.showSwitchCamera ? View.VISIBLE : View.GONE}"
                 app:tint="@color/white"
                 app:layout_constraintTop_toTopOf="@id/conference_subject"
                 app:layout_constraintBottom_toBottomOf="@id/conference_subject"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toStartOf="@+id/stats" />
 
             <ImageView
                 android:id="@+id/recording"
@@ -199,15 +234,14 @@
                 android:layout_marginStart="10dp"
                 android:src="@drawable/record_fill"
                 android:visibility="@{viewModel.isRecording ? View.VISIBLE : View.GONE, default=gone}"
-                app:layout_constraintTop_toTopOf="@id/background"
-                app:layout_constraintStart_toStartOf="@id/background"
+                app:layout_constraintTop_toBottomOf="@id/media_encryption_icon"
+                app:layout_constraintStart_toStartOf="parent"
                 app:tint="?attr/color_danger_500" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <include
             android:id="@+id/bottom_bar"
-            android:visibility="@{viewModel.fullScreenMode || viewModel.pipMode ? View.INVISIBLE : View.VISIBLE}"
             layout="@layout/call_conference_actions_bottom_sheet"
             bind:viewModel="@{viewModel}"
             bind:callsViewModel="@{callsViewModel}"
