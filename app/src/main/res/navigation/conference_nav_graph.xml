@@ -16,6 +16,12 @@
             app:launchSingleTop="true"
             app:popUpTo="@id/conferenceActiveSpeakerFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_conferenceGridFragment_to_conferenceAudioOnlyFragment"
+            app:destination="@id/conferenceAudioOnlyFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/conferenceAudioOnlyFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -25,6 +31,30 @@
         tools:layout="@layout/call_conference_active_speaker_fragment">
         <action
             android:id="@+id/action_conferenceActiveSpeakerFragment_to_conferenceGridFragment"
+            app:destination="@id/conferenceGridFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/conferenceGridFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_conferenceActiveSpeakerFragment_to_conferenceAudioOnlyFragment"
+            app:destination="@id/conferenceAudioOnlyFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/conferenceAudioOnlyFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/conferenceAudioOnlyFragment"
+        android:name="org.linphone.ui.call.fragment.ConferenceAudioOnlyFragment"
+        android:label="ConferenceAudioOnlyFragment"
+        tools:layout="@layout/call_conference_audio_only_fragment">
+        <action
+            android:id="@+id/action_conferenceAudioOnlyFragment_to_conferenceActiveSpeakerFragment"
+            app:destination="@id/conferenceActiveSpeakerFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/conferenceActiveSpeakerFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_conferenceAudioOnlyFragment_to_conferenceGridFragment"
             app:destination="@id/conferenceGridFragment"
             app:launchSingleTop="true"
             app:popUpTo="@id/conferenceGridFragment"

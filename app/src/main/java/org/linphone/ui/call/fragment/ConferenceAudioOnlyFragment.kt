@@ -28,16 +28,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
 import org.linphone.core.tools.Log
-import org.linphone.databinding.CallConferenceGridFragmentBinding
+import org.linphone.databinding.CallConferenceAudioOnlyFragmentBinding
 import org.linphone.ui.call.model.ConferenceModel
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
 @UiThread
-class ConferenceGridFragment : GenericCallFragment() {
+class ConferenceAudioOnlyFragment : GenericCallFragment() {
     companion object {
-        private const val TAG = "[Conference Grid Fragment]"
+        private const val TAG = "[Conference Audio Only Fragment]"
     }
 
-    private lateinit var binding: CallConferenceGridFragmentBinding
+    private lateinit var binding: CallConferenceAudioOnlyFragmentBinding
 
     private lateinit var callViewModel: CurrentCallViewModel
 
@@ -46,7 +46,7 @@ class ConferenceGridFragment : GenericCallFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = CallConferenceGridFragmentBinding.inflate(layoutInflater)
+        binding = CallConferenceAudioOnlyFragmentBinding.inflate(layoutInflater)
         return binding.root
     }
 
@@ -67,19 +67,19 @@ class ConferenceGridFragment : GenericCallFragment() {
                     Log.i(
                         "$TAG Conference layout changed to active speaker, navigating to matching fragment"
                     )
-                    if (findNavController().currentDestination?.id == R.id.conferenceGridFragment) {
+                    if (findNavController().currentDestination?.id == R.id.conferenceAudioOnlyFragment) {
                         findNavController().navigate(
-                            R.id.action_conferenceGridFragment_to_conferenceActiveSpeakerFragment
+                            R.id.action_conferenceAudioOnlyFragment_to_conferenceActiveSpeakerFragment
                         )
                     }
                 }
-                ConferenceModel.AUDIO_ONLY_LAYOUT -> {
+                ConferenceModel.GRID_LAYOUT -> {
                     Log.i(
-                        "$TAG Conference layout changed to audio only, navigating to matching fragment"
+                        "$TAG Conference layout changed to mosaic, navigating to matching fragment"
                     )
-                    if (findNavController().currentDestination?.id == R.id.conferenceGridFragment) {
+                    if (findNavController().currentDestination?.id == R.id.conferenceAudioOnlyFragment) {
                         findNavController().navigate(
-                            R.id.action_conferenceGridFragment_to_conferenceAudioOnlyFragment
+                            R.id.action_conferenceAudioOnlyFragment_to_conferenceGridFragment
                         )
                     }
                 }
@@ -87,5 +87,12 @@ class ConferenceGridFragment : GenericCallFragment() {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        Log.i("$TAG Making sure we are not in full-screen mode")
+        callViewModel.fullScreenMode.value = false
     }
 }

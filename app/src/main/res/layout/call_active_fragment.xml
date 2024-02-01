@@ -61,7 +61,7 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginEnd="12dp"
                 android:layout_marginBottom="@dimen/call_main_actions_menu_margin"
-                app:layout_constraintTop_toBottomOf="@id/media_encryption"
+                app:layout_constraintTop_toBottomOf="@id/media_encryption_icon"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
@@ -80,7 +80,7 @@
                 app:layout_constraintEnd_toEndOf="@id/background"
                 app:layout_constraintStart_toStartOf="@id/background"
                 app:layout_constraintTop_toTopOf="@id/background"
-                app:layout_constraintBottom_toTopOf="@id/address"/>
+                app:layout_constraintBottom_toTopOf="@id/display_name"/>
 
             <ImageView
                 android:id="@+id/trust_badge"
@@ -92,16 +92,29 @@
                 app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 
             <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_300"
+                android:id="@+id/display_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="@{viewModel.displayedName, default=`John Doe`}"
+                android:textSize="22sp"
+                android:textColor="@color/white"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/avatar"
+                app:layout_constraintBottom_toTopOf="@id/address"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style"
                 android:id="@+id/address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:layout_marginBottom="5dp"
                 android:text="@{viewModel.displayedAddress, default=`sip:johndoe@sip.linphone.org`}"
                 android:textColor="@color/white"
                 android:textSize="14sp"
-                app:layout_constraintTop_toBottomOf="@id/avatar"
+                app:layout_constraintTop_toBottomOf="@id/display_name"
                 app:layout_constraintBottom_toBottomOf="@id/background"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
@@ -181,26 +194,39 @@
                 android:visibility="@{viewModel.isPaused || viewModel.isPausedByRemote ? View.VISIBLE : View.GONE, default=gone}"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toEndOf="@id/separator"
-                app:layout_constraintEnd_toStartOf="@id/media_encryption"
                 app:layout_constraintTop_toTopOf="@id/name"/>
+
+            <ImageView
+                style="@style/default_text_style"
+                android:id="@+id/media_encryption_icon"
+                android:onClick="@{() -> viewModel.showMediaEncryptionStatisticsIfPossible()}"
+                android:layout_width="@dimen/small_icon_size"
+                android:layout_height="0dp"
+                android:layout_marginStart="10dp"
+                android:adjustViewBounds="true"
+                android:paddingTop="3dp"
+                android:contentDescription="@null"
+                android:src="@{viewModel.isZrtpPq ? @drawable/atom : @drawable/lock_simple, default=@drawable/atom}"
+                android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; viewModel.isMediaEncrypted ? View.VISIBLE : View.GONE}"
+                app:layout_constraintStart_toEndOf="@id/back"
+                app:layout_constraintTop_toTopOf="@id/media_encryption_label"
+                app:layout_constraintBottom_toBottomOf="@id/media_encryption_label"
+                app:tint="@color/blue_info_500" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style"
-                android:id="@+id/media_encryption"
+                android:id="@+id/media_encryption_label"
                 android:onClick="@{() -> viewModel.showMediaEncryptionStatisticsIfPossible()}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="5dp"
                 android:text="@{viewModel.isZrtpPq ? @string/call_post_quantum_zrtp_end_to_end_encrypted : @string/call_zrtp_end_to_end_encrypted, default=@string/call_post_quantum_zrtp_end_to_end_encrypted}"
                 android:textSize="12sp"
                 android:textColor="@color/blue_info_500"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:drawableStart="@{viewModel.isZrtpPq ? @drawable/atom : @drawable/lock_simple, default=@drawable/atom}"
-                android:drawablePadding="5dp"
-                android:drawableTint="@color/blue_info_500"
                 android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; viewModel.isMediaEncrypted ? View.VISIBLE : View.GONE}"
-                app:layout_constraintStart_toEndOf="@id/back"
+                app:layout_constraintStart_toEndOf="@id/media_encryption_icon"
                 app:layout_constraintTop_toBottomOf="@id/name"/>
 
             <ImageView

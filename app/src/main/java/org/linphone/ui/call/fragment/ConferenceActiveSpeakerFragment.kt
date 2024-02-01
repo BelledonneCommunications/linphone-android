@@ -65,10 +65,22 @@ class ConferenceActiveSpeakerFragment : GenericCallFragment() {
         callViewModel.conferenceModel.conferenceLayout.observe(viewLifecycleOwner) {
             when (it) {
                 ConferenceModel.GRID_LAYOUT -> {
-                    Log.i("$TAG Conference layout changed to mosaic, navigating to Grid fragment")
+                    Log.i(
+                        "$TAG Conference layout changed to mosaic, navigating to matching fragment"
+                    )
                     if (findNavController().currentDestination?.id == R.id.conferenceActiveSpeakerFragment) {
                         findNavController().navigate(
                             R.id.action_conferenceActiveSpeakerFragment_to_conferenceGridFragment
+                        )
+                    }
+                }
+                ConferenceModel.AUDIO_ONLY_LAYOUT -> {
+                    Log.i(
+                        "$TAG Conference layout changed to audio only, navigating to matching fragment"
+                    )
+                    if (findNavController().currentDestination?.id == R.id.conferenceActiveSpeakerFragment) {
+                        findNavController().navigate(
+                            R.id.action_conferenceActiveSpeakerFragment_to_conferenceAudioOnlyFragment
                         )
                     }
                 }

@@ -11,81 +11,75 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/call_conference_audio_only_miniature_height"
         android:padding="8dp"
-        app:layout_constraintDimensionRatio="1:1">
+        app:layout_columnWeight="1"
+        app:layout_gravity="fill_horizontal">
 
         <ImageView
             android:id="@+id/participant_device_background"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:contentDescription="@null"
-            android:background="@drawable/shape_round_in_call_cell_gray_background" />
+            android:background="@drawable/shape_round_in_call_cell_gray_background"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <com.google.android.material.imageview.ShapeableImageView
             style="@style/avatar_imageview"
             android:id="@+id/avatar"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="5dp"
-            android:visibility="@{model.isSendingVideo ? View.GONE : View.VISIBLE}"
+            android:layout_marginStart="10dp"
             coilCallAvatar="@{model.avatarModel}"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintWidth_max="@dimen/avatar_in_call_size"
-            app:layout_constraintHeight_max="@dimen/avatar_in_call_size"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintWidth_max="@dimen/avatar_list_cell_size"
+            app:layout_constraintHeight_max="@dimen/avatar_list_cell_size"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
         <ImageView
             android:id="@+id/trust_badge"
-            android:layout_width="@dimen/avatar_presence_badge_in_call_size"
-            android:layout_height="@dimen/avatar_presence_badge_in_call_size"
+            android:layout_width="@dimen/avatar_presence_badge_size"
+            android:layout_height="@dimen/avatar_presence_badge_size"
             android:src="@{model.avatarModel.trust == SecurityLevel.Safe ? @drawable/trusted : @drawable/not_trusted, default=@drawable/trusted}"
             android:visibility="@{model.avatarModel.trust == SecurityLevel.Safe || model.avatarModel.trust == SecurityLevel.Unsafe ? View.VISIBLE : View.GONE}"
             app:layout_constraintStart_toStartOf="@id/avatar"
             app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 
-        <org.linphone.ui.call.view.RoundCornersTextureView
-            android:id="@+id/participant_video_surface"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:alignTopRight="false"
-            app:displayMode="hybrid"
-            participantTextureView="@{model}"
-            android:visibility="@{model.isSendingVideo ? View.VISIBLE : View.GONE, default=gone}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <ImageView
             android:id="@+id/muted"
             android:layout_width="@dimen/icon_size"
             android:layout_height="@dimen/icon_size"
-            android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:padding="2dp"
             android:src="@drawable/microphone_slash"
             android:background="@drawable/shape_circle_white_call_background"
             android:visibility="@{model.isMuted ? View.VISIBLE : View.GONE}"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_500"
             android:id="@+id/name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
             android:text="@{model.name, default=`John Doe`}"
             android:textColor="@color/white"
-            android:textSize="20sp"
+            android:textSize="14sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toEndOf="@id/avatar"
+            app:layout_constraintEnd_toStartOf="@id/muted"/>
 
         <ImageView
             android:id="@+id/speaking"

@@ -19,17 +19,23 @@
         android:layout_height="match_parent"
         android:background="@color/gray_900">
 
-        <org.linphone.ui.call.view.GridBoxLayout
-            android:id="@+id/grid_box_layout"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:onClick="@{() -> viewModel.toggleFullScreen()}"
-            entries="@{conferenceViewModel.participantDevices}"
-            layout="@{@layout/call_conference_grid_cell}"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+        <ScrollView
+            android:id="@+id/grid_scrollview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <androidx.gridlayout.widget.GridLayout
+                android:id="@+id/grid_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                entries="@{conferenceViewModel.participantDevices}"
+                layout="@{@layout/call_conference_audio_only_cell}"
+                app:columnCount="2"
+                app:orientation="horizontal" />
+
+        </ScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
