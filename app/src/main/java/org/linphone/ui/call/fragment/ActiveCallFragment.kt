@@ -33,6 +33,7 @@ import androidx.annotation.UiThread
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import androidx.window.layout.FoldingFeature
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -50,6 +51,7 @@ import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 import org.linphone.utils.addCharacterAtPosition
 import org.linphone.utils.removeCharacterAtPosition
+import org.linphone.utils.startAnimatedDrawable
 
 @UiThread
 class ActiveCallFragment : GenericCallFragment() {
@@ -107,7 +109,19 @@ class ActiveCallFragment : GenericCallFragment() {
 
     private val actionsBottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
-            callViewModel.extraActionsBottomSheetVisible.value = newState != BottomSheetBehavior.STATE_COLLAPSED
+            if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                val drawable = AnimatedVectorDrawableCompat.create(
+                    requireContext(),
+                    R.drawable.animated_handle_to_caret
+                )
+                binding.bottomBar.mainActions.handle.setImageDrawable(drawable)
+            } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                val drawable = AnimatedVectorDrawableCompat.create(
+                    requireContext(),
+                    R.drawable.animated_caret_to_handle
+                )
+                binding.bottomBar.mainActions.handle.setImageDrawable(drawable)
+            }
         }
 
         override fun onSlide(bottomSheet: View, slideOffset: Float) { }
@@ -235,8 +249,20 @@ class ActiveCallFragment : GenericCallFragment() {
             it.consume {
                 val state = actionsBottomSheetBehavior.state
                 if (state == BottomSheetBehavior.STATE_COLLAPSED) {
+                    val drawable = AnimatedVectorDrawableCompat.create(
+                        requireContext(),
+                        R.drawable.animated_caret_to_handle
+                    )
+                    binding.bottomBar.mainActions.handle.setImageDrawable(drawable)
+                    binding.bottomBar.mainActions.handle.startAnimatedDrawable()
                     actionsBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
                 } else if (state == BottomSheetBehavior.STATE_EXPANDED) {
+                    val drawable = AnimatedVectorDrawableCompat.create(
+                        requireContext(),
+                        R.drawable.animated_handle_to_caret
+                    )
+                    binding.bottomBar.mainActions.handle.setImageDrawable(drawable)
+                    binding.bottomBar.mainActions.handle.startAnimatedDrawable()
                     actionsBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                 }
             }

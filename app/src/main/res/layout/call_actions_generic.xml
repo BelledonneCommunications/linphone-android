@@ -15,13 +15,13 @@
         android:paddingBottom="5dp"
         android:background="@drawable/shape_call_bottom_sheet_background">
 
-        <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+        <ImageView
             android:onClick="@{() -> viewModel.toggleExpandActionsMenu()}"
-            android:id="@+id/toggle_expand"
+            android:id="@+id/handle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="11dp"
-            android:src="@{viewModel.extraActionsBottomSheetVisible ? @drawable/caret_down : @drawable/handle, default=@drawable/handle}"
+            android:src="@drawable/animated_caret_to_handle"
             app:tint="@color/white"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

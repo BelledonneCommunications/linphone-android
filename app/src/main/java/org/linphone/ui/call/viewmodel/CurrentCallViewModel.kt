@@ -151,8 +151,6 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     // Extras actions
 
-    val extraActionsBottomSheetVisible = MutableLiveData<Boolean>()
-
     val toggleExtraActionsBottomSheetEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
