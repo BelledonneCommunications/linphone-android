@@ -35,29 +35,29 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import org.linphone.R
 import org.linphone.core.tools.Log
-import org.linphone.databinding.MeetingScheduleFragmentBinding
-import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.databinding.MeetingEditFragmentBinding
+import org.linphone.ui.main.fragment.SlidingPaneChildFragment
 import org.linphone.ui.main.meetings.viewmodel.ScheduleMeetingViewModel
 import org.linphone.utils.Event
 
 @UiThread
-class ScheduleMeetingFragment : GenericFragment() {
+class EditMeetingFragment : SlidingPaneChildFragment() {
     companion object {
-        private const val TAG = "[Schedule Meeting Fragment]"
+        private const val TAG = "[Edit Meeting Fragment]"
     }
 
-    private lateinit var binding: MeetingScheduleFragmentBinding
+    private lateinit var binding: MeetingEditFragmentBinding
 
     private lateinit var viewModel: ScheduleMeetingViewModel
 
-    private val args: ScheduleMeetingFragmentArgs by navArgs()
+    private val args: EditMeetingFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = MeetingScheduleFragmentBinding.inflate(layoutInflater)
+        binding = MeetingEditFragmentBinding.inflate(layoutInflater)
         return binding.root
     }
 
@@ -73,11 +73,9 @@ class ScheduleMeetingFragment : GenericFragment() {
         viewModel = ViewModelProvider(this)[ScheduleMeetingViewModel::class.java]
         binding.viewModel = viewModel
 
-        val participants = args.participants
-        if (!participants.isNullOrEmpty()) {
-            Log.i("$TAG Found pre-populated array of participants of size [${participants.size}]")
-            viewModel.addParticipants(participants.toList())
-        }
+        val conferenceUri = args.conferenceUri
+        Log.i("$TAG Found conference URI [$conferenceUri] in arguments")
+        viewModel.loadExistingConferenceInfoFromUri(conferenceUri)
 
         binding.setBackClickListener {
             goBack()
@@ -158,10 +156,10 @@ class ScheduleMeetingFragment : GenericFragment() {
         }
 
         binding.setPickParticipantsClickListener {
-            if (findNavController().currentDestination?.id == R.id.scheduleMeetingFragment) {
+            if (findNavController().currentDestination?.id == R.id.editMeetingFragment) {
                 Log.i("$TAG Going into participant picker fragment")
                 val action =
-                    ScheduleMeetingFragmentDirections.actionScheduleMeetingFragmentToAddParticipantsFragment()
+                    EditMeetingFragmentDirections.actionEditMeetingFragmentToAddParticipantsFragment()
                 findNavController().navigate(action)
             }
         }

@@ -121,16 +121,16 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         @WorkerThread
         override fun onConfiguringStatus(
             core: Core,
-            status: Config.ConfiguringState?,
+            status: ConfiguringState?,
             message: String?
         ) {
             Log.i("$TAG Configuring state changed [$status]")
-            if (status == Config.ConfiguringState.Successful) {
+            if (status == ConfiguringState.Successful) {
                 val text = context.getString(
                     org.linphone.R.string.assistant_qr_code_provisioning_done
                 )
                 greenToastToShowEvent.postValue(Event(Pair(text, org.linphone.R.drawable.smiley)))
-            } else if (status == Config.ConfiguringState.Failed) {
+            } else if (status == ConfiguringState.Failed) {
                 val text = context.getString(
                     org.linphone.R.string.assistant_qr_code_provisioning_done
                 )

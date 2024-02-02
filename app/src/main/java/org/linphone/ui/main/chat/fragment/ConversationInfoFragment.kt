@@ -211,8 +211,12 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
         }
 
         binding.setAddParticipantsClickListener {
-            val action = ConversationInfoFragmentDirections.actionConversationInfoFragmentToAddParticipantsFragment()
-            findNavController().navigate(action)
+            if (findNavController().currentDestination?.id == R.id.conversationInfoFragment) {
+                Log.i("$TAG Going into participant picker fragment")
+                val action =
+                    ConversationInfoFragmentDirections.actionConversationInfoFragmentToAddParticipantsFragment()
+                findNavController().navigate(action)
+            }
         }
 
         binding.setEditSubjectClickListener {

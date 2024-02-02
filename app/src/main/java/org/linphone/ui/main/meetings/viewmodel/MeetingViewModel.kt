@@ -130,7 +130,7 @@ class MeetingViewModel @UiThread constructor() : ViewModel() {
                 hideYear = false
             )
             val startTime = TimestampUtils.timeToString(timestamp)
-            val end = timestamp + (duration * 60)
+            val end = timestamp + duration
             val endTime = TimestampUtils.timeToString(end)
             startTimeStamp.postValue(timestamp * 1000)
             endTimeStamp.postValue(end * 1000)

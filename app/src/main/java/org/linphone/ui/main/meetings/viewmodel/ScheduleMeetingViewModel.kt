@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.main.meetings.viewmodel
 
+import androidx.annotation.AnyThread
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
@@ -30,6 +31,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Address
 import org.linphone.core.ChatRoom
+import org.linphone.core.ConferenceInfo
 import org.linphone.core.ConferenceScheduler
 import org.linphone.core.ConferenceSchedulerListenerStub
 import org.linphone.core.Factory
@@ -85,6 +87,8 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
 
     private lateinit var conferenceScheduler: ConferenceScheduler
 
+    private lateinit var conferenceInfoToEdit: ConferenceInfo
+
     private val conferenceSchedulerListener = object : ConferenceSchedulerListenerStub() {
         @WorkerThread
         override fun onStateChanged(
@@ -99,9 +103,16 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
                 }
                 ConferenceScheduler.State.Ready -> {
                     val conferenceAddress = conferenceScheduler.info?.uri
-                    Log.i(
-                        "$TAG Conference info created, address will be ${conferenceAddress?.asStringUriOnly()}"
-                    )
+                    if (::conferenceInfoToEdit.isInitialized) {
+                        Log.i(
+                            "$TAG Conference info [${conferenceInfoToEdit.uri?.asStringUriOnly()}] has been updated"
+                        )
+                    } else {
+                        Log.i(
+                            "$TAG Conference info created, address will be [${conferenceAddress?.asStringUriOnly()}]"
+                        )
+                    }
+
                     if (sendInvitations.value == true) {
                         Log.i("$TAG User asked for invitations to be sent, let's do it")
                         val chatRoomParams = coreContext.core.createDefaultChatRoomParams()
@@ -179,19 +190,7 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
 
         computeDateLabels()
         computeTimeLabels()
-
-        timezone.value = AppUtils.getFormattedString(
-            R.string.meeting_schedule_timezone_title,
-            TimeZone.getDefault().displayName.replaceFirstChar {
-                if (it.isLowerCase()) {
-                    it.titlecase(
-                        Locale.getDefault()
-                    )
-                } else {
-                    it.toString()
-                }
-            }
-        )
+        updateTimezone()
     }
 
     override fun onCleared() {
@@ -201,6 +200,64 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
             if (::conferenceScheduler.isInitialized) {
                 conferenceScheduler.removeListener(conferenceSchedulerListener)
             }
+        }
+    }
+
+    @UiThread
+    fun loadExistingConferenceInfoFromUri(conferenceUri: String) {
+        coreContext.postOnCoreThread { core ->
+            val conferenceAddress = core.interpretUrl(conferenceUri, false)
+            if (conferenceAddress == null) {
+                Log.e("$TAG Failed to parse conference URI [$conferenceUri], abort")
+                return@postOnCoreThread
+            }
+
+            val conferenceInfo = core.findConferenceInformationFromUri(conferenceAddress)
+            if (conferenceInfo == null) {
+                Log.e(
+                    "$TAG Failed to find a conference info matching URI [${conferenceAddress.asString()}], abort"
+                )
+                return@postOnCoreThread
+            }
+
+            conferenceInfoToEdit = conferenceInfo
+            Log.i(
+                "$TAG Found conference info matching URI [${conferenceInfo.uri?.asString()}] with subject [${conferenceInfo.subject}]"
+            )
+            subject.postValue(conferenceInfo.subject)
+            description.postValue(conferenceInfo.description)
+
+            isBroadcastSelected.postValue(false) // TODO FIXME
+
+            startHour = 0
+            startMinutes = 0
+            endHour = 0
+            endMinutes = 0
+            startTimestamp = conferenceInfo.dateTime * 1000 /* Linphone timestamps are in seconds */
+            endTimestamp = (conferenceInfo.dateTime + conferenceInfo.duration) * 1000 /* Linphone timestamps are in seconds */
+            Log.i(
+                "$TAG Loaded start date is [$startTimestamp], loaded end date is [$endTimestamp]"
+            )
+            computeDateLabels()
+            computeTimeLabels()
+            updateTimezone()
+
+            val list = arrayListOf<SelectedAddressModel>()
+            for (participant in conferenceInfo.participantInfos) {
+                val address = participant.address
+                val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(
+                    address
+                )
+                val model = SelectedAddressModel(address, avatarModel) {
+                    // onRemoveFromSelection
+                }
+                list.add(model)
+                Log.i("$TAG Loaded participant [${address.asStringUriOnly()}]")
+            }
+            Log.i(
+                "$TAG [${list.size}] participants loaded from found conference info"
+            )
+            participants.postValue(list)
         }
     }
 
@@ -292,6 +349,8 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
         }
     }
 
+    // TODO FIXME handle speakers when in broadcast mode
+
     @UiThread
     fun schedule() {
         coreContext.postOnCoreThread { core ->
@@ -339,12 +398,64 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
             }
 
             conferenceScheduler.account = localAccount
-            // Will trigger the conference creation/update automatically
+            // Will trigger the conference creation automatically
             conferenceScheduler.info = conferenceInfo
         }
     }
 
     @UiThread
+    fun update() {
+        coreContext.postOnCoreThread { core ->
+            Log.i(
+                "$TAG Updating ${if (isBroadcastSelected.value == true) "broadcast" else "meeting"}"
+            )
+            if (!::conferenceInfoToEdit.isInitialized) {
+                Log.e("No conference info to edit found!")
+                return@postOnCoreThread
+            }
+
+            operationInProgress.postValue(true)
+
+            val conferenceInfo = conferenceInfoToEdit
+            conferenceInfo.subject = subject.value
+            conferenceInfo.description = description.value
+
+            val startTime = startTimestamp / 1000 // Linphone expects timestamp in seconds
+            conferenceInfo.dateTime = startTime
+            val duration = ((endTimestamp - startTimestamp) / 1000).toInt() // Linphone expects duration in seconds
+            conferenceInfo.duration = duration
+
+            val participantsList = participants.value.orEmpty()
+            val participantsInfoList = arrayListOf<ParticipantInfo>()
+            for (participant in participantsList) {
+                val info = Factory.instance().createParticipantInfo(participant.address)
+                if (info == null) {
+                    Log.e(
+                        "$TAG Failed to create Participant Info from address [${participant.address.asStringUriOnly()}]"
+                    )
+                    continue
+                }
+
+                // For meetings, all participants must have Speaker role
+                info.role = Participant.Role.Speaker
+                participantsInfoList.add(info)
+            }
+
+            val participantsInfoArray = arrayOfNulls<ParticipantInfo>(participantsInfoList.size)
+            participantsInfoList.toArray(participantsInfoArray)
+            conferenceInfo.setParticipantInfos(participantsInfoArray)
+
+            if (!::conferenceScheduler.isInitialized) {
+                conferenceScheduler = core.createConferenceScheduler()
+                conferenceScheduler.addListener(conferenceSchedulerListener)
+            }
+
+            // Will trigger the conference update automatically
+            conferenceScheduler.info = conferenceInfo
+        }
+    }
+
+    @AnyThread
     private fun computeDateLabels() {
         val start = TimestampUtils.toString(
             startTimestamp,
@@ -353,7 +464,7 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
             shortDate = false,
             hideYear = false
         )
-        fromDate.value = start
+        fromDate.postValue(start)
         Log.i("$TAG Computed start date for timestamp [$startTimestamp] is [$start]")
 
         val end = TimestampUtils.toString(
@@ -363,25 +474,47 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
             shortDate = false,
             hideYear = false
         )
-        toDate.value = end
+        toDate.postValue(end)
         Log.i("$TAG Computed end date for timestamp [$endTimestamp] is [$end]")
     }
 
-    @UiThread
+    @AnyThread
     private fun computeTimeLabels() {
         val cal = Calendar.getInstance()
         cal.timeInMillis = startTimestamp
-        cal.set(Calendar.HOUR_OF_DAY, startHour)
-        cal.set(Calendar.MINUTE, startMinutes)
+        if (startHour != 0 && startMinutes != 0) {
+            cal.set(Calendar.HOUR_OF_DAY, startHour)
+            cal.set(Calendar.MINUTE, startMinutes)
+        }
         val start = TimestampUtils.timeToString(cal.timeInMillis, timestampInSecs = false)
         Log.i("$TAG Computed start time for timestamp [$startTimestamp] is [$start]")
-        fromTime.value = start
+        fromTime.postValue(start)
 
         cal.timeInMillis = endTimestamp
-        cal.set(Calendar.HOUR_OF_DAY, endHour)
-        cal.set(Calendar.MINUTE, endMinutes)
+        if (endHour != 0 && endMinutes != 0) {
+            cal.set(Calendar.HOUR_OF_DAY, endHour)
+            cal.set(Calendar.MINUTE, endMinutes)
+        }
         val end = TimestampUtils.timeToString(cal.timeInMillis, timestampInSecs = false)
         Log.i("$TAG Computed end time for timestamp [$endTimestamp] is [$end]")
-        toTime.value = end
+        toTime.postValue(end)
+    }
+
+    @AnyThread
+    private fun updateTimezone() {
+        timezone.postValue(
+            AppUtils.getFormattedString(
+                R.string.meeting_schedule_timezone_title,
+                TimeZone.getDefault().displayName.replaceFirstChar {
+                    if (it.isLowerCase()) {
+                        it.titlecase(
+                            Locale.getDefault()
+                        )
+                    } else {
+                        it.toString()
+                    }
+                }
+            )
+        )
     }
 }

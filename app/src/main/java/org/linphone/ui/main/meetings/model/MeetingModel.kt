@@ -49,7 +49,7 @@ class MeetingModel @WorkerThread constructor(private val conferenceInfo: Confere
 
     private val startTime = TimestampUtils.timeToString(timestamp)
 
-    private val endTime = TimestampUtils.timeToString(timestamp + (conferenceInfo.duration * 60))
+    private val endTime = TimestampUtils.timeToString(timestamp + conferenceInfo.duration)
 
     val time = "$startTime - $endTime"
 

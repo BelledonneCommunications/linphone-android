@@ -95,6 +95,19 @@ class MeetingFragment : SlidingPaneChildFragment() {
             goBack()
         }
 
+        binding.setEditClickListener {
+            val conferenceUri = viewModel.sipUri.value.orEmpty()
+            if (conferenceUri.isNotEmpty()) {
+                Log.i(
+                    "$TAG Navigating to meeting edit fragment with conference URI [$conferenceUri]"
+                )
+                val action = MeetingFragmentDirections.actionMeetingFragmentToEditMeetingFragment(
+                    conferenceUri
+                )
+                findNavController().navigate(action)
+            }
+        }
+
         binding.setShareClickListener {
             copyMeetingAddressIntoClipboard(uri)
         }

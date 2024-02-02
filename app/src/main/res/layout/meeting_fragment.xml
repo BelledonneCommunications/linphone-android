@@ -8,6 +8,9 @@
             name="backClickListener"
             type="View.OnClickListener" />
         <variable
+            name="editClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="menuClickListener"
             type="View.OnClickListener" />
         <variable
@@ -53,12 +56,13 @@
 
         <ImageView
             android:id="@+id/edit"
+            android:onClick="@{editClickListener}"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:padding="15dp"
             android:adjustViewBounds="true"
             android:src="@drawable/pencil_simple"
-            android:visibility="@{viewModel.isEditable ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{viewModel.isEditable ? View.VISIBLE : View.GONE}"
             app:tint="@color/primary_color_selector"
             app:layout_constraintStart_toEndOf="@id/title"
             app:layout_constraintEnd_toStartOf="@id/menu"
