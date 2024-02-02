@@ -354,6 +354,7 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
         coreContext.postOnCoreThread {
             if (::friend.isInitialized) {
                 Log.w("$TAG Deleting friend [$friend]")
+                coreContext.contactsManager.contactRemoved(friend)
                 friend.remove()
                 coreContext.contactsManager.notifyContactsListChanged()
                 contactRemovedEvent.postValue(Event(true))

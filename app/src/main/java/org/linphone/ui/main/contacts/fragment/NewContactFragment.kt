@@ -67,11 +67,16 @@ class NewContactFragment : GenericFragment() {
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
             Log.i("$TAG Picture picked [$uri]")
-            // TODO FIXME: use a better file name
-            val localFileName = FileUtils.getFileStoragePath("temp.jpg", true)
+            val localFileName = FileUtils.getFileStorageCacheDir(
+                ContactNewOrEditViewModel.TEMP_PICTURE_NAME
+            )
             lifecycleScope.launch {
                 if (FileUtils.copyFile(uri, localFileName)) {
-                    viewModel.picturePath.postValue(localFileName.absolutePath)
+                    val newPath = FileUtils.getProperFilePath(
+                        localFileName.absolutePath
+                    )
+                    Log.i("$TAG Copied file [$uri] to [$newPath]")
+                    viewModel.picturePath.value = newPath
                 } else {
                     Log.e(
                         "$TAG Failed to copy file from [$uri] to [${localFileName.absolutePath}]"

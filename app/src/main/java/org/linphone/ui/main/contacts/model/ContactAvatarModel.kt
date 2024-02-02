@@ -69,14 +69,7 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) : Abstrac
             friend.addListener(friendListener)
         }
 
-        isFavourite.postValue(friend.starred)
-        initials.postValue(AppUtils.getInitials(friend.name.orEmpty()))
-        trust.postValue(SecurityLevel.Encrypted) // TODO FIXME: use API
-        showTrust.postValue(coreContext.core.defaultAccount?.isInSecureMode())
-        images.postValue(arrayListOf(getAvatarUri(friend).toString()))
-
-        name.postValue(friend.name)
-        computePresence()
+        update()
     }
 
     @WorkerThread
@@ -87,8 +80,14 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) : Abstrac
     }
 
     @WorkerThread
-    fun updatePresence() {
-        Log.i("$TAG Force update presence information for friend [${friend.name}]")
+    fun update() {
+        isFavourite.postValue(friend.starred)
+        initials.postValue(AppUtils.getInitials(friend.name.orEmpty()))
+        trust.postValue(SecurityLevel.Encrypted) // TODO FIXME: use API
+        showTrust.postValue(coreContext.core.defaultAccount?.isInSecureMode())
+        images.postValue(arrayListOf(getAvatarUri(friend).toString()))
+
+        name.postValue(friend.name)
         computePresence()
     }
 

@@ -79,10 +79,10 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
         override fun onContactsLoaded() {
             Log.i("$TAG Contacts have been (re)loaded, updating list")
             magicSearch.resetSearchCache()
+
             applyFilter(
                 currentFilter,
-                if (limitSearchToLinphoneAccounts) corePreferences.defaultDomain else "",
-                MagicSearch.Source.Friends.toInt() or MagicSearch.Source.LdapServers.toInt()
+                if (limitSearchToLinphoneAccounts) corePreferences.defaultDomain else ""
             )
         }
     }
@@ -118,8 +118,7 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
         coreContext.postOnCoreThread {
             applyFilter(
                 currentFilter,
-                if (limitSearchToLinphoneAccounts) corePreferences.defaultDomain else "",
-                MagicSearch.Source.Friends.toInt() or MagicSearch.Source.LdapServers.toInt()
+                if (limitSearchToLinphoneAccounts) corePreferences.defaultDomain else ""
             )
         }
     }
@@ -179,8 +178,7 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
     @WorkerThread
     private fun applyFilter(
         filter: String,
-        domain: String,
-        sources: Int
+        domain: String
     ) {
         if (contactsList.value.orEmpty().isEmpty()) {
             fetchInProgress.postValue(true)
@@ -197,12 +195,12 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
         previousFilter = filter
 
         Log.i(
-            "$TAG Asking Magic search for contacts matching filter [$filter], domain [$domain] and in sources [$sources]"
+            "$TAG Asking Magic search for contacts matching filter [$filter], domain [$domain] and in sources Friends/LDAP"
         )
         magicSearch.getContactsListAsync(
             filter,
             domain,
-            sources,
+            MagicSearch.Source.Friends.toInt() or MagicSearch.Source.LdapServers.toInt(),
             MagicSearch.Aggregation.Friend
         )
     }

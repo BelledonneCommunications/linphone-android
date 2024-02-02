@@ -89,17 +89,7 @@ class ContactsManager @UiThread constructor() {
             Log.d(
                 "$TAG Newly discovered SIP Address [$sipUri] for friend [${friend.name}] in list [${friendList.displayName}]"
             )
-
-            if (unknownContactsAvatarsMap.keys.contains(sipUri)) {
-                Log.d("$TAG Found SIP Address in unknownContactsAvatarsMap, removing it")
-                val oldModel = unknownContactsAvatarsMap[sipUri]
-                oldModel?.destroy()
-                unknownContactsAvatarsMap.remove(sipUri)
-            } else if (knownContactsAvatarsMap.keys.contains(sipUri)) {
-                Log.d("$TAG Found SIP Address in knownContactsAvatarsMap, forcing presence update")
-                val oldModel = knownContactsAvatarsMap[sipUri]
-                oldModel?.updatePresence()
-            }
+            newContactAddedWithSipUri(sipUri)
 
             reloadContactsJob = coroutineScope.launch {
                 delay(DELAY_BEFORE_RELOADING_CONTACTS_AFTER_PRESENCE_RECEIVED)
@@ -160,6 +150,49 @@ class ContactsManager @UiThread constructor() {
                 }
             }
         }
+    }
+
+    @WorkerThread
+    private fun newContactAddedWithSipUri(sipUri: String) {
+        if (unknownContactsAvatarsMap.keys.contains(sipUri)) {
+            Log.d("$TAG Found SIP URI [$sipUri] in unknownContactsAvatarsMap, removing it")
+            val oldModel = unknownContactsAvatarsMap[sipUri]
+            oldModel?.destroy()
+            unknownContactsAvatarsMap.remove(sipUri)
+        } else if (knownContactsAvatarsMap.keys.contains(sipUri)) {
+            Log.d(
+                "$TAG Found SIP URI [$sipUri] in knownContactsAvatarsMap, forcing presence update"
+            )
+            val oldModel = knownContactsAvatarsMap[sipUri]
+            oldModel?.update()
+        }
+    }
+
+    @WorkerThread
+    fun newContactAdded(friend: Friend) {
+        for (sipAddress in friend.addresses) {
+            newContactAddedWithSipUri(sipAddress.asStringUriOnly())
+        }
+
+        conferenceAvatarMap.values.forEach(ContactAvatarModel::destroy)
+        conferenceAvatarMap.clear()
+        coreContext.contactsManager.notifyContactsListChanged()
+    }
+
+    fun contactRemoved(friend: Friend) {
+        for (sipAddress in friend.addresses) {
+            val sipUri = sipAddress.asStringUriOnly()
+            if (knownContactsAvatarsMap.keys.contains(sipUri)) {
+                Log.d("$TAG Found SIP URI [$sipUri] in knownContactsAvatarsMap, removing it")
+                val oldModel = knownContactsAvatarsMap[sipUri]
+                oldModel?.destroy()
+                knownContactsAvatarsMap.remove(sipUri)
+            }
+        }
+
+        conferenceAvatarMap.values.forEach(ContactAvatarModel::destroy)
+        conferenceAvatarMap.clear()
+        coreContext.contactsManager.notifyContactsListChanged()
     }
 
     @WorkerThread

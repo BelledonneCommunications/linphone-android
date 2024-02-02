@@ -19,10 +19,14 @@
  */
 package org.linphone.ui.main.contacts.viewmodel
 
+import android.net.Uri
+import androidx.annotation.AnyThread
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.contacts.ContactLoader.Companion.LINPHONE_ADDRESS_BOOK_FRIEND_LIST
 import org.linphone.core.Friend
@@ -36,9 +40,13 @@ import org.linphone.utils.FileUtils
 class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
     companion object {
         private const val TAG = "[Contact New/Edit View Model]"
+
+        const val TEMP_PICTURE_NAME = "new_contact_temp_picture.jpg"
     }
 
     private lateinit var friend: Friend
+
+    val id = MutableLiveData<String>()
 
     val isEdit = MutableLiveData<Boolean>()
 
@@ -89,6 +97,8 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
                     // TODO ? What to do when vCard is null
                 }
 
+                id.postValue(friend.refKey ?: friend.vcard?.uid)
+
                 val photo = friend.photo.orEmpty()
                 if (photo.isNotEmpty()) {
                     picturePath.postValue(photo)
@@ -112,6 +122,12 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
 
             friendFoundEvent.postValue(Event(exists))
         }
+    }
+
+    @AnyThread
+    fun getPictureFileName(): String {
+        val name = id.value?.replace(" ", "_") ?: "${firstName.value.orEmpty().trim()}_${lastName.value.orEmpty().trim()}"
+        return "$name.jpg"
     }
 
     @UiThread
@@ -140,9 +156,9 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
             }
             val fn = firstName.value.orEmpty().trim()
             val ln = lastName.value.orEmpty().trim()
-            friend.name = "$fn $ln"
 
             friend.edit()
+            friend.name = "$fn $ln"
 
             val vCard = friend.vcard
             if (vCard != null) {
@@ -151,7 +167,22 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
 
                 val picture = picturePath.value.orEmpty()
                 if (picture.isNotEmpty()) {
-                    friend.photo = FileUtils.getProperFilePath(picture)
+                    if (picture.contains(TEMP_PICTURE_NAME)) {
+                        val newFile = FileUtils.getFileStoragePath(
+                            getPictureFileName(),
+                            true,
+                            overrideExisting = true
+                        )
+                        val oldFile = Uri.parse(FileUtils.getProperFilePath(picture))
+                        viewModelScope.launch {
+                            FileUtils.copyFile(oldFile, newFile)
+                        }
+                        val newPicture = FileUtils.getProperFilePath(newFile.absolutePath)
+                        Log.i("$TAG Temporary picture [$picture] copied to [$newPicture]")
+                        friend.photo = newPicture
+                    } else {
+                        friend.photo = FileUtils.getProperFilePath(picture)
+                    }
                 } else {
                     friend.photo = null
                 }
@@ -215,7 +246,7 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
                 friend.done()
             }
 
-            coreContext.contactsManager.notifyContactsListChanged()
+            coreContext.contactsManager.newContactAdded(friend)
 
             saveChangesEvent.postValue(
                 Event(if (status == Status.OK) friend.refKey.orEmpty() else "")

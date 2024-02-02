@@ -230,6 +230,7 @@ class ContactsListFragment : AbstractTopBarFragment() {
                     { // onDelete
                         coreContext.postOnCoreThread {
                             Log.w("$TAG Removing friend [${model.name.value}]")
+                            coreContext.contactsManager.contactRemoved(model.friend)
                             model.friend.remove()
                             coreContext.contactsManager.notifyContactsListChanged()
                         }

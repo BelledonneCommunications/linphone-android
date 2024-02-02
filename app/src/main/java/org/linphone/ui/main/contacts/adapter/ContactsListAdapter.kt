@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
-import org.linphone.core.ConsolidatedPresence
 import org.linphone.databinding.ContactFavouriteListCellBinding
 import org.linphone.databinding.ContactListCellBinding
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
@@ -138,13 +137,11 @@ class ContactsListAdapter(
 
     private class ContactDiffCallback : DiffUtil.ItemCallback<ContactAvatarModel>() {
         override fun areItemsTheSame(oldItem: ContactAvatarModel, newItem: ContactAvatarModel): Boolean {
-            return oldItem.id == newItem.id && oldItem.contactName == newItem.contactName
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: ContactAvatarModel, newItem: ContactAvatarModel): Boolean {
-            return oldItem.presenceStatus.value == newItem.presenceStatus.value &&
-                oldItem.isFavourite.value == newItem.isFavourite.value &&
-                (newItem.presenceStatus.value == ConsolidatedPresence.Busy || newItem.presenceStatus.value == ConsolidatedPresence.Online)
+            return false // oldItem & newItem are always the same because fetched from cache, so return false to force refresh
         }
     }
 }
