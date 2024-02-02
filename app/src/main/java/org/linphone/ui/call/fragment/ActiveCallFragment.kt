@@ -207,16 +207,6 @@ class ActiveCallFragment : GenericCallFragment() {
             numpadBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
-        callViewModel.isRemoteDeviceTrusted.observe(viewLifecycleOwner) { trusted ->
-            if (trusted) {
-                (requireActivity() as CallActivity).showBlueToast(
-                    getString(R.string.toast_call_can_be_trusted),
-                    R.drawable.trusted,
-                    doNotTint = true
-                )
-            }
-        }
-
         callViewModel.showZrtpSasDialogEvent.observe(viewLifecycleOwner) {
             it.consume { pair ->
                 val model = ZrtpSasConfirmationDialogModel(pair.first, pair.second)
@@ -232,6 +222,14 @@ class ActiveCallFragment : GenericCallFragment() {
                     event.consume { verified ->
                         callViewModel.updateZrtpSas(verified)
                         dialog.dismiss()
+
+                        if (verified) {
+                            (requireActivity() as CallActivity).showBlueToast(
+                                getString(R.string.toast_call_can_be_trusted),
+                                R.drawable.trusted,
+                                doNotTint = true
+                            )
+                        }
                     }
                 }
 
