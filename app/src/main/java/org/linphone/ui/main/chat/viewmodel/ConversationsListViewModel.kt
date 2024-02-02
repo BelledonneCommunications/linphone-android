@@ -142,18 +142,11 @@ class ConversationsListViewModel @UiThread constructor() : AbstractTopBarViewMod
         val account = LinphoneUtils.getDefaultAccount()
         val chatRooms = account?.chatRooms ?: coreContext.core.chatRooms
         for (chatRoom in chatRooms) {
-            // TODO: remove when SDK will do it automatically
-            if (account?.isInSecureMode() == true) {
-                if (!chatRoom.hasCapability(Capabilities.Encrypted.toInt()) && chatRoom.unreadMessagesCount == 0) { // TODO: remove message count check later
-                    Log.d(
-                        "$TAG Skipping conversation [${LinphoneUtils.getChatRoomId(chatRoom)}] as it is not E2E encrypted and default account requires it"
-                    )
-                    continue
-                }
-            }
-
+            val disabledBecauseNotSecured = account?.isInSecureMode() == true && !chatRoom.hasCapability(
+                Capabilities.Encrypted.toInt()
+            )
             if (filter.isEmpty()) {
-                val model = ConversationModel(chatRoom)
+                val model = ConversationModel(chatRoom, disabledBecauseNotSecured)
                 list.add(model)
                 count += 1
             } else {
@@ -175,7 +168,7 @@ class ConversationsListViewModel @UiThread constructor() : AbstractTopBarViewMod
                     chatRoom.peerAddress.asStringUriOnly().contains(filter, ignoreCase = true) ||
                     chatRoom.subject.orEmpty().contains(filter, ignoreCase = true)
                 ) {
-                    val model = ConversationModel(chatRoom)
+                    val model = ConversationModel(chatRoom, disabledBecauseNotSecured)
                     list.add(model)
                     count += 1
                 }

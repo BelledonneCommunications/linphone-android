@@ -41,6 +41,7 @@ import org.linphone.core.tools.Log
 import org.linphone.ui.main.chat.model.EventLogModel
 import org.linphone.ui.main.chat.model.MessageModel
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
+import org.linphone.ui.main.model.isInSecureMode
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.ImageUtils
@@ -70,6 +71,8 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
     val subject = MutableLiveData<String>()
 
     val isReadOnly = MutableLiveData<Boolean>()
+
+    val isDisabledBecauseNotSecured = MutableLiveData<Boolean>()
 
     val composingLabel = MutableLiveData<String>()
 
@@ -314,6 +317,7 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
     init {
         searchBarVisible.value = false
         isUserScrollingUp.value = false
+        isDisabledBecauseNotSecured.value = false
     }
 
     override fun onCleared() {
@@ -559,6 +563,16 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         isReadOnly.postValue(readOnly)
         if (readOnly) {
             Log.w("$TAG Conversation with subject [${chatRoom.subject}] is read only!")
+        }
+
+        if (!chatRoom.hasCapability(ChatRoom.Capabilities.Encrypted.toInt())) {
+            val account = LinphoneUtils.getDefaultAccount()
+            if (account?.isInSecureMode() == true) {
+                Log.w(
+                    "$TAG Conversation with subject [${chatRoom.subject}] has been disabled because it isn't encrypted and default account is in secure mode"
+                )
+                isDisabledBecauseNotSecured.postValue(true)
+            }
         }
 
         subject.postValue(chatRoom.subject)

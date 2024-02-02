@@ -86,7 +86,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="start"
-            app:constraint_referenced_ids="notifications_count, date_time, ephemeral, muted, last_sent_message_status" />
+            app:constraint_referenced_ids="warning_disabled_not_secured, notifications_count, date_time, ephemeral, muted, last_sent_message_status" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
@@ -95,7 +95,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginStart="10dp"
-            android:layout_marginEnd="5dp"
             android:maxLines="1"
             android:ellipsize="end"
             android:text="@{model.isGroup ? model.subject : model.avatarModel.name, default=`John Doe`}"
@@ -113,7 +112,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:layout_marginEnd="5dp"
             android:gravity="center_vertical|start"
             android:maxLines="2"
             android:ellipsize="end"
@@ -126,12 +124,27 @@
             app:layout_constraintTop_toBottomOf="@id/name"
             app:layout_constraintBottom_toTopOf="@id/separator" />
 
+        <ImageView
+            android:id="@+id/warning_disabled_not_secured"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/warning_circle"
+            android:visibility="@{model.isDisabledBecauseNotSecured ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/right_border"
+            app:layout_constraintEnd_toStartOf="@id/notifications_count"
+            app:tint="?attr/color_warning_600" />
+
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
             android:id="@+id/notifications_count"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginEnd="16dp"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="10dp"
             android:gravity="center"
             android:background="@drawable/shape_red_round"
             android:text="@{String.valueOf(model.unreadMessageCount), default=`1`}"
@@ -142,7 +155,7 @@
             app:layout_constraintHorizontal_bias="1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@id/name"
+            app:layout_constraintStart_toEndOf="@id/warning_disabled_not_secured"
             app:layout_constraintEnd_toStartOf="@id/unread_count_right_border"/>
 
         <androidx.appcompat.widget.AppCompatTextView
