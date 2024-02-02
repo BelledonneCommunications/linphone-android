@@ -218,7 +218,6 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                     updateCallDuration()
                     Log.i("$TAG Call is ending, go to ended call fragment")
                     // Show that call was ended for a few seconds, then leave
-                    // TODO FIXME: do not show it when call is being ended due to user terminating the call
                     goToEndedCallEvent.postValue(Event(true))
                 }
             } else {

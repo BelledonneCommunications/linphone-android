@@ -34,7 +34,6 @@
             android:layout_height="@dimen/call_top_bar_text_height"
             android:layout_marginStart="10dp"
             android:text="@string/call_ended"
-            android:visibility="@{viewModel.conferenceModel.isCurrentCallInConference ? View.GONE : View.VISIBLE}"
             app:layout_constraintStart_toEndOf="@id/back"
             app:layout_constraintTop_toTopOf="@id/back"
             app:layout_constraintBottom_toBottomOf="@id/back"/>
