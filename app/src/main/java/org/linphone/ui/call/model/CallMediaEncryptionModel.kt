@@ -26,6 +26,7 @@ import org.linphone.core.Call
 import org.linphone.core.MediaEncryption
 import org.linphone.core.StreamType
 import org.linphone.utils.AppUtils
+import org.linphone.utils.Event
 
 class CallMediaEncryptionModel @WorkerThread constructor(call: Call) {
     val mediaEncryption = MutableLiveData<String>()
@@ -36,6 +37,10 @@ class CallMediaEncryptionModel @WorkerThread constructor(call: Call) {
     val zrtpHash = MutableLiveData<String>()
     val zrtpAuthTag = MutableLiveData<String>()
     val zrtpAuthSas = MutableLiveData<String>()
+
+    val showZrtpSasValidationDialogEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
 
     init {
         isMediaEncryptionZrtp.postValue(false)
@@ -103,5 +108,9 @@ class CallMediaEncryptionModel @WorkerThread constructor(call: Call) {
                 )
             }
         }
+    }
+
+    fun showSasValidationDialog() {
+        showZrtpSasValidationDialogEvent.value = Event(true)
     }
 }

@@ -382,5 +382,14 @@ class ActiveCallFragment : GenericCallFragment() {
             MediaEncryptionStatisticsDialogFragment.TAG
         )
         bottomSheetDialog = modalBottomSheet
+
+        model.showZrtpSasValidationDialogEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                callViewModel.showZrtpSasDialogIfPossible()
+
+                modalBottomSheet.dismiss()
+                bottomSheetDialog = null
+            }
+        }
     }
 }
