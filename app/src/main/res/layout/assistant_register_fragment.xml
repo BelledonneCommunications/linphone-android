@@ -187,7 +187,8 @@
                     app:layout_constraintWidth_max="@dimen/text_input_max_width"
                     app:layout_constraintTop_toBottomOf="@id/phone_number_label"
                     app:layout_constraintStart_toEndOf="@id/prefix_caret"
-                    app:layout_constraintEnd_toEndOf="@id/username"/>
+                    app:layout_constraintEnd_toEndOf="@id/username"
+                    bind:ignore="RtlSymmetry" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/default_text_style_600"

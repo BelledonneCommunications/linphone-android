@@ -293,11 +293,6 @@ class MessageModel @WorkerThread constructor(
         }
     }
 
-    @UiThread
-    fun firstImageClicked() {
-        filesList.value.orEmpty().firstOrNull()?.onClick()
-    }
-
     @WorkerThread
     private fun computeContentsList() {
         Log.d("$TAG Computing message contents list")

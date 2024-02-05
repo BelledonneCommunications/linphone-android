@@ -95,7 +95,7 @@ class ConferenceModel {
             if (found != null) {
                 Log.i("$TAG Newly active speaker participant is [${found.name}]")
                 found.isActiveSpeaker.postValue(true)
-                activeSpeaker.postValue(found)
+                activeSpeaker.postValue(found!!)
             } else {
                 Log.i("$TAG Failed to find actively speaking participant...")
                 val model = ConferenceParticipantDeviceModel(participantDevice)

@@ -45,7 +45,7 @@ class PermissionsFragment : Fragment() {
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
-        permissions.entries.forEach() {
+        permissions.entries.forEach {
             val permissionName = it.key
             val isGranted = it.value
             if (isGranted) {

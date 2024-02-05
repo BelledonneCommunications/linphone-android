@@ -38,7 +38,7 @@ import org.linphone.core.MediaDirection
 import org.linphone.core.tools.Log
 import org.linphone.utils.AudioUtils
 
-class TelecomCallControlCallback constructor(
+class TelecomCallControlCallback(
     private val call: Call,
     private val callControl: CallControlScope,
     private val scope: CoroutineScope

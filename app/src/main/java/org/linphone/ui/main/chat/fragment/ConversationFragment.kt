@@ -338,8 +338,8 @@ class ConversationFragment : SlidingPaneChildFragment() {
                     sendMessageViewModel.configureChatRoom(viewModel.chatRoom)
 
                     // Wait for chat room to be ready before trying to forward a message in it
-                    sharedViewModel.messageToForwardEvent.observe(viewLifecycleOwner) {
-                        it.consume { toForward ->
+                    sharedViewModel.messageToForwardEvent.observe(viewLifecycleOwner) { event ->
+                        event.consume { toForward ->
                             Log.i("$TAG Found message to forward")
                             sendMessageViewModel.forwardMessage(toForward)
                         }

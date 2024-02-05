@@ -22,7 +22,6 @@ package org.linphone.ui.main.chat.view
 import android.content.Context
 import android.text.method.LinkMovementMethod
 import android.util.AttributeSet
-import android.view.View.MeasureSpec.*
 import androidx.annotation.UiThread
 import androidx.appcompat.widget.AppCompatTextView
 

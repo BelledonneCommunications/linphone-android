@@ -420,7 +420,7 @@ class MainActivity : GenericActivity() {
         }
 
         val list = arrayListOf<String>()
-        lifecycleScope.launch() {
+        lifecycleScope.launch {
             val deferred = arrayListOf<Deferred<String?>>()
             for (uri in parcelablesUri) {
                 deferred.add(async { FileUtils.getFilePath(this@MainActivity, uri, false) })
