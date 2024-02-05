@@ -6,6 +6,9 @@
     <data>
         <import type="android.view.View" />
         <variable
+            name="onLongClickListener"
+            type="View.OnLongClickListener" />
+        <variable
             name="model"
             type="org.linphone.ui.main.chat.model.MessageModel" />
         <variable
@@ -16,6 +19,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="@dimen/chat_bubble_voice_record_width"
         android:layout_height="wrap_content"
+        android:onLongClick="@{onLongClickListener}"
         android:visibility="@{inflatedVisibility == View.VISIBLE ? View.VISIBLE : View.GONE}"
         inflatedLifecycleOwner="@{true}">
 

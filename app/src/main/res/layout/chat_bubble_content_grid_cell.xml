@@ -6,13 +6,15 @@
     <data>
         <import type="android.view.View" />
         <variable
+            name="onLongClickListener"
+            type="View.OnLongClickListener" />
+        <variable
             name="model"
             type="org.linphone.ui.main.chat.model.FileModel" />
     </data>
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:onClick="@{() -> model.onClick()}"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
@@ -25,15 +27,30 @@
 
         <ImageView
             android:id="@+id/image"
+            android:onClick="@{() -> model.onClick()}"
+            android:onLongClick="@{onLongClickListener}"
             android:layout_width="@dimen/chat_bubble_grid_image_size"
             android:layout_height="@dimen/chat_bubble_grid_image_size"
             android:layout_margin="1dp"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
             android:visibility="@{model.isImage || model.isVideoPreview ? View.VISIBLE : View.GONE}"
-            coilBubbleGrid="@{model.path}"
+            coilBubbleGrid="@{model.file}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_600"
+            android:id="@+id/video_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="@{model.videoDuration, default=`00:42`}"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:visibility="@{model.isVideoPreview &amp;&amp; model.videoDuration.length() > 0 ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintBottom_toBottomOf="@id/image"
+            app:layout_constraintStart_toStartOf="@id/image"/>
 
         <ImageView
             android:id="@+id/video_preview"
@@ -45,12 +62,14 @@
             app:layout_constraintBottom_toBottomOf="@id/image"
             app:layout_constraintStart_toStartOf="@id/image"
             app:layout_constraintEnd_toEndOf="@id/image"
-            app:tint="?attr/color_main1_500" />
+            app:tint="@color/white" />
 
         <ImageView
             android:id="@+id/file_icon"
             android:layout_width="@dimen/chat_bubble_grid_image_size"
             android:layout_height="@dimen/chat_bubble_grid_image_size"
+            android:onClick="@{() -> model.onClick()}"
+            android:onLongClick="@{onLongClickListener}"
             android:adjustViewBounds="true"
             android:padding="18dp"
             android:src="@{model.isWaitingToBeDownloaded ? @drawable/download_simple : model.isPdf ? @drawable/file_pdf : model.isAudio ? @drawable/file_audio : @drawable/file, default=@drawable/file_pdf}"
@@ -78,6 +97,7 @@
 
         <View
             android:id="@+id/file_background"
+            android:onClick="@{() -> model.onClick()}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@drawable/shape_squircle_white_right"
@@ -89,6 +109,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_700"
             android:id="@+id/file_name"
+            android:onClick="@{() -> model.onClick()}"
             android:layout_width="@dimen/chat_bubble_grid_file_name_max_width"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -108,6 +129,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_300"
             android:id="@+id/file_size"
+            android:onClick="@{() -> model.onClick()}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"

@@ -24,6 +24,7 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.media.AudioFocusRequestCompat
 import java.text.SimpleDateFormat
@@ -109,7 +110,7 @@ class MessageModel @WorkerThread constructor(
 
     val filesList = MutableLiveData<ArrayList<FileModel>>()
 
-    val firstImagePath = MutableLiveData<String>()
+    val firstFileModel = MediatorLiveData<FileModel>()
 
     val isSelected = MutableLiveData<Boolean>()
 
@@ -231,6 +232,12 @@ class MessageModel @WorkerThread constructor(
         updateReactionsList()
 
         computeContentsList()
+
+        coreContext.postOnMainThread {
+            firstFileModel.addSource(filesList) {
+                firstFileModel.value = it.firstOrNull()
+            }
+        }
     }
 
     @WorkerThread
@@ -296,7 +303,6 @@ class MessageModel @WorkerThread constructor(
         Log.d("$TAG Computing message contents list")
         text.postValue(Spannable.Factory.getInstance().newSpannable(""))
         filesList.postValue(arrayListOf())
-        firstImagePath.postValue("")
 
         var displayableContentFound = false
         var filesContentCount = 0
@@ -349,10 +355,6 @@ class MessageModel @WorkerThread constructor(
                                 }
                                 filesPath.add(fileModel)
 
-                                if (filesContentCount == 1) {
-                                    firstImagePath.postValue(path)
-                                }
-
                                 displayableContentFound = true
                             }
                             else -> {
@@ -376,9 +378,6 @@ class MessageModel @WorkerThread constructor(
                     if (name.isNotEmpty()) {
                         val fileModel = if (isOutgoing && chatMessage.isFileTransferInProgress) {
                             val path = content.filePath ?: ""
-                            if (filesContentCount == 1) {
-                                firstImagePath.postValue(path)
-                            }
                             FileModel(path, name, content.fileSize.toLong(), false) { model ->
                                 onContentClicked?.invoke(model.file)
                             }

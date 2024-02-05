@@ -84,6 +84,17 @@ fun <T> setEntries(
     entries: List<T>?,
     layoutId: Int
 ) {
+    setEntries(viewGroup, entries, layoutId, null)
+}
+
+@UiThread
+@BindingAdapter("entries", "layout", "onLongClick")
+fun <T> setEntries(
+    viewGroup: ViewGroup,
+    entries: List<T>?,
+    layoutId: Int,
+    onLongClick: View.OnLongClickListener?
+) {
     viewGroup.removeAllViews()
     if (!entries.isNullOrEmpty()) {
         val inflater = viewGroup.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -96,6 +107,7 @@ fun <T> setEntries(
             )
 
             binding.setVariable(BR.model, entry)
+            binding.setVariable(BR.onLongClickListener, onLongClick)
 
             // This is a bit hacky...
             if (viewGroup.context as? LifecycleOwner != null) {

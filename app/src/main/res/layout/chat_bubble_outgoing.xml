@@ -139,23 +139,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onLongClick="@{onLongClickListener}"
-                android:visibility="@{model.filesList.size() >= 2 || (model.filesList.size() >= 1 &amp;&amp; model.firstImagePath.length() == 0) ? View.VISIBLE : View.GONE, default=gone}"
+                android:visibility="@{model.filesList.size() >= 2 || (model.filesList.size() == 1 &amp;&amp; !model.firstFileModel.isMedia) ? View.VISIBLE : View.GONE, default=gone}"
                 app:alignItems="center"
                 app:flexWrap="wrap"
                 app:justifyContent="@{model.outgoing ? JustifyContent.FLEX_END : JustifyContent.FLEX_START}"
                 entries="@{model.filesList}"
-                layout="@{@layout/chat_bubble_content_grid_cell}"/>
+                layout="@{@layout/chat_bubble_content_grid_cell}"
+                onLongClick="@{onLongClickListener}"/>
 
-            <ImageView
-                android:id="@+id/single_image"
-                android:onClick="@{() -> model.firstImageClicked()}"
-                android:onLongClick="@{onLongClickListener}"
+            <ViewStub
+                android:id="@+id/single_media"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/chat_bubble_big_image_max_size"
-                android:adjustViewBounds="true"
-                android:scaleType="fitCenter"
-                android:visibility="@{model.filesList.size() == 1 &amp;&amp; model.firstImagePath.length() > 0 ? View.VISIBLE : View.GONE, default=gone}"
-                coilBubble="@{model.firstImagePath}"/>
+                android:layout_height="wrap_content"
+                android:layout="@layout/chat_bubble_single_media_content"
+                android:visibility="@{model.filesList.size() == 1 &amp;&amp; model.firstFileModel.isMedia ? View.VISIBLE : View.GONE, default=gone}"
+                bind:inflatedVisibility="@{model.filesList.size() == 1 &amp;&amp; model.firstFileModel.isMedia? View.VISIBLE : View.GONE}"
+                bind:model="@{model.firstFileModel}"
+                bind:onLongClickListener="@{onLongClickListener}"/>
 
             <ViewStub
                 android:id="@+id/meeting_info"
@@ -164,7 +164,8 @@
                 android:layout="@layout/chat_bubble_meeting_invite_content"
                 android:visibility="@{model.meetingFound ? View.VISIBLE : View.GONE, default=gone}"
                 bind:inflatedVisibility="@{model.meetingFound ? View.VISIBLE : View.GONE}"
-                bind:model="@{model}"/>
+                bind:model="@{model}"
+                bind:onLongClickListener="@{onLongClickListener}"/>
 
             <ViewStub
                 android:id="@+id/voice_record"
@@ -173,7 +174,8 @@
                 android:layout="@layout/chat_bubble_voice_record_content"
                 android:visibility="@{model.isVoiceRecord ? View.VISIBLE : View.GONE, default=gone}"
                 bind:inflatedVisibility="@{model.isVoiceRecord ? View.VISIBLE : View.GONE}"
-                bind:model="@{model}" />
+                bind:model="@{model}"
+                bind:onLongClickListener="@{onLongClickListener}" />
 
             <org.linphone.ui.main.chat.view.ChatBubbleTextView
                 style="@style/default_text_style"
@@ -198,6 +200,7 @@
                     style="@style/default_text_style_300"
                     android:id="@+id/date_time"
                     android:onClick="@{showDeliveryInfoClickListener}"
+                    android:onLongClick="@{onLongClickListener}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@{model.time, default=`13:40`}"
@@ -207,6 +210,7 @@
                     style="@style/default_text_style_300"
                     android:id="@+id/delivery_status"
                     android:onClick="@{showDeliveryInfoClickListener}"
+                    android:onLongClick="@{onLongClickListener}"
                     android:layout_width="@dimen/small_icon_size"
                     android:layout_height="@dimen/small_icon_size"
                     android:layout_marginStart="5dp"
