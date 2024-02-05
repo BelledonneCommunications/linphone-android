@@ -42,9 +42,11 @@ import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -265,33 +267,60 @@ class MainActivity : GenericActivity() {
     }
 
     fun showGreenToast(message: String, @DrawableRes icon: Int) {
-        val greenToast = ToastUtils.getGreenToast(this, binding.toastsArea, message, icon)
-        binding.toastsArea.addView(greenToast.root)
+        lifecycleScope.launch {
+            withContext(Dispatchers.Main) {
+                val greenToast = ToastUtils.getGreenToast(
+                    this@MainActivity,
+                    binding.toastsArea,
+                    message,
+                    icon
+                )
+                binding.toastsArea.addView(greenToast.root)
 
-        greenToast.root.slideInToastFromTopForDuration(
-            binding.toastsArea as ViewGroup,
-            lifecycleScope
-        )
+                greenToast.root.slideInToastFromTopForDuration(
+                    binding.toastsArea as ViewGroup,
+                    lifecycleScope
+                )
+            }
+        }
     }
 
     fun showBlueToast(message: String, @DrawableRes icon: Int) {
-        val blueToast = ToastUtils.getBlueToast(this, binding.toastsArea, message, icon)
-        binding.toastsArea.addView(blueToast.root)
+        lifecycleScope.launch {
+            withContext(Dispatchers.Main) {
+                val blueToast = ToastUtils.getBlueToast(
+                    this@MainActivity,
+                    binding.toastsArea,
+                    message,
+                    icon
+                )
+                binding.toastsArea.addView(blueToast.root)
 
-        blueToast.root.slideInToastFromTopForDuration(
-            binding.toastsArea as ViewGroup,
-            lifecycleScope
-        )
+                blueToast.root.slideInToastFromTopForDuration(
+                    binding.toastsArea as ViewGroup,
+                    lifecycleScope
+                )
+            }
+        }
     }
 
     fun showRedToast(message: String, @DrawableRes icon: Int) {
-        val redToast = ToastUtils.getRedToast(this, binding.toastsArea, message, icon)
-        binding.toastsArea.addView(redToast.root)
+        lifecycleScope.launch {
+            withContext(Dispatchers.Main) {
+                val redToast = ToastUtils.getRedToast(
+                    this@MainActivity,
+                    binding.toastsArea,
+                    message,
+                    icon
+                )
+                binding.toastsArea.addView(redToast.root)
 
-        redToast.root.slideInToastFromTopForDuration(
-            binding.toastsArea as ViewGroup,
-            lifecycleScope
-        )
+                redToast.root.slideInToastFromTopForDuration(
+                    binding.toastsArea as ViewGroup,
+                    lifecycleScope
+                )
+            }
+        }
     }
 
     private fun showPersistentRedToast(
@@ -300,20 +329,35 @@ class MainActivity : GenericActivity() {
         tag: String,
         doNotTint: Boolean = false
     ) {
-        val redToast = ToastUtils.getRedToast(this, binding.toastsArea, message, icon, doNotTint)
-        redToast.root.tag = tag
-        binding.toastsArea.addView(redToast.root)
+        lifecycleScope.launch {
+            withContext(Dispatchers.Main) {
+                val redToast =
+                    ToastUtils.getRedToast(
+                        this@MainActivity,
+                        binding.toastsArea,
+                        message,
+                        icon,
+                        doNotTint
+                    )
+                redToast.root.tag = tag
+                binding.toastsArea.addView(redToast.root)
 
-        redToast.root.slideInToastFromTop(
-            binding.toastsArea as ViewGroup,
-            true
-        )
+                redToast.root.slideInToastFromTop(
+                    binding.toastsArea as ViewGroup,
+                    true
+                )
+            }
+        }
     }
 
     private fun removePersistentRedToast(tag: String) {
-        for (child in binding.toastsArea.children) {
-            if (child.tag == tag) {
-                binding.toastsArea.removeView(child)
+        lifecycleScope.launch {
+            withContext(Dispatchers.Main) {
+                for (child in binding.toastsArea.children) {
+                    if (child.tag == tag) {
+                        binding.toastsArea.removeView(child)
+                    }
+                }
             }
         }
     }

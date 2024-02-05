@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.main.chat.viewmodel.MediaViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:onClick="@{() -> viewModel.toggleFullScreen()}"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black">
+
+        <VideoView
+            android:id="@+id/video_player"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewModel.isVideo ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <ImageView
+            android:id="@+id/play_pause_video_playback"
+            android:onClick="@{() -> viewModel.playPauseVideo()}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:src="@{viewModel.isVideoPlaying ? @drawable/pause_fill : @drawable/play_fill, default=@drawable/play_fill}"
+            android:visibility="@{viewModel.isVideo &amp;&amp; !viewModel.fullScreenMode ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@color/white"/>
+
+        <com.github.chrisbanes.photoview.PhotoView
+            android:id="@+id/image"
+            android:onClick="@{() -> viewModel.toggleFullScreen()}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/illu"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            coilFile="@{viewModel.path}"
+            android:visibility="@{viewModel.isImage ? View.VISIBLE : View.GONE, default=gone}" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

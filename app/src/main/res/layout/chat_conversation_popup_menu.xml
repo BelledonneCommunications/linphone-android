@@ -22,6 +22,9 @@
             name="configureEphemeralMessagesClickListener"
             type="View.OnClickListener" />
         <variable
+            name="mediasClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="conversationMuted"
             type="Boolean" />
         <variable
@@ -44,7 +47,7 @@
             style="@style/default_text_style"
             android:id="@+id/info"
             android:onClick="@{goToInfoClickListener}"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/conversation_menu_go_to_info"
@@ -56,6 +59,7 @@
             android:drawablePadding="5dp"
             app:drawableTint="?attr/color_main2_700"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/search"/>
 
@@ -63,7 +67,7 @@
             style="@style/default_text_style"
             android:id="@+id/search"
             android:onClick="@{searchClickListener}"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="@string/conversation_menu_search_in_messages"
@@ -75,6 +79,7 @@
             android:drawablePadding="5dp"
             app:drawableTint="?attr/color_main2_700"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/info"
             app:layout_constraintBottom_toTopOf="@id/mute"/>
 
@@ -82,7 +87,7 @@
             style="@style/default_text_style"
             android:id="@+id/mute"
             android:onClick="@{muteClickListener}"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="@string/conversation_action_mute"
@@ -95,6 +100,7 @@
             android:visibility="@{conversationMuted || readOnlyConversation ? View.GONE : View.VISIBLE}"
             app:drawableTint="?attr/color_main2_700"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/search"
             app:layout_constraintBottom_toTopOf="@id/unmute"/>
 
@@ -122,7 +128,7 @@
             style="@style/default_text_style"
             android:id="@+id/ephemeral"
             android:onClick="@{configureEphemeralMessagesClickListener}"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="@string/conversation_menu_configure_ephemeral_messages"
@@ -135,7 +141,28 @@
             android:visibility="@{ephemeralMessagesAvailable &amp;&amp; !readOnlyConversation ? View.VISIBLE : View.GONE}"
             app:drawableTint="?attr/color_main2_700"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/unmute"
+            app:layout_constraintBottom_toTopOf="@id/medias"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/medias"
+            android:onClick="@{mediasClickListener}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/conversation_menu_media_files"
+            android:textSize="14sp"
+            android:textColor="?attr/color_main2_500"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:drawableStart="@drawable/image"
+            android:drawablePadding="5dp"
+            app:drawableTint="?attr/color_main2_700"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ephemeral"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

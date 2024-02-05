@@ -106,6 +106,8 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
     // When using keyboard to share gif or other, see RichContentReceiver & RichEditText classes
     val richContentUri = MutableLiveData<Event<Uri>>()
 
+    val mediaViewerFullScreenMode = MutableLiveData<Boolean>()
+
     val forceRefreshConversationInfo: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -136,9 +138,5 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
 
     val listOfSelectedSipUrisEvent: MutableLiveData<Event<ArrayList<String>>> by lazy {
         MutableLiveData<Event<ArrayList<String>>>()
-    }
-
-    val displayFileEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
     }
 }

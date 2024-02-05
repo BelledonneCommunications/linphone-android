@@ -20,13 +20,14 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.FileViewerFragmentBinding
 import org.linphone.ui.main.MainActivity
-import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.fragment.SlidingPaneChildFragment
 import org.linphone.ui.main.viewer.adapter.PdfPagesListAdapter
 import org.linphone.ui.main.viewer.viewmodel.FileViewModel
+import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 
 @UiThread
-class FileViewerFragment : GenericFragment() {
+class FileViewerFragment : SlidingPaneChildFragment() {
     companion object {
         private const val TAG = "[File Viewer Fragment]"
 
@@ -73,7 +74,11 @@ class FileViewerFragment : GenericFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
-        val path = args.path
+        val path = if (arguments?.containsKey("path") == true) {
+            requireArguments().getString("path", args.path)
+        } else {
+            args.path
+        }
         Log.i("$TAG Path argument is [$path]")
         viewModel.loadFile(path)
 
@@ -103,9 +108,7 @@ class FileViewerFragment : GenericFragment() {
                 if (!copy.isNullOrEmpty()) {
                     sharedViewModel.filesToShareFromIntent.value = arrayListOf(copy)
                     Log.i("$TAG Sharing file [$copy], going back to conversations list")
-                    val action =
-                        FileViewerFragmentDirections.actionFileViewerFragmentToConversationsListFragment()
-                    findNavController().navigate(action)
+                    sharedViewModel.closeSlidingPaneEvent.value = Event(true)
                 } else {
                     Log.e("$TAG Failed to copy file [$filePath] to share!")
                 }

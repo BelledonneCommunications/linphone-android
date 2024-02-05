@@ -429,6 +429,8 @@
     <string name="conversation_menu_search_in_messages">Search</string>
     <string name="conversation_menu_go_to_info">Conversation info</string>
     <string name="conversation_menu_configure_ephemeral_messages">Ephemeral messages</string>
+    <string name="conversation_menu_media_files">Medias</string>
+    <string name="conversation_no_media_found">No media found</string>
     <string name="conversation_filter_no_matching_result">No matching result</string>
 
     <string name="conversation_info_participants_list_title">Group members</string>
@@ -454,6 +456,8 @@
     <string name="conversation_event_ephemeral_messages_enabled">Ephemeral messages have been enabled</string>
     <string name="conversation_event_ephemeral_messages_disabled">Ephemeral messages have been disabled</string>
     <string name="conversation_event_ephemeral_messages_lifetime_changed">Ephemeral lifetime is now %s</string>
+
+    <string name="conversation_media_list_title">Shared media</string>
 
     <string name="message_delivery_info_read_title">Read %s</string>
     <string name="message_delivery_info_received_title">Received %s</string>
@@ -565,7 +569,7 @@
     <!-- Keep <i></i> in following strings translations! -->
     <string name="message_meeting_invitation_content_description"><i>meeting invite: </i>%s</string>
     <string name="message_voice_message_content_description"><i>voice message</i></string>
-    
+
     <!-- Content description for accessibility -->
     <string name="content_description_trusted_contact_icon">Contact is trusted</string>
     <string name="content_description_not_trusted_contact_icon">Contact is not trusted!</string>

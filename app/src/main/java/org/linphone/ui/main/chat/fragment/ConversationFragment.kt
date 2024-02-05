@@ -21,6 +21,7 @@ package org.linphone.ui.main.chat.fragment
 
 import android.Manifest
 import android.app.Dialog
+import android.content.ActivityNotFoundException
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -38,6 +39,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.PopupWindow
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -238,6 +241,17 @@ class ConversationFragment : SlidingPaneChildFragment() {
     private var bottomSheetDeliveryModel: MessageDeliveryModel? = null
 
     private var bottomSheetReactionsModel: MessageReactionsModel? = null
+
+    override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
+        if (
+            findNavController().currentDestination?.id == R.id.fileViewerFragment ||
+            findNavController().currentDestination?.id == R.id.mediaListViewerFragment
+        ) {
+            // Holds fragment in place while new fragment slides over it
+            return AnimationUtils.loadAnimation(activity, R.anim.hold)
+        }
+        return super.onCreateAnimation(transit, enter, nextAnim)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -505,7 +519,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
         viewModel.fileToDisplayEvent.observe(viewLifecycleOwner) {
             it.consume { file ->
                 Log.i("$TAG User clicked on file [$file], let's display it in file viewer")
-                sharedViewModel.displayFileEvent.value = Event(file)
+                goToFileViewer(file)
             }
         }
 
@@ -729,6 +743,49 @@ class ConversationFragment : SlidingPaneChildFragment() {
         }
     }
 
+    private fun goToFileViewer(path: String) {
+        if (findNavController().currentDestination?.id == R.id.conversationFragment) {
+            Log.i("$TAG Navigating to file viewer fragment with path [$path]")
+            val extension = FileUtils.getExtensionFromFileName(path)
+            val mime = FileUtils.getMimeTypeFromExtension(extension)
+            when (FileUtils.getMimeType(mime)) {
+                FileUtils.MimeType.Image, FileUtils.MimeType.Video -> {
+                    val action =
+                        ConversationFragmentDirections.actionConversationFragmentToMediaListViewerFragment(
+                            localSipUri = viewModel.localSipUri,
+                            remoteSipUri = viewModel.remoteSipUri,
+                            path = path
+                        )
+                    findNavController().navigate(action)
+                }
+                FileUtils.MimeType.Pdf, FileUtils.MimeType.PlainText -> {
+                    val action =
+                        ConversationFragmentDirections.actionConversationFragmentToFileViewerFragment(
+                            path
+                        )
+                    findNavController().navigate(action)
+                }
+                else -> {
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    val contentUri: Uri =
+                        FileUtils.getPublicFilePath(requireContext(), path)
+                    intent.setDataAndType(contentUri, "file/$mime")
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    try {
+                        requireContext().startActivity(intent)
+                    } catch (anfe: ActivityNotFoundException) {
+                        Log.e("$TAG Can't open file [$path] in third party app: $anfe")
+                        val message = getString(
+                            R.string.toast_no_app_registered_to_handle_content_type_error
+                        )
+                        val icon = R.drawable.file
+                        (requireActivity() as MainActivity).showRedToast(message, icon)
+                    }
+                }
+            }
+        }
+    }
+
     private fun showPopupMenu(view: View) {
         val popupView: ChatConversationPopupMenuBinding = DataBindingUtil.inflate(
             LayoutInflater.from(requireContext()),
@@ -773,6 +830,18 @@ class ConversationFragment : SlidingPaneChildFragment() {
 
         popupView.setConfigureEphemeralMessagesClickListener {
             // TODO: go to configure ephemeral messages
+            popupWindow.dismiss()
+        }
+
+        popupView.setMediasClickListener {
+            if (findNavController().currentDestination?.id == R.id.conversationFragment) {
+                val action =
+                    ConversationFragmentDirections.actionConversationFragmentToConversationMediaListFragment(
+                        localSipUri = viewModel.localSipUri,
+                        remoteSipUri = viewModel.remoteSipUri
+                    )
+                findNavController().navigate(action)
+            }
             popupWindow.dismiss()
         }
 
