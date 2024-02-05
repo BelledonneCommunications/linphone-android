@@ -40,6 +40,7 @@
                 android:layout_height="@dimen/top_bar_height"
                 android:padding="15dp"
                 android:src="@drawable/caret_left"
+                android:contentDescription="@string/content_description_go_back_icon"
                 app:tint="?attr/color_main2_500"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
@@ -52,6 +53,7 @@
                 android:src="@drawable/mountains"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
+                android:contentDescription="@null"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/back"
@@ -156,6 +158,7 @@
                 android:background="@drawable/led_background"
                 android:padding="@dimen/avatar_presence_badge_padding"
                 android:src="@drawable/led_online"
+                android:contentDescription="@null"
                 app:layout_constraintEnd_toEndOf="@id/image1"
                 app:layout_constraintBottom_toBottomOf="@id/image1"/>
 
@@ -165,6 +168,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:src="@drawable/arrow_right_fill"
+                android:contentDescription="@null"
                 app:tint="@color/black"
                 app:layout_constraintStart_toEndOf="@id/image1"
                 app:layout_constraintEnd_toStartOf="@id/image2"
@@ -191,6 +195,7 @@
                 android:layout_width="@dimen/avatar_presence_badge_size"
                 android:layout_height="@dimen/avatar_presence_badge_size"
                 android:src="@drawable/trusted"
+                android:contentDescription="@null"
                 app:layout_constraintStart_toStartOf="@id/image2"
                 app:layout_constraintBottom_toBottomOf="@id/image2"/>
 
@@ -202,6 +207,7 @@
                 android:background="@drawable/led_background"
                 android:padding="@dimen/avatar_presence_badge_padding"
                 android:src="@drawable/led_online"
+                android:contentDescription="@null"
                 app:layout_constraintEnd_toEndOf="@id/image2"
                 app:layout_constraintBottom_toBottomOf="@id/image2"/>
 

@@ -52,6 +52,7 @@
             android:layout_height="@dimen/avatar_presence_badge_size"
             android:src="@drawable/trusted"
             android:visibility="@{viewModel.account.showTrust ? View.VISIBLE : View.GONE}"
+            android:contentDescription="@null"
             app:layout_constraintStart_toStartOf="@id/avatar"
             app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 

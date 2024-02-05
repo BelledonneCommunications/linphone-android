@@ -564,4 +564,10 @@
     <!-- Keep <i></i> in following strings translations! -->
     <string name="message_meeting_invitation_content_description"><i>meeting invite: </i>%s</string>
     <string name="message_voice_message_content_description"><i>voice message</i></string>
+    
+    <!-- Content description for accessibility -->
+    <string name="content_description_trusted_contact_icon">Contact is trusted</string>
+    <string name="content_description_not_trusted_contact_icon">Contact is not trusted!</string>
+    <string name="content_description_open_drawer_menu_icon">Open drawer menu</string>
+    <string name="content_description_go_back_icon">Go back</string>
 </resources>

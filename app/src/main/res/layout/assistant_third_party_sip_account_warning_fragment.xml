@@ -36,6 +36,7 @@
                 android:layout_height="@dimen/top_bar_height"
                 android:padding="15dp"
                 android:src="@drawable/caret_left"
+                android:contentDescription="@string/content_description_go_back_icon"
                 app:tint="?attr/color_main2_500"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>

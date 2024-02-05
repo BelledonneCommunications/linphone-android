@@ -45,6 +45,7 @@
                 android:layout_height="@dimen/top_bar_height"
                 android:padding="15dp"
                 android:src="@drawable/caret_left"
+                android:contentDescription="@string/content_description_go_back_icon"
                 app:tint="?attr/color_main2_500"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
@@ -57,6 +58,7 @@
                 android:src="@drawable/mountains"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
+                android:contentDescription="@null"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/back"
@@ -97,6 +99,7 @@
                 android:background="@drawable/circle_light_blue_button_background"
                 android:padding="12dp"
                 android:src="@drawable/bell_ringing"
+                android:contentDescription="@null"
                 app:tint="?attr/color_main2_500"
                 app:layout_constraintTop_toBottomOf="@id/subtitle"
                 app:layout_constraintStart_toStartOf="parent"/>
@@ -125,6 +128,7 @@
                 android:background="@drawable/circle_light_blue_button_background"
                 android:padding="12dp"
                 android:src="@drawable/address_book"
+                android:contentDescription="@null"
                 app:tint="?attr/color_main2_500"
                 app:layout_constraintTop_toBottomOf="@id/post_notifications_icon"
                 app:layout_constraintStart_toStartOf="parent"/>
@@ -153,6 +157,7 @@
                 android:background="@drawable/circle_light_blue_button_background"
                 android:padding="12dp"
                 android:src="@drawable/microphone"
+                android:contentDescription="@null"
                 app:tint="?attr/color_main2_500"
                 app:layout_constraintTop_toBottomOf="@id/read_contacts_icon"
                 app:layout_constraintStart_toStartOf="parent"/>
@@ -181,6 +186,7 @@
                 android:background="@drawable/circle_light_blue_button_background"
                 android:padding="12dp"
                 android:src="@drawable/video_camera"
+                android:contentDescription="@null"
                 app:tint="?attr/color_main2_500"
                 app:layout_constraintTop_toBottomOf="@id/record_audio_icon"
                 app:layout_constraintStart_toStartOf="parent"/>

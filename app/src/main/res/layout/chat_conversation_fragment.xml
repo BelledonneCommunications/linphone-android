@@ -70,6 +70,7 @@
                 android:onClick="@{backClickListener}"
                 android:visibility="@{viewModel.showBackButton &amp;&amp; !viewModel.searchBarVisible ? View.VISIBLE : View.GONE}"
                 android:src="@drawable/caret_left"
+                android:contentDescription="@string/content_description_go_back_icon"
                 app:tint="?attr/color_main1_500"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
@@ -105,6 +106,7 @@
                 android:layout_height="@dimen/avatar_presence_badge_size"
                 android:src="@{viewModel.avatarModel.trust == SecurityLevel.Safe ? @drawable/trusted : @drawable/not_trusted, default=@drawable/trusted}"
                 android:visibility="@{!viewModel.searchBarVisible &amp;&amp; (viewModel.avatarModel.trust == SecurityLevel.Safe || viewModel.avatarModel.trust == SecurityLevel.Unsafe) ? View.VISIBLE : View.GONE}"
+                android:contentDescription="@{viewModel.avatarModel.trust == SecurityLevel.Safe ? @string/content_description_trusted_contact_icon : @string/content_description_not_trusted_contact_icon}"
                 app:layout_constraintStart_toStartOf="@id/avatar"
                 app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 

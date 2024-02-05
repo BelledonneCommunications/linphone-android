@@ -45,6 +45,7 @@
             android:layout_height="@dimen/avatar_presence_badge_size"
             android:src="@{model.avatarModel.trust == SecurityLevel.Safe ? @drawable/trusted : @drawable/not_trusted, default=@drawable/trusted}"
             android:visibility="@{model.avatarModel.trust == SecurityLevel.Safe || model.avatarModel.trust == SecurityLevel.Unsafe ? View.VISIBLE : View.GONE}"
+            android:contentDescription="@{model.avatarModel.trust == SecurityLevel.Safe ? @string/content_description_trusted_contact_icon : @string/content_description_not_trusted_contact_icon}"
             app:layout_constraintStart_toStartOf="@id/avatar"
             app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 

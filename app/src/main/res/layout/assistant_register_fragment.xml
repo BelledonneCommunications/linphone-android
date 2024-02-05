@@ -44,6 +44,7 @@
                     android:layout_height="@dimen/top_bar_height"
                     android:padding="15dp"
                     android:src="@drawable/caret_left"
+                    android:contentDescription="@string/content_description_go_back_icon"
                     app:tint="?attr/color_main2_500"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"/>
@@ -56,6 +57,7 @@
                     android:src="@drawable/mountains"
                     android:adjustViewBounds="true"
                     android:scaleType="centerCrop"
+                    android:contentDescription="@null"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/back"
@@ -134,6 +136,7 @@
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:src="@{viewModel.phoneNumberError.length() > 0 ? @drawable/shape_edit_text_error_background : @drawable/edit_text_background, default=@drawable/edit_text_background}"
+                    android:contentDescription="@null"
                     app:layout_constraintStart_toStartOf="@id/prefix"
                     app:layout_constraintEnd_toEndOf="@id/phone_number"
                     app:layout_constraintTop_toTopOf="@id/prefix"
@@ -164,6 +167,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/caret_down"
+                    android:contentDescription="@null"
                     app:layout_constraintTop_toTopOf="@id/prefix"
                     app:layout_constraintBottom_toBottomOf="@id/prefix"
                     app:layout_constraintEnd_toEndOf="@id/prefix"/>
