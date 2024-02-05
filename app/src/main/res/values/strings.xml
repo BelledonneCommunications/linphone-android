@@ -276,6 +276,7 @@
     <string name="settings_conversations_auto_download_title">Auto-download files</string>
     <string name="settings_conversations_export_media_title">Export media in native gallery</string>
     <string name="settings_conversations_export_media_subtitle">Media from ephemeral messages will never be exported</string>
+    <string name="settings_contacts_title">Contacts</string>
     <string name="settings_meetings_title">Meetings</string>
     <string name="settings_meetings_default_layout_title">Default layout</string>
     <string name="settings_meetings_layout_active_speaker_label">Active speaker</string>

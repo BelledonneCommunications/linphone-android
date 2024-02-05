@@ -119,6 +119,36 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/section_header_style"
+                    android:onClick="@{() -> viewModel.toggleContactsExpand()}"
+                    android:id="@+id/contacts"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:layout_marginStart="26dp"
+                    android:layout_marginEnd="26dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/settings_contacts_title"
+                    android:drawableEnd="@{viewModel.expandContacts ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
+                    android:drawableTint="?attr/color_main2_600"
+                    android:visibility="@{viewModel.showContactsSettings ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/conversation_settings"/>
+
+                <include
+                    android:id="@+id/contacts_settings"
+                    layout="@layout/settings_contacts"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:visibility="@{viewModel.expandContacts &amp;&amp; viewModel.showContactsSettings ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintTop_toBottomOf="@id/contacts"
+                    bind:viewModel="@{viewModel}"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/section_header_style"
                     android:onClick="@{() -> viewModel.toggleMeetingsExpand()}"
                     android:id="@+id/meetings"
                     android:layout_width="0dp"
@@ -133,7 +163,7 @@
                     android:visibility="@{viewModel.showMeetingsSettings ? View.VISIBLE : View.GONE}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/conversation_settings"/>
+                    app:layout_constraintTop_toBottomOf="@id/contacts_settings"/>
 
                 <include
                     android:id="@+id/meetings_settings"

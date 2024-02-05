@@ -48,6 +48,7 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
 
     val expandCalls = MutableLiveData<Boolean>()
     val expandConversations = MutableLiveData<Boolean>()
+    val expandContacts = MutableLiveData<Boolean>()
     val expandMeetings = MutableLiveData<Boolean>()
     val expandNetwork = MutableLiveData<Boolean>()
     val expandUserInterface = MutableLiveData<Boolean>()
@@ -74,6 +75,9 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
 
     val autoDownloadEnabled = MutableLiveData<Boolean>()
     val exportMediaEnabled = MutableLiveData<Boolean>()
+
+    // Contacts settings
+    val showContactsSettings = MutableLiveData<Boolean>()
 
     // Meetings settings
     val showMeetingsSettings = MutableLiveData<Boolean>()
@@ -116,6 +120,7 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
             showConversationsSettings.postValue(!corePreferences.disableChat)
             showMeetingsSettings.postValue(!corePreferences.disableMeetings)
         }
+        showContactsSettings.value = true
 
         expandCalls.value = false
         expandConversations.value = false
@@ -324,6 +329,11 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
             corePreferences.exportMediaToNativeGallery = newValue
             exportMediaEnabled.postValue(newValue)
         }
+    }
+
+    @UiThread
+    fun toggleContactsExpand() {
+        expandContacts.value = expandContacts.value == false
     }
 
     @UiThread
