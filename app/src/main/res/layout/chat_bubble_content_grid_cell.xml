@@ -98,6 +98,7 @@
         <View
             android:id="@+id/file_background"
             android:onClick="@{() -> model.onClick()}"
+            android:onLongClick="@{onLongClickListener}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@drawable/shape_squircle_white_right"
@@ -110,6 +111,7 @@
             style="@style/default_text_style_700"
             android:id="@+id/file_name"
             android:onClick="@{() -> model.onClick()}"
+            android:onLongClick="@{onLongClickListener}"
             android:layout_width="@dimen/chat_bubble_grid_file_name_max_width"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -130,6 +132,7 @@
             style="@style/default_text_style_300"
             android:id="@+id/file_size"
             android:onClick="@{() -> model.onClick()}"
+            android:onLongClick="@{onLongClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
