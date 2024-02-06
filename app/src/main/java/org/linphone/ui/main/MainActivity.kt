@@ -52,7 +52,7 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.MainActivityBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.assistant.AssistantActivity
-import org.linphone.ui.main.help.fragment.DebugFragmentDirections
+import org.linphone.ui.main.chat.fragment.ConversationsListFragmentDirections
 import org.linphone.ui.main.viewmodel.MainViewModel
 import org.linphone.ui.main.viewmodel.SharedMainViewModel
 import org.linphone.ui.welcome.WelcomeActivity
@@ -347,7 +347,20 @@ class MainActivity : GenericActivity() {
             try {
                 Log.i("$TAG Trying to go to Conversations fragment")
                 val args = intent.extras
-                findNavController().navigate(R.id.conversationsListFragment, args)
+                val localSipUri = args?.getString("LocalSipUri", "")
+                val remoteSipUri = args?.getString("RemoteSipUri", "")
+                if (remoteSipUri.isNullOrEmpty() || localSipUri.isNullOrEmpty()) {
+                    Log.w("$TAG Found [Chat] extra but no local and/or remote SIP URI!")
+                } else {
+                    Log.i(
+                        "$TAG Found [Chat] extra with local [$localSipUri] and peer [$remoteSipUri] addresses"
+                    )
+                    val pair = Pair(localSipUri, remoteSipUri)
+                    sharedViewModel.showConversationEvent.value = Event(pair)
+                }
+
+                val action = ConversationsListFragmentDirections.actionGlobalConversationsListFragment()
+                findNavController().navigate(action)
             } catch (ise: IllegalStateException) {
                 Log.e("$TAG Can't navigate to Conversations fragment: $ise")
             }
@@ -362,10 +375,15 @@ class MainActivity : GenericActivity() {
                 try {
                     val navOptionsBuilder = NavOptions.Builder()
                     navOptionsBuilder.setPopUpTo(R.id.contactsListFragment, true)
+                    navOptionsBuilder.setLaunchSingleTop(true)
                     val navOptions = navOptionsBuilder.build()
                     when (defaultFragmentId) {
                         HISTORY_FRAGMENT_ID -> {
-                            findNavController().navigate(R.id.historyListFragment, args, navOptions)
+                            findNavController().navigate(
+                                R.id.historyListFragment,
+                                args,
+                                navOptions
+                            )
                         }
                         CHAT_FRAGMENT_ID -> {
                             findNavController().navigate(
@@ -458,9 +476,6 @@ class MainActivity : GenericActivity() {
                     )
                     sharedViewModel.showConversationEvent.value = Event(pair)
                 }
-
-                val action = DebugFragmentDirections.actionDebugFragmentToConversationsListFragment()
-                findNavController().navigate(action)
             } else {
                 val pair = parseShortcutIfAny(intent)
                 if (pair != null) {
@@ -469,11 +484,12 @@ class MainActivity : GenericActivity() {
                     Log.i(
                         "$TAG Navigating to conversation with local [$localSipUri] and peer [$remoteSipUri] addresses, computed from shortcut ID"
                     )
-                    intent.putExtra("LocalSipUri", localSipUri)
-                    intent.putExtra("RemoteSipUri", remoteSipUri)
+                    sharedViewModel.showConversationEvent.value = Event(pair)
                 }
-                findNavController().navigate(R.id.conversationsListFragment)
             }
+
+            val action = ConversationsListFragmentDirections.actionGlobalConversationsListFragment()
+            findNavController().navigate(action)
         }
     }
 

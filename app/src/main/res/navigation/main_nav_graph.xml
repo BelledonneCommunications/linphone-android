@@ -333,6 +333,7 @@
         <action
             android:id="@+id/action_fileViewerFragment_to_conversationsListFragment"
             app:destination="@id/conversationsListFragment"
+            app:launchSingleTop="true"
             app:popUpTo="@id/conversationsListFragment"
             app:popUpToInclusive="true"/>
     </fragment>
