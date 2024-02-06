@@ -21,12 +21,18 @@ package org.linphone.ui.call.viewmodel
 
 import android.Manifest
 import android.content.pm.PackageManager
+import androidx.annotation.AnyThread
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import java.util.Locale
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -99,6 +105,10 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
     val incomingCallTitle: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
+
+    val qualityValue = MutableLiveData<Float>()
+
+    val qualityIcon = MutableLiveData<Int>()
 
     var terminatedByUsed = false
 
@@ -343,6 +353,8 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
             { // OnCallClicked
             }
         )
+
+        updateCallQualityIcon()
     }
 
     @UiThread
@@ -856,6 +868,31 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         return ::currentCall.isInitialized && !currentCall.mediaInProgress() && when (currentCall.state) {
             Call.State.StreamsRunning, Call.State.Pausing, Call.State.Paused -> true
             else -> false
+        }
+    }
+
+    @AnyThread
+    private fun updateCallQualityIcon() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                delay(1000)
+                coreContext.postOnCoreThread {
+                    if (::currentCall.isInitialized) {
+                        val quality = currentCall.currentQuality
+                        val icon = when {
+                            quality >= 4 -> R.drawable.cell_signal_full
+                            quality >= 3 -> R.drawable.cell_signal_high
+                            quality >= 2 -> R.drawable.cell_signal_medium
+                            quality >= 1 -> R.drawable.cell_signal_low
+                            else -> R.drawable.cell_signal_none
+                        }
+                        qualityValue.postValue(quality)
+                        qualityIcon.postValue(icon)
+                    }
+
+                    updateCallQualityIcon()
+                }
+            }
         }
     }
 }
