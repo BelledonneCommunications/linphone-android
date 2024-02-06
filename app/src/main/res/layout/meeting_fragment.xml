@@ -92,7 +92,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintBottom_toTopOf="@id/separator_5">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -314,46 +314,38 @@
                     app:layout_constraintStart_toEndOf="@id/participants_icon"
                     app:layout_constraintEnd_toEndOf="parent" />
 
-                <androidx.constraintlayout.widget.Barrier
-                    android:id="@+id/participants_bottom_barrier"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:barrierDirection="bottom"
-                    app:constraint_referenced_ids="participants, participants_icon" />
-
-                <View
-                    android:id="@+id/separator_5"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="16dp"
-                    android:background="?attr/color_main2_200"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/participants_bottom_barrier" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/primary_button_label_style"
-                    android:id="@+id/join"
-                    android:onClick="@{joinClickListener}"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="@dimen/screen_bottom_margin"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"
-                    android:text="@string/meeting_info_join_title"
-                    app:layout_constraintWidth_max="@dimen/button_max_width"
-                    app:layout_constraintVertical_bias="1"
-                    app:layout_constraintTop_toBottomOf="@id/separator_5"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </ScrollView>
+
+        <View
+            android:id="@+id/separator_5"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="?attr/color_main2_200"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/scrollView" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/primary_button_label_style"
+            android:id="@+id/join"
+            android:onClick="@{joinClickListener}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="@dimen/screen_bottom_margin"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="@string/meeting_info_join_title"
+            app:layout_constraintWidth_max="@dimen/button_max_width"
+            app:layout_constraintVertical_bias="1"
+            app:layout_constraintTop_toBottomOf="@id/separator_5"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
