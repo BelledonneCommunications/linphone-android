@@ -86,6 +86,8 @@ class MainViewModel @UiThread constructor() : ViewModel() {
 
     var accountsFound = -1
 
+    var mainIntentHandled = false
+
     private var defaultAccountRegistrationFailed = false
 
     private val alertsList = arrayListOf<Pair<Int, String>>()

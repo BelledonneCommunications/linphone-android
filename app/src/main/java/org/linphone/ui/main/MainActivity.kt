@@ -386,6 +386,16 @@ class MainActivity : GenericActivity() {
 
     @MainThread
     private fun handleMainIntent(intent: Intent, isNewIntent: Boolean) {
+        // Prevent navigating to default fragment upon rotation (we only want to do it on first start)
+        if (intent.action == Intent.ACTION_MAIN && intent.type == null && intent.data == null && !isNewIntent) {
+            if (viewModel.mainIntentHandled) {
+                Log.d("$TAG Main intent without type nor data was already handled, do nothing")
+                return
+            } else {
+                viewModel.mainIntentHandled = true
+            }
+        }
+
         if (intent.hasExtra("Chat")) {
             Log.i("$TAG Intent has [Chat] extra")
             try {
