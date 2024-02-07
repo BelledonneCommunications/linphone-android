@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.main.chat.fragment
+package org.linphone.ui.main.file_media_viewer.fragment
 
 import android.net.Uri
 import android.os.Bundle
@@ -27,7 +27,6 @@ import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.widget.ViewPager2
 import kotlinx.coroutines.Dispatchers
@@ -35,21 +34,21 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.linphone.R
 import org.linphone.core.tools.Log
-import org.linphone.databinding.ChatMediaViewerFragmentBinding
+import org.linphone.databinding.FileMediaViewerFragmentBinding
 import org.linphone.ui.main.MainActivity
-import org.linphone.ui.main.chat.adapter.MediaListAdapter
 import org.linphone.ui.main.chat.viewmodel.ConversationMediaListViewModel
-import org.linphone.ui.main.fragment.SlidingPaneChildFragment
+import org.linphone.ui.main.file_media_viewer.adapter.MediaListAdapter
+import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 
-class MediaListViewerFragment : SlidingPaneChildFragment() {
+class MediaListViewerFragment : GenericFragment() {
     companion object {
         private const val TAG = "[Media List Viewer]"
     }
 
-    private lateinit var binding: ChatMediaViewerFragmentBinding
+    private lateinit var binding: FileMediaViewerFragmentBinding
 
     private lateinit var adapter: MediaListAdapter
 
@@ -76,12 +75,8 @@ class MediaListViewerFragment : SlidingPaneChildFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = ChatMediaViewerFragmentBinding.inflate(layoutInflater)
+        binding = FileMediaViewerFragmentBinding.inflate(layoutInflater)
         return binding.root
-    }
-
-    override fun goBack(): Boolean {
-        return findNavController().popBackStack()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -218,7 +213,9 @@ class MediaListViewerFragment : SlidingPaneChildFragment() {
         // Reset default navigation bar color
         requireActivity().window.navigationBarColor = navBarDefaultColor
 
-        viewPager.unregisterOnPageChangeCallback(pageListener)
+        if (::viewPager.isInitialized) {
+            viewPager.unregisterOnPageChangeCallback(pageListener)
+        }
 
         super.onDestroy()
     }

@@ -20,6 +20,7 @@
 package org.linphone.ui.main.viewmodel
 
 import android.net.Uri
+import android.os.Bundle
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -107,6 +108,10 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
     val richContentUri = MutableLiveData<Event<Uri>>()
 
     val mediaViewerFullScreenMode = MutableLiveData<Boolean>()
+
+    val displayFileEvent: MutableLiveData<Event<Bundle>> by lazy {
+        MutableLiveData<Event<Bundle>>()
+    }
 
     val forceRefreshConversationInfo: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()

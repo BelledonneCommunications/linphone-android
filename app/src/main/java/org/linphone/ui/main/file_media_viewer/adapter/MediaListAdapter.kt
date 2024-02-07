@@ -17,14 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.main.chat.adapter
+package org.linphone.ui.main.file_media_viewer.adapter
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import org.linphone.core.tools.Log
-import org.linphone.ui.main.chat.fragment.MediaViewerFragment
 import org.linphone.ui.main.chat.viewmodel.ConversationMediaListViewModel
+import org.linphone.ui.main.file_media_viewer.fragment.MediaViewerFragment
 
 class MediaListAdapter(fragment: Fragment, private val viewModel: ConversationMediaListViewModel) : FragmentStateAdapter(
     fragment

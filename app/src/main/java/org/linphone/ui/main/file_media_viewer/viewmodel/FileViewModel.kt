@@ -1,4 +1,4 @@
-package org.linphone.ui.main.viewer.viewmodel
+package org.linphone.ui.main.file_media_viewer.viewmodel
 
 import android.graphics.Bitmap
 import android.graphics.pdf.PdfRenderer
@@ -28,8 +28,6 @@ class FileViewModel @UiThread constructor() : ViewModel() {
         private const val TAG = "[File ViewModel]"
     }
 
-    val path = MutableLiveData<String>()
-
     val fileName = MutableLiveData<String>()
 
     val fullScreenMode = MutableLiveData<Boolean>()
@@ -40,13 +38,7 @@ class FileViewModel @UiThread constructor() : ViewModel() {
 
     val pdfPages = MutableLiveData<String>()
 
-    val isImage = MutableLiveData<Boolean>()
-
     val isAudio = MutableLiveData<Boolean>()
-
-    val isVideo = MutableLiveData<Boolean>()
-
-    val isVideoPlaying = MutableLiveData<Boolean>()
 
     val isText = MutableLiveData<Boolean>()
 
@@ -60,10 +52,6 @@ class FileViewModel @UiThread constructor() : ViewModel() {
 
     val exportPdfEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
-    }
-
-    val toggleVideoPlayPauseEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
     }
 
     val showGreenToastEvent: MutableLiveData<Event<Pair<String, Int>>> by lazy {
@@ -109,18 +97,6 @@ class FileViewModel @UiThread constructor() : ViewModel() {
             FileUtils.MimeType.Pdf -> {
                 Log.i("$TAG File [$file] seems to be a PDF")
                 loadPdf()
-            }
-            FileUtils.MimeType.Image -> {
-                Log.i("$TAG File [$file] seems to be an image")
-                isImage.value = true
-                path.value = file
-                fileReadyEvent.value = Event(true)
-            }
-            FileUtils.MimeType.Video -> {
-                Log.i("$TAG File [$file] seems to be a video")
-                isVideo.value = true
-                isVideoPlaying.value = false
-                fileReadyEvent.value = Event(true)
             }
             FileUtils.MimeType.Audio -> {
                 Log.i("$TAG File [$file] seems to be an audio")
@@ -187,13 +163,6 @@ class FileViewModel @UiThread constructor() : ViewModel() {
                 }
             }
         }
-    }
-
-    @UiThread
-    fun playPauseVideo() {
-        val playVideo = isVideoPlaying.value == false
-        isVideoPlaying.value = playVideo
-        toggleVideoPlayPauseEvent.value = Event(playVideo)
     }
 
     @UiThread

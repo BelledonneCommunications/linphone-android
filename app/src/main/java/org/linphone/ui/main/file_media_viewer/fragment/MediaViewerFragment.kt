@@ -1,26 +1,24 @@
-package org.linphone.ui.main.chat.fragment
+package org.linphone.ui.main.file_media_viewer.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.core.tools.Log
-import org.linphone.databinding.ChatMediaViewerChildFragmentBinding
-import org.linphone.ui.main.chat.viewmodel.MediaViewModel
+import org.linphone.databinding.FileMediaViewerChildFragmentBinding
+import org.linphone.ui.main.file_media_viewer.viewmodel.MediaViewModel
+import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.ui.main.viewmodel.SharedMainViewModel
 
 @UiThread
-class MediaViewerFragment : Fragment() {
+class MediaViewerFragment : GenericFragment() {
     companion object {
         private const val TAG = "[Media Viewer Fragment]"
     }
 
-    private lateinit var binding: ChatMediaViewerChildFragmentBinding
-
-    private lateinit var sharedViewModel: SharedMainViewModel
+    private lateinit var binding: FileMediaViewerChildFragmentBinding
 
     private lateinit var viewModel: MediaViewModel
 
@@ -29,7 +27,7 @@ class MediaViewerFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = ChatMediaViewerChildFragmentBinding.inflate(layoutInflater)
+        binding = FileMediaViewerChildFragmentBinding.inflate(layoutInflater)
         return binding.root
     }
 

@@ -218,6 +218,32 @@ class ConversationsListFragment : AbstractTopBarFragment() {
             }
         }
 
+        sharedViewModel.displayFileEvent.observe(viewLifecycleOwner) {
+            it.consume { bundle ->
+                if (findNavController().currentDestination?.id == R.id.conversationsListFragment) {
+                    val path = bundle.getString("path", "")
+                    val isMedia = bundle.getBoolean("isMedia", false)
+                    Log.i(
+                        "$TAG Navigating to ${if (isMedia) "media" else "file"} viewer fragment with path [$path]"
+                    )
+                    val action = if (isMedia) {
+                        val localSipUri = bundle.getString("localSipUri", "")
+                        val remoteSipUri = bundle.getString("remoteSipUri", "")
+                        ConversationsListFragmentDirections.actionConversationsListFragmentToMediaListViewerFragment(
+                            localSipUri = localSipUri,
+                            remoteSipUri = remoteSipUri,
+                            path = path
+                        )
+                    } else {
+                        ConversationsListFragmentDirections.actionConversationsListFragmentToFileViewerFragment(
+                            path
+                        )
+                    }
+                    findNavController().navigate(action)
+                }
+            }
+        }
+
         sharedViewModel.messageToForwardEvent.observe(viewLifecycleOwner) { event ->
             if (!event.consumed()) {
                 // Do not consume it yet

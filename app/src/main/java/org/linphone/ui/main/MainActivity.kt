@@ -402,6 +402,7 @@ class MainActivity : GenericActivity() {
                     val pair = Pair(localSipUri, remoteSipUri)
                     sharedViewModel.showConversationEvent.value = Event(pair)
                 }
+                args?.clear()
 
                 val action = ConversationsListFragmentDirections.actionGlobalConversationsListFragment()
                 findNavController().navigate(action)

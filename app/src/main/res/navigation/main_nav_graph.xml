@@ -238,6 +238,18 @@
             app:enterAnim="@anim/slide_in"
             app:popExitAnim="@anim/slide_out"
             app:launchSingleTop="true" />
+        <action
+            android:id="@+id/action_conversationsListFragment_to_mediaListViewerFragment"
+            app:destination="@id/mediaListViewerFragment"
+            app:launchSingleTop="true"
+            app:enterAnim="@anim/slide_in"
+            app:popExitAnim="@anim/slide_out" />
+        <action
+            android:id="@+id/action_conversationsListFragment_to_fileViewerFragment"
+            app:destination="@id/fileViewerFragment"
+            app:launchSingleTop="true"
+            app:enterAnim="@anim/slide_in"
+            app:popExitAnim="@anim/slide_out" />
     </fragment>
 
     <fragment
@@ -310,7 +322,9 @@
 
     <action android:id="@+id/action_global_conversationsListFragment"
         app:destination="@id/conversationsListFragment"
-        app:launchSingleTop="true"/>
+        app:launchSingleTop="true"
+        app:popUpTo="@id/contactsListFragment"
+        app:popUpToInclusive="true"/>
 
     <fragment
         android:id="@+id/meetingWaitingRoomFragment"
@@ -321,4 +335,31 @@
             android:name="conferenceUri"
             app:argType="string" />
     </fragment>
+
+    <fragment
+        android:id="@+id/fileViewerFragment"
+        android:name="org.linphone.ui.main.file_media_viewer.fragment.FileViewerFragment"
+        android:label="FileViewerFragment"
+        tools:layout="@layout/file_viewer_fragment">
+        <argument
+            android:name="path"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/mediaListViewerFragment"
+        android:name="org.linphone.ui.main.file_media_viewer.fragment.MediaListViewerFragment"
+        android:label="MediaListViewerFragment"
+        tools:layout="@layout/file_media_viewer_fragment">
+        <argument
+            android:name="localSipUri"
+            app:argType="string" />
+        <argument
+            android:name="remoteSipUri"
+            app:argType="string" />
+        <argument
+            android:name="path"
+            app:argType="string" />
+    </fragment>
+
 </navigation>

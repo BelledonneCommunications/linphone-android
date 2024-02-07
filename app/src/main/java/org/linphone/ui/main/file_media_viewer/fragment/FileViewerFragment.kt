@@ -1,4 +1,4 @@
-package org.linphone.ui.main.viewer.fragment
+package org.linphone.ui.main.file_media_viewer.fragment
 
 import android.app.Activity
 import android.content.Intent
@@ -20,14 +20,14 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.FileViewerFragmentBinding
 import org.linphone.ui.main.MainActivity
-import org.linphone.ui.main.fragment.SlidingPaneChildFragment
-import org.linphone.ui.main.viewer.adapter.PdfPagesListAdapter
-import org.linphone.ui.main.viewer.viewmodel.FileViewModel
+import org.linphone.ui.main.file_media_viewer.adapter.PdfPagesListAdapter
+import org.linphone.ui.main.file_media_viewer.viewmodel.FileViewModel
+import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 
 @UiThread
-class FileViewerFragment : SlidingPaneChildFragment() {
+class FileViewerFragment : GenericFragment() {
     companion object {
         private const val TAG = "[File Viewer Fragment]"
 
@@ -74,11 +74,7 @@ class FileViewerFragment : SlidingPaneChildFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
-        val path = if (arguments?.containsKey("path") == true) {
-            requireArguments().getString("path", args.path)
-        } else {
-            args.path
-        }
+        val path = args.path
         Log.i("$TAG Path argument is [$path]")
         viewModel.loadFile(path)
 
@@ -138,30 +134,6 @@ class FileViewerFragment : SlidingPaneChildFragment() {
             }
         }
 
-        viewModel.isVideo.observe(viewLifecycleOwner) { isVideo ->
-            if (isVideo) {
-                binding.videoPlayer.setVideoPath(path)
-                binding.videoPlayer.setOnCompletionListener {
-                    Log.i("$TAG End of file reached")
-                    viewModel.isVideoPlaying.value = false
-                }
-                (view.parent as? ViewGroup)?.doOnPreDraw {
-                    binding.videoPlayer.start()
-                    viewModel.isVideoPlaying.value = true
-                }
-            }
-        }
-
-        viewModel.toggleVideoPlayPauseEvent.observe(viewLifecycleOwner) {
-            it.consume { play ->
-                if (play) {
-                    binding.videoPlayer.start()
-                } else {
-                    binding.videoPlayer.pause()
-                }
-            }
-        }
-
         viewModel.showGreenToastEvent.observe(viewLifecycleOwner) {
             it.consume { pair ->
                 val message = pair.first
@@ -191,19 +163,7 @@ class FileViewerFragment : SlidingPaneChildFragment() {
 
     override fun onPause() {
         binding.pdfViewPager.unregisterOnPageChangeCallback(pageChangedListener)
-
-        if (binding.videoPlayer.isPlaying) {
-            binding.videoPlayer.pause()
-            viewModel.isVideoPlaying.value = false
-        }
-
         super.onPause()
-    }
-
-    override fun onDestroyView() {
-        binding.videoPlayer.stopPlayback()
-
-        super.onDestroyView()
     }
 
     override fun onDestroy() {

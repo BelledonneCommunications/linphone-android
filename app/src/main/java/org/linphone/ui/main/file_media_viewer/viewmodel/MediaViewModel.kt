@@ -1,4 +1,4 @@
-package org.linphone.ui.main.chat.viewmodel
+package org.linphone.ui.main.file_media_viewer.viewmodel
 
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
