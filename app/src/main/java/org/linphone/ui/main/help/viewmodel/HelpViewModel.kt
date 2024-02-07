@@ -30,7 +30,6 @@ import org.linphone.R
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.Factory
-import org.linphone.core.LogLevel
 import org.linphone.core.VersionUpdateCheckResult
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
@@ -47,7 +46,7 @@ class HelpViewModel @UiThread constructor() : ViewModel() {
 
     val sdkVersion = MutableLiveData<String>()
 
-    val debugModeEnabled = MutableLiveData<Boolean>()
+    val printLogInLogcatEnabled = MutableLiveData<Boolean>()
 
     val newVersionAvailableEvent: MutableLiveData<Event<Pair<String, String>>> by lazy {
         MutableLiveData<Event<Pair<String, String>>>()
@@ -124,7 +123,7 @@ class HelpViewModel @UiThread constructor() : ViewModel() {
 
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
-            debugModeEnabled.postValue(corePreferences.debugLogs)
+            printLogInLogcatEnabled.postValue(corePreferences.printLogsInLogcat)
         }
     }
 
@@ -138,19 +137,13 @@ class HelpViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
-    fun toggleDebugMode() {
-        val enabled = debugModeEnabled.value == false
-        debugModeEnabled.value = enabled
-
-        if (!enabled) {
-            cleanLogs()
-        }
+    fun togglePrintLogsInLogcat() {
+        val enabled = printLogInLogcatEnabled.value == false
+        printLogInLogcatEnabled.value = enabled
 
         coreContext.postOnCoreThread {
-            corePreferences.debugLogs = enabled
-            val logLevel = if (enabled) LogLevel.Message else LogLevel.Error
-            Factory.instance().loggingService.setLogLevel(logLevel)
-            Log.i("$TAG Debug logs have been ${if (enabled) "enabled" else "disabled"}")
+            corePreferences.printLogsInLogcat = enabled
+            Factory.instance().enableLogcatLogs(corePreferences.printLogsInLogcat)
         }
     }
 

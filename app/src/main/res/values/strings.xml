@@ -246,8 +246,8 @@
     <string name="help_version_up_to_date_toast_message">Your version is up-to-date</string>
     <string name="help_error_checking_version_toast_message">An error occurred while checking for update</string>
     <string name="help_troubleshooting_title">Troubleshooting</string>
-    <string name="help_troubleshooting_debug_title">Enable/disable debug logs</string>
-    <string name="help_troubleshooting_debug_subtitle">Blah</string> <!-- TODO -->
+    <string name="help_troubleshooting_debug_title">Enable/disable printing logs in ADB</string>
+    <string name="help_troubleshooting_debug_subtitle">Blah blah blah?</string> <!-- TODO -->
     <string name="help_troubleshooting_clean_logs">Clean logs</string>
     <string name="help_troubleshooting_share_logs">Share logs</string>
     <string name="help_troubleshooting_app_version_title">Linphone app version</string>
