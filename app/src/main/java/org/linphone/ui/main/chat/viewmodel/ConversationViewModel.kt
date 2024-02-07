@@ -74,6 +74,8 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
 
     val isDisabledBecauseNotSecured = MutableLiveData<Boolean>()
 
+    val ephemeralLifetime = MutableLiveData<Long>()
+
     val composingLabel = MutableLiveData<String>()
 
     val searchBarVisible = MutableLiveData<Boolean>()
@@ -258,6 +260,10 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             list.add(EventLogModel(eventLog, avatarModel))
             eventsList = list
             events.postValue(eventsList)
+
+            ephemeralLifetime.postValue(
+                if (!chatRoom.isEphemeralEnabled) 0L else chatRoom.ephemeralLifetime
+            )
         }
 
         @WorkerThread
@@ -602,6 +608,10 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
             coreContext.contactsManager.getContactAvatarModelForAddress(address)
         }
         avatarModel.postValue(avatar)
+
+        ephemeralLifetime.postValue(
+            if (!chatRoom.isEphemeralEnabled) 0L else chatRoom.ephemeralLifetime
+        )
     }
 
     @WorkerThread

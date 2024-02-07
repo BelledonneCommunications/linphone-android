@@ -127,15 +127,36 @@
                 app:layout_constraintEnd_toStartOf="@id/start_call"
                 app:layout_constraintStart_toEndOf="@id/avatar"
                 app:layout_constraintTop_toTopOf="@id/avatar"
-                app:layout_constraintBottom_toTopOf="@id/muted"/>
+                app:layout_constraintBottom_toTopOf="@id/subtitle_barrier"/>
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/subtitle_barrier"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="top"
+                app:constraint_referenced_ids="muted, ephemeral_enabled" />
 
             <ImageView
                 android:id="@+id/muted"
                 android:layout_width="@dimen/small_icon_size"
                 android:layout_height="@dimen/small_icon_size"
+                android:layout_marginEnd="5dp"
                 android:src="@drawable/bell_simple_slash"
                 android:visibility="@{viewModel.isMuted ? View.VISIBLE : View.GONE, default=gone}"
                 app:layout_constraintStart_toStartOf="@id/title"
+                app:layout_constraintEnd_toStartOf="@id/ephemeral_enabled"
+                app:layout_constraintTop_toBottomOf="@id/title"
+                app:layout_constraintBottom_toBottomOf="@id/avatar"
+                app:tint="@color/orange_main_400"/>
+
+            <ImageView
+                android:id="@+id/ephemeral_enabled"
+                android:layout_width="@dimen/small_icon_size"
+                android:layout_height="@dimen/small_icon_size"
+                android:layout_marginEnd="5dp"
+                android:src="@drawable/clock_countdown"
+                android:visibility="@{viewModel.ephemeralLifetime > 0L ? View.VISIBLE : View.GONE, default=gone}"
+                app:layout_constraintStart_toEndOf="@id/muted"
                 app:layout_constraintTop_toBottomOf="@id/title"
                 app:layout_constraintBottom_toBottomOf="@id/avatar"
                 app:tint="@color/orange_main_400"/>
