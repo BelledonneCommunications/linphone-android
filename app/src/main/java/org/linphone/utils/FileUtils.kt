@@ -162,7 +162,6 @@ class FileUtils {
         @AnyThread
         fun getFileStorageCacheDir(fileName: String, overrideExisting: Boolean = false): File {
             val path = coreContext.context.cacheDir
-            Log.i("$TAG Cache directory is: $path")
 
             var file = File(path, fileName)
             if (!overrideExisting) {
@@ -308,7 +307,7 @@ class FileUtils {
             return false
         }
 
-        suspend fun copyFileTo(filePath: String, outputStream: OutputStream?): Boolean {
+        private suspend fun copyFileTo(filePath: String, outputStream: OutputStream?): Boolean {
             if (outputStream == null) {
                 Log.e("$TAG Can't copy file [$filePath] to given null output stream")
                 return false

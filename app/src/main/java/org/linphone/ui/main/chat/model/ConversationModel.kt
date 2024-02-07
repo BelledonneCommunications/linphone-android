@@ -269,7 +269,7 @@ class ConversationModel @WorkerThread constructor(
     }
 
     @WorkerThread
-    private fun updateLastMessage() {
+    fun updateLastMessage() {
         lastMessage?.removeListener(chatMessageListener)
         lastMessage = null
 
@@ -305,7 +305,7 @@ class ConversationModel @WorkerThread constructor(
     }
 
     @WorkerThread
-    private fun computeParticipants() {
+    fun computeParticipants() {
         val friends = arrayListOf<Friend>()
         val address = if (chatRoom.hasCapability(Capabilities.Basic.toInt())) {
             Log.d("$TAG Conversation [$id] is 'Basic'")

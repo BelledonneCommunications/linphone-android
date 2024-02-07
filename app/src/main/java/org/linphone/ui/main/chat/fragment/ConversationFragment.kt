@@ -110,6 +110,8 @@ class ConversationFragment : SlidingPaneChildFragment() {
 
     private lateinit var bottomSheetAdapter: MessageBottomSheetAdapter
 
+    private var messageLongPressDialog: Dialog? = null
+
     private val args: ConversationFragmentArgs by navArgs()
 
     private val pickMedia = registerForActivityResult(
@@ -518,20 +520,15 @@ class ConversationFragment : SlidingPaneChildFragment() {
 
         viewModel.fileToDisplayEvent.observe(viewLifecycleOwner) {
             it.consume { file ->
+                if (messageLongPressDialog != null) return@consume
                 Log.i("$TAG User clicked on file [$file], let's display it in file viewer")
                 goToFileViewer(file)
             }
         }
 
-        viewModel.isGroup.observe(viewLifecycleOwner) { group ->
-            if (group) {
-                Log.i("$TAG Adding text observer to message sending area")
-                binding.sendArea.messageToSend.addTextChangedListener(textObserver)
-            }
-        }
-
         viewModel.conferenceToJoinEvent.observe(viewLifecycleOwner) {
             it.consume { conferenceUri ->
+                if (messageLongPressDialog != null) return@consume
                 Log.i("$TAG Requesting to go to waiting room for conference URI [$conferenceUri]")
                 sharedViewModel.goToMeetingWaitingRoomEvent.value = Event(conferenceUri)
             }
@@ -539,6 +536,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
 
         viewModel.openWebBrowserEvent.observe(viewLifecycleOwner) {
             it.consume { url ->
+                if (messageLongPressDialog != null) return@consume
                 Log.i("$TAG Requesting to open web browser on page [$url]")
                 try {
                     val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
@@ -553,9 +551,17 @@ class ConversationFragment : SlidingPaneChildFragment() {
 
         viewModel.contactToDisplayEvent.observe(viewLifecycleOwner) {
             it.consume { friendRefKey ->
+                if (messageLongPressDialog != null) return@consume
                 Log.i("$TAG Navigating to contact with ref key [$friendRefKey]")
                 sharedViewModel.navigateToContactsEvent.value = Event(true)
                 sharedViewModel.showContactEvent.value = Event(friendRefKey)
+            }
+        }
+
+        viewModel.isGroup.observe(viewLifecycleOwner) { group ->
+            if (group) {
+                Log.i("$TAG Adding text observer to message sending area")
+                binding.sendArea.messageToSend.addTextChangedListener(textObserver)
             }
         }
 
@@ -850,6 +856,11 @@ class ConversationFragment : SlidingPaneChildFragment() {
         popupWindow.showAsDropDown(view, 0, 0, Gravity.BOTTOM)
     }
 
+    private fun dismissDialog() {
+        messageLongPressDialog?.dismiss()
+        messageLongPressDialog = null
+    }
+
     private fun showChatMessageLongPressMenu(chatMessageModel: MessageModel) {
         Compatibility.setBlurRenderEffect(binding.root)
 
@@ -864,13 +875,13 @@ class ConversationFragment : SlidingPaneChildFragment() {
         )
 
         layout.root.setOnClickListener {
-            dialog.dismiss()
+            dismissDialog()
         }
 
         layout.setDeleteClickListener {
             Log.i("$TAG Deleting message")
             viewModel.deleteChatMessage(chatMessageModel)
-            dialog.dismiss()
+            dismissDialog()
         }
 
         layout.setCopyClickListener {
@@ -880,7 +891,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
             val label = "Message"
             clipboard.setPrimaryClip(ClipData.newPlainText(label, text))
 
-            dialog.dismiss()
+            dismissDialog()
         }
 
         layout.setPickEmojiClickListener {
@@ -892,7 +903,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
         layout.setResendClickListener {
             Log.i("$TAG Re-sending message in error state")
             chatMessageModel.resend()
-            dialog.dismiss()
+            dismissDialog()
         }
 
         layout.setForwardClickListener {
@@ -901,14 +912,14 @@ class ConversationFragment : SlidingPaneChildFragment() {
             // as we don't want to forward it in this chat room
             sharedViewModel.messageToForwardEvent.removeObservers(viewLifecycleOwner)
             sharedViewModel.messageToForwardEvent.postValue(Event(chatMessageModel))
-            dialog.dismiss()
+            dismissDialog()
             goBack()
         }
 
         layout.setReplyClickListener {
             Log.i("$TAG Updating sending area to reply to selected message")
             sendMessageViewModel.replyToMessage(chatMessageModel)
-            dialog.dismiss()
+            dismissDialog()
 
             // Open keyboard & focus edit text
             binding.sendArea.messageToSend.showKeyboard()
@@ -916,7 +927,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
 
         layout.model = chatMessageModel
         chatMessageModel.dismissLongPressMenuEvent.observe(viewLifecycleOwner) {
-            dialog.dismiss()
+            dismissDialog()
         }
 
         dialog.setContentView(layout.root)
@@ -935,6 +946,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
         d.alpha = 102
         dialog.window?.setBackgroundDrawable(d)
         dialog.show()
+        messageLongPressDialog = dialog
     }
 
     @UiThread

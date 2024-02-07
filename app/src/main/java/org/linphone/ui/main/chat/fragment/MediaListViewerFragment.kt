@@ -129,7 +129,7 @@ class MediaListViewerFragment : SlidingPaneChildFragment() {
                 index
             }
             viewPager.setCurrentItem(position, false)
-            viewPager.offscreenPageLimit = 2
+            viewPager.offscreenPageLimit = 1
 
             (view.parent as? ViewGroup)?.doOnPreDraw {
                 startPostponedEnterTransition()
@@ -168,7 +168,7 @@ class MediaListViewerFragment : SlidingPaneChildFragment() {
             val currentItem = binding.mediaViewPager.currentItem
             val model = if (currentItem >= 0 && currentItem < list.size) list[currentItem] else null
             if (model != null) {
-                val filePath = FileUtils.getProperFilePath(model.file)
+                val filePath = model.file
                 lifecycleScope.launch {
                     withContext(Dispatchers.IO) {
                         Log.i("$TAG Export file [$filePath] to Android's MediaStore")

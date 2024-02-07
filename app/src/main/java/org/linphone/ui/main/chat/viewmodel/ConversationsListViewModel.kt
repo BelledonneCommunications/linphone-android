@@ -97,7 +97,10 @@ class ConversationsListViewModel @UiThread constructor() : AbstractTopBarViewMod
         @WorkerThread
         override fun onContactsLoaded() {
             Log.i("$TAG Contacts have been (re)loaded, updating list")
-            computeChatRoomsList(currentFilter)
+            for (model in conversations.value.orEmpty()) {
+                model.computeParticipants()
+                model.updateLastMessage()
+            }
         }
     }
 
