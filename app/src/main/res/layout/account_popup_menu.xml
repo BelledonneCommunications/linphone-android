@@ -22,7 +22,7 @@
             android:onClick="@{manageProfileClickListener}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
+            android:layout_margin="@dimen/popup_menu_padding"
             android:text="@string/drawer_menu_manage_account"
             android:textSize="14sp"
             android:textColor="?attr/color_main2_500"

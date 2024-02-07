@@ -41,6 +41,14 @@
 
     <dimen name="top_bar_height">55dp</dimen>
     <dimen name="toast_top_margin">70dp</dimen> <!-- 15dp + top_bar_height -->
+    <dimen name="toast_max_width">400dp</dimen>
+    <dimen name="toast_text_max_width">300dp</dimen>
+    <dimen name="button_max_width">400dp</dimen>
+    <dimen name="dialog_max_width">400dp</dimen>
+    <dimen name="text_input_max_width">400dp</dimen>
+    <dimen name="popup_menu_width">250dp</dimen>
+    <dimen name="popup_menu_padding">15dp</dimen>
+    <dimen name="popup_menu_item_top_margin">20dp</dimen>
 
     <dimen name="call_top_bar_text_height">28dp</dimen>
     <dimen name="call_top_bar_info_height">48dp</dimen> <!-- Size of top text + top & bottom margins -->
@@ -56,13 +64,6 @@
     <dimen name="call_conference_active_speaker_miniature_size">120dp</dimen>
 
     <dimen name="meeting_list_decoration_height">66dp</dimen>
-
-    <dimen name="toast_max_width">400dp</dimen>
-    <dimen name="toast_text_max_width">300dp</dimen>
-    <dimen name="button_max_width">400dp</dimen>
-    <dimen name="dialog_max_width">400dp</dimen>
-    <dimen name="text_input_max_width">400dp</dimen>
-
     <dimen name="meeting_margin">8dp</dimen>
 
     <dimen name="chat_bubble_grouped_top_margin">2dp</dimen>

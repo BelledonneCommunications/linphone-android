@@ -38,9 +38,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingEnd="20dp"
-        android:paddingStart="20dp"
-        android:paddingBottom="20dp"
+        android:paddingEnd="@dimen/popup_menu_padding"
+        android:paddingStart="@dimen/popup_menu_padding"
         android:background="@drawable/shape_round_popup_menu_background">
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -49,7 +48,7 @@
             android:onClick="@{goToInfoClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/popup_menu_item_top_margin"
             android:text="@string/conversation_menu_go_to_info"
             android:textSize="14sp"
             android:textColor="?attr/color_main2_500"
@@ -69,7 +68,7 @@
             android:onClick="@{searchClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="@dimen/popup_menu_item_top_margin"
             android:text="@string/conversation_menu_search_in_messages"
             android:textSize="14sp"
             android:textColor="?attr/color_main2_500"
@@ -89,7 +88,7 @@
             android:onClick="@{muteClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="@dimen/popup_menu_item_top_margin"
             android:text="@string/conversation_action_mute"
             android:textSize="14sp"
             android:textColor="?attr/color_main2_500"
@@ -110,7 +109,7 @@
             android:onClick="@{unmuteClickListener}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="@dimen/popup_menu_item_top_margin"
             android:text="@string/conversation_action_unmute"
             android:textSize="14sp"
             android:textColor="?attr/color_main2_500"
@@ -128,9 +127,9 @@
             style="@style/default_text_style"
             android:id="@+id/ephemeral"
             android:onClick="@{configureEphemeralMessagesClickListener}"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="@dimen/popup_menu_item_top_margin"
             android:text="@string/conversation_menu_configure_ephemeral_messages"
             android:textSize="14sp"
             android:textColor="?attr/color_main2_500"
@@ -151,7 +150,7 @@
             android:onClick="@{mediasClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="@dimen/popup_menu_item_top_margin"
             android:text="@string/conversation_menu_media_files"
             android:textSize="14sp"
             android:textColor="?attr/color_main2_500"
@@ -163,7 +162,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ephemeral"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toTopOf="@id/bottom_anchor"/>
+
+        <View
+            android:id="@+id/bottom_anchor"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_marginBottom="@dimen/popup_menu_item_top_margin"
+            app:layout_constraintWidth_max="@dimen/popup_menu_width"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/medias"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
