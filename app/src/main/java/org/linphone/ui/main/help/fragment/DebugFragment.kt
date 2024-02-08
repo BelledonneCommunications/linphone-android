@@ -73,13 +73,6 @@ class DebugFragment : GenericFragment() {
 
         viewModel.uploadDebugLogsFinishedEvent.observe(viewLifecycleOwner) {
             it.consume { url ->
-                (requireActivity() as MainActivity).showGreenToast(
-                    getString(
-                        R.string.help_troubleshooting_debug_logs_url_copied_into_clipboard_toast_message
-                    ),
-                    R.drawable.info
-                )
-
                 val appName = requireContext().getString(R.string.app_name)
                 val intent = Intent(Intent.ACTION_SEND)
                 intent.putExtra(

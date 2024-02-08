@@ -160,6 +160,7 @@ class HelpViewModel @UiThread constructor() : ViewModel() {
     fun shareLogs() {
         coreContext.postOnCoreThread { core ->
             Log.i("$TAG Uploading debug logs for sharing")
+            // TODO FIXME: spinner while logs are uploaded
             core.uploadLogCollection()
         }
     }
