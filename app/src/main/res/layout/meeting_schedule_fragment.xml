@@ -474,7 +474,6 @@
 
                     <LinearLayout
                         android:id="@+id/participants_list"
-                        android:onClick="@{pickParticipantsClickListener}"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
@@ -519,13 +518,22 @@
                         android:layout_marginTop="20dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
-                        android:text="@string/meeting_schedule_send_invitations_title"
                         android:textColor="@color/gray_main2_600"
                         android:textSize="14sp"
                         android:checked="@={viewModel.sendInvitations}"
                         app:layout_constraintTop_toBottomOf="@id/separator_5"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent" />
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/material_switch_style"
+                        android:id="@+id/send_invitations_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="@string/meeting_schedule_send_invitations_title"
+                        app:layout_constraintStart_toEndOf="@id/send_invitations"
+                        app:layout_constraintTop_toTopOf="@id/send_invitations"
+                        app:layout_constraintBottom_toBottomOf="@id/send_invitations" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

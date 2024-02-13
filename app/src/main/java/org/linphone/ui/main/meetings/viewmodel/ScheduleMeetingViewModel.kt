@@ -248,8 +248,9 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
                 val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(
                     address
                 )
-                val model = SelectedAddressModel(address, avatarModel) {
+                val model = SelectedAddressModel(address, avatarModel) { model ->
                     // onRemoveFromSelection
+                    removeModelFromSelection(model)
                 }
                 list.add(model)
                 Log.i("$TAG Loaded participant [${address.asStringUriOnly()}]")
@@ -331,11 +332,20 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
                 if (address == null) {
                     Log.e("$TAG Failed to parse [$participant] as address!")
                 } else {
+                    val found = list.find { it.address.weakEqual(address) }
+                    if (found != null) {
+                        Log.i(
+                            "$TAG Participant [${found.address.asStringUriOnly()}] already in list, skipping"
+                        )
+                        continue
+                    }
+
                     val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(
                         address
                     )
-                    val model = SelectedAddressModel(address, avatarModel) {
+                    val model = SelectedAddressModel(address, avatarModel) { model ->
                         // onRemoveFromSelection
+                        removeModelFromSelection(model)
                     }
                     list.add(model)
                     Log.i("$TAG Added participant [${address.asStringUriOnly()}]")
@@ -353,6 +363,12 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
 
     @UiThread
     fun schedule() {
+        if (subject.value.orEmpty().isEmpty() || participants.value.orEmpty().isEmpty()) {
+            Log.e("$TAG Either no subject was set or no participant was selected, can't schedule meeting.")
+            // TODO: show red toast
+            return
+        }
+
         coreContext.postOnCoreThread { core ->
             Log.i(
                 "$TAG Scheduling ${if (isBroadcastSelected.value == true) "broadcast" else "meeting"}"
@@ -453,6 +469,15 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
             // Will trigger the conference update automatically
             conferenceScheduler.info = conferenceInfo
         }
+    }
+
+    @UiThread
+    private fun removeModelFromSelection(model: SelectedAddressModel) {
+        val newList = arrayListOf<SelectedAddressModel>()
+        newList.addAll(participants.value.orEmpty())
+        newList.remove(model)
+        Log.i("$TAG Removed participant [${model.address.asStringUriOnly()}]")
+        participants.postValue(newList)
     }
 
     @AnyThread
