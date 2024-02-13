@@ -304,6 +304,10 @@ class ConversationFragment : SlidingPaneChildFragment() {
                 Log.e("$TAG Swipe viewHolder index [$index] is out of bounds!")
             } else {
                 adapter.notifyItemChanged(index)
+                if (viewModel.isReadOnly.value == true || viewModel.isDisabledBecauseNotSecured.value == true) {
+                    Log.w("$TAG Do not handle swipe action because conversation is read only")
+                    return@RecyclerViewSwipeUtilsCallback
+                }
 
                 val chatMessageEventLog = adapter.currentList[index]
                 val chatMessageModel = (chatMessageEventLog.model as? MessageModel)
@@ -344,7 +348,13 @@ class ConversationFragment : SlidingPaneChildFragment() {
                     sharedViewModel.messageToForwardEvent.observe(viewLifecycleOwner) { event ->
                         event.consume { toForward ->
                             Log.i("$TAG Found message to forward")
-                            sendMessageViewModel.forwardMessage(toForward)
+                            if (viewModel.isReadOnly.value == true || viewModel.isDisabledBecauseNotSecured.value == true) {
+                                Log.w(
+                                    "$TAG Can't forward message in this conversation as it is read only"
+                                )
+                            } else {
+                                sendMessageViewModel.forwardMessage(toForward)
+                            }
                         }
                     }
                 }
