@@ -76,18 +76,12 @@
             app:layout_constraintEnd_toEndOf="@id/avatar"/>
 
         <androidx.constraintlayout.widget.Barrier
-            android:id="@+id/unread_count_right_border"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:barrierDirection="start"
-            app:constraint_referenced_ids="ephemeral, muted, date_time, last_sent_message_status" />
-
-        <androidx.constraintlayout.widget.Barrier
             android:id="@+id/right_border"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="start"
-            app:constraint_referenced_ids="warning_disabled_not_secured, notifications_count, date_time, ephemeral, muted, last_sent_message_status" />
+            app:barrierMargin="-5dp"
+            app:constraint_referenced_ids="notifications_count, warning_disabled_not_secured, ephemeral, muted, date_time, last_sent_message_status" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
@@ -133,31 +127,10 @@
             android:layout_marginEnd="10dp"
             android:src="@drawable/warning_circle"
             android:visibility="@{model.isDisabledBecauseNotSecured ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@id/right_border"
-            app:layout_constraintEnd_toStartOf="@id/notifications_count"
+            app:layout_constraintBottom_toBottomOf="@id/date_time"
+            app:layout_constraintTop_toTopOf="@id/date_time"
+            app:layout_constraintEnd_toStartOf="@id/date_time"
             app:tint="?attr/color_warning_600" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style"
-            android:id="@+id/notifications_count"
-            android:layout_width="@dimen/icon_size"
-            android:layout_height="@dimen/icon_size"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="10dp"
-            android:gravity="center"
-            android:background="@drawable/shape_red_round"
-            android:text="@{String.valueOf(model.unreadMessageCount), default=`1`}"
-            android:textColor="?attr/color_on_main"
-            android:textSize="13sp"
-            android:paddingBottom="2dp"
-            android:visibility="@{model.unreadMessageCount > 0 ? View.VISIBLE : View.GONE}"
-            app:layout_constraintHorizontal_bias="1"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@id/warning_disabled_not_secured"
-            app:layout_constraintEnd_toStartOf="@id/unread_count_right_border"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_300"
@@ -172,6 +145,22 @@
             app:layout_constraintTop_toTopOf="@id/name"
             app:layout_constraintBottom_toBottomOf="@id/name" />
 
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/notifications_count"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="center"
+            android:background="@drawable/shape_red_round"
+            android:text="@{String.valueOf(model.unreadMessageCount), default=`99`}"
+            android:textColor="?attr/color_on_main"
+            android:textSize="11sp"
+            android:visibility="@{model.unreadMessageCount > 0 ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/date_time"
+            app:layout_constraintBottom_toTopOf="@id/separator"/>
+
         <ImageView
             android:id="@+id/last_sent_message_status"
             android:layout_width="@dimen/small_icon_size"
@@ -179,7 +168,7 @@
             android:layout_marginEnd="10dp"
             android:src="@{model.lastMessageIcon, default=@drawable/animated_in_progress}"
             android:visibility="@{model.isLastMessageOutgoing ? View.VISIBLE : View.GONE}"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/notifications_count"
             app:layout_constraintTop_toBottomOf="@id/date_time"
             app:layout_constraintBottom_toTopOf="@id/separator"
             app:tint="?attr/color_main1_500" />
