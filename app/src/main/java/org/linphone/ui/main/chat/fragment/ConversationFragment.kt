@@ -241,10 +241,12 @@ class ConversationFragment : SlidingPaneChildFragment() {
         ): Boolean {
             // Following code is only to detect click on header at position 0
             if (::headerItemDecoration.isInitialized) {
-                if ((rv.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition() == 0) {
-                    if (e.y >= 0 && e.y <= headerItemDecoration.getDecorationHeight(0)) {
-                        showEndToEndEncryptionDetailsBottomSheet()
-                        return true
+                if (e.action == MotionEvent.ACTION_UP) {
+                    if ((rv.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition() == 0) {
+                        if (e.y >= 0 && e.y <= headerItemDecoration.getDecorationHeight(0)) {
+                            showEndToEndEncryptionDetailsBottomSheet()
+                            return true
+                        }
                     }
                 }
             }
