@@ -43,6 +43,14 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_conversationFragment_to_conversationDocumentsListFragment"
+            app:destination="@id/conversationDocumentsListFragment"
+            app:launchSingleTop="true"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <action
@@ -100,6 +108,19 @@
         android:name="org.linphone.ui.main.chat.fragment.ConversationMediaListFragment"
         android:label="ConversationMediaListFragment"
         tools:layout="@layout/chat_media_fragment">
+        <argument
+            android:name="localSipUri"
+            app:argType="string" />
+        <argument
+            android:name="remoteSipUri"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/conversationDocumentsListFragment"
+        android:name="org.linphone.ui.main.chat.fragment.ConversationDocumentsListFragment"
+        android:label="ConversationDocumentsListFragment"
+        tools:layout="@layout/chat_documents_fragment">
         <argument
             android:name="localSipUri"
             app:argType="string" />

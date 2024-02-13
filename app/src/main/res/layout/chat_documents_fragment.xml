@@ -10,7 +10,7 @@
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.main.chat.viewmodel.ConversationMediaListViewModel" />
+            type="org.linphone.ui.main.chat.viewmodel.ConversationDocumentsListViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -43,7 +43,7 @@
                 android:layout_height="@dimen/top_bar_height"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:text="@string/conversation_media_list_title"
+                android:text="@string/conversation_document_list_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/back"
                 app:layout_constraintTop_toTopOf="parent"/>
@@ -59,15 +59,13 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title">
 
-                <com.google.android.flexbox.FlexboxLayout
-                    android:id="@+id/files_grid"
+                <LinearLayout
+                    android:id="@+id/files_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:flexWrap="wrap"
-                    app:alignItems="stretch"
-                    app:alignContent="flex_start"
-                    entries="@{viewModel.mediaList}"
-                    layout="@{@layout/chat_media_content_grid_cell}"/>
+                    android:orientation="vertical"
+                    entries="@{viewModel.documentsList}"
+                    layout="@{@layout/chat_document_content_list_cell}"/>
 
             </ScrollView>
 
@@ -76,10 +74,10 @@
                 android:id="@+id/no_result"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/conversation_no_media_found"
+                android:text="@string/conversation_no_document_found"
                 android:textColor="?attr/color_main2_600"
                 android:textSize="16sp"
-                android:visibility="@{viewModel.mediaList.empty ? View.VISIBLE : View.GONE}"
+                android:visibility="@{viewModel.documentsList.empty ? View.VISIBLE : View.GONE}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -87,10 +85,10 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <include
-        layout="@layout/operation_in_progress"
-        bind:visibility="@{viewModel.operationInProgress}" />
+        <include
+            layout="@layout/operation_in_progress"
+            bind:visibility="@{viewModel.operationInProgress}" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </layout>

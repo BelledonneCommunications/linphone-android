@@ -880,10 +880,22 @@ class ConversationFragment : SlidingPaneChildFragment() {
             popupWindow.dismiss()
         }
 
-        popupView.setMediasClickListener {
+        popupView.setMediaClickListener {
             if (findNavController().currentDestination?.id == R.id.conversationFragment) {
                 val action =
                     ConversationFragmentDirections.actionConversationFragmentToConversationMediaListFragment(
+                        localSipUri = viewModel.localSipUri,
+                        remoteSipUri = viewModel.remoteSipUri
+                    )
+                findNavController().navigate(action)
+            }
+            popupWindow.dismiss()
+        }
+
+        popupView.setDocumentsClickListener {
+            if (findNavController().currentDestination?.id == R.id.conversationFragment) {
+                val action =
+                    ConversationFragmentDirections.actionConversationFragmentToConversationDocumentsListFragment(
                         localSipUri = viewModel.localSipUri,
                         remoteSipUri = viewModel.remoteSipUri
                     )

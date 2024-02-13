@@ -33,22 +33,22 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import org.linphone.R
 import org.linphone.core.tools.Log
-import org.linphone.databinding.ChatMediaFragmentBinding
+import org.linphone.databinding.ChatDocumentsFragmentBinding
 import org.linphone.ui.main.MainActivity
-import org.linphone.ui.main.chat.viewmodel.ConversationMediaListViewModel
+import org.linphone.ui.main.chat.viewmodel.ConversationDocumentsListViewModel
 import org.linphone.ui.main.fragment.SlidingPaneChildFragment
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 
 @UiThread
-class ConversationMediaListFragment : SlidingPaneChildFragment() {
+class ConversationDocumentsListFragment : SlidingPaneChildFragment() {
     companion object {
-        private const val TAG = "[Conversation Media List Fragment]"
+        private const val TAG = "[Conversation Documents List Fragment]"
     }
 
-    private lateinit var binding: ChatMediaFragmentBinding
+    private lateinit var binding: ChatDocumentsFragmentBinding
 
-    private lateinit var viewModel: ConversationMediaListViewModel
+    private lateinit var viewModel: ConversationDocumentsListViewModel
 
     private val args: ConversationMediaListFragmentArgs by navArgs()
 
@@ -61,7 +61,7 @@ class ConversationMediaListFragment : SlidingPaneChildFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = ChatMediaFragmentBinding.inflate(layoutInflater)
+        binding = ChatDocumentsFragmentBinding.inflate(layoutInflater)
         return binding.root
     }
 
@@ -71,7 +71,7 @@ class ConversationMediaListFragment : SlidingPaneChildFragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        viewModel = ViewModelProvider(this)[ConversationMediaListViewModel::class.java]
+        viewModel = ViewModelProvider(this)[ConversationDocumentsListViewModel::class.java]
         binding.viewModel = viewModel
 
         val localSipUri = args.localSipUri
@@ -90,20 +90,20 @@ class ConversationMediaListFragment : SlidingPaneChildFragment() {
             it.consume {
                 (view.parent as? ViewGroup)?.doOnPreDraw {
                     startPostponedEnterTransition()
-                    viewModel.loadMediaList()
+                    viewModel.loadDocumentsList()
                 }
             }
         }
 
-        viewModel.mediaList.observe(viewLifecycleOwner) {
+        viewModel.documentsList.observe(viewLifecycleOwner) {
             val count = it.size
             Log.i(
-                "$TAG Found [$count] media for conversation with local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
+                "$TAG Found [$count] documents for conversation with local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
             )
             // TODO: FIXME: use Adapter
         }
 
-        viewModel.openMediaEvent.observe(viewLifecycleOwner) {
+        viewModel.openDocumentEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
                 Log.i("$TAG User clicked on file [${model.file}], let's display it in file viewer")
                 goToFileViewer(model.file)
@@ -123,8 +123,8 @@ class ConversationMediaListFragment : SlidingPaneChildFragment() {
             putString("path", path)
         }
         when (FileUtils.getMimeType(mime)) {
-            FileUtils.MimeType.Image, FileUtils.MimeType.Video -> {
-                bundle.putBoolean("isMedia", true)
+            FileUtils.MimeType.Pdf, FileUtils.MimeType.PlainText -> {
+                bundle.putBoolean("isMedia", false)
                 sharedViewModel.displayFileEvent.value = Event(bundle)
             }
             else -> {

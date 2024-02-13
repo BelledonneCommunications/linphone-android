@@ -29,16 +29,12 @@ import org.linphone.core.tools.Log
 import org.linphone.ui.main.chat.model.FileModel
 import org.linphone.utils.Event
 
-class ConversationMediaListViewModel @UiThread constructor() : ViewModel() {
+class ConversationDocumentsListViewModel @UiThread constructor() : ViewModel() {
     companion object {
-        private const val TAG = "[Conversation Media List ViewModel]"
+        private const val TAG = "[Conversation Documents List ViewModel]"
     }
 
-    val mediaList = MutableLiveData<ArrayList<FileModel>>()
-
-    val fullScreenMode = MutableLiveData<Boolean>()
-
-    val currentlyDisplayedFileName = MutableLiveData<String>()
+    val documentsList = MutableLiveData<ArrayList<FileModel>>()
 
     val operationInProgress = MutableLiveData<Boolean>()
 
@@ -46,7 +42,7 @@ class ConversationMediaListViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
-    val openMediaEvent: MutableLiveData<Event<FileModel>> by lazy {
+    val openDocumentEvent: MutableLiveData<Event<FileModel>> by lazy {
         MutableLiveData<Event<FileModel>>()
     }
 
@@ -105,26 +101,26 @@ class ConversationMediaListViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
-    fun loadMediaList() {
+    fun loadDocumentsList() {
         operationInProgress.value = true
 
         coreContext.postOnCoreThread {
             val list = arrayListOf<FileModel>()
             if (::chatRoom.isInitialized) {
-                val media = chatRoom.mediaContents
-                for (mediaContent in media) {
-                    val path = mediaContent.filePath.orEmpty()
-                    val name = mediaContent.name.orEmpty()
-                    val size = mediaContent.size.toLong()
+                val documents = chatRoom.documentContents
+                for (documentContent in documents) {
+                    val path = documentContent.filePath.orEmpty()
+                    val name = documentContent.name.orEmpty()
+                    val size = documentContent.size.toLong()
                     if (path.isNotEmpty() && name.isNotEmpty()) {
                         val model = FileModel(path, name, size) {
-                            openMediaEvent.postValue(Event(it))
+                            openDocumentEvent.postValue(Event(it))
                         }
                         list.add(model)
                     }
                 }
             }
-            mediaList.postValue(list)
+            documentsList.postValue(list)
 
             operationInProgress.postValue(false)
         }

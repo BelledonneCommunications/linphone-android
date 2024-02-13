@@ -22,7 +22,10 @@
             name="configureEphemeralMessagesClickListener"
             type="View.OnClickListener" />
         <variable
-            name="mediasClickListener"
+            name="mediaClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="documentsClickListener"
             type="View.OnClickListener" />
         <variable
             name="conversationMuted"
@@ -143,12 +146,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/unmute"
-            app:layout_constraintBottom_toTopOf="@id/medias"/>
+            app:layout_constraintBottom_toTopOf="@id/media"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
-            android:id="@+id/medias"
-            android:onClick="@{mediasClickListener}"
+            android:id="@+id/media"
+            android:onClick="@{mediaClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/popup_menu_item_top_margin"
@@ -163,6 +166,26 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ephemeral"
+            app:layout_constraintBottom_toTopOf="@id/documents"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/documents"
+            android:onClick="@{documentsClickListener}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/popup_menu_item_top_margin"
+            android:text="@string/conversation_menu_documents_files"
+            android:textSize="14sp"
+            android:textColor="?attr/color_main2_500"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:drawableStart="@drawable/file_pdf"
+            android:drawablePadding="5dp"
+            app:drawableTint="?attr/color_main2_700"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/media"
             app:layout_constraintBottom_toTopOf="@id/bottom_anchor"/>
 
         <View
@@ -173,7 +196,7 @@
             app:layout_constraintWidth_max="@dimen/popup_menu_width"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/medias"
+            app:layout_constraintTop_toBottomOf="@id/documents"
             app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

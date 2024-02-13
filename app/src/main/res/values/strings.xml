@@ -428,8 +428,10 @@
     <string name="conversation_menu_search_in_messages">Search</string>
     <string name="conversation_menu_go_to_info">Conversation info</string>
     <string name="conversation_menu_configure_ephemeral_messages">Ephemeral messages</string>
-    <string name="conversation_menu_media_files">Medias</string>
+    <string name="conversation_menu_media_files">Media</string>
+    <string name="conversation_menu_documents_files">Documents</string>
     <string name="conversation_no_media_found">No media found</string>
+    <string name="conversation_no_document_found">No document found</string>
     <string name="conversation_filter_no_matching_result">No matching result</string>
     <string name="conversation_end_to_end_encrypted_event_title">End-to-end encrypted conversation</string>
     <string name="conversation_end_to_end_encrypted_event_subtitle">Messages in this conversation are e2e encrypted. Only your correspondent can decrypt them.</string>
@@ -462,6 +464,7 @@
     <string name="conversation_event_ephemeral_messages_lifetime_changed">Ephemeral lifetime is now %s</string>
 
     <string name="conversation_media_list_title">Shared media</string>
+    <string name="conversation_document_list_title">Shared documents</string>
 
     <string name="message_delivery_info_read_title">Read %s</string>
     <string name="message_delivery_info_received_title">Received %s</string>
