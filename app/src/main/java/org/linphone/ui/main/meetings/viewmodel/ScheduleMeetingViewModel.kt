@@ -364,7 +364,9 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun schedule() {
         if (subject.value.orEmpty().isEmpty() || participants.value.orEmpty().isEmpty()) {
-            Log.e("$TAG Either no subject was set or no participant was selected, can't schedule meeting.")
+            Log.e(
+                "$TAG Either no subject was set or no participant was selected, can't schedule meeting."
+            )
             // TODO: show red toast
             return
         }
