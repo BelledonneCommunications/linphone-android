@@ -34,6 +34,10 @@ class RecyclerViewHeaderDecoration(
 ) : RecyclerView.ItemDecoration() {
     private val headers: SparseArray<View> = SparseArray()
 
+    fun getDecorationHeight(position: Int): Int {
+        return headers.get(position, null)?.height ?: 0
+    }
+
     override fun getItemOffsets(
         outRect: Rect,
         view: View,
@@ -91,7 +95,9 @@ class RecyclerViewHeaderDecoration(
                     context,
                     position
                 )
-                canvas.translate(0f, child.y - headerView.height)
+                if (position != 0 || child.y < headerView.height) {
+                    canvas.translate(0f, child.y - headerView.height)
+                }
                 headerView.draw(canvas)
                 canvas.restore()
             }

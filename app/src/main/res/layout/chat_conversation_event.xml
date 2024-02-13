@@ -13,24 +13,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        style="@style/default_text_style"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:padding="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:background="@drawable/shape_squircle_main2_200_chat_event_border"
-        android:text="@{model.text, default=`You have left the group`}"
-        android:textColor="?attr/color_grey_400"
-        android:textSize="12sp"
-        android:maxLines="2"
-        android:ellipsize="end"
-        android:gravity="center"
-        android:drawableStart="@{model.icon, default=@drawable/clock_countdown}"
-        android:drawablePadding="5dp"
-        android:drawableTint="?attr/color_grey_400"/>
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:padding="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/shape_squircle_main2_200_chat_event_border"
+            android:text="@{model.text, default=`You have left the group`}"
+            android:textColor="?attr/color_grey_400"
+            android:textSize="12sp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:drawableStart="@{model.icon, default=@drawable/clock_countdown}"
+            android:drawablePadding="5dp"
+            android:drawableTint="?attr/color_grey_400"/>
 
     </RelativeLayout>
 

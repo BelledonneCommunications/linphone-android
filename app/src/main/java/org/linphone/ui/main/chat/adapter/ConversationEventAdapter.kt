@@ -19,7 +19,9 @@
  */
 package org.linphone.ui.main.chat.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
@@ -33,15 +35,19 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatBubbleIncomingBinding
 import org.linphone.databinding.ChatBubbleOutgoingBinding
 import org.linphone.databinding.ChatConversationEventBinding
+import org.linphone.databinding.ChatConversationSecuredFirstEventBinding
 import org.linphone.ui.main.chat.model.EventLogModel
 import org.linphone.ui.main.chat.model.EventModel
 import org.linphone.ui.main.chat.model.MessageModel
 import org.linphone.utils.Event
+import org.linphone.utils.HeaderAdapter
 import org.linphone.utils.startAnimatedDrawable
 
-class ConversationEventAdapter : ListAdapter<EventLogModel, RecyclerView.ViewHolder>(
-    EventLogDiffCallback()
-) {
+class ConversationEventAdapter :
+    ListAdapter<EventLogModel, RecyclerView.ViewHolder>(
+        EventLogDiffCallback()
+    ),
+    HeaderAdapter {
     companion object {
         private const val TAG = "[Conversation Event Adapter]"
 
@@ -55,11 +61,23 @@ class ConversationEventAdapter : ListAdapter<EventLogModel, RecyclerView.ViewHol
     val showDeliveryForChatMessageModelEvent: MutableLiveData<Event<MessageModel>> by lazy {
         MutableLiveData<Event<MessageModel>>()
     }
+
     val showReactionForChatMessageModelEvent: MutableLiveData<Event<MessageModel>> by lazy {
         MutableLiveData<Event<MessageModel>>()
     }
+
     val scrollToRepliedMessageEvent: MutableLiveData<Event<MessageModel>> by lazy {
         MutableLiveData<Event<MessageModel>>()
+    }
+
+    override fun displayHeaderForPosition(position: Int): Boolean {
+        // We only want to display it at top
+        return position == 0
+    }
+
+    override fun getHeaderViewForPosition(context: Context, position: Int): View {
+        val binding = ChatConversationSecuredFirstEventBinding.inflate(LayoutInflater.from(context))
+        return binding.root
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

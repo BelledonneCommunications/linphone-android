@@ -61,7 +61,6 @@
             app:layout_constraintBottom_toBottomOf="@id/call_direction_label"/>
 
         <ImageView
-            style="@style/default_text_style"
             android:id="@+id/media_encryption_icon"
             android:onClick="@{() -> viewModel.showMediaEncryptionStatisticsIfPossible()}"
             android:layout_width="@dimen/small_icon_size"

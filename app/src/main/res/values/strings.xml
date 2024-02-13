@@ -431,6 +431,11 @@
     <string name="conversation_menu_media_files">Medias</string>
     <string name="conversation_no_media_found">No media found</string>
     <string name="conversation_filter_no_matching_result">No matching result</string>
+    <string name="conversation_end_to_end_encrypted_event_title">End-to-end encrypted conversation</string>
+    <string name="conversation_end_to_end_encrypted_event_subtitle">Messages in this conversation are e2e encrypted. Only your correspondent can decrypt them.</string>
+    <string name="conversation_end_to_end_encrypted_bottom_sheet_title">Guaranteed confidentiality</string>
+    <string name="conversation_end_to_end_encrypted_bottom_sheet_message">Thanks to end-to-end encryption technology in &appName;, messages, calls and meetings confidentiality are guaranteed. No-one can decrypt exchanged data, not even ourselves.</string>
+    <string name="conversation_end_to_end_encrypted_bottom_sheet_link"><u>https://linphone.org/security</u></string>
 
     <string name="conversation_info_participants_list_title">Group members</string>
     <string name="conversation_info_add_participants_label">Add participants</string>

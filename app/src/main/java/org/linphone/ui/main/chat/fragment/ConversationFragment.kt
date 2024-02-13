@@ -35,6 +35,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
@@ -52,9 +53,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import java.io.File
@@ -84,6 +87,7 @@ import org.linphone.ui.main.chat.viewmodel.SendMessageInConversationViewModel
 import org.linphone.ui.main.fragment.SlidingPaneChildFragment
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
+import org.linphone.utils.RecyclerViewHeaderDecoration
 import org.linphone.utils.RecyclerViewSwipeUtils
 import org.linphone.utils.RecyclerViewSwipeUtilsCallback
 import org.linphone.utils.TimestampUtils
@@ -111,6 +115,8 @@ class ConversationFragment : SlidingPaneChildFragment() {
     private var messageLongPressDialog: Dialog? = null
 
     private val args: ConversationFragmentArgs by navArgs()
+
+    private var bottomSheetDialog: BottomSheetDialogFragment? = null
 
     private val pickMedia = registerForActivityResult(
         ActivityResultContracts.PickMultipleVisualMedia()
@@ -225,6 +231,32 @@ class ConversationFragment : SlidingPaneChildFragment() {
     }
 
     private lateinit var scrollListener: ConversationScrollListener
+
+    private lateinit var headerItemDecoration: RecyclerViewHeaderDecoration
+
+    private val listItemTouchListener = object : RecyclerView.OnItemTouchListener {
+        override fun onInterceptTouchEvent(
+            rv: RecyclerView,
+            e: MotionEvent
+        ): Boolean {
+            // Following code is only to detect click on header at position 0
+            if (::headerItemDecoration.isInitialized) {
+                if ((rv.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition() == 0) {
+                    if (e.y >= 0 && e.y <= headerItemDecoration.getDecorationHeight(0)) {
+                        showEndToEndEncryptionDetailsBottomSheet()
+                        return true
+                    }
+                }
+            }
+            return false
+        }
+
+        override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) { }
+
+        override fun onRequestDisallowInterceptTouchEvent(
+            disallowIntercept: Boolean
+        ) { }
+    }
 
     private var currentChatMessageModelForBottomSheet: MessageModel? = null
     private val bottomSheetCallback = object : BottomSheetCallback() {
@@ -343,6 +375,16 @@ class ConversationFragment : SlidingPaneChildFragment() {
                     }
                 } else {
                     sendMessageViewModel.configureChatRoom(viewModel.chatRoom)
+
+                    if (viewModel.isEndToEndEncrypted.value == true) {
+                        headerItemDecoration = RecyclerViewHeaderDecoration(
+                            requireContext(),
+                            adapter,
+                            false
+                        )
+                        binding.eventsList.addItemDecoration(headerItemDecoration)
+                        binding.eventsList.addOnItemTouchListener(listItemTouchListener)
+                    }
 
                     // Wait for chat room to be ready before trying to forward a message in it
                     sharedViewModel.messageToForwardEvent.observe(viewLifecycleOwner) { event ->
@@ -681,6 +723,9 @@ class ConversationFragment : SlidingPaneChildFragment() {
 
     override fun onPause() {
         super.onPause()
+
+        bottomSheetDialog?.dismiss()
+        bottomSheetDialog = null
 
         if (::scrollListener.isInitialized) {
             binding.eventsList.removeOnScrollListener(scrollListener)
@@ -1112,5 +1157,14 @@ class ConversationFragment : SlidingPaneChildFragment() {
         val initialList = model.allReactions
         bottomSheetAdapter.submitList(initialList)
         Log.i("$TAG Submitted [${initialList.size}] items for default reactions list")
+    }
+
+    private fun showEndToEndEncryptionDetailsBottomSheet() {
+        val e2eEncryptionDetailsBottomSheet = EndToEndEncryptionDetailsDialogFragment()
+        e2eEncryptionDetailsBottomSheet.show(
+            requireActivity().supportFragmentManager,
+            EndToEndEncryptionDetailsDialogFragment.TAG
+        )
+        bottomSheetDialog = e2eEncryptionDetailsBottomSheet
     }
 }
