@@ -28,6 +28,7 @@ import org.linphone.core.Factory
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.chat.model.FileModel
 import org.linphone.utils.Event
+import org.linphone.utils.LinphoneUtils
 
 class ConversationMediaListViewModel @UiThread constructor() : ViewModel() {
     companion object {
@@ -111,7 +112,13 @@ class ConversationMediaListViewModel @UiThread constructor() : ViewModel() {
         coreContext.postOnCoreThread {
             val list = arrayListOf<FileModel>()
             if (::chatRoom.isInitialized) {
+                Log.i(
+                    "$TAG Loading media contents for conversation [${LinphoneUtils.getChatRoomId(
+                        chatRoom
+                    )}]"
+                )
                 val media = chatRoom.mediaContents
+                Log.i("$TAG [${media.size}] media have been fetched")
                 for (mediaContent in media) {
                     val path = mediaContent.filePath.orEmpty()
                     val name = mediaContent.name.orEmpty()
@@ -123,6 +130,7 @@ class ConversationMediaListViewModel @UiThread constructor() : ViewModel() {
                         list.add(model)
                     }
                 }
+                Log.i("$TAG [${media.size}] media have been processed")
             }
             mediaList.postValue(list)
 

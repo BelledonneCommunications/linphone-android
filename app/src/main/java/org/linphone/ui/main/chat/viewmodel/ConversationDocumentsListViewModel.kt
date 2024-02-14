@@ -28,6 +28,7 @@ import org.linphone.core.Factory
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.chat.model.FileModel
 import org.linphone.utils.Event
+import org.linphone.utils.LinphoneUtils
 
 class ConversationDocumentsListViewModel @UiThread constructor() : ViewModel() {
     companion object {
@@ -107,7 +108,13 @@ class ConversationDocumentsListViewModel @UiThread constructor() : ViewModel() {
         coreContext.postOnCoreThread {
             val list = arrayListOf<FileModel>()
             if (::chatRoom.isInitialized) {
+                Log.i(
+                    "$TAG Loading document contents for conversation [${LinphoneUtils.getChatRoomId(
+                        chatRoom
+                    )}]"
+                )
                 val documents = chatRoom.documentContents
+                Log.i("$TAG [${documents.size}] documents have been fetched")
                 for (documentContent in documents) {
                     val path = documentContent.filePath.orEmpty()
                     val name = documentContent.name.orEmpty()
@@ -119,6 +126,7 @@ class ConversationDocumentsListViewModel @UiThread constructor() : ViewModel() {
                         list.add(model)
                     }
                 }
+                Log.i("$TAG [${documents.size}] documents have been processed")
             }
             documentsList.postValue(list)
 

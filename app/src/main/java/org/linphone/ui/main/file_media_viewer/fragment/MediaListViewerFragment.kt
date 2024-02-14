@@ -102,12 +102,17 @@ class MediaListViewerFragment : GenericFragment() {
         val chatRoom = sharedViewModel.displayedChatRoom
         viewModel.findChatRoom(chatRoom, localSipUri, remoteSipUri)
 
+        viewModel.chatRoomFoundEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                viewModel.loadMediaList()
+            }
+        }
+
         viewModel.mediaList.observe(viewLifecycleOwner) {
             val count = it.size
             Log.i(
                 "$TAG Found [$count] media for conversation with local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
             )
-
             adapter = MediaListAdapter(this, viewModel)
             viewPager = binding.mediaViewPager
             viewPager.adapter = adapter
