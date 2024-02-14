@@ -31,10 +31,12 @@ import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatDocumentsFragmentBinding
 import org.linphone.ui.main.MainActivity
+import org.linphone.ui.main.chat.adapter.ConversationsFilesAdapter
 import org.linphone.ui.main.chat.viewmodel.ConversationDocumentsListViewModel
 import org.linphone.ui.main.fragment.SlidingPaneChildFragment
 import org.linphone.utils.Event
@@ -50,10 +52,18 @@ class ConversationDocumentsListFragment : SlidingPaneChildFragment() {
 
     private lateinit var viewModel: ConversationDocumentsListViewModel
 
+    private lateinit var adapter: ConversationsFilesAdapter
+
     private val args: ConversationMediaListFragmentArgs by navArgs()
 
     override fun goBack(): Boolean {
         return findNavController().popBackStack()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        adapter = ConversationsFilesAdapter()
     }
 
     override fun onCreateView(
@@ -82,6 +92,14 @@ class ConversationDocumentsListFragment : SlidingPaneChildFragment() {
         val chatRoom = sharedViewModel.displayedChatRoom
         viewModel.findChatRoom(chatRoom, localSipUri, remoteSipUri)
 
+        binding.documentsList.setHasFixedSize(true)
+        val layoutManager = LinearLayoutManager(requireContext())
+        binding.documentsList.layoutManager = layoutManager
+
+        if (binding.documentsList.adapter != adapter) {
+            binding.documentsList.adapter = adapter
+        }
+
         binding.setBackClickListener {
             goBack()
         }
@@ -95,12 +113,12 @@ class ConversationDocumentsListFragment : SlidingPaneChildFragment() {
             }
         }
 
-        viewModel.documentsList.observe(viewLifecycleOwner) {
-            val count = it.size
+        viewModel.documentsList.observe(viewLifecycleOwner) { items ->
+            val count = items.size
             Log.i(
                 "$TAG Found [$count] documents for conversation with local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
             )
-            // TODO: FIXME: use Adapter
+            adapter.submitList(items)
         }
 
         viewModel.openDocumentEvent.observe(viewLifecycleOwner) {

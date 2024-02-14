@@ -31,10 +31,13 @@ import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatMediaFragmentBinding
 import org.linphone.ui.main.MainActivity
+import org.linphone.ui.main.chat.adapter.ConversationsFilesAdapter
 import org.linphone.ui.main.chat.viewmodel.ConversationMediaListViewModel
 import org.linphone.ui.main.fragment.SlidingPaneChildFragment
 import org.linphone.utils.Event
@@ -50,10 +53,18 @@ class ConversationMediaListFragment : SlidingPaneChildFragment() {
 
     private lateinit var viewModel: ConversationMediaListViewModel
 
+    private lateinit var adapter: ConversationsFilesAdapter
+
     private val args: ConversationMediaListFragmentArgs by navArgs()
 
     override fun goBack(): Boolean {
         return findNavController().popBackStack()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        adapter = ConversationsFilesAdapter()
     }
 
     override fun onCreateView(
@@ -82,6 +93,19 @@ class ConversationMediaListFragment : SlidingPaneChildFragment() {
         val chatRoom = sharedViewModel.displayedChatRoom
         viewModel.findChatRoom(chatRoom, localSipUri, remoteSipUri)
 
+        binding.mediaList.setHasFixedSize(true)
+        val layoutManager = object : GridLayoutManager(requireContext(), 4) {
+            override fun checkLayoutParams(lp: RecyclerView.LayoutParams): Boolean {
+                lp.width = width / spanCount
+                return true
+            }
+        }
+        binding.mediaList.layoutManager = layoutManager
+
+        if (binding.mediaList.adapter != adapter) {
+            binding.mediaList.adapter = adapter
+        }
+
         binding.setBackClickListener {
             goBack()
         }
@@ -95,12 +119,12 @@ class ConversationMediaListFragment : SlidingPaneChildFragment() {
             }
         }
 
-        viewModel.mediaList.observe(viewLifecycleOwner) {
-            val count = it.size
+        viewModel.mediaList.observe(viewLifecycleOwner) { items ->
+            val count = items.size
             Log.i(
                 "$TAG Found [$count] media for conversation with local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
             )
-            // TODO: FIXME: use Adapter
+            adapter.submitList(items)
         }
 
         viewModel.openMediaEvent.observe(viewLifecycleOwner) {

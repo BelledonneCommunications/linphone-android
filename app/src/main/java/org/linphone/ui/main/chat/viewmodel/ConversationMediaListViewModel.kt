@@ -132,8 +132,8 @@ class ConversationMediaListViewModel @UiThread constructor() : ViewModel() {
                 }
                 Log.i("$TAG [${media.size}] media have been processed")
             }
-            mediaList.postValue(list)
 
+            mediaList.postValue(list)
             operationInProgress.postValue(false)
         }
     }

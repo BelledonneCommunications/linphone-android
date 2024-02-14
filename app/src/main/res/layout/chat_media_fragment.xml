@@ -48,28 +48,15 @@
                 app:layout_constraintStart_toEndOf="@id/back"
                 app:layout_constraintTop_toTopOf="parent"/>
 
-            <ScrollView
-                android:id="@+id/scrollView"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/mediaList"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:background="?attr/color_grey_100"
-                android:fillViewport="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/title">
-
-                <com.google.android.flexbox.FlexboxLayout
-                    android:id="@+id/files_grid"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:flexWrap="wrap"
-                    app:alignItems="stretch"
-                    app:alignContent="flex_start"
-                    entries="@{viewModel.mediaList}"
-                    layout="@{@layout/chat_media_content_grid_cell}"/>
-
-            </ScrollView>
+                app:layout_constraintTop_toBottomOf="@id/title" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style_800"

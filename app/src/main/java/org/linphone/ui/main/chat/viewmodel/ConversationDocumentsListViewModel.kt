@@ -128,8 +128,8 @@ class ConversationDocumentsListViewModel @UiThread constructor() : ViewModel() {
                 }
                 Log.i("$TAG [${documents.size}] documents have been processed")
             }
-            documentsList.postValue(list)
 
+            documentsList.postValue(list)
             operationInProgress.postValue(false)
         }
     }
