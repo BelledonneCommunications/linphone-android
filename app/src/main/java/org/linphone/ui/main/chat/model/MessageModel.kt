@@ -44,12 +44,14 @@ import org.linphone.core.Address
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatMessageListenerStub
 import org.linphone.core.ChatMessageReaction
+import org.linphone.core.ChatRoom
 import org.linphone.core.Content
 import org.linphone.core.Factory
 import org.linphone.core.Player
 import org.linphone.core.PlayerListener
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
+import org.linphone.ui.main.model.isInSecureMode
 import org.linphone.utils.AppUtils
 import org.linphone.utils.AudioUtils
 import org.linphone.utils.Event
@@ -96,7 +98,8 @@ class MessageModel @WorkerThread constructor(
 
     val time = TimestampUtils.toString(timestamp)
 
-    val chatRoomIsReadOnly = chatMessage.chatRoom.isReadOnly
+    val chatRoomIsReadOnly = chatMessage.chatRoom.isReadOnly ||
+        (!chatMessage.chatRoom.hasCapability(ChatRoom.Capabilities.Encrypted.toInt()) && LinphoneUtils.getDefaultAccount()?.isInSecureMode() == true)
 
     val groupedWithNextMessage = MutableLiveData<Boolean>()
 

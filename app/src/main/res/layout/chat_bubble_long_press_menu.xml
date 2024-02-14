@@ -124,7 +124,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/menu_reply_to_chat_message"
-                android:enabled="@{!model.chatRoomIsReadOnly}"
+                android:visibility="@{model.chatRoomIsReadOnly ? View.GONE : View.VISIBLE}"
                 android:background="@drawable/menu_item_background"
                 android:layout_marginBottom="1dp"
                 android:drawableStart="@drawable/reply"
