@@ -97,6 +97,7 @@ class ConversationMediaListFragment : SlidingPaneChildFragment() {
         val layoutManager = object : GridLayoutManager(requireContext(), 4) {
             override fun checkLayoutParams(lp: RecyclerView.LayoutParams): Boolean {
                 lp.width = width / spanCount
+                lp.height = lp.width
                 return true
             }
         }
