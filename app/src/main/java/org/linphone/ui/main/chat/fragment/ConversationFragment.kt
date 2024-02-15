@@ -280,6 +280,11 @@ class ConversationFragment : SlidingPaneChildFragment() {
         super.onCreate(savedInstanceState)
 
         adapter = ConversationEventAdapter()
+        headerItemDecoration = RecyclerViewHeaderDecoration(
+            requireContext(),
+            adapter,
+            false
+        )
         bottomSheetAdapter = MessageBottomSheetAdapter()
     }
 
@@ -379,15 +384,8 @@ class ConversationFragment : SlidingPaneChildFragment() {
                     sendMessageViewModel.configureChatRoom(viewModel.chatRoom)
 
                     if (viewModel.isEndToEndEncrypted.value == true) {
-                        if (binding.eventsList.itemDecorationCount == 0) {
-                            headerItemDecoration = RecyclerViewHeaderDecoration(
-                                requireContext(),
-                                adapter,
-                                false
-                            )
-                            binding.eventsList.addItemDecoration(headerItemDecoration)
-                            binding.eventsList.addOnItemTouchListener(listItemTouchListener)
-                        }
+                        binding.eventsList.addItemDecoration(headerItemDecoration)
+                        binding.eventsList.addOnItemTouchListener(listItemTouchListener)
                     }
 
                     // Wait for chat room to be ready before trying to forward a message in it
