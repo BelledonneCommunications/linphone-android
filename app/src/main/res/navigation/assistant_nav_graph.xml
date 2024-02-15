@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/assistant_nav_graph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/landingFragment">
 
     <fragment
         android:id="@+id/loginFragment"
@@ -12,32 +12,6 @@
         tools:layout="@layout/assistant_login_fragment" >
 
         <action
-            android:id="@+id/action_loginFragment_to_registerFragment"
-            app:destination="@id/registerFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            app:launchSingleTop="true" />
-
-        <action
-            android:id="@+id/action_loginFragment_to_qrCodeScannerFragment"
-            app:destination="@id/qrCodeScannerFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            app:launchSingleTop="true" />
-
-        <action
-            android:id="@+id/action_loginFragment_to_thirdPartySipAccountWarningFragment"
-            app:destination="@id/thirdPartySipAccountWarningFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            app:launchSingleTop="true" />
-        <action
             android:id="@+id/action_loginFragment_to_profileModeFragment"
             app:destination="@id/profileModeFragment"
             app:enterAnim="@anim/slide_in_right"
@@ -45,6 +19,9 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
             app:launchSingleTop="true" />
+        <argument
+            android:name="sipIdentity"
+            app:argType="string" />
 
     </fragment>
 
@@ -137,14 +114,64 @@
         android:name="org.linphone.ui.assistant.fragment.PermissionsFragment"
         android:label="PermissionsFragment"
         tools:layout="@layout/assistant_permissions_fragment">
+
         <action
-            android:id="@+id/action_permissionsFragment_to_loginFragment"
+            android:id="@+id/action_permissionsFragment_to_landingFragment"
+            app:destination="@id/landingFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:launchSingleTop="true" />
+
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_permissionsFragment"
+        app:destination="@id/permissionsFragment"/>
+
+    <fragment
+        android:id="@+id/landingFragment"
+        android:name="org.linphone.ui.assistant.fragment.LandingFragment"
+        android:label="LandingFragment"
+        tools:layout="@layout/assistant_landing_fragment" >
+
+        <action
+            android:id="@+id/action_landingFragment_to_loginFragment"
             app:destination="@id/loginFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
             app:launchSingleTop="true" />
-    </fragment><action android:id="@+id/action_global_permissionsFragment" app:destination="@id/permissionsFragment"/>
+
+        <action
+            android:id="@+id/action_landingFragment_to_qrCodeScannerFragment"
+            app:destination="@id/qrCodeScannerFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:launchSingleTop="true" />
+
+        <action
+            android:id="@+id/action_landingFragment_to_thirdPartySipAccountWarningFragment"
+            app:destination="@id/thirdPartySipAccountWarningFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:launchSingleTop="true" />
+
+        <action
+            android:id="@+id/action_landingFragment_to_registerFragment"
+            app:destination="@id/registerFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:launchSingleTop="true" />
+
+    </fragment>
 
 </navigation>

@@ -43,9 +43,7 @@ class AccountLoginViewModel @UiThread constructor() : ViewModel() {
         private const val TAG = "[Account Login ViewModel]"
     }
 
-    val showBackButton = MutableLiveData<Boolean>()
-
-    val username = MutableLiveData<String>()
+    val sipIdentity = MutableLiveData<String>()
 
     val password = MutableLiveData<String>()
 
@@ -68,8 +66,6 @@ class AccountLoginViewModel @UiThread constructor() : ViewModel() {
     val accountLoginErrorEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
     }
-
-    var conditionsAndPrivacyPolicyAccepted = false
 
     private lateinit var newlyCreatedAuthInfo: AuthInfo
     private lateinit var newlyCreatedAccount: Account
@@ -121,13 +117,7 @@ class AccountLoginViewModel @UiThread constructor() : ViewModel() {
         showPassword.value = false
         registrationInProgress.value = false
 
-        coreContext.postOnCoreThread { core ->
-            // Prevent user from leaving assistant if no account was configured yet
-            showBackButton.postValue(core.accountList.isNotEmpty())
-            conditionsAndPrivacyPolicyAccepted = corePreferences.conditionsAndPrivacyPolicyAccepted
-        }
-
-        loginEnabled.addSource(username) {
+        loginEnabled.addSource(sipIdentity) {
             loginEnabled.value = isLoginButtonEnabled()
         }
         loginEnabled.addSource(password) {
@@ -142,8 +132,14 @@ class AccountLoginViewModel @UiThread constructor() : ViewModel() {
         coreContext.postOnCoreThread { core ->
             core.loadConfigFromXml(corePreferences.linphoneDefaultValuesPath)
 
-            val user = username.value.orEmpty().trim()
-            val domain = corePreferences.defaultDomain
+            val identity = sipIdentity.value.orEmpty().trim()
+            val identityAddress = core.interpretUrl(identity, false)
+            identityAddress ?: return@postOnCoreThread
+
+            val user = identityAddress.username
+            user ?: return@postOnCoreThread
+
+            val domain = identityAddress.domain
 
             newlyCreatedAuthInfo = Factory.instance().createAuthInfo(
                 user,
@@ -156,20 +152,6 @@ class AccountLoginViewModel @UiThread constructor() : ViewModel() {
             core.addAuthInfo(newlyCreatedAuthInfo)
 
             val accountParams = core.createAccountParams()
-            val identity = if (user.startsWith("sip:")) {
-                if (user.contains("@")) {
-                    user
-                } else {
-                    "$user@$domain"
-                }
-            } else {
-                if (user.contains("@")) {
-                    "sip:$user"
-                } else {
-                    "sip:$user@$domain"
-                }
-            }
-            val identityAddress = Factory.instance().createAddress(identity)
             accountParams.identityAddress = identityAddress
 
             val prefix = internationalPrefix.value.orEmpty().trim()
@@ -214,6 +196,6 @@ class AccountLoginViewModel @UiThread constructor() : ViewModel() {
 
     @UiThread
     private fun isLoginButtonEnabled(): Boolean {
-        return username.value.orEmpty().isNotEmpty() && password.value.orEmpty().isNotEmpty()
+        return sipIdentity.value.orEmpty().isNotEmpty() && password.value.orEmpty().isNotEmpty()
     }
 }

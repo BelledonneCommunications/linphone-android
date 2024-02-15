@@ -68,7 +68,10 @@ class RegisterCodeConfirmationFragment : Fragment() {
         viewModel.goToLoginPageEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.i("$TAG Going to login fragment")
-                val action = RegisterCodeConfirmationFragmentDirections.actionRegisterCodeConfirmationFragmentToLoginFragment()
+                val identity = viewModel.username.value.orEmpty()
+                val action = RegisterCodeConfirmationFragmentDirections.actionRegisterCodeConfirmationFragmentToLoginFragment(
+                    identity
+                )
                 findNavController().navigate(action)
             }
         }

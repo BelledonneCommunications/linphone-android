@@ -9,11 +9,17 @@
             name="backClickListener"
             type="View.OnClickListener" />
         <variable
-            name="forgottenPasswordClickListener"
+            name="registerClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="thirdPartySipAccountLoginClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="qrCodeClickListener"
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.assistant.viewmodel.AccountLoginViewModel" />
+            type="org.linphone.ui.assistant.viewmodel.LandingViewModel" />
     </data>
 
     <ScrollView
@@ -34,6 +40,7 @@
                 android:padding="15dp"
                 android:src="@drawable/caret_left"
                 android:contentDescription="@string/content_description_go_back_icon"
+                android:visibility="@{viewModel.showBackButton ? View.VISIBLE : View.INVISIBLE, default=invisible}"
                 app:tint="?attr/color_main2_500"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
@@ -96,53 +103,8 @@
                 app:layout_constraintEnd_toEndOf="parent"/>
 
             <androidx.appcompat.widget.AppCompatTextView
-                style="@style/header_style"
-                android:id="@+id/password_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginTop="16dp"
-                android:text="@{@string/password + `*`, default=@string/password}"
-                app:layout_constraintWidth_max="@dimen/text_input_max_width"
-                app:layout_constraintTop_toBottomOf="@id/sip_identity"
-                app:layout_constraintStart_toStartOf="@id/password"/>
-
-            <androidx.appcompat.widget.AppCompatEditText
-                style="@style/default_text_style"
-                android:id="@+id/password"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                android:text="@={viewModel.password, default=`johndoe`}"
-                android:textSize="14sp"
-                android:textColor="?attr/color_main2_600"
-                android:background="@drawable/edit_text_background"
-                android:hint="@string/password"
-                app:layout_constraintWidth_max="@dimen/text_input_max_width"
-                android:inputType="@{viewModel.showPassword ? InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD : InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD, default=textPassword}"
-                app:layout_constraintTop_toBottomOf="@id/password_label"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
-
-            <ImageView
-                android:onClick="@{() -> viewModel.toggleShowPassword()}"
-                android:id="@+id/eye"
-                android:layout_width="@dimen/icon_size"
-                android:layout_height="0dp"
-                android:padding="4dp"
-                android:layout_marginEnd="20dp"
-                android:src="@{viewModel.showPassword ? @drawable/eye_slash : @drawable/eye, default=@drawable/eye}"
-                app:tint="?attr/color_main2_500"
-                app:layout_constraintEnd_toEndOf="@id/password"
-                app:layout_constraintTop_toTopOf="@id/password"
-                app:layout_constraintBottom_toBottomOf="@id/password" />
-
-            <androidx.appcompat.widget.AppCompatTextView
                 android:onClick="@{() -> viewModel.login()}"
-                android:enabled="@{viewModel.loginEnabled &amp;&amp; !viewModel.registrationInProgress, default=false}"
+                android:enabled="@{viewModel.sipIdentity.length() > 0, default=false}"
                 style="@style/primary_button_label_style"
                 android:id="@+id/login"
                 android:layout_width="0dp"
@@ -154,27 +116,115 @@
                 android:paddingEnd="20dp"
                 android:text="@string/assistant_account_login"
                 app:layout_constraintWidth_max="@dimen/button_max_width"
-                app:layout_constraintTop_toBottomOf="@id/password"
+                app:layout_constraintTop_toBottomOf="@id/sip_identity"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:onClick="@{forgottenPasswordClickListener}"
-                style="@style/default_text_style_600"
-                android:id="@+id/forgotten_password"
+                style="@style/default_text_style"
+                android:id="@+id/or"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:paddingTop="13dp"
-                android:paddingBottom="13dp"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                android:text="@string/assistant_forgotten_password"
-                android:textSize="13sp"
+                android:layout_marginTop="28dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:text="@string/or"
+                android:textSize="14sp"
                 android:textColor="?attr/color_main2_500"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/login"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
+                android:background="?attr/color_main2_200"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/or"
+                app:layout_constraintTop_toTopOf="@id/or"
+                app:layout_constraintBottom_toBottomOf="@id/or"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginEnd="16dp"
+                android:background="?attr/color_main2_200"
+                app:layout_constraintStart_toEndOf="@id/or"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/or"
+                app:layout_constraintBottom_toBottomOf="@id/or"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:onClick="@{qrCodeClickListener}"
+                style="@style/secondary_button_label_style"
+                android:id="@+id/scan_qr_code"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="22dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="@string/assistant_scan_qr_code"
+                android:drawableStart="@drawable/qr_code"
+                android:drawablePadding="8dp"
+                app:drawableTint="@color/secondary_button_label_color"
+                app:layout_constraintWidth_max="@dimen/button_max_width"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/or" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:onClick="@{thirdPartySipAccountLoginClickListener}"
+                style="@style/secondary_button_label_style"
+                android:id="@+id/third_party_sip_account"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="@string/assistant_login_third_party_sip_account"
+                app:layout_constraintWidth_max="@dimen/button_max_width"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/scan_qr_code" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:id="@+id/no_account_yet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="@string/assistant_no_account_yet"
+                android:textSize="14sp"
+                android:textColor="?attr/color_main2_700"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/register"
+                app:layout_constraintTop_toTopOf="@id/register"
+                app:layout_constraintBottom_toBottomOf="@id/register"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:onClick="@{registerClickListener}"
+                style="@style/primary_button_label_style"
+                android:id="@+id/register"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="@dimen/screen_bottom_margin"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="@string/assistant_account_register"
+                app:layout_constraintVertical_bias="1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/no_account_yet"
+                app:layout_constraintTop_toBottomOf="@id/third_party_sip_account"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

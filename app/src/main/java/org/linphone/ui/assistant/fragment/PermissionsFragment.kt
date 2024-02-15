@@ -113,7 +113,7 @@ class PermissionsFragment : Fragment() {
     }
 
     private fun goToLoginFragment() {
-        val action = PermissionsFragmentDirections.actionPermissionsFragmentToLoginFragment()
+        val action = PermissionsFragmentDirections.actionPermissionsFragmentToLandingFragment()
         findNavController().navigate(action)
     }
 

@@ -29,19 +29,16 @@ import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantLoginFragmentBinding
 import org.linphone.ui.assistant.AssistantActivity
-import org.linphone.ui.assistant.model.AcceptConditionsAndPolicyDialogModel
 import org.linphone.ui.assistant.viewmodel.AccountLoginViewModel
-import org.linphone.ui.sso.OpenIdActivity
-import org.linphone.utils.DialogUtils
 import org.linphone.utils.PhoneNumberUtils
 
 @UiThread
@@ -51,6 +48,8 @@ class LoginFragment : Fragment() {
     }
 
     private lateinit var binding: AssistantLoginFragmentBinding
+
+    private val args: LoginFragmentArgs by navArgs()
 
     private val viewModel: AccountLoginViewModel by navGraphViewModels(
         R.id.assistant_nav_graph
@@ -72,16 +71,11 @@ class LoginFragment : Fragment() {
         binding.viewModel = viewModel
 
         binding.setBackClickListener {
-            requireActivity().finish()
+            goBack()
         }
 
-        binding.setRegisterClickListener {
-            if (viewModel.conditionsAndPrivacyPolicyAccepted) {
-                goToRegisterFragment()
-            } else {
-                showAcceptConditionsAndPrivacyDialog(goToAccountCreate = true)
-            }
-        }
+        val identity = args.sipIdentity
+        viewModel.sipIdentity.value = identity
 
         binding.setForgottenPasswordClickListener {
             val url = getString(R.string.web_platform_forgotten_password_url)
@@ -92,24 +86,6 @@ class LoginFragment : Fragment() {
                 Log.e(
                     "$TAG Can't start ACTION_VIEW intent for URL [$url], IllegalStateException: $ise"
                 )
-            }
-        }
-
-        binding.setSingleSignOnClickListener {
-            startActivity(Intent(requireContext(), OpenIdActivity::class.java))
-            requireActivity().finish()
-        }
-
-        binding.setQrCodeClickListener {
-            val action = LoginFragmentDirections.actionLoginFragmentToQrCodeScannerFragment()
-            findNavController().navigate(action)
-        }
-
-        binding.setThirdPartySipAccountLoginClickListener {
-            if (viewModel.conditionsAndPrivacyPolicyAccepted) {
-                goToLoginThirdPartySipAccountFragment()
-            } else {
-                showAcceptConditionsAndPrivacyDialog(goToThirdPartySipAccountLogin = true)
             }
         }
 
@@ -146,76 +122,7 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun goToRegisterFragment() {
-        val action = LoginFragmentDirections.actionLoginFragmentToRegisterFragment()
-        findNavController().navigate(action)
-    }
-
-    private fun goToLoginThirdPartySipAccountFragment() {
-        val action = LoginFragmentDirections.actionLoginFragmentToThirdPartySipAccountWarningFragment()
-        findNavController().navigate(action)
-    }
-
-    private fun showAcceptConditionsAndPrivacyDialog(
-        goToAccountCreate: Boolean = false,
-        goToThirdPartySipAccountLogin: Boolean = false
-    ) {
-        val model = AcceptConditionsAndPolicyDialogModel()
-        val dialog = DialogUtils.getAcceptConditionsAndPrivacyDialog(
-            requireActivity(),
-            model
-        )
-
-        model.dismissEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                dialog.dismiss()
-            }
-        }
-
-        model.conditionsAcceptedEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                Log.i("$TAG Conditions & Privacy policy have been accepted")
-                coreContext.postOnCoreThread {
-                    corePreferences.conditionsAndPrivacyPolicyAccepted = true
-                }
-                dialog.dismiss()
-
-                if (goToAccountCreate) {
-                    goToRegisterFragment()
-                } else if (goToThirdPartySipAccountLogin) {
-                    goToLoginThirdPartySipAccountFragment()
-                }
-            }
-        }
-
-        model.privacyPolicyClickedEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                val url = getString(R.string.website_privacy_policy_url)
-                try {
-                    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                    startActivity(browserIntent)
-                } catch (ise: IllegalStateException) {
-                    Log.e(
-                        "$TAG Can't start ACTION_VIEW intent for URL [$url], IllegalStateException: $ise"
-                    )
-                }
-            }
-        }
-
-        model.generalTermsClickedEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                val url = getString(R.string.website_terms_and_conditions_url)
-                try {
-                    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                    startActivity(browserIntent)
-                } catch (ise: IllegalStateException) {
-                    Log.e(
-                        "$TAG Can't start ACTION_VIEW intent for URL [$url], IllegalStateException: $ise"
-                    )
-                }
-            }
-        }
-
-        dialog.show()
+    private fun goBack() {
+        findNavController().popBackStack()
     }
 }
