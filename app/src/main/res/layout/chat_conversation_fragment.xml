@@ -278,22 +278,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <include
                 style="@style/default_text_style"
                 android:id="@+id/warning_disabled_not_secured"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="5dp"
-                android:text="@string/conversation_warning_disabled_because_not_secured"
-                android:textColor="?attr/color_warning_600"
-                android:textSize="16sp"
-                android:maxLines="2"
-                android:ellipsize="end"
-                android:drawableStart="@drawable/warning_circle"
-                android:drawableTint="?attr/color_warning_600"
-                android:drawablePadding="10dp"
+                layout="@layout/chat_conversation_send_area_disabled_unsecured_warning"
                 android:visibility="@{viewModel.isDisabledBecauseNotSecured ? View.VISIBLE : View.GONE, default=gone}"
                 app:layout_constraintBottom_toTopOf="@id/send_area"/>
 

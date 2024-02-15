@@ -438,6 +438,8 @@
     <string name="conversation_end_to_end_encrypted_bottom_sheet_title">Guaranteed confidentiality</string>
     <string name="conversation_end_to_end_encrypted_bottom_sheet_message">Thanks to end-to-end encryption technology in &appName;, messages, calls and meetings confidentiality are guaranteed. No-one can decrypt exchanged data, not even ourselves.</string>
     <string name="conversation_end_to_end_encrypted_bottom_sheet_link"><u>https://linphone.org/security</u></string>
+    <string name="conversation_warning_disabled_because_not_secured_title">This conversation is not encrypted!</string>
+    <string name="conversation_warning_disabled_because_not_secured_subtitle">This conversation was disabled because it is not encrypted. You can enable it back by switching your account profile mode from Secure to Interoperable.</string>
 
     <string name="conversation_info_participants_list_title">Group members</string>
     <string name="conversation_info_add_participants_label">Add participants</string>
@@ -448,7 +450,6 @@
     <string name="conversation_info_admin_menu_unset_participant_admin">Remove admin rights</string>
     <string name="conversation_info_menu_go_to_contact">See contact profile</string>
     <string name="conversation_info_menu_add_to_contacts">Add to contacts</string>
-    <string name="conversation_warning_disabled_because_not_secured">This conversation was disabled because it is not encrypted!</string>
 
     <string name="conversation_event_conference_created">You have joined the group</string>
     <string name="conversation_event_conference_destroyed">You have left the group</string>
