@@ -136,7 +136,7 @@
             android:layout_height="@dimen/call_button_size"
             android:layout_marginTop="@dimen/call_extra_button_top_margin"
             android:padding="@dimen/call_button_icon_padding"
-            android:src="@drawable/pause"
+            android:src="@{viewModel.isPaused ? @drawable/play : @drawable/pause, default=@drawable/pause}"
             android:background="@drawable/in_call_button_background_green"
             app:tint="@color/in_call_button_tint_color"
             app:layout_constraintDimensionRatio="1:1"
@@ -219,7 +219,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"
-            android:text="@string/call_action_pause_call"
+            android:text="@{viewModel.isPaused ? @string/call_action_resume_call : @string/call_action_pause_call, default=@string/call_action_pause_call}"
             app:layout_constraintTop_toBottomOf="@id/pause_call"
             app:layout_constraintStart_toStartOf="@id/participants_label"
             app:layout_constraintEnd_toEndOf="@id/participants_label" />
