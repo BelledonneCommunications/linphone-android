@@ -102,12 +102,6 @@ class MediaListViewerFragment : GenericFragment() {
         val chatRoom = sharedViewModel.displayedChatRoom
         viewModel.findChatRoom(chatRoom, localSipUri, remoteSipUri)
 
-        viewModel.chatRoomFoundEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                viewModel.loadMediaList()
-            }
-        }
-
         viewModel.mediaList.observe(viewLifecycleOwner) {
             val count = it.size
             Log.i(

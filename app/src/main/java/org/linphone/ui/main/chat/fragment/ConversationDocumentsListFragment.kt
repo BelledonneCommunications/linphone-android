@@ -108,17 +108,15 @@ class ConversationDocumentsListFragment : SlidingPaneChildFragment() {
             it.consume {
                 (view.parent as? ViewGroup)?.doOnPreDraw {
                     startPostponedEnterTransition()
-                    viewModel.loadDocumentsList()
                 }
             }
         }
 
         viewModel.documentsList.observe(viewLifecycleOwner) { items ->
-            val count = items.size
-            Log.i(
-                "$TAG Found [$count] documents for conversation with local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
-            )
-            adapter.submitList(items)
+            if (items != adapter.currentList || items.size != adapter.itemCount) {
+                adapter.submitList(items)
+                Log.i("$TAG Documents list updated with [${items.size}] items")
+            }
         }
 
         viewModel.openDocumentEvent.observe(viewLifecycleOwner) {

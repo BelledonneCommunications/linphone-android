@@ -379,13 +379,15 @@ class ConversationFragment : SlidingPaneChildFragment() {
                     sendMessageViewModel.configureChatRoom(viewModel.chatRoom)
 
                     if (viewModel.isEndToEndEncrypted.value == true) {
-                        headerItemDecoration = RecyclerViewHeaderDecoration(
-                            requireContext(),
-                            adapter,
-                            false
-                        )
-                        binding.eventsList.addItemDecoration(headerItemDecoration)
-                        binding.eventsList.addOnItemTouchListener(listItemTouchListener)
+                        if (binding.eventsList.itemDecorationCount == 0) {
+                            headerItemDecoration = RecyclerViewHeaderDecoration(
+                                requireContext(),
+                                adapter,
+                                false
+                            )
+                            binding.eventsList.addItemDecoration(headerItemDecoration)
+                            binding.eventsList.addOnItemTouchListener(listItemTouchListener)
+                        }
                     }
 
                     // Wait for chat room to be ready before trying to forward a message in it
@@ -406,8 +408,10 @@ class ConversationFragment : SlidingPaneChildFragment() {
         }
 
         viewModel.events.observe(viewLifecycleOwner) { items ->
-            adapter.submitList(items)
-            Log.i("$TAG Events (messages) list updated with [${items.size}] items")
+            if (items != adapter.currentList || items.size != adapter.itemCount) {
+                adapter.submitList(items)
+                Log.i("$TAG Events (messages) list updated with [${items.size}] items")
+            }
 
             (view.parent as? ViewGroup)?.doOnPreDraw {
                 sharedViewModel.openSlidingPaneEvent.value = Event(true)

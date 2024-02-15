@@ -100,7 +100,7 @@ class ConversationsFilesAdapter : ListAdapter<FileModel, RecyclerView.ViewHolder
         }
 
         override fun areContentsTheSame(oldItem: FileModel, newItem: FileModel): Boolean {
-            return true
+            return oldItem.mimeType == newItem.mimeType
         }
     }
 }

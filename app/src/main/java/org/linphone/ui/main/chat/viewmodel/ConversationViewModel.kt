@@ -22,7 +22,6 @@ package org.linphone.ui.main.chat.viewmodel
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Address
@@ -47,7 +46,7 @@ import org.linphone.utils.Event
 import org.linphone.utils.ImageUtils
 import org.linphone.utils.LinphoneUtils
 
-class ConversationViewModel @UiThread constructor() : ViewModel() {
+class ConversationViewModel @UiThread constructor() : AbstractConversationViewModel() {
     companion object {
         private const val TAG = "[Conversation ViewModel]"
         private const val MESSAGES_PER_PAGE = 30
@@ -113,14 +112,6 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
     val showRedToastEvent: MutableLiveData<Event<Pair<String, Int>>> by lazy {
         MutableLiveData<Event<Pair<String, Int>>>()
     }
-
-    val chatRoomFoundEvent = MutableLiveData<Event<Boolean>>()
-
-    lateinit var chatRoom: ChatRoom
-
-    lateinit var localSipUri: String
-
-    lateinit var remoteSipUri: String
 
     private var eventsList = arrayListOf<EventLogModel>()
 
@@ -330,10 +321,17 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
         super.onCleared()
 
         coreContext.postOnCoreThread {
-            if (::chatRoom.isInitialized) {
+            if (isChatRoomInitialized()) {
                 chatRoom.removeListener(chatRoomListener)
             }
             eventsList.forEach(EventLogModel::destroy)
+        }
+    }
+
+    override fun beforeNotifyingChatRoomFound(sameOne: Boolean) {
+        if (!sameOne) {
+            chatRoom.addListener(chatRoomListener)
+            configureChatRoom()
         }
     }
 
@@ -353,65 +351,6 @@ class ConversationViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun clearFilter() {
         searchFilter.value = ""
-    }
-
-    @UiThread
-    fun findChatRoom(room: ChatRoom?, localSipUri: String, remoteSipUri: String) {
-        this.localSipUri = localSipUri
-        this.remoteSipUri = remoteSipUri
-
-        coreContext.postOnCoreThread { core ->
-            Log.i(
-                "$TAG Looking for conversation with local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
-            )
-            if (room != null && ::chatRoom.isInitialized && chatRoom == room) {
-                Log.i("$TAG Conversation object already in memory, skipping")
-                chatRoomFoundEvent.postValue(Event(true))
-                return@postOnCoreThread
-            }
-
-            val localAddress = Factory.instance().createAddress(localSipUri)
-            val remoteAddress = Factory.instance().createAddress(remoteSipUri)
-
-            if (room != null && (!::chatRoom.isInitialized || chatRoom != room)) {
-                if (localAddress?.weakEqual(room.localAddress) == true && remoteAddress?.weakEqual(
-                        room.peerAddress
-                    ) == true
-                ) {
-                    Log.i("$TAG Conversation object available in sharedViewModel, using it")
-                    chatRoom = room
-                    chatRoom.addListener(chatRoomListener)
-                    configureChatRoom()
-                    chatRoomFoundEvent.postValue(Event(true))
-                    return@postOnCoreThread
-                }
-            }
-
-            if (localAddress != null && remoteAddress != null) {
-                Log.i("$TAG Searching for conversation in Core using local & peer SIP addresses")
-                val found = core.searchChatRoom(
-                    null,
-                    localAddress,
-                    remoteAddress,
-                    arrayOfNulls(
-                        0
-                    )
-                )
-                if (found != null) {
-                    chatRoom = found
-                    chatRoom.addListener(chatRoomListener)
-
-                    configureChatRoom()
-                    chatRoomFoundEvent.postValue(Event(true))
-                } else {
-                    Log.e("$TAG Failed to find conversation given local & remote addresses!")
-                    chatRoomFoundEvent.postValue(Event(false))
-                }
-            } else {
-                Log.e("$TAG Failed to parse local or remote SIP URI as Address!")
-                chatRoomFoundEvent.postValue(Event(false))
-            }
-        }
     }
 
     @UiThread

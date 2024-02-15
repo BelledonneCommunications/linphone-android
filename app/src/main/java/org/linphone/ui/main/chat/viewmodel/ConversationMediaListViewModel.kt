@@ -20,17 +20,14 @@
 package org.linphone.ui.main.chat.viewmodel
 
 import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import org.linphone.LinphoneApplication.Companion.coreContext
-import org.linphone.core.ChatRoom
-import org.linphone.core.Factory
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.chat.model.FileModel
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
-class ConversationMediaListViewModel @UiThread constructor() : ViewModel() {
+class ConversationMediaListViewModel @UiThread constructor() : AbstractConversationViewModel() {
     companion object {
         private const val TAG = "[Conversation Media List ViewModel]"
     }
@@ -43,98 +40,40 @@ class ConversationMediaListViewModel @UiThread constructor() : ViewModel() {
 
     val operationInProgress = MutableLiveData<Boolean>()
 
-    val chatRoomFoundEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
-    }
-
     val openMediaEvent: MutableLiveData<Event<FileModel>> by lazy {
         MutableLiveData<Event<FileModel>>()
     }
 
-    private lateinit var chatRoom: ChatRoom
-
-    lateinit var localSipUri: String
-
-    lateinit var remoteSipUri: String
-
-    @UiThread
-    fun findChatRoom(room: ChatRoom?, localSipUri: String, remoteSipUri: String) {
-        this.localSipUri = localSipUri
-        this.remoteSipUri = remoteSipUri
-
-        coreContext.postOnCoreThread { core ->
-            Log.i(
-                "$TAG Looking for conversation with local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
-            )
-            if (room != null && ::chatRoom.isInitialized && chatRoom == room) {
-                Log.i("$TAG Conversation object already in memory, skipping")
-                chatRoomFoundEvent.postValue(Event(true))
-                return@postOnCoreThread
-            }
-
-            val localAddress = Factory.instance().createAddress(localSipUri)
-            val remoteAddress = Factory.instance().createAddress(remoteSipUri)
-
-            if (room != null && (!::chatRoom.isInitialized || chatRoom != room)) {
-                if (localAddress?.weakEqual(room.localAddress) == true && remoteAddress?.weakEqual(
-                        room.peerAddress
-                    ) == true
-                ) {
-                    Log.i("$TAG Conversation object available in sharedViewModel, using it")
-                    chatRoom = room
-                    chatRoomFoundEvent.postValue(Event(true))
-                    return@postOnCoreThread
-                }
-            }
-
-            if (localAddress != null && remoteAddress != null) {
-                Log.i("$TAG Searching for conversation in Core using local & peer SIP addresses")
-                val found = core.searchChatRoom(
-                    null,
-                    localAddress,
-                    remoteAddress,
-                    arrayOfNulls(
-                        0
-                    )
-                )
-                if (found != null) {
-                    chatRoom = found
-                    chatRoomFoundEvent.postValue(Event(true))
-                }
-            }
-        }
+    override fun beforeNotifyingChatRoomFound(sameOne: Boolean) {
+        loadMediaList()
     }
 
-    @UiThread
-    fun loadMediaList() {
-        operationInProgress.value = true
+    @WorkerThread
+    private fun loadMediaList() {
+        operationInProgress.postValue(true)
 
-        coreContext.postOnCoreThread {
-            val list = arrayListOf<FileModel>()
-            if (::chatRoom.isInitialized) {
-                Log.i(
-                    "$TAG Loading media contents for conversation [${LinphoneUtils.getChatRoomId(
-                        chatRoom
-                    )}]"
-                )
-                val media = chatRoom.mediaContents
-                Log.i("$TAG [${media.size}] media have been fetched")
-                for (mediaContent in media) {
-                    val path = mediaContent.filePath.orEmpty()
-                    val name = mediaContent.name.orEmpty()
-                    val size = mediaContent.size.toLong()
-                    if (path.isNotEmpty() && name.isNotEmpty()) {
-                        val model = FileModel(path, name, size) {
-                            openMediaEvent.postValue(Event(it))
-                        }
-                        list.add(model)
-                    }
+        val list = arrayListOf<FileModel>()
+        Log.i(
+            "$TAG Loading media contents for conversation [${LinphoneUtils.getChatRoomId(
+                chatRoom
+            )}]"
+        )
+        val media = chatRoom.mediaContents
+        Log.i("$TAG [${media.size}] media have been fetched")
+        for (mediaContent in media) {
+            val path = mediaContent.filePath.orEmpty()
+            val name = mediaContent.name.orEmpty()
+            val size = mediaContent.size.toLong()
+            if (path.isNotEmpty() && name.isNotEmpty()) {
+                val model = FileModel(path, name, size) {
+                    openMediaEvent.postValue(Event(it))
                 }
-                Log.i("$TAG [${media.size}] media have been processed")
+                list.add(model)
             }
-
-            mediaList.postValue(list)
-            operationInProgress.postValue(false)
         }
+        Log.i("$TAG [${media.size}] media have been processed")
+
+        mediaList.postValue(list)
+        operationInProgress.postValue(false)
     }
 }
