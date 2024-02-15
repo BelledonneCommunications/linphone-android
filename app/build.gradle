@@ -174,7 +174,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics-ndk'
 
     implementation 'net.openid:appauth:0.11.1'
-    android.defaultConfig.manifestPlaceholders = [appAuthRedirectScheme: 'org.linphone.sso']
+    android.defaultConfig.manifestPlaceholders = [appAuthRedirectScheme: 'org.linphone']
 
     //noinspection GradleDynamicVersion
     implementation 'org.linphone:linphone-sdk-android:5.4.+'

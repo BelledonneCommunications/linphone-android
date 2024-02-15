@@ -49,10 +49,10 @@ class OpenIdActivity : GenericActivity() {
     companion object {
         private const val TAG = "[Open ID Activity]"
 
-        private const val WELL_KNOWN = "https://auth.linphone.org:8443/realms/sip.linphone.org/.well-known/openid-configuration"
+        private const val WELL_KNOWN = "https://sso.onhexagone.com//realms/ONHEXAGONE/.well-known/openid-configuration"
         private const val CLIENT_ID = "account"
         private const val SCOPE = "openid email profile"
-        private const val REDIRECT_URI = "org.linphone.sso:/openidcallback"
+        private const val REDIRECT_URI = "org.linphone:/openidcallback"
         private const val ACTIVITY_RESULT_ID = 666
     }
 
@@ -187,7 +187,14 @@ class OpenIdActivity : GenericActivity() {
                     }
                     updateTokenInfo()
                 } else {
-                    Log.e("$TAG Failed to perform token refresh [$ex]")
+                    Log.e(
+                        "$TAG Failed to perform token refresh [$ex], destroying auth_state.json file"
+                    )
+                    val file = File(applicationContext.filesDir.absolutePath, "auth_state.json")
+                    lifecycleScope.launch {
+                        FileUtils.deleteFile(file.absolutePath)
+                        singleSignOn()
+                    }
                 }
             }
         }
