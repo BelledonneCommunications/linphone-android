@@ -191,8 +191,9 @@
                 android:textSize="22sp"
                 android:gravity="center"
                 android:visibility="@{conferenceViewModel.participantDevices.size() > 1 ? View.GONE : View.VISIBLE}"
+                app:layout_constraintVertical_chainStyle="packed"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/share_conference_link"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
@@ -216,6 +217,7 @@
                 android:drawablePadding="8dp"
                 app:drawableTint="@color/gray_main2_400"
                 app:layout_constraintTop_toBottomOf="@id/waiting_for_others"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 

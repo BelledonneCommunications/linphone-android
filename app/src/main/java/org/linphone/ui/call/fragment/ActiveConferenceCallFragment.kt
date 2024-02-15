@@ -190,6 +190,13 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+
+        bottomSheetDialog?.dismiss()
+        bottomSheetDialog = null
+    }
+
     private fun showCallStatistics() {
         // TODO
     }

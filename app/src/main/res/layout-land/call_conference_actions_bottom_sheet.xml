@@ -23,6 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/call_all_actions_menu_height"
         android:background="@drawable/shape_call_bottom_sheet_background"
+        android:visibility="@{viewModel.fullScreenMode || viewModel.pipMode ? View.INVISIBLE : View.VISIBLE}"
         app:behavior_hideable="false"
         app:behavior_peekHeight="@dimen/call_main_actions_menu_height"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
@@ -123,9 +124,9 @@
             android:background="@drawable/shape_round_in_call_disabled_button_background"
             app:tint="?attr/color_grey_500"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintTop_toBottomOf="@id/screen_sharing_label"
-            app:layout_constraintStart_toStartOf="@id/screen_sharing"
-            app:layout_constraintEnd_toEndOf="@id/screen_sharing"/>
+            app:layout_constraintTop_toBottomOf="@id/main_actions"
+            app:layout_constraintStart_toStartOf="@id/chat_label"
+            app:layout_constraintEnd_toEndOf="@id/chat_label"/>
 
         <ImageView
             android:id="@+id/pause_call"
@@ -140,9 +141,9 @@
             android:background="@drawable/in_call_button_background_green"
             app:tint="@color/in_call_button_tint_color"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintTop_toBottomOf="@id/participants_label"
-            app:layout_constraintStart_toStartOf="@id/participants"
-            app:layout_constraintEnd_toEndOf="@id/participants"/>
+            app:layout_constraintTop_toBottomOf="@id/main_actions"
+            app:layout_constraintStart_toStartOf="@id/pause_call_label"
+            app:layout_constraintEnd_toEndOf="@id/pause_call_label"/>
 
         <ImageView
             android:id="@+id/record_call"
@@ -155,15 +156,16 @@
             android:background="@drawable/shape_round_in_call_disabled_button_background"
             app:tint="?attr/color_grey_500"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintTop_toBottomOf="@id/calls_list_label"
-            app:layout_constraintStart_toStartOf="@id/calls_list"
-            app:layout_constraintEnd_toEndOf="@id/calls_list" />
+            app:layout_constraintTop_toBottomOf="@id/main_actions"
+            app:layout_constraintStart_toStartOf="@id/record_call_label"
+            app:layout_constraintEnd_toEndOf="@id/record_call_label" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/in_call_extra_action_label_style"
             android:id="@+id/screen_sharing_label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:paddingBottom="15dp"
             android:text="@string/conference_action_screen_sharing"
             app:layout_constraintTop_toBottomOf="@id/screen_sharing"
             app:layout_constraintStart_toStartOf="parent"
@@ -175,6 +177,7 @@
             android:onClick="@{participantsListClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:paddingBottom="15dp"
             android:text="@string/conference_action_show_participants"
             app:layout_constraintTop_toBottomOf="@id/participants"
             app:layout_constraintStart_toEndOf="@id/screen_sharing_label"
@@ -186,6 +189,7 @@
             android:onClick="@{callsListClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:paddingBottom="15dp"
             android:text="@string/call_action_go_to_calls_list"
             app:layout_constraintTop_toBottomOf="@id/calls_list"
             app:layout_constraintStart_toEndOf="@id/participants_label"
@@ -197,10 +201,11 @@
             android:onClick="@{() -> viewModel.conferenceModel.showLayoutMenu()}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:paddingBottom="15dp"
             android:text="@string/call_action_change_layout"
             app:layout_constraintTop_toBottomOf="@id/layout"
             app:layout_constraintStart_toEndOf="@id/calls_list_label"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toStartOf="@id/chat_label" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/in_call_extra_action_label_style"
@@ -210,8 +215,8 @@
             android:paddingBottom="15dp"
             android:text="@string/call_action_show_messages"
             app:layout_constraintTop_toBottomOf="@id/chat"
-            app:layout_constraintStart_toStartOf="@id/screen_sharing_label"
-            app:layout_constraintEnd_toEndOf="@id/screen_sharing_label" />
+            app:layout_constraintStart_toEndOf="@id/layout_label"
+            app:layout_constraintEnd_toStartOf="@id/pause_call_label" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/in_call_extra_action_label_style"
@@ -221,8 +226,8 @@
             android:paddingBottom="15dp"
             android:text="@string/call_action_pause_call"
             app:layout_constraintTop_toBottomOf="@id/pause_call"
-            app:layout_constraintStart_toStartOf="@id/participants_label"
-            app:layout_constraintEnd_toEndOf="@id/participants_label" />
+            app:layout_constraintStart_toEndOf="@id/chat_label"
+            app:layout_constraintEnd_toStartOf="@id/record_call_label" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/in_call_extra_action_label_style"
@@ -232,8 +237,8 @@
             android:paddingBottom="15dp"
             android:text="@string/call_action_record_call"
             app:layout_constraintTop_toBottomOf="@id/record_call"
-            app:layout_constraintStart_toStartOf="@id/calls_list_label"
-            app:layout_constraintEnd_toEndOf="@id/calls_list_label" />
+            app:layout_constraintStart_toEndOf="@id/pause_call_label"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

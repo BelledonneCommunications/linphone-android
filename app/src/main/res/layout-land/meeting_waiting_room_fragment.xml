@@ -17,6 +17,13 @@
         android:layout_height="match_parent"
         android:background="@color/gray_900">
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/half_screen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.50" />
+
         <ImageView
             android:id="@+id/back"
             android:onClick="@{backClickListener}"
@@ -88,10 +95,10 @@
             android:visibility="@{viewModel.isVideoAvailable &amp;&amp; viewModel.isVideoEnabled ? View.VISIBLE : View.INVISIBLE}"
             app:alignTopRight="false"
             app:displayMode="occupy_all_space"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/toggle_mute_mic"
+            app:layout_constraintEnd_toEndOf="@id/half_screen"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/back"
-            app:layout_constraintBottom_toTopOf="@id/toggle_mute_mic"/>
+            app:layout_constraintTop_toBottomOf="@id/back" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_500"
@@ -133,8 +140,7 @@
             android:background="@drawable/in_call_button_background_red"
             app:tint="@color/in_call_button_tint_color"
             app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintTop_toTopOf="@id/toggle_mute_mic"
-            app:layout_constraintBottom_toBottomOf="@id/toggle_mute_mic"
+            app:layout_constraintBottom_toBottomOf="@id/join"
             app:layout_constraintStart_toStartOf="@id/video_preview"
             app:layout_constraintEnd_toStartOf="@id/toggle_mute_mic" />
 
@@ -144,12 +150,12 @@
             android:layout_width="@dimen/call_button_size"
             android:layout_height="@dimen/call_button_size"
             android:layout_marginEnd="16dp"
+            android:layout_marginTop="20dp"
             android:padding="@dimen/call_button_icon_padding"
             android:src="@{viewModel.isMicrophoneMuted ? @drawable/microphone_slash : @drawable/microphone, default=@drawable/microphone}"
             android:background="@drawable/in_call_button_background_red"
             app:tint="@color/in_call_button_tint_color"
-            app:layout_constraintTop_toBottomOf="@id/video_preview"
-            app:layout_constraintBottom_toTopOf="@id/join"
+            app:layout_constraintBottom_toBottomOf="@id/join"
             app:layout_constraintStart_toEndOf="@id/toggle_video"
             app:layout_constraintEnd_toStartOf="@id/change_audio_output" />
 
@@ -163,10 +169,9 @@
             android:src="@{viewModel.isHeadsetEnabled ? @drawable/headset : viewModel.isBluetoothEnabled ? @drawable/bluetooth : viewModel.isSpeakerEnabled ? @drawable/speaker_high : @drawable/speaker_slash, default=@drawable/speaker_slash}"
             android:background="@drawable/in_call_button_background_red"
             app:tint="@color/in_call_button_tint_color"
-            app:layout_constraintTop_toTopOf="@id/toggle_mute_mic"
-            app:layout_constraintBottom_toBottomOf="@id/toggle_mute_mic"
+            app:layout_constraintBottom_toBottomOf="@id/join"
             app:layout_constraintStart_toEndOf="@id/toggle_mute_mic"
-            app:layout_constraintEnd_toEndOf="@id/video_preview" />
+            app:layout_constraintEnd_toEndOf="@id/half_screen" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/primary_button_label_style"
@@ -182,9 +187,8 @@
             android:paddingEnd="20dp"
             android:text="@string/meeting_waiting_room_join"
             app:layout_constraintWidth_max="@dimen/button_max_width"
-            app:layout_constraintTop_toBottomOf="@id/toggle_mute_mic"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/half_screen"
             app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
