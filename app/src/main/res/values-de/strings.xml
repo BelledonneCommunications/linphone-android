@@ -2,7 +2,7 @@
 <!DOCTYPE resources [
 <!ENTITY appName "Linphone">
 ]>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="service_description">Dies ist erforderlich um Anrufe im Hintergrund anzunehmen</string>
     <string name="sync_account_name">&appName; Kontakte</string>
     <string name="about_privacy_policy">Datenschutz-Bestimmungen</string>
@@ -295,4 +295,196 @@
     <string name="conference_schedule_mandatory_field">Verpflichtend</string>
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
+    <string name="call_screenshot_taken">Bildschirmfoto erzeugt: %s</string>
+    <string name="recordings_export">Aufnahme exportieren mit…</string>
+    <string name="conference_schedule_send_invite_chat_summary">Die Einladung wird über mein &appName; Konto gesendet</string>
+    <string name="call_stats_ice">ICE-Verbindung:</string>
+    <string name="conference_group_call_create">Gruppenanruf starten</string>
+    <string name="conference_invite_participants_count" tools:ignore="PluralsCandidate">%d Teilnehmer</string>
+    <string name="conference_scheduled">Meetings</string>
+    <string name="conference_scheduled_delete_many_dialog">Möchten Sie diese Meetings löschen\?</string>
+    <string name="conference_scheduled_cancelled_by_organizer">Die Konferenz wurde vom Organisator abgesagt</string>
+    <string name="conference_scheduled_cancelled_by_me">Sie haben die Konferenz abgesagt</string>
+    <string name="call_action_participants_list">Teilnehmerliste</string>
+    <string name="call_action_chat">Chat</string>
+    <string name="call_action_calls_list">Anrufliste</string>
+    <string name="call_context_action_answer">Anruf annehmen</string>
+    <string name="call_stats_download">Download-Bandbreite:</string>
+    <string name="call_stats_receiver_loss_rate">Verlustrate (Empfänger):</string>
+    <string name="call_stats_decoder_name">Decoder:</string>
+    <string name="call_stats_zrtp_cipher_algo">Verschlüsselungsalgorithmus:</string>
+    <string name="audio_settings_echo_tester_summary_is_running">Echo-Tester läuft</string>
+    <string name="video_settings_bandwidth_limit_summary">in kbits/s</string>
+    <string name="call_settings_device_ringtone_title">Geräte-Klingelton verwenden</string>
+    <string name="call_settings_media_encryption_zrtp">ZRTP</string>
+    <string name="conference_start_group_call_dialog_title">Gruppenanruf</string>
+    <string name="call_action_statistics">Anrufstatistik</string>
+    <string name="call_remote_recording">Dieser Anruf wird aufgezeichnet.</string>
+    <string name="call_remotely_paused_title">Der Anruf wurde von der Gegenstelle pausiert.</string>
+    <string name="call_stats_audio">Audio</string>
+    <string name="call_stats_zrtp_sas_algo">SAS-Algorithmus:</string>
+    <string name="assistant_welcome_title">Willkommen</string>
+    <string name="assistant_error_username_already_exists">Benutzername schon in Verwendung</string>
+    <string name="conference_layout_too_many_participants_for_mosaic">Das Gruppenanruf-Layout kann wegen zu vieler Teilnehmer nicht geändert werden</string>
+    <string name="conference_low_bandwidth">Niedrige Bandbreite erkannt, Video wird deaktiviert</string>
+    <string name="call_action_change_conf_layout">Layout ändern</string>
+    <string name="call_stats_zrtp_hash_algo">Hash-Algorithmus:</string>
+    <string name="assistant_welcome_desc">Dieser Assistent hilft bei der Konfiguration und Benutzung Ihres SIP-Kontos.</string>
+    <string name="assistant_phone_number_link_info_content">"
+\nWenn Sie ihr Konto mit ihrer Rufnummer verknüpfen, können ihre Freunde Sie leichter finden.
+\n
+\nSie werden im Adressbuch sehen können, wer &amp;appName; verwendet und ihre Freunde erfahren so ebenfalls, daß Sie per &amp;appName; erreichbar sind.
+\n"</string>
+    <string name="assistant_phone_number_link_info_content_already_account">Sie können ihre Rufnummer mit nur einem &amp;appName;-Konto verwenden.
+\n
+\nSollten Sie ihre Rufnummer bereits mit einem anderen Konto verknüpft haben, Sie möchten stattdessen aber dieses verwenden, verknüpfen Sie die Nummer einfach jetzt mit diesem Konto, dann wird Ihre Nummer wird in dieses Konto überführt.</string>
+    <string name="assistant_create_account_part_email">Bitte geben Sie einen Benutzernamen, e-Mail Adr. und Passwort für ihr &amp;appName;-Konto ein</string>
+    <string name="assistant_launch_qrcode">QR-Code</string>
+    <string name="audio_settings_echo_cancellation_calibration_started">Echounterdrückungs-Kalibrierung gestartet</string>
+    <string name="call_settings_vibrate_title">Bei eingehenden Anrufen vibirieren</string>
+    <string name="assistant_remote_provisioning_wrong_format">Unbekanntes URL-Format. Bereitstellung kann nicht geladen werden…</string>
+    <string name="settings_video_title">Video</string>
+    <string name="conference_no_terminated_schedule">Bislang wurde kein Meeting beendet.</string>
+    <string name="conference_schedule_participants_list">Teilnehmerliste</string>
+    <string name="conference_invite_join">Beitreten</string>
+    <string name="conference_admin_set">%s ist nun ein Admin</string>
+    <string name="conference_admin_unset">%s ist nicht länger ein Admin</string>
+    <string name="conference_last_user">Alle anderen Teilnehmer haben den Gruppenanruf verlassen</string>
+    <string name="conference_incoming_title">Eingehender Gruppenanruf</string>
+    <string name="conference_participants_title">Teilnehmer (%d)</string>
+    <string name="conference_start_group_call_dialog_message">Möchten Sie einen Gruppenanruf starten\?
+\nJeder in dieser Gruppe wird einen Anruf zum Beitritt des Meetings erhalten.</string>
+    <string name="conference_scheduled_delete_one_dialog">Möchten Sie dieses Meeting löschen\?</string>
+    <string name="call_stats_codec">Codec:</string>
+    <string name="call_stats_ip">IP-Familie:</string>
+    <string name="assistant_login_linphone">&amp;appName;-Konto verwenden</string>
+    <string name="assistant_login_generic">SIP-Konto verwenden</string>
+    <string name="assistant_general_terms">Nutzungsbedingungen</string>
+    <string name="audio_settings_echo_cancellation_calibration_failed">Kalibrierung fehlgeschlagen</string>
+    <string name="audio_settings_adaptive_rate_control_title">Adaptive Ratensteuerung</string>
+    <string name="audio_settings_input_device_title">Standard-Audioeingabegerät</string>
+    <string name="conference_schedule_send_updated_invite_chat">Aktualisierung über &amp;appName; senden</string>
+    <string name="audio_settings_output_device_summary">Änderungen greifen ab nächstem Anruf</string>
+    <string name="video_settings_codecs_title">Codecs</string>
+    <string name="call_settings_use_telecom_manager_title">Interaktionen mit Bluetooth-Geräten verbessern</string>
+    <string name="call_settings_system_wide_overlay_summary">Sie werden um Erlaubnis nach Overlay-Rechten gefragt</string>
+    <string name="conference_schedule_send_updated_invite_email">Aktualisierung per e-Mail senden</string>
+    <string name="conference_group_call_summary">Gruppenanruf-Info</string>
+    <string name="conference_schedule_start">Meeting planen</string>
+    <string name="conference_schedule_edit">Meeting ändern</string>
+    <string name="conference_schedule_address_copied_to_clipboard">Die Meeting-Adresse wurde in die Zwischenablage kopiert</string>
+    <string name="conference_paused_subtitle">Play-Knopf drücken um wieder beizutreten.</string>
+    <string name="conference_invite_title">Meeting-Einladung:</string>
+    <string name="conference_update_title">Meeting wurde aktualisiert:</string>
+    <string name="conference_display_mode_mosaic">Mosaik-Modus</string>
+    <string name="conference_display_mode_active_speaker">Aktueller-Sprecher-Modus</string>
+    <string name="conference_display_mode_audio_only">Nur-Audio-Modus</string>
+    <string name="conference_waiting_room_start_call">Start</string>
+    <string name="conference_waiting_room_cancel_call">Abbrechen</string>
+    <string name="conference_waiting_room_video_disabled">Video ist aktuell deaktiviert</string>
+    <string name="conference_too_many_participants_for_mosaic_layout">Zu viele Teilnehmer für das Mosaik-Layout. Aktueller-Sprecher-Layout wird aktiviert</string>
+    <string name="conference_participant_paused">(pausiert)</string>
+    <string name="conference_no_schedule">Bislang ist kein Meeting geplant.</string>
+    <string name="conference_schedule_organizer">Organisator:</string>
+    <string name="conference_creation_failed">Meeting konnte nicht erstellt werden</string>
+    <string name="conference_schedule_info_created">Das Meeting wurde geplant</string>
+    <string name="conference_info_removed">Die Meeting-Info wurde gelöscht</string>
+    <string name="conference_empty">Zur Zeit sind Sie allein in diesem Gruppenanruf</string>
+    <string name="conference_invitation_received_notification">Sie wurde zu einem Meeting eingeladen</string>
+    <string name="conference_invitation">Einladung zum Meeting</string>
+    <string name="conference_first_to_join">Sie sind der Erste in diesem Gruppenanruf</string>
+    <string name="conference_start_group_call_dialog_ok_button">Start</string>
+    <string name="conference_scheduled_terminated_filter">Beendet</string>
+    <string name="conference_scheduled_future_filter">Geplant</string>
+    <string name="call_action_numpad">Nummernblock</string>
+    <string name="call_action_add_call">Neuer Anruf</string>
+    <string name="call_action_attended_transfer_call">Rückfrage/Weiterleitung</string>
+    <string name="call_context_action_resume">Anruf fortführen</string>
+    <string name="call_context_action_pause">Anruf pausieren</string>
+    <string name="call_context_action_hangup">Anruf beenden</string>
+    <string name="call_locally_paused_title">Sie haben den Anruf pausiert.</string>
+    <string name="call_stats_estimated_download">Geschätzte Download-Bandbreite:</string>
+    <string name="call_stats_video_resolution_sent">Gesendete Videoauflösung:</string>
+    <string name="call_stats_video_resolution_received">Empfangene Videoauflösung:</string>
+    <string name="call_stats_video_fps_sent">Gesendete Video fps:</string>
+    <string name="call_stats_video_fps_received">Empfangene Video fps:</string>
+    <string name="call_stats_jitter_buffer">Jitter-Puffer:</string>
+    <string name="call_stats_media_encryption">Medienverschlüsselung:</string>
+    <string name="call_stats_zrtp_auth_tag_algo">Authentifizierungsalgorithmus:</string>
+    <string name="assistant_create_account">Konto erstellen</string>
+    <string name="assistant_remote_provisioning">Konfiguration extern abrufen</string>
+    <string name="assistant_ec_calibration">Kalibrierung des Echounterdrückers läuft</string>
+    <string name="assistant_phone_number_info_title">Wofür wird meine Rufnummer verwendet\?</string>
+    <string name="assistant_read_and_agree_terms">Ich akzeptiere Belledonne Communications\' %1$s und %2$s</string>
+    <string name="assistant_generic_account_warning">Einige Funktionen erfordern ein &amp;appName;-Konto, z. B. Gruppennachrichten oder flüchtige Nachrichten.
+\n
+\nDiese Funktionen bleiben bei Benutzung von Drittanbieter-SIP-Konten unsichtbar.
+\n
+\nKontaktieren Sie uns bitte, wenn Sie die Funktionen in einem kommerziellen Projekt aktivieren möchten.</string>
+    <string name="assistant_generic_account_warning_continue_button_text">Verstanden</string>
+    <string name="assistant_alternative_way_create_account">Konto mit e-Mail Adresse erstellen:</string>
+    <string name="assistant_no_push_warning">Ihr Gerät scheint keine Push-Nachrichten empfangen zu können.
+\n
+\nDa der Empfang zur Kontoerstellung erforderlich ist, können Sie kein Konto mit dieser App erstellen. Das können Sie stattdessen auf unserer Webseite machen:</string>
+    <string name="assistant_error_phone_number_invalid_characters">Hier werden Ziffern erwartet</string>
+    <string name="assistant_error_username_invalid_characters">Ungültige Zeichen verwendet</string>
+    <string name="assistant_error_passwords_dont_match">Die Passwörter stimmen nicht überein</string>
+    <string name="assistant_error_username_too_long">Der Benutzername ist zu lang</string>
+    <string name="assistant_error_invalid_international_prefix">Falscher internationaler Präfix</string>
+    <string name="assistant_validate_account_1">Ihr Konto wurde erstellt. Bitte prüfen Sie Ihre e-Mail zur Kontobestätigung:</string>
+    <string name="assistant_validate_account_2">Nach Erledigung drücken Sie hier auf den Knopf.</string>
+    <string name="assistant_use_username_instead_or_phone_number">Benutzernamen verwenden (optional)</string>
+    <string name="assistant_create_account_part_2">Wir haben Ihnen einen Bestätigungscode per SMS an Ihre Rufnummer gesendet:</string>
+    <string name="assistant_create_account_part_3">Bitte geben Sie den 4-Ziffer Code ein, um die Rufnummernbestätigung abzuschließen:
+\n</string>
+    <string name="assistant_create_email_account_not_validated">Ihr Konto wurde noch nicht aktiviert. Bitte klicken Sie auf den Link, den Sie per e-Mail erhalten haben</string>
+    <string name="assistant_remote_provisioning_url">URL</string>
+    <string name="assistant_remote_provisioning_failure">Herunterladen oder Anwendung des Bereitstellungsprofils fehlgeschlagen…</string>
+    <string name="assistant_fetch_apply">Laden und anwenden</string>
+    <string name="settings_audio_title">Audio</string>
+    <string name="settings_conferences_title">Meetings</string>
+    <string name="audio_settings_software_echo_cancellation_title">Software-Echounterdrückung</string>
+    <string name="audio_settings_echo_canceller_calibration_summary">Echounterdrückungs-Kalibrierung per klick starten</string>
+    <string name="audio_settings_echo_cancellation_calibration_value">Kalibriert in %s ms</string>
+    <string name="audio_settings_echo_cancellation_calibration_no_echo">Kein Echo erkannt</string>
+    <string name="audio_settings_echo_tester_title">Test-Echo</string>
+    <string name="audio_settings_echo_tester_summary">Klicken um Echo-Tester zu starten</string>
+    <string name="audio_settings_echo_tester_summary_is_stopped">Echo-Tester ist gestoppt</string>
+    <string name="audio_settings_output_device_title">Standard-Audioausgabegerät</string>
+    <string name="audio_settings_codec_bitrate_title">Codec-Bitratenlimit</string>
+    <string name="audio_settings_playback_gain_summary">(in Dezibel)</string>
+    <string name="video_settings_enable_title">Video aktivieren</string>
+    <string name="call_settings_media_encryption_none">Keine</string>
+    <string name="call_settings_media_encryption_dtls">DTLS-SRTP</string>
+    <string name="call_settings_rfc2833_dtmf_title">In-Band DTMF (RFC 2833) senden</string>
+    <string name="call_locally_paused_subtitle">Zum Fortführen Play-Knopf drücken.</string>
+    <string name="call_stats_video">Video</string>
+    <string name="call_stats_upload">Upload-Bandbreite:</string>
+    <string name="call_stats_encoder_name">Encoder:</string>
+    <string name="assistant_privacy_policy">Datenschutzrichtlinie</string>
+    <string name="assistant_error_phone_number_already_exists">Ein anderes Konto verwendet diese Nummer bereits</string>
+    <string name="assistant_error_invalid_email_address">Die E-Mail Adresse ist ungültig</string>
+    <string name="assistant_link_phone_number">Ihre Rufnummer wird mit folgendem Benutzernamen verknüpft:</string>
+    <string name="settings_tunnel_title">Tunnel</string>
+    <string name="settings_password_protection_dialog_title">Für Zugriff auf die Einstellungen geben Sie bitte Ihr Passwort ein</string>
+    <string name="settings_password_protection_dialog_input_hint">Passwort</string>
+    <string name="settings_password_protection_dialog_ok_label">Bestätigen</string>
+    <string name="settings_password_protection_dialog_invalid_input">Ungültiges Passwort!</string>
+    <string name="video_settings_initiate_call_title">Videoanrufe einleiten</string>
+    <string name="video_settings_automatically_accept_title">Eingehende Videoanrufe annehmen</string>
+    <string name="call_settings_overlay_title">Anrufbenachrichtigung als Overlay</string>
+    <string name="conference_schedule_send_invite_chat">Einladung über &amp;appName; senden</string>
+    <string name="conference_schedule_send_invite_email">Einladung per e-Mail senden</string>
+    <string name="conference_schedule_encryption">Soll das Meeting verschlüsselt werden\?</string>
+    <string name="conference_organizer">Organisator</string>
+    <string name="conference_schedule_summary">Meeting-Info</string>
+    <string name="conference_schedule_info_not_sent_to_participant">Senden der Meeting-Info an einen Teilnehmer fehlgeschlagen</string>
+    <string name="conference_paused_title">Sie sind zur Zeit nicht im Meeting.</string>
+    <string name="conference_default_title">Entfernter Gruppenanruf</string>
+    <string name="conference_local_title">Lokaler Gruppenanruf</string>
+    <string name="conference_cancel_title">Meeting wurde abgesagt:</string>
+    <string name="conference_description_title">Beschreibung</string>
+    <string name="call_error_temporarily_unavailable">Temporär nicht verfügbar</string>
+    <string name="assistant_login">Login</string>
+    <string name="audio_settings_input_device_summary">Änderungen greifen ab nächstem Anruf</string>
 </resources>
