@@ -92,25 +92,24 @@ class LandingFragment : Fragment() {
         }
 
         viewModel.redirectToDigestAuthEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                goToLoginFragment()
+            it.consume { address ->
+                goToLoginFragment(address)
             }
         }
 
         viewModel.redirectToSingleSignOnEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                goToSingleSignOnActivity()
+            it.consume { address ->
+                goToSingleSignOnActivity(address)
             }
         }
     }
 
-    private fun goToLoginFragment() {
-        val identity = viewModel.sipIdentity.value.orEmpty()
+    private fun goToLoginFragment(identity: String) {
         val action = LandingFragmentDirections.actionLandingFragmentToLoginFragment(identity)
         findNavController().navigate(action)
     }
 
-    private fun goToSingleSignOnActivity() {
+    private fun goToSingleSignOnActivity(identity: String) {
         startActivity(Intent(requireContext(), OpenIdActivity::class.java))
         requireActivity().finish()
     }

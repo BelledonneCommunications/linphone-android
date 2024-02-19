@@ -134,10 +134,20 @@ class AccountLoginViewModel @UiThread constructor() : ViewModel() {
 
             val identity = sipIdentity.value.orEmpty().trim()
             val identityAddress = core.interpretUrl(identity, false)
-            identityAddress ?: return@postOnCoreThread
+            if (identityAddress == null) {
+                Log.e("$TAG Can't parse [$identity] as Address!")
+                // TODO: show error
+                return@postOnCoreThread
+            }
 
             val user = identityAddress.username
-            user ?: return@postOnCoreThread
+            if (user == null) {
+                Log.e(
+                    "$TAG Address [${identityAddress.asStringUriOnly()}] doesn't contains an username!"
+                )
+                // TODO: show error
+                return@postOnCoreThread
+            }
 
             val domain = identityAddress.domain
 

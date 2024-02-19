@@ -25,6 +25,7 @@ import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.Factory
+import org.linphone.core.tools.Log
 import org.linphone.utils.Event
 
 class LandingViewModel @UiThread constructor() : ViewModel() {
@@ -36,12 +37,12 @@ class LandingViewModel @UiThread constructor() : ViewModel() {
 
     val sipIdentity = MutableLiveData<String>()
 
-    val redirectToDigestAuthEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+    val redirectToDigestAuthEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
     }
 
-    val redirectToSingleSignOnEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+    val redirectToSingleSignOnEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
     }
 
     var conditionsAndPrivacyPolicyAccepted = false
@@ -56,7 +57,7 @@ class LandingViewModel @UiThread constructor() : ViewModel() {
 
     @UiThread
     fun login() {
-        coreContext.postOnCoreThread { core ->
+        coreContext.postOnCoreThread {
             var identity = sipIdentity.value.orEmpty()
             if (!identity.startsWith("sip:")) {
                 identity = "sip:$identity"
@@ -67,14 +68,17 @@ class LandingViewModel @UiThread constructor() : ViewModel() {
             val identityAddress = Factory.instance().createAddress(identity)
             if (identityAddress == null) {
                 // TODO: FIXME: show error
+                Log.e("$TAG Can't parse [$identity] as Address!")
                 return@postOnCoreThread
             }
 
             // TODO: SSO or password auth?
             if (identityAddress.domain == corePreferences.defaultDomain) {
-                redirectToDigestAuthEvent.postValue(Event(true))
+                Log.i("$TAG Address matches default domain, using digest authentication")
+                redirectToDigestAuthEvent.postValue(Event(identityAddress.asStringUriOnly()))
             } else {
-                redirectToSingleSignOnEvent.postValue(Event(true))
+                Log.i("$TAG Address doesn't match default domain, using Single Sign On")
+                redirectToSingleSignOnEvent.postValue(Event(identityAddress.asStringUriOnly()))
             }
         }
     }
