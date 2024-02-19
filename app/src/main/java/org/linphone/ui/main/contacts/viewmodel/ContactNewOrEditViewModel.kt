@@ -132,21 +132,14 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
 
     @UiThread
     fun saveChanges() {
-        var check = true
-        if (firstName.value.orEmpty().isEmpty()) {
-            Log.e("$TAG Firstname is empty")
-            check = false
-        }
-        if (sipAddresses.isEmpty() && phoneNumbers.isEmpty()) {
-            Log.e("$TAG No SIP address nor phone number")
-            check = false
-        }
-
-        if (!check) {
+        val fn = firstName.value.orEmpty().trim()
+        val ln = lastName.value.orEmpty().trim()
+        val organization = company.value.orEmpty().trim()
+        if (fn.isEmpty() && ln.isEmpty() && organization.isEmpty()) {
             Log.e("$TAG At least a mandatory field wasn't filled, aborting save")
+            // TODO FIXME: notify user
             return
         }
-        // TODO FIXME: notify user
 
         coreContext.postOnCoreThread { core ->
             var status = Status.OK
@@ -154,11 +147,20 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
             if (!::friend.isInitialized) {
                 friend = core.createFriend()
             }
-            val fn = firstName.value.orEmpty().trim()
-            val ln = lastName.value.orEmpty().trim()
+            val name = if (fn.isNotEmpty() && ln.isNotEmpty()) {
+                "$fn $ln"
+            } else if (fn.isNotEmpty()) {
+                fn
+            } else if (ln.isNotEmpty()) {
+                ln
+            } else if (organization.isNotEmpty()) {
+                organization
+            } else {
+                "<Unknown>"
+            }
 
             friend.edit()
-            friend.name = "$fn $ln"
+            friend.name = name
 
             val vCard = friend.vcard
             if (vCard != null) {
@@ -188,7 +190,7 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
                 }
             }
 
-            friend.organization = company.value.orEmpty().trim()
+            friend.organization = organization
             friend.jobTitle = jobTitle.value.orEmpty().trim()
 
             for (address in friend.addresses) {
