@@ -218,6 +218,7 @@
     <string name="assistant_permissions_title">Grant permissions</string>
     <string name="assistant_permissions_grant_all_of_them">OK</string>
     <string name="assistant_permissions_skip_permissions">Do it later</string>
+    <string name="assistant_single_sign_on_title">Single Sign On</string>
 
     <string name="assistant_permissions_subtitle">To fully enjoy &appName; we need you to grant us the following permissions :</string>
     <string name="assistant_permissions_read_contacts_title"><b>Read contacts:</b> To display your contacts and find whom is using &appName;.</string>

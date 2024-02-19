@@ -173,6 +173,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging'
     implementation 'com.google.firebase:firebase-crashlytics-ndk'
 
+    // https://github.com/openid/AppAuth-Android/blob/master/LICENSE Apache v2.0
     implementation 'net.openid:appauth:0.11.1'
     android.defaultConfig.manifestPlaceholders = [appAuthRedirectScheme: 'org.linphone']
 

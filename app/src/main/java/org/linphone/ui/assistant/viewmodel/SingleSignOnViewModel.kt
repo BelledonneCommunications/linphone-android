@@ -17,107 +17,93 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.sso
+package org.linphone.ui.assistant.viewmodel
 
 import android.content.Intent
 import android.net.Uri
-import android.os.Bundle
-import android.view.View
 import androidx.annotation.UiThread
-import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import java.io.File
 import kotlinx.coroutines.launch
 import net.openid.appauth.AuthState
-import net.openid.appauth.AuthState.AuthStateAction
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationRequest
 import net.openid.appauth.AuthorizationResponse
 import net.openid.appauth.AuthorizationService
 import net.openid.appauth.AuthorizationServiceConfiguration
-import net.openid.appauth.AuthorizationServiceConfiguration.RetrieveConfigurationCallback
 import net.openid.appauth.ResponseTypeValues
-import org.linphone.R
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.tools.Log
-import org.linphone.databinding.SingleSignOnOpenIdActivityBinding
-import org.linphone.ui.GenericActivity
+import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.TimestampUtils
 
-@UiThread
-class OpenIdActivity : GenericActivity() {
+class SingleSignOnViewModel : ViewModel() {
     companion object {
-        private const val TAG = "[Open ID Activity]"
+        private const val TAG = "[Single Sign On ViewModel]"
 
         private const val WELL_KNOWN = "https://sso.onhexagone.com//realms/ONHEXAGONE/.well-known/openid-configuration"
         private const val CLIENT_ID = "account"
         private const val SCOPE = "openid email profile"
         private const val REDIRECT_URI = "org.linphone:/openidcallback"
-        private const val ACTIVITY_RESULT_ID = 666
     }
 
-    private lateinit var binding: SingleSignOnOpenIdActivityBinding
+    val singleSignOnProcessCompletedEvent = MutableLiveData<Event<Boolean>>()
+
+    val startAuthIntentEvent: MutableLiveData<Event<Intent>> by lazy {
+        MutableLiveData<Event<Intent>>()
+    }
+
+    val onErrorEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
+
+    var preFilledUser: String = ""
 
     private lateinit var authState: AuthState
     private lateinit var authService: AuthorizationService
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        binding = DataBindingUtil.setContentView(this, R.layout.single_sign_on_open_id_activity)
-        binding.lifecycleOwner = this
-
-        lifecycleScope.launch {
+    @UiThread
+    fun setUp() {
+        viewModelScope.launch {
+            Log.i("$TAG Setting up SSO environment, redirect URI is [$REDIRECT_URI]")
             authState = getAuthState()
             updateTokenInfo()
         }
+    }
 
-        binding.setSingleSignOnClickListener {
-            lifecycleScope.launch {
-                singleSignOn()
-            }
+    @UiThread
+    fun processAuthIntentResponse(resp: AuthorizationResponse?, ex: AuthorizationException?) {
+        if (::authState.isInitialized) {
+            Log.i("$TAG Updating AuthState object after authorization response")
+            authState.update(resp, ex)
         }
 
-        binding.setRefreshTokenClickListener {
-            lifecycleScope.launch {
-                performRefreshToken()
-            }
+        if (resp != null) {
+            Log.i("$TAG Response isn't null, performing request token")
+            performRequestToken(resp)
+        } else {
+            Log.e("$TAG Can't perform request token [$ex]")
+            onErrorEvent.postValue(Event(ex?.errorDescription.orEmpty()))
         }
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == ACTIVITY_RESULT_ID && data != null) {
-            val resp = AuthorizationResponse.fromIntent(data)
-            val ex = AuthorizationException.fromIntent(data)
-
-            if (::authState.isInitialized) {
-                Log.i("$TAG Updating AuthState object after authorization response")
-                authState.update(resp, ex)
-            }
-
-            if (resp != null) {
-                Log.i("$TAG Response isn't null, performing request token")
-                performRequestToken(resp)
-            } else {
-                Log.e("$TAG Can't perform request token [$ex]")
-            }
-        }
-
-        super.onActivityResult(requestCode, resultCode, data)
-    }
-
+    @UiThread
     private fun singleSignOn() {
         Log.i("$TAG Fetch from issuer")
         AuthorizationServiceConfiguration.fetchFromUrl(
             Uri.parse(WELL_KNOWN),
-            RetrieveConfigurationCallback { serviceConfiguration, ex ->
+            AuthorizationServiceConfiguration.RetrieveConfigurationCallback { serviceConfiguration, ex ->
                 if (ex != null) {
                     Log.e("$TAG Failed to fetch configuration")
+                    onErrorEvent.postValue(Event("Failed to fetch configuration"))
                     return@RetrieveConfigurationCallback
                 }
                 if (serviceConfiguration == null) {
                     Log.e("$TAG Service configuration is null!")
+                    onErrorEvent.postValue(Event("Service configuration is null"))
                     return@RetrieveConfigurationCallback
                 }
 
@@ -134,43 +120,25 @@ class OpenIdActivity : GenericActivity() {
                     Uri.parse(REDIRECT_URI) // the redirect URI to which the auth response is sent
                 )
 
+                if (preFilledUser.isNotEmpty()) {
+                    authRequestBuilder.setLoginHint(preFilledUser)
+                }
+
                 val authRequest = authRequestBuilder
                     .setScope(SCOPE)
                     .build()
-                authService = AuthorizationService(this)
+                authService = AuthorizationService(coreContext.context)
                 val authIntent = authService.getAuthorizationRequestIntent(authRequest)
-                startActivityForResult(authIntent, ACTIVITY_RESULT_ID)
+                startAuthIntentEvent.postValue(Event(authIntent))
             }
         )
     }
 
-    private fun performRequestToken(response: AuthorizationResponse) {
-        if (::authService.isInitialized) {
-            Log.i("$TAG Starting perform token request")
-            authService.performTokenRequest(
-                response.createTokenExchangeRequest()
-            ) { resp, ex ->
-                if (resp != null) {
-                    Log.i("$TAG Token exchange succeeded!")
-
-                    if (::authState.isInitialized) {
-                        Log.i("$TAG Updating AuthState object after token response")
-                        authState.update(resp, ex)
-                        storeAuthStateAsJsonFile()
-                    }
-
-                    useToken()
-                } else {
-                    Log.e("$TAG Failed to perform token request [$ex]")
-                }
-            }
-        }
-    }
-
+    @UiThread
     private fun performRefreshToken() {
         if (::authState.isInitialized) {
             if (!::authService.isInitialized) {
-                authService = AuthorizationService(this)
+                authService = AuthorizationService(coreContext.context)
             }
 
             Log.i("$TAG Starting refresh token request")
@@ -190,9 +158,14 @@ class OpenIdActivity : GenericActivity() {
                     Log.e(
                         "$TAG Failed to perform token refresh [$ex], destroying auth_state.json file"
                     )
-                    val file = File(applicationContext.filesDir.absolutePath, "auth_state.json")
-                    lifecycleScope.launch {
+                    onErrorEvent.postValue(Event(ex?.errorDescription.orEmpty()))
+
+                    val file = File(coreContext.context.filesDir.absolutePath, "auth_state.json")
+                    viewModelScope.launch {
                         FileUtils.deleteFile(file.absolutePath)
+                        Log.w(
+                            "$TAG Previous auth_state.json file deleted, starting single sign on process from scratch"
+                        )
                         singleSignOn()
                     }
                 }
@@ -200,6 +173,32 @@ class OpenIdActivity : GenericActivity() {
         }
     }
 
+    @UiThread
+    private fun performRequestToken(response: AuthorizationResponse) {
+        if (::authService.isInitialized) {
+            Log.i("$TAG Starting perform token request")
+            authService.performTokenRequest(
+                response.createTokenExchangeRequest()
+            ) { resp, ex ->
+                if (resp != null) {
+                    Log.i("$TAG Token exchange succeeded!")
+
+                    if (::authState.isInitialized) {
+                        Log.i("$TAG Updating AuthState object after token response")
+                        authState.update(resp, ex)
+                        storeAuthStateAsJsonFile()
+                    }
+
+                    useToken()
+                } else {
+                    Log.e("$TAG Failed to perform token request [$ex]")
+                    onErrorEvent.postValue(Event(ex?.errorDescription.orEmpty()))
+                }
+            }
+        }
+    }
+
+    @UiThread
     private fun useToken() {
         if (::authState.isInitialized && ::authService.isInitialized) {
             if (authState.needsTokenRefresh && authState.refreshToken.isNullOrEmpty()) {
@@ -207,10 +206,11 @@ class OpenIdActivity : GenericActivity() {
                 return
             }
 
-            Log.i("$TAG Performing action with fresh token")
+            singleSignOnProcessCompletedEvent.postValue(Event(true))
+            /*Log.i("$TAG Performing action with fresh token")
             authState.performActionWithFreshTokens(
                 authService,
-                AuthStateAction { accessToken, idToken, ex ->
+                AuthState.AuthStateAction { accessToken, idToken, ex ->
                     if (ex != null) {
                         Log.e("$TAG Failed to use token [$ex]")
                         return@AuthStateAction
@@ -221,13 +221,15 @@ class OpenIdActivity : GenericActivity() {
 
                     storeAuthStateAsJsonFile()
                 }
-            )
+            )*/
         }
     }
 
+    @UiThread
     private suspend fun getAuthState(): AuthState {
-        val file = File(applicationContext.filesDir.absolutePath, "auth_state.json")
+        val file = File(coreContext.context.filesDir.absolutePath, "auth_state.json")
         if (file.exists()) {
+            Log.i("$TAG Auth state file found, trying to read it")
             val content = FileUtils.readFile(file)
             if (content.isNotEmpty()) {
                 Log.i("$TAG Initializing AuthState from local JSON file")
@@ -236,19 +238,23 @@ class OpenIdActivity : GenericActivity() {
                     return AuthState.jsonDeserialize(content)
                 } catch (exception: Exception) {
                     Log.e("$TAG Failed to use serialized AuthState [$exception]")
+                    onErrorEvent.postValue(Event("Failed to read stored AuthState"))
                 }
             }
+        } else {
+            Log.i("$TAG Auth state file not found yet...")
         }
 
         return AuthState()
     }
 
+    @UiThread
     private fun storeAuthStateAsJsonFile() {
         Log.i("$TAG Trying to save serialized authState as JSON file")
         val data = authState.jsonSerializeString()
         Log.d("$TAG Date to save is [$data]")
-        val file = File(applicationContext.filesDir.absolutePath, "auth_state.json")
-        lifecycleScope.launch {
+        val file = File(coreContext.context.filesDir.absolutePath, "auth_state.json")
+        viewModelScope.launch {
             if (FileUtils.dumpStringToFile(data, file)) {
                 Log.i("$TAG Service configuration saved as JSON as [${file.absolutePath}]")
             } else {
@@ -259,20 +265,19 @@ class OpenIdActivity : GenericActivity() {
         }
     }
 
+    @UiThread
     private fun updateTokenInfo() {
+        Log.i("$TAG Updating token info")
+
         if (::authState.isInitialized) {
             if (authState.isAuthorized) {
                 Log.i("$TAG User is already authenticated!")
-                binding.sso.visibility = View.GONE
-                binding.tokenRefresh.visibility = View.GONE
-                binding.tokenExpires.visibility = View.VISIBLE
 
                 val expiration = authState.accessTokenExpirationTime
                 if (expiration != null) {
                     if (expiration < System.currentTimeMillis()) {
                         Log.w("$TAG Access token is expired")
-                        binding.tokenExpires.text = "Token expired!"
-                        binding.tokenRefresh.visibility = View.VISIBLE
+                        performRefreshToken()
                     } else {
                         val date = if (TimestampUtils.isToday(expiration, timestampInSecs = false)) {
                             "today"
@@ -285,18 +290,23 @@ class OpenIdActivity : GenericActivity() {
                         }
                         val time = TimestampUtils.toString(expiration, timestampInSecs = false)
                         Log.i("$TAG Access token expires [$date] [$time]")
-                        binding.tokenExpires.text = "Token expires $date at $time"
+                        singleSignOnProcessCompletedEvent.postValue(Event(true))
                     }
                 } else {
                     Log.w("$TAG Access token expiration info not available")
-                    binding.tokenExpires.text = "Can't access token expiration!"
+                    val file = File(coreContext.context.filesDir.absolutePath, "auth_state.json")
+                    viewModelScope.launch {
+                        FileUtils.deleteFile(file.absolutePath)
+                        singleSignOn()
+                    }
                 }
             } else {
-                Log.w("$TAG User isn't authenticated yet!")
-                binding.sso.visibility = View.VISIBLE
-                binding.tokenRefresh.visibility = View.GONE
-                binding.tokenExpires.visibility = View.GONE
+                Log.w("$TAG User isn't authenticated yet")
+                singleSignOn()
             }
+        } else {
+            Log.i("$TAG Auth state hasn't been created yet")
+            singleSignOn()
         }
     }
 }

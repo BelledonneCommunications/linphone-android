@@ -36,7 +36,6 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantLandingFragmentBinding
 import org.linphone.ui.assistant.model.AcceptConditionsAndPolicyDialogModel
 import org.linphone.ui.assistant.viewmodel.LandingViewModel
-import org.linphone.ui.sso.OpenIdActivity
 import org.linphone.utils.DialogUtils
 
 @UiThread
@@ -99,19 +98,23 @@ class LandingFragment : Fragment() {
 
         viewModel.redirectToSingleSignOnEvent.observe(viewLifecycleOwner) {
             it.consume { address ->
-                goToSingleSignOnActivity(address)
+                goToSingleSignOnFragment(address)
             }
         }
     }
 
     private fun goToLoginFragment(identity: String) {
+        Log.i(
+            "$TAG Going to Linphone credentials based authentication fragment for SIP account [$identity]"
+        )
         val action = LandingFragmentDirections.actionLandingFragmentToLoginFragment(identity)
         findNavController().navigate(action)
     }
 
-    private fun goToSingleSignOnActivity(identity: String) {
-        startActivity(Intent(requireContext(), OpenIdActivity::class.java))
-        requireActivity().finish()
+    private fun goToSingleSignOnFragment(identity: String) {
+        Log.i("$TAG Going to Single Sign On fragment for SIP account [$identity]")
+        val action = LandingFragmentDirections.actionLandingFragmentToSingleSignOnFragment(identity)
+        findNavController().navigate(action)
     }
 
     private fun goToRegisterFragment() {
