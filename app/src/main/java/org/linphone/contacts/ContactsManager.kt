@@ -66,6 +66,7 @@ class ContactsManager @UiThread constructor() {
         private const val TAG = "[Contacts Manager]"
 
         private const val DELAY_BEFORE_RELOADING_CONTACTS_AFTER_PRESENCE_RECEIVED = 1000L // 1 second
+        private const val FRIEND_LIST_TEMPORARY_STORED = "TempNativeContacts"
     }
 
     private var nativeContactsLoaded = false
@@ -75,6 +76,8 @@ class ContactsManager @UiThread constructor() {
     private val knownContactsAvatarsMap = hashMapOf<String, ContactAvatarModel>()
     private val unknownContactsAvatarsMap = hashMapOf<String, ContactAvatarModel>()
     private val conferenceAvatarMap = hashMapOf<String, ContactAvatarModel>()
+
+    private val unknownAndroidContactsMap = arrayListOf<String>()
 
     private val coroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private var reloadContactsJob: Job? = null
@@ -201,12 +204,23 @@ class ContactsManager @UiThread constructor() {
         nativeContactsLoaded = true
         Log.i("$TAG Native contacts have been loaded, cleaning avatars maps")
 
+        val core = coreContext.core
+        val found = core.getFriendListByName(FRIEND_LIST_TEMPORARY_STORED)
+        if (found != null) {
+            val count = found.friends.size
+            Log.i(
+                "$TAG Found temporary friend list with [$count] friends, removing it as no longer necessary"
+            )
+            core.removeFriendList(found)
+        }
+
         knownContactsAvatarsMap.values.forEach(ContactAvatarModel::destroy)
         knownContactsAvatarsMap.clear()
         unknownContactsAvatarsMap.values.forEach(ContactAvatarModel::destroy)
         unknownContactsAvatarsMap.clear()
         conferenceAvatarMap.values.forEach(ContactAvatarModel::destroy)
         conferenceAvatarMap.clear()
+        unknownAndroidContactsMap.clear()
 
         notifyContactsListChanged()
 
@@ -417,8 +431,15 @@ class ContactsManager @UiThread constructor() {
             )
             return null
         }
+        if (unknownAndroidContactsMap.contains(address)) {
+            Log.d(
+                "$TAG Address [$address] already looked in Android native contacts and not found, do not do it again"
+            )
+            return null
+        }
 
         val context = coreContext.context
+        val core = coreContext.core
         if (ActivityCompat.checkSelfPermission(
                 context,
                 Manifest.permission.READ_CONTACTS
@@ -427,6 +448,16 @@ class ContactsManager @UiThread constructor() {
             Log.d(
                 "$TAG Looking for native contact with address [$address] ${if (searchAsPhoneNumber) "or phone number [$username]" else ""}"
             )
+
+            val temporaryFriendList = core.getFriendListByName(FRIEND_LIST_TEMPORARY_STORED) ?: core.createFriendList()
+            if (temporaryFriendList.displayName.isNullOrEmpty()) {
+                temporaryFriendList.isDatabaseStorageEnabled = false
+                temporaryFriendList.displayName = FRIEND_LIST_TEMPORARY_STORED
+                core.addFriendList(temporaryFriendList)
+                Log.i(
+                    "$TAG Created temporary friend list with name [$FRIEND_LIST_TEMPORARY_STORED]"
+                )
+            }
 
             try {
                 val selection = if (searchAsPhoneNumber) {
@@ -454,6 +485,13 @@ class ContactsManager @UiThread constructor() {
                 if (cursor != null && cursor.moveToNext()) {
                     val friend = coreContext.core.createFriend()
                     friend.edit()
+
+                    val parsedAddress = core.interpretUrl(address, false)
+                    if (parsedAddress != null) {
+                        friend.address = parsedAddress
+                    } else {
+                        Log.e("$TAG Failed to parse [$address] as Address!")
+                    }
 
                     do {
                         val id: String =
@@ -492,6 +530,7 @@ class ContactsManager @UiThread constructor() {
                     } while (cursor.moveToNext())
 
                     friend.done()
+                    temporaryFriendList.addLocalFriend(friend)
 
                     Log.d("$TAG Found native contact [${friend.name}] with address [$address]")
                     cursor.close()
@@ -499,6 +538,7 @@ class ContactsManager @UiThread constructor() {
                 }
 
                 Log.w("$TAG Failed to find native contact with address [$address]")
+                unknownAndroidContactsMap.add(address)
                 return null
             } catch (e: IllegalArgumentException) {
                 Log.e("$TAG Failed to search for native contact with address [$address]: $e")
