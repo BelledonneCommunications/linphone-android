@@ -206,7 +206,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
                     "$TAG [$itemCount] new events have been loaded, scrolling to first unread message"
                 )
             }
-            scrollToFirstUnreadMessageOrBottom(false)
+            scrollToFirstUnreadMessageOrBottom()
         }
     }
 
@@ -508,7 +508,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
         }
 
         binding.setScrollToBottomClickListener {
-            scrollToFirstUnreadMessageOrBottom(true)
+            scrollToFirstUnreadMessageOrBottom()
         }
 
         sendMessageViewModel.emojiToAddEvent.observe(viewLifecycleOwner) {
@@ -760,7 +760,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
         currentChatMessageModelForBottomSheet = null
     }
 
-    private fun scrollToFirstUnreadMessageOrBottom(smooth: Boolean) {
+    private fun scrollToFirstUnreadMessageOrBottom() {
         if (adapter.itemCount == 0) return
 
         val recyclerView = binding.eventsList
@@ -776,10 +776,10 @@ class ConversationFragment : SlidingPaneChildFragment() {
         Log.i(
             "$TAG Scrolling to position $indexToScrollTo, first unread message is at $firstUnreadMessagePosition"
         )
-        if (smooth) {
-            recyclerView.smoothScrollToPosition(indexToScrollTo)
-        } else {
-            recyclerView.scrollToPosition(indexToScrollTo)
+        recyclerView.scrollToPosition(indexToScrollTo)
+
+        if (indexToScrollTo == adapter.itemCount - 1) {
+            viewModel.isUserScrollingUp.postValue(false)
         }
     }
 
