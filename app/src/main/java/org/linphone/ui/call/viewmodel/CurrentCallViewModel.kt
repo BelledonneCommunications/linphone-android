@@ -532,12 +532,20 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                 val params = core.createCallParams(currentCall)
                 if (currentCall.conference != null) {
                     if (params?.isVideoEnabled == false) {
+                        Log.i("$TAG Conference found and video disabled in params, enabling it")
                         params.isVideoEnabled = true
                         params.videoDirection = MediaDirection.SendRecv
+                        conferenceModel.setNewLayout(ConferenceModel.ACTIVE_SPEAKER_LAYOUT)
                     } else {
                         if (params?.videoDirection == MediaDirection.SendRecv || params?.videoDirection == MediaDirection.SendOnly) {
+                            Log.i(
+                                "$TAG Conference found with video already enabled, changing video media direction to receive only"
+                            )
                             params.videoDirection = MediaDirection.RecvOnly
                         } else {
+                            Log.i(
+                                "$TAG Conference found with video already enabled, changing video media direction to send & receive"
+                            )
                             params?.videoDirection = MediaDirection.SendRecv
                         }
                     }

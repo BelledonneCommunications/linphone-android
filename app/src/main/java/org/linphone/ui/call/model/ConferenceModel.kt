@@ -203,50 +203,55 @@ class ConferenceModel {
     @UiThread
     fun changeLayout(newLayout: Int) {
         coreContext.postOnCoreThread {
-            val call = conference.call
-            if (call != null) {
-                val params = call.core.createCallParams(call)
-                if (params != null) {
-                    val currentLayout = getCurrentLayout(call)
-                    if (currentLayout != newLayout) {
-                        when (newLayout) {
-                            AUDIO_ONLY_LAYOUT -> {
-                                Log.i("$TAG Changing conference layout to [Audio Only]")
-                                params.isVideoEnabled = false
-                            }
-                            ACTIVE_SPEAKER_LAYOUT -> {
-                                Log.i("$TAG Changing conference layout to [Active Speaker]")
-                                params.conferenceVideoLayout = Conference.Layout.ActiveSpeaker
-                            }
-                            GRID_LAYOUT -> {
-                                Log.i("$TAG Changing conference layout to [Grid]")
-                                params.conferenceVideoLayout = Conference.Layout.Grid
-                            }
-                        }
+            setNewLayout(newLayout)
+        }
+    }
 
-                        if (currentLayout == AUDIO_ONLY_LAYOUT) {
-                            // Previous layout was audio only, make sure video isn't sent without user consent when switching layout
-                            Log.i(
-                                "$TAG Previous layout was [Audio Only], enabling video but in receive only direction"
-                            )
-                            params.isVideoEnabled = true
-                            params.videoDirection = MediaDirection.RecvOnly
+    @WorkerThread
+    fun setNewLayout(newLayout: Int) {
+        val call = conference.call
+        if (call != null) {
+            val params = call.core.createCallParams(call)
+            if (params != null) {
+                val currentLayout = getCurrentLayout(call)
+                if (currentLayout != newLayout) {
+                    when (newLayout) {
+                        AUDIO_ONLY_LAYOUT -> {
+                            Log.i("$TAG Changing conference layout to [Audio Only]")
+                            params.isVideoEnabled = false
                         }
-
-                        Log.i("$TAG Updating conference's call params")
-                        call.update(params)
-                        conferenceLayout.postValue(newLayout)
-                    } else {
-                        Log.w(
-                            "$TAG The conference is already using selected layout, aborting layout change"
-                        )
+                        ACTIVE_SPEAKER_LAYOUT -> {
+                            Log.i("$TAG Changing conference layout to [Active Speaker]")
+                            params.conferenceVideoLayout = Conference.Layout.ActiveSpeaker
+                        }
+                        GRID_LAYOUT -> {
+                            Log.i("$TAG Changing conference layout to [Grid]")
+                            params.conferenceVideoLayout = Conference.Layout.Grid
+                        }
                     }
+
+                    if (currentLayout == AUDIO_ONLY_LAYOUT) {
+                        // Previous layout was audio only, make sure video isn't sent without user consent when switching layout
+                        Log.i(
+                            "$TAG Previous layout was [Audio Only], enabling video but in receive only direction"
+                        )
+                        params.isVideoEnabled = true
+                        params.videoDirection = MediaDirection.RecvOnly
+                    }
+
+                    Log.i("$TAG Updating conference's call params")
+                    call.update(params)
+                    conferenceLayout.postValue(newLayout)
                 } else {
-                    Log.e("$TAG Failed to create call params, aborting layout change")
+                    Log.w(
+                        "$TAG The conference is already using selected layout, aborting layout change"
+                    )
                 }
             } else {
-                Log.e("$TAG Failed to get call from conference, aborting layout change")
+                Log.e("$TAG Failed to create call params, aborting layout change")
             }
+        } else {
+            Log.e("$TAG Failed to get call from conference, aborting layout change")
         }
     }
 
