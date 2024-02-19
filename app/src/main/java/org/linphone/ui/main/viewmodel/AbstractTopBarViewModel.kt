@@ -145,13 +145,12 @@ open class AbstractTopBarViewModel @UiThread constructor() : ViewModel() {
     }
 
     init {
-        searchBarVisible.value = false
-
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
+            configure()
         }
 
-        update()
+        searchBarVisible.value = false
     }
 
     @UiThread
@@ -201,17 +200,6 @@ open class AbstractTopBarViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun update() {
         coreContext.postOnCoreThread { core ->
-            if (core.accountList.isNotEmpty()) {
-                Log.i("$TAG Updating displayed default account")
-                val defaultAccount = core.defaultAccount ?: core.accountList.first()
-
-                account.value?.destroy()
-                account.postValue(AccountModel(defaultAccount))
-
-                updateUnreadMessagesCount()
-                updateMissedCallsCount()
-                updateAvailableMenus()
-            }
         }
     }
 
@@ -275,5 +263,22 @@ open class AbstractTopBarViewModel @UiThread constructor() : ViewModel() {
                 coreContext.core
             )
         hideMeetings.postValue(hideGroupCall)
+    }
+
+    @WorkerThread
+    private fun configure() {
+        val core = coreContext.core
+        val defaultAccount = core.defaultAccount
+        if (defaultAccount != null || core.accountList.isNotEmpty()) {
+            Log.i("$TAG Updating displayed default account")
+            account.value?.destroy()
+            account.postValue(AccountModel(defaultAccount ?: core.accountList.first()))
+
+            updateUnreadMessagesCount()
+            updateMissedCallsCount()
+            updateAvailableMenus()
+        } else {
+            Log.e("$TAG Accounts list no supposed to be empty!")
+        }
     }
 }
