@@ -67,6 +67,7 @@
     <string name="notification_missed_call">Missed call from %s</string>
     <string name="notification_missed_calls">%s missed calls</string>
     <string name="notification_missed_call_title">Missed call</string>
+    <string name="notification_push_received_title">Push notification received</string> <!-- TODO: improve -->
 
     <string name="welcome_page_title">Welcome</string>
     <string name="welcome_page_subtitle">in Linphone</string>

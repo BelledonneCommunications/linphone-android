@@ -135,7 +135,7 @@
             android:label="@string/app_name" />
 
         <service
-            android:name="org.linphone.core.tools.service.PushService"
+            android:name=".core.CorePushService"
             android:exported="false"
             android:foregroundServiceType="dataSync"
             android:stopWithTask="false"
