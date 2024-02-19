@@ -70,7 +70,7 @@ class CorePushService : PushService() {
             .setGroup(NotificationsManager.CHAT_NOTIFICATIONS_GROUP)
             .setVisibility(NotificationCompat.VISIBILITY_SECRET)
             .setWhen(System.currentTimeMillis())
-            .setShowWhen(true)
+            .setShowWhen(false)
             .setOngoing(true)
             .build()
     }
