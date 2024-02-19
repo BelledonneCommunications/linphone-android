@@ -26,6 +26,7 @@ import android.database.Cursor
 import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.ContactsContract
+import androidx.annotation.MainThread
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.core.app.ActivityCompat
@@ -120,7 +121,7 @@ class ContactsManager @UiThread constructor() {
         }
     }
 
-    @UiThread
+    @MainThread
     fun loadContacts(activity: MainActivity) {
         val manager = LoaderManager.getInstance(activity)
         manager.restartLoader(0, null, ContactLoader())
@@ -236,15 +237,25 @@ class ContactsManager @UiThread constructor() {
 
     @WorkerThread
     fun findContactByAddress(address: Address): Friend? {
-        val sipUri = address.asStringUriOnly()
+        val sipUri = LinphoneUtils.getAddressAsCleanStringUriOnly(address)
         Log.d("$TAG Looking for friend with SIP URI [$sipUri]")
 
         val username = address.username
         val found = coreContext.core.findFriend(address)
-        return if (found != null) {
+        if (found != null) {
             Log.d("$TAG Friend [${found.name}] was found using SIP URI [$sipUri]")
-            found
-        } else if (!username.isNullOrEmpty() && username.startsWith("+")) {
+            return found
+        }
+
+        val sipAddress = if (sipUri.startsWith("sip:")) {
+            sipUri.substring("sip:".length)
+        } else if (sipUri.startsWith("sips:")) {
+            sipUri.substring("sips:".length)
+        } else {
+            sipUri
+        }
+
+        return if (!username.isNullOrEmpty() && username.startsWith("+")) {
             Log.d("$TAG Looking for friend with phone number [$username]")
             val foundUsingPhoneNumber = coreContext.core.findFriendByPhoneNumber(username)
             if (foundUsingPhoneNumber != null) {
@@ -256,13 +267,13 @@ class ContactsManager @UiThread constructor() {
                 Log.d(
                     "$TAG Friend wasn't found using phone number [$username], looking in native address book directly"
                 )
-                findNativeContact(sipUri, true, username)
+                findNativeContact(sipAddress, username, true)
             }
         } else {
             Log.d(
-                "$TAG Friend wasn't found using SIP URI [$sipUri] and username [$username] isn't a phone number, looking in native address book directly"
+                "$TAG Friend wasn't found using SIP address [$sipAddress] and username [$username] isn't a phone number, looking in native address book directly"
             )
-            findNativeContact(sipUri, false)
+            findNativeContact(sipAddress, username.orEmpty(), false)
         }
     }
 
@@ -339,10 +350,7 @@ class ContactsManager @UiThread constructor() {
             "$TAG Looking for avatar model for friend [${friend.name}] using SIP URI  [${address.asStringUriOnly()}]"
         )
 
-        val clone = address.clone()
-        clone.clean()
-        val key = clone.asStringUriOnly()
-
+        val key = LinphoneUtils.getAddressAsCleanStringUriOnly(address)
         val foundInMap = getAvatarModelFromCache(key)
         if (foundInMap != null) {
             Log.d("$TAG Found avatar model in map using SIP URI [$key]")
@@ -402,7 +410,7 @@ class ContactsManager @UiThread constructor() {
     }
 
     @WorkerThread
-    fun findNativeContact(address: String, searchAsPhoneNumber: Boolean, number: String = ""): Friend? {
+    fun findNativeContact(address: String, username: String, searchAsPhoneNumber: Boolean): Friend? {
         if (nativeContactsLoaded) {
             Log.d(
                 "$TAG Native contacts already loaded, no need to search further, no native contact matches address [$address]"
@@ -417,19 +425,19 @@ class ContactsManager @UiThread constructor() {
             ) == PackageManager.PERMISSION_GRANTED
         ) {
             Log.d(
-                "$TAG Looking for native contact with address [$address] ${if (searchAsPhoneNumber) "or phone number [$number]" else ""}"
+                "$TAG Looking for native contact with address [$address] ${if (searchAsPhoneNumber) "or phone number [$username]" else ""}"
             )
 
             try {
                 val selection = if (searchAsPhoneNumber) {
-                    "${ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER} LIKE ? OR ${ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS} LIKE ?"
+                    "${ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER} LIKE ? OR ${ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS} LIKE ? OR ${ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS} LIKE ? OR ${ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS} LIKE ?"
                 } else {
-                    "${ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS} LIKE ?"
+                    "${ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS} LIKE ? OR ${ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS} LIKE ? OR ${ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS} LIKE ?"
                 }
                 val selectionParams = if (searchAsPhoneNumber) {
-                    arrayOf(number, address)
+                    arrayOf(username, address, "sip:$address", username)
                 } else {
-                    arrayOf(address)
+                    arrayOf(address, "sip:$address", username)
                 }
                 val cursor: Cursor? = context.contentResolver.query(
                     ContactsContract.Data.CONTENT_URI,

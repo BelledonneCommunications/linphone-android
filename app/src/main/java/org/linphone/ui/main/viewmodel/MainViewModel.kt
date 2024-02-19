@@ -84,6 +84,10 @@ class MainViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    val startLoadingContactsEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     var accountsFound = -1
 
     var mainIntentHandled = false
@@ -93,6 +97,8 @@ class MainViewModel @UiThread constructor() : ViewModel() {
     private val alertsList = arrayListOf<Pair<Int, String>>()
 
     private var alertJob: Job? = null
+
+    private var firstAccountRegistered: Boolean = false
 
     private val coreListener = object : CoreListenerStub() {
         @WorkerThread
@@ -164,10 +170,20 @@ class MainViewModel @UiThread constructor() : ViewModel() {
                     }
                 }
                 RegistrationState.Ok -> {
-                    if (account == core.defaultAccount && defaultAccountRegistrationFailed) {
-                        Log.i("$TAG Default account is now registered")
-                        defaultAccountRegistrationFailed = false
-                        defaultAccountRegistrationErrorEvent.postValue(Event(false))
+                    if (!firstAccountRegistered) {
+                        Log.i(
+                            "$TAG First account registered, start loading contacts if permission has been granted"
+                        )
+                        firstAccountRegistered = true
+                        startLoadingContactsEvent.postValue(Event(true))
+                    }
+
+                    if (account == core.defaultAccount) {
+                        if (defaultAccountRegistrationFailed) {
+                            Log.i("$TAG Default account is now registered")
+                            defaultAccountRegistrationFailed = false
+                            defaultAccountRegistrationErrorEvent.postValue(Event(false))
+                        }
                     } else {
                         // If no call and no account is in Failed state, hide top bar
                         val found = core.accountList.find {
@@ -240,6 +256,14 @@ class MainViewModel @UiThread constructor() : ViewModel() {
                 updateCallAlert()
             }
             atLeastOneCall.postValue(core.callsNb > 0)
+
+            if (core.defaultAccount?.state == RegistrationState.Ok && !firstAccountRegistered) {
+                Log.i(
+                    "$TAG First account registered, start loading contacts if permission has been granted"
+                )
+                firstAccountRegistered = true
+                startLoadingContactsEvent.postValue(Event(true))
+            }
         }
     }
 
@@ -293,17 +317,16 @@ class MainViewModel @UiThread constructor() : ViewModel() {
 
             val currentCall = core.currentCall ?: core.calls.firstOrNull()
             if (currentCall != null) {
-                val contact = coreContext.contactsManager.findContactByAddress(
-                    currentCall.remoteAddress
-                )
+                val address = currentCall.remoteAddress
+                val contact = coreContext.contactsManager.findContactByAddress(address)
                 val label = if (contact != null) {
-                    contact.name ?: LinphoneUtils.getDisplayName(currentCall.remoteAddress)
+                    contact.name ?: LinphoneUtils.getDisplayName(address)
                 } else {
                     val conferenceInfo = coreContext.core.findConferenceInformationFromUri(
-                        currentCall.remoteAddress
+                        address
                     )
                     conferenceInfo?.subject ?: LinphoneUtils.getDisplayName(
-                        currentCall.remoteAddress
+                        address
                     )
                 }
                 addAlert(SINGLE_CALL, label)

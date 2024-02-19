@@ -810,25 +810,22 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         isPausedByRemote.postValue(call.state == Call.State.PausedByRemote)
         canBePaused.postValue(canCallBePaused())
 
-        val address = call.remoteAddress.clone()
-        address.clean()
+        val address = call.remoteAddress
         displayedAddress.postValue(address.asStringUriOnly())
 
-        val conferenceInfo = coreContext.core.findConferenceInformationFromUri(
-            call.remoteAddress
-        )
+        val conferenceInfo = coreContext.core.findConferenceInformationFromUri(address)
         val model = if (conferenceInfo != null) {
             coreContext.contactsManager.getContactAvatarModelForConferenceInfo(conferenceInfo)
         } else {
             // Do not use contact avatar model from ContactsManager
-            // coreContext.contactsManager.getContactAvatarModelForAddress(call.remoteAddress)
-            val friend = coreContext.contactsManager.findContactByAddress(call.remoteAddress)
+            // coreContext.contactsManager.getContactAvatarModelForAddress(address)
+            val friend = coreContext.contactsManager.findContactByAddress(address)
             if (friend != null) {
                 ContactAvatarModel(friend)
             } else {
                 val fakeFriend = coreContext.core.createFriend()
                 fakeFriend.name = LinphoneUtils.getDisplayName(address)
-                fakeFriend.address = call.remoteAddress
+                fakeFriend.address = address
                 ContactAvatarModel(fakeFriend)
             }
         }

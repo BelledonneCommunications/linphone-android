@@ -59,6 +59,16 @@ class LinphoneUtils {
         }
 
         @WorkerThread
+        fun getAddressAsCleanStringUriOnly(address: Address): String {
+            val scheme = address.scheme ?: "sip"
+            val username = address.username
+            if (username.orEmpty().isEmpty()) {
+                return "$scheme:${address.domain}"
+            }
+            return "$scheme:$username@${address.domain}"
+        }
+
+        @WorkerThread
         fun getDisplayName(address: Address?): String {
             if (address == null) return "[null]"
             if (address.displayName == null) {

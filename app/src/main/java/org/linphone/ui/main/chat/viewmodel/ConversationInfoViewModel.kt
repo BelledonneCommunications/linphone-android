@@ -464,7 +464,7 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
         val firstParticipant = chatRoom.participants.firstOrNull()
         if (firstParticipant != null) {
             val address = firstParticipant.address
-            sipUri.postValue(address.asStringUriOnly())
+            sipUri.postValue(LinphoneUtils.getAddressAsCleanStringUriOnly(address))
             val friend = coreContext.contactsManager.findContactByAddress(address)
             oneToOneParticipantRefKey.postValue(friend?.refKey ?: "")
         }

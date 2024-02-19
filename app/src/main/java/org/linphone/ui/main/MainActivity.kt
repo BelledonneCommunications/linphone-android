@@ -96,10 +96,6 @@ class MainActivity : GenericActivity() {
             Thread.sleep(50)
         }
 
-        if (checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            loadContacts()
-        }
-
         viewModel = run {
             ViewModelProvider(this)[MainViewModel::class.java]
         }
@@ -157,6 +153,14 @@ class MainActivity : GenericActivity() {
             it.consume {
                 val message = getString(R.string.toast_new_account_configured)
                 showGreenToast(message, R.drawable.user_circle)
+            }
+        }
+
+        viewModel.startLoadingContactsEvent.observe(this) {
+            it.consume {
+                if (checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+                    loadContacts()
+                }
             }
         }
 
