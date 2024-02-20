@@ -21,6 +21,7 @@ package org.linphone
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.content.ComponentCallbacks2
 import androidx.annotation.MainThread
 import coil.ImageLoader
 import coil.ImageLoaderFactory
@@ -28,6 +29,7 @@ import coil.decode.ImageDecoderDecoder
 import coil.decode.SvgDecoder
 import coil.decode.VideoFrameDecoder
 import coil.disk.DiskCache
+import coil.imageLoader
 import coil.memory.MemoryCache
 import coil.request.CachePolicy
 import com.google.android.material.color.DynamicColors
@@ -41,6 +43,8 @@ import org.linphone.core.tools.Log
 @MainThread
 class LinphoneApplication : Application(), ImageLoaderFactory {
     companion object {
+        private const val TAG = "[Linphone Application]"
+
         @SuppressLint("StaticFieldLeak")
         lateinit var corePreferences: CorePreferences
 
@@ -70,12 +74,32 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
         Factory.instance().loggingService.setLogLevel(LogLevel.Message)
         Factory.instance().enableLogcatLogs(corePreferences.printLogsInLogcat)
 
-        Log.i("[Linphone Application] Report Core preferences initialized")
+        Log.i("$TAG Report Core preferences initialized")
 
         coreContext = CoreContext(context)
         coreContext.start()
 
         DynamicColors.applyToActivitiesIfAvailable(this)
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        Log.w("$TAG onLowMemory !")
+    }
+
+    override fun onTrimMemory(level: Int) {
+        Log.w("$TAG onTrimMemory called with level [${trimLevelToString(level)}]($level) !")
+        when (level) {
+            ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW,
+            ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL,
+            ComponentCallbacks2.TRIM_MEMORY_MODERATE,
+            ComponentCallbacks2.TRIM_MEMORY_COMPLETE -> {
+                Log.i("$TAG Memory trim required, clearing imageLoader memory cache")
+                imageLoader.memoryCache?.clear()
+            }
+            else -> {}
+        }
+        super.onTrimMemory(level)
     }
 
     override fun newImageLoader(): ImageLoader {
@@ -101,5 +125,18 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
             .diskCachePolicy(CachePolicy.ENABLED)
             .memoryCachePolicy(CachePolicy.ENABLED)
             .build()
+    }
+
+    private fun trimLevelToString(level: Int): String {
+        return when (level) {
+            ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN -> "Hidden UI"
+            ComponentCallbacks2.TRIM_MEMORY_RUNNING_MODERATE -> "Moderate (Running)"
+            ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW -> "Low"
+            ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL -> "Critical"
+            ComponentCallbacks2.TRIM_MEMORY_BACKGROUND -> "Background"
+            ComponentCallbacks2.TRIM_MEMORY_MODERATE -> "Moderate"
+            ComponentCallbacks2.TRIM_MEMORY_COMPLETE -> "Complete"
+            else -> level.toString()
+        }
     }
 }

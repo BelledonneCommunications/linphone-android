@@ -262,27 +262,34 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         Log.i("$TAG Report Core created and started")
     }
 
-    @Deprecated("Deprecated in Java")
     @WorkerThread
-    override fun destroy() {
-        Log.i("$TAG Stopping Core")
+    private fun destroyCore() {
+        if (!::core.isInitialized) {
+            return
+        }
 
-        val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        audioManager.unregisterAudioDeviceCallback(audioDeviceCallback)
-
-        core.stop()
-
-        contactsManager.onCoreStopped(core)
-        telecomManager.onCoreStopped(core)
-        notificationsManager.onCoreStopped(core)
+        val state = core.globalState
+        if (state != GlobalState.On) {
+            Log.w("$TAG Core is in state [$state], do not continue destroy process")
+            return
+        }
+        Log.w("$TAG Stopping Core and destroying context related objects")
 
         postOnMainThread {
             (context as Application).unregisterActivityLifecycleCallbacks(activityMonitor)
         }
 
-        Log.i("$TAG Core has been stopped, app can gracefully quit")
-        Factory.instance().loggingService.removeListener(loggingServiceListener)
-        quitSafely()
+        val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        audioManager.unregisterAudioDeviceCallback(audioDeviceCallback)
+
+        core.stopAsync()
+
+        contactsManager.onCoreStopped(core)
+        telecomManager.onCoreStopped(core)
+        notificationsManager.onCoreStopped(core)
+
+        // It's very unlikely the process will survive until the Core reaches GlobalStateOff sadly
+        Log.w("$TAG Core is shutting down but probably won't reach Off state")
     }
 
     @AnyThread
@@ -331,6 +338,14 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
                 // Flexisip will handle the Busy status depending on other devices
                 core.consolidatedPresence = ConsolidatedPresence.Offline
             }
+        }
+    }
+
+    @UiThread
+    fun onAppDestroyed() {
+        postOnCoreThread {
+            Log.w("$TAG App has been destroyed, stopping Core")
+            destroyCore()
         }
     }
 

@@ -24,10 +24,15 @@ import android.app.Application.ActivityLifecycleCallbacks
 import android.os.Bundle
 import androidx.annotation.UiThread
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.core.tools.Log
 import org.linphone.core.tools.service.AndroidDispatcher
 
 @UiThread
 class ActivityMonitor : ActivityLifecycleCallbacks {
+    companion object {
+        private const val TAG = "[Activity Monitor]"
+    }
+
     private val activities = ArrayList<Activity>()
     private var mActive = false
     private var mRunningActivities = 0
@@ -35,14 +40,17 @@ class ActivityMonitor : ActivityLifecycleCallbacks {
 
     @Synchronized
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+        Log.d("$TAG onActivityCreated [$activity]")
         if (!activities.contains(activity)) activities.add(activity)
     }
 
     override fun onActivityStarted(activity: Activity) {
+        Log.d("$TAG onActivityStarted [$activity]")
     }
 
     @Synchronized
     override fun onActivityResumed(activity: Activity) {
+        Log.d("$TAG onActivityResumed [$activity]")
         if (!activities.contains(activity)) {
             activities.add(activity)
         }
@@ -52,6 +60,7 @@ class ActivityMonitor : ActivityLifecycleCallbacks {
 
     @Synchronized
     override fun onActivityPaused(activity: Activity) {
+        Log.d("$TAG onActivityPaused [$activity]")
         if (!activities.contains(activity)) {
             activities.add(activity)
         } else {
@@ -61,11 +70,17 @@ class ActivityMonitor : ActivityLifecycleCallbacks {
     }
 
     override fun onActivityStopped(activity: Activity) {
+        Log.d("$TAG onActivityStopped [$activity]")
     }
 
     @Synchronized
     override fun onActivityDestroyed(activity: Activity) {
+        Log.d("$TAG onActivityDestroyed [$activity]")
         activities.remove(activity)
+
+        if (activities.isEmpty()) {
+            onAppDestroyed()
+        }
     }
 
     private fun startInactivityChecker() {
@@ -91,11 +106,18 @@ class ActivityMonitor : ActivityLifecycleCallbacks {
         }
     }
 
+    private fun onAppDestroyed() {
+        Log.w("$TAG onAppDestroyed()")
+        coreContext.onAppDestroyed()
+    }
+
     private fun onBackgroundMode() {
+        Log.i("$TAG onBackgroundMode()")
         coreContext.onBackground()
     }
 
     private fun onForegroundMode() {
+        Log.i("$TAG onForegroundMode()")
         coreContext.onForeground()
     }
 

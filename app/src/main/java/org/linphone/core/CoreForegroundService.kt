@@ -39,7 +39,6 @@ class CoreForegroundService : CoreService() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.i("$TAG onStartCommand")
-
         coreContext.notificationsManager.onServiceStarted(this)
 
         return super.onStartCommand(intent, flags, startId)
