@@ -30,6 +30,7 @@ import org.linphone.core.ConferenceListenerStub
 import org.linphone.core.MediaDirection
 import org.linphone.core.Participant
 import org.linphone.core.ParticipantDevice
+import org.linphone.core.StreamType
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
@@ -59,6 +60,8 @@ class ConferenceModel {
 
     val conferenceLayout = MutableLiveData<Int>()
 
+    val isMeParticipantSendingVideo = MutableLiveData<Boolean>()
+
     val showLayoutMenuEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -80,6 +83,18 @@ class ConferenceModel {
                 "$TAG Participant removed: ${participant.address.asStringUriOnly()}"
             )
             removeParticipant(participant)
+        }
+
+        override fun onParticipantDeviceMediaCapabilityChanged(
+            conference: Conference,
+            device: ParticipantDevice
+        ) {
+            if (conference.isMe(device.address)) {
+                val direction = device.getStreamCapability(StreamType.Video)
+                isMeParticipantSendingVideo.postValue(
+                    direction == MediaDirection.SendRecv || direction == MediaDirection.SendOnly
+                )
+            }
         }
 
         @WorkerThread
@@ -337,6 +352,11 @@ class ConferenceModel {
                 activeSpeaker.postValue(model)
                 activeSpeakerParticipantDeviceFound = true
             }
+
+            val direction = device.getStreamCapability(StreamType.Video)
+            isMeParticipantSendingVideo.postValue(
+                direction == MediaDirection.SendRecv || direction == MediaDirection.SendOnly
+            )
         }
 
         if (!activeSpeakerParticipantDeviceFound) {

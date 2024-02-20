@@ -383,11 +383,6 @@ class ConversationFragment : SlidingPaneChildFragment() {
                 } else {
                     sendMessageViewModel.configureChatRoom(viewModel.chatRoom)
 
-                    if (viewModel.isEndToEndEncrypted.value == true) {
-                        binding.eventsList.addItemDecoration(headerItemDecoration)
-                        binding.eventsList.addOnItemTouchListener(listItemTouchListener)
-                    }
-
                     // Wait for chat room to be ready before trying to forward a message in it
                     sharedViewModel.messageToForwardEvent.observe(viewLifecycleOwner) { event ->
                         event.consume { toForward ->
@@ -413,6 +408,13 @@ class ConversationFragment : SlidingPaneChildFragment() {
 
             (view.parent as? ViewGroup)?.doOnPreDraw {
                 sharedViewModel.openSlidingPaneEvent.value = Event(true)
+            }
+        }
+
+        viewModel.isEndToEndEncrypted.observe(viewLifecycleOwner) { encrypted ->
+            if (encrypted) {
+                binding.eventsList.addItemDecoration(headerItemDecoration)
+                binding.eventsList.addOnItemTouchListener(listItemTouchListener)
             }
         }
 
@@ -509,6 +511,10 @@ class ConversationFragment : SlidingPaneChildFragment() {
 
         binding.setScrollToBottomClickListener {
             scrollToFirstUnreadMessageOrBottom()
+        }
+
+        binding.setEndToEndEncryptedEventClickListener {
+            showEndToEndEncryptionDetailsBottomSheet()
         }
 
         sendMessageViewModel.emojiToAddEvent.observe(viewLifecycleOwner) {

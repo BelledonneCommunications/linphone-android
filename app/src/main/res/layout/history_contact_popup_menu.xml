@@ -35,12 +35,12 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{addToContactsListener}"
-            android:visibility="@{contactExists || isConferenceCallLog ? View.GONE : View.VISIBLE}"
+            android:visibility="@{contactExists || isConferenceCallLog ? View.GONE : View.VISIBLE, default=gone}"
             style="@style/default_text_style"
             android:id="@+id/add_to_contact"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/popup_menu_item_top_margin"
+            android:layout_marginBottom="@dimen/popup_menu_item_top_margin"
             android:gravity="start|center_vertical"
             android:text="@string/menu_add_address_to_contacts"
             android:textSize="14sp"
@@ -56,12 +56,12 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{goToContactListener}"
-            android:visibility="@{contactExists ? View.VISIBLE : View.GONE}"
+            android:visibility="@{contactExists &amp;&amp; !isConferenceCallLog ? View.VISIBLE : View.GONE}"
             style="@style/default_text_style"
             android:id="@+id/go_to_contact"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/popup_menu_item_top_margin"
+            android:layout_marginBottom="@dimen/popup_menu_item_top_margin"
             android:gravity="start|center_vertical"
             android:text="@string/menu_see_existing_contact"
             android:textSize="14sp"
@@ -80,7 +80,6 @@
             android:id="@+id/copy_number"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/popup_menu_item_top_margin"
             android:gravity="start|center_vertical"
             android:text="@string/menu_copy_sip_address"
             android:textSize="14sp"

@@ -26,6 +26,9 @@
             name="scrollToBottomClickListener"
             type="View.OnClickListener" />
         <variable
+            name="endToEndEncryptedEventClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.main.chat.viewmodel.ConversationViewModel" />
         <variable
@@ -247,6 +250,17 @@
                 android:paddingBottom="5dp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/composing"/>
+
+            <include
+                android:id="@+id/secured_event"
+                android:onClick="@{endToEndEncryptedEventClickListener}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:visibility="@{viewModel.events.size() == 0 &amp;&amp; viewModel.isEndToEndEncrypted ? View.VISIBLE : View.GONE}"
+                layout="@layout/chat_conversation_secured_first_event"
+                app:layout_constraintTop_toTopOf="@id/events_list"
+                app:layout_constraintStart_toStartOf="@id/events_list"
+                app:layout_constraintEnd_toEndOf="@id/events_list" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style_800"

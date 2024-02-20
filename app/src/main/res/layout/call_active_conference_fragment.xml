@@ -127,7 +127,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
                 android:src="@drawable/camera_rotate"
-                android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; viewModel.isVideoEnabled &amp;&amp; viewModel.showSwitchCamera &amp;&amp; conferenceViewModel.participantDevices.size() > 1 ? View.VISIBLE : View.GONE}"
+                android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; viewModel.showSwitchCamera &amp;&amp; conferenceViewModel.participantDevices.size() > 1 &amp;&amp; conferenceViewModel.isMeParticipantSendingVideo ? View.VISIBLE : View.GONE}"
                 app:tint="@color/white"
                 app:layout_constraintTop_toTopOf="@id/conference_subject"
                 app:layout_constraintBottom_toBottomOf="@id/conference_subject"

@@ -32,14 +32,15 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:text="@string/conference_layout_grid"
-            android:textColor="@color/white"
+            android:textColor="@color/in_call_label_color"
             android:gravity="center_vertical"
             android:layout_marginBottom="1dp"
             android:drawableEnd="@drawable/squares_four"
-            android:drawableTint="@color/white"
+            android:drawableTint="@color/in_call_label_color"
+            android:enabled="@{viewModel.participantDevices.size() &lt; 7, default=false}"
             android:checked="@{viewModel.conferenceLayout == 0}"
             app:useMaterialThemeColors="false"
-            app:buttonTint="@color/white"/>
+            app:buttonTint="@color/in_call_label_color"/>
 
         <com.google.android.material.radiobutton.MaterialRadioButton
             style="@style/context_menu_action_label_style"

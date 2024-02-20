@@ -811,7 +811,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         canBePaused.postValue(canCallBePaused())
 
         val address = call.remoteAddress
-        displayedAddress.postValue(address.asStringUriOnly())
+        displayedAddress.postValue(LinphoneUtils.getAddressAsCleanStringUriOnly(address))
 
         val conferenceInfo = coreContext.core.findConferenceInformationFromUri(address)
         val model = if (conferenceInfo != null) {
