@@ -32,6 +32,8 @@ class GridBoxLayout : GridLayout {
     companion object {
         private const val TAG = "[Grid Box Layout]"
 
+        const val MAX_CHILD = 6
+
         private val placementMatrix = arrayOf(
             intArrayOf(1, 2, 3, 4, 5, 6),
             intArrayOf(1, 1, 2, 2, 3, 3),

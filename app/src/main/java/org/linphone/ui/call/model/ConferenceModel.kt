@@ -32,6 +32,7 @@ import org.linphone.core.Participant
 import org.linphone.core.ParticipantDevice
 import org.linphone.core.StreamType
 import org.linphone.core.tools.Log
+import org.linphone.ui.call.view.GridBoxLayout
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
@@ -371,6 +372,8 @@ class ConferenceModel {
             activeSpeaker.postValue(first)
         }
 
+        checkIfTooManyParticipantDevicesForGridLayout(devicesList)
+
         participantDevices.postValue(sortParticipantDevicesList(devicesList))
         participants.postValue(participantsList)
         participantsLabel.postValue(
@@ -441,6 +444,7 @@ class ConferenceModel {
         val newModel = ConferenceParticipantDeviceModel(participantDevice)
         list.add(newModel)
 
+        checkIfTooManyParticipantDevicesForGridLayout(list)
         participantDevices.postValue(sortParticipantDevicesList(list))
     }
 
@@ -495,6 +499,19 @@ class ConferenceModel {
                 conference.enter()
                 isPaused.postValue(false)
             }
+        }
+    }
+
+    @WorkerThread
+    private fun checkIfTooManyParticipantDevicesForGridLayout(
+        list: ArrayList<ConferenceParticipantDeviceModel>
+    ) {
+        if (list.size > GridBoxLayout.MAX_CHILD && conferenceLayout.value == GRID_LAYOUT) {
+            Log.w(
+                "$TAG Too many participant devices for grid layout, switching to active speaker layout"
+            )
+            setNewLayout(ACTIVE_SPEAKER_LAYOUT)
+            // TODO FIXME: notify user
         }
     }
 }
