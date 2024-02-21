@@ -341,14 +341,6 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         }
     }
 
-    @UiThread
-    fun onAppDestroyed() {
-        postOnCoreThread {
-            Log.w("$TAG App has been destroyed, stopping Core")
-            destroyCore()
-        }
-    }
-
     @WorkerThread
     fun isAddressMyself(address: Address): Boolean {
         val found = core.accountList.find {

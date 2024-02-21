@@ -77,10 +77,6 @@ class ActivityMonitor : ActivityLifecycleCallbacks {
     override fun onActivityDestroyed(activity: Activity) {
         Log.d("$TAG onActivityDestroyed [$activity]")
         activities.remove(activity)
-
-        if (activities.isEmpty()) {
-            onAppDestroyed()
-        }
     }
 
     private fun startInactivityChecker() {
@@ -104,11 +100,6 @@ class ActivityMonitor : ActivityLifecycleCallbacks {
                 mLastChecker = null
             }
         }
-    }
-
-    private fun onAppDestroyed() {
-        Log.w("$TAG onAppDestroyed()")
-        coreContext.onAppDestroyed()
     }
 
     private fun onBackgroundMode() {
