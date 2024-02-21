@@ -362,7 +362,7 @@ class ConferenceModel {
             )
         }
 
-        if (!activeSpeakerParticipantDeviceFound) {
+        if (!activeSpeakerParticipantDeviceFound && devicesList.isNotEmpty()) {
             val first = devicesList.first()
             Log.w(
                 "$TAG Failed to find current active speaker participant device, using first one [${first.name}]"
