@@ -216,6 +216,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"
             android:text="@string/call_action_show_messages"
+            android:enabled="false"
             app:layout_constraintTop_toBottomOf="@id/chat"
             app:layout_constraintStart_toStartOf="@id/transfer_label"
             app:layout_constraintEnd_toEndOf="@id/transfer_label" />

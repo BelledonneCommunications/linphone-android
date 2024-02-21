@@ -60,6 +60,8 @@ class ConferenceModel {
 
     val conferenceLayout = MutableLiveData<Int>()
 
+    val isPaused = MutableLiveData<Boolean>()
+
     val isMeParticipantSendingVideo = MutableLiveData<Boolean>()
 
     val showLayoutMenuEvent: MutableLiveData<Event<Boolean>> by lazy {
@@ -195,6 +197,7 @@ class ConferenceModel {
         isCurrentCallInConference.postValue(true)
         conference = conf
         conference.addListener(conferenceListener)
+        isPaused.postValue(conference.isIn)
 
         Log.i(
             "$TAG Configuring conference with subject [${conference.subject}] from call [${call.callLog.callId}]"
@@ -478,5 +481,20 @@ class ConferenceModel {
         }
 
         participantDevices.postValue(list)
+    }
+
+    @WorkerThread
+    fun togglePause() {
+        if (::conference.isInitialized) {
+            if (conference.isIn) {
+                Log.i("$TAG Temporary leaving conference")
+                conference.leave()
+                isPaused.postValue(true)
+            } else {
+                Log.i("$TAG Entering conference again")
+                conference.enter()
+                isPaused.postValue(false)
+            }
+        }
     }
 }

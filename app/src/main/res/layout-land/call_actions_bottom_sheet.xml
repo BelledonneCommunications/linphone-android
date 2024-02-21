@@ -220,6 +220,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"
             android:text="@string/call_action_show_messages"
+            android:enabled="false"
             app:layout_constraintEnd_toStartOf="@id/pause_call_label"
             app:layout_constraintStart_toEndOf="@id/numpad_label"
             app:layout_constraintTop_toBottomOf="@id/chat" />

@@ -167,6 +167,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"
             android:text="@string/conference_action_screen_sharing"
+            android:enabled="false"
             app:layout_constraintTop_toBottomOf="@id/screen_sharing"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/participants_label"/>
@@ -214,6 +215,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"
             android:text="@string/call_action_show_messages"
+            android:enabled="false"
             app:layout_constraintTop_toBottomOf="@id/chat"
             app:layout_constraintStart_toEndOf="@id/layout_label"
             app:layout_constraintEnd_toStartOf="@id/pause_call_label" />
@@ -236,6 +238,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"
             android:text="@string/call_action_record_call"
+            android:enabled="false"
             app:layout_constraintTop_toBottomOf="@id/record_call"
             app:layout_constraintStart_toEndOf="@id/pause_call_label"
             app:layout_constraintEnd_toEndOf="parent" />

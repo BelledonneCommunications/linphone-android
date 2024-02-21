@@ -589,14 +589,23 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
     fun togglePause() {
         coreContext.postOnCoreThread {
             if (::currentCall.isInitialized) {
-                when (isCallPaused()) {
-                    true -> {
-                        Log.i("$TAG Resuming call [${currentCall.remoteAddress.asStringUriOnly()}]")
-                        currentCall.resume()
-                    }
-                    false -> {
-                        Log.i("$TAG Pausing call [${currentCall.remoteAddress.asStringUriOnly()}]")
-                        currentCall.pause()
+                if (currentCall.conference != null) {
+                    conferenceModel.togglePause()
+                } else {
+                    when (isCallPaused()) {
+                        true -> {
+                            Log.i(
+                                "$TAG Resuming call [${currentCall.remoteAddress.asStringUriOnly()}]"
+                            )
+                            currentCall.resume()
+                        }
+
+                        false -> {
+                            Log.i(
+                                "$TAG Pausing call [${currentCall.remoteAddress.asStringUriOnly()}]"
+                            )
+                            currentCall.pause()
+                        }
                     }
                 }
             }
