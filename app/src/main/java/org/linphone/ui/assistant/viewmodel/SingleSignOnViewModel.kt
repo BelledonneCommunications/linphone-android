@@ -44,9 +44,8 @@ class SingleSignOnViewModel : ViewModel() {
     companion object {
         private const val TAG = "[Single Sign On ViewModel]"
 
-        private const val WELL_KNOWN = "https://sso.onhexagone.com//realms/ONHEXAGONE/.well-known/openid-configuration"
-        private const val CLIENT_ID = "account"
-        private const val SCOPE = "openid email profile"
+        private const val WELL_KNOWN = "https://sso.onhexagone.com/realms/ONHEXAGONE/.well-known/openid-configuration"
+        private const val CLIENT_ID = "linphone"
         private const val REDIRECT_URI = "org.linphone:/openidcallback"
     }
 
@@ -124,9 +123,7 @@ class SingleSignOnViewModel : ViewModel() {
                     authRequestBuilder.setLoginHint(preFilledUser)
                 }
 
-                val authRequest = authRequestBuilder
-                    .setScope(SCOPE)
-                    .build()
+                val authRequest = authRequestBuilder.build()
                 authService = AuthorizationService(coreContext.context)
                 val authIntent = authService.getAuthorizationRequestIntent(authRequest)
                 startAuthIntentEvent.postValue(Event(authIntent))

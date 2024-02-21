@@ -78,7 +78,8 @@ class LandingViewModel @UiThread constructor() : ViewModel() {
                 redirectToDigestAuthEvent.postValue(Event(identityAddress.asStringUriOnly()))
             } else {
                 Log.i("$TAG Address doesn't match default domain, using Single Sign On")
-                redirectToSingleSignOnEvent.postValue(Event(identityAddress.asStringUriOnly()))
+                // TODO FIXME: use username or full SIP address as login?
+                redirectToSingleSignOnEvent.postValue(Event(identityAddress.username.orEmpty()))
             }
         }
     }
