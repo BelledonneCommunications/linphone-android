@@ -55,6 +55,10 @@ class ConferenceParticipantDeviceModel @WorkerThread constructor(
 
     val isSendingVideo = MutableLiveData<Boolean>()
 
+    val isJoining = MutableLiveData<Boolean>()
+
+    val isInConference = MutableLiveData<Boolean>()
+
     private lateinit var textureView: TextureView
 
     private val deviceListener = object : ParticipantDeviceListenerStub() {
@@ -66,6 +70,19 @@ class ConferenceParticipantDeviceModel @WorkerThread constructor(
             Log.i(
                 "$TAG Participant device [${participantDevice.address.asStringUriOnly()}] state changed [$state]"
             )
+            when (state) {
+                ParticipantDevice.State.Joining, ParticipantDevice.State.Alerting -> {
+                    isJoining.postValue(true)
+                }
+                ParticipantDevice.State.OnHold -> {
+                    isInConference.postValue(false)
+                }
+                ParticipantDevice.State.Present -> {
+                    isJoining.postValue(false)
+                    isInConference.postValue(true)
+                }
+                else -> {}
+            }
         }
 
         @WorkerThread
@@ -124,6 +141,21 @@ class ConferenceParticipantDeviceModel @WorkerThread constructor(
     init {
         device.addListener(deviceListener)
 
+        val state = device.state
+        val joining = state == ParticipantDevice.State.Joining || state == ParticipantDevice.State.Alerting
+        isJoining.postValue(joining)
+        val inConference = device.isInConference
+        isInConference.postValue(inConference)
+        if (joining) {
+            Log.i(
+                "$TAG Participant [${device.address.asStringUriOnly()}] is joining the conference (state [$state])"
+            )
+        } else {
+            Log.i(
+                "$TAG Participant [${device.address.asStringUriOnly()}] is ${if (inConference) "inside" else "outside"} the conference with state [${device.state}]"
+            )
+        }
+
         isMuted.postValue(device.isMuted)
         isSpeaking.postValue(device.isSpeaking)
         isActiveSpeaker.postValue(false)
@@ -159,6 +191,11 @@ class ConferenceParticipantDeviceModel @WorkerThread constructor(
         Log.i(
             "$$TAG Setting participant [${device.address.asStringUriOnly()}] window ID [$windowId]"
         )
-        device.nativeVideoWindowId = windowId
+        // SDK does it but it's a bit better this way, prevents going to participants map in PlatformHelper for nothing
+        if (isMe) {
+            coreContext.core.nativePreviewWindowId = windowId
+        } else {
+            device.nativeVideoWindowId = windowId
+        }
     }
 }
