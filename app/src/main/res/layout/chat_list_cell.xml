@@ -119,19 +119,6 @@
             app:layout_constraintTop_toBottomOf="@id/name"
             app:layout_constraintBottom_toTopOf="@id/separator" />
 
-        <ImageView
-            android:id="@+id/warning_disabled_not_secured"
-            android:layout_width="@dimen/icon_size"
-            android:layout_height="@dimen/icon_size"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="10dp"
-            android:src="@drawable/warning_circle"
-            android:visibility="@{model.isDisabledBecauseNotSecured ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="@id/date_time"
-            app:layout_constraintTop_toTopOf="@id/date_time"
-            app:layout_constraintEnd_toStartOf="@id/date_time"
-            app:tint="?attr/color_warning_600" />
-
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_300"
             android:id="@+id/date_time"
@@ -196,6 +183,19 @@
             app:layout_constraintTop_toBottomOf="@id/date_time"
             app:layout_constraintBottom_toTopOf="@id/separator"
             app:tint="?attr/color_main2_400" />
+
+        <ImageView
+            android:id="@+id/warning_disabled_not_secured"
+            android:layout_width="@dimen/small_icon_size"
+            android:layout_height="@dimen/small_icon_size"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/lock_simple_open_bold"
+            android:visibility="@{model.isDisabledBecauseNotSecured ? View.VISIBLE : View.GONE}"
+            app:layout_constraintTop_toBottomOf="@id/date_time"
+            app:layout_constraintBottom_toTopOf="@id/separator"
+            app:layout_constraintEnd_toStartOf="@id/ephemeral"
+            app:tint="?attr/color_warning_600" />
 
         <View
             android:id="@+id/separator"
