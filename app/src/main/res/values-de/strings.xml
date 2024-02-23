@@ -487,4 +487,20 @@
     <string name="call_error_temporarily_unavailable">Temporär nicht verfügbar</string>
     <string name="assistant_login">Login</string>
     <string name="audio_settings_input_device_summary">Änderungen greifen ab nächstem Anruf</string>
+    <string name="audio_settings_playback_gain_title">Wiedergabeverstärkung</string>
+    <string name="audio_settings_codecs_title">Codecs</string>
+    <string name="call_settings_encryption_title">Medienverschlüsselung</string>
+    <string name="call_settings_encryption_mandatory_title">Medienverschlüsselung ist obligatorisch</string>
+    <string name="call_settings_auto_answer_delay_title">Annehmen nach</string>
+    <string name="video_settings_automatically_accept_summary">Videoanrufe immer annehmen</string>
+    <string name="call_settings_ringtones_title">Klingelton</string>
+    <string name="call_settings_media_encryption_srtp">SRTP</string>
+    <string name="call_settings_auto_start_title">Anruf sofort ausführen</string>
+    <string name="call_settings_auto_start_summary">Anruf startet automatisch, wenn von anderer Anwendung ausgelöst</string>
+    <string name="call_settings_auto_answer_title">Eingehende Anrufe automatisch annehmen</string>
+    <string name="call_settings_auto_answer_delay_summary">Millisekunden</string>
+    <string name="video_settings_initiate_call_summary">Videoanrufe immer anfordern</string>
+    <string name="call_settings_media_encryption_zrtp_post_quantum">Post Quantum ZRTP</string>
+    <string name="call_settings_use_telecom_manager_summary">Benötigt einige Zusatzrechte</string>
+    <string name="audio_settings_prefer_bluetooth_devices_title">Audio an Bluetoothgerät leiten, wenn möglich</string>
 </resources>
