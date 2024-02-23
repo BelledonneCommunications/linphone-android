@@ -76,6 +76,10 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     val isVideoEnabled = MutableLiveData<Boolean>()
 
+    val isSendingVideo = MutableLiveData<Boolean>()
+
+    val isReceivingVideo = MutableLiveData<Boolean>()
+
     val showSwitchCamera = MutableLiveData<Boolean>()
 
     val isOutgoing = MutableLiveData<Boolean>()
@@ -230,6 +234,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
             Log.i("$TAG Call [${call.remoteAddress.asStringUriOnly()}] state changed [$state]")
             if (LinphoneUtils.isCallOutgoing(call.state)) {
                 isVideoEnabled.postValue(call.params.isVideoEnabled)
+                updateVideoDirection(call.currentParams.videoDirection)
             } else if (LinphoneUtils.isCallEnding(call.state)) {
                 // If current call is being terminated but there is at least one other call, switch
                 val core = call.core
@@ -270,6 +275,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                     }
                 }
                 isVideoEnabled.postValue(videoEnabled)
+                updateVideoDirection(call.currentParams.videoDirection)
 
                 // Toggle full screen OFF when remote disables video
                 if (!videoEnabled && fullScreenMode.value == true) {
@@ -606,10 +612,15 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                             params?.videoDirection = MediaDirection.SendRecv
                         }
                     }
-                } else {
-                    params?.isVideoEnabled = params?.isVideoEnabled == false
+                } else if (params != null) {
+                    params.isVideoEnabled = true
+                    params.videoDirection = when (currentCall.currentParams.videoDirection) {
+                        MediaDirection.RecvOnly -> MediaDirection.SendRecv
+                        MediaDirection.SendRecv, MediaDirection.SendOnly -> MediaDirection.RecvOnly
+                        else -> MediaDirection.SendOnly
+                    }
                     Log.i(
-                        "$TAG Updating call with video enabled set to ${params?.isVideoEnabled}"
+                        "$TAG Updating call with video enabled and media direction set to ${params.videoDirection}"
                     )
                 }
                 currentCall.update(params)
@@ -967,6 +978,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         } else {
             isVideoEnabled.postValue(call.currentParams.isVideoEnabled)
         }
+        updateVideoDirection(call.currentParams.videoDirection)
 
         if (ActivityCompat.checkSelfPermission(
                 coreContext.context,
@@ -1054,6 +1066,16 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
             Call.State.StreamsRunning, Call.State.Pausing, Call.State.Paused -> true
             else -> false
         }
+    }
+
+    @WorkerThread
+    private fun updateVideoDirection(direction: MediaDirection) {
+        isSendingVideo.postValue(
+            direction == MediaDirection.SendRecv || direction == MediaDirection.SendOnly
+        )
+        isReceivingVideo.postValue(
+            direction == MediaDirection.SendRecv || direction == MediaDirection.RecvOnly
+        )
     }
 
     @AnyThread

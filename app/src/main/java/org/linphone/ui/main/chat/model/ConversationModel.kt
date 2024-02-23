@@ -217,7 +217,7 @@ class ConversationModel @WorkerThread constructor(
         coreContext.postOnCoreThread {
             val address = chatRoom.participants.firstOrNull()?.address ?: chatRoom.peerAddress
             Log.i("$TAG Calling [${address.asStringUriOnly()}]")
-            coreContext.startCall(address)
+            coreContext.startAudioCall(address)
         }
     }
 

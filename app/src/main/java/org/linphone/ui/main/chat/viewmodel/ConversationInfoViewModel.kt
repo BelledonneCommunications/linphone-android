@@ -207,7 +207,7 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
                     Log.i(
                         "$TAG Conference info created, address is ${conferenceAddress.asStringUriOnly()}"
                     )
-                    coreContext.startCall(conferenceAddress)
+                    coreContext.startVideoCall(conferenceAddress)
                 } else {
                     Log.e("$TAG Conference info URI is null!")
                     // TODO: notify error to user
@@ -284,9 +284,7 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
                 val address = firstParticipant?.address
                 if (address != null) {
                     Log.i("$TAG Audio calling SIP address [${address.asStringUriOnly()}]")
-                    val params = core.createCallParams(null)
-                    params?.isVideoEnabled = false
-                    coreContext.startCall(address, params)
+                    coreContext.startAudioCall(address)
                 } else {
                     Log.e("$TAG Failed to find participant to call!")
                 }

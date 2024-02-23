@@ -622,7 +622,7 @@ class MainActivity : GenericActivity() {
             )
             Log.i("$TAG Interpreted SIP URI is [${address?.asStringUriOnly()}]")
             if (address != null) {
-                coreContext.startCall(address)
+                coreContext.startAudioCall(address)
             }
         }
     }

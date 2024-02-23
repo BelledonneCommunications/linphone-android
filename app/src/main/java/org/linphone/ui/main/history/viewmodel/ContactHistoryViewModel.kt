@@ -140,18 +140,14 @@ class ContactHistoryViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun startAudioCall() {
         coreContext.postOnCoreThread { core ->
-            val params = core.createCallParams(null)
-            params?.isVideoEnabled = false
-            coreContext.startCall(address, params)
+            coreContext.startAudioCall(address)
         }
     }
 
     @UiThread
     fun startVideoCall() {
         coreContext.postOnCoreThread { core ->
-            val params = core.createCallParams(null)
-            params?.isVideoEnabled = true
-            coreContext.startCall(address, params)
+            coreContext.startVideoCall(address)
         }
     }
 

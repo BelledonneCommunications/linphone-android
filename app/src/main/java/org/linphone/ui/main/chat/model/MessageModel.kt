@@ -557,7 +557,7 @@ class MessageModel @WorkerThread constructor(
                                 Log.i("$TAG Clicked on SIP URI: $text")
                                 val address = coreContext.core.interpretUrl(text, false)
                                 if (address != null) {
-                                    coreContext.startCall(address)
+                                    coreContext.startAudioCall(address)
                                 } else {
                                     Log.w("$TAG Failed to parse [$text] as SIP URI")
                                 }

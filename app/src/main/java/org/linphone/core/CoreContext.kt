@@ -249,6 +249,16 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         Log.i("$TAG Configuring Core")
         core.videoCodecPriorityPolicy = CodecPriorityPolicy.Auto
 
+        val oldVersion = corePreferences.linphoneConfigurationVersion
+        val newVersion = "6.0.0"
+        if (oldVersion == "5.2") {
+            Log.i("$TAG Migrating configuration from  [$oldVersion] to [$newVersion]")
+            val policy = core.videoActivationPolicy.clone()
+            policy.automaticallyAccept = true
+            policy.automaticallyAcceptDirection = MediaDirection.RecvOnly
+            core.videoActivationPolicy = policy
+        }
+
         updateFriendListsSubscriptionDependingOnDefaultAccount()
 
         computeUserAgent()
@@ -262,7 +272,7 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         audioManager.registerAudioDeviceCallback(audioDeviceCallback, coreThread)
 
-        corePreferences.linphoneConfigurationVersion = "6.0"
+        corePreferences.linphoneConfigurationVersion = newVersion
 
         Log.i("$TAG Report Core created and started")
     }
@@ -352,6 +362,30 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
             it.params.identityAddress?.weakEqual(address) ?: false
         }
         return found != null
+    }
+
+    @WorkerThread
+    fun startAudioCall(
+        address: Address,
+        forceZRTP: Boolean = false,
+        localAddress: Address? = null
+    ) {
+        val params = core.createCallParams(null)
+        params?.isVideoEnabled = true
+        params?.videoDirection = MediaDirection.Inactive
+        startCall(address, params, forceZRTP, localAddress)
+    }
+
+    @WorkerThread
+    fun startVideoCall(
+        address: Address,
+        forceZRTP: Boolean = false,
+        localAddress: Address? = null
+    ) {
+        val params = core.createCallParams(null)
+        params?.isVideoEnabled = true
+        params?.videoDirection = MediaDirection.SendRecv
+        startCall(address, params, forceZRTP, localAddress)
     }
 
     @WorkerThread

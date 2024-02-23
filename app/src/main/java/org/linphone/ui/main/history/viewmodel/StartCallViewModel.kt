@@ -83,7 +83,7 @@ class StartCallViewModel @UiThread constructor() : AddressSelectionViewModel() {
                     Log.i(
                         "$TAG Conference info created, address is ${conferenceAddress.asStringUriOnly()}"
                     )
-                    coreContext.startCall(conferenceAddress)
+                    coreContext.startVideoCall(conferenceAddress)
                 } else {
                     Log.e("$TAG Conference info URI is null!")
                     // TODO: notify error to user
@@ -122,7 +122,7 @@ class StartCallViewModel @UiThread constructor() : AddressSelectionViewModel() {
                         )
                         if (address != null) {
                             Log.i("$TAG Calling [${address.asStringUriOnly()}]")
-                            coreContext.startCall(address)
+                            coreContext.startAudioCall(address)
                         } else {
                             Log.e("$TAG Failed to parse [$suggestion] as SIP address")
                         }

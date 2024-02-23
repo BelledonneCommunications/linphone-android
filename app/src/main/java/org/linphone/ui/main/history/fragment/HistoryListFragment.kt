@@ -185,7 +185,7 @@ class HistoryListFragment : AbstractTopBarFragment() {
                         )
                     } else {
                         Log.i("$TAG Starting call to [${model.address.asStringUriOnly()}]")
-                        coreContext.startCall(model.address)
+                        coreContext.startAudioCall(model.address)
                     }
                 }
             }

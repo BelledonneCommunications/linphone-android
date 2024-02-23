@@ -335,6 +335,22 @@ class ActiveCallFragment : GenericCallFragment() {
             }
         }
 
+        callViewModel.isSendingVideo.observe(viewLifecycleOwner) { sending ->
+            coreContext.core.nativePreviewWindowId = if (sending) {
+                binding.localPreviewVideoSurface
+            } else {
+                null
+            }
+        }
+
+        callViewModel.isReceivingVideo.observe(viewLifecycleOwner) { receiving ->
+            coreContext.core.nativeVideoWindowId = if (receiving) {
+                binding.remoteVideoSurface
+            } else {
+                null
+            }
+        }
+
         callViewModel.chatRoomCreationErrorEvent.observe(viewLifecycleOwner) {
             it.consume { error ->
                 (requireActivity() as CallActivity).showRedToast(
@@ -368,8 +384,6 @@ class ActiveCallFragment : GenericCallFragment() {
         super.onResume()
 
         coreContext.postOnCoreThread { core ->
-            core.nativeVideoWindowId = binding.remoteVideoSurface
-            coreContext.core.nativePreviewWindowId = binding.localPreviewVideoSurface
             binding.localPreviewVideoSurface.setOnTouchListener(previewTouchListener)
 
             // Need to be done manually

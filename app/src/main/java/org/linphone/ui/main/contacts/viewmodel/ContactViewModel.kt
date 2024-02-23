@@ -140,15 +140,11 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                     when (expectedAction) {
                         START_AUDIO_CALL -> {
                             Log.i("$TAG Audio calling SIP address [${address.asStringUriOnly()}]")
-                            val params = core.createCallParams(null)
-                            params?.isVideoEnabled = false
-                            coreContext.startCall(address, params)
+                            coreContext.startAudioCall(address)
                         }
                         START_VIDEO_CALL -> {
                             Log.i("$TAG Video calling SIP address [${address.asStringUriOnly()}]")
-                            val params = core.createCallParams(null)
-                            params?.isVideoEnabled = true
-                            coreContext.startCall(address, params)
+                            coreContext.startVideoCall(address)
                         }
                         START_CONVERSATION -> {
                             Log.i(
@@ -405,7 +401,7 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                     "$TAG Only 1 SIP address found for contact [${friend.name}], starting audio call directly"
                 )
                 val address = friend.addresses.first()
-                coreContext.startCall(address)
+                coreContext.startAudioCall(address)
             } else if (addressesCount == 0 && numbersCount == 1 && enablePhoneNumbers) {
                 val number = friend.phoneNumbers.first()
                 val address = core.interpretUrl(number, LinphoneUtils.applyInternationalPrefix())
@@ -413,7 +409,7 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                     Log.i(
                         "$TAG Only 1 phone number found for contact [${friend.name}], starting audio call directly"
                     )
-                    coreContext.startCall(address)
+                    coreContext.startAudioCall(address)
                 } else {
                     Log.e("$TAG Failed to interpret phone number [$number] as SIP address")
                 }
@@ -442,9 +438,7 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                     "$TAG Only 1 SIP address found for contact [${friend.name}], starting video call directly"
                 )
                 val address = friend.addresses.first()
-                val params = core.createCallParams(null)
-                params?.isVideoEnabled = true
-                coreContext.startCall(address, params)
+                coreContext.startVideoCall(address)
             } else if (addressesCount == 0 && numbersCount == 1 && enablePhoneNumbers) {
                 val number = friend.phoneNumbers.first()
                 val address = core.interpretUrl(number, LinphoneUtils.applyInternationalPrefix())
@@ -452,9 +446,7 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                     Log.i(
                         "$TAG Only 1 phone number found for contact [${friend.name}], starting video call directly"
                     )
-                    val params = core.createCallParams(null)
-                    params?.isVideoEnabled = true
-                    coreContext.startCall(address, params)
+                    coreContext.startVideoCall(address)
                 } else {
                     Log.e("$TAG Failed to interpret phone number [$number] as SIP address")
                 }

@@ -39,7 +39,7 @@ class NewCallFragment : AbstractNewTransferCallFragment() {
     @WorkerThread
     override fun action(address: Address) {
         Log.i("$TAG Calling [${address.asStringUriOnly()}]")
-        coreContext.startCall(address)
+        coreContext.startAudioCall(address)
 
         coreContext.postOnMainThread {
             findNavController().popBackStack()

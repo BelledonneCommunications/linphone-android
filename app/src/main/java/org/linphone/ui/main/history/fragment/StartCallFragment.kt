@@ -150,7 +150,7 @@ class StartCallFragment : GenericAddressPickerFragment() {
 
     @WorkerThread
     override fun onSingleAddressSelected(address: Address, friend: Friend) {
-        coreContext.startCall(address)
+        coreContext.startAudioCall(address)
     }
 
     override fun onPause() {

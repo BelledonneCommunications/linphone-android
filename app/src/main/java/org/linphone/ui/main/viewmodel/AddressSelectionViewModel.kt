@@ -257,7 +257,7 @@ abstract class AddressSelectionViewModel @UiThread constructor() : DefaultAccoun
                     }
 
                     val model = ContactOrSuggestionModel(address) {
-                        coreContext.startCall(address)
+                        coreContext.startAudioCall(address)
                     }
 
                     suggestionsList.add(model)

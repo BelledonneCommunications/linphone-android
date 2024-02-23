@@ -19,6 +19,9 @@ upload_bw=0
 
 [video]
 size=vga
+automatically_accept=1
+automatically_initiate=0
+automatically_accept_direction=2 #receive only
 
 [app]
 tunnel=disabled
