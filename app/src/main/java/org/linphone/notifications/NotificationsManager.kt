@@ -64,6 +64,7 @@ import org.linphone.core.MediaDirection
 import org.linphone.core.tools.Log
 import org.linphone.ui.call.CallActivity
 import org.linphone.ui.main.MainActivity
+import org.linphone.ui.main.model.isInSecureMode
 import org.linphone.utils.AppUtils
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
@@ -564,6 +565,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
                 notifiable.isGroup = true
                 notifiable.groupTitle = chatRoom.subject
             }
+            notifiable.isEncrypted = chatRoom.hasCapability(ChatRoom.Capabilities.Encrypted.toInt())
 
             for (message in chatRoom.unreadHistory) {
                 if (message.isRead || message.isOutgoing) continue
@@ -879,6 +881,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         return builder.build()
     }
 
+    @WorkerThread
     private fun createMessageNotification(
         notifiable: Notifiable,
         pendingIntent: PendingIntent,
@@ -937,13 +940,23 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             .setShowWhen(true)
             .setStyle(style)
             .setContentIntent(pendingIntent)
-            .addAction(getReplyMessageAction(notifiable))
             .addAction(getMarkMessageAsReadAction(notifiable))
             .setShortcutId(id)
             .setLocusId(LocusIdCompat(id))
 
         for (person in allPersons) {
             notificationBuilder.addPerson(person)
+        }
+
+        if (notifiable.isEncrypted) {
+            notificationBuilder.addAction(getReplyMessageAction(notifiable))
+        } else {
+            val account = coreContext.core.accountList.find {
+                it.params.identityAddress?.asStringUriOnly() == notifiable.localIdentity
+            }
+            if (account != null && !account.isInSecureMode()) {
+                notificationBuilder.addAction(getReplyMessageAction(notifiable))
+            }
         }
 
         return notificationBuilder.build()
@@ -1226,6 +1239,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         var remoteAddress: String? = null
 
         var isGroup: Boolean = false
+        var isEncrypted: Boolean = false
         var groupTitle: String? = null
         val messages: ArrayList<NotifiableMessage> = arrayListOf()
     }
