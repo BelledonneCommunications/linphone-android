@@ -25,18 +25,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.UiThread
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import org.linphone.databinding.CallsListLongPressMenuBinding
-import org.linphone.ui.call.model.CallModel
+import org.linphone.databinding.CallStatsBottomSheetBindingImpl
+import org.linphone.ui.call.model.CallStatsModel
 
-class CallMenuDialogFragment(
-    private val callModel: CallModel,
+@UiThread
+class CallStatisticsDialogFragment(
+    private val model: CallStatsModel,
     private val onDismiss: (() -> Unit)? = null
 ) : BottomSheetDialogFragment() {
     companion object {
-        const val TAG = "CallMenuDialogFragment"
+        const val TAG = "CallStatisticsDialogFragment"
     }
 
     override fun onCancel(dialog: DialogInterface) {
@@ -62,20 +64,10 @@ class CallMenuDialogFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view = CallsListLongPressMenuBinding.inflate(layoutInflater)
+        val view = CallStatsBottomSheetBindingImpl.inflate(layoutInflater)
         view.lifecycleOwner = viewLifecycleOwner
 
-        view.setHangUpClickListener {
-            callModel.hangUp()
-            dismiss()
-        }
-
-        view.setPauseResumeClickListener {
-            callModel.togglePauseResume()
-            dismiss()
-        }
-
-        view.isPaused = callModel.isPaused.value == true
+        view.model = model
 
         return view.root
     }

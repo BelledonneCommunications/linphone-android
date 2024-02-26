@@ -29,7 +29,7 @@ import androidx.annotation.UiThread
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import org.linphone.databinding.CallMediaEncryptionStatsMenuBinding
+import org.linphone.databinding.CallMediaEncryptionStatsBottomSheetBinding
 import org.linphone.ui.call.model.CallMediaEncryptionModel
 
 @UiThread
@@ -64,7 +64,8 @@ class MediaEncryptionStatisticsDialogFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view = CallMediaEncryptionStatsMenuBinding.inflate(layoutInflater)
+        val view = CallMediaEncryptionStatsBottomSheetBinding.inflate(layoutInflater)
+        view.lifecycleOwner = viewLifecycleOwner
 
         view.model = model
 

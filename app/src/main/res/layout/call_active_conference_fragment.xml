@@ -220,7 +220,7 @@
                 android:paddingBottom="12dp"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
-                android:background="@drawable/shape_squircle_main2_400_border"
+                android:background="@drawable/shape_squircle_in_call_button_background"
                 android:text="@string/conference_share_link_title"
                 android:textSize="18sp"
                 android:textColor="@color/gray_main2_400"

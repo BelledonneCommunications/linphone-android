@@ -29,7 +29,7 @@ import androidx.annotation.UiThread
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import org.linphone.databinding.CallConferenceLayoutMenuBinding
+import org.linphone.databinding.CallConferenceLayoutBottomSheetBinding
 import org.linphone.ui.call.model.ConferenceModel
 
 @UiThread
@@ -64,7 +64,8 @@ class ConferenceLayoutMenuDialogFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view = CallConferenceLayoutMenuBinding.inflate(layoutInflater)
+        val view = CallConferenceLayoutBottomSheetBinding.inflate(layoutInflater)
+        view.lifecycleOwner = viewLifecycleOwner
 
         view.viewModel = conferenceModel
 

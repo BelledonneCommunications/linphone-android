@@ -30,7 +30,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.linphone.R
-import org.linphone.databinding.CallAudioDevicesMenuBinding
+import org.linphone.databinding.CallAudioDevicesBottomSheetBinding
 import org.linphone.ui.call.model.AudioDeviceModel
 
 @UiThread
@@ -68,7 +68,8 @@ class AudioDevicesMenuDialogFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view = CallAudioDevicesMenuBinding.inflate(layoutInflater)
+        val view = CallAudioDevicesBottomSheetBinding.inflate(layoutInflater)
+        view.lifecycleOwner = viewLifecycleOwner
 
         for (device in devicesList) {
             device.dismissDialog = {

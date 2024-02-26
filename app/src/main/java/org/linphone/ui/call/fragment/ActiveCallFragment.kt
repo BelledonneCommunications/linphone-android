@@ -107,6 +107,17 @@ class ActiveCallFragment : GenericCallFragment() {
         override fun onSlide(bottomSheet: View, slideOffset: Float) { }
     }
 
+    private val callStatsBottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+            if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                val callStatsBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+                callStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            }
+        }
+
+        override fun onSlide(bottomSheet: View, slideOffset: Float) { }
+    }
+
     private val actionsBottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
             if (newState == BottomSheetBehavior.STATE_EXPANDED) {
@@ -159,6 +170,7 @@ class ActiveCallFragment : GenericCallFragment() {
         binding.viewModel = callViewModel
         binding.callsViewModel = callsViewModel
         binding.numpadModel = callViewModel.numpadModel
+        binding.callStatsModel = callViewModel.callStatsModel
 
         val actionsBottomSheetBehavior = BottomSheetBehavior.from(binding.bottomBar.root)
         actionsBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
@@ -167,6 +179,10 @@ class ActiveCallFragment : GenericCallFragment() {
         val numpadBottomSheetBehavior = BottomSheetBehavior.from(binding.callNumpad.root)
         numpadBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         numpadBottomSheetBehavior.addBottomSheetCallback(numpadBottomSheetCallback)
+
+        val callStatsBottomSheetBehavior = BottomSheetBehavior.from(binding.callStats.root)
+        callStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        callStatsBottomSheetBehavior.addBottomSheetCallback(callStatsBottomSheetCallback)
 
         binding.setBackClickListener {
             requireActivity().finish()
@@ -183,7 +199,9 @@ class ActiveCallFragment : GenericCallFragment() {
         }
 
         binding.setCallStatisticsClickListener {
-            showCallStatistics()
+            actionsBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            numpadBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            callStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
 
         sharedViewModel = requireActivity().run {
@@ -205,6 +223,7 @@ class ActiveCallFragment : GenericCallFragment() {
             Log.i("$TAG Switching full screen mode to ${if (hide) "ON" else "OFF"}")
             sharedViewModel.toggleFullScreenEvent.value = Event(hide)
             numpadBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            callStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
         callViewModel.showZrtpSasDialogEvent.observe(viewLifecycleOwner) {
@@ -369,10 +388,6 @@ class ActiveCallFragment : GenericCallFragment() {
         }
 
         set.applyTo(constraintLayout)
-    }
-
-    private fun showCallStatistics() {
-        // TODO
     }
 
     private fun showMediaEncryptionStatistics(model: CallMediaEncryptionModel) {

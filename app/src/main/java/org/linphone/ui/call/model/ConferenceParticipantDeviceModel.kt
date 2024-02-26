@@ -116,7 +116,7 @@ class ConferenceParticipantDeviceModel @WorkerThread constructor(
             if (streamType == StreamType.Video) {
                 isVideoAvailable.postValue(available)
                 if (available) {
-                    updateWindowId(textureView)
+                    updateWindowId()
                 }
             }
         }
@@ -182,20 +182,26 @@ class ConferenceParticipantDeviceModel @WorkerThread constructor(
         )
         textureView = view
         coreContext.postOnCoreThread {
-            updateWindowId(textureView)
+            updateWindowId()
         }
     }
 
     @WorkerThread
-    private fun updateWindowId(windowId: Any?) {
-        Log.i(
-            "$$TAG Setting participant [${device.address.asStringUriOnly()}] window ID [$windowId]"
-        )
-        // SDK does it but it's a bit better this way, prevents going to participants map in PlatformHelper for nothing
-        if (isMe) {
-            coreContext.core.nativePreviewWindowId = windowId
+    private fun updateWindowId() {
+        if (::textureView.isInitialized) {
+            Log.i(
+                "$$TAG Setting participant [${device.address.asStringUriOnly()}] window ID [$textureView]"
+            )
+            // SDK does it but it's a bit better this way, prevents going to participants map in PlatformHelper for nothing
+            if (isMe) {
+                coreContext.core.nativePreviewWindowId = textureView
+            } else {
+                device.nativeVideoWindowId = textureView
+            }
         } else {
-            device.nativeVideoWindowId = windowId
+            Log.e(
+                "$TAG TextureView for participant [${device.address.asStringUriOnly()}] wasn't initialized yet!"
+            )
         }
     }
 }

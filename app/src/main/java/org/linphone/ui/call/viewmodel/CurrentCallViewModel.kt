@@ -40,6 +40,7 @@ import org.linphone.core.Address
 import org.linphone.core.AudioDevice
 import org.linphone.core.Call
 import org.linphone.core.CallListenerStub
+import org.linphone.core.CallStats
 import org.linphone.core.ChatRoom.SecurityLevel
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
@@ -49,6 +50,7 @@ import org.linphone.core.StreamType
 import org.linphone.core.tools.Log
 import org.linphone.ui.call.model.AudioDeviceModel
 import org.linphone.ui.call.model.CallMediaEncryptionModel
+import org.linphone.ui.call.model.CallStatsModel
 import org.linphone.ui.call.model.ConferenceModel
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.history.model.NumpadModel
@@ -101,6 +103,8 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
     val isMediaEncrypted = MutableLiveData<Boolean>()
 
     val hideVideo = MutableLiveData<Boolean>()
+
+    val callStatsModel = CallStatsModel()
 
     val incomingCallTitle: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
@@ -196,6 +200,10 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         override fun onRemoteRecording(call: Call, recording: Boolean) {
             Log.i("$TAG Remote recording changed: $recording")
             isRemoteRecordingEvent.postValue(Event(Pair(recording, displayedName.value.orEmpty())))
+        }
+
+        override fun onStatsUpdated(call: Call, stats: CallStats) {
+            callStatsModel.update(call, stats)
         }
 
         @WorkerThread
@@ -768,6 +776,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
         terminatedByUsed = false
         currentCall = call
+        callStatsModel.update(call, call.audioStats)
         call.addListener(callListener)
 
         if (call.conference != null) {

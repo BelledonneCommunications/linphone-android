@@ -1,0 +1,100 @@
+/*
+ * Copyright (c) 2010-2023 Belledonne Communications SARL.
+ *
+ * This file is part of linphone-android
+ * (see https://www.linphone.org).
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.linphone.ui.call.model
+
+import androidx.annotation.WorkerThread
+import androidx.lifecycle.MutableLiveData
+import kotlin.math.roundToInt
+import org.linphone.R
+import org.linphone.core.Call
+import org.linphone.core.CallStats
+import org.linphone.core.StreamType
+import org.linphone.utils.AppUtils
+
+class CallStatsModel @WorkerThread constructor() {
+    val audioCodec = MutableLiveData<String>()
+    val audioBandwidth = MutableLiveData<String>()
+
+    val isVideoEnabled = MutableLiveData<Boolean>()
+    val videoCodec = MutableLiveData<String>()
+    val videoBandwidth = MutableLiveData<String>()
+    val videoResolution = MutableLiveData<String>()
+    val videoFps = MutableLiveData<String>()
+
+    @WorkerThread
+    fun update(call: Call, stats: CallStats?) {
+        stats ?: return
+        isVideoEnabled.postValue(call.params.isVideoEnabled)
+
+        when (stats.type) {
+            StreamType.Audio -> {
+                val payloadType = call.currentParams.usedAudioPayloadType
+                val clockRate = (payloadType?.clockRate ?: 0) / 1000
+                val codecLabel = AppUtils.getFormattedString(
+                    R.string.call_stats_codec_label,
+                    "${payloadType?.mimeType}/$clockRate kHz"
+                )
+                audioCodec.postValue(codecLabel)
+
+                val uploadBandwidth = stats.uploadBandwidth.roundToInt()
+                val downloadBandwidth = stats.downloadBandwidth.roundToInt()
+                val bandwidthLabel = AppUtils.getFormattedString(
+                    R.string.call_stats_bandwidth_label,
+                    "↑ $uploadBandwidth kbits/s ↓ $downloadBandwidth kbits/s"
+                )
+                audioBandwidth.postValue(bandwidthLabel)
+            }
+            StreamType.Video -> {
+                val payloadType = call.currentParams.usedVideoPayloadType
+                val clockRate = (payloadType?.clockRate ?: 0) / 1000
+                val codecLabel = AppUtils.getFormattedString(
+                    R.string.call_stats_codec_label,
+                    "${payloadType?.mimeType}/$clockRate kHz"
+                )
+                videoCodec.postValue(codecLabel)
+
+                val uploadBandwidth = stats.uploadBandwidth.roundToInt()
+                val downloadBandwidth = stats.downloadBandwidth.roundToInt()
+                val bandwidthLabel = AppUtils.getFormattedString(
+                    R.string.call_stats_bandwidth_label,
+                    "↑ $uploadBandwidth kbits/s ↓ $downloadBandwidth kbits/s"
+                )
+                videoBandwidth.postValue(bandwidthLabel)
+
+                val sentResolution = call.currentParams.sentVideoDefinition?.name
+                val receivedResolution = call.currentParams.receivedVideoDefinition?.name
+                val resolutionLabel = AppUtils.getFormattedString(
+                    R.string.call_stats_resolution_label,
+                    "↑ $sentResolution ↓ $receivedResolution"
+                )
+                videoResolution.postValue(resolutionLabel)
+
+                val sentFps = call.currentParams.sentFramerate.roundToInt()
+                val receivedFps = call.currentParams.receivedFramerate.roundToInt()
+                val fpsLabel = AppUtils.getFormattedString(
+                    R.string.call_stats_fps_label,
+                    "↑ $sentFps ↓ $receivedFps"
+                )
+                videoFps.postValue(fpsLabel)
+            }
+            else -> {}
+        }
+    }
+}
