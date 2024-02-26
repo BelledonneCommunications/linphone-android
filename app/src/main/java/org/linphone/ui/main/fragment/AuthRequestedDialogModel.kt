@@ -30,15 +30,23 @@ class AuthRequestedDialogModel @UiThread constructor(identity: String) {
 
     val password = MutableLiveData<String>()
 
+    val showPassword = MutableLiveData<Boolean>()
+
     val dismissEvent = MutableLiveData<Event<Boolean>>()
 
     val confirmEvent = MutableLiveData<Event<String>>()
 
     init {
+        showPassword.value = false
         message.value = AppUtils.getFormattedString(
             R.string.dialog_account_invalid_password_message,
             identity
         )
+    }
+
+    @UiThread
+    fun toggleShowPassword() {
+        showPassword.value = showPassword.value == false
     }
 
     @UiThread

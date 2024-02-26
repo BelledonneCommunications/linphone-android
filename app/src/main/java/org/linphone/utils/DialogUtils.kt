@@ -30,6 +30,7 @@ import android.view.WindowManager
 import androidx.annotation.UiThread
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.LifecycleOwner
 import org.linphone.R
 import org.linphone.databinding.DialogAccountModesExplanationBinding
 import org.linphone.databinding.DialogAssistantAcceptConditionsAndPolicyBinding
@@ -315,6 +316,7 @@ class DialogUtils {
                 false
             )
             binding.viewModel = viewModel
+            binding.lifecycleOwner = context as LifecycleOwner
 
             return getDialog(context, binding)
         }

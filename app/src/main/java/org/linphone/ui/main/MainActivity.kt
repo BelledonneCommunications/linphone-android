@@ -21,6 +21,7 @@ package org.linphone.ui.main
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -84,6 +85,8 @@ class MainActivity : GenericActivity() {
     private lateinit var viewModel: MainViewModel
 
     private lateinit var sharedViewModel: SharedMainViewModel
+
+    private var currentlyDisplayedAuthDialog: Dialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Must be done before the setContentView
@@ -217,6 +220,9 @@ class MainActivity : GenericActivity() {
     }
 
     override fun onPause() {
+        currentlyDisplayedAuthDialog?.dismiss()
+        currentlyDisplayedAuthDialog = null
+
         val defaultFragmentId = when (sharedViewModel.currentlyDisplayedFragment.value) {
             R.id.contactsListFragment -> {
                 CONTACTS_FRAGMENT_ID
@@ -625,6 +631,8 @@ class MainActivity : GenericActivity() {
     }
 
     private fun showAuthenticationRequestedDialog(identity: String) {
+        currentlyDisplayedAuthDialog?.dismiss()
+
         val model = AuthRequestedDialogModel(identity)
         val dialog = DialogUtils.getAuthRequestedDialog(this, model)
 
@@ -642,5 +650,6 @@ class MainActivity : GenericActivity() {
         }
 
         dialog.show()
+        currentlyDisplayedAuthDialog = dialog
     }
 }
