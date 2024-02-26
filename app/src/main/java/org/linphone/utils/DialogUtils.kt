@@ -45,12 +45,14 @@ import org.linphone.databinding.DialogRemoveAccountBinding
 import org.linphone.databinding.DialogRemoveAllCallLogsBinding
 import org.linphone.databinding.DialogRemoveCallLogsBinding
 import org.linphone.databinding.DialogSetOrEditGroupSubjectBindingImpl
+import org.linphone.databinding.DialogUpdateAccountPasswordBinding
 import org.linphone.databinding.DialogUpdateAvailableBinding
 import org.linphone.ui.assistant.model.AcceptConditionsAndPolicyDialogModel
 import org.linphone.ui.assistant.model.ConfirmPhoneNumberDialogModel
 import org.linphone.ui.call.model.ZrtpSasConfirmationDialogModel
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
 import org.linphone.ui.main.contacts.model.TrustCallDialogModel
+import org.linphone.ui.main.fragment.AuthRequestedDialogModel
 import org.linphone.ui.main.fragment.GroupSetOrEditSubjectDialogModel
 import org.linphone.ui.main.history.model.ConfirmationDialogModel
 
@@ -297,6 +299,22 @@ class DialogUtils {
             )
             binding.viewModel = viewModel
             binding.message.text = message
+
+            return getDialog(context, binding)
+        }
+
+        @UiThread
+        fun getAuthRequestedDialog(
+            context: Context,
+            viewModel: AuthRequestedDialogModel
+        ): Dialog {
+            val binding: DialogUpdateAccountPasswordBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.dialog_update_account_password,
+                null,
+                false
+            )
+            binding.viewModel = viewModel
 
             return getDialog(context, binding)
         }

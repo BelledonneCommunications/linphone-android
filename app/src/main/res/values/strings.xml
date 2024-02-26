@@ -127,6 +127,9 @@
     <string name="dialog_group_conversation_edit_subject_confirm_button">Confirm</string>
     <string name="dialog_group_call_set_subject">Set group call subject</string>
     <string name="dialog_group_call_subject_hint">Group call subject</string>
+    <string name="dialog_account_invalid_password_title">Authentication needed</string>
+    <string name="dialog_account_invalid_password_message">Connection failed because authentication is missing or invalid for account \n%s.\n\nYou can provide password again, or check your account configuration in the settings.</string>
+    <string name="dialog_account_invalid_password_hint">New password</string>
 
     <string name="toast_assistant_qr_code_invalid">Invalid QR code!</string>
     <string name="toast_sip_address_copied_to_clipboard">SIP address copied into clipboard</string>

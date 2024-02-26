@@ -55,9 +55,11 @@ import org.linphone.databinding.MainActivityBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.assistant.AssistantActivity
 import org.linphone.ui.main.chat.fragment.ConversationsListFragmentDirections
+import org.linphone.ui.main.fragment.AuthRequestedDialogModel
 import org.linphone.ui.main.viewmodel.MainViewModel
 import org.linphone.ui.main.viewmodel.SharedMainViewModel
 import org.linphone.ui.welcome.WelcomeActivity
+import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
@@ -161,6 +163,12 @@ class MainActivity : GenericActivity() {
                 if (checkSelfPermission(Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
                     loadContacts()
                 }
+            }
+        }
+
+        viewModel.authenticationRequestedEvent.observe(this) {
+            it.consume { identity ->
+                showAuthenticationRequestedDialog(identity)
             }
         }
 
@@ -614,5 +622,25 @@ class MainActivity : GenericActivity() {
                 }
             }
         }*/
+    }
+
+    private fun showAuthenticationRequestedDialog(identity: String) {
+        val model = AuthRequestedDialogModel(identity)
+        val dialog = DialogUtils.getAuthRequestedDialog(this, model)
+
+        model.dismissEvent.observe(this) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        model.confirmEvent.observe(this) {
+            it.consume { password ->
+                viewModel.updateAuthInfo(password)
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
     }
 }

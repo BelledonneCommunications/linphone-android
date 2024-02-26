@@ -33,6 +33,8 @@ import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Account
+import org.linphone.core.AuthInfo
+import org.linphone.core.AuthMethod
 import org.linphone.core.Call
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
@@ -88,6 +90,10 @@ class MainViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    val authenticationRequestedEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
+
     var accountsFound = -1
 
     var mainIntentHandled = false
@@ -100,6 +106,8 @@ class MainViewModel @UiThread constructor() : ViewModel() {
 
     private var firstAccountRegistered: Boolean = false
 
+    private var authInfoPendingPasswordUpdate: AuthInfo? = null
+
     private val coreListener = object : CoreListenerStub() {
         @WorkerThread
         override fun onLastCallEnded(core: Core) {
@@ -108,6 +116,7 @@ class MainViewModel @UiThread constructor() : ViewModel() {
             atLeastOneCall.postValue(false)
         }
 
+        @WorkerThread
         override fun onFirstCallStarted(core: Core) {
             Log.i("$TAG First call started, adding in-call 'alert'")
             updateCallAlert()
@@ -225,6 +234,7 @@ class MainViewModel @UiThread constructor() : ViewModel() {
             // TODO: compute other calls notifications count
         }
 
+        @WorkerThread
         override fun onAccountRemoved(core: Core, account: Account) {
             accountsFound -= 1
 
@@ -234,6 +244,27 @@ class MainViewModel @UiThread constructor() : ViewModel() {
                 )
                 core.defaultAccount = core.accountList.firstOrNull()
             }
+        }
+
+        @WorkerThread
+        override fun onAuthenticationRequested(core: Core, authInfo: AuthInfo, method: AuthMethod) {
+            if (authInfo.username == null || authInfo.domain == null || authInfo.realm == null) {
+                return
+            }
+
+            Log.w(
+                "$TAG Authentication requested for account [${authInfo.username}@${authInfo.domain}] with realm [${authInfo.realm}] using method [$method]"
+            )
+            val accountFound = core.accountList.find {
+                it.params.identityAddress?.username == authInfo.username && it.params.identityAddress?.domain == authInfo.domain
+            }
+            if (accountFound == null) {
+                Log.w("$TAG Failed to find account matching auth info, aborting auth dialog")
+                return
+            }
+            val identity = "${authInfo.username}@${authInfo.domain}"
+            authInfoPendingPasswordUpdate = authInfo
+            authenticationRequestedEvent.postValue(Event(identity))
         }
     }
 
@@ -305,6 +336,22 @@ class MainViewModel @UiThread constructor() : ViewModel() {
             goBackToCallEvent.value = Event(true)
         } else {
             openDrawerEvent.value = Event(true)
+        }
+    }
+
+    @UiThread
+    fun updateAuthInfo(password: String) {
+        coreContext.postOnCoreThread { core ->
+            val authInfo = authInfoPendingPasswordUpdate
+            if (authInfo != null) {
+                Log.i(
+                    "$TAG Updating password for username [${authInfo.username}] using auth info [$authInfo]"
+                )
+                authInfo.password = password
+                core.addAuthInfo(authInfo)
+                authInfoPendingPasswordUpdate = null
+                core.refreshRegisters()
+            }
         }
     }
 
