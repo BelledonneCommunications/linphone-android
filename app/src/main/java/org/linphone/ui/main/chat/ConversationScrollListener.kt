@@ -42,7 +42,7 @@ internal abstract class ConversationScrollListener(private val mLayoutManager: L
     override fun onScrolled(view: RecyclerView, dx: Int, dy: Int) {
         val totalItemCount = mLayoutManager.itemCount
         val firstVisibleItemPosition: Int = mLayoutManager.findFirstVisibleItemPosition()
-        val lastVisibleItemPosition: Int = mLayoutManager.findLastCompletelyVisibleItemPosition()
+        val lastVisibleItemPosition: Int = mLayoutManager.findLastVisibleItemPosition()
 
         // If the total item count is zero and the previous isn't, assume the
         // list is invalidated and should be reset back to initial state
