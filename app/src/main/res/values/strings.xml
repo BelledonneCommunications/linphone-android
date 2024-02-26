@@ -574,6 +574,8 @@
         <item quantity="one">%s participant</item>
         <item quantity="other">%s participants</item>
     </plurals>
+    <string name="conference_participant_joining_text">Joining…</string>
+    <string name="conference_participant_paused_text">Paused</string>
 
     <string name="conference_layout_grid">Mosaic</string>
     <string name="conference_layout_active_speaker">Speaker</string>

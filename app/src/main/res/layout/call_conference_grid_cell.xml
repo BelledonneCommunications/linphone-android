@@ -29,7 +29,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="5dp"
-            android:visibility="@{model.isSendingVideo ? View.GONE : View.VISIBLE}"
+            android:visibility="@{model.isSendingVideo || model.isJoining || !model.isInConference ? View.GONE : View.VISIBLE}"
             coilCallAvatar="@{model.avatarModel}"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintWidth_max="@dimen/avatar_in_call_size"
@@ -56,11 +56,66 @@
             app:alignTopRight="false"
             app:displayMode="hybrid"
             participantTextureView="@{model}"
-            android:visibility="@{model.isSendingVideo ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{model.isSendingVideo &amp;&amp; model.isInConference ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/joining"
+            android:layout_width="@dimen/big_icon_size"
+            android:layout_height="@dimen/big_icon_size"
+            android:indeterminate="true"
+            android:visibility="@{model.isJoining ? View.VISIBLE : View.GONE, default=gone}"
+            app:indicatorColor="@color/white"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/joining_label" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/joining_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/conference_participant_joining_text"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:visibility="@{model.isJoining ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintTop_toBottomOf="@id/joining"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/paused"
+            android:layout_width="@dimen/big_icon_size"
+            android:layout_height="@dimen/big_icon_size"
+            android:contentDescription="@null"
+            android:src="@drawable/pause"
+            android:visibility="@{!model.isInConference &amp;&amp; !model.isJoining ? View.VISIBLE : View.GONE, default=gone}"
+            app:tint="@color/white"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/paused_label" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/paused_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/conference_participant_paused_text"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:visibility="@{!model.isInConference &amp;&amp; !model.isJoining ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintTop_toBottomOf="@id/paused"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <ImageView
             android:id="@+id/muted"

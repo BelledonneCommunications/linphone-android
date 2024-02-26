@@ -10,6 +10,7 @@
 
     <dimen name="small_icon_size">14dp</dimen>
     <dimen name="icon_size">24dp</dimen>
+    <dimen name="big_icon_size">48dp</dimen>
     <dimen name="welcome_icon_size">100dp</dimen>
 
     <dimen name="avatar_bubble_size">30dp</dimen>
