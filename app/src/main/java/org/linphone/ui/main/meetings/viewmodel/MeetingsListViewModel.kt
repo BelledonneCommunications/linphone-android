@@ -87,6 +87,7 @@ class MeetingsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
         var previousModel: MeetingModel? = null
         var meetingForTodayFound = false
         for (info: ConferenceInfo in source) {
+            if (info.duration == 0) continue // This isn't a scheduled conference, don't display it
             val add = if (filter.isNotEmpty()) {
                 val organizerCheck = info.organizer?.asStringUriOnly()?.contains(
                     filter,
