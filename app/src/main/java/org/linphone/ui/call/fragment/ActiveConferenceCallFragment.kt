@@ -73,6 +73,17 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
         override fun onSlide(bottomSheet: View, slideOffset: Float) { }
     }
 
+    private val callStatsBottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+            if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                val callStatsBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+                callStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            }
+        }
+
+        override fun onSlide(bottomSheet: View, slideOffset: Float) { }
+    }
+
     private var bottomSheetDialog: BottomSheetDialogFragment? = null
 
     override fun onCreateView(
@@ -105,6 +116,10 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
         actionsBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         actionsBottomSheetBehavior.addBottomSheetCallback(actionsBottomSheetCallback)
 
+        val callStatsBottomSheetBehavior = BottomSheetBehavior.from(binding.callStats.root)
+        callStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        callStatsBottomSheetBehavior.addBottomSheetCallback(callStatsBottomSheetCallback)
+
         callViewModel.callDuration.observe(viewLifecycleOwner) { duration ->
             binding.chronometer.base = SystemClock.elapsedRealtime() - (1000 * duration)
             binding.chronometer.start()
@@ -136,6 +151,7 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
         callViewModel.fullScreenMode.observe(viewLifecycleOwner) { hide ->
             Log.i("$TAG Switching full screen mode to ${if (hide) "ON" else "OFF"}")
             sharedViewModel.toggleFullScreenEvent.value = Event(hide)
+            callStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
         callViewModel.conferenceModel.conferenceLayout.observe(viewLifecycleOwner) { layout ->
@@ -177,7 +193,8 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
         }
 
         binding.setCallStatisticsClickListener {
-            showCallStatistics()
+            actionsBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            callStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
     }
 
@@ -195,10 +212,6 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
 
         bottomSheetDialog?.dismiss()
         bottomSheetDialog = null
-    }
-
-    private fun showCallStatistics() {
-        // TODO
     }
 
     private fun showMediaEncryptionStatistics(model: CallMediaEncryptionModel) {

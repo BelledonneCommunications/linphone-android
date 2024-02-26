@@ -27,9 +27,6 @@
         <variable
             name="numpadModel"
             type="org.linphone.ui.main.history.model.NumpadModel" />
-        <variable
-            name="callStatsModel"
-            type="org.linphone.ui.call.model.CallStatsModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -311,7 +308,7 @@
         <include
             android:id="@+id/call_stats"
             layout="@layout/call_stats_bottom_sheet"
-            bind:model="@{callStatsModel}"/>
+            bind:model="@{viewModel.callStatsModel}"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

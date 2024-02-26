@@ -170,7 +170,6 @@ class ActiveCallFragment : GenericCallFragment() {
         binding.viewModel = callViewModel
         binding.callsViewModel = callsViewModel
         binding.numpadModel = callViewModel.numpadModel
-        binding.callStatsModel = callViewModel.callStatsModel
 
         val actionsBottomSheetBehavior = BottomSheetBehavior.from(binding.bottomBar.root)
         actionsBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED

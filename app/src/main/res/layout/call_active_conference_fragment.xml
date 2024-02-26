@@ -268,6 +268,11 @@
             bind:participantsListClickListener="@{participantsListClickListener}"
             bind:callsListClickListener="@{callsListClickListener}"/>
 
+        <include
+            android:id="@+id/call_stats"
+            layout="@layout/call_stats_bottom_sheet"
+            bind:model="@{viewModel.callStatsModel}"/>
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </layout>
