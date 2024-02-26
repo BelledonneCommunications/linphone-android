@@ -124,22 +124,22 @@
             <ImageView
                 android:id="@+id/switch_camera"
                 android:onClick="@{() -> viewModel.switchCamera()}"
-                android:layout_width="@dimen/call_top_bar_info_height"
-                android:layout_height="@dimen/call_top_bar_info_height"
+                android:layout_width="@dimen/big_icon_size"
+                android:layout_height="0dp"
                 android:padding="10dp"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
                 android:src="@drawable/camera_rotate"
                 android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; viewModel.showSwitchCamera &amp;&amp; conferenceViewModel.participantDevices.size() > 1 &amp;&amp; conferenceViewModel.isMeParticipantSendingVideo ? View.VISIBLE : View.GONE}"
                 app:tint="@color/white"
-                app:layout_constraintTop_toTopOf="@id/conference_subject"
-                app:layout_constraintBottom_toBottomOf="@id/conference_subject"
+                app:layout_constraintTop_toTopOf="@id/back"
+                app:layout_constraintBottom_toBottomOf="@id/back"
                 app:layout_constraintEnd_toStartOf="@+id/paused" />
 
             <ImageView
                 android:id="@+id/paused"
-                android:layout_width="@dimen/call_top_bar_info_height"
-                android:layout_height="@dimen/call_top_bar_info_height"
+                android:layout_width="@dimen/big_icon_size"
+                android:layout_height="0dp"
                 android:padding="10dp"
                 android:src="@drawable/pause"
                 android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; conferenceViewModel.isPaused ? View.VISIBLE : View.GONE, default=gone}"
@@ -151,14 +151,14 @@
             <ImageView
                 android:id="@+id/stats"
                 android:onClick="@{callStatisticsClickListener}"
-                android:layout_width="@dimen/call_top_bar_info_height"
-                android:layout_height="@dimen/call_top_bar_info_height"
+                android:layout_width="@dimen/big_icon_size"
+                android:layout_height="0dp"
                 android:padding="10dp"
                 android:src="@{viewModel.qualityIcon, default=@drawable/cell_signal_full}"
                 android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; !conferenceViewModel.isPaused ? View.VISIBLE : View.GONE}"
                 android:tint="@{viewModel.qualityValue >= 2 ? @color/white : viewModel.qualityValue >= 1 ? @color/orange_warning_600 : @color/red_danger_500, default=@color/white}"
-                app:layout_constraintTop_toTopOf="@id/conference_subject"
-                app:layout_constraintBottom_toBottomOf="@id/conference_subject"
+                app:layout_constraintTop_toTopOf="@id/back"
+                app:layout_constraintBottom_toBottomOf="@id/back"
                 app:layout_constraintEnd_toEndOf="parent"
                 bind:ignore="UseAppTint" />
 
@@ -242,11 +242,12 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginBottom="@{viewModel.fullScreenMode || viewModel.pipMode ? @dimen/zero : @dimen/call_main_actions_menu_margin, default=@dimen/call_main_actions_menu_margin}"
+                android:layout_marginTop="@{viewModel.fullScreenMode || viewModel.pipMode ? @dimen/zero : @dimen/call_remote_video_top_margin, default=@dimen/call_remote_video_top_margin}"
                 android:visibility="@{conferenceViewModel.participantDevices.size() > 1 &amp;&amp; !conferenceViewModel.isPaused ? View.VISIBLE : View.GONE}"
                 app:navGraph="@navigation/conference_nav_graph"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/media_encryption_icon"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
             <ImageView

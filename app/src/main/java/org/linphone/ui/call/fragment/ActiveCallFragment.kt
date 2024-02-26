@@ -189,16 +189,12 @@ class ActiveCallFragment : GenericCallFragment() {
         }
 
         binding.setCallStatisticsClickListener {
-            actionsBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            numpadBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            callMediaEncryptionStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            callMediaEncryptionStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             callStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
 
         binding.setCallMediaEncryptionStatisticsClickListener {
-            actionsBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            numpadBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            callStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            callStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             callMediaEncryptionStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
 

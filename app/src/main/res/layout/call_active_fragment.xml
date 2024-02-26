@@ -114,7 +114,7 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginBottom="@{viewModel.fullScreenMode || viewModel.pipMode || viewModel.halfOpenedFolded ? @dimen/zero : @dimen/call_main_actions_menu_margin, default=@dimen/call_main_actions_menu_margin}"
-                android:layout_marginTop="@{viewModel.fullScreenMode || viewModel.pipMode || viewModel.halfOpenedFolded ? @dimen/zero : @dimen/call_top_bar_info_height, default=@dimen/call_top_bar_info_height}"
+                android:layout_marginTop="@{viewModel.fullScreenMode || viewModel.pipMode || viewModel.halfOpenedFolded ? @dimen/zero : @dimen/call_remote_video_top_margin, default=@dimen/call_remote_video_top_margin}"
                 android:onClick="@{() -> viewModel.toggleFullScreen()}"
                 android:visibility="@{viewModel.isVideoEnabled &amp;&amp; !(viewModel.isPaused || viewModel.isPausedByRemote) ? View.VISIBLE : View.GONE}"
                 app:layout_constraintTop_toTopOf="parent"
@@ -197,8 +197,8 @@
             <ImageView
                 android:onClick="@{() -> viewModel.switchCamera()}"
                 android:id="@+id/switch_camera"
-                android:layout_width="@dimen/call_top_bar_info_height"
-                android:layout_height="@dimen/call_top_bar_info_height"
+                android:layout_width="@dimen/big_icon_size"
+                android:layout_height="0dp"
                 android:padding="10dp"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
@@ -211,8 +211,8 @@
 
             <ImageView
                 android:id="@+id/paused"
-                android:layout_width="@dimen/call_top_bar_info_height"
-                android:layout_height="@dimen/call_top_bar_info_height"
+                android:layout_width="@dimen/big_icon_size"
+                android:layout_height="0dp"
                 android:padding="10dp"
                 android:src="@drawable/pause"
                 android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; (viewModel.isPaused || viewModel.isPausedByRemote) ? View.VISIBLE : View.GONE, default=gone}"
@@ -224,8 +224,8 @@
             <ImageView
                 android:id="@+id/stats"
                 android:onClick="@{callStatisticsClickListener}"
-                android:layout_width="@dimen/call_top_bar_info_height"
-                android:layout_height="@dimen/call_top_bar_info_height"
+                android:layout_width="@dimen/big_icon_size"
+                android:layout_height="0dp"
                 android:padding="10dp"
                 android:src="@{viewModel.qualityIcon, default=@drawable/cell_signal_full}"
                 android:visibility="@{!viewModel.fullScreenMode &amp;&amp; !viewModel.pipMode &amp;&amp; !(viewModel.isPaused || viewModel.isPausedByRemote) ? View.VISIBLE : View.GONE}"
