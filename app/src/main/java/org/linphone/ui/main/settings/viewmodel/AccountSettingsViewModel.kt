@@ -26,7 +26,6 @@ import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.AVPFMode
 import org.linphone.core.Account
-import org.linphone.core.Factory
 import org.linphone.core.NatPolicy
 import org.linphone.core.TransportType
 import org.linphone.core.tools.Log
@@ -122,7 +121,7 @@ class AccountSettingsViewModel @UiThread constructor() : ViewModel() {
 
                 val server = sipProxyServer.value.orEmpty()
                 if (server.isNotEmpty()) {
-                    val serverAddress = Factory.instance().createAddress(server)
+                    val serverAddress = core.interpretUrl(server, false)
                     if (serverAddress != null) {
                         serverAddress.transport = selectedTransport.value
                         newParams.serverAddress = serverAddress
@@ -142,13 +141,15 @@ class AccountSettingsViewModel @UiThread constructor() : ViewModel() {
 
                 newParams.expires = expire.value?.toInt() ?: 31536000
 
-                val conferenceFactoryAddress = Factory.instance().createAddress(
-                    conferenceFactoryUri.value.orEmpty()
+                val conferenceFactoryAddress = core.interpretUrl(
+                    conferenceFactoryUri.value.orEmpty(),
+                    false
                 )
                 newParams.conferenceFactoryAddress = conferenceFactoryAddress
 
-                val audioVideoConferenceFactoryAddress = Factory.instance().createAddress(
-                    audioVideoConferenceFactoryUri.value.orEmpty()
+                val audioVideoConferenceFactoryAddress = core.interpretUrl(
+                    audioVideoConferenceFactoryUri.value.orEmpty(),
+                    false
                 )
                 newParams.audioVideoConferenceFactoryAddress = audioVideoConferenceFactoryAddress
 

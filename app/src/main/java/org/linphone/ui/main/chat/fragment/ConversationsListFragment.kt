@@ -309,6 +309,13 @@ class ConversationsListFragment : AbstractTopBarFragment() {
     override fun onResume() {
         super.onResume()
 
+        if (listViewModel.hideMeetings.value == true) {
+            Log.w(
+                "$TAG Resuming fragment that should no longer be accessible, going to contacts list instead"
+            )
+            sharedViewModel.navigateToContactsEvent.value = Event(true)
+        }
+
         try {
             adapter.registerAdapterDataObserver(dataObserver)
         } catch (e: IllegalStateException) {

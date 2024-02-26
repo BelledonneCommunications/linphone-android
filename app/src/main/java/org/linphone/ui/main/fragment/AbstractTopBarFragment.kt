@@ -167,6 +167,12 @@ abstract class AbstractTopBarFragment : GenericFragment() {
                 viewModel.resetMissedCallsCount()
             }
         }
+
+        sharedViewModel.forceUpdateAvailableNavigationItems.observe(viewLifecycleOwner) {
+            it.consume {
+                viewModel.updateAvailableMenus()
+            }
+        }
     }
 
     fun initBottomNavBar(navBar: View) {

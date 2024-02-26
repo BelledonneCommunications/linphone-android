@@ -39,6 +39,7 @@ import org.linphone.ui.main.fragment.AbstractTopBarFragment
 import org.linphone.ui.main.meetings.adapter.MeetingsListAdapter
 import org.linphone.ui.main.meetings.viewmodel.MeetingsListViewModel
 import org.linphone.utils.AppUtils
+import org.linphone.utils.Event
 import org.linphone.utils.RecyclerViewHeaderDecoration
 
 @UiThread
@@ -217,6 +218,17 @@ class MeetingsListFragment : AbstractTopBarFragment() {
 
         bottomSheetDialog?.dismiss()
         bottomSheetDialog = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        if (listViewModel.hideMeetings.value == true) {
+            Log.w(
+                "$TAG Resuming fragment that should no longer be accessible, going to contacts list instead"
+            )
+            sharedViewModel.navigateToContactsEvent.value = Event(true)
+        }
     }
 
     private fun scrollToToday() {

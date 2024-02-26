@@ -18,6 +18,7 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.AccountSettingsFragmentBinding
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.ui.main.settings.viewmodel.AccountSettingsViewModel
+import org.linphone.utils.Event
 
 @UiThread
 class AccountSettingsFragment : GenericFragment() {
@@ -113,5 +114,7 @@ class AccountSettingsFragment : GenericFragment() {
         super.onPause()
 
         viewModel.saveChanges()
+        // It is possible some value have changed, causing some menu to appear or disappear
+        sharedViewModel.forceUpdateAvailableNavigationItems.value = Event(true)
     }
 }

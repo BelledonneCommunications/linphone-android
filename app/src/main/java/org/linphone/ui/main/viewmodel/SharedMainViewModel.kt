@@ -69,6 +69,10 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    val forceUpdateAvailableNavigationItems: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     /* Contacts related */
 
     val showContactEvent: MutableLiveData<Event<String>> by lazy {
