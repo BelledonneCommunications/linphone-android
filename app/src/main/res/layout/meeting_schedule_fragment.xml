@@ -275,7 +275,7 @@
                         android:text="@{viewModel.fromTime, default=`17:00`}"
                         android:textSize="14sp"
                         android:textColor="?attr/color_main2_600"
-                        android:visibility="@{viewModel.allDayMeeting ? View.GONE : View.VISIBLE}"
+                        android:visibility="@{viewModel.allDayMeeting ? View.INVISIBLE : View.VISIBLE}"
                         app:layout_constraintStart_toStartOf="@id/from_date"
                         app:layout_constraintTop_toBottomOf="@id/from_date" />
 
@@ -289,7 +289,7 @@
                         android:text="@{viewModel.toTime, default=`18:00`}"
                         android:textSize="14sp"
                         android:textColor="?attr/color_main2_600"
-                        android:visibility="@{viewModel.allDayMeeting ? View.GONE : View.VISIBLE}"
+                        android:visibility="@{viewModel.allDayMeeting ? View.INVISIBLE : View.VISIBLE}"
                         app:layout_constraintStart_toEndOf="@id/from_time"
                         app:layout_constraintTop_toTopOf="@id/from_time" />
 
@@ -301,19 +301,25 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginStart="32dp"
                         android:checked="@={viewModel.allDayMeeting}"
-                        app:layout_constraintStart_toStartOf="@id/from_date"
-                        app:layout_constraintTop_toBottomOf="@id/from_time"/>
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintHorizontal_bias="1"
+                        app:layout_constraintStart_toEndOf="@id/to_time"
+                        app:layout_constraintEnd_toStartOf="@id/all_day"
+                        app:layout_constraintTop_toTopOf="@id/to_time"
+                        app:layout_constraintBottom_toBottomOf="@id/to_time"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/default_text_style_500"
                         android:id="@+id/all_day"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
                         android:text="@string/meeting_schedule_date_all_day_title"
                         android:textColor="?attr/color_main2_600"
                         android:textSize="14sp"
                         app:layout_constraintStart_toEndOf="@id/all_day_switch"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@id/all_day_switch"
                         app:layout_constraintBottom_toBottomOf="@id/all_day_switch"/>
 
