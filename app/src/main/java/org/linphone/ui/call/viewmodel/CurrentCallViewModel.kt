@@ -106,6 +106,8 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     val callStatsModel = CallStatsModel()
 
+    val callMediaEncryptionModel = CallMediaEncryptionModel()
+
     val incomingCallTitle: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
@@ -147,10 +149,6 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     val showZrtpSasDialogEvent: MutableLiveData<Event<Pair<String, String>>> by lazy {
         MutableLiveData<Event<Pair<String, String>>>()
-    }
-
-    val showMediaEncryptionStatisticsEvent: MutableLiveData<Event<CallMediaEncryptionModel>> by lazy {
-        MutableLiveData<Event<CallMediaEncryptionModel>>()
     }
 
     // Conference
@@ -195,6 +193,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         @WorkerThread
         override fun onEncryptionChanged(call: Call, on: Boolean, authenticationToken: String?) {
             updateEncryption()
+            callMediaEncryptionModel.update(call)
         }
 
         override fun onRemoteRecording(call: Call, recording: Boolean) {
@@ -696,16 +695,6 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         }
     }
 
-    @UiThread
-    fun showMediaEncryptionStatisticsIfPossible(): Boolean {
-        coreContext.postOnCoreThread {
-            val model = CallMediaEncryptionModel(currentCall)
-            showMediaEncryptionStatisticsEvent.postValue(Event(model))
-        }
-
-        return true
-    }
-
     @WorkerThread
     private fun showZrtpSasDialog(authToken: String) {
         val upperCaseAuthToken = authToken.uppercase(Locale.getDefault())
@@ -777,6 +766,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         terminatedByUsed = false
         currentCall = call
         callStatsModel.update(call, call.audioStats)
+        callMediaEncryptionModel.update(call)
         call.addListener(callListener)
 
         if (call.conference != null) {

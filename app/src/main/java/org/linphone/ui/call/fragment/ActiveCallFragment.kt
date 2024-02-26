@@ -36,13 +36,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import androidx.window.layout.FoldingFeature
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.CallActiveFragmentBinding
 import org.linphone.ui.call.CallActivity
-import org.linphone.ui.call.model.CallMediaEncryptionModel
 import org.linphone.ui.call.model.ZrtpSasConfirmationDialogModel
 import org.linphone.ui.call.viewmodel.CallsViewModel
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
@@ -66,8 +64,6 @@ class ActiveCallFragment : GenericCallFragment() {
     private lateinit var callsViewModel: CallsViewModel
 
     private var zrtpSasDialog: Dialog? = null
-
-    private var bottomSheetDialog: BottomSheetDialogFragment? = null
 
     // For moving video preview purposes
 
@@ -96,22 +92,11 @@ class ActiveCallFragment : GenericCallFragment() {
         }
     }
 
-    private val numpadBottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
+    private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
             if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                val numpadBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
-                numpadBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-            }
-        }
-
-        override fun onSlide(bottomSheet: View, slideOffset: Float) { }
-    }
-
-    private val callStatsBottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
-        override fun onStateChanged(bottomSheet: View, newState: Int) {
-            if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                val callStatsBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
-                callStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             }
         }
 
@@ -177,11 +162,17 @@ class ActiveCallFragment : GenericCallFragment() {
 
         val numpadBottomSheetBehavior = BottomSheetBehavior.from(binding.callNumpad.root)
         numpadBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        numpadBottomSheetBehavior.addBottomSheetCallback(numpadBottomSheetCallback)
+        numpadBottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
 
         val callStatsBottomSheetBehavior = BottomSheetBehavior.from(binding.callStats.root)
         callStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        callStatsBottomSheetBehavior.addBottomSheetCallback(callStatsBottomSheetCallback)
+        callStatsBottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
+
+        val callMediaEncryptionStatsBottomSheetBehavior = BottomSheetBehavior.from(
+            binding.callMediaEncryptionStats.root
+        )
+        callMediaEncryptionStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        callMediaEncryptionStatsBottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
 
         binding.setBackClickListener {
             requireActivity().finish()
@@ -200,7 +191,15 @@ class ActiveCallFragment : GenericCallFragment() {
         binding.setCallStatisticsClickListener {
             actionsBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             numpadBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            callMediaEncryptionStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             callStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
+
+        binding.setCallMediaEncryptionStatisticsClickListener {
+            actionsBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            numpadBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            callStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            callMediaEncryptionStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
 
         sharedViewModel = requireActivity().run {
@@ -223,6 +222,7 @@ class ActiveCallFragment : GenericCallFragment() {
             sharedViewModel.toggleFullScreenEvent.value = Event(hide)
             numpadBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             callStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            callMediaEncryptionStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
         callViewModel.showZrtpSasDialogEvent.observe(viewLifecycleOwner) {
@@ -334,12 +334,6 @@ class ActiveCallFragment : GenericCallFragment() {
                 }
             }
         }
-
-        callViewModel.showMediaEncryptionStatisticsEvent.observe(viewLifecycleOwner) {
-            it.consume { model ->
-                showMediaEncryptionStatistics(model)
-            }
-        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -363,9 +357,6 @@ class ActiveCallFragment : GenericCallFragment() {
         zrtpSasDialog?.dismiss()
         zrtpSasDialog = null
 
-        bottomSheetDialog?.dismiss()
-        bottomSheetDialog = null
-
         binding.localPreviewVideoSurface.setOnTouchListener(null)
     }
 
@@ -387,23 +378,5 @@ class ActiveCallFragment : GenericCallFragment() {
         }
 
         set.applyTo(constraintLayout)
-    }
-
-    private fun showMediaEncryptionStatistics(model: CallMediaEncryptionModel) {
-        val modalBottomSheet = MediaEncryptionStatisticsDialogFragment(model)
-        modalBottomSheet.show(
-            requireActivity().supportFragmentManager,
-            MediaEncryptionStatisticsDialogFragment.TAG
-        )
-        bottomSheetDialog = modalBottomSheet
-
-        model.showZrtpSasValidationDialogEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                callViewModel.showZrtpSasDialogIfPossible()
-
-                modalBottomSheet.dismiss()
-                bottomSheetDialog = null
-            }
-        }
     }
 }

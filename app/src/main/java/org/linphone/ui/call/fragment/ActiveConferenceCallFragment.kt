@@ -31,12 +31,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.CallActiveConferenceFragmentBinding
-import org.linphone.ui.call.model.CallMediaEncryptionModel
 import org.linphone.ui.call.viewmodel.CallsViewModel
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
 import org.linphone.utils.Event
@@ -52,6 +50,17 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
     private lateinit var callViewModel: CurrentCallViewModel
 
     private lateinit var callsViewModel: CallsViewModel
+
+    private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+            if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            }
+        }
+
+        override fun onSlide(bottomSheet: View, slideOffset: Float) { }
+    }
 
     private val actionsBottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -72,19 +81,6 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
 
         override fun onSlide(bottomSheet: View, slideOffset: Float) { }
     }
-
-    private val callStatsBottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
-        override fun onStateChanged(bottomSheet: View, newState: Int) {
-            if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                val callStatsBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
-                callStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-            }
-        }
-
-        override fun onSlide(bottomSheet: View, slideOffset: Float) { }
-    }
-
-    private var bottomSheetDialog: BottomSheetDialogFragment? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -118,7 +114,13 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
 
         val callStatsBottomSheetBehavior = BottomSheetBehavior.from(binding.callStats.root)
         callStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        callStatsBottomSheetBehavior.addBottomSheetCallback(callStatsBottomSheetCallback)
+        callStatsBottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
+
+        val callMediaEncryptionStatsBottomSheetBehavior = BottomSheetBehavior.from(
+            binding.callMediaEncryptionStats.root
+        )
+        callMediaEncryptionStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        callMediaEncryptionStatsBottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
 
         callViewModel.callDuration.observe(viewLifecycleOwner) { duration ->
             binding.chronometer.base = SystemClock.elapsedRealtime() - (1000 * duration)
@@ -152,17 +154,12 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
             Log.i("$TAG Switching full screen mode to ${if (hide) "ON" else "OFF"}")
             sharedViewModel.toggleFullScreenEvent.value = Event(hide)
             callStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            callMediaEncryptionStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
         callViewModel.conferenceModel.conferenceLayout.observe(viewLifecycleOwner) { layout ->
             // Collapse bottom sheet after changing conference layout
             actionsBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        }
-
-        callViewModel.showMediaEncryptionStatisticsEvent.observe(viewLifecycleOwner) {
-            it.consume { model ->
-                showMediaEncryptionStatistics(model)
-            }
         }
 
         binding.setBackClickListener {
@@ -194,7 +191,14 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
 
         binding.setCallStatisticsClickListener {
             actionsBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            callMediaEncryptionStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             callStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
+
+        binding.setCallMediaEncryptionStatisticsClickListener {
+            actionsBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            callStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            callMediaEncryptionStatsBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
     }
 
@@ -205,21 +209,5 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
             // Need to be done manually
             callViewModel.updateCallDuration()
         }
-    }
-
-    override fun onPause() {
-        super.onPause()
-
-        bottomSheetDialog?.dismiss()
-        bottomSheetDialog = null
-    }
-
-    private fun showMediaEncryptionStatistics(model: CallMediaEncryptionModel) {
-        val modalBottomSheet = MediaEncryptionStatisticsDialogFragment(model)
-        modalBottomSheet.show(
-            requireActivity().supportFragmentManager,
-            MediaEncryptionStatisticsDialogFragment.TAG
-        )
-        bottomSheetDialog = modalBottomSheet
     }
 }

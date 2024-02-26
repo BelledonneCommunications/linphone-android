@@ -558,6 +558,7 @@
     <string name="call_stats_resolution_label">Resolution: %s</string>
     <string name="call_stats_fps_label">FPS: %s</string>
 
+    <string name="call_stats_media_encryption_title">Media encryption</string>
     <string name="call_stats_media_encryption">Media encryption: %s</string>
     <string name="call_stats_media_encryption_zrtp_post_quantum">Post Quantum ZRTP</string>
     <string name="call_stats_zrtp_cipher_algo">Cipher algorithm: %s</string>

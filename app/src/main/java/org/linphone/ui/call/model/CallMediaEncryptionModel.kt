@@ -28,7 +28,7 @@ import org.linphone.core.StreamType
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
-class CallMediaEncryptionModel @WorkerThread constructor(call: Call) {
+class CallMediaEncryptionModel @WorkerThread constructor() {
     val mediaEncryption = MutableLiveData<String>()
 
     val isMediaEncryptionZrtp = MutableLiveData<Boolean>()
@@ -42,7 +42,8 @@ class CallMediaEncryptionModel @WorkerThread constructor(call: Call) {
         MutableLiveData<Event<Boolean>>()
     }
 
-    init {
+    @WorkerThread
+    fun update(call: Call) {
         isMediaEncryptionZrtp.postValue(false)
 
         val stats = call.getStats(StreamType.Audio)

@@ -23,6 +23,9 @@
             name="callStatisticsClickListener"
             type="View.OnClickListener" />
         <variable
+            name="callMediaEncryptionStatisticsClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.call.viewmodel.CurrentCallViewModel" />
         <variable
@@ -161,7 +164,7 @@
 
             <ImageView
                 android:id="@+id/media_encryption_icon"
-                android:onClick="@{() -> viewModel.showMediaEncryptionStatisticsIfPossible()}"
+                android:onClick="@{callMediaEncryptionStatisticsClickListener}"
                 android:layout_width="@dimen/small_icon_size"
                 android:layout_height="0dp"
                 android:layout_marginStart="10dp"
@@ -178,7 +181,7 @@
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/default_text_style"
                 android:id="@+id/media_encryption_label"
-                android:onClick="@{() -> viewModel.showMediaEncryptionStatisticsIfPossible()}"
+                android:onClick="@{callMediaEncryptionStatisticsClickListener}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
@@ -269,8 +272,15 @@
             bind:callsListClickListener="@{callsListClickListener}"/>
 
         <include
+            android:id="@+id/call_media_encryption_stats"
+            layout="@layout/call_media_encryption_stats_bottom_sheet"
+            bind:viewModel="@{viewModel}"
+            bind:model="@{viewModel.callMediaEncryptionModel}"/>
+
+        <include
             android:id="@+id/call_stats"
             layout="@layout/call_stats_bottom_sheet"
+            bind:viewModel="@{viewModel}"
             bind:model="@{viewModel.callStatsModel}"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,93 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.call.viewmodel.CurrentCallViewModel" />
         <variable
             name="model"
             type="org.linphone.ui.call.model.CallMediaEncryptionModel" />
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="?attr/color_main2_000">
+        android:background="@color/black"
+        android:visibility="@{viewModel.fullScreenMode || viewModel.pipMode ? View.INVISIBLE : View.VISIBLE}"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="0dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/context_menu_action_label_style"
+    <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+        android:id="@+id/handle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="11dp"
+        android:src="@drawable/shape_drawer_handle"
+        app:tint="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="@{model.mediaEncryption, default=`Media Encryption: Post Quantum ZRTP`}"
-            android:textColor="?attr/color_grey_900"
-            android:gravity="center_vertical" />
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/shape_squircle_gray_600_background"
+            app:layout_constraintTop_toBottomOf="@id/handle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:orientation="vertical">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/context_menu_action_label_style"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="@{model.zrtpCipher, default=@string/call_stats_zrtp_cipher_algo}"
-            android:textColor="?attr/color_grey_900"
-            android:gravity="center_vertical"
-            android:visibility="@{model.isMediaEncryptionZrtp ? View.VISIBLE : View.GONE}"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_700"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/call_stats_media_encryption_title"
+                android:textSize="12sp"
+                android:textColor="@color/white"
+                android:gravity="center" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/context_menu_action_label_style"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="@{model.zrtpKeyAgreement, default=@string/call_stats_zrtp_key_agreement_algo}"
-            android:textColor="?attr/color_grey_900"
-            android:gravity="center_vertical"
-            android:visibility="@{model.isMediaEncryptionZrtp ? View.VISIBLE : View.GONE}" />
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="10dp"
+                android:text="@{model.mediaEncryption, default=`Media Encryption: Post Quantum ZRTP`}"
+                android:textColor="@color/white"
+                android:gravity="center" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/context_menu_action_label_style"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="@{model.zrtpHash, default=@string/call_stats_zrtp_hash_algo}"
-            android:textColor="?attr/color_grey_900"
-            android:gravity="center_vertical"
-            android:visibility="@{model.isMediaEncryptionZrtp ? View.VISIBLE : View.GONE}" />
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="10dp"
+                android:text="@{model.zrtpCipher, default=@string/call_stats_zrtp_cipher_algo}"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:visibility="@{model.isMediaEncryptionZrtp ? View.VISIBLE : View.GONE}"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/context_menu_action_label_style"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="@{model.zrtpAuthTag, default=@string/call_stats_zrtp_auth_tag_algo}"
-            android:textColor="?attr/color_grey_900"
-            android:gravity="center_vertical"
-            android:visibility="@{model.isMediaEncryptionZrtp ? View.VISIBLE : View.GONE}" />
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="10dp"
+                android:text="@{model.zrtpKeyAgreement, default=@string/call_stats_zrtp_key_agreement_algo}"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:visibility="@{model.isMediaEncryptionZrtp ? View.VISIBLE : View.GONE}" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/context_menu_action_label_style"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="@{model.zrtpAuthSas, default=@string/call_stats_zrtp_sas_algo}"
-            android:textColor="?attr/color_grey_900"
-            android:gravity="center_vertical"
-            android:visibility="@{model.isMediaEncryptionZrtp ? View.VISIBLE : View.GONE}" />
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="10dp"
+                android:text="@{model.zrtpHash, default=@string/call_stats_zrtp_hash_algo}"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:visibility="@{model.isMediaEncryptionZrtp ? View.VISIBLE : View.GONE}" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/secondary_button_label_style"
-            android:onClick="@{() -> model.showSasValidationDialog()}"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:text="@string/call_do_zrtp_sas_validation_again"
-            android:visibility="@{model.isMediaEncryptionZrtp ? View.VISIBLE : View.GONE}"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="10dp"
+                android:text="@{model.zrtpAuthTag, default=@string/call_stats_zrtp_auth_tag_algo}"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:visibility="@{model.isMediaEncryptionZrtp ? View.VISIBLE : View.GONE}" />
 
-    </LinearLayout>
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="10dp"
+                android:text="@{model.zrtpAuthSas, default=@string/call_stats_zrtp_sas_algo}"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:visibility="@{model.isMediaEncryptionZrtp ? View.VISIBLE : View.GONE}" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/secondary_button_label_style"
+                android:onClick="@{() -> model.showSasValidationDialog()}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:text="@string/call_do_zrtp_sas_validation_again"
+                android:visibility="@{model.isMediaEncryptionZrtp ? View.VISIBLE : View.GONE}"/>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
