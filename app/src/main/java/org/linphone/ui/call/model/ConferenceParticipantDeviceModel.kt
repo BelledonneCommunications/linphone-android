@@ -110,14 +110,11 @@ class ConferenceParticipantDeviceModel @WorkerThread constructor(
             available: Boolean,
             streamType: StreamType?
         ) {
-            Log.d(
+            Log.i(
                 "$TAG Participant device [${participantDevice.address.asStringUriOnly()}] stream [$streamType] availability changed to ${if (available) "available" else "not available"}"
             )
             if (streamType == StreamType.Video) {
                 isVideoAvailable.postValue(available)
-                if (available) {
-                    updateWindowId()
-                }
             }
         }
 
@@ -127,12 +124,13 @@ class ConferenceParticipantDeviceModel @WorkerThread constructor(
             direction: MediaDirection?,
             streamType: StreamType?
         ) {
-            Log.d(
+            Log.i(
                 "$TAG Participant device [${participantDevice.address.asStringUriOnly()}] stream [$streamType] capability changed to [$direction]"
             )
             if (streamType == StreamType.Video) {
+                val sending = direction == MediaDirection.SendRecv || direction == MediaDirection.SendOnly
                 isSendingVideo.postValue(
-                    direction == MediaDirection.SendRecv || direction == MediaDirection.SendOnly
+                    sending
                 )
             }
         }
@@ -189,19 +187,26 @@ class ConferenceParticipantDeviceModel @WorkerThread constructor(
     @WorkerThread
     private fun updateWindowId() {
         if (::textureView.isInitialized) {
-            Log.i(
-                "$$TAG Setting participant [${device.address.asStringUriOnly()}] window ID [$textureView]"
-            )
             // SDK does it but it's a bit better this way, prevents going to participants map in PlatformHelper for nothing
             if (isMe) {
+                Log.i(
+                    "$TAG Setting our own video preview window ID [$textureView]"
+                )
                 coreContext.core.nativePreviewWindowId = textureView
             } else {
+                Log.i(
+                    "$TAG Setting participant [${device.address.asStringUriOnly()}] window ID [$textureView]"
+                )
                 device.nativeVideoWindowId = textureView
             }
         } else {
-            Log.e(
-                "$TAG TextureView for participant [${device.address.asStringUriOnly()}] wasn't initialized yet!"
-            )
+            if (isMe) {
+                Log.e("$TAG Our TextureView wasn't initialized yet!")
+            } else {
+                Log.e(
+                    "$TAG TextureView for participant [${device.address.asStringUriOnly()}] wasn't initialized yet!"
+                )
+            }
         }
     }
 }
