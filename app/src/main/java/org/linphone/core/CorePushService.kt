@@ -64,6 +64,7 @@ class CorePushService : PushService() {
             SERVICE_NOTIFICATION_CHANNEL_ID
         )
             .setContentTitle(getString(R.string.notification_push_received_title))
+            .setContentText(getString(R.string.notification_push_received_message))
             .setSmallIcon(R.drawable.linphone_notification)
             .setAutoCancel(false)
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
