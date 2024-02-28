@@ -74,11 +74,6 @@ class MeetingViewModel @UiThread constructor() : ViewModel() {
 
     override fun onCleared() {
         super.onCleared()
-
-        coreContext.postOnCoreThread {
-            speakers.value.orEmpty().forEach(ParticipantModel::destroy)
-            participants.value.orEmpty().forEach(ParticipantModel::destroy)
-        }
     }
 
     @UiThread
@@ -163,9 +158,6 @@ class MeetingViewModel @UiThread constructor() : ViewModel() {
     }
 
     private fun computeParticipantsList() {
-        speakers.value.orEmpty().forEach(ParticipantModel::destroy)
-        participants.value.orEmpty().forEach(ParticipantModel::destroy)
-
         val speakersList = arrayListOf<ParticipantModel>()
         val participantsList = arrayListOf<ParticipantModel>()
 

@@ -175,6 +175,7 @@ dependencies {
 
     // https://github.com/openid/AppAuth-Android/blob/master/LICENSE Apache v2.0
     implementation 'net.openid:appauth:0.11.1'
+    //noinspection GroovyConstructorNamedArguments
     android.defaultConfig.manifestPlaceholders = [appAuthRedirectScheme: 'org.linphone']
 
     //noinspection GradleDynamicVersion

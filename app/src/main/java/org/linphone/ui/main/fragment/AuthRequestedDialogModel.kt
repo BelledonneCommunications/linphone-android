@@ -39,7 +39,7 @@ class AuthRequestedDialogModel @UiThread constructor(identity: String) {
     init {
         showPassword.value = false
         message.value = AppUtils.getFormattedString(
-            R.string.dialog_account_invalid_password_message,
+            R.string.account_settings_dialog_invalid_password_message,
             identity
         )
     }

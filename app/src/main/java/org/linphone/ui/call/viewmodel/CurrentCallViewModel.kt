@@ -726,7 +726,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                 val avatarModel = contact.value
                 if (avatarModel != null) {
                     avatarModel.trust.postValue(securityLevel)
-                    contact.postValue(avatarModel!!)
+                    contact.postValue(avatarModel)
                 } else {
                     Log.e("$TAG No avatar model found!")
                 }

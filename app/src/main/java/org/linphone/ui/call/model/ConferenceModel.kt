@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.call.model
 
+import android.annotation.SuppressLint
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
@@ -113,7 +114,7 @@ class ConferenceModel {
             if (found != null) {
                 Log.i("$TAG Newly active speaker participant is [${found.name}]")
                 found.isActiveSpeaker.postValue(true)
-                activeSpeaker.postValue(found!!)
+                activeSpeaker.postValue(found)
             } else {
                 Log.i("$TAG Failed to find actively speaking participant...")
                 val model = ConferenceParticipantDeviceModel(participantDevice)
@@ -300,7 +301,6 @@ class ConferenceModel {
 
     @WorkerThread
     private fun computeParticipants() {
-        participants.value.orEmpty().forEach(ConferenceParticipantModel::destroy)
         participantDevices.value.orEmpty().forEach(ConferenceParticipantDeviceModel::destroy)
 
         val participantsList = arrayListOf<ConferenceParticipantModel>()
@@ -457,7 +457,6 @@ class ConferenceModel {
             participant.address.weakEqual(it.participant.address)
         }
         if (toRemove != null) {
-            toRemove.destroy()
             list.remove(toRemove)
         }
 

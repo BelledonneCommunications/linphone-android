@@ -241,6 +241,16 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         Looper.loop()
     }
 
+    override fun quit(): Boolean {
+        destroyCore()
+        return super.quit()
+    }
+
+    override fun quitSafely(): Boolean {
+        destroyCore()
+        return super.quitSafely()
+    }
+
     @WorkerThread
     fun startCore() {
         Log.i("$TAG Configuring Core")

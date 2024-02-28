@@ -57,6 +57,7 @@ class ProfileModeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = viewModel
 
         binding.setBackClickListener {
             findNavController().popBackStack()

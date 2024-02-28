@@ -32,8 +32,4 @@ class ParticipantModel @WorkerThread constructor(address: Address, val isOrganiz
         val avatar = coreContext.contactsManager.getContactAvatarModelForAddress(address)
         avatarModel.postValue(avatar)
     }
-
-    @WorkerThread
-    fun destroy() {
-    }
 }

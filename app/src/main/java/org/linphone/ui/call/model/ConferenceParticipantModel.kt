@@ -36,8 +36,4 @@ class ConferenceParticipantModel @WorkerThread constructor(val participant: Part
     init {
         isAdmin.postValue(participant.isAdmin)
     }
-
-    @WorkerThread
-    fun destroy() {
-    }
 }

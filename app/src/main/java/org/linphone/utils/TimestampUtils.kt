@@ -70,22 +70,6 @@ class TimestampUtils {
         }
 
         @AnyThread
-        fun dateToString(date: Long, timestampInSecs: Boolean = true): String {
-            val dateFormat: Format = android.text.format.DateFormat.getDateFormat(
-                coreContext.context
-            )
-            val pattern = (dateFormat as SimpleDateFormat).toLocalizedPattern()
-
-            val calendar = Calendar.getInstance()
-            calendar.timeInMillis = if (timestampInSecs) date * 1000 else date
-
-            // See https://github.com/material-components/material-components-android/issues/882
-            val dateFormatter = SimpleDateFormat(pattern, Locale.getDefault())
-            dateFormatter.timeZone = TimeZone.getTimeZone("UTC")
-            return dateFormatter.format(calendar.time)
-        }
-
-        @AnyThread
         fun dayOfWeek(timestamp: Long, timestampInSecs: Boolean = true): String {
             val calendar = Calendar.getInstance()
             calendar.timeInMillis = if (timestampInSecs) timestamp * 1000 else timestamp
