@@ -19,7 +19,6 @@
  */
 package org.linphone.ui.call.model
 
-import android.annotation.SuppressLint
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData

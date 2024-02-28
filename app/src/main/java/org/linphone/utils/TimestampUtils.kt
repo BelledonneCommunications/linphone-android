@@ -21,13 +21,11 @@ package org.linphone.utils
 
 import androidx.annotation.AnyThread
 import java.text.DateFormat
-import java.text.Format
 import java.text.SimpleDateFormat
 import java.time.format.TextStyle
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-import java.util.TimeZone
 import org.linphone.LinphoneApplication.Companion.coreContext
 
 class TimestampUtils {

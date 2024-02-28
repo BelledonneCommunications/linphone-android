@@ -32,6 +32,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.contacts.ContactLoader
 import org.linphone.core.Account
 import org.linphone.core.AuthInfo
 import org.linphone.core.AuthMethod
@@ -180,11 +181,7 @@ class MainViewModel @UiThread constructor() : ViewModel() {
                 }
                 RegistrationState.Ok -> {
                     if (!firstAccountRegistered) {
-                        Log.i(
-                            "$TAG First account registered, start loading contacts if permission has been granted"
-                        )
-                        firstAccountRegistered = true
-                        startLoadingContactsEvent.postValue(Event(true))
+                        triggerNativeAddressBookImport()
                     }
 
                     if (account == core.defaultAccount) {
@@ -289,11 +286,7 @@ class MainViewModel @UiThread constructor() : ViewModel() {
             atLeastOneCall.postValue(core.callsNb > 0)
 
             if (core.defaultAccount?.state == RegistrationState.Ok && !firstAccountRegistered) {
-                Log.i(
-                    "$TAG First account registered, start loading contacts if permission has been granted"
-                )
-                firstAccountRegistered = true
-                startLoadingContactsEvent.postValue(Event(true))
+                triggerNativeAddressBookImport()
             }
         }
     }
@@ -470,6 +463,18 @@ class MainViewModel @UiThread constructor() : ViewModel() {
                     }
                 }
             }
+        }
+    }
+
+    @WorkerThread
+    private fun triggerNativeAddressBookImport() {
+        firstAccountRegistered = true
+
+        if (coreContext.core.getFriendListByName(ContactLoader.NATIVE_ADDRESS_BOOK_FRIEND_LIST) == null) {
+            Log.i("$TAG Native friend list not found, trying to fetch native contacts")
+            startLoadingContactsEvent.postValue(Event(true))
+        } else {
+            Log.i("$TAG Native contacts were already imported once, do not do it again")
         }
     }
 }

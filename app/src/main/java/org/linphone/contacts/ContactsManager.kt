@@ -46,6 +46,7 @@ import org.linphone.core.Address
 import org.linphone.core.ConferenceInfo
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
+import org.linphone.core.Factory
 import org.linphone.core.Friend
 import org.linphone.core.FriendList
 import org.linphone.core.FriendListListenerStub
@@ -93,7 +94,17 @@ class ContactsManager @UiThread constructor() {
             Log.d(
                 "$TAG Newly discovered SIP Address [$sipUri] for friend [${friend.name}] in list [${friendList.displayName}]"
             )
-            newContactAddedWithSipUri(sipUri)
+            val address = Factory.instance().createAddress(sipUri)
+            if (address != null) {
+                Log.i("$TAG Storing discovered SIP URI inside Friend")
+                friend.edit()
+                friend.addAddress(address)
+                friend.done()
+
+                newContactAddedWithSipUri(sipUri)
+            } else {
+                Log.e("$TAG Failed to parse SIP URI [$sipUri] as Address!")
+            }
 
             reloadContactsJob = coroutineScope.launch {
                 delay(DELAY_BEFORE_RELOADING_CONTACTS_AFTER_PRESENCE_RECEIVED)

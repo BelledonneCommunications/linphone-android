@@ -50,10 +50,10 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
 
         private const val TAG = "[Contacts Loader]"
 
-        private const val NATIVE_ADDRESS_BOOK_FRIEND_LIST = "Native address-book"
+        const val NATIVE_ADDRESS_BOOK_FRIEND_LIST = "Native address-book"
         const val LINPHONE_ADDRESS_BOOK_FRIEND_LIST = "Linphone address-book"
 
-        private const val MAX_INTERVAL_TO_REFRESH = 60000L // 1 minute
+        private const val MIN_INTERVAL_TO_WAIT_BEFORE_REFRESH = 300000L // 5 minutes
     }
 
     @MainThread
@@ -78,7 +78,7 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
             ContactsContract.Data.CONTACT_ID + " ASC"
         )
 
-        loader.setUpdateThrottle(MAX_INTERVAL_TO_REFRESH) // Update at most once per minute
+        loader.setUpdateThrottle(MIN_INTERVAL_TO_WAIT_BEFORE_REFRESH) // Update at most once per minute
 
         return loader
     }
@@ -301,12 +301,13 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                         Log.i(
                             "$TAG Friend list [$NATIVE_ADDRESS_BOOK_FRIEND_LIST] didn't exist yet, let's create it"
                         )
-                        fl.isDatabaseStorageEnabled = false // We don't want to store local address-book in DB
+                        fl.isDatabaseStorageEnabled = true // Store them to allow user
+                        fl.type = FriendList.Type.Default
                         fl.displayName = NATIVE_ADDRESS_BOOK_FRIEND_LIST
                         core.addFriendList(fl)
                     } else {
                         Log.i(
-                            "$TAG Friend list [$LINPHONE_ADDRESS_BOOK_FRIEND_LIST] found, removing existing friends if any"
+                            "$TAG Friend list [$NATIVE_ADDRESS_BOOK_FRIEND_LIST] found, removing existing friends if any"
                         )
                         for (friend in fl.friends) {
                             fl.removeFriend(friend)
