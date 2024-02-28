@@ -167,7 +167,7 @@
     </style>
     <style name="avatar_imageview">
         <item name="android:padding">1dp</item> <!-- half the size of the border @dimen/avatar_trust_border_width -->
-        <item name="android:background">@drawable/shape_circle_light_blue_background</item>
+        <item name="android:background">@drawable/shape_circle_contact_avatar_background</item>
         <item name="android:adjustViewBounds">true</item>
         <item name="android:scaleType">centerCrop</item>
         <item name="shapeAppearanceOverlay">@style/rounded</item>
