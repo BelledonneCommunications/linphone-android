@@ -179,20 +179,17 @@
     <string name="assistant_login_using_single_sign_on">Single sign on</string>
     <string name="assistant_no_account_yet">No account yet?</string>
     <string name="assistant_account_register">Register</string>
-    <string name="assistant_scan_qr_code_title">Scan a QR code</string>
     <string name="assistant_account_creation_sms_confirmation_explanation">We have sent a verification code on your phone number %1$s.\n\nPlease enter the verification code below:</string>
     <string name="assistant_account_creation_wrong_phone_number">Wrong number?</string>
     <string name="assistant_account_create">Create</string>
     <string name="assistant_create_account_using_email_on_our_web_platform">Create an account with your email on:</string>
     <string name="assistant_already_have_an_account">Already have an account?</string>
     <string name="assistant_sip_account_transport_protocol">Transport</string>
-    <string name="assistant_third_party_sip_account_warning_explanation">Some features require a Linphone account, such as group messaging, video conferences…\n\nThese features are hidden when you register with a third party SIP account.\n\nTo enable it in a commercial project, please contact us.</string>
+    <string name="assistant_third_party_sip_account_warning_explanation">Some features require a &appName; account, such as group messaging, video conferences…\n\nThese features are hidden when you register with a third party SIP account.\n\nTo enable it in a commercial project, please contact us.</string>
     <string name="assistant_third_party_sip_account_create_linphone_account">I prefer to create an account</string>
     <string name="assistant_third_party_sip_account_warning_ok">I understand</string>
     <string name="assistant_account_secure_mode_title">Personalize your profile mode</string>
     <string name="assistant_account_secure_mode_subtitle">You may change that mode later</string>
-    <string name="assistant_secure_mode_default_title">End-to-end encrypted</string>
-    <string name="assistant_secure_mode_interoperable_title">Interoperable</string>
     <string name="assistant_secure_mode_finish_account_login">Continue</string>
     <string name="assistant_account_register_unavailable_no_push_toast">Push notifications not available, account creation disabled</string>
     <string name="assistant_account_register_username_already_in_use_error">This account already exists</string>
@@ -217,7 +214,6 @@
     <string name="assistant_permissions_title">Grant permissions</string>
     <string name="assistant_permissions_grant_all_of_them">OK</string>
     <string name="assistant_permissions_skip_permissions">Do it later</string>
-    <string name="assistant_single_sign_on_title">Single Sign On</string>
 
     <string name="assistant_permissions_subtitle">To fully enjoy &appName; we need you to grant us the following permissions :</string>
     <string name="assistant_permissions_read_contacts_title"><b>Read contacts:</b> To display your contacts and find whom is using &appName;.</string>
@@ -252,8 +248,8 @@
     <string name="help_troubleshooting_debug_subtitle">Blah blah blah?</string> <!-- TODO -->
     <string name="help_troubleshooting_clean_logs">Clean logs</string>
     <string name="help_troubleshooting_share_logs">Share logs</string>
-    <string name="help_troubleshooting_app_version_title">Linphone app version</string>
-    <string name="help_troubleshooting_sdk_version_title">Linphone SDK version</string>
+    <string name="help_troubleshooting_app_version_title">App version</string>
+    <string name="help_troubleshooting_sdk_version_title">SDK version</string>
     <string name="help_troubleshooting_share_logs_dialog_title">Share debug logs link using…</string>
     <string name="help_troubleshooting_debug_logs_cleaned_toast_message">Debug logs have been cleaned</string>
     <string name="help_troubleshooting_debug_logs_upload_error_toast_message">Failed to upload debug logs</string>
@@ -263,10 +259,6 @@
     <string name="settings_calls_echo_canceller_subtitle">Prevents echo from being heard by remote end</string>
     <string name="settings_calls_route_audio_to_bluetooth_title">Route audio to bluetooth device, if any</string>
     <string name="settings_calls_enable_video_title">Enable video</string>
-    <string name="settings_calls_auto_initiate_video_title">Start video calls</string>
-    <string name="settings_calls_auto_initiate_video_subtitle">Always initiate calls as video</string>
-    <string name="settings_calls_auto_accept_video_title">Accept video calls</string>
-    <string name="settings_calls_auto_accept_video_subtitle">Always accept video calls</string>
     <string name="settings_calls_ringtones_title">Choose your ringtone:</string>
     <string name="settings_calls_use_device_ringtone_label">Use this device\'s ringtone</string>
     <string name="settings_calls_play_ringtone_label">Play</string>
@@ -291,8 +283,6 @@
     <string name="settings_user_interface_auto_theme_label">Auto</string>
     <string name="settings_advanced_title">Advanced settings</string>
 
-    <string name="account_settings_title">Account settings</string>
-
     <string name="manage_account_title">Manage account</string>
     <string name="manage_account_details_title">Details</string>
     <string name="manage_account_devices_title">Devices</string>
@@ -316,6 +306,7 @@
     <string name="manage_account_device_remove">Remove</string>
     <string name="manage_account_device_last_connection">Last connection:</string>
 
+    <string name="account_settings_title">Account settings</string>
     <string name="account_settings_push_notification_title">Allow push notifications</string>
     <string name="account_settings_sip_proxy_url_title">SIP proxy server URL</string>
     <string name="account_settings_outbound_proxy_title">Outbound proxy</string>
@@ -396,7 +387,7 @@
     <string name="call_incoming_for_account">Incoming call for %s</string>
 
     <string name="conversations_list_empty">No conversation for the moment…</string>
-    <string name="conversations_list_is_being_removed_label">Removal in progress</string>
+    <string name="conversations_list_is_being_removed_label">Removal in progress…</string>
     <string name="conversations_last_message_format">%s:</string>
     <string name="conversation_action_mark_as_read">Mark as read</string>
     <string name="conversation_action_mute">Mute</string>
@@ -432,8 +423,8 @@
     <string name="conversation_menu_configure_ephemeral_messages">Ephemeral messages</string>
     <string name="conversation_menu_media_files">Media</string>
     <string name="conversation_menu_documents_files">Documents</string>
-    <string name="conversation_no_media_found">No media found</string>
-    <string name="conversation_no_document_found">No document found</string>
+    <string name="conversation_no_media_found">No media found…</string>
+    <string name="conversation_no_document_found">No document found…</string>
     <string name="conversation_filter_no_matching_result">No matching result</string>
     <string name="conversation_end_to_end_encrypted_event_title">End-to-end encrypted conversation</string>
     <string name="conversation_end_to_end_encrypted_event_subtitle">Messages in this conversation are e2e encrypted. Only your correspondent can decrypt them.</string>
@@ -517,7 +508,6 @@
     <string name="call_action_go_to_calls_list">Calls list</string>
     <string name="call_action_show_dialer">Dialer</string>
     <string name="call_action_show_messages">Messages</string>
-    <string name="call_action_show_statistics">Statistics</string>
     <string name="call_action_pause_call">Pause</string>
     <string name="call_action_resume_call">Resume</string>
     <string name="call_action_record_call">Record</string>

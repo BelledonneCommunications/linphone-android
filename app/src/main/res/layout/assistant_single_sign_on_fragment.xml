@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="100dp"
                 android:paddingBottom="27dp"
-                android:text="@string/assistant_single_sign_on_title"
+                android:text="@string/assistant_login_using_single_sign_on"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
