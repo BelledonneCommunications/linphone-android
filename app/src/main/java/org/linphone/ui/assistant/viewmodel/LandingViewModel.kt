@@ -58,7 +58,7 @@ class LandingViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun login() {
         coreContext.postOnCoreThread {
-            var identity = sipIdentity.value.orEmpty()
+            var identity = sipIdentity.value.orEmpty().trim()
             if (!identity.startsWith("sip:")) {
                 identity = "sip:$identity"
             }

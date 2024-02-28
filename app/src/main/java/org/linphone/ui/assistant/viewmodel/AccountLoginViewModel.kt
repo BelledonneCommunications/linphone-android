@@ -206,6 +206,6 @@ class AccountLoginViewModel @UiThread constructor() : ViewModel() {
 
     @UiThread
     private fun isLoginButtonEnabled(): Boolean {
-        return sipIdentity.value.orEmpty().isNotEmpty() && password.value.orEmpty().isNotEmpty()
+        return sipIdentity.value.orEmpty().trim().isNotEmpty() && password.value.orEmpty().isNotEmpty()
     }
 }
