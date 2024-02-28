@@ -117,7 +117,7 @@ class HelpFragment : GenericFragment() {
     }
 
     private fun showUpdateAvailableDialog(version: String, url: String) {
-        val message = getString(R.string.dialog_update_available_message, version)
+        val message = getString(R.string.help_dialog_update_available_message, version)
 
         val model = ConfirmationDialogModel()
         val dialog = DialogUtils.getUpdateAvailableDialog(

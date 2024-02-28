@@ -145,7 +145,7 @@ class DialogUtils {
             )
             binding.viewModel = viewModel
             binding.title.text = context.getString(
-                R.string.dialog_remove_account_title,
+                R.string.manage_account_dialog_remove_account_title,
                 displayName
             )
 
@@ -215,7 +215,7 @@ class DialogUtils {
             )
             binding.viewModel = viewModel
             binding.title.text = context.getString(
-                R.string.dialog_contact_delete_title,
+                R.string.contact_dialog_delete_title,
                 contactName
             )
 

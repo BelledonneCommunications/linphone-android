@@ -5,38 +5,6 @@
 ]>
 
 <resources>
-    <string name="app_name">Linphone</string>
-
-    <string name="vertical_separator" translatable="false">|</string>
-    <string name="assistant_web_platform_link" translatable="false">subscribe.linphone.org</string>
-    <string name="assistant_linphone_contact_us_link" translatable="false">linphone.org/contact</string>
-    <string name="notification_channel_call_id" translatable="false">linphone_notification_call_id</string>
-    <string name="notification_channel_incoming_call_id" translatable="false">linphone_notification_incoming_call_id</string>
-    <string name="notification_channel_missed_call_id" translatable="false">linphone_notification_missed_call_id</string>
-    <string name="notification_channel_service_id" translatable="false">linphone_notification_service_id</string>
-    <string name="notification_channel_chat_id" translatable="false">linphone_notification_chat_id</string>
-
-    <string name="emoji_love" translatable="false">❤️</string>
-    <string name="emoji_thumbs_up" translatable="false">👍</string>
-    <string name="emoji_laughing" translatable="false">😂</string>
-    <string name="emoji_surprised" translatable="false">😮</string>
-    <string name="emoji_tear" translatable="false">😢</string>
-
-    <string name="help_about_open_source_licenses_title" translatable="false">GNU General Public License v3.0</string>
-    <string name="help_about_open_source_licenses_subtitle" translatable="false">© Belledonne Communications 2010-2024</string>
-    <string name="help_advanced_send_debug_logs_email_address" translatable="false">linphone-android@belledonne-communications.com</string>
-
-    <string name="website_contact_url" translatable="false">https://linphone.org/contact</string>
-    <string name="website_download_url" translatable="false">https://linphone.org/download</string>
-    <string name="website_privacy_policy_url" translatable="false">https://linphone.org/privacy-policy</string>
-    <string name="website_terms_and_conditions_url" translatable="false">https://linphone.org/general-terms</string>
-    <string name="web_platform_register_email_url" translatable="false">https://subscribe.linphone.org/register/email</string>
-    <string name="web_platform_forgotten_password_url" translatable="false">https://subscribe.linphone.org/</string>
-    <string name="website_translate_weblate_url" translatable="false">https://weblate.linphone.org/</string>
-    <string name="website_open_source_licences_usage_url" translatable="false">https://wiki.linphone.org/xwiki/wiki/public/view/Linphone/Third%20party%20components%20/#Hlinphone-android</string>
-
-    <string name="conversation_one_to_one_hidden_subject" translatable="false">Dummy subject</string>
-
     <string name="sip_address">Adresse SIP</string>
     <string name="sip_address_hint">utilisateur@domaine</string>
     <string name="sip_address_display_name">Nom d\'affichage</string>
@@ -55,6 +23,17 @@
         <item quantity="one">%s selectionné</item>
         <item quantity="other">%s selectionnés</item>
     </plurals>
+
+    <string name="dialog_deny">Refuser</string>
+    <string name="dialog_accept">Accepter</string>
+    <string name="dialog_cancel">Annuler</string>
+    <string name="dialog_continue">Continuer</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_call">Appeler</string>
+    <string name="dialog_delete">Supprimer</string>
+    <string name="dialog_close">Fermer</string>
+    <string name="dialog_install">Installer</string>
+    <string name="dialog_do_not_show_anymore">Ne plus me montrer ce message</string>
 
     <string name="notification_channel_call_name">&appName; notifications d\'appels en cours</string>
     <string name="notification_channel_incoming_call_name">&appName; notifications d\'appels entrants</string>
@@ -77,60 +56,6 @@
     <string name="welcome_page_2_message">Vos communications sont en sécurité grâce au <b>chiffrement de bout en bout</b>.</string>
     <string name="welcome_page_3_title">Open source</string>
     <string name="welcome_page_3_message">Une application open source et un <b>service gratuit</b> depuis <b>2001</b>.</string>
-
-    <string name="bottom_navigation_contacts_label">Contacts</string>
-    <string name="bottom_navigation_calls_label">Appels</string>
-    <string name="bottom_navigation_conversations_label">Conversations</string>
-    <string name="bottom_navigation_meetings_label">Réunions</string>
-
-    <string name="dialog_deny">Refuser</string>
-    <string name="dialog_accept">Accepter</string>
-    <string name="dialog_cancel">Annuler</string>
-    <string name="dialog_continue">Continuer</string>
-    <string name="dialog_ok">OK</string>
-    <string name="dialog_call">Appeler</string>
-    <string name="dialog_delete">Supprimer</string>
-    <string name="dialog_close">Fermer</string>
-    <string name="dialog_install">Installer</string>
-    <string name="dialog_do_not_show_anymore">Ne plus me montrer ce message</string>
-    <string name="dialog_general_terms_and_privacy_policy_title">Conditions de service &amp; politique de confidentialité</string>
-    <string name="dialog_general_terms_and_privacy_policy_message">blah blah blah</string> <!-- TODO FIXME -->
-    <string name="dialog_confirm_phone_number_title">Confirmez votre numéro de téléphone</string>
-    <string name="dialog_confirm_phone_number_message">Êtes-vous sûr de vouloir utiliser ce numéro de téléphone ?</string>
-    <string name="dialog_contact_new_or_edit_abort_confirmation_title">Ne pas sauvegarder vos changements</string>
-    <string name="dialog_contact_new_or_edit_abort_confirmation_message">Toutes vos modifications seront perdues.</string>
-    <string name="dialog_zrtp_validate_trust_title">Valider l\'appareil</string>
-    <string name="dialog_zrtp_validate_trust_subtitle">Dites %s puis cliquez sur les lettres données par votre correspondant :</string>
-    <string name="dialog_zrtp_validate_trust_message">Blah</string> <!-- TODO FIXME -->
-    <string name="dialog_zrtp_validate_trust_letters_do_not_match">Je ne trouve pas</string>
-    <string name="dialog_contact_increase_trust_level_title">Augmenter le niveau de confiance</string>
-    <string name="dialog_contact_increase_trust_level_message">Vous êtes sur le point de passer un appel vers l\'appareil $2%s\ de $1%s.\Voulez-vous démarrer l\'appel ?</string>
-    <string name="dialog_contact_devices_trust_help_title">What does it mean?</string>
-    <string name="dialog_contact_devices_trust_help_message">Blah blah blah</string> <!-- TODO FIXME -->
-    <string name="dialog_contact_delete_title">Supprimer %s ?</string>
-    <string name="dialog_contact_delete_message">Ce contact sera définitivement supprimé.</string>
-    <string name="dialog_pick_phone_number_or_sip_address_title">Quel numéro ou adresse appeler ?</string>
-    <string name="dialog_delete_all_call_logs_title">Voulez-vous tout supprimer ?</string>
-    <string name="dialog_delete_all_call_logs_message">Tout votre historique d\'appels sera supprimé.</string>
-    <string name="dialog_delete_call_logs_title">Voulez-vous supprimer tout les appels avec cette personne ?</string>
-    <string name="dialog_delete_call_logs_message">TOut l\'historique d\'appel avec cette personne sera supprimmé.</string>
-    <string name="dialog_account_secure_mode_default_message">Blah</string> <!-- TODO -->
-    <string name="dialog_account_secure_mode_interoperable_message">Blah</string> <!-- TODO -->
-    <string name="dialog_remove_account_title">Supprimer %s ?</string>
-    <string name="dialog_remove_account_message">Vous pouvez vous reconnecter à tout moment en cliquant sur "Ajouter un compte".Cependant toutes les informations stockées sur ce périphérique seront supprimées.</string>
-    <string name="dialog_update_available_title">Mise à jour disponible</string>
-    <string name="dialog_update_available_message">Une nouvelle version %s est disponible. Voulez-vous mettre à jour ?</string>
-    <string name="dialog_account_international_prefix_help_title">Pourquoi en avons-nous besoin ?</string>
-    <string name="dialog_account_international_prefix_help_message">Blah blah blah</string>
-    <string name="dialog_group_conversation_set_subject">Nommer la conversation</string>
-    <string name="dialog_group_conversation_edit_subject">Renommer la conversation</string>
-    <string name="dialog_group_conversation_subject_hint">Nom de la conversation</string>
-    <string name="dialog_group_conversation_edit_subject_confirm_button">Confirmer</string>
-    <string name="dialog_group_call_set_subject">Nommer l\'appel de groupe</string>
-    <string name="dialog_group_call_subject_hint">Nom de l\'appel de groupe</string>
-    <string name="dialog_account_invalid_password_title">Autentification requise</string>
-    <string name="dialog_account_invalid_password_message">La connexion a échoué pour le compte \n%s.\n\nVous pouvez renseigner votre mot de passe à nouveau ou bien vérifier les options de configuration de votre compte.</string>
-    <string name="dialog_account_invalid_password_hint">Mot de passe</string>
 
     <string name="toast_assistant_qr_code_invalid">Ce QR code est invalide !</string>
     <string name="toast_sip_address_copied_to_clipboard">L\'adresse SIP a été copiée</string>
@@ -172,6 +97,10 @@
     <string name="toast_call_transfer_successful">L\'appel a été transferré</string>
     <string name="toast_call_transfer_failed">Le transfert a échoué !</string>
 
+    <string name="assistant_dialog_general_terms_and_privacy_policy_title">Conditions de service &amp; politique de confidentialité</string>
+    <string name="assistant_dialog_general_terms_and_privacy_policy_message">blah blah blah</string> <!-- TODO FIXME -->
+    <string name="assistant_dialog_confirm_phone_number_title">Confirmez votre numéro de téléphone</string>
+    <string name="assistant_dialog_confirm_phone_number_message">Êtes-vous sûr de vouloir utiliser ce numéro de téléphone ?</string>
     <string name="assistant_account_login">Connexion</string>
     <string name="assistant_scan_qr_code">Scanner un QR code</string>
     <string name="assistant_qr_code_provisioning_done">Configuration téléchargée avec succès</string>
@@ -214,12 +143,16 @@
     <string name="assistant_permissions_title">Donner les permissions</string>
     <string name="assistant_permissions_grant_all_of_them">OK</string>
     <string name="assistant_permissions_skip_permissions">Plus tard</string>
-
     <string name="assistant_permissions_subtitle">Pour vous permettre de vous profitez pleinement de &appName;, nous avons besoin des autorisations suivantes :</string>
     <string name="assistant_permissions_read_contacts_title"><b>Contacts :</b> Pour vous afficher vos contacts et retrouver qui utilise &appName;.</string>
     <string name="assistant_permissions_post_notifications_title"><b>Notifications :</b> Pour vous informer quand vous recevez un message ou un appel.</string>
     <string name="assistant_permissions_record_audio_title"><b>Microphone :</b> Pour permettre à vos correspondants de vous entendre. </string>
     <string name="assistant_permissions_access_camera_title"><b>Caméra :</b> Pour capturer votre vidéo lors des appels et des conférences.</string>
+
+    <string name="bottom_navigation_contacts_label">Contacts</string>
+    <string name="bottom_navigation_calls_label">Appels</string>
+    <string name="bottom_navigation_conversations_label">Conversations</string>
+    <string name="bottom_navigation_meetings_label">Réunions</string>
 
     <string name="drawer_menu_manage_account">Paramètres du profil</string>
     <string name="drawer_menu_account_connection_status_connected">Connecté</string>
@@ -229,9 +162,6 @@
     <string name="drawer_menu_account_connection_status_failed">Erreur</string>
     <string name="drawer_menu_no_account_configured_yet">Aucun compte configuré</string>
     <string name="drawer_menu_add_account">Ajouter un compte</string>
-
-    <string name="settings_title">Paramètres</string>
-    <string name="recordings_title">Enregistrements</string>
 
     <string name="help_title">Aide</string>
     <string name="help_about_title">À propos de &appName;</string>
@@ -243,6 +173,8 @@
     <string name="help_about_advanced_title">Avancé</string>
     <string name="help_version_up_to_date_toast_message">Votre version est à jour</string>
     <string name="help_error_checking_version_toast_message">Une erreur est survenue</string>
+    <string name="help_dialog_update_available_title">Mise à jour disponible</string>
+    <string name="help_dialog_update_available_message">Une nouvelle version %s est disponible. Voulez-vous mettre à jour ?</string>
     <string name="help_troubleshooting_title">Dépannage</string>
     <string name="help_troubleshooting_debug_title">Activer/désactiver les messages dans ADB</string>
     <string name="help_troubleshooting_debug_subtitle">Blah blah blah?</string> <!-- TODO -->
@@ -254,6 +186,7 @@
     <string name="help_troubleshooting_debug_logs_cleaned_toast_message">Les journaux ont été nettoyés</string>
     <string name="help_troubleshooting_debug_logs_upload_error_toast_message">Echec à l\'envoi des journaux</string>
 
+    <string name="settings_title">Paramètres</string>
     <string name="settings_calls_title">Appels</string>
     <string name="settings_calls_echo_canceller_title">Utiliser l\'annulateur d\'écho</string>
     <string name="settings_calls_echo_canceller_subtitle">Évite que de l\'écho soit entendu par votre correspondant</string>
@@ -295,6 +228,8 @@
     <string name="manage_account_status_failed_summary">Erreur de connexion, vérifiez vos paramètres.</string>
     <string name="manage_account_change_mode">Changer de mode</string>
     <string name="manage_account_international_prefix">Préfixe international</string>
+    <string name="manage_account_dialog_international_prefix_help_title">Pourquoi en avons-nous besoin ?</string>
+    <string name="manage_account_dialog_international_prefix_help_message">Blah blah blah</string>
     <string name="manage_account_settings">Paramètres de compte</string>
     <string name="manage_account_delete">Supprimer le compte</string>
     <string name="manage_account_choose_mode_title">Choisir le mode</string>
@@ -305,6 +240,10 @@
     <string name="manage_account_secure_mode_interoperable_summary">Ce mode vous permet de profiter de toutes les fonctionnalités de &appName; tout en restant interopérable avec n’importe qu’elle autre service SIP.</string>
     <string name="manage_account_device_remove">Supprimer</string>
     <string name="manage_account_device_last_connection">Dernière connexion :</string>
+    <string name="manage_account_dialog_secure_mode_default_message">Blah</string> <!-- TODO -->
+    <string name="manage_account_dialog_secure_mode_interoperable_message">Blah</string> <!-- TODO -->
+    <string name="manage_account_dialog_remove_account_title">Supprimer %s ?</string>
+    <string name="manage_account_dialog_remove_account_message">Vous pouvez vous reconnecter à tout moment en cliquant sur "Ajouter un compte".Cependant toutes les informations stockées sur ce périphérique seront supprimées.</string>
 
     <string name="account_settings_title">Paramètres de compte</string>
     <string name="account_settings_push_notification_title">Autoriser les notifications poussées</string>
@@ -318,28 +257,9 @@
     <string name="account_settings_audio_video_conference_factory_uri_title">URI de l\'usine à conférences</string>
     <string name="account_settings_lime_server_url_title">URL du serveur d\'échange de clés de chiffrement</string>
 
-    <string name="friend_presence_status_online">En ligne</string>
-    <string name="friend_presence_status_was_online_on">En ligne il y a %s</string>
-    <string name="friend_presence_status_was_online_today_at">En ligne aujourd\'hui à %s</string>
-    <string name="friend_presence_status_was_online_yesterday_at">En ligne hier à %s</string>
-    <string name="friend_presence_status_away">Absent</string>
-    <string name="friend_presence_status_do_not_disturb">Ne pas déranger</string>
-    <string name="friend_call_action">Appel</string>
-    <string name="friend_message_action">Message</string>
-    <string name="friend_video_call_action">Appel vidéo</string>
-    <string name="friend_make_call_check_device_trust">Vérifier les appareils</string>
-
-    <string name="menu_add_address_to_contacts">Ajouter aux contacts</string>
-    <string name="menu_see_existing_contact">Voir le contact</string>
-    <string name="menu_copy_sip_address">Copier l\'adresse SIP</string>
-    <string name="menu_copy_phone_number">Copier le numéro de téléphone</string>
-    <string name="menu_delete_history">Supprimer l\'historique d\'appels</string>
-    <string name="menu_delete_selected_item">Supprimer</string>
-    <string name="menu_invite">Inviter</string>
-    <string name="menu_resend_chat_message">Ré-envoyer</string>
-    <string name="menu_reply_to_chat_message">Répondre</string>
-    <string name="menu_forward_chat_message">Transférer</string>
-    <string name="menu_copy_chat_message">Copier le texte</string>
+    <string name="account_settings_dialog_invalid_password_title">Autentification requise</string>
+    <string name="account_settings_dialog_invalid_password_message">La connexion a échoué pour le compte \n%s.\n\nVous pouvez renseigner votre mot de passe à nouveau ou bien vérifier les options de configuration de votre compte.</string>
+    <string name="account_settings_dialog_invalid_password_hint">Mot de passe</string>
 
     <string name="history_title">Historique d\'appel</string>
     <string name="history_call_start_title">Nouvel appel</string>
@@ -348,7 +268,14 @@
     <string name="history_call_start_no_suggestion_nor_contact">Aucun contact ni suggestion pour le moment…</string>
     <string name="history_call_start_contacts_list_title">Contacts</string>
     <string name="history_call_start_suggestions_list_title">Suggestions</string>
+    <string name="history_group_call_start_dialog_set_subject">Nommer l\'appel de groupe</string>
+    <string name="history_group_call_start_dialog_subject_hint">Nom de l\'appel de groupe</string>
     <string name="history_list_empty_history">Aucun appel dans votre historique…</string>
+
+    <string name="history_dialog_delete_all_call_logs_title">Voulez-vous tout supprimer ?</string>
+    <string name="history_dialog_delete_all_call_logs_message">Tout votre historique d\'appels sera supprimé.</string>
+    <string name="history_dialog_delete_call_logs_title">Voulez-vous supprimer tout les appels avec cette personne ?</string>
+    <string name="history_dialog_delete_call_logs_message">TOut l\'historique d\'appel avec cette personne sera supprimmé.</string>
 
     <string name="contacts_list_empty">Aucun contact pour le moment…</string>
     <string name="contacts_list_favourites_title">Favoris</string>
@@ -367,6 +294,8 @@
     <string name="contact_editor_saved_contact_toast">Le contact a été créé</string>
     <string name="contact_editor_error_saving_contact_toast">Erreur lors de la création du contact</string>
     <string name="contact_editor_save_title">Sauvegarder</string>
+    <string name="contact_editor_dialog_abort_confirmation_title">Ne pas sauvegarder vos changements</string>
+    <string name="contact_editor_dialog_abort_confirmation_message">Toutes vos modifications seront perdues.</string>
 
     <string name="contact_details_numbers_and_addresses_title">Numéros de téléphone et adresses SIP</string>
     <string name="contact_details_company_name">Entreprise :</string>
@@ -381,10 +310,24 @@
     <string name="contact_details_delete">Supprimer</string>
     <string name="contact_sms_invite_content">Salut, rejoins moi sur &appName; ! Tu peux le télécharger gratuitement sur %s</string>
 
-    <string name="call_outgoing">Appel sortant</string>
-    <string name="call_incoming">Appel entrant</string>
-    <string name="call_ended">Appel terminé</string>
-    <string name="call_incoming_for_account">Appel entrant pour %s</string>
+    <string name="contact_dialog_increase_trust_level_title">Augmenter le niveau de confiance</string>
+    <string name="contact_dialog_increase_trust_level_message">Vous êtes sur le point de passer un appel vers l\'appareil $2%s\ de $1%s.\Voulez-vous démarrer l\'appel ?</string>
+    <string name="contact_dialog_devices_trust_help_title">What does it mean?</string>
+    <string name="contact_dialog_devices_trust_help_message">Blah blah blah</string> <!-- TODO FIXME -->
+    <string name="contact_dialog_delete_title">Supprimer %s ?</string>
+    <string name="contact_dialog_delete_message">Ce contact sera définitivement supprimé.</string>
+    <string name="contact_dialog_pick_phone_number_or_sip_address_title">Quel numéro ou adresse appeler ?</string>
+
+    <string name="contact_presence_status_online">En ligne</string>
+    <string name="contact_presence_status_was_online_on">En ligne il y a %s</string>
+    <string name="contact_presence_status_was_online_today_at">En ligne aujourd\'hui à %s</string>
+    <string name="contact_presence_status_was_online_yesterday_at">En ligne hier à %s</string>
+    <string name="contact_presence_status_away">Absent</string>
+    <string name="contact_presence_status_do_not_disturb">Ne pas déranger</string>
+    <string name="contact_call_action">Appel</string>
+    <string name="contact_message_action">Message</string>
+    <string name="contact_video_call_action">Appel vidéo</string>
+    <string name="contact_make_call_check_device_trust">Vérifier les appareils</string>
 
     <string name="conversations_list_empty">Aucune conversation pour le moment…</string>
     <string name="conversations_list_is_being_removed_label">En cours de suppression…</string>
@@ -433,6 +376,10 @@
     <string name="conversation_end_to_end_encrypted_bottom_sheet_link"><u>https://linphone.org/security</u></string>
     <string name="conversation_warning_disabled_because_not_secured_title">Cette conversation n\'est pas chiffrée !</string>
     <string name="conversation_warning_disabled_because_not_secured_subtitle">Cette conversation a été désactivée car elle n\'est pas chiffrée. Vous pouvez l\'activer en changeant le mode de votre compte pour Intéropérable.</string>
+    <string name="conversation_dialog_set_subject">Nommer la conversation</string>
+    <string name="conversation_dialog_edit_subject">Renommer la conversation</string>
+    <string name="conversation_dialog_subject_hint">Nom de la conversation</string>
+    <string name="conversation_dialog_edit_subject_confirm_button">Confirmer</string>
 
     <string name="conversation_info_participants_list_title">Membres du groupe</string>
     <string name="conversation_info_add_participants_label">Ajouter des membres</string>
@@ -500,7 +447,10 @@
 
     <string name="meeting_waiting_room_join">Rejoindre</string>
 
-    <string name="operation_in_progress_overlay">Opération en cours, merci de patienter…</string>
+    <string name="call_outgoing">Appel sortant</string>
+    <string name="call_incoming">Appel entrant</string>
+    <string name="call_ended">Appel terminé</string>
+    <string name="call_incoming_for_account">Appel entrant pour %s</string>
 
     <string name="call_action_blind_transfer">Transfert</string>
     <string name="call_action_attended_transfer">Transfert</string>
@@ -529,6 +479,11 @@
     <string name="call_remote_is_recording">%s est en train d\'enregistrer</string>
     <string name="calls_count_label">%s appels</string>
     <string name="calls_paused_count_label">%s appels en pause</string>
+
+    <string name="call_dialog_zrtp_validate_trust_title">Valider l\'appareil</string>
+    <string name="call_dialog_zrtp_validate_trust_subtitle">Dites %s puis cliquez sur les lettres données par votre correspondant :</string>
+    <string name="call_dialog_zrtp_validate_trust_message">Blah</string> <!-- TODO FIXME -->
+    <string name="call_dialog_zrtp_validate_trust_letters_do_not_match">Je ne trouve pas</string>
 
     <string name="call_audio_device_type_earpiece">Oreilette</string>
     <string name="call_audio_device_type_speaker">Haut parleur</string>
@@ -568,8 +523,23 @@
     <string name="conference_layout_active_speaker">Intervenant actif</string>
     <string name="conference_layout_audio_only">Audio uniquement</string>
 
+    <string name="recordings_title">Enregistrements</string>
+
+    <string name="menu_add_address_to_contacts">Ajouter aux contacts</string>
+    <string name="menu_see_existing_contact">Voir le contact</string>
+    <string name="menu_copy_sip_address">Copier l\'adresse SIP</string>
+    <string name="menu_copy_phone_number">Copier le numéro de téléphone</string>
+    <string name="menu_delete_history">Supprimer l\'historique d\'appels</string>
+    <string name="menu_delete_selected_item">Supprimer</string>
+    <string name="menu_invite">Inviter</string>
+    <string name="menu_resend_chat_message">Ré-envoyer</string>
+    <string name="menu_reply_to_chat_message">Répondre</string>
+    <string name="menu_forward_chat_message">Transférer</string>
+    <string name="menu_copy_chat_message">Copier le texte</string>
+
     <string name="connection_error_for_non_default_account">Erreur de connexion au compte</string>
     <string name="network_not_reachable">Vous n\'êtes pas connecté à internet</string>
+    <string name="operation_in_progress_overlay">Opération en cours, merci de patienter…</string>
 
     <!-- Keep <u></u> in following strings translations! -->
     <string name="welcome_carousel_skip"><u>Passer</u></string>
@@ -580,7 +550,6 @@
     <string name="message_meeting_invitation_content_description"><i>invitation à une réunion: </i>%s</string>
     <string name="message_voice_message_content_description"><i>message vocal</i></string>
 
-    <!-- Content description for accessibility -->
     <string name="content_description_trusted_contact_icon">Contact is trusted</string>
     <string name="content_description_not_trusted_contact_icon">Contact is not trusted!</string>
     <string name="content_description_open_drawer_menu_icon">Open drawer menu</string>

@@ -67,7 +67,7 @@
             android:gravity="center"
             android:drawableStart="@drawable/warning_circle"
             android:drawablePadding="8dp"
-            android:text="@string/friend_make_call_check_device_trust"
+            android:text="@string/contact_make_call_check_device_trust"
             android:maxLines="1"
             android:ellipsize="end"
             app:drawableTint="@color/tertiary_button_label_color"

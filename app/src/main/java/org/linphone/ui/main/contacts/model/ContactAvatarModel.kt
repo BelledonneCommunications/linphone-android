@@ -118,7 +118,7 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) : Abstrac
 
         val presenceString = when (presence) {
             ConsolidatedPresence.Online -> {
-                AppUtils.getString(R.string.friend_presence_status_online)
+                AppUtils.getString(R.string.contact_presence_status_online)
             }
             ConsolidatedPresence.Busy -> {
                 val timestamp = friend.presenceModel?.latestActivityTimestamp ?: -1L
@@ -130,7 +130,7 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) : Abstrac
                                 timestampInSecs = true
                             )
                             AppUtils.getFormattedString(
-                                R.string.friend_presence_status_was_online_today_at,
+                                R.string.contact_presence_status_was_online_today_at,
                                 time
                             )
                         }
@@ -140,7 +140,7 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) : Abstrac
                                 timestampInSecs = true
                             )
                             AppUtils.getFormattedString(
-                                R.string.friend_presence_status_was_online_yesterday_at,
+                                R.string.contact_presence_status_was_online_yesterday_at,
                                 time
                             )
                         }
@@ -152,17 +152,17 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) : Abstrac
                                 hideYear = true
                             )
                             AppUtils.getFormattedString(
-                                R.string.friend_presence_status_was_online_on,
+                                R.string.contact_presence_status_was_online_on,
                                 date
                             )
                         }
                     }
                 } else {
-                    AppUtils.getString(R.string.friend_presence_status_away)
+                    AppUtils.getString(R.string.contact_presence_status_away)
                 }
             }
             ConsolidatedPresence.DoNotDisturb -> {
-                AppUtils.getString(R.string.friend_presence_status_do_not_disturb)
+                AppUtils.getString(R.string.contact_presence_status_do_not_disturb)
             }
             else -> ""
         }

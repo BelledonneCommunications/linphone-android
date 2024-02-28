@@ -49,7 +49,7 @@ class ZrtpSasConfirmationDialogModel @UiThread constructor(
 
     init {
         message.value = AppUtils.getFormattedString(
-            R.string.dialog_zrtp_validate_trust_subtitle,
+            R.string.call_dialog_zrtp_validate_trust_subtitle,
             authTokenToRead
         )
 
