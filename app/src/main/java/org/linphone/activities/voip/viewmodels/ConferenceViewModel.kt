@@ -107,7 +107,7 @@ class ConferenceViewModel : ViewModel() {
             Log.i(
                 "[Conference] Participant device added: ${participantDevice.address.asStringUriOnly()}"
             )
-            addParticipantDevice(participantDevice)
+            addParticipantDevice(conference, participantDevice)
 
             if (conferenceParticipantDevices.value.orEmpty().size == 2) {
                 secondParticipantJoinedEvent.value = Event(true)
@@ -628,7 +628,7 @@ class ConferenceViewModel : ViewModel() {
         moreThanTwoParticipants.value = devices.size > 2
     }
 
-    private fun addParticipantDevice(device: ParticipantDevice) {
+    private fun addParticipantDevice(conference: Conference, device: ParticipantDevice) {
         val devices = arrayListOf<ConferenceParticipantDeviceData>()
         devices.addAll(conferenceParticipantDevices.value.orEmpty())
 
@@ -645,6 +645,22 @@ class ConferenceViewModel : ViewModel() {
         Log.i(
             "[Conference] New participant device found: ${device.name} (${device.address.asStringUriOnly()})"
         )
+
+        val conferenceInfo = conference.core.findConferenceInformationFromUri(
+            conference.conferenceAddress
+        )
+        val info = conferenceInfo?.participantInfos?.find {
+            it.address.weakEqual(device.address)
+        }
+        if (info != null) {
+            Log.i("[Conference] New participant role is [${info.role.name}]")
+            val listener =
+                info.role == Participant.Role.Listener || info.role == Participant.Role.Unknown
+            if (listener) {
+                return
+            }
+        }
+
         val deviceData = ConferenceParticipantDeviceData(device, false)
         devices.add(deviceData)
 
