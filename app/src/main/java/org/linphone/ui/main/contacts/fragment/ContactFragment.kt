@@ -38,7 +38,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.io.File
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.core.Factory
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactFragmentBinding
 import org.linphone.ui.main.MainActivity
@@ -289,8 +291,8 @@ class ContactFragment : SlidingPaneChildFragment() {
         dialog.show()
     }
 
-    private fun showConfirmTrustCallDialog(contact: String, device: String) {
-        val model = TrustCallDialogModel(contact, device)
+    private fun showConfirmTrustCallDialog(contactName: String, deviceSipUri: String) {
+        val model = TrustCallDialogModel(contactName, deviceSipUri)
         val dialog = DialogUtils.getContactTrustCallConfirmationDialog(requireActivity(), model)
 
         model.dismissEvent.observe(viewLifecycleOwner) {
@@ -304,7 +306,12 @@ class ContactFragment : SlidingPaneChildFragment() {
                 if (model.doNotShowAnymore.value == true) {
                     // TODO: never display this anymore
                 }
-                // TODO: start call
+                coreContext.postOnCoreThread {
+                    val address = Factory.instance().createAddress(deviceSipUri)
+                    if (address != null) {
+                        coreContext.startCall(address, forceZRTP = true)
+                    }
+                }
                 dialog.dismiss()
             }
         }

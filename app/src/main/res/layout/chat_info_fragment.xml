@@ -5,7 +5,7 @@
     <data>
         <import type="android.view.View" />
         <import type="org.linphone.core.ConsolidatedPresence" />
-        <import type="org.linphone.core.ChatRoom.SecurityLevel" />
+        <import type="org.linphone.core.SecurityLevel" />
         <variable
             name="backClickListener"
             type="View.OnClickListener" />
@@ -100,6 +100,17 @@
                     app:layout_constraintBottom_toBottomOf="@id/avatar"
                     app:layout_constraintEnd_toEndOf="@id/avatar"
                     app:presenceIcon="@{viewModel.avatarModel.presenceStatus}" />
+
+                <ImageView
+                    android:id="@+id/trust_badge"
+                    android:layout_width="@dimen/avatar_presence_badge_big_size"
+                    android:layout_height="@dimen/avatar_presence_badge_big_size"
+                    android:layout_marginStart="@dimen/avatar_presence_badge_big_end_margin"
+                    android:src="@{viewModel.avatarModel.trust == SecurityLevel.EndToEndEncryptedAndVerified ? @drawable/trusted : @drawable/not_trusted, default=@drawable/trusted}"
+                    android:visibility="@{viewModel.avatarModel.trust == SecurityLevel.EndToEndEncryptedAndVerified || viewModel.avatarModel.trust == SecurityLevel.Unsafe ? View.VISIBLE : View.GONE}"
+                    android:contentDescription="@{viewModel.avatarModel.trust == SecurityLevel.EndToEndEncryptedAndVerified ? @string/content_description_trusted_contact_icon : @string/content_description_not_trusted_contact_icon}"
+                    app:layout_constraintStart_toStartOf="@id/avatar"
+                    app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/title"

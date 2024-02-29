@@ -372,6 +372,7 @@
     <string name="contact_details_company_name">Company:</string>
     <string name="contact_details_job_title">Job title:</string>
     <string name="contact_details_trust_title">Trust</string>
+    <string name="contact_details_no_device_found">No device found…</string>
     <string name="contact_details_trusted_devices_count">Number of trusted devices:</string>
     <string name="contact_details_actions_title">Other actions</string>
     <string name="contact_details_edit">Edit</string>
@@ -398,7 +399,7 @@
     <string name="contact_call_action">Call</string>
     <string name="contact_message_action">Message</string>
     <string name="contact_video_call_action">Video Call</string>
-    <string name="contact_make_call_check_device_trust">Verify device</string>
+    <string name="contact_make_call_check_device_trust">Verify</string>
 
     <!-- Chat -->
     <string name="conversations_list_empty">No conversation for the moment…</string>

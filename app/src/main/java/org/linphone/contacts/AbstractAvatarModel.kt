@@ -1,10 +1,10 @@
 package org.linphone.contacts
 
 import androidx.lifecycle.MutableLiveData
-import org.linphone.core.ChatRoom
+import org.linphone.core.SecurityLevel
 
 abstract class AbstractAvatarModel {
-    val trust = MutableLiveData<ChatRoom.SecurityLevel>()
+    val trust = MutableLiveData<SecurityLevel>()
 
     val showTrust = MutableLiveData<Boolean>()
 

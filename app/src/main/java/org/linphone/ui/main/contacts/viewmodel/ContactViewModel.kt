@@ -33,10 +33,14 @@ import org.linphone.R
 import org.linphone.contacts.ContactsManager
 import org.linphone.contacts.getListOfSipAddressesAndPhoneNumbers
 import org.linphone.core.Address
+import org.linphone.core.Call
 import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoomListenerStub
 import org.linphone.core.ChatRoomParams
+import org.linphone.core.Core
+import org.linphone.core.CoreListenerStub
 import org.linphone.core.Friend
+import org.linphone.core.SecurityLevel
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.contacts.model.ContactDeviceModel
@@ -62,6 +66,9 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
     val sipAddressesAndPhoneNumbers = MutableLiveData<ArrayList<ContactNumberOrAddressModel>>()
 
     val devices = MutableLiveData<ArrayList<ContactDeviceModel>>()
+
+    val trustedDevicesPercentage = MutableLiveData<Int>()
+    val trustedDevicesPercentageFloat = MutableLiveData<Float>()
 
     val company = MutableLiveData<String>()
 
@@ -207,17 +214,35 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
         }
     }
 
+    private val coreListener = object : CoreListenerStub() {
+        override fun onCallStateChanged(
+            core: Core,
+            call: Call,
+            state: Call.State?,
+            message: String
+        ) {
+            if (call.state == Call.State.End) {
+                // Updates trust if need be
+                fetchDevicesAndTrust()
+            }
+        }
+    }
+
     private lateinit var friend: Friend
 
     private var refKey: String = ""
 
     init {
         expandNumbersAndAddresses.value = true
-        expandDevicesTrust.value = false // TODO FIXME: set it to true when it will work for real
+        trustedDevicesPercentage.value = 0
 
         coreContext.postOnCoreThread { core ->
+            core.addListener(coreListener)
             chatDisabled.postValue(corePreferences.disableChat)
             videoCallDisabled.postValue(!core.isVideoEnabled)
+            expandDevicesTrust.postValue(
+                LinphoneUtils.getDefaultAccount()?.isInSecureMode() == true
+            )
             coreContext.contactsManager.addListener(contactsListener)
         }
     }
@@ -226,7 +251,8 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
     override fun onCleared() {
         super.onCleared()
 
-        coreContext.postOnCoreThread {
+        coreContext.postOnCoreThread { core ->
+            core.removeListener(coreListener)
             coreContext.contactsManager.removeListener(contactsListener)
             contact.value?.destroy()
         }
@@ -267,21 +293,7 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
         val addressesAndNumbers = friend.getListOfSipAddressesAndPhoneNumbers(listener)
         sipAddressesAndPhoneNumbers.postValue(addressesAndNumbers)
 
-        val devicesList = arrayListOf<ContactDeviceModel>()
-        // TODO FIXME: use real devices list from API
-        devicesList.add(ContactDeviceModel("Pixel 6 Pro de Sylvain", true))
-        devicesList.add(ContactDeviceModel("Sylvain Galaxy Tab S9 Pro+ Ultra", true))
-        devicesList.add(
-            ContactDeviceModel("MacBook Pro de Marcel", false) {
-                // TODO: check if do not show dialog anymore setting is set
-                if (::friend.isInitialized) {
-                    startCallToDeviceToIncreaseTrustEvent.value =
-                        Event(Pair(friend.name.orEmpty(), it.name))
-                }
-            }
-        )
-        devicesList.add(ContactDeviceModel("sylvain@fedora-linux-38", true))
-        devices.postValue(devicesList)
+        fetchDevicesAndTrust()
     }
 
     @UiThread
@@ -595,5 +607,46 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                 }
             }
         }
+    }
+
+    @WorkerThread
+    private fun fetchDevicesAndTrust() {
+        val devicesList = arrayListOf<ContactDeviceModel>()
+
+        val friendDevices = friend.devices
+        if (friendDevices.isEmpty()) {
+            Log.w("$TAG No device found for friend [${friend.name}]")
+        } else {
+            val devicesCount = friendDevices.size
+            var trustedDevicesCount = 0
+            for (device in friendDevices) {
+                val trusted = device.securityLevel == SecurityLevel.EndToEndEncryptedAndVerified
+                devicesList.add(
+                    ContactDeviceModel(
+                        device.displayName ?: "???", // TODO: what to do if device name isn't available?
+                        device.address,
+                        trusted
+                    ) {
+                        // TODO: check if do not show dialog anymore setting is set
+                        if (::friend.isInitialized) {
+                            startCallToDeviceToIncreaseTrustEvent.value =
+                                Event(Pair(friend.name.orEmpty(), it.address.asStringUriOnly()))
+                        }
+                    }
+                )
+                if (trusted) {
+                    trustedDevicesCount += 1
+                }
+            }
+
+            if (devicesList.isNotEmpty()) {
+                trustedDevicesPercentage.postValue(trustedDevicesCount * 100 / devicesCount.toInt())
+                trustedDevicesPercentageFloat.postValue(
+                    trustedDevicesCount / devicesCount.toFloat() / 2
+                )
+            }
+        }
+
+        devices.postValue(devicesList)
     }
 }

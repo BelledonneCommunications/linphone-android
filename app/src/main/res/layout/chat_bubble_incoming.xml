@@ -6,6 +6,7 @@
     <data>
         <import type="android.view.View" />
         <import type="com.google.android.flexbox.JustifyContent" />
+        <import type="org.linphone.core.SecurityLevel" />
         <import type="org.linphone.core.ConsolidatedPresence" />
         <import type="org.linphone.core.ChatMessage.State" />
         <variable
@@ -43,6 +44,16 @@
             coilBubbleAvatar="@{model.avatarModel}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/name" />
+
+        <ImageView
+            android:id="@+id/trust_badge"
+            android:layout_width="@dimen/avatar_bubble_presence_badge_size"
+            android:layout_height="@dimen/avatar_bubble_presence_badge_size"
+            android:src="@{model.avatarModel.trust == SecurityLevel.EndToEndEncryptedAndVerified ? @drawable/trusted : @drawable/not_trusted, default=@drawable/trusted}"
+            android:visibility="@{model.isFromGroup &amp;&amp; (model.avatarModel.trust == SecurityLevel.EndToEndEncryptedAndVerified || model.avatarModel.trust == SecurityLevel.Unsafe) ? View.VISIBLE : View.GONE}"
+            android:contentDescription="@{model.avatarModel.trust == SecurityLevel.EndToEndEncryptedAndVerified ? @string/content_description_trusted_contact_icon : @string/content_description_not_trusted_contact_icon}"
+            app:layout_constraintStart_toStartOf="@id/avatar"
+            app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 
         <ImageView
             android:id="@+id/presence_badge"

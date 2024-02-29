@@ -21,9 +21,11 @@ package org.linphone.ui.main.contacts.model
 
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
+import org.linphone.core.Address
 
 class ContactDeviceModel @WorkerThread constructor(
     val name: String,
+    val address: Address,
     val trusted: Boolean,
     private val onCall: ((model: ContactDeviceModel) -> Unit)? = null
 ) {

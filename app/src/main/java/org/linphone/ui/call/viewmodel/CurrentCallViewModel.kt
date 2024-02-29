@@ -41,11 +41,11 @@ import org.linphone.core.AudioDevice
 import org.linphone.core.Call
 import org.linphone.core.CallListenerStub
 import org.linphone.core.CallStats
-import org.linphone.core.ChatRoom.SecurityLevel
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.MediaDirection
 import org.linphone.core.MediaEncryption
+import org.linphone.core.SecurityLevel
 import org.linphone.core.StreamType
 import org.linphone.core.tools.Log
 import org.linphone.ui.call.model.AudioDeviceModel
@@ -722,11 +722,18 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                 Log.i(
                     "$TAG Current call media encryption is ZRTP, auth token is ${if (isDeviceTrusted) "trusted" else "not trusted yet"}"
                 )
-                val securityLevel = if (isDeviceTrusted) SecurityLevel.Safe else SecurityLevel.Encrypted
+                val securityLevel = if (isDeviceTrusted) SecurityLevel.EndToEndEncryptedAndVerified else SecurityLevel.EndToEndEncrypted
                 val avatarModel = contact.value
                 if (avatarModel != null) {
                     avatarModel.trust.postValue(securityLevel)
                     contact.postValue(avatarModel)
+
+                    // Also update avatar contact model if any for the rest of the app
+                    val address = currentCall.remoteAddress
+                    val storedModel = coreContext.contactsManager.getContactAvatarModelForAddress(
+                        address
+                    )
+                    storedModel.updateSecurityLevel(address)
                 } else {
                     Log.e("$TAG No avatar model found!")
                 }
@@ -829,7 +836,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
             // coreContext.contactsManager.getContactAvatarModelForAddress(address)
             val friend = coreContext.contactsManager.findContactByAddress(address)
             if (friend != null) {
-                ContactAvatarModel(friend)
+                ContactAvatarModel(friend, address)
             } else {
                 val fakeFriend = coreContext.core.createFriend()
                 fakeFriend.name = LinphoneUtils.getDisplayName(address)
@@ -837,6 +844,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                 ContactAvatarModel(fakeFriend)
             }
         }
+
         updateEncryption()
 
         contact.postValue(model)

@@ -5,7 +5,7 @@
 
     <data>
         <import type="android.view.View" />
-        <import type="org.linphone.core.ChatRoom.SecurityLevel" />
+        <import type="org.linphone.core.SecurityLevel" />
         <import type="org.linphone.ui.call.model.ConferenceModel" />
         <variable
             name="backClickListener"

@@ -325,6 +325,7 @@
     <string name="contact_details_company_name">Entreprise :</string>
     <string name="contact_details_job_title">Poste :</string>
     <string name="contact_details_trust_title">Confiance</string>
+    <string name="contact_details_no_device_found">Aucun appareil n\'a été trouvé…</string>
     <string name="contact_details_trusted_devices_count">Appareils de confiance :</string>
     <string name="contact_details_actions_title">Autres actions</string>
     <string name="contact_details_edit">Modifier</string>
@@ -351,7 +352,7 @@
     <string name="contact_call_action">Appel</string>
     <string name="contact_message_action">Message</string>
     <string name="contact_video_call_action">Appel vidéo</string>
-    <string name="contact_make_call_check_device_trust">Vérifier les appareils</string>
+    <string name="contact_make_call_check_device_trust">Vérifier</string>
 
     <string name="conversations_list_empty">Aucune conversation pour le moment…</string>
     <string name="conversations_list_is_being_removed_label">En cours de suppression…</string>

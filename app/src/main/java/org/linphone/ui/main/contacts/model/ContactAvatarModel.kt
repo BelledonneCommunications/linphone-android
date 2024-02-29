@@ -26,7 +26,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.contacts.AbstractAvatarModel
 import org.linphone.contacts.getNativeContactPictureUri
-import org.linphone.core.ChatRoom.SecurityLevel
+import org.linphone.core.Address
 import org.linphone.core.ConsolidatedPresence
 import org.linphone.core.Friend
 import org.linphone.core.FriendListenerStub
@@ -35,7 +35,7 @@ import org.linphone.ui.main.model.isInSecureMode
 import org.linphone.utils.AppUtils
 import org.linphone.utils.TimestampUtils
 
-class ContactAvatarModel @WorkerThread constructor(val friend: Friend) : AbstractAvatarModel() {
+class ContactAvatarModel @WorkerThread constructor(val friend: Friend, val address: Address? = null) : AbstractAvatarModel() {
     companion object {
         private const val TAG = "[Contact Avatar Model]"
     }
@@ -69,7 +69,7 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) : Abstrac
             friend.addListener(friendListener)
         }
 
-        update()
+        update(address)
     }
 
     @WorkerThread
@@ -80,15 +80,25 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) : Abstrac
     }
 
     @WorkerThread
-    fun update() {
+    fun update(address: Address?) {
+        updateSecurityLevel(address)
+
         isFavourite.postValue(friend.starred)
         initials.postValue(AppUtils.getInitials(friend.name.orEmpty()))
-        trust.postValue(SecurityLevel.Encrypted) // TODO FIXME: use API
         showTrust.postValue(coreContext.core.defaultAccount?.isInSecureMode())
         images.postValue(arrayListOf(getAvatarUri(friend).toString()))
 
         name.postValue(friend.name)
-        computePresence()
+        computePresence(address)
+    }
+
+    @WorkerThread
+    fun updateSecurityLevel(address: Address?) {
+        if (address == null) {
+            trust.postValue(friend.securityLevel)
+        } else {
+            trust.postValue(friend.getSecurityLevelForAddress(address))
+        }
     }
 
     @WorkerThread
@@ -111,8 +121,12 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend) : Abstrac
     }
 
     @WorkerThread
-    private fun computePresence() {
-        val presence = friend.consolidatedPresence
+    private fun computePresence(address: Address? = null) {
+        val presence = if (address == null) {
+            friend.consolidatedPresence
+        } else {
+            friend.getPresenceModelForUriOrTel(address.asStringUriOnly())?.consolidatedPresence ?: friend.consolidatedPresence
+        }
         Log.d("$TAG Friend [${friend.name}] presence status is [$presence]")
         presenceStatus.postValue(presence)
 

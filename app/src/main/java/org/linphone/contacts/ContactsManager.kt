@@ -50,6 +50,7 @@ import org.linphone.core.Factory
 import org.linphone.core.Friend
 import org.linphone.core.FriendList
 import org.linphone.core.FriendListListenerStub
+import org.linphone.core.SecurityLevel
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
@@ -179,7 +180,8 @@ class ContactsManager @UiThread constructor() {
                 "$TAG Found SIP URI [$sipUri] in knownContactsAvatarsMap, forcing presence update"
             )
             val oldModel = knownContactsAvatarsMap[sipUri]
-            oldModel?.update()
+            val address = Factory.instance().createAddress(sipUri)
+            oldModel?.update(address)
         }
     }
 
@@ -337,6 +339,7 @@ class ContactsManager @UiThread constructor() {
             fakeFriend.name = LinphoneUtils.getDisplayName(localAccount.params.identityAddress)
             fakeFriend.photo = localAccount.params.pictureUri
             val model = ContactAvatarModel(fakeFriend)
+            model.trust.postValue(SecurityLevel.EndToEndEncryptedAndVerified) // TODO CHECK: as it is ourselves, force encrypted level?
             unknownContactsAvatarsMap[key] = model
             model
         } else {
@@ -344,7 +347,7 @@ class ContactsManager @UiThread constructor() {
             val friend = coreContext.contactsManager.findContactByAddress(clone)
             if (friend != null) {
                 Log.d("$TAG Matching friend [${friend.name}] found for SIP URI [$key]")
-                val model = ContactAvatarModel(friend)
+                val model = ContactAvatarModel(friend, address)
                 knownContactsAvatarsMap[key] = model
                 model
             } else {
@@ -383,7 +386,7 @@ class ContactsManager @UiThread constructor() {
         }
 
         Log.w("$TAG Avatar model not found in map with SIP URI [$key]")
-        val avatar = ContactAvatarModel(friend)
+        val avatar = ContactAvatarModel(friend, address)
         knownContactsAvatarsMap[key] = avatar
 
         return avatar

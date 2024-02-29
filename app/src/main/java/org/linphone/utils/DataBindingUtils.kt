@@ -39,6 +39,7 @@ import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnLayout
@@ -59,8 +60,8 @@ import org.linphone.BR
 import org.linphone.R
 import org.linphone.contacts.AbstractAvatarModel
 import org.linphone.contacts.AvatarGenerator
-import org.linphone.core.ChatRoom
 import org.linphone.core.ConsolidatedPresence
+import org.linphone.core.SecurityLevel
 import org.linphone.core.tools.Log
 import org.linphone.ui.call.model.ConferenceParticipantDeviceModel
 
@@ -382,12 +383,12 @@ private fun loadContactPictureWithCoil(
         if (!skipTrust) {
             if (model.showTrust.value == true) {
                 when (model.trust.value) {
-                    ChatRoom.SecurityLevel.Safe -> {
+                    SecurityLevel.EndToEndEncryptedAndVerified -> {
                         imageView.setStrokeColorResource(R.color.info_500)
                         imageView.setStrokeWidthResource(R.dimen.avatar_trust_border_width)
                     }
 
-                    ChatRoom.SecurityLevel.Unsafe -> {
+                    SecurityLevel.Unsafe -> {
                         imageView.setStrokeColorResource(R.color.danger_500)
                         imageView.setStrokeWidthResource(R.dimen.avatar_trust_border_width)
                     }
@@ -496,6 +497,13 @@ fun setConstraintLayoutStartMargin(view: View, margins: Float) {
     val params = view.layoutParams as ViewGroup.MarginLayoutParams
     val m = margins.toInt()
     params.marginStart = m
+    view.layoutParams = params
+}
+
+@BindingAdapter("layout_constraintHorizontal_bias")
+fun setConstraintLayoutChildHorizontalBias(view: View, horizontalBias: Float) {
+    val params = view.layoutParams as ConstraintLayout.LayoutParams
+    params.horizontalBias = horizontalBias
     view.layoutParams = params
 }
 

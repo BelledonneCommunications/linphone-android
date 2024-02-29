@@ -6,7 +6,7 @@
     <data>
         <import type="android.view.View" />
         <import type="org.linphone.core.ConsolidatedPresence" />
-        <import type="org.linphone.core.ChatRoom.SecurityLevel" />
+        <import type="org.linphone.core.SecurityLevel" />
         <variable
             name="backClickListener"
             type="View.OnClickListener" />
@@ -100,8 +100,8 @@
                     <androidx.constraintlayout.widget.Group
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:constraint_referenced_ids="trusted_devices_count, trust_background, trusted_devices_progress, devices, trusted_devices_progress_label"
-                        android:visibility="@{viewModel.expandDevicesTrust ? View.VISIBLE : View.GONE, default=gone}" />
+                        app:constraint_referenced_ids="trusted_devices_count, trusted_devices_progress, devices, trusted_devices_progress_label"
+                        android:visibility="@{viewModel.expandDevicesTrust &amp;&amp; viewModel.devices.size() > 0 ? View.VISIBLE : View.GONE}" />
 
                     <com.google.android.material.imageview.ShapeableImageView
                         style="@style/avatar_imageview"
@@ -128,11 +128,12 @@
 
                     <ImageView
                         android:id="@+id/trust_badge"
-                        android:layout_width="@dimen/avatar_presence_badge_in_call_size"
-                        android:layout_height="@dimen/avatar_presence_badge_in_call_size"
-                        android:src="@{viewModel.contact.trust == SecurityLevel.Safe ? @drawable/trusted : @drawable/not_trusted, default=@drawable/trusted}"
-                        android:visibility="@{viewModel.contact.trust == SecurityLevel.Safe || viewModel.contact.trust == SecurityLevel.Unsafe ? View.VISIBLE : View.GONE}"
-                        android:contentDescription="@{viewModel.contact.trust == SecurityLevel.Safe ? @string/content_description_trusted_contact_icon : @string/content_description_not_trusted_contact_icon}"
+                        android:layout_width="@dimen/avatar_presence_badge_big_size"
+                        android:layout_height="@dimen/avatar_presence_badge_big_size"
+                        android:layout_marginStart="@dimen/avatar_presence_badge_big_end_margin"
+                        android:src="@{viewModel.contact.trust == SecurityLevel.EndToEndEncryptedAndVerified ? @drawable/trusted : @drawable/not_trusted, default=@drawable/trusted}"
+                        android:visibility="@{viewModel.contact.trust == SecurityLevel.EndToEndEncryptedAndVerified || viewModel.contact.trust == SecurityLevel.Unsafe ? View.VISIBLE : View.GONE}"
+                        android:contentDescription="@{viewModel.contact.trust == SecurityLevel.EndToEndEncryptedAndVerified ? @string/content_description_trusted_contact_icon : @string/content_description_not_trusted_contact_icon}"
                         app:layout_constraintStart_toStartOf="@id/avatar"
                         app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 
@@ -364,7 +365,6 @@
                         android:drawableEnd="@drawable/question"
                         android:drawableTint="?attr/color_main2_600"
                         android:drawablePadding="8dp"
-                        android:visibility="gone"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/info_background"/>
 
@@ -379,10 +379,16 @@
                         android:padding="5dp"
                         android:drawableEnd="@{viewModel.expandDevicesTrust ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
                         android:drawableTint="?attr/color_main2_600"
-                        android:visibility="gone"
                         app:layout_constraintStart_toEndOf="@id/trust_label"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/info_background"/>
+
+                    <androidx.constraintlayout.widget.Barrier
+                        android:id="@+id/trust_background_bottom_barrier"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:barrierDirection="bottom"
+                        app:constraint_referenced_ids="devices, no_device_label" />
 
                     <ImageView
                         android:id="@+id/trust_background"
@@ -392,10 +398,11 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
                         android:src="@drawable/shape_squircle_white_background"
+                        android:visibility="@{viewModel.expandDevicesTrust ? View.VISIBLE : View.GONE}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/trust_label"
-                        app:layout_constraintBottom_toBottomOf="@id/devices"/>
+                        app:layout_constraintBottom_toBottomOf="@id/trust_background_bottom_barrier"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/header_style"
@@ -417,12 +424,12 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
+                        android:max="100"
+                        android:progress="@{viewModel.trustedDevicesPercentage, default=75}"
                         app:trackCornerRadius="50dp"
                         app:trackThickness="22dp"
                         app:trackColor="?attr/color_main2_100"
                         app:indicatorColor="?attr/color_info_500"
-                        android:max="100"
-                        android:progress="75"
                         app:layout_constraintStart_toStartOf="@id/trust_background"
                         app:layout_constraintEnd_toEndOf="@id/trust_background"
                         app:layout_constraintTop_toBottomOf="@id/trusted_devices_count"/>
@@ -430,12 +437,14 @@
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/default_text_style_700"
                         android:id="@+id/trusted_devices_progress_label"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="0dp"
-                        android:text="75%"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:text="@{String.valueOf(viewModel.trustedDevicesPercentage) + `%`, default=`75%`}"
                         android:textColor="?attr/color_main2_000"
                         android:textSize="12sp"
-                        android:gravity="center"
+                        app:layout_constraintHorizontal_bias="@{viewModel.trustedDevicesPercentageFloat, default=0.37}"
                         app:layout_constraintStart_toStartOf="@id/trusted_devices_progress"
                         app:layout_constraintEnd_toEndOf="@id/trusted_devices_progress"
                         app:layout_constraintTop_toTopOf="@id/trusted_devices_progress"
@@ -454,6 +463,21 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/trusted_devices_progress" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/default_text_style_700"
+                        android:id="@+id/no_device_label"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:padding="10dp"
+                        android:text="@string/contact_details_no_device_found"
+                        android:visibility="@{viewModel.expandDevicesTrust &amp;&amp; viewModel.devices.empty ? View.VISIBLE : View.GONE, default=gone}"
+                        app:layout_constraintStart_toStartOf="@id/trust_background"
+                        app:layout_constraintEnd_toEndOf="@id/trust_background"
+                        app:layout_constraintTop_toTopOf="@id/trust_background"
+                        app:layout_constraintBottom_toBottomOf="@id/trust_background" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/section_header_style"

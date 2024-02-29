@@ -33,6 +33,7 @@ import org.linphone.core.ChatRoom
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.RegistrationState
+import org.linphone.core.SecurityLevel
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.LinphoneUtils
@@ -93,7 +94,7 @@ class AccountModel @WorkerThread constructor(
         account.addListener(accountListener)
         coreContext.core.addListener(coreListener)
 
-        trust.postValue(ChatRoom.SecurityLevel.Safe)
+        trust.postValue(SecurityLevel.EndToEndEncryptedAndVerified)
         showTrust.postValue(account.isInSecureMode())
 
         update()

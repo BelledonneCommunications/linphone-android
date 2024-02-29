@@ -6,7 +6,7 @@
     <data>
         <import type="android.view.View" />
         <import type="org.linphone.core.ConsolidatedPresence" />
-        <import type="org.linphone.core.ChatRoom.SecurityLevel" />
+        <import type="org.linphone.core.SecurityLevel" />
         <variable
             name="backClickListener"
             type="View.OnClickListener" />
@@ -114,11 +114,12 @@
 
                     <ImageView
                         android:id="@+id/trust_badge"
-                        android:layout_width="@dimen/avatar_presence_badge_in_call_size"
-                        android:layout_height="@dimen/avatar_presence_badge_in_call_size"
-                        android:src="@{viewModel.callLogModel.avatarModel.trust == SecurityLevel.Safe ? @drawable/trusted : @drawable/not_trusted, default=@drawable/trusted}"
-                        android:visibility="@{viewModel.callLogModel.avatarModel.trust == SecurityLevel.Safe || viewModel.callLogModel.avatarModel.trust == SecurityLevel.Unsafe ? View.VISIBLE : View.GONE}"
-                        android:contentDescription="@{viewModel.callLogModel.avatarModel.trust == SecurityLevel.Safe ? @string/content_description_trusted_contact_icon : @string/content_description_not_trusted_contact_icon}"
+                        android:layout_width="@dimen/avatar_presence_badge_big_size"
+                        android:layout_height="@dimen/avatar_presence_badge_big_size"
+                        android:layout_marginStart="@dimen/avatar_presence_badge_big_end_margin"
+                        android:src="@{viewModel.callLogModel.avatarModel.trust == SecurityLevel.EndToEndEncryptedAndVerified ? @drawable/trusted : @drawable/not_trusted, default=@drawable/trusted}"
+                        android:visibility="@{viewModel.callLogModel.avatarModel.trust == SecurityLevel.EndToEndEncryptedAndVerified || viewModel.callLogModel.avatarModel.trust == SecurityLevel.Unsafe ? View.VISIBLE : View.GONE}"
+                        android:contentDescription="@{viewModel.callLogModel.avatarModel.trust == SecurityLevel.EndToEndEncryptedAndVerified ? @string/content_description_trusted_contact_icon : @string/content_description_not_trusted_contact_icon}"
                         app:layout_constraintStart_toStartOf="@id/avatar"
                         app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 
