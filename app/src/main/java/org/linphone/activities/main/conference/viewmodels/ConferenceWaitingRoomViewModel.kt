@@ -236,13 +236,6 @@ class ConferenceWaitingRoomViewModel : MessageNotifierViewModel() {
                         )
                         val areWeListener = myself.role == Participant.Role.Listener
                         isConferenceBroadcastWithListenerRole.value = areWeListener
-
-                        if (areWeListener) {
-                            callParams.isVideoEnabled = false
-                            callParams.videoDirection = MediaDirection.Inactive
-                            updateVideoState()
-                            updateLayout()
-                        }
                     } else {
                         Log.e(
                             "[Conference Waiting Room] Failed to find ourselves in participants info"
