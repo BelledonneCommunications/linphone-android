@@ -377,6 +377,7 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
         }
 
         coreContext.postOnCoreThread {
+            requestKeyboardHidingEvent.postValue(Event(true))
             isVoiceRecording.postValue(true)
             initVoiceRecorder()
 

@@ -148,6 +148,7 @@
             android:text="@={viewModel.textToSend}"
             android:textColorHint="?attr/color_main2_400"
             android:textSize="14sp"
+            android:enabled="@{!viewModel.isVoiceRecording}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/send_barrier"
             app:layout_constraintStart_toStartOf="@id/message_area_background"
