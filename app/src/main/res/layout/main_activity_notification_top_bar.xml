@@ -27,7 +27,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:tint="?attr/color_main2_000" />
+            app:tint="@color/white" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_300"
@@ -40,7 +40,7 @@
             android:layout_marginBottom="5dp"
             android:gravity="center_vertical"
             android:text="@{viewModel.alertLabel, default=@string/connection_error_for_non_default_account}"
-            android:textColor="?attr/color_main2_000"
+            android:textColor="@color/white"
             android:textSize="16sp"
             android:maxLines="1"
             android:ellipsize="end"
@@ -64,7 +64,7 @@
             android:layout_marginEnd="16dp"
             android:gravity="center_vertical"
             android:text="@{viewModel.callsStatus, default=`Paused`}"
-            android:textColor="?attr/color_main2_000"
+            android:textColor="@color/white"
             android:textSize="14sp"
             android:visibility="@{viewModel.atLeastOneCall ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintEnd_toEndOf="parent"
@@ -79,7 +79,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:src="@drawable/x"
-            app:tint="?attr/color_main2_000"
+            app:tint="@color/white"
             android:visibility="@{viewModel.atLeastOneCall ? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
