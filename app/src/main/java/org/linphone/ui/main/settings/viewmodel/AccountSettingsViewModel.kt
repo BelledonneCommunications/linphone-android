@@ -58,6 +58,8 @@ class AccountSettingsViewModel @UiThread constructor() : ViewModel() {
 
     val limeServerUrl = MutableLiveData<String>()
 
+    val bundleModeEnabled = MutableLiveData<Boolean>()
+
     val accountFoundEvent = MutableLiveData<Event<Boolean>>()
 
     private lateinit var account: Account
@@ -92,6 +94,8 @@ class AccountSettingsViewModel @UiThread constructor() : ViewModel() {
                 iceEnabled.postValue(natPolicy.isIceEnabled)
 
                 avpfEnabled.postValue(account.isAvpfEnabled)
+
+                bundleModeEnabled.postValue(params.isRtpBundleEnabled)
 
                 expire.postValue(params.expires.toString())
 
@@ -138,6 +142,8 @@ class AccountSettingsViewModel @UiThread constructor() : ViewModel() {
                 }
 
                 newParams.avpfMode = if (avpfEnabled.value == true) AVPFMode.Enabled else AVPFMode.Disabled
+
+                newParams.isRtpBundleEnabled = bundleModeEnabled.value == true
 
                 newParams.expires = expire.value?.toInt() ?: 31536000
 
