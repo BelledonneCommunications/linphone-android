@@ -608,26 +608,6 @@ class MainActivity : GenericActivity() {
 
     private fun loadContacts() {
         coreContext.contactsManager.loadContacts(this)
-
-        /* TODO: Uncomment later, only fixes a small UI display issue for contacts with emoji in the name
-        val emojiCompat = coreContext.emojiCompat
-        lifecycleScope.launch {
-            withContext(Dispatchers.IO) {
-                // Wait for emoji compat library to have been loaded
-                Log.i("[Main Activity] Waiting for emoji compat library to have been loaded")
-                while (emojiCompat.loadState == EmojiCompat.LOAD_STATE_DEFAULT || emojiCompat.loadState == EmojiCompat.LOAD_STATE_LOADING) {
-                    delay(100)
-                }
-
-                Log.i(
-                    "[Main Activity] Emoji compat library loading status is ${emojiCompat.loadState}, re-loading contacts"
-                )
-                coreContext.postOnMainThread {
-                    // Contacts loading must be started from UI thread
-                    coreContext.contactsManager.loadContacts(this@MainActivity)
-                }
-            }
-        }*/
     }
 
     private fun showAuthenticationRequestedDialog(identity: String) {
