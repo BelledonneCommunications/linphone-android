@@ -61,6 +61,8 @@ class ConferenceModel {
 
     val conferenceLayout = MutableLiveData<Int>()
 
+    val isScreenSharing = MutableLiveData<Boolean>()
+
     val isPaused = MutableLiveData<Boolean>()
 
     val isMeParticipantSendingVideo = MutableLiveData<Boolean>()
@@ -88,6 +90,7 @@ class ConferenceModel {
             removeParticipant(participant)
         }
 
+        @WorkerThread
         override fun onParticipantDeviceMediaCapabilityChanged(
             conference: Conference,
             device: ParticipantDevice
@@ -171,6 +174,32 @@ class ConferenceModel {
         }
 
         @WorkerThread
+        override fun onParticipantDeviceScreenSharingChanged(
+            conference: Conference,
+            device: ParticipantDevice,
+            enabled: Boolean
+        ) {
+            Log.i(
+                "$TAG Participant device [${device.address.asStringUriOnly()}] is ${if (enabled) "sharing it's screen" else "no longer sharing it's screen"}"
+            )
+            isScreenSharing.postValue(enabled)
+            if (enabled) {
+                val call = conference.call
+                if (call != null) {
+                    val currentLayout = getCurrentLayout(call)
+                    if (currentLayout == GRID_LAYOUT) {
+                        Log.w(
+                            "$TAG Current layout is mosaic but screen sharing was enabled, switching to active speaker layout"
+                        )
+                        setNewLayout(ACTIVE_SPEAKER_LAYOUT)
+                    }
+                } else {
+                    Log.e("$TAG Screen sharing was enabled but conference's call is null!")
+                }
+            }
+        }
+
+        @WorkerThread
         override fun onStateChanged(conference: Conference, state: Conference.State) {
             Log.i("$TAG State changed [$state]")
             if (conference.state == Conference.State.Created) {
@@ -199,6 +228,8 @@ class ConferenceModel {
         conference = conf
         conference.addListener(conferenceListener)
         isPaused.postValue(conference.isIn)
+        val screenSharing = conference.screenSharingParticipant != null
+        isScreenSharing.postValue(screenSharing)
 
         Log.i(
             "$TAG Configuring conference with subject [${conference.subject}] from call [${call.callLog.callId}]"
@@ -212,6 +243,12 @@ class ConferenceModel {
 
         val currentLayout = getCurrentLayout(call)
         conferenceLayout.postValue(currentLayout)
+        if (currentLayout == GRID_LAYOUT && screenSharing) {
+            Log.w(
+                "$TAG Conference has a participant sharing it's screen, changing layout from mosaic to active speaker"
+            )
+            setNewLayout(ACTIVE_SPEAKER_LAYOUT)
+        }
     }
 
     @UiThread

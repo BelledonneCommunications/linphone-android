@@ -4,6 +4,7 @@
 
     <data>
         <import type="android.view.View" />
+        <import type="org.linphone.ui.call.model.ConferenceModel" />
         <variable
             name="gridClickListener"
             type="View.OnClickListener" />
@@ -37,8 +38,8 @@
             android:layout_marginBottom="1dp"
             android:drawableEnd="@drawable/squares_four"
             android:drawableTint="@color/in_call_label_color"
-            android:enabled="@{viewModel.participantDevices.size() &lt; 7, default=false}"
-            android:checked="@{viewModel.conferenceLayout == 0}"
+            android:enabled="@{viewModel.participantDevices.size() &lt; 7 &amp;&amp; !viewModel.isScreenSharing, default=false}"
+            android:checked="@{viewModel.conferenceLayout == ConferenceModel.GRID_LAYOUT}"
             app:useMaterialThemeColors="false"
             app:buttonTint="@color/in_call_label_color"/>
 
@@ -55,7 +56,7 @@
             android:layout_marginBottom="1dp"
             android:drawableEnd="@drawable/picture_in_picture"
             android:drawableTint="@color/white"
-            android:checked="@{viewModel.conferenceLayout == 1}"
+            android:checked="@{viewModel.conferenceLayout == ConferenceModel.ACTIVE_SPEAKER_LAYOUT}"
             app:useMaterialThemeColors="false"
             app:buttonTint="@color/white"/>
 
@@ -72,7 +73,7 @@
             android:layout_marginBottom="1dp"
             android:drawableEnd="@drawable/waveform"
             android:drawableTint="@color/white"
-            android:checked="@{viewModel.conferenceLayout == -1}"
+            android:checked="@{viewModel.conferenceLayout == ConferenceModel.AUDIO_ONLY_LAYOUT}"
             app:useMaterialThemeColors="false"
             app:buttonTint="@color/white"/>
 

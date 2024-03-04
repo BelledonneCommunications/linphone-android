@@ -51,6 +51,8 @@ class ConferenceParticipantDeviceModel @WorkerThread constructor(
 
     val isActiveSpeaker = MutableLiveData<Boolean>()
 
+    val isScreenSharing = MutableLiveData<Boolean>()
+
     val isVideoAvailable = MutableLiveData<Boolean>()
 
     val isSendingVideo = MutableLiveData<Boolean>()
@@ -110,12 +112,9 @@ class ConferenceParticipantDeviceModel @WorkerThread constructor(
             available: Boolean,
             streamType: StreamType?
         ) {
-            Log.i(
+            Log.d(
                 "$TAG Participant device [${participantDevice.address.asStringUriOnly()}] stream [$streamType] availability changed to ${if (available) "available" else "not available"}"
             )
-            if (streamType == StreamType.Video) {
-                isVideoAvailable.postValue(available)
-            }
         }
 
         @WorkerThread
@@ -124,15 +123,43 @@ class ConferenceParticipantDeviceModel @WorkerThread constructor(
             direction: MediaDirection?,
             streamType: StreamType?
         ) {
-            Log.i(
+            Log.d(
                 "$TAG Participant device [${participantDevice.address.asStringUriOnly()}] stream [$streamType] capability changed to [$direction]"
             )
-            if (streamType == StreamType.Video) {
-                val sending = direction == MediaDirection.SendRecv || direction == MediaDirection.SendOnly
-                isSendingVideo.postValue(
-                    sending
-                )
-            }
+        }
+
+        @WorkerThread
+        override fun onScreenSharingChanged(
+            participantDevice: ParticipantDevice,
+            screenSharing: Boolean
+        ) {
+            Log.i(
+                "$TAG Participant device [${participantDevice.address.asStringUriOnly()}] is ${if (screenSharing) "sharing it's screen" else "no longer sharing it's screen"}"
+            )
+            isScreenSharing.postValue(screenSharing)
+        }
+
+        @WorkerThread
+        override fun onThumbnailStreamAvailabilityChanged(
+            participantDevice: ParticipantDevice,
+            available: Boolean
+        ) {
+            Log.i(
+                "$TAG Participant device [${participantDevice.address.asStringUriOnly()}] thumbnail availability changed to ${if (available) "available" else "not available"}"
+            )
+            isVideoAvailable.postValue(available)
+        }
+
+        @WorkerThread
+        override fun onThumbnailStreamCapabilityChanged(
+            participantDevice: ParticipantDevice,
+            direction: MediaDirection?
+        ) {
+            Log.i(
+                "$TAG Participant device [${participantDevice.address.asStringUriOnly()}] thumbnail capability changed to [$direction]"
+            )
+            val sending = direction == MediaDirection.SendRecv || direction == MediaDirection.SendOnly
+            isSendingVideo.postValue(sending)
         }
     }
 
@@ -156,10 +183,16 @@ class ConferenceParticipantDeviceModel @WorkerThread constructor(
 
         isMuted.postValue(device.isMuted)
         isSpeaking.postValue(device.isSpeaking)
-        isActiveSpeaker.postValue(false)
         Log.i(
             "$TAG Participant [${device.address.asStringUriOnly()}] is in state [${device.state}]"
         )
+
+        isActiveSpeaker.postValue(false)
+        val screenSharing = device.isScreenSharingEnabled
+        isScreenSharing.postValue(screenSharing)
+        if (screenSharing) {
+            Log.i("$TAG Participant [${device.address.asStringUriOnly()}] is sharing it's screen")
+        }
 
         isVideoAvailable.postValue(device.getStreamAvailability(StreamType.Video))
         val videoCapability = device.getStreamCapability(StreamType.Video)

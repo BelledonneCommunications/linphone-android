@@ -40,7 +40,7 @@
     <string name="notification_channel_missed_call_name">&appName; notifications d\'appels manqués</string>
     <string name="notification_channel_service_name">&appName; notification de service</string>
     <string name="notification_channel_chat_name">&appName; notifications des conversations</string>
-    <string name="notification_chat_message_reaction_received">%s a réagi à %s par : %s</string>
+    <string name="notification_chat_message_reaction_received">%s a réagi par %s à : %s</string>
     <string name="notification_mark_message_as_read">Marquer comme lu</string>
     <string name="notification_reply_to_message">Répondre</string>
     <string name="notification_missed_call">Appel manqué de %s</string>

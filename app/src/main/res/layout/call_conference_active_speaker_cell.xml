@@ -13,7 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="@dimen/call_conference_active_speaker_miniature_size"
         android:layout_height="@dimen/call_conference_active_speaker_miniature_size"
-        android:visibility="@{model.isActiveSpeaker ? View.GONE : View.VISIBLE}"
+        android:visibility="@{model.isActiveSpeaker &amp;&amp; !model.isScreenSharing ? View.GONE : View.VISIBLE}"
         android:padding="2dp">
 
         <ImageView
