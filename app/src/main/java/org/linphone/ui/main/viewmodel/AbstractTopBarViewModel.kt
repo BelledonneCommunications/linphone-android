@@ -153,23 +153,28 @@ open class AbstractTopBarViewModel @UiThread constructor() : ViewModel() {
     init {
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
+            configure()
         }
+
+        searchBarVisible.value = false
 
         val emojiCompat = coreContext.emojiCompat
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 // Wait for emoji compat library to have been loaded
-                Log.i("$TAG Waiting for emoji compat library to have been loaded")
-                while (emojiCompat.loadState == EmojiCompat.LOAD_STATE_DEFAULT || emojiCompat.loadState == EmojiCompat.LOAD_STATE_LOADING) {
-                    delay(50)
-                }
-                coreContext.postOnCoreThread {
-                    configure()
+                if (emojiCompat.loadState != EmojiCompat.LOAD_STATE_SUCCEEDED) {
+                    Log.i("$TAG Waiting for emoji compat library to have been loaded")
+                    while (emojiCompat.loadState == EmojiCompat.LOAD_STATE_DEFAULT || emojiCompat.loadState == EmojiCompat.LOAD_STATE_LOADING) {
+                        delay(50)
+                    }
+
+                    coreContext.postOnCoreThread {
+                        Log.i("$TAG Emoji compat library loaded, update account")
+                        configure()
+                    }
                 }
             }
         }
-
-        searchBarVisible.value = false
     }
 
     @UiThread

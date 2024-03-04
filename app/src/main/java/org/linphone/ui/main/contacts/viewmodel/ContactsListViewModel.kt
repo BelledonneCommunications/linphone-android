@@ -21,13 +21,17 @@ package org.linphone.ui.main.contacts.viewmodel
 
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
+import androidx.emoji2.text.EmojiCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import java.io.File
 import java.text.Collator
 import java.util.ArrayList
 import java.util.Locale
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.contacts.ContactsManager.ContactsListener
@@ -101,6 +105,24 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
         }
 
         applyFilter(currentFilter)
+
+        val emojiCompat = coreContext.emojiCompat
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                // Wait for emoji compat library to have been loaded
+                if (emojiCompat.loadState != EmojiCompat.LOAD_STATE_SUCCEEDED) {
+                    Log.i("$TAG Waiting for emoji compat library to have been loaded")
+                    while (emojiCompat.loadState == EmojiCompat.LOAD_STATE_DEFAULT || emojiCompat.loadState == EmojiCompat.LOAD_STATE_LOADING) {
+                        delay(50)
+                    }
+
+                    coreContext.postOnCoreThread {
+                        Log.i("$TAG Emoji compat library loaded, update contacts list")
+                        processMagicSearchResults(magicSearch.lastSearch)
+                    }
+                }
+            }
+        }
     }
 
     @UiThread
@@ -207,6 +229,7 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
 
     @WorkerThread
     private fun processMagicSearchResults(results: Array<SearchResult>) {
+        // Do not call destroy() on previous list items as they are cached and will be re-used
         Log.i("$TAG Processing [${results.size}] results")
 
         val list = arrayListOf<ContactAvatarModel>()
