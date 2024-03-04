@@ -32,7 +32,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
-import org.linphone.contacts.ContactLoader
 import org.linphone.core.Account
 import org.linphone.core.AuthInfo
 import org.linphone.core.AuthMethod
@@ -469,12 +468,7 @@ class MainViewModel @UiThread constructor() : ViewModel() {
     @WorkerThread
     private fun triggerNativeAddressBookImport() {
         firstAccountRegistered = true
-
-        if (coreContext.core.getFriendListByName(ContactLoader.NATIVE_ADDRESS_BOOK_FRIEND_LIST) == null) {
-            Log.i("$TAG Native friend list not found, trying to fetch native contacts")
-            startLoadingContactsEvent.postValue(Event(true))
-        } else {
-            Log.i("$TAG Native contacts were already imported once, do not do it again")
-        }
+        Log.i("$TAG Trying to fetch & import native contacts")
+        startLoadingContactsEvent.postValue(Event(true))
     }
 }

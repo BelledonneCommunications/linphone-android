@@ -78,7 +78,8 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
             ContactsContract.Data.CONTACT_ID + " ASC"
         )
 
-        loader.setUpdateThrottle(MIN_INTERVAL_TO_WAIT_BEFORE_REFRESH) // Update at most once per minute
+        // Update at most once every X (see variable value for actual duration)
+        loader.setUpdateThrottle(MIN_INTERVAL_TO_WAIT_BEFORE_REFRESH)
 
         return loader
     }
@@ -293,34 +294,110 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                 } else if (friends.isEmpty()) {
                     Log.w("$TAG No friend created!")
                 } else {
-                    Log.i("$TAG ${friends.size} friends created")
-                    val fetchedFriends = friends.values
+                    Log.i("$TAG ${friends.size} friends fetched")
 
-                    val fl = core.getFriendListByName(NATIVE_ADDRESS_BOOK_FRIEND_LIST) ?: core.createFriendList()
-                    if (fl.displayName.isNullOrEmpty()) {
+                    val friendsList = core.getFriendListByName(NATIVE_ADDRESS_BOOK_FRIEND_LIST) ?: core.createFriendList()
+                    if (friendsList.displayName.isNullOrEmpty()) {
                         Log.i(
                             "$TAG Friend list [$NATIVE_ADDRESS_BOOK_FRIEND_LIST] didn't exist yet, let's create it"
                         )
-                        fl.isDatabaseStorageEnabled = true // Store them to allow user
-                        fl.type = FriendList.Type.Default
-                        fl.displayName = NATIVE_ADDRESS_BOOK_FRIEND_LIST
-                        core.addFriendList(fl)
+                        friendsList.isDatabaseStorageEnabled = true // Store them to keep presence info available for push notifications & favorites
+                        friendsList.type = FriendList.Type.Default
+                        friendsList.displayName = NATIVE_ADDRESS_BOOK_FRIEND_LIST
+                        core.addFriendList(friendsList)
+
+                        for (friend in friends.values) {
+                            friendsList.addLocalFriend(friend)
+                        }
+                        Log.i("$TAG Friends added")
                     } else {
                         Log.i(
-                            "$TAG Friend list [$NATIVE_ADDRESS_BOOK_FRIEND_LIST] found, removing existing friends if any"
+                            "$TAG Friend list [$NATIVE_ADDRESS_BOOK_FRIEND_LIST] found, synchronizing existing friends with new ones"
                         )
-                        for (friend in fl.friends) {
-                            fl.removeFriend(friend)
-                        }
-                    }
+                        for (localFriend in friendsList.friends) {
+                            val newlyFetchedFriend = friends[localFriend.refKey]
+                            if (newlyFetchedFriend != null) {
+                                Log.d(
+                                    "$TAG Friend [${localFriend.name}] with ref key [${localFriend.refKey}] found in newly fetched batch"
+                                )
+                                localFriend.edit()
+                                localFriend.nativeUri = newlyFetchedFriend.nativeUri // Native URI isn't stored in linphone database, needs to be updated
 
-                    for (friend in fetchedFriends) {
-                        fl.addLocalFriend(friend)
+                                // Update basic fields that may have changed
+                                localFriend.name = newlyFetchedFriend.name
+                                localFriend.organization = newlyFetchedFriend.organization
+                                localFriend.jobTitle = newlyFetchedFriend.jobTitle
+                                localFriend.photo = newlyFetchedFriend.photo
+
+                                // Clear local friend phone numbers & add all newly fetched one ones
+                                var atLeastAPhoneNumberWasRemoved = false
+                                for (phoneNumber in localFriend.phoneNumbersWithLabel) {
+                                    val found = newlyFetchedFriend.phoneNumbers.find {
+                                        it == phoneNumber.phoneNumber
+                                    }
+                                    if (found == null) {
+                                        atLeastAPhoneNumberWasRemoved = true
+                                    }
+                                    localFriend.removePhoneNumberWithLabel(phoneNumber)
+                                }
+                                for (phoneNumber in newlyFetchedFriend.phoneNumbersWithLabel) {
+                                    localFriend.addPhoneNumberWithLabel(phoneNumber)
+                                }
+
+                                // If at least a phone number was removed, remove all SIP address from local friend before adding all from newly fetched one.
+                                // If none was removed, simply add SIP addresses from fetched contact that aren't already in the local friend.
+                                if (atLeastAPhoneNumberWasRemoved) {
+                                    Log.w(
+                                        "$TAG At least a phone number was removed from native contact [${localFriend.name}], clearing all SIP addresses from local friend before adding back the ones that still exists"
+                                    )
+                                    for (sipAddress in localFriend.addresses) {
+                                        localFriend.removeAddress(sipAddress)
+                                    }
+                                }
+
+                                // Adding only newly added SIP address(es) in native contact if any
+                                for (sipAddress in newlyFetchedFriend.addresses) {
+                                    val found = localFriend.addresses.find {
+                                        it.weakEqual(sipAddress)
+                                    }
+                                    if (found == null) {
+                                        localFriend.addAddress(sipAddress)
+                                    }
+                                }
+                                localFriend.done()
+                            } else {
+                                Log.i(
+                                    "$TAG Friend [${localFriend.name}] with ref key [${localFriend.refKey}] not found in newly fetched batch, removing it"
+                                )
+                                friendsList.removeFriend(localFriend)
+                            }
+                        }
+
+                        // Check for newly created friends since last sync
+                        val localFriends = friendsList.friends
+                        for (key in friends.keys) {
+                            val found = localFriends.find {
+                                it.refKey == key
+                            }
+                            if (found == null) {
+                                val newFriend = friends[key]
+                                if (newFriend != null) {
+                                    Log.i(
+                                        "$TAG Friend [${newFriend.name}] with ref key [${newFriend.refKey}] not found in currently stored list, adding it"
+                                    )
+                                    friendsList.addLocalFriend(newFriend)
+                                } else {
+                                    Log.e(
+                                        "$TAG Expected to find newly fetched friend with ref key [$key] but was null!"
+                                    )
+                                }
+                            }
+                        }
+                        Log.i("$TAG Friends synchronized")
                     }
                     friends.clear()
-                    Log.i("$TAG Friends added")
 
-                    fl.updateSubscriptions()
+                    friendsList.updateSubscriptions()
                     Log.i("$TAG Subscription(s) updated")
                     coreContext.contactsManager.onNativeContactsLoaded()
                 }
