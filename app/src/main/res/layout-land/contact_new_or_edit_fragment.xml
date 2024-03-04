@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="backClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="pickImageClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="deleteImageClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.main.contacts.viewmodel.ContactNewOrEditViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/color_grey_100">
+
+        <ImageView
+            android:id="@+id/back"
+            android:onClick="@{backClickListener}"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:adjustViewBounds="true"
+            android:padding="15dp"
+            android:src="@drawable/caret_left"
+            android:contentDescription="@string/content_description_go_back_icon"
+            android:background="?attr/color_main2_000"
+            app:tint="?attr/color_main1_500"
+            app:layout_constraintBottom_toBottomOf="@id/title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/title" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/main_page_title_style"
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/top_bar_height"
+            android:paddingStart="10dp"
+            android:background="?attr/color_main2_000"
+            android:text="@{viewModel.isEdit ? @string/contact_edit_title : @string/contact_new_title, default=@string/contact_new_title}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/back"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="RtlSymmetry" />
+
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:fillViewport="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    style="@style/avatar_imageview"
+                    android:onClick="@{pickImageClickListener}"
+                    android:id="@+id/avatar"
+                    android:layout_width="@dimen/avatar_big_size"
+                    android:layout_height="@dimen/avatar_big_size"
+                    android:layout_marginTop="8dp"
+                    coil="@{viewModel.picturePath}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/overlay"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:padding="10dp"
+                    android:src="@drawable/smiley"
+                    android:visibility="@{viewModel.picturePath.empty ? View.VISIBLE : View.GONE}"
+                    app:tint="@color/gray_main2_600"
+                    app:layout_constraintEnd_toEndOf="@id/avatar"
+                    app:layout_constraintStart_toStartOf="@id/avatar"
+                    app:layout_constraintTop_toTopOf="@id/avatar"
+                    app:layout_constraintBottom_toBottomOf="@id/avatar" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:onClick="@{pickImageClickListener}"
+                    style="@style/default_text_style"
+                    android:id="@+id/add_picture_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/manage_account_add_picture"
+                    android:textSize="14sp"
+                    android:drawableStart="@drawable/camera"
+                    android:drawablePadding="3dp"
+                    android:visibility="@{viewModel.picturePath.empty ? View.VISIBLE : View.GONE, default=gone}"
+                    app:layout_constraintTop_toBottomOf="@id/avatar"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:onClick="@{pickImageClickListener}"
+                    style="@style/default_text_style"
+                    android:id="@+id/edit_picture_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/manage_account_edit_picture"
+                    android:textSize="14sp"
+                    android:drawableStart="@drawable/pencil_simple"
+                    android:drawablePadding="3dp"
+                    android:visibility="@{viewModel.picturePath.empty ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintTop_toBottomOf="@id/avatar"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/remove_picture_label"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:onClick="@{deleteImageClickListener}"
+                    style="@style/default_text_style"
+                    android:id="@+id/remove_picture_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="16dp"
+                    android:text="@string/manage_account_remove_picture"
+                    android:textSize="14sp"
+                    android:drawableStart="@drawable/trash_simple"
+                    android:drawablePadding="3dp"
+                    android:visibility="@{viewModel.picturePath.empty ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintTop_toBottomOf="@id/avatar"
+                    app:layout_constraintStart_toEndOf="@id/edit_picture_label"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <androidx.constraintlayout.widget.Barrier
+                    android:id="@+id/avatar_barrier"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:constraint_referenced_ids="remove_picture_label, edit_picture_label, add_picture_label"
+                    app:barrierDirection="bottom" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/left_column"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="30dp"
+                    app:layout_constraintWidth_percent="0.5"
+                    app:layout_constraintTop_toBottomOf="@id/avatar_barrier"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/right_column">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/header_style"
+                        android:id="@+id/first_name_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:text="@string/contact_editor_first_name"
+                        app:layout_constraintStart_toStartOf="@id/first_name"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        style="@style/default_text_style"
+                        android:id="@+id/first_name"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginTop="5dp"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
+                        android:text="@={viewModel.firstName, default=`John`}"
+                        android:textSize="14sp"
+                        android:textColor="?attr/color_main2_600"
+                        android:hint="@string/contact_editor_first_name"
+                        android:maxLines="1"
+                        android:background="@drawable/edit_text_background"
+                        android:inputType="text|textPersonName|textCapWords"
+                        app:layout_constraintWidth_max="@dimen/text_input_max_width"
+                        app:layout_constraintTop_toBottomOf="@id/first_name_label"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/header_style"
+                        android:id="@+id/last_name_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="@string/contact_editor_last_name"
+                        app:layout_constraintStart_toStartOf="@id/last_name"
+                        app:layout_constraintTop_toBottomOf="@id/first_name"/>
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        style="@style/default_text_style"
+                        android:id="@+id/last_name"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginTop="5dp"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
+                        android:text="@={viewModel.lastName, default=`Doe`}"
+                        android:textSize="14sp"
+                        android:textColor="?attr/color_main2_600"
+                        android:hint="@string/contact_editor_last_name"
+                        android:maxLines="1"
+                        android:background="@drawable/edit_text_background"
+                        android:inputType="text|textPersonName|textCapWords"
+                        app:layout_constraintWidth_max="@dimen/text_input_max_width"
+                        app:layout_constraintTop_toBottomOf="@id/last_name_label"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/header_style"
+                        android:id="@+id/company_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="@string/contact_editor_company"
+                        app:layout_constraintStart_toStartOf="@id/company"
+                        app:layout_constraintTop_toBottomOf="@id/last_name"/>
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        style="@style/default_text_style"
+                        android:id="@+id/company"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginTop="5dp"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
+                        android:text="@={viewModel.company, default=`Belledonne Comm`}"
+                        android:textSize="14sp"
+                        android:textColor="?attr/color_main2_600"
+                        android:hint="@string/contact_editor_company"
+                        android:maxLines="1"
+                        android:background="@drawable/edit_text_background"
+                        android:inputType="text|textCapWords"
+                        app:layout_constraintWidth_max="@dimen/text_input_max_width"
+                        app:layout_constraintTop_toBottomOf="@id/company_label"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/header_style"
+                        android:id="@+id/job_title_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="@string/contact_editor_job_title"
+                        app:layout_constraintStart_toStartOf="@id/job_title"
+                        app:layout_constraintTop_toBottomOf="@id/company"/>
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        style="@style/default_text_style"
+                        android:id="@+id/job_title"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginTop="5dp"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
+                        android:layout_marginBottom="@dimen/screen_bottom_margin"
+                        android:text="@={viewModel.jobTitle, default=`Android dev`}"
+                        android:textSize="14sp"
+                        android:textColor="?attr/color_main2_600"
+                        android:hint="@string/contact_editor_job_title"
+                        android:maxLines="1"
+                        android:background="@drawable/edit_text_background"
+                        android:inputType="text|textCapWords"
+                        app:layout_constraintVertical_bias="0"
+                        app:layout_constraintWidth_max="@dimen/text_input_max_width"
+                        app:layout_constraintTop_toBottomOf="@id/job_title_label"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/right_column"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="30dp"
+                    app:layout_constraintWidth_percent="0.5"
+                    app:layout_constraintTop_toBottomOf="@id/avatar_barrier"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/left_column"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/header_style"
+                        android:id="@+id/sip_addresses_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:text="@string/sip_address"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="@id/sip_addresses"/>
+
+                    <LinearLayout
+                        android:id="@+id/sip_addresses"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:orientation="vertical"
+                        app:layout_constraintWidth_max="@dimen/text_input_max_width"
+                        app:layout_constraintTop_toBottomOf="@id/sip_addresses_label"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/header_style"
+                        android:id="@+id/phone_numbers_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="@string/phone_number"
+                        app:layout_constraintTop_toBottomOf="@id/sip_addresses"
+                        app:layout_constraintStart_toStartOf="@id/phone_numbers"/>
+
+                    <LinearLayout
+                        android:id="@+id/phone_numbers"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:orientation="vertical"
+                        app:layout_constraintWidth_max="@dimen/text_input_max_width"
+                        app:layout_constraintTop_toBottomOf="@id/phone_numbers_label"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/save"
+            android:onClick="@{() -> viewModel.saveChanges()}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="16dp"
+            android:src="@drawable/check"
+            app:tint="?attr/color_on_main"
+            app:backgroundTint="?attr/color_main1_500"
+            app:shapeAppearanceOverlay="@style/rounded"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
