@@ -44,13 +44,14 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_500"
             android:id="@+id/header"
-            android:layout_width="18dp"
+            android:layout_width="25dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:text="@{model.firstLetter, default=`A`}"
             android:visibility="@{firstContactStartingByThatLetter ? View.VISIBLE : View.INVISIBLE}"
             android:textColor="?attr/color_main2_400"
             android:textSize="20sp"
+            android:gravity="center"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
