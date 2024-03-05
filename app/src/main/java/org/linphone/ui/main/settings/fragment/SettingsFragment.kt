@@ -8,6 +8,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.annotation.UiThread
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.compatibility.Compatibility
@@ -109,6 +110,42 @@ class SettingsFragment : GenericFragment() {
 
         binding.callsSettings.deviceRingtoneSpinner.onItemSelectedListener = ringtoneListener
 
+        viewModel.addLdapServerEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                val action = SettingsFragmentDirections.actionSettingsFragmentToLdapServerConfigurationFragment(
+                    null
+                )
+                findNavController().navigate(action)
+            }
+        }
+
+        viewModel.editLdapServerEvent.observe(viewLifecycleOwner) {
+            it.consume { name ->
+                val action = SettingsFragmentDirections.actionSettingsFragmentToLdapServerConfigurationFragment(
+                    name
+                )
+                findNavController().navigate(action)
+            }
+        }
+
+        viewModel.addCardDavServerEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                val action = SettingsFragmentDirections.actionSettingsFragmentToCardDavAddressBookConfigurationFragment(
+                    null
+                )
+                findNavController().navigate(action)
+            }
+        }
+
+        viewModel.editCardDavServerEvent.observe(viewLifecycleOwner) {
+            it.consume { name ->
+                val action = SettingsFragmentDirections.actionSettingsFragmentToCardDavAddressBookConfigurationFragment(
+                    name
+                )
+                findNavController().navigate(action)
+            }
+        }
+
         // Meeting default layout related
         val layoutAdapter = ArrayAdapter(
             requireContext(),
@@ -151,5 +188,12 @@ class SettingsFragment : GenericFragment() {
         coreContext.postOnCoreThread {
             viewModel.stopRingtonePlayer()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        viewModel.reloadLdapServers()
+        viewModel.reloadConfiguredCardDavServers()
     }
 }

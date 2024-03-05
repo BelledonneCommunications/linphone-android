@@ -35,11 +35,14 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.Conference
+import org.linphone.core.FriendList
 import org.linphone.core.Player
 import org.linphone.core.PlayerListener
 import org.linphone.core.tools.Log
+import org.linphone.ui.main.settings.model.CardDavLdapModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.AudioUtils
+import org.linphone.utils.Event
 
 class SettingsViewModel @UiThread constructor() : ViewModel() {
     companion object {
@@ -78,6 +81,25 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
 
     // Contacts settings
     val showContactsSettings = MutableLiveData<Boolean>()
+
+    val ldapServers = MutableLiveData<List<CardDavLdapModel>>()
+
+    val cardDavFriendsLists = MutableLiveData<List<CardDavLdapModel>>()
+
+    val addLdapServerEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+    val editLdapServerEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
+
+    val addCardDavServerEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
+    val editCardDavServerEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
 
     // Meetings settings
     val showMeetingsSettings = MutableLiveData<Boolean>()
@@ -334,6 +356,58 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun toggleContactsExpand() {
         expandContacts.value = expandContacts.value == false
+    }
+
+    @UiThread
+    fun addLdapServer() {
+        addLdapServerEvent.value = Event(true)
+    }
+
+    @UiThread
+    fun reloadLdapServers() {
+        coreContext.postOnCoreThread { core ->
+            val list = arrayListOf<CardDavLdapModel>()
+
+            for (ldap in core.ldapList) {
+                val label = ldap.params.server
+                if (label.isNotEmpty()) {
+                    list.add(
+                        CardDavLdapModel(label) {
+                            editLdapServerEvent.postValue(Event(label))
+                        }
+                    )
+                }
+            }
+
+            ldapServers.postValue(list)
+        }
+    }
+
+    @UiThread
+    fun addCardDavServer() {
+        addCardDavServerEvent.value = Event(true)
+    }
+
+    @UiThread
+    fun reloadConfiguredCardDavServers() {
+        coreContext.postOnCoreThread { core ->
+            val list = arrayListOf<CardDavLdapModel>()
+
+            for (friendList in core.friendsLists) {
+                if (friendList.type == FriendList.Type.CardDAV) {
+                    val label = friendList.displayName ?: friendList.uri ?: ""
+                    if (label.isNotEmpty()) {
+                        list.add(
+                            CardDavLdapModel(label) {
+                                editCardDavServerEvent.postValue(Event(label))
+                            }
+                        )
+                    }
+                }
+            }
+
+            cardDavFriendsLists.postValue(list)
+        }
     }
 
     @UiThread

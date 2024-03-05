@@ -107,7 +107,9 @@ fun <T> setEntries(
             )
 
             binding.setVariable(BR.model, entry)
-            binding.setVariable(BR.onLongClickListener, onLongClick)
+            if (onLongClick != null) {
+                binding.setVariable(BR.onLongClickListener, onLongClick)
+            }
 
             // This is a bit hacky...
             if (viewGroup.context as? LifecycleOwner != null) {
