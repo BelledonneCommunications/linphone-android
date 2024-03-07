@@ -57,10 +57,12 @@ class MeetingsListFragment : AbstractTopBarFragment() {
     private var bottomSheetDialog: BottomSheetDialogFragment? = null
 
     override fun onDefaultAccountChanged() {
-        Log.i(
-            "$TAG Default account changed, updating avatar in top bar & re-computing meetings list"
-        )
-        listViewModel.applyFilter()
+        if (!goToContactsIfMeetingsAreDisabledForCurrentlyDefaultAccount()) {
+            Log.i(
+                "$TAG Default account changed, updating avatar in top bar & re-computing meetings list"
+            )
+            listViewModel.applyFilter()
+        }
     }
 
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
@@ -223,12 +225,18 @@ class MeetingsListFragment : AbstractTopBarFragment() {
     override fun onResume() {
         super.onResume()
 
+        goToContactsIfMeetingsAreDisabledForCurrentlyDefaultAccount()
+    }
+
+    private fun goToContactsIfMeetingsAreDisabledForCurrentlyDefaultAccount(): Boolean {
         if (listViewModel.hideMeetings.value == true) {
             Log.w(
                 "$TAG Resuming fragment that should no longer be accessible, going to contacts list instead"
             )
             sharedViewModel.navigateToContactsEvent.value = Event(true)
+            return true
         }
+        return false
     }
 
     private fun scrollToToday() {

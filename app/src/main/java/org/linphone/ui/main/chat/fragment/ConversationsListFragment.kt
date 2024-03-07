@@ -309,7 +309,7 @@ class ConversationsListFragment : AbstractTopBarFragment() {
     override fun onResume() {
         super.onResume()
 
-        if (listViewModel.hideMeetings.value == true) {
+        if (listViewModel.hideConversations.value == true) {
             Log.w(
                 "$TAG Resuming fragment that should no longer be accessible, going to contacts list instead"
             )

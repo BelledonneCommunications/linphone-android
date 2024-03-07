@@ -87,6 +87,12 @@
                         app:constraint_referenced_ids="details_background, sip_address, sip_address_label, display_name, display_name_label, prefix, prefix_caret, prefix_label, prefix_label_tooltip, push_notifications_switch, push_notifications_title"
                         android:visibility="@{viewModel.expandDetails ? View.VISIBLE : View.GONE}" />
 
+                    <androidx.constraintlayout.widget.Group
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:constraint_referenced_ids="mode_background, current_mode, change_mode"
+                        android:visibility="@{viewModel.showModeSelection ? View.VISIBLE : View.GONE}" />
+
                     <com.google.android.material.imageview.ShapeableImageView
                         style="@style/avatar_imageview"
                         android:onClick="@{pickImageClickListener}"

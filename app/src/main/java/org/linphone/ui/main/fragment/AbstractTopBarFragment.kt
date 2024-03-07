@@ -20,7 +20,6 @@
 package org.linphone.ui.main.fragment
 
 import android.content.res.Configuration
-import android.os.Bundle
 import android.view.View
 import androidx.annotation.IdRes
 import androidx.annotation.UiThread
@@ -51,10 +50,6 @@ abstract class AbstractTopBarFragment : GenericFragment() {
     private var currentFragmentId: Int = 0
 
     abstract fun onDefaultAccountChanged()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     fun initSlidingPane(slidingPane: SlidingPaneLayout) {
         val slidingPaneBackPressedCallback = SlidingPaneBackPressedCallback(slidingPane)

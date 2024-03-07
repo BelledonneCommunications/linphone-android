@@ -142,11 +142,11 @@ open class AbstractTopBarViewModel @UiThread constructor() : ViewModel() {
                 account.postValue(AccountModel(defaultAccount))
             }
 
-            defaultAccountChangedEvent.postValue(Event(true))
-
             updateUnreadMessagesCount()
             updateMissedCallsCount()
             updateAvailableMenus()
+
+            defaultAccountChangedEvent.postValue(Event(true))
         }
     }
 
