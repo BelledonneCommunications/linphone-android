@@ -221,7 +221,7 @@
             android:id="@+id/conference_active_speaker_remote_video"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:visibility="@{!conferenceViewModel.isConferenceLocallyPaused &amp;&amp; conferenceViewModel.speakingParticipant.videoEnabled &amp;&amp; conferenceViewModel.speakingParticipant.isInConference ? View.VISIBLE : View.GONE}"
+            android:visibility="@{!conferenceViewModel.isConferenceLocallyPaused &amp;&amp; conferenceViewModel.speakingParticipantVideoEnabled ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@id/active_speaker_background"
             app:layout_constraintEnd_toEndOf="@id/active_speaker_background"
             app:layout_constraintStart_toStartOf="@id/active_speaker_background"

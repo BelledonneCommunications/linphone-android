@@ -163,16 +163,12 @@ class ScheduledConferenceData(val conferenceInfo: ConferenceInfo, private val is
             val address = participant.asStringUriOnly()
             participantsListShort += "$name, "
             when (info.role) {
-                Participant.Role.Speaker -> {
-                    speakersListExpanded += "$name ($address)\n"
-                }
                 Participant.Role.Listener -> {
                     participantsListExpanded += "$name ($address)\n"
                     allSpeaker = false
                 }
-                else -> { // For meetings created before 5.3 SDK
-                    participantsListExpanded += "$name ($address)\n"
-                    allSpeaker = false
+                else -> { // For meetings created before 5.3 SDK, a speaker might be Unknown
+                    speakersListExpanded += "$name ($address)\n"
                 }
             }
         }
