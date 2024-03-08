@@ -58,6 +58,7 @@ class ConferenceViewModel : ViewModel() {
 
     val speakingParticipantFound = MutableLiveData<Boolean>()
     val speakingParticipant = MutableLiveData<ConferenceParticipantDeviceData>()
+    val speakingParticipantVideoEnabled = MutableLiveData<Boolean>()
     val meParticipant = MutableLiveData<ConferenceParticipantDeviceData>()
 
     val isBroadcast = MutableLiveData<Boolean>()
@@ -128,6 +129,7 @@ class ConferenceViewModel : ViewModel() {
             when (conferenceParticipantDevices.value.orEmpty().size) {
                 1 -> {
                     speakingParticipant.value?.videoEnabled?.value = false
+                    speakingParticipantVideoEnabled.value = false
                     allParticipantsLeftEvent.value = Event(true)
                 }
                 2 -> {
@@ -192,6 +194,8 @@ class ConferenceViewModel : ViewModel() {
                     }
                     else -> {}
                 }
+            } else {
+                speakingParticipantVideoEnabled.value = speakingParticipant.value?.isInConference?.value == true && speakingParticipant.value?.isSendingVideo?.value == true
             }
         }
 
@@ -212,11 +216,26 @@ class ConferenceViewModel : ViewModel() {
                 device.isActiveSpeaker.value = true
                 speakingParticipant.value = device!!
                 speakingParticipantFound.value = true
+                speakingParticipantVideoEnabled.value = speakingParticipant.value?.isInConference?.value == true && speakingParticipant.value?.isSendingVideo?.value == true
             } else if (device == null) {
                 Log.w(
                     "[Conference] Participant device [${participantDevice.address.asStringUriOnly()}] is the active speaker but couldn't find it in devices list"
                 )
             }
+        }
+
+        override fun onParticipantDeviceMediaAvailabilityChanged(
+            conference: Conference,
+            device: ParticipantDevice
+        ) {
+            speakingParticipantVideoEnabled.value = speakingParticipant.value?.isInConference?.value == true && speakingParticipant.value?.isSendingVideo?.value == true
+        }
+
+        override fun onParticipantDeviceMediaCapabilityChanged(
+            conference: Conference,
+            device: ParticipantDevice
+        ) {
+            speakingParticipantVideoEnabled.value = speakingParticipant.value?.isInConference?.value == true && speakingParticipant.value?.isSendingVideo?.value == true
         }
 
         override fun onStateChanged(conference: Conference, state: Conference.State) {
@@ -537,6 +556,7 @@ class ConferenceViewModel : ViewModel() {
         val activelySpeakingParticipantDevice = conference.activeSpeakerParticipantDevice
         var foundActivelySpeakingParticipantDevice = false
         speakingParticipantFound.value = false
+        speakingParticipantVideoEnabled.value = false
 
         val conferenceInfo = conference.core.findConferenceInformationFromUri(
             conference.conferenceAddress
@@ -587,6 +607,7 @@ class ConferenceViewModel : ViewModel() {
                     deviceData.isActiveSpeaker.value = true
                     foundActivelySpeakingParticipantDevice = true
                     speakingParticipantFound.value = true
+                    speakingParticipantVideoEnabled.value = speakingParticipant.value?.isInConference?.value == true && speakingParticipant.value?.isSendingVideo?.value == true
                 }
             }
         }
@@ -599,6 +620,7 @@ class ConferenceViewModel : ViewModel() {
             speakingParticipant.value = deviceData
             deviceData.isActiveSpeaker.value = true
             speakingParticipantFound.value = true
+            speakingParticipantVideoEnabled.value = speakingParticipant.value?.isInConference?.value == true && speakingParticipant.value?.isSendingVideo?.value == true
         }
 
         for (device in conference.me.devices) {
@@ -666,10 +688,11 @@ class ConferenceViewModel : ViewModel() {
 
         val sortedDevices = sortDevicesDataList(devices)
 
-        if (speakingParticipant.value == null) {
+        if (speakingParticipant.value == null || speakingParticipantFound.value == false) {
             speakingParticipant.value = deviceData
             deviceData.isActiveSpeaker.value = true
-            speakingParticipantFound.value = false
+            speakingParticipantFound.value = true
+            speakingParticipantVideoEnabled.value = speakingParticipant.value?.isInConference?.value == true && speakingParticipant.value?.isSendingVideo?.value == true
         }
 
         conferenceParticipantDevices.value = sortedDevices
@@ -710,7 +733,8 @@ class ConferenceViewModel : ViewModel() {
             val deviceData = devices[1]
             speakingParticipant.value = deviceData
             deviceData.isActiveSpeaker.value = true
-            speakingParticipantFound.value = false
+            speakingParticipantFound.value = true
+            speakingParticipantVideoEnabled.value = speakingParticipant.value?.isInConference?.value == true && speakingParticipant.value?.isSendingVideo?.value == true
         }
 
         conferenceParticipantDevices.value = devices
