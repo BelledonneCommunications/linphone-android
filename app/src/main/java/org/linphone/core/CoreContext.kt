@@ -32,10 +32,8 @@ import android.os.Looper
 import androidx.annotation.AnyThread
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
-import androidx.emoji2.text.EmojiCompat
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import java.util.*
 import org.linphone.BuildConfig
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.contacts.ContactsManager
@@ -54,8 +52,6 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
     }
 
     lateinit var core: Core
-
-    val emojiCompat: EmojiCompat
 
     val contactsManager = ContactsManager()
 
@@ -208,9 +204,6 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
     }
 
     init {
-        EmojiCompat.init(context)
-        emojiCompat = EmojiCompat.get()
-
         (context as Application).registerActivityLifecycleCallbacks(activityMonitor)
     }
 

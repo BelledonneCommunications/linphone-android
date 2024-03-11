@@ -21,14 +21,8 @@ package org.linphone.ui.main.viewmodel
 
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
-import androidx.emoji2.text.EmojiCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.Account
@@ -157,24 +151,6 @@ open class AbstractTopBarViewModel @UiThread constructor() : ViewModel() {
         }
 
         searchBarVisible.value = false
-
-        val emojiCompat = coreContext.emojiCompat
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                // Wait for emoji compat library to have been loaded
-                if (emojiCompat.loadState != EmojiCompat.LOAD_STATE_SUCCEEDED) {
-                    Log.i("$TAG Waiting for emoji compat library to have been loaded")
-                    while (emojiCompat.loadState == EmojiCompat.LOAD_STATE_DEFAULT || emojiCompat.loadState == EmojiCompat.LOAD_STATE_LOADING) {
-                        delay(50)
-                    }
-
-                    coreContext.postOnCoreThread {
-                        Log.i("$TAG Emoji compat library loaded, update account")
-                        configure()
-                    }
-                }
-            }
-        }
     }
 
     @UiThread

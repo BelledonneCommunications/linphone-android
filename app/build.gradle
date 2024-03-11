@@ -147,7 +147,6 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
     def emoji_version = "1.4.0"
-    implementation "androidx.emoji2:emoji2:$emoji_version"
     implementation "androidx.emoji2:emoji2-emojipicker:$emoji_version"
 
     // https://github.com/google/flexbox-layout/blob/main/LICENSE Apache v2.0

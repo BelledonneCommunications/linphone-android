@@ -33,7 +33,6 @@ import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
 import androidx.annotation.UiThread
 import androidx.core.view.SoftwareKeyboardControllerCompat
-import androidx.emoji2.text.EmojiCompat
 import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.tools.Log
@@ -128,28 +127,19 @@ class AppUtils {
             val split = displayName.uppercase(Locale.getDefault()).split(" ")
             var initials = ""
             var characters = 0
-            val emoji = coreContext.emojiCompat
 
             for (i in split.indices) {
-                if (split[i].isNotEmpty()) {
+                val split = split[i]
+                if (split.isNotEmpty()) {
                     try {
-                        if (emoji.loadState == EmojiCompat.LOAD_STATE_SUCCEEDED && emoji.hasEmojiGlyph(
-                                split[i]
-                            )
-                        ) {
-                            val glyph = emoji.process(split[i])
-                            if (characters > 0) { // Limit initial to 1 emoji only
-                                Log.d("$TAG We limit initials to one emoji only")
-                                initials = ""
-                            }
-                            initials += glyph
-                            break // Limit initial to 1 emoji only
-                        } else {
-                            initials += split[i][0]
+                        val symbol = extractFirstSymbol(split)
+                        initials += symbol
+                        if (symbol.length > 1) {
+                            break
                         }
-                    } catch (ise: IllegalStateException) {
-                        Log.e("$TAG Can't call hasEmojiGlyph: $ise")
-                        initials += split[i][0]
+                    } catch (e: Exception) {
+                        Log.e("$TAG Failed to extract first symbol if any: $e")
+                        initials += split[0]
                     }
 
                     characters += 1
@@ -175,6 +165,38 @@ class AppUtils {
                 name = Build.MANUFACTURER + " " + Build.MODEL
             }
             return name
+        }
+
+        @AnyThread
+        private fun extractFirstSymbol(text: String): String {
+            val sequence = StringBuilder(text.length)
+            var isInJoin = false
+            var codePoint: Int
+
+            var i = 0
+            while (i < text.length) {
+                codePoint = text.codePointAt(i)
+                if (codePoint == 0x200D) {
+                    isInJoin = true
+                    if (sequence.isEmpty()) {
+                        i = text.offsetByCodePoints(i, 1)
+                        continue
+                    }
+                } else {
+                    if (sequence.isNotEmpty() && !isInJoin) break
+                    isInJoin = false
+                }
+                sequence.appendCodePoint(codePoint)
+                i = text.offsetByCodePoints(i, 1)
+            }
+
+            if (isInJoin) {
+                for (i in sequence.length - 1 downTo 0) {
+                    if (sequence[i].code == 0x200D) sequence.deleteCharAt(i) else break
+                }
+            }
+
+            return sequence.toString()
         }
     }
 }
