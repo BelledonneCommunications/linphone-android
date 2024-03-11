@@ -66,6 +66,8 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
 
     private lateinit var magicSearch: MagicSearch
 
+    private var firstLoad = true
+
     private val magicSearchListener = object : MagicSearchListenerStub() {
         @WorkerThread
         override fun onSearchResultsReceived(magicSearch: MagicSearch) {
@@ -232,7 +234,7 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
                 favouritesList.add(model)
             }
 
-            if (count == 20) {
+            if (firstLoad && count == 20) {
                 contactsList.postValue(list)
                 fetchInProgress.postValue(false)
             }
@@ -251,5 +253,6 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
         fetchInProgress.postValue(false)
 
         Log.i("$TAG Processed [${results.size}] results")
+        firstLoad = false
     }
 }
