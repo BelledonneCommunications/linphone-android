@@ -146,6 +146,7 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
 
         expandCalls.value = false
         expandConversations.value = false
+        expandContacts.value = false
         expandMeetings.value = false
         expandNetwork.value = false
         expandUserInterface.value = false
