@@ -42,6 +42,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.core.Account
 import org.linphone.core.Address
 import org.linphone.core.ConferenceInfo
 import org.linphone.core.Core
@@ -133,6 +134,21 @@ class ContactsManager @UiThread constructor() {
         override fun onFriendListRemoved(core: Core, friendList: FriendList) {
             Log.i("$TAG Friend list [${friendList.displayName}] removed")
             friendList.removeListener(friendListListener)
+        }
+
+        @WorkerThread
+        override fun onDefaultAccountChanged(core: Core, account: Account?) {
+            Log.i("$TAG Default account changed, update all contact models showTrust value")
+            val showTrust = account?.isInSecureMode()
+            knownContactsAvatarsMap.forEach { (_, contactAvatarModel) ->
+                contactAvatarModel.showTrust.postValue(showTrust)
+            }
+            unknownContactsAvatarsMap.forEach { (_, contactAvatarModel) ->
+                contactAvatarModel.showTrust.postValue(showTrust)
+            }
+            conferenceAvatarMap.forEach { (_, contactAvatarModel) ->
+                contactAvatarModel.showTrust.postValue(showTrust)
+            }
         }
     }
 

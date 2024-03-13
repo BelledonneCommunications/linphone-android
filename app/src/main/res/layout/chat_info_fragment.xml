@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View" />
         <import type="org.linphone.core.ConsolidatedPresence" />
-        <import type="org.linphone.core.SecurityLevel" />
         <variable
             name="backClickListener"
             type="View.OnClickListener" />
@@ -77,40 +77,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.google.android.material.imageview.ShapeableImageView
+                <include
                     android:id="@+id/avatar"
-                    style="@style/avatar_imageview"
-                    coilBigAvatar="@{viewModel.avatarModel}"
-                    android:layout_width="@dimen/avatar_big_size"
-                    android:layout_height="@dimen/avatar_big_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:src="@drawable/inset_meeting"
+                    layout="@layout/contact_avatar_big"
+                    bind:model="@{viewModel.avatarModel}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:id="@+id/presence_badge"
-                    android:layout_width="@dimen/avatar_presence_badge_big_size"
-                    android:layout_height="@dimen/avatar_presence_badge_big_size"
-                    android:layout_marginEnd="@dimen/avatar_presence_badge_big_end_margin"
-                    android:background="@drawable/led_background"
-                    android:padding="@dimen/avatar_presence_badge_big_padding"
-                    android:visibility="@{viewModel.avatarModel.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE, default=gone}"
-                    app:layout_constraintBottom_toBottomOf="@id/avatar"
-                    app:layout_constraintEnd_toEndOf="@id/avatar"
-                    app:presenceIcon="@{viewModel.avatarModel.presenceStatus}" />
-
-                <ImageView
-                    android:id="@+id/trust_badge"
-                    android:layout_width="@dimen/avatar_presence_badge_big_size"
-                    android:layout_height="@dimen/avatar_presence_badge_big_size"
-                    android:layout_marginStart="@dimen/avatar_presence_badge_big_end_margin"
-                    android:src="@{viewModel.avatarModel.trust == SecurityLevel.EndToEndEncryptedAndVerified ? @drawable/trusted : @drawable/not_trusted, default=@drawable/trusted}"
-                    android:visibility="@{viewModel.avatarModel.trust == SecurityLevel.EndToEndEncryptedAndVerified || viewModel.avatarModel.trust == SecurityLevel.Unsafe ? View.VISIBLE : View.GONE}"
-                    android:contentDescription="@{viewModel.avatarModel.trust == SecurityLevel.EndToEndEncryptedAndVerified ? @string/content_description_trusted_contact_icon : @string/content_description_not_trusted_contact_icon}"
-                    app:layout_constraintStart_toStartOf="@id/avatar"
-                    app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/title"

@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View" />
         <import type="android.graphics.Typeface" />
-        <import type="org.linphone.core.ConsolidatedPresence" />
-        <import type="org.linphone.core.SecurityLevel" />
         <variable
             name="model"
             type="org.linphone.ui.main.contacts.model.ContactAvatarModel" />
@@ -56,40 +54,18 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <com.google.android.material.imageview.ShapeableImageView
-            style="@style/avatar_imageview"
+        <include
             android:id="@+id/avatar"
-            android:layout_width="@dimen/avatar_list_cell_size"
-            android:layout_height="@dimen/avatar_list_cell_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            coilAvatar="@{model}"
+            layout="@layout/contact_avatar"
+            bind:model="@{model}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/header"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/presence_badge"
-            android:layout_width="@dimen/avatar_presence_badge_size"
-            android:layout_height="@dimen/avatar_presence_badge_size"
-            android:layout_marginEnd="@dimen/avatar_presence_badge_end_margin"
-            android:background="@drawable/led_background"
-            android:padding="@dimen/avatar_presence_badge_padding"
-            app:presenceIcon="@{model.presenceStatus}"
-            android:visibility="@{model.presenceStatus == ConsolidatedPresence.Offline ? View.GONE : View.VISIBLE}"
-            app:layout_constraintEnd_toEndOf="@id/avatar"
-            app:layout_constraintBottom_toBottomOf="@id/avatar"/>
-
-        <ImageView
-            android:id="@+id/trust_badge"
-            android:layout_width="@dimen/avatar_presence_badge_size"
-            android:layout_height="@dimen/avatar_presence_badge_size"
-            android:src="@{model.trust == SecurityLevel.EndToEndEncryptedAndVerified ? @drawable/trusted : @drawable/not_trusted, default=@drawable/trusted}"
-            android:visibility="@{model.trust == SecurityLevel.EndToEndEncryptedAndVerified || model.trust == SecurityLevel.Unsafe ? View.VISIBLE : View.GONE}"
-            android:contentDescription="@{model.trust == SecurityLevel.EndToEndEncryptedAndVerified ? @string/content_description_trusted_contact_icon : @string/content_description_not_trusted_contact_icon}"
-            app:layout_constraintStart_toStartOf="@id/avatar"
-            app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"

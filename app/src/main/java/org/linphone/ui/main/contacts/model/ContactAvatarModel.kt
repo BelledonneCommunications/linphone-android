@@ -48,8 +48,6 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend, val addre
 
     val lastPresenceInfo = MutableLiveData<String>()
 
-    val presenceStatus = MutableLiveData<ConsolidatedPresence>()
-
     val name = MutableLiveData<String>()
 
     val firstLetter: String = AppUtils.getFirstLetter(friend.name.orEmpty())

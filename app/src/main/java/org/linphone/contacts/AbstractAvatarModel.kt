@@ -1,6 +1,7 @@
 package org.linphone.contacts
 
 import androidx.lifecycle.MutableLiveData
+import org.linphone.core.ConsolidatedPresence
 import org.linphone.core.SecurityLevel
 
 abstract class AbstractAvatarModel {
@@ -21,4 +22,6 @@ abstract class AbstractAvatarModel {
     val defaultToConferenceIcon = MutableLiveData<Boolean>()
 
     val skipInitials = MutableLiveData<Boolean>()
+
+    val presenceStatus = MutableLiveData<ConsolidatedPresence>()
 }

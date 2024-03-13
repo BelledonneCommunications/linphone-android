@@ -54,14 +54,13 @@ import coil.dispose
 import coil.load
 import coil.request.videoFrameMillis
 import coil.size.Dimension
+import coil.transform.CircleCropTransformation
 import coil.transform.RoundedCornersTransformation
-import com.google.android.material.imageview.ShapeableImageView
 import org.linphone.BR
 import org.linphone.R
 import org.linphone.contacts.AbstractAvatarModel
 import org.linphone.contacts.AvatarGenerator
 import org.linphone.core.ConsolidatedPresence
-import org.linphone.core.SecurityLevel
 import org.linphone.core.tools.Log
 import org.linphone.ui.call.model.ConferenceParticipantDeviceModel
 
@@ -310,7 +309,7 @@ fun ImageView.startAnimatedDrawable(start: Boolean = true) {
 
 @UiThread
 @BindingAdapter("coil")
-fun ShapeableImageView.loadCircleFileWithCoil(file: String?) {
+fun ImageView.loadCircleFileWithCoil(file: String?) {
     if (file != null) {
         load(file)
     }
@@ -318,19 +317,13 @@ fun ShapeableImageView.loadCircleFileWithCoil(file: String?) {
 
 @UiThread
 @BindingAdapter("coilAvatar")
-fun ShapeableImageView.loadAvatarWithCoil(model: AbstractAvatarModel?) {
+fun ImageView.loadAvatarWithCoil(model: AbstractAvatarModel?) {
     loadContactPictureWithCoil(this, model)
 }
 
 @UiThread
-@BindingAdapter("coilAvatarNoTrust")
-fun ShapeableImageView.loadAvatarWithCoilWithoutTrust(model: AbstractAvatarModel?) {
-    loadContactPictureWithCoil(this, model, skipTrust = true)
-}
-
-@UiThread
 @BindingAdapter("coilBubbleAvatar")
-fun ShapeableImageView.loadBubbleAvatarWithCoil(model: AbstractAvatarModel?) {
+fun ImageView.loadBubbleAvatarWithCoil(model: AbstractAvatarModel?) {
     val size = R.dimen.avatar_bubble_size
     val initialsSize = R.dimen.avatar_initials_bubble_text_size
     loadContactPictureWithCoil(this, model, size = size, textSize = initialsSize)
@@ -338,15 +331,15 @@ fun ShapeableImageView.loadBubbleAvatarWithCoil(model: AbstractAvatarModel?) {
 
 @UiThread
 @BindingAdapter("coilBigAvatar")
-fun ShapeableImageView.loadBigAvatarWithCoil(model: AbstractAvatarModel?) {
+fun ImageView.loadBigAvatarWithCoil(model: AbstractAvatarModel?) {
     val size = R.dimen.avatar_big_size
     val initialsSize = R.dimen.avatar_initials_big_text_size
     loadContactPictureWithCoil(this, model, size = size, textSize = initialsSize)
 }
 
 @UiThread
-@BindingAdapter("coilCallAvatar")
-fun ShapeableImageView.loadCallAvatarWithCoil(model: AbstractAvatarModel?) {
+@BindingAdapter("coilHugeAvatar")
+fun ImageView.loadCallAvatarWithCoil(model: AbstractAvatarModel?) {
     val size = R.dimen.avatar_in_call_size
     val initialsSize = R.dimen.avatar_initials_call_text_size
     loadContactPictureWithCoil(this, model, size = size, textSize = initialsSize)
@@ -354,7 +347,7 @@ fun ShapeableImageView.loadCallAvatarWithCoil(model: AbstractAvatarModel?) {
 
 @UiThread
 @BindingAdapter("coilInitials")
-fun ShapeableImageView.loadInitialsAvatarWithCoil(initials: String?) {
+fun ImageView.loadInitialsAvatarWithCoil(initials: String?) {
     val builder = AvatarGenerator(context)
     builder.setInitials(initials.orEmpty())
     load(builder.build())
@@ -362,11 +355,10 @@ fun ShapeableImageView.loadInitialsAvatarWithCoil(initials: String?) {
 
 @SuppressLint("ResourceType")
 private fun loadContactPictureWithCoil(
-    imageView: ShapeableImageView,
+    imageView: ImageView,
     model: AbstractAvatarModel?,
     @DimenRes size: Int = 0,
-    @DimenRes textSize: Int = 0,
-    skipTrust: Boolean = false
+    @DimenRes textSize: Int = 0
 ) {
     imageView.dispose()
 
@@ -380,36 +372,13 @@ private fun loadContactPictureWithCoil(
             return
         }
 
-        if (!skipTrust) {
-            if (model.showTrust.value == true) {
-                when (model.trust.value) {
-                    SecurityLevel.EndToEndEncryptedAndVerified -> {
-                        imageView.setStrokeColorResource(R.color.info_500)
-                        imageView.setStrokeWidthResource(R.dimen.avatar_trust_border_width)
-                    }
-
-                    SecurityLevel.Unsafe -> {
-                        imageView.setStrokeColorResource(R.color.danger_500)
-                        imageView.setStrokeWidthResource(R.dimen.avatar_trust_border_width)
-                    }
-
-                    else -> {
-                        imageView.setStrokeColorResource(R.color.transparent_color)
-                        imageView.setStrokeWidthResource(R.dimen.zero)
-                    }
-                }
-            } else {
-                imageView.setStrokeColorResource(R.color.transparent_color)
-                imageView.setStrokeWidthResource(R.dimen.zero)
-            }
-        }
-
         val images = model.images.value.orEmpty()
         val count = images.size
         if (count == 1) {
             val image = images.firstOrNull()
             if (image != null) {
                 imageView.load(image) {
+                    transformations(CircleCropTransformation())
                     listener(
                         onError = { _, _ ->
                             imageView.load(getErrorImageLoader(context, model, size, textSize))
@@ -426,7 +395,9 @@ private fun loadContactPictureWithCoil(
                 AppUtils.getDimension(R.dimen.avatar_list_cell_size).toInt()
             }
             val bitmap = ImageUtils.getBitmapFromMultipleAvatars(imageView.context, w, images)
-            imageView.load(bitmap)
+            imageView.load(bitmap) {
+                transformations(CircleCropTransformation())
+            }
         }
     } else {
         imageView.load(R.drawable.smiley)

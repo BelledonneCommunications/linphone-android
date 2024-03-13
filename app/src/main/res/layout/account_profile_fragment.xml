@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View" />
-        <import type="org.linphone.core.SecurityLevel" />
         <variable
             name="backClickListener"
             type="View.OnClickListener" />
@@ -93,27 +92,17 @@
                         app:constraint_referenced_ids="mode_background, current_mode, change_mode"
                         android:visibility="@{viewModel.showModeSelection ? View.VISIBLE : View.GONE}" />
 
-                    <com.google.android.material.imageview.ShapeableImageView
-                        style="@style/avatar_imageview"
-                        android:onClick="@{pickImageClickListener}"
+                    <include
                         android:id="@+id/avatar"
-                        android:layout_width="@dimen/avatar_big_size"
-                        android:layout_height="@dimen/avatar_big_size"
+                        android:onClick="@{pickImageClickListener}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
-                        coilAvatar="@{viewModel.accountModel}"
+                        layout="@layout/contact_avatar_big"
+                        bind:model="@{viewModel.accountModel}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
-
-                    <ImageView
-                        android:id="@+id/avatar_trust_badge"
-                        android:layout_width="@dimen/avatar_presence_badge_big_size"
-                        android:layout_height="@dimen/avatar_presence_badge_big_size"
-                        android:layout_marginStart="@dimen/avatar_presence_badge_big_end_margin"
-                        android:src="@{viewModel.accountModel.trust == SecurityLevel.EndToEndEncryptedAndVerified ? @drawable/trusted : @drawable/not_trusted, default=@drawable/trusted}"
-                        android:visibility="@{viewModel.accountModel.showTrust ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintStart_toStartOf="@id/avatar"
-                        app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:onClick="@{pickImageClickListener}"

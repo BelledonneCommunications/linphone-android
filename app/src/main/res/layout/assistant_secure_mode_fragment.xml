@@ -135,82 +135,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/image1"
-                android:layout_width="@dimen/avatar_list_cell_size"
-                android:layout_height="@dimen/avatar_list_cell_size"
-                android:adjustViewBounds="true"
-                android:layout_marginEnd="16dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/shape_circle_light_blue_background"
-                android:src="@drawable/user_circle"
-                coilInitials="@{`JD`}"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/arrow"
-                app:layout_constraintTop_toBottomOf="@id/default_mode_summary"/>
-
-            <ImageView
-                android:id="@+id/image1_presence_badge"
-                android:layout_width="@dimen/avatar_presence_badge_size"
-                android:layout_height="@dimen/avatar_presence_badge_size"
-                android:layout_marginEnd="@dimen/avatar_presence_badge_end_margin"
-                android:background="@drawable/led_background"
-                android:padding="@dimen/avatar_presence_badge_padding"
-                android:src="@drawable/led_online"
-                android:contentDescription="@null"
-                app:layout_constraintEnd_toEndOf="@id/image1"
-                app:layout_constraintBottom_toBottomOf="@id/image1"/>
-
-            <ImageView
-                android:id="@+id/arrow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:src="@drawable/arrow_right_fill"
-                android:contentDescription="@null"
-                app:tint="@color/black"
-                app:layout_constraintStart_toEndOf="@id/image1"
-                app:layout_constraintEnd_toStartOf="@id/image2"
-                app:layout_constraintTop_toTopOf="@id/image1"
-                app:layout_constraintBottom_toBottomOf="@id/image1"/>
-
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/image2"
-                android:layout_width="@dimen/avatar_list_cell_size"
-                android:layout_height="@dimen/avatar_list_cell_size"
-                android:adjustViewBounds="true"
-                android:background="@drawable/shape_circle_light_blue_background"
-                android:src="@drawable/user_circle"
-                coilInitials="@{`JD`}"
-                app:strokeWidth="@dimen/avatar_trust_border_width"
-                app:strokeColor="?attr/color_info_500"
-                app:layout_constraintStart_toEndOf="@id/arrow"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/image1"
-                app:layout_constraintBottom_toBottomOf="@id/image1"/>
-
-            <ImageView
-                android:id="@+id/image2_trust_badge"
-                android:layout_width="@dimen/avatar_presence_badge_size"
-                android:layout_height="@dimen/avatar_presence_badge_size"
-                android:src="@drawable/trusted"
-                android:contentDescription="@null"
-                app:layout_constraintStart_toStartOf="@id/image2"
-                app:layout_constraintBottom_toBottomOf="@id/image2"/>
-
-            <ImageView
-                android:id="@+id/image2_presence_badge"
-                android:layout_width="@dimen/avatar_presence_badge_size"
-                android:layout_height="@dimen/avatar_presence_badge_size"
-                android:layout_marginEnd="@dimen/avatar_presence_badge_end_margin"
-                android:background="@drawable/led_background"
-                android:padding="@dimen/avatar_presence_badge_padding"
-                android:src="@drawable/led_online"
-                android:contentDescription="@null"
-                app:layout_constraintEnd_toEndOf="@id/image2"
-                app:layout_constraintBottom_toBottomOf="@id/image2"/>
-
             <com.google.android.material.radiobutton.MaterialRadioButton
                 android:id="@+id/interop_mode"
                 style="@style/default_text_style_800"
@@ -226,7 +150,7 @@
                 android:enabled="@{viewModel.isCurrentlySelectedModeSecure}"
                 app:useMaterialThemeColors="false"
                 app:buttonTint="?attr/color_main1_500"
-                app:layout_constraintTop_toBottomOf="@id/image1"
+                app:layout_constraintTop_toBottomOf="@id/default_mode_summary"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <ImageView

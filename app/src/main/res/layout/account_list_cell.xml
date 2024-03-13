@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View" />
@@ -25,28 +25,18 @@
             app:barrierDirection="right"
             app:constraint_referenced_ids="name, register_status" />
 
-        <com.google.android.material.imageview.ShapeableImageView
-            style="@style/avatar_imageview"
+        <include
             android:id="@+id/avatar"
-            android:layout_width="@dimen/avatar_list_cell_size"
-            android:layout_height="@dimen/avatar_list_cell_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            coilAvatar="@{model}"
+            layout="@layout/contact_avatar"
+            bind:model="@{model}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/trust_badge"
-            android:layout_width="@dimen/avatar_presence_badge_size"
-            android:layout_height="@dimen/avatar_presence_badge_size"
-            android:src="@drawable/trusted"
-            android:visibility="@{model.showTrust ? View.VISIBLE : View.GONE}"
-            android:contentDescription="@null"
-            app:layout_constraintStart_toStartOf="@id/avatar"
-            app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"

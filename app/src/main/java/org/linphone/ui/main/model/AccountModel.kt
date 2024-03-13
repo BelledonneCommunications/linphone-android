@@ -30,6 +30,7 @@ import org.linphone.core.Account
 import org.linphone.core.AccountListenerStub
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatRoom
+import org.linphone.core.ConsolidatedPresence
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.RegistrationState
@@ -96,6 +97,7 @@ class AccountModel @WorkerThread constructor(
 
         trust.postValue(SecurityLevel.EndToEndEncryptedAndVerified)
         showTrust.postValue(account.isInSecureMode())
+        presenceStatus.postValue(ConsolidatedPresence.Offline)
 
         update()
     }

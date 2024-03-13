@@ -6,7 +6,6 @@
     <data>
         <import type="android.view.View" />
         <import type="com.google.android.flexbox.JustifyContent" />
-        <import type="org.linphone.core.ConsolidatedPresence" />
         <import type="org.linphone.core.ChatMessage.State" />
         <variable
             name="onLongClickListener"

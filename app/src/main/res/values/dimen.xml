@@ -28,9 +28,10 @@
     <dimen name="avatar_presence_badge_big_size">22dp</dimen>
     <dimen name="avatar_presence_badge_big_padding">3dp</dimen>
     <dimen name="avatar_presence_badge_big_end_margin">5dp</dimen>
+    <dimen name="avatar_presence_badge_in_call_end_margin">6dp</dimen>
     <dimen name="avatar_presence_badge_in_active_speaker_miniature_conference_call_size">14dp</dimen>
 
-    <dimen name="avatar_trust_border_width">2dp</dimen>
+    <dimen name="avatar_trust_border_width">3dp</dimen>
 
     <dimen name="avatar_initials_text_size">16sp</dimen>
     <dimen name="avatar_initials_bubble_text_size">14sp</dimen>

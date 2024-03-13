@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View" />
-        <import type="org.linphone.core.SecurityLevel" />
         <import type="org.linphone.ui.call.model.ConferenceModel" />
         <variable
             name="viewModel"
@@ -20,13 +20,13 @@
         android:layout_height="match_parent"
         android:background="@color/gray_900">
 
-        <com.google.android.material.imageview.ShapeableImageView
-            style="@style/avatar_imageview"
+        <include
             android:id="@+id/avatar"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            layout="@layout/contact_avatar_huge"
             android:layout_marginTop="5dp"
-            coilCallAvatar="@{conferenceViewModel.activeSpeaker.avatarModel}"
+            bind:model="@{conferenceViewModel.activeSpeaker.avatarModel}"
             android:visibility="@{conferenceViewModel.activeSpeaker.isSendingVideo || conferenceViewModel.activeSpeaker.isJoining || !conferenceViewModel.activeSpeaker.isInConference ? View.GONE : View.VISIBLE}"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintWidth_max="@dimen/avatar_in_call_size"
@@ -35,7 +35,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent" />
 
         <org.linphone.ui.call.view.RoundCornersTextureView
             android:id="@+id/active_speaker_surface"

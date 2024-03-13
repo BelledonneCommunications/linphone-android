@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View" />
@@ -25,15 +25,15 @@
         android:layout_marginEnd="16dp"
         android:background="@drawable/primary_cell_background">
 
-        <com.google.android.material.imageview.ShapeableImageView
-            style="@style/avatar_imageview"
+        <include
             android:id="@+id/avatar"
-            android:layout_width="@dimen/avatar_list_cell_size"
-            android:layout_height="@dimen/avatar_list_cell_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            coilAvatar="@{model.contact}"
+            layout="@layout/contact_avatar"
+            bind:model="@{model.contact}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

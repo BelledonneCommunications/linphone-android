@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View" />
-        <import type="org.linphone.core.SecurityLevel" />
         <variable
             name="model"
             type="org.linphone.ui.call.model.ConferenceParticipantDeviceModel" />
@@ -23,31 +23,18 @@
             android:contentDescription="@null"
             android:background="@drawable/shape_round_in_call_cell_gray_background" />
 
-        <com.google.android.material.imageview.ShapeableImageView
-            style="@style/avatar_imageview"
+        <include
             android:id="@+id/avatar"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:visibility="@{model.isSendingVideo || model.isJoining || !model.isInConference ? View.GONE : View.VISIBLE}"
-            coilCallAvatar="@{model.avatarModel}"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintWidth_max="@dimen/avatar_in_call_size"
-            app:layout_constraintHeight_max="@dimen/avatar_in_call_size"
+            layout="@layout/contact_avatar_big"
+            bind:model="@{model.avatarModel}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-        <ImageView
-            android:id="@+id/trust_badge"
-            android:layout_width="@dimen/avatar_presence_badge_in_call_size"
-            android:layout_height="@dimen/avatar_presence_badge_in_call_size"
-            android:src="@{model.avatarModel.trust == SecurityLevel.EndToEndEncryptedAndVerified ? @drawable/trusted : @drawable/not_trusted, default=@drawable/trusted}"
-            android:visibility="@{model.avatarModel.trust == SecurityLevel.EndToEndEncryptedAndVerified || model.avatarModel.trust == SecurityLevel.Unsafe ? View.VISIBLE : View.GONE}"
-            android:contentDescription="@{model.avatarModel.trust == SecurityLevel.EndToEndEncryptedAndVerified ? @string/content_description_trusted_contact_icon : @string/content_description_not_trusted_contact_icon}"
-            app:layout_constraintStart_toStartOf="@id/avatar"
-            app:layout_constraintBottom_toBottomOf="@id/avatar"/>
+            app:layout_constraintBottom_toBottomOf="parent" />
 
         <org.linphone.ui.call.view.RoundCornersTextureView
             android:id="@+id/participant_video_surface"

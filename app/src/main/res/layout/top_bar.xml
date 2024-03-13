@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View" />
@@ -34,27 +34,17 @@
             app:constraint_referenced_ids="title, search"
             app:barrierDirection="bottom" />
 
-        <com.google.android.material.imageview.ShapeableImageView
-            style="@style/avatar_imageview"
-            android:onClick="@{() -> viewModel.openDrawerMenu()}"
+        <include
             android:id="@+id/avatar"
-            android:layout_width="@dimen/avatar_list_cell_size"
-            android:layout_height="@dimen/avatar_list_cell_size"
+            android:onClick="@{() -> viewModel.openDrawerMenu()}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
-            coilAvatar="@{viewModel.account}"
+            layout="@layout/contact_avatar"
+            bind:model="@{viewModel.account}"
             app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/title" />
-
-        <ImageView
-            android:id="@+id/trust_badge"
-            android:layout_width="@dimen/avatar_presence_badge_size"
-            android:layout_height="@dimen/avatar_presence_badge_size"
-            android:src="@drawable/trusted"
-            android:visibility="@{viewModel.account.showTrust ? View.VISIBLE : View.GONE}"
-            android:contentDescription="@null"
-            app:layout_constraintStart_toStartOf="@id/avatar"
-            app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_800"

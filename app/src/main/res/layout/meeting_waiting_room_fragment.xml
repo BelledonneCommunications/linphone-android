@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View" />
@@ -69,16 +70,16 @@
             app:layout_constraintEnd_toEndOf="@id/video_preview"
             app:layout_constraintBottom_toBottomOf="@id/video_preview" />
 
-        <com.google.android.material.imageview.ShapeableImageView
-            style="@style/avatar_imageview"
+        <include
             android:id="@+id/avatar"
             android:layout_width="@dimen/avatar_in_call_size"
             android:layout_height="@dimen/avatar_in_call_size"
-            coilCallAvatar="@{viewModel.selfAvatar}"
+            layout="@layout/contact_avatar_huge"
+            bind:model="@{viewModel.selfAvatar}"
             app:layout_constraintEnd_toEndOf="@id/no_video_background"
             app:layout_constraintStart_toStartOf="@id/no_video_background"
             app:layout_constraintTop_toTopOf="@id/no_video_background"
-            app:layout_constraintBottom_toBottomOf="@id/no_video_background"/>
+            app:layout_constraintBottom_toBottomOf="@id/no_video_background" />
 
         <org.linphone.ui.call.view.RoundCornersTextureView
             android:id="@+id/video_preview"

@@ -5,7 +5,6 @@
 
     <data>
         <import type="android.view.View" />
-        <import type="org.linphone.core.SecurityLevel" />
         <variable
             name="viewModel"
             type="org.linphone.ui.call.viewmodel.CurrentCallViewModel" />
@@ -39,27 +38,17 @@
             app:layout_constraintStart_toEndOf="@id/call_direction_icon"
             app:layout_constraintTop_toTopOf="parent"/>
 
-        <com.google.android.material.imageview.ShapeableImageView
-            style="@style/avatar_imageview"
+        <include
             android:id="@+id/avatar"
             android:layout_width="@dimen/avatar_in_call_size"
             android:layout_height="@dimen/avatar_in_call_size"
-            coilCallAvatar="@{viewModel.contact}"
+            layout="@layout/contact_avatar_huge"
+            bind:model="@{viewModel.contact}"
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/call_direction_label"
-            app:layout_constraintBottom_toTopOf="@id/name"/>
-
-        <ImageView
-            android:id="@+id/trust_badge"
-            android:layout_width="@dimen/avatar_presence_badge_in_call_size"
-            android:layout_height="@dimen/avatar_presence_badge_in_call_size"
-            android:src="@{viewModel.contact.trust == SecurityLevel.EndToEndEncryptedAndVerified ? @drawable/trusted : @drawable/not_trusted, default=@drawable/trusted}"
-            android:visibility="@{viewModel.contact.trust == SecurityLevel.EndToEndEncryptedAndVerified || viewModel.contact.trust == SecurityLevel.Unsafe ? View.VISIBLE : View.GONE}"
-            android:contentDescription="@{viewModel.contact.trust == SecurityLevel.EndToEndEncryptedAndVerified ? @string/content_description_trusted_contact_icon : @string/content_description_not_trusted_contact_icon}"
-            app:layout_constraintStart_toStartOf="@id/avatar"
-            app:layout_constraintBottom_toBottomOf="@id/avatar"/>
+            app:layout_constraintBottom_toTopOf="@id/name" />
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:layout_width="wrap_content"
