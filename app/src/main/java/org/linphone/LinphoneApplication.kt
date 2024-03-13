@@ -38,6 +38,7 @@ import org.linphone.core.CorePreferences
 import org.linphone.core.Factory
 import org.linphone.core.LogCollectionState
 import org.linphone.core.LogLevel
+import org.linphone.core.VFS
 import org.linphone.core.tools.Log
 
 @MainThread
@@ -63,6 +64,11 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
 
         corePreferences = CorePreferences(context)
         corePreferences.copyAssetsFromPackage()
+
+        if (VFS.isEnabled(context)) {
+            VFS.setup(context)
+        }
+
         val config = Factory.instance().createConfigWithFactory(
             corePreferences.configPath,
             corePreferences.factoryConfigPath
@@ -103,6 +109,13 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
     }
 
     override fun newImageLoader(): ImageLoader {
+        // When VFS is enabled, prevent Coil from keeping plain version of files on disk
+        val diskCachePolicy = if (VFS.isEnabled(applicationContext)) {
+            CachePolicy.DISABLED
+        } else {
+            CachePolicy.ENABLED
+        }
+
         return ImageLoader.Builder(this)
             .crossfade(false)
             .components {
@@ -122,7 +135,7 @@ class LinphoneApplication : Application(), ImageLoaderFactory {
                     .build()
             }
             .networkCachePolicy(CachePolicy.DISABLED)
-            .diskCachePolicy(CachePolicy.ENABLED)
+            .diskCachePolicy(diskCachePolicy)
             .memoryCachePolicy(CachePolicy.ENABLED)
             .build()
     }

@@ -424,6 +424,27 @@ class FileUtils {
             return stringBuilder.toString()
         }
 
+        suspend fun clearExistingPlainFiles(path: String) {
+            val dir = File(path)
+            if (dir.exists()) {
+                for (file in dir.listFiles().orEmpty()) {
+                    Log.w(
+                        "$TAG [VFS] Found forgotten plain file [${file.path}], deleting it now"
+                    )
+                    deleteFile(file.path)
+                }
+            }
+        }
+
+        @AnyThread
+        fun countFilesInDirectory(path: String): Int {
+            val dir = File(path)
+            if (dir.exists()) {
+                return dir.listFiles().orEmpty().size
+            }
+            return -1
+        }
+
         @AnyThread
         private fun getFileStorageDir(isPicture: Boolean = false): File {
             var path: File? = null

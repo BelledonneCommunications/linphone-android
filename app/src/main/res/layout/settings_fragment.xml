@@ -60,6 +60,35 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/section_header_style"
+                    android:onClick="@{() -> viewModel.toggleSecurityExpand()}"
+                    android:id="@+id/security"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:layout_marginStart="26dp"
+                    android:layout_marginEnd="26dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/settings_security_title"
+                    android:drawableEnd="@{viewModel.expandSecurity ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
+                    android:drawableTint="?attr/color_main2_600"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <include
+                    android:id="@+id/security_settings"
+                    layout="@layout/settings_security"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:visibility="@{viewModel.expandSecurity ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintTop_toBottomOf="@id/security"
+                    bind:viewModel="@{viewModel}"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/section_header_style"
                     android:onClick="@{() -> viewModel.toggleCallsExpand()}"
                     android:id="@+id/calls"
                     android:layout_width="0dp"
@@ -73,7 +102,7 @@
                     android:drawableTint="?attr/color_main2_600"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toBottomOf="@id/security_settings"/>
 
                 <include
                     android:id="@+id/calls_settings"

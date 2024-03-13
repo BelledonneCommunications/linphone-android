@@ -6,6 +6,10 @@ import android.net.Uri
 import androidx.annotation.AnyThread
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.tools.Log
 import org.linphone.utils.FileUtils
@@ -15,6 +19,7 @@ class FileModel @AnyThread constructor(
     val file: String,
     val fileName: String,
     fileSize: Long,
+    private val isEncrypted: Boolean,
     val isWaitingToBeDownloaded: Boolean = false,
     private val onClicked: ((model: FileModel) -> Unit)? = null
 ) {
@@ -39,6 +44,8 @@ class FileModel @AnyThread constructor(
     val isPdf: Boolean
 
     val isAudio: Boolean
+
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     init {
         downloadProgress.postValue(-1)
@@ -68,6 +75,16 @@ class FileModel @AnyThread constructor(
         }
 
         isMedia = isVideoPreview || isImage
+    }
+
+    @AnyThread
+    fun destroy() {
+        if (isEncrypted) {
+            Log.i("$TAG [VFS] Deleting plain file in cache: $file")
+            scope.launch {
+                FileUtils.deleteFile(file)
+            }
+        }
     }
 
     @UiThread

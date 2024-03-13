@@ -44,6 +44,10 @@ class ConversationDocumentsListViewModel @UiThread constructor() : AbstractConve
         loadDocumentsList()
     }
 
+    override fun onCleared() {
+        documentsList.value.orEmpty().forEach(FileModel::destroy)
+    }
+
     @WorkerThread
     private fun loadDocumentsList() {
         operationInProgress.postValue(true)
@@ -57,11 +61,19 @@ class ConversationDocumentsListViewModel @UiThread constructor() : AbstractConve
         val documents = chatRoom.documentContents
         Log.i("$TAG [${documents.size}] documents have been fetched")
         for (documentContent in documents) {
-            val path = documentContent.filePath.orEmpty()
+            val isEncrypted = documentContent.isFileEncrypted
+            val path = if (isEncrypted) {
+                Log.i(
+                    "$TAG [VFS] Content is encrypted, requesting plain file path for file [${documentContent.filePath}]"
+                )
+                documentContent.exportPlainFile()
+            } else {
+                documentContent.filePath.orEmpty()
+            }
             val name = documentContent.name.orEmpty()
             val size = documentContent.size.toLong()
             if (path.isNotEmpty() && name.isNotEmpty()) {
-                val model = FileModel(path, name, size) {
+                val model = FileModel(path, name, size, isEncrypted) {
                     openDocumentEvent.postValue(Event(it))
                 }
                 list.add(model)

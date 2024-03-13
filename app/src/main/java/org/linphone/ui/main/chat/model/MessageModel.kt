@@ -247,6 +247,8 @@ class MessageModel @WorkerThread constructor(
     fun destroy() {
         scope.cancel()
 
+        filesList.value.orEmpty().forEach(FileModel::destroy)
+
         if (::voiceRecordPlayer.isInitialized) {
             stopVoiceRecordPlayer()
             voiceRecordPlayer.removeListener(playerListener)
@@ -308,6 +310,8 @@ class MessageModel @WorkerThread constructor(
 
         val contents = chatMessage.contents
         for (content in contents) {
+            val isFileEncrypted = content.isFileEncrypted
+
             if (content.isIcalendar) {
                 Log.d("$TAG Found iCal content")
                 parseConferenceInvite(content)
@@ -339,16 +343,24 @@ class MessageModel @WorkerThread constructor(
 
                     checkAndRepairFilePathIfNeeded(content)
 
-                    val path = content.filePath ?: ""
+                    val path = if (isFileEncrypted) {
+                        Log.i(
+                            "$TAG [VFS] Content is encrypted, requesting plain file path for file [${content.filePath}]"
+                        )
+                        content.exportPlainFile()
+                    } else {
+                        content.filePath ?: ""
+                    }
                     val name = content.name ?: ""
                     if (path.isNotEmpty()) {
                         Log.d(
                             "$TAG Found file ready to be displayed [$path] with MIME [${content.type}/${content.subtype}] for message [${chatMessage.messageId}]"
                         )
 
+                        val fileSize = content.fileSize.toLong()
                         when (content.type) {
                             "image", "video" -> {
-                                val fileModel = FileModel(path, name, content.fileSize.toLong()) { model ->
+                                val fileModel = FileModel(path, name, fileSize, isFileEncrypted) { model ->
                                     onContentClicked?.invoke(model.file)
                                 }
                                 filesPath.add(fileModel)
@@ -356,7 +368,7 @@ class MessageModel @WorkerThread constructor(
                                 displayableContentFound = true
                             }
                             else -> {
-                                val fileModel = FileModel(path, name, content.fileSize.toLong()) { model ->
+                                val fileModel = FileModel(path, name, fileSize, isFileEncrypted) { model ->
                                     onContentClicked?.invoke(model.file)
                                 }
                                 filesPath.add(fileModel)
@@ -376,11 +388,11 @@ class MessageModel @WorkerThread constructor(
                     if (name.isNotEmpty()) {
                         val fileModel = if (isOutgoing && chatMessage.isFileTransferInProgress) {
                             val path = content.filePath ?: ""
-                            FileModel(path, name, content.fileSize.toLong(), false) { model ->
+                            FileModel(path, name, content.fileSize.toLong(), isFileEncrypted, false) { model ->
                                 onContentClicked?.invoke(model.file)
                             }
                         } else {
-                            FileModel(name, name, content.fileSize.toLong(), true) { model ->
+                            FileModel(name, name, content.fileSize.toLong(), isFileEncrypted, true) { model ->
                                 downloadContent(model, content)
                             }
                         }

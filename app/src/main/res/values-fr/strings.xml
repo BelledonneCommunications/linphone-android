@@ -187,6 +187,9 @@
     <string name="help_troubleshooting_debug_logs_upload_error_toast_message">Echec à l\'envoi des journaux</string>
 
     <string name="settings_title">Paramètres</string>
+    <string name="settings_security_title">Securité</string>
+    <string name="settings_security_enable_vfs_title">Chiffrer tous les fichiers</string>
+    <string name="settings_security_enable_vfs_subtitle">Attention, vous ne pourrez pas revenir en arrière !</string>
     <string name="settings_calls_title">Appels</string>
     <string name="settings_calls_echo_canceller_title">Utiliser l\'annulateur d\'écho</string>
     <string name="settings_calls_echo_canceller_subtitle">Évite que de l\'écho soit entendu par votre correspondant</string>

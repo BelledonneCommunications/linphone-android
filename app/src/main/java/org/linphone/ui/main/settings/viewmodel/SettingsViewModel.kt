@@ -38,6 +38,7 @@ import org.linphone.core.Conference
 import org.linphone.core.FriendList
 import org.linphone.core.Player
 import org.linphone.core.PlayerListener
+import org.linphone.core.VFS
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.settings.model.CardDavLdapModel
 import org.linphone.utils.AppUtils
@@ -49,12 +50,16 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
         private const val TAG = "[Settings ViewModel]"
     }
 
+    val expandSecurity = MutableLiveData<Boolean>()
     val expandCalls = MutableLiveData<Boolean>()
     val expandConversations = MutableLiveData<Boolean>()
     val expandContacts = MutableLiveData<Boolean>()
     val expandMeetings = MutableLiveData<Boolean>()
     val expandNetwork = MutableLiveData<Boolean>()
     val expandUserInterface = MutableLiveData<Boolean>()
+
+    // Security settings
+    val isVfsEnabled = MutableLiveData<Boolean>()
 
     // Calls settings
     val hideVideoCallSetting = MutableLiveData<Boolean>()
@@ -144,12 +149,15 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
         }
         showContactsSettings.value = true
 
+        expandSecurity.value = false
         expandCalls.value = false
         expandConversations.value = false
         expandContacts.value = false
         expandMeetings.value = false
         expandNetwork.value = false
         expandUserInterface.value = false
+
+        isVfsEnabled.value = VFS.isEnabled(coreContext.context)
 
         val vibrator = coreContext.context.getSystemService(Vibrator::class.java)
         isVibrationAvailable.value = vibrator.hasVibrator()
@@ -191,6 +199,30 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
                 ringtonePlayer.removeListener(playerListener)
             }
         }
+    }
+
+    @UiThread
+    fun toggleSecurityExpand() {
+        expandSecurity.value = expandSecurity.value == false
+    }
+
+    @UiThread
+    fun enableVfs() {
+        Log.i("$TAG Enabling VFS")
+        if (VFS.enable(coreContext.context)) {
+            val enabled = VFS.isEnabled(coreContext.context)
+            isVfsEnabled.postValue(enabled)
+            if (enabled) {
+                Log.i("$TAG VFS has been enabled")
+            }
+        } else {
+            Log.e("$TAG Failed to enable VFS!")
+        }
+    }
+
+    @UiThread
+    fun toggleCallsExpand() {
+        expandCalls.value = expandCalls.value == false
     }
 
     @UiThread
@@ -318,20 +350,6 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
-    fun toggleUseWifiOnly() {
-        val newValue = useWifiOnly.value == false
-        coreContext.postOnCoreThread { core ->
-            core.isWifiOnlyEnabled = newValue
-            useWifiOnly.postValue(newValue)
-        }
-    }
-
-    @UiThread
-    fun toggleCallsExpand() {
-        expandCalls.value = expandCalls.value == false
-    }
-
-    @UiThread
     fun toggleConversationsExpand() {
         expandConversations.value = expandConversations.value == false
     }
@@ -429,6 +447,15 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun toggleNetworkExpand() {
         expandNetwork.value = expandNetwork.value == false
+    }
+
+    @UiThread
+    fun toggleUseWifiOnly() {
+        val newValue = useWifiOnly.value == false
+        coreContext.postOnCoreThread { core ->
+            core.isWifiOnlyEnabled = newValue
+            useWifiOnly.postValue(newValue)
+        }
     }
 
     @UiThread

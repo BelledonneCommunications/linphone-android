@@ -259,6 +259,7 @@ private fun loadImageForChatBubble(imageView: ImageView, file: String?, grid: Bo
         val radius = imageView.resources.getDimension(
             R.dimen.chat_bubble_images_rounded_corner_radius
         )
+
         if (FileUtils.isExtensionVideo(file)) {
             imageView.load(file) {
                 placeholder(R.drawable.image_square)

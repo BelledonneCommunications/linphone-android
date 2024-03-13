@@ -314,7 +314,8 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
         list.addAll(attachments.value.orEmpty())
 
         val fileName = FileUtils.getNameFromFilePath(file)
-        val model = FileModel(file, fileName, 0) { model ->
+        val isEncrypted = true // Really ? //TODO FIXME: is it really encrypted here?
+        val model = FileModel(file, fileName, 0, isEncrypted) { model ->
             removeAttachment(model.file)
         }
 

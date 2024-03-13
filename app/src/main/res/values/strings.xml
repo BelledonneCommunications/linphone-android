@@ -231,6 +231,9 @@
 
     <!-- App & SDK settings -->
     <string name="settings_title">Settings</string>
+    <string name="settings_security_title">Security</string>
+    <string name="settings_security_enable_vfs_title">Encrypt everything</string>
+    <string name="settings_security_enable_vfs_subtitle">Warning: once enabled it can\'t be disabled!</string>
     <string name="settings_calls_title">Calls</string>
     <string name="settings_calls_echo_canceller_title">Use echo canceller</string>
     <string name="settings_calls_echo_canceller_subtitle">Prevents echo from being heard by remote end</string>

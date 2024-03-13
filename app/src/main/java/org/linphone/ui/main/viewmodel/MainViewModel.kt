@@ -31,6 +31,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.Account
 import org.linphone.core.AuthInfo
@@ -39,9 +40,11 @@ import org.linphone.core.Call
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.RegistrationState
+import org.linphone.core.VFS
 import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
+import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
 
 class MainViewModel @UiThread constructor() : ViewModel() {
@@ -286,6 +289,19 @@ class MainViewModel @UiThread constructor() : ViewModel() {
 
             if (core.defaultAccount?.state == RegistrationState.Ok && !firstAccountRegistered) {
                 triggerNativeAddressBookImport()
+            }
+        }
+
+        if (VFS.isEnabled(coreContext.context)) {
+            val cache = corePreferences.vfsCachePath
+            viewModelScope.launch {
+                val notClearedCount = FileUtils.countFilesInDirectory(cache)
+                if (notClearedCount > 0) {
+                    Log.w(
+                        "$TAG [VFS] There are [$notClearedCount] plain files not cleared from previous app lifetime, removing them now"
+                    )
+                    FileUtils.clearExistingPlainFiles(cache)
+                }
             }
         }
     }

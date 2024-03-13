@@ -48,6 +48,10 @@ class ConversationMediaListViewModel @UiThread constructor() : AbstractConversat
         loadMediaList()
     }
 
+    override fun onCleared() {
+        mediaList.value.orEmpty().forEach(FileModel::destroy)
+    }
+
     @WorkerThread
     private fun loadMediaList() {
         operationInProgress.postValue(true)
@@ -61,11 +65,19 @@ class ConversationMediaListViewModel @UiThread constructor() : AbstractConversat
         val media = chatRoom.mediaContents
         Log.i("$TAG [${media.size}] media have been fetched")
         for (mediaContent in media) {
-            val path = mediaContent.filePath.orEmpty()
+            val isEncrypted = mediaContent.isFileEncrypted
+            val path = if (isEncrypted) {
+                Log.i(
+                    "$TAG [VFS] Content is encrypted, requesting plain file path for file [${mediaContent.filePath}]"
+                )
+                mediaContent.exportPlainFile()
+            } else {
+                mediaContent.filePath.orEmpty()
+            }
             val name = mediaContent.name.orEmpty()
             val size = mediaContent.size.toLong()
             if (path.isNotEmpty() && name.isNotEmpty()) {
-                val model = FileModel(path, name, size) {
+                val model = FileModel(path, name, size, isEncrypted) {
                     openMediaEvent.postValue(Event(it))
                 }
                 list.add(model)

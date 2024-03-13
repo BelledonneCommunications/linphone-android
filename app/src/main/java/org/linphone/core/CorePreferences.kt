@@ -157,6 +157,10 @@ class CorePreferences @UiThread constructor(private val context: Context) {
     val ringtonesPath: String
         get() = context.filesDir.absolutePath + "/share/sounds/linphone/rings/"
 
+    @get:AnyThread
+    val vfsCachePath: String
+        get() = context.cacheDir.absolutePath + "/evfs/"
+
     @UiThread
     fun copyAssetsFromPackage() {
         copy("linphonerc_default", configPath)

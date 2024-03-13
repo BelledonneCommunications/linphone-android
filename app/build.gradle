@@ -141,6 +141,8 @@ dependencies {
     implementation "androidx.slidingpanelayout:slidingpanelayout:1.2.0"
     implementation "androidx.window:window:1.2.0"
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
+    // For VFS
+    implementation "androidx.security:security-crypto-ktx:1.1.0-alpha06"
 
     def nav_version = "2.7.7"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
