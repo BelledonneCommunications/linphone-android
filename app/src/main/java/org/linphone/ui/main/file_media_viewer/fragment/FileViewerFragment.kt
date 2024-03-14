@@ -9,12 +9,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
+import androidx.core.content.FileProvider
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
+import java.io.File
 import kotlinx.coroutines.launch
 import org.linphone.R
 import org.linphone.core.tools.Log
@@ -23,7 +25,6 @@ import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.file_media_viewer.adapter.PdfPagesListAdapter
 import org.linphone.ui.main.file_media_viewer.viewmodel.FileViewModel
 import org.linphone.ui.main.fragment.GenericFragment
-import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 
 @UiThread
@@ -31,7 +32,7 @@ class FileViewerFragment : GenericFragment() {
     companion object {
         private const val TAG = "[File Viewer Fragment]"
 
-        private const val EXPORT_PDF = 10
+        private const val EXPORT_FILE_AS_DOCUMENT = 10
     }
 
     private lateinit var binding: FileViewerFragmentBinding
@@ -101,17 +102,7 @@ class FileViewerFragment : GenericFragment() {
         }
 
         binding.setShareClickListener {
-            lifecycleScope.launch {
-                val filePath = FileUtils.getProperFilePath(path)
-                val copy = FileUtils.getFilePath(requireContext(), Uri.parse(filePath), false)
-                if (!copy.isNullOrEmpty()) {
-                    sharedViewModel.filesToShareFromIntent.value = arrayListOf(copy)
-                    Log.i("$TAG Sharing file [$copy], going back to conversations list")
-                    sharedViewModel.closeSlidingPaneEvent.value = Event(true)
-                } else {
-                    Log.e("$TAG Failed to copy file [$filePath] to share!")
-                }
-            }
+            shareFile()
         }
 
         viewModel.pdfRendererReadyEvent.observe(viewLifecycleOwner) {
@@ -126,6 +117,17 @@ class FileViewerFragment : GenericFragment() {
             }
         }
 
+        viewModel.exportPlainTextFileEvent.observe(viewLifecycleOwner) {
+            it.consume { name ->
+                val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_TITLE, name)
+                }
+                startActivityForResult(intent, EXPORT_FILE_AS_DOCUMENT)
+            }
+        }
+
         viewModel.exportPdfEvent.observe(viewLifecycleOwner) {
             it.consume { name ->
                 val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
@@ -133,7 +135,7 @@ class FileViewerFragment : GenericFragment() {
                     type = "application/pdf"
                     putExtra(Intent.EXTRA_TITLE, name)
                 }
-                startActivityForResult(intent, EXPORT_PDF)
+                startActivityForResult(intent, EXPORT_FILE_AS_DOCUMENT)
             }
         }
 
@@ -178,10 +180,10 @@ class FileViewerFragment : GenericFragment() {
 
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == EXPORT_PDF && resultCode == Activity.RESULT_OK) {
+        if (requestCode == EXPORT_FILE_AS_DOCUMENT && resultCode == Activity.RESULT_OK) {
             data?.data?.also { documentUri ->
-                Log.i("$TAG Exported PDF should be stored in URI [$documentUri]")
-                viewModel.copyPdfToUri(documentUri)
+                Log.i("$TAG Exported file should be stored in URI [$documentUri]")
+                viewModel.copyFileToUri(documentUri)
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
@@ -195,5 +197,37 @@ class FileViewerFragment : GenericFragment() {
         Log.i(
             "$TAG Setting screen size ${viewModel.screenWidth}/${viewModel.screenHeight} for PDF renderer"
         )
+    }
+
+    private fun shareFile() {
+        lifecycleScope.launch {
+            val filePath = FileUtils.getProperFilePath(viewModel.getFilePath())
+            val copy = FileUtils.getFilePath(
+                requireContext(),
+                Uri.parse(filePath),
+                overrideExisting = true,
+                copyToCache = true
+            )
+            if (!copy.isNullOrEmpty()) {
+                val publicUri = FileProvider.getUriForFile(
+                    requireContext(),
+                    requireContext().getString(R.string.file_provider),
+                    File(copy)
+                )
+                Log.i("$TAG Public URI for file is [$publicUri], starting intent chooser")
+
+                val sendIntent: Intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_STREAM, publicUri)
+                    putExtra(Intent.EXTRA_SUBJECT, viewModel.fileName.value.orEmpty())
+                    type = viewModel.mimeType.value.orEmpty()
+                }
+
+                val shareIntent = Intent.createChooser(sendIntent, null)
+                startActivity(shareIntent)
+            } else {
+                Log.e("$TAG Failed to copy file [$filePath] to share!")
+            }
+        }
     }
 }

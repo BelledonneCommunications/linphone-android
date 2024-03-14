@@ -19,16 +19,19 @@
  */
 package org.linphone.ui.main.file_media_viewer.fragment
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.FileProvider
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.widget.ViewPager2
+import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -40,7 +43,6 @@ import org.linphone.ui.main.chat.viewmodel.ConversationMediaListViewModel
 import org.linphone.ui.main.file_media_viewer.adapter.MediaListAdapter
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.utils.AppUtils
-import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 
 class MediaListViewerFragment : GenericFragment() {
@@ -135,26 +137,7 @@ class MediaListViewerFragment : GenericFragment() {
         }
 
         binding.setShareClickListener {
-            val list = viewModel.mediaList.value.orEmpty()
-            val currentItem = binding.mediaViewPager.currentItem
-            val model = if (currentItem >= 0 && currentItem < list.size) list[currentItem] else null
-            if (model != null) {
-                lifecycleScope.launch {
-                    val filePath = FileUtils.getProperFilePath(model.file)
-                    val copy = FileUtils.getFilePath(requireContext(), Uri.parse(filePath), false)
-                    if (!copy.isNullOrEmpty()) {
-                        sharedViewModel.filesToShareFromIntent.value = arrayListOf(copy)
-                        Log.i("$TAG Sharing file [$copy], going back to conversations list")
-                        sharedViewModel.closeSlidingPaneEvent.value = Event(true)
-                    } else {
-                        Log.e("$TAG Failed to copy file [$filePath] to share!")
-                    }
-                }
-            } else {
-                Log.e(
-                    "$TAG Failed to get FileModel at index [$currentItem], only [${list.size}] items in list"
-                )
-            }
+            shareFile()
         }
 
         binding.setExportClickListener {
@@ -217,5 +200,46 @@ class MediaListViewerFragment : GenericFragment() {
         }
 
         super.onDestroy()
+    }
+
+    private fun shareFile() {
+        val list = viewModel.mediaList.value.orEmpty()
+        val currentItem = binding.mediaViewPager.currentItem
+        val model = if (currentItem >= 0 && currentItem < list.size) list[currentItem] else null
+        if (model != null) {
+            lifecycleScope.launch {
+                val filePath = FileUtils.getProperFilePath(model.file)
+                val copy = FileUtils.getFilePath(
+                    requireContext(),
+                    Uri.parse(filePath),
+                    overrideExisting = true,
+                    copyToCache = true
+                )
+                if (!copy.isNullOrEmpty()) {
+                    val publicUri = FileProvider.getUriForFile(
+                        requireContext(),
+                        requireContext().getString(R.string.file_provider),
+                        File(copy)
+                    )
+                    Log.i("$TAG Public URI for file is [$publicUri], starting intent chooser")
+
+                    val sendIntent: Intent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        putExtra(Intent.EXTRA_STREAM, publicUri)
+                        putExtra(Intent.EXTRA_SUBJECT, model.fileName)
+                        type = model.mimeTypeString
+                    }
+
+                    val shareIntent = Intent.createChooser(sendIntent, null)
+                    startActivity(shareIntent)
+                } else {
+                    Log.e("$TAG Failed to copy file [$filePath] to share!")
+                }
+            }
+        } else {
+            Log.e(
+                "$TAG Failed to get FileModel at index [$currentItem], only [${list.size}] items in list"
+            )
+        }
     }
 }

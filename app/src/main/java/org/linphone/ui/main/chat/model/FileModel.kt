@@ -33,6 +33,8 @@ class FileModel @AnyThread constructor(
 
     val mimeType: FileUtils.MimeType
 
+    val mimeTypeString: String
+
     val isMedia: Boolean
 
     val isImage: Boolean
@@ -56,6 +58,8 @@ class FileModel @AnyThread constructor(
             isPdf = extension == "pdf"
 
             val mime = FileUtils.getMimeTypeFromExtension(extension)
+            mimeTypeString = mime
+
             mimeType = FileUtils.getMimeType(mime)
             isImage = mimeType == FileUtils.MimeType.Image
             isVideoPreview = mimeType == FileUtils.MimeType.Video
@@ -68,6 +72,7 @@ class FileModel @AnyThread constructor(
             )
         } else {
             mimeType = FileUtils.MimeType.Unknown
+            mimeTypeString = "application/octet-stream"
             isPdf = false
             isImage = false
             isVideoPreview = false

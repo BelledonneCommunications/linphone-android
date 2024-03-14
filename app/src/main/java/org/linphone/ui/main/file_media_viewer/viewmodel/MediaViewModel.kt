@@ -24,6 +24,8 @@ class MediaViewModel @UiThread constructor() : ViewModel() {
 
     val isVideoPlaying = MutableLiveData<Boolean>()
 
+    val isAudio = MutableLiveData<Boolean>()
+
     val toggleVideoPlayPauseEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -48,6 +50,11 @@ class MediaViewModel @UiThread constructor() : ViewModel() {
                 Log.i("$TAG File [$file] seems to be a video")
                 isVideo.value = true
                 isVideoPlaying.value = false
+            }
+            FileUtils.MimeType.Audio -> {
+                Log.i("$TAG File [$file] seems to be an audio file")
+                isAudio.value = true
+                // TODO: handle audio files
             }
             else -> { }
         }

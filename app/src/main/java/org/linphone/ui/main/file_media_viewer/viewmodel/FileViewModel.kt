@@ -30,6 +30,8 @@ class FileViewModel @UiThread constructor() : ViewModel() {
 
     val fileName = MutableLiveData<String>()
 
+    val mimeType = MutableLiveData<String>()
+
     val fullScreenMode = MutableLiveData<Boolean>()
 
     val isPdf = MutableLiveData<Boolean>()
@@ -38,13 +40,15 @@ class FileViewModel @UiThread constructor() : ViewModel() {
 
     val pdfPages = MutableLiveData<String>()
 
-    val isAudio = MutableLiveData<Boolean>()
-
     val isText = MutableLiveData<Boolean>()
 
     val text = MutableLiveData<String>()
 
     val fileReadyEvent = MutableLiveData<Event<Boolean>>()
+
+    val exportPlainTextFileEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
 
     val pdfRendererReadyEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
@@ -87,30 +91,26 @@ class FileViewModel @UiThread constructor() : ViewModel() {
     fun loadFile(file: String, content: String? = null) {
         fullScreenMode.value = true
 
-        filePath = file
         val name = FileUtils.getNameFromFilePath(file)
         fileName.value = name
 
         if (!content.isNullOrEmpty()) {
             isText.value = true
             text.postValue(content)
+            mimeType.postValue("text/plain")
             Log.i("$TAG Using pre-loaded content as PlainText")
             fileReadyEvent.postValue(Event(true))
             return
         }
 
+        filePath = file
         val extension = FileUtils.getExtensionFromFileName(name)
         val mime = FileUtils.getMimeTypeFromExtension(extension)
+        mimeType.postValue(mime)
         when (FileUtils.getMimeType(mime)) {
             FileUtils.MimeType.Pdf -> {
                 Log.i("$TAG File [$file] seems to be a PDF")
                 loadPdf()
-            }
-            FileUtils.MimeType.Audio -> {
-                Log.i("$TAG File [$file] seems to be an audio")
-                // TODO: handle audio files
-                isAudio.value = true
-                fileReadyEvent.value = Event(true)
             }
             FileUtils.MimeType.PlainText -> {
                 Log.i("$TAG File [$file] seems to be plain text")
@@ -174,42 +174,36 @@ class FileViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
-    fun exportToMediaStore() {
+    fun getFilePath(): String {
         if (::filePath.isInitialized) {
-            if (isPdf.value == true) {
-                Log.i("$TAG Exporting PDF as document")
-                exportPdfEvent.postValue(Event(fileName.value.orEmpty()))
-            } else {
-                viewModelScope.launch {
-                    withContext(Dispatchers.IO) {
-                        Log.i("$TAG Export file [$filePath] to Android's MediaStore")
-                        val mediaStorePath = FileUtils.addContentToMediaStore(filePath)
-                        if (mediaStorePath.isNotEmpty()) {
-                            Log.i(
-                                "$TAG File [$filePath] has been successfully exported to MediaStore"
-                            )
-                            val message = AppUtils.getString(
-                                R.string.toast_file_successfully_exported_to_media_store
-                            )
-                            showGreenToastEvent.postValue(Event(Pair(message, R.drawable.check)))
-                        } else {
-                            Log.e("$TAG Failed to export file [$filePath] to MediaStore!")
-                            val message = AppUtils.getString(
-                                R.string.toast_export_file_to_media_store_error
-                            )
-                            showRedToastEvent.postValue(Event(Pair(message, R.drawable.x)))
-                        }
-                    }
-                }
-            }
+            return filePath
+        }
+
+        Log.i("$TAG File path wasn't initialized, storing memory content as file")
+        val name = fileName.value.orEmpty()
+        val file = FileUtils.getFileStorageCacheDir(
+            fileName = name,
+            overrideExisting = true
+        )
+        savePlainTextFileToUri(file)
+        filePath = file.absolutePath
+        return filePath
+    }
+
+    @UiThread
+    fun exportToMediaStore() {
+        if (isPdf.value == true) {
+            Log.i("$TAG Exporting PDF as document")
+            exportPdfEvent.postValue(Event(fileName.value.orEmpty()))
         } else {
-            Log.e("$TAG Filepath wasn't initialized!")
+            Log.i("$TAG Exporting plain text content as document")
+            exportPlainTextFileEvent.postValue(Event(fileName.value.orEmpty()))
         }
     }
 
     @UiThread
-    fun copyPdfToUri(dest: Uri) {
-        val source = Uri.parse(FileUtils.getProperFilePath(filePath))
+    fun copyFileToUri(dest: Uri) {
+        val source = Uri.parse(FileUtils.getProperFilePath(getFilePath()))
         Log.i("$TAG Copying file URI [$source] to [$dest]")
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -233,6 +227,32 @@ class FileViewModel @UiThread constructor() : ViewModel() {
         }
     }
 
+    @UiThread
+    private fun savePlainTextFileToUri(dest: File) {
+        Log.i("$TAG Saving text to file  [${dest.absolutePath}]")
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val result = FileUtils.dumpStringToFile(text.value.orEmpty(), dest)
+                if (result) {
+                    Log.i(
+                        "$TAG Text has been successfully exported to documents"
+                    )
+                    val message = AppUtils.getString(
+                        R.string.toast_file_successfully_exported_to_documents
+                    )
+                    showGreenToastEvent.postValue(Event(Pair(message, R.drawable.check)))
+                } else {
+                    Log.e("$TAG Failed to save text to documents!")
+                    val message = AppUtils.getString(
+                        R.string.toast_export_file_to_documents_error
+                    )
+                    showRedToastEvent.postValue(Event(Pair(message, R.drawable.x)))
+                }
+            }
+        }
+    }
+
+    @UiThread
     private fun loadPdf() {
         isPdf.value = true
 
@@ -253,6 +273,7 @@ class FileViewModel @UiThread constructor() : ViewModel() {
         }
     }
 
+    @UiThread
     private fun loadPlainText() {
         isText.value = true
 
