@@ -171,6 +171,7 @@
                 android:text="@string/help_about_check_for_update"
                 android:maxLines="1"
                 android:ellipsize="end"
+                android:visibility="@{viewModel.checkUpdateAvailable ? View.VISIBLE : View.GONE}"
                 app:layout_constraintStart_toEndOf="@id/version_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/version_title"

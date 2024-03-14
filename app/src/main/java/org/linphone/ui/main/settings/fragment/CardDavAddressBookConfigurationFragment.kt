@@ -57,6 +57,7 @@ class CardDavAddressBookConfigurationFragment : GenericFragment() {
         viewModel.cardDavOperationSuccessfulEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.i("$TAG CardDAV friend list operation was successful, going back")
+                // TODO FIXME: show green toast
                 goBack()
             }
         }

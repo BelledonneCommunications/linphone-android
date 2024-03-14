@@ -54,6 +54,8 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
 
     val isGroup = MutableLiveData<Boolean>()
 
+    val isEndToEndEncrypted = MutableLiveData<Boolean>()
+
     val subject = MutableLiveData<String>()
 
     val sipUri = MutableLiveData<String>()
@@ -451,6 +453,9 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
 
         val isGroupChatRoom = LinphoneUtils.isChatRoomAGroup(chatRoom)
         isGroup.postValue(isGroupChatRoom)
+        isEndToEndEncrypted.postValue(
+            chatRoom.hasCapability(ChatRoom.Capabilities.Encrypted.toInt())
+        )
 
         val empty = chatRoom.hasCapability(ChatRoom.Capabilities.Conference.toInt()) && chatRoom.participants.isEmpty()
         val readOnly = chatRoom.isReadOnly || empty

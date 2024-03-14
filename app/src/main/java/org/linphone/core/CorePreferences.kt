@@ -124,6 +124,10 @@ class CorePreferences @UiThread constructor(private val context: Context) {
         get() = config.getBool("ui", "dark_mode_allowed", true)
 
     @get:WorkerThread
+    val onlyDisplaySipUriUsername: Boolean
+        get() = config.getBool("ui", "only_display_sip_uri_username", true)
+
+    @get:WorkerThread
     val disableChat: Boolean
         get() = config.getBool("ui", "disable_chat_feature", false)
 

@@ -63,6 +63,8 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
 
     val textToSend = MutableLiveData<String>()
 
+    val isFileTransferServerAvailable = MutableLiveData<Boolean>()
+
     val isEmojiPickerOpen = MutableLiveData<Boolean>()
 
     val isParticipantsListOpen = MutableLiveData<Boolean>()
@@ -141,6 +143,10 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
     }
 
     init {
+        coreContext.postOnCoreThread { core ->
+            isFileTransferServerAvailable.postValue(!core.fileTransferServer.isNullOrEmpty())
+        }
+
         isEmojiPickerOpen.value = false
         isPlayingVoiceRecord.value = false
     }

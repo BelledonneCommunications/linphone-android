@@ -396,7 +396,7 @@
                     android:drawableStart="@drawable/clock_countdown"
                     android:onClick="@{configureEphemeralMessagesClickListener}"
                     android:text="@string/conversation_action_configure_ephemeral_messages"
-                    android:visibility="@{!viewModel.isReadOnly ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewModel.isEndToEndEncrypted &amp;&amp; !viewModel.isReadOnly ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="@id/actions_background"
                     app:layout_constraintStart_toStartOf="@id/actions_background"
                     app:layout_constraintTop_toBottomOf="@id/action_add_to_contacts" />

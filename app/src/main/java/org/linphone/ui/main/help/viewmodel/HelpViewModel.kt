@@ -48,6 +48,10 @@ class HelpViewModel @UiThread constructor() : ViewModel() {
 
     val printLogInLogcatEnabled = MutableLiveData<Boolean>()
 
+    val checkUpdateAvailable = MutableLiveData<Boolean>()
+
+    val uploadLogsAvailable = MutableLiveData<Boolean>()
+
     val newVersionAvailableEvent: MutableLiveData<Event<Pair<String, String>>> by lazy {
         MutableLiveData<Event<Pair<String, String>>>()
     }
@@ -128,6 +132,10 @@ class HelpViewModel @UiThread constructor() : ViewModel() {
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
             printLogInLogcatEnabled.postValue(corePreferences.printLogsInLogcat)
+
+            val checkUpdateServerUrl = core.config.getString("misc", "version_check_url_root", "")
+            checkUpdateAvailable.postValue(!checkUpdateServerUrl.isNullOrEmpty())
+            uploadLogsAvailable.postValue(!core.logCollectionUploadServerUrl.isNullOrEmpty())
         }
     }
 
