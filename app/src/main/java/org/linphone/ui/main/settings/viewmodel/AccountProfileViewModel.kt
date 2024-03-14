@@ -4,6 +4,7 @@ import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.Account
 import org.linphone.core.DialPlan
 import org.linphone.core.Factory
@@ -46,6 +47,8 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
 
     val expandDevices = MutableLiveData<Boolean>()
 
+    val hideAccountSettings = MutableLiveData<Boolean>()
+
     val accountRemovedEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -57,6 +60,7 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
         expandDevices.value = false // TODO: set to true when feature will be available
 
         coreContext.postOnCoreThread {
+            hideAccountSettings.postValue(corePreferences.hideAccountSettings)
             dialPlansLabelList.add("") // To allow removing selected dial plan
 
             val dialPlans = Factory.instance().dialPlans.toList()

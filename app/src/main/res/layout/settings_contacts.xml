@@ -30,6 +30,7 @@
             android:ellipsize="end"
             android:drawableEnd="@drawable/caret_right"
             android:drawableTint="?attr/color_main2_600"
+            android:visibility="@{viewModel.ldapAvailable ? View.VISIBLE : View.GONE}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/existing_ldap_servers"
             app:layout_constraintStart_toStartOf="parent"

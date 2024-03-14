@@ -87,6 +87,7 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
     // Contacts settings
     val showContactsSettings = MutableLiveData<Boolean>()
 
+    val ldapAvailable = MutableLiveData<Boolean>()
     val ldapServers = MutableLiveData<List<CardDavLdapModel>>()
 
     val cardDavFriendsLists = MutableLiveData<List<CardDavLdapModel>>()
@@ -123,6 +124,7 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
     val useWifiOnly = MutableLiveData<Boolean>()
 
     // User Interface settings
+    val showThemeSelector = MutableLiveData<Boolean>()
     val theme = MutableLiveData<Int>()
     val availableThemesNames = arrayListOf(
         AppUtils.getString(R.string.settings_user_interface_auto_theme_label),
@@ -146,6 +148,8 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
             hideVideoCallSetting.postValue(!core.isVideoEnabled)
             showConversationsSettings.postValue(!corePreferences.disableChat)
             showMeetingsSettings.postValue(!corePreferences.disableMeetings)
+            ldapAvailable.postValue(core.ldapAvailable())
+            showThemeSelector.postValue(corePreferences.darkModeAllowed)
         }
         showContactsSettings.value = true
 

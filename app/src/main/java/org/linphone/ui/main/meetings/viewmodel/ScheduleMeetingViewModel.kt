@@ -28,6 +28,7 @@ import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.Address
 import org.linphone.core.ChatRoom
@@ -75,6 +76,8 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
     val operationInProgress = MutableLiveData<Boolean>()
 
     val conferenceCreatedEvent = MutableLiveData<Event<Boolean>>()
+
+    val hideBroadcast = MutableLiveData<Boolean>()
 
     private var startTimestamp = 0L
     private var endTimestamp = 0L
@@ -160,6 +163,9 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
     }
 
     init {
+        coreContext.postOnCoreThread {
+            hideBroadcast.postValue(corePreferences.disableBroadcasts)
+        }
         isBroadcastSelected.value = false
         showBroadcastHelp.value = false
         allDayMeeting.value = false

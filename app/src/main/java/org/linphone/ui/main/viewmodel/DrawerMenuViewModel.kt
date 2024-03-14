@@ -25,6 +25,7 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.Account
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
@@ -38,6 +39,12 @@ class DrawerMenuViewModel @UiThread constructor() : ViewModel() {
     }
 
     val accounts = MutableLiveData<ArrayList<AccountModel>>()
+
+    val hideAddAccount = MutableLiveData<Boolean>()
+
+    val hideRecordings = MutableLiveData<Boolean>()
+
+    val hideSettings = MutableLiveData<Boolean>()
 
     val startAssistantEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
@@ -96,6 +103,9 @@ class DrawerMenuViewModel @UiThread constructor() : ViewModel() {
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
 
+            hideRecordings.postValue(corePreferences.disableCallRecordings)
+            hideSettings.postValue(corePreferences.hideSettings)
+
             computeAccountsList()
         }
     }
@@ -140,5 +150,7 @@ class DrawerMenuViewModel @UiThread constructor() : ViewModel() {
             list.add(model)
         }
         accounts.postValue(list)
+
+        hideAddAccount.postValue(corePreferences.oneAccountMax && list.isNotEmpty())
     }
 }

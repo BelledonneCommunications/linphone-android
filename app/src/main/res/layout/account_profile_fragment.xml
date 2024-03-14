@@ -516,6 +516,7 @@
                         android:background="@drawable/action_background"
                         android:text="@string/manage_account_settings"
                         android:drawableStart="@drawable/gear"
+                        android:visibility="@{viewModel.hideAccountSettings ? View.GONE : View.VISIBLE}"
                         app:layout_constraintTop_toTopOf="@id/actions_background"
                         app:layout_constraintStart_toStartOf="@id/actions_background"
                         app:layout_constraintEnd_toEndOf="@id/actions_background"/>

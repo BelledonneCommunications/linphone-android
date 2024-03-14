@@ -37,6 +37,12 @@ class LandingViewModel @UiThread constructor() : ViewModel() {
 
     val sipIdentity = MutableLiveData<String>()
 
+    val hideCreateAccount = MutableLiveData<Boolean>()
+
+    val hideScanQrCode = MutableLiveData<Boolean>()
+
+    val hideThirdPartyAccount = MutableLiveData<Boolean>()
+
     val redirectToDigestAuthEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
     }
@@ -51,6 +57,9 @@ class LandingViewModel @UiThread constructor() : ViewModel() {
         coreContext.postOnCoreThread { core ->
             // Prevent user from leaving assistant if no account was configured yet
             showBackButton.postValue(core.accountList.isNotEmpty())
+            hideCreateAccount.postValue(corePreferences.hideAssistantCreateAccount)
+            hideScanQrCode.postValue(corePreferences.hideAssistantScanQrCode)
+            hideThirdPartyAccount.postValue(corePreferences.hideAssistantThirdPartySipAccount)
             conditionsAndPrivacyPolicyAccepted = corePreferences.conditionsAndPrivacyPolicyAccepted
         }
     }

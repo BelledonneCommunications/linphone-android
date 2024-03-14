@@ -120,18 +120,48 @@ class CorePreferences @UiThread constructor(private val context: Context) {
         }
 
     @get:WorkerThread
-    private val darkModeAllowed: Boolean
-        get() = config.getBool("app", "dark_mode_allowed", true)
+    val darkModeAllowed: Boolean
+        get() = config.getBool("ui", "dark_mode_allowed", true)
 
-    // Will disable chat feature completely
     @get:WorkerThread
     val disableChat: Boolean
-        get() = config.getBool("app", "disable_chat_feature", false)
+        get() = config.getBool("ui", "disable_chat_feature", false)
 
-    // Will disable meetings feature completely
     @get:WorkerThread
     val disableMeetings: Boolean
         get() = config.getBool("app", "disable_meetings_feature", false)
+
+    @get:WorkerThread
+    val disableBroadcasts: Boolean
+        get() = config.getBool("ui", "disable_broadcast_feature", true) // TODO: not implemented
+
+    @get:WorkerThread
+    val disableCallRecordings: Boolean // TODO FIXME: also disable recording in call
+        get() = config.getBool("ui", "disable_call_recordings_feature", true) // TODO: not implemented
+
+    @get:WorkerThread
+    val oneAccountMax: Boolean
+        get() = config.getBool("ui", "one_account_max", false)
+
+    @get:WorkerThread
+    val hideSettings: Boolean
+        get() = config.getBool("ui", "hide_settings", false)
+
+    @get:WorkerThread
+    val hideAccountSettings: Boolean
+        get() = config.getBool("ui", "hide_account_settings", false)
+
+    @get:WorkerThread
+    val hideAssistantCreateAccount: Boolean
+        get() = config.getBool("ui", "assistant_hide_create_account", false)
+
+    @get:WorkerThread
+    val hideAssistantScanQrCode: Boolean
+        get() = config.getBool("ui", "assistant_disable_qr_code", false)
+
+    @get:WorkerThread
+    val hideAssistantThirdPartySipAccount: Boolean
+        get() = config.getBool("ui", "assistant_hide_third_party_account", false)
 
     @get:WorkerThread
     val defaultDomain: String

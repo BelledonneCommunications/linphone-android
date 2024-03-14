@@ -97,7 +97,7 @@
                         android:paddingBottom="@dimen/primary_secondary_buttons_label_padding"
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp"
-                        android:visibility="@{viewModel.isBroadcastSelected ? View.GONE : View.VISIBLE}"
+                        android:visibility="@{viewModel.hideBroadcast || viewModel.isBroadcastSelected ? View.GONE : View.VISIBLE}"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/broadcast"/>
@@ -123,7 +123,7 @@
                         android:paddingBottom="@dimen/primary_secondary_buttons_label_padding"
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp"
-                        android:visibility="@{viewModel.isBroadcastSelected ? View.GONE : View.VISIBLE}"
+                        android:visibility="@{viewModel.hideBroadcast || viewModel.isBroadcastSelected ? View.GONE : View.VISIBLE}"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintStart_toEndOf="@id/meeting_selected"
                         app:layout_constraintEnd_toEndOf="parent"/>
