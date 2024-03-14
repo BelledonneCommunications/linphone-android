@@ -51,109 +51,6 @@ class VFS {
         private const val VFS_KEY = "vfskey"
         private const val ENCRYPTED_SHARED_PREFS_FILE = "encrypted.pref"
 
-        @Throws(java.lang.Exception::class)
-        private fun generateSecretKey() {
-            val keyGenerator =
-                KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEY_STORE)
-            keyGenerator.init(
-                KeyGenParameterSpec.Builder(
-                    ALIAS,
-                    KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
-                )
-                    .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
-                    .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
-                    .build()
-            )
-            keyGenerator.generateKey()
-        }
-
-        @Throws(java.lang.Exception::class)
-        private fun getSecretKey(): SecretKey? {
-            val ks = KeyStore.getInstance(ANDROID_KEY_STORE)
-            ks.load(null)
-            val entry = ks.getEntry(ALIAS, null) as KeyStore.SecretKeyEntry
-            return entry.secretKey
-        }
-
-        @Throws(java.lang.Exception::class)
-        fun generateToken(): String {
-            return sha512(UUID.randomUUID().toString())
-        }
-
-        @Throws(java.lang.Exception::class)
-        private fun encryptData(textToEncrypt: String): Pair<ByteArray, ByteArray> {
-            val cipher = Cipher.getInstance(TRANSFORMATION)
-            cipher.init(Cipher.ENCRYPT_MODE, getSecretKey())
-            val iv = cipher.iv
-            return Pair<ByteArray, ByteArray>(
-                iv,
-                cipher.doFinal(textToEncrypt.toByteArray(StandardCharsets.UTF_8))
-            )
-        }
-
-        @Throws(java.lang.Exception::class)
-        private fun decryptData(encrypted: String?, encryptionIv: ByteArray): String {
-            val cipher = Cipher.getInstance(TRANSFORMATION)
-            val spec = GCMParameterSpec(128, encryptionIv)
-            cipher.init(Cipher.DECRYPT_MODE, getSecretKey(), spec)
-            val encryptedData = Base64.decode(encrypted, Base64.DEFAULT)
-            return String(cipher.doFinal(encryptedData), StandardCharsets.UTF_8)
-        }
-
-        @Throws(java.lang.Exception::class)
-        fun encryptToken(string_to_encrypt: String): Pair<String?, String?> {
-            val encryptedData = encryptData(string_to_encrypt)
-            return Pair<String?, String?>(
-                Base64.encodeToString(encryptedData.first, Base64.DEFAULT),
-                Base64.encodeToString(encryptedData.second, Base64.DEFAULT)
-            )
-        }
-
-        @Throws(java.lang.Exception::class)
-        fun sha512(input: String): String {
-            val md = MessageDigest.getInstance("SHA-512")
-            val messageDigest = md.digest(input.toByteArray())
-            val no = BigInteger(1, messageDigest)
-            var hashtext = no.toString(16)
-            while (hashtext.length < 32) {
-                hashtext = "0$hashtext"
-            }
-            return hashtext
-        }
-
-        @Throws(java.lang.Exception::class)
-        fun getVfsKey(sharedPreferences: SharedPreferences): String {
-            val keyStore = KeyStore.getInstance(ANDROID_KEY_STORE)
-            keyStore.load(null)
-            return decryptData(
-                sharedPreferences.getString(VFS_KEY, null),
-                Base64.decode(sharedPreferences.getString(VFS_IV, null), Base64.DEFAULT)
-            )
-        }
-
-        fun getEncryptedSharedPreferences(context: Context): SharedPreferences? {
-            val masterKey: MasterKey = MasterKey.Builder(
-                context,
-                MasterKey.DEFAULT_MASTER_KEY_ALIAS
-            ).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build()
-
-            return try {
-                EncryptedSharedPreferences.create(
-                    context,
-                    ENCRYPTED_SHARED_PREFS_FILE,
-                    masterKey,
-                    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-                    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-                )
-            } catch (kse: KeyStoreException) {
-                Log.e("[VFS] Keystore exception: $kse")
-                null
-            } catch (e: Exception) {
-                Log.e("[VFS] Exception: $e")
-                null
-            }
-        }
-
         fun isEnabled(context: Context): Boolean {
             val preferences = getEncryptedSharedPreferences(context)
             if (preferences == null) {
@@ -211,6 +108,109 @@ class VFS {
             } catch (e: Exception) {
                 android.util.Log.wtf(TAG, "$TAG Unable to activate VFS encryption: $e")
             }
+        }
+
+        private fun getEncryptedSharedPreferences(context: Context): SharedPreferences? {
+            val masterKey: MasterKey = MasterKey.Builder(
+                context,
+                MasterKey.DEFAULT_MASTER_KEY_ALIAS
+            ).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build()
+
+            return try {
+                EncryptedSharedPreferences.create(
+                    context,
+                    ENCRYPTED_SHARED_PREFS_FILE,
+                    masterKey,
+                    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+                )
+            } catch (kse: KeyStoreException) {
+                Log.e("[VFS] Keystore exception: $kse")
+                null
+            } catch (e: Exception) {
+                Log.e("[VFS] Exception: $e")
+                null
+            }
+        }
+
+        @Throws(java.lang.Exception::class)
+        private fun generateSecretKey() {
+            val keyGenerator =
+                KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEY_STORE)
+            keyGenerator.init(
+                KeyGenParameterSpec.Builder(
+                    ALIAS,
+                    KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
+                )
+                    .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
+                    .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
+                    .build()
+            )
+            keyGenerator.generateKey()
+        }
+
+        @Throws(java.lang.Exception::class)
+        private fun getSecretKey(): SecretKey? {
+            val ks = KeyStore.getInstance(ANDROID_KEY_STORE)
+            ks.load(null)
+            val entry = ks.getEntry(ALIAS, null) as KeyStore.SecretKeyEntry
+            return entry.secretKey
+        }
+
+        @Throws(java.lang.Exception::class)
+        private fun generateToken(): String {
+            return sha512(UUID.randomUUID().toString())
+        }
+
+        @Throws(java.lang.Exception::class)
+        private fun encryptData(textToEncrypt: String): Pair<ByteArray, ByteArray> {
+            val cipher = Cipher.getInstance(TRANSFORMATION)
+            cipher.init(Cipher.ENCRYPT_MODE, getSecretKey())
+            val iv = cipher.iv
+            return Pair<ByteArray, ByteArray>(
+                iv,
+                cipher.doFinal(textToEncrypt.toByteArray(StandardCharsets.UTF_8))
+            )
+        }
+
+        @Throws(java.lang.Exception::class)
+        private fun decryptData(encrypted: String?, encryptionIv: ByteArray): String {
+            val cipher = Cipher.getInstance(TRANSFORMATION)
+            val spec = GCMParameterSpec(128, encryptionIv)
+            cipher.init(Cipher.DECRYPT_MODE, getSecretKey(), spec)
+            val encryptedData = Base64.decode(encrypted, Base64.DEFAULT)
+            return String(cipher.doFinal(encryptedData), StandardCharsets.UTF_8)
+        }
+
+        @Throws(java.lang.Exception::class)
+        private fun encryptToken(token: String): Pair<String?, String?> {
+            val encryptedData = encryptData(token)
+            return Pair<String?, String?>(
+                Base64.encodeToString(encryptedData.first, Base64.DEFAULT),
+                Base64.encodeToString(encryptedData.second, Base64.DEFAULT)
+            )
+        }
+
+        @Throws(java.lang.Exception::class)
+        private fun sha512(input: String): String {
+            val md = MessageDigest.getInstance("SHA-512")
+            val messageDigest = md.digest(input.toByteArray())
+            val no = BigInteger(1, messageDigest)
+            var hashtext = no.toString(16)
+            while (hashtext.length < 32) {
+                hashtext = "0$hashtext"
+            }
+            return hashtext
+        }
+
+        @Throws(java.lang.Exception::class)
+        private fun getVfsKey(sharedPreferences: SharedPreferences): String {
+            val keyStore = KeyStore.getInstance(ANDROID_KEY_STORE)
+            keyStore.load(null)
+            return decryptData(
+                sharedPreferences.getString(VFS_KEY, null),
+                Base64.decode(sharedPreferences.getString(VFS_IV, null), Base64.DEFAULT)
+            )
         }
     }
 }
