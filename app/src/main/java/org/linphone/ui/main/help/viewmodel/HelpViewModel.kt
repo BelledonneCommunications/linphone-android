@@ -72,6 +72,10 @@ class HelpViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    val showConfigFileEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
+
     private val coreListener = object : CoreListenerStub() {
         @WorkerThread
         override fun onVersionUpdateCheckResultReceived(
@@ -171,6 +175,15 @@ class HelpViewModel @UiThread constructor() : ViewModel() {
         coreContext.postOnCoreThread { core ->
             Log.i("$TAG Checking for update using current version [$currentVersion]")
             core.checkForUpdate(currentVersion)
+        }
+    }
+
+    @UiThread
+    fun showConfigFile() {
+        coreContext.postOnCoreThread { core ->
+            Log.i("$TAG Dumping & displaying Core's config")
+            val config = core.config.dump()
+            showConfigFileEvent.postValue(Event(config))
         }
     }
 }

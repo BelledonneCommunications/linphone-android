@@ -84,12 +84,20 @@ class FileViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
-    fun loadFile(file: String) {
+    fun loadFile(file: String, content: String? = null) {
         fullScreenMode.value = true
 
         filePath = file
         val name = FileUtils.getNameFromFilePath(file)
         fileName.value = name
+
+        if (!content.isNullOrEmpty()) {
+            isText.value = true
+            text.postValue(content)
+            Log.i("$TAG Using pre-loaded content as PlainText")
+            fileReadyEvent.postValue(Event(true))
+            return
+        }
 
         val extension = FileUtils.getExtensionFromFileName(name)
         val mime = FileUtils.getMimeTypeFromExtension(extension)

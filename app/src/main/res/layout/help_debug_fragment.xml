@@ -207,6 +207,27 @@
             app:layout_constraintStart_toEndOf="@id/sdk_version_icon"
             app:layout_constraintEnd_toEndOf="parent" />
 
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/tertiary_button_label_style"
+            android:onClick="@{() -> viewModel.showConfigFile()}"
+            android:id="@+id/show_config_file"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/tertiary_button_background"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:gravity="center"
+            android:text="@string/help_troubleshooting_show_config_file"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sdk_version_subtitle"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

@@ -25,7 +25,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.HelpDebugFragmentBinding
@@ -108,6 +110,18 @@ class DebugFragment : GenericFragment() {
                     getString(R.string.help_troubleshooting_debug_logs_upload_error_toast_message),
                     R.drawable.warning_circle
                 )
+            }
+        }
+
+        viewModel.showConfigFileEvent.observe(viewLifecycleOwner) {
+            it.consume { content ->
+                if (findNavController().currentDestination?.id == R.id.debugFragment) {
+                    val action = DebugFragmentDirections.actionDebugFragmentToFileViewerFragment(
+                        corePreferences.configFile,
+                        content
+                    )
+                    findNavController().navigate(action)
+                }
             }
         }
     }

@@ -138,8 +138,12 @@ class CorePreferences @UiThread constructor(private val context: Context) {
         get() = config.getString("app", "default_domain", "sip.linphone.org")!!
 
     @get:AnyThread
+    val configFile: String
+        get() = ".linphonerc"
+
+    @get:AnyThread
     val configPath: String
-        get() = context.filesDir.absolutePath + "/.linphonerc"
+        get() = context.filesDir.absolutePath + "/" + configFile
 
     @get:AnyThread
     val factoryConfigPath: String

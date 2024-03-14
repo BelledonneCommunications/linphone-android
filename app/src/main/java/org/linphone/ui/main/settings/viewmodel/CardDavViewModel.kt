@@ -81,6 +81,11 @@ class CardDavViewModel : ViewModel() {
                     syncInProgress.postValue(false)
                     val icon = R.drawable.x
                     showErrorToastEvent.postValue(Event(Pair(icon, message.orEmpty())))
+                    if (isEdit.value == false) {
+                        Log.e("$TAG Synchronization failed, removing Friend list from Core")
+                        friendList.removeListener(this)
+                        coreContext.core.removeFriendList(friendList)
+                    }
                 }
                 else -> {}
             }

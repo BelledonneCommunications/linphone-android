@@ -208,6 +208,12 @@
             app:launchSingleTop="true"
             app:popUpTo="@id/helpFragment"
             app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_debugFragment_to_fileViewerFragment"
+            app:destination="@id/fileViewerFragment"
+            app:launchSingleTop="true"
+            app:enterAnim="@anim/slide_in"
+            app:popExitAnim="@anim/slide_out" />
     </fragment>
 
     <fragment
@@ -361,6 +367,10 @@
         <argument
             android:name="path"
             app:argType="string" />
+        <argument
+            android:name="content"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
 
     <fragment

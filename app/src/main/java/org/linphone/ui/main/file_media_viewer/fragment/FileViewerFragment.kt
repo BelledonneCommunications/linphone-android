@@ -75,8 +75,11 @@ class FileViewerFragment : GenericFragment() {
         binding.viewModel = viewModel
 
         val path = args.path
-        Log.i("$TAG Path argument is [$path]")
-        viewModel.loadFile(path)
+        val preLoadedContent = args.content
+        Log.i(
+            "$TAG Path argument is [$path], pre loaded text content is ${if (preLoadedContent.isNullOrEmpty()) "not available" else "available, using it"}"
+        )
+        viewModel.loadFile(path, preLoadedContent)
 
         binding.setBackClickListener {
             goBack()

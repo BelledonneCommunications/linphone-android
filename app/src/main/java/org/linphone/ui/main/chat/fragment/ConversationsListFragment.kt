@@ -236,7 +236,8 @@ class ConversationsListFragment : AbstractTopBarFragment() {
                         )
                     } else {
                         ConversationsListFragmentDirections.actionConversationsListFragmentToFileViewerFragment(
-                            path
+                            path,
+                            null
                         )
                     }
                     findNavController().navigate(action)

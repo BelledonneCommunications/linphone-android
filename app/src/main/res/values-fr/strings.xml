@@ -185,6 +185,7 @@
     <string name="help_troubleshooting_share_logs_dialog_title">Partager le lien vers journaux avec…</string>
     <string name="help_troubleshooting_debug_logs_cleaned_toast_message">Les journaux ont été nettoyés</string>
     <string name="help_troubleshooting_debug_logs_upload_error_toast_message">Echec à l\'envoi des journaux</string>
+    <string name="help_troubleshooting_show_config_file">Afficher la configuration</string>
 
     <string name="settings_title">Paramètres</string>
     <string name="settings_security_title">Securité</string>
