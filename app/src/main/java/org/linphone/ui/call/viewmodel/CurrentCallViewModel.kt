@@ -76,6 +76,8 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     val isOutgoing = MutableLiveData<Boolean>()
 
+    val isRecordingEnabled = MutableLiveData<Boolean>()
+
     val isRecording = MutableLiveData<Boolean>()
 
     val canBePaused = MutableLiveData<Boolean>()
@@ -333,6 +335,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
 
+            isRecordingEnabled.postValue(!corePreferences.disableCallRecordings)
             hideVideo.postValue(!core.isVideoEnabled)
             showSwitchCamera.postValue(coreContext.showSwitchCameraButton())
 

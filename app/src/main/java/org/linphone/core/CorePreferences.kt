@@ -131,7 +131,7 @@ class CorePreferences @UiThread constructor(private val context: Context) {
         get() = config.getBool("ui", "dark_mode_allowed", true)
 
     @get:WorkerThread
-    val onlyDisplaySipUriUsername: Boolean
+    val onlyDisplaySipUriUsername: Boolean // TODO: use it
         get() = config.getBool("ui", "only_display_sip_uri_username", true)
 
     @get:WorkerThread
@@ -140,14 +140,14 @@ class CorePreferences @UiThread constructor(private val context: Context) {
 
     @get:WorkerThread
     val disableMeetings: Boolean
-        get() = config.getBool("app", "disable_meetings_feature", false)
+        get() = config.getBool("ui", "disable_meetings_feature", false)
 
     @get:WorkerThread
     val disableBroadcasts: Boolean
         get() = config.getBool("ui", "disable_broadcast_feature", true) // TODO: not implemented
 
     @get:WorkerThread
-    val disableCallRecordings: Boolean // TODO FIXME: also disable recording in call
+    val disableCallRecordings: Boolean
         get() = config.getBool("ui", "disable_call_recordings_feature", true) // TODO: not implemented
 
     @get:WorkerThread
