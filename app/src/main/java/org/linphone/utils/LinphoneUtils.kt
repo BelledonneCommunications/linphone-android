@@ -354,6 +354,29 @@ class LinphoneUtils {
         }
 
         @WorkerThread
+        fun chatRoomConfigureEphemeralMessagesLifetime(chatRoom: ChatRoom, lifetime: Long) {
+            if (lifetime == 0L) {
+                if (chatRoom.isEphemeralEnabled) {
+                    Log.i("$TAG Disabling ephemeral messages")
+                    chatRoom.isEphemeralEnabled = false
+                }
+            } else {
+                if (!chatRoom.isEphemeralEnabled) {
+                    Log.i("$TAG Enabling ephemeral messages")
+                    chatRoom.isEphemeralEnabled = true
+                }
+
+                if (chatRoom.ephemeralLifetime != lifetime) {
+                    Log.i("$TAG Updating lifetime to [$lifetime]")
+                    chatRoom.ephemeralLifetime = lifetime
+                }
+            }
+            Log.i(
+                "$TAG Ephemeral messages are [${if (chatRoom.isEphemeralEnabled) "enabled" else "disabled"}], lifetime is [${chatRoom.ephemeralLifetime}]"
+            )
+        }
+
+        @WorkerThread
         fun getAvatarModelForConferenceInfo(conferenceInfo: ConferenceInfo): ContactAvatarModel {
             val fakeFriend = coreContext.core.createFriend()
             fakeFriend.address = conferenceInfo.uri

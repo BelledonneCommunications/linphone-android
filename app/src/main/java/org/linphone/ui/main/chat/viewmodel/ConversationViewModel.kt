@@ -425,6 +425,16 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
     }
 
     @UiThread
+    fun updateEphemeralLifetime(lifetime: Long) {
+        coreContext.postOnCoreThread {
+            LinphoneUtils.chatRoomConfigureEphemeralMessagesLifetime(chatRoom, lifetime)
+            ephemeralLifetime.postValue(
+                if (!chatRoom.isEphemeralEnabled) 0L else chatRoom.ephemeralLifetime
+            )
+        }
+    }
+
+    @UiThread
     fun loadMoreData(totalItemsCount: Int) {
         coreContext.postOnCoreThread {
             val maxSize: Int = chatRoom.historyEventsSize

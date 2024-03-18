@@ -431,27 +431,9 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
     @UiThread
     fun updateEphemeralLifetime(lifetime: Long) {
         coreContext.postOnCoreThread {
-            if (lifetime == 0L) {
-                if (chatRoom.isEphemeralEnabled) {
-                    Log.i("$TAG Disabling ephemeral messages")
-                    chatRoom.isEphemeralEnabled = false
-                }
-            } else {
-                if (!chatRoom.isEphemeralEnabled) {
-                    Log.i("$TAG Enabling ephemeral messages")
-                    chatRoom.isEphemeralEnabled = true
-                }
-
-                if (chatRoom.ephemeralLifetime != lifetime) {
-                    Log.i("$TAG Updating lifetime to [$lifetime]")
-                    chatRoom.ephemeralLifetime = lifetime
-                }
-            }
+            LinphoneUtils.chatRoomConfigureEphemeralMessagesLifetime(chatRoom, lifetime)
             ephemeralLifetime.postValue(
                 if (!chatRoom.isEphemeralEnabled) 0L else chatRoom.ephemeralLifetime
-            )
-            Log.i(
-                "$TAG Ephemeral messages are [${if (chatRoom.isEphemeralEnabled) "enabled" else "disabled"}], lifetime is [${chatRoom.ephemeralLifetime}]"
             )
         }
     }

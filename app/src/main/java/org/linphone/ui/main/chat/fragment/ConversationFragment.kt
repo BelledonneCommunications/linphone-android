@@ -675,6 +675,15 @@ class ConversationFragment : SlidingPaneChildFragment() {
             }
         }
 
+        sharedViewModel.newChatMessageEphemeralLifetimeToSet.observe(viewLifecycleOwner) {
+            it.consume { ephemeralLifetime ->
+                Log.i(
+                    "$TAG Setting [$ephemeralLifetime] as new ephemeral lifetime for messages"
+                )
+                viewModel.updateEphemeralLifetime(ephemeralLifetime)
+            }
+        }
+
         binding.sendArea.messageToSend.setControlEnterListener(object :
                 RichEditText.RichEditTextSendListener {
                 override fun onControlEnterPressedAndReleased() {
@@ -884,7 +893,15 @@ class ConversationFragment : SlidingPaneChildFragment() {
         }
 
         popupView.setConfigureEphemeralMessagesClickListener {
-            // TODO: go to configure ephemeral messages
+            if (findNavController().currentDestination?.id == R.id.conversationFragment) {
+                val currentValue = viewModel.ephemeralLifetime.value ?: 0L
+                Log.i("$TAG Going to ephemeral lifetime fragment (currently [$currentValue])")
+                val action =
+                    ConversationFragmentDirections.actionConversationFragmentToConversationEphemeralLifetimeFragment(
+                        currentValue
+                    )
+                findNavController().navigate(action)
+            }
             popupWindow.dismiss()
         }
 
