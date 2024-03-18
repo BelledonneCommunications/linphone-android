@@ -776,7 +776,13 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         callMediaEncryptionModel.update(call)
         call.addListener(callListener)
 
-        if (call.conference != null) {
+        val remoteContactAddress = call.remoteContactAddress
+        val conferenceInfo = if (remoteContactAddress != null) {
+            call.core.findConferenceInformationFromUri(remoteContactAddress)
+        } else {
+            call.callLog.conferenceInfo
+        }
+        if (call.conference != null || conferenceInfo != null) {
             conferenceModel.configureFromCall(call)
             goToConferenceEvent.postValue(Event(true))
         } else {
@@ -828,7 +834,6 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         val address = call.remoteAddress
         displayedAddress.postValue(LinphoneUtils.getAddressAsCleanStringUriOnly(address))
 
-        val conferenceInfo = coreContext.core.findConferenceInformationFromUri(address)
         val model = if (conferenceInfo != null) {
             coreContext.contactsManager.getContactAvatarModelForConferenceInfo(conferenceInfo)
         } else {

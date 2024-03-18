@@ -783,11 +783,19 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         val answerIntent = getCallAnswerPendingIntent(notifiable)
 
         val remoteAddress = call.remoteAddress
+        val remoteContactAddress = call.remoteContactAddress
+        val conferenceInfo = if (remoteContactAddress != null) {
+            call.core.findConferenceInformationFromUri(remoteContactAddress) ?: call.callLog.conferenceInfo
+        } else {
+            call.callLog.conferenceInfo
+        }
         val conference = call.conference
-        val isConference = conference != null
+        val isConference = conference != null || conferenceInfo != null
 
-        val caller = if (conference != null) {
-            val subject = conference.subject ?: LinphoneUtils.getDisplayName(remoteAddress)
+        val caller = if (isConference) {
+            val subject = conferenceInfo?.subject ?: conference?.subject ?: LinphoneUtils.getDisplayName(
+                remoteAddress
+            )
             Person.Builder()
                 .setName(subject)
                 .setIcon(
@@ -837,13 +845,10 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             )
         }
 
-        val channel = when (call.state) {
-            Call.State.IncomingReceived, Call.State.IncomingEarlyMedia -> {
-                context.getString(R.string.notification_channel_incoming_call_id)
-            }
-            else -> {
-                context.getString(R.string.notification_channel_call_id)
-            }
+        val channel = if (isIncoming) {
+            context.getString(R.string.notification_channel_incoming_call_id)
+        } else {
+            context.getString(R.string.notification_channel_call_id)
         }
 
         Log.i(

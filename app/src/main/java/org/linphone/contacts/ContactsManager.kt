@@ -414,6 +414,7 @@ class ContactsManager @UiThread constructor() {
         val key = conferenceInfo.uri?.asStringUriOnly()
         if (key == null) {
             val fakeFriend = coreContext.core.createFriend()
+            fakeFriend.name = conferenceInfo.subject
             return ContactAvatarModel(fakeFriend)
         }
 

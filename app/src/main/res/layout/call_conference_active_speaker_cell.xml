@@ -27,7 +27,6 @@
             android:id="@+id/avatar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:visibility="@{model.isSendingVideo || model.isJoining || !model.isInConference ? View.GONE : View.VISIBLE}"
             layout="@layout/contact_avatar_medium"
             bind:model="@{model.avatarModel}"
@@ -120,15 +119,19 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_500"
             android:id="@+id/name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
             android:layout_marginBottom="8dp"
             android:text="@{model.name, default=`John Doe`}"
             android:textColor="@color/white"
             android:textSize="11sp"
+            android:maxLines="1"
+            android:ellipsize="end"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <ImageView
             android:id="@+id/speaking"
