@@ -39,6 +39,7 @@ import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.io.File
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.Factory
 import org.linphone.core.tools.Log
@@ -211,7 +212,7 @@ class ContactFragment : SlidingPaneChildFragment() {
 
         viewModel.startCallToDeviceToIncreaseTrustEvent.observe(viewLifecycleOwner) {
             it.consume { pair ->
-                showConfirmTrustCallDialog(pair.first, pair.second)
+                callDirectlyOrShowConfirmTrustCallDialog(pair.first, pair.second)
             }
         }
 
@@ -291,6 +292,21 @@ class ContactFragment : SlidingPaneChildFragment() {
         dialog.show()
     }
 
+    private fun callDirectlyOrShowConfirmTrustCallDialog(contactName: String, deviceSipUri: String) {
+        coreContext.postOnCoreThread {
+            if (corePreferences.showDialogWhenCallingDeviceUuidDirectly) {
+                coreContext.postOnMainThread {
+                    showConfirmTrustCallDialog(contactName, deviceSipUri)
+                }
+            } else {
+                val address = Factory.instance().createAddress(deviceSipUri)
+                if (address != null) {
+                    coreContext.startCall(address, forceZRTP = true)
+                }
+            }
+        }
+    }
+
     private fun showConfirmTrustCallDialog(contactName: String, deviceSipUri: String) {
         val model = TrustCallDialogModel(contactName, deviceSipUri)
         val dialog = DialogUtils.getContactTrustCallConfirmationDialog(requireActivity(), model)
@@ -303,10 +319,11 @@ class ContactFragment : SlidingPaneChildFragment() {
 
         model.confirmCallEvent.observe(viewLifecycleOwner) {
             it.consume {
-                if (model.doNotShowAnymore.value == true) {
-                    // TODO: never display this anymore
-                }
                 coreContext.postOnCoreThread {
+                    if (model.doNotShowAnymore.value == true) {
+                        corePreferences.showDialogWhenCallingDeviceUuidDirectly = false
+                    }
+
                     val address = Factory.instance().createAddress(deviceSipUri)
                     if (address != null) {
                         coreContext.startCall(address, forceZRTP = true)

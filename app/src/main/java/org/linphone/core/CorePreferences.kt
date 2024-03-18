@@ -93,6 +93,13 @@ class CorePreferences @UiThread constructor(private val context: Context) {
             config.setBool("app", "auto_start_call_record", value)
         }
 
+    @get:WorkerThread @set:WorkerThread
+    var showDialogWhenCallingDeviceUuidDirectly: Boolean
+        get() = config.getBool("app", "show_confirmation_dialog_zrtp_trust_call", true)
+        set(value) {
+            config.setBool("app", "show_confirmation_dialog_zrtp_trust_call", value)
+        }
+
     // Conversation settings
 
     var exportMediaToNativeGallery: Boolean // TODO: use it!
