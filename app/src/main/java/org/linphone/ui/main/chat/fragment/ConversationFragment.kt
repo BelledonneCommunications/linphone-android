@@ -263,7 +263,6 @@ class ConversationFragment : SlidingPaneChildFragment() {
     private var currentChatMessageModelForBottomSheet: MessageModel? = null
     private val bottomSheetCallback = object : BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
-            Log.i("$TAG Bottom sheet state is [$newState]")
             if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
                 currentChatMessageModelForBottomSheet?.isSelected?.value = false
             }

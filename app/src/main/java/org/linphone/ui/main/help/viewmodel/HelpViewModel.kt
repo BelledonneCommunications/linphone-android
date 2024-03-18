@@ -52,6 +52,8 @@ class HelpViewModel @UiThread constructor() : ViewModel() {
 
     val uploadLogsAvailable = MutableLiveData<Boolean>()
 
+    val logsUploadInProgress = MutableLiveData<Boolean>()
+
     val newVersionAvailableEvent: MutableLiveData<Event<Pair<String, String>>> by lazy {
         MutableLiveData<Event<Pair<String, String>>>()
     }
@@ -114,8 +116,10 @@ class HelpViewModel @UiThread constructor() : ViewModel() {
         ) {
             Log.i("$TAG Logs upload state changed [$state]")
             if (state == Core.LogCollectionUploadState.Delivered) {
+                logsUploadInProgress.postValue(false)
                 uploadDebugLogsFinishedEvent.postValue(Event(info))
             } else if (state == Core.LogCollectionUploadState.NotDelivered) {
+                logsUploadInProgress.postValue(false)
                 uploadDebugLogsErrorEvent.postValue(Event(true))
             }
         }
@@ -128,6 +132,7 @@ class HelpViewModel @UiThread constructor() : ViewModel() {
             R.string.linphone_app_branch
         )})"
         sdkVersion.value = coreContext.sdkVersion
+        logsUploadInProgress.value = false
 
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
@@ -172,7 +177,7 @@ class HelpViewModel @UiThread constructor() : ViewModel() {
     fun shareLogs() {
         coreContext.postOnCoreThread { core ->
             Log.i("$TAG Uploading debug logs for sharing")
-            // TODO FIXME: spinner while logs are uploaded
+            logsUploadInProgress.postValue(true)
             core.uploadLogCollection()
         }
     }
