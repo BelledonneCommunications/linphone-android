@@ -82,7 +82,7 @@ class ContactHistoryViewModel @UiThread constructor() : ViewModel() {
                 Log.e("$TAG Conversation [$id] creation has failed!")
                 chatRoom.removeListener(this)
                 operationInProgress.postValue(false)
-                chatRoomCreationErrorEvent.postValue(Event("Error!")) // TODO FIXME: use translated string
+                chatRoomCreationErrorEvent.postValue(Event("Error!")) // TODO: use translated string
             }
         }
     }
@@ -254,7 +254,7 @@ class ContactHistoryViewModel @UiThread constructor() : ViewModel() {
                             "$TAG Failed to create 1-1 conversation with [${remote.asStringUriOnly()}]!"
                         )
                         operationInProgress.postValue(false)
-                        chatRoomCreationErrorEvent.postValue(Event("Error!")) // TODO FIXME: use translated string
+                        chatRoomCreationErrorEvent.postValue(Event("Error!")) // TODO: use translated string
                     }
                 }
             }

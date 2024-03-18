@@ -233,7 +233,7 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
             subject.postValue(conferenceInfo.subject)
             description.postValue(conferenceInfo.description)
 
-            isBroadcastSelected.postValue(false) // TODO FIXME
+            isBroadcastSelected.postValue(false) // TODO FIXME: not implemented yet
 
             startHour = 0
             startMinutes = 0
@@ -365,7 +365,7 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
         }
     }
 
-    // TODO FIXME handle speakers when in broadcast mode
+    // TODO FIXME: handle speakers when in broadcast mode
 
     @UiThread
     fun schedule() {

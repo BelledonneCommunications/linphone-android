@@ -230,7 +230,7 @@ class MainViewModel @UiThread constructor() : ViewModel() {
 
             removeAlert(NON_DEFAULT_ACCOUNT_NOTIFICATIONS)
 
-            // TODO: compute other calls notifications count
+            // TODO FIXME: compute other accounts notifications count
         }
 
         @WorkerThread

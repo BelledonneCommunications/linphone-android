@@ -169,7 +169,7 @@ class LdapViewModel : ViewModel() {
                 ldapServerOperationSuccessfulEvent.postValue(Event(true))
             } catch (e: Exception) {
                 Log.e("$TAG Exception while creating LDAP: $e")
-                // TODO FIXME: improve toast
+                // TODO: improve toast
                 showErrorToastEvent.postValue(
                     Event(Pair(R.drawable.x, e.toString()))
                 )

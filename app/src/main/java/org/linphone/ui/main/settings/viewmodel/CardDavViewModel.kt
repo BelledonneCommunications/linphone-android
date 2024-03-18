@@ -147,7 +147,7 @@ class CardDavViewModel : ViewModel() {
         val name = displayName.value.orEmpty().trim()
         val server = serverUrl.value.orEmpty().trim()
         if (name.isEmpty() || server.isEmpty()) {
-            // TODO FIXME: improve toast
+            // TODO: improve toast
             showErrorToastEvent.postValue(Event(Pair(R.drawable.x, "Name or Server is empty!")))
             return
         }
@@ -157,7 +157,7 @@ class CardDavViewModel : ViewModel() {
         val authRealm = realm.value.orEmpty().trim()
 
         coreContext.postOnCoreThread { core ->
-            // TODO FIXME: add dialog to ask user before removing existing friend list & auth info ?
+            // TODO: add dialog to ask user before removing existing friend list & auth info ?
             if (isEdit.value == false) {
                 val foundFriendList = core.getFriendListByName(name)
                 if (foundFriendList != null) {

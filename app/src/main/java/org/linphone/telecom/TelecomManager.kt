@@ -96,7 +96,7 @@ class TelecomManager @WorkerThread constructor(context: Context) {
                             coreContext.postOnCoreThread {
                                 if (LinphoneUtils.isCallIncoming(call.state)) {
                                     Log.i("$TAG Answering call")
-                                    coreContext.answerCall(call) // TODO: use call type
+                                    coreContext.answerCall(call) // TODO FIXME: use call type
                                 }
                             }
                         },
@@ -108,7 +108,7 @@ class TelecomManager @WorkerThread constructor(context: Context) {
                                 Log.i(
                                     "$TAG Terminating call [${call.remoteAddress.asStringUriOnly()}]"
                                 )
-                                call.terminate() // TODO: use cause
+                                call.terminate() // TODO FIXME: use cause
                             }
                         },
                         { // onSetActive

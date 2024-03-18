@@ -110,7 +110,7 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
                 showModeSelection.postValue(showMode)
 
                 val devicesList = arrayListOf<AccountDeviceModel>()
-                // TODO FIXME: use real devices list from API
+                // TODO FIXME: use real devices list from API, not implemented yet
                 devices.postValue(devicesList)
 
                 val prefix = account.params.internationalPrefix

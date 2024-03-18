@@ -546,7 +546,7 @@ class ConferenceModel {
                 "$TAG Too many participant devices for grid layout, switching to active speaker layout"
             )
             setNewLayout(ACTIVE_SPEAKER_LAYOUT)
-            // TODO FIXME: notify user
+            // TODO: notify user
         }
     }
 }

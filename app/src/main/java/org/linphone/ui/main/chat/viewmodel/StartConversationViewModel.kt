@@ -81,7 +81,7 @@ class StartConversationViewModel @UiThread constructor() : AddressSelectionViewM
                 Log.e("$TAG Conversation [$id] creation has failed!")
                 chatRoom.removeListener(this)
                 operationInProgress.postValue(false)
-                chatRoomCreationErrorEvent.postValue(Event("Error!")) // TODO FIXME: use translated string
+                chatRoomCreationErrorEvent.postValue(Event("Error!")) // TODO: use translated string
             }
         }
     }
@@ -165,7 +165,7 @@ class StartConversationViewModel @UiThread constructor() : AddressSelectionViewM
             } else {
                 Log.e("$TAG Failed to create group conversation [$groupChatRoomSubject]!")
                 operationInProgress.postValue(false)
-                chatRoomCreationErrorEvent.postValue(Event("Error!")) // TODO FIXME: use translated string
+                chatRoomCreationErrorEvent.postValue(Event("Error!")) // TODO: use translated string
             }
         }
     }
@@ -212,7 +212,7 @@ class StartConversationViewModel @UiThread constructor() : AddressSelectionViewM
                 "$TAG Account is in secure mode, can't chat with SIP address of different domain [${remote.asStringUriOnly()}]"
             )
             operationInProgress.postValue(false)
-            chatRoomCreationErrorEvent.postValue(Event("Error!")) // TODO FIXME: use translated string
+            chatRoomCreationErrorEvent.postValue(Event("Error!")) // TODO: use translated string
             return
         }
 
@@ -258,7 +258,7 @@ class StartConversationViewModel @UiThread constructor() : AddressSelectionViewM
             } else {
                 Log.e("$TAG Failed to create 1-1 conversation with [${remote.asStringUriOnly()}]!")
                 operationInProgress.postValue(false)
-                chatRoomCreationErrorEvent.postValue(Event("Error!")) // TODO FIXME: use translated string
+                chatRoomCreationErrorEvent.postValue(Event("Error!")) // TODO: use translated string
             }
         } else {
             Log.w(

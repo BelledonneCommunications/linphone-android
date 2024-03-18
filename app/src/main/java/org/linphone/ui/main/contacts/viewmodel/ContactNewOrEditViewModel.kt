@@ -94,7 +94,7 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
                     firstName.postValue(vCard.givenName)
                     lastName.postValue(vCard.familyName)
                 } else {
-                    // TODO ? What to do when vCard is null
+                    // TODO: What to do if vCard is null?
                 }
 
                 id.postValue(friend.refKey ?: friend.vcard?.uid)
@@ -137,7 +137,7 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
         val organization = company.value.orEmpty().trim()
         if (fn.isEmpty() && ln.isEmpty() && organization.isEmpty()) {
             Log.e("$TAG At least a mandatory field wasn't filled, aborting save")
-            // TODO FIXME: notify user
+            // TODO: notify user
             return
         }
 
@@ -224,7 +224,7 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
                     )
                 } else {
                     Log.e("$TAG Failed to generate a ref key using vCard's generateUniqueId()")
-                    // TODO? : generate unique ref key
+                    // TODO: generate unique ref key?
                 }
 
                 friend.isSubscribesEnabled = false
@@ -313,7 +313,7 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun isPendingChanges(): Boolean {
         if (isEdit.value == true) {
-            // TODO: check if values of each field match friend values
+            // TODO FIXME: check if values of each field match friend values
             return true
         }
 

@@ -209,7 +209,7 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                 Log.e("$TAG Conversation [$id] creation has failed!")
                 chatRoom.removeListener(this)
                 operationInProgress.postValue(false)
-                chatRoomCreationErrorEvent.postValue(Event("Error!")) // TODO FIXME: use translated string
+                chatRoomCreationErrorEvent.postValue(Event("Error!")) // TODO: use translated string
             }
         }
     }
@@ -603,7 +603,7 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                         "$TAG Failed to create 1-1 conversation with [${remote.asStringUriOnly()}]!"
                     )
                     operationInProgress.postValue(false)
-                    chatRoomCreationErrorEvent.postValue(Event("Error!")) // TODO FIXME: use translated string
+                    chatRoomCreationErrorEvent.postValue(Event("Error!")) // TODO: use translated string
                 }
             }
         }
@@ -623,11 +623,12 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                 val trusted = device.securityLevel == SecurityLevel.EndToEndEncryptedAndVerified
                 devicesList.add(
                     ContactDeviceModel(
-                        device.displayName ?: "???", // TODO: what to do if device name isn't available?
+                        device.displayName ?: AppUtils.getString(
+                            R.string.contact_device_without_name
+                        ),
                         device.address,
                         trusted
                     ) {
-                        // TODO: check if do not show dialog anymore setting is set
                         if (::friend.isInitialized) {
                             startCallToDeviceToIncreaseTrustEvent.value =
                                 Event(Pair(friend.name.orEmpty(), it.address.asStringUriOnly()))
