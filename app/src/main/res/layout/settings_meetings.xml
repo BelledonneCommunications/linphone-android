@@ -40,6 +40,9 @@
             android:background="@drawable/edit_text_background"
             android:paddingStart="@dimen/spinner_start_padding"
             android:paddingEnd="@dimen/spinner_end_padding"
+            android:overlapAnchor="false"
+            android:spinnerMode="dropdown"
+            android:popupBackground="@drawable/shape_squircle_white_background"
             app:layout_constraintTop_toBottomOf="@id/layout_title"
             app:layout_constraintStart_toStartOf="@id/layout_title"
             app:layout_constraintEnd_toEndOf="@id/layout_title" />

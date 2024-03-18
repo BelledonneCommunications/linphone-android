@@ -83,6 +83,9 @@
                         android:background="@drawable/edit_text_background"
                         android:paddingStart="15dp"
                         android:paddingEnd="30dp"
+                        android:overlapAnchor="false"
+                        android:spinnerMode="dropdown"
+                        android:popupBackground="@drawable/shape_squircle_white_background"
                         app:layout_constraintTop_toBottomOf="@id/transport_title"
                         app:layout_constraintStart_toStartOf="@id/transport_title"
                         app:layout_constraintEnd_toEndOf="@id/transport_title" />
