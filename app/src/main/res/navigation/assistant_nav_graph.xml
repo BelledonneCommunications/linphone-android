@@ -180,6 +180,9 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
             app:launchSingleTop="true" />
+        <action
+            android:id="@+id/action_landingFragment_to_profileModeFragment"
+            app:destination="@id/profileModeFragment" />
 
     </fragment>
 

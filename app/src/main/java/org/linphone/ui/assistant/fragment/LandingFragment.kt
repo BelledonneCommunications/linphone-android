@@ -27,16 +27,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantLandingFragmentBinding
+import org.linphone.ui.assistant.AssistantActivity
 import org.linphone.ui.assistant.model.AcceptConditionsAndPolicyDialogModel
 import org.linphone.ui.assistant.viewmodel.LandingViewModel
 import org.linphone.utils.DialogUtils
+import org.linphone.utils.PhoneNumberUtils
 
 @UiThread
 class LandingFragment : Fragment() {
@@ -65,6 +70,14 @@ class LandingFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
+        coreContext.postOnCoreThread {
+            val dialPlan = PhoneNumberUtils.getDeviceDialPlan(requireContext())
+            if (dialPlan != null) {
+                viewModel.internationalPrefix.postValue(dialPlan.countryCallingCode)
+                viewModel.internationalPrefixIsoCountryCode.postValue(dialPlan.isoCountryCode)
+            }
+        }
+
         binding.setBackClickListener {
             requireActivity().finish()
         }
@@ -87,6 +100,42 @@ class LandingFragment : Fragment() {
                 goToLoginThirdPartySipAccountFragment()
             } else {
                 showAcceptConditionsAndPrivacyDialog(goToThirdPartySipAccountLogin = true)
+            }
+        }
+
+        binding.setForgottenPasswordClickListener {
+            val url = getString(R.string.web_platform_forgotten_password_url)
+            try {
+                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                startActivity(browserIntent)
+            } catch (ise: IllegalStateException) {
+                Log.e(
+                    "$TAG Can't start ACTION_VIEW intent for URL [$url], IllegalStateException: $ise"
+                )
+            }
+        }
+
+        viewModel.showPassword.observe(viewLifecycleOwner) {
+            lifecycleScope.launch {
+                delay(50)
+                binding.password.setSelection(binding.password.text?.length ?: 0)
+            }
+        }
+
+        viewModel.accountLoggedInEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i("$TAG Account successfully logged-in, go to profile mode fragment")
+                val action = LandingFragmentDirections.actionLandingFragmentToProfileModeFragment()
+                findNavController().navigate(action)
+            }
+        }
+
+        viewModel.accountLoginErrorEvent.observe(viewLifecycleOwner) {
+            it.consume { message ->
+                (requireActivity() as AssistantActivity).showRedToast(
+                    message,
+                    R.drawable.warning_circle
+                )
             }
         }
 

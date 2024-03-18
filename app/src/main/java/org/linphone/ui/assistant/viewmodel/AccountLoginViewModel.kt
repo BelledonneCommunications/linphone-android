@@ -38,7 +38,7 @@ import org.linphone.core.tools.Log
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
-class AccountLoginViewModel @UiThread constructor() : ViewModel() {
+open class AccountLoginViewModel @UiThread constructor() : ViewModel() {
     companion object {
         private const val TAG = "[Account Login ViewModel]"
     }

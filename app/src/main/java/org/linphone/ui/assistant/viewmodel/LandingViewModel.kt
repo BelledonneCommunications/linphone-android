@@ -21,21 +21,16 @@ package org.linphone.ui.assistant.viewmodel
 
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
-import org.linphone.core.Factory
-import org.linphone.core.tools.Log
 import org.linphone.utils.Event
 
-class LandingViewModel @UiThread constructor() : ViewModel() {
+class LandingViewModel @UiThread constructor() : AccountLoginViewModel() {
     companion object {
         private const val TAG = "[Account Login ViewModel]"
     }
 
     val showBackButton = MutableLiveData<Boolean>()
-
-    val sipIdentity = MutableLiveData<String>()
 
     val hideCreateAccount = MutableLiveData<Boolean>()
 
@@ -61,35 +56,6 @@ class LandingViewModel @UiThread constructor() : ViewModel() {
             hideScanQrCode.postValue(corePreferences.hideAssistantScanQrCode)
             hideThirdPartyAccount.postValue(corePreferences.hideAssistantThirdPartySipAccount)
             conditionsAndPrivacyPolicyAccepted = corePreferences.conditionsAndPrivacyPolicyAccepted
-        }
-    }
-
-    @UiThread
-    fun login() {
-        coreContext.postOnCoreThread {
-            var identity = sipIdentity.value.orEmpty().trim()
-            if (!identity.startsWith("sip:")) {
-                identity = "sip:$identity"
-            }
-            if (!identity.contains("@")) {
-                identity = "$identity@${corePreferences.defaultDomain}"
-            }
-            val identityAddress = Factory.instance().createAddress(identity)
-            if (identityAddress == null) {
-                // TODO: FIXME: show error
-                Log.e("$TAG Can't parse [$identity] as Address!")
-                return@postOnCoreThread
-            }
-
-            // TODO: SSO or password auth?
-            if (identityAddress.domain == corePreferences.defaultDomain) {
-                Log.i("$TAG Address matches default domain, using digest authentication")
-                redirectToDigestAuthEvent.postValue(Event(identityAddress.asStringUriOnly()))
-            } else {
-                Log.i("$TAG Address doesn't match default domain, using Single Sign On")
-                // TODO FIXME: use username or full SIP address as login?
-                redirectToSingleSignOnEvent.postValue(Event(identityAddress.username.orEmpty()))
-            }
         }
     }
 }
