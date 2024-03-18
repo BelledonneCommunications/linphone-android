@@ -331,7 +331,7 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel() {
         coreContext.postOnCoreThread {
             if (::accountCreator.isInitialized) {
                 val dialPlan = selectedDialPlan.value
-                val prefix = dialPlan?.internationalCallPrefix.orEmpty()
+                val prefix = dialPlan?.countryCallingCode.orEmpty()
                 val digitsPrefix = if (prefix.startsWith("+")) {
                     prefix.substring(1)
                 } else {
@@ -429,7 +429,7 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel() {
 
     @UiThread
     private fun isCreateButtonEnabled(): Boolean {
-        return username.value.orEmpty().isNotEmpty() && password.value.orEmpty().isNotEmpty() && phoneNumber.value.orEmpty().isNotEmpty() && selectedDialPlan.value?.internationalCallPrefix.orEmpty().isNotEmpty()
+        return username.value.orEmpty().isNotEmpty() && password.value.orEmpty().isNotEmpty() && phoneNumber.value.orEmpty().isNotEmpty() && selectedDialPlan.value?.countryCallingCode.orEmpty().isNotEmpty()
     }
 
     @UiThread
