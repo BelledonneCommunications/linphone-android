@@ -106,7 +106,9 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     val callStatsModel = CallStatsModel()
 
-    val callMediaEncryptionModel = CallMediaEncryptionModel()
+    val callMediaEncryptionModel = CallMediaEncryptionModel() {
+        showZrtpSasDialogIfPossible()
+    }
 
     val incomingCallTitle: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
