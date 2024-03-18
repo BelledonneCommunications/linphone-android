@@ -49,7 +49,7 @@ class ConversationParticipantsAdapter : ListAdapter<ParticipantModel, RecyclerVi
         }
 
         override fun areContentsTheSame(oldItem: ParticipantModel, newItem: ParticipantModel): Boolean {
-            return oldItem.avatarModel.id == newItem.avatarModel.id
+            return oldItem.avatarModel.id == newItem.avatarModel.id && oldItem.isParticipantAdmin == newItem.isParticipantAdmin
         }
     }
 }

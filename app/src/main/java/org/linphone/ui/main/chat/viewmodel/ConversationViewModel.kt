@@ -150,32 +150,7 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
             // Prevents auto scroll to go to latest received message
             chatRoom.markAsRead()
 
-            val list = arrayListOf<EventLogModel>()
-            list.addAll(eventsList)
-
-            val newList = getEventsListFromHistory(
-                arrayOf(eventLog),
-                searchFilter.value.orEmpty().trim()
-            )
-
-            val lastEvent = eventsList.lastOrNull()
-            val newEvent = newList.firstOrNull()
-            if (lastEvent != null && newEvent != null && shouldWeGroupTwoEvents(
-                    newEvent.eventLog,
-                    lastEvent.eventLog
-                )
-            ) {
-                if (lastEvent.model is MessageModel) {
-                    lastEvent.model.groupedWithNextMessage.postValue(true)
-                }
-                if (newEvent.model is MessageModel) {
-                    newEvent.model.groupedWithPreviousMessage.postValue(true)
-                }
-            }
-            list.addAll(newList)
-
-            eventsList = list
-            events.postValue(eventsList)
+            addEvents(arrayOf(eventLog))
         }
 
         @WorkerThread
@@ -189,31 +164,7 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
             Log.i("$TAG Received [${eventLogs.size}] new message(s)")
             computeComposingLabel()
 
-            val list = arrayListOf<EventLogModel>()
-            list.addAll(eventsList)
-            val lastEvent = list.lastOrNull()
-
-            val newList = getEventsListFromHistory(
-                eventLogs,
-                searchFilter.value.orEmpty().trim()
-            )
-            val newEvent = newList.firstOrNull()
-            if (lastEvent != null && newEvent != null && shouldWeGroupTwoEvents(
-                    newEvent.eventLog,
-                    lastEvent.eventLog
-                )
-            ) {
-                if (lastEvent.model is MessageModel) {
-                    lastEvent.model.groupedWithNextMessage.postValue(true)
-                }
-                if (newEvent.model is MessageModel) {
-                    newEvent.model.groupedWithPreviousMessage.postValue(true)
-                }
-            }
-
-            list.addAll(newList)
-            eventsList = list
-            events.postValue(eventsList)
+            addEvents(eventLogs)
 
             unreadMessagesCount.postValue(chatRoom.unreadMessagesCount)
         }
@@ -239,6 +190,36 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
                 "$TAG Remote [${remoteAddress.asStringUriOnly()}] is ${if (isComposing) "composing" else "no longer composing"}"
             )
             computeComposingLabel()
+        }
+
+        @WorkerThread
+        override fun onParticipantAdded(chatRoom: ChatRoom, eventLog: EventLog) {
+            Log.i("$TAG A participant was added to the conversation")
+            addEvents(arrayOf(eventLog))
+        }
+
+        @WorkerThread
+        override fun onParticipantRemoved(chatRoom: ChatRoom, eventLog: EventLog) {
+            Log.i("$TAG A participant was removed from the conversation or has left")
+            addEvents(arrayOf(eventLog))
+        }
+
+        @WorkerThread
+        override fun onParticipantAdminStatusChanged(chatRoom: ChatRoom, eventLog: EventLog) {
+            Log.i("$TAG A participant has been granted/removed admin rights")
+            addEvents(arrayOf(eventLog))
+        }
+
+        @WorkerThread
+        override fun onSubjectChanged(chatRoom: ChatRoom, eventLog: EventLog) {
+            Log.i("$TAG Conversation subject changed [${chatRoom.subject}]")
+            addEvents(arrayOf(eventLog))
+        }
+
+        @WorkerThread
+        override fun onSecurityEvent(chatRoom: ChatRoom, eventLog: EventLog) {
+            Log.i("$TAG A security event was triggered")
+            addEvents(arrayOf(eventLog))
         }
 
         @WorkerThread
@@ -457,25 +438,9 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
 
                 val history = chatRoom.getHistoryRangeEvents(totalItemsCount, upperBound)
                 val list = getEventsListFromHistory(history, searchFilter.value.orEmpty())
-
-                val lastEvent = list.lastOrNull()
-                val newEvent = eventsList.firstOrNull()
-                if (lastEvent != null && newEvent != null && shouldWeGroupTwoEvents(
-                        newEvent.eventLog,
-                        lastEvent.eventLog
-                    )
-                ) {
-                    if (lastEvent.model is MessageModel) {
-                        lastEvent.model.groupedWithNextMessage.postValue(true)
-                    }
-                    if (newEvent.model is MessageModel) {
-                        newEvent.model.groupedWithPreviousMessage.postValue(true)
-                    }
-                }
-
-                list.addAll(eventsList)
-                eventsList = list
-                events.postValue(eventsList)
+                val array = arrayOf<EventLog>()
+                list.toArray(array)
+                addEvents(array)
             }
         }
     }
@@ -567,6 +532,35 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
         } else {
             noMatchingResultForFilter.postValue(false)
         }
+    }
+
+    @WorkerThread
+    private fun addEvents(eventLogs: Array<EventLog>) {
+        val list = arrayListOf<EventLogModel>()
+        list.addAll(eventsList)
+        val lastEvent = list.lastOrNull()
+
+        val newList = getEventsListFromHistory(
+            eventLogs,
+            searchFilter.value.orEmpty().trim()
+        )
+        val newEvent = newList.firstOrNull()
+        if (lastEvent != null && newEvent != null && shouldWeGroupTwoEvents(
+                newEvent.eventLog,
+                lastEvent.eventLog
+            )
+        ) {
+            if (lastEvent.model is MessageModel) {
+                lastEvent.model.groupedWithNextMessage.postValue(true)
+            }
+            if (newEvent.model is MessageModel) {
+                newEvent.model.groupedWithPreviousMessage.postValue(true)
+            }
+        }
+
+        list.addAll(newList)
+        eventsList = list
+        events.postValue(eventsList)
     }
 
     @WorkerThread

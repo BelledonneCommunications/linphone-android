@@ -130,13 +130,24 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
             Log.i(
                 "$TAG A participant has been given/removed administration rights for group [${chatRoom.subject}]"
             )
+            val participantAddress = eventLog.participantAddress
+            val participant = if (participantAddress != null) {
+                val model = participants.value.orEmpty().find {
+                    it.address.weakEqual(participantAddress)
+                }
+                model?.avatarModel?.contactName ?: LinphoneUtils.getDisplayName(participantAddress)
+            } else {
+                ""
+            }
             val message = if (eventLog.type == EventLog.Type.ConferenceParticipantSetAdmin) {
-                AppUtils.getString(
-                    R.string.toast_participant_has_been_granted_admin_rights
+                AppUtils.getFormattedString(
+                    R.string.toast_participant_has_been_granted_admin_rights,
+                    participant
                 )
             } else {
-                AppUtils.getString(
-                    R.string.toast_participant_no_longer_has_admin_rights
+                AppUtils.getFormattedString(
+                    R.string.toast_participant_no_longer_has_admin_rights,
+                    participant
                 )
             }
             showGreenToastEvent.postValue(Event(Pair(message, R.drawable.user_circle)))

@@ -117,8 +117,11 @@ class ConversationModel @WorkerThread constructor(
             computeComposingLabel()
         }
 
-        @WorkerThread
-        override fun onMessagesReceived(chatRoom: ChatRoom, chatMessages: Array<out ChatMessage>) {
+        override fun onNewEvent(chatRoom: ChatRoom, eventLog: EventLog) {
+            updateLastUpdatedTime()
+        }
+
+        override fun onNewEvents(chatRoom: ChatRoom, eventLogs: Array<out EventLog>) {
             updateLastMessage()
             updateLastUpdatedTime()
             unreadMessageCount.postValue(chatRoom.unreadMessagesCount)
@@ -127,7 +130,6 @@ class ConversationModel @WorkerThread constructor(
         @WorkerThread
         override fun onChatMessageSending(chatRoom: ChatRoom, eventLog: EventLog) {
             updateLastMessage()
-            updateLastUpdatedTime()
         }
 
         @WorkerThread
@@ -139,12 +141,10 @@ class ConversationModel @WorkerThread constructor(
         override fun onSubjectChanged(chatRoom: ChatRoom, eventLog: EventLog) {
             Log.i("$TAG Conversation subject changed [${chatRoom.subject}]")
             subject.postValue(chatRoom.subject)
-            updateLastUpdatedTime()
         }
 
         @WorkerThread
         override fun onEphemeralEvent(chatRoom: ChatRoom, eventLog: EventLog) {
-            Log.i("$TAG Ephemeral event [${eventLog.type}]")
             isEphemeral.postValue(chatRoom.isEphemeralEnabled)
         }
 
