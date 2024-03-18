@@ -33,7 +33,7 @@
             android:layout_height="0dp"
             android:contentDescription="@null"
             android:src="@{model.trust == SecurityLevel.Unsafe ? @drawable/shape_circle_unsafe_contact_overlay : @drawable/shape_circle_trusted_contact_overlay, default=@drawable/shape_circle_trusted_contact_overlay}"
-            android:visibility="@{model.showTrust &amp;&amp; (model.trust == SecurityLevel.EndToEndEncryptedAndVerified || model.trust == SecurityLevel.Unsafe) ? View.VISIBLE : View.GONE}"
+            android:visibility="@{model.showTrust &amp;&amp; (model.trust == SecurityLevel.EndToEndEncryptedAndVerified || model.trust == SecurityLevel.Unsafe) ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintEnd_toEndOf="@id/avatar"
             app:layout_constraintStart_toStartOf="@id/avatar"
             app:layout_constraintTop_toTopOf="@id/avatar"
@@ -45,7 +45,7 @@
             android:layout_height="@dimen/avatar_presence_badge_in_call_size"
             android:layout_marginStart="@dimen/avatar_presence_badge_in_call_end_margin"
             android:src="@{model.trust == SecurityLevel.EndToEndEncryptedAndVerified ? @drawable/trusted : @drawable/not_trusted, default=@drawable/trusted}"
-            android:visibility="@{model.showTrust &amp;&amp; (model.trust == SecurityLevel.EndToEndEncryptedAndVerified || model.trust == SecurityLevel.Unsafe) ? View.VISIBLE : View.GONE}"
+            android:visibility="@{model.showTrust &amp;&amp; (model.trust == SecurityLevel.EndToEndEncryptedAndVerified || model.trust == SecurityLevel.Unsafe) ? View.VISIBLE : View.GONE, default=gone}"
             android:contentDescription="@{model.trust == SecurityLevel.EndToEndEncryptedAndVerified ? @string/content_description_trusted_contact_icon : @string/content_description_not_trusted_contact_icon}"
             app:layout_constraintStart_toStartOf="@id/avatar"
             app:layout_constraintBottom_toBottomOf="@id/avatar"/>

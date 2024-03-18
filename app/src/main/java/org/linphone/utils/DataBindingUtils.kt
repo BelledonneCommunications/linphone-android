@@ -206,6 +206,12 @@ fun AppCompatTextView.setDrawableTint(@ColorInt color: Int) {
 @UiThread
 @BindingAdapter("presenceIcon")
 fun ImageView.setPresenceIcon(presence: ConsolidatedPresence?) {
+    visibility = if (presence == null || presence == ConsolidatedPresence.Offline) {
+        View.GONE
+    } else {
+        View.VISIBLE
+    }
+
     val icon = when (presence) {
         ConsolidatedPresence.Online -> R.drawable.led_online
         ConsolidatedPresence.DoNotDisturb -> R.drawable.led_do_not_disturb
@@ -400,8 +406,6 @@ private fun loadContactPictureWithCoil(
                 transformations(CircleCropTransformation())
             }
         }
-    } else {
-        imageView.load(R.drawable.smiley)
     }
 }
 

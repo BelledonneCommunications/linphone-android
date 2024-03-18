@@ -63,6 +63,8 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend, val addre
     }
 
     init {
+        presenceStatus.postValue(ConsolidatedPresence.Offline)
+
         if (friend.addresses.isNotEmpty()) {
             friend.addListener(friendListener)
         }
