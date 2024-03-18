@@ -12,8 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/color_grey_300"
-        android:alpha="102"
+        android:background="@color/dialog_background"
         android:visibility="@{visibility ? View.VISIBLE : View.GONE, default=gone}">
 
         <ImageView

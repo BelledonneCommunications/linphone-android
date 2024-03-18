@@ -353,7 +353,7 @@ class DialogUtils {
                 val d: Drawable = ColorDrawable(
                     context.getColor(R.color.black)
                 )
-                d.alpha = 153 // 60%
+                d.alpha = 153 // 60% opacity
                 setBackgroundDrawable(d)
             }
 
