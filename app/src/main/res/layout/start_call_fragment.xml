@@ -102,7 +102,7 @@
             <androidx.appcompat.widget.AppCompatEditText
                 style="@style/default_text_style"
                 android:id="@+id/search_bar"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="16dp"
