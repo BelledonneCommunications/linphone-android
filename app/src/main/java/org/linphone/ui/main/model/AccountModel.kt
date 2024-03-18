@@ -33,6 +33,7 @@ import org.linphone.core.ChatRoom
 import org.linphone.core.ConsolidatedPresence
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
+import org.linphone.core.MessageWaitingIndication
 import org.linphone.core.RegistrationState
 import org.linphone.core.SecurityLevel
 import org.linphone.core.tools.Log
@@ -66,11 +67,28 @@ class AccountModel @WorkerThread constructor(
             state: RegistrationState?,
             message: String
         ) {
-            if (account == this@AccountModel.account) {
+            Log.i(
+                "$TAG Account [${account.params.identityAddress?.asStringUriOnly()}] registration state changed: [$state]($message)"
+            )
+            update()
+        }
+
+        override fun onMessageWaitingIndicationChanged(
+            account: Account,
+            mwi: MessageWaitingIndication
+        ) {
+            Log.i(
+                "$TAG Account [${account.params.identityAddress?.asStringUriOnly()}] has received a MWI NOTIFY. ${if (mwi.hasMessageWaiting()) "Message(s) are waiting." else "No message is waiting."}}"
+            )
+            for (summary in mwi.summaries) {
+                val context = summary.contextClass
+                val nbNew = summary.nbNew
+                val nbNewUrgent = summary.nbNewUrgent
+                val nbOld = summary.nbOld
+                val nbOldUrgent = summary.nbOldUrgent
                 Log.i(
-                    "$TAG Account [${account.params.identityAddress?.asStringUriOnly()}] registration state changed: [$state]($message)"
+                    "$TAG [MWI] [$context]: new [$nbNew] urgent ($nbNewUrgent), old [$nbOld] urgent ($nbOldUrgent)"
                 )
-                update()
             }
         }
     }
