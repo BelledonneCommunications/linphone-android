@@ -151,11 +151,10 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/left_column"
                     android:layout_width="0dp"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
                     app:layout_constraintWidth_percent="0.5"
                     app:layout_constraintTop_toBottomOf="@id/avatar_barrier"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/right_column">
 
@@ -298,11 +297,10 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/right_column"
                     android:layout_width="0dp"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
                     app:layout_constraintWidth_percent="0.5"
                     app:layout_constraintTop_toBottomOf="@id/avatar_barrier"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@id/left_column"
                     app:layout_constraintEnd_toEndOf="parent">
 
