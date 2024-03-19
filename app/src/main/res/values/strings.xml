@@ -71,6 +71,8 @@
     <string name="dialog_close">Close</string>
     <string name="dialog_install">Install</string>
     <string name="dialog_do_not_show_anymore">Do not show this dialog anymore</string>
+    <string name="dialog_no">No</string>
+    <string name="dialog_yes">Yes</string>
 
     <!-- Related to Android notifications -->
     <string name="notification_channel_call_name">&appName; active calls notifications</string>
@@ -523,6 +525,8 @@
     <string name="meeting_schedule_description_title">Description</string>
     <string name="meeting_schedule_create_title">Create</string>
     <string name="meeting_schedule_edit_title">Edit meeting</string>
+    <string name="meeting_schedule_cancel_dialog_title">Cancel the meeting?</string>
+    <string name="meeting_schedule_cancel_dialog_message">Do you want to cancel the meeting and send a notification to all participants?</string>
 
     <string name="meeting_waiting_room_join">Join</string>
 

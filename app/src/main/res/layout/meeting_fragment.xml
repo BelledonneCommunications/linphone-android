@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View" />
@@ -24,329 +25,339 @@
             type="org.linphone.ui.main.meetings.viewmodel.MeetingViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="?attr/color_main2_000">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/back"
-            android:onClick="@{backClickListener}"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:adjustViewBounds="true"
-            android:padding="15dp"
-            android:src="@drawable/caret_left"
-            android:contentDescription="@string/content_description_go_back_icon"
-            android:visibility="@{viewModel.showBackButton ? View.VISIBLE : View.GONE}"
-            app:tint="?attr/color_main1_500"
-            app:layout_constraintBottom_toBottomOf="@id/title"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/title" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/color_main2_000">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/main_page_title_style"
-            android:id="@+id/title"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/top_bar_height"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            app:layout_constraintEnd_toStartOf="@id/edit"
-            app:layout_constraintStart_toEndOf="@id/back"
-            app:layout_constraintTop_toTopOf="parent"/>
+            <ImageView
+                android:id="@+id/back"
+                android:onClick="@{backClickListener}"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:adjustViewBounds="true"
+                android:padding="15dp"
+                android:src="@drawable/caret_left"
+                android:contentDescription="@string/content_description_go_back_icon"
+                android:visibility="@{viewModel.showBackButton ? View.VISIBLE : View.GONE}"
+                app:tint="?attr/color_main1_500"
+                app:layout_constraintBottom_toBottomOf="@id/title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/title" />
 
-        <ImageView
-            android:id="@+id/edit"
-            android:onClick="@{editClickListener}"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:padding="15dp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/pencil_simple"
-            android:visibility="@{viewModel.isEditable ? View.VISIBLE : View.GONE}"
-            app:tint="@color/primary_color_selector"
-            app:layout_constraintStart_toEndOf="@id/title"
-            app:layout_constraintEnd_toStartOf="@id/menu"
-            app:layout_constraintBottom_toBottomOf="@id/title"
-            app:layout_constraintTop_toTopOf="@id/title" />
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/main_page_title_style"
+                android:id="@+id/title"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/top_bar_height"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintEnd_toStartOf="@id/edit"
+                app:layout_constraintStart_toEndOf="@id/back"
+                app:layout_constraintTop_toTopOf="parent"/>
 
-        <ImageView
-            android:id="@+id/menu"
-            android:onClick="@{menuClickListener}"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:padding="15dp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/dots_three_vertical"
-            app:tint="@color/primary_color_selector"
-            app:layout_constraintStart_toEndOf="@id/edit"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/title"
-            app:layout_constraintTop_toTopOf="@id/title" />
+            <ImageView
+                android:id="@+id/edit"
+                android:onClick="@{editClickListener}"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:padding="15dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/pencil_simple"
+                android:visibility="@{viewModel.isEditable ? View.VISIBLE : View.GONE}"
+                app:tint="@color/primary_color_selector"
+                app:layout_constraintStart_toEndOf="@id/title"
+                app:layout_constraintEnd_toStartOf="@id/menu"
+                app:layout_constraintBottom_toBottomOf="@id/title"
+                app:layout_constraintTop_toTopOf="@id/title" />
 
-        <ScrollView
-            android:id="@+id/scrollView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:fillViewport="true"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/title"
-            app:layout_constraintBottom_toTopOf="@id/separator_5">
+            <ImageView
+                android:id="@+id/menu"
+                android:onClick="@{menuClickListener}"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:padding="15dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/dots_three_vertical"
+                app:tint="@color/primary_color_selector"
+                app:layout_constraintStart_toEndOf="@id/edit"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/title"
+                app:layout_constraintTop_toTopOf="@id/title" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <ScrollView
+                android:id="@+id/scrollView"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:fillViewport="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title"
+                app:layout_constraintBottom_toTopOf="@id/separator_5">
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style_800"
-                    android:id="@+id/subject"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:text="@{viewModel.subject, default=`Broadcast about agility in software development`}"
-                    android:textSize="20sp"
-                    android:textColor="?attr/color_main2_600"
-                    android:maxLines="2"
-                    android:ellipsize="end"
-                    android:drawableStart="@{viewModel.isBroadcast ? @drawable/slideshow : @drawable/meeting, default=@drawable/meeting}"
-                    android:drawablePadding="8dp"
-                    android:drawableTint="?attr/color_main2_600"
-                    android:background="@color/transparent_color"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-                <View
-                    android:id="@+id/separator"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="16dp"
-                    android:background="?attr/color_main2_200"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/subject" />
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/default_text_style_800"
+                        android:id="@+id/subject"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="@{viewModel.subject, default=`Broadcast about agility in software development`}"
+                        android:textSize="20sp"
+                        android:textColor="?attr/color_main2_600"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:drawableStart="@{viewModel.isBroadcast ? @drawable/slideshow : @drawable/meeting, default=@drawable/meeting}"
+                        android:drawablePadding="8dp"
+                        android:drawableTint="?attr/color_main2_600"
+                        android:background="@color/transparent_color"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style"
-                    android:id="@+id/sip_uri"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:text="@{viewModel.sipUri, default=`linphone.com/wjre.fr`}"
-                    android:textSize="14sp"
-                    android:textColor="?attr/color_main2_600"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:drawableStart="@drawable/video_camera"
-                    android:drawablePadding="8dp"
-                    android:drawableTint="?attr/color_main2_600"
-                    app:layout_constraintTop_toBottomOf="@id/separator"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/share" />
+                    <View
+                        android:id="@+id/separator"
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="16dp"
+                        android:background="?attr/color_main2_200"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/subject" />
 
-                <ImageView
-                    android:id="@+id/share"
-                    android:onClick="@{shareClickListener}"
-                    android:layout_width="@dimen/icon_size"
-                    android:layout_height="@dimen/icon_size"
-                    android:layout_marginEnd="16dp"
-                    android:src="@drawable/share_network"
-                    app:layout_constraintTop_toTopOf="@id/sip_uri"
-                    app:layout_constraintBottom_toBottomOf="@id/sip_uri"
-                    app:layout_constraintStart_toEndOf="@id/sip_uri"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:tint="?attr/color_main2_600" />
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/default_text_style"
+                        android:id="@+id/sip_uri"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="@{viewModel.sipUri, default=`linphone.com/wjre.fr`}"
+                        android:textSize="14sp"
+                        android:textColor="?attr/color_main2_600"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:drawableStart="@drawable/video_camera"
+                        android:drawablePadding="8dp"
+                        android:drawableTint="?attr/color_main2_600"
+                        app:layout_constraintTop_toBottomOf="@id/separator"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/share" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style"
-                    android:id="@+id/date_time"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:text="@{viewModel.dateTime, default=`October 11th, 2023 | 17:00 - 18:00`}"
-                    android:textSize="14sp"
-                    android:textColor="?attr/color_main2_600"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:drawableStart="@drawable/clock"
-                    android:drawablePadding="8dp"
-                    android:drawableTint="?attr/color_main2_600"
-                    app:layout_constraintTop_toBottomOf="@id/sip_uri"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    <ImageView
+                        android:id="@+id/share"
+                        android:onClick="@{shareClickListener}"
+                        android:layout_width="@dimen/icon_size"
+                        android:layout_height="@dimen/icon_size"
+                        android:layout_marginEnd="16dp"
+                        android:src="@drawable/share_network"
+                        app:layout_constraintTop_toTopOf="@id/sip_uri"
+                        app:layout_constraintBottom_toBottomOf="@id/sip_uri"
+                        app:layout_constraintStart_toEndOf="@id/sip_uri"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:tint="?attr/color_main2_600" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style"
-                    android:id="@+id/timezone"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:text="@{viewModel.timezone, default=@string/meeting_schedule_timezone_title}"
-                    android:textSize="14sp"
-                    android:textColor="?attr/color_main2_600"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:drawableStart="@drawable/globe_hemisphere_west"
-                    android:drawablePadding="8dp"
-                    android:drawableTint="?attr/color_main2_600"
-                    app:layout_constraintTop_toBottomOf="@id/date_time"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/default_text_style"
+                        android:id="@+id/date_time"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="@{viewModel.dateTime, default=`October 11th, 2023 | 17:00 - 18:00`}"
+                        android:textSize="14sp"
+                        android:textColor="?attr/color_main2_600"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:drawableStart="@drawable/clock"
+                        android:drawablePadding="8dp"
+                        android:drawableTint="?attr/color_main2_600"
+                        app:layout_constraintTop_toBottomOf="@id/sip_uri"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
 
-                <View
-                    android:id="@+id/separator_2"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="16dp"
-                    android:background="?attr/color_main2_200"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/timezone" />
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/default_text_style"
+                        android:id="@+id/timezone"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="@{viewModel.timezone, default=@string/meeting_schedule_timezone_title}"
+                        android:textSize="14sp"
+                        android:textColor="?attr/color_main2_600"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:drawableStart="@drawable/globe_hemisphere_west"
+                        android:drawablePadding="8dp"
+                        android:drawableTint="?attr/color_main2_600"
+                        app:layout_constraintTop_toBottomOf="@id/date_time"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/default_text_style"
-                    android:id="@+id/description"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:text="@{viewModel.description, default=`Lorem ipsum dolor sit amet`}"
-                    android:textSize="14sp"
-                    android:textColor="?attr/color_main2_600"
-                    android:maxLines="3"
-                    android:ellipsize="end"
-                    android:drawableStart="@drawable/file_text"
-                    android:drawablePadding="8dp"
-                    android:drawableTint="?attr/color_main2_600"
-                    android:visibility="@{viewModel.description.length() > 0 ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintTop_toBottomOf="@id/separator_2"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    <View
+                        android:id="@+id/separator_2"
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="16dp"
+                        android:background="?attr/color_main2_200"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/timezone" />
 
-                <View
-                    android:id="@+id/separator_3"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="16dp"
-                    android:background="?attr/color_main2_200"
-                    android:visibility="@{viewModel.description.length() > 0 ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/description" />
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/default_text_style"
+                        android:id="@+id/description"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="@{viewModel.description, default=`Lorem ipsum dolor sit amet`}"
+                        android:textSize="14sp"
+                        android:textColor="?attr/color_main2_600"
+                        android:maxLines="3"
+                        android:ellipsize="end"
+                        android:drawableStart="@drawable/file_text"
+                        android:drawablePadding="8dp"
+                        android:drawableTint="?attr/color_main2_600"
+                        android:visibility="@{viewModel.description.length() > 0 ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintTop_toBottomOf="@id/separator_2"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
 
-                <androidx.constraintlayout.widget.Barrier
-                    android:id="@+id/speakers_bottom_barrier"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:barrierDirection="bottom"
-                    app:constraint_referenced_ids="speakers, speakers_icon" />
+                    <View
+                        android:id="@+id/separator_3"
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="16dp"
+                        android:background="?attr/color_main2_200"
+                        android:visibility="@{viewModel.description.length() > 0 ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/description" />
 
-                <ImageView
-                    android:id="@+id/speakers_icon"
-                    android:layout_width="@dimen/icon_size"
-                    android:layout_height="@dimen/icon_size"
-                    android:layout_marginTop="32dp"
-                    android:layout_marginStart="16dp"
-                    android:src="@drawable/user_square"
-                    android:visibility="@{viewModel.isBroadcast ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintTop_toBottomOf="@id/separator_3"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:tint="?attr/color_main2_600" />
+                    <androidx.constraintlayout.widget.Barrier
+                        android:id="@+id/speakers_bottom_barrier"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:barrierDirection="bottom"
+                        app:constraint_referenced_ids="speakers, speakers_icon" />
 
-                <LinearLayout
-                    android:id="@+id/speakers"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:visibility="@{viewModel.isBroadcast ? View.VISIBLE : View.GONE}"
-                    android:orientation="vertical"
-                    entries="@{viewModel.speakers}"
-                    layout="@{@layout/meeting_participant_list_cell}"
-                    app:layout_constraintTop_toBottomOf="@id/separator_3"
-                    app:layout_constraintStart_toEndOf="@id/speakers_icon"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    <ImageView
+                        android:id="@+id/speakers_icon"
+                        android:layout_width="@dimen/icon_size"
+                        android:layout_height="@dimen/icon_size"
+                        android:layout_marginTop="32dp"
+                        android:layout_marginStart="16dp"
+                        android:src="@drawable/user_square"
+                        android:visibility="@{viewModel.isBroadcast ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintTop_toBottomOf="@id/separator_3"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:tint="?attr/color_main2_600" />
 
-                <View
-                    android:id="@+id/separator_4"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="16dp"
-                    android:background="?attr/color_main2_200"
-                    android:visibility="@{viewModel.isBroadcast ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/speakers_bottom_barrier" />
+                    <LinearLayout
+                        android:id="@+id/speakers"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:visibility="@{viewModel.isBroadcast ? View.VISIBLE : View.GONE}"
+                        android:orientation="vertical"
+                        entries="@{viewModel.speakers}"
+                        layout="@{@layout/meeting_participant_list_cell}"
+                        app:layout_constraintTop_toBottomOf="@id/separator_3"
+                        app:layout_constraintStart_toEndOf="@id/speakers_icon"
+                        app:layout_constraintEnd_toEndOf="parent" />
 
-                <ImageView
-                    android:id="@+id/participants_icon"
-                    android:layout_width="@dimen/icon_size"
-                    android:layout_height="@dimen/icon_size"
-                    android:layout_marginTop="32dp"
-                    android:layout_marginStart="16dp"
-                    android:src="@drawable/users"
-                    app:layout_constraintTop_toBottomOf="@id/separator_4"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:tint="?attr/color_main2_600"/>
+                    <View
+                        android:id="@+id/separator_4"
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="16dp"
+                        android:background="?attr/color_main2_200"
+                        android:visibility="@{viewModel.isBroadcast ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/speakers_bottom_barrier" />
 
-                <LinearLayout
-                    android:id="@+id/participants"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:orientation="vertical"
-                    entries="@{viewModel.participants}"
-                    layout="@{@layout/meeting_participant_list_cell}"
-                    app:layout_constraintTop_toBottomOf="@id/separator_4"
-                    app:layout_constraintStart_toEndOf="@id/participants_icon"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    <ImageView
+                        android:id="@+id/participants_icon"
+                        android:layout_width="@dimen/icon_size"
+                        android:layout_height="@dimen/icon_size"
+                        android:layout_marginTop="32dp"
+                        android:layout_marginStart="16dp"
+                        android:src="@drawable/users"
+                        app:layout_constraintTop_toBottomOf="@id/separator_4"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:tint="?attr/color_main2_600"/>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    <LinearLayout
+                        android:id="@+id/participants"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:orientation="vertical"
+                        entries="@{viewModel.participants}"
+                        layout="@{@layout/meeting_participant_list_cell}"
+                        app:layout_constraintTop_toBottomOf="@id/separator_4"
+                        app:layout_constraintStart_toEndOf="@id/participants_icon"
+                        app:layout_constraintEnd_toEndOf="parent" />
 
-        </ScrollView>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <View
-            android:id="@+id/separator_5"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:background="?attr/color_main2_200"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/scrollView" />
+            </ScrollView>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/primary_button_label_style"
-            android:id="@+id/join"
-            android:onClick="@{joinClickListener}"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="@dimen/screen_bottom_margin"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:text="@string/meeting_info_join_title"
-            app:layout_constraintWidth_max="@dimen/button_max_width"
-            app:layout_constraintVertical_bias="1"
-            app:layout_constraintTop_toBottomOf="@id/separator_5"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            <View
+                android:id="@+id/separator_5"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="?attr/color_main2_200"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/scrollView" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/primary_button_label_style"
+                android:id="@+id/join"
+                android:onClick="@{joinClickListener}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="@dimen/screen_bottom_margin"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="@string/meeting_info_join_title"
+                app:layout_constraintWidth_max="@dimen/button_max_width"
+                app:layout_constraintVertical_bias="1"
+                app:layout_constraintTop_toBottomOf="@id/separator_5"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <include
+            layout="@layout/operation_in_progress"
+            bind:visibility="@{viewModel.operationInProgress}" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </layout>

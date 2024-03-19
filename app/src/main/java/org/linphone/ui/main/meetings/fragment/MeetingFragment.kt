@@ -43,7 +43,9 @@ import org.linphone.databinding.MeetingFragmentBinding
 import org.linphone.databinding.MeetingPopupMenuBinding
 import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.fragment.SlidingPaneChildFragment
+import org.linphone.ui.main.history.model.ConfirmationDialogModel
 import org.linphone.ui.main.meetings.viewmodel.MeetingViewModel
+import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 
 @UiThread
@@ -153,6 +155,13 @@ class MeetingFragment : SlidingPaneChildFragment() {
                 goBack()
             }
         }
+
+        viewModel.conferenceCancelledEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i("$TAG Meeting has been cancelled successfully, deleting it")
+                viewModel.delete()
+            }
+        }
     }
 
     private fun showPopupMenu() {
@@ -170,7 +179,11 @@ class MeetingFragment : SlidingPaneChildFragment() {
         )
 
         popupView.setDeleteClickListener {
-            viewModel.delete()
+            if (viewModel.isEditable.value == true) {
+                showCancelMeetingDialog()
+            } else {
+                viewModel.delete()
+            }
             popupWindow.dismiss()
         }
 
@@ -223,5 +236,28 @@ class MeetingFragment : SlidingPaneChildFragment() {
         } catch (exception: ActivityNotFoundException) {
             Log.e("$TAG No activity found to handle intent: $exception")
         }
+    }
+
+    private fun showCancelMeetingDialog() {
+        Log.i("$TAG Meeting is editable, asking whether to cancel it or not before deleting it")
+
+        val model = ConfirmationDialogModel()
+        val dialog = DialogUtils.getCancelMeetingDialog(requireContext(), model)
+
+        model.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                viewModel.delete()
+                dialog.dismiss()
+            }
+        }
+
+        model.confirmEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                viewModel.cancel()
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
     }
 }

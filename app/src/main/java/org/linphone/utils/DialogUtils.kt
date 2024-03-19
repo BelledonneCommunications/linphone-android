@@ -36,6 +36,7 @@ import org.linphone.databinding.DialogAccountModesExplanationBinding
 import org.linphone.databinding.DialogAssistantAcceptConditionsAndPolicyBinding
 import org.linphone.databinding.DialogAssistantCreateAccountConfirmPhoneNumberBinding
 import org.linphone.databinding.DialogCancelContactChangesBinding
+import org.linphone.databinding.DialogCancelMeetingBinding
 import org.linphone.databinding.DialogConfirmZrtpSasBinding
 import org.linphone.databinding.DialogContactConfirmTrustCallBinding
 import org.linphone.databinding.DialogContactTrustProcessBinding
@@ -329,6 +330,22 @@ class DialogUtils {
             val binding: DialogConfirmZrtpSasBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(context),
                 R.layout.dialog_confirm_zrtp_sas,
+                null,
+                false
+            )
+            binding.viewModel = viewModel
+
+            return getDialog(context, binding)
+        }
+
+        @UiThread
+        fun getCancelMeetingDialog(
+            context: Context,
+            viewModel: ConfirmationDialogModel
+        ): Dialog {
+            val binding: DialogCancelMeetingBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.dialog_cancel_meeting,
                 null,
                 false
             )

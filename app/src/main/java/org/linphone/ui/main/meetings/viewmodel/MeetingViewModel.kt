@@ -27,7 +27,11 @@ import java.util.Locale
 import java.util.TimeZone
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.core.Address
+import org.linphone.core.ChatRoom
 import org.linphone.core.ConferenceInfo
+import org.linphone.core.ConferenceScheduler
+import org.linphone.core.ConferenceSchedulerListenerStub
 import org.linphone.core.Factory
 import org.linphone.core.Participant
 import org.linphone.core.tools.Log
@@ -66,14 +70,61 @@ class MeetingViewModel @UiThread constructor() : ViewModel() {
     val startTimeStamp = MutableLiveData<Long>()
     val endTimeStamp = MutableLiveData<Long>()
 
+    val operationInProgress = MutableLiveData<Boolean>()
+
+    val conferenceCancelledEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     val conferenceInfoDeletedEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
 
+    private val conferenceSchedulerListener = object : ConferenceSchedulerListenerStub() {
+        override fun onStateChanged(
+            conferenceScheduler: ConferenceScheduler,
+            state: ConferenceScheduler.State?
+        ) {
+            Log.i("$TAG Conference scheduler state is $state")
+            if (state == ConferenceScheduler.State.Ready) {
+                Log.i(
+                    "$TAG Conference ${conferenceScheduler.info?.subject} cancelled"
+                )
+                val chatRoomParams = coreContext.core.createDefaultChatRoomParams()
+                chatRoomParams.isGroupEnabled = false
+                chatRoomParams.backend = ChatRoom.Backend.FlexisipChat
+                chatRoomParams.isEncryptionEnabled = true
+                chatRoomParams.subject = "Meeting cancelled" // Won't be used
+                conferenceScheduler.sendInvitations(chatRoomParams) // Send cancel ICS
+
+                operationInProgress.postValue(false)
+                conferenceCancelledEvent.postValue(Event(true))
+            }
+        }
+
+        override fun onInvitationsSent(
+            conferenceScheduler: ConferenceScheduler,
+            failedInvitations: Array<out Address>?
+        ) {
+            if (failedInvitations?.isNotEmpty() == true) {
+                for (address in failedInvitations) {
+                    Log.e(
+                        "$TAG Conference cancelled ICS wasn't sent to participant ${address.asStringUriOnly()}"
+                    )
+                }
+            } else {
+                Log.i(
+                    "$TAG Conference cancelled ICS successfully sent to all participants"
+                )
+            }
+            conferenceScheduler.removeListener(this)
+        }
+    }
+
     private lateinit var conferenceInfo: ConferenceInfo
 
-    override fun onCleared() {
-        super.onCleared()
+    init {
+        operationInProgress.value = false
     }
 
     @UiThread
@@ -105,6 +156,19 @@ class MeetingViewModel @UiThread constructor() : ViewModel() {
                 Log.i("$TAG Deleting conference information [$conferenceInfo]")
                 core.deleteConferenceInformation(conferenceInfo)
                 conferenceInfoDeletedEvent.postValue(Event(true))
+            }
+        }
+    }
+
+    @UiThread
+    fun cancel() {
+        coreContext.postOnCoreThread { core ->
+            if (::conferenceInfo.isInitialized) {
+                Log.i("$TAG Cancelling conference information [$conferenceInfo]")
+                operationInProgress.postValue(true)
+                val conferenceScheduler = core.createConferenceScheduler()
+                conferenceScheduler.addListener(conferenceSchedulerListener)
+                conferenceScheduler.cancelConference(conferenceInfo)
             }
         }
     }

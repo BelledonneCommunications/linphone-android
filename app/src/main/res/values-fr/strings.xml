@@ -34,6 +34,8 @@
     <string name="dialog_close">Fermer</string>
     <string name="dialog_install">Installer</string>
     <string name="dialog_do_not_show_anymore">Ne plus me montrer ce message</string>
+    <string name="dialog_no">Non</string>
+    <string name="dialog_yes">Oui</string>
 
     <string name="notification_channel_call_name">&appName; notifications d\'appels en cours</string>
     <string name="notification_channel_incoming_call_name">&appName; notifications d\'appels entrants</string>
@@ -474,6 +476,8 @@
     <string name="meeting_schedule_description_title">Description</string>
     <string name="meeting_schedule_create_title">Créer</string>
     <string name="meeting_schedule_edit_title">Modifier la réunion</string>
+    <string name="meeting_schedule_cancel_dialog_title">Annuler la réunion?</string>
+    <string name="meeting_schedule_cancel_dialog_message">Voulez-vous annuler la réunion et envoyer une notification aux participants?</string>
 
     <string name="meeting_waiting_room_join">Rejoindre</string>
 
