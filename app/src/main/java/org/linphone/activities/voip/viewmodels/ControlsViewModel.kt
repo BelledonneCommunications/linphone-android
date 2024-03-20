@@ -57,6 +57,8 @@ class ControlsViewModel : ViewModel() {
 
     val isIncomingEarlyMediaVideo = MutableLiveData<Boolean>()
 
+    val isIncomingCallVideo = MutableLiveData<Boolean>()
+
     val showExtras = MutableLiveData<Boolean>()
 
     val fullScreenMode = MutableLiveData<Boolean>()
@@ -123,6 +125,7 @@ class ControlsViewModel : ViewModel() {
             Log.i("[Call Controls] State changed: $state")
             isOutgoingEarlyMedia.value = state == Call.State.OutgoingEarlyMedia
             isIncomingEarlyMediaVideo.value = state == Call.State.IncomingEarlyMedia && call.remoteParams?.isVideoEnabled == true
+            isIncomingCallVideo.value = call.remoteParams?.isVideoEnabled == true
             attendedTransfer.value = core.callsNb > 1
 
             if (state == Call.State.StreamsRunning) {
@@ -237,6 +240,7 @@ class ControlsViewModel : ViewModel() {
         Log.i("[Call Controls] Current state is: $state")
         isOutgoingEarlyMedia.value = state == Call.State.OutgoingEarlyMedia
         isIncomingEarlyMediaVideo.value = state == Call.State.IncomingEarlyMedia && currentCall?.remoteParams?.isVideoEnabled == true
+        isIncomingCallVideo.value = currentCall?.remoteParams?.isVideoEnabled == true
 
         updateUI()
 

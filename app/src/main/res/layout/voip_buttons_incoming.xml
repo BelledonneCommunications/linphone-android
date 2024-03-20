@@ -40,7 +40,7 @@
             android:contentDescription="@string/content_description_answer_call"
             android:onClick="@{() -> viewModel.answer()}"
             android:padding="5dp"
-            android:src="@drawable/icon_call_answer"
+            android:src="@{viewModel.isIncomingCallVideo ? @drawable/icon_call_answer_video : @drawable/icon_call_answer, default=@drawable/icon_call_answer_video}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="W,1.26:1"
             app:layout_constraintEnd_toEndOf="parent"
