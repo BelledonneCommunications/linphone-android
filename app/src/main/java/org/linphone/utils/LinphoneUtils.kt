@@ -334,10 +334,36 @@ class LinphoneUtils {
                     val conferenceInfo = Factory.instance().createConferenceInfoFromIcalendarContent(
                         firstContent
                     )
-                    text = AppUtils.getFormattedString(
-                        R.string.message_meeting_invitation_content_description,
-                        conferenceInfo?.subject.orEmpty()
-                    )
+                    if (conferenceInfo != null) {
+                        val subject = conferenceInfo.subject.orEmpty()
+                        text = when (conferenceInfo.state) {
+                            ConferenceInfo.State.Cancelled -> {
+                                AppUtils.getFormattedString(
+                                    R.string.message_meeting_invitation_cancelled_content_description,
+                                    subject
+                                )
+                            }
+
+                            ConferenceInfo.State.Updated -> {
+                                AppUtils.getFormattedString(
+                                    R.string.message_meeting_invitation_updated_content_description,
+                                    subject
+                                )
+                            }
+
+                            else -> {
+                                AppUtils.getFormattedString(
+                                    R.string.message_meeting_invitation_content_description,
+                                    subject
+                                )
+                            }
+                        }
+                    } else {
+                        Log.e(
+                            "$TAG Failed to parse content with iCalendar content type as conference info!"
+                        )
+                        text = firstContent.name.orEmpty()
+                    }
                 } else if (firstContent?.isVoiceRecording == true) {
                     text = AppUtils.getString(R.string.message_voice_message_content_description)
                 } else {
