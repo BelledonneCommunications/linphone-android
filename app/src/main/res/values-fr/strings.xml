@@ -412,6 +412,7 @@
     <string name="conversation_dialog_edit_subject">Renommer la conversation</string>
     <string name="conversation_dialog_subject_hint">Nom de la conversation</string>
     <string name="conversation_dialog_edit_subject_confirm_button">Confirmer</string>
+    <string name="conversation_message_deleted_toast">Le message a été supprimé</string>
 
     <string name="conversation_info_participants_list_title">Membres du groupe</string>
     <string name="conversation_info_add_participants_label">Ajouter des membres</string>
@@ -582,7 +583,9 @@
     <string name="call_zrtp_sas_validation_skip"><u>Passer</u></string>
 
     <!-- Keep <i></i> in following strings translations! -->
-    <string name="message_meeting_invitation_content_description"><i>invitation à une réunion: </i>%s</string>
+    <string name="message_meeting_invitation_content_description"><i>invitation à une réunion : </i>%s</string>
+    <string name="message_meeting_invitation_updated_content_description"><i>réunion mise à jour : </i>%s</string>
+    <string name="message_meeting_invitation_cancelled_content_description"><i>réunion annulée : </i>%s</string>
     <string name="message_voice_message_content_description"><i>message vocal</i></string>
 
     <string name="content_description_trusted_contact_icon">Contact is trusted</string>

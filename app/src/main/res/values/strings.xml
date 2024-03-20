@@ -460,6 +460,7 @@
     <string name="conversation_dialog_edit_subject">Edit conversation subject</string>
     <string name="conversation_dialog_subject_hint">Conversation subject</string>
     <string name="conversation_dialog_edit_subject_confirm_button">Confirm</string>
+    <string name="conversation_message_deleted_toast">Message has been deleted</string>
 
     <string name="conversation_info_participants_list_title">Group members</string>
     <string name="conversation_info_add_participants_label">Add participants</string>
@@ -637,6 +638,8 @@
 
     <!-- Keep <i></i> in following strings translations! -->
     <string name="message_meeting_invitation_content_description"><i>meeting invite: </i>%s</string>
+    <string name="message_meeting_invitation_updated_content_description"><i>meeting updated: </i>%s</string>
+    <string name="message_meeting_invitation_cancelled_content_description"><i>meeting cancelled: </i>%s</string>
     <string name="message_voice_message_content_description"><i>voice message</i></string>
 
     <!-- Content description for accessibility -->

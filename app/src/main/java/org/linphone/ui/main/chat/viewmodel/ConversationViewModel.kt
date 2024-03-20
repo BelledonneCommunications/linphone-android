@@ -113,6 +113,10 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
         MutableLiveData<Event<Pair<String, Int>>>()
     }
 
+    val messageDeletedEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     private var eventsList = arrayListOf<EventLogModel>()
 
     private val chatRoomListener = object : ChatRoomListenerStub() {
@@ -370,6 +374,7 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
 
             Log.i("$TAG Deleting message id [${chatMessageModel.id}]")
             chatRoom.deleteMessage(chatMessageModel.chatMessage)
+            messageDeletedEvent.postValue(Event(true))
         }
     }
 

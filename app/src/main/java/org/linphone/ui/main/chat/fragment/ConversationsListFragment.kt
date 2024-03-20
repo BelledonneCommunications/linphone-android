@@ -278,6 +278,12 @@ class ConversationsListFragment : AbstractTopBarFragment() {
             }
         }
 
+        sharedViewModel.forceRefreshConversations.observe(viewLifecycleOwner) {
+            it.consume {
+                listViewModel.filter()
+            }
+        }
+
         // TopBarFragment related
 
         setViewModelAndTitle(
