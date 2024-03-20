@@ -45,6 +45,7 @@ import org.linphone.core.ChatMessage
 import org.linphone.core.ChatMessageListenerStub
 import org.linphone.core.ChatMessageReaction
 import org.linphone.core.ChatRoom
+import org.linphone.core.ConferenceInfo
 import org.linphone.core.Content
 import org.linphone.core.Factory
 import org.linphone.core.Player
@@ -119,6 +120,10 @@ class MessageModel @WorkerThread constructor(
 
     // Below are for conferences info
     val meetingFound = MutableLiveData<Boolean>()
+
+    val meetingUpdated = MutableLiveData<Boolean>()
+
+    val meetingCancelled = MutableLiveData<Boolean>()
 
     val meetingDay = MutableLiveData<String>()
 
@@ -580,6 +585,9 @@ class MessageModel @WorkerThread constructor(
 
             meetingSubject.postValue(conferenceInfo.subject)
             meetingDescription.postValue(conferenceInfo.description)
+
+            meetingUpdated.postValue(conferenceInfo.state == ConferenceInfo.State.Updated)
+            meetingCancelled.postValue(conferenceInfo.state == ConferenceInfo.State.Cancelled)
 
             val timestamp = conferenceInfo.dateTime
             val duration = conferenceInfo.duration

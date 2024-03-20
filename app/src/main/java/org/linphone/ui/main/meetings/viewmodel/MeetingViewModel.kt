@@ -96,9 +96,8 @@ class MeetingViewModel @UiThread constructor() : ViewModel() {
                 chatRoomParams.isEncryptionEnabled = true
                 chatRoomParams.subject = "Meeting cancelled" // Won't be used
                 conferenceScheduler.sendInvitations(chatRoomParams) // Send cancel ICS
-
+            } else if (state == ConferenceScheduler.State.Error) {
                 operationInProgress.postValue(false)
-                conferenceCancelledEvent.postValue(Event(true))
             }
         }
 
@@ -118,6 +117,9 @@ class MeetingViewModel @UiThread constructor() : ViewModel() {
                 )
             }
             conferenceScheduler.removeListener(this)
+
+            operationInProgress.postValue(false)
+            conferenceCancelledEvent.postValue(Event(true))
         }
     }
 

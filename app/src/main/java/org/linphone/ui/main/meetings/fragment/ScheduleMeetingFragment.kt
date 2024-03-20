@@ -36,6 +36,7 @@ import com.google.android.material.timepicker.TimeFormat
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.MeetingScheduleFragmentBinding
+import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.ui.main.meetings.viewmodel.ScheduleMeetingViewModel
 import org.linphone.utils.Event
@@ -169,6 +170,10 @@ class ScheduleMeetingFragment : GenericFragment() {
         viewModel.conferenceCreatedEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.i("$TAG Conference was scheduled, leaving fragment and ask list to refresh")
+                (requireActivity() as MainActivity).showGreenToast(
+                    getString(R.string.meeting_info_created_toast),
+                    R.drawable.check
+                )
                 sharedViewModel.forceRefreshMeetingsListEvent.value = Event(true)
                 goBack()
             }

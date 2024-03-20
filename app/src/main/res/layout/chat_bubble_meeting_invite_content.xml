@@ -34,6 +34,48 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/day_background"/>
 
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/meeting_updated_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/conversation_message_meeting_updated_label"
+            android:textColor="@color/warning_600"
+            android:textSize="12sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:drawablePadding="8dp"
+            android:drawableStart="@drawable/warning_circle"
+            android:drawableTint="@color/warning_600"
+            android:visibility="@{model.meetingUpdated ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintTop_toTopOf="@id/header_background"
+            app:layout_constraintStart_toStartOf="@id/header_background"
+            app:layout_constraintEnd_toEndOf="@id/header_background"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/meeting_cancelled_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/conversation_message_meeting_cancelled_label"
+            android:textColor="@color/danger_500"
+            android:textSize="12sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:drawablePadding="8dp"
+            android:drawableStart="@drawable/x"
+            android:drawableTint="@color/danger_500"
+            android:visibility="@{model.meetingCancelled ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintTop_toBottomOf="@id/meeting_updated_title"
+            app:layout_constraintStart_toStartOf="@id/header_background"
+            app:layout_constraintEnd_toEndOf="@id/header_background"/>
+
         <View
             android:id="@+id/day_background"
             android:layout_width="0dp"
@@ -42,7 +84,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="-4dp"
             android:background="@drawable/shape_squircle_white_r10_background"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/meeting_cancelled_title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="@id/header_day"
             app:layout_constraintBottom_toBottomOf="@id/header_day_number"/>
@@ -101,7 +143,7 @@
             app:drawableTint="?attr/color_main2_600"
             app:layout_constraintStart_toEndOf="@id/day_background"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/meeting_cancelled_title"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_300"
@@ -174,6 +216,7 @@
             android:textColor="?attr/color_main2_800"
             android:maxLines="1"
             android:ellipsize="end"
+            android:visibility="@{model.meetingCancelled ? View.GONE : View.VISIBLE, default=gone}"
             android:drawableStart="@drawable/users"
             android:drawablePadding="4dp"
             app:drawableTint="?attr/color_main2_600"
@@ -200,6 +243,7 @@
             android:text="@string/meeting_waiting_room_join"
             android:maxLines="1"
             android:ellipsize="end"
+            android:visibility="@{model.meetingCancelled ? View.GONE : View.VISIBLE, default=gone}"
             app:layout_constraintStart_toEndOf="@id/participants"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/description"

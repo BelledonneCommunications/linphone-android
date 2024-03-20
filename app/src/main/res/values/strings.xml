@@ -528,6 +528,9 @@
     <string name="meeting_schedule_edit_title">Edit meeting</string>
     <string name="meeting_schedule_cancel_dialog_title">Cancel the meeting?</string>
     <string name="meeting_schedule_cancel_dialog_message">Do you want to cancel the meeting and send a notification to all participants?</string>
+    <string name="meeting_info_created_toast">Meeting has been created</string>
+    <string name="meeting_info_updated_toast">Meeting has been updated</string>
+    <string name="meeting_info_cancelled_toast">Meeting has been cancelled</string>
 
     <string name="meeting_waiting_room_join">Join</string>
 
@@ -631,16 +634,20 @@
     <string name="network_not_reachable">You aren\'t connected to internet</string>
     <string name="operation_in_progress_overlay">Operation in progress, please wait</string>
 
-    <!-- Keep <u></u> in following strings translations! -->
+    <!-- Keep <u></u> in the following strings translations! -->
     <string name="welcome_carousel_skip"><u>Skip</u></string>
     <string name="assistant_forgotten_password"><u>Forgotten password?</u></string>
     <string name="call_zrtp_sas_validation_skip"><u>Skip</u></string>
 
-    <!-- Keep <i></i> in following strings translations! -->
+    <!-- Keep <i></i> in the following strings translations! -->
     <string name="message_meeting_invitation_content_description"><i>meeting invite: </i>%s</string>
     <string name="message_meeting_invitation_updated_content_description"><i>meeting updated: </i>%s</string>
     <string name="message_meeting_invitation_cancelled_content_description"><i>meeting cancelled: </i>%s</string>
     <string name="message_voice_message_content_description"><i>voice message</i></string>
+
+    <!-- Keep <b></b> in the following strings translations! -->
+    <string name="conversation_message_meeting_updated_label"><b>Meeting has been updated</b></string>
+    <string name="conversation_message_meeting_cancelled_label"><b>Meeting has been cancelled!</b></string>
 
     <!-- Content description for accessibility -->
     <string name="content_description_trusted_contact_icon">Contact is trusted</string>

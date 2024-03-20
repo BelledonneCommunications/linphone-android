@@ -159,6 +159,10 @@ class MeetingFragment : SlidingPaneChildFragment() {
         viewModel.conferenceCancelledEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.i("$TAG Meeting has been cancelled successfully, deleting it")
+                (requireActivity() as MainActivity).showGreenToast(
+                    getString(R.string.meeting_info_cancelled_toast),
+                    R.drawable.trash_simple
+                )
                 viewModel.delete()
             }
         }
