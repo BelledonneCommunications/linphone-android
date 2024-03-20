@@ -116,7 +116,10 @@ class StartCallViewModel @UiThread constructor() : AddressSelectionViewModel() {
                 if (suggestion.isNotEmpty()) {
                     Log.i("$TAG Using numpad dial button to call [$suggestion]")
                     coreContext.postOnCoreThread { core ->
-                        val address = core.interpretUrl(suggestion, true)
+                        val address = core.interpretUrl(
+                            suggestion,
+                            LinphoneUtils.applyInternationalPrefix()
+                        )
                         if (address != null) {
                             Log.i("$TAG Calling [${address.asStringUriOnly()}]")
                             coreContext.startCall(address)

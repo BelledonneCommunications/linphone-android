@@ -199,7 +199,7 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
             for (address in sipAddresses) {
                 val data = address.value.value.orEmpty().trim()
                 if (data.isNotEmpty()) {
-                    val parsedAddress = core.interpretUrl(data, true)
+                    val parsedAddress = core.interpretUrl(data, false)
                     if (parsedAddress != null) {
                         friend.addAddress(parsedAddress)
                     }

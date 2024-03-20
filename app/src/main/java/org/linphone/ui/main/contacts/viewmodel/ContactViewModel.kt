@@ -408,7 +408,7 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                 coreContext.startCall(address)
             } else if (addressesCount == 0 && numbersCount == 1 && enablePhoneNumbers) {
                 val number = friend.phoneNumbers.first()
-                val address = core.interpretUrl(number, true)
+                val address = core.interpretUrl(number, LinphoneUtils.applyInternationalPrefix())
                 if (address != null) {
                     Log.i(
                         "$TAG Only 1 phone number found for contact [${friend.name}], starting audio call directly"
@@ -447,7 +447,7 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                 coreContext.startCall(address, params)
             } else if (addressesCount == 0 && numbersCount == 1 && enablePhoneNumbers) {
                 val number = friend.phoneNumbers.first()
-                val address = core.interpretUrl(number, true)
+                val address = core.interpretUrl(number, LinphoneUtils.applyInternationalPrefix())
                 if (address != null) {
                     Log.i(
                         "$TAG Only 1 phone number found for contact [${friend.name}], starting video call directly"
@@ -485,7 +485,7 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                 goToConversation(friend.addresses.first())
             } else if (addressesCount == 0 && numbersCount == 1 && enablePhoneNumbers) {
                 val number = friend.phoneNumbers.first()
-                val address = core.interpretUrl(number, true)
+                val address = core.interpretUrl(number, LinphoneUtils.applyInternationalPrefix())
                 if (address != null) {
                     Log.i(
                         "$TAG Only 1 phone number found for contact [${friend.name}], sending message directly"

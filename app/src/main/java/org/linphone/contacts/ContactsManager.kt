@@ -735,8 +735,12 @@ fun Friend.getListOfSipAddressesAndPhoneNumbers(listener: ContactNumberOrAddress
         }
 
         // phone numbers are disabled is secure mode unless linked to a SIP address
-        val enablePhoneNumbers = hasPresenceInfo || core.defaultAccount?.isInSecureMode() == false
-        val address = presenceAddress ?: core.interpretUrl(number.phoneNumber, true)
+        val defaultAccount = LinphoneUtils.getDefaultAccount()
+        val enablePhoneNumbers = hasPresenceInfo || defaultAccount?.isInSecureMode() == false
+        val address = presenceAddress ?: core.interpretUrl(
+            number.phoneNumber,
+            LinphoneUtils.applyInternationalPrefix(defaultAccount)
+        )
         val label = PhoneNumberUtils.vcardParamStringToAddressBookLabel(
             coreContext.context.resources,
             number.label ?: ""

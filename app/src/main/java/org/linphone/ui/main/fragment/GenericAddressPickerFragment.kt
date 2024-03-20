@@ -40,6 +40,7 @@ import org.linphone.ui.main.model.SelectedAddressModel
 import org.linphone.ui.main.model.isInSecureMode
 import org.linphone.ui.main.viewmodel.AddressSelectionViewModel
 import org.linphone.utils.DialogUtils
+import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.RecyclerViewHeaderDecoration
 
 @UiThread
@@ -169,7 +170,7 @@ abstract class GenericAddressPickerFragment : GenericFragment() {
                 onAddressSelected(address, friend)
             } else if (addressesCount == 0 && numbersCount == 1 && enablePhoneNumbers) {
                 val number = friend.phoneNumbers.first()
-                val address = core.interpretUrl(number, true)
+                val address = core.interpretUrl(number, LinphoneUtils.applyInternationalPrefix())
                 if (address != null) {
                     Log.i("$TAG Only 1 phone number found for contact [${friend.name}], using it")
                     onAddressSelected(address, friend)

@@ -594,10 +594,9 @@ class MainActivity : GenericActivity() {
         }.replace("%40", "@") // Unescape @ character if needed
 
         coreContext.postOnCoreThread {
-            val applyPrefix = LinphoneUtils.getDefaultAccount()?.params?.useInternationalPrefixForCallsAndChats ?: false
             val address = coreContext.core.interpretUrl(
                 sipUriToCall,
-                applyPrefix
+                LinphoneUtils.applyInternationalPrefix()
             )
             Log.i("$TAG Interpreted SIP URI is [${address?.asStringUriOnly()}]")
             if (address != null) {

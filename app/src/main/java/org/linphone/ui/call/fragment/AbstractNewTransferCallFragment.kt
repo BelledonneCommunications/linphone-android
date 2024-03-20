@@ -45,6 +45,7 @@ import org.linphone.ui.main.history.model.ContactOrSuggestionModel
 import org.linphone.ui.main.history.viewmodel.StartCallViewModel
 import org.linphone.ui.main.model.isInSecureMode
 import org.linphone.utils.DialogUtils
+import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.RecyclerViewHeaderDecoration
 import org.linphone.utils.hideKeyboard
 import org.linphone.utils.setKeyboardInsetListener
@@ -233,7 +234,7 @@ abstract class AbstractNewTransferCallFragment : GenericCallFragment() {
                 action(address)
             } else if (addressesCount == 0 && numbersCount == 1 && enablePhoneNumbers) {
                 val number = friend.phoneNumbers.first()
-                val address = core.interpretUrl(number, true)
+                val address = core.interpretUrl(number, LinphoneUtils.applyInternationalPrefix())
                 if (address != null) {
                     Log.i(
                         "$TAG Only 1 phone number found for contact [${friend.name}], starting call directly"

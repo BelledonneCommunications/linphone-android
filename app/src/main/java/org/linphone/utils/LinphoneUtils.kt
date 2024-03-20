@@ -59,6 +59,12 @@ class LinphoneUtils {
         }
 
         @WorkerThread
+        fun applyInternationalPrefix(account: Account? = null): Boolean {
+            return account?.params?.useInternationalPrefixForCallsAndChats
+                ?: (getDefaultAccount()?.params?.useInternationalPrefixForCallsAndChats ?: false)
+        }
+
+        @WorkerThread
         fun getAddressAsCleanStringUriOnly(address: Address): String {
             val scheme = address.scheme ?: "sip"
             val username = address.username
