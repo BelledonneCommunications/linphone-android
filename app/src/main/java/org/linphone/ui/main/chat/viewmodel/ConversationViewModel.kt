@@ -229,13 +229,7 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
         @WorkerThread
         override fun onEphemeralEvent(chatRoom: ChatRoom, eventLog: EventLog) {
             Log.i("$TAG Adding new ephemeral event [${eventLog.type}]")
-            val list = arrayListOf<EventLogModel>()
-            list.addAll(eventsList)
-            val fakeFriend = chatRoom.core.createFriend()
-            val avatarModel = ContactAvatarModel(fakeFriend)
-            list.add(EventLogModel(eventLog, avatarModel))
-            eventsList = list
-            events.postValue(eventsList)
+            addEvents(arrayOf(eventLog))
 
             ephemeralLifetime.postValue(
                 if (!chatRoom.isEphemeralEnabled) 0L else chatRoom.ephemeralLifetime
@@ -258,13 +252,12 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
                 // Update previous & next messages if needed
                 updatePreviousAndNextMessages(list, found)
 
+                Log.i("$TAG Removing message from conversation events list")
                 list.remove(found)
                 eventsList = list
                 events.postValue(eventsList)
-
-                Log.i("$TAG Message was removed from events list")
             } else {
-                Log.w("$TAG Failed to find matching message in events list")
+                Log.e("$TAG Failed to find matching message in conversation events list")
             }
         }
     }
@@ -367,12 +360,17 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
                 // Update previous & next messages if needed
                 updatePreviousAndNextMessages(list, found)
 
+                Log.i("$TAG Removing chat message id [${chatMessageModel.id}] from events list")
                 list.remove(found)
                 eventsList = list
                 events.postValue(eventsList)
+            } else {
+                Log.e(
+                    "$TAG Failed to find chat message id [${chatMessageModel.id}] in events list!"
+                )
             }
 
-            Log.i("$TAG Deleting message id [${chatMessageModel.id}]")
+            Log.i("$TAG Deleting message id [${chatMessageModel.id}] from database")
             chatRoom.deleteMessage(chatMessageModel.chatMessage)
             messageDeletedEvent.postValue(Event(true))
         }
@@ -469,6 +467,7 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
                     }
                 }
 
+                Log.i("$TAG More data loaded, adding it to conversation events list")
                 list.addAll(eventsList)
                 eventsList = list
                 events.postValue(eventsList)
@@ -555,6 +554,7 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
 
         val history = chatRoom.getHistoryEvents(MESSAGES_PER_PAGE)
         val list = getEventsListFromHistory(history, filter)
+        Log.i("$TAG Extracted [${list.size}] events from conversation history in database")
         eventsList = list
         events.postValue(eventsList)
 
@@ -567,6 +567,23 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
 
     @WorkerThread
     private fun addEvents(eventLogs: Array<EventLog>) {
+        // TODO FIXME: remove later, for debug purposes
+        Log.e("$TAG Adding ${eventLogs.size} events to conversation")
+        for (event in eventLogs) {
+            if (event.type == EventLog.Type.ConferenceChatMessage) {
+                val message = event.chatMessage
+                val describe = if (message != null) {
+                    LinphoneUtils.getTextDescribingMessage(message)
+                } else {
+                    "Failed to get message for event log [$event]"
+                }
+                Log.e("$TAG Adding chat message event: [$describe]")
+            } else {
+                Log.e("$TAG Adding [${event.type}] event: [$event]")
+            }
+        }
+        // End of TODO FIXME
+
         val list = arrayListOf<EventLogModel>()
         list.addAll(eventsList)
         val lastEvent = list.lastOrNull()
@@ -601,7 +618,6 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
         val groupChatRoom = LinphoneUtils.isChatRoomAGroup(chatRoom)
         val eventsList = arrayListOf<EventLogModel>()
 
-        // Handle all events in group, then re-start a new group with current item
         var index = 0
         for (groupedEvent in groupedEventLogs) {
             val avatar = coreContext.contactsManager.getContactAvatarModelForAddress(
@@ -641,45 +657,59 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
     private fun getEventsListFromHistory(history: Array<EventLog>, filter: String = ""): ArrayList<EventLogModel> {
         val eventsList = arrayListOf<EventLogModel>()
         val groupedEventLogs = arrayListOf<EventLog>()
-        for (event in history) {
-            if (filter.isNotEmpty()) {
-                if (event.type == EventLog.Type.ConferenceChatMessage) {
-                    val message = event.chatMessage ?: continue
-                    val fromAddress = message.fromAddress
-                    val model = coreContext.contactsManager.getContactAvatarModelForAddress(
-                        fromAddress
-                    )
-                    if (
-                        !model.name.value.orEmpty().contains(filter, ignoreCase = true) &&
-                        !fromAddress.asStringUriOnly().contains(filter, ignoreCase = true) &&
-                        !message.utf8Text.orEmpty().contains(filter, ignoreCase = true)
-                    ) {
+
+        if (history.size == 1) {
+            // TODO FIXME: remove later, for debug purposes
+            Log.e("$TAG Adding a single event to conversation")
+
+            // If there is a single event, improve processing speed by skipping grouping tasks
+            val event = history[0]
+            eventsList.addAll(processGroupedEvents(arrayListOf(event)))
+        } else {
+            // TODO FIXME: remove later, for debug purposes
+            Log.e("$TAG Processing list of events (${history.size}) to add to conversation")
+
+            for (event in history) {
+                if (filter.isNotEmpty()) {
+                    if (event.type == EventLog.Type.ConferenceChatMessage) {
+                        val message = event.chatMessage ?: continue
+                        val fromAddress = message.fromAddress
+                        val model = coreContext.contactsManager.getContactAvatarModelForAddress(
+                            fromAddress
+                        )
+                        if (
+                            !model.name.value.orEmpty().contains(filter, ignoreCase = true) &&
+                            !fromAddress.asStringUriOnly().contains(filter, ignoreCase = true) &&
+                            !message.utf8Text.orEmpty().contains(filter, ignoreCase = true)
+                        ) {
+                            continue
+                        }
+                    } else {
                         continue
                     }
-                } else {
+                }
+
+                if (groupedEventLogs.isEmpty()) {
+                    groupedEventLogs.add(event)
                     continue
                 }
-            }
 
-            if (groupedEventLogs.isEmpty()) {
+                val previousGroupEvent = groupedEventLogs.last()
+                val groupEvents = shouldWeGroupTwoEvents(event, previousGroupEvent)
+
+                // Handle all events in group, then re-start a new group with current item
+                if (!groupEvents) {
+                    eventsList.addAll(processGroupedEvents(groupedEventLogs))
+                    groupedEventLogs.clear()
+                }
+
                 groupedEventLogs.add(event)
-                continue
             }
 
-            val previousGroupEvent = groupedEventLogs.last()
-            val groupEvents = shouldWeGroupTwoEvents(event, previousGroupEvent)
-
-            if (!groupEvents) {
+            if (groupedEventLogs.isNotEmpty()) {
                 eventsList.addAll(processGroupedEvents(groupedEventLogs))
                 groupedEventLogs.clear()
             }
-
-            groupedEventLogs.add(event)
-        }
-
-        if (groupedEventLogs.isNotEmpty()) {
-            eventsList.addAll(processGroupedEvents(groupedEventLogs))
-            groupedEventLogs.clear()
         }
 
         return eventsList
