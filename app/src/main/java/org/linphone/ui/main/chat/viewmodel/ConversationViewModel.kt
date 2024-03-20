@@ -453,9 +453,25 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
 
                 val history = chatRoom.getHistoryRangeEvents(totalItemsCount, upperBound)
                 val list = getEventsListFromHistory(history, searchFilter.value.orEmpty())
-                val array = arrayOf<EventLog>()
-                list.toArray(array)
-                addEvents(array)
+
+                val lastEvent = list.lastOrNull()
+                val newEvent = eventsList.firstOrNull()
+                if (lastEvent != null && newEvent != null && shouldWeGroupTwoEvents(
+                        newEvent.eventLog,
+                        lastEvent.eventLog
+                    )
+                ) {
+                    if (lastEvent.model is MessageModel) {
+                        lastEvent.model.groupedWithNextMessage.postValue(true)
+                    }
+                    if (newEvent.model is MessageModel) {
+                        newEvent.model.groupedWithPreviousMessage.postValue(true)
+                    }
+                }
+
+                list.addAll(eventsList)
+                eventsList = list
+                events.postValue(eventsList)
             }
         }
     }
