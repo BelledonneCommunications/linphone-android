@@ -242,7 +242,7 @@ class ContactLoader : LoaderManager.LoaderCallbacks<Cursor> {
                                             )
                                         )
                                     if (sipAddress != null) {
-                                        val address = core.interpretUrl(sipAddress, true)
+                                        val address = core.interpretUrl(sipAddress, false)
                                         if (address != null &&
                                             friendsAddresses.find {
                                                 it.weakEqual(address)
