@@ -249,7 +249,10 @@ class NotificationsManager @MainThread constructor(private val context: Context)
                             "$TAG After removing original reaction notification there is still messages, updating notification"
                         )
                         val me = coreContext.contactsManager.getMePerson(chatRoom.localAddress)
-                        val pendingIntent = getChatRoomPendingIntent(chatRoom)
+                        val pendingIntent = getChatRoomPendingIntent(
+                            chatRoom,
+                            notifiable.notificationId
+                        )
                         val notification = createMessageNotification(
                             notifiable,
                             pendingIntent,
@@ -599,7 +602,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
         if (notifiable.messages.isNotEmpty()) {
             val me = coreContext.contactsManager.getMePerson(chatRoom.localAddress)
-            val pendingIntent = getChatRoomPendingIntent(chatRoom)
+            val pendingIntent = getChatRoomPendingIntent(chatRoom, notifiable.notificationId)
             val notification = createMessageNotification(
                 notifiable,
                 pendingIntent,
@@ -664,7 +667,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
         if (notifiable.messages.isNotEmpty()) {
             val me = coreContext.contactsManager.getMePerson(chatRoom.localAddress)
-            val pendingIntent = getChatRoomPendingIntent(chatRoom)
+            val pendingIntent = getChatRoomPendingIntent(chatRoom, notifiable.notificationId)
             val notification = createMessageNotification(
                 notifiable,
                 pendingIntent,
@@ -1053,7 +1056,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         notifiable.messages.add(reply)
 
         val chatRoom = message.chatRoom
-        val pendingIntent = getChatRoomPendingIntent(chatRoom)
+        val pendingIntent = getChatRoomPendingIntent(chatRoom, notifiable.notificationId)
         val me = coreContext.contactsManager.getMePerson(chatRoom.localAddress)
         val notification = createMessageNotification(
             notifiable,
@@ -1216,7 +1219,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
     }
 
     @WorkerThread
-    private fun getChatRoomPendingIntent(chatRoom: ChatRoom): PendingIntent {
+    private fun getChatRoomPendingIntent(chatRoom: ChatRoom, notificationId: Int): PendingIntent {
         val args = Bundle()
         args.putBoolean("Chat", true)
         args.putString("RemoteSipUri", chatRoom.peerAddress.asStringUriOnly())
@@ -1230,7 +1233,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
                 }
             )
             getPendingIntent(
-                0,
+                notificationId,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
                 args // Need to pass args here too for Remote & Local SIP URIs
             )!!
