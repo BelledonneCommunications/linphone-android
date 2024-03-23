@@ -185,6 +185,10 @@ class ConversationFragment : SlidingPaneChildFragment() {
 
     private val dataObserver = object : AdapterDataObserver() {
         override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+            if (positionStart == adapter.itemCount - itemCount) {
+                adapter.notifyItemChanged(positionStart - 1) // For grouping purposes
+            }
+
             if (viewModel.isUserScrollingUp.value == true) {
                 Log.i(
                     "$TAG [$itemCount] events have been loaded but user was scrolling up in conversation, do not scroll"
@@ -203,10 +207,6 @@ class ConversationFragment : SlidingPaneChildFragment() {
                 )
             }
             scrollToFirstUnreadMessageOrBottom()
-
-            if (positionStart > 0) {
-                adapter.notifyItemChanged(positionStart - 1) // For grouping purposes
-            }
         }
     }
 

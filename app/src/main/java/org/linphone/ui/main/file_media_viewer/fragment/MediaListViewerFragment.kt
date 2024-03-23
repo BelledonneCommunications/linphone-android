@@ -115,11 +115,33 @@ class MediaListViewerFragment : GenericFragment() {
 
             viewPager.registerOnPageChangeCallback(pageListener)
 
-            val index = it.indexOfFirst { model ->
+            var index = it.indexOfFirst { model ->
                 model.file == path
             }
-            Log.i("$TAG Path [$path] is at index [$index]")
+
+            if (index == -1) {
+                Log.i(
+                    "$TAG Path [$path] not found in media list (expected if VFS is enabled), trying using file name"
+                )
+                val fileName = File(path).name
+                val underscore = fileName.indexOf("_")
+                val originalFileName = if (underscore != -1 && underscore < 2) {
+                    fileName.subSequence(underscore, fileName.length)
+                } else {
+                    fileName
+                }
+                index = it.indexOfFirst { model ->
+                    model.file.endsWith(originalFileName)
+                }
+                if (index == -1) {
+                    Log.w(
+                        "$TAG Path [$path] not found either using filename [$originalFileName] match"
+                    )
+                }
+            }
+
             val position = if (index == -1) {
+                Log.e("$TAG File [$path] not found, using latest one available instead!")
                 count - 1
             } else {
                 index

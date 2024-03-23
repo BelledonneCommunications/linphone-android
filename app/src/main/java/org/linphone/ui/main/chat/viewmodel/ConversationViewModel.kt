@@ -567,23 +567,6 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
 
     @WorkerThread
     private fun addEvents(eventLogs: Array<EventLog>) {
-        // TODO FIXME: remove later, for debug purposes
-        Log.e("$TAG Adding ${eventLogs.size} events to conversation")
-        for (event in eventLogs) {
-            if (event.type == EventLog.Type.ConferenceChatMessage) {
-                val message = event.chatMessage
-                val describe = if (message != null) {
-                    LinphoneUtils.getTextDescribingMessage(message)
-                } else {
-                    "Failed to get message for event log [$event]"
-                }
-                Log.e("$TAG Adding chat message event: [$describe]")
-            } else {
-                Log.e("$TAG Adding [${event.type}] event: [$event]")
-            }
-        }
-        // End of TODO FIXME
-
         val list = arrayListOf<EventLogModel>()
         list.addAll(eventsList)
         val lastEvent = list.lastOrNull()
@@ -659,16 +642,10 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
         val groupedEventLogs = arrayListOf<EventLog>()
 
         if (history.size == 1) {
-            // TODO FIXME: remove later, for debug purposes
-            Log.e("$TAG Adding a single event to conversation")
-
             // If there is a single event, improve processing speed by skipping grouping tasks
             val event = history[0]
             eventsList.addAll(processGroupedEvents(arrayListOf(event)))
         } else {
-            // TODO FIXME: remove later, for debug purposes
-            Log.e("$TAG Processing list of events (${history.size}) to add to conversation")
-
             for (event in history) {
                 if (filter.isNotEmpty()) {
                     if (event.type == EventLog.Type.ConferenceChatMessage) {

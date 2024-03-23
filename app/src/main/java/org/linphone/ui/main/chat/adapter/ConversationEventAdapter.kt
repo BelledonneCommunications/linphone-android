@@ -245,16 +245,14 @@ class ConversationEventAdapter :
         }
 
         override fun areContentsTheSame(oldItem: EventLogModel, newItem: EventLogModel): Boolean {
-            return if (oldItem.isEvent && newItem.isEvent) {
-                true
-            } else if (!oldItem.isEvent && !newItem.isEvent) {
+            return if (!oldItem.isEvent && !newItem.isEvent) {
                 val oldModel = (oldItem.model as MessageModel)
                 val newModel = (newItem.model as MessageModel)
-                oldModel.statusIcon.value == newModel.statusIcon.value &&
+                newModel.isRead &&
                     oldModel.groupedWithNextMessage.value == newModel.groupedWithNextMessage.value &&
                     oldModel.groupedWithPreviousMessage.value == newModel.groupedWithPreviousMessage.value
             } else {
-                false
+                true
             }
         }
     }
