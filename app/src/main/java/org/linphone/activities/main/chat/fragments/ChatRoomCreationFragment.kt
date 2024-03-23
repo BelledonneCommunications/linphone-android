@@ -64,7 +64,9 @@ class ChatRoomCreationFragment : SecureFragment<ChatRoomCreationFragmentBinding>
 
         adapter = ContactsSelectionAdapter(viewLifecycleOwner)
         adapter.setGroupChatCapabilityRequired(viewModel.createGroupChat.value == true)
-        adapter.setLimeCapabilityRequired(viewModel.isEncrypted.value == true)
+        adapter.setLimeCapabilityRequired(
+            viewModel.isEncrypted.value == true && !corePreferences.allowEndToEndEncryptedChatWithoutPresence
+        )
         binding.contactsList.adapter = adapter
 
         val layoutManager = LinearLayoutManager(requireContext())
