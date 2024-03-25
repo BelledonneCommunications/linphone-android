@@ -318,7 +318,9 @@ fun ImageView.startAnimatedDrawable(start: Boolean = true) {
 @BindingAdapter("coil")
 fun ImageView.loadCircleFileWithCoil(file: String?) {
     if (file != null) {
-        load(file)
+        load(file) {
+            transformations(CircleCropTransformation())
+        }
     }
 }
 

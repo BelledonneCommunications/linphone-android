@@ -92,8 +92,8 @@
                     app:layout_constraintBottom_toBottomOf="@id/avatar" />
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    android:onClick="@{pickImageClickListener}"
                     style="@style/default_text_style"
+                    android:onClick="@{pickImageClickListener}"
                     android:id="@+id/add_picture_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -108,8 +108,8 @@
                     app:layout_constraintEnd_toEndOf="parent"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    android:onClick="@{pickImageClickListener}"
                     style="@style/default_text_style"
+                    android:onClick="@{pickImageClickListener}"
                     android:id="@+id/edit_picture_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -125,8 +125,8 @@
                     app:layout_constraintEnd_toStartOf="@id/remove_picture_label"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    android:onClick="@{deleteImageClickListener}"
                     style="@style/default_text_style"
+                    android:onClick="@{deleteImageClickListener}"
                     android:id="@+id/remove_picture_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
