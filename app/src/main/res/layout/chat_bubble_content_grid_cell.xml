@@ -22,7 +22,7 @@
             android:id="@+id/file_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="@{model.isImage || model.isVideoPreview ? View.GONE : View.VISIBLE, default=gone}"
+            android:visibility="@{model.isImage || model.isVideoPreview ? View.GONE : View.VISIBLE}"
             app:constraint_referenced_ids="file_name, file_size, file_background, file_icon" />
 
         <ImageView
@@ -80,19 +80,19 @@
             app:tint="?attr/color_main2_600" />
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
-            android:id="@+id/download_progress"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:id="@+id/transfer_progress"
+            android:layout_width="@dimen/chat_bubble_grid_image_size"
+            android:layout_height="@dimen/chat_bubble_grid_image_size"
+            android:padding="18dp"
             android:indeterminate="false"
-            android:progress="@{model.downloadProgress}"
+            android:progress="@{model.transferProgress}"
             android:max="100"
-            android:visibility="@{!model.isWaitingToBeDownloaded || model.downloadProgress == -1 || model.downloadProgress >= 100 ? View.GONE : View.VISIBLE}"
+            android:visibility="@{model.transferProgress == -1 || model.transferProgress >= 100 ? View.GONE : View.VISIBLE}"
             app:trackColor="?attr/color_main1_100"
             app:indicatorColor="?attr/color_main1_500"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/file_icon"
             tools:progress="40" />
 
         <View

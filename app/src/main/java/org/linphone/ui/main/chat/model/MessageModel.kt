@@ -171,21 +171,27 @@ class MessageModel @WorkerThread constructor(
 
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
-    private var downloadingFileModel: FileModel? = null
+    private var transferringFileModel: FileModel? = null
+
+    private var allFilesDownloaded = true
 
     private val chatMessageListener = object : ChatMessageListenerStub() {
         @WorkerThread
         override fun onMsgStateChanged(message: ChatMessage, messageState: ChatMessage.State?) {
-            statusIcon.postValue(LinphoneUtils.getChatIconResId(chatMessage.state))
+            if (messageState != ChatMessage.State.FileTransferDone && messageState != ChatMessage.State.FileTransferInProgress) {
+                statusIcon.postValue(LinphoneUtils.getChatIconResId(chatMessage.state))
 
-            if (messageState == ChatMessage.State.FileTransferDone) {
+                if (messageState == ChatMessage.State.Displayed) {
+                    isRead = chatMessage.isRead
+                }
+            } else if (messageState == ChatMessage.State.FileTransferDone) {
                 Log.i("$TAG File transfer is done")
-                downloadingFileModel?.downloadProgress?.postValue(-1)
-                downloadingFileModel = null
-                computeContentsList()
+                transferringFileModel?.transferProgress?.postValue(-1)
+                transferringFileModel = null
+                if (!allFilesDownloaded) {
+                    computeContentsList()
+                }
             }
-
-            isRead = chatMessage.isRead
         }
 
         @WorkerThread
@@ -209,17 +215,16 @@ class MessageModel @WorkerThread constructor(
             offset: Int,
             total: Int
         ) {
-            val model = downloadingFileModel
-            if (model != null) {
-                val percent = ((offset * 100.0) / total).toInt() // Conversion from int to double and back to int is required
-                model.downloadProgress.postValue(percent)
-            } else {
-                Log.w("$TAG A file is being downloaded but no downloadingFileModel set!")
+            val percent = ((offset * 100.0) / total).toInt() // Conversion from int to double and back to int is required
+
+            val model = transferringFileModel
+            if (model == null) {
+                Log.w("$TAG A file is being uploaded/downloaded but no transferringFileModel set!")
                 val found = filesList.value.orEmpty().find {
                     it.fileName == content.name
                 }
                 if (found != null) {
-                    downloadingFileModel = found
+                    transferringFileModel = found
                     Log.i("$TAG Found matching FileModel in files list using content name")
                 } else {
                     Log.w(
@@ -227,6 +232,7 @@ class MessageModel @WorkerThread constructor(
                     )
                 }
             }
+            model?.transferProgress?.postValue(percent)
         }
     }
 
@@ -314,6 +320,7 @@ class MessageModel @WorkerThread constructor(
         val filesPath = arrayListOf<FileModel>()
 
         val contents = chatMessage.contents
+        allFilesDownloaded = true
         for (content in contents) {
             val isFileEncrypted = content.isFileEncrypted
 
@@ -388,6 +395,7 @@ class MessageModel @WorkerThread constructor(
                     Log.d(
                         "$TAG Found file content (not downloaded yet) with type [${content.type}/${content.subtype}] and name [${content.name}]"
                     )
+                    allFilesDownloaded = false
                     filesContentCount += 1
                     val name = content.name ?: ""
                     if (name.isNotEmpty()) {
@@ -439,8 +447,8 @@ class MessageModel @WorkerThread constructor(
                     "$TAG File [$contentName] will be downloaded at [${content.filePath}]"
                 )
 
-                model.downloadProgress.postValue(0)
-                downloadingFileModel = model
+                model.transferProgress.postValue(0)
+                transferringFileModel = model
                 chatMessage.downloadContent(content)
             } else {
                 Log.e("$TAG Content name is null, can't download it!")

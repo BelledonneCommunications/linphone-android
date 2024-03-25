@@ -29,7 +29,7 @@ class FileModel @AnyThread constructor(
 
     val formattedFileSize = MutableLiveData<String>()
 
-    val downloadProgress = MutableLiveData<Int>()
+    val transferProgress = MutableLiveData<Int>()
 
     val mimeType: FileUtils.MimeType
 
@@ -50,7 +50,7 @@ class FileModel @AnyThread constructor(
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     init {
-        downloadProgress.postValue(-1)
+        transferProgress.postValue(-1)
         formattedFileSize.postValue(FileUtils.bytesToDisplayableSize(fileSize))
 
         if (!isWaitingToBeDownloaded) {
