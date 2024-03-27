@@ -791,4 +791,8 @@
     <string name="content_description_presence_online">Benutzer ist online</string>
     <string name="content_description_presence_offline">Benutzer ist offline</string>
     <string name="content_description_emoji_picker">Emoji-Auswahl ein-/ausblenden</string>
+    <string name="content_description_toggle_layout_menu">Gruppenanruf-Layoutmenü anzeigen/verbergen</string>
+    <string name="content_description_continue_chat_room_creation">Zum letzten Schritt der Chatraumerstellung</string>
+    <string name="content_description_toggle_conference_info_details">Meeting-Informationsdetails ein/ausschalten</string>
+    <string name="content_description_start_call">Anruf tätigen</string>
 </resources>
