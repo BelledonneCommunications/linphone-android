@@ -502,6 +502,10 @@ class CorePreferences constructor(private val context: Context) {
     val allowEndToEndEncryptedChatWithoutPresence: Boolean
         get() = config.getBool("app", "allow_lime_friend_without_capability", false)
 
+    // Turning this ON will show the group chat button even if there is no conference capability in presence (or no presence)
+    val allowGroupChatWithoutPresence: Boolean
+        get() = config.getBool("app", "allow_group_friend_without_capability", false)
+
     val showEmojiPickerButton: Boolean
         get() = config.getBool("app", "show_emoji_picker", true)
 
