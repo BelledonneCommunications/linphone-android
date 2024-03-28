@@ -179,6 +179,9 @@ dependencies {
     //noinspection GroovyConstructorNamedArguments
     android.defaultConfig.manifestPlaceholders = [appAuthRedirectScheme: 'org.linphone']
 
+    // To be able to parse native crash tombstone and print them with SDK logs the next time the app will start
+    implementation "com.google.protobuf:protobuf-javalite:3.22.3"
+
     //noinspection GradleDynamicVersion
     implementation 'org.linphone:linphone-sdk-android:5.4.+'
 }

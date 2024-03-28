@@ -101,6 +101,8 @@ class ConversationMediaListFragment : SlidingPaneChildFragment() {
                 return true
             }
         }
+        // This isn't supported by GridLayoutManager, it will crash
+        // layoutManager.stackFromEnd = true
         binding.mediaList.layoutManager = layoutManager
 
         if (binding.mediaList.adapter != adapter) {
