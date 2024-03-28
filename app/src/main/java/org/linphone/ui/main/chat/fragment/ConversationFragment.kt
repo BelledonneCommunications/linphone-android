@@ -185,7 +185,10 @@ class ConversationFragment : SlidingPaneChildFragment() {
 
     private val dataObserver = object : AdapterDataObserver() {
         override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-            if (positionStart == adapter.itemCount - itemCount) {
+            if (positionStart > 0 && positionStart == adapter.itemCount - itemCount) {
+                Log.i(
+                    "$TAG Item(s) inserted at the end, notify item changed at position [${positionStart - 1}]"
+                )
                 adapter.notifyItemChanged(positionStart - 1) // For grouping purposes
             }
 
@@ -399,11 +402,10 @@ class ConversationFragment : SlidingPaneChildFragment() {
             }
         }
 
-        viewModel.events.observe(viewLifecycleOwner) { items ->
-            if (items != adapter.currentList || items.size != adapter.itemCount) {
-                adapter.submitList(items)
-                Log.i("$TAG Events (messages) list updated with [${items.size}] items")
-            }
+        viewModel.updateEvents.observe(viewLifecycleOwner) {
+            val items = viewModel.eventsList
+            adapter.submitList(items)
+            Log.i("$TAG Events (messages) list updated, contains [${items.size}] items")
 
             (view.parent as? ViewGroup)?.doOnPreDraw {
                 sharedViewModel.openSlidingPaneEvent.value = Event(true)
@@ -720,9 +722,11 @@ class ConversationFragment : SlidingPaneChildFragment() {
 
             @UiThread
             override fun onScrolledToEnd() {
-                viewModel.isUserScrollingUp.value = false
-                Log.i("$TAG Last message is visible, considering conversation as read")
-                viewModel.markAsRead()
+                if (viewModel.isUserScrollingUp.value == true) {
+                    viewModel.isUserScrollingUp.value = false
+                    Log.i("$TAG Last message is visible, considering conversation as read")
+                    viewModel.markAsRead()
+                }
             }
         }
         binding.eventsList.addOnScrollListener(scrollListener)

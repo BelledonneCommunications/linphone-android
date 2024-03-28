@@ -59,7 +59,7 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
 
     val avatarModel = MutableLiveData<ContactAvatarModel>()
 
-    val events = MutableLiveData<ArrayList<EventLogModel>>()
+    val isEmpty = MutableLiveData<Boolean>()
 
     val isMuted = MutableLiveData<Boolean>()
 
@@ -117,7 +117,11 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
         MutableLiveData<Event<Boolean>>()
     }
 
-    private var eventsList = arrayListOf<EventLogModel>()
+    val updateEvents: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
+    var eventsList = arrayListOf<EventLogModel>()
 
     private val chatRoomListener = object : ChatRoomListenerStub() {
         @WorkerThread
@@ -255,7 +259,8 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
                 Log.i("$TAG Removing message from conversation events list")
                 list.remove(found)
                 eventsList = list
-                events.postValue(eventsList)
+                updateEvents.postValue(Event(true))
+                isEmpty.postValue(eventsList.isEmpty())
             } else {
                 Log.e("$TAG Failed to find matching message in conversation events list")
             }
@@ -363,7 +368,8 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
                 Log.i("$TAG Removing chat message id [${chatMessageModel.id}] from events list")
                 list.remove(found)
                 eventsList = list
-                events.postValue(eventsList)
+                updateEvents.postValue(Event(true))
+                isEmpty.postValue(eventsList.isEmpty())
             } else {
                 Log.e(
                     "$TAG Failed to find chat message id [${chatMessageModel.id}] in events list!"
@@ -454,23 +460,20 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
 
                 val lastEvent = list.lastOrNull()
                 val newEvent = eventsList.firstOrNull()
-                if (lastEvent != null && newEvent != null && shouldWeGroupTwoEvents(
+                if (lastEvent != null && lastEvent.model is MessageModel && newEvent != null && newEvent.model is MessageModel && shouldWeGroupTwoEvents(
                         newEvent.eventLog,
                         lastEvent.eventLog
                     )
                 ) {
-                    if (lastEvent.model is MessageModel) {
-                        lastEvent.model.groupedWithNextMessage.postValue(true)
-                    }
-                    if (newEvent.model is MessageModel) {
-                        newEvent.model.groupedWithPreviousMessage.postValue(true)
-                    }
+                    lastEvent.model.groupedWithNextMessage.postValue(true)
+                    newEvent.model.groupedWithPreviousMessage.postValue(true)
                 }
 
                 Log.i("$TAG More data loaded, adding it to conversation events list")
                 list.addAll(eventsList)
                 eventsList = list
-                events.postValue(eventsList)
+                updateEvents.postValue(Event(true))
+                isEmpty.postValue(eventsList.isEmpty())
             }
         }
     }
@@ -498,7 +501,8 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
         val group = LinphoneUtils.isChatRoomAGroup(chatRoom)
         isGroup.postValue(group)
 
-        val empty = chatRoom.hasCapability(ChatRoom.Capabilities.Conference.toInt()) && chatRoom.participants.isEmpty()
+        val empty =
+            chatRoom.hasCapability(ChatRoom.Capabilities.Conference.toInt()) && chatRoom.participants.isEmpty()
         val readOnly = chatRoom.isReadOnly || empty
         isReadOnly.postValue(readOnly)
         if (readOnly) {
@@ -556,7 +560,8 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
         val list = getEventsListFromHistory(history, filter)
         Log.i("$TAG Extracted [${list.size}] events from conversation history in database")
         eventsList = list
-        events.postValue(eventsList)
+        updateEvents.postValue(Event(true))
+        isEmpty.postValue(eventsList.isEmpty())
 
         if (filter.isNotEmpty() && eventsList.isEmpty()) {
             noMatchingResultForFilter.postValue(true)
@@ -567,6 +572,8 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
 
     @WorkerThread
     private fun addEvents(eventLogs: Array<EventLog>) {
+        Log.i("$TAG Adding [${eventLogs.size}] events")
+        // Need to use a new list, otherwise ConversationFragment's dataObserver isn't triggered...
         val list = arrayListOf<EventLogModel>()
         list.addAll(eventsList)
         val lastEvent = list.lastOrNull()
@@ -576,22 +583,20 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
             searchFilter.value.orEmpty().trim()
         )
         val newEvent = newList.firstOrNull()
-        if (lastEvent != null && newEvent != null && shouldWeGroupTwoEvents(
+
+        if (lastEvent != null && lastEvent.model is MessageModel && newEvent != null && newEvent.model is MessageModel && shouldWeGroupTwoEvents(
                 newEvent.eventLog,
                 lastEvent.eventLog
             )
         ) {
-            if (lastEvent.model is MessageModel) {
-                lastEvent.model.groupedWithNextMessage.postValue(true)
-            }
-            if (newEvent.model is MessageModel) {
-                newEvent.model.groupedWithPreviousMessage.postValue(true)
-            }
+            lastEvent.model.groupedWithNextMessage.postValue(true)
+            newEvent.model.groupedWithPreviousMessage.postValue(true)
         }
 
         list.addAll(newList)
         eventsList = list
-        events.postValue(eventsList)
+        updateEvents.postValue(Event(true))
+        isEmpty.postValue(eventsList.isEmpty())
     }
 
     @WorkerThread
@@ -637,7 +642,10 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
     }
 
     @WorkerThread
-    private fun getEventsListFromHistory(history: Array<EventLog>, filter: String = ""): ArrayList<EventLogModel> {
+    private fun getEventsListFromHistory(
+        history: Array<EventLog>,
+        filter: String = ""
+    ): ArrayList<EventLogModel> {
         val eventsList = arrayListOf<EventLogModel>()
         val groupedEventLogs = arrayListOf<EventLog>()
 
@@ -708,7 +716,10 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
     }
 
     @WorkerThread
-    private fun updatePreviousAndNextMessages(list: ArrayList<EventLogModel>, found: EventLogModel) {
+    private fun updatePreviousAndNextMessages(
+        list: ArrayList<EventLogModel>,
+        found: EventLogModel
+    ) {
         val index = list.indexOf(found)
         if (found.model is MessageModel) {
             val messageModel = found.model
