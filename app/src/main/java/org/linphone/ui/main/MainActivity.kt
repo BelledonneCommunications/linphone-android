@@ -51,6 +51,7 @@ import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 import org.linphone.databinding.MainActivityBinding
 import org.linphone.ui.GenericActivity
@@ -396,9 +397,30 @@ class MainActivity : GenericActivity() {
             Intent.ACTION_VIEW, Intent.ACTION_DIAL, Intent.ACTION_CALL -> {
                 handleCallIntent(intent)
             }
+            Intent.ACTION_VIEW_LOCUS -> {
+                val locus = Compatibility.extractLocusIdFromIntent(intent)
+                if (locus != null) {
+                    Log.i("$TAG Found chat room locus intent extra: $locus")
+                    handleLocusOrShortcut(locus)
+                }
+            }
             else -> {
                 handleMainIntent(intent, isNewIntent)
             }
+        }
+    }
+
+    @MainThread
+    private fun handleLocusOrShortcut(id: String) {
+        Log.i("$TAG Found locus ID [$id]")
+        val pair = LinphoneUtils.getLocalAndPeerSipUrisFromChatRoomId(id)
+        if (pair != null) {
+            val localSipUri = pair.first
+            val remoteSipUri = pair.second
+            Log.i(
+                "$TAG Navigating to conversation with local [$localSipUri] and peer [$remoteSipUri] addresses, computed from shortcut ID"
+            )
+            sharedViewModel.showConversationEvent.value = Event(pair)
         }
     }
 

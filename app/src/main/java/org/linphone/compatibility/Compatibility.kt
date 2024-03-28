@@ -24,6 +24,7 @@ import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.Service
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
@@ -131,6 +132,23 @@ class Compatibility {
                 Api31Compatibility.setAutoLightDarkMode(context)
             } else {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            }
+        }
+
+        fun extractLocusIdFromIntent(intent: Intent): String? {
+            if (Version.sdkAboveOrEqual(Version.API29_ANDROID_10)) {
+                return Api29Compatibility.extractLocusIdFromIntent(intent)
+            }
+            return null
+        }
+
+        fun setLocusIdInContentCaptureSession(root: View, localSipUri: String, remoteSipUri: String) {
+            if (Version.sdkAboveOrEqual(Version.API29_ANDROID_10)) {
+                return Api29Compatibility.setLocusIdInContentCaptureSession(
+                    root,
+                    localSipUri,
+                    remoteSipUri
+                )
             }
         }
     }

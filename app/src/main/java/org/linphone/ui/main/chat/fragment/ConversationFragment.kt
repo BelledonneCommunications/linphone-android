@@ -185,10 +185,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
 
     private val dataObserver = object : AdapterDataObserver() {
         override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-            if (positionStart > 0 && positionStart == adapter.itemCount - itemCount) {
-                Log.i(
-                    "$TAG Item(s) inserted at the end, notify item changed at position [${positionStart - 1}]"
-                )
+            if (positionStart > 0) {
                 adapter.notifyItemChanged(positionStart - 1) // For grouping purposes
             }
 
@@ -202,14 +199,14 @@ class ConversationFragment : SlidingPaneChildFragment() {
             if (positionStart == 0 && adapter.itemCount == itemCount) {
                 // First time we fill the list with messages
                 Log.i(
-                    "$TAG [$itemCount] events have been loaded, scrolling to first unread message"
+                    "$TAG [$itemCount] events have been loaded"
                 )
             } else {
                 Log.i(
                     "$TAG [$itemCount] new events have been loaded, scrolling to first unread message"
                 )
+                scrollToFirstUnreadMessageOrBottom()
             }
-            scrollToFirstUnreadMessageOrBottom()
         }
     }
 
@@ -372,6 +369,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
         )
         val chatRoom = sharedViewModel.displayedChatRoom
         viewModel.findChatRoom(chatRoom, localSipUri, remoteSipUri)
+        Compatibility.setLocusIdInContentCaptureSession(binding.root, localSipUri, remoteSipUri)
 
         viewModel.chatRoomFoundEvent.observe(viewLifecycleOwner) {
             it.consume { found ->

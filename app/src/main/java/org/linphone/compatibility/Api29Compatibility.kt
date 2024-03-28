@@ -19,10 +19,15 @@
  */
 package org.linphone.compatibility
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.view.View
+import android.view.contentcapture.ContentCaptureContext
+import android.view.contentcapture.ContentCaptureSession
 import androidx.annotation.RequiresApi
+import org.linphone.utils.LinphoneUtils
 
 @RequiresApi(Build.VERSION_CODES.Q)
 class Api29Compatibility {
@@ -47,6 +52,18 @@ class Api29Compatibility {
                     )
                 }
                 else -> Uri.EMPTY
+            }
+        }
+
+        fun extractLocusIdFromIntent(intent: Intent): String? {
+            return intent.getStringExtra(Intent.EXTRA_LOCUS_ID)
+        }
+
+        fun setLocusIdInContentCaptureSession(root: View, localSipUri: String, remoteSipUri: String) {
+            val session: ContentCaptureSession? = root.contentCaptureSession
+            if (session != null) {
+                val id = LinphoneUtils.getChatRoomId(localSipUri, remoteSipUri)
+                session.contentCaptureContext = ContentCaptureContext.forLocusId(id)
             }
         }
     }

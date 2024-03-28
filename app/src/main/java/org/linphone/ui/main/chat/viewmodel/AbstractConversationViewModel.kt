@@ -23,7 +23,7 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import org.linphone.LinphoneApplication
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.ChatRoom
 import org.linphone.core.Factory
 import org.linphone.core.tools.Log
@@ -61,7 +61,7 @@ abstract class AbstractConversationViewModel : ViewModel() {
         this.localSipUri = localSipUri
         this.remoteSipUri = remoteSipUri
 
-        LinphoneApplication.coreContext.postOnCoreThread { core ->
+        coreContext.postOnCoreThread { core ->
             Log.i(
                 "$TAG Looking for conversation with local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
             )
