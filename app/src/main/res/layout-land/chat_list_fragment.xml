@@ -105,7 +105,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end|bottom"
                     android:layout_margin="16dp"
-                    android:src="@drawable/plus_circle"
+                    android:src="@drawable/chat_teardrop_dots"
                     app:tint="?attr/color_on_main"
                     app:backgroundTint="?attr/color_main1_500"
                     app:shapeAppearanceOverlay="@style/rounded"

@@ -61,7 +61,7 @@
                 android:layout_marginEnd="30dp"
                 android:background="@drawable/circle_light_blue_button_background"
                 android:padding="16dp"
-                android:src="@drawable/chat_teardrop_text"
+                android:src="@drawable/chat_teardrop_slash"
                 app:tint="?attr/color_main2_500"
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="parent"
