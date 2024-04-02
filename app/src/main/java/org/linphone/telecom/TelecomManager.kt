@@ -33,7 +33,6 @@ import org.linphone.core.AudioDevice
 import org.linphone.core.Call
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
-import org.linphone.core.MediaDirection
 import org.linphone.core.tools.Log
 import org.linphone.utils.LinphoneUtils
 
@@ -51,98 +50,7 @@ class TelecomManager @WorkerThread constructor(context: Context) {
     private val coreListener = object : CoreListenerStub() {
         @WorkerThread
         override fun onCallCreated(core: Core, call: Call) {
-            Log.i("$TAG Call created: $call")
-
-            val address = call.remoteAddress
-            val friend = coreContext.contactsManager.findContactByAddress(address)
-            val displayName = friend?.name ?: LinphoneUtils.getDisplayName(address)
-
-            val uri = Uri.parse(address.asStringUriOnly())
-
-            val direction = if (call.dir == Call.Dir.Outgoing) {
-                CallAttributesCompat.DIRECTION_OUTGOING
-            } else {
-                CallAttributesCompat.DIRECTION_INCOMING
-            }
-
-            val params = if (call.dir == Call.Dir.Outgoing) {
-                call.params
-            } else {
-                call.remoteParams
-            }
-            val type = if (params?.isVideoEnabled == true && params.videoDirection != MediaDirection.Inactive) {
-                CallAttributesCompat.CALL_TYPE_VIDEO_CALL
-            } else {
-                CallAttributesCompat.CALL_TYPE_AUDIO_CALL
-            }
-
-            val capabilities = CallAttributesCompat.SUPPORTS_SET_INACTIVE or CallAttributesCompat.SUPPORTS_TRANSFER
-
-            val callAttributes = CallAttributesCompat(
-                displayName,
-                uri,
-                direction,
-                type,
-                capabilities
-            )
-            Log.i("$TAG Adding call to Telecom's CallsManager with attributes [$callAttributes]")
-
-            scope.launch {
-                try {
-                    callsManager.addCall(
-                        callAttributes,
-                        { callType -> // onAnswer
-                            Log.i("$TAG We're asked to answer the call with type [$callType]")
-                            coreContext.postOnCoreThread {
-                                if (LinphoneUtils.isCallIncoming(call.state)) {
-                                    Log.i("$TAG Answering call")
-                                    coreContext.answerCall(call) // TODO FIXME: use call type
-                                }
-                            }
-                        },
-                        { disconnectCause -> // onDisconnect
-                            Log.i(
-                                "$TAG We're asked to terminate the call with reason [$disconnectCause]"
-                            )
-                            coreContext.postOnCoreThread {
-                                Log.i(
-                                    "$TAG Terminating call [${call.remoteAddress.asStringUriOnly()}]"
-                                )
-                                call.terminate() // TODO FIXME: use cause
-                            }
-                        },
-                        { // onSetActive
-                            Log.i("$TAG We're asked to resume the call")
-                            coreContext.postOnCoreThread {
-                                Log.i("$TAG Resuming call")
-                                call.resume()
-                            }
-                        },
-                        { // onSetInactive
-                            Log.i("$TAG We're asked to pause the call")
-                            coreContext.postOnCoreThread {
-                                Log.i("$TAG Pausing call")
-                                call.pause()
-                            }
-                        }
-                    ) {
-                        val callbacks = TelecomCallControlCallback(call, this, scope)
-
-                        coreContext.postOnCoreThread {
-                            val callId = call.callLog.callId.orEmpty()
-                            if (callId.isNotEmpty()) {
-                                Log.i("$TAG Storing our callbacks for call ID [$callId]")
-                                map[callId] = callbacks
-                            }
-                        }
-
-                        // We must first call setCallback on callControlScope before using it
-                        callbacks.onCallControlCallbackSet()
-                    }
-                } catch (e: Exception) {
-                    Log.e("$TAG Failed to add call to Telecom's CallsManager!")
-                }
-            }
+            onCallCreated(call)
         }
     }
 
@@ -155,6 +63,91 @@ class TelecomManager @WorkerThread constructor(context: Context) {
         Log.i(
             "$TAG App has been registered with Telecom, android.software.telecom feature is [${if (hasTelecomFeature) "available" else "not available"}]"
         )
+    }
+
+    @WorkerThread
+    fun onCallCreated(call: Call) {
+        Log.i("$TAG Call created: $call")
+
+        val address = call.remoteAddress
+        val friend = coreContext.contactsManager.findContactByAddress(address)
+        val displayName = friend?.name ?: LinphoneUtils.getDisplayName(address)
+
+        val uri = Uri.parse(address.asStringUriOnly())
+
+        val direction = if (call.dir == Call.Dir.Outgoing) {
+            CallAttributesCompat.DIRECTION_OUTGOING
+        } else {
+            CallAttributesCompat.DIRECTION_INCOMING
+        }
+
+        val capabilities = CallAttributesCompat.SUPPORTS_SET_INACTIVE or CallAttributesCompat.SUPPORTS_TRANSFER
+
+        val callAttributes = CallAttributesCompat(
+            displayName,
+            uri,
+            direction,
+            CallAttributesCompat.CALL_TYPE_AUDIO_CALL,
+            capabilities
+        )
+        Log.i("$TAG Adding call to Telecom's CallsManager with attributes [$callAttributes]")
+
+        scope.launch {
+            try {
+                callsManager.addCall(
+                    callAttributes,
+                    { callType -> // onAnswer
+                        Log.i("$TAG We're asked to answer the call with type [$callType]")
+                        coreContext.postOnCoreThread {
+                            if (LinphoneUtils.isCallIncoming(call.state)) {
+                                Log.i("$TAG Answering call")
+                                coreContext.answerCall(call)
+                            }
+                        }
+                    },
+                    { disconnectCause -> // onDisconnect
+                        Log.i(
+                            "$TAG We're asked to terminate the call with reason [$disconnectCause]"
+                        )
+                        coreContext.postOnCoreThread {
+                            Log.i(
+                                "$TAG Terminating call [${call.remoteAddress.asStringUriOnly()}]"
+                            )
+                            call.terminate() // TODO FIXME: use cause
+                        }
+                    },
+                    { // onSetActive
+                        Log.i("$TAG We're asked to resume the call")
+                        coreContext.postOnCoreThread {
+                            Log.i("$TAG Resuming call")
+                            call.resume()
+                        }
+                    },
+                    { // onSetInactive
+                        Log.i("$TAG We're asked to pause the call")
+                        coreContext.postOnCoreThread {
+                            Log.i("$TAG Pausing call")
+                            call.pause()
+                        }
+                    }
+                ) {
+                    val callbacks = TelecomCallControlCallback(call, this, scope)
+
+                    coreContext.postOnCoreThread {
+                        val callId = call.callLog.callId.orEmpty()
+                        if (callId.isNotEmpty()) {
+                            Log.i("$TAG Storing our callbacks for call ID [$callId]")
+                            map[callId] = callbacks
+                        }
+                    }
+
+                    // We must first call setCallback on callControlScope before using it
+                    callbacks.onCallControlCallbackSet()
+                }
+            } catch (e: Exception) {
+                Log.e("$TAG Failed to add call to Telecom's CallsManager!")
+            }
+        }
     }
 
     @WorkerThread

@@ -27,6 +27,7 @@ rls_uri=sips:rls@sip.linphone.org
 [sound]
 #remove this property for any application that is not Linphone public version itself
 ec_calibrator_cool_tones=1
+disable_ringing=1
 
 [audio]
 android_disable_audio_focus_requests=1

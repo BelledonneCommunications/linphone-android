@@ -13,11 +13,11 @@
     <string name="assistant_web_platform_link" translatable="false">subscribe.linphone.org</string>
     <string name="assistant_linphone_contact_us_link" translatable="false">linphone.org/contact</string>
 
-    <string name="notification_channel_call_id" translatable="false">linphone_notification_call_id</string>
-    <string name="notification_channel_incoming_call_id" translatable="false">linphone_notification_incoming_call_id</string>
-    <string name="notification_channel_missed_call_id" translatable="false">linphone_notification_missed_call_id</string>
-    <string name="notification_channel_service_id" translatable="false">linphone_notification_service_id</string>
-    <string name="notification_channel_chat_id" translatable="false">linphone_notification_chat_id</string>
+    <string name="notification_channel_call_id" translatable="false">linphone_6.0_notification_call_id</string>
+    <string name="notification_channel_incoming_call_id" translatable="false">linphone_6.0_notification_incoming_call_id</string>
+    <string name="notification_channel_missed_call_id" translatable="false">linphone_6.0_notification_missed_call_id</string>
+    <string name="notification_channel_service_id" translatable="false">linphone_6.0_notification_service_id</string>
+    <string name="notification_channel_chat_id" translatable="false">linphone_6.0_notification_chat_id</string>
 
     <string name="emoji_love" translatable="false">❤️</string>
     <string name="emoji_thumbs_up" translatable="false">👍</string>

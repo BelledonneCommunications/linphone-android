@@ -126,6 +126,13 @@ class CorePreferences @UiThread constructor(private val context: Context) {
             config.setInt("app", "dark_mode", value)
         }
 
+    @get:WorkerThread @set:WorkerThread
+    var linphoneConfigurationVersion: String
+        get() = config.getString("app", "linphonerc_version", "5.2")!!
+        set(value) {
+            config.setString("app", "linphonerc_version", value)
+        }
+
     @get:WorkerThread
     val darkModeAllowed: Boolean
         get() = config.getBool("ui", "dark_mode_allowed", true)

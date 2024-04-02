@@ -29,6 +29,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.media.AudioAttributes
+import android.media.AudioManager
+import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Bundle
 import androidx.annotation.AnyThread
@@ -88,6 +91,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         private const val MISSED_CALL_TAG = "Missed call"
         const val CHAT_NOTIFICATIONS_GROUP = "CHAT_NOTIF_GROUP"
 
+        private const val INCOMING_CALL_ID = 1
         private const val MISSED_CALL_ID = 10
     }
 
@@ -321,12 +325,6 @@ class NotificationsManager @MainThread constructor(private val context: Context)
     private var currentlyDisplayedChatRoomId: String = ""
 
     init {
-        createServiceChannel()
-        createIncomingCallNotificationChannel()
-        createMissedCallNotificationChannel()
-        createActiveCallNotificationChannel()
-        createMessageChannel()
-
         for (notification in notificationManager.activeNotifications) {
             if (notification.tag.isNullOrEmpty()) {
                 Log.w(
@@ -365,8 +363,10 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             if (core.callsNb == 0) {
                 Log.w("$TAG No call anymore, stopping service")
                 stopCallForeground()
-            } else {
-                Log.i("$TAG At least a call is still running")
+            } else if (currentForegroundServiceNotificationId == -1) {
+                Log.i(
+                    "$TAG At least a call is still running and no foreground service notification was found"
+                )
                 val call = core.currentCall ?: core.calls.first()
                 startCallForeground(call)
             }
@@ -379,9 +379,33 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         coreService = null
     }
 
+    @MainThread
+    private fun createChannels(clearPreviousChannels: Boolean) {
+        if (clearPreviousChannels) {
+            Log.w("$TAG We were asked to remove all existing notification channels")
+            for (channel in notificationManager.notificationChannels) {
+                Log.i("$TAG Deleting notification channel ID [${channel.id}]")
+                notificationManager.deleteNotificationChannel(channel.id)
+            }
+        }
+
+        createServiceChannel()
+        createIncomingCallNotificationChannel()
+        createMissedCallNotificationChannel()
+        createActiveCallNotificationChannel()
+        createMessageChannel()
+    }
+
     @WorkerThread
     fun onCoreStarted(core: Core) {
         Log.i("$TAG Core has been started")
+
+        val rcVersion = corePreferences.linphoneConfigurationVersion
+        val clearPreviousChannels = rcVersion == "5.2"
+        coreContext.postOnMainThread {
+            createChannels(clearPreviousChannels)
+        }
+
         core.addListener(coreListener)
     }
 
@@ -394,6 +418,22 @@ class NotificationsManager @MainThread constructor(private val context: Context)
     @WorkerThread
     private fun showCallNotification(call: Call, isIncoming: Boolean) {
         val notifiable = getNotifiableForCall(call)
+        if (!isIncoming && call.dir == Call.Dir.Incoming) {
+            if (currentForegroundServiceNotificationId == INCOMING_CALL_ID) {
+                // This is an accepted incoming call, remove notification before adding it again to change channel
+                Log.i(
+                    "$TAG Incoming call with notification ID [${notifiable.notificationId}] was accepted, cancelling notification before adding it again to the right channel"
+                )
+                if (coreService != null) {
+                    Log.i(
+                        "$TAG Service found, stopping it as foreground before cancelling notification"
+                    )
+                    coreService?.stopForeground(STOP_FOREGROUND_REMOVE)
+                }
+                cancelNotification(INCOMING_CALL_ID)
+                currentForegroundServiceNotificationId = -1
+            }
+        }
 
         val callNotificationIntent = Intent(context, CallActivity::class.java)
         callNotificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -417,10 +457,16 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             pendingIntent,
             isIncoming
         )
-        notify(notifiable.notificationId, notification)
-
-        if (notifiable.notificationId == currentForegroundServiceNotificationId) {
-            startCallForeground(call)
+        if (isIncoming) {
+            notify(INCOMING_CALL_ID, notification)
+            if (currentForegroundServiceNotificationId == -1) {
+                startIncomingCallForeground(notification)
+            }
+        } else {
+            notify(notifiable.notificationId, notification)
+            if (currentForegroundServiceNotificationId == -1) {
+                startCallForeground(call)
+            }
         }
     }
 
@@ -463,6 +509,26 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
         val notification = builder.build()
         notify(MISSED_CALL_ID, notification, MISSED_CALL_TAG)
+    }
+
+    @WorkerThread
+    private fun startIncomingCallForeground(notification: Notification) {
+        Log.i("$TAG Trying to start foreground Service using incoming call notification")
+        val service = coreService
+        if (service != null) {
+            Log.i(
+                "$TAG Service found, starting it as foreground using notification ID [$INCOMING_CALL_ID] with type PHONE_CALL"
+            )
+            Compatibility.startServiceForeground(
+                service,
+                INCOMING_CALL_ID,
+                notification,
+                Compatibility.FOREGROUND_SERVICE_TYPE_PHONE_CALL
+            )
+            currentForegroundServiceNotificationId = INCOMING_CALL_ID
+        } else {
+            Log.w("$TAG Core Foreground Service hasn't started yet...")
+        }
     }
 
     @WorkerThread
@@ -863,19 +929,15 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             channel
         ).apply {
             try {
-                style.setIsVideo(isVideo)
-                style.setAnswerButtonColorHint(
-                    context.getColor(R.color.success_500)
-                )
-                style.setDeclineButtonColorHint(
-                    context.getColor(R.color.danger_500)
-                )
+                style.setIsVideo(false)
                 setStyle(style)
             } catch (iae: IllegalArgumentException) {
                 Log.e(
                     "$TAG Can't use notification call style: $iae"
                 )
             }
+            setColorized(true)
+            setOnlyAlertOnce(true)
             setSmallIcon(smallIcon)
             setCategory(NotificationCompat.CATEGORY_CALL)
             setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
@@ -1017,7 +1079,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
         return PendingIntent.getBroadcast(
             context,
-            notifiable.notificationId,
+            3,
             hangupIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
@@ -1032,7 +1094,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
         return PendingIntent.getBroadcast(
             context,
-            notifiable.notificationId,
+            2,
             answerIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
@@ -1146,13 +1208,16 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         val id = context.getString(R.string.notification_channel_incoming_call_id)
         val name = context.getString(R.string.notification_channel_incoming_call_name)
 
+        val ringtone = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE)
+        val audioAttributes = AudioAttributes.Builder()
+            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+            .setLegacyStreamType(AudioManager.STREAM_RING)
+            .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE).build()
+
         val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH).apply {
             description = name
-            lightColor = context.getColor(R.color.main1_500)
-            lockscreenVisibility = Notification.VISIBILITY_PUBLIC
             enableVibration(true)
-            enableLights(true)
-            setShowBadge(false)
+            setSound(ringtone, audioAttributes)
         }
         notificationManager.createNotificationChannel(channel)
     }
@@ -1164,11 +1229,8 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
         val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH).apply {
             description = name
-            lightColor = context.getColor(R.color.main1_500)
             lockscreenVisibility = Notification.VISIBILITY_PUBLIC
             enableVibration(true)
-            enableLights(true)
-            setShowBadge(false)
         }
         notificationManager.createNotificationChannel(channel)
     }
@@ -1181,9 +1243,6 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_DEFAULT).apply {
             description = name
             lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-            enableVibration(false)
-            enableLights(false)
-            setShowBadge(false)
         }
         notificationManager.createNotificationChannel(channel)
     }
@@ -1195,11 +1254,8 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
         val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH).apply {
             description = name
-            lightColor = context.getColor(R.color.main1_500)
             lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-            enableLights(true)
             enableVibration(true)
-            setShowBadge(true)
         }
         notificationManager.createNotificationChannel(channel)
     }
@@ -1211,9 +1267,6 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
         val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_LOW).apply {
             description = name
-            enableVibration(false)
-            enableLights(false)
-            setShowBadge(false)
         }
         notificationManager.createNotificationChannel(channel)
     }

@@ -262,6 +262,8 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         audioManager.registerAudioDeviceCallback(audioDeviceCallback, coreThread)
 
+        corePreferences.linphoneConfigurationVersion = "6.0"
+
         Log.i("$TAG Report Core created and started")
     }
 
