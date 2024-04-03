@@ -9,7 +9,6 @@ import android.widget.ArrayAdapter
 import androidx.annotation.UiThread
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
@@ -26,18 +25,6 @@ class SettingsFragment : GenericFragment() {
     private lateinit var binding: SettingsFragmentBinding
 
     private lateinit var viewModel: SettingsViewModel
-
-    private val ringtoneListener = object : AdapterView.OnItemSelectedListener {
-        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            val path = viewModel.availableRingtonesPaths[position]
-            val label = viewModel.availableRingtonesNames[position]
-            Log.i("$TAG Selected ringtone is now [$label] ($path)")
-            viewModel.setRingtone(path)
-        }
-
-        override fun onNothingSelected(parent: AdapterView<*>?) {
-        }
-    }
 
     private val layoutListener = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -90,25 +77,6 @@ class SettingsFragment : GenericFragment() {
         binding.setBackClickListener {
             goBack()
         }
-
-        // Ringtone related
-        val ringtonesAdapter = ArrayAdapter(
-            requireContext(),
-            R.layout.drop_down_item,
-            viewModel.availableRingtonesNames
-        )
-        ringtonesAdapter.setDropDownViewResource(R.layout.generic_dropdown_cell)
-        binding.callsSettings.deviceRingtoneSpinner.adapter = ringtonesAdapter
-
-        viewModel.selectedRingtone.observe(viewLifecycleOwner) { ringtone ->
-            binding.callsSettings.deviceRingtoneSpinner.setSelection(
-                viewModel.availableRingtonesPaths.indexOf(
-                    ringtone
-                )
-            )
-        }
-
-        binding.callsSettings.deviceRingtoneSpinner.onItemSelectedListener = ringtoneListener
 
         viewModel.addLdapServerEvent.observe(viewLifecycleOwner) {
             it.consume {
@@ -180,14 +148,6 @@ class SettingsFragment : GenericFragment() {
         binding.userInterfaceSettings.themeSpinner.onItemSelectedListener = themeListener
 
         startPostponedEnterTransition()
-    }
-
-    override fun onPause() {
-        super.onPause()
-
-        coreContext.postOnCoreThread {
-            viewModel.stopRingtonePlayer()
-        }
     }
 
     override fun onResume() {

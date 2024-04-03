@@ -19,30 +19,19 @@
  */
 package org.linphone.ui.main.settings.viewmodel
 
-import android.content.Context
-import android.media.AudioAttributes
-import android.media.Ringtone
-import android.media.RingtoneManager
-import android.net.Uri
 import android.os.Vibrator
 import androidx.annotation.UiThread
-import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import java.io.File
-import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.Conference
 import org.linphone.core.FriendList
-import org.linphone.core.Player
-import org.linphone.core.PlayerListener
 import org.linphone.core.VFS
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.settings.model.CardDavLdapModel
 import org.linphone.utils.AppUtils
-import org.linphone.utils.AudioUtils
 import org.linphone.utils.Event
 
 class SettingsViewModel @UiThread constructor() : ViewModel() {
@@ -67,11 +56,6 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
     val echoCancellerEnabled = MutableLiveData<Boolean>()
     val routeAudioToBluetooth = MutableLiveData<Boolean>()
     val videoEnabled = MutableLiveData<Boolean>()
-
-    val availableRingtonesPaths = arrayListOf<String>()
-    val availableRingtonesNames = arrayListOf<String>()
-    val selectedRingtone = MutableLiveData<String>()
-    val isRingtonePlaying = MutableLiveData<Boolean>()
 
     val isVibrationAvailable = MutableLiveData<Boolean>()
     val vibrateDuringIncomingCall = MutableLiveData<Boolean>()
@@ -133,16 +117,6 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
     )
     val availableThemesValues = arrayListOf(-1, 0, 1)
 
-    // Other
-
-    private lateinit var ringtonePlayer: Player
-    private lateinit var deviceRingtonePlayer: Ringtone
-
-    private val playerListener = PlayerListener {
-        Log.i("[$TAG] End of ringtone reached")
-        stopRingtonePlayer()
-    }
-
     init {
         coreContext.postOnCoreThread { core ->
             hideVideoCallSetting.postValue(!core.isVideoEnabled)
@@ -169,8 +143,6 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
             Log.w("$TAG Device doesn't seem to have a vibrator, hiding related setting")
         }
 
-        computeAvailableRingtones()
-
         coreContext.postOnCoreThread { core ->
             echoCancellerEnabled.postValue(core.isEchoCancellationEnabled)
             routeAudioToBluetooth.postValue(corePreferences.routeAudioToBluetoothIfAvailable)
@@ -180,28 +152,12 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
 
             useWifiOnly.postValue(core.isWifiOnlyEnabled)
 
-            val ringtone = core.ring.orEmpty()
-            Log.i("Currently configured ringtone in Core is [$ringtone]")
-            selectedRingtone.postValue(ringtone)
-
             autoDownloadEnabled.postValue(core.maxSizeForAutoDownloadIncomingFiles == 0)
             exportMediaEnabled.postValue(corePreferences.exportMediaToNativeGallery)
 
             defaultLayout.postValue(core.defaultConferenceLayout.toInt())
 
             theme.postValue(corePreferences.darkMode)
-        }
-    }
-
-    @UiThread
-    override fun onCleared() {
-        super.onCleared()
-
-        coreContext.postOnCoreThread {
-            if (::ringtonePlayer.isInitialized) {
-                stopRingtonePlayer()
-                ringtonePlayer.removeListener(playerListener)
-            }
         }
     }
 
@@ -254,84 +210,6 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
             core.isVideoCaptureEnabled = newValue
             core.isVideoDisplayEnabled = newValue
             videoEnabled.postValue(newValue)
-        }
-    }
-
-    @UiThread
-    fun setRingtone(ringtone: String) {
-        coreContext.postOnCoreThread { core ->
-            core.ring = ringtone
-            selectedRingtone.postValue(ringtone)
-
-            if (::ringtonePlayer.isInitialized) {
-                if (ringtonePlayer.state == Player.State.Playing) {
-                    stopRingtonePlayer()
-                }
-            }
-        }
-    }
-
-    @UiThread
-    fun playPauseRingtone() {
-        coreContext.postOnCoreThread { core ->
-            if (!::ringtonePlayer.isInitialized) {
-                // Also works for ringtone
-                val playbackDevice = AudioUtils.getAudioPlaybackDeviceIdForCallRecordingOrVoiceMessage()
-                val player = core.createLocalPlayer(playbackDevice, null, null)
-                ringtonePlayer = player ?: return@postOnCoreThread
-                ringtonePlayer.addListener(playerListener)
-            }
-
-            val path = core.ring.orEmpty()
-            if (path.isEmpty()) {
-                if (::deviceRingtonePlayer.isInitialized) {
-                    if (deviceRingtonePlayer.isPlaying) {
-                        deviceRingtonePlayer.stop()
-                        isRingtonePlaying.postValue(false)
-                    } else {
-                        playDeviceDefaultRingtone()
-                    }
-                } else {
-                    playDeviceDefaultRingtone()
-                }
-            } else {
-                if (ringtonePlayer.state == Player.State.Playing) {
-                    stopRingtonePlayer()
-                } else {
-                    if (ringtonePlayer.open(path) == 0) {
-                        if (ringtonePlayer.start() == 0) {
-                            isRingtonePlaying.postValue(true)
-                        } else {
-                            Log.e("$TAG Failed to play ringtone [$path]")
-                        }
-                    } else {
-                        Log.e("$TAG Failed to open ringtone [$path]")
-                    }
-                }
-            }
-        }
-    }
-
-    @WorkerThread
-    private fun playDeviceDefaultRingtone() {
-        val audioAttrs = AudioAttributes.Builder()
-            .setUsage(AudioAttributes.USAGE_MEDIA)
-            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-            .build()
-        val defaultRingtoneUri = getDefaultRingtoneUri(coreContext.context)
-        try {
-            val ringtone = RingtoneManager.getRingtone(coreContext.context, defaultRingtoneUri)
-            if (ringtone != null) {
-                ringtone.audioAttributes = audioAttrs
-                ringtone.isLooping = true
-                ringtone.play()
-                deviceRingtonePlayer = ringtone
-                isRingtonePlaying.postValue(true)
-            } else {
-                Log.e("$TAG Couldn't retrieve Ringtone object from manager!")
-            }
-        } catch (e: Exception) {
-            Log.e("$TAG Failed to play ringtone [", defaultRingtoneUri, "] : ", e)
         }
     }
 
@@ -474,65 +352,5 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
             Log.i("$TAG Theme [$theme] saved")
             theme.postValue(themeValue)
         }
-    }
-
-    @WorkerThread
-    fun stopRingtonePlayer() {
-        if (::ringtonePlayer.isInitialized && ringtonePlayer.state != Player.State.Closed) {
-            Log.i("$TAG Stopping ringtone player")
-            ringtonePlayer.pause()
-            ringtonePlayer.seek(0)
-            ringtonePlayer.close()
-            isRingtonePlaying.postValue(false)
-        }
-    }
-
-    @UiThread
-    private fun computeAvailableRingtones() {
-        availableRingtonesNames.add(
-            AppUtils.getString(R.string.settings_calls_use_device_ringtone_label)
-        )
-        availableRingtonesPaths.add("")
-
-        val directory = File(corePreferences.ringtonesPath)
-        val files = directory.listFiles()
-        for (ringtone in files.orEmpty()) {
-            if (ringtone.absolutePath.endsWith(".mkv")) {
-                val name = ringtone.name
-                    .substringBefore(".")
-                    .replace("_", " ")
-                    .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
-                availableRingtonesNames.add(name)
-                availableRingtonesPaths.add(ringtone.absolutePath)
-            }
-        }
-    }
-
-    private fun getDefaultRingtoneUri(context: Context): Uri? {
-        var uri: Uri? = null
-        try {
-            uri =
-                RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_RINGTONE)
-        } catch (e: SecurityException) {
-            Log.e("$TAG Can't get default ringtone URI: $e")
-        }
-
-        if (uri == null) {
-            Log.w("$TAG Failed to get actual default ringtone URI, trying to get a valid one")
-            uri = RingtoneManager.getValidRingtoneUri(context)
-        }
-        if (uri == null) {
-            Log.w("$TAG Failed to get a valid ringtone URI, trying the first one available")
-            val ringtoneManager = RingtoneManager(context)
-            ringtoneManager.setType(RingtoneManager.TYPE_RINGTONE)
-            val cursor = ringtoneManager.cursor
-            if (cursor.moveToFirst()) {
-                val idString = cursor.getString(RingtoneManager.ID_COLUMN_INDEX)
-                val uriString = cursor.getString(RingtoneManager.URI_COLUMN_INDEX)
-                uri = Uri.parse("$uriString/$idString")
-            }
-            cursor.close()
-        }
-        return uri
     }
 }

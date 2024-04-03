@@ -118,71 +118,6 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/settings_title_style"
-            android:id="@+id/device_ringtone_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="10dp"
-            android:text="@string/settings_calls_ringtones_title"
-            android:maxLines="2"
-            android:ellipsize="end"
-            app:layout_constraintTop_toBottomOf="@id/enable_video_switch"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/device_ringtone_player"/>
-
-        <androidx.appcompat.widget.AppCompatSpinner
-            style="@style/material_switch_style"
-            android:id="@+id/device_ringtone_spinner"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_marginEnd="10dp"
-            android:background="@drawable/edit_text_background"
-            android:paddingStart="@dimen/spinner_start_padding"
-            android:paddingEnd="@dimen/spinner_end_padding"
-            android:overlapAnchor="false"
-            android:spinnerMode="dropdown"
-            android:popupBackground="@drawable/shape_squircle_white_background"
-            app:layout_constraintTop_toBottomOf="@id/device_ringtone_title"
-            app:layout_constraintStart_toStartOf="@id/device_ringtone_title"
-            app:layout_constraintEnd_toStartOf="@id/device_ringtone_player" />
-
-        <ImageView
-            android:id="@+id/device_ringtone_spinner_caret"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/spinner_caret_end_margin"
-            android:src="@drawable/caret_down"
-            app:layout_constraintTop_toTopOf="@id/device_ringtone_spinner"
-            app:layout_constraintBottom_toBottomOf="@id/device_ringtone_spinner"
-            app:layout_constraintEnd_toEndOf="@id/device_ringtone_spinner"/>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/tertiary_button_label_style"
-            android:id="@+id/device_ringtone_player"
-            android:onClick="@{() -> viewModel.playPauseRingtone()}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/tertiary_button_background"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:paddingTop="6dp"
-            android:paddingBottom="6dp"
-            android:gravity="center"
-            android:text="@{viewModel.isRingtonePlaying ? @string/settings_calls_pause_ringtone_label : @string/settings_calls_play_ringtone_label, default=@string/settings_calls_play_ringtone_label}"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:drawableStart="@{viewModel.isRingtonePlaying ? @drawable/pause : @drawable/play, default=@drawable/play}"
-            android:drawableTint="@color/tertiary_button_label_color"
-            android:drawablePadding="8dp"
-            app:layout_constraintStart_toEndOf="@id/device_ringtone_spinner"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/device_ringtone_spinner"
-            app:layout_constraintBottom_toBottomOf="@id/device_ringtone_spinner"/>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/settings_title_style"
             android:onClick="@{() -> viewModel.toggleVibrateOnIncomingCalls()}"
             android:id="@+id/vibrate_title"
             android:visibility="@{viewModel.isVibrationAvailable ? View.VISIBLE : View.GONE}"
@@ -209,7 +144,7 @@
             android:layout_marginEnd="16dp"
             android:checked="@{viewModel.vibrateDuringIncomingCall}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/device_ringtone_spinner" />
+            app:layout_constraintTop_toBottomOf="@id/enable_video_switch" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/settings_title_style"

@@ -1216,7 +1216,6 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
         val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH).apply {
             description = name
-            enableVibration(true)
             setSound(ringtone, audioAttributes)
         }
         notificationManager.createNotificationChannel(channel)
