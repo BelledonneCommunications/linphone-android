@@ -16,7 +16,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="1dp">
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/file_group"
@@ -31,7 +32,6 @@
             android:onLongClick="@{onLongClickListener}"
             android:layout_width="@dimen/chat_bubble_grid_image_size"
             android:layout_height="@dimen/chat_bubble_grid_image_size"
-            android:layout_margin="1dp"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
             android:visibility="@{model.isImage || model.isVideoPreview ? View.VISIBLE : View.GONE}"
@@ -68,6 +68,8 @@
             android:id="@+id/file_icon"
             android:layout_width="@dimen/chat_bubble_grid_image_size"
             android:layout_height="@dimen/chat_bubble_grid_image_size"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
             android:onClick="@{() -> model.onClick()}"
             android:onLongClick="@{onLongClickListener}"
             android:adjustViewBounds="true"
@@ -90,8 +92,8 @@
             android:visibility="@{model.transferProgress == -1 || model.transferProgress >= 100 ? View.GONE : View.VISIBLE}"
             app:trackColor="?attr/color_main1_100"
             app:indicatorColor="?attr/color_main1_500"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="@id/file_icon"
+            app:layout_constraintBottom_toBottomOf="@id/file_icon"
             app:layout_constraintStart_toStartOf="parent"
             tools:progress="40" />
 
@@ -102,8 +104,8 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@drawable/shape_squircle_white_right"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="@id/file_icon"
+            app:layout_constraintBottom_toBottomOf="@id/file_icon"
             app:layout_constraintStart_toEndOf="@id/file_icon"
             app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -125,7 +127,7 @@
             android:background="@drawable/shape_squircle_white_r10_background"
             app:layout_constraintStart_toEndOf="@id/file_icon"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@id/file_background"
             app:layout_constraintBottom_toTopOf="@id/file_size"/>
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -145,7 +147,7 @@
             app:layout_constraintStart_toStartOf="@id/file_name"
             app:layout_constraintEnd_toEndOf="@id/file_name"
             app:layout_constraintTop_toBottomOf="@id/file_name"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="@id/file_background"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
