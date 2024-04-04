@@ -40,6 +40,9 @@ import org.linphone.ui.call.viewmodel.CurrentCallViewModel
 class EndedCallFragment : GenericCallFragment() {
     companion object {
         private const val TAG = "[Ended Call Fragment]"
+
+        private const val LOCALLY_TERMINATED_CALL_TIMEOUT: Long = 1000
+        private const val REMOTELY_TERMINATED_CALL_TIMEOUT: Long = 2000
     }
 
     private lateinit var binding: CallEndedFragmentBinding
@@ -85,12 +88,12 @@ class EndedCallFragment : GenericCallFragment() {
                     Log.i(
                         "$TAG Call terminated by user, waiting 1 second before finishing activity"
                     )
-                    delay(1000)
+                    delay(LOCALLY_TERMINATED_CALL_TIMEOUT)
                 } else {
                     Log.i(
                         "$TAG Call terminated by remote end, waiting 2 seconds before finishing activity"
                     )
-                    delay(2000)
+                    delay(REMOTELY_TERMINATED_CALL_TIMEOUT)
                 }
 
                 withContext(Dispatchers.Main) {
