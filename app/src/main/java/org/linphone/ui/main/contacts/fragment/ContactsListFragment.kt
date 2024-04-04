@@ -229,6 +229,7 @@ class ContactsListFragment : AbstractTopBarFragment() {
                     },
                     { // onDelete
                         coreContext.postOnCoreThread {
+                            // TODO: confirmation dialog + confirmation toast once deleted
                             Log.w("$TAG Removing friend [${model.name.value}]")
                             coreContext.contactsManager.contactRemoved(model.friend)
                             model.friend.remove()
