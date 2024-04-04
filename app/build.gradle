@@ -9,7 +9,7 @@ plugins {
 def appVersionName = "5.2.3"
 def appVersionCode = 52003
 
-def packageName = "org.linphone"
+def packageName = "org.calloutvoip"
 
 def firebaseAvailable = new File(projectDir.absolutePath +'/google-services.json').exists()
 
