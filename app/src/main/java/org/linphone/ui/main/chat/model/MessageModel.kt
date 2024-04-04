@@ -329,7 +329,7 @@ class MessageModel @WorkerThread constructor(
                 parseConferenceInvite(content)
 
                 displayableContentFound = true
-            } else if (content.isText) {
+            } else if (content.isText && !content.isFile) {
                 Log.d("$TAG Found plain text content")
                 computeTextContent(content)
 
@@ -416,7 +416,7 @@ class MessageModel @WorkerThread constructor(
                         Log.e("$TAG No name found for FileTransfer Content!")
                     }
                 } else {
-                    Log.i("$TAG Content is not a File")
+                    Log.w("$TAG Content [${content.name}] is not a File")
                 }
             }
         }

@@ -48,9 +48,11 @@
 
         <ScrollView
             android:id="@+id/text"
+            android:onClick="@{() -> viewModel.toggleFullScreen()}"
             android:background="?attr/color_main2_000"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:fillViewport="true"
             android:visibility="@{viewModel.isText ? View.VISIBLE : View.GONE, default=gone}" >
 
             <TextView
