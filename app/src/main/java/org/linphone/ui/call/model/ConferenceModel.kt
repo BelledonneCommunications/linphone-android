@@ -67,6 +67,8 @@ class ConferenceModel {
 
     val isMeParticipantSendingVideo = MutableLiveData<Boolean>()
 
+    val isMeAdmin = MutableLiveData<Boolean>()
+
     val showLayoutMenuEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -130,14 +132,8 @@ class ConferenceModel {
             conference: Conference,
             participant: Participant
         ) {
-            val newAdminStatus = participant.isAdmin
-            Log.i(
-                "$TAG Participant [${participant.address.asStringUriOnly()}] is [${if (newAdminStatus) "now admin" else "no longer admin"}]"
-            )
-            val participantModel = participants.value.orEmpty().find {
-                it.participant.address.weakEqual(participant.address)
-            }
-            participantModel?.isAdmin?.postValue(newAdminStatus)
+            // Only recompute participants list
+            computeParticipants(true)
         }
 
         @WorkerThread
@@ -336,7 +332,7 @@ class ConferenceModel {
     }
 
     @WorkerThread
-    private fun computeParticipants() {
+    private fun computeParticipants(skipDevices: Boolean = false) {
         participantDevices.value.orEmpty().forEach(ConferenceParticipantDeviceModel::destroy)
 
         val participantsList = arrayListOf<ConferenceParticipantModel>()
@@ -344,6 +340,13 @@ class ConferenceModel {
 
         val conferenceParticipants = conference.participantList
         Log.i("$TAG [${conferenceParticipants.size}] participant in conference")
+
+        val meParticipant = conference.me
+        val admin = meParticipant.isAdmin
+        isMeAdmin.postValue(admin)
+        if (admin) {
+            Log.i("$TAG We are admin of that conference!")
+        }
 
         var activeSpeakerParticipantDeviceFound = false
         for (participant in conferenceParticipants) {
@@ -353,22 +356,34 @@ class ConferenceModel {
             Log.i(
                 "$TAG Participant [${participant.address.asStringUriOnly()}] has [${devices.size}] devices and role [${role.name}]"
             )
-            val participantModel = ConferenceParticipantModel(participant)
+            val participantModel = ConferenceParticipantModel(
+                participant,
+                admin,
+                false,
+                { participant -> // Remove from conference
+                    conference.removeParticipant(participant)
+                },
+                { participant, setAdmin -> // Change admin status
+                    conference.setParticipantAdminStatus(participant, setAdmin)
+                }
+            )
             participantsList.add(participantModel)
 
             if (role == Participant.Role.Listener) {
                 continue
             }
 
-            for (device in participant.devices) {
-                val model = ConferenceParticipantDeviceModel(device)
-                devicesList.add(model)
+            if (!skipDevices) {
+                for (device in devices) {
+                    val model = ConferenceParticipantDeviceModel(device)
+                    devicesList.add(model)
 
-                if (device == conference.activeSpeakerParticipantDevice) {
-                    Log.i("$TAG Using participant is [${model.name}] as current active speaker")
-                    model.isActiveSpeaker.postValue(true)
-                    activeSpeaker.postValue(model)
-                    activeSpeakerParticipantDeviceFound = true
+                    if (device == conference.activeSpeakerParticipantDevice) {
+                        Log.i("$TAG Using participant is [${model.name}] as current active speaker")
+                        model.isActiveSpeaker.postValue(true)
+                        activeSpeaker.postValue(model)
+                        activeSpeakerParticipantDeviceFound = true
+                    }
                 }
             }
         }
@@ -376,27 +391,28 @@ class ConferenceModel {
             "$TAG [${devicesList.size}] participant devices for [${participantsList.size}] participants will be displayed (not counting ourselves)"
         )
 
-        val meParticipant = conference.me
-        val meParticipantModel = ConferenceParticipantModel(meParticipant)
+        val meParticipantModel = ConferenceParticipantModel(meParticipant, admin, true, null, null)
         participantsList.add(meParticipantModel)
 
-        val ourDevices = conference.me.devices
-        Log.i("$TAG We have [${ourDevices.size}] devices")
-        for (device in ourDevices) {
-            val model = ConferenceParticipantDeviceModel(device, true)
-            devicesList.add(model)
+        if (!skipDevices) {
+            val ourDevices = conference.me.devices
+            Log.i("$TAG We have [${ourDevices.size}] devices")
+            for (device in ourDevices) {
+                val model = ConferenceParticipantDeviceModel(device, true)
+                devicesList.add(model)
 
-            if (device == conference.activeSpeakerParticipantDevice) {
-                Log.i("$TAG Using our device [${model.name}] as current active speaker")
-                model.isActiveSpeaker.postValue(true)
-                activeSpeaker.postValue(model)
-                activeSpeakerParticipantDeviceFound = true
+                if (device == conference.activeSpeakerParticipantDevice) {
+                    Log.i("$TAG Using our device [${model.name}] as current active speaker")
+                    model.isActiveSpeaker.postValue(true)
+                    activeSpeaker.postValue(model)
+                    activeSpeakerParticipantDeviceFound = true
+                }
+
+                val direction = device.getStreamCapability(StreamType.Video)
+                isMeParticipantSendingVideo.postValue(
+                    direction == MediaDirection.SendRecv || direction == MediaDirection.SendOnly
+                )
             }
-
-            val direction = device.getStreamCapability(StreamType.Video)
-            isMeParticipantSendingVideo.postValue(
-                direction == MediaDirection.SendRecv || direction == MediaDirection.SendOnly
-            )
         }
 
         if (!activeSpeakerParticipantDeviceFound && devicesList.isNotEmpty()) {
@@ -408,17 +424,41 @@ class ConferenceModel {
             activeSpeaker.postValue(first)
         }
 
-        checkIfTooManyParticipantDevicesForGridLayout(devicesList)
-
-        participantDevices.postValue(sortParticipantDevicesList(devicesList))
-        participants.postValue(participantsList)
-        participantsLabel.postValue(
-            AppUtils.getStringWithPlural(
-                R.plurals.conference_participants_list_title,
-                participantsList.size,
-                "${participantsList.size}"
+        participants.postValue(sortParticipantList(participantsList))
+        if (!skipDevices) {
+            checkIfTooManyParticipantDevicesForGridLayout(devicesList)
+            participantDevices.postValue(sortParticipantDevicesList(devicesList))
+            participantsLabel.postValue(
+                AppUtils.getStringWithPlural(
+                    R.plurals.conference_participants_list_title,
+                    participantsList.size,
+                    "${participantsList.size}"
+                )
             )
-        )
+        }
+    }
+
+    @WorkerThread
+    private fun sortParticipantList(devices: List<ConferenceParticipantModel>): ArrayList<ConferenceParticipantModel> {
+        val sortedList = arrayListOf<ConferenceParticipantModel>()
+        sortedList.addAll(devices)
+
+        val meModel = sortedList.find {
+            it.isMyself
+        }
+        if (meModel != null) {
+            val index = sortedList.indexOf(meModel)
+            val expectedIndex = 0
+            if (index != expectedIndex) {
+                Log.i(
+                    "$TAG Me participant model is at index $index, moving it to index $expectedIndex"
+                )
+                sortedList.removeAt(index)
+                sortedList.add(expectedIndex, meModel)
+            }
+        }
+
+        return sortedList
     }
 
     @WorkerThread
@@ -426,11 +466,11 @@ class ConferenceModel {
         val sortedList = arrayListOf<ConferenceParticipantDeviceModel>()
         sortedList.addAll(devices)
 
-        val meDeviceData = sortedList.find {
+        val meDeviceModel = sortedList.find {
             it.isMe
         }
-        if (meDeviceData != null) {
-            val index = sortedList.indexOf(meDeviceData)
+        if (meDeviceModel != null) {
+            val index = sortedList.indexOf(meDeviceModel)
             val expectedIndex = if (conferenceLayout.value == ACTIVE_SPEAKER_LAYOUT) {
                 Log.i(
                     "$TAG Current conference layout is [Active Speaker], expecting our device to be at the beginning of the list"
@@ -444,10 +484,10 @@ class ConferenceModel {
             }
             if (index != expectedIndex) {
                 Log.i(
-                    "$TAG Me device data is at index $index, moving it to index $expectedIndex"
+                    "$TAG Me device model is at index $index, moving it to index $expectedIndex"
                 )
                 sortedList.removeAt(index)
-                sortedList.add(expectedIndex, meDeviceData)
+                sortedList.add(expectedIndex, meDeviceModel)
             }
         }
 
@@ -459,10 +499,20 @@ class ConferenceModel {
         val list = arrayListOf<ConferenceParticipantModel>()
         list.addAll(participants.value.orEmpty())
 
-        val newModel = ConferenceParticipantModel(participant)
+        val newModel = ConferenceParticipantModel(
+            participant,
+            isMeAdmin.value == true,
+            false,
+            { participant -> // Remove from conference
+                conference.removeParticipant(participant)
+            },
+            { participant, setAdmin -> // Change admin status
+                conference.setParticipantAdminStatus(participant, setAdmin)
+            }
+        )
         list.add(newModel)
 
-        participants.postValue(list)
+        participants.postValue(sortParticipantList(list))
         participantsLabel.postValue(
             AppUtils.getStringWithPlural(
                 R.plurals.conference_participants_list_title,

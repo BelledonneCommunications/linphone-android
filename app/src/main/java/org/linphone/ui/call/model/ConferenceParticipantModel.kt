@@ -19,12 +19,24 @@
  */
 package org.linphone.ui.call.model
 
+import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Participant
+import org.linphone.core.tools.Log
 
-class ConferenceParticipantModel @WorkerThread constructor(val participant: Participant) {
+class ConferenceParticipantModel @WorkerThread constructor(
+    val participant: Participant,
+    val isMyselfAdmin: Boolean,
+    val isMyself: Boolean,
+    private val removeFromConference: ((participant: Participant) -> Unit)?,
+    private val changeAdminStatus: ((participant: Participant, setAdmin: Boolean) -> Unit)?
+) {
+    companion object {
+        private const val TAG = "[Conference Participant Model]"
+    }
+
     val sipUri = participant.address.asStringUriOnly()
 
     val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(
@@ -33,7 +45,31 @@ class ConferenceParticipantModel @WorkerThread constructor(val participant: Part
 
     val isAdmin = MutableLiveData<Boolean>()
 
+    val isMeAdmin = MutableLiveData<Boolean>()
+
     init {
         isAdmin.postValue(participant.isAdmin)
+        isMeAdmin.postValue(isMyselfAdmin)
+    }
+
+    @UiThread
+    fun removeParticipant() {
+        Log.w("$TAG Removing participant from conference")
+        coreContext.postOnCoreThread {
+            removeFromConference?.invoke(participant)
+        }
+    }
+
+    @UiThread
+    fun toggleAdminStatus() {
+        val newStatus = isAdmin.value == false
+        Log.w(
+            "$TAG Changing participant admin status to ${if (newStatus) "admin" else "not admin"}"
+        )
+        isAdmin.postValue(newStatus)
+
+        coreContext.postOnCoreThread {
+            changeAdminStatus?.invoke(participant, newStatus)
+        }
     }
 }

@@ -78,6 +78,10 @@ class ConferenceParticipantsListFragment : GenericCallFragment() {
             findNavController().popBackStack()
         }
 
+        binding.setAddParticipantsClickListener {
+            // TODO FIXME: display add participants fragment
+        }
+
         viewModel.conferenceModel.participants.observe(viewLifecycleOwner) {
             Log.i("$TAG participants list updated with [${it.size}] items")
             adapter.submitList(it)

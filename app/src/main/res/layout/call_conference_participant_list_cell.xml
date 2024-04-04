@@ -56,18 +56,55 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_300"
             android:id="@+id/admin"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:text="@string/conversation_info_participant_is_admin_label"
             android:textSize="12sp"
             android:textColor="?attr/color_main2_400"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:gravity="center"
-            android:visibility="@{model.isAdmin ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{model.isAdmin &amp;&amp; !model.isMeAdmin ? View.VISIBLE : View.GONE}"
             app:layout_constraintStart_toEndOf="@id/name"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/admin_toggle"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            style="@style/material_switch_style"
+            android:id="@+id/admin_toggle"
+            android:onClick="@{() -> model.toggleAdminStatus()}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@string/conversation_info_participant_is_admin_label"
+            android:textSize="12sp"
+            android:textColor="?attr/color_main2_400"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:enabled="@{!model.isMyself}"
+            android:checked="@{model.isAdmin}"
+            android:visibility="@{model.isMeAdmin ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintStart_toEndOf="@id/admin"
+            app:layout_constraintEnd_toStartOf="@id/remove_participant"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageView
+            android:id="@+id/remove_participant"
+            android:onClick="@{() -> model.removeParticipant()}"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/x"
+            android:visibility="@{model.isMeAdmin ? (model.isMyself ? View.INVISIBLE : View.VISIBLE) : View.GONE, default=gone}"
+            app:layout_constraintStart_toEndOf="@id/admin_toggle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:tint="?attr/color_danger_500" />
 
         <View
             android:id="@+id/separator"

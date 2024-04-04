@@ -8,6 +8,9 @@
             name="backClickListener"
             type="View.OnClickListener" />
         <variable
+            name="addParticipantsClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.call.viewmodel.CurrentCallViewModel" />
     </data>
@@ -52,6 +55,21 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title"
             app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/add_participants"
+            android:onClick="@{addParticipantsClickListener}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="16dp"
+            android:src="@drawable/plus_circle"
+            android:visibility="@{viewModel.conferenceModel.isMeAdmin ? View.VISIBLE : View.GONE, default=gone}"
+            app:tint="?attr/color_on_main"
+            app:backgroundTint="?attr/color_main1_500"
+            app:shapeAppearanceOverlay="@style/rounded"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
