@@ -8,6 +8,9 @@
             name="backClickListener"
             type="View.OnClickListener" />
         <variable
+            name="mergeCallsClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.call.viewmodel.CallsViewModel" />
     </data>
@@ -39,9 +42,23 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:text="@string/calls_list_title"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/merge"
             app:layout_constraintStart_toEndOf="@id/back"
             app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageView
+            android:id="@+id/merge"
+            android:onClick="@{mergeCallsClickListener}"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:padding="15dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/arrows_merge"
+            android:visibility="@{viewModel.callsCount > 1 ? View.VISIBLE : View.GONE}"
+            app:tint="?attr/color_main1_500"
+            app:layout_constraintBottom_toBottomOf="@id/title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/title"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/calls_list"

@@ -202,6 +202,11 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
         goToCallsListEvent.value = Event(true)
     }
 
+    @UiThread
+    fun mergeCallsIntoLocalConference() {
+        // TODO FIXME: implement local conferences merge
+    }
+
     @WorkerThread
     private fun updateOtherCallsInfo() {
         val core = coreContext.core

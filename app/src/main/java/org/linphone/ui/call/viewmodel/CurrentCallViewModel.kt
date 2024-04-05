@@ -729,7 +729,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                 )
                 val securityLevel = if (isDeviceTrusted) SecurityLevel.EndToEndEncryptedAndVerified else SecurityLevel.EndToEndEncrypted
                 val avatarModel = contact.value
-                if (avatarModel != null) {
+                if (avatarModel != null && currentCall.conference == null) { // Don't do it for conferences
                     avatarModel.trust.postValue(securityLevel)
                     contact.postValue(avatarModel)
 
