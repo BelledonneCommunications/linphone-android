@@ -312,6 +312,7 @@
     <string name="contacts_list_all_contacts_title">Tous les contacts</string>
     <string name="contacts_list_filter_popup_see_all">Voir tous les contacts</string>
     <string name="contacts_list_filter_popup_see_linphone_only">Voir les contacts &appName;</string>
+    <string name="contacts_list_filter_popup_see_sip_only">Voir les contacts SIP</string>
 
     <string name="contact_new_title">Nouveau contact</string>
     <string name="contact_edit_title">Modifier contact</string>

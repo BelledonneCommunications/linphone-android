@@ -57,12 +57,14 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
 
     val isListFiltered = MutableLiveData<Boolean>()
 
+    val isDefaultAccountLinphone = MutableLiveData<Boolean>()
+
     val vCardTerminatedEvent: MutableLiveData<Event<Pair<String, File>>> by lazy {
         MutableLiveData<Event<Pair<String, File>>>()
     }
 
     private var previousFilter = "NotSet"
-    private var limitSearchToLinphoneAccounts = true
+    private var domainFilter = ""
 
     private lateinit var magicSearch: MagicSearch
 
@@ -84,7 +86,7 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
 
             applyFilter(
                 currentFilter,
-                if (limitSearchToLinphoneAccounts) corePreferences.defaultDomain else ""
+                domainFilter
             )
         }
     }
@@ -93,8 +95,7 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
         showFavourites.value = true
 
         coreContext.postOnCoreThread { core ->
-            val defaultAccount = core.defaultAccount
-            limitSearchToLinphoneAccounts = defaultAccount?.isInSecureMode() ?: false
+            updateDomainFilter()
 
             coreContext.contactsManager.addListener(contactsListener)
             magicSearch = core.createMagicSearch()
@@ -120,34 +121,52 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
         coreContext.postOnCoreThread {
             applyFilter(
                 currentFilter,
-                if (limitSearchToLinphoneAccounts) corePreferences.defaultDomain else ""
+                domainFilter
             )
         }
     }
 
     @UiThread
     fun applyCurrentDefaultAccountFilter() {
-        coreContext.postOnCoreThread { core ->
-            val defaultAccount = core.defaultAccount
-            limitSearchToLinphoneAccounts = defaultAccount?.isInSecureMode() ?: false
+        coreContext.postOnCoreThread {
+            updateDomainFilter()
         }
 
         applyFilter(currentFilter)
     }
 
     @UiThread
-    fun changeContactsFilter(onlyLinphoneContacts: Boolean) {
-        limitSearchToLinphoneAccounts = onlyLinphoneContacts
+    fun changeContactsFilter(onlyLinphoneContacts: Boolean, onlySipContacts: Boolean) {
+        domainFilter = if (onlyLinphoneContacts) {
+            corePreferences.defaultDomain
+        } else if (onlySipContacts) {
+            "*"
+        } else {
+            ""
+        }
         applyFilter(currentFilter)
     }
 
     fun areAllContactsDisplayed(): Boolean {
-        return !limitSearchToLinphoneAccounts
+        return domainFilter.isEmpty()
     }
 
     @UiThread
     fun toggleFavouritesVisibility() {
         showFavourites.value = showFavourites.value == false
+    }
+
+    @WorkerThread
+    private fun updateDomainFilter() {
+        val defaultAccount = coreContext.core.defaultAccount
+        isDefaultAccountLinphone.postValue(
+            defaultAccount?.isInSecureMode() == true && defaultAccount.params.domain == corePreferences.defaultDomain
+        )
+        domainFilter = if (defaultAccount?.isInSecureMode() == true) {
+            corePreferences.defaultDomain
+        } else {
+            "*"
+        }
     }
 
     @UiThread

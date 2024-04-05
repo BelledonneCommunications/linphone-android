@@ -13,7 +13,13 @@
             name="linphoneOnlyClickListener"
             type="View.OnClickListener" />
         <variable
+            name="sipOnlyClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="seeAllSelected"
+            type="Boolean" />
+        <variable
+            name="showLinphoneFilter"
             type="Boolean" />
     </data>
 
@@ -52,12 +58,32 @@
             android:text="@string/contacts_list_filter_popup_see_linphone_only"
             android:textSize="14sp"
             android:textColor="?attr/color_main2_500"
+            android:visibility="@{showLinphoneFilter ? View.VISIBLE : View.GONE}"
             android:drawablePadding="5dp"
             android:drawableEnd="@drawable/check"
             android:drawableTint="@{seeAllSelected ? @color/transparent_color : @color/green_success_500, default=@color/green_success_500}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/no_filter"
+            app:layout_constraintBottom_toTopOf="@id/sip_filter"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/sip_filter"
+            android:onClick="@{sipOnlyClickListener}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/popup_menu_item_top_margin"
+            android:text="@string/contacts_list_filter_popup_see_sip_only"
+            android:textSize="14sp"
+            android:textColor="?attr/color_main2_500"
+            android:visibility="@{showLinphoneFilter ? View.GONE : View.VISIBLE}"
+            android:drawablePadding="5dp"
+            android:drawableEnd="@drawable/check"
+            android:drawableTint="@{seeAllSelected ? @color/transparent_color : @color/green_success_500, default=@color/green_success_500}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/linphone_filter"
             app:layout_constraintBottom_toTopOf="@id/bottom_anchor"/>
 
         <View
@@ -68,7 +94,7 @@
             app:layout_constraintWidth_max="@dimen/popup_menu_width"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/linphone_filter"
+            app:layout_constraintTop_toBottomOf="@id/sip_filter"
             app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
