@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.call.fragment
+package org.linphone.ui.call.conference.fragment
 
 import android.app.Dialog
 import android.content.DialogInterface
@@ -30,11 +30,11 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.linphone.databinding.CallConferenceLayoutBottomSheetBinding
-import org.linphone.ui.call.model.ConferenceModel
+import org.linphone.ui.call.conference.viewmodel.ConferenceViewModel
 
 @UiThread
 class ConferenceLayoutMenuDialogFragment(
-    val conferenceModel: ConferenceModel,
+    val conferenceModel: ConferenceViewModel,
     private val onDismiss: (() -> Unit)? = null
 ) : BottomSheetDialogFragment() {
     companion object {
@@ -71,18 +71,18 @@ class ConferenceLayoutMenuDialogFragment(
 
         view.setGridClickListener {
             if (conferenceModel.participantDevices.value.orEmpty().size < 6) {
-                conferenceModel.changeLayout(ConferenceModel.GRID_LAYOUT)
+                conferenceModel.changeLayout(ConferenceViewModel.GRID_LAYOUT)
                 dismiss()
             } else {
                 // TODO: notify user
             }
         }
         view.setActiveSpeakerClickListener {
-            conferenceModel.changeLayout(ConferenceModel.ACTIVE_SPEAKER_LAYOUT)
+            conferenceModel.changeLayout(ConferenceViewModel.ACTIVE_SPEAKER_LAYOUT)
             dismiss()
         }
         view.setAudioOnlyClickListener {
-            conferenceModel.changeLayout(ConferenceModel.AUDIO_ONLY_LAYOUT)
+            conferenceModel.changeLayout(ConferenceViewModel.AUDIO_ONLY_LAYOUT)
             dismiss()
         }
 

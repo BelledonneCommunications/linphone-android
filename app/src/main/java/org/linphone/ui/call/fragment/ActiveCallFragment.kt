@@ -124,11 +124,15 @@ class ActiveCallFragment : GenericCallFragment() {
     }
 
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
-        if (findNavController().currentDestination?.id == R.id.newCallFragment || findNavController().currentDestination?.id == R.id.callsListFragment) {
-            // Holds fragment in place while new fragment slides over it
-            return AnimationUtils.loadAnimation(activity, R.anim.hold)
+        return when (findNavController().currentDestination?.id) {
+            R.id.newCallFragment, R.id.callsListFragment, R.id.transferCallFragment, R.id.inCallConversationFragment -> {
+                // Holds fragment in place while new fragment slides over it
+                AnimationUtils.loadAnimation(activity, R.anim.hold)
+            }
+            else -> {
+                super.onCreateAnimation(transit, enter, nextAnim)
+            }
         }
-        return super.onCreateAnimation(transit, enter, nextAnim)
     }
 
     override fun onCreateView(

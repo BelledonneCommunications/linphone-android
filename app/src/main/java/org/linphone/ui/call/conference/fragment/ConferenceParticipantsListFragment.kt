@@ -17,18 +17,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.call.fragment
+package org.linphone.ui.call.conference.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.CallConferenceParticipantsListFragmentBinding
 import org.linphone.ui.call.adapter.ConferenceParticipantsListAdapter
+import org.linphone.ui.call.fragment.GenericCallFragment
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
 
 class ConferenceParticipantsListFragment : GenericCallFragment() {
@@ -41,6 +45,14 @@ class ConferenceParticipantsListFragment : GenericCallFragment() {
     private lateinit var viewModel: CurrentCallViewModel
 
     private lateinit var adapter: ConferenceParticipantsListAdapter
+
+    override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
+        if (findNavController().currentDestination?.id == R.id.conferenceAddParticipantsFragment) {
+            // Holds fragment in place while new fragment slides over it
+            return AnimationUtils.loadAnimation(activity, R.anim.hold)
+        }
+        return super.onCreateAnimation(transit, enter, nextAnim)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,7 +91,11 @@ class ConferenceParticipantsListFragment : GenericCallFragment() {
         }
 
         binding.setAddParticipantsClickListener {
-            // TODO FIXME: display add participants fragment
+            if (findNavController().currentDestination?.id == R.id.conferenceParticipantsListFragment) {
+                val action =
+                    ConferenceParticipantsListFragmentDirections.actionConferenceParticipantsListFragmentToConferenceAddParticipantsFragment()
+                findNavController().navigate(action)
+            }
         }
 
         viewModel.conferenceModel.participants.observe(viewLifecycleOwner) {

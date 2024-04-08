@@ -4,7 +4,7 @@
 
     <data>
         <import type="android.view.View" />
-        <import type="org.linphone.ui.call.model.ConferenceModel" />
+        <import type="org.linphone.ui.call.conference.viewmodel.ConferenceViewModel" />
         <variable
             name="gridClickListener"
             type="View.OnClickListener" />
@@ -16,7 +16,7 @@
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.call.model.ConferenceModel" />
+            type="org.linphone.ui.call.conference.viewmodel.ConferenceViewModel" />
     </data>
 
     <LinearLayout
@@ -39,7 +39,7 @@
             android:drawableEnd="@drawable/squares_four"
             android:drawableTint="@color/in_call_label_color"
             android:enabled="@{viewModel.participantDevices.size() &lt; 7 &amp;&amp; !viewModel.isScreenSharing, default=false}"
-            android:checked="@{viewModel.conferenceLayout == ConferenceModel.GRID_LAYOUT}"
+            android:checked="@{viewModel.conferenceLayout == ConferenceViewModel.GRID_LAYOUT}"
             app:useMaterialThemeColors="false"
             app:buttonTint="@color/in_call_label_color"/>
 
@@ -56,7 +56,7 @@
             android:layout_marginBottom="1dp"
             android:drawableEnd="@drawable/picture_in_picture"
             android:drawableTint="@color/white"
-            android:checked="@{viewModel.conferenceLayout == ConferenceModel.ACTIVE_SPEAKER_LAYOUT}"
+            android:checked="@{viewModel.conferenceLayout == ConferenceViewModel.ACTIVE_SPEAKER_LAYOUT}"
             app:useMaterialThemeColors="false"
             app:buttonTint="@color/white"/>
 
@@ -73,7 +73,7 @@
             android:layout_marginBottom="1dp"
             android:drawableEnd="@drawable/waveform"
             android:drawableTint="@color/white"
-            android:checked="@{viewModel.conferenceLayout == ConferenceModel.AUDIO_ONLY_LAYOUT}"
+            android:checked="@{viewModel.conferenceLayout == ConferenceViewModel.AUDIO_ONLY_LAYOUT}"
             app:useMaterialThemeColors="false"
             app:buttonTint="@color/white"/>
 

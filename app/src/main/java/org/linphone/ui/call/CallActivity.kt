@@ -47,10 +47,10 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.CallActivityBinding
 import org.linphone.ui.GenericActivity
+import org.linphone.ui.call.conference.fragment.ActiveConferenceCallFragmentDirections
+import org.linphone.ui.call.conference.fragment.ConferenceLayoutMenuDialogFragment
 import org.linphone.ui.call.fragment.ActiveCallFragmentDirections
-import org.linphone.ui.call.fragment.ActiveConferenceCallFragmentDirections
 import org.linphone.ui.call.fragment.AudioDevicesMenuDialogFragment
-import org.linphone.ui.call.fragment.ConferenceLayoutMenuDialogFragment
 import org.linphone.ui.call.fragment.IncomingCallFragmentDirections
 import org.linphone.ui.call.fragment.OutgoingCallFragmentDirections
 import org.linphone.ui.call.model.AudioDeviceModel

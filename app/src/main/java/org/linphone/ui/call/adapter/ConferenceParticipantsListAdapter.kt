@@ -29,7 +29,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
 import org.linphone.databinding.CallConferenceParticipantListCellBinding
-import org.linphone.ui.call.model.ConferenceParticipantModel
+import org.linphone.ui.call.conference.model.ConferenceParticipantModel
 
 class ConferenceParticipantsListAdapter :
     ListAdapter<ConferenceParticipantModel, RecyclerView.ViewHolder>(ParticipantDiffCallback()) {

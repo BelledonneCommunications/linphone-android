@@ -130,7 +130,7 @@
 
     <fragment
         android:id="@+id/activeConferenceCallFragment"
-        android:name="org.linphone.ui.call.fragment.ActiveConferenceCallFragment"
+        android:name="org.linphone.ui.call.conference.fragment.ActiveConferenceCallFragment"
         android:label="ActiveConferenceCallFragment"
         tools:layout="@layout/call_active_conference_fragment">
         <action
@@ -161,9 +161,16 @@
 
     <fragment
         android:id="@+id/conferenceParticipantsListFragment"
-        android:name="org.linphone.ui.call.fragment.ConferenceParticipantsListFragment"
+        android:name="org.linphone.ui.call.conference.fragment.ConferenceParticipantsListFragment"
         android:label="ConferenceParticipantsListFragment"
-        tools:layout="@layout/call_conference_participants_list_fragment"/>
+        tools:layout="@layout/call_conference_participants_list_fragment">
+        <action
+            android:id="@+id/action_conferenceParticipantsListFragment_to_conferenceAddParticipantsFragment"
+            app:destination="@id/conferenceAddParticipantsFragment"
+            app:enterAnim="@anim/slide_in"
+            app:popExitAnim="@anim/slide_out"
+            app:launchSingleTop="true" />
+    </fragment>
 
     <fragment
         android:id="@+id/inCallConversationFragment"
@@ -177,5 +184,11 @@
             android:name="remoteSipUri"
             app:argType="string" />
     </fragment>
+
+    <fragment
+        android:id="@+id/conferenceAddParticipantsFragment"
+        android:name="org.linphone.ui.call.conference.fragment.ConferenceAddParticipantsFragment"
+        android:label="ConferenceAddParticipantsFragment"
+        tools:layout="@layout/generic_add_participants_fragment"/>
 
 </navigation>

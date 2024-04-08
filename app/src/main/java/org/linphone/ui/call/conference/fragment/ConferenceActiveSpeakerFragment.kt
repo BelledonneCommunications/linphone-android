@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.call.fragment
+package org.linphone.ui.call.conference.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -26,18 +26,20 @@ import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
-import org.linphone.databinding.CallConferenceGridFragmentBinding
-import org.linphone.ui.call.model.ConferenceModel
+import org.linphone.databinding.CallConferenceActiveSpeakerFragmentBinding
+import org.linphone.ui.call.conference.viewmodel.ConferenceViewModel
+import org.linphone.ui.call.fragment.GenericCallFragment
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
 @UiThread
-class ConferenceGridFragment : GenericCallFragment() {
+class ConferenceActiveSpeakerFragment : GenericCallFragment() {
     companion object {
-        private const val TAG = "[Conference Grid Fragment]"
+        private const val TAG = "[Conference Active Speaker Fragment]"
     }
 
-    private lateinit var binding: CallConferenceGridFragmentBinding
+    private lateinit var binding: CallConferenceActiveSpeakerFragmentBinding
 
     private lateinit var callViewModel: CurrentCallViewModel
 
@@ -46,7 +48,7 @@ class ConferenceGridFragment : GenericCallFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = CallConferenceGridFragmentBinding.inflate(layoutInflater)
+        binding = CallConferenceActiveSpeakerFragmentBinding.inflate(layoutInflater)
         return binding.root
     }
 
@@ -63,29 +65,34 @@ class ConferenceGridFragment : GenericCallFragment() {
 
         callViewModel.conferenceModel.conferenceLayout.observe(viewLifecycleOwner) {
             when (it) {
-                ConferenceModel.ACTIVE_SPEAKER_LAYOUT -> {
+                ConferenceViewModel.GRID_LAYOUT -> {
                     Log.i(
-                        "$TAG Conference layout changed to active speaker, navigating to matching fragment"
+                        "$TAG Conference layout changed to mosaic, navigating to matching fragment"
                     )
-                    if (findNavController().currentDestination?.id == R.id.conferenceGridFragment) {
+                    if (findNavController().currentDestination?.id == R.id.conferenceActiveSpeakerFragment) {
                         findNavController().navigate(
-                            R.id.action_conferenceGridFragment_to_conferenceActiveSpeakerFragment
+                            R.id.action_conferenceActiveSpeakerFragment_to_conferenceGridFragment
                         )
                     }
                 }
-                ConferenceModel.AUDIO_ONLY_LAYOUT -> {
+                ConferenceViewModel.AUDIO_ONLY_LAYOUT -> {
                     Log.i(
                         "$TAG Conference layout changed to audio only, navigating to matching fragment"
                     )
-                    if (findNavController().currentDestination?.id == R.id.conferenceGridFragment) {
+                    if (findNavController().currentDestination?.id == R.id.conferenceActiveSpeakerFragment) {
                         findNavController().navigate(
-                            R.id.action_conferenceGridFragment_to_conferenceAudioOnlyFragment
+                            R.id.action_conferenceActiveSpeakerFragment_to_conferenceAudioOnlyFragment
                         )
                     }
                 }
                 else -> {
                 }
             }
+        }
+
+        coreContext.postOnCoreThread { core ->
+            Log.i("$TAG Setting native video window ID")
+            core.nativeVideoWindowId = binding.activeSpeakerSurface
         }
     }
 }

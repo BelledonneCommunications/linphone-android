@@ -17,13 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.call.model
+package org.linphone.ui.call.conference.viewmodel
 
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.core.Address
 import org.linphone.core.Call
 import org.linphone.core.Conference
 import org.linphone.core.ConferenceListenerStub
@@ -32,11 +33,13 @@ import org.linphone.core.Participant
 import org.linphone.core.ParticipantDevice
 import org.linphone.core.StreamType
 import org.linphone.core.tools.Log
-import org.linphone.ui.call.view.GridBoxLayout
+import org.linphone.ui.call.conference.model.ConferenceParticipantDeviceModel
+import org.linphone.ui.call.conference.model.ConferenceParticipantModel
+import org.linphone.ui.call.conference.view.GridBoxLayout
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
-class ConferenceModel {
+class ConferenceViewModel {
     companion object {
         private const val TAG = "[Conference ViewModel]"
 
@@ -256,6 +259,29 @@ class ConferenceModel {
     fun changeLayout(newLayout: Int) {
         coreContext.postOnCoreThread {
             setNewLayout(newLayout)
+        }
+    }
+
+    @UiThread
+    fun inviteSipUrisIntoConference(uris: List<String>) {
+        coreContext.postOnCoreThread { core ->
+            val addresses = arrayListOf<Address>()
+            for (uri in uris) {
+                val address = core.interpretUrl(uri, false)
+                if (address != null) {
+                    addresses.add(address)
+                    Log.i("$TAG Address [${address.asStringUriOnly()}] will be added to conference")
+                } else {
+                    Log.e(
+                        "$TAG Failed to parse SIP URI [$uri] into address, can't add it to the conference!"
+                    )
+                    // TODO: notify user
+                }
+            }
+            val addressesArray = arrayOfNulls<Address>(addresses.size)
+            addresses.toArray(addressesArray)
+            Log.i("$TAG Trying to add [${addressesArray.size}] new participant(s) into conference")
+            conference.addParticipants(addressesArray)
         }
     }
 

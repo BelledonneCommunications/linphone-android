@@ -51,10 +51,10 @@ import org.linphone.core.MediaEncryption
 import org.linphone.core.SecurityLevel
 import org.linphone.core.StreamType
 import org.linphone.core.tools.Log
+import org.linphone.ui.call.conference.viewmodel.ConferenceViewModel
 import org.linphone.ui.call.model.AudioDeviceModel
 import org.linphone.ui.call.model.CallMediaEncryptionModel
 import org.linphone.ui.call.model.CallStatsModel
-import org.linphone.ui.call.model.ConferenceModel
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.history.model.NumpadModel
 import org.linphone.ui.main.model.isInSecureMode
@@ -173,7 +173,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     // Conference
 
-    val conferenceModel = ConferenceModel()
+    val conferenceModel = ConferenceViewModel()
 
     val goToConferenceEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
@@ -592,7 +592,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                         Log.i("$TAG Conference found and video disabled in params, enabling it")
                         params.isVideoEnabled = true
                         params.videoDirection = MediaDirection.SendRecv
-                        conferenceModel.setNewLayout(ConferenceModel.ACTIVE_SPEAKER_LAYOUT)
+                        conferenceModel.setNewLayout(ConferenceViewModel.ACTIVE_SPEAKER_LAYOUT)
                     } else {
                         if (params?.videoDirection == MediaDirection.SendRecv || params?.videoDirection == MediaDirection.SendOnly) {
                             Log.i(

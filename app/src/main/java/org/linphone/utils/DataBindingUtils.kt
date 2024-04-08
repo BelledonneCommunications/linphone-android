@@ -62,7 +62,7 @@ import org.linphone.contacts.AbstractAvatarModel
 import org.linphone.contacts.AvatarGenerator
 import org.linphone.core.ConsolidatedPresence
 import org.linphone.core.tools.Log
-import org.linphone.ui.call.model.ConferenceParticipantDeviceModel
+import org.linphone.ui.call.conference.model.ConferenceParticipantDeviceModel
 
 /**
  * This file contains all the data binding necessary for the app

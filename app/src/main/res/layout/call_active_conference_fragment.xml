@@ -5,7 +5,7 @@
 
     <data>
         <import type="android.view.View" />
-        <import type="org.linphone.ui.call.model.ConferenceModel" />
+        <import type="org.linphone.ui.call.conference.viewmodel.ConferenceViewModel" />
         <variable
             name="backClickListener"
             type="View.OnClickListener" />
@@ -29,7 +29,7 @@
             type="org.linphone.ui.call.viewmodel.CurrentCallViewModel" />
         <variable
             name="conferenceViewModel"
-            type="org.linphone.ui.call.model.ConferenceModel" />
+            type="org.linphone.ui.call.conference.viewmodel.ConferenceViewModel" />
         <variable
             name="callsViewModel"
             type="org.linphone.ui.call.viewmodel.CallsViewModel" />
