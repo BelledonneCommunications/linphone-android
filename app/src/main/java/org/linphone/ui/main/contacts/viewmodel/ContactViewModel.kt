@@ -84,6 +84,8 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
 
     val contactFoundEvent = MutableLiveData<Event<Boolean>>()
 
+    val isStored = MutableLiveData<Boolean>()
+
     val chatDisabled = MutableLiveData<Boolean>()
 
     val videoCallDisabled = MutableLiveData<Boolean>()
@@ -229,6 +231,7 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
     private var refKey: String = ""
 
     init {
+        isStored.value = false
         expandNumbersAndAddresses.value = true
         trustedDevicesPercentage.value = 0
 
@@ -255,14 +258,33 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
-    fun findContactByRefKey(refKey: String) {
+    fun findContact(displayedFriend: Friend?, refKey: String) {
         this.refKey = refKey
 
         coreContext.postOnCoreThread {
-            val friend = coreContext.contactsManager.findContactById(refKey)
-            if (friend != null) {
+            if (displayedFriend != null && ::friend.isInitialized && friend == displayedFriend) {
+                Log.i("$TAG Contact object already in memory, skipping")
+
+                refreshContactInfo()
+                contactFoundEvent.postValue(Event(true))
+                return@postOnCoreThread
+            }
+
+            if (displayedFriend != null && (!::friend.isInitialized || friend != displayedFriend)) {
+                if (displayedFriend.refKey == refKey) {
+                    friend = displayedFriend
+                    Log.i("$TAG Friend object available in sharedViewModel, using it")
+
+                    refreshContactInfo()
+                    contactFoundEvent.postValue(Event(true))
+                    return@postOnCoreThread
+                }
+            }
+
+            val found = coreContext.contactsManager.findContactById(refKey)
+            if (found != null) {
+                friend = found
                 Log.i("$TAG Found contact [${friend.name}] matching ref key [$refKey]")
-                this.friend = friend
 
                 refreshContactInfo()
                 contactFoundEvent.postValue(Event(true))
@@ -273,6 +295,7 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
     @WorkerThread
     fun refreshContactInfo() {
         isFavourite.postValue(friend.starred)
+        isStored.postValue(friend.inList())
 
         contact.value?.destroy()
         contact.postValue(ContactAvatarModel(friend))

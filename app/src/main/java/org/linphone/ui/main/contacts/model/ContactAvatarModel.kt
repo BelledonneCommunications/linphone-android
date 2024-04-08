@@ -40,9 +40,11 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend, val addre
         private const val TAG = "[Contact Avatar Model]"
     }
 
-    val id = friend.refKey ?: friend.name
+    val id = friend.refKey ?: friend.name ?: ""
 
     val contactName = friend.name
+
+    val isStored = friend.inList()
 
     val isFavourite = MutableLiveData<Boolean>()
 

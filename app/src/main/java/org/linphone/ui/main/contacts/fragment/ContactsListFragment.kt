@@ -206,6 +206,7 @@ class ContactsListFragment : AbstractTopBarFragment() {
             it.consume { model ->
                 val modalBottomSheet = ContactsListMenuDialogFragment(
                     model.isFavourite.value == true,
+                    model.isStored,
                     { // onDismiss
                         adapter.resetSelection()
                     },
@@ -244,7 +245,8 @@ class ContactsListFragment : AbstractTopBarFragment() {
 
         adapter.contactClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
-                sharedViewModel.showContactEvent.value = Event(model.id ?: "")
+                sharedViewModel.displayedFriend = model.friend
+                sharedViewModel.showContactEvent.value = Event(model.id)
             }
         }
     }

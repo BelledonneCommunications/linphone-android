@@ -25,6 +25,7 @@ import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.core.ChatRoom
+import org.linphone.core.Friend
 import org.linphone.ui.main.chat.model.MessageModel
 import org.linphone.utils.Event
 
@@ -75,6 +76,7 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
 
     /* Contacts related */
 
+    var displayedFriend: Friend? = null // Prevents the need to go look for the friend
     val showContactEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
     }

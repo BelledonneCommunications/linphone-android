@@ -226,9 +226,9 @@
     <string name="settings_contacts_ldap_search_base_title">Base de recherche (ne peut être vide)</string>
     <string name="settings_contacts_ldap_search_filter_title">Filtre</string>
     <string name="settings_contacts_ldap_max_results_title">Nombre de résultats maximum</string>
-    <string name="settings_contacts_ldap_request_timeout_title">Durée maximum</string>
-    <string name="settings_contacts_ldap_request_delay_title">Délai entre 2 requêtes (en secondes)</string>
-    <string name="settings_contacts_ldap_min_characters_title">Nombre minimum de caractères pour lancer la requête (en millisecondes)</string>
+    <string name="settings_contacts_ldap_request_timeout_title">Durée maximum (en secondes)</string>
+    <string name="settings_contacts_ldap_request_delay_title">Délai entre 2 requêtes (en millisecondes)</string>
+    <string name="settings_contacts_ldap_min_characters_title">Nombre minimum de caractères pour lancer la requête</string>
     <string name="settings_contacts_ldap_name_attributes_title">Attributs de nom</string>
     <string name="settings_contacts_ldap_sip_attributes_title">Attributs SIP</string>
     <string name="settings_contacts_ldap_sip_domain_title">Domaine SIP</string>

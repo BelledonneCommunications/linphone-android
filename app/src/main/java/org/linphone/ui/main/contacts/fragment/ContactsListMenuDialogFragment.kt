@@ -34,6 +34,7 @@ import org.linphone.databinding.ContactsListLongPressMenuBinding
 @UiThread
 class ContactsListMenuDialogFragment(
     private val isFavourite: Boolean,
+    private val isStored: Boolean,
     private val onDismiss: (() -> Unit)? = null,
     private val onFavourite: (() -> Unit)? = null,
     private val onShare: (() -> Unit)? = null,
@@ -68,6 +69,7 @@ class ContactsListMenuDialogFragment(
     ): View {
         val view = ContactsListLongPressMenuBinding.inflate(layoutInflater)
         view.isFavourite = isFavourite
+        view.isStored = isStored
 
         view.setFavoriteClickListener {
             onFavourite?.invoke()

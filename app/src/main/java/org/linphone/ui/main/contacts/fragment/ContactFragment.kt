@@ -98,7 +98,7 @@ class ContactFragment : SlidingPaneChildFragment() {
 
         val refKey = args.contactRefKey
         Log.i("$TAG Looking up for contact with ref key [$refKey]")
-        viewModel.findContactByRefKey(refKey)
+        viewModel.findContact(sharedViewModel.displayedFriend, refKey)
 
         binding.setBackClickListener {
             goBack()

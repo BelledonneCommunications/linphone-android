@@ -79,6 +79,8 @@ class LdapViewModel : ViewModel() {
 
         useTls.value = true
         minCharacters.value = "3"
+        requestTimeout.value = "5"
+        requestDelay.value = "2000"
     }
 
     @UiThread

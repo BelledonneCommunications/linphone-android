@@ -274,7 +274,7 @@ class ContactsManager @UiThread constructor() {
                 return found
             }
         }
-        Log.d("$TAG No friend matching ref key [$id] has been found")
+        Log.w("$TAG No friend matching ref key [$id] has been found")
         return null
     }
 
