@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2023 Belledonne Communications SARL.
+ * Copyright (c) 2010-2024 Belledonne Communications SARL.
  *
  * This file is part of linphone-android
  * (see https://www.linphone.org).
@@ -17,35 +17,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.main.chat.fragment
+package org.linphone.ui.call.fragment
 
-import android.Manifest
 import android.app.Dialog
-import android.content.ActivityNotFoundException
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
-import android.widget.PopupWindow
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
-import androidx.core.app.ActivityCompat
-import androidx.core.content.FileProvider
 import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -54,13 +43,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
-import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -72,34 +57,29 @@ import org.linphone.core.ChatMessage
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatBubbleLongPressMenuBinding
 import org.linphone.databinding.ChatConversationFragmentBinding
-import org.linphone.databinding.ChatConversationPopupMenuBinding
-import org.linphone.ui.main.MainActivity
+import org.linphone.ui.call.CallActivity
 import org.linphone.ui.main.chat.ConversationScrollListener
 import org.linphone.ui.main.chat.adapter.ConversationEventAdapter
 import org.linphone.ui.main.chat.adapter.MessageBottomSheetAdapter
+import org.linphone.ui.main.chat.fragment.ConversationFragmentArgs
+import org.linphone.ui.main.chat.fragment.EndToEndEncryptionDetailsDialogFragment
 import org.linphone.ui.main.chat.model.MessageDeliveryModel
 import org.linphone.ui.main.chat.model.MessageModel
 import org.linphone.ui.main.chat.model.MessageReactionsModel
 import org.linphone.ui.main.chat.view.RichEditText
 import org.linphone.ui.main.chat.viewmodel.ConversationViewModel
-import org.linphone.ui.main.chat.viewmodel.ConversationViewModel.Companion.SCROLLING_POSITION_NOT_SET
 import org.linphone.ui.main.chat.viewmodel.SendMessageInConversationViewModel
-import org.linphone.ui.main.fragment.SlidingPaneChildFragment
-import org.linphone.utils.Event
-import org.linphone.utils.FileUtils
 import org.linphone.utils.RecyclerViewHeaderDecoration
 import org.linphone.utils.RecyclerViewSwipeUtils
 import org.linphone.utils.RecyclerViewSwipeUtilsCallback
-import org.linphone.utils.TimestampUtils
 import org.linphone.utils.addCharacterAtPosition
 import org.linphone.utils.hideKeyboard
 import org.linphone.utils.setKeyboardInsetListener
 import org.linphone.utils.showKeyboard
 
-@UiThread
-class ConversationFragment : SlidingPaneChildFragment() {
+class ConversationFragment : GenericCallFragment() {
     companion object {
-        private const val TAG = "[Conversation Fragment]"
+        private const val TAG = "[In-call Conversation Fragment]"
     }
 
     private lateinit var binding: ChatConversationFragmentBinding
@@ -118,72 +98,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
 
     private var bottomSheetDialog: BottomSheetDialogFragment? = null
 
-    private val pickMedia = registerForActivityResult(
-        ActivityResultContracts.PickMultipleVisualMedia()
-    ) { list ->
-        if (!list.isNullOrEmpty()) {
-            for (uri in list) {
-                lifecycleScope.launch {
-                    withContext(Dispatchers.IO) {
-                        val path = FileUtils.getFilePath(requireContext(), uri, false)
-                        Log.i("$TAG Picked file [$uri] matching path is [$path]")
-                        if (path != null) {
-                            withContext(Dispatchers.Main) {
-                                sendMessageViewModel.addAttachment(path)
-                            }
-                        }
-                    }
-                }
-            }
-        } else {
-            Log.w("$TAG No file picked")
-        }
-    }
-
-    private var pendingImageCaptureFile: File? = null
-
-    private val startCameraCapture = registerForActivityResult(
-        ActivityResultContracts.TakePicture()
-    ) { captured ->
-        val path = pendingImageCaptureFile?.absolutePath
-        if (path != null) {
-            if (captured) {
-                Log.i("$TAG Image was captured and saved in [$path]")
-                sendMessageViewModel.addAttachment(path)
-            } else {
-                Log.w("$TAG Image capture was aborted")
-                lifecycleScope.launch {
-                    FileUtils.deleteFile(path)
-                }
-            }
-            pendingImageCaptureFile = null
-        } else {
-            Log.e("$TAG No pending captured image file!")
-        }
-    }
-
-    private val requestCameraPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            Log.i("$TAG CAMERA permission has been granted")
-        } else {
-            Log.e("$TAG CAMERA permission has been denied")
-        }
-    }
-
-    private val requestRecordAudioPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            Log.i("$TAG RECORD_AUDIO permission has been granted, starting voice message recording")
-            sendMessageViewModel.startVoiceMessageRecording()
-        } else {
-            Log.e("$TAG RECORD_AUDIO permission has been denied")
-        }
-    }
-
-    private val dataObserver = object : AdapterDataObserver() {
+    private val dataObserver = object : RecyclerView.AdapterDataObserver() {
         override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
             if (positionStart > 0) {
                 adapter.notifyItemChanged(positionStart - 1) // For grouping purposes
@@ -206,26 +121,6 @@ class ConversationFragment : SlidingPaneChildFragment() {
                     "$TAG [$itemCount] new events have been loaded, scrolling to first unread message"
                 )
                 scrollToFirstUnreadMessageOrBottom()
-            }
-        }
-    }
-
-    private val textObserver = object : TextWatcher {
-        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-        }
-
-        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-        }
-
-        override fun afterTextChanged(p0: Editable?) {
-            sendMessageViewModel.isParticipantsListOpen.value = false
-
-            val split = p0.toString().split(" ")
-            for (part in split) {
-                if (part == "@") {
-                    Log.i("$TAG '@' found, opening participants list")
-                    sendMessageViewModel.isParticipantsListOpen.value = true
-                }
             }
         }
     }
@@ -262,7 +157,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
 
     private var currentChatMessageModelForBottomSheet: MessageModel? = null
 
-    private val bottomSheetCallback = object : BottomSheetCallback() {
+    private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
             if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
                 currentChatMessageModelForBottomSheet?.isSelected?.value = false
@@ -297,32 +192,24 @@ class ConversationFragment : SlidingPaneChildFragment() {
         return binding.root
     }
 
-    override fun goBack(): Boolean {
-        sharedViewModel.closeSlidingPaneEvent.value = Event(true)
-
-        // If not done this fragment won't be paused, which will cause us issues
-        val action = ConversationFragmentDirections.actionConversationFragmentToEmptyFragment()
-        findNavController().navigate(action)
-        return true
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        postponeEnterTransition()
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
 
         viewModel = ViewModelProvider(this)[ConversationViewModel::class.java]
-        sendMessageViewModel = ViewModelProvider(this)[SendMessageInConversationViewModel::class.java]
+        sendMessageViewModel =
+            ViewModelProvider(this)[SendMessageInConversationViewModel::class.java]
 
+        viewModel.isInCallConversation.value = true
         binding.viewModel = viewModel
+
+        sendMessageViewModel.isInCallConversation.value = true
         binding.sendMessageViewModel = sendMessageViewModel
 
         binding.setBackClickListener {
-            goBack()
-        }
-
-        sharedViewModel.isSlidingPaneSlideable.observe(viewLifecycleOwner) { slideable ->
-            viewModel.showBackButton.value = slideable
+            findNavController().popBackStack()
         }
 
         binding.eventsList.setHasFixedSize(true)
@@ -368,34 +255,21 @@ class ConversationFragment : SlidingPaneChildFragment() {
         Log.i(
             "$TAG Looking up for conversation with local SIP URI [$localSipUri] and remote SIP URI [$remoteSipUri]"
         )
-        val chatRoom = sharedViewModel.displayedChatRoom
-        viewModel.findChatRoom(chatRoom, localSipUri, remoteSipUri)
-        Compatibility.setLocusIdInContentCaptureSession(binding.root, localSipUri, remoteSipUri)
+        viewModel.findChatRoom(null, localSipUri, remoteSipUri)
 
         viewModel.chatRoomFoundEvent.observe(viewLifecycleOwner) {
             it.consume { found ->
                 if (!found) {
                     (view.parent as? ViewGroup)?.doOnPreDraw {
                         Log.e("$TAG Failed to find conversation, going back")
-                        goBack()
+                        findNavController().popBackStack()
                         val message = getString(R.string.toast_cant_find_conversation_to_display)
-                        (requireActivity() as MainActivity).showRedToast(message, R.drawable.x)
+                        (requireActivity() as CallActivity).showRedToast(message, R.drawable.x)
                     }
                 } else {
                     sendMessageViewModel.configureChatRoom(viewModel.chatRoom)
-
-                    // Wait for chat room to be ready before trying to forward a message in it
-                    sharedViewModel.messageToForwardEvent.observe(viewLifecycleOwner) { event ->
-                        event.consume { toForward ->
-                            Log.i("$TAG Found message to forward")
-                            if (viewModel.isReadOnly.value == true || viewModel.isDisabledBecauseNotSecured.value == true) {
-                                Log.w(
-                                    "$TAG Can't forward message in this conversation as it is read only"
-                                )
-                            } else {
-                                sendMessageViewModel.forwardMessage(toForward)
-                            }
-                        }
+                    (view.parent as? ViewGroup)?.doOnPreDraw {
+                        startPostponedEnterTransition()
                     }
                 }
             }
@@ -405,10 +279,6 @@ class ConversationFragment : SlidingPaneChildFragment() {
             val items = viewModel.eventsList
             adapter.submitList(items)
             Log.i("$TAG Events (messages) list updated, contains [${items.size}] items")
-
-            (view.parent as? ViewGroup)?.doOnPreDraw {
-                sharedViewModel.openSlidingPaneEvent.value = Event(true)
-            }
         }
 
         viewModel.isEndToEndEncrypted.observe(viewLifecycleOwner) { encrypted ->
@@ -417,7 +287,6 @@ class ConversationFragment : SlidingPaneChildFragment() {
                 binding.eventsList.addOnItemTouchListener(listItemTouchListener)
             }
         }
-
         binding.messageBottomSheet.bottomSheetList.setHasFixedSize(true)
         val bottomSheetLayoutManager = LinearLayoutManager(requireContext())
         binding.messageBottomSheet.bottomSheetList.layoutManager = bottomSheetLayoutManager
@@ -460,55 +329,6 @@ class ConversationFragment : SlidingPaneChildFragment() {
             }
         }
 
-        binding.setShowMenuClickListener {
-            showPopupMenu(binding.showMenu)
-        }
-
-        binding.setOpenFilePickerClickListener {
-            Log.i("$TAG Opening media picker")
-            pickMedia.launch(
-                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo)
-            )
-        }
-
-        binding.setOpenCameraClickListener {
-            if (ActivityCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.CAMERA
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                Log.w("$TAG Asking for CAMERA permission")
-                requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA)
-            } else {
-                val timeStamp = TimestampUtils.toFullString(
-                    System.currentTimeMillis(),
-                    timestampInSecs = false
-                )
-                val tempFileName = "$timeStamp.jpg"
-                Log.i(
-                    "$TAG Opening camera to take a picture, will be stored in file [$tempFileName]"
-                )
-                val file = FileUtils.getFileStoragePath(tempFileName)
-                try {
-                    val publicUri = FileProvider.getUriForFile(
-                        requireContext(),
-                        requireContext().getString(R.string.file_provider),
-                        file
-                    )
-                    pendingImageCaptureFile = file
-                    startCameraCapture.launch(publicUri)
-                } catch (e: Exception) {
-                    Log.e(
-                        "$TAG Failed to get public URI for file in which to store captured image: $e"
-                    )
-                }
-            }
-        }
-
-        binding.setGoToInfoClickListener {
-            goToInfoFragment()
-        }
-
         binding.setScrollToBottomClickListener {
             scrollToFirstUnreadMessageOrBottom()
         }
@@ -537,18 +357,11 @@ class ConversationFragment : SlidingPaneChildFragment() {
             }
         }
 
-        sendMessageViewModel.askRecordAudioPermissionEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                Log.w("$TAG Asking for RECORD_AUDIO permission")
-                requestRecordAudioPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
-            }
-        }
-
         sendMessageViewModel.showRedToastEvent.observe(viewLifecycleOwner) {
             it.consume { pair ->
                 val message = pair.first
                 val icon = pair.second
-                (requireActivity() as MainActivity).showRedToast(message, icon)
+                (requireActivity() as CallActivity).showRedToast(message, icon)
             }
         }
 
@@ -567,22 +380,6 @@ class ConversationFragment : SlidingPaneChildFragment() {
             }
         }
 
-        viewModel.fileToDisplayEvent.observe(viewLifecycleOwner) {
-            it.consume { file ->
-                if (messageLongPressDialog != null) return@consume
-                Log.i("$TAG User clicked on file [$file], let's display it in file viewer")
-                goToFileViewer(file)
-            }
-        }
-
-        viewModel.conferenceToJoinEvent.observe(viewLifecycleOwner) {
-            it.consume { conferenceUri ->
-                if (messageLongPressDialog != null) return@consume
-                Log.i("$TAG Requesting to go to waiting room for conference URI [$conferenceUri]")
-                sharedViewModel.goToMeetingWaitingRoomEvent.value = Event(conferenceUri)
-            }
-        }
-
         viewModel.openWebBrowserEvent.observe(viewLifecycleOwner) {
             it.consume { url ->
                 if (messageLongPressDialog != null) return@consume
@@ -598,27 +395,11 @@ class ConversationFragment : SlidingPaneChildFragment() {
             }
         }
 
-        viewModel.contactToDisplayEvent.observe(viewLifecycleOwner) {
-            it.consume { friendRefKey ->
-                if (messageLongPressDialog != null) return@consume
-                Log.i("$TAG Navigating to contact with ref key [$friendRefKey]")
-                sharedViewModel.navigateToContactsEvent.value = Event(true)
-                sharedViewModel.showContactEvent.value = Event(friendRefKey)
-            }
-        }
-
-        viewModel.isGroup.observe(viewLifecycleOwner) { group ->
-            if (group) {
-                Log.i("$TAG Adding text observer to message sending area")
-                binding.sendArea.messageToSend.addTextChangedListener(textObserver)
-            }
-        }
-
         viewModel.showRedToastEvent.observe(viewLifecycleOwner) {
             it.consume { pair ->
                 val message = pair.first
                 val icon = pair.second
-                (requireActivity() as MainActivity).showRedToast(message, icon)
+                (requireActivity() as CallActivity).showRedToast(message, icon)
             }
         }
 
@@ -626,73 +407,9 @@ class ConversationFragment : SlidingPaneChildFragment() {
             it.consume {
                 val message = getString(R.string.conversation_message_deleted_toast)
                 val icon = R.drawable.x
-                (requireActivity() as MainActivity).showGreenToast(message, icon)
-                sharedViewModel.forceRefreshConversations.value = Event(true)
+                (requireActivity() as CallActivity).showGreenToast(message, icon)
             }
         }
-
-        sharedViewModel.richContentUri.observe(
-            viewLifecycleOwner
-        ) {
-            it.consume { uri ->
-                Log.i("$TAG Found rich content URI: $uri")
-                lifecycleScope.launch {
-                    withContext(Dispatchers.IO) {
-                        val path = FileUtils.getFilePath(requireContext(), uri, false)
-                        Log.i("$TAG Rich content URI [$uri] matching path is [$path]")
-                        if (path != null) {
-                            withContext(Dispatchers.Main) {
-                                sendMessageViewModel.addAttachment(path)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        sharedViewModel.textToShareFromIntent.observe(viewLifecycleOwner) { text ->
-            if (text.isNotEmpty()) {
-                Log.i("$TAG Found text to share from intent")
-                sendMessageViewModel.textToSend.value = text
-
-                sharedViewModel.textToShareFromIntent.value = ""
-            }
-        }
-
-        sharedViewModel.filesToShareFromIntent.observe(viewLifecycleOwner) { files ->
-            if (files.isNotEmpty()) {
-                Log.i("$TAG Found [${files.size}] files to share from intent")
-                for (path in files) {
-                    sendMessageViewModel.addAttachment(path)
-                }
-
-                sharedViewModel.filesToShareFromIntent.value = arrayListOf()
-            }
-        }
-
-        sharedViewModel.forceRefreshConversationInfo.observe(viewLifecycleOwner) {
-            it.consume {
-                Log.i("$TAG Force refreshing conversation info")
-                viewModel.refresh()
-            }
-        }
-
-        sharedViewModel.forceRefreshConversationEvents.observe(viewLifecycleOwner) {
-            it.consume {
-                Log.i("$TAG Force refreshing messages list")
-                viewModel.applyFilter("")
-            }
-        }
-
-        sharedViewModel.newChatMessageEphemeralLifetimeToSet.observe(viewLifecycleOwner) {
-            it.consume { ephemeralLifetime ->
-                Log.i(
-                    "$TAG Setting [$ephemeralLifetime] as new ephemeral lifetime for messages"
-                )
-                viewModel.updateEphemeralLifetime(ephemeralLifetime)
-            }
-        }
-
         binding.sendArea.messageToSend.setControlEnterListener(object :
                 RichEditText.RichEditTextSendListener {
                 override fun onControlEnterPressedAndReleased() {
@@ -736,11 +453,6 @@ class ConversationFragment : SlidingPaneChildFragment() {
 
         viewModel.updateCurrentlyDisplayedConversation()
 
-        if (viewModel.scrollingPosition != SCROLLING_POSITION_NOT_SET) {
-            Log.d("$TAG Restoring previous scrolling position: ${viewModel.scrollingPosition}")
-            binding.eventsList.scrollToPosition(viewModel.scrollingPosition)
-        }
-
         try {
             adapter.registerAdapterDataObserver(dataObserver)
         } catch (e: IllegalStateException) {
@@ -773,14 +485,6 @@ class ConversationFragment : SlidingPaneChildFragment() {
             Log.e("$TAG Failed to unregister data observer to adapter: $e")
         }
 
-        if (viewModel.isUserScrollingUp.value == true) {
-            val layoutManager = binding.eventsList.layoutManager as LinearLayoutManager
-            viewModel.scrollingPosition = layoutManager.findFirstCompletelyVisibleItemPosition()
-            Log.d("$TAG Storing current scrolling position: ${viewModel.scrollingPosition}")
-        } else {
-            viewModel.scrollingPosition = SCROLLING_POSITION_NOT_SET
-        }
-
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.messageBottomSheet.root)
         bottomSheetBehavior.removeBottomSheetCallback(bottomSheetCallback)
         currentChatMessageModelForBottomSheet = null
@@ -810,142 +514,6 @@ class ConversationFragment : SlidingPaneChildFragment() {
         }
     }
 
-    private fun goToInfoFragment() {
-        Log.i("TAG Navigating to info fragment")
-        if (findNavController().currentDestination?.id == R.id.conversationFragment) {
-            val action =
-                ConversationFragmentDirections.actionConversationFragmentToConversationInfoFragment(
-                    viewModel.localSipUri,
-                    viewModel.remoteSipUri
-                )
-            findNavController().navigate(action)
-        }
-    }
-
-    private fun goToFileViewer(path: String) {
-        Log.i("$TAG Navigating to file viewer fragment with path [$path]")
-        val extension = FileUtils.getExtensionFromFileName(path)
-        val mime = FileUtils.getMimeTypeFromExtension(extension)
-
-        val bundle = Bundle()
-        bundle.apply {
-            putString("localSipUri", viewModel.localSipUri)
-            putString("remoteSipUri", viewModel.remoteSipUri)
-            putString("path", path)
-        }
-        when (FileUtils.getMimeType(mime)) {
-            FileUtils.MimeType.Image, FileUtils.MimeType.Video -> {
-                bundle.putBoolean("isMedia", true)
-                sharedViewModel.displayFileEvent.value = Event(bundle)
-            }
-            FileUtils.MimeType.Pdf, FileUtils.MimeType.PlainText -> {
-                bundle.putBoolean("isMedia", false)
-                sharedViewModel.displayFileEvent.value = Event(bundle)
-            }
-            else -> {
-                val intent = Intent(Intent.ACTION_VIEW)
-                val contentUri: Uri =
-                    FileUtils.getPublicFilePath(requireContext(), path)
-                intent.setDataAndType(contentUri, "file/$mime")
-                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                try {
-                    requireContext().startActivity(intent)
-                } catch (anfe: ActivityNotFoundException) {
-                    Log.e("$TAG Can't open file [$path] in third party app: $anfe")
-                    val message = getString(
-                        R.string.toast_no_app_registered_to_handle_content_type_error
-                    )
-                    val icon = R.drawable.file
-                    (requireActivity() as MainActivity).showRedToast(message, icon)
-                }
-            }
-        }
-    }
-
-    private fun showPopupMenu(view: View) {
-        val popupView: ChatConversationPopupMenuBinding = DataBindingUtil.inflate(
-            LayoutInflater.from(requireContext()),
-            R.layout.chat_conversation_popup_menu,
-            null,
-            false
-        )
-
-        val popupWindow = PopupWindow(
-            popupView.root,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            true
-        )
-
-        popupView.conversationMuted = viewModel.isMuted.value == true
-        popupView.ephemeralMessagesAvailable = viewModel.isEndToEndEncrypted.value == true
-        popupView.readOnlyConversation = viewModel.isReadOnly.value == true
-
-        popupView.setGoToInfoClickListener {
-            goToInfoFragment()
-            popupWindow.dismiss()
-        }
-
-        popupView.setSearchClickListener {
-            Log.i("$TAG Opening search bar")
-            viewModel.openSearchBar()
-            popupWindow.dismiss()
-        }
-
-        popupView.setMuteClickListener {
-            Log.i("$TAG Muting conversation")
-            viewModel.mute()
-            popupWindow.dismiss()
-        }
-
-        popupView.setUnmuteClickListener {
-            Log.i("$TAG Un-muting conversation")
-            viewModel.unmute()
-            popupWindow.dismiss()
-        }
-
-        popupView.setConfigureEphemeralMessagesClickListener {
-            if (findNavController().currentDestination?.id == R.id.conversationFragment) {
-                val currentValue = viewModel.ephemeralLifetime.value ?: 0L
-                Log.i("$TAG Going to ephemeral lifetime fragment (currently [$currentValue])")
-                val action =
-                    ConversationFragmentDirections.actionConversationFragmentToConversationEphemeralLifetimeFragment(
-                        currentValue
-                    )
-                findNavController().navigate(action)
-            }
-            popupWindow.dismiss()
-        }
-
-        popupView.setMediaClickListener {
-            if (findNavController().currentDestination?.id == R.id.conversationFragment) {
-                val action =
-                    ConversationFragmentDirections.actionConversationFragmentToConversationMediaListFragment(
-                        localSipUri = viewModel.localSipUri,
-                        remoteSipUri = viewModel.remoteSipUri
-                    )
-                findNavController().navigate(action)
-            }
-            popupWindow.dismiss()
-        }
-
-        popupView.setDocumentsClickListener {
-            if (findNavController().currentDestination?.id == R.id.conversationFragment) {
-                val action =
-                    ConversationFragmentDirections.actionConversationFragmentToConversationDocumentsListFragment(
-                        localSipUri = viewModel.localSipUri,
-                        remoteSipUri = viewModel.remoteSipUri
-                    )
-                findNavController().navigate(action)
-            }
-            popupWindow.dismiss()
-        }
-
-        // Elevation is for showing a shadow around the popup
-        popupWindow.elevation = 20f
-        popupWindow.showAsDropDown(view, 0, 0, Gravity.BOTTOM)
-    }
-
     private fun dismissDialog() {
         messageLongPressDialog?.dismiss()
         messageLongPressDialog = null
@@ -963,6 +531,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
             null,
             false
         )
+        layout.hideForward = true
 
         layout.root.setOnClickListener {
             dismissDialog()
@@ -994,16 +563,6 @@ class ConversationFragment : SlidingPaneChildFragment() {
             Log.i("$TAG Re-sending message in error state")
             chatMessageModel.resend()
             dismissDialog()
-        }
-
-        layout.setForwardClickListener {
-            Log.i("$TAG Forwarding message, going back to conversations list")
-            // Remove observer before setting the message to forward
-            // as we don't want to forward it in this chat room
-            sharedViewModel.messageToForwardEvent.removeObservers(viewLifecycleOwner)
-            sharedViewModel.messageToForwardEvent.postValue(Event(chatMessageModel))
-            dismissDialog()
-            goBack()
         }
 
         layout.setReplyClickListener {
@@ -1143,7 +702,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
             )
         )
 
-        tabs.setOnTabSelectedListener(object : OnTabSelectedListener {
+        tabs.setOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 val state = tab?.id ?: ChatMessage.State.Displayed.toInt()
                 bottomSheetAdapter.submitList(
@@ -1188,7 +747,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
             index += 1
         }
 
-        tabs.setOnTabSelectedListener(object : OnTabSelectedListener {
+        tabs.setOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 val filter = tab?.tag.toString()
                 if (filter.isEmpty()) {

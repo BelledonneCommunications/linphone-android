@@ -69,7 +69,7 @@
                 android:padding="15dp"
                 android:adjustViewBounds="true"
                 android:onClick="@{backClickListener}"
-                android:visibility="@{viewModel.showBackButton &amp;&amp; !viewModel.searchBarVisible ? View.VISIBLE : View.GONE}"
+                android:visibility="@{viewModel.isInCallConversation || viewModel.showBackButton &amp;&amp; !viewModel.searchBarVisible ? View.VISIBLE : View.GONE}"
                 android:src="@drawable/caret_left"
                 android:contentDescription="@string/content_description_go_back_icon"
                 app:tint="?attr/color_main1_500"
@@ -148,6 +148,7 @@
                 android:padding="15dp"
                 android:adjustViewBounds="true"
                 android:src="@drawable/dots_three_vertical"
+                android:visibility="@{viewModel.isInCallConversation ? View.GONE : View.VISIBLE}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:tint="?attr/color_main2_500"/>
@@ -159,7 +160,7 @@
                 android:layout_height="@dimen/top_bar_height"
                 android:padding="15dp"
                 android:src="@drawable/phone"
-                android:visibility="@{viewModel.isReadOnly || viewModel.searchBarVisible ? View.GONE : View.VISIBLE}"
+                android:visibility="@{viewModel.isInCallConversation || viewModel.isReadOnly || viewModel.searchBarVisible ? View.GONE : View.VISIBLE}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/show_menu"
                 app:tint="?attr/color_main2_500" />

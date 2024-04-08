@@ -14,7 +14,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/color_success_500"
-        android:onClick="@{() -> viewModel.goToCallsList()}">
+        android:onClick="@{() -> viewModel.topBarClicked()}">
+
+        <ImageView
+            android:id="@+id/call_icon"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="10dp"
+            android:src="@{viewModel.callsTopBarIcon, default=@drawable/phone_pause}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/call_display_name"
+            app:layout_constraintBottom_toBottomOf="@id/call_display_name"
+            app:tint="@color/white" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_800"
@@ -26,14 +38,11 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:gravity="center_vertical"
-            android:text="@{viewModel.otherCallsLabel, default=`John Doe`}"
+            android:text="@{viewModel.callsTopBarLabel, default=`John Doe`}"
             android:textColor="@color/white"
             android:textSize="16sp"
-            android:drawableStart="@drawable/pause_call"
-            android:drawablePadding="10dp"
-            android:drawableTint="@color/white"
             app:layout_constraintEnd_toStartOf="@id/call_time"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/call_icon"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
@@ -44,7 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:gravity="center_vertical"
-            android:text="@{viewModel.otherCallsStatus, default=`Paused`}"
+            android:text="@{viewModel.callsTopBarStatus, default=`Paused`}"
             android:textColor="@color/white"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"

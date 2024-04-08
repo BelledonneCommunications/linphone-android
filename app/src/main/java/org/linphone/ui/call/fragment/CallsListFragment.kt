@@ -99,7 +99,7 @@ class CallsListFragment : GenericCallFragment() {
         }
 
         binding.setMergeCallsClickListener {
-            viewModel.mergeCallsIntoLocalConference()
+            viewModel.mergeCallsIntoConference()
         }
 
         viewModel.calls.observe(viewLifecycleOwner) {

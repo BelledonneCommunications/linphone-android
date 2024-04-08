@@ -30,7 +30,7 @@
             style="@style/context_menu_action_label_style"
             android:background="@drawable/menu_item_background"
             android:layout_marginBottom="1dp"
-            android:drawableStart="@drawable/pause_call"
+            android:drawableStart="@drawable/phone_pause"
             app:layout_constraintBottom_toTopOf="@id/hang_up"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
@@ -45,7 +45,7 @@
             style="@style/context_menu_action_label_style"
             android:background="@drawable/menu_item_background"
             android:layout_marginBottom="1dp"
-            android:drawableStart="@drawable/pause_call"
+            android:drawableStart="@drawable/phone_pause"
             app:layout_constraintBottom_toTopOf="@id/hang_up"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>

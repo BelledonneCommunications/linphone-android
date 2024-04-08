@@ -254,7 +254,11 @@ fun ImageView.loadImageForChatBubbleGrid(file: String?) {
 }
 
 private fun loadImageForChatBubble(imageView: ImageView, file: String?, grid: Boolean) {
-    if (!file.isNullOrEmpty()) {
+    if (file.isNullOrEmpty()) return
+
+    val isImage = FileUtils.isExtensionImage((file))
+    val isVideo = FileUtils.isExtensionVideo(file)
+    if (isImage || isVideo) {
         val dimen = if (grid) {
             imageView.resources.getDimension(R.dimen.chat_bubble_grid_image_size).toInt()
         } else {
@@ -266,7 +270,7 @@ private fun loadImageForChatBubble(imageView: ImageView, file: String?, grid: Bo
             R.dimen.chat_bubble_images_rounded_corner_radius
         )
 
-        if (FileUtils.isExtensionVideo(file)) {
+        if (isVideo) {
             imageView.load(file) {
                 placeholder(R.drawable.image_square)
                 videoFrameMillis(0)

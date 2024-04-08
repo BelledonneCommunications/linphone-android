@@ -57,6 +57,8 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
 
     val showBackButton = MutableLiveData<Boolean>()
 
+    val isInCallConversation = MutableLiveData<Boolean>()
+
     val avatarModel = MutableLiveData<ContactAvatarModel>()
 
     val isEmpty = MutableLiveData<Boolean>()

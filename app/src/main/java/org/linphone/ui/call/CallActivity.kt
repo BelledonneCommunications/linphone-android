@@ -233,6 +233,28 @@ class CallActivity : GenericActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+
+        findNavController(R.id.call_nav_container).addOnDestinationChangedListener { _, destination, _ ->
+            val showTopBar = when (destination.id) {
+                R.id.inCallConversationFragment, R.id.transferCallFragment, R.id.newCallFragment -> true
+                else -> false
+            }
+            callsViewModel.showTopBar.postValue(showTopBar)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val isInPipMode = isInPictureInPictureMode
+        if (::callViewModel.isInitialized) {
+            Log.i("$TAG onResume: is in PiP mode? $isInPipMode")
+            callViewModel.pipMode.value = isInPipMode
+        }
+    }
+
     override fun onPause() {
         super.onPause()
 
@@ -246,16 +268,6 @@ class CallActivity : GenericActivity() {
         coreContext.postOnCoreThread { core ->
             Log.i("$TAG Clearing native video window ID")
             core.nativeVideoWindowId = null
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        val isInPipMode = isInPictureInPictureMode
-        if (::callViewModel.isInitialized) {
-            Log.i("$TAG onResume: is in PiP mode? $isInPipMode")
-            callViewModel.pipMode.value = isInPipMode
         }
     }
 
@@ -323,7 +335,7 @@ class CallActivity : GenericActivity() {
         )
     }
 
-    private fun showRedToast(
+    fun showRedToast(
         message: String,
         @DrawableRes icon: Int,
         duration: Long = 4000,

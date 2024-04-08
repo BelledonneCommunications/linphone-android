@@ -43,6 +43,8 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
 
     val callsCount = MutableLiveData<Int>()
 
+    val showTopBar = MutableLiveData<Boolean>()
+
     val goToActiveCallEvent = MutableLiveData<Event<Boolean>>()
 
     val showIncomingCallEvent = MutableLiveData<Event<Boolean>>()
@@ -51,9 +53,11 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
 
     val noCallFoundEvent = MutableLiveData<Event<Boolean>>()
 
-    val otherCallsLabel = MutableLiveData<String>()
+    val callsTopBarLabel = MutableLiveData<String>()
 
-    val otherCallsStatus = MutableLiveData<String>()
+    val callsTopBarIcon = MutableLiveData<Int>()
+
+    val callsTopBarStatus = MutableLiveData<String>()
 
     val goToCallsListEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
@@ -149,6 +153,8 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
     }
 
     init {
+        showTopBar.value = false
+
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
 
@@ -198,12 +204,18 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
-    fun goToCallsList() {
-        goToCallsListEvent.value = Event(true)
+    fun topBarClicked() {
+        coreContext.postOnCoreThread { core ->
+            if (core.callsNb == 1) {
+                goToActiveCallEvent.postValue(Event(core.calls.first().conference == null))
+            } else {
+                goToCallsListEvent.postValue(Event(true))
+            }
+        }
     }
 
     @UiThread
-    fun mergeCallsIntoLocalConference() {
+    fun mergeCallsIntoConference() {
         // TODO FIXME: implement local conferences merge
     }
 
@@ -212,31 +224,46 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
         val core = coreContext.core
 
         if (core.callsNb > 1) {
+            showTopBar.postValue(true)
             if (core.callsNb == 2) {
                 val found = core.calls.find {
                     it.state == Call.State.Paused
                 }
+                callsTopBarIcon.postValue(R.drawable.phone_pause)
                 if (found != null) {
                     val contact = coreContext.contactsManager.findContactByAddress(
                         found.remoteAddress
                     )
-                    otherCallsLabel.postValue(
+                    callsTopBarLabel.postValue(
                         contact?.name ?: LinphoneUtils.getDisplayName(found.remoteAddress)
                     )
-                    otherCallsStatus.postValue(LinphoneUtils.callStateToString(found.state))
+                    callsTopBarStatus.postValue(LinphoneUtils.callStateToString(found.state))
                 } else {
                     Log.e("$TAG Failed to find a paused call")
                 }
             } else {
-                otherCallsLabel.postValue(
+                callsTopBarLabel.postValue(
                     AppUtils.getFormattedString(R.string.calls_paused_count_label, core.callsNb - 1)
                 )
-                otherCallsStatus.postValue("") // TODO: improve ?
+                callsTopBarStatus.postValue("") // TODO: improve ?
             }
 
             Log.i("$TAG At least one other call, asking activity to change status bar color")
             changeSystemTopBarColorToMultipleCallsEvent.postValue(Event(true))
         } else {
+            if (core.callsNb == 1) {
+                callsTopBarIcon.postValue(R.drawable.phone)
+
+                val call = core.calls.first()
+                val contact = coreContext.contactsManager.findContactByAddress(
+                    call.remoteAddress
+                )
+                callsTopBarLabel.postValue(
+                    contact?.name ?: LinphoneUtils.getDisplayName(call.remoteAddress)
+                )
+                callsTopBarStatus.postValue(LinphoneUtils.callStateToString(call.state))
+            }
+
             Log.i(
                 "$TAG No more than one call, asking activity to change status bar color back to primary"
             )

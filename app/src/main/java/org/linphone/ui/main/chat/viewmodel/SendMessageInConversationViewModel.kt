@@ -83,6 +83,8 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
 
     val isKeyboardOpen = MutableLiveData<Boolean>()
 
+    val isInCallConversation = MutableLiveData<Boolean>()
+
     val isVoiceRecording = MutableLiveData<Boolean>()
 
     val isVoiceRecordingInProgress = MutableLiveData<Boolean>()
@@ -149,6 +151,7 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
 
         isEmojiPickerOpen.value = false
         isPlayingVoiceRecord.value = false
+        isInCallConversation.value = false
     }
 
     override fun onCleared() {

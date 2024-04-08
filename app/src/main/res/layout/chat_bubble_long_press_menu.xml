@@ -26,6 +26,9 @@
         <variable
             name="model"
             type="org.linphone.ui.main.chat.model.MessageModel" />
+        <variable
+            name="hideForward"
+            type="Boolean" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -156,6 +159,7 @@
                 android:background="@drawable/menu_item_background"
                 android:layout_marginBottom="1dp"
                 android:drawableStart="@drawable/forward"
+                android:visibility="@{hideForward ? View.GONE : View.VISIBLE}"
                 app:layout_constraintBottom_toTopOf="@id/delete"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
