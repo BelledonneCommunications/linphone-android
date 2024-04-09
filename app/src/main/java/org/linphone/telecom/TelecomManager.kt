@@ -21,7 +21,6 @@ package org.linphone.telecom
 
 import android.content.Context
 import android.net.Uri
-import android.telecom.DisconnectCause
 import androidx.annotation.WorkerThread
 import androidx.core.telecom.CallAttributesCompat
 import androidx.core.telecom.CallsManager
@@ -34,7 +33,6 @@ import org.linphone.core.AudioDevice
 import org.linphone.core.Call
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
-import org.linphone.core.Reason
 import org.linphone.core.tools.Log
 import org.linphone.utils.LinphoneUtils
 

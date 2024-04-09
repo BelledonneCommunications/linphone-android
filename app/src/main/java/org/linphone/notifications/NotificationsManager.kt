@@ -97,6 +97,8 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
     private var currentForegroundServiceNotificationId = -1
 
+    private var currentlyRingingCallRemoteAddress: Address? = null
+
     private val notificationManager: NotificationManagerCompat by lazy {
         NotificationManagerCompat.from(context)
     }
@@ -117,14 +119,32 @@ class NotificationsManager @MainThread constructor(private val context: Context)
                     showCallNotification(call, true)
                 }
                 Call.State.Connected -> {
+                    if (call.dir == Call.Dir.Incoming) {
+                        Log.i(
+                            "$TAG Connected call was incoming (so it was answered), removing incoming call notification"
+                        )
+                        removeIncomingCallNotification()
+                    }
+
                     Log.i(
                         "$TAG Showing connected call notification for [${call.remoteAddress.asStringUriOnly()}]"
                     )
                     showCallNotification(call, false)
                 }
                 Call.State.End, Call.State.Error -> {
+                    val remoteSipAddress = call.remoteAddress
+                    if (call.dir == Call.Dir.Incoming && currentlyRingingCallRemoteAddress?.weakEqual(
+                            remoteSipAddress
+                        ) == true
+                    ) {
+                        Log.i(
+                            "$TAG Incoming call has been declined, cancelling incoming call notification"
+                        )
+                        removeIncomingCallNotification()
+                    }
+
                     Log.i(
-                        "$TAG Removing terminated call notification for [${call.remoteAddress.asStringUriOnly()}]"
+                        "$TAG Removing terminated/declined call notification for [${remoteSipAddress.asStringUriOnly()}]"
                     )
                     dismissCallNotification(call)
                 }
@@ -416,24 +436,30 @@ class NotificationsManager @MainThread constructor(private val context: Context)
     }
 
     @WorkerThread
+    fun removeIncomingCallNotification() {
+        if (currentForegroundServiceNotificationId == INCOMING_CALL_ID) {
+            if (coreService != null) {
+                Log.i(
+                    "$TAG Service found, stopping it as foreground before cancelling notification"
+                )
+                coreService?.stopForeground(STOP_FOREGROUND_REMOVE)
+            } else {
+                Log.w("$TAG Incoming call foreground notification Service wasn't found, weird...")
+            }
+            currentForegroundServiceNotificationId = -1
+        } else {
+            Log.i(
+                "$TAG Incoming call notification wasn't used to keep running Service as foreground"
+            )
+        }
+
+        cancelNotification(INCOMING_CALL_ID)
+        currentlyRingingCallRemoteAddress = null
+    }
+
+    @WorkerThread
     private fun showCallNotification(call: Call, isIncoming: Boolean) {
         val notifiable = getNotifiableForCall(call)
-        if (!isIncoming && call.dir == Call.Dir.Incoming) {
-            if (currentForegroundServiceNotificationId == INCOMING_CALL_ID) {
-                // This is an accepted incoming call, remove notification before adding it again to change channel
-                Log.i(
-                    "$TAG Incoming call with notification ID [${notifiable.notificationId}] was accepted, cancelling notification before adding it again to the right channel"
-                )
-                if (coreService != null) {
-                    Log.i(
-                        "$TAG Service found, stopping it as foreground before cancelling notification"
-                    )
-                    coreService?.stopForeground(STOP_FOREGROUND_REMOVE)
-                }
-                cancelNotification(INCOMING_CALL_ID)
-                currentForegroundServiceNotificationId = -1
-            }
-        }
 
         val callNotificationIntent = Intent(context, CallActivity::class.java)
         callNotificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -458,6 +484,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             isIncoming
         )
         if (isIncoming) {
+            currentlyRingingCallRemoteAddress = call.remoteAddress
             notify(INCOMING_CALL_ID, notification)
             if (currentForegroundServiceNotificationId == -1) {
                 startIncomingCallForeground(notification)

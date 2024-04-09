@@ -120,15 +120,15 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
             status: ConfiguringState?,
             message: String?
         ) {
-            Log.i("$TAG Configuring state changed [$status]")
+            Log.i("$TAG Configuring state changed [$status], message is [$message]")
             if (status == ConfiguringState.Successful) {
                 val text = context.getString(
-                    org.linphone.R.string.assistant_qr_code_provisioning_done
+                    org.linphone.R.string.toast_remote_provisioning_config_applied
                 )
                 greenToastToShowEvent.postValue(Event(Pair(text, org.linphone.R.drawable.smiley)))
             } else if (status == ConfiguringState.Failed) {
                 val text = context.getString(
-                    org.linphone.R.string.assistant_qr_code_provisioning_done
+                    org.linphone.R.string.toast_remote_provisioning_config_failed
                 )
                 redToastToShowEvent.postValue(
                     Event(Pair(text, org.linphone.R.drawable.warning_circle))
@@ -505,7 +505,9 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
     fun terminateCall(call: Call) {
         if (call.dir == Call.Dir.Incoming && LinphoneUtils.isCallIncoming(call.state)) {
             val reason = if (call.core.callsNb > 1) Reason.Busy else Reason.Declined
-            Log.i("$TAG Declining call [${call.remoteAddress.asStringUriOnly()}] with reason [$reason]")
+            Log.i(
+                "$TAG Declining call [${call.remoteAddress.asStringUriOnly()}] with reason [$reason]"
+            )
             call.decline(reason)
         } else {
             Log.i("$TAG Terminating call [${call.remoteAddress.asStringUriOnly()}]")

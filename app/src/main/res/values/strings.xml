@@ -137,6 +137,8 @@
     <string name="toast_call_transfer_in_progress">Call is being transferred</string>
     <string name="toast_call_transfer_successful">Call has been successfully transferred</string>
     <string name="toast_call_transfer_failed">Call transfer failed!</string>
+    <string name="toast_remote_provisioning_config_applied">Configuration successfully applied</string>
+    <string name="toast_remote_provisioning_config_failed">Error while trying to download and apply remote configuration</string>
 
     <!-- Assistant related string (account register / login / etc...) -->
     <string name="assistant_dialog_general_terms_and_privacy_policy_title">General terms &amp; privacy policy</string>
@@ -145,7 +147,6 @@
     <string name="assistant_dialog_confirm_phone_number_message">Are you sure you want to use this phone number?</string>
     <string name="assistant_account_login">Login</string>
     <string name="assistant_scan_qr_code">Scan QR code</string>
-    <string name="assistant_qr_code_provisioning_done">Configuration successfully applied</string>+
     <string name="assistant_login_third_party_sip_account">Use a third party SIP account</string>
     <string name="assistant_login_using_single_sign_on">Single sign on</string>
     <string name="assistant_no_account_yet">No account yet?</string>

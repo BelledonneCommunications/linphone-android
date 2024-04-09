@@ -102,6 +102,8 @@
     <string name="toast_call_transfer_in_progress">Appel en cours de transfert</string>
     <string name="toast_call_transfer_successful">L\'appel a été transferré</string>
     <string name="toast_call_transfer_failed">Le transfert a échoué !</string>
+    <string name="toast_remote_provisioning_config_applied">Configuration appliquée avec succès</string>
+    <string name="toast_remote_provisioning_config_failed">Erreur durant la récupération ou l\'application de la configuration</string>
 
     <!-- Assistant related string (account register / login / etc...) -->
     <string name="assistant_dialog_general_terms_and_privacy_policy_title">Conditions de service &amp; politique de confidentialité</string>
@@ -110,7 +112,6 @@
     <string name="assistant_dialog_confirm_phone_number_message">Êtes-vous sûr de vouloir utiliser ce numéro de téléphone ?</string>
     <string name="assistant_account_login">Connexion</string>
     <string name="assistant_scan_qr_code">Scanner un QR code</string>
-    <string name="assistant_qr_code_provisioning_done">Configuration téléchargée avec succès</string>
     <string name="assistant_login_third_party_sip_account">J\'ai un compte SIP tiers</string>
     <string name="assistant_login_using_single_sign_on">Single sign on</string>
     <string name="assistant_no_account_yet">Pas encore de compte ?</string>

@@ -26,7 +26,6 @@ import android.content.Context
 import android.content.Intent
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.tools.Log
-import org.linphone.utils.LinphoneUtils
 
 class NotificationBroadcastReceiver : BroadcastReceiver() {
     companion object {

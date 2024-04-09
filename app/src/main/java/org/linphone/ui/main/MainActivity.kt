@@ -184,6 +184,22 @@ class MainActivity : GenericActivity() {
                 Log.e("$TAG Security exception when doing reportFullyDrawn(): $se")
             }
         }
+
+        coreContext.greenToastToShowEvent.observe(this) {
+            it.consume { pair ->
+                val message = pair.first
+                val icon = pair.second
+                showGreenToast(message, icon)
+            }
+        }
+
+        coreContext.redToastToShowEvent.observe(this) {
+            it.consume { pair ->
+                val message = pair.first
+                val icon = pair.second
+                showRedToast(message, icon)
+            }
+        }
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -201,14 +217,6 @@ class MainActivity : GenericActivity() {
                 coreContext.postOnMainThread {
                     startActivity(Intent(this, AssistantActivity::class.java))
                 }
-            }
-        }
-
-        coreContext.greenToastToShowEvent.observe(this) {
-            it.consume { pair ->
-                val message = pair.first
-                val icon = pair.second
-                showGreenToast(message, icon)
             }
         }
 
@@ -394,7 +402,15 @@ class MainActivity : GenericActivity() {
             Intent.ACTION_SEND_MULTIPLE -> {
                 handleSendIntent(intent, true)
             }
-            Intent.ACTION_VIEW, Intent.ACTION_DIAL, Intent.ACTION_CALL -> {
+            Intent.ACTION_VIEW -> {
+                val uri = intent.data?.toString() ?: ""
+                if (uri.startsWith("linphone-config:")) {
+                    handleConfigIntent(uri)
+                } else {
+                    handleCallIntent(intent)
+                }
+            }
+            Intent.ACTION_DIAL, Intent.ACTION_CALL -> {
                 handleCallIntent(intent)
             }
             Intent.ACTION_VIEW_LOCUS -> {
@@ -624,6 +640,18 @@ class MainActivity : GenericActivity() {
             if (address != null) {
                 coreContext.startAudioCall(address)
             }
+        }
+    }
+
+    @MainThread
+    private fun handleConfigIntent(uri: String) {
+        val remoteConfigUri = uri.substring("linphone-config:".length)
+        coreContext.postOnCoreThread { core ->
+            coreContext.core.provisioningUri = remoteConfigUri
+            Log.w("$TAG Remote provisioning URL set to [$remoteConfigUri], restarting Core now")
+            coreContext.core.stop()
+            coreContext.core.start()
+            Log.i("$TAG Core restarted after remote provisioning URL was applied")
         }
     }
 
