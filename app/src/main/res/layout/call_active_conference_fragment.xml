@@ -235,6 +235,20 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
+            <org.linphone.ui.call.view.RoundCornersTextureView
+                android:id="@+id/local_preview_video_surface"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="@{viewModel.fullScreenMode || viewModel.pipMode ? @dimen/zero : @dimen/call_main_actions_menu_margin, default=@dimen/call_main_actions_menu_margin}"
+                android:visibility="@{conferenceViewModel.isMeParticipantSendingVideo &amp;&amp; conferenceViewModel.participants.size() == 1 &amp;&amp; !conferenceViewModel.isPaused ? View.VISIBLE : View.GONE}"
+                app:alignTopRight="true"
+                app:displayMode="black_bars"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHeight_max="200dp"
+                app:layout_constraintWidth_max="200dp" />
+
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/conference_layout_nav_host_fragment"
                 android:name="androidx.navigation.fragment.NavHostFragment"
@@ -242,7 +256,7 @@
                 android:layout_height="0dp"
                 android:layout_marginBottom="@{viewModel.fullScreenMode || viewModel.pipMode ? @dimen/zero : @dimen/call_main_actions_menu_margin, default=@dimen/call_main_actions_menu_margin}"
                 android:layout_marginTop="@{viewModel.fullScreenMode || viewModel.pipMode ? @dimen/zero : @dimen/call_remote_video_top_margin, default=@dimen/call_remote_video_top_margin}"
-                android:visibility="@{conferenceViewModel.participantDevices.size() > 1 &amp;&amp; !conferenceViewModel.isPaused ? View.VISIBLE : View.GONE}"
+                android:visibility="@{conferenceViewModel.participants.size() > 1 &amp;&amp; !conferenceViewModel.isPaused ? View.VISIBLE : View.GONE, default=gone}"
                 app:navGraph="@navigation/conference_nav_graph"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

@@ -19,12 +19,14 @@
  */
 package org.linphone.ui.call.conference.fragment
 
+import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
@@ -81,6 +83,33 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
         }
 
         override fun onSlide(bottomSheet: View, slideOffset: Float) { }
+    }
+
+    // For moving video preview purposes
+
+    private var previewX: Float = 0f
+    private var previewY: Float = 0f
+
+    private val previewTouchListener = View.OnTouchListener { view, event ->
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                previewX = view.x - event.rawX
+                previewY = view.y - event.rawY
+                true
+            }
+            MotionEvent.ACTION_MOVE -> {
+                view.animate()
+                    .x(event.rawX + previewX)
+                    .y(event.rawY + previewY)
+                    .setDuration(0)
+                    .start()
+                true
+            }
+            else -> {
+                view.performClick()
+                false
+            }
+        }
     }
 
     override fun onCreateView(
@@ -163,6 +192,15 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
             actionsBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
+        callViewModel.conferenceModel.participants.observe(viewLifecycleOwner) { participants ->
+            coreContext.postOnCoreThread { core ->
+                if (participants.size == 1) {
+                    Log.i("$TAG We are alone in that conference, using nativePreviewWindowId")
+                    core.nativePreviewWindowId = binding.localPreviewVideoSurface
+                }
+            }
+        }
+
         binding.setBackClickListener {
             requireActivity().finish()
         }
@@ -201,12 +239,22 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onResume() {
         super.onResume()
 
         coreContext.postOnCoreThread {
+            binding.localPreviewVideoSurface.setOnTouchListener(previewTouchListener)
+
             // Need to be done manually
             callViewModel.updateCallDuration()
         }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onPause() {
+        super.onPause()
+
+        binding.localPreviewVideoSurface.setOnTouchListener(null)
     }
 }

@@ -102,9 +102,9 @@ class ConferenceViewModel {
         ) {
             if (conference.isMe(device.address)) {
                 val direction = device.getStreamCapability(StreamType.Video)
-                isMeParticipantSendingVideo.postValue(
-                    direction == MediaDirection.SendRecv || direction == MediaDirection.SendOnly
-                )
+                val sendingVideo = direction == MediaDirection.SendRecv || direction == MediaDirection.SendOnly
+                isMeParticipantSendingVideo.postValue(sendingVideo)
+                Log.i("$TAG We ${if (sendingVideo) "are" else "aren't"} sending video")
             }
         }
 
@@ -147,7 +147,24 @@ class ConferenceViewModel {
             Log.i(
                 "$TAG Participant device added: ${participantDevice.address.asStringUriOnly()}"
             )
-            addParticipantDevice(participantDevice)
+
+            // Since we do not compute our own devices until another participant joins,
+            // We have to do it when someone else joins
+            if (participantDevices.value.orEmpty().isEmpty()) {
+                val list = arrayListOf<ConferenceParticipantDeviceModel>()
+                val ourDevices = conference.me.devices
+                Log.i("$TAG We have [${ourDevices.size}] devices, now it's time to add them")
+                for (device in ourDevices) {
+                    val model = ConferenceParticipantDeviceModel(device, true)
+                    list.add(model)
+                }
+
+                val newModel = ConferenceParticipantDeviceModel(participantDevice)
+                list.add(newModel)
+                participantDevices.postValue(sortParticipantDevicesList(list))
+            } else {
+                addParticipantDevice(participantDevice)
+            }
         }
 
         @WorkerThread
@@ -202,6 +219,10 @@ class ConferenceViewModel {
         override fun onStateChanged(conference: Conference, state: Conference.State) {
             Log.i("$TAG State changed [$state]")
             if (conference.state == Conference.State.Created) {
+                val isIn = conference.isIn
+                isPaused.postValue(!isIn)
+                Log.i("$TAG We ${if (isIn) "are" else "aren't"} in the conference")
+
                 computeParticipants()
             }
         }
@@ -226,15 +247,20 @@ class ConferenceViewModel {
         isCurrentCallInConference.postValue(true)
         conference = conf
         conference.addListener(conferenceListener)
-        isPaused.postValue(conference.isIn)
+
+        val isIn = conference.isIn
+        isPaused.postValue(!isIn)
+        Log.i("$TAG We ${if (isIn) "are" else "aren't"} in the conference right now")
+
         val screenSharing = conference.screenSharingParticipant != null
         isScreenSharing.postValue(screenSharing)
 
+        val confSubject = conference.subject.orEmpty()
         Log.i(
-            "$TAG Configuring conference with subject [${conference.subject}] from call [${call.callLog.callId}]"
+            "$TAG Configuring conference with subject [$confSubject] from call [${call.callLog.callId}]"
         )
         sipUri.postValue(conference.conferenceAddress.asStringUriOnly())
-        subject.postValue(conference.subject)
+        subject.postValue(confSubject)
 
         if (conference.state == Conference.State.Created) {
             computeParticipants()
@@ -420,10 +446,10 @@ class ConferenceViewModel {
         val meParticipantModel = ConferenceParticipantModel(meParticipant, admin, true, null, null)
         participantsList.add(meParticipantModel)
 
-        if (!skipDevices) {
-            val ourDevices = conference.me.devices
-            Log.i("$TAG We have [${ourDevices.size}] devices")
-            for (device in ourDevices) {
+        val ourDevices = conference.me.devices
+        Log.i("$TAG We have [${ourDevices.size}] devices")
+        for (device in ourDevices) {
+            if (!skipDevices) {
                 val model = ConferenceParticipantDeviceModel(device, true)
                 devicesList.add(model)
 
@@ -433,12 +459,12 @@ class ConferenceViewModel {
                     activeSpeaker.postValue(model)
                     activeSpeakerParticipantDeviceFound = true
                 }
-
-                val direction = device.getStreamCapability(StreamType.Video)
-                isMeParticipantSendingVideo.postValue(
-                    direction == MediaDirection.SendRecv || direction == MediaDirection.SendOnly
-                )
             }
+
+            val direction = device.getStreamCapability(StreamType.Video)
+            val sendingVideo = direction == MediaDirection.SendRecv || direction == MediaDirection.SendOnly
+            isMeParticipantSendingVideo.postValue(sendingVideo)
+            Log.i("$TAG We ${if (sendingVideo) "are" else "aren't"} sending video right now")
         }
 
         if (!activeSpeakerParticipantDeviceFound && devicesList.isNotEmpty()) {
@@ -453,7 +479,14 @@ class ConferenceViewModel {
         participants.postValue(sortParticipantList(participantsList))
         if (!skipDevices) {
             checkIfTooManyParticipantDevicesForGridLayout(devicesList)
-            participantDevices.postValue(sortParticipantDevicesList(devicesList))
+
+            if (participantsList.size == 1) {
+                Log.i("$TAG We are alone in that conference, not posting devices list for now")
+                participantDevices.postValue(arrayListOf())
+            } else {
+                participantDevices.postValue(sortParticipantDevicesList(devicesList))
+            }
+
             participantsLabel.postValue(
                 AppUtils.getStringWithPlural(
                     R.plurals.conference_participants_list_title,
