@@ -4,7 +4,8 @@
     <!ENTITY appName "Linphone">
 ]>
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Common words -->
     <string name="sip_address">Adresse SIP</string>
     <string name="sip_address_hint">utilisateur@domaine</string>
     <string name="sip_address_display_name">Nom d\'affichage</string>
@@ -19,11 +20,12 @@
     <string name="today">Aujourd\'hui</string>
     <string name="yesterday">Hier</string>
 
-    <plurals name="selection_count_label">
+    <plurals name="selection_count_label" tools:ignore="MissingQuantity">
         <item quantity="one">%s selectionné</item>
         <item quantity="other">%s selectionnés</item>
     </plurals>
 
+    <!-- Dialog various possible buttons label -->
     <string name="dialog_deny">Refuser</string>
     <string name="dialog_accept">Accepter</string>
     <string name="dialog_cancel">Annuler</string>
@@ -37,6 +39,7 @@
     <string name="dialog_no">Non</string>
     <string name="dialog_yes">Oui</string>
 
+    <!-- Related to Android notifications -->
     <string name="notification_channel_call_name">&appName; notifications d\'appels en cours</string>
     <string name="notification_channel_incoming_call_name">&appName; notifications d\'appels entrants</string>
     <string name="notification_channel_missed_call_name">&appName; notifications d\'appels manqués</string>
@@ -51,6 +54,7 @@
     <string name="notification_push_received_title">&appName;</string>
     <string name="notification_push_received_message">Recherche de nouveaux messages</string>
 
+    <!-- First screens user see when app is installed and started -->
     <string name="welcome_page_title">Bienvenue</string>
     <string name="welcome_page_subtitle">sur &appName;</string>
     <string name="welcome_page_1_message">Une application de communication <b>sécurisée</b>, <b>open source</b> et <b>française</b>.</string>
@@ -89,7 +93,7 @@
     <string name="toast_group_conversation_left">Vous avez quitté la conversation</string>
     <string name="toast_low_media_volume">Le volume media est bas, vous pourriez ne rien entendre !</string>
     <string name="toast_no_app_registered_to_handle_content_type_error">Aucune application trouvée pour lire ce fichier</string>
-    <plurals name="toast_files_waiting_to_be_shared">
+    <plurals name="toast_files_waiting_to_be_shared" tools:ignore="MissingQuantity">
         <item quantity="one">%s fichier en attente de partage</item>
         <item quantity="other">%s fichiers en attente de partage</item>
     </plurals>
@@ -99,6 +103,7 @@
     <string name="toast_call_transfer_successful">L\'appel a été transferré</string>
     <string name="toast_call_transfer_failed">Le transfert a échoué !</string>
 
+    <!-- Assistant related string (account register / login / etc...) -->
     <string name="assistant_dialog_general_terms_and_privacy_policy_title">Conditions de service &amp; politique de confidentialité</string>
     <string name="assistant_dialog_general_terms_and_privacy_policy_message">blah blah blah</string> <!-- TODO FIXME -->
     <string name="assistant_dialog_confirm_phone_number_title">Confirmez votre numéro de téléphone</string>
@@ -151,11 +156,13 @@
     <string name="assistant_permissions_record_audio_title"><b>Microphone :</b> Pour permettre à vos correspondants de vous entendre. </string>
     <string name="assistant_permissions_access_camera_title"><b>Caméra :</b> Pour capturer votre vidéo lors des appels et des conférences.</string>
 
+    <!-- Main navigation items -->
     <string name="bottom_navigation_contacts_label">Contacts</string>
     <string name="bottom_navigation_calls_label">Appels</string>
     <string name="bottom_navigation_conversations_label">Conversations</string>
     <string name="bottom_navigation_meetings_label">Réunions</string>
 
+    <!-- Side menu -->
     <string name="drawer_menu_manage_account">Paramètres du profil</string>
     <string name="drawer_menu_account_connection_status_connected">Connecté</string>
     <string name="drawer_menu_account_connection_status_refreshing">En cours de rafraîchissement…</string>
@@ -165,6 +172,7 @@
     <string name="drawer_menu_no_account_configured_yet">Aucun compte configuré</string>
     <string name="drawer_menu_add_account">Ajouter un compte</string>
 
+    <!-- Help & troubleshooting related -->
     <string name="help_title">Aide</string>
     <string name="help_about_title">À propos de &appName;</string>
     <string name="help_about_privacy_policy_title">Politique de confidentialité</string>
@@ -189,6 +197,7 @@
     <string name="help_troubleshooting_debug_logs_upload_error_toast_message">Echec à l\'envoi des journaux</string>
     <string name="help_troubleshooting_show_config_file">Afficher la configuration</string>
 
+    <!-- App & SDK settings -->
     <string name="settings_title">Paramètres</string>
     <string name="settings_security_title">Securité</string>
     <string name="settings_security_enable_vfs_title">Chiffrer tous les fichiers</string>
@@ -245,6 +254,7 @@
     <string name="settings_user_interface_auto_theme_label">Auto</string>
     <string name="settings_advanced_title">Paramètres avancés</string>
 
+    <!-- Account profile & settings -->
     <string name="manage_account_title">Votre compte</string>
     <string name="manage_account_details_title">Détails</string>
     <string name="manage_account_devices_title">Appareils</string>
@@ -307,6 +317,7 @@
     <string name="history_dialog_delete_call_logs_title">Voulez-vous supprimer tout les appels avec cette personne ?</string>
     <string name="history_dialog_delete_call_logs_message">TOut l\'historique d\'appel avec cette personne sera supprimmé.</string>
 
+    <!-- Contacts -->
     <string name="contacts_list_empty">Aucun contact pour le moment…</string>
     <string name="contacts_list_favourites_title">Favoris</string>
     <string name="contacts_list_all_contacts_title">Tous les contacts</string>
@@ -362,6 +373,7 @@
     <string name="contact_make_call_check_device_trust">Vérifier</string>
     <string name="contact_device_without_name">Appareil sans nom</string>
 
+    <!-- Chat -->
     <string name="conversations_list_empty">Aucune conversation pour le moment…</string>
     <string name="conversations_list_is_being_removed_label">En cours de suppression…</string>
     <string name="conversations_last_message_format">%s :</string>
@@ -388,7 +400,7 @@
     <string name="new_conversation_no_matching_contact">Aucun résultat trouvé…</string>
     <string name="new_conversation_group_name_title">Nom du groupe</string>
     <string name="conversation_text_field_hint">Dites quelque chose…</string>
-    <plurals name="conversation_composing_label">
+    <plurals name="conversation_composing_label" tools:ignore="MissingQuantity">
         <item quantity="one">%s est en train d\'écrire…</item>
         <item quantity="other">%s sont en train d\'écrire…</item>
     </plurals>
@@ -450,6 +462,7 @@
     <string name="message_reaction_click_to_remove_label">Cliquez pour supprimer</string>
     <string name="message_forwarded_label">Transféré</string>
 
+    <!-- Scheduled conferences -->
     <string name="meetings_list_empty">Aucune réunion pour le moment…</string>
     <string name="meetings_list_today_indicator">Aujourd\'hui</string>
 
@@ -488,6 +501,7 @@
     <string name="meeting_waiting_room_joining_title">Connexion à la réunion</string>
     <string name="meeting_waiting_room_joining_subtitle">Vous allez rejoindre la réunion dans quelques instants…</string>
 
+    <!-- Call related -->
     <string name="call_outgoing">Appel sortant</string>
     <string name="call_incoming">Appel entrant</string>
     <string name="call_ended">Appel terminé</string>
@@ -520,6 +534,7 @@
     <string name="call_remote_is_recording">%s est en train d\'enregistrer</string>
     <string name="calls_count_label">%s appels</string>
     <string name="calls_paused_count_label">%s appels en pause</string>
+    <string name="calls_list_dialog_merge_into_conference_title">Fusionner les appels en une conférence ?</string>
 
     <string name="call_dialog_zrtp_validate_trust_title">Valider l\'appareil</string>
     <string name="call_dialog_zrtp_validate_trust_subtitle">Dites %s puis cliquez sur les lettres données par votre correspondant :</string>
@@ -549,11 +564,12 @@
     <string name="call_stats_zrtp_auth_tag_algo">Algorithme d\'authentification : %s</string>
     <string name="call_stats_zrtp_sas_algo">Algorithm SAS: %s</string>
 
+    <!-- Conference (in-call) -->
     <string name="conference_share_link_title">Partager le lien</string>
     <string name="conference_call_empty">En attente d\'autres participants…</string>
     <string name="conference_action_screen_sharing">Partage d\'écran</string>
     <string name="conference_action_show_participants">Participants</string>
-    <plurals name="conference_participants_list_title">
+    <plurals name="conference_participants_list_title" tools:ignore="MissingQuantity">
         <item quantity="one">%s participant</item>
         <item quantity="other">%s participants</item>
     </plurals>
@@ -565,8 +581,13 @@
     <string name="conference_layout_active_speaker">Intervenant actif</string>
     <string name="conference_layout_audio_only">Audio uniquement</string>
 
+    <string name="conference_remotely_hosted_title">Appel de groupe distant</string>
+    <string name="conference_locally_hosted_title">Appel de groupe local</string>
+
+    <!-- Call records -->
     <string name="recordings_title">Enregistrements</string>
 
+    <!-- Various menu entries -->
     <string name="menu_add_address_to_contacts">Ajouter aux contacts</string>
     <string name="menu_see_existing_contact">Voir le contact</string>
     <string name="menu_copy_sip_address">Copier l\'adresse SIP</string>
@@ -579,6 +600,7 @@
     <string name="menu_forward_chat_message">Transférer</string>
     <string name="menu_copy_chat_message">Copier le texte</string>
 
+    <!-- Misc -->
     <string name="connection_error_for_non_default_account">Erreur de connexion au compte</string>
     <string name="network_not_reachable">Vous n\'êtes pas connecté à internet</string>
     <string name="operation_in_progress_overlay">Opération en cours, merci de patienter…</string>

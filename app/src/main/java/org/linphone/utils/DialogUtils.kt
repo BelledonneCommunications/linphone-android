@@ -42,6 +42,7 @@ import org.linphone.databinding.DialogContactConfirmTrustCallBinding
 import org.linphone.databinding.DialogContactTrustProcessBinding
 import org.linphone.databinding.DialogDeleteContactBinding
 import org.linphone.databinding.DialogManageAccountInternationalPrefixHelpBinding
+import org.linphone.databinding.DialogMergeCallsIntoConferenceBinding
 import org.linphone.databinding.DialogPickNumberOrAddressBinding
 import org.linphone.databinding.DialogRemoveAccountBinding
 import org.linphone.databinding.DialogRemoveAllCallLogsBinding
@@ -330,6 +331,22 @@ class DialogUtils {
             val binding: DialogConfirmZrtpSasBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(context),
                 R.layout.dialog_confirm_zrtp_sas,
+                null,
+                false
+            )
+            binding.viewModel = viewModel
+
+            return getDialog(context, binding)
+        }
+
+        @UiThread
+        fun getConfirmMergeCallsDialog(
+            context: Context,
+            viewModel: ConfirmationDialogModel
+        ): Dialog {
+            val binding: DialogMergeCallsIntoConferenceBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.dialog_merge_calls_into_conference,
                 null,
                 false
             )

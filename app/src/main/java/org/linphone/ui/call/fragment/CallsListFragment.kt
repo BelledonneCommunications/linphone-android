@@ -31,6 +31,8 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.CallsListFragmentBinding
 import org.linphone.ui.call.adapter.CallsListAdapter
 import org.linphone.ui.call.viewmodel.CallsViewModel
+import org.linphone.ui.main.history.model.ConfirmationDialogModel
+import org.linphone.utils.DialogUtils
 
 class CallsListFragment : GenericCallFragment() {
     companion object {
@@ -99,7 +101,7 @@ class CallsListFragment : GenericCallFragment() {
         }
 
         binding.setMergeCallsClickListener {
-            viewModel.mergeCallsIntoConference()
+            showMergeCallsIntoConferenceConfirmationDialog()
         }
 
         viewModel.calls.observe(viewLifecycleOwner) {
@@ -113,5 +115,28 @@ class CallsListFragment : GenericCallFragment() {
 
         bottomSheetDialog?.dismiss()
         bottomSheetDialog = null
+    }
+
+    private fun showMergeCallsIntoConferenceConfirmationDialog() {
+        val model = ConfirmationDialogModel()
+        val dialog = DialogUtils.getConfirmMergeCallsDialog(
+            requireActivity(),
+            model
+        )
+
+        model.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        model.confirmEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                viewModel.mergeCallsIntoConference()
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
     }
 }

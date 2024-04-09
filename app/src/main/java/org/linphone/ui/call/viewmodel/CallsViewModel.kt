@@ -216,7 +216,24 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
 
     @UiThread
     fun mergeCallsIntoConference() {
-        // TODO FIXME: implement local conferences merge
+        coreContext.postOnCoreThread { core ->
+            val callsCount = core.callsNb
+            val defaultAccount = LinphoneUtils.getDefaultAccount()
+            val subject = if (defaultAccount != null && defaultAccount.params.audioVideoConferenceFactoryAddress != null) {
+                Log.i("$TAG Merging [$callsCount] calls into a remotely hosted conference")
+                AppUtils.getString(R.string.conference_remotely_hosted_title)
+            } else {
+                Log.i("$TAG Merging [$callsCount] calls into a locally hosted conference")
+                AppUtils.getString(R.string.conference_locally_hosted_title)
+            }
+
+            val params = core.createConferenceParams(null)
+            params.subject = subject
+            // Prevent group call to start in audio only layout
+            params.isVideoEnabled = true
+            val conference = core.createConferenceWithParams(params)
+            conference?.addParticipants(core.calls)
+        }
     }
 
     @WorkerThread
