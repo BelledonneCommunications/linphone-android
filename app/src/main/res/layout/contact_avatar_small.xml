@@ -62,4 +62,5 @@
             app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

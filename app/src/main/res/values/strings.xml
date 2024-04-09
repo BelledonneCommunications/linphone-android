@@ -534,6 +534,8 @@
     <string name="meeting_info_cancelled_toast">Meeting has been cancelled</string>
 
     <string name="meeting_waiting_room_join">Join</string>
+    <string name="meeting_waiting_room_joining_title">Connection in progress</string>
+    <string name="meeting_waiting_room_joining_subtitle">You\'ll be joining in a short moment</string>
 
     <!-- Call related -->
     <string name="call_outgoing">Outgoing call</string>

@@ -9,6 +9,9 @@
         <variable
             name="model"
             type="org.linphone.contacts.AbstractAvatarModel" />
+        <variable
+            name="hidePresence"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -47,6 +50,7 @@
             android:padding="@dimen/avatar_presence_badge_padding"
             android:contentDescription="@{model.presenceStatus == ConsolidatedPresence.Online ? @string/content_description_contact_online : @string/content_description_contact_away}"
             app:presenceIcon="@{model.presenceStatus}"
+            app:hidePresence="@{hidePresence}"
             app:layout_constraintEnd_toEndOf="@id/avatar"
             app:layout_constraintBottom_toBottomOf="@id/avatar" />
 
@@ -62,4 +66,5 @@
             app:layout_constraintBottom_toBottomOf="@id/avatar"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

@@ -485,6 +485,8 @@
     <string name="meeting_info_cancelled_toast">La réunion a été annulée</string>
 
     <string name="meeting_waiting_room_join">Rejoindre</string>
+    <string name="meeting_waiting_room_joining_title">Connexion à la réunion</string>
+    <string name="meeting_waiting_room_joining_subtitle">Vous allez rejoindre la réunion dans quelques instants…</string>
 
     <string name="call_outgoing">Appel sortant</string>
     <string name="call_incoming">Appel entrant</string>

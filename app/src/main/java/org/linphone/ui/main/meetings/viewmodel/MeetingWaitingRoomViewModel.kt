@@ -70,6 +70,8 @@ class MeetingWaitingRoomViewModel @UiThread constructor() : ViewModel() {
 
     val hideVideo = MutableLiveData<Boolean>()
 
+    val joining = MutableLiveData<Boolean>()
+
     val conferenceInfoFoundEvent = MutableLiveData<Event<Boolean>>()
 
     val showAudioDevicesListEvent: MutableLiveData<Event<ArrayList<AudioDeviceModel>>> by lazy {
@@ -77,6 +79,10 @@ class MeetingWaitingRoomViewModel @UiThread constructor() : ViewModel() {
     }
 
     val conferenceCreatedEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
+    val conferenceCreationError: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
 
@@ -97,11 +103,17 @@ class MeetingWaitingRoomViewModel @UiThread constructor() : ViewModel() {
             Log.i("$TAG Conference state changed: [$state]")
             if (conference.state == Conference.State.Created) {
                 conferenceCreatedEvent.postValue(Event(true))
+                joining.postValue(false)
+            } else if (conference.state == Conference.State.CreationFailed) {
+                conferenceCreationError.postValue(Event(true))
+                joining.postValue(false)
             }
         }
     }
 
     init {
+        joining.value = false
+
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
 
@@ -193,6 +205,7 @@ class MeetingWaitingRoomViewModel @UiThread constructor() : ViewModel() {
                     params.outputAudioDevice = selectedOutputAudioDevice
                 }
                 params.account = core.defaultAccount
+                joining.postValue(true)
                 coreContext.startCall(conferenceUri, params)
             }
         }

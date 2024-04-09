@@ -39,6 +39,7 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.MeetingWaitingRoomFragmentBinding
 import org.linphone.ui.call.fragment.AudioDevicesMenuDialogFragment
 import org.linphone.ui.call.model.AudioDeviceModel
+import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.ui.main.meetings.viewmodel.MeetingWaitingRoomViewModel
 
@@ -129,6 +130,17 @@ class MeetingWaitingRoomFragment : GenericFragment() {
             it.consume {
                 Log.i("$TAG Conference was joined, leaving waiting room")
                 goBack()
+            }
+        }
+
+        viewModel.conferenceCreationError.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.e("$TAG Error joining the conference!")
+                val message = getString(
+                    R.string.toast_no_app_registered_to_handle_content_type_error
+                )
+                val icon = R.drawable.x
+                (requireActivity() as MainActivity).showRedToast(message, icon)
             }
         }
 

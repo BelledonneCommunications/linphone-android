@@ -206,7 +206,13 @@ fun AppCompatTextView.setDrawableTint(@ColorInt color: Int) {
 @UiThread
 @BindingAdapter("presenceIcon")
 fun ImageView.setPresenceIcon(presence: ConsolidatedPresence?) {
-    visibility = if (presence == null || presence == ConsolidatedPresence.Offline) {
+    setPresenceIcon(presence, false)
+}
+
+@UiThread
+@BindingAdapter("presenceIcon", "hidePresence")
+fun ImageView.setPresenceIcon(presence: ConsolidatedPresence?, hidePresence: Boolean) {
+    visibility = if (hidePresence || presence == null || presence == ConsolidatedPresence.Offline) {
         View.GONE
     } else {
         View.VISIBLE

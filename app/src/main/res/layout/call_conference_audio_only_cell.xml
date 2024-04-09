@@ -33,6 +33,7 @@
             android:layout_marginStart="10dp"
             layout="@layout/contact_avatar"
             bind:model="@{model.avatarModel}"
+            bind:hidePresence="@{true}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
