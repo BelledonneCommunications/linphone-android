@@ -451,7 +451,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
             if (::currentCall.isInitialized) {
                 Log.i("$TAG Terminating call [${currentCall.remoteAddress.asStringUriOnly()}]")
                 terminatedByUsed = true
-                currentCall.terminate()
+                coreContext.terminateCall(currentCall)
             }
         }
     }

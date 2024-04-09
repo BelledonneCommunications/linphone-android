@@ -63,11 +63,7 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
                 if (intent.action == NotificationsManager.INTENT_ANSWER_CALL_NOTIF_ACTION) {
                     coreContext.answerCall(call)
                 } else {
-                    if (LinphoneUtils.isCallIncoming(call.state)) {
-                        coreContext.declineCall(call)
-                    } else {
-                        coreContext.terminateCall(call)
-                    }
+                    coreContext.terminateCall(call)
                 }
             }
         }

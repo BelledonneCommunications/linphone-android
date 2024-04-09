@@ -97,7 +97,7 @@ class CallModel @WorkerThread constructor(val call: Call) {
     fun hangUp() {
         coreContext.postOnCoreThread {
             Log.i("$TAG Terminating call [${call.remoteAddress.asStringUriOnly()}]")
-            call.terminate()
+            coreContext.terminateCall(call)
         }
     }
 }

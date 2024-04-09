@@ -502,20 +502,15 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
     }
 
     @WorkerThread
-    fun declineCall(call: Call) {
-        val reason = if (core.callsNb > 1) {
-            Reason.Busy
-        } else {
-            Reason.Declined
-        }
-        Log.i("$TAG Declining call [$call] with reason [$reason]")
-        call.decline(reason)
-    }
-
-    @WorkerThread
     fun terminateCall(call: Call) {
-        Log.i("$TAG Terminating call [${call.remoteAddress.asStringUriOnly()}]")
-        call.terminate()
+        if (call.dir == Call.Dir.Incoming && LinphoneUtils.isCallIncoming(call.state)) {
+            val reason = if (call.core.callsNb > 1) Reason.Busy else Reason.Declined
+            Log.i("$TAG Declining call [${call.remoteAddress.asStringUriOnly()}] with reason [$reason]")
+            call.decline(reason)
+        } else {
+            Log.i("$TAG Terminating call [${call.remoteAddress.asStringUriOnly()}]")
+            call.terminate()
+        }
     }
 
     @UiThread
