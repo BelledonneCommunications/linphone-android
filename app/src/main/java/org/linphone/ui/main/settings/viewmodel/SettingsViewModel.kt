@@ -51,8 +51,6 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
     val isVfsEnabled = MutableLiveData<Boolean>()
 
     // Calls settings
-    val hideVideoCallSetting = MutableLiveData<Boolean>()
-
     val echoCancellerEnabled = MutableLiveData<Boolean>()
     val routeAudioToBluetooth = MutableLiveData<Boolean>()
     val videoEnabled = MutableLiveData<Boolean>()
@@ -119,7 +117,6 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
 
     init {
         coreContext.postOnCoreThread { core ->
-            hideVideoCallSetting.postValue(!core.isVideoEnabled)
             showConversationsSettings.postValue(!corePreferences.disableChat)
             showMeetingsSettings.postValue(!corePreferences.disableMeetings)
             ldapAvailable.postValue(core.ldapAvailable())
