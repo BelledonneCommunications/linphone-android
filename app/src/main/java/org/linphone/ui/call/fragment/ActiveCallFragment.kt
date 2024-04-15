@@ -336,18 +336,14 @@ class ActiveCallFragment : GenericCallFragment() {
         }
 
         callViewModel.isSendingVideo.observe(viewLifecycleOwner) { sending ->
-            coreContext.core.nativePreviewWindowId = if (sending) {
-                binding.localPreviewVideoSurface
-            } else {
-                null
-            }
-        }
-
-        callViewModel.isReceivingVideo.observe(viewLifecycleOwner) { receiving ->
-            coreContext.core.nativeVideoWindowId = if (receiving) {
-                binding.remoteVideoSurface
-            } else {
-                null
+            coreContext.postOnCoreThread { core ->
+                core.nativePreviewWindowId = if (sending) {
+                    Log.i("$TAG We are sending video, setting capture preview surface")
+                    binding.localPreviewVideoSurface
+                } else {
+                    Log.i("$TAG We are not sending video, clearing capture preview surface")
+                    null
+                }
             }
         }
 
@@ -384,6 +380,8 @@ class ActiveCallFragment : GenericCallFragment() {
         super.onResume()
 
         coreContext.postOnCoreThread { core ->
+            core.nativeVideoWindowId = binding.remoteVideoSurface
+
             binding.localPreviewVideoSurface.setOnTouchListener(previewTouchListener)
 
             // Need to be done manually

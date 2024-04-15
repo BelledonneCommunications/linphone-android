@@ -1070,12 +1070,15 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     @WorkerThread
     private fun updateVideoDirection(direction: MediaDirection) {
+        val isSending = direction == MediaDirection.SendRecv || direction == MediaDirection.SendOnly
+        val isReceived = direction == MediaDirection.SendRecv || direction == MediaDirection.RecvOnly
         isSendingVideo.postValue(
-            direction == MediaDirection.SendRecv || direction == MediaDirection.SendOnly
+            isSending
         )
         isReceivingVideo.postValue(
-            direction == MediaDirection.SendRecv || direction == MediaDirection.RecvOnly
+            isReceived
         )
+        Log.i("$TAG Is video being sent? [$isSending] Is video being received? [$isReceived]")
     }
 
     @AnyThread
