@@ -375,8 +375,7 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         localAddress: Address? = null
     ) {
         val params = core.createCallParams(null)
-        params?.isVideoEnabled = true
-        params?.videoDirection = MediaDirection.Inactive
+        params?.isVideoEnabled = false
         startCall(address, params, forceZRTP, localAddress)
     }
 
