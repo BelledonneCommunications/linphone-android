@@ -80,7 +80,7 @@
     <string name="notification_channel_missed_call_name">&appName; missed calls notifications</string>
     <string name="notification_channel_service_name">&appName; service notification</string>
     <string name="notification_channel_chat_name">&appName; instant messages notifications</string>
-    <string name="notification_chat_message_reaction_received">%s has reacted by %s to: %s</string>
+    <string name="notification_chat_message_reaction_received">Reacted by %s to: %s</string>
     <string name="notification_mark_message_as_read">Mark as read</string>
     <string name="notification_reply_to_message">Reply</string>
     <string name="notification_missed_call">Missed call from %s</string>

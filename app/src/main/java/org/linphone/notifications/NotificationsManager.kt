@@ -206,15 +206,12 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             message: ChatMessage,
             reaction: ChatMessageReaction
         ) {
-            val address = reaction.fromAddress
-            val defaultAccountAddress = core.defaultAccount?.params?.identityAddress
-            // Do not notify our own reactions, it won't be done anyway since the chat room is very likely to be currently displayed
-            if (defaultAccountAddress != null && defaultAccountAddress.weakEqual(address)) return
+            if (corePreferences.disableChat) return
 
+            val address = reaction.fromAddress
             Log.i(
                 "$TAG Reaction received [${reaction.body}] from [${address.asStringUriOnly()}] for message [$message]"
             )
-            if (corePreferences.disableChat) return
 
             val id = LinphoneUtils.getChatRoomId(chatRoom)
             /*if (id == currentlyDisplayedChatRoomId) {
@@ -230,6 +227,10 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             }
             if (coreContext.isAddressMyself(address)) {
                 Log.i("$TAG Reaction has been sent by ourselves, do not notify it")
+                return
+            }
+            if (!coreContext.isAddressMyself(message.fromAddress)) {
+                Log.i("$TAG Reaction isn't for a message we sent, do not notify it")
                 return
             }
 
@@ -742,7 +743,6 @@ class NotificationsManager @MainThread constructor(private val context: Context)
 
         val originalMessage = LinphoneUtils.getTextDescribingMessage(message)
         val text = AppUtils.getString(R.string.notification_chat_message_reaction_received).format(
-            displayName,
             reaction,
             originalMessage
         )
