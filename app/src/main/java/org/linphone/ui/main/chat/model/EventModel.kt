@@ -95,7 +95,7 @@ class EventModel @WorkerThread constructor(private val eventLog: EventLog) {
                     R.drawable.clock_countdown
                 }
                 EventLog.Type.ConferenceTerminated -> {
-                    R.drawable.x
+                    R.drawable.warning_circle
                 }
                 EventLog.Type.ConferenceSubjectChanged -> {
                     R.drawable.pencil_simple

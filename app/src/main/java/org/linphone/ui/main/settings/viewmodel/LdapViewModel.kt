@@ -173,7 +173,7 @@ class LdapViewModel : ViewModel() {
                 Log.e("$TAG Exception while creating LDAP: $e")
                 // TODO: improve toast
                 showErrorToastEvent.postValue(
-                    Event(Pair(R.drawable.x, e.toString()))
+                    Event(Pair(R.drawable.warning_circle, e.toString()))
                 )
             }
         }

@@ -240,6 +240,24 @@
                 app:layout_constraintTop_toBottomOf="@id/joining_subtitle"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/primary_button_label_style"
+                android:id="@+id/cancel"
+                android:onClick="@{() -> viewModel.cancel()}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="@dimen/screen_bottom_margin"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="@string/meeting_waiting_room_cancel"
+                app:layout_constraintWidth_max="@dimen/button_max_width"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

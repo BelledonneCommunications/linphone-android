@@ -126,9 +126,9 @@ class MeetingWaitingRoomFragment : GenericFragment() {
             }
         }
 
-        viewModel.conferenceCreatedEvent.observe(viewLifecycleOwner) {
+        viewModel.leaveWaitingRoomEvent.observe(viewLifecycleOwner) {
             it.consume {
-                Log.i("$TAG Conference was joined, leaving waiting room")
+                Log.i("$TAG Leaving waiting room")
                 goBack()
             }
         }
@@ -137,9 +137,9 @@ class MeetingWaitingRoomFragment : GenericFragment() {
             it.consume {
                 Log.e("$TAG Error joining the conference!")
                 val message = getString(
-                    R.string.toast_no_app_registered_to_handle_content_type_error
+                    R.string.toast_failed_to_join_conference
                 )
-                val icon = R.drawable.x
+                val icon = R.drawable.warning_circle
                 (requireActivity() as MainActivity).showRedToast(message, icon)
             }
         }
@@ -169,6 +169,7 @@ class MeetingWaitingRoomFragment : GenericFragment() {
     override fun onPause() {
         bottomSheetDialog?.dismiss()
         bottomSheetDialog = null
+        viewModel.joining.value = false
 
         coreContext.postOnCoreThread { core ->
             core.nativePreviewWindowId = null

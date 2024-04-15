@@ -137,6 +137,7 @@
     <string name="toast_call_transfer_in_progress">Call is being transferred</string>
     <string name="toast_call_transfer_successful">Call has been successfully transferred</string>
     <string name="toast_call_transfer_failed">Call transfer failed!</string>
+    <string name="toast_failed_to_join_conference">Failed to join conference!</string>
     <string name="toast_remote_provisioning_config_applied">Configuration successfully applied</string>
     <string name="toast_remote_provisioning_config_failed">Error while trying to download and apply remote configuration</string>
 
@@ -535,6 +536,7 @@
     <string name="meeting_info_cancelled_toast">Meeting has been cancelled</string>
 
     <string name="meeting_waiting_room_join">Join</string>
+    <string name="meeting_waiting_room_cancel">Cancel</string>
     <string name="meeting_waiting_room_joining_title">Connection in progress</string>
     <string name="meeting_waiting_room_joining_subtitle">You\'ll be joining in a short moment</string>
 

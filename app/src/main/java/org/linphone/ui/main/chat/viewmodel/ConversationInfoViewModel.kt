@@ -403,7 +403,7 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
                     val message = AppUtils.getString(
                         R.string.toast_failed_to_add_participant_to_group_conversation
                     )
-                    showRedToastEvent.postValue(Event(Pair(message, R.drawable.x)))
+                    showRedToastEvent.postValue(Event(Pair(message, R.drawable.warning_circle)))
                 }
             }
         }

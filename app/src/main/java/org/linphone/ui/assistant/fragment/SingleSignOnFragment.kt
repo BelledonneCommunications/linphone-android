@@ -88,7 +88,10 @@ class SingleSignOnFragment : Fragment() {
 
         viewModel.onErrorEvent.observe(viewLifecycleOwner) {
             it.consume { errorMessage ->
-                (requireActivity() as AssistantActivity).showRedToast(errorMessage, R.drawable.x)
+                (requireActivity() as AssistantActivity).showRedToast(
+                    errorMessage,
+                    R.drawable.warning_circle
+                )
                 findNavController().popBackStack()
             }
         }

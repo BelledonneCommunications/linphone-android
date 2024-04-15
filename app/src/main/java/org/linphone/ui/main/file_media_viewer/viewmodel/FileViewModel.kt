@@ -221,7 +221,7 @@ class FileViewModel @UiThread constructor() : ViewModel() {
                     val message = AppUtils.getString(
                         R.string.toast_export_file_to_documents_error
                     )
-                    showRedToastEvent.postValue(Event(Pair(message, R.drawable.x)))
+                    showRedToastEvent.postValue(Event(Pair(message, R.drawable.warning_circle)))
                 }
             }
         }
@@ -246,7 +246,7 @@ class FileViewModel @UiThread constructor() : ViewModel() {
                     val message = AppUtils.getString(
                         R.string.toast_export_file_to_documents_error
                     )
-                    showRedToastEvent.postValue(Event(Pair(message, R.drawable.x)))
+                    showRedToastEvent.postValue(Event(Pair(message, R.drawable.warning_circle)))
                 }
             }
         }

@@ -188,7 +188,10 @@ class MediaListViewerFragment : GenericFragment() {
                             val message = AppUtils.getString(
                                 R.string.toast_export_file_to_media_store_error
                             )
-                            (requireActivity() as MainActivity).showRedToast(message, R.drawable.x)
+                            (requireActivity() as MainActivity).showRedToast(
+                                message,
+                                R.drawable.warning_circle
+                            )
                         }
                     }
                 }

@@ -264,7 +264,10 @@ class ConversationFragment : GenericCallFragment() {
                         Log.e("$TAG Failed to find conversation, going back")
                         findNavController().popBackStack()
                         val message = getString(R.string.toast_cant_find_conversation_to_display)
-                        (requireActivity() as CallActivity).showRedToast(message, R.drawable.x)
+                        (requireActivity() as CallActivity).showRedToast(
+                            message,
+                            R.drawable.warning_circle
+                        )
                     }
                 } else {
                     sendMessageViewModel.configureChatRoom(viewModel.chatRoom)

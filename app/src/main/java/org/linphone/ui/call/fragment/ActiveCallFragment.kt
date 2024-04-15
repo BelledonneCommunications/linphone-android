@@ -355,7 +355,7 @@ class ActiveCallFragment : GenericCallFragment() {
             it.consume { error ->
                 (requireActivity() as CallActivity).showRedToast(
                     error,
-                    R.drawable.x
+                    R.drawable.warning_circle
                 )
             }
         }

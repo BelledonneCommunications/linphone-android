@@ -379,7 +379,10 @@ class ConversationFragment : SlidingPaneChildFragment() {
                         Log.e("$TAG Failed to find conversation, going back")
                         goBack()
                         val message = getString(R.string.toast_cant_find_conversation_to_display)
-                        (requireActivity() as MainActivity).showRedToast(message, R.drawable.x)
+                        (requireActivity() as MainActivity).showRedToast(
+                            message,
+                            R.drawable.warning_circle
+                        )
                     }
                 } else {
                     sendMessageViewModel.configureChatRoom(viewModel.chatRoom)

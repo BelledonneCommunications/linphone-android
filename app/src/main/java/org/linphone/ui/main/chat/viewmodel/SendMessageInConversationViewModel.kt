@@ -520,7 +520,7 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
                     val message = AppUtils.getString(
                         R.string.toast_voice_recording_max_duration_reached
                     )
-                    showRedToastEvent.postValue(Event(Pair(message, R.drawable.x)))
+                    showRedToastEvent.postValue(Event(Pair(message, R.drawable.warning_circle)))
                 }
             }
         }.launchIn(viewModelScope)

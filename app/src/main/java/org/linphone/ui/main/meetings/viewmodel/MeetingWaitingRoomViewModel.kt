@@ -29,7 +29,9 @@ import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.core.Address
 import org.linphone.core.AudioDevice
+import org.linphone.core.Call
 import org.linphone.core.Conference
 import org.linphone.core.ConferenceInfo
 import org.linphone.core.Core
@@ -78,7 +80,7 @@ class MeetingWaitingRoomViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<ArrayList<AudioDeviceModel>>>()
     }
 
-    val conferenceCreatedEvent: MutableLiveData<Event<Boolean>> by lazy {
+    val leaveWaitingRoomEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
 
@@ -86,6 +88,7 @@ class MeetingWaitingRoomViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    private lateinit var conferenceAddress: Address
     private lateinit var conferenceInfo: ConferenceInfo
 
     private lateinit var selectedOutputAudioDevice: AudioDevice
@@ -95,18 +98,48 @@ class MeetingWaitingRoomViewModel @UiThread constructor() : ViewModel() {
     private var bluetoothAudioDevice: AudioDevice? = null
 
     private val coreListener = object : CoreListenerStub() {
+        @WorkerThread
+        override fun onCallStateChanged(
+            core: Core,
+            call: Call,
+            state: Call.State?,
+            message: String
+        ) {
+            if (::conferenceAddress.isInitialized && conferenceAddress.weakEqual(call.remoteAddress)) {
+                when (state) {
+                    Call.State.End -> {
+                        Log.i("$TAG Call has ended, leaving waiting room fragment")
+                        leaveWaitingRoomEvent.postValue(Event(true))
+                    }
+
+                    Call.State.Error -> {
+                        Log.w("$TAG Call has failed, leaving waiting room fragment")
+                        leaveWaitingRoomEvent.postValue(Event(true))
+                    }
+
+                    else -> {}
+                }
+            }
+        }
+
+        @WorkerThread
         override fun onConferenceStateChanged(
             core: Core,
             conference: Conference,
             state: Conference.State?
         ) {
-            Log.i("$TAG Conference state changed: [$state]")
-            if (conference.state == Conference.State.Created) {
-                conferenceCreatedEvent.postValue(Event(true))
-                joining.postValue(false)
-            } else if (conference.state == Conference.State.CreationFailed) {
-                conferenceCreationError.postValue(Event(true))
-                joining.postValue(false)
+            val remoteAddress = conference.conferenceAddress
+            if (::conferenceAddress.isInitialized && remoteAddress != null && conferenceAddress.weakEqual(
+                    remoteAddress
+                )
+            ) {
+                Log.i("$TAG Conference state changed: [$state]")
+                if (conference.state == Conference.State.Created) {
+                    leaveWaitingRoomEvent.postValue(Event(true))
+                } else if (conference.state == Conference.State.CreationFailed) {
+                    conferenceCreationError.postValue(Event(true))
+                    joining.postValue(false)
+                }
             }
         }
     }
@@ -144,6 +177,7 @@ class MeetingWaitingRoomViewModel @UiThread constructor() : ViewModel() {
         coreContext.postOnCoreThread { core ->
             val address = Factory.instance().createAddress(uri)
             if (address != null) {
+                conferenceAddress = address
                 val found = core.findConferenceInformationFromUri(address)
                 if (found != null) {
                     Log.i("$TAG Conference info with SIP URI [$uri] was found")
@@ -207,6 +241,27 @@ class MeetingWaitingRoomViewModel @UiThread constructor() : ViewModel() {
                 params.account = core.defaultAccount
                 joining.postValue(true)
                 coreContext.startCall(conferenceUri, params)
+            }
+        }
+    }
+
+    @UiThread
+    fun cancel() {
+        coreContext.postOnCoreThread { core ->
+            if (::conferenceAddress.isInitialized) {
+                val found = core.calls.find {
+                    it.remoteAddress.weakEqual(conferenceAddress)
+                }
+
+                if (found != null) {
+                    coreContext.terminateCall(found)
+                } else {
+                    Log.e(
+                        "$TAG No call found matching conference address [${conferenceAddress.asStringUriOnly()}]"
+                    )
+                }
+            } else {
+                Log.e("$TAG No conference address stored!")
             }
         }
     }

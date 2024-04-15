@@ -79,7 +79,7 @@ class CardDavViewModel : ViewModel() {
                 }
                 FriendList.SyncStatus.Failure -> {
                     syncInProgress.postValue(false)
-                    val icon = R.drawable.x
+                    val icon = R.drawable.warning_circle
                     showErrorToastEvent.postValue(Event(Pair(icon, message.orEmpty())))
                     if (isEdit.value == false) {
                         Log.e("$TAG Synchronization failed, removing Friend list from Core")
@@ -148,7 +148,9 @@ class CardDavViewModel : ViewModel() {
         val server = serverUrl.value.orEmpty().trim()
         if (name.isEmpty() || server.isEmpty()) {
             // TODO: improve toast
-            showErrorToastEvent.postValue(Event(Pair(R.drawable.x, "Name or Server is empty!")))
+            showErrorToastEvent.postValue(
+                Event(Pair(R.drawable.warning_circle, "Name or Server is empty!"))
+            )
             return
         }
 

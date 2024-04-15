@@ -102,6 +102,7 @@
     <string name="toast_call_transfer_in_progress">Appel en cours de transfert</string>
     <string name="toast_call_transfer_successful">L\'appel a été transferré</string>
     <string name="toast_call_transfer_failed">Le transfert a échoué !</string>
+    <string name="toast_failed_to_join_conference">Echec lors de la connexion à la conférence!</string>
     <string name="toast_remote_provisioning_config_applied">Configuration appliquée avec succès</string>
     <string name="toast_remote_provisioning_config_failed">Erreur durant la récupération ou l\'application de la configuration</string>
 
@@ -499,6 +500,7 @@
     <string name="meeting_info_cancelled_toast">La réunion a été annulée</string>
 
     <string name="meeting_waiting_room_join">Rejoindre</string>
+    <string name="meeting_waiting_room_cancel">Annuler</string>
     <string name="meeting_waiting_room_joining_title">Connexion à la réunion</string>
     <string name="meeting_waiting_room_joining_subtitle">Vous allez rejoindre la réunion dans quelques instants…</string>
 

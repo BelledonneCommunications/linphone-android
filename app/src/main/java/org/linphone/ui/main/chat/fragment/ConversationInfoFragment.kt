@@ -116,7 +116,10 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
                         Log.e("$TAG Failed to find conversation, going back")
                         goBack()
                         val message = getString(R.string.toast_cant_find_conversation_to_display)
-                        (requireActivity() as MainActivity).showRedToast(message, R.drawable.x)
+                        (requireActivity() as MainActivity).showRedToast(
+                            message,
+                            R.drawable.warning_circle
+                        )
                     }
                 }
             }
@@ -258,7 +261,7 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
             } else {
                 Log.e("$TAG Can't go to contact page, friend ref key is null or empty!")
                 val message = getString(R.string.toast_cant_find_contact_to_display)
-                (requireActivity() as MainActivity).showRedToast(message, R.drawable.x)
+                (requireActivity() as MainActivity).showRedToast(message, R.drawable.warning_circle)
             }
         }
 
@@ -272,7 +275,7 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
             } else {
                 Log.e("$TAG Can't add empty/null SIP URI to contacts!")
                 val message = getString(R.string.toast_no_address_to_add_to_contact)
-                (requireActivity() as MainActivity).showRedToast(message, R.drawable.x)
+                (requireActivity() as MainActivity).showRedToast(message, R.drawable.warning_circle)
             }
         }
 
@@ -337,7 +340,7 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
             } else {
                 Log.e("$TAG Can't go to contact page, friend ref key is null or empty!")
                 val message = getString(R.string.toast_cant_find_contact_to_display)
-                (requireActivity() as MainActivity).showRedToast(message, R.drawable.x)
+                (requireActivity() as MainActivity).showRedToast(message, R.drawable.warning_circle)
             }
             popupWindow.dismiss()
         }
@@ -352,7 +355,7 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
             } else {
                 Log.e("$TAG Can't add empty/null SIP URI to contacts!")
                 val message = getString(R.string.toast_no_address_to_add_to_contact)
-                (requireActivity() as MainActivity).showRedToast(message, R.drawable.x)
+                (requireActivity() as MainActivity).showRedToast(message, R.drawable.warning_circle)
             }
             popupWindow.dismiss()
         }
