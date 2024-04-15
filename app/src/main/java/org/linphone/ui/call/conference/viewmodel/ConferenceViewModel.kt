@@ -259,7 +259,7 @@ class ConferenceViewModel {
         Log.i(
             "$TAG Configuring conference with subject [$confSubject] from call [${call.callLog.callId}]"
         )
-        sipUri.postValue(conference.conferenceAddress.asStringUriOnly())
+        sipUri.postValue(conference.conferenceAddress?.asStringUriOnly())
         subject.postValue(confSubject)
 
         if (conference.state == Conference.State.Created) {

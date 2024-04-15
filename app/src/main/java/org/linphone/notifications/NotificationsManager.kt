@@ -62,6 +62,7 @@ import org.linphone.core.ChatRoom
 import org.linphone.core.Core
 import org.linphone.core.CoreForegroundService
 import org.linphone.core.CoreListenerStub
+import org.linphone.core.CorePreferences
 import org.linphone.core.Friend
 import org.linphone.core.MediaDirection
 import org.linphone.core.tools.Log
@@ -421,7 +422,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         Log.i("$TAG Core has been started")
 
         val rcVersion = corePreferences.linphoneConfigurationVersion
-        val clearPreviousChannels = rcVersion == "5.2"
+        val clearPreviousChannels = rcVersion < CorePreferences.CURRENT_VERSION
         coreContext.postOnMainThread {
             createChannels(clearPreviousChannels)
         }

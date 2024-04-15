@@ -88,7 +88,9 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
             if (!addedDevices.isNullOrEmpty()) {
                 Log.i("$TAG [${addedDevices.size}] new device(s) have been added:")
                 for (device in addedDevices) {
-                    Log.i("$TAG Added device [${device.id}][${device.productName}][${device.type}]")
+                    Log.i(
+                        "$TAG Added device [${device.productName}] with ID [${device.id}] and type [${device.type}]"
+                    )
                 }
                 core.reloadSoundDevices()
             }
@@ -250,10 +252,12 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         core.videoCodecPriorityPolicy = CodecPriorityPolicy.Auto
 
         val oldVersion = corePreferences.linphoneConfigurationVersion
-        val newVersion = "6.0.0"
-        if (oldVersion == "5.2") {
-            Log.i("$TAG Migrating configuration from  [$oldVersion] to [$newVersion]")
+        if (oldVersion < CorePreferences.CURRENT_VERSION) {
+            Log.i(
+                "$TAG Migrating configuration from [$oldVersion] to [${CorePreferences.CURRENT_VERSION}]"
+            )
             val policy = core.videoActivationPolicy.clone()
+            policy.automaticallyInitiate = false
             policy.automaticallyAccept = true
             policy.automaticallyAcceptDirection = MediaDirection.RecvOnly
             core.videoActivationPolicy = policy
@@ -272,7 +276,7 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         audioManager.registerAudioDeviceCallback(audioDeviceCallback, coreThread)
 
-        corePreferences.linphoneConfigurationVersion = newVersion
+        corePreferences.linphoneConfigurationVersion = CorePreferences.CURRENT_VERSION
 
         Log.i("$TAG Report Core created and started")
     }

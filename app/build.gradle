@@ -124,11 +124,11 @@ android {
         dataBinding true
     }
 
-    lintOptions {
-        abortOnError false
-    }
 
     namespace 'org.linphone'
+    lint {
+        abortOnError false
+    }
 }
 
 dependencies {

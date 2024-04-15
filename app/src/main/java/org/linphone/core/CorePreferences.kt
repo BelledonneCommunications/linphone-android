@@ -30,6 +30,8 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 class CorePreferences @UiThread constructor(private val context: Context) {
     companion object {
         private const val TAG = "[Preferences]"
+
+        const val CURRENT_VERSION = 60000
     }
 
     private var _config: Config? = null
@@ -127,10 +129,10 @@ class CorePreferences @UiThread constructor(private val context: Context) {
         }
 
     @get:WorkerThread @set:WorkerThread
-    var linphoneConfigurationVersion: String
-        get() = config.getString("app", "linphonerc_version", "5.2")!!
+    var linphoneConfigurationVersion: Int
+        get() = config.getInt("app", "config_version", 50200)
         set(value) {
-            config.setString("app", "linphonerc_version", value)
+            config.setInt("app", "config_version", value)
         }
 
     @get:WorkerThread
