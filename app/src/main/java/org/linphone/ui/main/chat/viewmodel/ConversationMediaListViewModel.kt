@@ -32,7 +32,7 @@ class ConversationMediaListViewModel @UiThread constructor() : AbstractConversat
         private const val TAG = "[Conversation Media List ViewModel]"
     }
 
-    val mediaList = MutableLiveData<ArrayList<FileModel>>()
+    val mediaList = MutableLiveData<List<FileModel>>()
 
     val fullScreenMode = MutableLiveData<Boolean>()
 
@@ -85,7 +85,7 @@ class ConversationMediaListViewModel @UiThread constructor() : AbstractConversat
         }
         Log.i("$TAG [${media.size}] media have been processed")
 
-        mediaList.postValue(list)
+        mediaList.postValue(list.reversed()) // To have most recent files at the top
         operationInProgress.postValue(false)
     }
 }

@@ -32,7 +32,7 @@ class ConversationDocumentsListViewModel @UiThread constructor() : AbstractConve
         private const val TAG = "[Conversation Documents List ViewModel]"
     }
 
-    val documentsList = MutableLiveData<ArrayList<FileModel>>()
+    val documentsList = MutableLiveData<List<FileModel>>()
 
     val operationInProgress = MutableLiveData<Boolean>()
 
@@ -81,7 +81,7 @@ class ConversationDocumentsListViewModel @UiThread constructor() : AbstractConve
         }
         Log.i("$TAG [${documents.size}] documents have been processed")
 
-        documentsList.postValue(list)
+        documentsList.postValue(list.reversed()) // To have most recent documents at the top
         operationInProgress.postValue(false)
     }
 }
