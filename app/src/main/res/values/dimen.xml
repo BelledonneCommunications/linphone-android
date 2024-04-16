@@ -62,6 +62,9 @@
     <dimen name="call_button_icon_padding">15dp</dimen>
     <dimen name="call_extra_button_top_margin">30dp</dimen>
 
+    <dimen name="call_video_preview_max_size">200dp</dimen>
+    <dimen name="call_video_preview_pip_max_size">45dp</dimen>
+
     <dimen name="call_conference_audio_only_miniature_height">100dp</dimen>
     <dimen name="call_conference_active_speaker_miniature_size">120dp</dimen>
 

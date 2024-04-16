@@ -20,7 +20,6 @@
 package org.linphone.ui.call
 
 import android.Manifest
-import android.app.PictureInPictureParams
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -44,6 +43,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
+import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 import org.linphone.databinding.CallActivityBinding
 import org.linphone.ui.GenericActivity
@@ -57,7 +57,6 @@ import org.linphone.ui.call.model.AudioDeviceModel
 import org.linphone.ui.call.viewmodel.CallsViewModel
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
 import org.linphone.ui.call.viewmodel.SharedCallViewModel
-import org.linphone.utils.AppUtils
 import org.linphone.utils.ToastUtils
 import org.linphone.utils.slideInToastFromTop
 import org.linphone.utils.slideInToastFromTopForDuration
@@ -75,6 +74,8 @@ class CallActivity : GenericActivity() {
     private lateinit var callViewModel: CurrentCallViewModel
 
     private var bottomSheetDialog: BottomSheetDialogFragment? = null
+
+    private var isPipSupported = false
 
     private val requestCameraPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -113,6 +114,11 @@ class CallActivity : GenericActivity() {
                 }
         }
 
+        isPipSupported = packageManager.hasSystemFeature(
+            PackageManager.FEATURE_PICTURE_IN_PICTURE
+        )
+        Log.i("$TAG Is PiP supported [$isPipSupported]")
+
         sharedViewModel = run {
             ViewModelProvider(this)[SharedCallViewModel::class.java]
         }
@@ -136,6 +142,13 @@ class CallActivity : GenericActivity() {
         callViewModel.conferenceModel.showLayoutMenuEvent.observe(this) {
             it.consume {
                 showConferenceLayoutMenu()
+            }
+        }
+
+        callViewModel.isVideoEnabled.observe(this) { enabled ->
+            if (isPipSupported) {
+                // Only enable PiP if video is enabled
+                Compatibility.enableAutoEnterPiP(this, enabled)
             }
         }
 
@@ -249,8 +262,8 @@ class CallActivity : GenericActivity() {
         super.onResume()
 
         val isInPipMode = isInPictureInPictureMode
+        Log.i("$TAG onResume: is in PiP mode? [$isInPipMode]")
         if (::callViewModel.isInitialized) {
-            Log.i("$TAG onResume: is in PiP mode? $isInPipMode")
             callViewModel.pipMode.value = isInPipMode
         }
     }
@@ -287,25 +300,13 @@ class CallActivity : GenericActivity() {
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
 
-        if (::callViewModel.isInitialized && callViewModel.isVideoEnabled.value == true) {
-            Log.i("$TAG User leave hint, entering PiP mode")
-            val supportsPip = packageManager.hasSystemFeature(
-                PackageManager.FEATURE_PICTURE_IN_PICTURE
-            )
-            Log.i("$TAG Is PiP supported: $supportsPip")
-            if (supportsPip) {
-                val params = PictureInPictureParams.Builder()
-                    .setAspectRatio(AppUtils.getPipRatio(this))
-                    .build()
-                try {
-                    if (!enterPictureInPictureMode(params)) {
-                        Log.e("$TAG Failed to enter PiP mode")
-                        callViewModel.pipMode.value = false
-                    } else {
-                        Log.i("$TAG Entered PiP mode")
-                    }
-                } catch (e: Exception) {
-                    Log.e("$TAG Can't build PiP params: $e")
+        if (::callViewModel.isInitialized) {
+            if (isPipSupported && callViewModel.isVideoEnabled.value == true) {
+                Log.i("$TAG User leave hint, entering PiP mode")
+                val pipMode = Compatibility.enterPipMode(this)
+                if (!pipMode) {
+                    Log.e("$TAG Failed to enter PiP mode")
+                    callViewModel.pipMode.value = false
                 }
             }
         }

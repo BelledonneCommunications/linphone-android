@@ -19,6 +19,8 @@
  */
 package org.linphone.compatibility
 
+import android.app.Activity
+import android.app.PictureInPictureParams
 import android.app.UiModeManager
 import android.content.Context
 import android.graphics.RenderEffect
@@ -28,11 +30,21 @@ import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import org.linphone.core.tools.Log
+import org.linphone.utils.AppUtils
 
 @RequiresApi(Build.VERSION_CODES.S)
 class Api31Compatibility {
     companion object {
         private const val TAG = "[API 31 Compatibility]"
+
+        fun enableAutoEnterPiP(activity: Activity, enable: Boolean) {
+            activity.setPictureInPictureParams(
+                PictureInPictureParams.Builder()
+                    .setAspectRatio(AppUtils.getPipRatio(activity))
+                    .setAutoEnterEnabled(enable)
+                    .build()
+            )
+        }
 
         fun setBlurRenderEffect(view: View) {
             val blurEffect = RenderEffect.createBlurEffect(16F, 16F, Shader.TileMode.MIRROR)

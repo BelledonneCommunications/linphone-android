@@ -40,6 +40,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnLayout
@@ -493,6 +494,24 @@ fun setConstraintLayoutChildHorizontalBias(view: View, horizontalBias: Float) {
     val params = view.layoutParams as ConstraintLayout.LayoutParams
     params.horizontalBias = horizontalBias
     view.layoutParams = params
+}
+
+@BindingAdapter("layout_constraintHeight_max")
+fun setConstraintLayoutHeightMax(view: View, dp: Float) {
+    val layout = view.parent as ConstraintLayout
+    val cs = ConstraintSet()
+    cs.clone(layout)
+    cs.constrainMaxHeight(view.id, dp.toInt())
+    cs.applyTo(layout)
+}
+
+@BindingAdapter("layout_constraintWidth_max")
+fun setConstraintLayoutWidthMax(view: View, dp: Float) {
+    val layout = view.parent as ConstraintLayout
+    val cs = ConstraintSet()
+    cs.clone(layout)
+    cs.constrainMaxWidth(view.id, dp.toInt())
+    cs.applyTo(layout)
 }
 
 @BindingAdapter("focusNextOnInput")

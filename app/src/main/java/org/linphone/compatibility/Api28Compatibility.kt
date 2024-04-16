@@ -19,11 +19,14 @@
  */
 package org.linphone.compatibility
 
+import android.app.Activity
 import android.app.Notification
+import android.app.PictureInPictureParams
 import android.app.Service
 import android.net.Uri
 import android.provider.MediaStore
 import org.linphone.core.tools.Log
+import org.linphone.utils.AppUtils
 
 class Api28Compatibility {
     companion object {
@@ -38,6 +41,23 @@ class Api28Compatibility {
             } catch (e: Exception) {
                 Log.e("$TAG Can't start service as foreground! $e")
             }
+        }
+
+        fun enterPipMode(activity: Activity): Boolean {
+            val params = PictureInPictureParams.Builder()
+                .setAspectRatio(AppUtils.getPipRatio(activity))
+                .build()
+            try {
+                if (!activity.enterPictureInPictureMode(params)) {
+                    Log.e("$TAG Failed to enter PiP mode")
+                } else {
+                    Log.i("$TAG Entered PiP mode")
+                    return true
+                }
+            } catch (e: Exception) {
+                Log.e("$TAG Can't build PiP params: $e")
+            }
+            return false
         }
 
         fun getMediaCollectionUri(isImage: Boolean, isVideo: Boolean, isAudio: Boolean): Uri {

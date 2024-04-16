@@ -21,6 +21,7 @@ package org.linphone.compatibility
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Notification
 import android.app.Service
 import android.content.Context
@@ -106,6 +107,19 @@ class Compatibility {
                 return true
             }
             return false
+        }
+
+        fun enterPipMode(activity: Activity): Boolean {
+            if (Version.sdkStrictlyBelow(Version.API31_ANDROID_12)) {
+                return Api28Compatibility.enterPipMode(activity)
+            }
+            return activity.isInPictureInPictureMode
+        }
+
+        fun enableAutoEnterPiP(activity: Activity, enable: Boolean) {
+            if (Version.sdkAboveOrEqual(Version.API31_ANDROID_12)) {
+                Api31Compatibility.enableAutoEnterPiP(activity, enable)
+            }
         }
 
         fun forceDarkMode(context: Context) {
