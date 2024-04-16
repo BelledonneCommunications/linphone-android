@@ -112,6 +112,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             state: Call.State?,
             message: String
         ) {
+            Log.i("$TAG Call state changed: [$state]")
             when (state) {
                 Call.State.IncomingReceived, Call.State.IncomingEarlyMedia -> {
                     Log.i(
@@ -131,6 +132,15 @@ class NotificationsManager @MainThread constructor(private val context: Context)
                         "$TAG Showing connected call notification for [${call.remoteAddress.asStringUriOnly()}]"
                     )
                     showCallNotification(call, false)
+                }
+                Call.State.Updating -> {
+                    val notifiable = getNotifiableForCall(call)
+                    if (notifiable.notificationId == currentForegroundServiceNotificationId) {
+                        Log.i(
+                            "$TAG Update foreground service type in case video was enabled/disabled since last time"
+                        )
+                        startCallForeground(call)
+                    }
                 }
                 Call.State.End, Call.State.Error -> {
                     val remoteSipAddress = call.remoteAddress
@@ -598,10 +608,14 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             ) {
                 mask = mask or Compatibility.FOREGROUND_SERVICE_TYPE_MICROPHONE
                 Log.i(
-                    "$TAG RECORD_AUDIO permission has been granted, adding FOREGROUND_SERVICE_TYPE_MICROPHONE"
+                    "$TAG RECORD_AUDIO permission has been granted, adding FOREGROUND_SERVICE_TYPE_MICROPHONE to foreground service types mask"
                 )
             }
-            if (call.currentParams.isVideoEnabled) {
+            val isSendingVideo = when (call.currentParams.videoDirection) {
+                MediaDirection.SendRecv, MediaDirection.SendOnly -> true
+                else -> false
+            }
+            if (call.currentParams.isVideoEnabled && isSendingVideo) {
                 if (ActivityCompat.checkSelfPermission(
                         context,
                         Manifest.permission.CAMERA
@@ -609,7 +623,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
                 ) {
                     mask = mask or Compatibility.FOREGROUND_SERVICE_TYPE_CAMERA
                     Log.i(
-                        "$TAG CAMERA permission has been granted, adding FOREGROUND_SERVICE_TYPE_CAMERA"
+                        "$TAG CAMERA permission has been granted, adding FOREGROUND_SERVICE_TYPE_CAMERA to foreground service types mask"
                     )
                 }
             }

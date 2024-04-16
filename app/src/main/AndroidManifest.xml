@@ -45,6 +45,7 @@
         android:localeConfig="@xml/locales_config"
         tools:targetApi="34">
 
+        <!-- Required for chat message notifications to be displayed in Android auto -->
         <meta-data
             android:name="com.google.android.gms.car.application"
             android:resource="@xml/automotive_app_desc"/>
@@ -126,7 +127,7 @@
         <service
             android:name=".core.CoreForegroundService"
             android:exported="false"
-            android:foregroundServiceType="phoneCall|camera|microphone|dataSync"
+            android:foregroundServiceType="phoneCall|camera|microphone"
             android:stopWithTask="false"
             android:label="@string/app_name" />
 
