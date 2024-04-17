@@ -58,6 +58,7 @@
     <dimen name="call_all_actions_menu_height">345dp</dimen> <!-- sum of above two -->
     <dimen name="call_main_actions_menu_margin">120dp</dimen>
     <dimen name="call_round_corners_texture_view_radius">20dp</dimen>
+    <dimen name="call_pip_round_corners_texture_view_radius">5dp</dimen>
     <dimen name="call_button_size">55dp</dimen>
     <dimen name="call_button_icon_padding">15dp</dimen>
     <dimen name="call_extra_button_top_margin">30dp</dimen>

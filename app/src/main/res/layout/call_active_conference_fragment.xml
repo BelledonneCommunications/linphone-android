@@ -244,6 +244,7 @@
                 android:visibility="@{conferenceViewModel.isMeParticipantSendingVideo &amp;&amp; conferenceViewModel.participants.size() == 1 &amp;&amp; !conferenceViewModel.isPaused ? View.VISIBLE : View.GONE}"
                 app:alignTopRight="true"
                 app:displayMode="black_bars"
+                roundCornersRadius="@{viewModel.pipMode ? @dimen/call_pip_round_corners_texture_view_radius : @dimen/call_round_corners_texture_view_radius, default=@dimen/call_round_corners_texture_view_radius}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHeight_max="@{viewModel.pipMode ? @dimen/call_video_preview_pip_max_size : @dimen/call_video_preview_max_size, default=@dimen/call_video_preview_max_size}"

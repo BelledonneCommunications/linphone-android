@@ -86,6 +86,11 @@ class RoundCornersTextureView : CaptureTextureView {
         }
     }
 
+    fun setRadius(radius: Float) {
+        mRadius = radius
+        setRoundCorners()
+    }
+
     private fun setRoundCorners() {
         outlineProvider = object : ViewOutlineProvider() {
             override fun getOutline(view: View, outline: Outline) {

@@ -64,6 +64,7 @@ import org.linphone.contacts.AvatarGenerator
 import org.linphone.core.ConsolidatedPresence
 import org.linphone.core.tools.Log
 import org.linphone.ui.call.conference.model.ConferenceParticipantDeviceModel
+import org.linphone.ui.call.view.RoundCornersTextureView
 
 /**
  * This file contains all the data binding necessary for the app
@@ -512,6 +513,11 @@ fun setConstraintLayoutWidthMax(view: View, dp: Float) {
     cs.clone(layout)
     cs.constrainMaxWidth(view.id, dp.toInt())
     cs.applyTo(layout)
+}
+
+@BindingAdapter("roundCornersRadius")
+fun RoundCornersTextureView.setRoundCornersRadius(radius: Float) {
+    setRadius(radius)
 }
 
 @BindingAdapter("focusNextOnInput")
