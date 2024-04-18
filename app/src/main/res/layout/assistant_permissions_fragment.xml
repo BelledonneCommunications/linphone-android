@@ -220,6 +220,7 @@
                 android:paddingEnd="20dp"
                 android:text="@string/assistant_permissions_skip_permissions"
                 app:layout_constraintWidth_max="@dimen/button_max_width"
+                app:layout_constraintTop_toBottomOf="@id/access_camera_title"
                 app:layout_constraintBottom_toTopOf="@id/grant_all_permissions"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
@@ -238,7 +239,6 @@
                 android:paddingEnd="20dp"
                 android:text="@string/assistant_permissions_grant_all_of_them"
                 app:layout_constraintWidth_max="@dimen/button_max_width"
-                app:layout_constraintVertical_bias="1"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
