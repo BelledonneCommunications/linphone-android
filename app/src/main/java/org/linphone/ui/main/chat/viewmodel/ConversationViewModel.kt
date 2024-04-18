@@ -174,7 +174,28 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
             Log.i("$TAG Received [${eventLogs.size}] new message(s)")
             computeComposingLabel()
 
-            addEvents(eventLogs)
+            // Prevents duplicates if user entered conversation while SDK was still doing messages aggregation
+            val eventsToAdd = arrayListOf<EventLog>()
+            for (event in eventLogs) {
+                val found = eventsList.find {
+                    it.model is MessageModel && it.model.chatMessage.messageId == event.chatMessage?.messageId
+                }
+                if (found == null) {
+                    eventsToAdd.add(event)
+                } else {
+                    Log.w(
+                        "$TAG Received message with ID [${event.chatMessage?.messageId}] is already displayed, do not add it again"
+                    )
+                }
+            }
+
+            if (eventsToAdd.size == eventLogs.size) {
+                addEvents(eventLogs)
+            } else {
+                val eventsArray = arrayOf<EventLog>()
+                eventsToAdd.toArray(eventsArray)
+                addEvents(eventsArray)
+            }
 
             unreadMessagesCount.postValue(chatRoom.unreadMessagesCount)
         }
