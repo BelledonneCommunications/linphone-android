@@ -409,7 +409,7 @@ class ConversationFragment : GenericCallFragment() {
         viewModel.messageDeletedEvent.observe(viewLifecycleOwner) {
             it.consume {
                 val message = getString(R.string.conversation_message_deleted_toast)
-                val icon = R.drawable.x
+                val icon = R.drawable.trash_simple
                 (requireActivity() as CallActivity).showGreenToast(message, icon)
             }
         }

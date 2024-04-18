@@ -628,7 +628,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
         viewModel.messageDeletedEvent.observe(viewLifecycleOwner) {
             it.consume {
                 val message = getString(R.string.conversation_message_deleted_toast)
-                val icon = R.drawable.x
+                val icon = R.drawable.trash_simple
                 (requireActivity() as MainActivity).showGreenToast(message, icon)
                 sharedViewModel.forceRefreshConversations.value = Event(true)
             }
