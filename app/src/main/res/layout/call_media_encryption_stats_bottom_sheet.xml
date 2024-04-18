@@ -127,7 +127,7 @@
                 android:visibility="@{model.isMediaEncryptionZrtp ? View.VISIBLE : View.GONE}" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                style="@style/secondary_button_label_style"
+                style="@style/primary_button_label_style"
                 android:onClick="@{() -> model.showSasValidationDialog()}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
