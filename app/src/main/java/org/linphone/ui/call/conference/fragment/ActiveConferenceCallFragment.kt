@@ -197,6 +197,9 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
                 if (participants.size == 1) {
                     Log.i("$TAG We are alone in that conference, using nativePreviewWindowId")
                     core.nativePreviewWindowId = binding.localPreviewVideoSurface
+
+                    // Don't forget to leave full screen mode, otherwise we won't be able to leave it by touching video surface...
+                    callViewModel.fullScreenMode.postValue(false)
                 }
             }
         }
