@@ -615,9 +615,8 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                 } else if (params != null) {
                     params.isVideoEnabled = true
                     params.videoDirection = when (currentCall.currentParams.videoDirection) {
-                        MediaDirection.RecvOnly -> MediaDirection.SendRecv
                         MediaDirection.SendRecv, MediaDirection.SendOnly -> MediaDirection.RecvOnly
-                        else -> MediaDirection.SendOnly
+                        else -> MediaDirection.SendRecv
                     }
                     Log.i(
                         "$TAG Updating call with video enabled and media direction set to ${params.videoDirection}"
