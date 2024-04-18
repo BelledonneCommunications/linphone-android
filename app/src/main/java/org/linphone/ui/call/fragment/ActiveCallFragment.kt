@@ -40,6 +40,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.CallActiveFragmentBinding
+import org.linphone.ui.GenericActivity
 import org.linphone.ui.call.CallActivity
 import org.linphone.ui.call.model.ZrtpSasConfirmationDialogModel
 import org.linphone.ui.call.viewmodel.CallsViewModel
@@ -242,7 +243,7 @@ class ActiveCallFragment : GenericCallFragment() {
                         dialog.dismiss()
 
                         if (verified) {
-                            (requireActivity() as CallActivity).showBlueToast(
+                            (requireActivity() as GenericActivity).showBlueToast(
                                 getString(R.string.toast_call_can_be_trusted),
                                 R.drawable.trusted,
                                 doNotTint = true
@@ -312,7 +313,7 @@ class ActiveCallFragment : GenericCallFragment() {
                 if (isRemoteRecording) {
                     Log.i("$TAG Showing [$displayName] is recording toast")
                     val message = getString(R.string.call_remote_is_recording, displayName)
-                    (requireActivity() as CallActivity).showPersistentRedToast(
+                    (requireActivity() as GenericActivity).showPersistentRedToast(
                         message,
                         R.drawable.record_fill,
                         toastTag
@@ -349,7 +350,7 @@ class ActiveCallFragment : GenericCallFragment() {
 
         callViewModel.chatRoomCreationErrorEvent.observe(viewLifecycleOwner) {
             it.consume { error ->
-                (requireActivity() as CallActivity).showRedToast(
+                (requireActivity() as GenericActivity).showRedToast(
                     error,
                     R.drawable.warning_circle
                 )

@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsContactsLdapBinding
-import org.linphone.ui.main.MainActivity
+import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.ui.main.settings.viewmodel.LdapViewModel
 
@@ -65,7 +65,7 @@ class LdapServerConfigurationFragment : GenericFragment() {
             it.consume { pair ->
                 val icon = pair.first
                 val message = pair.second
-                (requireActivity() as MainActivity).showRedToast(message, icon)
+                (requireActivity() as GenericActivity).showRedToast(message, icon)
             }
         }
     }

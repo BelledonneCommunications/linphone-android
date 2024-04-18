@@ -190,10 +190,6 @@
         android:id="@+id/singleSignOnFragment"
         android:name="org.linphone.ui.assistant.fragment.SingleSignOnFragment"
         android:label="SingleSignOnFragment"
-        tools:layout="@layout/assistant_single_sign_on_fragment">
-        <argument
-            android:name="sipIdentity"
-            app:argType="string" />
-    </fragment>
+        tools:layout="@layout/assistant_single_sign_on_fragment" />
 
 </navigation>

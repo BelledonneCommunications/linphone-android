@@ -37,7 +37,7 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantLandingFragmentBinding
-import org.linphone.ui.assistant.AssistantActivity
+import org.linphone.ui.GenericActivity
 import org.linphone.ui.assistant.model.AcceptConditionsAndPolicyDialogModel
 import org.linphone.ui.assistant.viewmodel.LandingViewModel
 import org.linphone.utils.DialogUtils
@@ -132,14 +132,14 @@ class LandingFragment : Fragment() {
 
         viewModel.accountLoginErrorEvent.observe(viewLifecycleOwner) {
             it.consume { message ->
-                (requireActivity() as AssistantActivity).showRedToast(
+                (requireActivity() as GenericActivity).showRedToast(
                     message,
                     R.drawable.warning_circle
                 )
             }
         }
 
-        viewModel.redirectToDigestAuthEvent.observe(viewLifecycleOwner) {
+        /*viewModel.redirectToDigestAuthEvent.observe(viewLifecycleOwner) {
             it.consume { address ->
                 goToLoginFragment(address)
             }
@@ -149,10 +149,10 @@ class LandingFragment : Fragment() {
             it.consume { address ->
                 goToSingleSignOnFragment(address)
             }
-        }
+        }*/
     }
 
-    private fun goToLoginFragment(identity: String) {
+    /*private fun goToLoginFragment(identity: String) {
         Log.i(
             "$TAG Going to Linphone credentials based authentication fragment for SIP account [$identity]"
         )
@@ -162,9 +162,9 @@ class LandingFragment : Fragment() {
 
     private fun goToSingleSignOnFragment(identity: String) {
         Log.i("$TAG Going to Single Sign On fragment for SIP account [$identity]")
-        val action = LandingFragmentDirections.actionLandingFragmentToSingleSignOnFragment(identity)
+        val action = LandingFragmentDirections.actionLandingFragmentToSingleSignOnFragment()
         findNavController().navigate(action)
-    }
+    }*/
 
     private fun goToRegisterFragment() {
         val action = LandingFragmentDirections.actionLandingFragmentToRegisterFragment()

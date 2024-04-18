@@ -29,12 +29,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.Gravity
-import android.view.ViewGroup
-import androidx.annotation.DrawableRes
 import androidx.annotation.MainThread
 import androidx.annotation.UiThread
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.children
 import androidx.core.view.doOnAttach
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -43,11 +40,9 @@ import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -65,9 +60,6 @@ import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
-import org.linphone.utils.ToastUtils
-import org.linphone.utils.slideInToastFromTop
-import org.linphone.utils.slideInToastFromTopForDuration
 
 @UiThread
 class MainActivity : GenericActivity() {
@@ -97,6 +89,8 @@ class MainActivity : GenericActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.main_activity)
         binding.lifecycleOwner = this
+
+        setUpToastsArea(binding.toastsArea)
 
         while (!coreContext.isReady()) {
             Thread.sleep(50)
@@ -291,102 +285,6 @@ class MainActivity : GenericActivity() {
 
     fun findNavController(): NavController {
         return findNavController(R.id.main_nav_host_fragment)
-    }
-
-    fun showGreenToast(message: String, @DrawableRes icon: Int) {
-        lifecycleScope.launch {
-            withContext(Dispatchers.Main) {
-                val greenToast = ToastUtils.getGreenToast(
-                    this@MainActivity,
-                    binding.toastsArea,
-                    message,
-                    icon
-                )
-                binding.toastsArea.addView(greenToast.root)
-
-                greenToast.root.slideInToastFromTopForDuration(
-                    binding.toastsArea as ViewGroup,
-                    lifecycleScope
-                )
-            }
-        }
-    }
-
-    fun showBlueToast(message: String, @DrawableRes icon: Int) {
-        lifecycleScope.launch {
-            withContext(Dispatchers.Main) {
-                val blueToast = ToastUtils.getBlueToast(
-                    this@MainActivity,
-                    binding.toastsArea,
-                    message,
-                    icon
-                )
-                binding.toastsArea.addView(blueToast.root)
-
-                blueToast.root.slideInToastFromTopForDuration(
-                    binding.toastsArea as ViewGroup,
-                    lifecycleScope
-                )
-            }
-        }
-    }
-
-    fun showRedToast(message: String, @DrawableRes icon: Int) {
-        lifecycleScope.launch {
-            withContext(Dispatchers.Main) {
-                val redToast = ToastUtils.getRedToast(
-                    this@MainActivity,
-                    binding.toastsArea,
-                    message,
-                    icon
-                )
-                binding.toastsArea.addView(redToast.root)
-
-                redToast.root.slideInToastFromTopForDuration(
-                    binding.toastsArea as ViewGroup,
-                    lifecycleScope
-                )
-            }
-        }
-    }
-
-    private fun showPersistentRedToast(
-        message: String,
-        @DrawableRes icon: Int,
-        tag: String,
-        doNotTint: Boolean = false
-    ) {
-        lifecycleScope.launch {
-            withContext(Dispatchers.Main) {
-                val redToast =
-                    ToastUtils.getRedToast(
-                        this@MainActivity,
-                        binding.toastsArea,
-                        message,
-                        icon,
-                        doNotTint
-                    )
-                redToast.root.tag = tag
-                binding.toastsArea.addView(redToast.root)
-
-                redToast.root.slideInToastFromTop(
-                    binding.toastsArea as ViewGroup,
-                    true
-                )
-            }
-        }
-    }
-
-    private fun removePersistentRedToast(tag: String) {
-        lifecycleScope.launch {
-            withContext(Dispatchers.Main) {
-                for (child in binding.toastsArea.children) {
-                    if (child.tag == tag) {
-                        binding.toastsArea.removeView(child)
-                    }
-                }
-            }
-        }
     }
 
     @MainThread
@@ -627,9 +525,15 @@ class MainActivity : GenericActivity() {
         Log.i("$TAG Found URI [$uri] as data for intent [${intent.action}]")
         val sipUriToCall = if (uri.startsWith("tel:")) {
             uri.substring("tel:".length)
+        } else if (uri.startsWith("sip-linphone:")) {
+            uri.replace("sip-linphone:", "sip:")
         } else {
-            uri
-        }.replace("%40", "@") // Unescape @ character if needed
+            if (uri.startsWith("sips-linphone:")) {
+                uri.replace("sips-linphone:", "sips:")
+            } else {
+                uri
+            }.replace("%40", "@") // Unescape @ character if needed
+        }
 
         coreContext.postOnCoreThread {
             val address = coreContext.core.interpretUrl(

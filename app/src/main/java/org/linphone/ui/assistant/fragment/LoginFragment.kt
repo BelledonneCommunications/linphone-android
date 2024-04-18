@@ -37,7 +37,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantLoginFragmentBinding
-import org.linphone.ui.assistant.AssistantActivity
+import org.linphone.ui.GenericActivity
 import org.linphone.ui.assistant.viewmodel.AccountLoginViewModel
 import org.linphone.utils.PhoneNumberUtils
 
@@ -106,7 +106,7 @@ class LoginFragment : Fragment() {
 
         viewModel.accountLoginErrorEvent.observe(viewLifecycleOwner) {
             it.consume { message ->
-                (requireActivity() as AssistantActivity).showRedToast(
+                (requireActivity() as GenericActivity).showRedToast(
                     message,
                     R.drawable.warning_circle
                 )

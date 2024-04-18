@@ -39,7 +39,7 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.HistoryContactFragmentBinding
 import org.linphone.databinding.HistoryContactPopupMenuBinding
-import org.linphone.ui.main.MainActivity
+import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.fragment.SlidingPaneChildFragment
 import org.linphone.ui.main.history.adapter.ContactHistoryListAdapter
 import org.linphone.ui.main.history.model.ConfirmationDialogModel
@@ -138,7 +138,7 @@ class HistoryContactFragment : SlidingPaneChildFragment() {
             it.consume {
                 sharedViewModel.forceRefreshCallLogsListEvent.value = Event(true)
 
-                (requireActivity() as MainActivity).showGreenToast(
+                (requireActivity() as GenericActivity).showGreenToast(
                     getString(R.string.toast_call_history_deleted),
                     R.drawable.check
                 )
@@ -175,7 +175,7 @@ class HistoryContactFragment : SlidingPaneChildFragment() {
         val label = "SIP address"
         clipboard.setPrimaryClip(ClipData.newPlainText(label, value))
 
-        (requireActivity() as MainActivity).showGreenToast(
+        (requireActivity() as GenericActivity).showGreenToast(
             getString(R.string.toast_sip_address_copied_to_clipboard),
             R.drawable.check
         )

@@ -44,12 +44,13 @@ class SingleSignOnViewModel : ViewModel() {
     companion object {
         private const val TAG = "[Single Sign On ViewModel]"
 
-        private const val WELL_KNOWN = "https://sso.onhexagone.com/realms/ONHEXAGONE/.well-known/openid-configuration"
         private const val CLIENT_ID = "linphone"
         private const val REDIRECT_URI = "org.linphone:/openidcallback"
     }
 
     val singleSignOnProcessCompletedEvent = MutableLiveData<Event<Boolean>>()
+
+    val singleSignOnUrl = MutableLiveData<String>()
 
     val startAuthIntentEvent: MutableLiveData<Event<Intent>> by lazy {
         MutableLiveData<Event<Intent>>()
@@ -59,7 +60,7 @@ class SingleSignOnViewModel : ViewModel() {
         MutableLiveData<Event<String>>()
     }
 
-    var preFilledUser: String = ""
+    private var preFilledUser: String = ""
 
     private lateinit var authState: AuthState
     private lateinit var authService: AuthorizationService
@@ -93,7 +94,7 @@ class SingleSignOnViewModel : ViewModel() {
     private fun singleSignOn() {
         Log.i("$TAG Fetch from issuer")
         AuthorizationServiceConfiguration.fetchFromUrl(
-            Uri.parse(WELL_KNOWN),
+            Uri.parse(singleSignOnUrl.value),
             AuthorizationServiceConfiguration.RetrieveConfigurationCallback { serviceConfiguration, ex ->
                 if (ex != null) {
                     Log.e("$TAG Failed to fetch configuration")

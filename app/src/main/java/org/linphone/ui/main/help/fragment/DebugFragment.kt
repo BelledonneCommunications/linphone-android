@@ -31,7 +31,7 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.HelpDebugFragmentBinding
-import org.linphone.ui.main.MainActivity
+import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.ui.main.help.viewmodel.HelpViewModel
 
@@ -66,7 +66,7 @@ class DebugFragment : GenericFragment() {
 
         viewModel.debugLogsCleanedEvent.observe(viewLifecycleOwner) {
             it.consume {
-                (requireActivity() as MainActivity).showGreenToast(
+                (requireActivity() as GenericActivity).showGreenToast(
                     getString(R.string.help_troubleshooting_debug_logs_cleaned_toast_message),
                     R.drawable.info
                 )
@@ -106,7 +106,7 @@ class DebugFragment : GenericFragment() {
 
         viewModel.uploadDebugLogsErrorEvent.observe(viewLifecycleOwner) {
             it.consume {
-                (requireActivity() as MainActivity).showRedToast(
+                (requireActivity() as GenericActivity).showRedToast(
                     getString(R.string.help_troubleshooting_debug_logs_upload_error_toast_message),
                     R.drawable.warning_circle
                 )

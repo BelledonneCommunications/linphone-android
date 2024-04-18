@@ -37,9 +37,9 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.MeetingWaitingRoomFragmentBinding
+import org.linphone.ui.GenericActivity
 import org.linphone.ui.call.fragment.AudioDevicesMenuDialogFragment
 import org.linphone.ui.call.model.AudioDeviceModel
-import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.ui.main.meetings.viewmodel.MeetingWaitingRoomViewModel
 
@@ -140,7 +140,7 @@ class MeetingWaitingRoomFragment : GenericFragment() {
                     R.string.toast_failed_to_join_conference
                 )
                 val icon = R.drawable.warning_circle
-                (requireActivity() as MainActivity).showRedToast(message, icon)
+                (requireActivity() as GenericActivity).showRedToast(message, icon)
             }
         }
 

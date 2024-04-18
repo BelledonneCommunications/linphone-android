@@ -98,6 +98,8 @@
                 <data android:scheme="tel" />
                 <data android:scheme="sip" />
                 <data android:scheme="sips" />
+                <data android:scheme="sip-linphone" />
+                <data android:scheme="sips-linphone" />
                 <data android:scheme="linphone-config" />
             </intent-filter>
 
@@ -112,6 +114,21 @@
             android:name=".ui.assistant.AssistantActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true" />
+
+        <activity
+            android:name=".ui.assistant.SingleSignOnActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="linphone-sso" />
+            </intent-filter>
+
+        </activity>
 
         <activity
             android:name=".ui.call.CallActivity"

@@ -22,16 +22,28 @@ package org.linphone.ui
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.Bundle
+import android.view.ViewGroup
+import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
+import androidx.core.view.children
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
+import org.linphone.utils.ToastUtils
+import org.linphone.utils.slideInToastFromTop
+import org.linphone.utils.slideInToastFromTopForDuration
 
 open class GenericActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "[Generic Activity]"
     }
+
+    private lateinit var toastsArea: ViewGroup
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,5 +68,126 @@ open class GenericActivity : AppCompatActivity() {
         }
 
         super.onCreate(savedInstanceState)
+    }
+
+    fun setUpToastsArea(viewGroup: ViewGroup) {
+        toastsArea = viewGroup
+    }
+
+    fun showGreenToast(
+        message: String,
+        @DrawableRes icon: Int,
+        duration: Long = 4000,
+        doNotTint: Boolean = false
+    ) {
+        lifecycleScope.launch {
+            withContext(Dispatchers.Main) {
+                val greenToast = ToastUtils.getGreenToast(
+                    this@GenericActivity,
+                    toastsArea,
+                    message,
+                    icon,
+                    doNotTint
+                )
+                toastsArea.addView(greenToast.root)
+
+                greenToast.root.slideInToastFromTopForDuration(
+                    toastsArea as ViewGroup,
+                    lifecycleScope,
+                    duration
+                )
+            }
+        }
+    }
+
+    fun showBlueToast(
+        message: String,
+        @DrawableRes icon: Int,
+        duration: Long = 4000,
+        doNotTint: Boolean = false
+    ) {
+        lifecycleScope.launch {
+            withContext(Dispatchers.Main) {
+                val blueToast = ToastUtils.getBlueToast(
+                    this@GenericActivity,
+                    toastsArea,
+                    message,
+                    icon,
+                    doNotTint
+                )
+                toastsArea.addView(blueToast.root)
+
+                blueToast.root.slideInToastFromTopForDuration(
+                    toastsArea as ViewGroup,
+                    lifecycleScope,
+                    duration
+                )
+            }
+        }
+    }
+
+    fun showRedToast(
+        message: String,
+        @DrawableRes icon: Int,
+        duration: Long = 4000,
+        doNotTint: Boolean = false
+    ) {
+        lifecycleScope.launch {
+            withContext(Dispatchers.Main) {
+                val redToast = ToastUtils.getRedToast(
+                    this@GenericActivity,
+                    toastsArea,
+                    message,
+                    icon,
+                    doNotTint
+                )
+                toastsArea.addView(redToast.root)
+
+                redToast.root.slideInToastFromTopForDuration(
+                    toastsArea as ViewGroup,
+                    lifecycleScope,
+                    duration
+                )
+            }
+        }
+    }
+
+    fun showPersistentRedToast(
+        message: String,
+        @DrawableRes icon: Int,
+        tag: String,
+        doNotTint: Boolean = false
+    ) {
+        lifecycleScope.launch {
+            withContext(Dispatchers.Main) {
+                val redToast =
+                    ToastUtils.getRedToast(
+                        this@GenericActivity,
+                        toastsArea,
+                        message,
+                        icon,
+                        doNotTint
+                    )
+                redToast.root.tag = tag
+                toastsArea.addView(redToast.root)
+
+                redToast.root.slideInToastFromTop(
+                    toastsArea as ViewGroup,
+                    true
+                )
+            }
+        }
+    }
+
+    fun removePersistentRedToast(tag: String) {
+        lifecycleScope.launch {
+            withContext(Dispatchers.Main) {
+                for (child in toastsArea.children) {
+                    if (child.tag == tag) {
+                        toastsArea.removeView(child)
+                    }
+                }
+            }
+        }
     }
 }

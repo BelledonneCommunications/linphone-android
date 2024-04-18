@@ -23,14 +23,11 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.DrawableRes
 import androidx.annotation.UiThread
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.core.view.children
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -58,9 +55,6 @@ import org.linphone.ui.call.model.AudioDeviceModel
 import org.linphone.ui.call.viewmodel.CallsViewModel
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
 import org.linphone.ui.call.viewmodel.SharedCallViewModel
-import org.linphone.utils.ToastUtils
-import org.linphone.utils.slideInToastFromTop
-import org.linphone.utils.slideInToastFromTopForDuration
 
 @UiThread
 class CallActivity : GenericActivity() {
@@ -105,6 +99,8 @@ class CallActivity : GenericActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.call_activity)
         binding.lifecycleOwner = this
+
+        setUpToastsArea(binding.toastsArea)
 
         lifecycleScope.launch(Dispatchers.Main) {
             WindowInfoTracker
@@ -325,78 +321,6 @@ class CallActivity : GenericActivity() {
                 }
             }
         }
-    }
-
-    fun showBlueToast(message: String, @DrawableRes icon: Int, doNotTint: Boolean = false) {
-        val blueToast = ToastUtils.getBlueToast(this, binding.toastsArea, message, icon, doNotTint)
-        binding.toastsArea.addView(blueToast.root)
-
-        blueToast.root.slideInToastFromTopForDuration(
-            binding.toastsArea as ViewGroup,
-            lifecycleScope
-        )
-    }
-
-    fun showRedToast(
-        message: String,
-        @DrawableRes icon: Int,
-        duration: Long = 4000,
-        doNotTint: Boolean = false
-    ) {
-        val redToast = ToastUtils.getRedToast(this, binding.toastsArea, message, icon, doNotTint)
-        binding.toastsArea.addView(redToast.root)
-
-        redToast.root.slideInToastFromTopForDuration(
-            binding.toastsArea as ViewGroup,
-            lifecycleScope,
-            duration
-        )
-    }
-
-    fun showPersistentRedToast(
-        message: String,
-        @DrawableRes icon: Int,
-        tag: String,
-        doNotTint: Boolean = false
-    ) {
-        val redToast = ToastUtils.getRedToast(this, binding.toastsArea, message, icon, doNotTint)
-        redToast.root.tag = tag
-        binding.toastsArea.addView(redToast.root)
-
-        redToast.root.slideInToastFromTop(
-            binding.toastsArea as ViewGroup,
-            true
-        )
-    }
-
-    fun removePersistentRedToast(tag: String) {
-        for (child in binding.toastsArea.children) {
-            if (child.tag == tag) {
-                binding.toastsArea.removeView(child)
-            }
-        }
-    }
-
-    fun showGreenToast(
-        message: String,
-        @DrawableRes icon: Int,
-        duration: Long = 4000,
-        doNotTint: Boolean = false
-    ) {
-        val greenToast = ToastUtils.getGreenToast(
-            this,
-            binding.toastsArea,
-            message,
-            icon,
-            doNotTint
-        )
-        binding.toastsArea.addView(greenToast.root)
-
-        greenToast.root.slideInToastFromTopForDuration(
-            binding.toastsArea as ViewGroup,
-            lifecycleScope,
-            duration
-        )
     }
 
     private fun navigateToActiveCall(notInConference: Boolean) {

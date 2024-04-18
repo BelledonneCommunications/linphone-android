@@ -12,7 +12,7 @@ import androidx.navigation.navGraphViewModels
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.HelpFragmentBinding
-import org.linphone.ui.main.MainActivity
+import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.ui.main.help.viewmodel.HelpViewModel
 import org.linphone.ui.main.history.model.ConfirmationDialogModel
@@ -99,7 +99,7 @@ class HelpFragment : GenericFragment() {
 
         viewModel.versionUpToDateEvent.observe(viewLifecycleOwner) {
             it.consume {
-                (requireActivity() as MainActivity).showGreenToast(
+                (requireActivity() as GenericActivity).showGreenToast(
                     getString(R.string.help_version_up_to_date_toast_message),
                     R.drawable.info
                 )
@@ -108,7 +108,7 @@ class HelpFragment : GenericFragment() {
 
         viewModel.errorEvent.observe(viewLifecycleOwner) {
             it.consume {
-                (requireActivity() as MainActivity).showRedToast(
+                (requireActivity() as GenericActivity).showRedToast(
                     getString(R.string.help_error_checking_version_toast_message),
                     R.drawable.warning_circle
                 )

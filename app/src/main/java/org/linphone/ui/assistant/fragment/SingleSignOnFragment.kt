@@ -28,13 +28,12 @@ import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationResponse
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantSingleSignOnFragmentBinding
-import org.linphone.ui.assistant.AssistantActivity
+import org.linphone.ui.GenericActivity
 import org.linphone.ui.assistant.viewmodel.SingleSignOnViewModel
 
 @UiThread
@@ -48,8 +47,6 @@ class SingleSignOnFragment : Fragment() {
     private lateinit var binding: AssistantSingleSignOnFragmentBinding
 
     private lateinit var viewModel: SingleSignOnViewModel
-
-    private val args: SingleSignOnFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,12 +62,15 @@ class SingleSignOnFragment : Fragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        viewModel = ViewModelProvider(this)[SingleSignOnViewModel::class.java]
+        viewModel = requireActivity().run {
+            ViewModelProvider(this)[SingleSignOnViewModel::class.java]
+        }
         binding.viewModel = viewModel
 
-        val identity = args.sipIdentity
-        Log.i("$TAG SIP Identity found in arguments is [$identity]")
-        viewModel.preFilledUser = identity
+        viewModel.singleSignOnUrl.observe(viewLifecycleOwner) { url ->
+            Log.i("$TAG SSO URL found [$url], setting it up")
+            viewModel.setUp()
+        }
 
         viewModel.singleSignOnProcessCompletedEvent.observe(viewLifecycleOwner) {
             it.consume {
@@ -88,15 +88,17 @@ class SingleSignOnFragment : Fragment() {
 
         viewModel.onErrorEvent.observe(viewLifecycleOwner) {
             it.consume { errorMessage ->
-                (requireActivity() as AssistantActivity).showRedToast(
+                (requireActivity() as GenericActivity).showRedToast(
                     errorMessage,
                     R.drawable.warning_circle
                 )
-                findNavController().popBackStack()
+                try {
+                    findNavController().popBackStack()
+                } catch (ise: IllegalStateException) {
+                    // Excepted in SingleSignOnActivity as no NavController is set
+                }
             }
         }
-
-        viewModel.setUp()
     }
 
     @Deprecated("Deprecated in Java")

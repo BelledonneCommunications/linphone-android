@@ -36,7 +36,7 @@ import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatMediaFragmentBinding
-import org.linphone.ui.main.MainActivity
+import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.chat.adapter.ConversationsFilesAdapter
 import org.linphone.ui.main.chat.viewmodel.ConversationMediaListViewModel
 import org.linphone.ui.main.fragment.SlidingPaneChildFragment
@@ -166,7 +166,7 @@ class ConversationMediaListFragment : SlidingPaneChildFragment() {
                         R.string.toast_no_app_registered_to_handle_content_type_error
                     )
                     val icon = R.drawable.file
-                    (requireActivity() as MainActivity).showRedToast(message, icon)
+                    (requireActivity() as GenericActivity).showRedToast(message, icon)
                 }
             }
         }

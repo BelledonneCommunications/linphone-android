@@ -44,7 +44,7 @@ import org.linphone.R
 import org.linphone.core.Factory
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactFragmentBinding
-import org.linphone.ui.main.MainActivity
+import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
 import org.linphone.ui.main.contacts.model.TrustCallDialogModel
 import org.linphone.ui.main.contacts.viewmodel.ContactViewModel
@@ -246,7 +246,7 @@ class ContactFragment : SlidingPaneChildFragment() {
         } else {
             getString(R.string.toast_phone_number_copied_to_clipboard)
         }
-        (requireActivity() as MainActivity).showGreenToast(
+        (requireActivity() as GenericActivity).showGreenToast(
             message,
             R.drawable.check
         )

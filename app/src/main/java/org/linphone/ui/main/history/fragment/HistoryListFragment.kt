@@ -43,7 +43,7 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.HistoryListFragmentBinding
 import org.linphone.databinding.HistoryListPopupMenuBinding
-import org.linphone.ui.main.MainActivity
+import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.fragment.AbstractTopBarFragment
 import org.linphone.ui.main.history.adapter.HistoryListAdapter
 import org.linphone.ui.main.history.model.ConfirmationDialogModel
@@ -203,7 +203,7 @@ class HistoryListFragment : AbstractTopBarFragment() {
         listViewModel.historyDeletedEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.w("$TAG All call logs have been deleted")
-                (requireActivity() as MainActivity).showGreenToast(
+                (requireActivity() as GenericActivity).showGreenToast(
                     getString(R.string.toast_call_history_deleted),
                     R.drawable.check
                 )
@@ -279,7 +279,7 @@ class HistoryListFragment : AbstractTopBarFragment() {
         val label = "SIP address"
         clipboard.setPrimaryClip(ClipData.newPlainText(label, value))
 
-        (requireActivity() as MainActivity).showGreenToast(
+        (requireActivity() as GenericActivity).showGreenToast(
             getString(R.string.toast_sip_address_copied_to_clipboard),
             R.drawable.check
         )

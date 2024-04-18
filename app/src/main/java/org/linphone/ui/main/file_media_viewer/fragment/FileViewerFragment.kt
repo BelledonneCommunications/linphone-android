@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.FileViewerFragmentBinding
-import org.linphone.ui.main.MainActivity
+import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.file_media_viewer.adapter.PdfPagesListAdapter
 import org.linphone.ui.main.file_media_viewer.viewmodel.FileViewModel
 import org.linphone.ui.main.fragment.GenericFragment
@@ -143,7 +143,7 @@ class FileViewerFragment : GenericFragment() {
             it.consume { pair ->
                 val message = pair.first
                 val icon = pair.second
-                (requireActivity() as MainActivity).showGreenToast(message, icon)
+                (requireActivity() as GenericActivity).showGreenToast(message, icon)
             }
         }
 
@@ -151,7 +151,7 @@ class FileViewerFragment : GenericFragment() {
             it.consume { pair ->
                 val message = pair.first
                 val icon = pair.second
-                (requireActivity() as MainActivity).showRedToast(message, icon)
+                (requireActivity() as GenericActivity).showRedToast(message, icon)
             }
         }
     }

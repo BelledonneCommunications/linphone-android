@@ -32,7 +32,7 @@ import org.linphone.core.Address
 import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.databinding.StartChatFragmentBinding
-import org.linphone.ui.main.MainActivity
+import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.chat.viewmodel.StartConversationViewModel
 import org.linphone.ui.main.fragment.GenericAddressPickerFragment
 import org.linphone.ui.main.fragment.GroupSetOrEditSubjectDialogModel
@@ -105,7 +105,10 @@ class StartConversationFragment : GenericAddressPickerFragment() {
         viewModel.chatRoomCreationErrorEvent.observe(viewLifecycleOwner) {
             it.consume { error ->
                 Log.i("$TAG Conversation creation error, showing red toast")
-                (requireActivity() as MainActivity).showRedToast(error, R.drawable.warning_circle)
+                (requireActivity() as GenericActivity).showRedToast(
+                    error,
+                    R.drawable.warning_circle
+                )
             }
         }
 

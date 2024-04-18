@@ -36,7 +36,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatListFragmentBinding
-import org.linphone.ui.main.MainActivity
+import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.chat.adapter.ConversationsListAdapter
 import org.linphone.ui.main.chat.viewmodel.ConversationsListViewModel
 import org.linphone.ui.main.fragment.AbstractTopBarFragment
@@ -250,7 +250,7 @@ class ConversationsListFragment : AbstractTopBarFragment() {
                 // Do not consume it yet
                 val message = getString(R.string.toast_message_waiting_to_be_forwarded)
                 val icon = R.drawable.forward
-                (requireActivity() as MainActivity).showGreenToast(message, icon)
+                (requireActivity() as GenericActivity).showGreenToast(message, icon)
                 Log.i("$TAG Found a message waiting to be forwarded")
             }
         }
@@ -264,7 +264,7 @@ class ConversationsListFragment : AbstractTopBarFragment() {
                     filesToShare.size.toString()
                 )
                 val icon = R.drawable.file
-                (requireActivity() as MainActivity).showGreenToast(message, icon)
+                (requireActivity() as GenericActivity).showGreenToast(message, icon)
                 Log.i("$TAG Found [$count] files waiting to be shared")
             }
         }
@@ -273,7 +273,7 @@ class ConversationsListFragment : AbstractTopBarFragment() {
             if (textToShare.isNotEmpty()) {
                 val message = getString(R.string.toast_text_waiting_to_be_shared)
                 val icon = R.drawable.file_text
-                (requireActivity() as MainActivity).showGreenToast(message, icon)
+                (requireActivity() as GenericActivity).showGreenToast(message, icon)
                 Log.i("$TAG Found text waiting to be shared")
             }
         }

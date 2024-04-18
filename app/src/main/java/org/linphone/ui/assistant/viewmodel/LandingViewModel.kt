@@ -23,7 +23,6 @@ import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
-import org.linphone.utils.Event
 
 class LandingViewModel @UiThread constructor() : AccountLoginViewModel() {
     companion object {
@@ -38,13 +37,13 @@ class LandingViewModel @UiThread constructor() : AccountLoginViewModel() {
 
     val hideThirdPartyAccount = MutableLiveData<Boolean>()
 
-    val redirectToDigestAuthEvent: MutableLiveData<Event<String>> by lazy {
+    /*val redirectToDigestAuthEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
     }
 
     val redirectToSingleSignOnEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
-    }
+    }*/
 
     var conditionsAndPrivacyPolicyAccepted = false
 

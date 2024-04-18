@@ -23,12 +23,10 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.ViewGroup
 import androidx.activity.addCallback
-import androidx.annotation.DrawableRes
 import androidx.annotation.UiThread
 import androidx.core.content.ContextCompat
 import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
@@ -37,8 +35,6 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantActivityBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.assistant.fragment.PermissionsFragmentDirections
-import org.linphone.utils.ToastUtils
-import org.linphone.utils.slideInToastFromTopForDuration
 
 @UiThread
 class AssistantActivity : GenericActivity() {
@@ -53,6 +49,8 @@ class AssistantActivity : GenericActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.assistant_activity)
         binding.lifecycleOwner = this
+
+        setUpToastsArea(binding.toastsArea)
 
         coreContext.postOnCoreThread { core ->
             if (core.accountList.isEmpty()) {
@@ -71,26 +69,6 @@ class AssistantActivity : GenericActivity() {
                 binding.assistantNavContainer.findNavController().navigate(action)
             }
         }
-    }
-
-    fun showGreenToast(message: String, @DrawableRes icon: Int) {
-        val greenToast = ToastUtils.getGreenToast(this, binding.toastsArea, message, icon)
-        binding.toastsArea.addView(greenToast.root)
-
-        greenToast.root.slideInToastFromTopForDuration(
-            binding.toastsArea as ViewGroup,
-            lifecycleScope
-        )
-    }
-
-    fun showRedToast(message: String, @DrawableRes icon: Int) {
-        val redToast = ToastUtils.getRedToast(this, binding.toastsArea, message, icon)
-        binding.toastsArea.addView(redToast.root)
-
-        redToast.root.slideInToastFromTopForDuration(
-            binding.toastsArea as ViewGroup,
-            lifecycleScope
-        )
     }
 
     private fun areAllPermissionsGranted(): Boolean {

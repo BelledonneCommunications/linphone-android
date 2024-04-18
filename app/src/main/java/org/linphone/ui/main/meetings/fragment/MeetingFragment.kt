@@ -41,7 +41,7 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.MeetingFragmentBinding
 import org.linphone.databinding.MeetingPopupMenuBinding
-import org.linphone.ui.main.MainActivity
+import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.fragment.SlidingPaneChildFragment
 import org.linphone.ui.main.history.model.ConfirmationDialogModel
 import org.linphone.ui.main.meetings.viewmodel.MeetingViewModel
@@ -147,7 +147,7 @@ class MeetingFragment : SlidingPaneChildFragment() {
         viewModel.conferenceInfoDeletedEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.i("$TAG Meeting info has been deleted successfully")
-                (requireActivity() as MainActivity).showGreenToast(
+                (requireActivity() as GenericActivity).showGreenToast(
                     getString(R.string.meeting_info_deleted_toast),
                     R.drawable.trash_simple
                 )
@@ -159,7 +159,7 @@ class MeetingFragment : SlidingPaneChildFragment() {
         viewModel.conferenceCancelledEvent.observe(viewLifecycleOwner) {
             it.consume {
                 Log.i("$TAG Meeting has been cancelled successfully, deleting it")
-                (requireActivity() as MainActivity).showGreenToast(
+                (requireActivity() as GenericActivity).showGreenToast(
                     getString(R.string.meeting_info_cancelled_toast),
                     R.drawable.trash_simple
                 )
@@ -208,7 +208,7 @@ class MeetingFragment : SlidingPaneChildFragment() {
         val label = "Meeting SIP address"
         clipboard.setPrimaryClip(ClipData.newPlainText(label, meetingSipUri))
 
-        (requireActivity() as MainActivity).showGreenToast(
+        (requireActivity() as GenericActivity).showGreenToast(
             getString(R.string.toast_meeting_address_copied_to_clipboard),
             R.drawable.check
         )

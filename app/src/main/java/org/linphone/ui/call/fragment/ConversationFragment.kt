@@ -57,7 +57,7 @@ import org.linphone.core.ChatMessage
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatBubbleLongPressMenuBinding
 import org.linphone.databinding.ChatConversationFragmentBinding
-import org.linphone.ui.call.CallActivity
+import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.chat.ConversationScrollListener
 import org.linphone.ui.main.chat.adapter.ConversationEventAdapter
 import org.linphone.ui.main.chat.adapter.MessageBottomSheetAdapter
@@ -264,7 +264,7 @@ class ConversationFragment : GenericCallFragment() {
                         Log.e("$TAG Failed to find conversation, going back")
                         findNavController().popBackStack()
                         val message = getString(R.string.toast_cant_find_conversation_to_display)
-                        (requireActivity() as CallActivity).showRedToast(
+                        (requireActivity() as GenericActivity).showRedToast(
                             message,
                             R.drawable.warning_circle
                         )
@@ -364,7 +364,7 @@ class ConversationFragment : GenericCallFragment() {
             it.consume { pair ->
                 val message = pair.first
                 val icon = pair.second
-                (requireActivity() as CallActivity).showRedToast(message, icon)
+                (requireActivity() as GenericActivity).showRedToast(message, icon)
             }
         }
 
@@ -402,7 +402,7 @@ class ConversationFragment : GenericCallFragment() {
             it.consume { pair ->
                 val message = pair.first
                 val icon = pair.second
-                (requireActivity() as CallActivity).showRedToast(message, icon)
+                (requireActivity() as GenericActivity).showRedToast(message, icon)
             }
         }
 
@@ -410,7 +410,7 @@ class ConversationFragment : GenericCallFragment() {
             it.consume {
                 val message = getString(R.string.conversation_message_deleted_toast)
                 val icon = R.drawable.trash_simple
-                (requireActivity() as CallActivity).showGreenToast(message, icon)
+                (requireActivity() as GenericActivity).showGreenToast(message, icon)
             }
         }
         binding.sendArea.messageToSend.setControlEnterListener(object :

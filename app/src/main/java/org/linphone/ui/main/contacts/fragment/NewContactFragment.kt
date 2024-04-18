@@ -39,6 +39,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactNewOrEditFragmentBinding
+import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.contacts.model.NewOrEditNumberOrAddressModel
 import org.linphone.ui.main.contacts.viewmodel.ContactNewOrEditViewModel
@@ -142,12 +143,12 @@ class NewContactFragment : GenericFragment() {
                     findNavController().popBackStack()
 
                     sharedViewModel.showContactEvent.value = Event(refKey)
-                    (requireActivity() as MainActivity).showGreenToast(
+                    (requireActivity() as GenericActivity).showGreenToast(
                         getString(R.string.contact_editor_saved_contact_toast),
                         R.drawable.info
                     )
                 } else {
-                    (requireActivity() as MainActivity).showRedToast(
+                    (requireActivity() as GenericActivity).showRedToast(
                         getString(R.string.contact_editor_error_saving_contact_toast),
                         R.drawable.warning_circle
                     )

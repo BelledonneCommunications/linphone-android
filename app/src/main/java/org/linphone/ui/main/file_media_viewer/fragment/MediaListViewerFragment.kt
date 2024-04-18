@@ -38,7 +38,7 @@ import kotlinx.coroutines.withContext
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.FileMediaViewerFragmentBinding
-import org.linphone.ui.main.MainActivity
+import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.chat.viewmodel.ConversationMediaListViewModel
 import org.linphone.ui.main.file_media_viewer.adapter.MediaListAdapter
 import org.linphone.ui.main.fragment.GenericFragment
@@ -179,7 +179,7 @@ class MediaListViewerFragment : GenericFragment() {
                             val message = AppUtils.getString(
                                 R.string.toast_file_successfully_exported_to_media_store
                             )
-                            (requireActivity() as MainActivity).showGreenToast(
+                            (requireActivity() as GenericActivity).showGreenToast(
                                 message,
                                 R.drawable.check
                             )
@@ -188,7 +188,7 @@ class MediaListViewerFragment : GenericFragment() {
                             val message = AppUtils.getString(
                                 R.string.toast_export_file_to_media_store_error
                             )
-                            (requireActivity() as MainActivity).showRedToast(
+                            (requireActivity() as GenericActivity).showRedToast(
                                 message,
                                 R.drawable.warning_circle
                             )

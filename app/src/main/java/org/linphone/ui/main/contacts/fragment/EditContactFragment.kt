@@ -40,6 +40,7 @@ import org.linphone.BR
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactNewOrEditFragmentBinding
+import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.contacts.model.NewOrEditNumberOrAddressModel
 import org.linphone.ui.main.contacts.viewmodel.ContactNewOrEditViewModel
@@ -154,7 +155,7 @@ class EditContactFragment : SlidingPaneChildFragment() {
             it.consume { refKey ->
                 if (refKey.isNotEmpty()) {
                     Log.i("$TAG Changes were applied, going back to details page")
-                    (requireActivity() as MainActivity).showGreenToast(
+                    (requireActivity() as GenericActivity).showGreenToast(
                         getString(R.string.contact_editor_saved_changes_toast),
                         R.drawable.info
                     )
@@ -162,7 +163,7 @@ class EditContactFragment : SlidingPaneChildFragment() {
                     backPressedCallback.isEnabled = false
                     findNavController().popBackStack()
                 } else {
-                    (requireActivity() as MainActivity).showRedToast(
+                    (requireActivity() as GenericActivity).showRedToast(
                         getString(R.string.contact_editor_error_saving_changes_toast),
                         R.drawable.warning_circle
                     )

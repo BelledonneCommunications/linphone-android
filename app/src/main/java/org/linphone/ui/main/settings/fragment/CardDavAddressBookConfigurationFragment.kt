@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsContactsCarddavBinding
-import org.linphone.ui.main.MainActivity
+import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.ui.main.settings.viewmodel.CardDavViewModel
 
@@ -66,7 +66,7 @@ class CardDavAddressBookConfigurationFragment : GenericFragment() {
             it.consume { pair ->
                 val icon = pair.first
                 val message = pair.second
-                (requireActivity() as MainActivity).showRedToast(message, icon)
+                (requireActivity() as GenericActivity).showRedToast(message, icon)
             }
         }
     }

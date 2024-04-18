@@ -74,6 +74,7 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatBubbleLongPressMenuBinding
 import org.linphone.databinding.ChatConversationFragmentBinding
 import org.linphone.databinding.ChatConversationPopupMenuBinding
+import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.chat.ConversationScrollListener
 import org.linphone.ui.main.chat.adapter.ConversationEventAdapter
@@ -403,7 +404,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
                         Log.e("$TAG Failed to find conversation, going back")
                         goBack()
                         val message = getString(R.string.toast_cant_find_conversation_to_display)
-                        (requireActivity() as MainActivity).showRedToast(
+                        (requireActivity() as GenericActivity).showRedToast(
                             message,
                             R.drawable.warning_circle
                         )
@@ -575,7 +576,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
             it.consume { pair ->
                 val message = pair.first
                 val icon = pair.second
-                (requireActivity() as MainActivity).showRedToast(message, icon)
+                (requireActivity() as GenericActivity).showRedToast(message, icon)
             }
         }
 
@@ -645,7 +646,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
             it.consume { pair ->
                 val message = pair.first
                 val icon = pair.second
-                (requireActivity() as MainActivity).showRedToast(message, icon)
+                (requireActivity() as GenericActivity).showRedToast(message, icon)
             }
         }
 
@@ -653,7 +654,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
             it.consume {
                 val message = getString(R.string.conversation_message_deleted_toast)
                 val icon = R.drawable.trash_simple
-                (requireActivity() as MainActivity).showGreenToast(message, icon)
+                (requireActivity() as GenericActivity).showGreenToast(message, icon)
                 sharedViewModel.forceRefreshConversations.value = Event(true)
             }
         }

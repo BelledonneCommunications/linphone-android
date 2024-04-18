@@ -41,7 +41,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantRegisterFragmentBinding
-import org.linphone.ui.assistant.AssistantActivity
+import org.linphone.ui.GenericActivity
 import org.linphone.ui.assistant.model.ConfirmPhoneNumberDialogModel
 import org.linphone.ui.assistant.viewmodel.AccountCreationViewModel
 import org.linphone.utils.DialogUtils
@@ -130,7 +130,7 @@ class RegisterFragment : Fragment() {
         viewModel.pushNotificationsAvailable.observe(viewLifecycleOwner) { available ->
             if (!available) {
                 val text = getString(R.string.assistant_account_register_unavailable_no_push_toast)
-                (requireActivity() as AssistantActivity).showRedToast(
+                (requireActivity() as GenericActivity).showRedToast(
                     text,
                     R.drawable.warning_circle
                 )
@@ -160,7 +160,7 @@ class RegisterFragment : Fragment() {
 
         viewModel.errorHappenedEvent.observe(viewLifecycleOwner) {
             it.consume { error ->
-                (requireActivity() as AssistantActivity).showRedToast(
+                (requireActivity() as GenericActivity).showRedToast(
                     error,
                     R.drawable.warning_circle
                 )

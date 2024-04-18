@@ -35,7 +35,7 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantQrCodeScannerFragmentBinding
-import org.linphone.ui.assistant.AssistantActivity
+import org.linphone.ui.GenericActivity
 import org.linphone.ui.assistant.viewmodel.QrCodeViewModel
 
 @UiThread
@@ -84,7 +84,7 @@ class QrCodeScannerFragment : Fragment() {
         viewModel.qrCodeFoundEvent.observe(viewLifecycleOwner) {
             it.consume { isValid ->
                 if (!isValid) {
-                    (requireActivity() as AssistantActivity).showRedToast(
+                    (requireActivity() as GenericActivity).showRedToast(
                         getString(R.string.toast_assistant_qr_code_invalid),
                         R.drawable.warning_circle
                     )
