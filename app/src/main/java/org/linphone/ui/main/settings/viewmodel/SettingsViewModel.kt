@@ -115,6 +115,9 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
     )
     val availableThemesValues = arrayListOf(-1, 0, 1)
 
+    // Advanced setttings
+    val remoteProvisioningUrl = MutableLiveData<String>()
+
     init {
         coreContext.postOnCoreThread { core ->
             showConversationsSettings.postValue(!corePreferences.disableChat)
@@ -155,6 +158,8 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
             defaultLayout.postValue(core.defaultConferenceLayout.toInt())
 
             theme.postValue(corePreferences.darkMode)
+
+            remoteProvisioningUrl.postValue(core.provisioningUri)
         }
     }
 
@@ -348,6 +353,21 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
             corePreferences.darkMode = themeValue
             Log.i("$TAG Theme [$theme] saved")
             theme.postValue(themeValue)
+        }
+    }
+
+    @UiThread
+    fun updateRemoteProvisioningUrl() {
+        coreContext.postOnCoreThread { core ->
+            val newProvisioningUri = remoteProvisioningUrl.value.orEmpty()
+            if (newProvisioningUri != core.provisioningUri) {
+                Log.i("$TAG Updating remote provisioning URI to [$newProvisioningUri]")
+                if (newProvisioningUri.isEmpty()) {
+                    core.provisioningUri = null
+                } else {
+                    core.provisioningUri = newProvisioningUri
+                }
+            }
         }
     }
 }

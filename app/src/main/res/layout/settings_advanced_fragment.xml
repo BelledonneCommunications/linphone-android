@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="backClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.main.settings.viewmodel.SettingsViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/color_main2_000">
+
+        <ImageView
+            android:id="@+id/back"
+            android:onClick="@{backClickListener}"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:adjustViewBounds="true"
+            android:padding="15dp"
+            android:src="@drawable/caret_left"
+            android:contentDescription="@string/content_description_go_back_icon"
+            app:tint="?attr/color_main1_500"
+            app:layout_constraintBottom_toBottomOf="@id/title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/title" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/main_page_title_style"
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/top_bar_height"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/settings_advanced_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/back"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:fillViewport="true"
+            android:background="?attr/color_grey_100"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/header_style"
+                    android:id="@+id/remote_provisioning_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:text="@string/settings_advanced_remote_provisioning_url"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    style="@style/default_text_style"
+                    android:id="@+id/remote_provisioning"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="5dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:text="@={viewModel.remoteProvisioningUrl}"
+                    android:textSize="14sp"
+                    android:textColor="@color/gray_main2_600"
+                    android:maxLines="1"
+                    android:background="@drawable/edit_text_background"
+                    android:inputType="text|textUri"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintWidth_max="@dimen/text_input_max_width"
+                    app:layout_constraintTop_toBottomOf="@id/remote_provisioning_label"
+                    app:layout_constraintStart_toStartOf="@id/remote_provisioning_label"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

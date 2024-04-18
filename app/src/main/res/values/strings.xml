@@ -291,6 +291,8 @@
     <string name="settings_user_interface_auto_theme_label">Auto</string>
     <string name="settings_advanced_title">Advanced settings</string>
 
+    <string name="settings_advanced_remote_provisioning_url">Remote provisioning URL</string>
+
     <!-- Account profile & settings -->
     <string name="manage_account_title">Manage account</string>
     <string name="manage_account_details_title">Details</string>

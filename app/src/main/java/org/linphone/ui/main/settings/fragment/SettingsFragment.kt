@@ -78,6 +78,13 @@ class SettingsFragment : GenericFragment() {
             goBack()
         }
 
+        binding.setAdvancedSettingsClickListener {
+            if (findNavController().currentDestination?.id == R.id.settingsFragment) {
+                val action = SettingsFragmentDirections.actionSettingsFragmentToSettingsAdvancedFragment()
+                findNavController().navigate(action)
+            }
+        }
+
         viewModel.addLdapServerEvent.observe(viewLifecycleOwner) {
             it.consume {
                 val action = SettingsFragmentDirections.actionSettingsFragmentToLdapServerConfigurationFragment(

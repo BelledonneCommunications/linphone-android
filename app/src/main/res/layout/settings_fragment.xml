@@ -9,6 +9,9 @@
             name="backClickListener"
             type="View.OnClickListener" />
         <variable
+            name="advancedSettingsClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
             type="org.linphone.ui.main.settings.viewmodel.SettingsViewModel" />
     </data>
@@ -268,6 +271,7 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/section_header_style"
                     android:id="@+id/advanced_settings"
+                    android:onClick="@{advancedSettingsClickListener}"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
