@@ -424,6 +424,15 @@ class CallActivity : GenericActivity() {
                     IncomingCallFragmentDirections.actionIncomingCallFragmentToActiveConferenceCallFragment()
                 }
             }
+            R.id.activeCallFragment -> {
+                if (notInConference) {
+                    Log.i("$TAG Going from call fragment to call fragment")
+                    ActiveCallFragmentDirections.actionGlobalActiveCallFragment()
+                } else {
+                    Log.i("$TAG Going from call fragment to conference call fragment")
+                    ActiveCallFragmentDirections.actionActiveCallFragmentToActiveConferenceCallFragment()
+                }
+            }
             R.id.activeConferenceCallFragment -> {
                 if (notInConference) {
                     Log.i("$TAG Going from conference call fragment to call fragment")
@@ -437,11 +446,11 @@ class CallActivity : GenericActivity() {
             }
             R.id.callsListFragment -> {
                 if (notInConference) {
-                    Log.i("$TAG Going calls list fragment to conference fragment")
-                    CallsListFragmentDirections.actionCallsListFragmentToActiveConferenceCallFragment()
-                } else {
                     Log.i("$TAG Going calls list fragment to active call fragment")
                     CallsListFragmentDirections.actionCallsListFragmentToActiveCallFragment()
+                } else {
+                    Log.i("$TAG Going calls list fragment to conference fragment")
+                    CallsListFragmentDirections.actionCallsListFragmentToActiveConferenceCallFragment()
                 }
             }
             else -> {
@@ -450,7 +459,7 @@ class CallActivity : GenericActivity() {
                     ActiveCallFragmentDirections.actionGlobalActiveCallFragment()
                 } else {
                     Log.i("$TAG Going from call fragment to conference call fragment")
-                    ActiveCallFragmentDirections.actionGlobalActiveConferenceCallFragment()
+                    ActiveConferenceCallFragmentDirections.actionGlobalActiveConferenceCallFragment()
                 }
             }
         }
