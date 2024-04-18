@@ -38,6 +38,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.view.Window
 import android.view.WindowManager
 import android.widget.PopupWindow
@@ -183,6 +184,26 @@ class ConversationFragment : SlidingPaneChildFragment() {
         }
     }
 
+    private val globalLayoutObserver = object : ViewTreeObserver.OnGlobalLayoutListener {
+        override fun onGlobalLayout() {
+            binding.eventsList
+                .viewTreeObserver
+                .removeOnGlobalLayoutListener(this)
+
+            if (::scrollListener.isInitialized) {
+                binding.eventsList.addOnScrollListener(scrollListener)
+            }
+
+            val unreadCount = viewModel.unreadMessagesCount.value ?: 0
+            if (unreadCount > 0) {
+                Log.i(
+                    "$TAG Messages have been displayed and [$unreadCount] of them are unread, scrolling to first unread"
+                )
+                scrollToFirstUnreadMessageOrBottom()
+            }
+        }
+    }
+
     private val dataObserver = object : AdapterDataObserver() {
         override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
             if (positionStart > 0) {
@@ -198,9 +219,12 @@ class ConversationFragment : SlidingPaneChildFragment() {
 
             if (positionStart == 0 && adapter.itemCount == itemCount) {
                 // First time we fill the list with messages
-                Log.i(
-                    "$TAG [$itemCount] events have been loaded"
-                )
+                Log.i("$TAG [$itemCount] events have been loaded")
+                val unreadCount = viewModel.unreadMessagesCount.value ?: 0
+                if (unreadCount > 0) {
+                    Log.i("$TAG [$unreadCount] unread messages, scrolling to first one")
+                    scrollToFirstUnreadMessageOrBottom()
+                }
             } else {
                 Log.i(
                     "$TAG [$itemCount] new events have been loaded, scrolling to first unread message"
@@ -731,7 +755,6 @@ class ConversationFragment : SlidingPaneChildFragment() {
                 }
             }
         }
-        binding.eventsList.addOnScrollListener(scrollListener)
     }
 
     override fun onResume() {
@@ -739,10 +762,10 @@ class ConversationFragment : SlidingPaneChildFragment() {
 
         viewModel.updateCurrentlyDisplayedConversation()
 
-        if (viewModel.scrollingPosition != SCROLLING_POSITION_NOT_SET) {
-            Log.d("$TAG Restoring previous scrolling position: ${viewModel.scrollingPosition}")
-            binding.eventsList.scrollToPosition(viewModel.scrollingPosition)
-        }
+        // Wait for items to be displayed
+        binding.eventsList
+            .viewTreeObserver
+            .addOnGlobalLayoutListener(globalLayoutObserver)
 
         try {
             adapter.registerAdapterDataObserver(dataObserver)
@@ -752,6 +775,11 @@ class ConversationFragment : SlidingPaneChildFragment() {
 
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.messageBottomSheet.root)
         bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
+
+        if (viewModel.scrollingPosition != SCROLLING_POSITION_NOT_SET) {
+            Log.d("$TAG Restoring previous scrolling position: ${viewModel.scrollingPosition}")
+            binding.eventsList.scrollToPosition(viewModel.scrollingPosition)
+        }
     }
 
     override fun onPause() {
@@ -763,6 +791,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
         if (::scrollListener.isInitialized) {
             binding.eventsList.removeOnScrollListener(scrollListener)
         }
+        binding.eventsList.viewTreeObserver.removeOnGlobalLayoutListener(globalLayoutObserver)
 
         coreContext.postOnCoreThread {
             bottomSheetReactionsModel?.destroy()
@@ -790,7 +819,10 @@ class ConversationFragment : SlidingPaneChildFragment() {
     }
 
     private fun scrollToFirstUnreadMessageOrBottom() {
-        if (adapter.itemCount == 0) return
+        if (adapter.itemCount == 0) {
+            Log.w("$TAG No item in adapter yet, do not scroll")
+            return
+        }
 
         val recyclerView = binding.eventsList
         // Scroll to first unread message if any, unless we are already on it
@@ -807,8 +839,9 @@ class ConversationFragment : SlidingPaneChildFragment() {
         )
         recyclerView.scrollToPosition(indexToScrollTo)
 
-        if (indexToScrollTo == adapter.itemCount - 1) {
-            viewModel.isUserScrollingUp.postValue(false)
+        val bottomReached = indexToScrollTo == adapter.itemCount - 1
+        viewModel.isUserScrollingUp.value = !bottomReached
+        if (bottomReached) {
             viewModel.markAsRead()
         }
     }

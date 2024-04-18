@@ -511,10 +511,8 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
 
         computeConversationInfo()
 
+        unreadMessagesCount.postValue(chatRoom.unreadMessagesCount)
         computeEvents()
-
-        Log.i("$TAG Marking chat room as read")
-        chatRoom.markAsRead()
     }
 
     @WorkerThread
