@@ -116,7 +116,14 @@
         android:id="@+id/callsListFragment"
         android:name="org.linphone.ui.call.fragment.CallsListFragment"
         android:label="CallsListFragment"
-        tools:layout="@layout/calls_list_fragment" />
+        tools:layout="@layout/calls_list_fragment" >
+        <action
+            android:id="@+id/action_callsListFragment_to_activeConferenceCallFragment"
+            app:destination="@id/activeConferenceCallFragment" />
+        <action
+            android:id="@+id/action_callsListFragment_to_activeCallFragment"
+            app:destination="@id/activeCallFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/endedCallFragment"

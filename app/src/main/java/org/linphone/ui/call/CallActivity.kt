@@ -51,6 +51,7 @@ import org.linphone.ui.call.conference.fragment.ActiveConferenceCallFragmentDire
 import org.linphone.ui.call.conference.fragment.ConferenceLayoutMenuDialogFragment
 import org.linphone.ui.call.fragment.ActiveCallFragmentDirections
 import org.linphone.ui.call.fragment.AudioDevicesMenuDialogFragment
+import org.linphone.ui.call.fragment.CallsListFragmentDirections
 import org.linphone.ui.call.fragment.IncomingCallFragmentDirections
 import org.linphone.ui.call.fragment.OutgoingCallFragmentDirections
 import org.linphone.ui.call.model.AudioDeviceModel
@@ -434,13 +435,22 @@ class CallActivity : GenericActivity() {
                     ActiveConferenceCallFragmentDirections.actionGlobalActiveConferenceCallFragment()
                 }
             }
+            R.id.callsListFragment -> {
+                if (notInConference) {
+                    Log.i("$TAG Going calls list fragment to conference fragment")
+                    CallsListFragmentDirections.actionCallsListFragmentToActiveConferenceCallFragment()
+                } else {
+                    Log.i("$TAG Going calls list fragment to active call fragment")
+                    CallsListFragmentDirections.actionCallsListFragmentToActiveCallFragment()
+                }
+            }
             else -> {
                 if (notInConference) {
                     Log.i("$TAG Going from call fragment to call fragment")
                     ActiveCallFragmentDirections.actionGlobalActiveCallFragment()
                 } else {
                     Log.i("$TAG Going from call fragment to conference call fragment")
-                    ActiveCallFragmentDirections.actionActiveCallFragmentToActiveConferenceCallFragment()
+                    ActiveCallFragmentDirections.actionGlobalActiveConferenceCallFragment()
                 }
             }
         }
