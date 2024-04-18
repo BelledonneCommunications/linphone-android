@@ -574,6 +574,7 @@
     <string name="calls_count_label">%s calls</string>
     <string name="calls_paused_count_label">%s paused calls</string>
     <string name="calls_list_dialog_merge_into_conference_title">Merge all calls into conference?</string>
+    <string name="calls_list_dialog_merge_into_conference_label">Create conference</string>
 
     <string name="call_dialog_zrtp_validate_trust_title">Validate the device</string>
     <string name="call_dialog_zrtp_validate_trust_subtitle">Say %s and click on the letters given by your correspondent:</string>
