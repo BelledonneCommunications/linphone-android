@@ -368,8 +368,15 @@ class MainActivity : GenericActivity() {
                 }
                 args?.clear()
 
-                val action = ConversationsListFragmentDirections.actionGlobalConversationsListFragment()
-                findNavController().navigate(action)
+                if (findNavController().currentDestination?.id == R.id.conversationsListFragment) {
+                    Log.w(
+                        "$TAG Current destination is already conversations list, skipping navigation"
+                    )
+                } else {
+                    val action =
+                        ConversationsListFragmentDirections.actionGlobalConversationsListFragment()
+                    findNavController().navigate(action)
+                }
             } catch (ise: IllegalStateException) {
                 Log.e("$TAG Can't navigate to Conversations fragment: $ise")
             }
@@ -481,7 +488,7 @@ class MainActivity : GenericActivity() {
                 val pair = parseShortcutIfAny(intent)
                 if (pair != null) {
                     Log.i(
-                        "$TAG Navigating to conversation with local [${pair.first}] and peer [${pair.second}] addresses, computed from shortcut ID"
+                        "$TAG Navigating from debug to conversation with local [${pair.first}] and peer [${pair.second}] addresses, computed from shortcut ID"
                     )
                     sharedViewModel.showConversationEvent.value = Event(pair)
                 }
@@ -497,8 +504,13 @@ class MainActivity : GenericActivity() {
                 }
             }
 
-            val action = ConversationsListFragmentDirections.actionGlobalConversationsListFragment()
-            findNavController().navigate(action)
+            if (findNavController().currentDestination?.id == R.id.conversationsListFragment) {
+                Log.w("$TAG Current destination is already conversations list, skipping navigation")
+            } else {
+                val action =
+                    ConversationsListFragmentDirections.actionGlobalConversationsListFragment()
+                findNavController().navigate(action)
+            }
         }
     }
 

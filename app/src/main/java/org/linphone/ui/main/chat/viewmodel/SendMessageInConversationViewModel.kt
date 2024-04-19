@@ -333,6 +333,9 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
 
         if (list.isNotEmpty()) {
             isFileAttachmentsListOpen.value = true
+            Log.i("$TAG [${list.size}] attachment(s) added")
+        } else {
+            Log.w("$TAG No attachment to display!")
         }
     }
 

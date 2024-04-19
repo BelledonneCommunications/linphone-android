@@ -315,6 +315,7 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
 
     override fun beforeNotifyingChatRoomFound(sameOne: Boolean) {
         if (!sameOne) {
+            Log.i("$TAG Conversation found and not the same as before, configuring it...")
             chatRoom.addListener(chatRoomListener)
             configureChatRoom()
         }

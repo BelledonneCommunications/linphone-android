@@ -279,9 +279,11 @@ class ConversationFragment : GenericCallFragment() {
         }
 
         viewModel.updateEvents.observe(viewLifecycleOwner) {
-            val items = viewModel.eventsList
-            adapter.submitList(items)
-            Log.i("$TAG Events (messages) list updated, contains [${items.size}] items")
+            it.consume {
+                val items = viewModel.eventsList
+                adapter.submitList(items)
+                Log.i("$TAG Events (messages) list updated, contains [${items.size}] items")
+            }
         }
 
         viewModel.isEndToEndEncrypted.observe(viewLifecycleOwner) { encrypted ->
