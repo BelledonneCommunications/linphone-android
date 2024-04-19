@@ -29,12 +29,15 @@ import org.linphone.core.Account
 import org.linphone.core.NatPolicy
 import org.linphone.core.TransportType
 import org.linphone.core.tools.Log
+import org.linphone.ui.main.model.isInSecureMode
 import org.linphone.utils.Event
 
 class AccountSettingsViewModel @UiThread constructor() : ViewModel() {
     companion object {
         private const val TAG = "[Account Settings ViewModel]"
     }
+
+    val isAccountInSecureMode = MutableLiveData<Boolean>()
 
     val availableTransports = arrayListOf<String>()
 
@@ -60,6 +63,8 @@ class AccountSettingsViewModel @UiThread constructor() : ViewModel() {
 
     val bundleModeEnabled = MutableLiveData<Boolean>()
 
+    val cpimInBasicChatRooms = MutableLiveData<Boolean>()
+
     val accountFoundEvent = MutableLiveData<Event<Boolean>>()
 
     private lateinit var account: Account
@@ -81,6 +86,8 @@ class AccountSettingsViewModel @UiThread constructor() : ViewModel() {
                 Log.i("$TAG Found matching account [$found]")
                 account = found
 
+                isAccountInSecureMode.postValue(account.isInSecureMode())
+
                 val params = account.params
 
                 val transportType = params.serverAddress?.transport ?: TransportType.Tls
@@ -96,6 +103,8 @@ class AccountSettingsViewModel @UiThread constructor() : ViewModel() {
                 avpfEnabled.postValue(account.isAvpfEnabled)
 
                 bundleModeEnabled.postValue(params.isRtpBundleEnabled)
+
+                cpimInBasicChatRooms.postValue(params.isCpimInBasicChatRoomEnabled)
 
                 expire.postValue(params.expires.toString())
 
@@ -144,6 +153,8 @@ class AccountSettingsViewModel @UiThread constructor() : ViewModel() {
                 newParams.avpfMode = if (avpfEnabled.value == true) AVPFMode.Enabled else AVPFMode.Disabled
 
                 newParams.isRtpBundleEnabled = bundleModeEnabled.value == true
+
+                newParams.isCpimInBasicChatRoomEnabled = cpimInBasicChatRooms.value == true
 
                 newParams.expires = expire.value?.toInt() ?: 31536000
 
