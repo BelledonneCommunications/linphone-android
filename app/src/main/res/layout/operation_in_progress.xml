@@ -46,7 +46,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_800"
             android:id="@+id/title"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/operation_in_progress_overlay"
@@ -54,6 +54,7 @@
             android:textSize="18sp"
             android:layout_below="@id/progress"
             android:layout_centerHorizontal="true"
+            android:gravity="center"
             app:layout_constraintTop_toBottomOf="@id/progress"
             app:layout_constraintStart_toStartOf="@id/dialog_background"
             app:layout_constraintEnd_toEndOf="@id/dialog_background"
