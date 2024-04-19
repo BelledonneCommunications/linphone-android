@@ -33,10 +33,6 @@ class ContactOrSuggestionModel @WorkerThread constructor(
     val friend: Friend? = null,
     private val onClicked: ((Address) -> Unit)? = null
 ) {
-    companion object {
-        private const val TAG = "[Suggestion Model]"
-    }
-
     val id = friend?.refKey ?: address.asStringUriOnly().hashCode()
 
     val name = if (friend != null) {

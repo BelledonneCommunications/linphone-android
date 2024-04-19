@@ -14,7 +14,7 @@
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.main.history.viewmodel.ContactHistoryViewModel" />
+            type="org.linphone.ui.main.history.viewmodel.HistoryViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

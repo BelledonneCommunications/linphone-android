@@ -54,7 +54,7 @@ import org.linphone.utils.Event
 @UiThread
 class HistoryListFragment : AbstractTopBarFragment() {
     companion object {
-        private const val TAG = "[Calls List Fragment]"
+        private const val TAG = "[History List Fragment]"
     }
 
     private lateinit var binding: HistoryListFragmentBinding
@@ -166,7 +166,7 @@ class HistoryListFragment : AbstractTopBarFragment() {
                 if (!uri.isNullOrEmpty()) {
                     val navController = binding.historyNavContainer.findNavController()
                     val action =
-                        HistoryContactFragmentDirections.actionGlobalHistoryContactFragment(uri)
+                        HistoryFragmentDirections.actionGlobalHistoryFragment(uri)
                     navController.navigate(action)
                 }
             }

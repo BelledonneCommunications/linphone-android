@@ -27,7 +27,6 @@ import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.Address
-import org.linphone.core.Call
 import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoomListenerStub
 import org.linphone.core.ChatRoomParams
@@ -39,9 +38,9 @@ import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
-class ContactHistoryViewModel @UiThread constructor() : ViewModel() {
+class HistoryViewModel @UiThread constructor() : ViewModel() {
     companion object {
-        private const val TAG = "[Contact History ViewModel]"
+        private const val TAG = "[History ViewModel]"
     }
 
     val showBackButton = MutableLiveData<Boolean>()
@@ -124,11 +123,11 @@ class ContactHistoryViewModel @UiThread constructor() : ViewModel() {
 
                 isConferenceCallLog.postValue(callLog.wasConference())
 
-                val peerAddress = if (callLog.dir == Call.Dir.Outgoing) callLog.toAddress else callLog.fromAddress
+                val peerAddress = callLog.remoteAddress
                 val history = arrayListOf<CallLogHistoryModel>()
                 val account = LinphoneUtils.getDefaultAccount()
                 val list = if (account == null) {
-                    val localAddress = if (callLog.dir == Call.Dir.Outgoing) callLog.fromAddress else callLog.toAddress
+                    val localAddress = callLog.localAddress
                     core.getCallHistory(peerAddress, localAddress)
                 } else {
                     account.getCallLogsForAddress(peerAddress)

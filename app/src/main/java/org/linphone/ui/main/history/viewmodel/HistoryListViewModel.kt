@@ -35,7 +35,7 @@ import org.linphone.utils.LinphoneUtils
 
 class HistoryListViewModel @UiThread constructor() : AbstractTopBarViewModel() {
     companion object {
-        private const val TAG = "[Calls List ViewModel]"
+        private const val TAG = "[History List ViewModel]"
     }
 
     val callLogs = MutableLiveData<ArrayList<CallLogModel>>()

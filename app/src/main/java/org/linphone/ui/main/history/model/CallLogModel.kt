@@ -25,7 +25,6 @@ import androidx.annotation.WorkerThread
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
-import org.linphone.core.Call.Dir
 import org.linphone.core.CallLog
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
@@ -35,14 +34,14 @@ import org.linphone.utils.TimestampUtils
 
 class CallLogModel @WorkerThread constructor(private val callLog: CallLog) {
     companion object {
-        private const val TAG = "[CallLog Model]"
+        private const val TAG = "[Call Log Model]"
     }
 
     val id = callLog.callId ?: callLog.refKey
 
     val timestamp = callLog.startDate
 
-    val address = if (callLog.dir == Dir.Outgoing) callLog.toAddress else callLog.fromAddress
+    val address = callLog.remoteAddress
 
     val sipUri = address.asStringUriOnly()
 

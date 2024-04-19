@@ -37,35 +37,35 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.R
 import org.linphone.core.tools.Log
-import org.linphone.databinding.HistoryContactFragmentBinding
-import org.linphone.databinding.HistoryContactPopupMenuBinding
+import org.linphone.databinding.HistoryFragmentBinding
+import org.linphone.databinding.HistoryPopupMenuBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.fragment.SlidingPaneChildFragment
 import org.linphone.ui.main.history.adapter.ContactHistoryListAdapter
 import org.linphone.ui.main.history.model.ConfirmationDialogModel
-import org.linphone.ui.main.history.viewmodel.ContactHistoryViewModel
+import org.linphone.ui.main.history.viewmodel.HistoryViewModel
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 
 @UiThread
-class HistoryContactFragment : SlidingPaneChildFragment() {
+class HistoryFragment : SlidingPaneChildFragment() {
     companion object {
-        private const val TAG = "[Call Fragment]"
+        private const val TAG = "[History Fragment]"
     }
 
-    private lateinit var binding: HistoryContactFragmentBinding
+    private lateinit var binding: HistoryFragmentBinding
 
-    private lateinit var viewModel: ContactHistoryViewModel
+    private lateinit var viewModel: HistoryViewModel
 
     private lateinit var adapter: ContactHistoryListAdapter
 
-    private val args: HistoryContactFragmentArgs by navArgs()
+    private val args: HistoryFragmentArgs by navArgs()
 
     override fun goBack(): Boolean {
         sharedViewModel.closeSlidingPaneEvent.value = Event(true)
 
         // If not done this fragment won't be paused, which will cause us issues
-        val action = HistoryContactFragmentDirections.actionHistoryContactFragmentToEmptyFragment()
+        val action = HistoryFragmentDirections.actionHistoryFragmentToEmptyFragment()
         findNavController().navigate(action)
         return true
     }
@@ -81,7 +81,7 @@ class HistoryContactFragment : SlidingPaneChildFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = HistoryContactFragmentBinding.inflate(layoutInflater)
+        binding = HistoryFragmentBinding.inflate(layoutInflater)
 
         return binding.root
     }
@@ -92,7 +92,7 @@ class HistoryContactFragment : SlidingPaneChildFragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        viewModel = ViewModelProvider(this)[ContactHistoryViewModel::class.java]
+        viewModel = ViewModelProvider(this)[HistoryViewModel::class.java]
         binding.viewModel = viewModel
 
         val callId = args.callId
@@ -182,9 +182,9 @@ class HistoryContactFragment : SlidingPaneChildFragment() {
     }
 
     private fun showPopupMenu() {
-        val popupView: HistoryContactPopupMenuBinding = DataBindingUtil.inflate(
+        val popupView: HistoryPopupMenuBinding = DataBindingUtil.inflate(
             LayoutInflater.from(requireContext()),
-            R.layout.history_contact_popup_menu,
+            R.layout.history_popup_menu,
             null,
             false
         )
