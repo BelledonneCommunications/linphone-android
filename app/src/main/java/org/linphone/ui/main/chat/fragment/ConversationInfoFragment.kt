@@ -95,7 +95,8 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
         val chatRoom = sharedViewModel.displayedChatRoom
         viewModel.findChatRoom(chatRoom, localSipUri, remoteSipUri)
 
-        binding.participants.setHasFixedSize(true)
+        binding.participants.isNestedScrollingEnabled = false
+        binding.participants.setHasFixedSize(false)
         binding.participants.layoutManager = LinearLayoutManager(requireContext())
 
         if (binding.participants.adapter != adapter) {
