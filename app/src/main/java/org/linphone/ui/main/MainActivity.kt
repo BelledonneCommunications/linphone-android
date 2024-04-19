@@ -258,12 +258,9 @@ class MainActivity : GenericActivity() {
         viewModel.checkForNewAccount()
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-
-        if (intent != null) {
-            handleIntent(intent, true)
-        }
+        handleIntent(intent, true)
     }
 
     @SuppressLint("RtlHardcoded")

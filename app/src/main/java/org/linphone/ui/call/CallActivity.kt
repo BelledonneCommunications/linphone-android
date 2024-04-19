@@ -281,14 +281,14 @@ class CallActivity : GenericActivity() {
         }
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
 
-        if (intent?.extras?.getBoolean("ActiveCall", false) == true) {
+        if (intent.extras?.getBoolean("ActiveCall", false) == true) {
             navigateToActiveCall(
                 callViewModel.conferenceModel.isCurrentCallInConference.value == false
             )
-        } else if (intent?.extras?.getBoolean("IncomingCall", false) == true) {
+        } else if (intent.extras?.getBoolean("IncomingCall", false) == true) {
             val action = IncomingCallFragmentDirections.actionGlobalIncomingCallFragment()
             findNavController(R.id.call_nav_container).navigate(action)
         }
