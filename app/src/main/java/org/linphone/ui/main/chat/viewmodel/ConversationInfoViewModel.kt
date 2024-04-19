@@ -24,6 +24,7 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.Address
 import org.linphone.core.ChatRoom
@@ -453,7 +454,13 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
         val firstParticipant = chatRoom.participants.firstOrNull()
         if (firstParticipant != null) {
             val address = firstParticipant.address
-            sipUri.postValue(LinphoneUtils.getAddressAsCleanStringUriOnly(address))
+            val uri = if (corePreferences.onlyDisplaySipUriUsername) {
+                address.username ?: ""
+            } else {
+                LinphoneUtils.getAddressAsCleanStringUriOnly(address)
+            }
+            sipUri.postValue(uri)
+
             val friend = coreContext.contactsManager.findContactByAddress(address)
             oneToOneParticipantRefKey.postValue(friend?.refKey ?: "")
         }

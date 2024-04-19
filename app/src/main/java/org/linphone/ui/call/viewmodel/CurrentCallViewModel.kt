@@ -1002,7 +1002,12 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         canBePaused.postValue(canCallBePaused())
 
         val address = call.remoteAddress
-        displayedAddress.postValue(LinphoneUtils.getAddressAsCleanStringUriOnly(address))
+        val uri = if (corePreferences.onlyDisplaySipUriUsername) {
+            address.username ?: ""
+        } else {
+            LinphoneUtils.getAddressAsCleanStringUriOnly(address)
+        }
+        displayedAddress.postValue(uri)
 
         val model = if (conferenceInfo != null) {
             coreContext.contactsManager.getContactAvatarModelForConferenceInfo(conferenceInfo)

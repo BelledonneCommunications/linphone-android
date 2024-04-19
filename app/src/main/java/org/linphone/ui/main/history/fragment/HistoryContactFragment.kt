@@ -142,7 +142,7 @@ class HistoryContactFragment : SlidingPaneChildFragment() {
                     getString(R.string.toast_call_history_deleted),
                     R.drawable.check
                 )
-                goBack() // TODO FIXME : issue with tablet when pane can't be closed
+                goBack()
             }
         }
 

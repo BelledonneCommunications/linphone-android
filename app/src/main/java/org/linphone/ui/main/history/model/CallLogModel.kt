@@ -4,6 +4,7 @@ import androidx.annotation.IntegerRes
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.Call.Dir
 import org.linphone.core.CallLog
@@ -76,7 +77,11 @@ class CallLogModel @WorkerThread constructor(private val callLog: CallLog) {
             friendRefKey = friend.refKey
             friendExists = !friendRefKey.isNullOrEmpty()
         }
-        displayedAddress = avatarModel.friend.address?.asStringUriOnly() ?: address.asStringUriOnly()
+        displayedAddress = if (corePreferences.onlyDisplaySipUriUsername) {
+            avatarModel.friend.address?.username ?: address.username ?: ""
+        } else {
+            avatarModel.friend.address?.asStringUriOnly() ?: address.asStringUriOnly()
+        }
 
         iconResId = LinphoneUtils.getCallIconResId(callLog.status, callLog.dir)
     }
