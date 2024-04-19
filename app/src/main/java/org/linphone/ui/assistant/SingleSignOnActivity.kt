@@ -19,10 +19,13 @@
  */
 package org.linphone.ui.assistant
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.annotation.UiThread
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import net.openid.appauth.AuthorizationException
+import net.openid.appauth.AuthorizationResponse
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantSingleSignOnActivityBinding
@@ -33,6 +36,8 @@ import org.linphone.ui.assistant.viewmodel.SingleSignOnViewModel
 class SingleSignOnActivity : GenericActivity() {
     companion object {
         private const val TAG = "[Single Sign On Activity]"
+
+        private const val ACTIVITY_RESULT_ID = 666
     }
 
     private lateinit var binding: AssistantSingleSignOnActivityBinding
@@ -42,12 +47,11 @@ class SingleSignOnActivity : GenericActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel = run {
-            ViewModelProvider(this)[SingleSignOnViewModel::class.java]
-        }
-
         binding = DataBindingUtil.setContentView(this, R.layout.assistant_single_sign_on_activity)
         binding.lifecycleOwner = this
+
+        viewModel = ViewModelProvider(this)[SingleSignOnViewModel::class.java]
+        binding.viewModel = viewModel
 
         setUpToastsArea(binding.toastsArea)
 
@@ -62,5 +66,44 @@ class SingleSignOnActivity : GenericActivity() {
                 viewModel.singleSignOnUrl.value = ssoUrl
             }
         }
+
+        viewModel.singleSignOnUrl.observe(this) { url ->
+            Log.i("$TAG SSO URL found [$url], setting it up")
+            viewModel.setUp()
+        }
+
+        viewModel.singleSignOnProcessCompletedEvent.observe(this) {
+            it.consume {
+                Log.i("$TAG Process complete, leaving assistant")
+                finish()
+            }
+        }
+
+        viewModel.startAuthIntentEvent.observe(this) {
+            it.consume { intent ->
+                Log.i("$TAG Starting auth intent activity")
+                startActivityForResult(intent, ACTIVITY_RESULT_ID)
+            }
+        }
+
+        viewModel.onErrorEvent.observe(this) {
+            it.consume { errorMessage ->
+                showRedToast(
+                    errorMessage,
+                    R.drawable.warning_circle
+                )
+            }
+        }
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == ACTIVITY_RESULT_ID && data != null) {
+            val resp = AuthorizationResponse.fromIntent(data)
+            val ex = AuthorizationException.fromIntent(data)
+            viewModel.processAuthIntentResponse(resp, ex)
+        }
+
+        super.onActivityResult(requestCode, resultCode, data)
     }
 }

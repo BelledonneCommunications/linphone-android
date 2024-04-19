@@ -137,15 +137,6 @@
         tools:layout="@layout/assistant_landing_fragment" >
 
         <action
-            android:id="@+id/action_landingFragment_to_loginFragment"
-            app:destination="@id/loginFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            app:launchSingleTop="true" />
-
-        <action
             android:id="@+id/action_landingFragment_to_qrCodeScannerFragment"
             app:destination="@id/qrCodeScannerFragment"
             app:enterAnim="@anim/slide_in_right"
@@ -173,23 +164,8 @@
             app:launchSingleTop="true" />
 
         <action
-            android:id="@+id/action_landingFragment_to_singleSignOnFragment"
-            app:destination="@id/singleSignOnFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            app:launchSingleTop="true" />
-        <action
             android:id="@+id/action_landingFragment_to_profileModeFragment"
             app:destination="@id/profileModeFragment" />
 
     </fragment>
-
-    <fragment
-        android:id="@+id/singleSignOnFragment"
-        android:name="org.linphone.ui.assistant.fragment.SingleSignOnFragment"
-        android:label="SingleSignOnFragment"
-        tools:layout="@layout/assistant_single_sign_on_fragment" />
-
 </navigation>

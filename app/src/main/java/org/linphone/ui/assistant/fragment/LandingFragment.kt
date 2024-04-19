@@ -138,33 +138,7 @@ class LandingFragment : Fragment() {
                 )
             }
         }
-
-        /*viewModel.redirectToDigestAuthEvent.observe(viewLifecycleOwner) {
-            it.consume { address ->
-                goToLoginFragment(address)
-            }
-        }
-
-        viewModel.redirectToSingleSignOnEvent.observe(viewLifecycleOwner) {
-            it.consume { address ->
-                goToSingleSignOnFragment(address)
-            }
-        }*/
     }
-
-    /*private fun goToLoginFragment(identity: String) {
-        Log.i(
-            "$TAG Going to Linphone credentials based authentication fragment for SIP account [$identity]"
-        )
-        val action = LandingFragmentDirections.actionLandingFragmentToLoginFragment(identity)
-        findNavController().navigate(action)
-    }
-
-    private fun goToSingleSignOnFragment(identity: String) {
-        Log.i("$TAG Going to Single Sign On fragment for SIP account [$identity]")
-        val action = LandingFragmentDirections.actionLandingFragmentToSingleSignOnFragment()
-        findNavController().navigate(action)
-    }*/
 
     private fun goToRegisterFragment() {
         val action = LandingFragmentDirections.actionLandingFragmentToRegisterFragment()

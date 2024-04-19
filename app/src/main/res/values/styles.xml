@@ -150,7 +150,7 @@
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/in_call_label_color</item>
         <item name="android:gravity">center</item>
-        <item name="maxLines">1</item>
+        <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
     </style>
     <style name="material_switch_style">

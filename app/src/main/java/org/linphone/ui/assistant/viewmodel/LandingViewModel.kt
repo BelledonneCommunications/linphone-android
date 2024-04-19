@@ -37,14 +37,6 @@ class LandingViewModel @UiThread constructor() : AccountLoginViewModel() {
 
     val hideThirdPartyAccount = MutableLiveData<Boolean>()
 
-    /*val redirectToDigestAuthEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
-    }
-
-    val redirectToSingleSignOnEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
-    }*/
-
     var conditionsAndPrivacyPolicyAccepted = false
 
     init {
