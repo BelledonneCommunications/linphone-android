@@ -37,7 +37,7 @@ import org.linphone.utils.TimestampUtils
 class FileModel @AnyThread constructor(
     val file: String,
     val fileName: String,
-    fileSize: Long,
+    val fileSize: Long,
     private val isEncrypted: Boolean,
     val isWaitingToBeDownloaded: Boolean = false,
     private val onClicked: ((model: FileModel) -> Unit)? = null

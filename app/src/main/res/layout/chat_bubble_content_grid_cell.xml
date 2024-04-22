@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="@{model.isImage || model.isVideoPreview ? View.GONE : View.VISIBLE}"
-            app:constraint_referenced_ids="file_name, file_size, file_background, file_icon" />
+            app:constraint_referenced_ids="file_name, file_background, file_icon" />
 
         <ImageView
             android:id="@+id/image"
@@ -118,13 +118,13 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginTop="16dp"
             android:text="@{model.fileName, default=`Lorem_ipsum.pdf`}"
             android:textColor="?attr/color_main2_600"
             android:textSize="13sp"
             android:maxLines="1"
             android:ellipsize="middle"
             android:background="@drawable/shape_squircle_white_r10_background"
+            app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintStart_toEndOf="@id/file_icon"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/file_background"
@@ -137,13 +137,13 @@
             android:onLongClick="@{onLongClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
             android:text="@{model.formattedFileSize, default=`42 kb`}"
             android:textColor="?attr/color_main2_600"
             android:textSize="12sp"
             android:maxLines="1"
             android:ellipsize="end"
             android:background="@drawable/shape_squircle_white_r10_background"
+            android:visibility="@{model.isImage || model.isVideoPreview || model.fileSize == 0 ? View.GONE : View.VISIBLE, default=gone}"
             app:layout_constraintStart_toStartOf="@id/file_name"
             app:layout_constraintEnd_toEndOf="@id/file_name"
             app:layout_constraintTop_toBottomOf="@id/file_name"
