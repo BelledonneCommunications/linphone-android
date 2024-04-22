@@ -110,7 +110,7 @@ class ImageUtils {
                     list.add(picture)
                 }
             }
-            if (list.isNotEmpty()) {
+            if (list.isNotEmpty() && coreContext.contactsManager.areContactsAvailable()) {
                 Log.i(
                     "$TAG Found at [${list.size}] participant(s) with a picture for conversation [$id]($hash), creating avatar"
                 )

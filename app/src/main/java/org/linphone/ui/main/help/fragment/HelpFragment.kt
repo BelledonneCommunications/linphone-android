@@ -26,8 +26,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
+import kotlinx.coroutines.launch
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.HelpFragmentBinding
@@ -36,6 +38,7 @@ import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.ui.main.help.viewmodel.HelpViewModel
 import org.linphone.ui.main.history.model.ConfirmationDialogModel
 import org.linphone.utils.DialogUtils
+import org.linphone.utils.FileUtils
 
 @UiThread
 class HelpFragment : GenericFragment() {
@@ -104,6 +107,17 @@ class HelpFragment : GenericFragment() {
             } catch (ise: IllegalStateException) {
                 Log.e(
                     "$TAG Can't start ACTION_VIEW intent for URL [$url], IllegalStateException: $ise"
+                )
+            }
+        }
+
+        binding.setClearCacheCLickListener {
+            lifecycleScope.launch {
+                Log.w("$TAG User requested we clear the cache folder, doing it")
+                FileUtils.clearCacheDirectory()
+                (requireActivity() as GenericActivity).showGreenToast(
+                    getString(R.string.help_cache_directory_cleared_toast_message),
+                    R.drawable.info
                 )
             }
         }

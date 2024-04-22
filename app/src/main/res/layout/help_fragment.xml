@@ -18,6 +18,9 @@
             name="translateClickListener"
             type="View.OnClickListener" />
         <variable
+            name="clearCacheCLickListener"
+            type="View.OnClickListener" />
+        <variable
             name="debugClickListener"
             type="View.OnClickListener" />
         <variable
@@ -285,11 +288,40 @@
                 android:drawableEnd="@drawable/caret_right"
                 android:drawablePadding="8dp"
                 app:drawableTint="?attr/color_main2_500"
-                app:layout_constraintVertical_bias="0"
                 app:layout_constraintTop_toBottomOf="@id/advanced_title"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/clear_cache_icon"
                 app:layout_constraintStart_toEndOf="@id/debug_icon"
                 app:layout_constraintEnd_toEndOf="parent"/>
+
+            <ImageView
+                android:onClick="@{clearCacheCLickListener}"
+                android:id="@+id/clear_cache_icon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/file"
+                app:tint="?attr/color_main1_500"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/clear_cache_title"
+                app:layout_constraintTop_toTopOf="@id/clear_cache_title"
+                app:layout_constraintBottom_toBottomOf="@id/clear_cache_title" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/header_style"
+                android:onClick="@{clearCacheCLickListener}"
+                android:id="@+id/clear_cache_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="@dimen/screen_bottom_margin"
+                android:text="@string/help_clear_cache_directory"
+                app:layout_constraintVertical_bias="0"
+                app:layout_constraintTop_toBottomOf="@id/debug_title"
+                app:layout_constraintStart_toEndOf="@id/clear_cache_icon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

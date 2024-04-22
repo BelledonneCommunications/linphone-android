@@ -187,6 +187,8 @@
     <string name="help_error_checking_version_toast_message">Une erreur est survenue</string>
     <string name="help_dialog_update_available_title">Mise à jour disponible</string>
     <string name="help_dialog_update_available_message">Une nouvelle version %s est disponible. Voulez-vous mettre à jour ?</string>
+    <string name="help_clear_cache_directory">Vider le dossier de cache</string>
+    <string name="help_cache_directory_cleared_toast_message">Cache directory has been cleared</string>
     <string name="help_troubleshooting_title">Dépannage</string>
     <string name="help_troubleshooting_debug_title">Activer/désactiver les messages dans ADB</string>
     <string name="help_troubleshooting_debug_subtitle">Blah blah blah?</string> <!-- TODO -->

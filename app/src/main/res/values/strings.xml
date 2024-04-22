@@ -222,6 +222,8 @@
     <string name="help_error_checking_version_toast_message">An error occurred while checking for update</string>
     <string name="help_dialog_update_available_title">Update available</string>
     <string name="help_dialog_update_available_message">A new version %s is available. Do you want to update?</string>
+    <string name="help_clear_cache_directory">Clear cache directory</string>
+    <string name="help_cache_directory_cleared_toast_message">Cache directory has been cleared</string>
     <string name="help_troubleshooting_title">Troubleshooting</string>
     <string name="help_troubleshooting_debug_title">Enable/disable printing logs in ADB</string>
     <string name="help_troubleshooting_debug_subtitle">Blah blah blah?</string> <!-- TODO -->

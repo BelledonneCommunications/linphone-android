@@ -424,6 +424,7 @@ class FileUtils {
             return stringBuilder.toString()
         }
 
+        @AnyThread
         suspend fun clearExistingPlainFiles(path: String) {
             val dir = File(path)
             if (dir.exists()) {
@@ -434,6 +435,19 @@ class FileUtils {
                     deleteFile(file.path)
                 }
             }
+        }
+
+        @AnyThread
+        suspend fun clearCacheDirectory() {
+            val dir = coreContext.context.cacheDir
+            var count = 0
+            if (dir.exists()) {
+                for (file in dir.listFiles().orEmpty()) {
+                    deleteFile(file.path)
+                    count += 1
+                }
+            }
+            Log.w("$TAG Deleted [$count] cache files")
         }
 
         @AnyThread
