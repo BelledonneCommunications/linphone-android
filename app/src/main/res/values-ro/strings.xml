@@ -726,7 +726,7 @@
     <string name="content_description_remove_pending_file_transfer">Eliminați transferul de fișiere în așteptare</string>
     <string name="content_description_downloaded_file_transfer">Fișier atașat</string>
     <string name="content_description_delivery_status">Starea de livrare a mesajelor</string>
-    <string name="content_description_linphone_user">Contact este un &amp;appName; utilizator</string>
+    <string name="content_description_linphone_user">Contact este un &appName; utilizator</string>
     <string name="content_description_toggle_recording">Activați sau dezactivați înregistrarea apelului</string>
     <string name="content_description_enable_mic_mute">Dezactivați microfonul</string>
     <string name="content_description_disable_video">Dezactivarea imaginii video în timpul apelului</string>

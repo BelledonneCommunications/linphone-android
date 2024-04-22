@@ -333,12 +333,12 @@
     <string name="assistant_phone_number_link_info_content">"
 \nWenn Sie ihr Konto mit ihrer Rufnummer verknüpfen, können ihre Freunde Sie leichter finden.
 \n
-\nSie werden im Adressbuch sehen können, wer &amp;appName; verwendet und ihre Freunde erfahren so ebenfalls, daß Sie per &amp;appName; erreichbar sind.
+\nSie werden im Adressbuch sehen können, wer &appName; verwendet und ihre Freunde erfahren so ebenfalls, daß Sie per &appName; erreichbar sind.
 \n"</string>
-    <string name="assistant_phone_number_link_info_content_already_account">Sie können ihre Rufnummer mit nur einem &amp;appName;-Konto verwenden.
+    <string name="assistant_phone_number_link_info_content_already_account">Sie können ihre Rufnummer mit nur einem &appName;-Konto verwenden.
 \n
 \nSollten Sie ihre Rufnummer bereits mit einem anderen Konto verknüpft haben, Sie möchten stattdessen aber dieses verwenden, verknüpfen Sie die Nummer einfach jetzt mit diesem Konto, dann wird Ihre Nummer wird in dieses Konto überführt.</string>
-    <string name="assistant_create_account_part_email">Bitte geben Sie einen Benutzernamen, e-Mail Adr. und Passwort für ihr &amp;appName;-Konto ein</string>
+    <string name="assistant_create_account_part_email">Bitte geben Sie einen Benutzernamen, e-Mail Adr. und Passwort für ihr &appName;-Konto ein</string>
     <string name="assistant_launch_qrcode">QR-Code</string>
     <string name="audio_settings_echo_cancellation_calibration_started">Echounterdrückungs-Kalibrierung gestartet</string>
     <string name="call_settings_vibrate_title">Bei eingehenden Anrufen vibirieren</string>
@@ -357,13 +357,13 @@
     <string name="conference_scheduled_delete_one_dialog">Möchten Sie dieses Meeting löschen\?</string>
     <string name="call_stats_codec">Codec:</string>
     <string name="call_stats_ip">IP-Familie:</string>
-    <string name="assistant_login_linphone">&amp;appName;-Konto verwenden</string>
+    <string name="assistant_login_linphone">&appName;-Konto verwenden</string>
     <string name="assistant_login_generic">SIP-Konto verwenden</string>
     <string name="assistant_general_terms">Nutzungsbedingungen</string>
     <string name="audio_settings_echo_cancellation_calibration_failed">Kalibrierung fehlgeschlagen</string>
     <string name="audio_settings_adaptive_rate_control_title">Adaptive Ratensteuerung</string>
     <string name="audio_settings_input_device_title">Standard-Audioeingabegerät</string>
-    <string name="conference_schedule_send_updated_invite_chat">Aktualisierung über &amp;appName; senden</string>
+    <string name="conference_schedule_send_updated_invite_chat">Aktualisierung über &appName; senden</string>
     <string name="audio_settings_output_device_summary">Änderungen greifen ab nächstem Anruf</string>
     <string name="video_settings_codecs_title">Codecs</string>
     <string name="call_settings_use_telecom_manager_title">Interaktionen mit Bluetooth-Geräten verbessern</string>
@@ -416,7 +416,7 @@
     <string name="assistant_ec_calibration">Kalibrierung des Echounterdrückers läuft</string>
     <string name="assistant_phone_number_info_title">Wofür wird meine Rufnummer verwendet\?</string>
     <string name="assistant_read_and_agree_terms">Ich akzeptiere Belledonne Communications\' %1$s und %2$s</string>
-    <string name="assistant_generic_account_warning">Einige Funktionen erfordern ein &amp;appName;-Konto, z. B. Gruppennachrichten oder flüchtige Nachrichten.
+    <string name="assistant_generic_account_warning">Einige Funktionen erfordern ein &appName;-Konto, z. B. Gruppennachrichten oder flüchtige Nachrichten.
 \n
 \nDiese Funktionen bleiben bei Benutzung von Drittanbieter-SIP-Konten unsichtbar.
 \n
@@ -473,7 +473,7 @@
     <string name="video_settings_initiate_call_title">Videoanrufe einleiten</string>
     <string name="video_settings_automatically_accept_title">Eingehende Videoanrufe annehmen</string>
     <string name="call_settings_overlay_title">Anrufbenachrichtigung als Overlay</string>
-    <string name="conference_schedule_send_invite_chat">Einladung über &amp;appName; senden</string>
+    <string name="conference_schedule_send_invite_chat">Einladung über &appName; senden</string>
     <string name="conference_schedule_send_invite_email">Einladung per e-Mail senden</string>
     <string name="conference_schedule_encryption">Soll das Meeting verschlüsselt werden\?</string>
     <string name="conference_organizer">Organisator</string>
@@ -523,14 +523,14 @@
     <string name="dialog_try_open_file_as_text_body">Möchten Sie versuchen, die Datei als Textdatei zu öffnen\?</string>
     <string name="content_description_menu_contacts">Kontakte</string>
     <string name="content_description_chat_message_video_attachment">Videoanhang</string>
-    <string name="contacts_settings_native_presence_summary">&amp;appName;-Kontaktinfos als Links den Android-Kontakten hinzufügen</string>
+    <string name="contacts_settings_native_presence_summary">&appName;-Kontaktinfos als Links den Android-Kontakten hinzufügen</string>
     <string name="contacts_settings_ldap_title">LDAP</string>
     <string name="advanced_settings_logs_server_url_title">Server-URL für Protokoll-Upload</string>
     <string name="advanced_settings_other_title">Andere Einstellungen</string>
     <string name="tunnel_settings_dual_port_summary">Im Dualmodus erforderlich</string>
     <string name="account_settings_prefix_title">Nationaler Präfix</string>
     <string name="account_setting_publish_presence_title">Anwesenheitsstatus veröffentlichen</string>
-    <string name="notification_channel_chat_name">&amp;appName; Instant-Nachrichten</string>
+    <string name="notification_channel_chat_name">&appName; Instant-Nachrichten</string>
     <string name="content_description_add_phone_number_field">Rufnummernfeld hinzufügen</string>
     <string name="content_description_go_back">Zurück</string>
     <string name="content_description_phone_number_use">Anzeigen, wofür Ihre Rufnummer verwendet wird</string>
@@ -670,7 +670,7 @@
     <string name="content_description_enable_video">Video im Anruf aktivieren</string>
     <string name="content_description_toggle_audio_menu">Audio-Ausgabemenü anzeigen / verbergen</string>
     <string name="content_description_use_earpiece">Hörer für Audioausgabe verwenden</string>
-    <string name="content_description_linphone_user">Der Kontakt ist ein &amp;appName;-Benutzer</string>
+    <string name="content_description_linphone_user">Der Kontakt ist ein &appName;-Benutzer</string>
     <string name="content_description_e2e_encryption_disabled">Ende-Ende-Verschlüsselung deaktiviert</string>
     <string name="content_description_show_all_contacts">Liste aller Kontakte anzeigen</string>
     <string name="content_description_show_chat_room_menu">Chatraum-Menü anzeigen</string>
@@ -721,7 +721,7 @@
 \nDauerhaft können Sie es bei ihrem SIP-Provider löschen.</string>
     <string name="account_setting_delete_sip_linphone_org_confirmation_dialog">Nur ihr lokales Konto wird entfernt.
 \nDauerhaft können Sie es auf unserer Kontoverwaltungsplattform löschen:</string>
-    <string name="notification_channel_incoming_call_name">&amp;appName; eingehende Anrufe</string>
+    <string name="notification_channel_incoming_call_name">&appName; eingehende Anrufe</string>
     <string name="incoming_call_notification_title">Eingehender Anruf</string>
     <string name="incoming_group_call_notification_title">Eingehender Gruppenanruf</string>
     <string name="dialog_cancel">Abbrechen</string>
@@ -740,8 +740,8 @@
     <string name="call_stats_sender_loss_rate">Verlustrate (Sender):</string>
     <string name="advanced_settings_auto_start_title">Zur Bootzeit starten</string>
     <string name="account_settings_apply_prefix_for_calls_title">Präfix auf ausgehende Anrufe &amp; Chats anwenden</string>
-    <string name="notification_channel_service_name">&amp;appName; Dienstmitteilung</string>
-    <string name="notification_channel_missed_call_name">&amp;appName; verpasste Anrufe</string>
+    <string name="notification_channel_service_name">&appName; Dienstmitteilung</string>
+    <string name="notification_channel_missed_call_name">&appName; verpasste Anrufe</string>
     <string name="dialog_accept">Annehmen</string>
     <string name="dialog_decline">Ablehnen</string>
     <string name="dialog_call">Anruf</string>

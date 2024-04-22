@@ -794,7 +794,7 @@
     <string name="chat_room_presence_away">გასული</string>
     <string name="chat_message_voice_recording_notification_short_desc">ხმოვანი შეტყობინება</string>
     <string name="chat_message_reaction_received">%s მოახდინა რეაგირება %s-თი %s-ზე</string>
-    <string name="contacts_new_contact_wont_be_visible_warning_dialog">თქვენ აპირებთ შექმნათ ახალი კონტაქტი SIP URI-ს და ტელეფონის ნომრის გარეშე, შესაბამისად იგი არ იქნება ხილვადი &amp;appName;-ში.
+    <string name="contacts_new_contact_wont_be_visible_warning_dialog">თქვენ აპირებთ შექმნათ ახალი კონტაქტი SIP URI-ს და ტელეფონის ნომრის გარეშე, შესაბამისად იგი არ იქნება ხილვადი &appName;-ში.
 \n
 \nმაინც გსურთ მისი შექმნა\?</string>
     <string name="assistant_no_push_warning">თქვენს მოწყობილობას არ შეუძლია push შეტყობინებების მიღება.
