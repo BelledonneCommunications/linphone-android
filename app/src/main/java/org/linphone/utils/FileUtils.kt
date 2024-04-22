@@ -108,15 +108,18 @@ class FileUtils {
         @AnyThread
         fun getMimeType(type: String?): MimeType {
             if (type.isNullOrEmpty()) return MimeType.Unknown
-            return when {
+            val mime = when {
                 type.startsWith("image/") -> MimeType.Image
                 type.startsWith("text/") -> MimeType.PlainText
                 type.endsWith("/log") -> MimeType.PlainText
                 type.startsWith("video/") -> MimeType.Video
                 type.startsWith("audio/") -> MimeType.Audio
                 type.startsWith("application/pdf") -> MimeType.Pdf
+                type.startsWith("application/json") -> MimeType.PlainText
                 else -> MimeType.Unknown
             }
+            Log.i("$TAG MIME type for [$type] is [$mime]")
+            return mime
         }
 
         @AnyThread
