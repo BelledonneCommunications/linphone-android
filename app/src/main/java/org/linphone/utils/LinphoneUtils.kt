@@ -100,9 +100,10 @@ class LinphoneUtils {
         }
 
         @AnyThread
-        fun isCallOutgoing(callState: Call.State): Boolean {
+        fun isCallOutgoing(callState: Call.State, considerEarlyMedia: Boolean = true): Boolean {
             return when (callState) {
-                Call.State.OutgoingInit, Call.State.OutgoingProgress, Call.State.OutgoingRinging, Call.State.OutgoingEarlyMedia -> true
+                Call.State.OutgoingInit, Call.State.OutgoingProgress, Call.State.OutgoingRinging -> true
+                Call.State.OutgoingEarlyMedia -> considerEarlyMedia
                 else -> false
             }
         }

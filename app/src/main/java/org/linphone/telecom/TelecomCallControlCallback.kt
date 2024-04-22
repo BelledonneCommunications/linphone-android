@@ -36,6 +36,7 @@ import org.linphone.core.Call
 import org.linphone.core.CallListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.utils.AudioUtils
+import org.linphone.utils.LinphoneUtils
 
 class TelecomCallControlCallback(
     private val call: Call,
@@ -143,9 +144,16 @@ class TelecomCallControlCallback(
         }.launchIn(scope)
 
         callControl.isMuted.onEach { muted ->
-            Log.i("$TAG We're asked to ${if (muted) "mute" else "unmute"} the call")
             coreContext.postOnCoreThread {
-                call.microphoneMuted = muted
+                val callState = call.state
+                Log.i(
+                    "$TAG We're asked to [${if (muted) "mute" else "unmute"}] the call in state [$callState]"
+                )
+                if (muted || !LinphoneUtils.isCallOutgoing(callState, false)) {
+                    call.microphoneMuted = muted
+                } else {
+                    Log.w("$TAG Not following unmute request because call is in state [$callState]")
+                }
             }
         }.launchIn(scope)
     }
