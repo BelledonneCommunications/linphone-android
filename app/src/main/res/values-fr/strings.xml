@@ -261,6 +261,7 @@
     <string name="settings_advanced_title">Paramètres avancés</string>
     <string name="settings_advanced_keep_alive_service_title">Garder l\'app en vie via un Service</string>
     <string name="settings_advanced_remote_provisioning_url">URL de configuration distante</string>
+    <string name="settings_advanced_download_apply_remote_provisioning">Télécharger &amp; appliquer</string>
 
     <!-- Account profile & settings -->
     <string name="manage_account_title">Votre compte</string>

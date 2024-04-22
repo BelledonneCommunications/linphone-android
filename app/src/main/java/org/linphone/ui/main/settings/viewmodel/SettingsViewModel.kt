@@ -389,4 +389,17 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
             }
         }
     }
+
+    @UiThread
+    fun downloadAndApplyRemoteProvisioning() {
+        Log.i("$TAG Updating remote provisioning URI now and then download/apply it")
+        updateRemoteProvisioningUrl()
+        coreContext.postOnCoreThread {
+            Log.i("$TAG Restarting the Core to apply configuration changes")
+            coreContext.core.stop()
+            Log.i("$TAG Core has been stopped, restarting it")
+            coreContext.core.start()
+            Log.i("$TAG Core has been restarted")
+        }
+    }
 }

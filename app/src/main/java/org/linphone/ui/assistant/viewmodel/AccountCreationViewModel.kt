@@ -552,7 +552,7 @@ class AccountCreationViewModel @UiThread constructor() : ViewModel() {
             operationInProgress.postValue(false)
         }
 
-        val status = accountCreator.createAccount()
+        val status = accountCreator.createAccount() // TODO FIXME: use createPushAccount instead ?
         Log.i("$TAG createAccount returned $status")
         if (status != AccountCreator.Status.RequestOk) {
             Log.e("$TAG Can't create account [$status]")
