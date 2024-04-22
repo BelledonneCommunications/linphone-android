@@ -70,14 +70,6 @@ class LandingFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
-        coreContext.postOnCoreThread {
-            val dialPlan = PhoneNumberUtils.getDeviceDialPlan(requireContext())
-            if (dialPlan != null) {
-                viewModel.internationalPrefix.postValue(dialPlan.countryCallingCode)
-                viewModel.internationalPrefixIsoCountryCode.postValue(dialPlan.isoCountryCode)
-            }
-        }
-
         binding.setBackClickListener {
             requireActivity().finish()
         }
@@ -136,6 +128,14 @@ class LandingFragment : Fragment() {
                     message,
                     R.drawable.warning_circle
                 )
+            }
+        }
+
+        coreContext.postOnCoreThread {
+            val dialPlan = PhoneNumberUtils.getDeviceDialPlan(requireContext())
+            if (dialPlan != null) {
+                viewModel.internationalPrefix.postValue(dialPlan.countryCallingCode)
+                viewModel.internationalPrefixIsoCountryCode.postValue(dialPlan.isoCountryCode)
             }
         }
     }

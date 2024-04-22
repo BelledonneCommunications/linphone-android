@@ -128,6 +128,7 @@ open class AbstractTopBarViewModel @UiThread constructor() : ViewModel() {
 
             if (defaultAccount == null) {
                 Log.w("$TAG Default account is now null!")
+                return
             } else {
                 Log.i(
                     "$TAG Default account has changed [${defaultAccount.params.identityAddress?.asStringUriOnly()}]"

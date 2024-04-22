@@ -434,8 +434,12 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         if (clearPreviousChannels) {
             Log.w("$TAG We were asked to remove all existing notification channels")
             for (channel in notificationManager.notificationChannels) {
-                Log.i("$TAG Deleting notification channel ID [${channel.id}]")
-                notificationManager.deleteNotificationChannel(channel.id)
+                try {
+                    Log.i("$TAG Deleting notification channel ID [${channel.id}]")
+                    notificationManager.deleteNotificationChannel(channel.id)
+                } catch (e: Exception) {
+                    Log.e("$TAG Failed to delete notification channel ID [${channel.id}]: $e")
+                }
             }
         }
 

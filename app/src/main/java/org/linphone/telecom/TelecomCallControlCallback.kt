@@ -149,6 +149,7 @@ class TelecomCallControlCallback(
                 Log.i(
                     "$TAG We're asked to [${if (muted) "mute" else "unmute"}] the call in state [$callState]"
                 )
+                // This is to prevent mic not muted when joining conference if user decided to join as muted
                 if (muted || !LinphoneUtils.isCallOutgoing(callState, false)) {
                     call.microphoneMuted = muted
                 } else {
