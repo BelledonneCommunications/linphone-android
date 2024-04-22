@@ -79,6 +79,7 @@
     <string name="notification_channel_incoming_call_name">&appName; incoming calls notifications</string>
     <string name="notification_channel_missed_call_name">&appName; missed calls notifications</string>
     <string name="notification_channel_service_name">&appName; service notification</string>
+    <string name="notification_channel_service_desc">This service will run all the time to keep app alive and allow you to receive calls and messages without push notifications.</string>
     <string name="notification_channel_chat_name">&appName; instant messages notifications</string>
     <string name="notification_chat_message_reaction_received">Reacted by %s to: %s</string>
     <string name="notification_mark_message_as_read">Mark as read</string>
@@ -291,8 +292,9 @@
     <string name="settings_user_interface_dark_theme_label">Dark theme</string>
     <string name="settings_user_interface_light_theme_label">Light theme</string>
     <string name="settings_user_interface_auto_theme_label">Auto</string>
-    <string name="settings_advanced_title">Advanced settings</string>
 
+    <string name="settings_advanced_title">Advanced settings</string>
+    <string name="settings_advanced_keep_alive_service_title">Keep app alive using Service</string>
     <string name="settings_advanced_remote_provisioning_url">Remote provisioning URL</string>
 
     <!-- Account profile & settings -->

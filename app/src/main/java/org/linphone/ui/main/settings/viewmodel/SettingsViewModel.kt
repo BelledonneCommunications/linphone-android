@@ -115,7 +115,9 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
     )
     val availableThemesValues = arrayListOf(-1, 0, 1)
 
-    // Advanced setttings
+    // Advanced settings
+    val keepAliveThirdPartyAccountsService = MutableLiveData<Boolean>()
+
     val remoteProvisioningUrl = MutableLiveData<String>()
 
     init {
@@ -158,6 +160,8 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
             defaultLayout.postValue(core.defaultConferenceLayout.toInt())
 
             theme.postValue(corePreferences.darkMode)
+
+            keepAliveThirdPartyAccountsService.postValue(corePreferences.keepServiceAlive)
 
             remoteProvisioningUrl.postValue(core.provisioningUri)
         }
@@ -353,6 +357,21 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
             corePreferences.darkMode = themeValue
             Log.i("$TAG Theme [$theme] saved")
             theme.postValue(themeValue)
+        }
+    }
+
+    @UiThread
+    fun toggleKeepAliveThirdPartyAccountService() {
+        val newValue = keepAliveThirdPartyAccountsService.value == false
+
+        coreContext.postOnCoreThread {
+            corePreferences.keepServiceAlive = newValue
+            keepAliveThirdPartyAccountsService.postValue(newValue)
+            if (newValue) {
+                coreContext.startKeepAliveService()
+            } else {
+                coreContext.stopKeepAliveService()
+            }
         }
     }
 

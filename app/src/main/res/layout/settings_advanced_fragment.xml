@@ -57,6 +57,33 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    style="@style/material_switch_style"
+                    android:id="@+id/keep_alive_service_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:checked="@{viewModel.keepAliveThirdPartyAccountsService}"
+                    android:onClick="@{() -> viewModel.toggleKeepAliveThirdPartyAccountService()}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/header_style"
+                    android:id="@+id/push_notifications_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/settings_advanced_keep_alive_service_title"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    app:layout_constraintTop_toTopOf="@id/keep_alive_service_switch"
+                    app:layout_constraintBottom_toBottomOf="@id/keep_alive_service_switch"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/keep_alive_service_switch"/>
+
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/header_style"
                     android:id="@+id/remote_provisioning_label"
@@ -68,7 +95,7 @@
                     android:paddingBottom="8dp"
                     android:text="@string/settings_advanced_remote_provisioning_url"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toBottomOf="@id/keep_alive_service_switch"/>
 
                 <androidx.appcompat.widget.AppCompatEditText
                     style="@style/default_text_style"
@@ -90,6 +117,8 @@
                     app:layout_constraintTop_toBottomOf="@id/remote_provisioning_label"
                     app:layout_constraintStart_toStartOf="@id/remote_provisioning_label"
                     app:layout_constraintEnd_toEndOf="parent"/>
+
+                <!-- TODO: apply button ? -->
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

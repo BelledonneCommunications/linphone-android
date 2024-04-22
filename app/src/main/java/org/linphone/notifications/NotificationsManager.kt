@@ -61,6 +61,7 @@ import org.linphone.core.ChatMessageReaction
 import org.linphone.core.ChatRoom
 import org.linphone.core.Core
 import org.linphone.core.CoreForegroundService
+import org.linphone.core.CoreKeepAliveThirdPartyAccountsService
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.CorePreferences
 import org.linphone.core.Friend
@@ -93,10 +94,12 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         const val CHAT_NOTIFICATIONS_GROUP = "CHAT_NOTIF_GROUP"
 
         private const val INCOMING_CALL_ID = 1
+        private const val KEEP_ALIVE_FOR_THIRD_PARTY_ACCOUNTS_ID = 5
         private const val MISSED_CALL_ID = 10
     }
 
     private var currentForegroundServiceNotificationId = -1
+    private var currentKeepAliveThirdPartyAccountsForegroundServiceNotificationId = -1
 
     private var currentlyRingingCallRemoteAddress: Address? = null
 
@@ -137,7 +140,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
                     val notifiable = getNotifiableForCall(call)
                     if (notifiable.notificationId == currentForegroundServiceNotificationId) {
                         Log.i(
-                            "$TAG Update foreground service type in case video was enabled/disabled since last time"
+                            "$TAG Update foreground Service type in case video was enabled/disabled since last time"
                         )
                         startCallForeground(call)
                     }
@@ -349,6 +352,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
     }
 
     private var coreService: CoreForegroundService? = null
+    private var keepAliveService: CoreKeepAliveThirdPartyAccountsService? = null
 
     private val callNotificationsMap: HashMap<String, Notifiable> = HashMap()
     private val chatNotificationsMap: HashMap<String, Notifiable> = HashMap()
@@ -397,7 +401,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
                 stopCallForeground()
             } else if (currentForegroundServiceNotificationId == -1) {
                 Log.i(
-                    "$TAG At least a call is still running and no foreground service notification was found"
+                    "$TAG At least a call is still running and no foreground Service notification was found"
                 )
                 val call = core.currentCall ?: core.calls.first()
                 startCallForeground(call)
@@ -412,6 +416,20 @@ class NotificationsManager @MainThread constructor(private val context: Context)
     }
 
     @MainThread
+    fun onKeepAliveServiceStarted(service: CoreKeepAliveThirdPartyAccountsService) {
+        Log.i("$TAG Keep app alive for third party accounts Service has been started")
+        keepAliveService = service
+        startKeepAliveServiceForeground()
+    }
+
+    @MainThread
+    fun onKeepAliveServiceDestroyed() {
+        Log.i("$TAG Keep app alive for third party accounts Service has been destroyed")
+        stopKeepAliveServiceForeground()
+        keepAliveService = null
+    }
+
+    @MainThread
     private fun createChannels(clearPreviousChannels: Boolean) {
         if (clearPreviousChannels) {
             Log.w("$TAG We were asked to remove all existing notification channels")
@@ -421,7 +439,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             }
         }
 
-        createServiceChannel()
+        createThirdPartyAccountKeepAliveServiceChannel()
         createIncomingCallNotificationChannel()
         createMissedCallNotificationChannel()
         createActiveCallNotificationChannel()
@@ -608,7 +626,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             ) {
                 mask = mask or Compatibility.FOREGROUND_SERVICE_TYPE_MICROPHONE
                 Log.i(
-                    "$TAG RECORD_AUDIO permission has been granted, adding FOREGROUND_SERVICE_TYPE_MICROPHONE to foreground service types mask"
+                    "$TAG RECORD_AUDIO permission has been granted, adding FOREGROUND_SERVICE_TYPE_MICROPHONE to foreground Service types mask"
                 )
             }
             val isSendingVideo = when (call.currentParams.videoDirection) {
@@ -623,7 +641,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
                 ) {
                     mask = mask or Compatibility.FOREGROUND_SERVICE_TYPE_CAMERA
                     Log.i(
-                        "$TAG CAMERA permission has been granted, adding FOREGROUND_SERVICE_TYPE_CAMERA to foreground service types mask"
+                        "$TAG CAMERA permission has been granted, adding FOREGROUND_SERVICE_TYPE_CAMERA to foreground Service types mask"
                     )
                 }
             }
@@ -651,13 +669,13 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         val service = coreService
         if (service != null) {
             Log.i(
-                "$TAG Stopping foreground service (was using notification ID [$currentForegroundServiceNotificationId])"
+                "$TAG Stopping foreground Service (was using notification ID [$currentForegroundServiceNotificationId])"
             )
             service.stopForeground(STOP_FOREGROUND_REMOVE)
             service.stopSelf()
             currentForegroundServiceNotificationId = -1
         } else {
-            Log.w("$TAG Can't stop foreground service & notif, no service was found")
+            Log.w("$TAG Can't stop foreground Service & notif, no Service was found")
         }
     }
 
@@ -806,7 +824,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
                 if (coreService == null && tag == null) {
                     // We can't notify using CallStyle if there isn't a foreground service running
                     Log.w(
-                        "$TAG Foreground service hasn't started yet, can't display a CallStyle notification until then: $iae"
+                        "$TAG Foreground Service hasn't started yet, can't display a CallStyle notification until then: $iae"
                     )
                 } else {
                     Log.e("$TAG Illegal Argument Exception occurred: $iae")
@@ -1246,6 +1264,66 @@ class NotificationsManager @MainThread constructor(private val context: Context)
     }
 
     @MainThread
+    private fun startKeepAliveServiceForeground() {
+        Log.i(
+            "$TAG Trying to start keep alive for third party accounts foreground Service using call notification"
+        )
+
+        val channelId = context.getString(R.string.notification_channel_service_id)
+        val channel = notificationManager.getNotificationChannel(channelId)
+        val importance = channel?.importance ?: NotificationManagerCompat.IMPORTANCE_NONE
+        if (importance == NotificationManagerCompat.IMPORTANCE_NONE) {
+            Log.e(
+                "$TAG Keep alive for third party accounts Service channel has been disabled, can't start foreground service!"
+            )
+            return
+        }
+
+        val service = keepAliveService
+        if (service != null) {
+            val builder = NotificationCompat.Builder(context, channelId)
+                .setContentTitle(context.getString(R.string.app_name))
+                .setSmallIcon(R.drawable.linphone_notification)
+                .setAutoCancel(false)
+                .setOngoing(true)
+                .setCategory(NotificationCompat.CATEGORY_SERVICE)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setShowWhen(false)
+            val notification = builder.build()
+
+            Log.i(
+                "$TAG Keep alive for third party accounts Service found, starting it as foreground using notification ID [$KEEP_ALIVE_FOR_THIRD_PARTY_ACCOUNTS_ID] with type DATA_SYNC"
+            )
+            Compatibility.startServiceForeground(
+                service,
+                KEEP_ALIVE_FOR_THIRD_PARTY_ACCOUNTS_ID,
+                notification,
+                Compatibility.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+            )
+            currentKeepAliveThirdPartyAccountsForegroundServiceNotificationId = KEEP_ALIVE_FOR_THIRD_PARTY_ACCOUNTS_ID
+        } else {
+            Log.w("$TAG Keep alive for third party accounts Service hasn't started yet...")
+        }
+    }
+
+    @MainThread
+    private fun stopKeepAliveServiceForeground() {
+        val service = keepAliveService
+        if (service != null) {
+            Log.i(
+                "$TAG Stopping keep alive for third party accounts foreground Service (was using notification ID [$currentKeepAliveThirdPartyAccountsForegroundServiceNotificationId])"
+            )
+            service.stopForeground(STOP_FOREGROUND_REMOVE)
+            service.stopSelf()
+            currentKeepAliveThirdPartyAccountsForegroundServiceNotificationId = -1
+        } else {
+            Log.w(
+                "$TAG Can't stop keep alive for third party accounts foreground Service & notif, no Service was found"
+            )
+        }
+    }
+
+    @MainThread
     private fun createIncomingCallNotificationChannel() {
         val id = context.getString(R.string.notification_channel_incoming_call_id)
         val name = context.getString(R.string.notification_channel_incoming_call_name)
@@ -1302,12 +1380,12 @@ class NotificationsManager @MainThread constructor(private val context: Context)
     }
 
     @MainThread
-    private fun createServiceChannel() {
+    private fun createThirdPartyAccountKeepAliveServiceChannel() {
         val id = context.getString(R.string.notification_channel_service_id)
         val name = context.getString(R.string.notification_channel_service_name)
 
         val channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_LOW).apply {
-            description = name
+            description = context.getString(R.string.notification_channel_service_desc)
         }
         notificationManager.createNotificationChannel(channel)
     }

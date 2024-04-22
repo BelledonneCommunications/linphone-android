@@ -44,6 +44,7 @@
     <string name="notification_channel_incoming_call_name">&appName; notifications d\'appels entrants</string>
     <string name="notification_channel_missed_call_name">&appName; notifications d\'appels manqués</string>
     <string name="notification_channel_service_name">&appName; notification de service</string>
+    <string name="notification_channel_service_desc">Ce service sera actif en permanence pour garder l\'app en vie et vous permettre de recevoir appels et messages sans recourir aux notifications push.</string>
     <string name="notification_channel_chat_name">&appName; notifications des conversations</string>
     <string name="notification_chat_message_reaction_received">A réagi par %s à : %s</string>
     <string name="notification_mark_message_as_read">Marquer comme lu</string>
@@ -256,7 +257,10 @@
     <string name="settings_user_interface_dark_theme_label">Sombre</string>
     <string name="settings_user_interface_light_theme_label">Clair</string>
     <string name="settings_user_interface_auto_theme_label">Auto</string>
+
     <string name="settings_advanced_title">Paramètres avancés</string>
+    <string name="settings_advanced_keep_alive_service_title">Garder l\'app en vie via un Service</string>
+    <string name="settings_advanced_remote_provisioning_url">URL de configuration distante</string>
 
     <!-- Account profile & settings -->
     <string name="manage_account_title">Votre compte</string>

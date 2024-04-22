@@ -36,6 +36,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import org.linphone.BuildConfig
 import org.linphone.LinphoneApplication.Companion.corePreferences
+import org.linphone.compatibility.Compatibility
 import org.linphone.contacts.ContactsManager
 import org.linphone.core.tools.Log
 import org.linphone.notifications.NotificationsManager
@@ -279,6 +280,10 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         corePreferences.linphoneConfigurationVersion = CorePreferences.CURRENT_VERSION
 
         Log.i("$TAG Report Core created and started")
+
+        if (corePreferences.keepServiceAlive) {
+            startKeepAliveService()
+        }
     }
 
     @WorkerThread
@@ -527,6 +532,30 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
             Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
         )
         context.startActivity(intent)
+    }
+
+    @WorkerThread
+    fun startKeepAliveService() {
+        val serviceIntent = Intent(Intent.ACTION_MAIN).setClass(
+            context,
+            CoreKeepAliveThirdPartyAccountsService::class.java
+        )
+        Log.i(
+            "$TAG Starting Keep alive for third party accounts Service (as foreground)"
+        )
+        Compatibility.startForegroundService(context, serviceIntent)
+    }
+
+    @WorkerThread
+    fun stopKeepAliveService() {
+        val serviceIntent = Intent(Intent.ACTION_MAIN).setClass(
+            context,
+            CoreKeepAliveThirdPartyAccountsService::class.java
+        )
+        Log.i(
+            "$TAG Stopping Keep alive for third party accounts Service"
+        )
+        context.stopService(serviceIntent)
     }
 
     @WorkerThread

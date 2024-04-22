@@ -71,6 +71,13 @@ class CorePreferences @UiThread constructor(private val context: Context) {
             config.setBool("app", "publish_presence", value)
         }
 
+    @get:WorkerThread @set:WorkerThread
+    var keepServiceAlive: Boolean
+        get() = config.getBool("app", "keep_service_alive", false)
+        set(value) {
+            config.setBool("app", "keep_service_alive", value)
+        }
+
     // Calls settings
 
     @get:WorkerThread @set:WorkerThread
@@ -104,6 +111,7 @@ class CorePreferences @UiThread constructor(private val context: Context) {
 
     // Conversation settings
 
+    @get:WorkerThread @set:WorkerThread
     var exportMediaToNativeGallery: Boolean // TODO: use it!
         // Keep old name for backward compatibility
         get() = config.getBool("app", "make_downloaded_images_public_in_gallery", true)
@@ -113,6 +121,7 @@ class CorePreferences @UiThread constructor(private val context: Context) {
 
     /* Voice Recordings */
 
+    @get:WorkerThread @set:WorkerThread
     var voiceRecordingMaxDuration: Int
         get() = config.getInt("app", "voice_recording_max_duration", 600000) // in ms
         set(value) = config.setInt("app", "voice_recording_max_duration", value)

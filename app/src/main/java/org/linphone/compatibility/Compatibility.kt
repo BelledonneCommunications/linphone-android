@@ -37,6 +37,7 @@ class Compatibility {
     companion object {
         private const val TAG = "[Compatibility]"
 
+        const val FOREGROUND_SERVICE_TYPE_DATA_SYNC = 1 // Matches ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
         const val FOREGROUND_SERVICE_TYPE_PHONE_CALL = 4 // Matches ServiceInfo.FOREGROUND_SERVICE_TYPE_PHONE_CALL
         const val FOREGROUND_SERVICE_TYPE_CAMERA = 64 // Matches ServiceInfo.FOREGROUND_SERVICE_TYPE_CAMERA
         const val FOREGROUND_SERVICE_TYPE_MICROPHONE = 128 // ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE
@@ -56,6 +57,14 @@ class Compatibility {
                 )
             } else {
                 Api28Compatibility.startServiceForeground(service, id, notification)
+            }
+        }
+
+        fun startForegroundService(context: Context, intent: Intent) {
+            if (Version.sdkAboveOrEqual(Version.API31_ANDROID_12)) {
+                Api31Compatibility.startForegroundService(context, intent)
+            } else {
+                Api28Compatibility.startForegroundService(context, intent)
             }
         }
 

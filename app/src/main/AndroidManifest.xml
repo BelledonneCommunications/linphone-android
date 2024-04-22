@@ -163,6 +163,13 @@
             </intent-filter>
         </service>
 
+        <service
+            android:name=".core.CoreKeepAliveThirdPartyAccountsService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync"
+            android:stopWithTask="false"
+            android:label="@string/app_name" />
+
         <!-- Receivers -->
 
         <receiver android:name=".core.CorePushReceiver"

@@ -20,9 +20,11 @@
 package org.linphone.compatibility
 
 import android.app.Activity
+import android.app.ForegroundServiceStartNotAllowedException
 import android.app.PictureInPictureParams
 import android.app.UiModeManager
 import android.content.Context
+import android.content.Intent
 import android.graphics.RenderEffect
 import android.graphics.Shader
 import android.os.Build
@@ -77,6 +79,18 @@ class Api31Compatibility {
                 Log.e("$TAG Failed to get UiModeManager system service!")
             }
             uiManager?.setApplicationNightMode(UiModeManager.MODE_NIGHT_AUTO)
+        }
+
+        fun startForegroundService(context: Context, intent: Intent) {
+            try {
+                context.startForegroundService(intent)
+            } catch (fssnae: ForegroundServiceStartNotAllowedException) {
+                Log.e("$TAG Can't start service as foreground! $fssnae")
+            } catch (se: SecurityException) {
+                Log.e("$TAG Can't start service as foreground! $se")
+            } catch (e: Exception) {
+                Log.e("$TAG Can't start service as foreground! $e")
+            }
         }
     }
 }
