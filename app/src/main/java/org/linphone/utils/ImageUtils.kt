@@ -115,6 +115,10 @@ class ImageUtils {
                     "$TAG Found at [${list.size}] participant(s) with a picture for conversation [$id]($hash), creating avatar"
                 )
                 val bitmap = generateBitmapFromList(list)
+                if (bitmap == null) {
+                    Log.e("$TAG Avatar couldn't be generated")
+                    return ""
+                }
                 val outputStream: OutputStream = FileOutputStream(file)
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
                 outputStream.close()
@@ -130,13 +134,13 @@ class ImageUtils {
         }
 
         @WorkerThread
-        fun generateBitmapFromList(list: ArrayList<String>): Bitmap {
+        fun generateBitmapFromList(list: ArrayList<String>): Bitmap? {
             val size = AppUtils.getDimension(R.dimen.avatar_in_call_size).toInt()
             return getBitmapFromMultipleAvatars(coreContext.context, size, list)
         }
 
         @AnyThread
-        fun getBitmapFromMultipleAvatars(context: Context, size: Int, images: List<String>): Bitmap {
+        fun getBitmapFromMultipleAvatars(context: Context, size: Int, images: List<String>): Bitmap? {
             val drawables = images.mapNotNull {
                 try {
                     val uri = Uri.parse(it)
@@ -148,8 +152,16 @@ class ImageUtils {
                         null
                     }
                 } catch (e: Exception) {
+                    Log.e("$TAG Failed to get scaled bitmap for URI [$it]")
                     null
                 }
+            }
+
+            if (drawables.isEmpty()) {
+                Log.e("$TAG Drawables list is empty, can't generate bitmap without at least one")
+                return null
+            } else {
+                Log.i("$TAG Generating avatar using [${drawables.size}] drawables")
             }
 
             val rectangles = if (drawables.size == 2) {
@@ -187,7 +199,7 @@ class ImageUtils {
                     val quarter = size / 4
                     Rect(quarter, 0, 3 * quarter, size)
                 } else {
-                    null
+                    Rect(0, 0, size, size)
                 }
 
                 try {

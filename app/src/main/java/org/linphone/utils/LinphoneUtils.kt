@@ -415,9 +415,13 @@ class LinphoneUtils {
             fakeFriend.address = conferenceInfo.uri
             fakeFriend.name = conferenceInfo.subject
 
+            var avatarFound = true
             val hash = conferenceInfo.uri?.asStringUriOnly().hashCode().toString()
             val file = FileUtils.getFileStorageCacheDir("$hash.jpg", overrideExisting = true)
             if (!file.exists()) {
+                avatarFound = false
+                Log.w("$TAG File [${file.absolutePath}] doesn't exist yet, trying to generate it")
+
                 val list = arrayListOf<String>()
                 for (participant in conferenceInfo.participantInfos) {
                     val friend = coreContext.contactsManager.findContactByAddress(
@@ -432,13 +436,25 @@ class LinphoneUtils {
                 }
                 if (list.isNotEmpty()) {
                     val bitmap = ImageUtils.generateBitmapFromList(list)
-                    val outputStream: OutputStream = FileOutputStream(file)
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
-                    outputStream.close()
+                    if (bitmap != null) {
+                        val outputStream: OutputStream = FileOutputStream(file)
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                        outputStream.close()
+                        avatarFound = true
+                        Log.i("$TAG Generated avatar and stored it in [${file.absolutePath}]")
+                    } else {
+                        Log.w("$TAG Can't generate avatar from that participants list")
+                    }
+                } else {
+                    Log.w(
+                        "$TAG Can't generate avatar as no participant was found with an available picture"
+                    )
                 }
             }
-            fakeFriend.photo = FileUtils.getProperFilePath(file.absolutePath)
 
+            if (avatarFound) {
+                fakeFriend.photo = FileUtils.getProperFilePath(file.absolutePath)
+            }
             val avatarModel = ContactAvatarModel(fakeFriend)
             avatarModel.defaultToConferenceIcon.postValue(true)
             avatarModel.skipInitials.postValue(true)

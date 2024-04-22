@@ -416,8 +416,13 @@ private fun loadContactPictureWithCoil(
                 AppUtils.getDimension(R.dimen.avatar_list_cell_size).toInt()
             }
             val bitmap = ImageUtils.getBitmapFromMultipleAvatars(imageView.context, w, images)
-            imageView.load(bitmap) {
-                transformations(CircleCropTransformation())
+            if (bitmap != null) {
+                imageView.load(bitmap) {
+                    transformations(CircleCropTransformation())
+                }
+            } else {
+                val initials = model.initials.value.orEmpty()
+                imageView.load(ImageUtils.getGeneratedAvatar(context, size, textSize, initials))
             }
         }
     }
