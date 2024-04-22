@@ -108,6 +108,18 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar" />
 
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/fetch_in_progress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true"
+                    android:visibility="@{viewModel.fetchInProgress ? View.VISIBLE : View.GONE}"
+                    app:indicatorColor="@color/main1_500"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar" />
+
                 <include
                     android:id="@+id/bottom_nav_bar"
                     android:layout_width="0dp"
@@ -133,10 +145,6 @@
                     app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <!--<include
-                layout="@layout/operation_in_progress"
-                bind:visibility="@{viewModel.fetchInProgress}" />-->
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

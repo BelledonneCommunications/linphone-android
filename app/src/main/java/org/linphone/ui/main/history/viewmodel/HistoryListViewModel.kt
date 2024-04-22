@@ -61,6 +61,8 @@ class HistoryListViewModel @UiThread constructor() : AbstractTopBarViewModel() {
     }
 
     init {
+        fetchInProgress.value = true
+
         coreContext.postOnCoreThread { core ->
             coreContext.contactsManager.addListener(contactsListener)
             core.addListener(coreListener)
@@ -123,11 +125,9 @@ class HistoryListViewModel @UiThread constructor() : AbstractTopBarViewModel() {
 
             if (count == 20) {
                 callLogs.postValue(list)
-                fetchInProgress.postValue(false)
             }
         }
 
         callLogs.postValue(list)
-        fetchInProgress.postValue(false)
     }
 }

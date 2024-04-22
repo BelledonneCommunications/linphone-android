@@ -92,7 +92,6 @@ class MeetingsListFragment : AbstractTopBarFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        postponeEnterTransition()
         super.onViewCreated(view, savedInstanceState)
 
         listViewModel = ViewModelProvider(this)[MeetingsListViewModel::class.java]
@@ -137,10 +136,9 @@ class MeetingsListFragment : AbstractTopBarFragment() {
             val newCount = it.size
             adapter.submitList(it)
             Log.i("$TAG Meetings list ready with [$newCount] items")
+            listViewModel.fetchInProgress.value = false
 
             (view.parent as? ViewGroup)?.doOnPreDraw {
-                startPostponedEnterTransition()
-
                 if (currentCount < newCount) {
                     scrollToToday()
                 }

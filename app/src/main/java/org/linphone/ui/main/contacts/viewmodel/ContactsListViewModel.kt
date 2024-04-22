@@ -92,6 +92,7 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
     }
 
     init {
+        fetchInProgress.value = true
         showFavourites.value = true
 
         coreContext.postOnCoreThread { core ->
@@ -259,7 +260,6 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
 
             if (firstLoad && count == 20) {
                 contactsList.postValue(list)
-                fetchInProgress.postValue(false)
             }
         }
 
@@ -273,7 +273,6 @@ class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
 
         favourites.postValue(favouritesList)
         contactsList.postValue(list)
-        fetchInProgress.postValue(false)
 
         Log.i("$TAG Processed [${results.size}] results")
         firstLoad = false

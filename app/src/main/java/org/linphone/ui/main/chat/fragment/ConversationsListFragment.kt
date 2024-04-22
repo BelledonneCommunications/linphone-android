@@ -26,7 +26,6 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.annotation.UiThread
-import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -111,7 +110,6 @@ class ConversationsListFragment : AbstractTopBarFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        postponeEnterTransition()
         super.onViewCreated(view, savedInstanceState)
 
         listViewModel = ViewModelProvider(this)[ConversationsListViewModel::class.java]
@@ -184,10 +182,7 @@ class ConversationsListFragment : AbstractTopBarFragment() {
         listViewModel.conversations.observe(viewLifecycleOwner) {
             adapter.submitList(it)
             Log.i("$TAG Conversations list ready with [${it.size}] items")
-
-            (view.parent as? ViewGroup)?.doOnPreDraw {
-                startPostponedEnterTransition()
-            }
+            listViewModel.fetchInProgress.value = false
         }
 
         sharedViewModel.showConversationEvent.observe(viewLifecycleOwner) {

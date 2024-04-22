@@ -31,7 +31,6 @@ import android.view.animation.AnimationUtils
 import android.widget.PopupWindow
 import androidx.annotation.UiThread
 import androidx.core.content.FileProvider
-import androidx.core.view.doOnPreDraw
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
@@ -97,7 +96,6 @@ class ContactsListFragment : AbstractTopBarFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        postponeEnterTransition()
         super.onViewCreated(view, savedInstanceState)
 
         listViewModel = ViewModelProvider(this)[ContactsListViewModel::class.java]
@@ -128,10 +126,7 @@ class ContactsListFragment : AbstractTopBarFragment() {
         ) {
             adapter.submitList(it)
             Log.i("$TAG Contacts list updated with [${it.size}] items")
-
-            (view.parent as? ViewGroup)?.doOnPreDraw {
-                startPostponedEnterTransition()
-            }
+            listViewModel.fetchInProgress.value = false
         }
 
         listViewModel.favourites.observe(

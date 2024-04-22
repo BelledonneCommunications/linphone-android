@@ -105,6 +105,8 @@ class ConversationsListViewModel @UiThread constructor() : AbstractTopBarViewMod
     }
 
     init {
+        fetchInProgress.value = true
+
         coreContext.postOnCoreThread { core ->
             coreContext.contactsManager.addListener(contactsListener)
             core.addListener(coreListener)
@@ -179,12 +181,10 @@ class ConversationsListViewModel @UiThread constructor() : AbstractTopBarViewMod
 
             if (count == 15) {
                 conversations.postValue(list)
-                fetchInProgress.postValue(false)
             }
         }
 
         conversations.postValue(list)
-        fetchInProgress.postValue(false)
     }
 
     @WorkerThread

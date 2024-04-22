@@ -49,6 +49,8 @@ class MeetingsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
     }
 
     init {
+        fetchInProgress.value = true
+
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
 
@@ -74,6 +76,10 @@ class MeetingsListViewModel @UiThread constructor() : AbstractTopBarViewModel() 
 
     @WorkerThread
     private fun computeMeetingsList(filter: String) {
+        if (meetings.value.orEmpty().isEmpty()) {
+            fetchInProgress.postValue(true)
+        }
+
         val list = arrayListOf<MeetingListItemModel>()
 
         var source = coreContext.core.defaultAccount?.conferenceInformationList
