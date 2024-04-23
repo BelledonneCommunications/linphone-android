@@ -27,23 +27,41 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp">
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp">
 
         <ImageView
             android:id="@+id/toast_background"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             android:src="@{shadow_color, default=@drawable/shape_toast_blue_background}"
+            app:layout_constraintWidth_max="@dimen/toast_max_width"
             app:layout_constraintBottom_toBottomOf="@id/toast_message"
-            app:layout_constraintEnd_toEndOf="@id/toast_message"
-            app:layout_constraintStart_toStartOf="@id/toast_icon"
-            app:layout_constraintTop_toTopOf="@id/toast_message" />
+            app:layout_constraintTop_toTopOf="@id/toast_message"
+            app:layout_constraintStart_toStartOf="@id/toast_start_barrier"
+            app:layout_constraintEnd_toEndOf="@id/toast_end_barrier"/>
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/toast_start_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="toast_icon"
+            app:barrierDirection="start"
+            app:barrierMargin="-20dp" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/toast_end_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="toast_message"
+            app:barrierDirection="end"
+            app:barrierMargin="20dp" />
 
         <ImageView
             android:id="@+id/toast_icon"
             android:layout_width="@dimen/icon_size"
             android:layout_height="@dimen/icon_size"
+            android:layout_marginStart="25dp"
             android:adjustViewBounds="true"
             android:src="@{icon, default=@drawable/check}"
             tint="@{text_color}"
@@ -59,13 +77,16 @@
             style="@style/default_text_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="25dp"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
+            android:paddingEnd="20dp"
             android:text="@{message, default=@string/assistant_account_register_push_notification_not_received_error}"
             android:textSize="14sp"
             textColor="@{text_color, default=@color/info_500}"
             app:layout_constraintWidth_max="@dimen/toast_text_max_width"
+            app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/toast_icon"
