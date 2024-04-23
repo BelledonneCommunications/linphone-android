@@ -30,9 +30,12 @@ import androidx.annotation.UiThread
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantPermissionsFragmentBinding
+import org.linphone.ui.assistant.AssistantActivity
 
 @UiThread
 class PermissionsFragment : Fragment() {
@@ -45,6 +48,7 @@ class PermissionsFragment : Fragment() {
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
+        var allGranted = true
         permissions.entries.forEach {
             val permissionName = it.key
             val isGranted = it.value
@@ -52,9 +56,16 @@ class PermissionsFragment : Fragment() {
                 Log.i("Permission [$permissionName] is now granted")
             } else {
                 Log.i("Permission [$permissionName] has been denied")
+                allGranted = false
             }
         }
-        goToLoginFragment()
+
+        if (!allGranted) { // If all permissions were granted, the onResume() will do the navigation
+            Log.w(
+                "$TAG Not all permissions were granted, leaving anyway, they will be asked again later..."
+            )
+            goToLoginFragment()
+        }
     }
 
     override fun onCreateView(
@@ -113,8 +124,25 @@ class PermissionsFragment : Fragment() {
     }
 
     private fun goToLoginFragment() {
-        val action = PermissionsFragmentDirections.actionPermissionsFragmentToLandingFragment()
-        findNavController().navigate(action)
+        if (requireActivity().intent.getBooleanExtra(AssistantActivity.SKIP_LANDING_EXTRA, false)) {
+            Log.w(
+                "$TAG We were asked to leave assistant if at least an account is already configured"
+            )
+            coreContext.postOnCoreThread { core ->
+                if (core.accountList.isNotEmpty()) {
+                    coreContext.postOnMainThread {
+                        Log.w("$TAG At least one account was found, leaving assistant")
+                        requireActivity().finish()
+                    }
+                }
+            }
+        } else {
+            if (findNavController().currentDestination?.id == R.id.permissionsFragment) {
+                val action =
+                    PermissionsFragmentDirections.actionPermissionsFragmentToLandingFragment()
+                findNavController().navigate(action)
+            }
+        }
     }
 
     private fun areAllPermissionsGranted(): Boolean {

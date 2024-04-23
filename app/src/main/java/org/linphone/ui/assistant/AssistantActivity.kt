@@ -40,6 +40,8 @@ import org.linphone.ui.assistant.fragment.PermissionsFragmentDirections
 class AssistantActivity : GenericActivity() {
     companion object {
         private const val TAG = "[Assistant Activity]"
+
+        const val SKIP_LANDING_EXTRA = "SkipLandingIfAtLeastAnAccount"
     }
 
     private lateinit var binding: AssistantActivityBinding
@@ -67,6 +69,18 @@ class AssistantActivity : GenericActivity() {
                 Log.w("$TAG Not all required permissions are granted, showing Permissions fragment")
                 val action = PermissionsFragmentDirections.actionGlobalPermissionsFragment()
                 binding.assistantNavContainer.findNavController().navigate(action)
+            } else if (intent.getBooleanExtra(SKIP_LANDING_EXTRA, false)) {
+                Log.w(
+                    "$TAG We were asked to leave assistant if at least an account is already configured"
+                )
+                coreContext.postOnCoreThread { core ->
+                    if (core.accountList.isNotEmpty()) {
+                        coreContext.postOnMainThread {
+                            Log.w("$TAG At least one account was found, leaving assistant")
+                            finish()
+                        }
+                    }
+                }
             }
         }
     }

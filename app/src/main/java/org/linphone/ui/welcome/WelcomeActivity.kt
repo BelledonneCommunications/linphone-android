@@ -67,9 +67,7 @@ class WelcomeActivity : GenericActivity() {
 
         binding.setSkipClickListener {
             Log.i("$TAG User clicked on 'skip' button, going to Assistant")
-            finish()
-            val intent = Intent(this, AssistantActivity::class.java)
-            startActivity(intent)
+            goToAssistant()
         }
 
         binding.setNextClickListener {
@@ -77,11 +75,9 @@ class WelcomeActivity : GenericActivity() {
                 Log.i(
                     "$TAG User clicked on 'start' button, leaving activity and going into Assistant"
                 )
-                finish()
-                val intent = Intent(this, AssistantActivity::class.java)
-                startActivity(intent)
+                goToAssistant()
             } else {
-                viewPager.currentItem = viewPager.currentItem + 1
+                viewPager.currentItem += 1
             }
         }
     }
@@ -94,6 +90,13 @@ class WelcomeActivity : GenericActivity() {
     override fun onPause() {
         viewPager.unregisterOnPageChangeCallback(pageChangedCallback)
         super.onPause()
+    }
+
+    private fun goToAssistant() {
+        finish()
+        val intent = Intent(this, AssistantActivity::class.java)
+        intent.putExtra(AssistantActivity.SKIP_LANDING_EXTRA, true)
+        startActivity(intent)
     }
 
     private inner class ScreenSlidePagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
