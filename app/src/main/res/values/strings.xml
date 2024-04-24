@@ -293,6 +293,7 @@
     <string name="settings_user_interface_dark_theme_label">Dark theme</string>
     <string name="settings_user_interface_light_theme_label">Light theme</string>
     <string name="settings_user_interface_auto_theme_label">Auto</string>
+    <string name="settings_user_interface_color_title">Main color</string>
 
     <string name="settings_advanced_title">Advanced settings</string>
     <string name="settings_advanced_keep_alive_service_title">Keep app alive using Service</string>

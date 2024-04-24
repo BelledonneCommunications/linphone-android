@@ -41,7 +41,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
         android:enableOnBackInvokedCallback="true"
-        android:theme="@style/Theme.Linphone"
         android:localeConfig="@xml/locales_config"
         tools:targetApi="34">
 

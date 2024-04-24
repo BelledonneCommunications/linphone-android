@@ -22,6 +22,7 @@ package org.linphone.ui.call
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
@@ -39,6 +40,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
@@ -92,6 +94,16 @@ class CallActivity : GenericActivity() {
         } else {
             Log.e("$TAG RECORD_AUDIO permission has been denied")
         }
+    }
+
+    override fun getTheme(): Resources.Theme {
+        val mainColor = corePreferences.themeMainColor
+        val theme = super.getTheme()
+        when (mainColor) {
+            "yellow" -> theme.applyStyle(R.style.Theme_LinphoneInCallYellow, true)
+            else -> theme.applyStyle(R.style.Theme_LinphoneInCall, true)
+        }
+        return theme
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

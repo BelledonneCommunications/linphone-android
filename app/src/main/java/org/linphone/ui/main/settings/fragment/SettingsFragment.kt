@@ -75,6 +75,22 @@ class SettingsFragment : GenericFragment() {
         }
     }
 
+    private val colorListener = object : AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            val label = viewModel.availableColorsNames[position]
+            val value = viewModel.availableColorsValues[position]
+            Log.i("$TAG Selected color is now [$label] ($value)")
+            // Be carefull not to create an infinite loop
+            if (value != viewModel.color.value.orEmpty()) {
+                viewModel.setColor(value)
+                requireActivity().recreate()
+            }
+        }
+
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -169,9 +185,24 @@ class SettingsFragment : GenericFragment() {
             binding.userInterfaceSettings.themeSpinner.setSelection(
                 viewModel.availableThemesValues.indexOf(theme)
             )
+            binding.userInterfaceSettings.themeSpinner.onItemSelectedListener = themeListener
         }
 
-        binding.userInterfaceSettings.themeSpinner.onItemSelectedListener = themeListener
+        // Choose main color
+        val colorAdapter = ArrayAdapter(
+            requireContext(),
+            R.layout.drop_down_item,
+            viewModel.availableColorsNames
+        )
+        colorAdapter.setDropDownViewResource(R.layout.generic_dropdown_cell)
+        binding.userInterfaceSettings.colorSpinner.adapter = colorAdapter
+
+        viewModel.color.observe(viewLifecycleOwner) { color ->
+            binding.userInterfaceSettings.colorSpinner.setSelection(
+                viewModel.availableColorsValues.indexOf(color)
+            )
+            binding.userInterfaceSettings.colorSpinner.onItemSelectedListener = colorListener
+        }
 
         startPostponedEnterTransition()
     }

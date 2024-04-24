@@ -115,6 +115,14 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
     )
     val availableThemesValues = arrayListOf(-1, 0, 1)
 
+    val showColorSelector = MutableLiveData<Boolean>()
+    val color = MutableLiveData<String>()
+    val availableColorsNames = arrayListOf(
+        "Orange",
+        "Yellow"
+    )
+    val availableColorsValues = arrayListOf("orange", "yellow")
+
     // Advanced settings
     val keepAliveThirdPartyAccountsService = MutableLiveData<Boolean>()
 
@@ -126,6 +134,7 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
             showMeetingsSettings.postValue(!corePreferences.disableMeetings)
             ldapAvailable.postValue(core.ldapAvailable())
             showThemeSelector.postValue(corePreferences.darkModeAllowed)
+            showColorSelector.postValue(corePreferences.changeMainColorAllowed)
         }
         showContactsSettings.value = true
 
@@ -160,6 +169,7 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
             defaultLayout.postValue(core.defaultConferenceLayout.toInt())
 
             theme.postValue(corePreferences.darkMode)
+            color.postValue(corePreferences.themeMainColor)
 
             keepAliveThirdPartyAccountsService.postValue(corePreferences.keepServiceAlive)
 
@@ -355,9 +365,18 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
     fun setTheme(themeValue: Int) {
         coreContext.postOnCoreThread {
             corePreferences.darkMode = themeValue
-            Log.i("$TAG Theme [$theme] saved")
-            theme.postValue(themeValue)
+            Log.i("$TAG Theme [$themeValue] saved")
         }
+        theme.value = themeValue
+    }
+
+    @UiThread
+    fun setColor(colorName: String) {
+        coreContext.postOnCoreThread {
+            corePreferences.themeMainColor = colorName
+            Log.i("$TAG Color [$colorName] saved")
+        }
+        color.value = colorName
     }
 
     @UiThread

@@ -17,6 +17,7 @@
         <item name="android:navigationBarColor">@color/white</item>
 
         <item name="color_main1_100">@color/orange_main_100</item>
+        <item name="color_main1_100_alpha_50">@color/orange_main_100_alpha_50</item>
         <item name="color_main1_300">@color/orange_main_300</item>
         <item name="color_main1_500">@color/orange_main_500</item>
         <item name="color_main1_700">@color/orange_main_700</item>
@@ -56,8 +57,22 @@
         <item name="color_on_main">@color/white</item>
     </style>
 
+    <style name="Theme.LinphoneYellow" parent="Theme.Linphone">
+        <item name="android:statusBarColor">@color/yellow_main_500</item>
+        <item name="color_main1_100">@color/yellow_main_100</item>
+        <item name="color_main1_100_alpha_50">@color/yellow_main_100_alpha_50</item>
+        <item name="color_main1_300">@color/yellow_main_300</item>
+        <item name="color_main1_500">@color/yellow_main_500</item>
+        <item name="color_main1_700">@color/yellow_main_700</item>
+    </style>
+
     <!-- In-call application theme. -->
     <style name="Theme.LinphoneInCall" parent="Theme.Linphone">
+        <item name="android:navigationBarColor">@color/gray_600</item>
+        <item name="android:windowBackground">@color/black</item>
+    </style>
+
+    <style name="Theme.LinphoneInCallYellow" parent="Theme.LinphoneYellow">
         <item name="android:navigationBarColor">@color/gray_600</item>
         <item name="android:windowBackground">@color/black</item>
     </style>

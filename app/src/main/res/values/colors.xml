@@ -66,4 +66,10 @@
 
     <color name="gradient_start">#FF923F</color>
     <color name="gradient_progress">#80FFFFFF</color>
+
+    <color name="yellow_main_100">#FFE799</color>
+    <color name="yellow_main_100_alpha_50">#80FFE799</color>
+    <color name="yellow_main_300">#FFDE70</color>
+    <color name="yellow_main_500">#FFD23F</color>
+    <color name="yellow_main_700">#FFCB1F</color>
 </resources>

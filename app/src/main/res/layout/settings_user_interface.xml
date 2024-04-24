@@ -16,6 +16,18 @@
         android:paddingBottom="20dp"
         android:background="@drawable/shape_squircle_white_background">
 
+        <androidx.constraintlayout.widget.Group
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewModel.showThemeSelector ? View.VISIBLE : View.GONE}"
+            app:constraint_referenced_ids="theme_spinner, theme_spinner_caret, theme_title" />
+
+        <androidx.constraintlayout.widget.Group
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewModel.showColorSelector ? View.VISIBLE : View.GONE}"
+            app:constraint_referenced_ids="color_spinner, color_spinner_caret, color_title" />
+
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/settings_title_style"
             android:id="@+id/theme_title"
@@ -56,6 +68,47 @@
             app:layout_constraintTop_toTopOf="@id/theme_spinner"
             app:layout_constraintBottom_toBottomOf="@id/theme_spinner"
             app:layout_constraintEnd_toEndOf="@id/theme_spinner"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/settings_title_style"
+            android:id="@+id/color_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/settings_user_interface_color_title"
+            android:maxLines="2"
+            android:ellipsize="end"
+            app:layout_constraintTop_toBottomOf="@id/theme_spinner"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            style="@style/material_switch_style"
+            android:id="@+id/color_spinner"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/edit_text_background"
+            android:paddingStart="@dimen/spinner_start_padding"
+            android:paddingEnd="@dimen/spinner_end_padding"
+            android:overlapAnchor="false"
+            android:spinnerMode="dropdown"
+            android:popupBackground="@drawable/shape_squircle_white_background"
+            app:layout_constraintTop_toBottomOf="@id/color_title"
+            app:layout_constraintStart_toStartOf="@id/color_title"
+            app:layout_constraintEnd_toEndOf="@id/color_title" />
+
+        <ImageView
+            android:id="@+id/color_spinner_caret"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/spinner_caret_end_margin"
+            android:src="@drawable/caret_down"
+            app:layout_constraintTop_toTopOf="@id/color_spinner"
+            app:layout_constraintBottom_toBottomOf="@id/color_spinner"
+            app:layout_constraintEnd_toEndOf="@id/color_spinner"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

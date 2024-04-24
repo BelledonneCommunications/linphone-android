@@ -258,6 +258,7 @@
     <string name="settings_user_interface_dark_theme_label">Sombre</string>
     <string name="settings_user_interface_light_theme_label">Clair</string>
     <string name="settings_user_interface_auto_theme_label">Auto</string>
+    <string name="settings_user_interface_color_title">Couleur principale</string>
 
     <string name="settings_advanced_title">Paramètres avancés</string>
     <string name="settings_advanced_keep_alive_service_title">Garder l\'app en vie via un Service</string>

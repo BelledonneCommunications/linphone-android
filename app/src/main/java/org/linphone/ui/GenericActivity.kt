@@ -21,9 +21,11 @@ package org.linphone.ui
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
+import android.content.res.Resources
 import android.os.Bundle
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
+import androidx.annotation.MainThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.children
@@ -32,18 +34,30 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
+import org.linphone.R
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 import org.linphone.utils.ToastUtils
 import org.linphone.utils.slideInToastFromTop
 import org.linphone.utils.slideInToastFromTopForDuration
 
+@MainThread
 open class GenericActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "[Generic Activity]"
     }
 
     private lateinit var toastsArea: ViewGroup
+
+    override fun getTheme(): Resources.Theme {
+        val mainColor = corePreferences.themeMainColor
+        val theme = super.getTheme()
+        when (mainColor) {
+            "yellow" -> theme.applyStyle(R.style.Theme_LinphoneYellow, true)
+            else -> theme.applyStyle(R.style.Theme_Linphone, true)
+        }
+        return theme
+    }
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {

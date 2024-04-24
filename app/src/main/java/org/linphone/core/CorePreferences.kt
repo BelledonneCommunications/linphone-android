@@ -138,6 +138,13 @@ class CorePreferences @UiThread constructor(private val context: Context) {
         }
 
     @get:WorkerThread @set:WorkerThread
+    var themeMainColor: String
+        get() = config.getString("ui", "theme_main_color", "orange")!!
+        set(value) {
+            config.setString("ui", "theme_main_color", value)
+        }
+
+    @get:WorkerThread @set:WorkerThread
     var linphoneConfigurationVersion: Int
         get() = config.getInt("app", "config_version", 50200)
         set(value) {
@@ -147,6 +154,10 @@ class CorePreferences @UiThread constructor(private val context: Context) {
     @get:WorkerThread
     val darkModeAllowed: Boolean
         get() = config.getBool("ui", "dark_mode_allowed", true)
+
+    @get:WorkerThread
+    val changeMainColorAllowed: Boolean
+        get() = config.getBool("ui", "change_main_color_allowed", true)
 
     @get:WorkerThread
     val onlyDisplaySipUriUsername: Boolean
