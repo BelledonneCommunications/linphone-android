@@ -113,7 +113,7 @@
     <string name="call_error_user_not_found">Gebruiker niet gevonden</string>
     <string name="call_error_incompatible_media_params">Incompatibele media parameters</string>
     <string name="call_error_network_unreachable">Netwerk is onbereikbaar</string>
-    <string name="call_error_io_error">Netwerkfout</string>
+    <string name="call_error_io_error">Beller is niet bereikbaar</string>
     <string name="call_video_update_requested_dialog">Tegenpartij wenst dat u video inschakelt</string>
     <string name="call_stats_audio">Audio</string>
     <string name="call_stats_video">Video</string>
@@ -160,7 +160,7 @@
     <string name="advanced_settings_background_mode_title">Achtergrond mode</string>
     <string name="incoming_call_notification_answer_action_label">Beantwoorden</string>
     <string name="no">nee</string>
-    <string name="error_unexpected">Onverwachte fout</string>
+    <string name="error_unexpected">Onverwachte fout…</string>
     <string name="account_settings_delete_title">Verwijderen</string>
     <string name="missed_calls_notification_body" tools:ignore="PluralsCandidate">%d gemiste gesprekken</string>
     <string name="advanced_settings_send_debug_logs_title">Verzenden logs</string>
@@ -179,7 +179,7 @@
     <string name="call_context_action_hangup">Beëindigen gesprek</string>
     <string name="advanced_settings_device_name_title">Toestel naam</string>
     <string name="settings_contacts_title">Contacten</string>
-    <string name="call_action_attended_transfer_call">aangekondigde doorverbinden</string>
+    <string name="call_action_attended_transfer_call">aangekondigd doorverbinden</string>
     <string name="advanced_settings_dark_mode_label_no">nee</string>
     <string name="call_action_transfer_call">Doorverbinden</string>
     <string name="call_context_action_resume">Hervatten gesprek</string>
