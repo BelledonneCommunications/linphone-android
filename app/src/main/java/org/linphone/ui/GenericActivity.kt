@@ -54,6 +54,11 @@ open class GenericActivity : AppCompatActivity() {
         val theme = super.getTheme()
         when (mainColor) {
             "yellow" -> theme.applyStyle(R.style.Theme_LinphoneYellow, true)
+            "green" -> theme.applyStyle(R.style.Theme_LinphoneGreen, true)
+            "blue" -> theme.applyStyle(R.style.Theme_LinphoneBlue, true)
+            "red" -> theme.applyStyle(R.style.Theme_LinphoneRed, true)
+            "pink" -> theme.applyStyle(R.style.Theme_LinphonePink, true)
+            "purple" -> theme.applyStyle(R.style.Theme_LinphonePurple, true)
             else -> theme.applyStyle(R.style.Theme_Linphone, true)
         }
         return theme

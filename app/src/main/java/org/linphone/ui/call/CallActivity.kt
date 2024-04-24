@@ -101,6 +101,11 @@ class CallActivity : GenericActivity() {
         val theme = super.getTheme()
         when (mainColor) {
             "yellow" -> theme.applyStyle(R.style.Theme_LinphoneInCallYellow, true)
+            "green" -> theme.applyStyle(R.style.Theme_LinphoneInCallGreen, true)
+            "blue" -> theme.applyStyle(R.style.Theme_LinphoneInCallBlue, true)
+            "red" -> theme.applyStyle(R.style.Theme_LinphoneInCallRed, true)
+            "pink" -> theme.applyStyle(R.style.Theme_LinphoneInCallPink, true)
+            "purple" -> theme.applyStyle(R.style.Theme_LinphoneInCallPurple, true)
             else -> theme.applyStyle(R.style.Theme_LinphoneInCall, true)
         }
         return theme

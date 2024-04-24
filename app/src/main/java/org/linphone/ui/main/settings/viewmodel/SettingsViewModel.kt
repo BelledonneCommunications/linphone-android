@@ -118,10 +118,23 @@ class SettingsViewModel @UiThread constructor() : ViewModel() {
     val showColorSelector = MutableLiveData<Boolean>()
     val color = MutableLiveData<String>()
     val availableColorsNames = arrayListOf(
-        "Orange",
-        "Yellow"
+        AppUtils.getString(R.string.orange),
+        AppUtils.getString(R.string.yellow),
+        AppUtils.getString(R.string.green),
+        AppUtils.getString(R.string.blue),
+        AppUtils.getString(R.string.red),
+        AppUtils.getString(R.string.pink),
+        AppUtils.getString(R.string.purple)
     )
-    val availableColorsValues = arrayListOf("orange", "yellow")
+    val availableColorsValues = arrayListOf(
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "red",
+        "pink",
+        "purple"
+    )
 
     // Advanced settings
     val keepAliveThirdPartyAccountsService = MutableLiveData<Boolean>()

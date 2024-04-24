@@ -59,11 +59,62 @@
 
     <style name="Theme.LinphoneYellow" parent="Theme.Linphone">
         <item name="android:statusBarColor">@color/yellow_main_500</item>
+
         <item name="color_main1_100">@color/yellow_main_100</item>
         <item name="color_main1_100_alpha_50">@color/yellow_main_100_alpha_50</item>
         <item name="color_main1_300">@color/yellow_main_300</item>
         <item name="color_main1_500">@color/yellow_main_500</item>
         <item name="color_main1_700">@color/yellow_main_700</item>
+    </style>
+
+    <style name="Theme.LinphoneGreen" parent="Theme.Linphone">
+        <item name="android:statusBarColor">@color/green_main_500</item>
+
+        <item name="color_main1_100">@color/green_main_100</item>
+        <item name="color_main1_100_alpha_50">@color/green_main_100_alpha_50</item>
+        <item name="color_main1_300">@color/green_main_300</item>
+        <item name="color_main1_500">@color/green_main_500</item>
+        <item name="color_main1_700">@color/green_main_700</item>
+    </style>
+
+    <style name="Theme.LinphoneBlue" parent="Theme.Linphone">
+        <item name="android:statusBarColor">@color/blue_main_500</item>
+
+        <item name="color_main1_100">@color/blue_main_100</item>
+        <item name="color_main1_100_alpha_50">@color/blue_main_100_alpha_50</item>
+        <item name="color_main1_300">@color/blue_main_300</item>
+        <item name="color_main1_500">@color/blue_main_500</item>
+        <item name="color_main1_700">@color/blue_main_700</item>
+    </style>
+
+    <style name="Theme.LinphoneRed" parent="Theme.Linphone">
+        <item name="android:statusBarColor">@color/red_main_500</item>
+
+        <item name="color_main1_100">@color/red_main_100</item>
+        <item name="color_main1_100_alpha_50">@color/red_main_100_alpha_50</item>
+        <item name="color_main1_300">@color/red_main_300</item>
+        <item name="color_main1_500">@color/red_main_500</item>
+        <item name="color_main1_700">@color/red_main_700</item>
+    </style>
+
+    <style name="Theme.LinphonePink" parent="Theme.Linphone">
+        <item name="android:statusBarColor">@color/pink_main_500</item>
+
+        <item name="color_main1_100">@color/pink_main_100</item>
+        <item name="color_main1_100_alpha_50">@color/pink_main_100_alpha_50</item>
+        <item name="color_main1_300">@color/pink_main_300</item>
+        <item name="color_main1_500">@color/pink_main_500</item>
+        <item name="color_main1_700">@color/pink_main_700</item>
+    </style>
+
+    <style name="Theme.LinphonePurple" parent="Theme.Linphone">
+        <item name="android:statusBarColor">@color/purple_main_500</item>
+
+        <item name="color_main1_100">@color/purple_main_100</item>
+        <item name="color_main1_100_alpha_50">@color/purple_main_100_alpha_50</item>
+        <item name="color_main1_300">@color/purple_main_300</item>
+        <item name="color_main1_500">@color/purple_main_500</item>
+        <item name="color_main1_700">@color/purple_main_700</item>
     </style>
 
     <!-- In-call application theme. -->
@@ -77,7 +128,35 @@
         <item name="android:windowBackground">@color/black</item>
     </style>
 
-    <style name="Theme.LinphoneDialog" parent="Theme.Linphone">
+    <style name="Theme.LinphoneInCallGreen" parent="Theme.LinphoneGreen">
+        <item name="android:navigationBarColor">@color/gray_600</item>
+        <item name="android:windowBackground">@color/black</item>
+    </style>
+
+    <style name="Theme.LinphoneInCallBlue" parent="Theme.LinphoneBlue">
+        <item name="android:navigationBarColor">@color/gray_600</item>
+        <item name="android:windowBackground">@color/black</item>
+    </style>
+
+    <style name="Theme.LinphoneInCallRed" parent="Theme.LinphoneRed">
+        <item name="android:navigationBarColor">@color/gray_600</item>
+        <item name="android:windowBackground">@color/black</item>
+    </style>
+
+    <style name="Theme.LinphoneInCallPink" parent="Theme.LinphonePink">
+        <item name="android:navigationBarColor">@color/gray_600</item>
+        <item name="android:windowBackground">@color/black</item>
+    </style>
+
+    <style name="Theme.LinphoneInCallPurple" parent="Theme.LinphonePurple">
+        <item name="android:navigationBarColor">@color/gray_600</item>
+        <item name="android:windowBackground">@color/black</item>
+    </style>
+
+    <style name="Theme.LinphoneDialog" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:statusBarColor">@color/gray_600</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+        <item name="android:windowActivityTransitions">true</item>
         <item name="android:windowAnimationStyle">@null</item>
         <item name="android:windowBackground">@color/transparent_color</item>
         <item name="android:navigationBarColor">@color/transparent_color</item>

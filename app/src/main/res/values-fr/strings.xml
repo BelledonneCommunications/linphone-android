@@ -616,6 +616,15 @@
     <string name="menu_forward_chat_message">Transférer</string>
     <string name="menu_copy_chat_message">Copier le texte</string>
 
+    <!-- Colors -->
+    <string name="orange">Orange</string>
+    <string name="yellow">Jaune</string>
+    <string name="green">Vert</string>
+    <string name="blue">Bleu</string>
+    <string name="red">Rouge</string>
+    <string name="pink">Rose</string>
+    <string name="purple">Violet</string>
+
     <!-- Misc -->
     <string name="connection_error_for_non_default_account">Erreur de connexion au compte</string>
     <string name="network_not_reachable">Vous n\'êtes pas connecté à internet</string>

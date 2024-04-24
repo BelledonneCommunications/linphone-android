@@ -67,9 +67,39 @@
     <color name="gradient_start">#FF923F</color>
     <color name="gradient_progress">#80FFFFFF</color>
 
-    <color name="yellow_main_100">#FFE799</color>
-    <color name="yellow_main_100_alpha_50">#80FFE799</color>
-    <color name="yellow_main_300">#FFDE70</color>
-    <color name="yellow_main_500">#FFD23F</color>
-    <color name="yellow_main_700">#FFCB1F</color>
+    <color name="yellow_main_100">#FFF5D6</color>
+    <color name="yellow_main_100_alpha_50">#80FFF5D6</color>
+    <color name="yellow_main_300">#FFE799</color>
+    <color name="yellow_main_500">#F5BC00</color>
+    <color name="yellow_main_700">#A37D00</color>
+
+    <color name="green_main_100">#DCF9E7</color>
+    <color name="green_main_100_alpha_50">#80DCF9E7</color>
+    <color name="green_main_300">#A8F0C2</color>
+    <color name="green_main_500">#25D366</color>
+    <color name="green_main_700">#1C9C4B</color>
+
+    <color name="blue_main_100">#D6F4FF</color>
+    <color name="blue_main_100_alpha_50">#80D6F4FF</color>
+    <color name="blue_main_300">#99E4FF</color>
+    <color name="blue_main_500">#00aff0</color>
+    <color name="blue_main_700">#0078A3</color>
+
+    <color name="red_main_100">#FBE1DA</color>
+    <color name="red_main_100_alpha_50">#80FBE1DA</color>
+    <color name="red_main_300">#F5B53A</color>
+    <color name="red_main_500">#E14318</color>
+    <color name="red_main_700">#A63211</color>
+
+    <color name="pink_main_100">#FFD6F1</color>
+    <color name="pink_main_100_alpha_50">#80FFD6F1</color>
+    <color name="pink_main_300">#FF99DD</color>
+    <color name="pink_main_500">#FF00A9</color>
+    <color name="pink_main_700">#B8007A</color>
+
+    <color name="purple_main_100">#FFD6FF</color>
+    <color name="purple_main_100_alpha_50">#80FFD6FF</color>
+    <color name="purple_main_300">#FF99FF</color>
+    <color name="purple_main_500">#800080</color>
+    <color name="purple_main_700">#520052</color>
 </resources>
