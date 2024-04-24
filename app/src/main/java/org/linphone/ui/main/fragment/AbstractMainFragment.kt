@@ -35,77 +35,26 @@ import org.linphone.ui.main.chat.fragment.ConversationsListFragmentDirections
 import org.linphone.ui.main.contacts.fragment.ContactsListFragmentDirections
 import org.linphone.ui.main.history.fragment.HistoryListFragmentDirections
 import org.linphone.ui.main.meetings.fragment.MeetingsListFragmentDirections
-import org.linphone.ui.main.viewmodel.AbstractTopBarViewModel
+import org.linphone.ui.main.viewmodel.AbstractMainViewModel
 import org.linphone.utils.SlidingPaneBackPressedCallback
 import org.linphone.utils.hideKeyboard
 import org.linphone.utils.setKeyboardInsetListener
 import org.linphone.utils.showKeyboard
 
 @UiThread
-abstract class AbstractTopBarFragment : GenericFragment() {
+abstract class AbstractMainFragment : GenericFragment() {
     companion object {
-        private const val TAG = "[Abstract TobBar Fragment]"
+        private const val TAG = "[Abstract Main Fragment]"
     }
 
     private var currentFragmentId: Int = 0
 
+    private lateinit var viewModel: AbstractMainViewModel
+
     abstract fun onDefaultAccountChanged()
 
-    fun initSlidingPane(slidingPane: SlidingPaneLayout) {
-        val slidingPaneBackPressedCallback = SlidingPaneBackPressedCallback(slidingPane)
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            slidingPaneBackPressedCallback
-        )
-
-        view?.doOnPreDraw {
-            slidingPane.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
-            val slideable = slidingPane.isSlideable
-            sharedViewModel.isSlidingPaneSlideable.value = slideable
-            slidingPaneBackPressedCallback.isEnabled = slideable && slidingPane.isOpen
-            Log.d("$TAG Sliding Pane is ${if (slideable) "slideable" else "flat"}")
-        }
-
-        sharedViewModel.closeSlidingPaneEvent.observe(
-            viewLifecycleOwner
-        ) {
-            it.consume {
-                if (slidingPane.isSlideable) {
-                    Log.d("$TAG Closing sliding pane")
-                    slidingPane.closePane()
-                }
-            }
-        }
-
-        sharedViewModel.openSlidingPaneEvent.observe(
-            viewLifecycleOwner
-        ) {
-            it.consume {
-                if (!slidingPane.isOpen) {
-                    Log.d("$TAG Opening sliding pane")
-                    slidingPane.openPane()
-                }
-            }
-        }
-    }
-
-    fun setViewModelAndTitle(
-        searchBar: TextInputLayout,
-        viewModel: AbstractTopBarViewModel,
-        title: String
-    ) {
-        viewModel.title.value = title
-
-        viewModel.focusSearchBarEvent.observe(viewLifecycleOwner) {
-            it.consume { show ->
-                if (show) {
-                    // To automatically open keyboard
-                    searchBar.showKeyboard()
-                } else {
-                    searchBar.hideKeyboard()
-                }
-            }
-        }
+    fun setViewModel(abstractMainViewModel: AbstractMainViewModel) {
+        viewModel = abstractMainViewModel
 
         viewModel.openDrawerMenuEvent.observe(viewLifecycleOwner) {
             it.consume {
@@ -175,14 +124,77 @@ abstract class AbstractTopBarFragment : GenericFragment() {
         }
     }
 
-    fun initBottomNavBar(navBar: View) {
+    fun initViews(
+        slidingPane: SlidingPaneLayout,
+        searchBar: TextInputLayout,
+        navBar: View,
+        @IdRes fragmentId: Int
+    ) {
+        initSlidingPane(slidingPane)
+        initSearchBar(searchBar)
+        initBottomNavBar(navBar)
+        initNavigation(fragmentId)
+    }
+
+    private fun initSlidingPane(slidingPane: SlidingPaneLayout) {
+        val slidingPaneBackPressedCallback = SlidingPaneBackPressedCallback(slidingPane)
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            slidingPaneBackPressedCallback
+        )
+
+        view?.doOnPreDraw {
+            slidingPane.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
+            val slideable = slidingPane.isSlideable
+            sharedViewModel.isSlidingPaneSlideable.value = slideable
+            slidingPaneBackPressedCallback.isEnabled = slideable && slidingPane.isOpen
+            Log.d("$TAG Sliding Pane is ${if (slideable) "slideable" else "flat"}")
+        }
+
+        sharedViewModel.closeSlidingPaneEvent.observe(
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                if (slidingPane.isSlideable) {
+                    Log.d("$TAG Closing sliding pane")
+                    slidingPane.closePane()
+                }
+            }
+        }
+
+        sharedViewModel.openSlidingPaneEvent.observe(
+            viewLifecycleOwner
+        ) {
+            it.consume {
+                if (!slidingPane.isOpen) {
+                    Log.d("$TAG Opening sliding pane")
+                    slidingPane.openPane()
+                }
+            }
+        }
+    }
+
+    private fun initSearchBar(searchBar: TextInputLayout) {
+        viewModel.focusSearchBarEvent.observe(viewLifecycleOwner) {
+            it.consume { show ->
+                if (show) {
+                    // To automatically open keyboard
+                    searchBar.showKeyboard()
+                } else {
+                    searchBar.hideKeyboard()
+                }
+            }
+        }
+    }
+
+    private fun initBottomNavBar(navBar: View) {
         view?.setKeyboardInsetListener { keyboardVisible ->
             val portraitOrientation = resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
             navBar.visibility = if (!portraitOrientation || !keyboardVisible) View.VISIBLE else View.GONE
         }
     }
 
-    fun initNavigation(@IdRes fragmentId: Int) {
+    private fun initNavigation(@IdRes fragmentId: Int) {
         currentFragmentId = fragmentId
 
         sharedViewModel.navigateToContactsEvent.observe(viewLifecycleOwner) {

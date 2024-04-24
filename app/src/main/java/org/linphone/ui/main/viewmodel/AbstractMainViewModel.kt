@@ -36,9 +36,9 @@ import org.linphone.ui.main.model.AccountModel
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
-open class AbstractTopBarViewModel @UiThread constructor() : ViewModel() {
+open class AbstractMainViewModel @UiThread constructor() : ViewModel() {
     companion object {
-        private const val TAG = "[Top Bar ViewModel]"
+        private const val TAG = "[Abstract Main ViewModel]"
     }
 
     val title = MutableLiveData<String>()

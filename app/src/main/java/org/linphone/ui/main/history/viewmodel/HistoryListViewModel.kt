@@ -29,11 +29,11 @@ import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.history.model.CallLogModel
-import org.linphone.ui.main.viewmodel.AbstractTopBarViewModel
+import org.linphone.ui.main.viewmodel.AbstractMainViewModel
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
-class HistoryListViewModel @UiThread constructor() : AbstractTopBarViewModel() {
+class HistoryListViewModel @UiThread constructor() : AbstractMainViewModel() {
     companion object {
         private const val TAG = "[History List ViewModel]"
     }

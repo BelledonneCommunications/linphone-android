@@ -29,9 +29,9 @@ import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.meetings.model.MeetingListItemModel
 import org.linphone.ui.main.meetings.model.MeetingModel
-import org.linphone.ui.main.viewmodel.AbstractTopBarViewModel
+import org.linphone.ui.main.viewmodel.AbstractMainViewModel
 
-class MeetingsListViewModel @UiThread constructor() : AbstractTopBarViewModel() {
+class MeetingsListViewModel @UiThread constructor() : AbstractMainViewModel() {
     companion object {
         private const val TAG = "[Meetings List ViewModel]"
     }

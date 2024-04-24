@@ -35,7 +35,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.MeetingsListFragmentBinding
-import org.linphone.ui.main.fragment.AbstractTopBarFragment
+import org.linphone.ui.main.fragment.AbstractMainFragment
 import org.linphone.ui.main.meetings.adapter.MeetingsListAdapter
 import org.linphone.ui.main.meetings.viewmodel.MeetingsListViewModel
 import org.linphone.utils.AppUtils
@@ -43,7 +43,7 @@ import org.linphone.utils.Event
 import org.linphone.utils.RecyclerViewHeaderDecoration
 
 @UiThread
-class MeetingsListFragment : AbstractTopBarFragment() {
+class MeetingsListFragment : AbstractMainFragment() {
     companion object {
         private const val TAG = "[Meetings List Fragment]"
     }
@@ -198,19 +198,16 @@ class MeetingsListFragment : AbstractTopBarFragment() {
             }
         }
 
-        // TopBarFragment related
+        // AbstractMainFragment related
 
-        setViewModelAndTitle(
+        listViewModel.title.value = getString(R.string.bottom_navigation_meetings_label)
+        setViewModel(listViewModel)
+        initViews(
+            binding.slidingPaneLayout,
             binding.topBar.search,
-            listViewModel,
-            getString(R.string.bottom_navigation_meetings_label)
+            binding.bottomNavBar.root,
+            R.id.meetingsListFragment
         )
-
-        initBottomNavBar(binding.bottomNavBar.root)
-
-        initSlidingPane(binding.slidingPaneLayout)
-
-        initNavigation(R.id.meetingsListFragment)
     }
 
     override fun onPause() {

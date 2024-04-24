@@ -43,7 +43,7 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.HistoryListFragmentBinding
 import org.linphone.databinding.HistoryListPopupMenuBinding
 import org.linphone.ui.GenericActivity
-import org.linphone.ui.main.fragment.AbstractTopBarFragment
+import org.linphone.ui.main.fragment.AbstractMainFragment
 import org.linphone.ui.main.history.adapter.HistoryListAdapter
 import org.linphone.ui.main.history.model.ConfirmationDialogModel
 import org.linphone.ui.main.history.viewmodel.HistoryListViewModel
@@ -51,7 +51,7 @@ import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 
 @UiThread
-class HistoryListFragment : AbstractTopBarFragment() {
+class HistoryListFragment : AbstractMainFragment() {
     companion object {
         private const val TAG = "[History List Fragment]"
     }
@@ -237,19 +237,16 @@ class HistoryListFragment : AbstractTopBarFragment() {
             }
         }
 
-        // TopBarFragment related
+        // AbstractMainFragment related
 
-        setViewModelAndTitle(
+        listViewModel.title.value = getString(R.string.bottom_navigation_calls_label)
+        setViewModel(listViewModel)
+        initViews(
+            binding.slidingPaneLayout,
             binding.topBar.search,
-            listViewModel,
-            getString(R.string.bottom_navigation_calls_label)
+            binding.bottomNavBar.root,
+            R.id.historyListFragment
         )
-
-        initBottomNavBar(binding.bottomNavBar.root)
-
-        initSlidingPane(binding.slidingPaneLayout)
-
-        initNavigation(R.id.historyListFragment)
     }
 
     override fun onPause() {

@@ -45,11 +45,11 @@ import org.linphone.databinding.ContactsListFilterPopupMenuBinding
 import org.linphone.databinding.ContactsListFragmentBinding
 import org.linphone.ui.main.contacts.adapter.ContactsListAdapter
 import org.linphone.ui.main.contacts.viewmodel.ContactsListViewModel
-import org.linphone.ui.main.fragment.AbstractTopBarFragment
+import org.linphone.ui.main.fragment.AbstractMainFragment
 import org.linphone.utils.Event
 
 @UiThread
-class ContactsListFragment : AbstractTopBarFragment() {
+class ContactsListFragment : AbstractMainFragment() {
     companion object {
         private const val TAG = "[Contacts List Fragment]"
     }
@@ -181,19 +181,16 @@ class ContactsListFragment : AbstractTopBarFragment() {
             }
         }
 
-        // TopBarFragment related
+        // AbstractMainFragment related
 
-        setViewModelAndTitle(
+        listViewModel.title.value = getString(R.string.bottom_navigation_contacts_label)
+        setViewModel(listViewModel)
+        initViews(
+            binding.slidingPaneLayout,
             binding.topBar.search,
-            listViewModel,
-            getString(R.string.bottom_navigation_contacts_label)
+            binding.bottomNavBar.root,
+            R.id.contactsListFragment
         )
-
-        initBottomNavBar(binding.bottomNavBar.root)
-
-        initSlidingPane(binding.slidingPaneLayout)
-
-        initNavigation(R.id.contactsListFragment)
     }
 
     private fun configureAdapter(adapter: ContactsListAdapter) {

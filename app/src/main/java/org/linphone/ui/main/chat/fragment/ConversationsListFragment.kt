@@ -38,13 +38,13 @@ import org.linphone.databinding.ChatListFragmentBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.chat.adapter.ConversationsListAdapter
 import org.linphone.ui.main.chat.viewmodel.ConversationsListViewModel
-import org.linphone.ui.main.fragment.AbstractTopBarFragment
+import org.linphone.ui.main.fragment.AbstractMainFragment
 import org.linphone.ui.main.history.fragment.HistoryMenuDialogFragment
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
 @UiThread
-class ConversationsListFragment : AbstractTopBarFragment() {
+class ConversationsListFragment : AbstractMainFragment() {
     companion object {
         private const val TAG = "[Conversations List Fragment]"
     }
@@ -279,19 +279,16 @@ class ConversationsListFragment : AbstractTopBarFragment() {
             }
         }
 
-        // TopBarFragment related
+        // AbstractMainFragment related
 
-        setViewModelAndTitle(
+        listViewModel.title.value = getString(R.string.bottom_navigation_conversations_label)
+        setViewModel(listViewModel)
+        initViews(
+            binding.slidingPaneLayout,
             binding.topBar.search,
-            listViewModel,
-            getString(R.string.bottom_navigation_conversations_label)
+            binding.bottomNavBar.root,
+            R.id.conversationsListFragment
         )
-
-        initBottomNavBar(binding.bottomNavBar.root)
-
-        initSlidingPane(binding.slidingPaneLayout)
-
-        initNavigation(R.id.conversationsListFragment)
 
         // Handle intent params if any
 

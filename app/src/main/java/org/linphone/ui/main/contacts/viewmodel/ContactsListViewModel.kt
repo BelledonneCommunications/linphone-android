@@ -38,11 +38,11 @@ import org.linphone.core.SearchResult
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.model.isInSecureMode
-import org.linphone.ui.main.viewmodel.AbstractTopBarViewModel
+import org.linphone.ui.main.viewmodel.AbstractMainViewModel
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 
-class ContactsListViewModel @UiThread constructor() : AbstractTopBarViewModel() {
+class ContactsListViewModel @UiThread constructor() : AbstractMainViewModel() {
     companion object {
         private const val TAG = "[Contacts List ViewModel]"
     }
