@@ -54,10 +54,10 @@ class QrCodeScannerFragment : Fragment() {
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
-            Log.i("$TAG Camera permission has been granted")
+            Log.i("$TAG CAMERA permission has been granted")
             enableQrCodeVideoScanner()
         } else {
-            Log.e("$TAG Camera permission has been denied, leaving this fragment")
+            Log.e("$TAG CAMERA permission has been denied, leaving this fragment")
             goBack()
         }
     }
@@ -95,7 +95,7 @@ class QrCodeScannerFragment : Fragment() {
         }
 
         if (!isCameraPermissionGranted()) {
-            Log.w("$TAG Camera permission wasn't granted yet, asking for it now")
+            Log.w("$TAG CAMERA permission wasn't granted yet, asking for it now")
             requestPermissionLauncher.launch(Manifest.permission.CAMERA)
         }
     }
@@ -131,7 +131,7 @@ class QrCodeScannerFragment : Fragment() {
             requireContext(),
             Manifest.permission.CAMERA
         ) == PackageManager.PERMISSION_GRANTED
-        Log.i("$TAG Camera permission is ${if (granted) "granted" else "denied"}")
+        Log.i("$TAG CAMERA permission is ${if (granted) "granted" else "denied"}")
         return granted
     }
 

@@ -59,10 +59,10 @@ class MeetingWaitingRoomFragment : GenericFragment() {
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
-            Log.i("$TAG Camera permission has been granted")
+            Log.i("$TAG CAMERA permission has been granted")
             enableVideoPreview()
         } else {
-            Log.e("$TAG Camera permission has been denied, leaving this fragment")
+            Log.e("$TAG CAMERA permission has been denied, leaving this fragment")
             goBack()
         }
     }
@@ -146,7 +146,7 @@ class MeetingWaitingRoomFragment : GenericFragment() {
 
         if (!isCameraPermissionGranted()) {
             viewModel.isVideoAvailable.value = false
-            Log.w("$TAG Camera permission wasn't granted yet, asking for it now")
+            Log.w("$TAG CAMERA permission wasn't granted yet, asking for it now")
             requestPermissionLauncher.launch(Manifest.permission.CAMERA)
         }
     }
@@ -191,7 +191,7 @@ class MeetingWaitingRoomFragment : GenericFragment() {
             requireContext(),
             Manifest.permission.CAMERA
         ) == PackageManager.PERMISSION_GRANTED
-        Log.i("$TAG Camera permission is ${if (granted) "granted" else "denied"}")
+        Log.i("$TAG CAMERA permission is ${if (granted) "granted" else "denied"}")
         return granted
     }
 

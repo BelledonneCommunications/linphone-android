@@ -87,7 +87,6 @@ import org.linphone.ui.main.chat.viewmodel.ConversationViewModel
 import org.linphone.ui.main.chat.viewmodel.ConversationViewModel.Companion.SCROLLING_POSITION_NOT_SET
 import org.linphone.ui.main.chat.viewmodel.SendMessageInConversationViewModel
 import org.linphone.ui.main.fragment.SlidingPaneChildFragment
-import org.linphone.ui.main.settings.fragment.AccountProfileFragmentDirections
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.RecyclerViewHeaderDecoration

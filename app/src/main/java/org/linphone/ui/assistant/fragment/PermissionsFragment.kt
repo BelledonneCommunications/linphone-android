@@ -68,6 +68,16 @@ class PermissionsFragment : Fragment() {
         }
     }
 
+    private val telecomManagerPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            Log.i("$TAG MANAGE_OWN_CALLS permission has been granted")
+        } else {
+            Log.w("$TAG MANAGE_OWN_CALLS permission has been denied, leaving this fragment")
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -103,7 +113,8 @@ class PermissionsFragment : Fragment() {
                 Manifest.permission.MANAGE_OWN_CALLS
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            requestPermissionLauncher.launch(arrayOf(Manifest.permission.MANAGE_OWN_CALLS))
+            Log.i("$TAG Request MANAGE_OWN_CALLS permission")
+            telecomManagerPermissionLauncher.launch(Manifest.permission.MANAGE_OWN_CALLS)
         }
 
         if (!Compatibility.hasFullScreenIntentPermission(requireContext())) {
