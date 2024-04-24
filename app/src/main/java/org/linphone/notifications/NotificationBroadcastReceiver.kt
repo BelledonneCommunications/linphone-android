@@ -38,6 +38,11 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
             "$TAG Got notification broadcast for ID [$notificationId]"
         )
 
+        // Wait for coreContext to be ready to handle intent
+        while (!coreContext.isReady()) {
+            Thread.sleep(50)
+        }
+
         if (intent.action == NotificationsManager.INTENT_ANSWER_CALL_NOTIF_ACTION || intent.action == NotificationsManager.INTENT_HANGUP_CALL_NOTIF_ACTION) {
             handleCallIntent(intent, notificationId)
         } else if (intent.action == NotificationsManager.INTENT_REPLY_MESSAGE_NOTIF_ACTION || intent.action == NotificationsManager.INTENT_MARK_MESSAGE_AS_READ_NOTIF_ACTION) {
