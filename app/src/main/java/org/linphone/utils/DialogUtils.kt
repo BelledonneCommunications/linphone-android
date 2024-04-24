@@ -41,6 +41,7 @@ import org.linphone.databinding.DialogConfirmZrtpSasBinding
 import org.linphone.databinding.DialogContactConfirmTrustCallBinding
 import org.linphone.databinding.DialogContactTrustProcessBinding
 import org.linphone.databinding.DialogDeleteContactBinding
+import org.linphone.databinding.DialogKickFromConferenceBinding
 import org.linphone.databinding.DialogManageAccountInternationalPrefixHelpBinding
 import org.linphone.databinding.DialogMergeCallsIntoConferenceBinding
 import org.linphone.databinding.DialogPickNumberOrAddressBinding
@@ -351,6 +352,27 @@ class DialogUtils {
                 false
             )
             binding.viewModel = viewModel
+
+            return getDialog(context, binding)
+        }
+
+        @UiThread
+        fun getKickConferenceParticipantConfirmationDialog(
+            context: Context,
+            viewModel: ConfirmationDialogModel,
+            displayName: String
+        ): Dialog {
+            val binding: DialogKickFromConferenceBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.dialog_kick_from_conference,
+                null,
+                false
+            )
+            binding.viewModel = viewModel
+            binding.title.text = context.getString(
+                R.string.conference_confirm_removing_participant_dialog_title,
+                displayName
+            )
 
             return getDialog(context, binding)
         }

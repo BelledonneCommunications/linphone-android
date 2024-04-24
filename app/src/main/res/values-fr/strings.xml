@@ -38,6 +38,7 @@
     <string name="dialog_do_not_show_anymore">Ne plus me montrer ce message</string>
     <string name="dialog_no">Non</string>
     <string name="dialog_yes">Oui</string>
+    <string name="dialog_remove">Retirer</string>
 
     <!-- Related to Android notifications -->
     <string name="notification_channel_call_name">&appName; notifications d\'appels en cours</string>
@@ -585,6 +586,8 @@
         <item quantity="one">%s participant</item>
         <item quantity="other">%s participants</item>
     </plurals>
+    <string name="conference_confirm_removing_participant_dialog_title">Retirer %s de la conférence ?</string>
+    <string name="conference_confirm_removing_participant_dialog_message">Voulez-vous vraiment retirer ce participant de la conférence ?</string>
     <string name="conference_participant_joining_text">En train de rejoindre…</string>
     <string name="conference_participant_paused_text">En pause</string>
     <string name="conference_active_speaker_is_screen_sharing">partage son écran</string>

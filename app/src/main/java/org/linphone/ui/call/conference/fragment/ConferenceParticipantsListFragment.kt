@@ -29,11 +29,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.R
+import org.linphone.core.Participant
 import org.linphone.core.tools.Log
 import org.linphone.databinding.CallConferenceParticipantsListFragmentBinding
 import org.linphone.ui.call.adapter.ConferenceParticipantsListAdapter
 import org.linphone.ui.call.fragment.GenericCallFragment
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
+import org.linphone.ui.main.history.model.ConfirmationDialogModel
+import org.linphone.utils.DialogUtils
 
 class ConferenceParticipantsListFragment : GenericCallFragment() {
     companion object {
@@ -102,5 +105,38 @@ class ConferenceParticipantsListFragment : GenericCallFragment() {
             Log.i("$TAG participants list updated with [${it.size}] items")
             adapter.submitList(it)
         }
+
+        viewModel.conferenceModel.removeParticipantEvent.observe(viewLifecycleOwner) {
+            it.consume { pair ->
+                val displayName = pair.first
+                val participant = pair.second
+                showKickParticipantDialog(displayName, participant)
+            }
+        }
+    }
+
+    private fun showKickParticipantDialog(displayName: String, participant: Participant) {
+        val model = ConfirmationDialogModel()
+        val dialog = DialogUtils.getKickConferenceParticipantConfirmationDialog(
+            requireActivity(),
+            model,
+            displayName
+        )
+
+        model.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        model.confirmEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                viewModel.conferenceModel.kickParticipant(participant)
+                // TODO: notify participant was kicked out
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
     }
 }

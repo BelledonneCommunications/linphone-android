@@ -25,10 +25,12 @@ import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Participant
 import org.linphone.core.tools.Log
+import org.linphone.ui.main.contacts.model.ContactAvatarModel
 
 class ConferenceParticipantModel @WorkerThread constructor(
     val participant: Participant,
-    val isMyselfAdmin: Boolean,
+    val avatarModel: ContactAvatarModel,
+    isMyselfAdmin: Boolean,
     val isMyself: Boolean,
     private val removeFromConference: ((participant: Participant) -> Unit)?,
     private val changeAdminStatus: ((participant: Participant, setAdmin: Boolean) -> Unit)?
@@ -38,10 +40,6 @@ class ConferenceParticipantModel @WorkerThread constructor(
     }
 
     val sipUri = participant.address.asStringUriOnly()
-
-    val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(
-        participant.address
-    )
 
     val isAdmin = MutableLiveData<Boolean>()
 

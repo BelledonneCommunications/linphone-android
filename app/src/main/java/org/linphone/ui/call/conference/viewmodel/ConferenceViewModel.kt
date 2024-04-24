@@ -76,6 +76,10 @@ class ConferenceViewModel {
         MutableLiveData<Event<Boolean>>()
     }
 
+    val removeParticipantEvent: MutableLiveData<Event<Pair<String, Participant>>> by lazy {
+        MutableLiveData<Event<Pair<String, Participant>>>()
+    }
+
     private lateinit var conference: Conference
 
     private val conferenceListener = object : ConferenceListenerStub() {
@@ -312,6 +316,16 @@ class ConferenceViewModel {
     }
 
     @WorkerThread
+    fun kickParticipant(participant: Participant) {
+        coreContext.postOnCoreThread {
+            Log.i(
+                "$TAG Kicking participant [${participant.address.asStringUriOnly()}] out of conference"
+            )
+            conference.removeParticipant(participant)
+        }
+    }
+
+    @WorkerThread
     fun setNewLayout(newLayout: Int) {
         val call = conference.call
         if (call != null) {
@@ -408,12 +422,18 @@ class ConferenceViewModel {
             Log.i(
                 "$TAG Participant [${participant.address.asStringUriOnly()}] has [${devices.size}] devices and role [${role.name}]"
             )
+            val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(
+                participant.address
+            )
             val participantModel = ConferenceParticipantModel(
                 participant,
+                avatarModel,
                 admin,
                 false,
                 { participant -> // Remove from conference
-                    conference.removeParticipant(participant)
+                    removeParticipantEvent.postValue(
+                        Event(Pair(avatarModel.name.value.orEmpty(), participant))
+                    )
                 },
                 { participant, setAdmin -> // Change admin status
                     conference.setParticipantAdminStatus(participant, setAdmin)
@@ -443,7 +463,17 @@ class ConferenceViewModel {
             "$TAG [${devicesList.size}] participant devices for [${participantsList.size}] participants will be displayed (not counting ourselves)"
         )
 
-        val meParticipantModel = ConferenceParticipantModel(meParticipant, admin, true, null, null)
+        val meAvatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(
+            meParticipant.address
+        )
+        val meParticipantModel = ConferenceParticipantModel(
+            meParticipant,
+            meAvatarModel,
+            admin,
+            true,
+            null,
+            null
+        )
         participantsList.add(meParticipantModel)
 
         val ourDevices = conference.me.devices
@@ -558,12 +588,18 @@ class ConferenceViewModel {
         val list = arrayListOf<ConferenceParticipantModel>()
         list.addAll(participants.value.orEmpty())
 
+        val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(
+            participant.address
+        )
         val newModel = ConferenceParticipantModel(
             participant,
+            avatarModel,
             isMeAdmin.value == true,
             false,
             { participant -> // Remove from conference
-                conference.removeParticipant(participant)
+                removeParticipantEvent.postValue(
+                    Event(Pair(avatarModel.name.value.orEmpty(), participant))
+                )
             },
             { participant, setAdmin -> // Change admin status
                 conference.setParticipantAdminStatus(participant, setAdmin)
