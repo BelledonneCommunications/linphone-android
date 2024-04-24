@@ -23,7 +23,6 @@
             android:id="@+id/grid_box_layout"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:onClick="@{() -> viewModel.toggleFullScreen()}"
             entries="@{conferenceViewModel.participantDevices}"
             layout="@{@layout/call_conference_grid_cell}"
             app:layout_constraintTop_toTopOf="parent"

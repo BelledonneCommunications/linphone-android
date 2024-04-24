@@ -42,7 +42,6 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginEnd="8dp"
-            android:onClick="@{() -> viewModel.toggleFullScreen()}"
             android:visibility="@{conferenceViewModel.activeSpeaker.isSendingVideo &amp;&amp; conferenceViewModel.activeSpeaker.isInConference ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -148,7 +147,6 @@
             android:id="@+id/active_speaker_miniatures_vertical_layout"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:onClick="@{() -> viewModel.toggleFullScreen()}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
