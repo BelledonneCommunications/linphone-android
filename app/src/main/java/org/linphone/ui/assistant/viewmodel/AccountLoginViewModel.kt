@@ -132,8 +132,22 @@ open class AccountLoginViewModel @UiThread constructor() : ViewModel() {
         coreContext.postOnCoreThread { core ->
             core.loadConfigFromXml(corePreferences.linphoneDefaultValuesPath)
 
-            val identity = sipIdentity.value.orEmpty().trim()
-            val identityAddress = core.interpretUrl(identity, false)
+            val userInput = sipIdentity.value.orEmpty().trim()
+            val defaultDomain = corePreferences.defaultDomain
+            val identity = if (userInput.startsWith("sip:")) {
+                if (userInput.contains("@")) {
+                    userInput
+                } else {
+                    "$userInput@$defaultDomain"
+                }
+            } else {
+                if (userInput.contains("@")) {
+                    "sip:$userInput"
+                } else {
+                    "sip:$userInput@$defaultDomain"
+                }
+            }
+            val identityAddress = Factory.instance().createAddress(identity)
             if (identityAddress == null) {
                 Log.e("$TAG Can't parse [$identity] as Address!")
                 // TODO: show error
@@ -185,6 +199,9 @@ open class AccountLoginViewModel @UiThread constructor() : ViewModel() {
 
             registrationInProgress.postValue(true)
             core.addListener(coreListener)
+            Log.i(
+                "$TAG Trying to log in account with SIP identity [${identityAddress.asStringUriOnly()}]"
+            )
             core.addAccount(newlyCreatedAccount)
         }
     }
