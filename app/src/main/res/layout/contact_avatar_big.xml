@@ -34,7 +34,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:contentDescription="@null"
-            android:src="@{model.trust == SecurityLevel.Unsafe ? @drawable/shape_circle_unsafe_contact_overlay : @drawable/shape_circle_trusted_contact_overlay, default=@drawable/shape_circle_trusted_contact_overlay}"
+            android:src="@{model.trust == SecurityLevel.Unsafe ? @drawable/shape_circle_unsafe_contact_large_overlay : @drawable/shape_circle_trusted_contact_large_overlay, default=@drawable/shape_circle_trusted_contact_large_overlay}"
             android:visibility="@{model.showTrust &amp;&amp; (model.trust == SecurityLevel.EndToEndEncryptedAndVerified || model.trust == SecurityLevel.Unsafe) ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintEnd_toEndOf="@id/avatar"
             app:layout_constraintStart_toStartOf="@id/avatar"

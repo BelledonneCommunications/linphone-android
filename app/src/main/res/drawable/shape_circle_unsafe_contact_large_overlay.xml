@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
+    <size android:width="120dp" android:height="120dp" />
+    <stroke android:color="?attr/color_danger_500" android:width="@dimen/avatar_large_trust_border_width" />
+</shape>
