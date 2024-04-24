@@ -114,7 +114,7 @@ class AccountModel @WorkerThread constructor(
         coreContext.core.addListener(coreListener)
 
         trust.postValue(SecurityLevel.EndToEndEncryptedAndVerified)
-        showTrust.postValue(account.isInSecureMode())
+        showTrust.postValue(account.isEndToEndEncryptionMandatory())
         presenceStatus.postValue(ConsolidatedPresence.Offline)
 
         update()
@@ -233,7 +233,7 @@ class AccountModel @WorkerThread constructor(
     }
 }
 
-fun Account.isInSecureMode(): Boolean {
+fun Account.isEndToEndEncryptionMandatory(): Boolean {
     // TODO FIXME: use real API when available
     return params.identityAddress?.domain == "sip.linphone.org"
 }

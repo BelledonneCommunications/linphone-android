@@ -101,7 +101,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:constraint_referenced_ids="trusted_devices_count, trusted_devices_progress, devices, trusted_devices_progress_label"
-                        android:visibility="@{viewModel.expandDevicesTrust &amp;&amp; viewModel.devices.size() > 0 ? View.VISIBLE : View.GONE}" />
+                        android:visibility="@{viewModel.showContactTrustAndDevices ? (viewModel.expandDevicesTrust &amp;&amp; viewModel.devices.size() > 0 ? View.VISIBLE : View.GONE) : View.GONE, default=gone}" />
 
                     <include
                         android:id="@+id/avatar"
@@ -331,8 +331,8 @@
 
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/section_header_style"
-                        android:onClick="@{() -> viewModel.displayTrustDialog()}"
                         android:id="@+id/trust_label"
+                        android:onClick="@{() -> viewModel.displayTrustDialog()}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="26dp"
@@ -342,13 +342,14 @@
                         android:drawableEnd="@drawable/question"
                         android:drawableTint="?attr/color_main2_600"
                         android:drawablePadding="8dp"
+                        android:visibility="@{viewModel.showContactTrustAndDevices ? View.VISIBLE : View.GONE, default=gone}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/info_background"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/section_header_style"
-                        android:onClick="@{() -> viewModel.toggleDevicesTrustExpand()}"
                         android:id="@+id/trust_toggle"
+                        android:onClick="@{() -> viewModel.toggleDevicesTrustExpand()}"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="26dp"
@@ -356,6 +357,7 @@
                         android:padding="5dp"
                         android:drawableEnd="@{viewModel.expandDevicesTrust ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
                         android:drawableTint="?attr/color_main2_600"
+                        android:visibility="@{viewModel.showContactTrustAndDevices ? View.VISIBLE : View.GONE, default=gone}"
                         app:layout_constraintStart_toEndOf="@id/trust_label"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/info_background"/>

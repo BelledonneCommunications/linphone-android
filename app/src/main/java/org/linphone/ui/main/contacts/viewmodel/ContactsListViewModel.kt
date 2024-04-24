@@ -37,7 +37,7 @@ import org.linphone.core.MagicSearchListenerStub
 import org.linphone.core.SearchResult
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
-import org.linphone.ui.main.model.isInSecureMode
+import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
 import org.linphone.ui.main.viewmodel.AbstractMainViewModel
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
@@ -161,9 +161,9 @@ class ContactsListViewModel @UiThread constructor() : AbstractMainViewModel() {
     private fun updateDomainFilter() {
         val defaultAccount = coreContext.core.defaultAccount
         isDefaultAccountLinphone.postValue(
-            defaultAccount?.isInSecureMode() == true && defaultAccount.params.domain == corePreferences.defaultDomain
+            defaultAccount?.isEndToEndEncryptionMandatory() == true && defaultAccount.params.domain == corePreferences.defaultDomain
         )
-        domainFilter = if (defaultAccount?.isInSecureMode() == true) {
+        domainFilter = if (defaultAccount?.isEndToEndEncryptionMandatory() == true) {
             corePreferences.defaultDomain
         } else {
             "*"

@@ -46,7 +46,7 @@ import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.contacts.model.ContactDeviceModel
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressClickListener
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel
-import org.linphone.ui.main.model.isInSecureMode
+import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
@@ -79,6 +79,8 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
     val showBackButton = MutableLiveData<Boolean>()
 
     val expandNumbersAndAddresses = MutableLiveData<Boolean>()
+
+    val showContactTrustAndDevices = MutableLiveData<Boolean>()
 
     val expandDevicesTrust = MutableLiveData<Boolean>()
 
@@ -239,8 +241,14 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
             core.addListener(coreListener)
             chatDisabled.postValue(corePreferences.disableChat)
             videoCallDisabled.postValue(!core.isVideoEnabled)
+
+            // Only show contact's devices for Linphone accounts
+            showContactTrustAndDevices.postValue(
+                LinphoneUtils.getDefaultAccount()?.params?.domain == corePreferences.defaultDomain
+            )
+            // Only expand contacts' devices & trust by default if in E2E encrypted mode
             expandDevicesTrust.postValue(
-                LinphoneUtils.getDefaultAccount()?.isInSecureMode() == true
+                LinphoneUtils.getDefaultAccount()?.isEndToEndEncryptionMandatory() == true
             )
             coreContext.contactsManager.addListener(contactsListener)
         }
@@ -417,7 +425,7 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
             val numbersCount = friend.phoneNumbers.size
 
             // Do not consider phone numbers if default account is in secure mode
-            val enablePhoneNumbers = core.defaultAccount?.isInSecureMode() != true
+            val enablePhoneNumbers = core.defaultAccount?.isEndToEndEncryptionMandatory() != true
 
             if (addressesCount == 1 && (numbersCount == 0 || !enablePhoneNumbers)) {
                 Log.i(
@@ -454,7 +462,7 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
             val numbersCount = friend.phoneNumbers.size
 
             // Do not consider phone numbers if default account is in secure mode
-            val enablePhoneNumbers = core.defaultAccount?.isInSecureMode() != true
+            val enablePhoneNumbers = core.defaultAccount?.isEndToEndEncryptionMandatory() != true
 
             if (addressesCount == 1 && (numbersCount == 0 || !enablePhoneNumbers)) {
                 Log.i(
@@ -491,7 +499,7 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
             val numbersCount = friend.phoneNumbers.size
 
             // Do not consider phone numbers if default account is in secure mode
-            val enablePhoneNumbers = core.defaultAccount?.isInSecureMode() != true
+            val enablePhoneNumbers = core.defaultAccount?.isEndToEndEncryptionMandatory() != true
 
             if (addressesCount == 1 && (numbersCount == 0 || !enablePhoneNumbers)) {
                 Log.i(
@@ -537,13 +545,13 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
             params.ephemeralLifetime = 0 // Make sure ephemeral is disabled by default
 
             val sameDomain = remote.domain == corePreferences.defaultDomain && remote.domain == account.params.domain
-            if (account.isInSecureMode() && sameDomain) {
+            if (account.isEndToEndEncryptionMandatory() && sameDomain) {
                 Log.i(
                     "$TAG Account is in secure mode & domain matches, creating a E2E conversation"
                 )
                 params.backend = ChatRoom.Backend.FlexisipChat
                 params.isEncryptionEnabled = true
-            } else if (!account.isInSecureMode()) {
+            } else if (!account.isEndToEndEncryptionMandatory()) {
                 if (LinphoneUtils.isEndToEndEncryptedChatAvailable(core)) {
                     Log.i(
                         "$TAG Account is in interop mode but LIME is available, creating a E2E conversation"

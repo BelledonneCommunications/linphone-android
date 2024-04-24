@@ -31,7 +31,7 @@ import org.linphone.core.ConsolidatedPresence
 import org.linphone.core.Friend
 import org.linphone.core.FriendListenerStub
 import org.linphone.core.tools.Log
-import org.linphone.ui.main.model.isInSecureMode
+import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
 import org.linphone.utils.AppUtils
 import org.linphone.utils.TimestampUtils
 
@@ -87,7 +87,7 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend, val addre
 
         isFavourite.postValue(friend.starred)
         initials.postValue(AppUtils.getInitials(friend.name.orEmpty()))
-        showTrust.postValue(coreContext.core.defaultAccount?.isInSecureMode())
+        showTrust.postValue(coreContext.core.defaultAccount?.isEndToEndEncryptionMandatory())
         images.postValue(arrayListOf(getAvatarUri(friend).toString()))
 
         name.postValue(friend.name)

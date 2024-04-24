@@ -57,7 +57,7 @@ import org.linphone.ui.call.model.CallMediaEncryptionModel
 import org.linphone.ui.call.model.CallStatsModel
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.history.model.NumpadModel
-import org.linphone.ui.main.model.isInSecureMode
+import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
 import org.linphone.utils.AppUtils
 import org.linphone.utils.AudioUtils
 import org.linphone.utils.Event
@@ -743,13 +743,13 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
                 val sameDomain =
                     remote.domain == corePreferences.defaultDomain && remote.domain == account.params.domain
-                if (account.isInSecureMode() && sameDomain) {
+                if (account.isEndToEndEncryptionMandatory() && sameDomain) {
                     Log.i(
                         "$TAG Account is in secure mode & domain matches, creating a E2E conversation"
                     )
                     params.backend = ChatRoom.Backend.FlexisipChat
                     params.isEncryptionEnabled = true
-                } else if (!account.isInSecureMode()) {
+                } else if (!account.isEndToEndEncryptionMandatory()) {
                     if (LinphoneUtils.isEndToEndEncryptedChatAvailable(core)) {
                         Log.i(
                             "$TAG Account is in interop mode but LIME is available, creating a E2E conversation"

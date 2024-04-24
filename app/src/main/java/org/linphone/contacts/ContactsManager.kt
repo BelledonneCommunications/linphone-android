@@ -57,7 +57,7 @@ import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressClickListener
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressModel
-import org.linphone.ui.main.model.isInSecureMode
+import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
 import org.linphone.utils.AppUtils
 import org.linphone.utils.ImageUtils
 import org.linphone.utils.LinphoneUtils
@@ -139,7 +139,7 @@ class ContactsManager @UiThread constructor() {
         @WorkerThread
         override fun onDefaultAccountChanged(core: Core, account: Account?) {
             Log.i("$TAG Default account changed, update all contact models showTrust value")
-            val showTrust = account?.isInSecureMode()
+            val showTrust = account?.isEndToEndEncryptionMandatory()
             knownContactsAvatarsMap.forEach { (_, contactAvatarModel) ->
                 contactAvatarModel.showTrust.postValue(showTrust)
             }
@@ -741,7 +741,7 @@ fun Friend.getListOfSipAddressesAndPhoneNumbers(listener: ContactNumberOrAddress
 
         // phone numbers are disabled is secure mode unless linked to a SIP address
         val defaultAccount = LinphoneUtils.getDefaultAccount()
-        val enablePhoneNumbers = hasPresenceInfo || defaultAccount?.isInSecureMode() == false
+        val enablePhoneNumbers = hasPresenceInfo || defaultAccount?.isEndToEndEncryptionMandatory() == false
         val address = presenceAddress ?: core.interpretUrl(
             number.phoneNumber,
             LinphoneUtils.applyInternationalPrefix(defaultAccount)

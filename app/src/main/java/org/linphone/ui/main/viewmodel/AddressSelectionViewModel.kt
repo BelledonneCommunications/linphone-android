@@ -34,7 +34,7 @@ import org.linphone.core.SearchResult
 import org.linphone.mediastream.Log
 import org.linphone.ui.main.history.model.ContactOrSuggestionModel
 import org.linphone.ui.main.model.SelectedAddressModel
-import org.linphone.ui.main.model.isInSecureMode
+import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
 import org.linphone.utils.AppUtils
 
 abstract class AddressSelectionViewModel @UiThread constructor() : DefaultAccountChangedViewModel() {
@@ -86,7 +86,7 @@ abstract class AddressSelectionViewModel @UiThread constructor() : DefaultAccoun
 
         coreContext.postOnCoreThread { core ->
             val defaultAccount = core.defaultAccount
-            limitSearchToLinphoneAccounts = defaultAccount?.isInSecureMode() ?: false
+            limitSearchToLinphoneAccounts = defaultAccount?.isEndToEndEncryptionMandatory() ?: false
 
             coreContext.contactsManager.addListener(contactsListener)
             magicSearch = core.createMagicSearch()

@@ -29,7 +29,7 @@ import org.linphone.core.DialPlan
 import org.linphone.core.Factory
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.model.AccountModel
-import org.linphone.ui.main.model.isInSecureMode
+import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
 import org.linphone.ui.main.settings.model.AccountDeviceModel
 import org.linphone.utils.Event
 
@@ -111,7 +111,7 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
                 Log.i("$TAG Found matching account [$found]")
                 account = found
                 accountModel.postValue(AccountModel(account))
-                isCurrentlySelectedModeSecure.postValue(account.isInSecureMode())
+                isCurrentlySelectedModeSecure.postValue(account.isEndToEndEncryptionMandatory())
                 registerEnabled.postValue(account.params.isRegisterEnabled)
                 pushNotificationsEnabled.postValue(account.params.pushNotificationAllowed)
 

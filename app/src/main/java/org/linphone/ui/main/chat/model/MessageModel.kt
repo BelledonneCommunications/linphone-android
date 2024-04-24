@@ -52,7 +52,7 @@ import org.linphone.core.Player
 import org.linphone.core.PlayerListener
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
-import org.linphone.ui.main.model.isInSecureMode
+import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
 import org.linphone.utils.AppUtils
 import org.linphone.utils.AudioUtils
 import org.linphone.utils.Event
@@ -100,7 +100,7 @@ class MessageModel @WorkerThread constructor(
     val time = TimestampUtils.toString(timestamp)
 
     val chatRoomIsReadOnly = chatMessage.chatRoom.isReadOnly ||
-        (!chatMessage.chatRoom.hasCapability(ChatRoom.Capabilities.Encrypted.toInt()) && LinphoneUtils.getDefaultAccount()?.isInSecureMode() == true)
+        (!chatMessage.chatRoom.hasCapability(ChatRoom.Capabilities.Encrypted.toInt()) && LinphoneUtils.getDefaultAccount()?.isEndToEndEncryptionMandatory() == true)
 
     val groupedWithNextMessage = MutableLiveData<Boolean>()
 

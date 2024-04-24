@@ -43,7 +43,7 @@ import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
 import org.linphone.ui.main.history.adapter.ContactsAndSuggestionsListAdapter
 import org.linphone.ui.main.history.model.ContactOrSuggestionModel
 import org.linphone.ui.main.history.viewmodel.StartCallViewModel
-import org.linphone.ui.main.model.isInSecureMode
+import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.RecyclerViewHeaderDecoration
@@ -224,7 +224,7 @@ abstract class AbstractNewTransferCallFragment : GenericCallFragment() {
             val numbersCount = friend.phoneNumbers.size
 
             // Do not consider phone numbers if default account is in secure mode
-            val enablePhoneNumbers = core.defaultAccount?.isInSecureMode() != true
+            val enablePhoneNumbers = core.defaultAccount?.isEndToEndEncryptionMandatory() != true
 
             if (addressesCount == 1 && (numbersCount == 0 || !enablePhoneNumbers)) {
                 Log.i(

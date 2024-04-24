@@ -33,7 +33,7 @@ import org.linphone.core.ChatRoomParams
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.history.model.CallLogHistoryModel
 import org.linphone.ui.main.history.model.CallLogModel
-import org.linphone.ui.main.model.isInSecureMode
+import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
@@ -187,13 +187,13 @@ class HistoryViewModel @UiThread constructor() : ViewModel() {
                 params.ephemeralLifetime = 0 // Make sure ephemeral is disabled by default
 
                 val sameDomain = remote.domain == corePreferences.defaultDomain && remote.domain == account.params.domain
-                if (account.isInSecureMode() && sameDomain) {
+                if (account.isEndToEndEncryptionMandatory() && sameDomain) {
                     Log.i(
                         "$TAG Account is in secure mode & domain matches, creating a E2E conversation"
                     )
                     params.backend = ChatRoom.Backend.FlexisipChat
                     params.isEncryptionEnabled = true
-                } else if (!account.isInSecureMode()) {
+                } else if (!account.isEndToEndEncryptionMandatory()) {
                     if (LinphoneUtils.isEndToEndEncryptedChatAvailable(core)) {
                         Log.i(
                             "$TAG Account is in interop mode but LIME is available, creating a E2E conversation"

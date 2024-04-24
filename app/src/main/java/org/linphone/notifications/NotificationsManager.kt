@@ -69,7 +69,7 @@ import org.linphone.core.MediaDirection
 import org.linphone.core.tools.Log
 import org.linphone.ui.call.CallActivity
 import org.linphone.ui.main.MainActivity
-import org.linphone.ui.main.model.isInSecureMode
+import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
 import org.linphone.utils.AppUtils
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
@@ -1088,7 +1088,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
             val account = coreContext.core.accountList.find {
                 it.params.identityAddress?.asStringUriOnly() == notifiable.localIdentity
             }
-            if (account != null && !account.isInSecureMode()) {
+            if (account != null && !account.isEndToEndEncryptionMandatory()) {
                 notificationBuilder.addAction(getReplyMessageAction(notifiable))
             }
         }

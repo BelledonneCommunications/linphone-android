@@ -29,7 +29,7 @@ import org.linphone.core.Account
 import org.linphone.core.NatPolicy
 import org.linphone.core.TransportType
 import org.linphone.core.tools.Log
-import org.linphone.ui.main.model.isInSecureMode
+import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
 import org.linphone.utils.Event
 
 class AccountSettingsViewModel @UiThread constructor() : ViewModel() {
@@ -86,7 +86,7 @@ class AccountSettingsViewModel @UiThread constructor() : ViewModel() {
                 Log.i("$TAG Found matching account [$found]")
                 account = found
 
-                isAccountInSecureMode.postValue(account.isInSecureMode())
+                isAccountInSecureMode.postValue(account.isEndToEndEncryptionMandatory())
 
                 val params = account.params
 

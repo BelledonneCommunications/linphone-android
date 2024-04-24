@@ -32,7 +32,7 @@ import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.chat.model.ConversationModel
-import org.linphone.ui.main.model.isInSecureMode
+import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
 import org.linphone.ui.main.viewmodel.AbstractMainViewModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
@@ -147,7 +147,7 @@ class ConversationsListViewModel @UiThread constructor() : AbstractMainViewModel
         val account = LinphoneUtils.getDefaultAccount()
         val chatRooms = account?.chatRooms ?: coreContext.core.chatRooms
         for (chatRoom in chatRooms) {
-            val disabledBecauseNotSecured = account?.isInSecureMode() == true && !chatRoom.hasCapability(
+            val disabledBecauseNotSecured = account?.isEndToEndEncryptionMandatory() == true && !chatRoom.hasCapability(
                 Capabilities.Encrypted.toInt()
             )
             if (filter.isEmpty()) {

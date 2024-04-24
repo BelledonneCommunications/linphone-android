@@ -37,7 +37,7 @@ import org.linphone.ui.main.contacts.model.NumberOrAddressPickerDialogModel
 import org.linphone.ui.main.history.adapter.ContactsAndSuggestionsListAdapter
 import org.linphone.ui.main.history.model.ContactOrSuggestionModel
 import org.linphone.ui.main.model.SelectedAddressModel
-import org.linphone.ui.main.model.isInSecureMode
+import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
 import org.linphone.ui.main.viewmodel.AddressSelectionViewModel
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.LinphoneUtils
@@ -162,7 +162,7 @@ abstract class GenericAddressPickerFragment : GenericFragment() {
             val numbersCount = friend.phoneNumbers.size
 
             // Do not consider phone numbers if default account is in secure mode
-            val enablePhoneNumbers = core.defaultAccount?.isInSecureMode() != true
+            val enablePhoneNumbers = core.defaultAccount?.isEndToEndEncryptionMandatory() != true
 
             if (addressesCount == 1 && (numbersCount == 0 || !enablePhoneNumbers)) {
                 val address = friend.addresses.first()
