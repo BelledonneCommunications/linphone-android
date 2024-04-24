@@ -336,6 +336,13 @@ class ActiveCallFragment : GenericCallFragment() {
             }
         }
 
+        callViewModel.isReceivingVideo.observe(viewLifecycleOwner) { receiving ->
+            if (!receiving && callViewModel.fullScreenMode.value == true) {
+                Log.i("$TAG We are no longer receiving video, leaving full screen mode")
+                callViewModel.fullScreenMode.value = false
+            }
+        }
+
         callViewModel.isSendingVideo.observe(viewLifecycleOwner) { sending ->
             coreContext.postOnCoreThread { core ->
                 core.nativePreviewWindowId = if (sending) {
