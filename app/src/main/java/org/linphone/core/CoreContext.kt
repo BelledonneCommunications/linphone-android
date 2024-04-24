@@ -185,6 +185,21 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
                 greenToastToShowEvent.postValue(Event(Pair(message, icon)))
             }
         }
+
+        @WorkerThread
+        override fun onLastCallEnded(core: Core) {
+            Log.i("$TAG Last call ended")
+            val currentCamera = core.videoDevice
+            if (currentCamera != "FrontFacingCamera") {
+                val frontFacing = core.videoDevicesList.find { it == "FrontFacingCamera" }
+                if (frontFacing == null) {
+                    Log.w("$TAG Failed to find [FrontFacingCamera] camera, doing nothing...")
+                } else {
+                    Log.i("$TAG Last call ended, setting [$frontFacing] as the default one")
+                    core.videoDevice = frontFacing
+                }
+            }
+        }
     }
 
     private val loggingServiceListener = object : LoggingServiceListenerStub() {
