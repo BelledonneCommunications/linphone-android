@@ -195,7 +195,7 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
 
                 // Create a new model to force UI to update
                 val newModel = AccountModel(account)
-                newModel.images.postValue(arrayListOf(path))
+                newModel.picturePath.postValue(path)
                 accountModel.postValue(newModel)
 
                 account.params = copy

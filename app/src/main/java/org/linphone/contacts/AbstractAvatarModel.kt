@@ -30,7 +30,7 @@ abstract class AbstractAvatarModel {
 
     val initials = MutableLiveData<String>()
 
-    val images = MutableLiveData<ArrayList<String>>()
+    val picturePath = MutableLiveData<String>()
 
     val forceConversationIcon = MutableLiveData<Boolean>()
 

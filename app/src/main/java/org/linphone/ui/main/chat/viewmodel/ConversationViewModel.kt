@@ -43,7 +43,6 @@ import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
-import org.linphone.utils.ImageUtils
 import org.linphone.utils.LinphoneUtils
 
 class ConversationViewModel @UiThread constructor() : AbstractConversationViewModel() {
@@ -538,7 +537,6 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
         val avatar = if (group) {
             val fakeFriend = coreContext.core.createFriend()
             fakeFriend.name = chatRoom.subject
-            fakeFriend.photo = ImageUtils.generateBitmapForChatRoom(chatRoom)
             val model = ContactAvatarModel(fakeFriend)
             model
         } else {

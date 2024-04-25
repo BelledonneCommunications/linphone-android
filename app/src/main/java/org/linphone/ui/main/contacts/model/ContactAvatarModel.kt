@@ -88,7 +88,7 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend, val addre
         isFavourite.postValue(friend.starred)
         initials.postValue(AppUtils.getInitials(friend.name.orEmpty()))
         showTrust.postValue(coreContext.core.defaultAccount?.isEndToEndEncryptionMandatory())
-        images.postValue(arrayListOf(getAvatarUri(friend).toString()))
+        picturePath.postValue(getAvatarUri(friend).toString())
 
         name.postValue(friend.name)
         computePresence(address)

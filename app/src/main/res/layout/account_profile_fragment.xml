@@ -115,7 +115,7 @@
                         android:textSize="14sp"
                         android:drawableStart="@drawable/camera"
                         android:drawablePadding="3dp"
-                        android:visibility="@{viewModel.accountModel.images.size() == 0 ? View.VISIBLE : View.GONE, default=gone}"
+                        android:visibility="@{viewModel.accountModel.picturePath.length() == 0 ? View.VISIBLE : View.GONE, default=gone}"
                         app:layout_constraintTop_toBottomOf="@id/avatar"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"/>
@@ -131,7 +131,7 @@
                         android:textSize="14sp"
                         android:drawableStart="@drawable/pencil_simple"
                         android:drawablePadding="3dp"
-                        android:visibility="@{viewModel.accountModel.images.size() == 0 ? View.GONE : View.VISIBLE}"
+                        android:visibility="@{viewModel.accountModel.picturePath.length() == 0 ? View.GONE : View.VISIBLE}"
                         app:layout_constraintHorizontal_chainStyle="packed"
                         app:layout_constraintTop_toBottomOf="@id/avatar"
                         app:layout_constraintStart_toStartOf="parent"
@@ -149,7 +149,7 @@
                         android:textSize="14sp"
                         android:drawableStart="@drawable/trash_simple"
                         android:drawablePadding="3dp"
-                        android:visibility="@{viewModel.accountModel.images.size() == 0 ? View.GONE : View.VISIBLE}"
+                        android:visibility="@{viewModel.accountModel.picturePath.length() == 0 ? View.GONE : View.VISIBLE}"
                         app:layout_constraintTop_toBottomOf="@id/avatar"
                         app:layout_constraintStart_toEndOf="@id/edit_picture_label"
                         app:layout_constraintEnd_toEndOf="parent"/>

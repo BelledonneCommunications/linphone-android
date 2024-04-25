@@ -393,37 +393,18 @@ private fun loadContactPictureWithCoil(
             return
         }
 
-        val images = model.images.value.orEmpty()
-        val count = images.size
-        if (count == 1) {
-            val image = images.firstOrNull()
-            if (image != null) {
-                imageView.load(image) {
-                    transformations(CircleCropTransformation())
-                    listener(
-                        onError = { _, _ ->
-                            imageView.load(getErrorImageLoader(context, model, size, textSize))
-                        }
-                    )
-                }
-            } else {
-                imageView.load(getErrorImageLoader(context, model, size, textSize))
+        val image = model.picturePath.value.orEmpty()
+        if (image != null) {
+            imageView.load(image) {
+                transformations(CircleCropTransformation())
+                listener(
+                    onError = { _, _ ->
+                        imageView.load(getErrorImageLoader(context, model, size, textSize))
+                    }
+                )
             }
         } else {
-            val w = if (size > 0) {
-                AppUtils.getDimension(size).toInt()
-            } else {
-                AppUtils.getDimension(R.dimen.avatar_list_cell_size).toInt()
-            }
-            val bitmap = ImageUtils.getBitmapFromMultipleAvatars(imageView.context, w, images)
-            if (bitmap != null) {
-                imageView.load(bitmap) {
-                    transformations(CircleCropTransformation())
-                }
-            } else {
-                val initials = model.initials.value.orEmpty()
-                imageView.load(ImageUtils.getGeneratedAvatar(context, size, textSize, initials))
-            }
+            imageView.load(getErrorImageLoader(context, model, size, textSize))
         }
     }
 }

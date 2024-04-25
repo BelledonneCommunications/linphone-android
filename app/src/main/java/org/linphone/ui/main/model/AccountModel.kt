@@ -172,8 +172,8 @@ class AccountModel @WorkerThread constructor(
         initials.postValue(AppUtils.getInitials(name))
 
         val pictureUri = account.params.pictureUri.orEmpty()
-        if (pictureUri != images.value?.firstOrNull()) {
-            images.postValue(arrayListOf(pictureUri))
+        if (pictureUri != picturePath.value.orEmpty()) {
+            picturePath.postValue(pictureUri)
             Log.d("$TAG Account picture URI is [$pictureUri]")
         }
 

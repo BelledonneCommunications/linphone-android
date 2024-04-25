@@ -22,7 +22,6 @@ package org.linphone.utils
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ShortcutInfo
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.annotation.WorkerThread
 import androidx.collection.ArraySet
@@ -141,18 +140,7 @@ class ShortcutUtils {
                     ).buildIcon()
                 } else {
                     subject = chatRoom.subject.orEmpty()
-                    val picture = ImageUtils.generateBitmapForChatRoom(chatRoom)
-                    if (picture.isNotEmpty()) {
-                        // BitmapFactory.decodeFile() doesn't handle file:/ URIs
-                        val file = if (picture.startsWith("file:/")) {
-                            picture.substring("file:/".length)
-                        } else {
-                            picture
-                        }
-                        IconCompat.createWithAdaptiveBitmap(BitmapFactory.decodeFile(file))
-                    } else {
-                        AvatarGenerator(context).setInitials(subject).buildIcon()
-                    }
+                    AvatarGenerator(context).setInitials(subject).buildIcon()
                 }
 
                 val persons = arrayOfNulls<Person>(personsList.size)
