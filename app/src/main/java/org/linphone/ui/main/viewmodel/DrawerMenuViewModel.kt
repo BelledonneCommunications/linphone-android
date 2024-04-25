@@ -27,6 +27,7 @@ import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.Account
+import org.linphone.core.ConfiguringState
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
@@ -96,6 +97,16 @@ class DrawerMenuViewModel @UiThread constructor() : ViewModel() {
                 "$TAG Account [${account.params.identityAddress?.asStringUriOnly()}] has been removed from the Core"
             )
             computeAccountsList()
+        }
+
+        @WorkerThread
+        override fun onConfiguringStatus(core: Core, status: ConfiguringState?, message: String?) {
+            if (status != ConfiguringState.Skipped) {
+                accounts.value.orEmpty().forEach(AccountModel::destroy)
+
+                Log.i("$TAG Configuring status is [$status], reload accounts")
+                computeAccountsList()
+            }
         }
     }
 

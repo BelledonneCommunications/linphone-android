@@ -29,6 +29,7 @@ import org.linphone.core.Account
 import org.linphone.core.Call
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatRoom
+import org.linphone.core.ConfiguringState
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
@@ -120,6 +121,22 @@ open class AbstractMainViewModel @UiThread constructor() : ViewModel() {
         @WorkerThread
         override fun onChatRoomRead(core: Core, chatRoom: ChatRoom) {
             updateUnreadMessagesCount()
+        }
+
+        @WorkerThread
+        override fun onConfiguringStatus(core: Core, status: ConfiguringState?, message: String?) {
+            if (status != ConfiguringState.Skipped) {
+                account.value?.destroy()
+
+                val defaultAccount = core.defaultAccount
+                if (defaultAccount != null) {
+                    Log.i("$TAG Configuring status is [$status], reload default account")
+                    account.postValue(AccountModel(defaultAccount))
+                    defaultAccountChangedEvent.postValue(Event(true))
+                } else {
+                    Log.w("$TAG Configuring status is [$status] but no default account was found!")
+                }
+            }
         }
 
         @WorkerThread
