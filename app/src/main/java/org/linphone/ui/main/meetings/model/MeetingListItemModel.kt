@@ -22,7 +22,10 @@ package org.linphone.ui.main.meetings.model
 import androidx.annotation.WorkerThread
 import org.linphone.utils.TimestampUtils
 
-class MeetingListItemModel @WorkerThread constructor(meetingModel: MeetingModel?) {
+class MeetingListItemModel @WorkerThread constructor(
+    meetingModel: MeetingModel?,
+    val firstMeetingOfTheWeek: Boolean
+) {
     val isToday = meetingModel == null
 
     val month = meetingModel?.month ?: TimestampUtils.month(System.currentTimeMillis(), false)
@@ -34,7 +37,16 @@ class MeetingListItemModel @WorkerThread constructor(meetingModel: MeetingModel?
         false
     )
 
+    val weekLabel = meetingModel?.weekLabel ?: TimestampUtils.firstAndLastDayOfWeek(
+        System.currentTimeMillis(),
+        false
+    )
+
     val model = meetingModel ?: TodayModel()
+
+    init {
+        meetingModel?.firstMeetingOfTheWeek?.postValue(firstMeetingOfTheWeek)
+    }
 
     class TodayModel
 }

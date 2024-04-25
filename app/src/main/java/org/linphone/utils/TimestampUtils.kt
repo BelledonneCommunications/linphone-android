@@ -97,6 +97,33 @@ class TimestampUtils {
         }
 
         @AnyThread
+        fun firstAndLastDayOfWeek(timestamp: Long, timestampInSecs: Boolean = true): String {
+            val calendar = Calendar.getInstance()
+            calendar.timeInMillis = if (timestampInSecs) timestamp * 1000 else timestamp
+            while (calendar.get(Calendar.DAY_OF_WEEK) != calendar.firstDayOfWeek) {
+                calendar.add(Calendar.DATE, -1)
+            }
+            val firstDayOfWeek = calendar.get(Calendar.DAY_OF_MONTH).toString()
+            val firstDayOfWeekMonth = calendar.getDisplayName(
+                Calendar.MONTH,
+                TextStyle.SHORT.ordinal,
+                Locale.getDefault()
+            )
+            calendar.add(Calendar.DAY_OF_MONTH, 6)
+            val lastDayOfWeek = calendar.get(Calendar.DAY_OF_MONTH).toString()
+            val lastDayOfWeekMonth = calendar.getDisplayName(
+                Calendar.MONTH,
+                TextStyle.SHORT.ordinal,
+                Locale.getDefault()
+            )
+            return if (firstDayOfWeekMonth == lastDayOfWeekMonth) {
+                "$firstDayOfWeek - $lastDayOfWeek $lastDayOfWeekMonth"
+            } else {
+                "$firstDayOfWeek $firstDayOfWeekMonth - $lastDayOfWeek $lastDayOfWeekMonth"
+            }
+        }
+
+        @AnyThread
         fun month(timestamp: Long, timestampInSecs: Boolean = true): String {
             val calendar = Calendar.getInstance()
             calendar.timeInMillis = if (timestampInSecs) timestamp * 1000 else timestamp

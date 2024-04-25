@@ -59,6 +59,10 @@ class MeetingModel @WorkerThread constructor(private val conferenceInfo: Confere
 
     val firstMeetingOfTheDay = MutableLiveData<Boolean>()
 
+    val weekLabel = TimestampUtils.firstAndLastDayOfWeek(timestamp)
+
+    val firstMeetingOfTheWeek = MutableLiveData<Boolean>()
+
     init {
         subject.postValue(conferenceInfo.subject)
 

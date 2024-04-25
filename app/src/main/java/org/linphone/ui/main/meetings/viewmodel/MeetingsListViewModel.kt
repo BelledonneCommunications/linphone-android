@@ -30,6 +30,7 @@ import org.linphone.core.tools.Log
 import org.linphone.ui.main.meetings.model.MeetingListItemModel
 import org.linphone.ui.main.meetings.model.MeetingModel
 import org.linphone.ui.main.viewmodel.AbstractMainViewModel
+import org.linphone.utils.TimestampUtils
 
 class MeetingsListViewModel @UiThread constructor() : AbstractMainViewModel() {
     companion object {
@@ -91,6 +92,7 @@ class MeetingsListViewModel @UiThread constructor() : AbstractMainViewModel() {
         }
 
         var previousModel: MeetingModel? = null
+        var previousModelWeekLabel = ""
         var meetingForTodayFound = false
         for (info: ConferenceInfo in source) {
             if (info.duration == 0) continue // This isn't a scheduled conference, don't display it
@@ -111,6 +113,9 @@ class MeetingsListViewModel @UiThread constructor() : AbstractMainViewModel() {
 
             if (add) {
                 val model = MeetingModel(info)
+
+                val firstMeetingOfTheWeek = previousModelWeekLabel != model.weekLabel
+
                 val firstMeetingOfTheDay = if (previousModel != null) {
                     previousModel.day != model.day || previousModel.dayNumber != model.dayNumber
                 } else {
@@ -124,18 +129,31 @@ class MeetingsListViewModel @UiThread constructor() : AbstractMainViewModel() {
 
                 // If no meeting was found for today, insert "Today" fake model before the next meeting to come
                 if (!meetingForTodayFound && model.isAfterToday) {
-                    list.add(MeetingListItemModel(null))
+                    val todayWeekLabel = TimestampUtils.firstAndLastDayOfWeek(
+                        System.currentTimeMillis(),
+                        false
+                    )
+                    val firstMeetingOfTheWeek = previousModelWeekLabel != todayWeekLabel
+                    list.add(MeetingListItemModel(null, firstMeetingOfTheWeek))
                     meetingForTodayFound = true
+                    previousModelWeekLabel = todayWeekLabel
+                } else {
+                    previousModelWeekLabel = model.weekLabel
                 }
 
-                list.add(MeetingListItemModel(model))
+                list.add(MeetingListItemModel(model, firstMeetingOfTheWeek))
                 previousModel = model
             }
         }
 
         // If no meeting was found after today, insert "Today" fake model at the end
         if (!meetingForTodayFound) {
-            list.add(MeetingListItemModel(null))
+            val todayWeekLabel = TimestampUtils.firstAndLastDayOfWeek(
+                System.currentTimeMillis(),
+                false
+            )
+            val firstMeetingOfTheWeek = previousModelWeekLabel != todayWeekLabel
+            list.add(MeetingListItemModel(null, firstMeetingOfTheWeek))
         }
 
         meetings.postValue(list)

@@ -24,6 +24,24 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
+            android:id="@+id/week_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:text="@{model.weekLabel, default=`22 - 28 Avril`}"
+            android:textSize="14sp"
+            android:textColor="?attr/color_main2_500"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:visibility="@{model.firstMeetingOfTheWeek ? View.VISIBLE : View.GONE}"
+            app:layout_constraintStart_toStartOf="@id/cardview"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/header_day"
+            app:layout_constraintEnd_toEndOf="@id/cardview" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
             android:id="@+id/header_day"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -35,7 +53,7 @@
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="@id/header_day_number"
             app:layout_constraintEnd_toEndOf="@id/header_day_number"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/week_label"/>
 
         <ImageView
             android:id="@+id/today_background"
@@ -77,7 +95,7 @@
             android:elevation="5dp"
             app:layout_constraintStart_toEndOf="@id/header_day"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/week_label"
             app:layout_constraintBottom_toBottomOf="parent">
 
             <androidx.appcompat.widget.AppCompatTextView
