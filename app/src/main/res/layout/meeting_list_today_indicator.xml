@@ -1,25 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingStart="16dp"
-    android:paddingEnd="16dp">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        style="@style/default_text_style_300"
-        android:id="@+id/today_indicator"
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="model"
+            type="org.linphone.ui.main.meetings.model.MeetingListItemModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:text="@string/meetings_list_today_indicator"
-        android:textSize="12sp"
-        android:textColor="?attr/color_main1_500" />
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
 
-    <View
-        android:id="@+id/today_separator"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="?attr/color_main1_500" />
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style"
+            android:id="@+id/header_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="@{model.day, default=`Mon.`}"
+            android:textColor="?attr/color_main2_500"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/header_day_number"
+            app:layout_constraintEnd_toEndOf="@id/header_day_number"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-</LinearLayout>
+        <ImageView
+            android:id="@+id/today_background"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="5dp"
+            android:contentDescription="@null"
+            android:src="@drawable/shape_circle_primary_background"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/header_day" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_800"
+            android:id="@+id/header_day_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{model.dayNumber, default=`19`}"
+            android:textColor="@color/main2_000"
+            android:textSize="20sp"
+            android:paddingBottom="4dp"
+            app:layout_constraintStart_toStartOf="@id/today_background"
+            app:layout_constraintEnd_toEndOf="@id/today_background"
+            app:layout_constraintBottom_toBottomOf="@id/today_background"
+            app:layout_constraintTop_toBottomOf="@id/header_day"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_700"
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="5dp"
+            android:text="@string/meetings_list_no_meeting_for_today"
+            android:textSize="13sp"
+            android:textColor="?attr/color_main2_600"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintStart_toEndOf="@id/header_day"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/header_day_number"
+            app:layout_constraintBottom_toBottomOf="@id/header_day_number"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

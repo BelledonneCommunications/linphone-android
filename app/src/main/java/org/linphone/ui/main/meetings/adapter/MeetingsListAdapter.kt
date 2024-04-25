@@ -32,6 +32,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
 import org.linphone.databinding.MeetingListCellBinding
+import org.linphone.databinding.MeetingListTodayIndicatorBinding
 import org.linphone.databinding.MeetingsListDecorationBinding
 import org.linphone.ui.main.meetings.model.MeetingListItemModel
 import org.linphone.ui.main.meetings.model.MeetingModel
@@ -91,6 +92,8 @@ class MeetingsListAdapter :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is MeetingViewHolder) {
             holder.bind(getItem(position).model as MeetingModel)
+        } else if (holder is TodayIndicatorViewHolder) {
+            holder.bind(getItem(position))
         }
     }
 
@@ -125,13 +128,17 @@ class MeetingsListAdapter :
     }
 
     private fun createTodayIndicatorViewHolder(parent: ViewGroup): TodayIndicatorViewHolder {
-        return TodayIndicatorViewHolder(
-            LayoutInflater.from(parent.context).inflate(
-                R.layout.meeting_list_today_indicator,
-                parent,
-                false
-            )
+        val binding: MeetingListTodayIndicatorBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(parent.context),
+            R.layout.meeting_list_today_indicator,
+            parent,
+            false
         )
+        val viewHolder = TodayIndicatorViewHolder(binding)
+        binding.apply {
+            lifecycleOwner = parent.findViewTreeLifecycleOwner()
+        }
+        return viewHolder
     }
 
     inner class MeetingViewHolder(
@@ -150,8 +157,16 @@ class MeetingsListAdapter :
     }
 
     inner class TodayIndicatorViewHolder(
-        val view: View
-    ) : RecyclerView.ViewHolder(view)
+        val binding: MeetingListTodayIndicatorBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+        @UiThread
+        fun bind(meetingListModel: MeetingListItemModel) {
+            with(binding) {
+                model = meetingListModel
+                executePendingBindings()
+            }
+        }
+    }
 
     private class MeetingDiffCallback : DiffUtil.ItemCallback<MeetingListItemModel>() {
         override fun areItemsTheSame(oldItem: MeetingListItemModel, newItem: MeetingListItemModel): Boolean {

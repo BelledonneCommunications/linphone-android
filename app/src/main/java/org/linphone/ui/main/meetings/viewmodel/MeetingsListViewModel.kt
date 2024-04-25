@@ -118,9 +118,7 @@ class MeetingsListViewModel @UiThread constructor() : AbstractMainViewModel() {
                 }
                 model.firstMeetingOfTheDay.postValue(firstMeetingOfTheDay)
 
-                // Insert "Today" fake model before the first one of today
-                if (firstMeetingOfTheDay && model.isToday) {
-                    list.add(MeetingListItemModel(null))
+                if (model.isToday) {
                     meetingForTodayFound = true
                 }
 

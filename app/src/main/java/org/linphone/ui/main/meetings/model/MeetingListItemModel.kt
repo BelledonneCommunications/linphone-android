@@ -27,6 +27,13 @@ class MeetingListItemModel @WorkerThread constructor(meetingModel: MeetingModel?
 
     val month = meetingModel?.month ?: TimestampUtils.month(System.currentTimeMillis(), false)
 
+    val day = meetingModel?.day ?: TimestampUtils.dayOfWeek(System.currentTimeMillis(), false)
+
+    val dayNumber = meetingModel?.dayNumber ?: TimestampUtils.dayOfMonth(
+        System.currentTimeMillis(),
+        false
+    )
+
     val model = meetingModel ?: TodayModel()
 
     class TodayModel

@@ -477,6 +477,7 @@
     <!-- Scheduled conferences -->
     <string name="meetings_list_empty">Aucune réunion pour le moment…</string>
     <string name="meetings_list_today_indicator">Aujourd\'hui</string>
+    <string name="meetings_list_no_meeting_for_today">Aucune réunion aujourd\'hui</string>
 
     <string name="meeting_schedule_title">Nouvelle réunion</string>
     <string name="meeting_schedule_meeting_label">Réunion</string>
