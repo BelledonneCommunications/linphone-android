@@ -45,6 +45,8 @@ class PermissionsFragment : Fragment() {
 
     private lateinit var binding: AssistantPermissionsFragmentBinding
 
+    private var leaving = false
+
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
@@ -60,12 +62,12 @@ class PermissionsFragment : Fragment() {
             }
         }
 
-        if (!allGranted) { // If all permissions were granted, the onResume() will do the navigation
+        if (!allGranted) {
             Log.w(
                 "$TAG Not all permissions were granted, leaving anyway, they will be asked again later..."
             )
-            goToLoginFragment()
         }
+        leave()
     }
 
     private val telecomManagerPermissionLauncher = registerForActivityResult(
@@ -98,7 +100,7 @@ class PermissionsFragment : Fragment() {
 
         binding.setSkipClickListener {
             Log.i("$TAG User clicked skip...")
-            goToLoginFragment()
+            leave()
         }
 
         binding.setGrantAllClickListener {
@@ -128,13 +130,16 @@ class PermissionsFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        if (areAllPermissionsGranted()) {
+        if (!leaving && areAllPermissionsGranted()) {
             Log.i("$TAG All permissions have been granted, skipping")
-            goToLoginFragment()
+            leave()
         }
     }
 
-    private fun goToLoginFragment() {
+    private fun leave() {
+        if (leaving) return
+        leaving = true
+
         if (requireActivity().intent.getBooleanExtra(AssistantActivity.SKIP_LANDING_EXTRA, false)) {
             Log.w(
                 "$TAG We were asked to leave assistant if at least an account is already configured"
@@ -145,14 +150,23 @@ class PermissionsFragment : Fragment() {
                         Log.w("$TAG At least one account was found, leaving assistant")
                         requireActivity().finish()
                     }
+                } else {
+                    coreContext.postOnMainThread {
+                        Log.w("$TAG No account was found, going to landing fragment")
+                        goToLoginFragment()
+                    }
                 }
             }
         } else {
-            if (findNavController().currentDestination?.id == R.id.permissionsFragment) {
-                val action =
-                    PermissionsFragmentDirections.actionPermissionsFragmentToLandingFragment()
-                findNavController().navigate(action)
-            }
+            goToLoginFragment()
+        }
+    }
+
+    private fun goToLoginFragment() {
+        if (findNavController().currentDestination?.id == R.id.permissionsFragment) {
+            val action =
+                PermissionsFragmentDirections.actionPermissionsFragmentToLandingFragment()
+            findNavController().navigate(action)
         }
     }
 
