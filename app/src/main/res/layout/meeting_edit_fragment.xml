@@ -91,7 +91,7 @@
                         android:textSize="20sp"
                         android:textColor="?attr/color_main2_600"
                         android:inputType="text|textCapSentences"
-                        android:drawableStart="@{viewModel.isBroadcastSelected ? @drawable/slideshow : @drawable/meeting, default=@drawable/meeting}"
+                        android:drawableStart="@{viewModel.isBroadcastSelected ? @drawable/slideshow : @drawable/video_conference, default=@drawable/video_conference}"
                         android:drawablePadding="8dp"
                         android:drawableTint="?attr/color_main2_600"
                         android:background="@color/transparent_color"

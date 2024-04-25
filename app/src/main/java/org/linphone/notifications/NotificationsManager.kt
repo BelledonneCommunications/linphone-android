@@ -953,7 +953,7 @@ class NotificationsManager @MainThread constructor(private val context: Context)
         }
 
         val smallIcon = if (isConference) {
-            R.drawable.meeting
+            R.drawable.video_conference
         } else if (isVideo) {
             R.drawable.video_camera
         } else {

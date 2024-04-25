@@ -120,7 +120,7 @@
             android:layout_marginStart="18dp"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
-            android:drawableTop="@drawable/meeting"
+            android:drawableTop="@drawable/video_conference"
             android:drawablePadding="10dp"
             android:drawableTint="@{viewModel.meetingsSelected ? @color/main1_500 : @color/main2_600, default=@color/main2_600}"
             android:text="@string/bottom_navigation_meetings_label"

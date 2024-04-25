@@ -214,7 +214,7 @@
                     android:background="@drawable/circle_light_blue_button_background"
                     android:onClick="@{() -> viewModel.scheduleMeeting()}"
                     android:padding="16dp"
-                    android:src="@drawable/meeting"
+                    android:src="@drawable/video_conference"
                     android:visibility="@{viewModel.isReadOnly ? View.GONE : View.VISIBLE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/call"

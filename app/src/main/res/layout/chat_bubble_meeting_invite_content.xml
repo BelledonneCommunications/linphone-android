@@ -132,7 +132,7 @@
             android:textColor="?attr/color_main2_600"
             android:maxLines="1"
             android:ellipsize="end"
-            android:drawableStart="@drawable/meeting"
+            android:drawableStart="@drawable/video_conference"
             android:drawablePadding="8dp"
             app:drawableTint="?attr/color_main2_600"
             app:layout_constraintStart_toEndOf="@id/day_background"

@@ -241,7 +241,7 @@
                         android:layout_marginTop="20dp"
                         android:background="@drawable/circle_light_blue_button_background"
                         android:padding="16dp"
-                        android:src="@drawable/meeting"
+                        android:src="@drawable/video_conference"
                         android:visibility="@{viewModel.isConferenceCallLog ? View.VISIBLE : View.GONE, default=gone}"
                         app:tint="?attr/color_main2_500"
                         app:layout_constraintEnd_toEndOf="parent"

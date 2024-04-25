@@ -93,7 +93,7 @@
                 android:textColor="?attr/color_main2_600"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:drawableStart="@{model.isBroadcast ? @drawable/slideshow : @drawable/meeting, default=@drawable/meeting}"
+                android:drawableStart="@{model.isBroadcast ? @drawable/slideshow : @drawable/video_conference, default=@drawable/video_conference}"
                 android:drawablePadding="8dp"
                 android:drawableTint="?attr/color_main2_600"
                 app:layout_constraintStart_toStartOf="parent"
