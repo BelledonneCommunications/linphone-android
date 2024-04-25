@@ -84,6 +84,8 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     val isOutgoing = MutableLiveData<Boolean>()
 
+    val isOutgoingRinging = MutableLiveData<Boolean>()
+
     val isRecordingEnabled = MutableLiveData<Boolean>()
 
     val isRecording = MutableLiveData<Boolean>()
@@ -341,6 +343,8 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
             state: Call.State,
             message: String
         ) {
+            isOutgoingRinging.postValue(call.state == Call.State.OutgoingRinging)
+
             if (::currentCall.isInitialized) {
                 if (call != currentCall) {
                     if (call == currentCall.core.currentCall) {
@@ -996,6 +1000,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         updateOutputAudioDevice(audioDevice)
 
         isOutgoing.postValue(call.dir == Call.Dir.Outgoing)
+        isOutgoingRinging.postValue(call.state == Call.State.OutgoingRinging)
 
         isPaused.postValue(isCallPaused())
         isPausedByRemote.postValue(call.state == Call.State.PausedByRemote)

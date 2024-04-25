@@ -40,7 +40,7 @@
             android:src="@drawable/video_camera_slash"
             android:background="@drawable/shape_round_in_call_disabled_button_background"
             android:visibility="@{viewModel.hideVideo ? View.GONE : View.VISIBLE}"
-            app:tint="?attr/color_grey_500"
+            app:tint="@color/gray_400"
             app:layout_constraintHorizontal_bias="1"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -55,7 +55,7 @@
             android:padding="@dimen/call_button_icon_padding"
             android:src="@drawable/microphone_slash"
             android:background="@drawable/shape_round_in_call_disabled_button_background"
-            app:tint="?attr/color_grey_500"
+            app:tint="@color/gray_400"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/toggle_video"
             app:layout_constraintEnd_toStartOf="@id/change_audio_output" />
@@ -68,7 +68,7 @@
             android:padding="@dimen/call_button_icon_padding"
             android:src="@drawable/speaker_slash"
             android:background="@drawable/shape_round_in_call_disabled_button_background"
-            app:tint="?attr/color_grey_500"
+            app:tint="@color/gray_400"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/toggle_mute_mic"
             app:layout_constraintEnd_toEndOf="parent" />
