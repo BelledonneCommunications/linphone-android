@@ -129,7 +129,7 @@
                 app:layout_constraintEnd_toStartOf="@id/ephemeral_enabled"
                 app:layout_constraintTop_toBottomOf="@id/title"
                 app:layout_constraintBottom_toBottomOf="@id/avatar"
-                app:tint="@color/orange_main_400"/>
+                app:tint="@color/main1_500"/>
 
             <ImageView
                 android:id="@+id/ephemeral_enabled"
@@ -141,7 +141,7 @@
                 app:layout_constraintStart_toEndOf="@id/muted"
                 app:layout_constraintTop_toBottomOf="@id/title"
                 app:layout_constraintBottom_toBottomOf="@id/avatar"
-                app:tint="@color/orange_main_400"/>
+                app:tint="@color/main1_500"/>
 
             <ImageView
                 android:id="@+id/show_menu"

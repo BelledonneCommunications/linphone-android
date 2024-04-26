@@ -8,7 +8,6 @@
     <color name="orange_main_100">#FFEACB</color>
     <color name="orange_main_100_alpha_50">#80FFEACB</color>
     <color name="orange_main_300">#FFB266</color>
-    <color name="orange_main_400">#FF923F</color>
     <color name="orange_main_500">#FF5E00</color>
     <color name="orange_main_700">#B72D00</color>
     <color name="orange_main_900">#662600</color>
@@ -64,7 +63,6 @@
     <color name="orange_warning_600">#DBB820</color>
     <color name="orange_warning_600_night">#E1C133</color>
 
-    <color name="gradient_start">#FF923F</color>
     <color name="gradient_progress">#80FFFFFF</color>
 
     <color name="yellow_main_100">#FFF5D6</color>
