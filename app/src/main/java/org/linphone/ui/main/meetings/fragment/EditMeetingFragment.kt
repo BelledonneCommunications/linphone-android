@@ -76,7 +76,8 @@ class EditMeetingFragment : SlidingPaneChildFragment() {
 
         val conferenceUri = args.conferenceUri
         Log.i("$TAG Found conference URI [$conferenceUri] in arguments")
-        viewModel.loadExistingConferenceInfoFromUri(conferenceUri)
+        val conferenceInfo = sharedViewModel.displayedMeeting
+        viewModel.findConferenceInfo(conferenceInfo, conferenceUri)
 
         binding.setBackClickListener {
             goBack()

@@ -25,6 +25,7 @@ import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.linphone.core.ChatRoom
+import org.linphone.core.ConferenceInfo
 import org.linphone.core.Friend
 import org.linphone.ui.main.chat.model.MessageModel
 import org.linphone.utils.Event
@@ -136,6 +137,8 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
     }
 
     /* Meetings related */
+
+    var displayedMeeting: ConferenceInfo? = null // Prevents the need to go look for the conference info
 
     val forceRefreshMeetingsListEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()

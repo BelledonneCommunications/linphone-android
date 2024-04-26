@@ -37,6 +37,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.MeetingFragmentBinding
@@ -44,6 +45,7 @@ import org.linphone.databinding.MeetingPopupMenuBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.fragment.SlidingPaneChildFragment
 import org.linphone.ui.main.history.model.ConfirmationDialogModel
+import org.linphone.ui.main.meetings.adapter.MeetingParticipantsAdapter
 import org.linphone.ui.main.meetings.viewmodel.MeetingViewModel
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
@@ -56,9 +58,17 @@ class MeetingFragment : SlidingPaneChildFragment() {
 
     private lateinit var binding: MeetingFragmentBinding
 
+    private lateinit var adapter: MeetingParticipantsAdapter
+
     private lateinit var viewModel: MeetingViewModel
 
     private val args: MeetingFragmentArgs by navArgs()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        adapter = MeetingParticipantsAdapter()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -91,7 +101,16 @@ class MeetingFragment : SlidingPaneChildFragment() {
         Log.i(
             "$TAG Looking up for conference with SIP URI [$uri]"
         )
-        viewModel.findConferenceInfo(uri)
+        val conferenceInfo = sharedViewModel.displayedMeeting
+        viewModel.findConferenceInfo(conferenceInfo, uri)
+
+        binding.participants.isNestedScrollingEnabled = false
+        binding.participants.setHasFixedSize(false)
+        binding.participants.layoutManager = LinearLayoutManager(requireContext())
+
+        if (binding.participants.adapter != adapter) {
+            binding.participants.adapter = adapter
+        }
 
         binding.setBackClickListener {
             goBack()
@@ -142,6 +161,11 @@ class MeetingFragment : SlidingPaneChildFragment() {
                     }
                 }
             }
+        }
+
+        viewModel.participants.observe(viewLifecycleOwner) { items ->
+            adapter.submitList(items)
+            Log.i("$TAG Participants list updated with [${items.size}] items")
         }
 
         viewModel.conferenceInfoDeletedEvent.observe(viewLifecycleOwner) {

@@ -20,16 +20,11 @@
 package org.linphone.ui.main.meetings.model
 
 import androidx.annotation.WorkerThread
-import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Address
-import org.linphone.ui.main.contacts.model.ContactAvatarModel
 
 class ParticipantModel @WorkerThread constructor(address: Address, val isOrganizer: Boolean) {
-    val avatarModel = MutableLiveData<ContactAvatarModel>()
+    val sipUri = address.asStringUriOnly()
 
-    init {
-        val avatar = coreContext.contactsManager.getContactAvatarModelForAddress(address)
-        avatarModel.postValue(avatar)
-    }
+    val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(address)
 }

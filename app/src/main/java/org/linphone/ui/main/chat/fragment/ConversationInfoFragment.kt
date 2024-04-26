@@ -125,6 +125,7 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
                 }
             }
         }
+
         viewModel.participants.observe(viewLifecycleOwner) { items ->
             adapter.submitList(items)
             Log.i("$TAG Participants list updated with [${items.size}] items")

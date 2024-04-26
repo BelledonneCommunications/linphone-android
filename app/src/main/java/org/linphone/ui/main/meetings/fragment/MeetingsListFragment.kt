@@ -126,6 +126,7 @@ class MeetingsListFragment : AbstractMainFragment() {
         adapter.meetingClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
                 Log.i("$TAG Show conversation with ID [${model.id}]")
+                sharedViewModel.displayedMeeting = model.conferenceInfo
                 val action = MeetingFragmentDirections.actionGlobalMeetingFragment(model.id)
                 binding.meetingsNavContainer.findNavController().navigate(action)
             }

@@ -34,7 +34,7 @@ class ZrtpSasConfirmationDialogModel @UiThread constructor(
 ) : ViewModel() {
     companion object {
         private const val TAG = "[ZRTP SAS Confirmation Dialog]"
-        private const val alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        private const val ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
     }
 
     val message = MutableLiveData<String>()
@@ -55,24 +55,24 @@ class ZrtpSasConfirmationDialogModel @UiThread constructor(
 
         // TODO: improve algo?
         val rnd = Random()
-        val randomLetters1 = "${alphabet[rnd.nextInt(alphabet.length)]}${alphabet[
+        val randomLetters1 = "${ALPHABET[rnd.nextInt(ALPHABET.length)]}${ALPHABET[
             rnd.nextInt(
-                alphabet.length
+                ALPHABET.length
             )
         ]}"
-        val randomLetters2 = "${alphabet[rnd.nextInt(alphabet.length)]}${alphabet[
+        val randomLetters2 = "${ALPHABET[rnd.nextInt(ALPHABET.length)]}${ALPHABET[
             rnd.nextInt(
-                alphabet.length
+                ALPHABET.length
             )
         ]}"
-        val randomLetters3 = "${alphabet[rnd.nextInt(alphabet.length)]}${alphabet[
+        val randomLetters3 = "${ALPHABET[rnd.nextInt(ALPHABET.length)]}${ALPHABET[
             rnd.nextInt(
-                alphabet.length
+                ALPHABET.length
             )
         ]}"
-        val randomLetters4 = "${alphabet[rnd.nextInt(alphabet.length)]}${alphabet[
+        val randomLetters4 = "${ALPHABET[rnd.nextInt(ALPHABET.length)]}${ALPHABET[
             rnd.nextInt(
-                alphabet.length
+                ALPHABET.length
             )
         ]}"
 

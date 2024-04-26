@@ -130,9 +130,26 @@ class MeetingViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
-    fun findConferenceInfo(uri: String) {
+    fun findConferenceInfo(meeting: ConferenceInfo?, uri: String) {
         coreContext.postOnCoreThread { core ->
+            if (meeting != null && ::conferenceInfo.isInitialized && meeting == conferenceInfo) {
+                Log.i("$TAG ConferenceInfo object already in memory, skipping")
+                conferenceInfoFoundEvent.postValue(Event(true))
+                return@postOnCoreThread
+            }
+
             val address = Factory.instance().createAddress(uri)
+
+            if (meeting != null && (!::conferenceInfo.isInitialized || conferenceInfo != meeting)) {
+                if (address != null && meeting.uri?.equal(address) == true) {
+                    Log.i("$TAG ConferenceInfo object available in sharedViewModel, using it")
+                    conferenceInfo = meeting
+                    configureConferenceInfo()
+                    conferenceInfoFoundEvent.postValue(Event(true))
+                    return@postOnCoreThread
+                }
+            }
+
             if (address != null) {
                 val found = core.findConferenceInformationFromUri(address)
                 if (found != null) {

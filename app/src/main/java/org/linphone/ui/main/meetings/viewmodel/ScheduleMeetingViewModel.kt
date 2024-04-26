@@ -90,7 +90,7 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
 
     private lateinit var conferenceScheduler: ConferenceScheduler
 
-    private lateinit var conferenceInfoToEdit: ConferenceInfo
+    private lateinit var conferenceInfo: ConferenceInfo
 
     private val conferenceSchedulerListener = object : ConferenceSchedulerListenerStub() {
         @WorkerThread
@@ -106,9 +106,9 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
                 }
                 ConferenceScheduler.State.Ready -> {
                     val conferenceAddress = conferenceScheduler.info?.uri
-                    if (::conferenceInfoToEdit.isInitialized) {
+                    if (::conferenceInfo.isInitialized) {
                         Log.i(
-                            "$TAG Conference info [${conferenceInfoToEdit.uri?.asStringUriOnly()}] has been updated"
+                            "$TAG Conference info [${conferenceInfo.uri?.asStringUriOnly()}] has been updated"
                         )
                     } else {
                         Log.i(
@@ -210,61 +210,42 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
-    fun loadExistingConferenceInfoFromUri(conferenceUri: String) {
+    fun findConferenceInfo(meeting: ConferenceInfo?, uri: String) {
         coreContext.postOnCoreThread { core ->
-            val conferenceAddress = core.interpretUrl(conferenceUri, false)
-            if (conferenceAddress == null) {
-                Log.e("$TAG Failed to parse conference URI [$conferenceUri], abort")
+            if (meeting != null && ::conferenceInfo.isInitialized && meeting == conferenceInfo) {
+                Log.i("$TAG ConferenceInfo object already in memory, skipping")
+                configureConferenceInfo()
+            }
+
+            val address = Factory.instance().createAddress(uri)
+
+            if (meeting != null && (!::conferenceInfo.isInitialized || conferenceInfo != meeting)) {
+                if (address != null && meeting.uri?.equal(address) == true) {
+                    Log.i("$TAG ConferenceInfo object available in sharedViewModel, using it")
+                    conferenceInfo = meeting
+                    configureConferenceInfo()
+                    return@postOnCoreThread
+                }
+            }
+
+            if (address == null) {
+                Log.e("$TAG Failed to parse conference URI [$address], abort")
                 return@postOnCoreThread
             }
 
-            val conferenceInfo = core.findConferenceInformationFromUri(conferenceAddress)
+            val conferenceInfo = core.findConferenceInformationFromUri(address)
             if (conferenceInfo == null) {
                 Log.e(
-                    "$TAG Failed to find a conference info matching URI [${conferenceAddress.asString()}], abort"
+                    "$TAG Failed to find a conference info matching URI [${address.asString()}], abort"
                 )
                 return@postOnCoreThread
             }
-
-            conferenceInfoToEdit = conferenceInfo
+            this.conferenceInfo = conferenceInfo
             Log.i(
                 "$TAG Found conference info matching URI [${conferenceInfo.uri?.asString()}] with subject [${conferenceInfo.subject}]"
             )
-            subject.postValue(conferenceInfo.subject)
-            description.postValue(conferenceInfo.description)
 
-            isBroadcastSelected.postValue(false) // TODO FIXME: not implemented yet
-
-            startHour = 0
-            startMinutes = 0
-            endHour = 0
-            endMinutes = 0
-            startTimestamp = conferenceInfo.dateTime * 1000 /* Linphone timestamps are in seconds */
-            endTimestamp = (conferenceInfo.dateTime + conferenceInfo.duration) * 1000 /* Linphone timestamps are in seconds */
-            Log.i(
-                "$TAG Loaded start date is [$startTimestamp], loaded end date is [$endTimestamp]"
-            )
-            computeDateLabels()
-            computeTimeLabels()
-            updateTimezone()
-
-            val list = arrayListOf<SelectedAddressModel>()
-            for (participant in conferenceInfo.participantInfos) {
-                val address = participant.address
-                val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(
-                    address
-                )
-                val model = SelectedAddressModel(address, avatarModel) { model ->
-                    // onRemoveFromSelection
-                    removeModelFromSelection(model)
-                }
-                list.add(model)
-                Log.i("$TAG Loaded participant [${address.asStringUriOnly()}]")
-            }
-            Log.i(
-                "$TAG [${list.size}] participants loaded from found conference info"
-            )
-            participants.postValue(list)
+            configureConferenceInfo()
         }
     }
 
@@ -433,14 +414,13 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
             Log.i(
                 "$TAG Updating ${if (isBroadcastSelected.value == true) "broadcast" else "meeting"}"
             )
-            if (!::conferenceInfoToEdit.isInitialized) {
+            if (!::conferenceInfo.isInitialized) {
                 Log.e("No conference info to edit found!")
                 return@postOnCoreThread
             }
 
             operationInProgress.postValue(true)
 
-            val conferenceInfo = conferenceInfoToEdit
             conferenceInfo.subject = subject.value
             conferenceInfo.description = description.value
 
@@ -476,6 +456,48 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
 
             // Will trigger the conference update automatically
             conferenceScheduler.info = conferenceInfo
+        }
+    }
+
+    @WorkerThread
+    private fun configureConferenceInfo() {
+        if (::conferenceInfo.isInitialized) {
+            subject.postValue(conferenceInfo.subject)
+            description.postValue(conferenceInfo.description)
+
+            isBroadcastSelected.postValue(false) // TODO FIXME: not implemented yet
+
+            startHour = 0
+            startMinutes = 0
+            endHour = 0
+            endMinutes = 0
+            startTimestamp = conferenceInfo.dateTime * 1000 /* Linphone timestamps are in seconds */
+            endTimestamp =
+                (conferenceInfo.dateTime + conferenceInfo.duration) * 1000 /* Linphone timestamps are in seconds */
+            Log.i(
+                "$TAG Loaded start date is [$startTimestamp], loaded end date is [$endTimestamp]"
+            )
+            computeDateLabels()
+            computeTimeLabels()
+            updateTimezone()
+
+            val list = arrayListOf<SelectedAddressModel>()
+            for (participant in conferenceInfo.participantInfos) {
+                val address = participant.address
+                val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(
+                    address
+                )
+                val model = SelectedAddressModel(address, avatarModel) { model ->
+                    // onRemoveFromSelection
+                    removeModelFromSelection(model)
+                }
+                list.add(model)
+                Log.i("$TAG Loaded participant [${address.asStringUriOnly()}]")
+            }
+            Log.i(
+                "$TAG [${list.size}] participants loaded from found conference info"
+            )
+            participants.postValue(list)
         }
     }
 

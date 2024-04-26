@@ -20,7 +20,9 @@
 package org.linphone.ui.main.fragment
 
 import android.content.res.Configuration
+import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.IdRes
 import androidx.annotation.UiThread
 import androidx.core.view.doOnPreDraw
@@ -53,7 +55,16 @@ abstract class AbstractMainFragment : GenericFragment() {
 
     abstract fun onDefaultAccountChanged()
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        postponeEnterTransition()
+        super.onViewCreated(view, savedInstanceState)
+    }
+
     fun setViewModel(abstractMainViewModel: AbstractMainViewModel) {
+        (view?.parent as? ViewGroup)?.doOnPreDraw {
+            startPostponedEnterTransition()
+        }
+
         viewModel = abstractMainViewModel
 
         viewModel.openDrawerMenuEvent.observe(viewLifecycleOwner) {
