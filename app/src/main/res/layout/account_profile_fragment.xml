@@ -321,6 +321,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="16dp"
+                        android:enabled="@{viewModel.pushNotificationsAvailable}"
                         android:checked="@={viewModel.pushNotificationsEnabled}"
                         app:layout_constraintEnd_toEndOf="@id/details_background"
                         app:layout_constraintTop_toBottomOf="@id/prefix"/>
@@ -330,12 +331,13 @@
                         android:id="@+id/push_notifications_title"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="10dp"
-                        android:text="@string/account_settings_push_notification_title"
+                        android:text="@{viewModel.pushNotificationsAvailable ? @string/account_settings_push_notification_title : @string/account_settings_push_notification_not_available_title, default=@string/account_settings_push_notification_title}"
                         android:maxLines="2"
                         android:ellipsize="end"
-                        app:layout_constraintTop_toTopOf="@id/push_notifications_switch"
+                        app:layout_constraintTop_toBottomOf="@id/prefix"
                         app:layout_constraintBottom_toBottomOf="@id/push_notifications_switch"
                         app:layout_constraintStart_toStartOf="@id/details_background"
                         app:layout_constraintEnd_toStartOf="@id/push_notifications_switch"/>

@@ -297,6 +297,7 @@
 
     <string name="account_settings_title">Paramètres de compte</string>
     <string name="account_settings_push_notification_title">Autoriser les notifications poussées</string>
+    <string name="account_settings_push_notification_not_available_title">Les notifications poussées ne sont pas disponibles !</string>
     <string name="account_settings_sip_proxy_url_title">URL du serveur mandataire</string>
     <string name="account_settings_outbound_proxy_title">Serveur mandataire sortant</string>
     <string name="account_settings_stun_server_url_title">URL du serveur STUN</string>
