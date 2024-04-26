@@ -60,7 +60,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/back"
-                app:layout_constraintBottom_toBottomOf="@id/title"/>
+                app:layout_constraintBottom_toBottomOf="@id/title"
+                app:tint="@color/main1_500" />
     
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/assistant_page_title_style"
