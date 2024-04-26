@@ -27,6 +27,7 @@ import androidx.annotation.UiThread
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import org.linphone.core.Address
 import org.linphone.core.Friend
 import org.linphone.core.tools.Log
@@ -43,6 +44,8 @@ class AddParticipantsFragment : GenericAddressPickerFragment() {
     private lateinit var binding: GenericAddParticipantsFragmentBinding
 
     override lateinit var viewModel: AddParticipantsViewModel
+
+    private val args: AddParticipantsFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -76,6 +79,11 @@ class AddParticipantsFragment : GenericAddressPickerFragment() {
         }
 
         setupRecyclerView(binding.contactsList)
+
+        val participants = args.selectedParticipants
+        if (!participants.isNullOrEmpty()) {
+            viewModel.addSelectedParticipants(participants)
+        }
 
         viewModel.contactsAndSuggestionsList.observe(
             viewLifecycleOwner

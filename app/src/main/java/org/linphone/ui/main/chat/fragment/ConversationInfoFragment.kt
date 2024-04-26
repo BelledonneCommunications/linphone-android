@@ -218,8 +218,15 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
         binding.setAddParticipantsClickListener {
             if (findNavController().currentDestination?.id == R.id.conversationInfoFragment) {
                 Log.i("$TAG Going into participant picker fragment")
+                val selection = arrayListOf<String>()
+                for (participant in viewModel.participants.value.orEmpty()) {
+                    selection.add(participant.address.asStringUriOnly())
+                }
+                Log.i("$TAG [${selection.size}] participants are already selected, keeping them")
                 val action =
-                    ConversationInfoFragmentDirections.actionConversationInfoFragmentToAddParticipantsFragment()
+                    ConversationInfoFragmentDirections.actionConversationInfoFragmentToAddParticipantsFragment(
+                        selection.toTypedArray()
+                    )
                 findNavController().navigate(action)
             }
         }

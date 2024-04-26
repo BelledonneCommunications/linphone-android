@@ -161,8 +161,15 @@ class ScheduleMeetingFragment : GenericFragment() {
         binding.setPickParticipantsClickListener {
             if (findNavController().currentDestination?.id == R.id.scheduleMeetingFragment) {
                 Log.i("$TAG Going into participant picker fragment")
+                val selection = arrayListOf<String>()
+                for (participant in viewModel.participants.value.orEmpty()) {
+                    selection.add(participant.address.asStringUriOnly())
+                }
+                Log.i("$TAG [${selection.size}] participants are already selected, keeping them")
                 val action =
-                    ScheduleMeetingFragmentDirections.actionScheduleMeetingFragmentToAddParticipantsFragment()
+                    ScheduleMeetingFragmentDirections.actionScheduleMeetingFragmentToAddParticipantsFragment(
+                        selection.toTypedArray()
+                    )
                 findNavController().navigate(action)
             }
         }

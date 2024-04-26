@@ -22,7 +22,10 @@ package org.linphone.ui.main.viewmodel
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
 import org.linphone.core.tools.Log
+import org.linphone.ui.main.model.SelectedAddressModel
+import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
 class AddParticipantsViewModel @UiThread constructor() : AddressSelectionViewModel() {
@@ -35,6 +38,39 @@ class AddParticipantsViewModel @UiThread constructor() : AddressSelectionViewMod
     init {
         Log.i("$TAG Forcing multiple selection mode")
         switchToMultipleSelectionMode()
+    }
+
+    @UiThread
+    fun addSelectedParticipants(participants: Array<String>) {
+        coreContext.postOnCoreThread { core ->
+            Log.i("$TAG Adding [${participants.size}] pre-selected participants")
+            val list = arrayListOf<SelectedAddressModel>()
+
+            for (uri in participants) {
+                val address = core.interpretUrl(uri, false)
+                if (address == null) {
+                    Log.e("$TAG Failed to parse participant URI [$uri] as address!")
+                    continue
+                }
+
+                val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(
+                    address
+                )
+                val model = SelectedAddressModel(address, avatarModel) {
+                    removeAddressModelFromSelection(it)
+                }
+                list.add(model)
+            }
+
+            selectionCount.postValue(
+                AppUtils.getStringWithPlural(
+                    R.plurals.selection_count_label,
+                    list.size,
+                    list.size.toString()
+                )
+            )
+            selection.postValue(list)
+        }
     }
 
     @UiThread
