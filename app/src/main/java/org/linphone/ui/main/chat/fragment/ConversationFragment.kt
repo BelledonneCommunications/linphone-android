@@ -325,10 +325,13 @@ class ConversationFragment : SlidingPaneChildFragment() {
     override fun goBack(): Boolean {
         sharedViewModel.closeSlidingPaneEvent.value = Event(true)
 
-        // If not done this fragment won't be paused, which will cause us issues
-        val action = ConversationFragmentDirections.actionConversationFragmentToEmptyFragment()
-        findNavController().navigate(action)
-        return true
+        if (findNavController().currentDestination?.id == R.id.conversationFragment) {
+            // If not done this fragment won't be paused, which will cause us issues
+            val action = ConversationFragmentDirections.actionConversationFragmentToEmptyFragment()
+            findNavController().navigate(action)
+            return true
+        }
+        return false
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
