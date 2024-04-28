@@ -140,7 +140,7 @@ class ShortcutUtils {
                     ).buildIcon()
                 } else {
                     subject = chatRoom.subject.orEmpty()
-                    AvatarGenerator(context).setInitials(subject).buildIcon()
+                    AvatarGenerator(context).setInitials(AppUtils.getInitials(subject)).buildIcon()
                 }
 
                 val persons = arrayOfNulls<Person>(personsList.size)
