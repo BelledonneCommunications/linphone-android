@@ -30,6 +30,8 @@ import org.linphone.core.Factory
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.model.AccountModel
 import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
+import org.linphone.ui.main.model.setEndToEndEncryptionMandatory
+import org.linphone.ui.main.model.setInteroperabilityMode
 import org.linphone.ui.main.settings.model.AccountDeviceModel
 import org.linphone.utils.Event
 
@@ -299,6 +301,18 @@ class AccountProfileViewModel @UiThread constructor() : ViewModel() {
 
     @UiThread
     fun applySelectedMode() {
-        // TODO
+        coreContext.postOnCoreThread { core ->
+            if (isCurrentlySelectedModeSecure.value == true) {
+                Log.i(
+                    "$TAG Selected mode is end-to-end encrypted, forcing media & im encryption to mandatory and setting media encryption to ZRTP"
+                )
+                account.setEndToEndEncryptionMandatory()
+            } else {
+                Log.i(
+                    "$TAG Selected mode is interoperable, not forcing media & im encryption to mandatory and setting media encryption to SRTP"
+                )
+                account.setInteroperabilityMode()
+            }
+        }
     }
 }

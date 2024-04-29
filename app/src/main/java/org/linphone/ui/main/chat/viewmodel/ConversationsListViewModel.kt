@@ -27,12 +27,10 @@ import org.linphone.R
 import org.linphone.contacts.ContactsManager
 import org.linphone.core.ChatMessage
 import org.linphone.core.ChatRoom
-import org.linphone.core.ChatRoom.Capabilities
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.chat.model.ConversationModel
-import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
 import org.linphone.ui.main.viewmodel.AbstractMainViewModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
@@ -147,11 +145,8 @@ class ConversationsListViewModel @UiThread constructor() : AbstractMainViewModel
         val account = LinphoneUtils.getDefaultAccount()
         val chatRooms = account?.chatRooms ?: coreContext.core.chatRooms
         for (chatRoom in chatRooms) {
-            val disabledBecauseNotSecured = account?.isEndToEndEncryptionMandatory() == true && !chatRoom.hasCapability(
-                Capabilities.Encrypted.toInt()
-            )
             if (filter.isEmpty()) {
-                val model = ConversationModel(chatRoom, disabledBecauseNotSecured)
+                val model = ConversationModel(chatRoom)
                 list.add(model)
                 count += 1
             } else {
@@ -173,7 +168,7 @@ class ConversationsListViewModel @UiThread constructor() : AbstractMainViewModel
                     chatRoom.peerAddress.asStringUriOnly().contains(filter, ignoreCase = true) ||
                     chatRoom.subject.orEmpty().contains(filter, ignoreCase = true)
                 ) {
-                    val model = ConversationModel(chatRoom, disabledBecauseNotSecured)
+                    val model = ConversationModel(chatRoom)
                     list.add(model)
                     count += 1
                 }

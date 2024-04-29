@@ -39,10 +39,7 @@ import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.ShortcutUtils
 import org.linphone.utils.TimestampUtils
 
-class ConversationModel @WorkerThread constructor(
-    val chatRoom: ChatRoom,
-    val isDisabledBecauseNotSecured: Boolean = false
-) {
+class ConversationModel @WorkerThread constructor(val chatRoom: ChatRoom) {
     companion object {
         private const val TAG = "[Conversation Model]"
     }
@@ -56,6 +53,8 @@ class ConversationModel @WorkerThread constructor(
     val isGroup = !chatRoom.hasCapability(Capabilities.OneToOne.toInt()) && chatRoom.hasCapability(
         Capabilities.Conference.toInt()
     )
+
+    val isEncrypted = chatRoom.hasCapability(Capabilities.Encrypted.toInt())
 
     val isReadOnly = chatRoom.isReadOnly
 

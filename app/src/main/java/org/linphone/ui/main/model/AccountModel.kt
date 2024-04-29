@@ -24,6 +24,7 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.contacts.AbstractAvatarModel
 import org.linphone.core.Account
@@ -113,8 +114,6 @@ class AccountModel @WorkerThread constructor(
         account.addListener(accountListener)
         coreContext.core.addListener(coreListener)
 
-        trust.postValue(SecurityLevel.EndToEndEncryptedAndVerified)
-        showTrust.postValue(account.isEndToEndEncryptionMandatory())
         presenceStatus.postValue(ConsolidatedPresence.Offline)
 
         update()
@@ -165,6 +164,9 @@ class AccountModel @WorkerThread constructor(
         Log.i(
             "$TAG Refreshing info for account [${account.params.identityAddress?.asStringUriOnly()}]"
         )
+
+        trust.postValue(SecurityLevel.EndToEndEncryptedAndVerified)
+        showTrust.postValue(account.isEndToEndEncryptionMandatory())
 
         val name = LinphoneUtils.getDisplayName(account.params.identityAddress)
         displayName.postValue(name)
@@ -233,7 +235,47 @@ class AccountModel @WorkerThread constructor(
     }
 }
 
+@WorkerThread
 fun Account.isEndToEndEncryptionMandatory(): Boolean {
-    // TODO FIXME: use real API when available
-    return params.identityAddress?.domain == "sip.linphone.org"
+    val defaultDomain = params.identityAddress?.domain == corePreferences.defaultDomain
+    // TODO FIXME: use API when available
+    // val encryption = params.mediaEncryption == MediaEncryption.ZRTP && params.mediaEncryptionMandatory && params.instantMessagingEncryptionMandatory
+    val encryption = corePreferences.config.getBool("test", "account_e2e_mode", false)
+    return defaultDomain && encryption
+}
+
+@WorkerThread
+fun Account.setEndToEndEncryptionMandatory() {
+    /*
+    TODO FIXME: use API when available
+    val clone = params.clone()
+    clone.mediaEncryption = MediaEncryption.ZRTP
+    clone.mediaEncryptionMandatory = true
+    clone.instantMessagingEncryptionMandatory = true
+    params = clone
+    */
+    corePreferences.config.setBool("test", "account_e2e_mode", true)
+
+    if (this == core.defaultAccount) {
+        coreContext.contactsManager.updateContactsModelDependingOnDefaultAccountMode()
+    }
+    Log.i("[Account] End-to-end encryption set mandatory on account")
+}
+
+@WorkerThread
+fun Account.setInteroperabilityMode() {
+    /*
+    TODO FIXME: use API when available
+    val clone = params.clone()
+    clone.mediaEncryption = MediaEncryption.SRTP
+    clone.mediaEncryptionMandatory = false
+    clone.instantMessagingEncryptionMandatory = false
+    params = clone
+    */
+    corePreferences.config.setBool("test", "account_e2e_mode", false)
+
+    if (this == core.defaultAccount) {
+        coreContext.contactsManager.updateContactsModelDependingOnDefaultAccountMode()
+    }
+    Log.i("[Account] Account configured in interoperable mode")
 }

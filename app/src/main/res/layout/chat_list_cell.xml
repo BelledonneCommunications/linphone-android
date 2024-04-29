@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             app:barrierDirection="start"
             app:barrierMargin="-5dp"
-            app:constraint_referenced_ids="notifications_count, warning_disabled_not_secured, ephemeral, muted, date_time, last_sent_message_status" />
+            app:constraint_referenced_ids="notifications_count, warning_not_secured, ephemeral, muted, date_time, last_sent_message_status" />
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
@@ -161,13 +161,13 @@
             app:tint="?attr/color_main2_400" />
 
         <ImageView
-            android:id="@+id/warning_disabled_not_secured"
+            android:id="@+id/warning_not_secured"
             android:layout_width="@dimen/small_icon_size"
             android:layout_height="@dimen/small_icon_size"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="10dp"
             android:src="@drawable/lock_simple_open_bold"
-            android:visibility="@{model.isDisabledBecauseNotSecured ? View.VISIBLE : View.GONE}"
+            android:visibility="@{model.isEncrypted ? View.GONE : View.VISIBLE}"
             app:layout_constraintTop_toBottomOf="@id/date_time"
             app:layout_constraintBottom_toTopOf="@id/separator"
             app:layout_constraintEnd_toStartOf="@id/ephemeral"

@@ -64,6 +64,7 @@ class ProfileModeFragment : Fragment() {
         }
 
         binding.setContinueClickListener {
+            viewModel.applySelectedMode()
             requireActivity().finish()
         }
 

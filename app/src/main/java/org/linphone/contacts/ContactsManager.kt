@@ -138,17 +138,8 @@ class ContactsManager @UiThread constructor() {
 
         @WorkerThread
         override fun onDefaultAccountChanged(core: Core, account: Account?) {
-            Log.i("$TAG Default account changed, update all contact models showTrust value")
-            val showTrust = account?.isEndToEndEncryptionMandatory()
-            knownContactsAvatarsMap.forEach { (_, contactAvatarModel) ->
-                contactAvatarModel.showTrust.postValue(showTrust)
-            }
-            unknownContactsAvatarsMap.forEach { (_, contactAvatarModel) ->
-                contactAvatarModel.showTrust.postValue(showTrust)
-            }
-            conferenceAvatarMap.forEach { (_, contactAvatarModel) ->
-                contactAvatarModel.showTrust.postValue(showTrust)
-            }
+            Log.i("$TAG Default account changed, update all contacts' model showTrust value")
+            updateContactsModelDependingOnDefaultAccountMode()
         }
     }
 
@@ -212,6 +203,7 @@ class ContactsManager @UiThread constructor() {
         coreContext.contactsManager.notifyContactsListChanged()
     }
 
+    @WorkerThread
     fun contactRemoved(friend: Friend) {
         for (sipAddress in friend.addresses) {
             val sipUri = sipAddress.asStringUriOnly()
@@ -609,6 +601,24 @@ class ContactsManager @UiThread constructor() {
         personBuilder.setKey(identity)
         personBuilder.setImportant(true)
         return personBuilder.build()
+    }
+
+    @WorkerThread
+    fun updateContactsModelDependingOnDefaultAccountMode() {
+        val account = coreContext.core.defaultAccount
+        val showTrust = account?.isEndToEndEncryptionMandatory() == true
+        Log.i(
+            "$TAG Default account mode is [${if (showTrust) "end-to-end encryption mandatory" else "interoperable"}], update all contact models showTrust value"
+        )
+        knownContactsAvatarsMap.forEach { (_, contactAvatarModel) ->
+            contactAvatarModel.showTrust.postValue(showTrust)
+        }
+        unknownContactsAvatarsMap.forEach { (_, contactAvatarModel) ->
+            contactAvatarModel.showTrust.postValue(showTrust)
+        }
+        conferenceAvatarMap.forEach { (_, contactAvatarModel) ->
+            contactAvatarModel.showTrust.postValue(showTrust)
+        }
     }
 
     @WorkerThread
