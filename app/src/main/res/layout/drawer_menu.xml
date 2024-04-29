@@ -31,9 +31,10 @@
             android:layout_height="32dp"
             android:layout_marginStart="26dp"
             android:layout_marginTop="30dp"
-            android:src="@mipmap/ic_launcher_round"
+            android:src="@drawable/linphone_notification"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:tint="@color/main1_500" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:onClick="@{() -> viewModel.closeDrawerMenu()}"
