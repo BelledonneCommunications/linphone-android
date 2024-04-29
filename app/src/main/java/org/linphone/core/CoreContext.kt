@@ -287,6 +287,8 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
             policy.automaticallyAccept = true
             policy.automaticallyAcceptDirection = MediaDirection.RecvOnly
             core.videoActivationPolicy = policy
+
+            core.isFecEnabled = true
         }
 
         updateFriendListsSubscriptionDependingOnDefaultAccount()

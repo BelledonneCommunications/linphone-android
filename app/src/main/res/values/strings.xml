@@ -255,6 +255,7 @@
     <string name="settings_calls_echo_canceller_subtitle">Prevents echo from being heard by remote end</string>
     <string name="settings_calls_route_audio_to_bluetooth_title">Route audio to bluetooth device, if any</string>
     <string name="settings_calls_enable_video_title">Enable video</string>
+    <string name="settings_calls_enable_fec_title">Enable video FEC</string>
     <string name="settings_calls_ringtones_title">Choose your ringtone:</string>
     <string name="settings_calls_use_device_ringtone_label">Use this device\'s ringtone</string>
     <string name="settings_calls_play_ringtone_label">Play</string>
