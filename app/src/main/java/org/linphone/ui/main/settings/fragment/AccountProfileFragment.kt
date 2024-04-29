@@ -134,15 +134,17 @@ class AccountProfileFragment : GenericFragment() {
         }
 
         binding.setChangeModeClickListener {
-            val action = AccountProfileFragmentDirections.actionAccountProfileFragmentToAccountProfileModeFragment()
-            findNavController().navigate(action)
+            goToAccountProfileModeFragment()
         }
 
         binding.setSettingsClickListener {
-            val action = AccountProfileFragmentDirections.actionAccountProfileFragmentToAccountSettingsFragment(
-                identity
-            )
-            findNavController().navigate(action)
+            if (findNavController().currentDestination?.id == R.id.accountProfileFragment) {
+                val action =
+                    AccountProfileFragmentDirections.actionAccountProfileFragmentToAccountSettingsFragment(
+                        identity
+                    )
+                findNavController().navigate(action)
+            }
         }
 
         binding.setDeleteAccountClickListener {
@@ -181,8 +183,16 @@ class AccountProfileFragment : GenericFragment() {
                 if (found) {
                     (view.parent as? ViewGroup)?.doOnPreDraw {
                         startPostponedEnterTransition()
-
                         setupDialPlanPicker()
+
+                        sharedViewModel.goToAccountProfileModeEvent.observe(viewLifecycleOwner) {
+                            it.consume {
+                                Log.i(
+                                    "$TAG Account was found, going directly to AccountProfileMode fragment"
+                                )
+                                goToAccountProfileModeFragment()
+                            }
+                        }
                     }
                 } else {
                     Log.e(
@@ -201,6 +211,14 @@ class AccountProfileFragment : GenericFragment() {
         Log.i("$TAG Leaving account profile, saving changes")
         viewModel.saveChangesWhenLeaving()
         sharedViewModel.refreshDrawerMenuAccountsListEvent.value = Event(true)
+    }
+
+    private fun goToAccountProfileModeFragment() {
+        if (findNavController().currentDestination?.id == R.id.accountProfileFragment) {
+            val action =
+                AccountProfileFragmentDirections.actionAccountProfileFragmentToAccountProfileModeFragment()
+            findNavController().navigate(action)
+        }
     }
 
     private fun pickImage() {

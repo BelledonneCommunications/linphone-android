@@ -430,6 +430,8 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
             val id = LinphoneUtils.getChatRoomId(chatRoom)
             Log.i("$TAG Asking notifications manager not to notify messages for conversation [$id]")
             coreContext.notificationsManager.setCurrentlyDisplayedChatRoomId(id)
+
+            checkIfConversationShouldBeDisabledForSecurityReasons()
         }
     }
 
@@ -479,6 +481,23 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
     }
 
     @WorkerThread
+    fun checkIfConversationShouldBeDisabledForSecurityReasons() {
+        if (!chatRoom.hasCapability(ChatRoom.Capabilities.Encrypted.toInt())) {
+            val account = LinphoneUtils.getDefaultAccount()
+            if (account?.isEndToEndEncryptionMandatory() == true) {
+                Log.w(
+                    "$TAG Conversation with subject [${chatRoom.subject}] has been disabled because it isn't encrypted and default account is in secure mode"
+                )
+                isDisabledBecauseNotSecured.postValue(true)
+            } else {
+                isDisabledBecauseNotSecured.postValue(false)
+            }
+        } else {
+            isDisabledBecauseNotSecured.postValue(false)
+        }
+    }
+
+    @WorkerThread
     private fun configureChatRoom() {
         scrollingPosition = SCROLLING_POSITION_NOT_SET
         computeComposingLabel()
@@ -507,15 +526,7 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
             Log.w("$TAG Conversation with subject [${chatRoom.subject}] is read only!")
         }
 
-        if (!chatRoom.hasCapability(ChatRoom.Capabilities.Encrypted.toInt())) {
-            val account = LinphoneUtils.getDefaultAccount()
-            if (account?.isEndToEndEncryptionMandatory() == true) {
-                Log.w(
-                    "$TAG Conversation with subject [${chatRoom.subject}] has been disabled because it isn't encrypted and default account is in secure mode"
-                )
-                isDisabledBecauseNotSecured.postValue(true)
-            }
-        }
+        checkIfConversationShouldBeDisabledForSecurityReasons()
 
         subject.postValue(chatRoom.subject)
 

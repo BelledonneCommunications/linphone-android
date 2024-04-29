@@ -551,7 +551,11 @@ class ConversationFragment : SlidingPaneChildFragment() {
         }
 
         binding.setWarningConversationDisabledClickListener {
-            // TODO: go to account profile mode fragment
+            Log.i(
+                "$TAG Navigating to account profile mode fragment to let user change mode to interop"
+            )
+            sharedViewModel.goToAccountProfileModeEvent.value = Event(true)
+            sharedViewModel.goToAccountProfileEvent.value = Event(true)
         }
 
         sendMessageViewModel.emojiToAddEvent.observe(viewLifecycleOwner) {

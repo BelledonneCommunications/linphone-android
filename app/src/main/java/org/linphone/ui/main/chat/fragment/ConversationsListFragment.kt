@@ -42,6 +42,7 @@ import org.linphone.ui.main.fragment.AbstractMainFragment
 import org.linphone.ui.main.history.fragment.HistoryMenuDialogFragment
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
+import org.linphone.utils.LinphoneUtils
 
 @UiThread
 class ConversationsListFragment : AbstractMainFragment() {
@@ -207,6 +208,19 @@ class ConversationsListFragment : AbstractMainFragment() {
                     val action =
                         ConversationsListFragmentDirections.actionConversationsListFragmentToMeetingWaitingRoomFragment(
                             uri
+                        )
+                    findNavController().navigate(action)
+                }
+            }
+        }
+
+        sharedViewModel.goToAccountProfileEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                if (findNavController().currentDestination?.id == R.id.conversationsListFragment) {
+                    val identity = LinphoneUtils.getDefaultAccount()?.params?.identityAddress?.asStringUriOnly().orEmpty()
+                    val action =
+                        ConversationsListFragmentDirections.actionConversationsListFragmentToAccountProfileFragment(
+                            identity
                         )
                     findNavController().navigate(action)
                 }

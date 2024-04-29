@@ -278,8 +278,8 @@
                 android:onClick="@{warningConversationDisabledClickListener}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                layout="@layout/chat_conversation_send_area_disabled_unsecured_warning"
                 android:visibility="@{viewModel.isDisabledBecauseNotSecured ? View.VISIBLE : View.GONE, default=gone}"
+                layout="@layout/chat_conversation_send_area_disabled_unsecured_warning"
                 app:layout_constraintBottom_toTopOf="@id/send_area"/>
 
             <include

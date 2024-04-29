@@ -281,6 +281,12 @@
             app:launchSingleTop="true"
             app:enterAnim="@anim/slide_in"
             app:popExitAnim="@anim/slide_out" />
+        <action
+            android:id="@+id/action_conversationsListFragment_to_accountProfileFragment"
+            app:destination="@id/accountProfileFragment"
+            app:launchSingleTop="true"
+            app:enterAnim="@anim/slide_in"
+            app:popExitAnim="@anim/slide_out" />
     </fragment>
 
     <fragment
