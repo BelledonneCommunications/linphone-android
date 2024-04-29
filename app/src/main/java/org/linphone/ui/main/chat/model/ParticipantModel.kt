@@ -30,6 +30,7 @@ class ParticipantModel @WorkerThread constructor(
     val isMyselfAdmin: Boolean = false,
     val isParticipantAdmin: Boolean = false,
     val showMenu: Boolean = false,
+    val isParticipantMyself: Boolean = false,
     private val onClicked: ((model: ParticipantModel) -> Unit)? = null,
     private val onMenuClicked: ((view: View, model: ParticipantModel) -> Unit)? = null
 ) {

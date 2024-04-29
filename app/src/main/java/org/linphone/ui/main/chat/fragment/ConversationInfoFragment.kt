@@ -198,8 +198,7 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
         sharedViewModel.listOfSelectedSipUrisEvent.observe(viewLifecycleOwner) {
             it.consume { list ->
                 Log.i("$TAG Found [${list.size}] new participants to add to the group, let's do it")
-                // TODO FIXME: instead of adding them, replace current list with new one
-                viewModel.addParticipants(list)
+                viewModel.setParticipants(list)
             }
         }
 
@@ -221,7 +220,10 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
                 Log.i("$TAG Going into participant picker fragment")
                 val selection = arrayListOf<String>()
                 for (participant in viewModel.participants.value.orEmpty()) {
-                    selection.add(participant.address.asStringUriOnly())
+                    if (!participant.isParticipantMyself) {
+                        // Do not add ourselves to editable list
+                        selection.add(participant.address.asStringUriOnly())
+                    }
                 }
                 Log.i("$TAG [${selection.size}] participants are already selected, keeping them")
                 val action =

@@ -376,7 +376,7 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
     }
 
     @UiThread
-    fun addParticipants(toAdd: ArrayList<String>) {
+    fun setParticipants(newList: ArrayList<String>) {
         coreContext.postOnCoreThread {
             if (isChatRoomInitialized()) {
                 if (!LinphoneUtils.isChatRoomAGroup(chatRoom)) {
@@ -384,26 +384,63 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
                     return@postOnCoreThread
                 }
 
-                val list = arrayListOf<Address>()
-                for (participant in toAdd) {
+                for (participant in chatRoom.participants) {
+                    val address = participant.address
+                    // Do not remove ourselves if not in participants list anymore
+                    if (LinphoneUtils.getDefaultAccount()?.params?.identityAddress?.weakEqual(
+                            address
+                        ) == true
+                    ) {
+                        continue
+                    }
+
+                    val uri = address.asStringUriOnly()
+                    val found = newList.find {
+                        it == uri
+                    }
+                    if (found != null) {
+                        Log.i(
+                            "$TAG Participant [$uri] is still in new participants list, do nothing"
+                        )
+                    } else {
+                        Log.i("$TAG Removing participant [$uri] from this conversation")
+                        chatRoom.removeParticipant(participant)
+                    }
+                }
+
+                val toAddList = arrayListOf<Address>()
+                for (participant in newList) {
                     val address = Factory.instance().createAddress(participant)
                     if (address == null) {
                         Log.e("$TAG Failed to parse [$participant] as address!")
                     } else {
-                        list.add(address)
+                        val found = participants.value.orEmpty().find {
+                            it.address.weakEqual(address)
+                        }
+                        if (found != null) {
+                            Log.i(
+                                "$TAG Participant [${address.asStringUriOnly()}] is already in group, do nothing"
+                            )
+                        } else {
+                            toAddList.add(address)
+                        }
                     }
                 }
 
-                val participantsToAdd = arrayOfNulls<Address>(list.size)
-                list.toArray(participantsToAdd)
-                Log.i("$TAG Adding [${participantsToAdd.size}] new participants to conversation")
-                val ok = chatRoom.addParticipants(participantsToAdd)
-                if (!ok) {
-                    Log.w("$TAG Failed to add some/all participants to the group!")
-                    val message = AppUtils.getString(
-                        R.string.toast_failed_to_add_participant_to_group_conversation
+                if (toAddList.isNotEmpty()) {
+                    val participantsToAdd = arrayOfNulls<Address>(toAddList.size)
+                    toAddList.toArray(participantsToAdd)
+                    Log.i(
+                        "$TAG Adding [${participantsToAdd.size}] new participants to conversation"
                     )
-                    showRedToastEvent.postValue(Event(Pair(message, R.drawable.warning_circle)))
+                    val ok = chatRoom.addParticipants(participantsToAdd)
+                    if (!ok) {
+                        Log.w("$TAG Failed to add some/all participants to the group!")
+                        val message = AppUtils.getString(
+                            R.string.toast_failed_to_add_participant_to_group_conversation
+                        )
+                        showRedToastEvent.postValue(Event(Pair(message, R.drawable.warning_circle)))
+                    }
                 }
             }
         }
@@ -484,6 +521,7 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
                 selfAdmin,
                 isParticipantAdmin = false,
                 showMenu = true,
+                isParticipantMyself = false,
                 onMenuClicked = { view, model ->
                     // openMenu
                     showParticipantAdminPopupMenuEvent.postValue(Event(Pair(view, model)))
@@ -499,6 +537,7 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
                     selfAdmin,
                     isParticipantAdmin = isParticipantAdmin,
                     showMenu = true,
+                    isParticipantMyself = false,
                     onMenuClicked = { view, model ->
                         // openMenu
                         showParticipantAdminPopupMenuEvent.postValue(Event(Pair(view, model)))
@@ -516,6 +555,7 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
                     selfAdmin,
                     isParticipantAdmin = selfAdmin,
                     showMenu = false,
+                    isParticipantMyself = true,
                     onMenuClicked = { view, model ->
                         // openMenu
                         showParticipantAdminPopupMenuEvent.postValue(Event(Pair(view, model)))
