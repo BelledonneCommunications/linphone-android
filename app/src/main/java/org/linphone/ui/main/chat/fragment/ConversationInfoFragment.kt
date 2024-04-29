@@ -198,6 +198,7 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
         sharedViewModel.listOfSelectedSipUrisEvent.observe(viewLifecycleOwner) {
             it.consume { list ->
                 Log.i("$TAG Found [${list.size}] new participants to add to the group, let's do it")
+                // TODO FIXME: instead of adding them, replace current list with new one
                 viewModel.addParticipants(list)
             }
         }

@@ -137,8 +137,8 @@ abstract class AddressSelectionViewModel @UiThread constructor() : DefaultAccoun
             Log.i("$TAG Adding [${model.address.asStringUriOnly()}] address to selection")
 
             val list = arrayListOf<SelectedAddressModel>()
-            list.addAll(actual)
             list.add(model)
+            list.addAll(actual)
 
             selectionCount.postValue(
                 AppUtils.getStringWithPlural(

@@ -190,6 +190,7 @@ class EditMeetingFragment : SlidingPaneChildFragment() {
                 Log.i(
                     "$TAG Found [${list.size}] new participants to add to the meeting, let's do it"
                 )
+                // TODO FIXME: instead of adding them, replace current list with new one
                 viewModel.addParticipants(list)
             }
         }
