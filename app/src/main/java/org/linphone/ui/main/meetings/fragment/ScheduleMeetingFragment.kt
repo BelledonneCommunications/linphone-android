@@ -77,7 +77,7 @@ class ScheduleMeetingFragment : GenericFragment() {
         val participants = args.participants
         if (!participants.isNullOrEmpty()) {
             Log.i("$TAG Found pre-populated array of participants of size [${participants.size}]")
-            viewModel.addParticipants(participants.toList())
+            viewModel.setParticipants(participants.toList())
         }
 
         binding.setBackClickListener {
@@ -191,8 +191,7 @@ class ScheduleMeetingFragment : GenericFragment() {
                 Log.i(
                     "$TAG Found [${list.size}] new participants to add to the meeting, let's do it"
                 )
-                // TODO FIXME: instead of adding them, replace current list with new one
-                viewModel.addParticipants(list)
+                viewModel.setParticipants(list)
             }
         }
     }

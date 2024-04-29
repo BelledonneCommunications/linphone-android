@@ -309,24 +309,15 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
     }
 
     @UiThread
-    fun addParticipants(toAdd: List<String>) {
+    fun setParticipants(toAdd: List<String>) {
         coreContext.postOnCoreThread {
             val list = arrayListOf<SelectedAddressModel>()
-            list.addAll(participants.value.orEmpty())
 
             for (participant in toAdd) {
                 val address = Factory.instance().createAddress(participant)
                 if (address == null) {
                     Log.e("$TAG Failed to parse [$participant] as address!")
                 } else {
-                    val found = list.find { it.address.weakEqual(address) }
-                    if (found != null) {
-                        Log.i(
-                            "$TAG Participant [${found.address.asStringUriOnly()}] already in list, skipping"
-                        )
-                        continue
-                    }
-
                     val avatarModel = coreContext.contactsManager.getContactAvatarModelForAddress(
                         address
                     )
@@ -335,13 +326,11 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
                         removeModelFromSelection(model)
                     }
                     list.add(model)
-                    Log.i("$TAG Added participant [${address.asStringUriOnly()}]")
+                    Log.i("$TAG Participant [${address.asStringUriOnly()}] added to list")
                 }
             }
 
-            Log.i(
-                "$TAG [${toAdd.size}] participants added, now there are [${list.size}] participants in list"
-            )
+            Log.i("$TAG Now there are [${list.size}] participants in list")
             participants.postValue(list)
         }
     }
