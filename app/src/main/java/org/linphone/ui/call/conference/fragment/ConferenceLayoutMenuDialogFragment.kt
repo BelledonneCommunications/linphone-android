@@ -70,7 +70,7 @@ class ConferenceLayoutMenuDialogFragment(
         view.viewModel = conferenceModel
 
         view.setGridClickListener {
-            if (conferenceModel.participantDevices.value.orEmpty().size < 6) {
+            if (conferenceModel.participantDevices.value.orEmpty().size < 7) {
                 conferenceModel.changeLayout(ConferenceViewModel.GRID_LAYOUT)
                 dismiss()
             } else {
