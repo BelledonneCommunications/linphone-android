@@ -140,8 +140,8 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
-    val goToEndedCallEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+    val goToEndedCallEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
     }
 
     val requestRecordAudioPermission: MutableLiveData<Event<Boolean>> by lazy {
@@ -256,13 +256,23 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                             "$TAG Failed to get a valid call to display, go to ended call fragment"
                         )
                         updateCallDuration()
-                        goToEndedCallEvent.postValue(Event(true))
+                        val text = if (call.state == Call.State.Error) {
+                            LinphoneUtils.getCallErrorInfoToast(call)
+                        } else {
+                            ""
+                        }
+                        goToEndedCallEvent.postValue(Event(text))
                     }
                 } else {
                     updateCallDuration()
                     Log.i("$TAG Call is ending, go to ended call fragment")
                     // Show that call was ended for a few seconds, then leave
-                    goToEndedCallEvent.postValue(Event(true))
+                    val text = if (call.state == Call.State.Error) {
+                        LinphoneUtils.getCallErrorInfoToast(call)
+                    } else {
+                        ""
+                    }
+                    goToEndedCallEvent.postValue(Event(text))
                 }
             } else {
                 val videoEnabled = call.currentParams.isVideoEnabled

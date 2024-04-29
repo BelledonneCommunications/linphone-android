@@ -107,6 +107,13 @@
     <string name="toast_failed_to_join_conference">Echec lors de la connexion à la conférence!</string>
     <string name="toast_remote_provisioning_config_applied">Configuration appliquée avec succès</string>
     <string name="toast_remote_provisioning_config_failed">Erreur durant la récupération ou l\'application de la configuration</string>
+    <string name="toast_call_error_user_busy">L\'utilisateur est occupé</string>
+    <string name="toast_call_error_user_not_found">L\'utilisateur n\'a pu être trouvé</string>
+    <string name="toast_call_error_incompatible_media_params">Paramètres media incompatibles</string>
+    <string name="toast_call_error_network_unreachable">Le réseau n\'est pas joignable</string>
+    <string name="toast_call_error_io_error">Service indisponible ou erreur réseau</string>
+    <string name="toast_call_error_server_timeout">Délai d\'attente du serveur dépassé</string>
+    <string name="toast_call_error_temporarily_unavailable">Temporairement indisponible</string>
 
     <!-- Assistant related string (account register / login / etc...) -->
     <string name="assistant_dialog_general_terms_and_privacy_policy_title">Conditions de service &amp; politique de confidentialité</string>

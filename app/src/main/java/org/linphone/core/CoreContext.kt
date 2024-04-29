@@ -166,6 +166,16 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
                         showCallActivity()
                     }
                 }
+                Call.State.Error -> {
+                    val errorInfo = call.errorInfo
+                    Log.w(
+                        "$TAG Call error reason is [${errorInfo.reason}](${errorInfo.protocolCode}): ${errorInfo.phrase}"
+                    )
+                    val text = LinphoneUtils.getCallErrorInfoToast(call)
+                    redToastToShowEvent.postValue(
+                        Event(Pair(text, org.linphone.R.drawable.warning_circle))
+                    )
+                }
                 else -> {
                 }
             }

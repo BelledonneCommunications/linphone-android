@@ -185,7 +185,11 @@ class CallActivity : GenericActivity() {
         }
 
         callViewModel.goToEndedCallEvent.observe(this) {
-            it.consume {
+            it.consume { message ->
+                if (message.isNotEmpty()) {
+                    showRedToast(message, R.drawable.warning_circle)
+                }
+
                 val action = ActiveCallFragmentDirections.actionGlobalEndedCallFragment()
                 findNavController(R.id.call_nav_container).navigate(action)
             }

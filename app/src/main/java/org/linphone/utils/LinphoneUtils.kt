@@ -40,6 +40,7 @@ import org.linphone.core.ChatRoom
 import org.linphone.core.ConferenceInfo
 import org.linphone.core.Core
 import org.linphone.core.Factory
+import org.linphone.core.Reason
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 
@@ -118,6 +119,37 @@ class LinphoneUtils {
             return when (callState) {
                 Call.State.End, Call.State.Error -> true
                 else -> false
+            }
+        }
+
+        @WorkerThread
+        fun getCallErrorInfoToast(call: Call): String {
+            val errorInfo = call.errorInfo
+            Log.w(
+                "$TAG Call error reason is [${errorInfo.reason}](${errorInfo.protocolCode}): ${errorInfo.phrase}"
+            )
+            return when (errorInfo.reason) {
+                Reason.Busy -> {
+                    AppUtils.getString(R.string.toast_call_error_user_busy)
+                }
+                Reason.IOError -> {
+                    AppUtils.getString(R.string.toast_call_error_io_error)
+                }
+                Reason.NotAcceptable -> {
+                    AppUtils.getString(R.string.toast_call_error_incompatible_media_params)
+                }
+                Reason.NotFound -> {
+                    AppUtils.getString(R.string.toast_call_error_user_not_found)
+                }
+                Reason.ServerTimeout -> {
+                    AppUtils.getString(R.string.toast_call_error_server_timeout)
+                }
+                Reason.TemporarilyUnavailable -> {
+                    AppUtils.getString(R.string.toast_call_error_temporarily_unavailable)
+                }
+                else -> {
+                    "${errorInfo.protocolCode} / ${errorInfo.phrase}"
+                }
             }
         }
 
