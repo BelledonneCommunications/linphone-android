@@ -30,6 +30,7 @@ import org.linphone.ui.main.fragment.GenericFragment
 @UiThread
 class RecordingsFragment : GenericFragment() {
     private lateinit var binding: RecordingsFragmentBinding
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

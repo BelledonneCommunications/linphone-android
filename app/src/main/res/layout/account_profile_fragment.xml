@@ -250,7 +250,7 @@
                         android:textColor="@color/gray_main2_600"
                         android:maxLines="1"
                         android:background="@drawable/edit_text_background"
-                        android:inputType="text|textPersonName"
+                        android:inputType="text|textPersonName|textCapSentences"
                         app:layout_constraintHorizontal_bias="0"
                         app:layout_constraintWidth_max="@dimen/text_input_max_width"
                         app:layout_constraintTop_toBottomOf="@id/display_name_label"
@@ -403,6 +403,7 @@
                         android:layout_marginEnd="16dp"
                         android:contentDescription="@null"
                         android:src="@drawable/shape_squircle_white_background"
+                        android:visibility="@{viewModel.showModeSelection ? View.VISIBLE : View.GONE}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/connection_background"
@@ -416,6 +417,7 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
                         android:text="@{viewModel.isCurrentlySelectedModeSecure ? @string/manage_account_e2e_encrypted_mode_default_title : @string/manage_account_e2e_encrypted_mode_interoperable_title, default=@string/manage_account_e2e_encrypted_mode_default_title}"
+                        android:visibility="@{viewModel.showModeSelection ? View.VISIBLE : View.GONE}"
                         app:layout_constraintTop_toTopOf="@id/mode_background"
                         app:layout_constraintStart_toStartOf="@id/mode_background"
                         app:layout_constraintBottom_toBottomOf="@id/mode_background"/>
@@ -436,6 +438,7 @@
                         android:text="@string/manage_account_change_mode"
                         android:maxLines="1"
                         android:ellipsize="end"
+                        android:visibility="@{viewModel.showModeSelection ? View.VISIBLE : View.GONE}"
                         app:layout_constraintEnd_toEndOf="@id/mode_background"
                         app:layout_constraintTop_toTopOf="@id/mode_background"
                         app:layout_constraintBottom_toBottomOf="@id/mode_background"/>

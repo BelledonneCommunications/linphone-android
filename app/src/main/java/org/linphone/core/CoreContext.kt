@@ -72,6 +72,17 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
 
     private val mainThread = Handler(Looper.getMainLooper())
 
+    var bearerAuthInfoPendingPasswordUpdate: AuthInfo? = null
+    var digestAuthInfoPendingPasswordUpdate: AuthInfo? = null
+
+    val bearerAuthenticationRequestedEvent: MutableLiveData<Event<Pair<String, String?>>> by lazy {
+        MutableLiveData<Event<Pair<String, String?>>>()
+    }
+
+    val digestAuthenticationRequestedEvent: MutableLiveData<Event<String>> by lazy {
+        MutableLiveData<Event<String>>()
+    }
+
     val greenToastToShowEvent: MutableLiveData<Event<Pair<String, Int>>> by lazy {
         MutableLiveData<Event<Pair<String, Int>>>()
     }
@@ -207,6 +218,57 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
                 } else {
                     Log.i("$TAG Last call ended, setting [$frontFacing] as the default one")
                     core.videoDevice = frontFacing
+                }
+            }
+        }
+
+        @WorkerThread
+        override fun onAuthenticationRequested(core: Core, authInfo: AuthInfo, method: AuthMethod) {
+            if (authInfo.username == null || authInfo.domain == null || authInfo.realm == null) {
+                Log.e(
+                    "$TAG Authentication request but either username [${authInfo.username}], domain [${authInfo.domain}] or realm [${authInfo.realm}] is null!"
+                )
+                return
+            }
+
+            when (method) {
+                AuthMethod.Bearer -> {
+                    val serverUrl = authInfo.authorizationServer
+                    val username = authInfo.username
+                    if (!serverUrl.isNullOrEmpty()) {
+                        Log.i(
+                            "$TAG Authentication requested method is Bearer, starting Single Sign On activity with server URL [$serverUrl] and username [$username]"
+                        )
+                        bearerAuthInfoPendingPasswordUpdate = authInfo
+                        bearerAuthenticationRequestedEvent.postValue(
+                            Event(Pair(serverUrl, username))
+                        )
+                    } else {
+                        Log.e(
+                            "$TAG Authentication requested method is Bearer but no authorization server was found in auth info!"
+                        )
+                    }
+                }
+                AuthMethod.HttpDigest -> {
+                    val accountFound = core.accountList.find {
+                        it.params.identityAddress?.username == authInfo.username && it.params.identityAddress?.domain == authInfo.domain
+                    }
+                    if (accountFound == null) {
+                        Log.w(
+                            "$TAG Failed to find account matching auth info, aborting auth dialog"
+                        )
+                        return
+                    }
+
+                    val identity = "${authInfo.username}@${authInfo.domain}"
+                    Log.i(
+                        "$TAG Authentication requested method is HttpDigest, showing dialog asking user for password for identity [$identity]"
+                    )
+                    digestAuthInfoPendingPasswordUpdate = authInfo
+                    digestAuthenticationRequestedEvent.postValue(Event(identity))
+                }
+                AuthMethod.Tls -> {
+                    Log.w("$TAG Authentication requested method is TLS, not doing anything...")
                 }
             }
         }
@@ -389,6 +451,22 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
                 // Flexisip will handle the Busy status depending on other devices
                 core.consolidatedPresence = ConsolidatedPresence.Offline
             }
+        }
+    }
+
+    @WorkerThread
+    fun updateAuthInfo(password: String) {
+        val authInfo = digestAuthInfoPendingPasswordUpdate
+        if (authInfo != null) {
+            Log.i(
+                "$TAG Updating password for username [${authInfo.username}] using auth info [$authInfo]"
+            )
+            authInfo.password = password
+            core.addAuthInfo(authInfo)
+            digestAuthInfoPendingPasswordUpdate = null
+            core.refreshRegisters()
+        } else {
+            Log.e("$TAG No pending auth info for digest authentication!")
         }
     }
 

@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.assistant.viewmodel
+package org.linphone.ui.main.sso.viewmodel
 
 import android.content.Intent
 import android.net.Uri
@@ -35,6 +35,7 @@ import net.openid.appauth.AuthorizationService
 import net.openid.appauth.AuthorizationServiceConfiguration
 import net.openid.appauth.ResponseTypeValues
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.core.Factory
 import org.linphone.core.tools.Log
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
@@ -50,7 +51,9 @@ class SingleSignOnViewModel : ViewModel() {
 
     val singleSignOnProcessCompletedEvent = MutableLiveData<Event<Boolean>>()
 
-    val singleSignOnUrl = MutableLiveData<String>()
+    private var singleSignOnUrl = ""
+
+    private var username: String = ""
 
     val startAuthIntentEvent: MutableLiveData<Event<Intent>> by lazy {
         MutableLiveData<Event<Intent>>()
@@ -60,15 +63,18 @@ class SingleSignOnViewModel : ViewModel() {
         MutableLiveData<Event<String>>()
     }
 
-    private var preFilledUser: String = ""
-
     private lateinit var authState: AuthState
     private lateinit var authService: AuthorizationService
 
     @UiThread
-    fun setUp() {
+    fun setUp(ssoUrl: String, user: String = "") {
         viewModelScope.launch {
-            Log.i("$TAG Setting up SSO environment, redirect URI is [$REDIRECT_URI]")
+            singleSignOnUrl = ssoUrl
+            username = user
+
+            Log.i(
+                "$TAG Setting up SSO environment for username [$username] and URL [$singleSignOnUrl], redirect URI is [$REDIRECT_URI]"
+            )
             authState = getAuthState()
             updateTokenInfo()
         }
@@ -94,7 +100,7 @@ class SingleSignOnViewModel : ViewModel() {
     private fun singleSignOn() {
         Log.i("$TAG Fetch from issuer")
         AuthorizationServiceConfiguration.fetchFromUrl(
-            Uri.parse(singleSignOnUrl.value),
+            Uri.parse(singleSignOnUrl),
             AuthorizationServiceConfiguration.RetrieveConfigurationCallback { serviceConfiguration, ex ->
                 if (ex != null) {
                     Log.e("$TAG Failed to fetch configuration")
@@ -120,8 +126,8 @@ class SingleSignOnViewModel : ViewModel() {
                     Uri.parse(REDIRECT_URI) // the redirect URI to which the auth response is sent
                 )
 
-                if (preFilledUser.isNotEmpty()) {
-                    authRequestBuilder.setLoginHint(preFilledUser)
+                if (username.isNotEmpty()) {
+                    authRequestBuilder.setLoginHint(username)
                 }
 
                 val authRequest = authRequestBuilder.build()
@@ -187,7 +193,7 @@ class SingleSignOnViewModel : ViewModel() {
                         storeAuthStateAsJsonFile()
                     }
 
-                    useToken()
+                    storeTokensInAuthInfo()
                 } else {
                     Log.e("$TAG Failed to perform token request [$ex]")
                     onErrorEvent.postValue(Event(ex?.errorDescription.orEmpty()))
@@ -214,9 +220,7 @@ class SingleSignOnViewModel : ViewModel() {
                         return@AuthStateAction
                     }
 
-                    Log.i("$$TAG Access & id tokens are now available")
-                    Log.d("$TAG Access token [$accessToken], id token [$idToken]")
-
+                    Log.i("$TAG Access & id tokens are now available")
                     storeAuthStateAsJsonFile()
                 }
             )*/
@@ -288,7 +292,7 @@ class SingleSignOnViewModel : ViewModel() {
                         }
                         val time = TimestampUtils.toString(expiration, timestampInSecs = false)
                         Log.i("$TAG Access token expires [$date] [$time]")
-                        singleSignOnProcessCompletedEvent.postValue(Event(true))
+                        storeTokensInAuthInfo()
                     }
                 } else {
                     Log.w("$TAG Access token expiration info not available")
@@ -305,6 +309,37 @@ class SingleSignOnViewModel : ViewModel() {
         } else {
             Log.i("$TAG Auth state hasn't been created yet")
             singleSignOn()
+        }
+    }
+
+    @UiThread
+    private fun storeTokensInAuthInfo() {
+        coreContext.postOnCoreThread { core ->
+            val expire = authState.accessTokenExpirationTime
+            if (expire == null) {
+                Log.e("$TAG Access token expiration time is null!")
+                onErrorEvent.postValue(Event("Invalid access token expiration time"))
+            } else {
+                val accessToken =
+                    Factory.instance().createBearerToken(authState.accessToken, expire)
+                val refreshToken =
+                    Factory.instance().createBearerToken(authState.refreshToken, expire)
+
+                val authInfo = coreContext.bearerAuthInfoPendingPasswordUpdate
+                if (authInfo == null) {
+                    Log.e("$TAG No pending auth info in CoreContext!")
+                    return@postOnCoreThread
+                }
+                authInfo.accessToken = accessToken
+                authInfo.refreshToken = refreshToken
+                core.addAuthInfo(authInfo)
+
+                Log.i(
+                    "$TAG Auth info for username [$username] filled with access token [${authState.accessToken}], refresh token [${authState.refreshToken}] and expire [$expire], refreshing REGISTERs"
+                )
+                core.refreshRegisters()
+                singleSignOnProcessCompletedEvent.postValue(Event(true))
+            }
         }
     }
 }

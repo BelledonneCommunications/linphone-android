@@ -53,6 +53,7 @@ import org.linphone.ui.GenericActivity
 import org.linphone.ui.assistant.AssistantActivity
 import org.linphone.ui.main.chat.fragment.ConversationsListFragmentDirections
 import org.linphone.ui.main.fragment.AuthRequestedDialogModel
+import org.linphone.ui.main.sso.fragment.SingleSignOnFragmentDirections
 import org.linphone.ui.main.viewmodel.MainViewModel
 import org.linphone.ui.main.viewmodel.SharedMainViewModel
 import org.linphone.ui.welcome.WelcomeActivity
@@ -164,18 +165,34 @@ class MainActivity : GenericActivity() {
             }
         }
 
-        viewModel.authenticationRequestedEvent.observe(this) {
-            it.consume { identity ->
-                showAuthenticationRequestedDialog(identity)
-            }
-        }
-
         binding.root.doOnAttach {
             Log.i("$TAG Report UI has been fully drawn (TTFD)")
             try {
                 reportFullyDrawn()
             } catch (se: SecurityException) {
                 Log.e("$TAG Security exception when doing reportFullyDrawn(): $se")
+            }
+        }
+
+        coreContext.bearerAuthenticationRequestedEvent.observe(this) {
+            it.consume { pair ->
+                val serverUrl = pair.first
+                val username = pair.second
+
+                Log.i(
+                    "$TAG Navigating to Single Sign On Fragment with server URL [$serverUrl] and username [$username]"
+                )
+                val action = SingleSignOnFragmentDirections.actionGlobalSingleSignOnFragment(
+                    serverUrl,
+                    username
+                )
+                findNavController().navigate(action)
+            }
+        }
+
+        coreContext.digestAuthenticationRequestedEvent.observe(this) {
+            it.consume { identity ->
+                showAuthenticationRequestedDialog(identity)
             }
         }
 
@@ -586,7 +603,9 @@ class MainActivity : GenericActivity() {
 
         model.confirmEvent.observe(this) {
             it.consume { password ->
-                viewModel.updateAuthInfo(password)
+                coreContext.postOnCoreThread {
+                    coreContext.updateAuthInfo(password)
+                }
                 dialog.dismiss()
             }
         }
