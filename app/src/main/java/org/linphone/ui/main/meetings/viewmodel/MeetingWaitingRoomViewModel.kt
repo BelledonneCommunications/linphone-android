@@ -145,8 +145,6 @@ class MeetingWaitingRoomViewModel @UiThread constructor() : ViewModel() {
     }
 
     init {
-        joining.value = false
-
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
 
@@ -178,10 +176,15 @@ class MeetingWaitingRoomViewModel @UiThread constructor() : ViewModel() {
             val address = Factory.instance().createAddress(uri)
             if (address != null) {
                 conferenceAddress = address
-                val found = core.findConferenceInformationFromUri(address)
-                if (found != null) {
+                val callFound = core.calls.find {
+                    it.remoteAddress.weakEqual(conferenceAddress)
+                }
+                joining.postValue(callFound != null)
+
+                val conferenceInfoFound = core.findConferenceInformationFromUri(address)
+                if (conferenceInfoFound != null) {
                     Log.i("$TAG Conference info with SIP URI [$uri] was found")
-                    conferenceInfo = found
+                    conferenceInfo = conferenceInfoFound
                     configureConferenceInfo()
                     configureWaitingRoom()
                     conferenceInfoFoundEvent.postValue(Event(true))
