@@ -216,16 +216,9 @@ class MainViewModel @UiThread constructor() : ViewModel() {
                 )
                 coreContext.updateFriendListsSubscriptionDependingOnDefaultAccount()
 
-                if (defaultAccountRegistrationFailed && account.state != RegistrationState.Failed) {
-                    Log.i(
-                        "$TAG Newly set default account isn't in failed registration state, clearing alert"
-                    )
-                    defaultAccountRegistrationFailed = false
-                    defaultAccountRegistrationErrorEvent.postValue(Event(false))
-
-                    // Refresh REGISTER to re-compute alerts regarding accounts registration state
-                    core.refreshRegisters()
-                }
+                removeAlert(NON_DEFAULT_ACCOUNT_NOT_CONNECTED)
+                // Refresh REGISTER to re-compute alerts regarding accounts registration state
+                core.refreshRegisters()
             }
 
             removeAlert(NON_DEFAULT_ACCOUNT_NOTIFICATIONS)
