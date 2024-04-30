@@ -384,6 +384,7 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
                     return@postOnCoreThread
                 }
 
+                val toRemoveList = arrayListOf<Participant>()
                 for (participant in chatRoom.participants) {
                     val address = participant.address
                     // Do not remove ourselves if not in participants list anymore
@@ -403,9 +404,16 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
                             "$TAG Participant [$uri] is still in new participants list, do nothing"
                         )
                     } else {
-                        Log.i("$TAG Removing participant [$uri] from this conversation")
-                        chatRoom.removeParticipant(participant)
+                        Log.i("$TAG Participant [$uri] will be removed from this conversation")
+                        toRemoveList.add(participant)
                     }
+                }
+
+                if (toRemoveList.isNotEmpty()) {
+                    Log.i(
+                        "$TAG Removing [${toRemoveList.size}] participants from conversation"
+                    )
+                    chatRoom.removeParticipants(toRemoveList.toTypedArray())
                 }
 
                 val toAddList = arrayListOf<Address>()
@@ -422,18 +430,19 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
                                 "$TAG Participant [${address.asStringUriOnly()}] is already in group, do nothing"
                             )
                         } else {
+                            Log.i(
+                                "$TAG Participant [${address.asStringUriOnly()}] will be added to this conversation"
+                            )
                             toAddList.add(address)
                         }
                     }
                 }
 
                 if (toAddList.isNotEmpty()) {
-                    val participantsToAdd = arrayOfNulls<Address>(toAddList.size)
-                    toAddList.toArray(participantsToAdd)
                     Log.i(
-                        "$TAG Adding [${participantsToAdd.size}] new participants to conversation"
+                        "$TAG Adding [${toAddList.size}] new participants to conversation"
                     )
-                    val ok = chatRoom.addParticipants(participantsToAdd)
+                    val ok = chatRoom.addParticipants(toAddList.toTypedArray())
                     if (!ok) {
                         Log.w("$TAG Failed to add some/all participants to the group!")
                         val message = AppUtils.getString(
