@@ -156,7 +156,7 @@ class ConversationMediaListFragment : SlidingPaneChildFragment() {
                 val intent = Intent(Intent.ACTION_VIEW)
                 val contentUri: Uri =
                     FileUtils.getPublicFilePath(requireContext(), path)
-                intent.setDataAndType(contentUri, "file/$mime")
+                intent.setDataAndType(contentUri, mime)
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 try {
                     requireContext().startActivity(intent)
