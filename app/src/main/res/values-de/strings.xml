@@ -23,7 +23,7 @@
         <item quantity="one">%d Tag</item>
         <item quantity="other">%d Tage</item>
     </plurals>
-    <string name="share_uploaded_logs_link">Teile die Logdatei-Verknüpfung mit…</string>
+    <string name="share_uploaded_logs_link">Protokollverknüpfung teilen mit…</string>
     <string name="email">E-Mail-Adresse</string>
     <string name="today">Heute</string>
     <string name="yesterday">Gestern</string>
@@ -116,7 +116,7 @@
     <string name="call_error_generic">Fehler: %s</string>
     <string name="service_auto_start_description">&appName; wurde automatisch gestartet</string>
     <string name="logs_upload_failure">Hochladen der Logdatei fehlgeschlagen!</string>
-    <string name="assistant_choose_country_title">Ländername oder Vorwahl</string>
+    <string name="assistant_choose_country_title">Ländername oder -vorwahl</string>
     <string name="app_description">der <i>freie</i> SIP client</string>
     <string name="history_delete_one_dialog">Diesen Eintrag löschen\?</string>
     <string name="contact_send_sms_invite_text">Hallo, benutze &appName;! Du kannst es kostenlos hier %s herunterladen</string>
@@ -237,7 +237,7 @@
     <string name="debug_popup_title">Debug</string>
     <string name="chat_security_event_participant_max_count_exceeded">Max. Teilnehmeranzahl wurde um %s überschritten</string>
     <string name="chat_room_ephemeral_messages_desc">Diese Nachricht wird auf beiden Seiten gelöscht, sobald sie gelesen wurde und nach dem gewählten Timeout.</string>
-    <string name="about_weblate_translation">Helfen Sie uns &appName; zu übersetzen</string>
+    <string name="about_weblate_translation">Helfen Sie uns, &amp;appName; zu übersetzen</string>
     <string name="contacts_ldap_query_more_results_available">Weitere Ergebnisse sind verfügbar, verfeinern Sie die Suche</string>
     <string name="chat_security_event_man_in_the_middle_detected">Man-in-the-Middle-Angriff erkannt für %s</string>
     <string name="chat_security_event_security_level_downgraded">Sicherheitsstufe wurde aufgrund von %s verringert</string>
@@ -248,15 +248,15 @@
     <string name="conference_schedule_description_title">Beschreibung hinzufügen</string>
     <string name="call_action_transfer_call">Anruf weiterleiten</string>
     <string name="call_context_action_transfer">Anruf weiterleiten</string>
-    <string name="chat_message_context_menu_ephemeral_messages">Flüchtige Nachrichten</string>
+    <string name="chat_message_context_menu_ephemeral_messages">Kurzlebige Nachrichten</string>
     <string name="chat_message_voice_recording_notification_short_desc">Sprachnachricht</string>
     <string name="error_unexpected">Unerwarteter Fehler…</string>
     <string name="chat_message_abort_removal">Abbruch</string>
     <string name="chat_message_voice_recording_received_notification">Du hast eine Sprachnachricht erhalten</string>
-    <string name="chat_event_ephemeral_enabled">Du hast flüchtige Nachrichten aktiviert: %s</string>
-    <string name="chat_event_ephemeral_lifetime_changed">Flüchtige Nachrichten Ablaufdatum: %s</string>
+    <string name="chat_event_ephemeral_enabled">Kurzlebige Nachrichten aktiviert: %s</string>
+    <string name="chat_event_ephemeral_lifetime_changed">Ablaufdatum kurzlebiger Nachrichten : %s</string>
     <string name="chat_room_context_menu_go_to_contact">Kontakt öffnen</string>
-    <string name="chat_room_ephemeral_fragment_title">Flüchtige Nachrichten</string>
+    <string name="chat_room_ephemeral_fragment_title">Kurzlebige Nachrichten</string>
     <string name="chat_room_ephemeral_message_disabled">Deaktiviert</string>
     <string name="chat_room_delete_many_dialog">Bist Du sicher, dass Du diese Konversationen löschen möchtest\?</string>
     <string name="chat_message_cant_open_file_in_app_dialog_title">Es scheint, dass wir die Datei nicht anzeigen können.</string>
@@ -270,7 +270,7 @@
     <string name="conference_schedule_duration">Dauer</string>
     <string name="conference_schedule_mode">Modus</string>
     <string name="conference_schedule_mode_meeting">Meeting</string>
-    <string name="conference_schedule_mode_broadcast">Broadcast</string>
+    <string name="conference_schedule_mode_broadcast">Übertragung</string>
     <string name="conference_schedule_timezone">Zeitzone</string>
     <string name="chat_room_presence_away">Abwesend</string>
     <string name="chat_room_presence_online">Online</string>
@@ -282,7 +282,7 @@
     <string name="chat_room_presence_do_not_disturb">Bitte nicht stören</string>
     <string name="conference_schedule_description_hint">Beschreibung</string>
     <string name="conference_schedule_date">Datum</string>
-    <string name="chat_event_ephemeral_disabled">Du hast flüchtige Nachrichten deaktiviert</string>
+    <string name="chat_event_ephemeral_disabled">Kurzlebige Nachrichten deaktiviert</string>
     <string name="chat_message_context_menu_turn_off_notifications">Benachrichtigungen deaktivieren</string>
     <string name="chat_message_context_menu_turn_on_notifications">Benachrichtigungen aktivieren</string>
     <plurals name="chat_room_unread_messages_event">
@@ -416,7 +416,7 @@
     <string name="assistant_ec_calibration">Kalibrierung des Echounterdrückers läuft</string>
     <string name="assistant_phone_number_info_title">Wofür wird meine Rufnummer verwendet\?</string>
     <string name="assistant_read_and_agree_terms">Ich akzeptiere Belledonne Communications\' %1$s und %2$s</string>
-    <string name="assistant_generic_account_warning">Einige Funktionen erfordern ein &appName;-Konto, z. B. Gruppennachrichten oder flüchtige Nachrichten.
+    <string name="assistant_generic_account_warning">Einige Funktionen erfordern ein &amp;appName;-Konto, z. B. Gruppen- oder kurzlebige Nachrichten.
 \n
 \nDiese Funktionen bleiben bei Benutzung von Drittanbieter-SIP-Konten unsichtbar.
 \n
@@ -593,7 +593,7 @@
     <string name="chat_settings_file_sharing_url_title">URL des Freigabeservers</string>
     <string name="chat_settings_auto_download_max_size_title">Maximalgröße</string>
     <string name="chat_settings_auto_download_max_size_summary">in Bytes</string>
-    <string name="chat_settings_downloaded_media_public_summary">Dateien in flüchtigen Nachrichten werden nicht veröffentlicht, funktioniert nicht mit Auto-Downloadfunktion</string>
+    <string name="chat_settings_downloaded_media_public_summary">Dateien in kurzlebigen Nachrichten werden nicht veröffentlicht, funktioniert nicht mit Auto-Downloadfunktion</string>
     <string name="chat_settings_hide_notification_content_summary">Nur der Absender wird angezeigt</string>
     <string name="chat_settings_hide_rooms_removed_proxies_title">Chaträume von gelöschten Konten nicht anzeigen</string>
     <string name="chat_settings_hide_rooms_removed_proxies_summary">Sollten Sie Chaträume vermissen, deaktivieren Sie diese Einstellung</string>
@@ -678,7 +678,7 @@
     <string name="content_description_remove_contact_from_chat_room">Kontakt aus Unterhaltung entfernen</string>
     <string name="content_description_contact_is_admin">Der Kontakt ist ein Admin in dieser Unterhaltung</string>
     <string name="content_description_contact_is_not_admin">Der Kontakt ist kein Admin in dieser Unterhaltung</string>
-    <string name="content_description_ephemeral_chat_room">Nachrichten sind flüchtig in dieser Unterhaltung</string>
+    <string name="content_description_ephemeral_chat_room">Nachrichten sind kurzlebig in dieser Unterhaltung</string>
     <string name="content_description_contact_can_do_encryption">Kontakt kann in verschlüsselte Unterhaltungen eingeladen werden</string>
     <string name="content_description_unselect_all">Alle Listenelmente abwählen</string>
     <string name="content_description_delete_selection">Ausgewählte Listenelemente löschen</string>
@@ -795,4 +795,50 @@
     <string name="content_description_continue_chat_room_creation">Zum letzten Schritt der Chatraumerstellung</string>
     <string name="content_description_toggle_conference_info_details">Meeting-Informationsdetails ein/ausschalten</string>
     <string name="content_description_start_call">Anruf tätigen</string>
+    <string name="chat_message_reaction_received">%s hat mit %s auf %s reagiert</string>
+    <string name="content_description_menu_dialer">Wählfeld</string>
+    <string name="account_setting_conference_factory_address">Conference Factory URI</string>
+    <string name="account_setting_audio_video_conference_factory_address">Audio/Video Conference Factory URI</string>
+    <string name="chat_room_last_message_sender_format">%s:</string>
+    <string name="chat_message_notification_hidden_content">&lt;Entfernt&gt;</string>
+    <string name="call_settings_system_wide_overlay_title">Overlay außerhalb der App anzeigen</string>
+    <string name="content_description_ephemeral_duration_selected">Kurzlebigkeit wurde ausgewählt</string>
+    <string name="conference_schedule_speakers_list">Rednerliste</string>
+    <string name="conference_schedule_speakers_list_empty">Mind. einen Redner auswählen</string>
+    <string name="conference_schedule_participants_list_empty">Mind. einen Teilnehmer auswählen</string>
+    <string name="conference_schedule_broadcast_summary">Übertragungsinfo</string>
+    <string name="conference_broadcast_invite_you_are_speaker">(Sie sind ein Redner)</string>
+    <string name="conference_waiting_room_listener_broadcast">In dieser Übertragung sind Sie kein Redner</string>
+    <string name="conference_broadcast_start">Übertragung planen</string>
+    <string name="conference_broadcast_edit">Übertragung ändern</string>
+    <string name="conference_broadcast_invite_title">Einladung zur Übertragung:</string>
+    <string name="conference_broadcast_title">Übertragung:</string>
+    <string name="conference_invitation_notification_short_desc">Einladung zum Meeting</string>
+    <string name="conference_meeting_title">Meeting:</string>
+    <string name="conference_invite_speakers_list_title">Redner</string>
+    <string name="conference_invite_participants_list_title">Teilnehmer</string>
+    <string name="conference_participants_list_speaker_label">Redner</string>
+    <string name="call_stats_zrtp_key_agreement_algo">Algorithmus zur Schlüsselvereinbarung:</string>
+    <string name="call_stats_player_filter">Player filter:</string>
+    <string name="call_stats_capture_filter">Capture filter:</string>
+    <string name="chat_settings_mark_as_read_notif_dismissal_title">Bei Benachrichtigungsentfernung als gelesen markieren</string>
+    <string name="contacts_settings_ldap_bind_dn_title">Bindungs-DN</string>
+    <string name="advanced_settings_go_to_power_manager_settings">Energiespareinstellungen</string>
+    <string name="account_setting_end_to_end_encryption_keys_server_url">Server-URL für E2E Verschlüsselungs-Schlüssel</string>
+    <string name="dialog_zrtp_remote_sas">Der Gesprächspartner muß antworten:</string>
+    <string name="account_settings_avpf_rr_interval_title">AVPF regelmäßiges RTCP-Intervall</string>
+    <string name="dialog_zrtp_local_sas">Sie sagen:</string>
+    <string name="conferences_settings_enable_broadcast_title">Übertragungen erlauben</string>
+    <string name="conferences_settings_enable_broadcast_summary">Feature aktuell im Betastatus!</string>
+    <string name="content_description_ephemeral_message">Die Nachricht ist kurzlebig</string>
+    <string name="content_description_enter_edition_mode">Editionsmodus aufrufen</string>
+    <string name="content_description_ephemeral_duration_change">Kurzlebigkeit auf ausgewählten Wert ändern</string>
+    <string name="content_description_contact_is_speaker">Kontakt ist ein Redner</string>
+    <string name="content_description_chat_message_meeting_attachment">Meeting-Anhang</string>
+    <string name="video_settings_tablet_preview_title">Kameravorschau im Wählfeld anzeigen</string>
+    <string name="content_description_exit_edition_mode">Editionsmodus beenden</string>
+    <string name="chat_room_removal_failed_snack">Entfernen des Chatraums fehlgeschlagen</string>
+    <string name="contacts_new_contact_wont_be_visible_warning_dialog">Kontakte ohne SIP URI oder Telefonnummer werden in &amp;appName; nicht sichtbar sein.
+\n
+\nSoll der Kontakt dennoch erzeugt werden\?</string>
 </resources>
