@@ -103,10 +103,23 @@ class SingleSignOnViewModel : ViewModel() {
             Uri.parse(singleSignOnUrl),
             AuthorizationServiceConfiguration.RetrieveConfigurationCallback { serviceConfiguration, ex ->
                 if (ex != null) {
-                    Log.e("$TAG Failed to fetch configuration")
-                    onErrorEvent.postValue(Event("Failed to fetch configuration"))
-                    return@RetrieveConfigurationCallback
+                    Log.e(
+                        "$TAG Failed to fetch configuration on [$singleSignOnUrl]: ${ex.errorDescription}"
+                    )
+                    if (!singleSignOnUrl.endsWith(".well-known/openid-configuration")) {
+                        Log.w("$TAG Trying again appending .well-known/openid-configuration to URL")
+                        if (singleSignOnUrl.endsWith("/")) {
+                            singleSignOnUrl = "$singleSignOnUrl.well-known/openid-configuration"
+                        } else {
+                            singleSignOnUrl = "$singleSignOnUrl/.well-known/openid-configuration"
+                        }
+                        singleSignOn()
+                    } else {
+                        onErrorEvent.postValue(Event("Failed to fetch configuration"))
+                        return@RetrieveConfigurationCallback
+                    }
                 }
+
                 if (serviceConfiguration == null) {
                     Log.e("$TAG Service configuration is null!")
                     onErrorEvent.postValue(Event("Service configuration is null"))
