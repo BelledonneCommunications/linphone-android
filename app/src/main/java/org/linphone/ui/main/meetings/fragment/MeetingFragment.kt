@@ -277,6 +277,12 @@ class MeetingFragment : SlidingPaneChildFragment() {
 
         model.dismissEvent.observe(viewLifecycleOwner) {
             it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        model.cancelEvent.observe(viewLifecycleOwner) {
+            it.consume {
                 viewModel.delete()
                 dialog.dismiss()
             }

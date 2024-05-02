@@ -60,7 +60,7 @@
             app:layout_constraintTop_toBottomOf="@id/title" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:onClick="@{() -> viewModel.dismiss()}"
+            android:onClick="@{() -> viewModel.cancel()}"
             style="@style/secondary_button_label_style"
             android:id="@+id/cancel"
             android:layout_width="0dp"
