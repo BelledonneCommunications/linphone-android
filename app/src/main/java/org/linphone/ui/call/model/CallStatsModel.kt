@@ -25,6 +25,7 @@ import kotlin.math.roundToInt
 import org.linphone.R
 import org.linphone.core.Call
 import org.linphone.core.CallStats
+import org.linphone.core.MediaDirection
 import org.linphone.core.StreamType
 import org.linphone.utils.AppUtils
 
@@ -41,7 +42,14 @@ class CallStatsModel @WorkerThread constructor() {
     @WorkerThread
     fun update(call: Call, stats: CallStats?) {
         stats ?: return
-        isVideoEnabled.postValue(call.params.isVideoEnabled)
+
+        val videoEnabled = call.currentParams.isVideoEnabled
+        val remoteParamsVideoDirection = call.remoteParams?.videoDirection
+        val remoteSendsVideo = remoteParamsVideoDirection == MediaDirection.SendRecv || remoteParamsVideoDirection == MediaDirection.SendOnly
+        val localParamsVideoDirection = call.params.videoDirection
+        val localSendsVideo = localParamsVideoDirection == MediaDirection.SendRecv || localParamsVideoDirection == MediaDirection.SendOnly
+        val showVideoStats = videoEnabled && (remoteSendsVideo || localSendsVideo)
+        isVideoEnabled.postValue(showVideoStats)
 
         when (stats.type) {
             StreamType.Audio -> {
