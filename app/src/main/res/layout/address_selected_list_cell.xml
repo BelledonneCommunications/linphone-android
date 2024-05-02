@@ -12,7 +12,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="75dp"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/selected_participant_cell_height"
         android:padding="5dp"
         android:background="@drawable/primary_cell_background">
 

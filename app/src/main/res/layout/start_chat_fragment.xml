@@ -92,7 +92,8 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     entries="@{viewModel.selection}"
-                    layout="@{@layout/address_selected_list_cell}"/>
+                    layout="@{@layout/address_selected_list_cell}"
+                    emptyPlaceholder="@{@layout/multiple_participants_selection_placeholder}"/>
 
             </HorizontalScrollView>
 

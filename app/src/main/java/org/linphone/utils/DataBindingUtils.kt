@@ -86,7 +86,18 @@ fun <T> setEntries(
     entries: List<T>?,
     layoutId: Int
 ) {
-    setEntries(viewGroup, entries, layoutId, null)
+    setEntries(viewGroup, entries, layoutId, null, null)
+}
+
+@UiThread
+@BindingAdapter("entries", "layout", "emptyPlaceholder")
+fun <T> setEntries(
+    viewGroup: ViewGroup,
+    entries: List<T>?,
+    layoutId: Int,
+    emptyPlaceholderLayoutId: Int
+) {
+    setEntries(viewGroup, entries, layoutId, emptyPlaceholderLayoutId, null)
 }
 
 @UiThread
@@ -97,7 +108,20 @@ fun <T> setEntries(
     layoutId: Int,
     onLongClick: View.OnLongClickListener?
 ) {
+    setEntries(viewGroup, entries, layoutId, null, onLongClick)
+}
+
+@UiThread
+@BindingAdapter("entries", "layout", "emptyPlaceholder", "onLongClick")
+fun <T> setEntries(
+    viewGroup: ViewGroup,
+    entries: List<T>?,
+    layoutId: Int,
+    emptyPlaceholderLayoutId: Int?,
+    onLongClick: View.OnLongClickListener?
+) {
     viewGroup.removeAllViews()
+
     if (!entries.isNullOrEmpty()) {
         val inflater = viewGroup.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         for (entry in entries) {
@@ -124,6 +148,13 @@ fun <T> setEntries(
 
             viewGroup.addView(binding.root)
         }
+    } else if (emptyPlaceholderLayoutId != null) {
+        val placeholder = LayoutInflater.from(viewGroup.context).inflate(
+            emptyPlaceholderLayoutId,
+            viewGroup,
+            false
+        )
+        viewGroup.addView(placeholder)
     }
 }
 

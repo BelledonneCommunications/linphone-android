@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.AppCompatTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/default_text_style_300"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/selected_participant_cell_height"
+    android:text="@string/multiple_participants_selection_placeholder"
+    android:gravity="center"
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp"
+    android:ellipsize="end"
+    android:maxLines="2"/>

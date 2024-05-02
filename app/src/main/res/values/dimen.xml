@@ -39,6 +39,8 @@
     <dimen name="avatar_initials_big_text_size">21sp</dimen>
     <dimen name="avatar_initials_call_text_size">36sp</dimen>
 
+    <dimen name="selected_participant_cell_height">90dp</dimen>
+
     <dimen name="primary_secondary_buttons_label_padding">11dp</dimen>
     <dimen name="dialog_top_bottom_margin">20dp</dimen>
 
