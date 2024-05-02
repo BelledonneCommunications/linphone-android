@@ -204,6 +204,17 @@ class ActiveConferenceCallFragment : GenericCallFragment() {
             }
         }
 
+        callViewModel.goToCallEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                if (findNavController().currentDestination?.id == R.id.activeConferenceCallFragment) {
+                    Log.i("$TAG Going to active call fragment")
+                    val action =
+                        ActiveConferenceCallFragmentDirections.actionActiveConferenceCallFragmentToActiveCallFragment()
+                    findNavController().navigate(action)
+                }
+            }
+        }
+
         binding.setBackClickListener {
             requireActivity().finish()
         }

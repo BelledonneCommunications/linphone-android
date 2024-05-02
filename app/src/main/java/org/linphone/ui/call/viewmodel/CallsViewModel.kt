@@ -207,7 +207,8 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
     fun topBarClicked() {
         coreContext.postOnCoreThread { core ->
             if (core.callsNb == 1) {
-                goToActiveCallEvent.postValue(Event(core.calls.first().conference == null))
+                val currentCall = core.currentCall ?: core.calls.first()
+                goToActiveCallEvent.postValue(Event(currentCall.conference == null))
             } else {
                 goToCallsListEvent.postValue(Event(true))
             }
@@ -248,12 +249,17 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
                 }
                 callsTopBarIcon.postValue(R.drawable.phone_pause)
                 if (found != null) {
-                    val contact = coreContext.contactsManager.findContactByAddress(
-                        found.remoteAddress
-                    )
-                    callsTopBarLabel.postValue(
-                        contact?.name ?: LinphoneUtils.getDisplayName(found.remoteAddress)
-                    )
+                    val conference = found.conference
+                    if (conference != null) {
+                        callsTopBarLabel.postValue(conference.subject)
+                    } else {
+                        val contact = coreContext.contactsManager.findContactByAddress(
+                            found.remoteAddress
+                        )
+                        callsTopBarLabel.postValue(
+                            contact?.name ?: LinphoneUtils.getDisplayName(found.remoteAddress)
+                        )
+                    }
                     callsTopBarStatus.postValue(LinphoneUtils.callStateToString(found.state))
                 } else {
                     Log.e("$TAG Failed to find a paused call")
@@ -272,12 +278,17 @@ class CallsViewModel @UiThread constructor() : ViewModel() {
                 callsTopBarIcon.postValue(R.drawable.phone)
 
                 val call = core.calls.first()
-                val contact = coreContext.contactsManager.findContactByAddress(
-                    call.remoteAddress
-                )
-                callsTopBarLabel.postValue(
-                    contact?.name ?: LinphoneUtils.getDisplayName(call.remoteAddress)
-                )
+                val conference = call.conference
+                if (conference != null) {
+                    callsTopBarLabel.postValue(conference.subject)
+                } else {
+                    val contact = coreContext.contactsManager.findContactByAddress(
+                        call.remoteAddress
+                    )
+                    callsTopBarLabel.postValue(
+                        contact?.name ?: LinphoneUtils.getDisplayName(call.remoteAddress)
+                    )
+                }
                 callsTopBarStatus.postValue(LinphoneUtils.callStateToString(call.state))
             }
 

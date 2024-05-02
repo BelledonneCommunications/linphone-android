@@ -242,6 +242,10 @@ class CallActivity : GenericActivity() {
                     val action =
                         ActiveCallFragmentDirections.actionActiveCallFragmentToCallsListFragment()
                     navController.navigate(action)
+                } else if (navController.currentDestination?.id == R.id.activeConferenceCallFragment) {
+                    val action =
+                        ActiveConferenceCallFragmentDirections.actionActiveConferenceCallFragmentToCallsListFragment()
+                    navController.navigate(action)
                 }
             }
         }

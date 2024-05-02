@@ -185,6 +185,10 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    val goToCallEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     // Extras actions
 
     val toggleExtraActionsBottomSheetEvent: MutableLiveData<Event<Boolean>> by lazy {
@@ -297,7 +301,9 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
                 if (call.state == Call.State.Connected) {
                     if (call.conference != null) {
-                        Log.i("$TAG Call is in Connected state and conference isn't null")
+                        Log.i(
+                            "$TAG Call is in Connected state and conference isn't null, going to conference fragment"
+                        )
                         conferenceModel.configureFromCall(call)
                         goToConferenceEvent.postValue(Event(true))
                     } else {
@@ -357,7 +363,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
             if (::currentCall.isInitialized) {
                 if (call != currentCall) {
-                    if (call == currentCall.core.currentCall) {
+                    if (call == core.currentCall && state != Call.State.Pausing) {
                         Log.w(
                             "$TAG Current call has changed, now is [${call.remoteAddress.asStringUriOnly()}] with state [$state]"
                         )
@@ -451,10 +457,15 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     @UiThread
     fun answer() {
-        coreContext.postOnCoreThread {
-            if (::currentCall.isInitialized) {
-                Log.i("$TAG Answering call [$currentCall]")
-                coreContext.answerCall(currentCall)
+        coreContext.postOnCoreThread { core ->
+            val call = core.calls.find {
+                LinphoneUtils.isCallIncoming(it.state)
+            }
+            if (call != null) {
+                Log.i("$TAG Answering call [${call.remoteAddress.asStringUriOnly()}]")
+                coreContext.answerCall(call)
+            } else {
+                Log.e("$TAG No call found in incoming state, can't answer any!")
             }
         }
     }
@@ -950,7 +961,9 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     @WorkerThread
     private fun configureCall(call: Call) {
-        Log.i("$TAG Configuring call [$call] as current")
+        Log.i(
+            "$TAG Configuring call with remote address [${call.remoteAddress.asStringUriOnly()}] as current"
+        )
         contact.value?.destroy()
 
         terminatedByUsed = false
@@ -966,10 +979,13 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
             call.callLog.conferenceInfo
         }
         if (call.conference != null || conferenceInfo != null) {
+            val subject = call.conference?.subject ?: conferenceInfo?.subject
+            Log.i("$TAG Conference [$subject] found, going to conference fragment")
             conferenceModel.configureFromCall(call)
             goToConferenceEvent.postValue(Event(true))
         } else {
             conferenceModel.destroy()
+            goToCallEvent.postValue(Event(true))
         }
 
         if (call.dir == Call.Dir.Incoming) {

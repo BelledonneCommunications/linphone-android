@@ -412,7 +412,9 @@ class ContactsManager @UiThread constructor() {
         if (key == null) {
             val fakeFriend = coreContext.core.createFriend()
             fakeFriend.name = conferenceInfo.subject
-            return ContactAvatarModel(fakeFriend)
+            val model = ContactAvatarModel(fakeFriend)
+            model.showTrust.postValue(false)
+            return model
         }
 
         val foundInMap = conferenceAvatarMap[key] ?: conferenceAvatarMap[key]

@@ -447,6 +447,7 @@ class LinphoneUtils {
             val avatarModel = ContactAvatarModel(fakeFriend)
             avatarModel.defaultToConferenceIcon.postValue(true)
             avatarModel.skipInitials.postValue(true)
+            avatarModel.showTrust.postValue(false)
 
             return avatarModel
         }
