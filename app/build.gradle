@@ -133,9 +133,9 @@ android {
 
 dependencies {
     implementation "androidx.annotation:annotation:1.7.1"
-    implementation "androidx.appcompat:appcompat:1.7.0-alpha03"
+    implementation "androidx.appcompat:appcompat:1.7.0-beta01"
     implementation "androidx.constraintlayout:constraintlayout:2.1.4"
-    implementation "androidx.core:core-ktx:1.13.0"
+    implementation "androidx.core:core-ktx:1.13.1"
     implementation 'androidx.core:core-splashscreen:1.2.0-alpha01'
     implementation "androidx.core:core-telecom:1.0.0-alpha03"
     implementation "androidx.media:media:1.7.0"
