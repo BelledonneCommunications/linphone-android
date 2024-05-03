@@ -363,7 +363,7 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
 
             val startTime = startTimestamp / 1000 // Linphone expects timestamp in seconds
             conferenceInfo.dateTime = startTime
-            val duration = ((endTimestamp - startTimestamp) / 1000).toInt() // Linphone expects duration in seconds
+            val duration = (((endTimestamp - startTimestamp) / 1000) / 60).toInt() // Linphone expects duration in minutes
             conferenceInfo.duration = duration
 
             val participantsList = participants.value.orEmpty()
@@ -415,7 +415,7 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
 
             val startTime = startTimestamp / 1000 // Linphone expects timestamp in seconds
             conferenceInfo.dateTime = startTime
-            val duration = ((endTimestamp - startTimestamp) / 1000).toInt() // Linphone expects duration in seconds
+            val duration = (((endTimestamp - startTimestamp) / 1000) / 60).toInt() // Linphone expects duration in minutes
             conferenceInfo.duration = duration
 
             val participantsList = participants.value.orEmpty()
@@ -462,7 +462,7 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
             endMinutes = 0
             startTimestamp = conferenceInfo.dateTime * 1000 /* Linphone timestamps are in seconds */
             endTimestamp =
-                (conferenceInfo.dateTime + conferenceInfo.duration) * 1000 /* Linphone timestamps are in seconds */
+                (conferenceInfo.dateTime + conferenceInfo.duration * 60) * 1000 /* Linphone timestamps are in seconds */
             Log.i(
                 "$TAG Loaded start date is [$startTimestamp], loaded end date is [$endTimestamp]"
             )

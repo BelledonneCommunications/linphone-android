@@ -99,7 +99,7 @@
             android:onClick="@{openFilePickerClickListener}"
             android:padding="8dp"
             android:src="@drawable/paperclip"
-            android:contentDescription="@string/content_description_chat_attach_media"
+            android:contentDescription="@string/content_description_chat_open_attach_media"
             app:layout_constraintBottom_toBottomOf="@id/message_area_background"
             app:layout_constraintEnd_toStartOf="@id/capture_image"
             app:layout_constraintStart_toEndOf="@id/emoji_picker_toggle"

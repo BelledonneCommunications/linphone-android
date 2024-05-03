@@ -397,7 +397,7 @@ class MeetingWaitingRoomViewModel @UiThread constructor() : ViewModel() {
                 hideYear = false
             )
             val startTime = TimestampUtils.timeToString(timestamp)
-            val end = timestamp + duration
+            val end = timestamp + (duration * 60)
             val endTime = TimestampUtils.timeToString(end)
             dateTime.postValue("$date | $startTime - $endTime")
 

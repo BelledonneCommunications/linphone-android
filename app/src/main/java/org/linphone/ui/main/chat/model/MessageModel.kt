@@ -606,7 +606,7 @@ class MessageModel @WorkerThread constructor(
                 hideYear = false
             )
             val startTime = TimestampUtils.timeToString(timestamp)
-            val end = timestamp + duration
+            val end = timestamp + (duration * 60)
             val endTime = TimestampUtils.timeToString(end)
             meetingDate.postValue(date)
             meetingTime.postValue("$startTime - $endTime")
