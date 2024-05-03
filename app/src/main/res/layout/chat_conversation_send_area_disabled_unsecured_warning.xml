@@ -13,7 +13,7 @@
         android:paddingBottom="10dp">
 
         <ImageView
-            android:id="@+id/background"
+            android:id="@+id/disabled_background"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:contentDescription="@null"
@@ -25,7 +25,7 @@
             app:layout_constraintBottom_toBottomOf="parent"/>
 
         <ImageView
-            android:id="@+id/icon"
+            android:id="@+id/disabled_icon"
             android:layout_width="@dimen/small_icon_size"
             android:layout_height="0dp"
             android:layout_marginEnd="5dp"
@@ -34,13 +34,13 @@
             android:contentDescription="@null"
             android:src="@drawable/lock_simple_open_bold"
             app:tint="@color/orange_warning_600"
-            app:layout_constraintTop_toTopOf="@id/title"
-            app:layout_constraintBottom_toBottomOf="@id/title"
-            app:layout_constraintEnd_toStartOf="@id/title"/>
+            app:layout_constraintTop_toTopOf="@id/disabled_title"
+            app:layout_constraintBottom_toBottomOf="@id/disabled_title"
+            app:layout_constraintEnd_toStartOf="@id/disabled_title"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style_700"
-            android:id="@+id/title"
+            android:id="@+id/disabled_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -56,7 +56,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/default_text_style"
-            android:id="@+id/subtitle"
+            android:id="@+id/disabled_subtitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingStart="5dp"
@@ -69,7 +69,7 @@
             app:layout_constraintWidth_max="300dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/title"/>
+            app:layout_constraintTop_toBottomOf="@id/disabled_title"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

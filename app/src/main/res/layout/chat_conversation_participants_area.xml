@@ -15,7 +15,7 @@
         android:background="?attr/color_main2_000">
 
         <View
-            android:id="@+id/separator"
+            android:id="@+id/participants_separator"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="?attr/color_main2_300"
@@ -28,7 +28,7 @@
             app:layout_constraintHeight_max="@dimen/chat_room_participants_list_max_height"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/separator">
+            app:layout_constraintTop_toBottomOf="@id/participants_separator">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -41,7 +41,7 @@
         </androidx.core.widget.NestedScrollView>
 
         <ImageView
-            android:id="@+id/close"
+            android:id="@+id/participants_close"
             android:onClick="@{() -> viewModel.closeParticipantsList()}"
             android:layout_width="@dimen/icon_size"
             android:layout_height="@dimen/icon_size"
@@ -51,7 +51,7 @@
             android:contentDescription="@string/content_description_chat_close_participants_list"
             app:tint="@color/icon_color_selector"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/separator" />
+            app:layout_constraintTop_toBottomOf="@id/participants_separator" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

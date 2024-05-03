@@ -22,7 +22,7 @@
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <com.google.android.material.bottomsheet.BottomSheetDragHandleView
-            android:id="@+id/handle"
+            android:id="@+id/call_stats_handle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="11dp"
@@ -41,7 +41,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/shape_squircle_gray_600_background"
-            app:layout_constraintTop_toBottomOf="@id/handle"
+            app:layout_constraintTop_toBottomOf="@id/call_stats_handle"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/video_stats"

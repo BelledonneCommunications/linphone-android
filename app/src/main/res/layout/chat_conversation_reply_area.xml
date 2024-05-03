@@ -15,7 +15,7 @@
         android:background="?attr/color_main2_000">
 
         <View
-            android:id="@+id/separator"
+            android:id="@+id/reply_separator"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="?attr/color_main2_300"

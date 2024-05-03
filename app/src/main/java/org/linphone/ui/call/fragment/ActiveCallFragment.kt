@@ -111,13 +111,13 @@ class ActiveCallFragment : GenericCallFragment() {
                     requireContext(),
                     R.drawable.animated_handle_to_caret
                 )
-                binding.bottomBar.mainActions.handle.setImageDrawable(drawable)
+                binding.bottomBar.mainActions.callActionsHandle.setImageDrawable(drawable)
             } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
                 val drawable = AnimatedVectorDrawableCompat.create(
                     requireContext(),
                     R.drawable.animated_caret_to_handle
                 )
-                binding.bottomBar.mainActions.handle.setImageDrawable(drawable)
+                binding.bottomBar.mainActions.callActionsHandle.setImageDrawable(drawable)
             }
         }
 
@@ -270,16 +270,16 @@ class ActiveCallFragment : GenericCallFragment() {
                         requireContext(),
                         R.drawable.animated_caret_to_handle
                     )
-                    binding.bottomBar.mainActions.handle.setImageDrawable(drawable)
-                    binding.bottomBar.mainActions.handle.startAnimatedDrawable()
+                    binding.bottomBar.mainActions.callActionsHandle.setImageDrawable(drawable)
+                    binding.bottomBar.mainActions.callActionsHandle.startAnimatedDrawable()
                     actionsBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
                 } else if (state == BottomSheetBehavior.STATE_EXPANDED) {
                     val drawable = AnimatedVectorDrawableCompat.create(
                         requireContext(),
                         R.drawable.animated_handle_to_caret
                     )
-                    binding.bottomBar.mainActions.handle.setImageDrawable(drawable)
-                    binding.bottomBar.mainActions.handle.startAnimatedDrawable()
+                    binding.bottomBar.mainActions.callActionsHandle.setImageDrawable(drawable)
+                    binding.bottomBar.mainActions.callActionsHandle.startAnimatedDrawable()
                     actionsBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                 }
             }

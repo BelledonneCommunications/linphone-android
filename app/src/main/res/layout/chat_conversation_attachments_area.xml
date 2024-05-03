@@ -15,7 +15,7 @@
         android:background="?attr/color_main2_000">
 
         <View
-            android:id="@+id/separator"
+            android:id="@+id/attachments_separator"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="?attr/color_main2_300"
@@ -30,12 +30,12 @@
             app:justifyContent="flex_start"
             entries="@{viewModel.attachments}"
             layout="@{@layout/chat_bubble_content_grid_cell}"
-            app:layout_constraintTop_toBottomOf="@id/separator"
+            app:layout_constraintTop_toBottomOf="@id/attachments_separator"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
         <ImageView
-            android:id="@+id/close"
+            android:id="@+id/attachments_close"
             android:onClick="@{() -> viewModel.closeFileAttachmentsList()}"
             android:layout_width="@dimen/icon_size"
             android:layout_height="@dimen/icon_size"
@@ -45,7 +45,7 @@
             android:contentDescription="@string/content_description_chat_remove_attachments"
             app:tint="@color/icon_color_selector"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/separator" />
+            app:layout_constraintTop_toBottomOf="@id/attachments_separator" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
