@@ -51,6 +51,7 @@
             android:adjustViewBounds="true"
             android:layout_marginEnd="12dp"
             android:src="@drawable/x"
+            android:contentDescription="@string/content_description_click_to_remove_participant"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

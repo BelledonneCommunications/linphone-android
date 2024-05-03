@@ -23,6 +23,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="10dp"
             android:src="@{viewModel.callsTopBarIcon, default=@drawable/phone_pause}"
+            android:contentDescription="@null"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/call_display_name"
             app:layout_constraintBottom_toBottomOf="@id/call_display_name"

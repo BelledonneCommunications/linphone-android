@@ -137,6 +137,7 @@
             android:layout_marginEnd="10dp"
             android:padding="2dp"
             android:src="@drawable/microphone_slash"
+            android:contentDescription="@string/content_description_conference_participant_muted"
             android:background="@drawable/shape_circle_white_call_background"
             android:visibility="@{conferenceViewModel.activeSpeaker.isMuted ? View.VISIBLE : View.GONE}"
             app:layout_constraintTop_toTopOf="parent"

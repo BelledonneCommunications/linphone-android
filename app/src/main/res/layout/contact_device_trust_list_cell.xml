@@ -47,6 +47,7 @@
             android:layout_height="@dimen/icon_size"
             android:layout_marginEnd="10dp"
             android:src="@drawable/trusted"
+            android:contentDescription="@string/content_description_contact_device_trusted"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />

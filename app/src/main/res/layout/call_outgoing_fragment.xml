@@ -22,6 +22,7 @@
             android:layout_marginStart="10dp"
             android:adjustViewBounds="true"
             android:src="@drawable/outgoing_call"
+            android:contentDescription="@null"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/call_direction_label"
             app:layout_constraintBottom_toBottomOf="@id/call_direction_label"/>

@@ -23,6 +23,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:src="@drawable/shape_squircle_white_background"
+            android:contentDescription="@null"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
@@ -111,6 +112,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="16dp"
             android:src="@drawable/plus_circle"
+            android:contentDescription="@string/content_description_chat_open_emoji_picker"
             app:layout_constraintStart_toEndOf="@id/tear"
             app:layout_constraintEnd_toEndOf="@id/emojis_background"
             app:layout_constraintTop_toTopOf="@id/thumbs_up"

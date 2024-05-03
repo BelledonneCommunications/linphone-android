@@ -64,6 +64,7 @@
                 android:padding="15dp"
                 android:adjustViewBounds="true"
                 android:src="@drawable/pencil_simple"
+                android:contentDescription="@string/content_description_contact_edit"
                 android:visibility="@{viewModel.isStored ? View.VISIBLE : View.GONE}"
                 app:tint="?attr/color_main1_500"
                 app:layout_constraintBottom_toBottomOf="@id/invisible_title"
@@ -149,6 +150,7 @@
                         android:background="@drawable/circle_light_blue_button_background"
                         android:padding="16dp"
                         android:src="@drawable/phone"
+                        android:contentDescription="@string/content_description_call_start"
                         app:tint="?attr/color_main2_500"
                         app:layout_constraintEnd_toStartOf="@id/chat"
                         app:layout_constraintStart_toStartOf="parent"
@@ -177,6 +179,7 @@
                         android:background="@drawable/circle_light_blue_button_background"
                         android:padding="16dp"
                         android:src="@drawable/chat_teardrop_text"
+                        android:contentDescription="@string/content_description_chat_create"
                         app:tint="?attr/color_main2_500"
                         app:layout_constraintEnd_toStartOf="@id/video_call"
                         app:layout_constraintStart_toEndOf="@id/call"
@@ -206,6 +209,7 @@
                         android:background="@drawable/circle_light_blue_button_background"
                         android:padding="16dp"
                         android:src="@drawable/video_camera"
+                        android:contentDescription="@string/content_description_call_start_video"
                         app:tint="?attr/color_main2_500"
                         app:layout_constraintStart_toEndOf="@id/chat"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -267,6 +271,7 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
                         android:src="@drawable/shape_squircle_white_background"
+                        android:contentDescription="@null"
                         android:visibility="@{viewModel.title.length() > 0 || viewModel.company.length() > 0 ? View.VISIBLE : View.GONE}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -377,6 +382,7 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
                         android:src="@drawable/shape_squircle_white_background"
+                        android:contentDescription="@null"
                         android:visibility="@{viewModel.expandDevicesTrust ? View.VISIBLE : View.GONE}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -471,19 +477,6 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/trust_background"/>
-
-                    <ImageView
-                        android:id="@+id/actions_background"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginBottom="@dimen/screen_bottom_margin"
-                        android:layout_marginEnd="16dp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/actions"
-                        app:layout_constraintBottom_toBottomOf="parent" />
 
                     <LinearLayout
                         android:layout_width="0dp"

@@ -23,6 +23,7 @@
             android:layout_marginEnd="12dp"
             android:layout_marginBottom="2dp"
             android:src="@drawable/shape_dialog_background"
+            android:contentDescription="@null"
             android:clickable="true"
             android:focusable="true"
             app:layout_constraintWidth_max="@dimen/dialog_max_width"

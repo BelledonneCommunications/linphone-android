@@ -52,6 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:src="@drawable/phone"
+            android:contentDescription="@string/content_description_call_start"
             android:visibility="@{model.enabled ? View.VISIBLE : View.GONE}"
             app:tint="?attr/color_main2_600"
             app:layout_constraintTop_toTopOf="@id/header"

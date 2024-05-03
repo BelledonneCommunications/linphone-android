@@ -32,6 +32,7 @@
             android:layout_marginStart="26dp"
             android:layout_marginTop="30dp"
             android:src="@drawable/linphone_notification"
+            android:contentDescription="@string/app_name"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:tint="@color/main1_500" />
@@ -79,6 +80,7 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/illu"
                     android:layout_margin="10dp"
+                    android:contentDescription="@null"
                     app:layout_constraintHeight_max="200dp"
                     app:layout_constraintBottom_toTopOf="@id/no_contacts_label"
                     app:layout_constraintDimensionRatio="1:1"

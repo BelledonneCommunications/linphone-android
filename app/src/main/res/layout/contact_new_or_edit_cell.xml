@@ -45,6 +45,7 @@
             android:layout_height="@dimen/icon_size"
             android:layout_marginStart="10dp"
             android:src="@drawable/x"
+            android:contentDescription="@string/content_description_contact_remove_field"
             app:tint="?attr/color_main2_700"
             app:layout_constraintStart_toEndOf="@id/field"
             app:layout_constraintEnd_toEndOf="parent"

@@ -64,6 +64,7 @@
             android:layout_width="@dimen/icon_size"
             android:layout_height="@dimen/icon_size"
             android:src="@drawable/dots_three_vertical"
+            android:contentDescription="@string/content_description_show_popup_menu"
             android:visibility="@{model.showMenu ? View.VISIBLE : View.GONE}"
             app:tint="?attr/color_grey_600"
             app:layout_constraintEnd_toEndOf="parent"

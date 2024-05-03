@@ -54,6 +54,7 @@
             android:padding="15dp"
             android:adjustViewBounds="true"
             android:src="@drawable/arrows_merge"
+            android:contentDescription="@string/content_description_merge_calls_into_conference"
             android:visibility="@{viewModel.callsCount > 1 ? View.VISIBLE : View.GONE}"
             app:tint="?attr/color_main1_500"
             app:layout_constraintBottom_toBottomOf="@id/title"

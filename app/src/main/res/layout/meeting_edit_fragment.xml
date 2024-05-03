@@ -330,6 +330,7 @@
                         android:layout_height="@dimen/icon_size"
                         android:layout_marginStart="16dp"
                         android:src="@drawable/users"
+                        android:contentDescription="@string/content_description_meeting_participants_list"
                         android:visibility="@{viewModel.participants.size() > 0 ? View.VISIBLE : View.GONE, default=gone}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@id/add_more_participants" />
@@ -403,6 +404,7 @@
             android:layout_gravity="end|bottom"
             android:layout_margin="16dp"
             android:src="@drawable/check"
+            android:contentDescription="@string/content_description_meeting_schedule"
             app:tint="?attr/color_on_main"
             app:backgroundTint="?attr/color_main1_500"
             app:shapeAppearanceOverlay="@style/rounded" />

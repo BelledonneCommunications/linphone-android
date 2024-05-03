@@ -62,6 +62,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="30dp"
             android:src="@drawable/backspace_fill"
+            android:contentDescription="@string/content_description_erase_last_input"
             android:padding="20dp"
             android:elevation="3dp"
             app:tint="@color/white"

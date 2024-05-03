@@ -28,6 +28,7 @@
             android:layout_height="@dimen/icon_size"
             android:layout_marginEnd="10dp"
             android:src="@drawable/x"
+            android:contentDescription="@string/content_description_chat_cancel_reply"
             app:tint="@color/icon_color_selector"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

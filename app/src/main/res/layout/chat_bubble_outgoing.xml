@@ -60,6 +60,7 @@
             android:layout_height="@dimen/small_icon_size"
             android:layout_marginEnd="5dp"
             android:src="@drawable/reply"
+            android:contentDescription="@string/content_description_chat_bubble_reply"
             app:layout_constraintEnd_toStartOf="@id/reply_name"
             app:layout_constraintTop_toTopOf="@id/reply_name"
             app:layout_constraintBottom_toBottomOf="@id/reply_name" />
@@ -114,6 +115,7 @@
             android:layout_height="@dimen/small_icon_size"
             android:layout_marginEnd="5dp"
             android:src="@drawable/forward"
+            android:contentDescription="@string/content_description_chat_bubble_forward"
             android:visibility="@{model.isForward ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintEnd_toStartOf="@id/forward_label"
             app:layout_constraintTop_toTopOf="@id/forward_label"
@@ -216,6 +218,7 @@
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="2dp"
                     android:src="@{model.statusIcon, default=@drawable/checks}"
+                    android:contentDescription="@string/content_description_chat_bubble_delivery_status"
                     app:tint="?attr/color_main1_500" />
 
             </LinearLayout>

@@ -277,6 +277,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:src="@drawable/info"
+                        android:contentDescription="@string/content_description_click_for_more_info"
                         app:tint="@color/black"
                         app:layout_constraintTop_toTopOf="@id/prefix_label"
                         app:layout_constraintBottom_toBottomOf="@id/prefix_label"

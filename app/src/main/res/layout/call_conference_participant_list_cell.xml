@@ -99,6 +99,7 @@
             android:layout_height="@dimen/icon_size"
             android:layout_marginStart="10dp"
             android:src="@drawable/x"
+            android:contentDescription="@string/content_description_click_to_remove_participant"
             android:visibility="@{model.isMeAdmin ? (model.isMyself ? View.INVISIBLE : View.VISIBLE) : View.GONE, default=gone}"
             app:layout_constraintStart_toEndOf="@id/admin_toggle"
             app:layout_constraintEnd_toEndOf="parent"

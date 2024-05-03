@@ -28,6 +28,7 @@
             android:layout_height="@dimen/avatar_list_cell_size"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
+            android:contentDescription="@null"
             coilInitials="@{model.initials, default=`JD`}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -34,6 +34,7 @@
             android:layout_height="0dp"
             android:layout_marginStart="5dp"
             android:src="@drawable/primary_cell_background"
+            android:contentDescription="@null"
             app:layout_constraintStart_toEndOf="@id/header"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

@@ -48,6 +48,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:src="@drawable/x"
+            android:contentDescription="@string/content_description_chat_close_participants_list"
             app:tint="@color/icon_color_selector"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/separator" />

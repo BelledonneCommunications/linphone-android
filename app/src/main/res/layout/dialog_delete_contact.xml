@@ -24,6 +24,7 @@
             android:layout_marginEnd="12dp"
             android:layout_marginBottom="2dp"
             android:src="@drawable/shape_dialog_background"
+            android:contentDescription="@null"
             app:layout_constraintWidth_max="@dimen/dialog_max_width"
             app:layout_constraintBottom_toBottomOf="@id/anchor"
             app:layout_constraintEnd_toEndOf="parent"

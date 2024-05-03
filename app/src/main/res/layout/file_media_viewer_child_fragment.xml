@@ -32,6 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
+            android:contentDescription="@string/content_description_play_pause_video_playback"
             android:src="@{viewModel.isVideoPlaying ? @drawable/pause_fill : @drawable/play_fill, default=@drawable/play_fill}"
             android:visibility="@{viewModel.isVideo &amp;&amp; !viewModel.fullScreenMode ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintTop_toTopOf="parent"

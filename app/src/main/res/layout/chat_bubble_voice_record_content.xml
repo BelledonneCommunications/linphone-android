@@ -44,6 +44,7 @@
             android:layout_marginStart="10dp"
             android:onClick="@{() -> model.togglePlayPauseVoiceRecord()}"
             android:padding="8dp"
+            android:contentDescription="@string/content_description_chat_bubble_toggle_voice_message_play_pause"
             android:src="@{model.isPlayingVoiceRecord ? @drawable/pause_fill : @drawable/play_fill, default=@drawable/play_fill}"
             android:background="@drawable/circle_white_button_background"
             app:layout_constraintDimensionRatio="1:1"
