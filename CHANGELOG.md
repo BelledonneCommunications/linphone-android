@@ -10,10 +10,15 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [5.2.5] - 2024-05-03
+
+## Changed
+- Updated translations
+
 ## [5.2.4] - 2024-04-22
 
 ## Fixed
-- Active speaker video hidden when you are the first one to join a meeting$
+- Active speaker video hidden when you are the first one to join a meeting
 - Show camera icon instead of microphone for incoming video calls
 - SIP URI parsing from native contact due to international prefix being applied when it shouldn't
 - Various fixes for broadcast mode

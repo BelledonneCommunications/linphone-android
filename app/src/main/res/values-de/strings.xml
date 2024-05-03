@@ -237,7 +237,7 @@
     <string name="debug_popup_title">Debug</string>
     <string name="chat_security_event_participant_max_count_exceeded">Max. Teilnehmeranzahl wurde um %s überschritten</string>
     <string name="chat_room_ephemeral_messages_desc">Diese Nachricht wird auf beiden Seiten gelöscht, sobald sie gelesen wurde und nach dem gewählten Timeout.</string>
-    <string name="about_weblate_translation">Helfen Sie uns, &amp;appName; zu übersetzen</string>
+    <string name="about_weblate_translation">Helfen Sie uns, &appName; zu übersetzen</string>
     <string name="contacts_ldap_query_more_results_available">Weitere Ergebnisse sind verfügbar, verfeinern Sie die Suche</string>
     <string name="chat_security_event_man_in_the_middle_detected">Man-in-the-Middle-Angriff erkannt für %s</string>
     <string name="chat_security_event_security_level_downgraded">Sicherheitsstufe wurde aufgrund von %s verringert</string>
@@ -416,7 +416,7 @@
     <string name="assistant_ec_calibration">Kalibrierung des Echounterdrückers läuft</string>
     <string name="assistant_phone_number_info_title">Wofür wird meine Rufnummer verwendet\?</string>
     <string name="assistant_read_and_agree_terms">Ich akzeptiere Belledonne Communications\' %1$s und %2$s</string>
-    <string name="assistant_generic_account_warning">Einige Funktionen erfordern ein &amp;appName;-Konto, z. B. Gruppen- oder kurzlebige Nachrichten.
+    <string name="assistant_generic_account_warning">Einige Funktionen erfordern ein &appName;-Konto, z. B. Gruppen- oder kurzlebige Nachrichten.
 \n
 \nDiese Funktionen bleiben bei Benutzung von Drittanbieter-SIP-Konten unsichtbar.
 \n
@@ -838,7 +838,7 @@
     <string name="video_settings_tablet_preview_title">Kameravorschau im Wählfeld anzeigen</string>
     <string name="content_description_exit_edition_mode">Editionsmodus beenden</string>
     <string name="chat_room_removal_failed_snack">Entfernen des Chatraums fehlgeschlagen</string>
-    <string name="contacts_new_contact_wont_be_visible_warning_dialog">Kontakte ohne SIP URI oder Telefonnummer werden in &amp;appName; nicht sichtbar sein.
+    <string name="contacts_new_contact_wont_be_visible_warning_dialog">Kontakte ohne SIP URI oder Telefonnummer werden in &appName; nicht sichtbar sein.
 \n
 \nSoll der Kontakt dennoch erzeugt werden\?</string>
 </resources>
