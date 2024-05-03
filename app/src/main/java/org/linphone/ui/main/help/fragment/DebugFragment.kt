@@ -27,8 +27,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
-import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.core.CorePreferences
 import org.linphone.core.tools.Log
 import org.linphone.databinding.HelpDebugFragmentBinding
 import org.linphone.ui.GenericActivity
@@ -117,7 +117,7 @@ class DebugFragment : GenericFragment() {
             it.consume { content ->
                 if (findNavController().currentDestination?.id == R.id.debugFragment) {
                     val action = DebugFragmentDirections.actionDebugFragmentToFileViewerFragment(
-                        corePreferences.configFile,
+                        CorePreferences.CONFIG_FILE_NAME,
                         content
                     )
                     findNavController().navigate(action)

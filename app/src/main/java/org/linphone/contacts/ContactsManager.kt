@@ -221,11 +221,6 @@ class ContactsManager @UiThread constructor() {
     }
 
     @WorkerThread
-    fun areContactsAvailable(): Boolean {
-        return nativeContactsLoaded || knownContactsAvatarsMap.isNotEmpty()
-    }
-
-    @WorkerThread
     fun onNativeContactsLoaded() {
         nativeContactsLoaded = true
         Log.i("$TAG Native contacts have been loaded, cleaning avatars maps")

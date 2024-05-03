@@ -168,7 +168,7 @@
                 android:layout_marginEnd="16dp"
                 android:text="@{viewModel.appVersion, default=`6.0.0 (master)`}"
                 android:textSize="14sp"
-                android:textColor="@color/gray_main2_600"
+                android:textColor="?attr/color_main2_600"
                 app:layout_constraintTop_toBottomOf="@id/app_version_title"
                 app:layout_constraintStart_toEndOf="@id/app_version_icon"
                 app:layout_constraintEnd_toEndOf="parent" />
@@ -207,7 +207,7 @@
                 android:layout_marginEnd="16dp"
                 android:text="@{viewModel.sdkVersion, default=`5.4.0 (master)`}"
                 android:textSize="14sp"
-                android:textColor="@color/gray_main2_600"
+                android:textColor="?attr/color_main2_600"
                 app:layout_constraintTop_toBottomOf="@id/sdk_version_title"
                 app:layout_constraintStart_toEndOf="@id/sdk_version_icon"
                 app:layout_constraintEnd_toEndOf="parent" />

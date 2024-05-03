@@ -31,6 +31,7 @@ class CorePreferences @UiThread constructor(private val context: Context) {
     companion object {
         private const val TAG = "[Preferences]"
 
+        const val CONFIG_FILE_NAME = ".linphonerc"
         const val CURRENT_VERSION = 60000
     }
 
@@ -208,12 +209,8 @@ class CorePreferences @UiThread constructor(private val context: Context) {
         get() = config.getString("app", "default_domain", "sip.linphone.org")!!
 
     @get:AnyThread
-    val configFile: String
-        get() = ".linphonerc"
-
-    @get:AnyThread
     val configPath: String
-        get() = context.filesDir.absolutePath + "/" + configFile
+        get() = context.filesDir.absolutePath + "/" + CONFIG_FILE_NAME
 
     @get:AnyThread
     val factoryConfigPath: String
@@ -226,10 +223,6 @@ class CorePreferences @UiThread constructor(private val context: Context) {
     @get:AnyThread
     val thirdPartyDefaultValuesPath: String
         get() = context.filesDir.absolutePath + "/assistant_third_party_default_values"
-
-    @get:AnyThread
-    val ringtonesPath: String
-        get() = context.filesDir.absolutePath + "/share/sounds/linphone/rings/"
 
     @get:AnyThread
     val vfsCachePath: String

@@ -118,7 +118,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
 
     val callStatsModel = CallStatsModel()
 
-    val callMediaEncryptionModel = CallMediaEncryptionModel() {
+    val callMediaEncryptionModel = CallMediaEncryptionModel {
         showZrtpSasDialogIfPossible()
     }
 
@@ -920,7 +920,7 @@ class CurrentCallViewModel @UiThread constructor() : ViewModel() {
                 val avatarModel = contact.value
                 if (avatarModel != null && currentCall.conference == null) { // Don't do it for conferences
                     avatarModel.trust.postValue(securityLevel)
-                    contact.postValue(avatarModel)
+                    contact.postValue(avatarModel!!)
 
                     // Also update avatar contact model if any for the rest of the app
                     val address = currentCall.remoteAddress

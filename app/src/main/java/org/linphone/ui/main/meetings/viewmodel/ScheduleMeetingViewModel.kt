@@ -229,7 +229,7 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
             }
 
             if (address == null) {
-                Log.e("$TAG Failed to parse conference URI [$address], abort")
+                Log.e("$TAG Failed to parse conference URI [$uri], abort")
                 return@postOnCoreThread
             }
 

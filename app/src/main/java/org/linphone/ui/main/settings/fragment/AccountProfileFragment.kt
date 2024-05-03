@@ -185,8 +185,8 @@ class AccountProfileFragment : GenericFragment() {
                         startPostponedEnterTransition()
                         setupDialPlanPicker()
 
-                        sharedViewModel.goToAccountProfileModeEvent.observe(viewLifecycleOwner) {
-                            it.consume {
+                        sharedViewModel.goToAccountProfileModeEvent.observe(viewLifecycleOwner) { event ->
+                            event.consume {
                                 Log.i(
                                     "$TAG Account was found, going directly to AccountProfileMode fragment"
                                 )

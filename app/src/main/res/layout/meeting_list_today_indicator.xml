@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
+<layout xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -87,7 +87,8 @@
             app:layout_constraintStart_toEndOf="@id/header_day"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/header_day_number"
-            app:layout_constraintBottom_toBottomOf="@id/header_day_number"/>
+            app:layout_constraintBottom_toBottomOf="@id/header_day_number"
+            tools:ignore="RtlSymmetry" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

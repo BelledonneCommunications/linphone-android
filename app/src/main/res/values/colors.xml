@@ -13,35 +13,24 @@
     <color name="orange_main_900">#662600</color>
 
     <color name="gray_main2_100">#EEF6F8</color>
-    <color name="gray_main2_100_night">#191919</color>
     <color name="gray_main2_200">#DFECF2</color>
-    <color name="gray_main2_200_night">#142932</color>
     <color name="gray_main2_300">#C0D1D9</color>
-    <color name="gray_main2_300_night">#30454F</color>
     <color name="gray_main2_400">#9AABB5</color>
-    <color name="gray_main2_400_night">#4E6074</color>
     <color name="gray_main2_500">#6C7A87</color>
     <color name="gray_main2_600">#4E6074</color>
-    <color name="gray_main2_600_night">#9AABB5</color>
     <color name="gray_main2_700">#364860</color>
-    <color name="gray_main2_700_night">#C0D1D9</color>
     <color name="gray_main2_800">#22334D</color>
-    <color name="gray_main2_800_night">#2A3F5F</color>
 
     <color name="gray_100">#F9F9F9</color>
-    <color name="gray_100_night">#131313</color>
     <color name="gray_200">#EDEDED</color>
     <color name="gray_200_night">#1F1F1F</color>
     <color name="gray_300">#C9C9C9</color>
     <color name="gray_400">#949494</color>
     <color name="gray_500">#4E4E4E</color>
     <color name="gray_600">#2E3030</color>
-    <color name="gray_600_night">#CFD1D1</color>
     <color name="gray_700">#383939</color>
     <color name="gray_800">#0F0F0F</color>
-    <color name="gray_800_night">#E7D2D8</color>
     <color name="gray_900">#070707</color>
-    <color name="gray_900_night">#FFFFFF</color>
 
     <color name="red_danger_500">#DD5F5F</color>
     <color name="red_danger_500_night">#E17474</color>

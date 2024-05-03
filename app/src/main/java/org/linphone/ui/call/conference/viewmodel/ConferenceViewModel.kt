@@ -125,7 +125,7 @@ class ConferenceViewModel {
             if (found != null) {
                 Log.i("$TAG Newly active speaker participant is [${found.name}]")
                 found.isActiveSpeaker.postValue(true)
-                activeSpeaker.postValue(found)
+                activeSpeaker.postValue(found!!)
             } else {
                 Log.i("$TAG Failed to find actively speaking participant...")
                 val model = ConferenceParticipantDeviceModel(participantDevice)
@@ -227,7 +227,7 @@ class ConferenceViewModel {
                 isPaused.postValue(!isIn)
                 Log.i("$TAG We ${if (isIn) "are" else "aren't"} in the conference")
 
-                computeParticipants()
+                computeParticipants(false)
             }
         }
     }
@@ -267,7 +267,7 @@ class ConferenceViewModel {
         subject.postValue(confSubject)
 
         if (conference.state == Conference.State.Created) {
-            computeParticipants()
+            computeParticipants(false)
         }
 
         val currentLayout = getCurrentLayout(call)
@@ -398,7 +398,7 @@ class ConferenceViewModel {
     }
 
     @WorkerThread
-    private fun computeParticipants(skipDevices: Boolean = false) {
+    private fun computeParticipants(skipDevices: Boolean) {
         participantDevices.value.orEmpty().forEach(ConferenceParticipantDeviceModel::destroy)
 
         val participantsList = arrayListOf<ConferenceParticipantModel>()

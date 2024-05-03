@@ -111,7 +111,7 @@ open class GenericActivity : AppCompatActivity() {
                 toastsArea.addView(greenToast.root)
 
                 greenToast.root.slideInToastFromTopForDuration(
-                    toastsArea as ViewGroup,
+                    toastsArea,
                     lifecycleScope,
                     duration
                 )
@@ -137,7 +137,7 @@ open class GenericActivity : AppCompatActivity() {
                 toastsArea.addView(blueToast.root)
 
                 blueToast.root.slideInToastFromTopForDuration(
-                    toastsArea as ViewGroup,
+                    toastsArea,
                     lifecycleScope,
                     duration
                 )
@@ -163,7 +163,7 @@ open class GenericActivity : AppCompatActivity() {
                 toastsArea.addView(redToast.root)
 
                 redToast.root.slideInToastFromTopForDuration(
-                    toastsArea as ViewGroup,
+                    toastsArea,
                     lifecycleScope,
                     duration
                 )
@@ -191,7 +191,7 @@ open class GenericActivity : AppCompatActivity() {
                 toastsArea.addView(redToast.root)
 
                 redToast.root.slideInToastFromTop(
-                    toastsArea as ViewGroup,
+                    toastsArea,
                     true
                 )
             }

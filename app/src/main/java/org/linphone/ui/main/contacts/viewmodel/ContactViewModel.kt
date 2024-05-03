@@ -310,11 +310,11 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
 
         val organization = friend.organization
         if (!organization.isNullOrEmpty()) {
-            company.postValue(organization)
+            company.postValue(organization!!)
         }
         val jobTitle = friend.jobTitle
         if (!jobTitle.isNullOrEmpty()) {
-            title.postValue(jobTitle)
+            title.postValue(jobTitle!!)
         }
 
         val addressesAndNumbers = friend.getListOfSipAddressesAndPhoneNumbers(listener)
@@ -664,7 +664,7 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
             }
 
             if (devicesList.isNotEmpty()) {
-                trustedDevicesPercentage.postValue(trustedDevicesCount * 100 / devicesCount.toInt())
+                trustedDevicesPercentage.postValue(trustedDevicesCount * 100 / devicesCount)
                 trustedDevicesPercentageFloat.postValue(
                     trustedDevicesCount / devicesCount.toFloat() / 2
                 )

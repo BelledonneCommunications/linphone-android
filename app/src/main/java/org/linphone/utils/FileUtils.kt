@@ -441,19 +441,6 @@ class FileUtils {
         }
 
         @AnyThread
-        suspend fun clearCacheDirectory() {
-            val dir = coreContext.context.cacheDir
-            var count = 0
-            if (dir.exists()) {
-                for (file in dir.listFiles().orEmpty()) {
-                    deleteFile(file.path)
-                    count += 1
-                }
-            }
-            Log.w("$TAG Deleted [$count] cache files")
-        }
-
-        @AnyThread
         fun countFilesInDirectory(path: String): Int {
             val dir = File(path)
             if (dir.exists()) {

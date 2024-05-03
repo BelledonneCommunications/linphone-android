@@ -27,7 +27,7 @@ internal abstract class ConversationScrollListener(private val mLayoutManager: L
     companion object {
         // The minimum amount of items to have below your current scroll position
         // before loading more.
-        private const val mVisibleThreshold = 5
+        private const val VISIBLE_THRESHOLD = 5
     }
 
     // The total number of items in the data set after the last load
@@ -73,9 +73,9 @@ internal abstract class ConversationScrollListener(private val mLayoutManager: L
         // If we do need to reload some more data, we execute onLoadMore to fetch the data.
         // threshold should reflect how many total columns there are too
         if (!loading &&
-            firstVisibleItemPosition < mVisibleThreshold &&
+            firstVisibleItemPosition < VISIBLE_THRESHOLD &&
             firstVisibleItemPosition >= 0 &&
-            lastVisibleItemPosition < totalItemCount - mVisibleThreshold
+            lastVisibleItemPosition < totalItemCount - VISIBLE_THRESHOLD
         ) {
             onLoadMore(totalItemCount)
             loading = true

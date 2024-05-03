@@ -115,7 +115,7 @@ class FileViewModel @UiThread constructor() : ViewModel() {
 
         if (!content.isNullOrEmpty()) {
             isText.value = true
-            text.postValue(content)
+            text.postValue(content!!)
             mimeType.postValue("text/plain")
             Log.i("$TAG Using pre-loaded content as PlainText")
             fileReadyEvent.postValue(Event(true))

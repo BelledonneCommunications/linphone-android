@@ -51,7 +51,6 @@
     <string name="or">or</string>
     <string name="next">next</string>
     <string name="start">Start</string>
-    <string name="required">Required</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
 
@@ -145,7 +144,6 @@
     <string name="toast_call_error_user_busy">User is busy</string>
     <string name="toast_call_error_user_not_found">User has not been found</string>
     <string name="toast_call_error_incompatible_media_params">Incompatible media parameters</string>
-    <string name="toast_call_error_network_unreachable">Network is unreachable</string>
     <string name="toast_call_error_io_error">Service unavailable or network error</string>
     <string name="toast_call_error_server_timeout">Server timeout</string>
     <string name="toast_call_error_temporarily_unavailable">Temporarily unavailable</string>
@@ -231,8 +229,6 @@
     <string name="help_error_checking_version_toast_message">An error occurred while checking for update</string>
     <string name="help_dialog_update_available_title">Update available</string>
     <string name="help_dialog_update_available_message">A new version %s is available. Do you want to update?</string>
-    <string name="help_clear_cache_directory">Clear cache directory</string>
-    <string name="help_cache_directory_cleared_toast_message">Cache directory has been cleared</string>
     <string name="help_troubleshooting_title">Troubleshooting</string>
     <string name="help_troubleshooting_debug_title">Enable/disable printing logs in ADB</string>
     <string name="help_troubleshooting_debug_subtitle">Blah blah blah?</string> <!-- TODO -->
@@ -256,10 +252,6 @@
     <string name="settings_calls_route_audio_to_bluetooth_title">Route audio to bluetooth device, if any</string>
     <string name="settings_calls_enable_video_title">Enable video</string>
     <string name="settings_calls_enable_fec_title">Enable video FEC</string>
-    <string name="settings_calls_ringtones_title">Choose your ringtone:</string>
-    <string name="settings_calls_use_device_ringtone_label">Use this device\'s ringtone</string>
-    <string name="settings_calls_play_ringtone_label">Play</string>
-    <string name="settings_calls_pause_ringtone_label">Pause</string>
     <string name="settings_calls_vibrate_while_ringing_title">Vibrate while incoming call is ringing</string>
     <string name="settings_calls_auto_record_title">Automatically start recording calls</string>
     <string name="settings_conversations_title">Conversations</string>
@@ -276,7 +268,6 @@
     <string name="settings_contacts_carddav_username_title">Username</string>
     <string name="settings_contacts_carddav_password_title">Password</string>
     <string name="settings_contacts_carddav_realm_title">Auth realm</string>
-    <string name="settings_contacts_carddav_add_title">Add address book</string>
     <string name="settings_contacts_ldap_server_url_title">Server URL</string>
     <string name="settings_contacts_ldap_bind_dn_title">Bind DN</string>
     <string name="settings_contacts_ldap_password_title">Password</string>
@@ -392,7 +383,6 @@
     <string name="contact_editor_error_saving_changes_toast">Failed to save changes!</string>
     <string name="contact_editor_saved_contact_toast">Contact was successfully created</string>
     <string name="contact_editor_error_saving_contact_toast">Failed to create contact!</string>
-    <string name="contact_editor_save_title">Save</string>
     <string name="contact_editor_dialog_abort_confirmation_title">Don\'t save changes?</string>
     <string name="contact_editor_dialog_abort_confirmation_message">All changes will be lost</string>
 
@@ -455,7 +445,6 @@
     <string name="new_conversation_create_group">Create a group conversation</string>
     <string name="new_conversation_no_contact">No contact and no suggestion for the moment…</string>
     <string name="new_conversation_no_matching_contact">No matching result…</string>
-    <string name="new_conversation_group_name_title">Name of the group</string>
     <string name="conversation_text_field_hint">Say something…</string>
     <plurals name="conversation_composing_label">
         <item quantity="one">%s is composing…</item>
@@ -521,7 +510,6 @@
 
     <!-- Scheduled conferences -->
     <string name="meetings_list_empty">No meeting for the moment…</string>
-    <string name="meetings_list_today_indicator">Today</string>
     <string name="meetings_list_no_meeting_for_today">No meeting scheduled for today</string>
 
     <string name="meeting_schedule_title">New meeting</string>
@@ -547,7 +535,6 @@
     <string name="meeting_info_export_as_calendar_event">Create calendar event</string>
     <string name="meeting_info_deleted_toast">Meeting has been deleted</string>
     <string name="meeting_schedule_description_title">Description</string>
-    <string name="meeting_schedule_create_title">Create</string>
     <string name="meeting_schedule_edit_title">Edit meeting</string>
     <string name="meeting_schedule_cancel_dialog_title">Cancel the meeting?</string>
     <string name="meeting_schedule_cancel_dialog_message">Do you want to cancel the meeting and send a notification to all participants?</string>

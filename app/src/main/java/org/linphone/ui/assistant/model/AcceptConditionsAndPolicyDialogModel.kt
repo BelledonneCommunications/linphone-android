@@ -48,7 +48,7 @@ class AcceptConditionsAndPolicyDialogModel @UiThread constructor() {
         val privacy = "politique de confidentialité"
         val terms = "conditions d'utilisation"
 
-        val label = "En continuant, vous notre $privacy et nos $terms."
+        val label = "En continuant, vous acceptez notre $privacy et nos $terms."
         val spannable = SpannableString(label)
 
         val termsMatcher = Pattern.compile(terms).matcher(label)

@@ -108,10 +108,10 @@ class SingleSignOnViewModel : ViewModel() {
                     )
                     if (!singleSignOnUrl.endsWith(".well-known/openid-configuration")) {
                         Log.w("$TAG Trying again appending .well-known/openid-configuration to URL")
-                        if (singleSignOnUrl.endsWith("/")) {
-                            singleSignOnUrl = "$singleSignOnUrl.well-known/openid-configuration"
+                        singleSignOnUrl = if (singleSignOnUrl.endsWith("/")) {
+                            "$singleSignOnUrl.well-known/openid-configuration"
                         } else {
-                            singleSignOnUrl = "$singleSignOnUrl/.well-known/openid-configuration"
+                            "$singleSignOnUrl/.well-known/openid-configuration"
                         }
                         singleSignOn()
                     } else {
@@ -212,31 +212,6 @@ class SingleSignOnViewModel : ViewModel() {
                     onErrorEvent.postValue(Event(ex?.errorDescription.orEmpty()))
                 }
             }
-        }
-    }
-
-    @UiThread
-    private fun useToken() {
-        if (::authState.isInitialized && ::authService.isInitialized) {
-            if (authState.needsTokenRefresh && authState.refreshToken.isNullOrEmpty()) {
-                Log.e("$TAG Attempted to take an unauthorized action without a refresh token!")
-                return
-            }
-
-            singleSignOnProcessCompletedEvent.postValue(Event(true))
-            /*Log.i("$TAG Performing action with fresh token")
-            authState.performActionWithFreshTokens(
-                authService,
-                AuthState.AuthStateAction { accessToken, idToken, ex ->
-                    if (ex != null) {
-                        Log.e("$TAG Failed to use token [$ex]")
-                        return@AuthStateAction
-                    }
-
-                    Log.i("$TAG Access & id tokens are now available")
-                    storeAuthStateAsJsonFile()
-                }
-            )*/
         }
     }
 

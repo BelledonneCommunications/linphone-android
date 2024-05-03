@@ -139,7 +139,7 @@
             android:paddingBottom="16dp"
             android:text="@{viewModel.fileName, default=`nomdufichier.jpg\nenvoyé le 02/05/2023 à 11h05`}"
             android:textSize="12sp"
-            android:textColor="?attr/color_main2_400"
+            android:textColor="?attr/color_main2_600"
             android:textAlignment="center"
             android:visibility="@{viewModel.fullScreenMode ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"

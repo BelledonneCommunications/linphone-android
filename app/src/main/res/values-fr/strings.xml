@@ -16,7 +16,6 @@
     <string name="or">ou</string>
     <string name="next">suivant</string>
     <string name="start">Commencer</string>
-    <string name="required">Requis</string>
     <string name="today">Aujourd\'hui</string>
     <string name="yesterday">Hier</string>
 
@@ -110,7 +109,6 @@
     <string name="toast_call_error_user_busy">L\'utilisateur est occupé</string>
     <string name="toast_call_error_user_not_found">L\'utilisateur n\'a pu être trouvé</string>
     <string name="toast_call_error_incompatible_media_params">Paramètres media incompatibles</string>
-    <string name="toast_call_error_network_unreachable">Le réseau n\'est pas joignable</string>
     <string name="toast_call_error_io_error">Service indisponible ou erreur réseau</string>
     <string name="toast_call_error_server_timeout">Délai d\'attente du serveur dépassé</string>
     <string name="toast_call_error_temporarily_unavailable">Temporairement indisponible</string>
@@ -196,8 +194,6 @@
     <string name="help_error_checking_version_toast_message">Une erreur est survenue</string>
     <string name="help_dialog_update_available_title">Mise à jour disponible</string>
     <string name="help_dialog_update_available_message">Une nouvelle version %s est disponible. Voulez-vous mettre à jour ?</string>
-    <string name="help_clear_cache_directory">Vider le dossier de cache</string>
-    <string name="help_cache_directory_cleared_toast_message">Cache directory has been cleared</string>
     <string name="help_troubleshooting_title">Dépannage</string>
     <string name="help_troubleshooting_debug_title">Activer/désactiver les messages dans ADB</string>
     <string name="help_troubleshooting_debug_subtitle">Blah blah blah?</string> <!-- TODO -->
@@ -221,10 +217,6 @@
     <string name="settings_calls_route_audio_to_bluetooth_title">Utiliser le périphérique Bluetooth si possible</string>
     <string name="settings_calls_enable_video_title">Activer la vidéo</string>
     <string name="settings_calls_enable_fec_title">Activer la FEC vidéo</string>
-    <string name="settings_calls_ringtones_title">Choisissez votre sonnerie :</string>
-    <string name="settings_calls_use_device_ringtone_label">Utiliser la sonnerie du système</string>
-    <string name="settings_calls_play_ringtone_label">Lire</string>
-    <string name="settings_calls_pause_ringtone_label">Pause</string>
     <string name="settings_calls_vibrate_while_ringing_title">Vibrer lors de la réception d\'un appel</string>
     <string name="settings_calls_auto_record_title">Démarrer l\'enregistrement des appels automatiquement</string>
     <string name="settings_conversations_title">Conversations</string>
@@ -241,7 +233,6 @@
     <string name="settings_contacts_carddav_username_title">Nom d\'utilisateur</string>
     <string name="settings_contacts_carddav_password_title">Mot de passe</string>
     <string name="settings_contacts_carddav_realm_title">Domaine d\'authentification</string>
-    <string name="settings_contacts_carddav_add_title">Ajouter le carnet d\'adresse</string>
     <string name="settings_contacts_ldap_server_url_title">URL du serveur</string>
     <string name="settings_contacts_ldap_bind_dn_title">Bind DN</string>
     <string name="settings_contacts_ldap_password_title">Mot de passe</string>
@@ -356,7 +347,6 @@
     <string name="contact_editor_error_saving_changes_toast">Erreur lors de la sauvegarde des changements</string>
     <string name="contact_editor_saved_contact_toast">Le contact a été créé</string>
     <string name="contact_editor_error_saving_contact_toast">Erreur lors de la création du contact</string>
-    <string name="contact_editor_save_title">Sauvegarder</string>
     <string name="contact_editor_dialog_abort_confirmation_title">Ne pas sauvegarder vos changements</string>
     <string name="contact_editor_dialog_abort_confirmation_message">Toutes vos modifications seront perdues.</string>
 
@@ -419,7 +409,6 @@
     <string name="new_conversation_create_group">Créer une conversation de groupe</string>
     <string name="new_conversation_no_contact">Aucun contact ni suggestion pour le moment…</string>
     <string name="new_conversation_no_matching_contact">Aucun résultat trouvé…</string>
-    <string name="new_conversation_group_name_title">Nom du groupe</string>
     <string name="conversation_text_field_hint">Dites quelque chose…</string>
     <plurals name="conversation_composing_label" tools:ignore="MissingQuantity">
         <item quantity="one">%s est en train d\'écrire…</item>
@@ -485,7 +474,6 @@
 
     <!-- Scheduled conferences -->
     <string name="meetings_list_empty">Aucune réunion pour le moment…</string>
-    <string name="meetings_list_today_indicator">Aujourd\'hui</string>
     <string name="meetings_list_no_meeting_for_today">Aucune réunion aujourd\'hui</string>
 
     <string name="meeting_schedule_title">Nouvelle réunion</string>
@@ -511,7 +499,6 @@
     <string name="meeting_info_export_as_calendar_event">Ajouter un évènement dans le calendrier</string>
     <string name="meeting_info_deleted_toast">La réunion a été supprimée</string>
     <string name="meeting_schedule_description_title">Description</string>
-    <string name="meeting_schedule_create_title">Créer</string>
     <string name="meeting_schedule_edit_title">Modifier la réunion</string>
     <string name="meeting_schedule_cancel_dialog_title">Annuler la réunion?</string>
     <string name="meeting_schedule_cancel_dialog_message">Voulez-vous annuler la réunion et envoyer une notification aux participants?</string>
