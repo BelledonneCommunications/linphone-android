@@ -150,7 +150,9 @@
 
     <!-- Assistant related string (account register / login / etc...) -->
     <string name="assistant_dialog_general_terms_and_privacy_policy_title">General terms &amp; privacy policy</string>
-    <string name="assistant_dialog_general_terms_and_privacy_policy_message">blah blah blah</string> <!-- TODO FIXME -->
+    <string name="assistant_dialog_general_terms_label">general terms</string>
+    <string name="assistant_dialog_privacy_policy_label">privacy policy</string>
+    <string name="assistant_dialog_general_terms_and_privacy_policy_message">By continuing, you accept our %1$s and %2$s.</string>
     <string name="assistant_dialog_confirm_phone_number_title">Confirm phone number</string>
     <string name="assistant_dialog_confirm_phone_number_message">Are you sure you want to use this phone number?</string>
     <string name="assistant_account_login">Login</string>

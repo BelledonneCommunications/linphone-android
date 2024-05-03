@@ -26,7 +26,10 @@ import android.view.View
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import java.util.regex.Pattern
+import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
 import org.linphone.core.tools.Log
+import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
 class AcceptConditionsAndPolicyDialogModel @UiThread constructor() {
@@ -45,13 +48,16 @@ class AcceptConditionsAndPolicyDialogModel @UiThread constructor() {
     val privacyPolicyClickedEvent = MutableLiveData<Event<Boolean>>()
 
     init {
-        val privacy = "politique de confidentialité"
-        val terms = "conditions d'utilisation"
-
-        val label = "En continuant, vous acceptez notre $privacy et nos $terms."
+        val generalTerms = AppUtils.getString(R.string.assistant_dialog_general_terms_label)
+        val privacyPolicy = AppUtils.getString(R.string.assistant_dialog_privacy_policy_label)
+        val label = coreContext.context.getString(
+            R.string.assistant_dialog_general_terms_and_privacy_policy_message,
+            generalTerms,
+            privacyPolicy
+        )
         val spannable = SpannableString(label)
 
-        val termsMatcher = Pattern.compile(terms).matcher(label)
+        val termsMatcher = Pattern.compile(generalTerms).matcher(label)
         if (termsMatcher.find()) {
             val clickableSpan: ClickableSpan = object : ClickableSpan() {
                 override fun onClick(widget: View) {
@@ -67,7 +73,7 @@ class AcceptConditionsAndPolicyDialogModel @UiThread constructor() {
             )
         }
 
-        val policyMatcher = Pattern.compile(privacy).matcher(label)
+        val policyMatcher = Pattern.compile(privacyPolicy).matcher(label)
         if (policyMatcher.find()) {
             val clickableSpan: ClickableSpan = object : ClickableSpan() {
                 override fun onClick(widget: View) {
