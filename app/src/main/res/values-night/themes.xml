@@ -4,6 +4,7 @@
         <item name="windowSplashScreenAnimatedIcon">@drawable/linphone_splashscreen</item>
         <item name="postSplashScreenTheme">@style/Theme.Linphone</item>
     </style>
+
     <!-- Base application theme. -->
     <style name="Theme.Linphone" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Status bar color. -->
