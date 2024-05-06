@@ -662,7 +662,7 @@
 
     <!-- Misc -->
     <string name="multiple_participants_selection_placeholder">Selected participants will appear here</string>
-    <string name="connection_error_for_non_default_account">Account connection error</string>
+    <string name="connection_error_for_non_default_account">Account(s) connection error</string>
     <string name="network_not_reachable">You aren\'t connected to internet</string>
     <string name="operation_in_progress_overlay">Operation in progress, please wait</string>
 

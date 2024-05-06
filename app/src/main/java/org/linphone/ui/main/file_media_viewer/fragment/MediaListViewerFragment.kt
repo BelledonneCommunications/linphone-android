@@ -142,6 +142,7 @@ class MediaListViewerFragment : GenericFragment() {
 
             val position = if (index == -1) {
                 Log.e("$TAG File [$path] not found, using latest one available instead!")
+                // TODO: show error toast
                 count - 1
             } else {
                 index

@@ -49,7 +49,7 @@ class ConversationsFilesAdapter : ListAdapter<FileModel, RecyclerView.ViewHolder
 
     override fun getItemViewType(position: Int): Int {
         val data = getItem(position)
-        if (data.isMedia) return MEDIA_FILE
+        if (data.isMedia || data.isAudio) return MEDIA_FILE
         return DOCUMENT_FILE
     }
 

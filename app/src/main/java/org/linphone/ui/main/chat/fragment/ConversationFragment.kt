@@ -884,7 +884,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
             putString("path", path)
         }
         when (FileUtils.getMimeType(mime)) {
-            FileUtils.MimeType.Image, FileUtils.MimeType.Video -> {
+            FileUtils.MimeType.Image, FileUtils.MimeType.Video, FileUtils.MimeType.Audio -> {
                 bundle.putBoolean("isMedia", true)
                 sharedViewModel.displayFileEvent.value = Event(bundle)
             }

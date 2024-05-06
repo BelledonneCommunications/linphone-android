@@ -73,7 +73,6 @@ class MediaViewModel @UiThread constructor() : ViewModel() {
             FileUtils.MimeType.Audio -> {
                 Log.i("$TAG File [$file] seems to be an audio file")
                 isAudio.value = true
-                // TODO FIXME: handle audio files
             }
             else -> { }
         }
