@@ -42,6 +42,7 @@ import org.linphone.ui.main.chat.viewmodel.ConversationMediaListViewModel
 import org.linphone.ui.main.fragment.SlidingPaneChildFragment
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
+import org.linphone.utils.RecyclerViewHeaderDecoration
 
 @UiThread
 class ConversationMediaListFragment : SlidingPaneChildFragment() {
@@ -93,12 +94,27 @@ class ConversationMediaListFragment : SlidingPaneChildFragment() {
         val chatRoom = sharedViewModel.displayedChatRoom
         viewModel.findChatRoom(chatRoom, localSipUri, remoteSipUri)
 
+        val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
+        binding.mediaList.addItemDecoration(headerItemDecoration)
+
         binding.mediaList.setHasFixedSize(true)
-        val layoutManager = object : GridLayoutManager(requireContext(), 4) {
+        val spanCount = 4
+        val layoutManager = object : GridLayoutManager(requireContext(), spanCount) {
             override fun checkLayoutParams(lp: RecyclerView.LayoutParams): Boolean {
                 lp.width = width / spanCount
                 lp.height = lp.width
                 return true
+            }
+        }
+        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                if (position < adapter.currentList.size - 1) {
+                    // Have last item of month takes all remaining horizontal space to have a "line break"
+                    if (adapter.displayHeaderForPosition(position + 1)) {
+                        return spanCount - (position % spanCount)
+                    }
+                }
+                return 1
             }
         }
         // This isn't supported by GridLayoutManager, it will crash

@@ -370,7 +370,7 @@ class MessageModel @WorkerThread constructor(
                         )
 
                         val fileSize = content.fileSize.toLong()
-                        val timestamp = -1L // TODO FIXME: use content.creationTimestamp
+                        val timestamp = content.creationTimestamp
                         when (content.type) {
                             "image", "video" -> {
                                 val fileModel = FileModel(
@@ -411,7 +411,7 @@ class MessageModel @WorkerThread constructor(
                     allFilesDownloaded = false
                     filesContentCount += 1
                     val name = content.name ?: ""
-                    val timestamp = -1L // TODO FIXME: use content.creationTimestamp
+                    val timestamp = content.creationTimestamp
                     if (name.isNotEmpty()) {
                         val fileModel = if (isOutgoing && chatMessage.isFileTransferInProgress) {
                             val path = content.filePath ?: ""

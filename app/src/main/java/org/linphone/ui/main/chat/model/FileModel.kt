@@ -38,7 +38,7 @@ class FileModel @AnyThread constructor(
     val file: String,
     val fileName: String,
     val fileSize: Long,
-    val fileCreationTimestamp: Long,
+    private val fileCreationTimestamp: Long,
     private val isEncrypted: Boolean,
     val isWaitingToBeDownloaded: Boolean = false,
     private val onClicked: ((model: FileModel) -> Unit)? = null
@@ -66,6 +66,14 @@ class FileModel @AnyThread constructor(
     val isPdf: Boolean
 
     val isAudio: Boolean
+
+    val month = TimestampUtils.month(fileCreationTimestamp)
+
+    val dateTime = TimestampUtils.toString(
+        fileCreationTimestamp,
+        shortDate = false,
+        hideYear = false
+    )
 
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 

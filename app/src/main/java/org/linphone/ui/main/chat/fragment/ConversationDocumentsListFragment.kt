@@ -41,6 +41,7 @@ import org.linphone.ui.main.chat.viewmodel.ConversationDocumentsListViewModel
 import org.linphone.ui.main.fragment.SlidingPaneChildFragment
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
+import org.linphone.utils.RecyclerViewHeaderDecoration
 
 @UiThread
 class ConversationDocumentsListFragment : SlidingPaneChildFragment() {
@@ -91,6 +92,9 @@ class ConversationDocumentsListFragment : SlidingPaneChildFragment() {
         )
         val chatRoom = sharedViewModel.displayedChatRoom
         viewModel.findChatRoom(chatRoom, localSipUri, remoteSipUri)
+
+        val headerItemDecoration = RecyclerViewHeaderDecoration(requireContext(), adapter)
+        binding.documentsList.addItemDecoration(headerItemDecoration)
 
         binding.documentsList.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(requireContext())

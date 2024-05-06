@@ -25,7 +25,6 @@
             coilBubbleGrid="@{model.file}"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
@@ -57,16 +56,16 @@
 
         <ImageView
             android:id="@+id/audio_file"
-            android:layout_width="@dimen/chat_bubble_grid_image_size"
-            android:layout_height="@dimen/chat_bubble_grid_image_size"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:adjustViewBounds="true"
             android:padding="18dp"
             android:background="@drawable/shape_squircle_main2_200"
             android:src="@drawable/file_audio"
             android:contentDescription="@null"
             android:visibility="@{model.isAudio ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:tint="?attr/color_main2_600" />

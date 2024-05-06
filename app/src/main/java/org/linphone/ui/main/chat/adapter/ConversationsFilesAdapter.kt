@@ -19,7 +19,9 @@
  */
 package org.linphone.ui.main.chat.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.databinding.DataBindingUtil
@@ -30,14 +32,33 @@ import androidx.recyclerview.widget.RecyclerView
 import org.linphone.R
 import org.linphone.databinding.ChatDocumentContentListCellBinding
 import org.linphone.databinding.ChatMediaContentGridCellBinding
+import org.linphone.databinding.MeetingsListDecorationBinding
 import org.linphone.ui.main.chat.model.FileModel
+import org.linphone.utils.HeaderAdapter
 
-class ConversationsFilesAdapter : ListAdapter<FileModel, RecyclerView.ViewHolder>(
-    FilesDiffCallback()
-) {
+class ConversationsFilesAdapter :
+    ListAdapter<FileModel, RecyclerView.ViewHolder>(
+        FilesDiffCallback()
+    ),
+    HeaderAdapter {
     companion object {
         const val MEDIA_FILE = 1
         const val DOCUMENT_FILE = 2
+    }
+
+    override fun displayHeaderForPosition(position: Int): Boolean {
+        if (position == 0) return true
+
+        val previous = getItem(position - 1)
+        val item = getItem(position)
+        return previous.month != item.month
+    }
+
+    override fun getHeaderViewForPosition(context: Context, position: Int): View {
+        val binding = MeetingsListDecorationBinding.inflate(LayoutInflater.from(context))
+        val item = getItem(position)
+        binding.header.text = item.month
+        return binding.root
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

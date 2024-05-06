@@ -67,7 +67,7 @@ class MediaListViewerFragment : GenericFragment() {
             val list = viewModel.mediaList.value.orEmpty()
             if (position >= 0 && position < list.size) {
                 val model = list[position]
-                viewModel.currentlyDisplayedFileName.value = model.fileName
+                viewModel.currentlyDisplayedFileName.value = "${model.fileName}\n${model.dateTime}"
             }
         }
     }
