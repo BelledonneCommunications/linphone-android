@@ -238,44 +238,34 @@ class AccountModel @WorkerThread constructor(
 @WorkerThread
 fun Account.isEndToEndEncryptionMandatory(): Boolean {
     val defaultDomain = params.identityAddress?.domain == corePreferences.defaultDomain
-    // TODO FIXME: use API when available
-    // val encryption = params.mediaEncryption == MediaEncryption.ZRTP && params.mediaEncryptionMandatory && params.instantMessagingEncryptionMandatory
-    val encryption = corePreferences.config.getBool("test", "account_e2e_mode", false)
+    val encryption = params.instantMessagingEncryptionMandatory
     return defaultDomain && encryption
 }
 
 @WorkerThread
 fun Account.setEndToEndEncryptionMandatory() {
-    /*
-    TODO FIXME: use API when available
     val clone = params.clone()
-    clone.mediaEncryption = MediaEncryption.ZRTP
-    clone.mediaEncryptionMandatory = true
     clone.instantMessagingEncryptionMandatory = true
     params = clone
-    */
-    corePreferences.config.setBool("test", "account_e2e_mode", true)
 
     if (this == core.defaultAccount) {
         coreContext.contactsManager.updateContactsModelDependingOnDefaultAccountMode()
     }
-    Log.i("[Account] End-to-end encryption set mandatory on account")
+    Log.i(
+        "[Account] End-to-end encryption is now mandatory on account [${params.identityAddress?.asStringUriOnly()}]"
+    )
 }
 
 @WorkerThread
 fun Account.setInteroperabilityMode() {
-    /*
-    TODO FIXME: use API when available
     val clone = params.clone()
-    clone.mediaEncryption = MediaEncryption.SRTP
-    clone.mediaEncryptionMandatory = false
     clone.instantMessagingEncryptionMandatory = false
     params = clone
-    */
-    corePreferences.config.setBool("test", "account_e2e_mode", false)
 
     if (this == core.defaultAccount) {
         coreContext.contactsManager.updateContactsModelDependingOnDefaultAccountMode()
     }
-    Log.i("[Account] Account configured in interoperable mode")
+    Log.i(
+        "[Account] End-to-end encryption is no longer mandatory on account [${params.identityAddress?.asStringUriOnly()}]"
+    )
 }
