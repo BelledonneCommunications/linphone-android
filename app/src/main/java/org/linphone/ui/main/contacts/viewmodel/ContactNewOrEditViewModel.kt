@@ -313,8 +313,42 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
     @UiThread
     fun isPendingChanges(): Boolean {
         if (isEdit.value == true) {
-            // TODO FIXME: check if values of each field match friend values
-            return true
+            if (firstName.value.orEmpty() != friend.vcard?.givenName.orEmpty()) return true
+            if (lastName.value.orEmpty() != friend.vcard?.familyName.orEmpty()) return true
+            if (picturePath.value.orEmpty() != friend.photo.orEmpty()) return true
+            if (company.value.orEmpty() != friend.organization.orEmpty()) return true
+            if (jobTitle.value.orEmpty() != friend.jobTitle.orEmpty()) return true
+
+            for (address in friend.addresses) {
+                val found = sipAddresses.find {
+                    it.isSip && it.value.value.orEmpty() == address.asStringUriOnly()
+                }
+                if (found == null) return true
+            }
+            for (address in sipAddresses) {
+                if (address.value.value.orEmpty().isEmpty()) continue
+
+                val found = friend.addresses.find {
+                    it.asStringUriOnly() == address.value.value.orEmpty()
+                }
+                if (found == null) return true
+            }
+            for (number in friend.phoneNumbers) {
+                val found = phoneNumbers.find {
+                    !it.isSip && it.value.value.orEmpty() == number
+                }
+                if (found == null) return true
+            }
+            for (number in phoneNumbers) {
+                if (number.value.value.orEmpty().isEmpty()) continue
+
+                val found = friend.phoneNumbers.find {
+                    it == number.value.value.orEmpty()
+                }
+                if (found == null) return true
+            }
+
+            return false
         }
 
         return !picturePath.value.isNullOrEmpty() ||

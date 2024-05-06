@@ -121,26 +121,7 @@ class EditContactFragment : SlidingPaneChildFragment() {
         viewModel.findFriendByRefKey(refKey)
 
         binding.setBackClickListener {
-            val model = ConfirmationDialogModel()
-            val dialog = DialogUtils.getCancelContactChangesConfirmationDialog(
-                requireActivity(),
-                model
-            )
-
-            model.dismissEvent.observe(viewLifecycleOwner) {
-                it.consume {
-                    dialog.dismiss()
-                }
-            }
-
-            model.confirmEvent.observe(viewLifecycleOwner) {
-                it.consume {
-                    findNavController().popBackStack()
-                    dialog.dismiss()
-                }
-            }
-
-            dialog.show()
+            showAbortConfirmationDialog()
         }
 
         binding.setPickImageClickListener {
@@ -238,6 +219,13 @@ class EditContactFragment : SlidingPaneChildFragment() {
     }
 
     private fun showAbortConfirmationDialog() {
+        if (!viewModel.isPendingChanges()) {
+            Log.i("$TAG No changes detected, do not show confirmation dialog")
+            backPressedCallback.isEnabled = false
+            findNavController().popBackStack()
+            return
+        }
+
         val model = ConfirmationDialogModel()
         val dialog = DialogUtils.getCancelContactChangesConfirmationDialog(
             requireActivity(),

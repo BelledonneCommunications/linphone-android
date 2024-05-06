@@ -218,6 +218,7 @@ class NewContactFragment : GenericFragment() {
 
     private fun showAbortConfirmationDialogIfNeededOrGoBack() {
         if (!viewModel.isPendingChanges()) {
+            Log.i("$TAG No changes detected, do not show confirmation dialog")
             backPressedCallback.isEnabled = false
             findNavController().popBackStack()
             return
