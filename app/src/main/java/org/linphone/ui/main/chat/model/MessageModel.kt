@@ -370,9 +370,16 @@ class MessageModel @WorkerThread constructor(
                         )
 
                         val fileSize = content.fileSize.toLong()
+                        val timestamp = -1L // TODO FIXME: use content.creationTimestamp
                         when (content.type) {
                             "image", "video" -> {
-                                val fileModel = FileModel(path, name, fileSize, isFileEncrypted) { model ->
+                                val fileModel = FileModel(
+                                    path,
+                                    name,
+                                    fileSize,
+                                    timestamp,
+                                    isFileEncrypted
+                                ) { model ->
                                     onContentClicked?.invoke(model.file)
                                 }
                                 filesPath.add(fileModel)
@@ -380,7 +387,13 @@ class MessageModel @WorkerThread constructor(
                                 displayableContentFound = true
                             }
                             else -> {
-                                val fileModel = FileModel(path, name, fileSize, isFileEncrypted) { model ->
+                                val fileModel = FileModel(
+                                    path,
+                                    name,
+                                    fileSize,
+                                    timestamp,
+                                    isFileEncrypted
+                                ) { model ->
                                     onContentClicked?.invoke(model.file)
                                 }
                                 filesPath.add(fileModel)
@@ -398,14 +411,29 @@ class MessageModel @WorkerThread constructor(
                     allFilesDownloaded = false
                     filesContentCount += 1
                     val name = content.name ?: ""
+                    val timestamp = -1L // TODO FIXME: use content.creationTimestamp
                     if (name.isNotEmpty()) {
                         val fileModel = if (isOutgoing && chatMessage.isFileTransferInProgress) {
                             val path = content.filePath ?: ""
-                            FileModel(path, name, content.fileSize.toLong(), isFileEncrypted, false) { model ->
+                            FileModel(
+                                path,
+                                name,
+                                content.fileSize.toLong(),
+                                timestamp,
+                                isFileEncrypted,
+                                false
+                            ) { model ->
                                 onContentClicked?.invoke(model.file)
                             }
                         } else {
-                            FileModel(name, name, content.fileSize.toLong(), isFileEncrypted, true) { model ->
+                            FileModel(
+                                name,
+                                name,
+                                content.fileSize.toLong(),
+                                timestamp,
+                                isFileEncrypted,
+                                true
+                            ) { model ->
                                 downloadContent(model, content)
                             }
                         }

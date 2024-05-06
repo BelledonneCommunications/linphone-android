@@ -76,8 +76,9 @@ class ConversationMediaListViewModel @UiThread constructor() : AbstractConversat
             }
             val name = mediaContent.name.orEmpty()
             val size = mediaContent.size.toLong()
+            val timestamp = -1L // TODO FIXME: use mediaContent.creationTimestamp
             if (path.isNotEmpty() && name.isNotEmpty()) {
-                val model = FileModel(path, name, size, isEncrypted) {
+                val model = FileModel(path, name, size, timestamp, isEncrypted) {
                     openMediaEvent.postValue(Event(it))
                 }
                 list.add(model)

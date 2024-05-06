@@ -72,8 +72,9 @@ class ConversationDocumentsListViewModel @UiThread constructor() : AbstractConve
             }
             val name = documentContent.name.orEmpty()
             val size = documentContent.size.toLong()
+            val timestamp = -1L // TODO FIXME: use documentContent.creationTimestamp
             if (path.isNotEmpty() && name.isNotEmpty()) {
-                val model = FileModel(path, name, size, isEncrypted) {
+                val model = FileModel(path, name, size, timestamp, isEncrypted) {
                     openDocumentEvent.postValue(Event(it))
                 }
                 list.add(model)

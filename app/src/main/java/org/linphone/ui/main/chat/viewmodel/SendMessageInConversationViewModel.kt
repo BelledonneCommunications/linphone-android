@@ -324,7 +324,8 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
         list.addAll(attachments.value.orEmpty())
 
         val fileName = FileUtils.getNameFromFilePath(file)
-        val model = FileModel(file, fileName, 0, isEncrypted = false) { model ->
+        val timestamp = System.currentTimeMillis() / 1000
+        val model = FileModel(file, fileName, 0, timestamp, isEncrypted = false) { model ->
             removeAttachment(model.file)
         }
 

@@ -38,6 +38,7 @@ class FileModel @AnyThread constructor(
     val file: String,
     val fileName: String,
     val fileSize: Long,
+    val fileCreationTimestamp: Long,
     private val isEncrypted: Boolean,
     val isWaitingToBeDownloaded: Boolean = false,
     private val onClicked: ((model: FileModel) -> Unit)? = null

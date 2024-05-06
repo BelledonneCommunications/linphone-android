@@ -77,12 +77,7 @@ class MediaViewerFragment : GenericFragment() {
 
         viewModel.isVideo.observe(viewLifecycleOwner) { isVideo ->
             if (isVideo) {
-                Log.i("$TAG Creating video player for file [$path]")
-                binding.videoPlayer.setVideoPath(path)
-                binding.videoPlayer.setOnCompletionListener {
-                    Log.i("$TAG End of file reached")
-                    viewModel.isVideoPlaying.value = false
-                }
+                initVideoPlayer(path)
             }
         }
 
@@ -124,6 +119,11 @@ class MediaViewerFragment : GenericFragment() {
             viewModel.isVideoPlaying.value = false
         }
 
+        if (viewModel.isAudioPlaying.value == true) {
+            Log.i("$TAG Paused, stopping audio player")
+            viewModel.pauseAudio()
+        }
+
         super.onPause()
     }
 
@@ -131,5 +131,14 @@ class MediaViewerFragment : GenericFragment() {
         binding.videoPlayer.stopPlayback()
 
         super.onDestroyView()
+    }
+
+    private fun initVideoPlayer(path: String) {
+        Log.i("$TAG Creating video player for file [$path]")
+        binding.videoPlayer.setVideoPath(path)
+        binding.videoPlayer.setOnCompletionListener {
+            Log.i("$TAG End of file reached")
+            viewModel.isVideoPlaying.value = false
+        }
     }
 }

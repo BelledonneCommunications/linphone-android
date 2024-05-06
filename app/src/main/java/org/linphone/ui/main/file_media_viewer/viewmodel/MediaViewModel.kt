@@ -19,6 +19,8 @@
  */
 package org.linphone.ui.main.file_media_viewer.viewmodel
 
+import android.media.AudioAttributes
+import android.media.MediaPlayer
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -45,11 +47,23 @@ class MediaViewModel @UiThread constructor() : ViewModel() {
 
     val isAudio = MutableLiveData<Boolean>()
 
+    val isAudioPlaying = MutableLiveData<Boolean>()
+
     val toggleVideoPlayPauseEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
 
     private lateinit var filePath: String
+
+    private lateinit var mediaPlayer: MediaPlayer
+
+    override fun onCleared() {
+        if (::mediaPlayer.isInitialized) {
+            mediaPlayer.release()
+        }
+
+        super.onCleared()
+    }
 
     @UiThread
     fun loadFile(file: String) {
@@ -73,6 +87,8 @@ class MediaViewModel @UiThread constructor() : ViewModel() {
             FileUtils.MimeType.Audio -> {
                 Log.i("$TAG File [$file] seems to be an audio file")
                 isAudio.value = true
+
+                initMediaPlayer()
             }
             else -> { }
         }
@@ -88,5 +104,46 @@ class MediaViewModel @UiThread constructor() : ViewModel() {
         val playVideo = isVideoPlaying.value == false
         isVideoPlaying.value = playVideo
         toggleVideoPlayPauseEvent.value = Event(playVideo)
+    }
+
+    @UiThread
+    fun playPauseAudio() {
+        if (::mediaPlayer.isInitialized) {
+            if (mediaPlayer.isPlaying) {
+                mediaPlayer.pause()
+                isAudioPlaying.value = false
+            } else {
+                mediaPlayer.start()
+                isAudioPlaying.value = true
+            }
+        }
+    }
+
+    @UiThread
+    fun pauseAudio() {
+        if (::mediaPlayer.isInitialized) {
+            mediaPlayer.pause()
+        }
+    }
+
+    @UiThread
+    private fun initMediaPlayer() {
+        isAudioPlaying.value = false
+        mediaPlayer = MediaPlayer().apply {
+            setAudioAttributes(
+                AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).setUsage(
+                    AudioAttributes.USAGE_MEDIA
+                ).build()
+            )
+            setDataSource(filePath)
+            setOnCompletionListener {
+                Log.i("$TAG Media player reached the end of file")
+                isAudioPlaying.postValue(false)
+            }
+            prepare()
+            start()
+            isAudioPlaying.value = true
+        }
+        Log.i("$TAG Media player for file [$filePath] created")
     }
 }

@@ -16,6 +16,21 @@
         android:layout_height="match_parent"
         android:background="@color/black">
 
+        <ImageView
+            android:id="@+id/play_pause_audio_playback"
+            android:onClick="@{() -> viewModel.playPauseAudio()}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:contentDescription="@string/content_description_play_pause_video_playback"
+            android:src="@{viewModel.isAudioPlaying ? @drawable/pause_fill : @drawable/play_fill, default=@drawable/play_fill}"
+            android:visibility="@{viewModel.isAudio ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@color/white"/>
+
         <VideoView
             android:id="@+id/video_player"
             android:layout_width="0dp"

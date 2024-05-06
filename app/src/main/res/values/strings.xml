@@ -719,6 +719,7 @@
     <string name="content_description_conference_participant_muted">Participant is muted</string>
     <string name="content_description_conference_participant_speaking">Participant is speaking</string>
     <string name="content_description_add_participants">Add participants</string>
+    <string name="content_description_play_pause_audio_playback">Plays/pauses the audio playback</string>
     <string name="content_description_play_pause_video_playback">Plays/pauses the video playback</string>
     <string name="content_description_share_file">Share file</string>
     <string name="content_description_save_file">Save file</string>
