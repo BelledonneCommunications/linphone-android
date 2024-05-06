@@ -38,14 +38,16 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.io.File
-import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactsListFilterPopupMenuBinding
 import org.linphone.databinding.ContactsListFragmentBinding
 import org.linphone.ui.main.contacts.adapter.ContactsListAdapter
+import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.contacts.viewmodel.ContactsListViewModel
 import org.linphone.ui.main.fragment.AbstractMainFragment
+import org.linphone.ui.main.history.model.ConfirmationDialogModel
+import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 
 @UiThread
@@ -203,16 +205,7 @@ class ContactsListFragment : AbstractMainFragment() {
                         adapter.resetSelection()
                     },
                     { // onFavourite
-                        coreContext.postOnCoreThread {
-                            model.friend.edit()
-                            val starred = !model.friend.starred
-                            Log.i(
-                                "$TAG Friend [${model.name.value}] will be ${if (starred) "added to" else "removed from"} favourites"
-                            )
-                            model.friend.starred = starred
-                            model.friend.done()
-                            coreContext.contactsManager.notifyContactsListChanged()
-                        }
+                        listViewModel.toggleContactFavoriteFlag(model)
                     },
                     { // onShare
                         Log.i(
@@ -221,13 +214,7 @@ class ContactsListFragment : AbstractMainFragment() {
                         listViewModel.exportContactAsVCard(model.friend)
                     },
                     { // onDelete
-                        coreContext.postOnCoreThread {
-                            // TODO: confirmation dialog + confirmation toast once deleted
-                            Log.w("$TAG Removing friend [${model.name.value}]")
-                            coreContext.contactsManager.contactRemoved(model.friend)
-                            model.friend.remove()
-                            coreContext.contactsManager.notifyContactsListChanged()
-                        }
+                        showDeleteConfirmationDialog(model)
                     }
                 )
                 modalBottomSheet.show(parentFragmentManager, ContactsListMenuDialogFragment.TAG)
@@ -319,5 +306,29 @@ class ContactsListFragment : AbstractMainFragment() {
         // Elevation is for showing a shadow around the popup
         popupWindow.elevation = 20f
         popupWindow.showAsDropDown(view, 0, 0, Gravity.BOTTOM)
+    }
+
+    private fun showDeleteConfirmationDialog(contactModel: ContactAvatarModel) {
+        val model = ConfirmationDialogModel()
+        val dialog = DialogUtils.getDeleteContactConfirmationDialog(
+            requireActivity(),
+            model,
+            contactModel.contactName.orEmpty()
+        )
+
+        model.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        model.confirmEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                listViewModel.deleteContact(contactModel)
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
     }
 }

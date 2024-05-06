@@ -347,7 +347,7 @@ class ContactsManager @UiThread constructor() {
             fakeFriend.name = LinphoneUtils.getDisplayName(localAccount.params.identityAddress)
             fakeFriend.photo = localAccount.params.pictureUri
             val model = ContactAvatarModel(fakeFriend)
-            model.trust.postValue(SecurityLevel.EndToEndEncryptedAndVerified) // TODO CHECK: as it is ourselves, force encrypted level?
+            model.trust.postValue(SecurityLevel.EndToEndEncryptedAndVerified)
             unknownContactsAvatarsMap[key] = model
             model
         } else {

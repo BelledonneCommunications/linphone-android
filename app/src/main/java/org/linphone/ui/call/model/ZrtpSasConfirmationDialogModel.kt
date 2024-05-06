@@ -53,7 +53,7 @@ class ZrtpSasConfirmationDialogModel @UiThread constructor(
             authTokenToRead
         )
 
-        // TODO: improve algo?
+        // TODO FIXME: use SDK API when it will be available
         val rnd = Random()
         val randomLetters1 = "${ALPHABET[rnd.nextInt(ALPHABET.length)]}${ALPHABET[
             rnd.nextInt(

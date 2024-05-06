@@ -197,6 +197,31 @@ class ContactsListViewModel @UiThread constructor() : AbstractMainViewModel() {
         }
     }
 
+    @UiThread
+    fun toggleContactFavoriteFlag(contactModel: ContactAvatarModel) {
+        coreContext.postOnCoreThread {
+            contactModel.friend.edit()
+            val starred = !contactModel.friend.starred
+            Log.i(
+                "$TAG Friend [${contactModel.name.value}] will be ${if (starred) "added to" else "removed from"} favourites"
+            )
+            contactModel.friend.starred = starred
+            contactModel.friend.done()
+            coreContext.contactsManager.notifyContactsListChanged()
+        }
+    }
+
+    @UiThread
+    fun deleteContact(contactModel: ContactAvatarModel) {
+        coreContext.postOnCoreThread {
+            Log.w("$TAG Removing friend [${contactModel.contactName}]")
+            coreContext.contactsManager.contactRemoved(contactModel.friend)
+            contactModel.friend.remove()
+            coreContext.contactsManager.notifyContactsListChanged()
+            // TODO: show green toast
+        }
+    }
+
     @WorkerThread
     private fun applyFilter(
         filter: String,
