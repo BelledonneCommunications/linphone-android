@@ -28,6 +28,7 @@ import android.view.LayoutInflater
 import android.view.Window
 import android.view.WindowManager
 import androidx.annotation.UiThread
+import androidx.appcompat.widget.AppCompatEditText
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.LifecycleOwner
@@ -285,6 +286,8 @@ class DialogUtils {
                 false
             )
             binding.viewModel = viewModel
+            // For some reason, binding.subject triggers an error on Android Studio...
+            binding.root.findViewById<AppCompatEditText>(R.id.subject)?.requestFocus()
 
             return getDialog(context, binding)
         }
