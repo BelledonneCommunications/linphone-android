@@ -61,7 +61,7 @@ class FileModel @AnyThread constructor(
 
     val isVideoPreview: Boolean
 
-    val videoDuration = MutableLiveData<String>()
+    val audioVideoDuration = MutableLiveData<String>()
 
     val isPdf: Boolean
 
@@ -91,10 +91,10 @@ class FileModel @AnyThread constructor(
             mimeType = FileUtils.getMimeType(mime)
             isImage = mimeType == FileUtils.MimeType.Image
             isVideoPreview = mimeType == FileUtils.MimeType.Video
-            if (isVideoPreview) {
+            isAudio = mimeType == FileUtils.MimeType.Audio
+            if (isVideoPreview || isAudio) {
                 getDuration()
             }
-            isAudio = mimeType == FileUtils.MimeType.Audio
             Log.d(
                 "$TAG File has already been downloaded, extension is [$extension], MIME is [$mime]"
             )
@@ -139,7 +139,7 @@ class FileModel @AnyThread constructor(
             val seconds = durationInMs / 1000
             val duration = TimestampUtils.durationToString(seconds)
             Log.d("$TAG Duration for file [$file] is $duration")
-            videoDuration.postValue(duration)
+            audioVideoDuration.postValue(duration)
             retriever.release()
         } catch (e: Exception) {
             Log.e("$TAG Failed to get duration for file [$file]: $e")

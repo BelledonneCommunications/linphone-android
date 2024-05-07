@@ -65,6 +65,9 @@ class ConversationMediaListViewModel @UiThread constructor() : AbstractConversat
         val media = chatRoom.mediaContents
         Log.i("$TAG [${media.size}] media have been fetched")
         for (mediaContent in media) {
+            // Do not display voice recordings here, even if they are media file
+            if (mediaContent.isVoiceRecording) continue
+
             val isEncrypted = mediaContent.isFileEncrypted
             val path = if (isEncrypted) {
                 Log.i(
@@ -85,8 +88,7 @@ class ConversationMediaListViewModel @UiThread constructor() : AbstractConversat
             }
         }
         Log.i("$TAG [${media.size}] media have been processed")
-
-        mediaList.postValue(list.reversed()) // To have most recent files at the top
+        mediaList.postValue(list)
         operationInProgress.postValue(false)
     }
 }

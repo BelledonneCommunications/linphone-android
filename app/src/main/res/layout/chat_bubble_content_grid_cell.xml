@@ -46,10 +46,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:text="@{model.videoDuration, default=`00:42`}"
+            android:text="@{model.audioVideoDuration, default=`00:42`}"
             android:textColor="@color/white"
             android:textSize="12sp"
-            android:visibility="@{model.isVideoPreview &amp;&amp; model.videoDuration.length() > 0 ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{model.isVideoPreview &amp;&amp; model.audioVideoDuration.length() > 0 ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintBottom_toBottomOf="@id/image"
             app:layout_constraintStart_toStartOf="@id/image"/>
 
@@ -83,6 +83,19 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:tint="?attr/color_main2_600" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_600"
+            android:id="@+id/audio_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="@{model.audioVideoDuration, default=`00:42`}"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:visibility="@{model.isAudio &amp;&amp; model.audioVideoDuration.length() > 0 ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintBottom_toBottomOf="@id/file_icon"
+            app:layout_constraintStart_toStartOf="@id/file_icon"/>
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/transfer_progress"

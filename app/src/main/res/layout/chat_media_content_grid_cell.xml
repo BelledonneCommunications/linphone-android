@@ -28,32 +28,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_600"
-            android:id="@+id/video_duration"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:text="@{model.videoDuration, default=`00:42`}"
-            android:textColor="@color/white"
-            android:textSize="12sp"
-            android:visibility="@{model.isVideoPreview &amp;&amp; model.videoDuration.length() > 0 ? View.VISIBLE : View.GONE, default=gone}"
-            app:layout_constraintBottom_toBottomOf="@id/image"
-            app:layout_constraintStart_toStartOf="@id/image"/>
-
-        <ImageView
-            android:id="@+id/video_preview"
-            android:layout_width="@dimen/icon_size"
-            android:layout_height="@dimen/icon_size"
-            android:src="@drawable/play_fill"
-            android:contentDescription="@null"
-            android:visibility="@{model.isVideoPreview ? View.VISIBLE : View.GONE, default=gone}"
-            app:layout_constraintTop_toTopOf="@id/image"
-            app:layout_constraintBottom_toBottomOf="@id/image"
-            app:layout_constraintStart_toStartOf="@id/image"
-            app:layout_constraintEnd_toEndOf="@id/image"
-            app:tint="@color/white" />
-
         <ImageView
             android:id="@+id/audio_file"
             android:layout_width="0dp"
@@ -69,6 +43,32 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:tint="?attr/color_main2_600" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_600"
+            android:id="@+id/audio_video_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="@{model.audioVideoDuration, default=`00:42`}"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:visibility="@{(model.isVideoPreview || model.isAudio) &amp;&amp; model.audioVideoDuration.length() > 0 ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <ImageView
+            android:id="@+id/video_preview"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:src="@drawable/play_fill"
+            android:contentDescription="@null"
+            android:visibility="@{model.isVideoPreview ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintTop_toTopOf="@id/image"
+            app:layout_constraintBottom_toBottomOf="@id/image"
+            app:layout_constraintStart_toStartOf="@id/image"
+            app:layout_constraintEnd_toEndOf="@id/image"
+            app:tint="@color/white" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -81,8 +81,7 @@ class ConversationDocumentsListViewModel @UiThread constructor() : AbstractConve
             }
         }
         Log.i("$TAG [${documents.size}] documents have been processed")
-
-        documentsList.postValue(list.reversed()) // To have most recent documents at the top
+        documentsList.postValue(list)
         operationInProgress.postValue(false)
     }
 }
