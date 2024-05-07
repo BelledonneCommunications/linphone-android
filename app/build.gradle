@@ -10,6 +10,7 @@ plugins {
 }
 
 def packageName = "org.linphone"
+def useDifferentPackageNameForDebugBuild = false
 
 def crashlyticsAvailable = new File(projectDir.absolutePath +'/google-services.json').exists() && new File(LinphoneSdkBuildDir + '/libs/').exists() && new File(LinphoneSdkBuildDir + '/libs-debug/').exists()
 
@@ -88,10 +89,17 @@ android {
 
     buildTypes {
         debug {
+            if (useDifferentPackageNameForDebugBuild) {
+                applicationIdSuffix ".debug"
+            }
             debuggable true
             jniDebuggable true
 
-            resValue "string", "file_provider", packageName + ".fileprovider"
+            if (useDifferentPackageNameForDebugBuild) {
+                resValue "string", "file_provider", packageName + ".debug.fileprovider"
+            } else {
+                resValue "string", "file_provider", packageName + ".fileprovider"
+            }
             resValue "string", "linphone_app_version", gitVersion.toString().trim()
             resValue "string", "linphone_app_branch", gitBranch.toString().trim()
 
