@@ -108,10 +108,18 @@ class ConversationMediaListFragment : SlidingPaneChildFragment() {
         }
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
+                // If not the latest item
                 if (position < adapter.currentList.size - 1) {
                     // Have last item of month takes all remaining horizontal space to have a "line break"
                     if (adapter.displayHeaderForPosition(position + 1)) {
-                        return spanCount - (position % spanCount)
+                        // Check index that marks the start of the previous section
+                        for (i in position downTo 0) {
+                            if (adapter.displayHeaderForPosition(i)) {
+                                // Compute span size depending on position in row
+                                val diff = position - i
+                                return spanCount - diff % spanCount
+                            }
+                        }
                     }
                 }
                 return 1
