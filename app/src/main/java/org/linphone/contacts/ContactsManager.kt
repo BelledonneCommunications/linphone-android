@@ -603,7 +603,7 @@ class ContactsManager @UiThread constructor() {
     @WorkerThread
     fun updateContactsModelDependingOnDefaultAccountMode() {
         val account = coreContext.core.defaultAccount
-        val showTrust = account?.isEndToEndEncryptionMandatory() == true
+        val showTrust = true
         Log.i(
             "$TAG Default account mode is [${if (showTrust) "end-to-end encryption mandatory" else "interoperable"}], update all contact models showTrust value"
         )

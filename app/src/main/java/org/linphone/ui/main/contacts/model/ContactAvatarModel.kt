@@ -22,7 +22,6 @@ package org.linphone.ui.main.contacts.model
 import android.net.Uri
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
-import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.contacts.AbstractAvatarModel
 import org.linphone.contacts.getNativeContactPictureUri
@@ -31,7 +30,6 @@ import org.linphone.core.ConsolidatedPresence
 import org.linphone.core.Friend
 import org.linphone.core.FriendListenerStub
 import org.linphone.core.tools.Log
-import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
 import org.linphone.utils.AppUtils
 import org.linphone.utils.TimestampUtils
 
@@ -87,7 +85,7 @@ class ContactAvatarModel @WorkerThread constructor(val friend: Friend, val addre
 
         isFavourite.postValue(friend.starred)
         initials.postValue(AppUtils.getInitials(friend.name.orEmpty()))
-        showTrust.postValue(coreContext.core.defaultAccount?.isEndToEndEncryptionMandatory())
+        showTrust.postValue(true)
         picturePath.postValue(getAvatarUri(friend).toString())
 
         name.postValue(friend.name)
