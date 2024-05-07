@@ -38,6 +38,7 @@ import org.linphone.ui.main.contacts.fragment.ContactsListFragmentDirections
 import org.linphone.ui.main.history.fragment.HistoryListFragmentDirections
 import org.linphone.ui.main.meetings.fragment.MeetingsListFragmentDirections
 import org.linphone.ui.main.viewmodel.AbstractMainViewModel
+import org.linphone.utils.Event
 import org.linphone.utils.SlidingPaneBackPressedCallback
 import org.linphone.utils.hideKeyboard
 import org.linphone.utils.setKeyboardInsetListener
@@ -177,6 +178,10 @@ abstract class AbstractMainFragment : GenericFragment() {
             viewLifecycleOwner
         ) {
             it.consume {
+                if (slidingPane.isSlideable && viewModel.searchBarVisible.value == true) {
+                    viewModel.focusSearchBarEvent.value = Event(false)
+                }
+
                 if (!slidingPane.isOpen) {
                     Log.d("$TAG Opening sliding pane")
                     slidingPane.openPane()
