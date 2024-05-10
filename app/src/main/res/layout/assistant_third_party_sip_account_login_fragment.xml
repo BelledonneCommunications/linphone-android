@@ -70,7 +70,7 @@
                 android:layout_marginTop="38dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:text="@{@string/username + `*`}"
+                android:text="@{@string/username + `*`, default=`Username*`}"
                 app:layout_constraintTop_toBottomOf="@id/title"
                 app:layout_constraintStart_toStartOf="@id/username"/>
 
@@ -102,7 +102,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="16dp"
-                android:text="@{@string/password + `*`}"
+                android:text="@string/password"
                 app:layout_constraintTop_toBottomOf="@id/username"
                 app:layout_constraintStart_toStartOf="@id/password"/>
 
@@ -148,7 +148,7 @@
                 android:layout_marginTop="18dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:text="@{@string/sip_address_domain + `*`}"
+                android:text="@{@string/sip_address_domain + `*`, default=`Domain*`}"
                 app:layout_constraintTop_toBottomOf="@id/password"
                 app:layout_constraintStart_toStartOf="@id/domain"/>
 
@@ -212,7 +212,7 @@
                 android:layout_marginTop="18dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:text="@{@string/assistant_sip_account_transport_protocol + `*`}"
+                android:text="@string/assistant_sip_account_transport_protocol"
                 app:layout_constraintTop_toBottomOf="@id/display_name"
                 app:layout_constraintStart_toStartOf="@id/transport"/>
 

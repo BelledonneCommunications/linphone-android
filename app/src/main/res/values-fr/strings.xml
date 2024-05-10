@@ -627,6 +627,10 @@
     <!-- Misc -->
     <string name="multiple_participants_selection_placeholder">Les participants selectionnés apparaîtront ici</string>
     <string name="connection_error_for_non_default_account">Compte(s) non connecté(s)</string>
+    <plurals name="pending_notification_for_other_accounts" tools:ignore="MissingQuantity">
+        <item quantity="one">%s notification en attente</item>
+        <item quantity="other">%s notifications en attente</item>
+    </plurals>
     <string name="network_not_reachable">Vous n\'êtes pas connecté à internet</string>
     <string name="operation_in_progress_overlay">Opération en cours, merci de patienter…</string>
 

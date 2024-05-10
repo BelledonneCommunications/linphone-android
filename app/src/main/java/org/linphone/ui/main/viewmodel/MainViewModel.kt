@@ -35,8 +35,11 @@ import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
 import org.linphone.core.Account
 import org.linphone.core.Call
+import org.linphone.core.ChatMessage
+import org.linphone.core.ChatRoom
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
+import org.linphone.core.GlobalState
 import org.linphone.core.RegistrationState
 import org.linphone.core.VFS
 import org.linphone.core.tools.Log
@@ -58,6 +61,8 @@ class MainViewModel @UiThread constructor() : ViewModel() {
     }
 
     val showAlert = MutableLiveData<Boolean>()
+
+    val maxAlertLevel = MutableLiveData<Int>()
 
     val alertLabel = MutableLiveData<String>()
 
@@ -105,10 +110,20 @@ class MainViewModel @UiThread constructor() : ViewModel() {
 
     private val coreListener = object : CoreListenerStub() {
         @WorkerThread
+        override fun onGlobalStateChanged(core: Core, state: GlobalState?, message: String) {
+            Log.i("$TAG Core's global state is now [${core.globalState}]")
+            if (core.globalState == GlobalState.On) {
+                computeNonDefaultAccountNotificationsCount()
+            }
+        }
+
+        @WorkerThread
         override fun onLastCallEnded(core: Core) {
             Log.i("$TAG Last call ended, removing in-call 'alert'")
             removeAlert(SINGLE_CALL)
             atLeastOneCall.postValue(false)
+
+            computeNonDefaultAccountNotificationsCount()
         }
 
         @WorkerThread
@@ -125,6 +140,7 @@ class MainViewModel @UiThread constructor() : ViewModel() {
             state: Call.State?,
             message: String
         ) {
+            Log.i("$TAG A call's state changed, updating alerts if needed")
             if (
                 core.callsNb > 1 && (
                     LinphoneUtils.isCallEnding(call.state) ||
@@ -139,6 +155,16 @@ class MainViewModel @UiThread constructor() : ViewModel() {
                 }
                 callsStatus.postValue(LinphoneUtils.callStateToString(call.state))
             }
+        }
+
+        @WorkerThread
+        override fun onMessagesReceived(
+            core: Core,
+            chatRoom: ChatRoom,
+            messages: Array<out ChatMessage>
+        ) {
+            Log.i("$TAG Message(s) received, updating notifications count if needed")
+            computeNonDefaultAccountNotificationsCount()
         }
 
         @WorkerThread
@@ -213,9 +239,7 @@ class MainViewModel @UiThread constructor() : ViewModel() {
                 core.refreshRegisters()
             }
 
-            removeAlert(NON_DEFAULT_ACCOUNT_NOTIFICATIONS)
-
-            // TODO FIXME: compute other accounts notifications count
+            computeNonDefaultAccountNotificationsCount()
         }
 
         @WorkerThread
@@ -234,6 +258,7 @@ class MainViewModel @UiThread constructor() : ViewModel() {
     init {
         defaultAccountRegistrationFailed = false
         showAlert.value = false
+        maxAlertLevel.value = NONE
 
         coreContext.postOnCoreThread { core ->
             accountsFound = core.accountList.size
@@ -312,6 +337,28 @@ class MainViewModel @UiThread constructor() : ViewModel() {
     }
 
     @WorkerThread
+    private fun computeNonDefaultAccountNotificationsCount() {
+        var count = 0
+        for (account in coreContext.core.accountList) {
+            if (account == coreContext.core.defaultAccount) continue
+            count += account.unreadChatMessageCount + account.missedCallsCount
+        }
+
+        if (count > 0) {
+            val label = AppUtils.getStringWithPlural(
+                R.plurals.pending_notification_for_other_accounts,
+                count,
+                count.toString()
+            )
+            addAlert(NON_DEFAULT_ACCOUNT_NOTIFICATIONS, label, forceUpdate = true)
+            Log.i("$TAG Found [$count] pending notifications for other account(s)")
+        } else {
+            Log.i("$TAG No pending notification found for other account(s), clearing alert")
+            removeAlert(NON_DEFAULT_ACCOUNT_NOTIFICATIONS)
+        }
+    }
+
+    @WorkerThread
     private fun updateCallAlert() {
         val core = coreContext.core
         val callsNb = core.callsNb
@@ -347,13 +394,18 @@ class MainViewModel @UiThread constructor() : ViewModel() {
     }
 
     @WorkerThread
-    private fun addAlert(type: Int, label: String) {
+    private fun addAlert(type: Int, label: String, forceUpdate: Boolean = false) {
         val found = alertsList.find {
             it.first == type
         }
-        if (found == null) {
+        if (found == null || forceUpdate) {
             cancelAlertJob()
+            if (found != null) {
+                alertsList.remove(found)
+            }
+
             val alert = Pair(type, label)
+            Log.i("$TAG Adding alert with type [$type]")
             alertsList.add(alert)
             updateDisplayedAlert()
         } else {
@@ -368,6 +420,7 @@ class MainViewModel @UiThread constructor() : ViewModel() {
         }
         if (found != null) {
             cancelAlertJob()
+            Log.i("$TAG Removing alert with type [$type]")
             alertsList.remove(found)
             updateDisplayedAlert()
         } else {
@@ -397,10 +450,12 @@ class MainViewModel @UiThread constructor() : ViewModel() {
             Log.i("$TAG No alert to display")
             showAlert.postValue(false)
             changeSystemTopBarColorEvent.postValue(Event(NONE))
+            maxAlertLevel.postValue(NONE)
         } else {
             val type = maxedPriorityAlert.first
             val label = maxedPriorityAlert.second
             Log.i("$TAG Max priority alert right now is [$type]")
+            maxAlertLevel.postValue(type)
             when (type) {
                 NON_DEFAULT_ACCOUNT_NOTIFICATIONS, NON_DEFAULT_ACCOUNT_NOT_CONNECTED -> {
                     alertIcon.postValue(R.drawable.bell_simple)
@@ -414,14 +469,20 @@ class MainViewModel @UiThread constructor() : ViewModel() {
             }
             alertLabel.postValue(label)
 
-            coreContext.postOnMainThread {
-                val delayMs = if (type == SINGLE_CALL) 1000L else 0L
-                alertJob = viewModelScope.launch {
-                    withContext(Dispatchers.IO) {
-                        delay(delayMs)
-                        withContext(Dispatchers.Main) {
-                            showAlert.value = true
-                            changeSystemTopBarColorEvent.value = Event(type)
+            if (showAlert.value == true) {
+                Log.i("$TAG Alert top-bar is already visible, updating color if needed")
+                changeSystemTopBarColorEvent.postValue(Event(type))
+            } else {
+                Log.i("$TAG Alert top-bar is currently invisible, starting job to display it")
+                coreContext.postOnMainThread {
+                    val delayMs = if (type == SINGLE_CALL) 1000L else 0L
+                    alertJob = viewModelScope.launch {
+                        withContext(Dispatchers.IO) {
+                            delay(delayMs)
+                            withContext(Dispatchers.Main) {
+                                showAlert.value = true
+                                changeSystemTopBarColorEvent.value = Event(type)
+                            }
                         }
                     }
                 }

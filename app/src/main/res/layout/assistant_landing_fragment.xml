@@ -36,8 +36,8 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:onClick="@{backClickListener}"
                 android:id="@+id/back"
+                android:onClick="@{backClickListener}"
                 android:layout_width="@dimen/top_bar_height"
                 android:layout_height="@dimen/top_bar_height"
                 android:padding="15dp"
@@ -82,7 +82,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
                 android:layout_marginEnd="16dp"
-                android:text="@{@string/sip_address + `*`, default=@string/sip_address}"
+                android:text="@{@string/sip_address + `*`, default=`SIP Address*`}"
                 app:layout_constraintTop_toBottomOf="@id/title"
                 app:layout_constraintStart_toStartOf="@id/sip_identity"/>
 
@@ -113,7 +113,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="16dp"
-                android:text="@{@string/password + `*`, default=@string/password}"
+                android:text="@{@string/password + `*`, default=`Password*`}"
                 app:layout_constraintWidth_max="@dimen/text_input_max_width"
                 app:layout_constraintTop_toBottomOf="@id/sip_identity"
                 app:layout_constraintStart_toStartOf="@id/password"/>
@@ -139,8 +139,8 @@
                 app:layout_constraintEnd_toEndOf="parent"/>
 
             <ImageView
-                android:onClick="@{() -> viewModel.toggleShowPassword()}"
                 android:id="@+id/eye"
+                android:onClick="@{() -> viewModel.toggleShowPassword()}"
                 android:layout_width="@dimen/icon_size"
                 android:layout_height="0dp"
                 android:padding="4dp"
@@ -153,10 +153,10 @@
                 app:layout_constraintBottom_toBottomOf="@id/password" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:onClick="@{() -> viewModel.login()}"
-                android:enabled="@{viewModel.loginEnabled &amp;&amp; !viewModel.registrationInProgress, default=false}"
                 style="@style/primary_button_label_style"
                 android:id="@+id/login"
+                android:onClick="@{() -> viewModel.login()}"
+                android:enabled="@{viewModel.loginEnabled &amp;&amp; !viewModel.registrationInProgress, default=false}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
@@ -171,9 +171,9 @@
                 app:layout_constraintEnd_toEndOf="parent" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:onClick="@{forgottenPasswordClickListener}"
                 style="@style/default_text_style_600"
                 android:id="@+id/forgotten_password"
+                android:onClick="@{forgottenPasswordClickListener}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -224,9 +224,9 @@
                 app:layout_constraintBottom_toBottomOf="@id/or"/>
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:onClick="@{qrCodeClickListener}"
                 style="@style/secondary_button_label_style"
                 android:id="@+id/scan_qr_code"
+                android:onClick="@{qrCodeClickListener}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="22dp"
@@ -245,9 +245,9 @@
                 app:layout_constraintTop_toBottomOf="@id/or" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:onClick="@{thirdPartySipAccountLoginClickListener}"
                 style="@style/secondary_button_label_style"
                 android:id="@+id/third_party_sip_account"
+                android:onClick="@{thirdPartySipAccountLoginClickListener}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -279,9 +279,9 @@
                 app:layout_constraintBottom_toBottomOf="@id/register"/>
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:onClick="@{registerClickListener}"
                 style="@style/primary_button_label_style"
                 android:id="@+id/register"
+                android:onClick="@{registerClickListener}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"

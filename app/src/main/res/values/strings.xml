@@ -663,6 +663,10 @@
     <!-- Misc -->
     <string name="multiple_participants_selection_placeholder">Selected participants will appear here</string>
     <string name="connection_error_for_non_default_account">Account(s) connection error</string>
+    <plurals name="pending_notification_for_other_accounts">
+        <item quantity="one">%s notification for other account(s)</item>
+        <item quantity="other">%s notifications for other account(s)</item>
+    </plurals>
     <string name="network_not_reachable">You aren\'t connected to internet</string>
     <string name="operation_in_progress_overlay">Operation in progress, please wait</string>
 
