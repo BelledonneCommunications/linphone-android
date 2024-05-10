@@ -20,6 +20,7 @@
 package org.linphone.ui.main.chat.fragment
 
 import android.Manifest
+import android.app.Activity
 import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.ClipData
@@ -87,6 +88,8 @@ import org.linphone.ui.main.chat.viewmodel.ConversationViewModel
 import org.linphone.ui.main.chat.viewmodel.ConversationViewModel.Companion.SCROLLING_POSITION_NOT_SET
 import org.linphone.ui.main.chat.viewmodel.SendMessageInConversationViewModel
 import org.linphone.ui.main.fragment.SlidingPaneChildFragment
+import org.linphone.ui.main.history.model.ConfirmationDialogModel
+import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.RecyclerViewHeaderDecoration
@@ -102,6 +105,8 @@ import org.linphone.utils.showKeyboard
 class ConversationFragment : SlidingPaneChildFragment() {
     companion object {
         private const val TAG = "[Conversation Fragment]"
+
+        private const val EXPORT_FILE_AS_DOCUMENT = 10
     }
 
     private lateinit var binding: ChatConversationFragmentBinding
@@ -119,6 +124,8 @@ class ConversationFragment : SlidingPaneChildFragment() {
     private val args: ConversationFragmentArgs by navArgs()
 
     private var bottomSheetDialog: BottomSheetDialogFragment? = null
+
+    private var filePathToExport: String? = null
 
     private val pickMedia = registerForActivityResult(
         ActivityResultContracts.PickMultipleVisualMedia()
@@ -655,6 +662,14 @@ class ConversationFragment : SlidingPaneChildFragment() {
             }
         }
 
+        viewModel.showGreenToastEvent.observe(viewLifecycleOwner) {
+            it.consume { pair ->
+                val message = pair.first
+                val icon = pair.second
+                (requireActivity() as GenericActivity).showGreenToast(message, icon)
+            }
+        }
+
         viewModel.showRedToastEvent.observe(viewLifecycleOwner) {
             it.consume { pair ->
                 val message = pair.first
@@ -832,6 +847,29 @@ class ConversationFragment : SlidingPaneChildFragment() {
         currentChatMessageModelForBottomSheet = null
     }
 
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == EXPORT_FILE_AS_DOCUMENT) {
+            if (resultCode == Activity.RESULT_OK) {
+                val filePath = filePathToExport
+                if (filePath != null) {
+                    data?.data?.also { documentUri ->
+                        Log.i(
+                            "$TAG Exported file [$filePath] should be stored in URI [$documentUri]"
+                        )
+                        viewModel.copyFileToUri(filePath, documentUri)
+                        filePathToExport = null
+                    }
+                } else {
+                    Log.e("$TAG No file path waiting to be exported!")
+                }
+            } else {
+                Log.w("$TAG Export file activity result is [$resultCode], aborting")
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
     private fun scrollToFirstUnreadMessageOrBottom() {
         if (adapter.itemCount == 0) {
             Log.w("$TAG No item in adapter yet, do not scroll")
@@ -893,21 +931,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
                 sharedViewModel.displayFileEvent.value = Event(bundle)
             }
             else -> {
-                val intent = Intent(Intent.ACTION_VIEW)
-                val contentUri: Uri =
-                    FileUtils.getPublicFilePath(requireContext(), path)
-                intent.setDataAndType(contentUri, mime)
-                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                try {
-                    requireContext().startActivity(intent)
-                } catch (anfe: ActivityNotFoundException) {
-                    Log.e("$TAG Can't open file [$path] in third party app: $anfe")
-                    val message = getString(
-                        R.string.toast_no_app_registered_to_handle_content_type_error
-                    )
-                    val icon = R.drawable.file
-                    (requireActivity() as MainActivity).showRedToast(message, icon)
-                }
+                showOpenOrExportFileDialog(path, mime)
             }
         }
     }
@@ -1267,5 +1291,67 @@ class ConversationFragment : SlidingPaneChildFragment() {
             EndToEndEncryptionDetailsDialogFragment.TAG
         )
         bottomSheetDialog = e2eEncryptionDetailsBottomSheet
+    }
+
+    private fun showOpenOrExportFileDialog(path: String, mime: String) {
+        val model = ConfirmationDialogModel()
+        val dialog = DialogUtils.getOpenOrExportFileDialog(
+            requireActivity(),
+            model
+        )
+
+        model.dismissEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                dialog.dismiss()
+            }
+        }
+
+        model.cancelEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                openFileInAnotherApp(path, mime)
+                dialog.dismiss()
+            }
+        }
+
+        model.confirmEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                exportFile(path, mime)
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
+    }
+
+    private fun openFileInAnotherApp(path: String, mime: String) {
+        val intent = Intent(Intent.ACTION_VIEW)
+        val contentUri: Uri =
+            FileUtils.getPublicFilePath(requireContext(), path)
+        intent.setDataAndType(contentUri, mime)
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        try {
+            Log.i("$TAG Trying to start ACTION_VIEW intent for file [$path]")
+            requireContext().startActivity(intent)
+        } catch (anfe: ActivityNotFoundException) {
+            Log.e("$TAG Can't open file [$path] in third party app: $anfe")
+            val message = getString(
+                R.string.toast_no_app_registered_to_handle_content_type_error
+            )
+            val icon = R.drawable.file
+            (requireActivity() as MainActivity).showRedToast(message, icon)
+        }
+    }
+
+    private fun exportFile(path: String, mime: String) {
+        filePathToExport = path
+
+        Log.i("$TAG Asking where to save file [$filePathToExport] on device")
+        val name = FileUtils.getNameFromFilePath(path)
+        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = mime
+            putExtra(Intent.EXTRA_TITLE, name)
+        }
+        startActivityForResult(intent, EXPORT_FILE_AS_DOCUMENT)
     }
 }

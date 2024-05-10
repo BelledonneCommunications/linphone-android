@@ -45,6 +45,7 @@ import org.linphone.databinding.DialogDeleteContactBinding
 import org.linphone.databinding.DialogKickFromConferenceBinding
 import org.linphone.databinding.DialogManageAccountInternationalPrefixHelpBinding
 import org.linphone.databinding.DialogMergeCallsIntoConferenceBinding
+import org.linphone.databinding.DialogOpenExportFileBinding
 import org.linphone.databinding.DialogPickNumberOrAddressBinding
 import org.linphone.databinding.DialogRemoveAccountBinding
 import org.linphone.databinding.DialogRemoveAllCallLogsBinding
@@ -288,6 +289,22 @@ class DialogUtils {
             binding.viewModel = viewModel
             // For some reason, binding.subject triggers an error on Android Studio...
             binding.root.findViewById<AppCompatEditText>(R.id.subject)?.requestFocus()
+
+            return getDialog(context, binding)
+        }
+
+        @UiThread
+        fun getOpenOrExportFileDialog(
+            context: Context,
+            viewModel: ConfirmationDialogModel
+        ): Dialog {
+            val binding: DialogOpenExportFileBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.dialog_open_export_file,
+                null,
+                false
+            )
+            binding.viewModel = viewModel
 
             return getDialog(context, binding)
         }

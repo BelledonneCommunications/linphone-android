@@ -164,43 +164,7 @@ class MediaListViewerFragment : GenericFragment() {
         }
 
         binding.setExportClickListener {
-            val list = viewModel.mediaList.value.orEmpty()
-            val currentItem = binding.mediaViewPager.currentItem
-            val model = if (currentItem >= 0 && currentItem < list.size) list[currentItem] else null
-            if (model != null) {
-                val filePath = model.file
-                lifecycleScope.launch {
-                    withContext(Dispatchers.IO) {
-                        Log.i("$TAG Export file [$filePath] to Android's MediaStore")
-                        val mediaStorePath = FileUtils.addContentToMediaStore(filePath)
-                        if (mediaStorePath.isNotEmpty()) {
-                            Log.i(
-                                "$TAG File [$filePath] has been successfully exported to MediaStore"
-                            )
-                            val message = AppUtils.getString(
-                                R.string.toast_file_successfully_exported_to_media_store
-                            )
-                            (requireActivity() as GenericActivity).showGreenToast(
-                                message,
-                                R.drawable.check
-                            )
-                        } else {
-                            Log.e("$TAG Failed to export file [$filePath] to MediaStore!")
-                            val message = AppUtils.getString(
-                                R.string.toast_export_file_to_media_store_error
-                            )
-                            (requireActivity() as GenericActivity).showRedToast(
-                                message,
-                                R.drawable.warning_circle
-                            )
-                        }
-                    }
-                }
-            } else {
-                Log.e(
-                    "$TAG Failed to get FileModel at index [$currentItem], only [${list.size}] items in list"
-                )
-            }
+            exportFile()
         }
 
         sharedViewModel.mediaViewerFullScreenMode.observe(viewLifecycleOwner) {
@@ -226,6 +190,46 @@ class MediaListViewerFragment : GenericFragment() {
         }
 
         super.onDestroy()
+    }
+
+    private fun exportFile() {
+        val list = viewModel.mediaList.value.orEmpty()
+        val currentItem = binding.mediaViewPager.currentItem
+        val model = if (currentItem >= 0 && currentItem < list.size) list[currentItem] else null
+        if (model != null) {
+            val filePath = model.file
+            lifecycleScope.launch {
+                withContext(Dispatchers.IO) {
+                    Log.i("$TAG Export file [$filePath] to Android's MediaStore")
+                    val mediaStorePath = FileUtils.addContentToMediaStore(filePath)
+                    if (mediaStorePath.isNotEmpty()) {
+                        Log.i(
+                            "$TAG File [$filePath] has been successfully exported to MediaStore"
+                        )
+                        val message = AppUtils.getString(
+                            R.string.toast_file_successfully_exported_to_media_store
+                        )
+                        (requireActivity() as GenericActivity).showGreenToast(
+                            message,
+                            R.drawable.check
+                        )
+                    } else {
+                        Log.e("$TAG Failed to export file [$filePath] to MediaStore!")
+                        val message = AppUtils.getString(
+                            R.string.toast_export_file_to_media_store_error
+                        )
+                        (requireActivity() as GenericActivity).showRedToast(
+                            message,
+                            R.drawable.warning_circle
+                        )
+                    }
+                }
+            }
+        } else {
+            Log.e(
+                "$TAG Failed to get FileModel at index [$currentItem], only [${list.size}] items in list"
+            )
+        }
     }
 
     private fun shareFile() {

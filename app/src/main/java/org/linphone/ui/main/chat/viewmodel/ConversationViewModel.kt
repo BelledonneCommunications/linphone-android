@@ -19,9 +19,14 @@
  */
 package org.linphone.ui.main.chat.viewmodel
 
+import android.net.Uri
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Address
@@ -43,6 +48,7 @@ import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
+import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
 
 class ConversationViewModel @UiThread constructor() : AbstractConversationViewModel() {
@@ -108,6 +114,10 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
 
     val contactToDisplayEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
+    }
+
+    val showGreenToastEvent: MutableLiveData<Event<Pair<String, Int>>> by lazy {
+        MutableLiveData<Event<Pair<String, Int>>>()
     }
 
     val showRedToastEvent: MutableLiveData<Event<Pair<String, Int>>> by lazy {
@@ -835,5 +845,31 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
         conferenceScheduler.account = account
         // Will trigger the conference creation/update automatically
         conferenceScheduler.info = conferenceInfo
+    }
+
+    @UiThread
+    fun copyFileToUri(filePath: String, dest: Uri) {
+        val source = Uri.parse(FileUtils.getProperFilePath(filePath))
+        Log.i("$TAG Copying file URI [$source] to [$dest]")
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val result = FileUtils.copyFile(source, dest)
+                if (result) {
+                    Log.i(
+                        "$TAG File [$filePath] has been successfully exported to documents"
+                    )
+                    val message = AppUtils.getString(
+                        R.string.toast_file_successfully_exported_to_documents
+                    )
+                    showGreenToastEvent.postValue(Event(Pair(message, R.drawable.check)))
+                } else {
+                    Log.e("$TAG Failed to export file [$filePath] to documents!")
+                    val message = AppUtils.getString(
+                        R.string.toast_export_file_to_documents_error
+                    )
+                    showRedToastEvent.postValue(Event(Pair(message, R.drawable.warning_circle)))
+                }
+            }
+        }
     }
 }

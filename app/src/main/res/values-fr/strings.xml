@@ -437,6 +437,10 @@
     <string name="conversation_dialog_edit_subject">Renommer la conversation</string>
     <string name="conversation_dialog_subject_hint">Nom de la conversation</string>
     <string name="conversation_dialog_edit_subject_confirm_button">Confirmer</string>
+    <string name="conversation_dialog_open_or_export_file_title">Ouvrir ou sauvegarder le fichier ?</string>
+    <string name="conversation_dialog_open_or_export_file_message">&appName; ne peut ouvrir ce fichier.\n\nVoulez-vous l\'ouvrir dans une autre app (si possible), ou le sauvegarder sur votre appareil ?</string>
+    <string name="conversation_dialog_open_file_label">Ouvrir le fichier</string>
+    <string name="conversation_dialog_export_file_label">Sauvegarder le fichier</string>
     <string name="conversation_message_deleted_toast">Le message a été supprimé</string>
 
     <string name="conversation_info_participants_list_title">Membres du groupe</string>
