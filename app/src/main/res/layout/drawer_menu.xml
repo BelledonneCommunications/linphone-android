@@ -27,6 +27,7 @@
 
         <ImageView
             android:id="@+id/brand_icon"
+            android:onClick="@{() -> viewModel.closeDrawerMenu()}"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_marginStart="26dp"
@@ -38,9 +39,9 @@
             app:tint="@color/main1_500" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:onClick="@{() -> viewModel.closeDrawerMenu()}"
             style="@style/section_header_style"
             android:id="@+id/brand_name"
+            android:onClick="@{() -> viewModel.closeDrawerMenu()}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
