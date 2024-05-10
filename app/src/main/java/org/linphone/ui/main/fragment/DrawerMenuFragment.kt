@@ -45,7 +45,7 @@ import org.linphone.ui.main.settings.fragment.AccountProfileFragmentDirections
 import org.linphone.ui.main.viewmodel.DrawerMenuViewModel
 
 @UiThread
-class DrawerMenuFragment : GenericFragment() {
+class DrawerMenuFragment : GenericMainFragment() {
     companion object {
         private const val TAG = "[Drawer Menu Fragment]"
     }
@@ -72,6 +72,7 @@ class DrawerMenuFragment : GenericFragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
 
         binding.setSettingsClickedListener {
             val navController = (requireActivity() as MainActivity).findNavController()

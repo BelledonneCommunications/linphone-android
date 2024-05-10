@@ -45,7 +45,7 @@ import org.linphone.utils.setKeyboardInsetListener
 import org.linphone.utils.showKeyboard
 
 @UiThread
-abstract class AbstractMainFragment : GenericFragment() {
+abstract class AbstractMainFragment : GenericMainFragment() {
     companion object {
         private const val TAG = "[Abstract Main Fragment]"
     }

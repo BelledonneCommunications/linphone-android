@@ -40,14 +40,13 @@ import kotlinx.coroutines.launch
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.FileViewerFragmentBinding
-import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.file_media_viewer.adapter.PdfPagesListAdapter
 import org.linphone.ui.main.file_media_viewer.viewmodel.FileViewModel
-import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.utils.FileUtils
 
 @UiThread
-class FileViewerFragment : GenericFragment() {
+class FileViewerFragment : GenericMainFragment() {
     companion object {
         private const val TAG = "[File Viewer Fragment]"
 
@@ -93,6 +92,7 @@ class FileViewerFragment : GenericFragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
 
         val path = args.path
         val preLoadedContent = args.content
@@ -155,22 +155,6 @@ class FileViewerFragment : GenericFragment() {
                     putExtra(Intent.EXTRA_TITLE, name)
                 }
                 startActivityForResult(intent, EXPORT_FILE_AS_DOCUMENT)
-            }
-        }
-
-        viewModel.showGreenToastEvent.observe(viewLifecycleOwner) {
-            it.consume { pair ->
-                val message = pair.first
-                val icon = pair.second
-                (requireActivity() as GenericActivity).showGreenToast(message, icon)
-            }
-        }
-
-        viewModel.showRedToastEvent.observe(viewLifecycleOwner) {
-            it.consume { pair ->
-                val message = pair.first
-                val icon = pair.second
-                (requireActivity() as GenericActivity).showRedToast(message, icon)
             }
         }
     }

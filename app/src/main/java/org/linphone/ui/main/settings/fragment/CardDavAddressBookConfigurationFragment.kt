@@ -28,12 +28,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsContactsCarddavBinding
-import org.linphone.ui.GenericActivity
-import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.ui.main.settings.viewmodel.CardDavViewModel
 
 @UiThread
-class CardDavAddressBookConfigurationFragment : GenericFragment() {
+class CardDavAddressBookConfigurationFragment : GenericMainFragment() {
     companion object {
         private const val TAG = "[CardDAV Address Book Configuration Fragment]"
     }
@@ -60,6 +59,7 @@ class CardDavAddressBookConfigurationFragment : GenericFragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
 
         val friendListDisplayName = args.displayName
         if (friendListDisplayName != null) {
@@ -71,23 +71,6 @@ class CardDavAddressBookConfigurationFragment : GenericFragment() {
 
         binding.setBackClickListener {
             goBack()
-        }
-
-        viewModel.showGreenToastEvent.observe(viewLifecycleOwner) {
-            it.consume { pair ->
-                val message = getString(pair.first)
-                val icon = pair.second
-                (requireActivity() as GenericActivity).showGreenToast(message, icon)
-                goBack()
-            }
-        }
-
-        viewModel.showRedToastEvent.observe(viewLifecycleOwner) {
-            it.consume { pair ->
-                val message = getString(pair.first)
-                val icon = pair.second
-                (requireActivity() as GenericActivity).showRedToast(message, icon)
-            }
         }
     }
 }

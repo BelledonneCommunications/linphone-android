@@ -64,10 +64,6 @@ class ContactsListViewModel @UiThread constructor() : AbstractMainViewModel() {
         MutableLiveData<Event<Pair<String, File>>>()
     }
 
-    val showGreenToastEvent: MutableLiveData<Event<Int>> by lazy {
-        MutableLiveData<Event<Int>>()
-    }
-
     private var previousFilter = "NotSet"
     private var domainFilter = ""
 
@@ -223,7 +219,9 @@ class ContactsListViewModel @UiThread constructor() : AbstractMainViewModel() {
             coreContext.contactsManager.contactRemoved(contactModel.friend)
             contactModel.friend.remove()
             coreContext.contactsManager.notifyContactsListChanged()
-            showGreenToastEvent.postValue(Event(R.string.contact_deleted_toast))
+            showGreenToastEvent.postValue(
+                Event(Pair(R.string.contact_deleted_toast, R.drawable.warning_circle))
+            )
         }
     }
 

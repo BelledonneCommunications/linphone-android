@@ -28,12 +28,12 @@ import androidx.navigation.navGraphViewModels
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AccountProfileSecureModeFragmentBinding
-import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.ui.main.settings.viewmodel.AccountProfileViewModel
 import org.linphone.utils.DialogUtils
 
 @UiThread
-class AccountProfileModeFragment : GenericFragment() {
+class AccountProfileModeFragment : GenericMainFragment() {
     companion object {
         private const val TAG = "[Account Profile Mode Fragment]"
     }
@@ -58,6 +58,7 @@ class AccountProfileModeFragment : GenericFragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
 
         binding.setBackClickListener {
             Log.i("$TAG Leaving without saving changes...")

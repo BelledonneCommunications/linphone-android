@@ -33,13 +33,14 @@ import org.linphone.core.Participant
 import org.linphone.core.ParticipantDevice
 import org.linphone.core.StreamType
 import org.linphone.core.tools.Log
+import org.linphone.ui.GenericViewModel
 import org.linphone.ui.call.conference.model.ConferenceParticipantDeviceModel
 import org.linphone.ui.call.conference.model.ConferenceParticipantModel
 import org.linphone.ui.call.conference.view.GridBoxLayout
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
-class ConferenceViewModel {
+class ConferenceViewModel : GenericViewModel() {
     companion object {
         private const val TAG = "[Conference ViewModel]"
 
@@ -78,10 +79,6 @@ class ConferenceViewModel {
 
     val removeParticipantEvent: MutableLiveData<Event<Pair<String, Participant>>> by lazy {
         MutableLiveData<Event<Pair<String, Participant>>>()
-    }
-
-    val showRedToastEvent: MutableLiveData<Event<Int>> by lazy {
-        MutableLiveData<Event<Int>>()
     }
 
     private lateinit var conference: Conference
@@ -310,7 +307,12 @@ class ConferenceViewModel {
                         "$TAG Failed to parse SIP URI [$uri] into address, can't add it to the conference!"
                     )
                     showRedToastEvent.postValue(
-                        Event(R.string.conference_failed_to_add_participant_invalid_address_toast)
+                        Event(
+                            Pair(
+                                R.string.conference_failed_to_add_participant_invalid_address_toast,
+                                R.drawable.warning_circle
+                            )
+                        )
                     )
                 }
             }
@@ -698,7 +700,12 @@ class ConferenceViewModel {
             )
             setNewLayout(ACTIVE_SPEAKER_LAYOUT)
             showRedToastEvent.postValue(
-                Event(R.string.conference_too_many_participants_for_mosaic_layout_toast)
+                Event(
+                    Pair(
+                        R.string.conference_too_many_participants_for_mosaic_layout_toast,
+                        R.drawable.warning_circle
+                    )
+                )
             )
         }
     }

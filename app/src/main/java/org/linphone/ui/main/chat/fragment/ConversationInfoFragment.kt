@@ -86,6 +86,7 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
 
         viewModel = ViewModelProvider(this)[ConversationInfoViewModel::class.java]
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
 
         val localSipUri = args.localSipUri
         val remoteSipUri = args.remoteSipUri
@@ -176,22 +177,6 @@ class ConversationInfoFragment : SlidingPaneChildFragment() {
         viewModel.infoChangedEvent.observe(viewLifecycleOwner) {
             it.consume {
                 sharedViewModel.forceRefreshConversationInfo.postValue(Event(true))
-            }
-        }
-
-        viewModel.showGreenToastEvent.observe(viewLifecycleOwner) {
-            it.consume { pair ->
-                val message = pair.first
-                val icon = pair.second
-                (requireActivity() as GenericActivity).showGreenToast(message, icon)
-            }
-        }
-
-        viewModel.showRedToastEvent.observe(viewLifecycleOwner) {
-            it.consume { pair ->
-                val message = pair.first
-                val icon = pair.second
-                (requireActivity() as GenericActivity).showRedToast(message, icon)
             }
         }
 

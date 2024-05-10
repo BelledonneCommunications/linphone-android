@@ -352,6 +352,9 @@ class ConversationFragment : SlidingPaneChildFragment() {
         binding.viewModel = viewModel
         binding.sendMessageViewModel = sendMessageViewModel
 
+        observeToastEvents(viewModel)
+        observeToastEvents(sendMessageViewModel)
+
         binding.setBackClickListener {
             goBack()
         }
@@ -592,14 +595,6 @@ class ConversationFragment : SlidingPaneChildFragment() {
             }
         }
 
-        sendMessageViewModel.showRedToastEvent.observe(viewLifecycleOwner) {
-            it.consume { pair ->
-                val message = pair.first
-                val icon = pair.second
-                (requireActivity() as GenericActivity).showRedToast(message, icon)
-            }
-        }
-
         viewModel.searchFilter.observe(viewLifecycleOwner) { filter ->
             viewModel.applyFilter(filter.trim())
         }
@@ -659,22 +654,6 @@ class ConversationFragment : SlidingPaneChildFragment() {
             if (group) {
                 Log.i("$TAG Adding text observer to message sending area")
                 binding.sendArea.messageToSend.addTextChangedListener(textObserver)
-            }
-        }
-
-        viewModel.showGreenToastEvent.observe(viewLifecycleOwner) {
-            it.consume { pair ->
-                val message = pair.first
-                val icon = pair.second
-                (requireActivity() as GenericActivity).showGreenToast(message, icon)
-            }
-        }
-
-        viewModel.showRedToastEvent.observe(viewLifecycleOwner) {
-            it.consume { pair ->
-                val message = pair.first
-                val icon = pair.second
-                (requireActivity() as GenericActivity).showRedToast(message, icon)
             }
         }
 

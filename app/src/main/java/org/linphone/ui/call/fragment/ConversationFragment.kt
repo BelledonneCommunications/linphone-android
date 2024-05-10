@@ -204,9 +204,11 @@ class ConversationFragment : GenericCallFragment() {
 
         viewModel.isInCallConversation.value = true
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
 
         sendMessageViewModel.isInCallConversation.value = true
         binding.sendMessageViewModel = sendMessageViewModel
+        observeToastEvents(sendMessageViewModel)
 
         binding.setBackClickListener {
             findNavController().popBackStack()
@@ -362,14 +364,6 @@ class ConversationFragment : GenericCallFragment() {
             }
         }
 
-        sendMessageViewModel.showRedToastEvent.observe(viewLifecycleOwner) {
-            it.consume { pair ->
-                val message = pair.first
-                val icon = pair.second
-                (requireActivity() as GenericActivity).showRedToast(message, icon)
-            }
-        }
-
         viewModel.searchFilter.observe(viewLifecycleOwner) { filter ->
             viewModel.applyFilter(filter.trim())
         }
@@ -397,14 +391,6 @@ class ConversationFragment : GenericCallFragment() {
                         "$TAG Can't start ACTION_VIEW intent for URL [$url]: $e"
                     )
                 }
-            }
-        }
-
-        viewModel.showRedToastEvent.observe(viewLifecycleOwner) {
-            it.consume { pair ->
-                val message = pair.first
-                val icon = pair.second
-                (requireActivity() as GenericActivity).showRedToast(message, icon)
             }
         }
 

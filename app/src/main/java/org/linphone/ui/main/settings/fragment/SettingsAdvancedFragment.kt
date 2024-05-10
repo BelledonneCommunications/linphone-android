@@ -26,11 +26,11 @@ import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.databinding.SettingsAdvancedFragmentBinding
-import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.ui.main.settings.viewmodel.SettingsViewModel
 
 @UiThread
-class SettingsAdvancedFragment : GenericFragment() {
+class SettingsAdvancedFragment : GenericMainFragment() {
     companion object {
         private const val TAG = "[Advanced Settings Fragment]"
     }
@@ -56,6 +56,7 @@ class SettingsAdvancedFragment : GenericFragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
 
         binding.setBackClickListener {
             goBack()

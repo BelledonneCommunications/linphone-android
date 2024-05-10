@@ -32,7 +32,6 @@ import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.chat.model.ConversationModel
 import org.linphone.ui.main.viewmodel.AbstractMainViewModel
-import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
@@ -44,10 +43,6 @@ class ConversationsListViewModel @UiThread constructor() : AbstractMainViewModel
     val conversations = MutableLiveData<ArrayList<ConversationModel>>()
 
     val fetchInProgress = MutableLiveData<Boolean>()
-
-    val showGreenToastEvent: MutableLiveData<Event<Pair<String, Int>>> by lazy {
-        MutableLiveData<Event<Pair<String, Int>>>()
-    }
 
     private val coreListener = object : CoreListenerStub() {
         @WorkerThread
@@ -67,9 +62,10 @@ class ConversationsListViewModel @UiThread constructor() : AbstractMainViewModel
                 ChatRoom.State.Deleted -> {
                     computeChatRoomsList(currentFilter)
 
-                    val message = AppUtils.getString(R.string.toast_conversation_deleted)
                     showGreenToastEvent.postValue(
-                        Event(Pair(message, R.drawable.chat_teardrop_text))
+                        Event(
+                            Pair(R.string.toast_conversation_deleted, R.drawable.chat_teardrop_text)
+                        )
                     )
                 }
                 else -> {}

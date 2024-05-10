@@ -99,6 +99,7 @@ class MeetingFragment : SlidingPaneChildFragment() {
 
         viewModel = ViewModelProvider(this)[MeetingViewModel::class.java]
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
 
         val uri = args.conferenceUri
         Log.i(

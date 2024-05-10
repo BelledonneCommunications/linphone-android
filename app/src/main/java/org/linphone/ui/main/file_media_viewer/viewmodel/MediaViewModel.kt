@@ -23,12 +23,12 @@ import android.media.AudioAttributes
 import android.media.MediaPlayer
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import org.linphone.core.tools.Log
+import org.linphone.ui.GenericViewModel
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 
-class MediaViewModel @UiThread constructor() : ViewModel() {
+class MediaViewModel @UiThread constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Media ViewModel]"
     }

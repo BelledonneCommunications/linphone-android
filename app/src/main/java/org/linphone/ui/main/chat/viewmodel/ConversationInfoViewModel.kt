@@ -92,14 +92,6 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
         MutableLiveData<Event<ArrayList<String>>>()
     }
 
-    val showGreenToastEvent: MutableLiveData<Event<Pair<String, Int>>> by lazy {
-        MutableLiveData<Event<Pair<String, Int>>>()
-    }
-
-    val showRedToastEvent: MutableLiveData<Event<Pair<String, Int>>> by lazy {
-        MutableLiveData<Event<Pair<String, Int>>>()
-    }
-
     private val chatRoomListener = object : ChatRoomListenerStub() {
         @WorkerThread
         override fun onParticipantAdded(chatRoom: ChatRoom, eventLog: EventLog) {
@@ -108,7 +100,7 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
                 R.string.toast_participant_added_to_conversation,
                 getParticipant(eventLog)
             )
-            showGreenToastEvent.postValue(Event(Pair(message, R.drawable.user_circle)))
+            showFormattedGreenToastEvent.postValue(Event(Pair(message, R.drawable.user_circle)))
 
             computeParticipantsList()
             infoChangedEvent.postValue(Event(true))
@@ -121,7 +113,7 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
                 R.string.toast_participant_removed_from_conversation,
                 getParticipant(eventLog)
             )
-            showGreenToastEvent.postValue(Event(Pair(message, R.drawable.user_circle)))
+            showFormattedGreenToastEvent.postValue(Event(Pair(message, R.drawable.user_circle)))
 
             computeParticipantsList()
             infoChangedEvent.postValue(Event(true))
@@ -143,7 +135,7 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
                     getParticipant(eventLog)
                 )
             }
-            showGreenToastEvent.postValue(Event(Pair(message, R.drawable.user_circle)))
+            showFormattedGreenToastEvent.postValue(Event(Pair(message, R.drawable.user_circle)))
 
             computeParticipantsList()
         }
@@ -153,10 +145,9 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
             Log.i(
                 "$TAG Conversation [${LinphoneUtils.getChatRoomId(chatRoom)}] has a new subject [${chatRoom.subject}]"
             )
-            val message = AppUtils.getString(
-                R.string.toast_conversation_subject_changed
+            showGreenToastEvent.postValue(
+                Event(Pair(R.string.toast_conversation_subject_changed, R.drawable.check))
             )
-            showGreenToastEvent.postValue(Event(Pair(message, R.drawable.check)))
 
             subject.postValue(chatRoom.subject)
             infoChangedEvent.postValue(Event(true))
@@ -165,24 +156,38 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
         @WorkerThread
         override fun onEphemeralEvent(chatRoom: ChatRoom, eventLog: EventLog) {
             Log.i("$TAG Ephemeral event [${eventLog.type}]")
-            val message = when (eventLog.type) {
+            when (eventLog.type) {
                 EventLog.Type.ConferenceEphemeralMessageEnabled -> {
-                    AppUtils.getString(
-                        R.string.toast_conversation_ephemeral_messages_enabled
+                    showGreenToastEvent.postValue(
+                        Event(
+                            Pair(
+                                R.string.toast_conversation_ephemeral_messages_enabled,
+                                R.drawable.clock_countdown
+                            )
+                        )
                     )
                 }
                 EventLog.Type.ConferenceEphemeralMessageDisabled -> {
-                    AppUtils.getString(
-                        R.string.toast_conversation_ephemeral_messages_disabled
+                    showGreenToastEvent.postValue(
+                        Event(
+                            Pair(
+                                R.string.toast_conversation_ephemeral_messages_disabled,
+                                R.drawable.clock_countdown
+                            )
+                        )
                     )
                 }
                 else -> {
-                    AppUtils.getString(
-                        R.string.toast_conversation_ephemeral_messages_lifetime_changed
+                    showGreenToastEvent.postValue(
+                        Event(
+                            Pair(
+                                R.string.toast_conversation_ephemeral_messages_lifetime_changed,
+                                R.drawable.clock_countdown
+                            )
+                        )
                     )
                 }
             }
-            showGreenToastEvent.postValue(Event(Pair(message, R.drawable.clock_countdown)))
         }
     }
 
@@ -203,18 +208,26 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
                     coreContext.startVideoCall(conferenceAddress)
                 } else {
                     Log.e("$TAG Conference info URI is null!")
-                    val message = AppUtils.getString(
-                        R.string.conference_failed_to_create_group_call_toast
+                    showRedToastEvent.postValue(
+                        Event(
+                            Pair(
+                                R.string.conference_failed_to_create_group_call_toast,
+                                R.drawable.warning_circle
+                            )
+                        )
                     )
-                    showRedToastEvent.postValue(Event(Pair(message, R.drawable.warning_circle)))
                 }
             } else if (state == ConferenceScheduler.State.Error) {
                 conferenceScheduler.removeListener(this)
                 Log.e("$TAG Failed to create group call!")
-                val message = AppUtils.getString(
-                    R.string.conference_failed_to_create_group_call_toast
+                showRedToastEvent.postValue(
+                    Event(
+                        Pair(
+                            R.string.conference_failed_to_create_group_call_toast,
+                            R.drawable.warning_circle
+                        )
+                    )
                 )
-                showRedToastEvent.postValue(Event(Pair(message, R.drawable.warning_circle)))
             }
         }
     }
@@ -451,10 +464,14 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
                     val ok = chatRoom.addParticipants(toAddList.toTypedArray())
                     if (!ok) {
                         Log.w("$TAG Failed to add some/all participants to the group!")
-                        val message = AppUtils.getString(
-                            R.string.toast_failed_to_add_participant_to_group_conversation
+                        showRedToastEvent.postValue(
+                            Event(
+                                Pair(
+                                    R.string.toast_failed_to_add_participant_to_group_conversation,
+                                    R.drawable.warning_circle
+                                )
+                            )
                         )
-                        showRedToastEvent.postValue(Event(Pair(message, R.drawable.warning_circle)))
                     }
                 }
             }

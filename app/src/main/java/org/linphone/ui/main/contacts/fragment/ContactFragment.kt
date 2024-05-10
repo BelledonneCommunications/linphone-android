@@ -98,6 +98,7 @@ class ContactFragment : SlidingPaneChildFragment() {
 
         viewModel = ViewModelProvider(this)[ContactViewModel::class.java]
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
 
         val refKey = args.contactRefKey
         Log.i("$TAG Looking up for contact with ref key [$refKey]")

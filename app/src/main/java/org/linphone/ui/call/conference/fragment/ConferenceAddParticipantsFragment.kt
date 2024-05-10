@@ -75,8 +75,8 @@ class ConferenceAddParticipantsFragment : GenericAddressPickerFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
-
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
 
         binding.setBackClickListener {
             goBack()

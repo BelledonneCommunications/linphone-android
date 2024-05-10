@@ -71,6 +71,7 @@ class CallsListFragment : GenericCallFragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
 
         binding.callsList.setHasFixedSize(true)
         binding.callsList.layoutManager = LinearLayoutManager(requireContext())

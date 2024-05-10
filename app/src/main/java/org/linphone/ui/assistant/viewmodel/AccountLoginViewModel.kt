@@ -23,7 +23,6 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -35,12 +34,13 @@ import org.linphone.core.Factory
 import org.linphone.core.Reason
 import org.linphone.core.RegistrationState
 import org.linphone.core.tools.Log
+import org.linphone.ui.GenericViewModel
 import org.linphone.ui.main.model.setEndToEndEncryptionMandatory
 import org.linphone.ui.main.model.setInteroperabilityMode
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
-open class AccountLoginViewModel @UiThread constructor() : ViewModel() {
+open class AccountLoginViewModel @UiThread constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Account Login ViewModel]"
     }
@@ -67,10 +67,6 @@ open class AccountLoginViewModel @UiThread constructor() : ViewModel() {
 
     val accountLoginErrorEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
-    }
-
-    val showRedToastEvent: MutableLiveData<Event<Int>> by lazy {
-        MutableLiveData<Event<Int>>()
     }
 
     private lateinit var newlyCreatedAuthInfo: AuthInfo
@@ -157,7 +153,12 @@ open class AccountLoginViewModel @UiThread constructor() : ViewModel() {
             if (identityAddress == null) {
                 Log.e("$TAG Can't parse [$identity] as Address!")
                 showRedToastEvent.postValue(
-                    Event(R.string.assistant_login_cant_parse_address_toast)
+                    Event(
+                        Pair(
+                            R.string.assistant_login_cant_parse_address_toast,
+                            R.drawable.warning_circle
+                        )
+                    )
                 )
                 return@postOnCoreThread
             }
@@ -168,7 +169,12 @@ open class AccountLoginViewModel @UiThread constructor() : ViewModel() {
                     "$TAG Address [${identityAddress.asStringUriOnly()}] doesn't contains an username!"
                 )
                 showRedToastEvent.postValue(
-                    Event(R.string.assistant_login_address_without_username_toast)
+                    Event(
+                        Pair(
+                            R.string.assistant_login_address_without_username_toast,
+                            R.drawable.warning_circle
+                        )
+                    )
                 )
                 return@postOnCoreThread
             }

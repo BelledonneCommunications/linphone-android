@@ -32,13 +32,13 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.HelpFragmentBinding
 import org.linphone.ui.GenericActivity
-import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.ui.main.help.viewmodel.HelpViewModel
 import org.linphone.ui.main.history.model.ConfirmationDialogModel
 import org.linphone.utils.DialogUtils
 
 @UiThread
-class HelpFragment : GenericFragment() {
+class HelpFragment : GenericMainFragment() {
     companion object {
         private const val TAG = "[Help Fragment]"
     }
@@ -62,6 +62,7 @@ class HelpFragment : GenericFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
 
         binding.setBackClickListener {
             goBack()

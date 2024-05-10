@@ -25,7 +25,6 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -39,13 +38,14 @@ import org.linphone.core.CoreListenerStub
 import org.linphone.core.Factory
 import org.linphone.core.MediaDirection
 import org.linphone.core.tools.Log
+import org.linphone.ui.GenericViewModel
 import org.linphone.ui.call.model.AudioDeviceModel
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.TimestampUtils
 
-class MeetingWaitingRoomViewModel @UiThread constructor() : ViewModel() {
+class MeetingWaitingRoomViewModel @UiThread constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Meeting Waiting Room ViewModel]"
     }

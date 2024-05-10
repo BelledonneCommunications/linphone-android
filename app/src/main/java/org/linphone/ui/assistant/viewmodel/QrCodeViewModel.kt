@@ -23,14 +23,14 @@ import android.util.Patterns
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
+import org.linphone.ui.GenericViewModel
 import org.linphone.utils.Event
 
-class QrCodeViewModel @UiThread constructor() : ViewModel() {
+class QrCodeViewModel @UiThread constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Qr Code Scanner ViewModel]"
     }

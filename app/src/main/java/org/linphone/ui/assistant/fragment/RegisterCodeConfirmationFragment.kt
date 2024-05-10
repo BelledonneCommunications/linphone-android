@@ -26,16 +26,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantRegisterConfirmSmsCodeFragmentBinding
+import org.linphone.ui.GenericFragment
 import org.linphone.ui.assistant.viewmodel.AccountCreationViewModel
 
 @UiThread
-class RegisterCodeConfirmationFragment : Fragment() {
+class RegisterCodeConfirmationFragment : GenericFragment() {
     companion object {
         private const val TAG = "[Register Code Confirmation Fragment]"
     }
@@ -60,6 +60,7 @@ class RegisterCodeConfirmationFragment : Fragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
 
         binding.setBackClickListener {
             goBack()

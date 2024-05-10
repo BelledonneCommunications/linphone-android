@@ -22,15 +22,15 @@ package org.linphone.ui.main.fragment
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.UiThread
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.core.tools.Log
+import org.linphone.ui.GenericFragment
 import org.linphone.ui.main.viewmodel.SharedMainViewModel
 
 @UiThread
-abstract class GenericFragment : Fragment() {
+abstract class GenericMainFragment : GenericFragment() {
     companion object {
-        private const val TAG = "[Generic Fragment]"
+        private const val TAG = "[Generic Main Fragment]"
     }
 
     protected lateinit var sharedViewModel: SharedMainViewModel

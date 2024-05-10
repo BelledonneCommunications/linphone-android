@@ -40,11 +40,11 @@ import org.linphone.databinding.MeetingWaitingRoomFragmentBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.call.fragment.AudioDevicesMenuDialogFragment
 import org.linphone.ui.call.model.AudioDeviceModel
-import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.ui.main.meetings.viewmodel.MeetingWaitingRoomViewModel
 
 @UiThread
-class MeetingWaitingRoomFragment : GenericFragment() {
+class MeetingWaitingRoomFragment : GenericMainFragment() {
     companion object {
         private const val TAG = "[Meeting Waiting Room Fragment]"
     }
@@ -94,6 +94,7 @@ class MeetingWaitingRoomFragment : GenericFragment() {
 
         viewModel = ViewModelProvider(this)[MeetingWaitingRoomViewModel::class.java]
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
 
         val uri = args.conferenceUri
         Log.i(

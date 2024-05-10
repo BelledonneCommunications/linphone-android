@@ -22,7 +22,6 @@ package org.linphone.ui.main.history.viewmodel
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -31,6 +30,7 @@ import org.linphone.core.ChatRoom
 import org.linphone.core.ChatRoomListenerStub
 import org.linphone.core.ChatRoomParams
 import org.linphone.core.tools.Log
+import org.linphone.ui.GenericViewModel
 import org.linphone.ui.main.history.model.CallLogHistoryModel
 import org.linphone.ui.main.history.model.CallLogModel
 import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
@@ -38,7 +38,7 @@ import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
-class HistoryViewModel @UiThread constructor() : ViewModel() {
+class HistoryViewModel @UiThread constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[History ViewModel]"
     }

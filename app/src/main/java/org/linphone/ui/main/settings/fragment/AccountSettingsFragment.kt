@@ -36,12 +36,12 @@ import org.linphone.core.TransportType
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AccountSettingsFragmentBinding
 import org.linphone.ui.GenericActivity
-import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.ui.main.settings.viewmodel.AccountSettingsViewModel
 import org.linphone.utils.Event
 
 @UiThread
-class AccountSettingsFragment : GenericFragment() {
+class AccountSettingsFragment : GenericMainFragment() {
     companion object {
         private const val TAG = "[Account Settings Fragment]"
     }
@@ -89,6 +89,7 @@ class AccountSettingsFragment : GenericFragment() {
 
         viewModel = ViewModelProvider(this)[AccountSettingsViewModel::class.java]
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
 
         val identity = args.accountIdentity
         Log.i("$TAG Looking up for account with identity address [$identity]")

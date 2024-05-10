@@ -84,6 +84,7 @@ class ConversationDocumentsListFragment : SlidingPaneChildFragment() {
 
         viewModel = ViewModelProvider(this)[ConversationDocumentsListViewModel::class.java]
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
 
         val localSipUri = args.localSipUri
         val remoteSipUri = args.remoteSipUri

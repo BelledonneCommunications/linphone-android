@@ -28,17 +28,17 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantPermissionsFragmentBinding
+import org.linphone.ui.GenericFragment
 import org.linphone.ui.assistant.AssistantActivity
 
 @UiThread
-class PermissionsFragment : Fragment() {
+class PermissionsFragment : GenericFragment() {
     companion object {
         private const val TAG = "[Permissions Fragment]"
     }

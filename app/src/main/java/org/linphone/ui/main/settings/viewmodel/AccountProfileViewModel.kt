@@ -21,13 +21,13 @@ package org.linphone.ui.main.settings.viewmodel
 
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.core.Account
 import org.linphone.core.DialPlan
 import org.linphone.core.Factory
 import org.linphone.core.tools.Log
+import org.linphone.ui.GenericViewModel
 import org.linphone.ui.main.model.AccountModel
 import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
 import org.linphone.ui.main.model.setEndToEndEncryptionMandatory
@@ -35,7 +35,7 @@ import org.linphone.ui.main.model.setInteroperabilityMode
 import org.linphone.ui.main.settings.model.AccountDeviceModel
 import org.linphone.utils.Event
 
-class AccountProfileViewModel @UiThread constructor() : ViewModel() {
+class AccountProfileViewModel @UiThread constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Account Profile ViewModel]"
     }

@@ -25,7 +25,6 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media.AudioFocusRequestCompat
 import java.text.SimpleDateFormat
@@ -47,16 +46,16 @@ import org.linphone.core.Player
 import org.linphone.core.PlayerListener
 import org.linphone.core.Recorder
 import org.linphone.core.tools.Log
+import org.linphone.ui.GenericViewModel
 import org.linphone.ui.main.chat.model.FileModel
 import org.linphone.ui.main.chat.model.MessageModel
 import org.linphone.ui.main.chat.model.ParticipantModel
-import org.linphone.utils.AppUtils
 import org.linphone.utils.AudioUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
 
-class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
+class SendMessageInConversationViewModel @UiThread constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Send Message In Conversation ViewModel]"
     }
@@ -118,10 +117,6 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
 
     val askRecordAudioPermissionEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
-    }
-
-    val showRedToastEvent: MutableLiveData<Event<Pair<String, Int>>> by lazy {
-        MutableLiveData<Event<Pair<String, Int>>>()
     }
 
     lateinit var chatRoom: ChatRoom
@@ -521,10 +516,14 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
                         "$TAG Max duration for voice recording exceeded (${maxVoiceRecordDuration}ms), stopping."
                     )
                     stopVoiceRecorder()
-                    val message = AppUtils.getString(
-                        R.string.toast_voice_recording_max_duration_reached
+                    showRedToastEvent.postValue(
+                        Event(
+                            Pair(
+                                R.string.toast_voice_recording_max_duration_reached,
+                                R.drawable.warning_circle
+                            )
+                        )
                     )
-                    showRedToastEvent.postValue(Event(Pair(message, R.drawable.warning_circle)))
                 }
             }
         }.launchIn(viewModelScope)
@@ -589,8 +588,9 @@ class SendMessageInConversationViewModel @UiThread constructor() : ViewModel() {
         val lowMediaVolume = AudioUtils.isMediaVolumeLow(context)
         if (lowMediaVolume) {
             Log.w("$TAG Media volume is low, notifying user as they may not hear voice message")
-            val message = AppUtils.getString(R.string.toast_low_media_volume)
-            showRedToastEvent.postValue(Event(Pair(message, R.drawable.speaker_slash)))
+            showRedToastEvent.postValue(
+                Event(Pair(R.string.toast_low_media_volume, R.drawable.speaker_slash))
+            )
         }
 
         if (voiceRecordAudioFocusRequest == null) {

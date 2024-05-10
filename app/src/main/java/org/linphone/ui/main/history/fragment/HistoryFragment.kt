@@ -97,6 +97,7 @@ class HistoryFragment : SlidingPaneChildFragment() {
 
         viewModel = ViewModelProvider(this)[HistoryViewModel::class.java]
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
 
         val callId = args.callId
         Log.i("$TAG Looking up for call log with call id [$callId]")

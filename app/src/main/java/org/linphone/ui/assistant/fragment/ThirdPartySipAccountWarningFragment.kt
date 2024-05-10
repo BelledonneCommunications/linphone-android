@@ -26,14 +26,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantThirdPartySipAccountWarningFragmentBinding
+import org.linphone.ui.GenericFragment
 
 @UiThread
-class ThirdPartySipAccountWarningFragment : Fragment() {
+class ThirdPartySipAccountWarningFragment : GenericFragment() {
     companion object {
         private const val TAG = "[Third Party SIP Account Warning Fragment]"
     }

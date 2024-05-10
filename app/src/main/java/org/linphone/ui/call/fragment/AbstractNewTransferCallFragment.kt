@@ -106,6 +106,7 @@ abstract class AbstractNewTransferCallFragment : GenericCallFragment() {
 
         viewModel.title.value = title
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
 
         binding.setBackClickListener {
             findNavController().popBackStack()

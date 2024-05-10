@@ -73,6 +73,7 @@ class EditMeetingFragment : SlidingPaneChildFragment() {
 
         viewModel = ViewModelProvider(this)[ScheduleMeetingViewModel::class.java]
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
 
         val conferenceUri = args.conferenceUri
         Log.i("$TAG Found conference URI [$conferenceUri] in arguments")
@@ -182,15 +183,6 @@ class EditMeetingFragment : SlidingPaneChildFragment() {
                 )
                 sharedViewModel.forceRefreshMeetingsListEvent.value = Event(true)
                 goBack()
-            }
-        }
-
-        viewModel.showRedToastEvent.observe(viewLifecycleOwner) {
-            it.consume { message ->
-                (requireActivity() as GenericActivity).showRedToast(
-                    getString(message),
-                    R.drawable.warning_circle
-                )
             }
         }
 

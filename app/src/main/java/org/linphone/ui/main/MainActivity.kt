@@ -196,15 +196,23 @@ class MainActivity : GenericActivity() {
             }
         }
 
-        coreContext.greenToastToShowEvent.observe(this) {
+        coreContext.showGreenToastEvent.observe(this) {
             it.consume { pair ->
-                val message = pair.first
+                val message = getString(pair.first)
                 val icon = pair.second
                 showGreenToast(message, icon)
             }
         }
 
-        coreContext.redToastToShowEvent.observe(this) {
+        coreContext.showRedToastEvent.observe(this) {
+            it.consume { pair ->
+                val message = getString(pair.first)
+                val icon = pair.second
+                showRedToast(message, icon)
+            }
+        }
+
+        coreContext.showFormattedRedToastEvent.observe(this) {
             it.consume { pair ->
                 val message = pair.first
                 val icon = pair.second

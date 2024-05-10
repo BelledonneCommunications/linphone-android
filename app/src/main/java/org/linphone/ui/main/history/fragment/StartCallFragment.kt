@@ -74,6 +74,7 @@ class StartCallFragment : GenericAddressPickerFragment() {
 
         viewModel.title.value = getString(R.string.history_call_start_title)
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
 
         binding.setBackClickListener {
             goBack()
@@ -139,15 +140,6 @@ class StartCallFragment : GenericAddressPickerFragment() {
         viewModel.defaultAccountChangedEvent.observe(viewLifecycleOwner) {
             it.consume {
                 viewModel.updateGroupCallButtonVisibility()
-            }
-        }
-
-        viewModel.showRedToastEvent.observe(viewLifecycleOwner) {
-            it.consume { message ->
-                (requireActivity() as GenericActivity).showRedToast(
-                    getString(message),
-                    R.drawable.warning_circle
-                )
             }
         }
 

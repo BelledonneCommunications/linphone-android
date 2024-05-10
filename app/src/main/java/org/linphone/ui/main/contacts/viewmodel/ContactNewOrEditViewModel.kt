@@ -24,7 +24,6 @@ import androidx.annotation.AnyThread
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -34,11 +33,12 @@ import org.linphone.core.Friend
 import org.linphone.core.FriendList.Status
 import org.linphone.core.SubscribePolicy
 import org.linphone.core.tools.Log
+import org.linphone.ui.GenericViewModel
 import org.linphone.ui.main.contacts.model.NewOrEditNumberOrAddressModel
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 
-class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
+class ContactNewOrEditViewModel @UiThread constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Contact New/Edit View Model]"
 
@@ -74,10 +74,6 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
     val addNewNumberOrAddressFieldEvent = MutableLiveData<Event<NewOrEditNumberOrAddressModel>>()
 
     val removeNewNumberOrAddressFieldEvent = MutableLiveData<Event<NewOrEditNumberOrAddressModel>>()
-
-    val showRedToastEvent: MutableLiveData<Event<Int>> by lazy {
-        MutableLiveData<Event<Int>>()
-    }
 
     @UiThread
     fun findFriendByRefKey(refKey: String?) {
@@ -143,7 +139,12 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
         if (fn.isEmpty() && ln.isEmpty() && organization.isEmpty()) {
             Log.e("$TAG At least a mandatory field wasn't filled, aborting save")
             showRedToastEvent.postValue(
-                Event(R.string.contact_editor_mandatory_field_not_filled_toast)
+                Event(
+                    Pair(
+                        R.string.contact_editor_mandatory_field_not_filled_toast,
+                        R.drawable.warning_circle
+                    )
+                )
             )
             return
         }

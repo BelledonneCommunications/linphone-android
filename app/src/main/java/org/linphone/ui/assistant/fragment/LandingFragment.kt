@@ -26,7 +26,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
@@ -38,13 +37,14 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantLandingFragmentBinding
 import org.linphone.ui.GenericActivity
+import org.linphone.ui.GenericFragment
 import org.linphone.ui.assistant.model.AcceptConditionsAndPolicyDialogModel
 import org.linphone.ui.assistant.viewmodel.LandingViewModel
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.PhoneNumberUtils
 
 @UiThread
-class LandingFragment : Fragment() {
+class LandingFragment : GenericFragment() {
     companion object {
         private const val TAG = "[Landing Fragment]"
     }
@@ -69,6 +69,7 @@ class LandingFragment : Fragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
 
         binding.setBackClickListener {
             requireActivity().finish()
@@ -126,15 +127,6 @@ class LandingFragment : Fragment() {
             it.consume { message ->
                 (requireActivity() as GenericActivity).showRedToast(
                     message,
-                    R.drawable.warning_circle
-                )
-            }
-        }
-
-        viewModel.showRedToastEvent.observe(viewLifecycleOwner) {
-            it.consume { message ->
-                (requireActivity() as GenericActivity).showRedToast(
-                    getString(message),
                     R.drawable.warning_circle
                 )
             }

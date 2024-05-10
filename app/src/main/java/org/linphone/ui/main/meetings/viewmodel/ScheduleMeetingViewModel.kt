@@ -23,7 +23,6 @@ import androidx.annotation.AnyThread
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
@@ -39,12 +38,13 @@ import org.linphone.core.Factory
 import org.linphone.core.Participant
 import org.linphone.core.ParticipantInfo
 import org.linphone.core.tools.Log
+import org.linphone.ui.GenericViewModel
 import org.linphone.ui.main.model.SelectedAddressModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.TimestampUtils
 
-class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
+class ScheduleMeetingViewModel @UiThread constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Schedule Meeting ViewModel]"
     }
@@ -81,10 +81,6 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
-    val showRedToastEvent: MutableLiveData<Event<Int>> by lazy {
-        MutableLiveData<Event<Int>>()
-    }
-
     private var startTimestamp = 0L
     private var endTimestamp = 0L
 
@@ -108,7 +104,14 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
             when (state) {
                 ConferenceScheduler.State.Error -> {
                     operationInProgress.postValue(false)
-                    showRedToastEvent.postValue(Event(R.string.meeting_failed_to_schedule_toast))
+                    showRedToastEvent.postValue(
+                        Event(
+                            Pair(
+                                R.string.meeting_failed_to_schedule_toast,
+                                R.drawable.warning_circle
+                            )
+                        )
+                    )
                 }
                 ConferenceScheduler.State.Ready -> {
                     val conferenceAddress = conferenceScheduler.info?.uri
@@ -153,7 +156,12 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
                 participants.value.orEmpty().size -> {
                     Log.e("$TAG No invitation sent!")
                     showRedToastEvent.postValue(
-                        Event(R.string.meeting_failed_to_send_invites_toast)
+                        Event(
+                            Pair(
+                                R.string.meeting_failed_to_send_invites_toast,
+                                R.drawable.warning_circle
+                            )
+                        )
                     )
                 }
                 else -> {
@@ -162,7 +170,12 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
                         Log.w(failed.asStringUriOnly())
                     }
                     showRedToastEvent.postValue(
-                        Event(R.string.meeting_failed_to_send_part_of_invites_toast)
+                        Event(
+                            Pair(
+                                R.string.meeting_failed_to_send_part_of_invites_toast,
+                                R.drawable.warning_circle
+                            )
+                        )
                     )
                 }
             }
@@ -354,7 +367,12 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
                 "$TAG Either no subject was set or no participant was selected, can't schedule meeting."
             )
             showRedToastEvent.postValue(
-                Event(R.string.meeting_schedule_mandatory_field_not_filled_toast)
+                Event(
+                    Pair(
+                        R.string.meeting_schedule_mandatory_field_not_filled_toast,
+                        R.drawable.warning_circle
+                    )
+                )
             )
             return
         }

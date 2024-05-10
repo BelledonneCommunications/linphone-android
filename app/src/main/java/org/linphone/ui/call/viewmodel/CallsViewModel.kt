@@ -22,19 +22,19 @@ package org.linphone.ui.call.viewmodel
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Call
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
 import org.linphone.core.tools.Log
+import org.linphone.ui.GenericViewModel
 import org.linphone.ui.call.model.CallModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
-class CallsViewModel @UiThread constructor() : ViewModel() {
+class CallsViewModel @UiThread constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Calls ViewModel]"
     }

@@ -26,7 +26,6 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import java.util.Locale
 import kotlinx.coroutines.Dispatchers
@@ -51,6 +50,7 @@ import org.linphone.core.MediaEncryption
 import org.linphone.core.SecurityLevel
 import org.linphone.core.StreamType
 import org.linphone.core.tools.Log
+import org.linphone.ui.GenericViewModel
 import org.linphone.ui.call.conference.viewmodel.ConferenceViewModel
 import org.linphone.ui.call.model.AudioDeviceModel
 import org.linphone.ui.call.model.CallMediaEncryptionModel
@@ -63,7 +63,7 @@ import org.linphone.utils.AudioUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
-class CurrentCallViewModel @UiThread constructor() : ViewModel() {
+class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Current Call ViewModel]"
     }

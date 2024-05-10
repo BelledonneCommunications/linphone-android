@@ -22,7 +22,6 @@ package org.linphone.ui.main.settings.viewmodel
 import android.os.Vibrator
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
@@ -30,11 +29,12 @@ import org.linphone.core.Conference
 import org.linphone.core.FriendList
 import org.linphone.core.VFS
 import org.linphone.core.tools.Log
+import org.linphone.ui.GenericViewModel
 import org.linphone.ui.main.settings.model.CardDavLdapModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
-class SettingsViewModel @UiThread constructor() : ViewModel() {
+class SettingsViewModel @UiThread constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Settings ViewModel]"
     }

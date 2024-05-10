@@ -77,7 +77,7 @@ class MessageModel @WorkerThread constructor(
     private val onJoinConferenceClicked: ((uri: String) -> Unit)? = null,
     private val onWebUrlClicked: ((url: String) -> Unit)? = null,
     private val onContactClicked: ((friendRefKey: String) -> Unit)? = null,
-    private val onRedToastToShow: ((pair: Pair<String, Int>) -> Unit)? = null
+    private val onRedToastToShow: ((pair: Pair<Int, Int>) -> Unit)? = null
 ) {
     companion object {
         private const val TAG = "[Message Model]"
@@ -702,8 +702,9 @@ class MessageModel @WorkerThread constructor(
         val lowMediaVolume = AudioUtils.isMediaVolumeLow(coreContext.context)
         if (lowMediaVolume) {
             Log.w("$TAG Media volume is low, notifying user as they may not hear voice message")
-            val message = AppUtils.getString(R.string.toast_low_media_volume)
-            onRedToastToShow?.invoke(Pair(message, R.drawable.speaker_slash))
+            onRedToastToShow?.invoke(
+                Pair(R.string.toast_low_media_volume, R.drawable.speaker_slash)
+            )
         }
 
         if (voiceRecordAudioFocusRequest == null) {

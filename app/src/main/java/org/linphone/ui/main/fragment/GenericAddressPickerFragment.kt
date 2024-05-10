@@ -44,7 +44,7 @@ import org.linphone.utils.LinphoneUtils
 import org.linphone.utils.RecyclerViewHeaderDecoration
 
 @UiThread
-abstract class GenericAddressPickerFragment : GenericFragment() {
+abstract class GenericAddressPickerFragment : GenericMainFragment() {
     companion object {
         private const val TAG = "[Generic Address Picker Fragment]"
     }

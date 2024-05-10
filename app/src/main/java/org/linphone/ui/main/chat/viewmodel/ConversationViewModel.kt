@@ -116,14 +116,6 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
         MutableLiveData<Event<String>>()
     }
 
-    val showGreenToastEvent: MutableLiveData<Event<Pair<String, Int>>> by lazy {
-        MutableLiveData<Event<Pair<String, Int>>>()
-    }
-
-    val showRedToastEvent: MutableLiveData<Event<Pair<String, Int>>> by lazy {
-        MutableLiveData<Event<Pair<String, Int>>>()
-    }
-
     val messageDeletedEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
@@ -295,18 +287,26 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
                     coreContext.startVideoCall(conferenceAddress)
                 } else {
                     Log.e("$TAG Conference info URI is null!")
-                    val message = AppUtils.getString(
-                        R.string.conference_failed_to_create_group_call_toast
+                    showRedToastEvent.postValue(
+                        Event(
+                            Pair(
+                                R.string.conference_failed_to_create_group_call_toast,
+                                R.drawable.warning_circle
+                            )
+                        )
                     )
-                    showRedToastEvent.postValue(Event(Pair(message, R.drawable.warning_circle)))
                 }
             } else if (state == ConferenceScheduler.State.Error) {
                 conferenceScheduler.removeListener(this)
                 Log.e("$TAG Failed to create group call!")
-                val message = AppUtils.getString(
-                    R.string.conference_failed_to_create_group_call_toast
+                showRedToastEvent.postValue(
+                    Event(
+                        Pair(
+                            R.string.conference_failed_to_create_group_call_toast,
+                            R.drawable.warning_circle
+                        )
+                    )
                 )
-                showRedToastEvent.postValue(Event(Pair(message, R.drawable.warning_circle)))
             }
         }
     }
@@ -864,16 +864,24 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
                     Log.i(
                         "$TAG File [$filePath] has been successfully exported to documents"
                     )
-                    val message = AppUtils.getString(
-                        R.string.toast_file_successfully_exported_to_documents
+                    showGreenToastEvent.postValue(
+                        Event(
+                            Pair(
+                                R.string.toast_file_successfully_exported_to_documents,
+                                R.drawable.check
+                            )
+                        )
                     )
-                    showGreenToastEvent.postValue(Event(Pair(message, R.drawable.check)))
                 } else {
                     Log.e("$TAG Failed to export file [$filePath] to documents!")
-                    val message = AppUtils.getString(
-                        R.string.toast_export_file_to_documents_error
+                    showRedToastEvent.postValue(
+                        Event(
+                            Pair(
+                                R.string.toast_export_file_to_documents_error,
+                                R.drawable.warning_circle
+                            )
+                        )
                     )
-                    showRedToastEvent.postValue(Event(Pair(message, R.drawable.warning_circle)))
                 }
             }
         }

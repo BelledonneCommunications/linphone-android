@@ -82,6 +82,8 @@ class ConferenceParticipantsListFragment : GenericCallFragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
+        observeToastEvents(viewModel.conferenceModel)
 
         binding.participantsList.setHasFixedSize(true)
         binding.participantsList.layoutManager = LinearLayoutManager(requireContext())
@@ -112,15 +114,6 @@ class ConferenceParticipantsListFragment : GenericCallFragment() {
                 val displayName = pair.first
                 val participant = pair.second
                 showKickParticipantDialog(displayName, participant)
-            }
-        }
-
-        viewModel.conferenceModel.showRedToastEvent.observe(viewLifecycleOwner) {
-            it.consume { message ->
-                (requireActivity() as GenericActivity).showRedToast(
-                    getString(message),
-                    R.drawable.warning_circle
-                )
             }
         }
     }

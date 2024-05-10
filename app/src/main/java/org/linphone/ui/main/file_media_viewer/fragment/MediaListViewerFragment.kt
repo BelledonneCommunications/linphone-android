@@ -41,11 +41,11 @@ import org.linphone.databinding.FileMediaViewerFragmentBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.chat.viewmodel.ConversationMediaListViewModel
 import org.linphone.ui.main.file_media_viewer.adapter.MediaListAdapter
-import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.utils.AppUtils
 import org.linphone.utils.FileUtils
 
-class MediaListViewerFragment : GenericFragment() {
+class MediaListViewerFragment : GenericMainFragment() {
     companion object {
         private const val TAG = "[Media List Viewer]"
     }
@@ -91,6 +91,7 @@ class MediaListViewerFragment : GenericFragment() {
 
         viewModel = ViewModelProvider(this)[ConversationMediaListViewModel::class.java]
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
 
         // Consider full screen mode the default
         sharedViewModel.mediaViewerFullScreenMode.value = true

@@ -23,7 +23,6 @@ import android.content.Intent
 import android.net.Uri
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import java.io.File
 import kotlinx.coroutines.launch
@@ -37,11 +36,12 @@ import net.openid.appauth.ResponseTypeValues
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Factory
 import org.linphone.core.tools.Log
+import org.linphone.ui.GenericViewModel
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.TimestampUtils
 
-class SingleSignOnViewModel : ViewModel() {
+class SingleSignOnViewModel : GenericViewModel() {
     companion object {
         private const val TAG = "[Single Sign On ViewModel]"
 

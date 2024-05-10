@@ -85,6 +85,7 @@ class ConversationMediaListFragment : SlidingPaneChildFragment() {
 
         viewModel = ViewModelProvider(this)[ConversationMediaListViewModel::class.java]
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
 
         val localSipUri = args.localSipUri
         val remoteSipUri = args.remoteSipUri

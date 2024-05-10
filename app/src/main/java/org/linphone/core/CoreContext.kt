@@ -83,11 +83,15 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         MutableLiveData<Event<String>>()
     }
 
-    val greenToastToShowEvent: MutableLiveData<Event<Pair<String, Int>>> by lazy {
-        MutableLiveData<Event<Pair<String, Int>>>()
+    val showGreenToastEvent: MutableLiveData<Event<Pair<Int, Int>>> by lazy {
+        MutableLiveData<Event<Pair<Int, Int>>>()
     }
 
-    val redToastToShowEvent: MutableLiveData<Event<Pair<String, Int>>> by lazy {
+    val showRedToastEvent: MutableLiveData<Event<Pair<Int, Int>>> by lazy {
+        MutableLiveData<Event<Pair<Int, Int>>>()
+    }
+
+    val showFormattedRedToastEvent: MutableLiveData<Event<Pair<String, Int>>> by lazy {
         MutableLiveData<Event<Pair<String, Int>>>()
     }
 
@@ -136,16 +140,22 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         ) {
             Log.i("$TAG Configuring state changed [$status], message is [$message]")
             if (status == ConfiguringState.Successful) {
-                val text = context.getString(
-                    org.linphone.R.string.toast_remote_provisioning_config_applied
+                showGreenToastEvent.postValue(
+                    Event(
+                        Pair(
+                            org.linphone.R.string.toast_remote_provisioning_config_applied,
+                            org.linphone.R.drawable.smiley
+                        )
+                    )
                 )
-                greenToastToShowEvent.postValue(Event(Pair(text, org.linphone.R.drawable.smiley)))
             } else if (status == ConfiguringState.Failed) {
-                val text = context.getString(
-                    org.linphone.R.string.toast_remote_provisioning_config_failed
-                )
-                redToastToShowEvent.postValue(
-                    Event(Pair(text, org.linphone.R.drawable.warning_circle))
+                showRedToastEvent.postValue(
+                    Event(
+                        Pair(
+                            org.linphone.R.string.toast_remote_provisioning_config_failed,
+                            org.linphone.R.drawable.warning_circle
+                        )
+                    )
                 )
             }
         }
@@ -183,7 +193,7 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
                         "$TAG Call error reason is [${errorInfo.reason}](${errorInfo.protocolCode}): ${errorInfo.phrase}"
                     )
                     val text = LinphoneUtils.getCallErrorInfoToast(call)
-                    redToastToShowEvent.postValue(
+                    showFormattedRedToastEvent.postValue(
                         Event(Pair(text, org.linphone.R.drawable.warning_circle))
                     )
                 }
@@ -198,12 +208,10 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
                 "$TAG Transferred call [${transfered.remoteAddress.asStringUriOnly()}] state changed [$state]"
             )
             if (state == Call.State.Connected) {
-                val message = context.getString(
-                    org.linphone.R.string.toast_call_transfer_successful
-                )
                 val icon = org.linphone.R.drawable.phone_transfer
-
-                greenToastToShowEvent.postValue(Event(Pair(message, icon)))
+                showGreenToastEvent.postValue(
+                    Event(Pair(org.linphone.R.string.toast_call_transfer_successful, icon))
+                )
             }
         }
 

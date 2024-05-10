@@ -25,10 +25,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
 import org.linphone.databinding.RecordingsFragmentBinding
-import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.fragment.GenericMainFragment
 
 @UiThread
-class RecordingsFragment : GenericFragment() {
+class RecordingsFragment : GenericMainFragment() {
     private lateinit var binding: RecordingsFragmentBinding
 
     override fun onCreateView(

@@ -28,7 +28,6 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -36,10 +35,11 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantQrCodeScannerFragmentBinding
 import org.linphone.ui.GenericActivity
+import org.linphone.ui.GenericFragment
 import org.linphone.ui.assistant.viewmodel.QrCodeViewModel
 
 @UiThread
-class QrCodeScannerFragment : Fragment() {
+class QrCodeScannerFragment : GenericFragment() {
     companion object {
         private const val TAG = "[Qr Code Scanner Fragment]"
     }
@@ -76,6 +76,7 @@ class QrCodeScannerFragment : Fragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
 
         binding.setBackClickListener {
             goBack()

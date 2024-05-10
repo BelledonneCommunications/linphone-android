@@ -38,7 +38,7 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AccountProfileFragmentBinding
 import org.linphone.ui.GenericActivity
-import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.ui.main.history.model.ConfirmationDialogModel
 import org.linphone.ui.main.settings.viewmodel.AccountProfileViewModel
 import org.linphone.utils.DialogUtils
@@ -46,7 +46,7 @@ import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 
 @UiThread
-class AccountProfileFragment : GenericFragment() {
+class AccountProfileFragment : GenericMainFragment() {
     companion object {
         private const val TAG = "[Account Profile Fragment]"
     }
@@ -113,6 +113,7 @@ class AccountProfileFragment : GenericFragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
 
         val identity = args.accountIdentity
         Log.i("$TAG Looking up for account with identity address [$identity]")

@@ -21,17 +21,17 @@ package org.linphone.ui.call.model
 
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import java.util.Random
 import org.linphone.R
 import org.linphone.core.tools.Log
+import org.linphone.ui.GenericViewModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
 class ZrtpSasConfirmationDialogModel @UiThread constructor(
     authTokenToRead: String,
     private val authTokenToListen: String
-) : ViewModel() {
+) : GenericViewModel() {
     companion object {
         private const val TAG = "[ZRTP SAS Confirmation Dialog]"
         private const val ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"

@@ -22,12 +22,12 @@ package org.linphone.ui.call.fragment
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.UiThread
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import org.linphone.ui.GenericFragment
 import org.linphone.ui.call.viewmodel.SharedCallViewModel
 
 @UiThread
-abstract class GenericCallFragment : Fragment() {
+abstract class GenericCallFragment : GenericFragment() {
     companion object {
         private const val TAG = "[Generic Call Fragment]"
     }

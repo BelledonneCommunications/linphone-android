@@ -28,12 +28,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsContactsLdapBinding
-import org.linphone.ui.GenericActivity
-import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.ui.main.settings.viewmodel.LdapViewModel
 
 @UiThread
-class LdapServerConfigurationFragment : GenericFragment() {
+class LdapServerConfigurationFragment : GenericMainFragment() {
     companion object {
         private const val TAG = "[LDAP Server Configuration Fragment]"
     }
@@ -60,6 +59,7 @@ class LdapServerConfigurationFragment : GenericFragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
 
         val ldapServerUrl = args.serverUrl
         if (ldapServerUrl != null) {
@@ -77,14 +77,6 @@ class LdapServerConfigurationFragment : GenericFragment() {
             it.consume {
                 Log.i("$TAG LDAP server operation was successful, going back")
                 goBack()
-            }
-        }
-
-        viewModel.showRedToastEvent.observe(viewLifecycleOwner) {
-            it.consume { pair ->
-                val message = getString(pair.first)
-                val icon = pair.second
-                (requireActivity() as GenericActivity).showRedToast(message, icon)
             }
         }
     }

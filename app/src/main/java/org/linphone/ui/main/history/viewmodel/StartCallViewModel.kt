@@ -70,10 +70,6 @@ class StartCallViewModel @UiThread constructor() : AddressSelectionViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
-    val showRedToastEvent: MutableLiveData<Event<Int>> by lazy {
-        MutableLiveData<Event<Int>>()
-    }
-
     private val conferenceSchedulerListener = object : ConferenceSchedulerListenerStub() {
         override fun onStateChanged(
             conferenceScheduler: ConferenceScheduler,
@@ -92,7 +88,12 @@ class StartCallViewModel @UiThread constructor() : AddressSelectionViewModel() {
                 } else {
                     Log.e("$TAG Conference info URI is null!")
                     showRedToastEvent.postValue(
-                        Event(R.string.conference_failed_to_create_group_call_toast)
+                        Event(
+                            Pair(
+                                R.string.conference_failed_to_create_group_call_toast,
+                                R.drawable.warning_circle
+                            )
+                        )
                     )
                 }
                 operationInProgress.postValue(false)
@@ -100,7 +101,12 @@ class StartCallViewModel @UiThread constructor() : AddressSelectionViewModel() {
                 conferenceScheduler.removeListener(this)
                 Log.e("$TAG Failed to create group call!")
                 showRedToastEvent.postValue(
-                    Event(R.string.conference_failed_to_create_group_call_toast)
+                    Event(
+                        Pair(
+                            R.string.conference_failed_to_create_group_call_toast,
+                            R.drawable.warning_circle
+                        )
+                    )
                 )
                 operationInProgress.postValue(false)
             }

@@ -26,7 +26,6 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.annotation.UiThread
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
@@ -37,11 +36,12 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantThirdPartySipAccountLoginFragmentBinding
 import org.linphone.ui.GenericActivity
+import org.linphone.ui.GenericFragment
 import org.linphone.ui.assistant.viewmodel.ThirdPartySipAccountLoginViewModel
 import org.linphone.utils.PhoneNumberUtils
 
 @UiThread
-class ThirdPartySipAccountLoginFragment : Fragment() {
+class ThirdPartySipAccountLoginFragment : GenericFragment() {
     companion object {
         private const val TAG = "[Third Party SIP Account Login Fragment]"
     }
@@ -90,6 +90,7 @@ class ThirdPartySipAccountLoginFragment : Fragment() {
         binding.transport.setSelection(viewModel.availableTransports.size - 1)
 
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
 
         binding.setBackClickListener {
             goBack()

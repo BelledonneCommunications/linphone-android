@@ -22,16 +22,16 @@ package org.linphone.ui.main.settings.viewmodel
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Factory
 import org.linphone.core.FriendList
 import org.linphone.core.FriendListListenerStub
 import org.linphone.core.tools.Log
+import org.linphone.ui.GenericViewModel
 import org.linphone.utils.Event
 
-class CardDavViewModel : ViewModel() {
+class CardDavViewModel : GenericViewModel() {
     companion object {
         private const val TAG = "[CardDAV ViewModel]"
     }
@@ -51,14 +51,6 @@ class CardDavViewModel : ViewModel() {
     val showPassword = MutableLiveData<Boolean>()
 
     val syncInProgress = MutableLiveData<Boolean>()
-
-    val showGreenToastEvent: MutableLiveData<Event<Pair<Int, Int>>> by lazy {
-        MutableLiveData<Event<Pair<Int, Int>>>()
-    }
-
-    val showRedToastEvent: MutableLiveData<Event<Pair<Int, Int>>> by lazy {
-        MutableLiveData<Event<Pair<Int, Int>>>()
-    }
 
     private lateinit var friendList: FriendList
 

@@ -32,11 +32,11 @@ import org.linphone.R
 import org.linphone.compatibility.Compatibility
 import org.linphone.core.tools.Log
 import org.linphone.databinding.SettingsFragmentBinding
-import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.ui.main.settings.viewmodel.SettingsViewModel
 
 @UiThread
-class SettingsFragment : GenericFragment() {
+class SettingsFragment : GenericMainFragment() {
     companion object {
         private const val TAG = "[Settings Fragment]"
     }
@@ -108,6 +108,7 @@ class SettingsFragment : GenericFragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
 
         binding.setBackClickListener {
             goBack()

@@ -21,14 +21,14 @@ package org.linphone.ui.main.settings.viewmodel
 
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Ldap
 import org.linphone.core.tools.Log
+import org.linphone.ui.GenericViewModel
 import org.linphone.utils.Event
 
-class LdapViewModel : ViewModel() {
+class LdapViewModel : GenericViewModel() {
     companion object {
         private const val TAG = "[LDAP ViewModel]"
     }
@@ -65,10 +65,6 @@ class LdapViewModel : ViewModel() {
 
     val ldapServerOperationSuccessfulEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
-    }
-
-    val showRedToastEvent: MutableLiveData<Event<Pair<Int, Int>>> by lazy {
-        MutableLiveData<Event<Pair<Int, Int>>>()
     }
 
     private lateinit var ldapToEdit: Ldap

@@ -21,9 +21,9 @@ package org.linphone.ui.main.chat.viewmodel
 
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import org.linphone.ui.GenericViewModel
 
-class ConversationEphemeralLifetimeViewModel @UiThread constructor() : ViewModel() {
+class ConversationEphemeralLifetimeViewModel @UiThread constructor() : GenericViewModel() {
     val currentlySelectedValue = MutableLiveData<Long>()
 
     init {

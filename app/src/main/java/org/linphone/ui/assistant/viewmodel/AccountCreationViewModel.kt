@@ -23,7 +23,6 @@ import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -44,11 +43,12 @@ import org.linphone.core.CoreListenerStub
 import org.linphone.core.DialPlan
 import org.linphone.core.Factory
 import org.linphone.core.tools.Log
+import org.linphone.ui.GenericViewModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.LinphoneUtils
 
-class AccountCreationViewModel @UiThread constructor() : ViewModel() {
+class AccountCreationViewModel @UiThread constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Account Creation ViewModel]"
     }

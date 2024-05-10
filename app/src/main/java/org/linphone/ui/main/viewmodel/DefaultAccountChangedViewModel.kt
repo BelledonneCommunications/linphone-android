@@ -21,14 +21,14 @@ package org.linphone.ui.main.viewmodel
 
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Account
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
+import org.linphone.ui.GenericViewModel
 import org.linphone.utils.Event
 
-open class DefaultAccountChangedViewModel : ViewModel() {
+open class DefaultAccountChangedViewModel : GenericViewModel() {
     val defaultAccountChangedEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }

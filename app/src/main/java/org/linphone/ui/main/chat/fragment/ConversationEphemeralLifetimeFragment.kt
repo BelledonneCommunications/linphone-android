@@ -65,6 +65,7 @@ class ConversationEphemeralLifetimeFragment : SlidingPaneChildFragment() {
 
         viewModel = ViewModelProvider(this)[ConversationEphemeralLifetimeViewModel::class.java]
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
 
         val lifetime = args.currentEphemeralLifetime
         Log.i("$TAG Current lifetime for ephemeral messages is [$lifetime]")

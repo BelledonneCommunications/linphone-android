@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2023 Belledonne Communications SARL.
+ * Copyright (c) 2010-2024 Belledonne Communications SARL.
  *
  * This file is part of linphone-android
  * (see https://www.linphone.org).
@@ -17,16 +17,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.call.viewmodel
+package org.linphone.ui
 
-import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
-import androidx.window.layout.FoldingFeature
-import org.linphone.ui.GenericViewModel
+import androidx.lifecycle.ViewModel
 import org.linphone.utils.Event
 
-class SharedCallViewModel @UiThread constructor() : GenericViewModel() {
-    val toggleFullScreenEvent = MutableLiveData<Event<Boolean>>()
+open class GenericViewModel : ViewModel() {
+    val showGreenToastEvent: MutableLiveData<Event<Pair<Int, Int>>> by lazy {
+        MutableLiveData<Event<Pair<Int, Int>>>()
+    }
 
-    val foldingState = MutableLiveData<FoldingFeature>()
+    val showFormattedGreenToastEvent: MutableLiveData<Event<Pair<String, Int>>> by lazy {
+        MutableLiveData<Event<Pair<String, Int>>>()
+    }
+
+    val showRedToastEvent: MutableLiveData<Event<Pair<Int, Int>>> by lazy {
+        MutableLiveData<Event<Pair<Int, Int>>>()
+    }
+
+    val showFormattedRedToastEvent: MutableLiveData<Event<Pair<String, Int>>> by lazy {
+        MutableLiveData<Event<Pair<String, Int>>>()
+    }
 }

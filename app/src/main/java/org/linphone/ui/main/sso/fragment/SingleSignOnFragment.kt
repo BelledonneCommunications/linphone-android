@@ -32,10 +32,10 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.SingleSignOnFragmentBinding
 import org.linphone.ui.GenericActivity
-import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.ui.main.sso.viewmodel.SingleSignOnViewModel
 
-class SingleSignOnFragment : GenericFragment() {
+class SingleSignOnFragment : GenericMainFragment() {
     companion object {
         private const val TAG = "[Single Sign On Fragment]"
 
@@ -63,6 +63,7 @@ class SingleSignOnFragment : GenericFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
 
         viewModel.singleSignOnProcessCompletedEvent.observe(viewLifecycleOwner) {
             it.consume {

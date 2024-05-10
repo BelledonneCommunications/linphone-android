@@ -26,7 +26,6 @@ import android.os.ParcelFileDescriptor
 import android.widget.ImageView
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import java.io.BufferedReader
 import java.io.File
@@ -38,11 +37,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.linphone.R
 import org.linphone.core.tools.Log
-import org.linphone.utils.AppUtils
+import org.linphone.ui.GenericViewModel
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 
-class FileViewModel @UiThread constructor() : ViewModel() {
+class FileViewModel @UiThread constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[File ViewModel]"
     }
@@ -75,14 +74,6 @@ class FileViewModel @UiThread constructor() : ViewModel() {
 
     val exportPdfEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
-    }
-
-    val showGreenToastEvent: MutableLiveData<Event<Pair<String, Int>>> by lazy {
-        MutableLiveData<Event<Pair<String, Int>>>()
-    }
-
-    val showRedToastEvent: MutableLiveData<Event<Pair<String, Int>>> by lazy {
-        MutableLiveData<Event<Pair<String, Int>>>()
     }
 
     // Below are required for PDF viewer
@@ -231,16 +222,24 @@ class FileViewModel @UiThread constructor() : ViewModel() {
                     Log.i(
                         "$TAG File [$filePath] has been successfully exported to documents"
                     )
-                    val message = AppUtils.getString(
-                        R.string.toast_file_successfully_exported_to_documents
+                    showGreenToastEvent.postValue(
+                        Event(
+                            Pair(
+                                R.string.toast_file_successfully_exported_to_documents,
+                                R.drawable.check
+                            )
+                        )
                     )
-                    showGreenToastEvent.postValue(Event(Pair(message, R.drawable.check)))
                 } else {
                     Log.e("$TAG Failed to export file [$filePath] to documents!")
-                    val message = AppUtils.getString(
-                        R.string.toast_export_file_to_documents_error
+                    showRedToastEvent.postValue(
+                        Event(
+                            Pair(
+                                R.string.toast_export_file_to_documents_error,
+                                R.drawable.warning_circle
+                            )
+                        )
                     )
-                    showRedToastEvent.postValue(Event(Pair(message, R.drawable.warning_circle)))
                 }
             }
         }
@@ -256,16 +255,24 @@ class FileViewModel @UiThread constructor() : ViewModel() {
                     Log.i(
                         "$TAG Text has been successfully exported to documents"
                     )
-                    val message = AppUtils.getString(
-                        R.string.toast_file_successfully_exported_to_documents
+                    showGreenToastEvent.postValue(
+                        Event(
+                            Pair(
+                                R.string.toast_file_successfully_exported_to_documents,
+                                R.drawable.check
+                            )
+                        )
                     )
-                    showGreenToastEvent.postValue(Event(Pair(message, R.drawable.check)))
                 } else {
                     Log.e("$TAG Failed to save text to documents!")
-                    val message = AppUtils.getString(
-                        R.string.toast_export_file_to_documents_error
+                    showRedToastEvent.postValue(
+                        Event(
+                            Pair(
+                                R.string.toast_export_file_to_documents_error,
+                                R.drawable.warning_circle
+                            )
+                        )
                     )
-                    showRedToastEvent.postValue(Event(Pair(message, R.drawable.warning_circle)))
                 }
             }
         }

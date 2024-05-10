@@ -37,12 +37,12 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.MeetingScheduleFragmentBinding
 import org.linphone.ui.GenericActivity
-import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.ui.main.meetings.viewmodel.ScheduleMeetingViewModel
 import org.linphone.utils.Event
 
 @UiThread
-class ScheduleMeetingFragment : GenericFragment() {
+class ScheduleMeetingFragment : GenericMainFragment() {
     companion object {
         private const val TAG = "[Schedule Meeting Fragment]"
     }
@@ -73,6 +73,7 @@ class ScheduleMeetingFragment : GenericFragment() {
 
         viewModel = ViewModelProvider(this)[ScheduleMeetingViewModel::class.java]
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
 
         val participants = args.participants
         if (!participants.isNullOrEmpty()) {
@@ -183,15 +184,6 @@ class ScheduleMeetingFragment : GenericFragment() {
                 )
                 sharedViewModel.forceRefreshMeetingsListEvent.value = Event(true)
                 goBack()
-            }
-        }
-
-        viewModel.showRedToastEvent.observe(viewLifecycleOwner) {
-            it.consume { message ->
-                (requireActivity() as GenericActivity).showRedToast(
-                    getString(message),
-                    R.drawable.warning_circle
-                )
             }
         }
 

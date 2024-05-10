@@ -22,7 +22,6 @@ package org.linphone.ui.main.help.viewmodel
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import org.linphone.BuildConfig
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
@@ -32,10 +31,11 @@ import org.linphone.core.CoreListenerStub
 import org.linphone.core.Factory
 import org.linphone.core.VersionUpdateCheckResult
 import org.linphone.core.tools.Log
+import org.linphone.ui.GenericViewModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
-class HelpViewModel @UiThread constructor() : ViewModel() {
+class HelpViewModel @UiThread constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Help ViewModel]"
     }

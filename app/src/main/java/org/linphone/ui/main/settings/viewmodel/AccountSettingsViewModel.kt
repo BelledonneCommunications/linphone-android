@@ -21,7 +21,6 @@ package org.linphone.ui.main.settings.viewmodel
 
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.AVPFMode
@@ -29,10 +28,11 @@ import org.linphone.core.Account
 import org.linphone.core.NatPolicy
 import org.linphone.core.TransportType
 import org.linphone.core.tools.Log
+import org.linphone.ui.GenericViewModel
 import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
 import org.linphone.utils.Event
 
-class AccountSettingsViewModel @UiThread constructor() : ViewModel() {
+class AccountSettingsViewModel @UiThread constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Account Settings ViewModel]"
     }

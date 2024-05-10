@@ -24,11 +24,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
-import androidx.fragment.app.Fragment
 import org.linphone.R
+import org.linphone.ui.GenericFragment
 
 @UiThread
-class WelcomePage2Fragment : Fragment() {
+class WelcomePage2Fragment : GenericFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

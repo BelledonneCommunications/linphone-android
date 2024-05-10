@@ -22,7 +22,6 @@ package org.linphone.ui.main.contacts.viewmodel
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import java.io.File
 import java.util.Locale
@@ -42,6 +41,7 @@ import org.linphone.core.CoreListenerStub
 import org.linphone.core.Friend
 import org.linphone.core.SecurityLevel
 import org.linphone.core.tools.Log
+import org.linphone.ui.GenericViewModel
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.contacts.model.ContactDeviceModel
 import org.linphone.ui.main.contacts.model.ContactNumberOrAddressClickListener
@@ -52,7 +52,7 @@ import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
 
-class ContactViewModel @UiThread constructor() : ViewModel() {
+class ContactViewModel @UiThread constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Contact ViewModel]"
 

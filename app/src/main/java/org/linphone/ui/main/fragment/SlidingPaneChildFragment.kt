@@ -29,7 +29,7 @@ import org.linphone.core.tools.Log
 import org.linphone.ui.main.viewmodel.DefaultAccountChangedViewModel
 
 @UiThread
-abstract class SlidingPaneChildFragment : GenericFragment() {
+abstract class SlidingPaneChildFragment : GenericMainFragment() {
     companion object {
         private const val TAG = "[Sliding Pane Child Fragment]"
     }

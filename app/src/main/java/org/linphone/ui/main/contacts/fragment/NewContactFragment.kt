@@ -43,14 +43,14 @@ import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.contacts.model.NewOrEditNumberOrAddressModel
 import org.linphone.ui.main.contacts.viewmodel.ContactNewOrEditViewModel
-import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.ui.main.history.model.ConfirmationDialogModel
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
 
 @UiThread
-class NewContactFragment : GenericFragment() {
+class NewContactFragment : GenericMainFragment() {
     companion object {
         private const val TAG = "[New Contact Fragment]"
     }
@@ -111,6 +111,7 @@ class NewContactFragment : GenericFragment() {
 
         viewModel = ViewModelProvider(this)[ContactNewOrEditViewModel::class.java]
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
 
         val addressToAdd = sharedViewModel.sipAddressToAddToNewContact
         if (addressToAdd.isNotEmpty()) {
@@ -178,15 +179,6 @@ class NewContactFragment : GenericFragment() {
         viewModel.removeNewNumberOrAddressFieldEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
                 removeCell(model)
-            }
-        }
-
-        viewModel.showRedToastEvent.observe(viewLifecycleOwner) {
-            it.consume { message ->
-                (requireActivity() as GenericActivity).showRedToast(
-                    getString(message),
-                    R.drawable.warning_circle
-                )
             }
         }
     }

@@ -22,14 +22,14 @@ package org.linphone.ui.main.chat.viewmodel
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.ChatRoom
 import org.linphone.core.Factory
 import org.linphone.core.tools.Log
+import org.linphone.ui.GenericViewModel
 import org.linphone.utils.Event
 
-abstract class AbstractConversationViewModel : ViewModel() {
+abstract class AbstractConversationViewModel : GenericViewModel() {
     companion object {
         private const val TAG = "[Abstract Conversation ViewModel]"
     }

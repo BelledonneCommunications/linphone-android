@@ -24,12 +24,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import org.linphone.databinding.EmptyFragmentBinding
+import org.linphone.ui.GenericFragment
 
 @UiThread
-class EmptyFragment : Fragment() {
+class EmptyFragment : GenericFragment() {
     private lateinit var binding: EmptyFragmentBinding
 
     override fun onCreateView(

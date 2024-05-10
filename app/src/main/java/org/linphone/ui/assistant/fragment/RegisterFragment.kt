@@ -31,7 +31,6 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.annotation.UiThread
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
@@ -42,13 +41,14 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AssistantRegisterFragmentBinding
 import org.linphone.ui.GenericActivity
+import org.linphone.ui.GenericFragment
 import org.linphone.ui.assistant.model.ConfirmPhoneNumberDialogModel
 import org.linphone.ui.assistant.viewmodel.AccountCreationViewModel
 import org.linphone.utils.DialogUtils
 import org.linphone.utils.PhoneNumberUtils
 
 @UiThread
-class RegisterFragment : Fragment() {
+class RegisterFragment : GenericFragment() {
     companion object {
         private const val TAG = "[Register Fragment]"
     }
@@ -86,6 +86,7 @@ class RegisterFragment : Fragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
 
         binding.setBackClickListener {
             goBack()

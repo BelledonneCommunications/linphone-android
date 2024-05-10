@@ -115,6 +115,7 @@ class EditContactFragment : SlidingPaneChildFragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
 
         val refKey = args.contactRefKey
         Log.i("$TAG Looking up for contact with ref key [$refKey]")
@@ -180,15 +181,6 @@ class EditContactFragment : SlidingPaneChildFragment() {
         viewModel.removeNewNumberOrAddressFieldEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
                 removeCell(model)
-            }
-        }
-
-        viewModel.showRedToastEvent.observe(viewLifecycleOwner) {
-            it.consume { message ->
-                (requireActivity() as GenericActivity).showRedToast(
-                    getString(message),
-                    R.drawable.warning_circle
-                )
             }
         }
     }

@@ -28,11 +28,11 @@ import androidx.lifecycle.ViewModelProvider
 import org.linphone.core.tools.Log
 import org.linphone.databinding.FileMediaViewerChildFragmentBinding
 import org.linphone.ui.main.file_media_viewer.viewmodel.MediaViewModel
-import org.linphone.ui.main.fragment.GenericFragment
+import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.ui.main.viewmodel.SharedMainViewModel
 
 @UiThread
-class MediaViewerFragment : GenericFragment() {
+class MediaViewerFragment : GenericMainFragment() {
     companion object {
         private const val TAG = "[Media Viewer Fragment]"
     }
@@ -61,6 +61,7 @@ class MediaViewerFragment : GenericFragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+        observeToastEvents(viewModel)
 
         val path = if (arguments?.containsKey("path") == true) {
             requireArguments().getString("path")

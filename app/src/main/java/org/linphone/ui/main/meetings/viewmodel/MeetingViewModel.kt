@@ -22,7 +22,6 @@ package org.linphone.ui.main.meetings.viewmodel
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import java.util.Locale
 import java.util.TimeZone
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -35,12 +34,13 @@ import org.linphone.core.ConferenceSchedulerListenerStub
 import org.linphone.core.Factory
 import org.linphone.core.Participant
 import org.linphone.core.tools.Log
+import org.linphone.ui.GenericViewModel
 import org.linphone.ui.main.meetings.model.ParticipantModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 import org.linphone.utils.TimestampUtils
 
-class MeetingViewModel @UiThread constructor() : ViewModel() {
+class MeetingViewModel @UiThread constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Meeting ViewModel]"
     }
