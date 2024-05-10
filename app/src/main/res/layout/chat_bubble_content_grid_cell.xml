@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:text="@{model.audioVideoDuration, default=`00:42`}"
-            android:textColor="@color/white"
+            android:textColor="@{model.isVideoPreview ? @color/white : @color/main2_600}"
             android:textSize="12sp"
             android:visibility="@{model.isVideoPreview &amp;&amp; model.audioVideoDuration.length() > 0 ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintBottom_toBottomOf="@id/image"
