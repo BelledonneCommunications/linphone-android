@@ -203,12 +203,18 @@ class ConversationInfoViewModel @UiThread constructor() : AbstractConversationVi
                     coreContext.startVideoCall(conferenceAddress)
                 } else {
                     Log.e("$TAG Conference info URI is null!")
-                    // TODO: notify error to user
+                    val message = AppUtils.getString(
+                        R.string.conference_failed_to_create_group_call_toast
+                    )
+                    showRedToastEvent.postValue(Event(Pair(message, R.drawable.warning_circle)))
                 }
             } else if (state == ConferenceScheduler.State.Error) {
                 conferenceScheduler.removeListener(this)
                 Log.e("$TAG Failed to create group call!")
-                // TODO: notify error to user
+                val message = AppUtils.getString(
+                    R.string.conference_failed_to_create_group_call_toast
+                )
+                showRedToastEvent.postValue(Event(Pair(message, R.drawable.warning_circle)))
             }
         }
     }

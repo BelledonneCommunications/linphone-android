@@ -32,6 +32,7 @@ import org.linphone.R
 import org.linphone.core.Participant
 import org.linphone.core.tools.Log
 import org.linphone.databinding.CallConferenceParticipantsListFragmentBinding
+import org.linphone.ui.GenericActivity
 import org.linphone.ui.call.adapter.ConferenceParticipantsListAdapter
 import org.linphone.ui.call.fragment.GenericCallFragment
 import org.linphone.ui.call.viewmodel.CurrentCallViewModel
@@ -113,6 +114,15 @@ class ConferenceParticipantsListFragment : GenericCallFragment() {
                 showKickParticipantDialog(displayName, participant)
             }
         }
+
+        viewModel.conferenceModel.showRedToastEvent.observe(viewLifecycleOwner) {
+            it.consume { message ->
+                (requireActivity() as GenericActivity).showRedToast(
+                    getString(message),
+                    R.drawable.warning_circle
+                )
+            }
+        }
     }
 
     private fun showKickParticipantDialog(displayName: String, participant: Participant) {
@@ -132,7 +142,9 @@ class ConferenceParticipantsListFragment : GenericCallFragment() {
         model.confirmEvent.observe(viewLifecycleOwner) {
             it.consume {
                 viewModel.conferenceModel.kickParticipant(participant)
-                // TODO: notify participant was kicked out
+                val message = getString(R.string.conference_participant_was_kicked_out_toast)
+                val icon = R.drawable.check
+                (requireActivity() as GenericActivity).showGreenToast(message, icon)
                 dialog.dismiss()
             }
         }

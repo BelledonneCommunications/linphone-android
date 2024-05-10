@@ -34,6 +34,7 @@ import org.linphone.core.Address
 import org.linphone.core.Friend
 import org.linphone.core.tools.Log
 import org.linphone.databinding.StartCallFragmentBinding
+import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.fragment.GenericAddressPickerFragment
 import org.linphone.ui.main.fragment.GroupSetOrEditSubjectDialogModel
 import org.linphone.ui.main.history.viewmodel.StartCallViewModel
@@ -141,6 +142,15 @@ class StartCallFragment : GenericAddressPickerFragment() {
             }
         }
 
+        viewModel.showRedToastEvent.observe(viewLifecycleOwner) {
+            it.consume { message ->
+                (requireActivity() as GenericActivity).showRedToast(
+                    getString(message),
+                    R.drawable.warning_circle
+                )
+            }
+        }
+
         binding.root.setKeyboardInsetListener { keyboardVisible ->
             if (keyboardVisible) {
                 viewModel.isNumpadVisible.value = false
@@ -186,7 +196,9 @@ class StartCallFragment : GenericAddressPickerFragment() {
                     dialog.currentFocus?.hideKeyboard()
                     dialog.dismiss()
                 } else {
-                    // TODO: show error
+                    val message = getString(R.string.conversation_invalid_empty_subject_toast)
+                    val icon = R.drawable.warning_circle
+                    (requireActivity() as GenericActivity).showRedToast(message, icon)
                 }
             }
         }

@@ -142,7 +142,10 @@ class MediaListViewerFragment : GenericFragment() {
 
             val position = if (index == -1) {
                 Log.e("$TAG File [$path] not found, using latest one available instead!")
-                // TODO: show error toast
+                val message = getString(R.string.conversation_media_not_found_toast)
+                val icon = R.drawable.warning_circle
+                (requireActivity() as GenericActivity).showRedToast(message, icon)
+
                 count - 1
             } else {
                 index

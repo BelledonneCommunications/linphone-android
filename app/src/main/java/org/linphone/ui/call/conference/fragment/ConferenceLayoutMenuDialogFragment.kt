@@ -73,14 +73,14 @@ class ConferenceLayoutMenuDialogFragment(
             if (conferenceModel.participantDevices.value.orEmpty().size < 7) {
                 conferenceModel.changeLayout(ConferenceViewModel.GRID_LAYOUT)
                 dismiss()
-            } else {
-                // TODO: notify user
             }
         }
+
         view.setActiveSpeakerClickListener {
             conferenceModel.changeLayout(ConferenceViewModel.ACTIVE_SPEAKER_LAYOUT)
             dismiss()
         }
+
         view.setAudioOnlyClickListener {
             conferenceModel.changeLayout(ConferenceViewModel.AUDIO_ONLY_LAYOUT)
             dismiss()

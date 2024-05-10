@@ -67,8 +67,8 @@ class LdapViewModel : ViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
-    val showErrorToastEvent: MutableLiveData<Event<Pair<Int, String>>> by lazy {
-        MutableLiveData<Event<Pair<Int, String>>>()
+    val showRedToastEvent: MutableLiveData<Event<Pair<Int, Int>>> by lazy {
+        MutableLiveData<Event<Pair<Int, Int>>>()
     }
 
     private lateinit var ldapToEdit: Ldap
@@ -171,9 +171,10 @@ class LdapViewModel : ViewModel() {
                 ldapServerOperationSuccessfulEvent.postValue(Event(true))
             } catch (e: Exception) {
                 Log.e("$TAG Exception while creating LDAP: $e")
-                // TODO: improve toast
-                showErrorToastEvent.postValue(
-                    Event(Pair(R.drawable.warning_circle, e.toString()))
+                showRedToastEvent.postValue(
+                    Event(
+                        Pair(R.string.settings_contacts_ldap_error_toast, R.drawable.warning_circle)
+                    )
                 )
             }
         }

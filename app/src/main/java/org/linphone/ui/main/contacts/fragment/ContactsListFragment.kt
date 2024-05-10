@@ -42,6 +42,7 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactsListFilterPopupMenuBinding
 import org.linphone.databinding.ContactsListFragmentBinding
+import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.contacts.adapter.ContactsListAdapter
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.contacts.viewmodel.ContactsListViewModel
@@ -146,6 +147,15 @@ class ContactsListFragment : AbstractMainFragment() {
                     "$TAG Friend [$contactName] was exported as vCard file [${file.absolutePath}], sharing it"
                 )
                 shareContact(contactName, file)
+            }
+        }
+
+        listViewModel.showGreenToastEvent.observe(viewLifecycleOwner) {
+            it.consume { message ->
+                (requireActivity() as GenericActivity).showRedToast(
+                    getString(message),
+                    R.drawable.check
+                )
             }
         }
 

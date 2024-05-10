@@ -30,6 +30,7 @@ import java.util.Locale
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
+import org.linphone.R
 import org.linphone.contacts.ContactsManager.ContactsListener
 import org.linphone.core.Friend
 import org.linphone.core.MagicSearch
@@ -61,6 +62,10 @@ class ContactsListViewModel @UiThread constructor() : AbstractMainViewModel() {
 
     val vCardTerminatedEvent: MutableLiveData<Event<Pair<String, File>>> by lazy {
         MutableLiveData<Event<Pair<String, File>>>()
+    }
+
+    val showGreenToastEvent: MutableLiveData<Event<Int>> by lazy {
+        MutableLiveData<Event<Int>>()
     }
 
     private var previousFilter = "NotSet"
@@ -218,7 +223,7 @@ class ContactsListViewModel @UiThread constructor() : AbstractMainViewModel() {
             coreContext.contactsManager.contactRemoved(contactModel.friend)
             contactModel.friend.remove()
             coreContext.contactsManager.notifyContactsListChanged()
-            // TODO: show green toast
+            showGreenToastEvent.postValue(Event(R.string.contact_deleted_toast))
         }
     }
 

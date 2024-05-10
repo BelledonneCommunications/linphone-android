@@ -28,6 +28,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
 import org.linphone.contacts.ContactLoader.Companion.LINPHONE_ADDRESS_BOOK_FRIEND_LIST
 import org.linphone.core.Friend
 import org.linphone.core.FriendList.Status
@@ -73,6 +74,10 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
     val addNewNumberOrAddressFieldEvent = MutableLiveData<Event<NewOrEditNumberOrAddressModel>>()
 
     val removeNewNumberOrAddressFieldEvent = MutableLiveData<Event<NewOrEditNumberOrAddressModel>>()
+
+    val showRedToastEvent: MutableLiveData<Event<Int>> by lazy {
+        MutableLiveData<Event<Int>>()
+    }
 
     @UiThread
     fun findFriendByRefKey(refKey: String?) {
@@ -137,7 +142,9 @@ class ContactNewOrEditViewModel @UiThread constructor() : ViewModel() {
         val organization = company.value.orEmpty().trim()
         if (fn.isEmpty() && ln.isEmpty() && organization.isEmpty()) {
             Log.e("$TAG At least a mandatory field wasn't filled, aborting save")
-            // TODO: notify user
+            showRedToastEvent.postValue(
+                Event(R.string.contact_editor_mandatory_field_not_filled_toast)
+            )
             return
         }
 

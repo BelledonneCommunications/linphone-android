@@ -50,8 +50,8 @@ class StartConversationViewModel @UiThread constructor() : AddressSelectionViewM
 
     val operationInProgress = MutableLiveData<Boolean>()
 
-    val chatRoomCreationErrorEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
+    val chatRoomCreationErrorEvent: MutableLiveData<Event<Int>> by lazy {
+        MutableLiveData<Event<Int>>()
     }
 
     val chatRoomCreatedEvent: MutableLiveData<Event<Pair<String, String>>> by lazy {
@@ -81,7 +81,9 @@ class StartConversationViewModel @UiThread constructor() : AddressSelectionViewM
                 Log.e("$TAG Conversation [$id] creation has failed!")
                 chatRoom.removeListener(this)
                 operationInProgress.postValue(false)
-                chatRoomCreationErrorEvent.postValue(Event("Error!")) // TODO: use translated string
+                chatRoomCreationErrorEvent.postValue(
+                    Event(R.string.conversation_failed_to_create_toast)
+                )
             }
         }
     }
@@ -165,7 +167,9 @@ class StartConversationViewModel @UiThread constructor() : AddressSelectionViewM
             } else {
                 Log.e("$TAG Failed to create group conversation [$groupChatRoomSubject]!")
                 operationInProgress.postValue(false)
-                chatRoomCreationErrorEvent.postValue(Event("Error!")) // TODO: use translated string
+                chatRoomCreationErrorEvent.postValue(
+                    Event(R.string.conversation_failed_to_create_toast)
+                )
             }
         }
     }
@@ -212,7 +216,9 @@ class StartConversationViewModel @UiThread constructor() : AddressSelectionViewM
                 "$TAG Account is in secure mode, can't chat with SIP address of different domain [${remote.asStringUriOnly()}]"
             )
             operationInProgress.postValue(false)
-            chatRoomCreationErrorEvent.postValue(Event("Error!")) // TODO: use translated string
+            chatRoomCreationErrorEvent.postValue(
+                Event(R.string.conversation_invalid_participant_due_to_security_mode_toast)
+            )
             return
         }
 
@@ -258,7 +264,9 @@ class StartConversationViewModel @UiThread constructor() : AddressSelectionViewM
             } else {
                 Log.e("$TAG Failed to create 1-1 conversation with [${remote.asStringUriOnly()}]!")
                 operationInProgress.postValue(false)
-                chatRoomCreationErrorEvent.postValue(Event("Error!")) // TODO: use translated string
+                chatRoomCreationErrorEvent.postValue(
+                    Event(R.string.conversation_failed_to_create_toast)
+                )
             }
         } else {
             Log.w(

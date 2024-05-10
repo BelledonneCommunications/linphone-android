@@ -94,8 +94,8 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
 
     val operationInProgress = MutableLiveData<Boolean>()
 
-    val chatRoomCreationErrorEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
+    val chatRoomCreationErrorEvent: MutableLiveData<Event<Int>> by lazy {
+        MutableLiveData<Event<Int>>()
     }
 
     val showLongPressMenuForNumberOrAddressEvent: MutableLiveData<Event<ContactNumberOrAddressModel>> by lazy {
@@ -209,7 +209,9 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                 Log.e("$TAG Conversation [$id] creation has failed!")
                 chatRoom.removeListener(this)
                 operationInProgress.postValue(false)
-                chatRoomCreationErrorEvent.postValue(Event("Error!")) // TODO: use translated string
+                chatRoomCreationErrorEvent.postValue(
+                    Event(R.string.conversation_creation_error_toast)
+                )
             }
         }
     }
@@ -626,7 +628,9 @@ class ContactViewModel @UiThread constructor() : ViewModel() {
                         "$TAG Failed to create 1-1 conversation with [${remote.asStringUriOnly()}]!"
                     )
                     operationInProgress.postValue(false)
-                    chatRoomCreationErrorEvent.postValue(Event("Error!")) // TODO: use translated string
+                    chatRoomCreationErrorEvent.postValue(
+                        Event(R.string.conversation_creation_error_toast)
+                    )
                 }
             }
         }

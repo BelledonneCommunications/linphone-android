@@ -27,6 +27,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
+import org.linphone.R
 import org.linphone.core.ConferenceScheduler
 import org.linphone.core.ConferenceSchedulerListenerStub
 import org.linphone.core.Factory
@@ -69,6 +70,10 @@ class StartCallViewModel @UiThread constructor() : AddressSelectionViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    val showRedToastEvent: MutableLiveData<Event<Int>> by lazy {
+        MutableLiveData<Event<Int>>()
+    }
+
     private val conferenceSchedulerListener = object : ConferenceSchedulerListenerStub() {
         override fun onStateChanged(
             conferenceScheduler: ConferenceScheduler,
@@ -86,13 +91,17 @@ class StartCallViewModel @UiThread constructor() : AddressSelectionViewModel() {
                     coreContext.startVideoCall(conferenceAddress)
                 } else {
                     Log.e("$TAG Conference info URI is null!")
-                    // TODO: notify error to user
+                    showRedToastEvent.postValue(
+                        Event(R.string.conference_failed_to_create_group_call_toast)
+                    )
                 }
                 operationInProgress.postValue(false)
             } else if (state == ConferenceScheduler.State.Error) {
                 conferenceScheduler.removeListener(this)
                 Log.e("$TAG Failed to create group call!")
-                // TODO: notify error to user
+                showRedToastEvent.postValue(
+                    Event(R.string.conference_failed_to_create_group_call_toast)
+                )
                 operationInProgress.postValue(false)
             }
         }

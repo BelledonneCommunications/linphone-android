@@ -52,12 +52,12 @@ class CardDavViewModel : ViewModel() {
 
     val syncInProgress = MutableLiveData<Boolean>()
 
-    val cardDavOperationSuccessfulEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
+    val showGreenToastEvent: MutableLiveData<Event<Pair<Int, Int>>> by lazy {
+        MutableLiveData<Event<Pair<Int, Int>>>()
     }
 
-    val showErrorToastEvent: MutableLiveData<Event<Pair<Int, String>>> by lazy {
-        MutableLiveData<Event<Pair<Int, String>>>()
+    val showRedToastEvent: MutableLiveData<Event<Pair<Int, Int>>> by lazy {
+        MutableLiveData<Event<Pair<Int, Int>>>()
     }
 
     private lateinit var friendList: FriendList
@@ -75,12 +75,25 @@ class CardDavViewModel : ViewModel() {
             when (status) {
                 FriendList.SyncStatus.Successful -> {
                     syncInProgress.postValue(false)
-                    cardDavOperationSuccessfulEvent.postValue(Event(true))
+                    showGreenToastEvent.postValue(
+                        Event(
+                            Pair(
+                                R.string.settings_contacts_carddav_sync_successful_toast,
+                                R.drawable.check
+                            )
+                        )
+                    )
                 }
                 FriendList.SyncStatus.Failure -> {
                     syncInProgress.postValue(false)
-                    val icon = R.drawable.warning_circle
-                    showErrorToastEvent.postValue(Event(Pair(icon, message.orEmpty())))
+                    showRedToastEvent.postValue(
+                        Event(
+                            Pair(
+                                R.string.settings_contacts_carddav_sync_error_toast,
+                                R.drawable.warning_circle
+                            )
+                        )
+                    )
                     if (isEdit.value == false) {
                         Log.e("$TAG Synchronization failed, removing Friend list from Core")
                         friendList.removeListener(this)
@@ -132,7 +145,14 @@ class CardDavViewModel : ViewModel() {
                 val name = friendList.displayName
                 core.removeFriendList(friendList)
                 Log.i("$TAG Removed friends list with display name [$name]")
-                cardDavOperationSuccessfulEvent.postValue(Event(true))
+                showGreenToastEvent.postValue(
+                    Event(
+                        Pair(
+                            R.string.settings_contacts_carddav_deleted_toast,
+                            R.drawable.trash_simple
+                        )
+                    )
+                )
             }
         }
     }
@@ -147,9 +167,13 @@ class CardDavViewModel : ViewModel() {
         val name = displayName.value.orEmpty().trim()
         val server = serverUrl.value.orEmpty().trim()
         if (name.isEmpty() || server.isEmpty()) {
-            // TODO: improve toast
-            showErrorToastEvent.postValue(
-                Event(Pair(R.drawable.warning_circle, "Name or Server is empty!"))
+            showRedToastEvent.postValue(
+                Event(
+                    Pair(
+                        R.string.settings_contacts_carddav_mandatory_field_not_filled_toast,
+                        R.drawable.warning_circle
+                    )
+                )
             )
             return
         }

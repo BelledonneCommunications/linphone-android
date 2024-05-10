@@ -358,7 +358,7 @@ class ActiveCallFragment : GenericCallFragment() {
         callViewModel.chatRoomCreationErrorEvent.observe(viewLifecycleOwner) {
             it.consume { error ->
                 (requireActivity() as GenericActivity).showRedToast(
-                    error,
+                    getString(error),
                     R.drawable.warning_circle
                 )
             }

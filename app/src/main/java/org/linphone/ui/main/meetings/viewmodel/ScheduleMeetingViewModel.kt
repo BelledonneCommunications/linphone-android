@@ -75,9 +75,15 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
 
     val operationInProgress = MutableLiveData<Boolean>()
 
-    val conferenceCreatedEvent = MutableLiveData<Event<Boolean>>()
-
     val hideBroadcast = MutableLiveData<Boolean>()
+
+    val conferenceCreatedEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
+    val showRedToastEvent: MutableLiveData<Event<Int>> by lazy {
+        MutableLiveData<Event<Int>>()
+    }
 
     private var startTimestamp = 0L
     private var endTimestamp = 0L
@@ -102,7 +108,7 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
             when (state) {
                 ConferenceScheduler.State.Error -> {
                     operationInProgress.postValue(false)
-                    // TODO: show error toast
+                    showRedToastEvent.postValue(Event(R.string.meeting_failed_to_schedule_toast))
                 }
                 ConferenceScheduler.State.Ready -> {
                     val conferenceAddress = conferenceScheduler.info?.uri
@@ -146,14 +152,18 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
                 }
                 participants.value.orEmpty().size -> {
                     Log.e("$TAG No invitation sent!")
-                    // TODO: show error toast
+                    showRedToastEvent.postValue(
+                        Event(R.string.meeting_failed_to_send_invites_toast)
+                    )
                 }
                 else -> {
                     Log.w("$TAG [$failedCount] invitations couldn't have been sent for:")
                     for (failed in failedInvitations.orEmpty()) {
                         Log.w(failed.asStringUriOnly())
                     }
-                    // TODO: show error toast
+                    showRedToastEvent.postValue(
+                        Event(R.string.meeting_failed_to_send_part_of_invites_toast)
+                    )
                 }
             }
 
@@ -343,7 +353,9 @@ class ScheduleMeetingViewModel @UiThread constructor() : ViewModel() {
             Log.e(
                 "$TAG Either no subject was set or no participant was selected, can't schedule meeting."
             )
-            // TODO: show red toast
+            showRedToastEvent.postValue(
+                Event(R.string.meeting_schedule_mandatory_field_not_filled_toast)
+            )
             return
         }
 

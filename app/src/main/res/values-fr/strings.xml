@@ -124,6 +124,8 @@
     <string name="assistant_scan_qr_code">Scanner un QR code</string>
     <string name="assistant_login_third_party_sip_account">J\'ai un compte SIP tiers</string>
     <string name="assistant_login_using_single_sign_on">Single sign on</string>
+    <string name="assistant_login_cant_parse_address_toast">L\'adresse SIP est invalide !</string>
+    <string name="assistant_login_address_without_username_toast">L\'adresse SIP ne contient pas de nom d\'utilisateur !</string>
     <string name="assistant_no_account_yet">Pas encore de compte ?</string>
     <string name="assistant_account_register">Créer un compte</string>
     <string name="assistant_account_creation_sms_confirmation_explanation">On vous a envoyé un code de vérification par SMS au numéro %1$s.\n\nMerci de le saisir ci-dessous :</string>
@@ -235,6 +237,10 @@
     <string name="settings_contacts_carddav_username_title">Nom d\'utilisateur</string>
     <string name="settings_contacts_carddav_password_title">Mot de passe</string>
     <string name="settings_contacts_carddav_realm_title">Domaine d\'authentification</string>
+    <string name="settings_contacts_carddav_sync_successful_toast">Synchronization réussie</string>
+    <string name="settings_contacts_carddav_sync_error_toast">Erreur de synchronization !</string>
+    <string name="settings_contacts_carddav_deleted_toast">Compte CardDAV supprimé</string>
+    <string name="settings_contacts_carddav_mandatory_field_not_filled_toast">Au moins un champ obligatoire n\'est pas rempli</string>
     <string name="settings_contacts_ldap_server_url_title">URL du serveur</string>
     <string name="settings_contacts_ldap_bind_dn_title">Bind DN</string>
     <string name="settings_contacts_ldap_password_title">Mot de passe</string>
@@ -248,6 +254,7 @@
     <string name="settings_contacts_ldap_name_attributes_title">Attributs de nom</string>
     <string name="settings_contacts_ldap_sip_attributes_title">Attributs SIP</string>
     <string name="settings_contacts_ldap_sip_domain_title">Domaine SIP</string>
+    <string name="settings_contacts_ldap_error_toast">Une erreur s\'est produite, la configuration LDAP n\'a pas été sauvegardée !</string>
     <string name="settings_meetings_title">Réunions</string>
     <string name="settings_meetings_default_layout_title">Disposition par défaut</string>
     <string name="settings_meetings_layout_active_speaker_label">Intervenant actif</string>
@@ -314,6 +321,7 @@
     <string name="account_settings_dialog_invalid_password_title">Autentification requise</string>
     <string name="account_settings_dialog_invalid_password_message">La connexion a échoué pour le compte \n%s.\n\nVous pouvez renseigner votre mot de passe à nouveau ou bien vérifier les options de configuration de votre compte.</string>
     <string name="account_settings_dialog_invalid_password_hint">Mot de passe</string>
+    <string name="account_failed_to_find_identity_toast">Le compte selectionné est introuvable !</string>
 
     <string name="history_title">Historique d\'appel</string>
     <string name="history_call_start_title">Nouvel appel</string>
@@ -351,6 +359,7 @@
     <string name="contact_editor_error_saving_contact_toast">Erreur lors de la création du contact</string>
     <string name="contact_editor_dialog_abort_confirmation_title">Ne pas sauvegarder vos changements</string>
     <string name="contact_editor_dialog_abort_confirmation_message">Toutes vos modifications seront perdues.</string>
+    <string name="contact_editor_mandatory_field_not_filled_toast">Au moins un champ obligatoire n\'est pas rempli</string>
 
     <string name="contact_details_numbers_and_addresses_title">Numéros de téléphone et adresses SIP</string>
     <string name="contact_details_company_name">Entreprise :</string>
@@ -365,6 +374,7 @@
     <string name="contact_details_share">Partager</string>
     <string name="contact_details_delete">Supprimer</string>
     <string name="contact_sms_invite_content">Salut, rejoins moi sur &appName; ! Tu peux le télécharger gratuitement sur %s</string>
+    <string name="contact_deleted_toast">Le contact a été supprimé</string>
 
     <string name="contact_dialog_increase_trust_level_title">Augmenter le niveau de confiance</string>
     <string name="contact_dialog_increase_trust_level_message">Vous êtes sur le point de passer un appel vers l\'appareil $2%s\ de $1%s.\Voulez-vous démarrer l\'appel ?</string>
@@ -407,6 +417,7 @@
     <string name="conversation_ephemeral_messages_duration_one_week">1 semaine</string>
     <string name="new_conversation_title">Créer une conversation</string>
     <string name="new_group_conversation_title">Créer un groupe</string>
+    <string name="conversation_invalid_empty_subject_toast">Veuillez choisir un sujet pour la conversation</string>
     <string name="new_conversation_search_bar_filter_hint">Chercher un contact</string>
     <string name="new_conversation_create_group">Créer une conversation de groupe</string>
     <string name="new_conversation_no_contact">Aucun contact ni suggestion pour le moment…</string>
@@ -416,6 +427,7 @@
         <item quantity="one">%s est en train d\'écrire…</item>
         <item quantity="other">%s sont en train d\'écrire…</item>
     </plurals>
+    <string name="conversation_creation_error_toast">Échec de la création de la conversation !</string>
     <string name="conversation_add_participants_title">Ajouter des membres</string>
     <string name="conversation_reply_to_message_title">En réponse à :</string>
     <string name="conversation_menu_search_in_messages">Chercher</string>
@@ -442,6 +454,9 @@
     <string name="conversation_dialog_open_file_label">Ouvrir le fichier</string>
     <string name="conversation_dialog_export_file_label">Sauvegarder le fichier</string>
     <string name="conversation_message_deleted_toast">Le message a été supprimé</string>
+    <string name="conversation_failed_to_create_toast">Échec de la création de la conversation !</string>
+    <string name="conversation_invalid_participant_due_to_security_mode_toast">Pour des raisons de sécurité, la création d\'une conversation avec un participant d\'un domaine tiers est désactivé.</string>
+    <string name="conversation_media_not_found_toast">Le média selectionné est introuvable !</string>
 
     <string name="conversation_info_participants_list_title">Membres du groupe</string>
     <string name="conversation_info_add_participants_label">Ajouter des membres</string>
@@ -511,6 +526,10 @@
     <string name="meeting_info_created_toast">La réunion a été créée</string>
     <string name="meeting_info_updated_toast">La réunion a été mise à jour</string>
     <string name="meeting_info_cancelled_toast">La réunion a été annulée</string>
+    <string name="meeting_failed_to_schedule_toast">Échec de la création de la réunion !</string>
+    <string name="meeting_schedule_mandatory_field_not_filled_toast">Au moins un champ obligatoire n\'a pas été rempli</string>
+    <string name="meeting_failed_to_send_invites_toast">Échec de l\'envoi des invitations à la réunion !</string>
+    <string name="meeting_failed_to_send_part_of_invites_toast">Échec de l\'envoi des invitations à la réunion pour certains des participants !</string>
 
     <string name="meeting_waiting_room_join">Rejoindre</string>
     <string name="meeting_waiting_room_cancel">Annuler</string>
@@ -586,19 +605,23 @@
     <string name="conference_call_empty">En attente d\'autres participants…</string>
     <string name="conference_action_screen_sharing">Partage d\'écran</string>
     <string name="conference_action_show_participants">Participants</string>
+    <string name="conference_failed_to_create_group_call_toast">L\'appel de groupe n\'a pas pu être créé!</string>
     <plurals name="conference_participants_list_title" tools:ignore="MissingQuantity">
         <item quantity="one">%s participant</item>
         <item quantity="other">%s participants</item>
     </plurals>
     <string name="conference_confirm_removing_participant_dialog_title">Retirer %s de la conférence ?</string>
     <string name="conference_confirm_removing_participant_dialog_message">Voulez-vous vraiment retirer ce participant de la conférence ?</string>
+    <string name="conference_participant_was_kicked_out_toast">Le participant a été exclu de la conférence</string>
     <string name="conference_participant_joining_text">En train de rejoindre…</string>
     <string name="conference_participant_paused_text">En pause</string>
     <string name="conference_active_speaker_is_screen_sharing">partage son écran</string>
+    <string name="conference_failed_to_add_participant_invalid_address_toast">L\'adresse SIP est invalide, elle ne peut être ajoutée à la conférence</string>
 
     <string name="conference_layout_grid">Mosaïque</string>
     <string name="conference_layout_active_speaker">Intervenant actif</string>
     <string name="conference_layout_audio_only">Audio uniquement</string>
+    <string name="conference_too_many_participants_for_mosaic_layout_toast">Trop de participants pour l\'affichage mosaïque</string>
 
     <string name="conference_remotely_hosted_title">Appel de groupe distant</string>
     <string name="conference_locally_hosted_title">Appel de groupe local</string>

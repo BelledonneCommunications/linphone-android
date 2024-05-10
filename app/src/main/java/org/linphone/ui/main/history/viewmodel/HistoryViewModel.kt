@@ -59,8 +59,8 @@ class HistoryViewModel @UiThread constructor() : ViewModel() {
 
     val callLogFoundEvent = MutableLiveData<Event<Boolean>>()
 
-    val chatRoomCreationErrorEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
+    val chatRoomCreationErrorEvent: MutableLiveData<Event<Int>> by lazy {
+        MutableLiveData<Event<Int>>()
     }
 
     val goToConversationEvent: MutableLiveData<Event<Pair<String, String>>> by lazy {
@@ -100,7 +100,9 @@ class HistoryViewModel @UiThread constructor() : ViewModel() {
                 Log.e("$TAG Conversation [$id] creation has failed!")
                 chatRoom.removeListener(this)
                 operationInProgress.postValue(false)
-                chatRoomCreationErrorEvent.postValue(Event("Error!")) // TODO: use translated string
+                chatRoomCreationErrorEvent.postValue(
+                    Event(R.string.conversation_failed_to_create_toast)
+                )
             }
         }
     }
@@ -268,7 +270,9 @@ class HistoryViewModel @UiThread constructor() : ViewModel() {
                             "$TAG Failed to create 1-1 conversation with [${remote.asStringUriOnly()}]!"
                         )
                         operationInProgress.postValue(false)
-                        chatRoomCreationErrorEvent.postValue(Event("Error!")) // TODO: use translated string
+                        chatRoomCreationErrorEvent.postValue(
+                            Event(R.string.conversation_failed_to_create_toast)
+                        )
                     }
                 }
             }

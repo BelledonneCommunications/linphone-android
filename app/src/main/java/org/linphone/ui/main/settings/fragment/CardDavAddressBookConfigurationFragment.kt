@@ -73,18 +73,19 @@ class CardDavAddressBookConfigurationFragment : GenericFragment() {
             goBack()
         }
 
-        viewModel.cardDavOperationSuccessfulEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                Log.i("$TAG CardDAV friend list operation was successful, going back")
-                // TODO: show green toast
+        viewModel.showGreenToastEvent.observe(viewLifecycleOwner) {
+            it.consume { pair ->
+                val message = getString(pair.first)
+                val icon = pair.second
+                (requireActivity() as GenericActivity).showGreenToast(message, icon)
                 goBack()
             }
         }
 
-        viewModel.showErrorToastEvent.observe(viewLifecycleOwner) {
+        viewModel.showRedToastEvent.observe(viewLifecycleOwner) {
             it.consume { pair ->
-                val icon = pair.first
-                val message = pair.second
+                val message = getString(pair.first)
+                val icon = pair.second
                 (requireActivity() as GenericActivity).showRedToast(message, icon)
             }
         }

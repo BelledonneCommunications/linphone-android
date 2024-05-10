@@ -69,6 +69,10 @@ open class AccountLoginViewModel @UiThread constructor() : ViewModel() {
         MutableLiveData<Event<String>>()
     }
 
+    val showRedToastEvent: MutableLiveData<Event<Int>> by lazy {
+        MutableLiveData<Event<Int>>()
+    }
+
     private lateinit var newlyCreatedAuthInfo: AuthInfo
     private lateinit var newlyCreatedAccount: Account
 
@@ -152,7 +156,9 @@ open class AccountLoginViewModel @UiThread constructor() : ViewModel() {
             val identityAddress = Factory.instance().createAddress(identity)
             if (identityAddress == null) {
                 Log.e("$TAG Can't parse [$identity] as Address!")
-                // TODO: show error
+                showRedToastEvent.postValue(
+                    Event(R.string.assistant_login_cant_parse_address_toast)
+                )
                 return@postOnCoreThread
             }
 
@@ -161,7 +167,9 @@ open class AccountLoginViewModel @UiThread constructor() : ViewModel() {
                 Log.e(
                     "$TAG Address [${identityAddress.asStringUriOnly()}] doesn't contains an username!"
                 )
-                // TODO: show error
+                showRedToastEvent.postValue(
+                    Event(R.string.assistant_login_address_without_username_toast)
+                )
                 return@postOnCoreThread
             }
 

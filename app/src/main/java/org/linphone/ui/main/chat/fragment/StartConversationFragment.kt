@@ -106,7 +106,7 @@ class StartConversationFragment : GenericAddressPickerFragment() {
             it.consume { error ->
                 Log.i("$TAG Conversation creation error, showing red toast")
                 (requireActivity() as GenericActivity).showRedToast(
-                    error,
+                    getString(error),
                     R.drawable.warning_circle
                 )
             }
@@ -151,7 +151,9 @@ class StartConversationFragment : GenericAddressPickerFragment() {
                     dialog.currentFocus?.hideKeyboard()
                     dialog.dismiss()
                 } else {
-                    // TODO: show error
+                    val message = getString(R.string.conversation_invalid_empty_subject_toast)
+                    val icon = R.drawable.warning_circle
+                    (requireActivity() as GenericActivity).showRedToast(message, icon)
                 }
             }
         }

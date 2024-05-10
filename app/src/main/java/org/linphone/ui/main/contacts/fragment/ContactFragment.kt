@@ -224,7 +224,11 @@ class ContactFragment : SlidingPaneChildFragment() {
                 Log.w(
                     "$TAG Contact [${viewModel.contact.value?.name?.value}] has been deleted"
                 )
-                // TODO: show green toast
+
+                val message = getString(R.string.contact_deleted_toast)
+                val icon = R.drawable.check
+                (requireActivity() as GenericActivity).showGreenToast(message, icon)
+
                 goBack()
             }
         }

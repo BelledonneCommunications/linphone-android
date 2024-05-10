@@ -131,6 +131,15 @@ class LandingFragment : Fragment() {
             }
         }
 
+        viewModel.showRedToastEvent.observe(viewLifecycleOwner) {
+            it.consume { message ->
+                (requireActivity() as GenericActivity).showRedToast(
+                    getString(message),
+                    R.drawable.warning_circle
+                )
+            }
+        }
+
         coreContext.postOnCoreThread {
             val dialPlan = PhoneNumberUtils.getDeviceDialPlan(requireContext())
             if (dialPlan != null) {

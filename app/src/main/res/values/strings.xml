@@ -159,6 +159,8 @@
     <string name="assistant_scan_qr_code">Scan QR code</string>
     <string name="assistant_login_third_party_sip_account">Use a third party SIP account</string>
     <string name="assistant_login_using_single_sign_on">Single sign on</string>
+    <string name="assistant_login_cant_parse_address_toast">SIP address is invalid!</string>
+    <string name="assistant_login_address_without_username_toast">SIP address doesn\'t contains a username!</string>
     <string name="assistant_no_account_yet">No account yet?</string>
     <string name="assistant_account_register">Register</string>
     <string name="assistant_account_creation_sms_confirmation_explanation">We have sent a verification code on your phone number %1$s.\n\nPlease enter the verification code below:</string>
@@ -270,6 +272,10 @@
     <string name="settings_contacts_carddav_username_title">Username</string>
     <string name="settings_contacts_carddav_password_title">Password</string>
     <string name="settings_contacts_carddav_realm_title">Auth realm</string>
+    <string name="settings_contacts_carddav_sync_successful_toast">Synchronization was successful</string>
+    <string name="settings_contacts_carddav_sync_error_toast">Synchronization error!</string>
+    <string name="settings_contacts_carddav_deleted_toast">CardDAV account removed</string>
+    <string name="settings_contacts_carddav_mandatory_field_not_filled_toast">At least one mandatory field wasn\'t filled</string>
     <string name="settings_contacts_ldap_server_url_title">Server URL</string>
     <string name="settings_contacts_ldap_bind_dn_title">Bind DN</string>
     <string name="settings_contacts_ldap_password_title">Password</string>
@@ -283,6 +289,7 @@
     <string name="settings_contacts_ldap_name_attributes_title">Name attributes</string>
     <string name="settings_contacts_ldap_sip_attributes_title">SIP attributes</string>
     <string name="settings_contacts_ldap_sip_domain_title">SIP domain</string>
+    <string name="settings_contacts_ldap_error_toast">A error occurred, LDAP server not saved!</string>
     <string name="settings_meetings_title">Meetings</string>
     <string name="settings_meetings_default_layout_title">Default layout</string>
     <string name="settings_meetings_layout_active_speaker_label">Active speaker</string>
@@ -349,6 +356,7 @@
     <string name="account_settings_dialog_invalid_password_title">Authentication needed</string>
     <string name="account_settings_dialog_invalid_password_message">Connection failed because authentication is missing or invalid for account \n%s.\n\nYou can provide password again, or check your account configuration in the settings.</string>
     <string name="account_settings_dialog_invalid_password_hint">New password</string>
+    <string name="account_failed_to_find_identity_toast">Failed to find matching account!</string>
 
     <!-- Call history -->
     <string name="history_title">Call history</string>
@@ -387,6 +395,7 @@
     <string name="contact_editor_error_saving_contact_toast">Failed to create contact!</string>
     <string name="contact_editor_dialog_abort_confirmation_title">Don\'t save changes?</string>
     <string name="contact_editor_dialog_abort_confirmation_message">All changes will be lost</string>
+    <string name="contact_editor_mandatory_field_not_filled_toast">At least one mandatory field wasn\'t filled</string>
 
     <string name="contact_details_numbers_and_addresses_title">Phone numbers &amp; SIP addresses</string>
     <string name="contact_details_company_name">Company:</string>
@@ -401,6 +410,7 @@
     <string name="contact_details_share">Share</string>
     <string name="contact_details_delete">Delete</string>
     <string name="contact_sms_invite_content">Hello, join me on &appName;! You can download it for free at %s</string>
+    <string name="contact_deleted_toast">Contact has been removed</string>
 
     <string name="contact_dialog_increase_trust_level_title">Increase trust level</string>
     <string name="contact_dialog_increase_trust_level_message">You\'re about to make a call to $1%s\'s device $2%s.\nDo you want to make the call?</string>
@@ -443,6 +453,7 @@
     <string name="conversation_ephemeral_messages_duration_one_week">1 week</string>
     <string name="new_conversation_title">New conversation</string>
     <string name="new_group_conversation_title">New group conversation</string>
+    <string name="conversation_invalid_empty_subject_toast">Please enter a name for the conversation</string>
     <string name="new_conversation_search_bar_filter_hint">Search contact</string>
     <string name="new_conversation_create_group">Create a group conversation</string>
     <string name="new_conversation_no_contact">No contact and no suggestion for the moment…</string>
@@ -452,6 +463,7 @@
         <item quantity="one">%s is composing…</item>
         <item quantity="other">%s are composing…</item>
     </plurals>
+    <string name="conversation_creation_error_toast">Failed to create conversation!</string>
     <string name="conversation_add_participants_title">Add participants</string>
     <string name="conversation_reply_to_message_title">Replying to:</string>
     <string name="conversation_menu_search_in_messages">Search</string>
@@ -478,6 +490,9 @@
     <string name="conversation_dialog_open_file_label">Open file</string>
     <string name="conversation_dialog_export_file_label">Export file</string>
     <string name="conversation_message_deleted_toast">Message has been deleted</string>
+    <string name="conversation_failed_to_create_toast">Failed to create conversation!</string>
+    <string name="conversation_invalid_participant_due_to_security_mode_toast">Can\'t create conversation with a participant not on the same domain due to security restrictions!</string>
+    <string name="conversation_media_not_found_toast">Selected media wasn\'t found</string>
 
     <string name="conversation_info_participants_list_title">Group members</string>
     <string name="conversation_info_add_participants_label">Add participants</string>
@@ -547,6 +562,10 @@
     <string name="meeting_info_created_toast">Meeting has been created</string>
     <string name="meeting_info_updated_toast">Meeting has been updated</string>
     <string name="meeting_info_cancelled_toast">Meeting has been cancelled</string>
+    <string name="meeting_failed_to_schedule_toast">Failed to schedule meeting!</string>
+    <string name="meeting_schedule_mandatory_field_not_filled_toast">A least a mandatory field wasn\'t filled</string>
+    <string name="meeting_failed_to_send_invites_toast">Failed to send all invites to meeting!</string>
+    <string name="meeting_failed_to_send_part_of_invites_toast">Failed to send invites to some participants of the meeting!</string>
 
     <string name="meeting_waiting_room_join">Join</string>
     <string name="meeting_waiting_room_cancel">Cancel</string>
@@ -622,19 +641,23 @@
     <string name="conference_call_empty">Waiting for other participants…</string>
     <string name="conference_action_screen_sharing">Screen share</string>
     <string name="conference_action_show_participants">Participants</string>
+    <string name="conference_failed_to_create_group_call_toast">Failed to create a group call!</string>
     <plurals name="conference_participants_list_title">
         <item quantity="one">%s participant</item>
         <item quantity="other">%s participants</item>
     </plurals>
     <string name="conference_confirm_removing_participant_dialog_title">Remove %s from conference?</string>
     <string name="conference_confirm_removing_participant_dialog_message">Are you sure you want to remove this participant from the conference?</string>
+    <string name="conference_participant_was_kicked_out_toast">Participant was kicked out of conference</string>
     <string name="conference_participant_joining_text">Joining…</string>
     <string name="conference_participant_paused_text">Paused</string>
     <string name="conference_active_speaker_is_screen_sharing">is sharing it\'s screen</string>
+    <string name="conference_failed_to_add_participant_invalid_address_toast">Invalid SIP address, can\'t be added to conference</string>
 
     <string name="conference_layout_grid">Mosaic</string>
     <string name="conference_layout_active_speaker">Speaker</string>
     <string name="conference_layout_audio_only">Audio only</string>
+    <string name="conference_too_many_participants_for_mosaic_layout_toast">Too many participants for mosaic layout</string>
 
     <string name="conference_remotely_hosted_title">Remote group call</string>
     <string name="conference_locally_hosted_title">Local group call</string>

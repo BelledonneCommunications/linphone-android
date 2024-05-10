@@ -35,6 +35,7 @@ import org.linphone.R
 import org.linphone.core.TransportType
 import org.linphone.core.tools.Log
 import org.linphone.databinding.AccountSettingsFragmentBinding
+import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.fragment.GenericFragment
 import org.linphone.ui.main.settings.viewmodel.AccountSettingsViewModel
 import org.linphone.utils.Event
@@ -122,7 +123,9 @@ class AccountSettingsFragment : GenericFragment() {
                     Log.e(
                         "$TAG Failed to find an account matching this identity address [$identity]"
                     )
-                    // TODO: show error
+                    val message = getString(R.string.account_failed_to_find_identity_toast)
+                    val icon = R.drawable.warning_circle
+                    (requireActivity() as GenericActivity).showRedToast(message, icon)
                     goBack()
                 }
             }

@@ -186,6 +186,15 @@ class ScheduleMeetingFragment : GenericFragment() {
             }
         }
 
+        viewModel.showRedToastEvent.observe(viewLifecycleOwner) {
+            it.consume { message ->
+                (requireActivity() as GenericActivity).showRedToast(
+                    getString(message),
+                    R.drawable.warning_circle
+                )
+            }
+        }
+
         sharedViewModel.listOfSelectedSipUrisEvent.observe(viewLifecycleOwner) {
             it.consume { list ->
                 Log.i(

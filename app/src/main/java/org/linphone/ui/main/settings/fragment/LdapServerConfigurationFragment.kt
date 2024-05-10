@@ -80,10 +80,10 @@ class LdapServerConfigurationFragment : GenericFragment() {
             }
         }
 
-        viewModel.showErrorToastEvent.observe(viewLifecycleOwner) {
+        viewModel.showRedToastEvent.observe(viewLifecycleOwner) {
             it.consume { pair ->
-                val icon = pair.first
-                val message = pair.second
+                val message = getString(pair.first)
+                val icon = pair.second
                 (requireActivity() as GenericActivity).showRedToast(message, icon)
             }
         }

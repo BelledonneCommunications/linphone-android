@@ -80,6 +80,10 @@ class ConferenceViewModel {
         MutableLiveData<Event<Pair<String, Participant>>>()
     }
 
+    val showRedToastEvent: MutableLiveData<Event<Int>> by lazy {
+        MutableLiveData<Event<Int>>()
+    }
+
     private lateinit var conference: Conference
 
     private val conferenceListener = object : ConferenceListenerStub() {
@@ -305,7 +309,9 @@ class ConferenceViewModel {
                     Log.e(
                         "$TAG Failed to parse SIP URI [$uri] into address, can't add it to the conference!"
                     )
-                    // TODO: notify user
+                    showRedToastEvent.postValue(
+                        Event(R.string.conference_failed_to_add_participant_invalid_address_toast)
+                    )
                 }
             }
             val addressesArray = arrayOfNulls<Address>(addresses.size)
@@ -691,7 +697,9 @@ class ConferenceViewModel {
                 "$TAG Too many participant devices for grid layout, switching to active speaker layout"
             )
             setNewLayout(ACTIVE_SPEAKER_LAYOUT)
-            // TODO: notify user
+            showRedToastEvent.postValue(
+                Event(R.string.conference_too_many_participants_for_mosaic_layout_toast)
+            )
         }
     }
 }

@@ -180,6 +180,15 @@ class NewContactFragment : GenericFragment() {
                 removeCell(model)
             }
         }
+
+        viewModel.showRedToastEvent.observe(viewLifecycleOwner) {
+            it.consume { message ->
+                (requireActivity() as GenericActivity).showRedToast(
+                    getString(message),
+                    R.drawable.warning_circle
+                )
+            }
+        }
     }
 
     override fun onResume() {
