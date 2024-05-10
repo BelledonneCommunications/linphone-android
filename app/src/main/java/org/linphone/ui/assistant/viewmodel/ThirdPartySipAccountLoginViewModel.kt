@@ -124,9 +124,6 @@ class ThirdPartySipAccountLoginViewModel @UiThread constructor() : GenericViewMo
         loginEnabled.addSource(username) {
             loginEnabled.value = isLoginButtonEnabled()
         }
-        loginEnabled.addSource(password) {
-            loginEnabled.value = isLoginButtonEnabled()
-        }
         loginEnabled.addSource(domain) {
             loginEnabled.value = isLoginButtonEnabled()
         }
@@ -143,8 +140,31 @@ class ThirdPartySipAccountLoginViewModel @UiThread constructor() : GenericViewMo
         coreContext.postOnCoreThread { core ->
             core.loadConfigFromXml(corePreferences.thirdPartyDefaultValuesPath)
 
-            val user = username.value.orEmpty().trim()
+            // Remove sip: in front of domain, just in case...
             val domainValue = domain.value.orEmpty().trim()
+            val domain = if (domainValue.startsWith("sip:")) {
+                domainValue.substring("sip:".length)
+            } else {
+                domainValue
+            }
+
+            // Allow to enter SIP identity instead of simply username
+            // in case identity domain doesn't match proxy domain
+            val user = username.value.orEmpty().trim()
+            val identity = if (user.startsWith("sip:")) {
+                if (user.contains("@")) {
+                    user
+                } else {
+                    "$user@$domain"
+                }
+            } else {
+                if (user.contains("@")) {
+                    "sip:$user"
+                } else {
+                    "sip:$user@$domain"
+                }
+            }
+            val identityAddress = Factory.instance().createAddress(identity)
 
             newlyCreatedAuthInfo = Factory.instance().createAuthInfo(
                 user,
@@ -152,19 +172,18 @@ class ThirdPartySipAccountLoginViewModel @UiThread constructor() : GenericViewMo
                 password.value.orEmpty().trim(),
                 null,
                 null,
-                domainValue
+                null
             )
             core.addAuthInfo(newlyCreatedAuthInfo)
 
             val accountParams = core.createAccountParams()
 
-            val identityAddress = Factory.instance().createAddress("sip:$user@$domainValue")
             if (displayName.value.orEmpty().isNotEmpty()) {
                 identityAddress?.displayName = displayName.value.orEmpty().trim()
             }
             accountParams.identityAddress = identityAddress
 
-            val serverAddress = Factory.instance().createAddress("sip:$domainValue")
+            val serverAddress = Factory.instance().createAddress("sip:$domain")
             serverAddress?.transport = when (transport.value.orEmpty().trim()) {
                 TransportType.Tcp.name.uppercase(Locale.getDefault()) -> TransportType.Tcp
                 TransportType.Tls.name.uppercase(Locale.getDefault()) -> TransportType.Tls
@@ -204,6 +223,7 @@ class ThirdPartySipAccountLoginViewModel @UiThread constructor() : GenericViewMo
 
     @UiThread
     private fun isLoginButtonEnabled(): Boolean {
-        return username.value.orEmpty().isNotEmpty() && password.value.orEmpty().isNotEmpty() && domain.value.orEmpty().isNotEmpty()
+        // Password isn't mandatory as authentication could be Bearer
+        return username.value.orEmpty().isNotEmpty() && domain.value.orEmpty().isNotEmpty()
     }
 }

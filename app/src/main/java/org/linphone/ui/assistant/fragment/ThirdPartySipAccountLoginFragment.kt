@@ -38,6 +38,7 @@ import org.linphone.databinding.AssistantThirdPartySipAccountLoginFragmentBindin
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.GenericFragment
 import org.linphone.ui.assistant.viewmodel.ThirdPartySipAccountLoginViewModel
+import org.linphone.ui.main.sso.fragment.SingleSignOnFragmentDirections
 import org.linphone.utils.PhoneNumberUtils
 
 @UiThread
@@ -116,6 +117,22 @@ class ThirdPartySipAccountLoginFragment : GenericFragment() {
                     message,
                     R.drawable.warning_circle
                 )
+            }
+        }
+
+        coreContext.bearerAuthenticationRequestedEvent.observe(viewLifecycleOwner) {
+            it.consume { pair ->
+                val serverUrl = pair.first
+                val username = pair.second
+
+                Log.i(
+                    "$TAG Navigating to Single Sign On Fragment with server URL [$serverUrl] and username [$username]"
+                )
+                val action = SingleSignOnFragmentDirections.actionGlobalSingleSignOnFragment(
+                    serverUrl,
+                    username
+                )
+                findNavController().navigate(action)
             }
         }
 

@@ -137,6 +137,7 @@
     <string name="assistant_third_party_sip_account_warning_explanation">Certaines fonctionalités telles que les conversations de groupe, les vidéo-conférences, etc… nécessitent un compte &appName;.\n\nCes fonctionalités seront masquées si vous utilisez un compte SIP tiers.\n\nPour les activer dans un projet commercial, merci de nous contacter.</string>
     <string name="assistant_third_party_sip_account_create_linphone_account">Je préfère créer un compte</string>
     <string name="assistant_third_party_sip_account_warning_ok">J\'ai compris</string>
+    <string name="assistant_third_party_sip_account_username_or_identity">Nom d\'utilisateur ou identité SIP*</string>
     <string name="assistant_account_secure_mode_title">Choisissez votre mode</string>
     <string name="assistant_account_secure_mode_subtitle">Vous pourrez le changer plus tard</string>
     <string name="assistant_secure_mode_finish_account_login">Continuer</string>

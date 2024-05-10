@@ -114,6 +114,7 @@ class SingleSignOnViewModel : GenericViewModel() {
                             "$singleSignOnUrl/.well-known/openid-configuration"
                         }
                         singleSignOn()
+                        return@RetrieveConfigurationCallback
                     } else {
                         onErrorEvent.postValue(Event("Failed to fetch configuration"))
                         return@RetrieveConfigurationCallback
@@ -158,34 +159,48 @@ class SingleSignOnViewModel : GenericViewModel() {
                 authService = AuthorizationService(coreContext.context)
             }
 
+            val authStateJsonFile = File(
+                coreContext.context.filesDir.absolutePath,
+                "auth_state.json"
+            )
             Log.i("$TAG Starting refresh token request")
-            authService.performTokenRequest(
-                authState.createTokenRefreshRequest()
-            ) { resp, ex ->
-                if (resp != null) {
-                    Log.i("$TAG Token refresh succeeded!")
+            try {
+                authService.performTokenRequest(
+                    authState.createTokenRefreshRequest()
+                ) { resp, ex ->
+                    if (resp != null) {
+                        Log.i("$TAG Token refresh succeeded!")
 
-                    if (::authState.isInitialized) {
-                        Log.i("$TAG Updating AuthState object after refresh token response")
-                        authState.update(resp, ex)
-                        storeAuthStateAsJsonFile()
-                    }
-                    updateTokenInfo()
-                } else {
-                    Log.e(
-                        "$TAG Failed to perform token refresh [$ex], destroying auth_state.json file"
-                    )
-                    onErrorEvent.postValue(Event(ex?.errorDescription.orEmpty()))
-
-                    val file = File(coreContext.context.filesDir.absolutePath, "auth_state.json")
-                    viewModelScope.launch {
-                        FileUtils.deleteFile(file.absolutePath)
-                        Log.w(
-                            "$TAG Previous auth_state.json file deleted, starting single sign on process from scratch"
+                        if (::authState.isInitialized) {
+                            Log.i("$TAG Updating AuthState object after refresh token response")
+                            authState.update(resp, ex)
+                            storeAuthStateAsJsonFile()
+                        }
+                        updateTokenInfo()
+                    } else {
+                        Log.e(
+                            "$TAG Failed to perform token refresh [$ex], destroying auth_state.json file"
                         )
-                        singleSignOn()
+                        onErrorEvent.postValue(Event(ex?.errorDescription.orEmpty()))
+
+                        viewModelScope.launch {
+                            FileUtils.deleteFile(authStateJsonFile.absolutePath)
+                            Log.w(
+                                "$TAG Previous auth_state.json file deleted, starting single sign on process from scratch"
+                            )
+                            singleSignOn()
+                        }
                     }
                 }
+            } catch (ise: IllegalStateException) {
+                Log.e("$TAG Illegal state exception, clearing auth state and trying again: $ise")
+                viewModelScope.launch {
+                    FileUtils.deleteFile(authStateJsonFile.absolutePath)
+                    authState = getAuthState()
+                    performRefreshToken()
+                }
+            } catch (e: Exception) {
+                Log.e("$TAG Failed to perform token request: $e")
             }
         }
     }

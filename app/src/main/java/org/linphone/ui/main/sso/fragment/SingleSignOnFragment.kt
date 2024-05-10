@@ -24,8 +24,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
-import androidx.navigation.navGraphViewModels
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationResponse
 import org.linphone.R
@@ -44,9 +44,7 @@ class SingleSignOnFragment : GenericMainFragment() {
 
     private lateinit var binding: SingleSignOnFragmentBinding
 
-    private val viewModel: SingleSignOnViewModel by navGraphViewModels(
-        R.id.main_nav_graph
-    )
+    private lateinit var viewModel: SingleSignOnViewModel
 
     private val args: SingleSignOnFragmentArgs by navArgs()
 
@@ -62,6 +60,8 @@ class SingleSignOnFragment : GenericMainFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
+
+        viewModel = ViewModelProvider(this)[SingleSignOnViewModel::class.java]
         binding.viewModel = viewModel
         observeToastEvents(viewModel)
 

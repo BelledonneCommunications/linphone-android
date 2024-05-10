@@ -168,4 +168,27 @@
             app:destination="@id/profileModeFragment" />
 
     </fragment>
+
+    <fragment
+        android:id="@+id/singleSignOnFragment"
+        android:name="org.linphone.ui.main.sso.fragment.SingleSignOnFragment"
+        android:label="SingleSignOnFragment"
+        tools:layout="@layout/single_sign_on_fragment">
+        <argument
+            android:name="serverUrl"
+            app:argType="string" />
+        <argument
+            android:name="username"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_singleSignOnFragment"
+        app:destination="@id/singleSignOnFragment"
+        app:launchSingleTop="true"
+        app:enterAnim="@anim/slide_in"
+        app:popExitAnim="@anim/slide_out" />
+
 </navigation>
