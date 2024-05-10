@@ -346,13 +346,16 @@ class ConversationFragment : SlidingPaneChildFragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        viewModel = ViewModelProvider(this)[ConversationViewModel::class.java]
-        sendMessageViewModel = ViewModelProvider(this)[SendMessageInConversationViewModel::class.java]
-
+        // The following prevents re-computing conversation history
+        // when going back from a sub-fragment such as media grid or info
+        if (!::viewModel.isInitialized) {
+            viewModel = ViewModelProvider(this)[ConversationViewModel::class.java]
+        }
         binding.viewModel = viewModel
-        binding.sendMessageViewModel = sendMessageViewModel
-
         observeToastEvents(viewModel)
+
+        sendMessageViewModel = ViewModelProvider(this)[SendMessageInConversationViewModel::class.java]
+        binding.sendMessageViewModel = sendMessageViewModel
         observeToastEvents(sendMessageViewModel)
 
         binding.setBackClickListener {

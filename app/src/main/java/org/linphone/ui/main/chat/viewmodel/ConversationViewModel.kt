@@ -333,6 +333,10 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
             Log.i("$TAG Conversation found and not the same as before, configuring it...")
             chatRoom.addListener(chatRoomListener)
             configureChatRoom()
+        } else {
+            // This is required to have events displayed when fragment is recreated
+            // due to a rotation or theme switching between light & dark for example
+            updateEvents.postValue(Event(true))
         }
     }
 
