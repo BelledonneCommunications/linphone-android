@@ -6,12 +6,15 @@
     <data>
         <import type="android.view.View" />
         <variable
+            name="toggleFullScreenModeClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="viewModel"
-            type="org.linphone.ui.main.file_media_viewer.viewmodel.MediaViewModel" />
+            type="org.linphone.ui.file_viewer.viewmodel.MediaViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:onClick="@{() -> viewModel.toggleFullScreen()}"
+        android:onClick="@{toggleFullScreenModeClickListener}"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/black">
@@ -58,7 +61,7 @@
 
         <com.github.chrisbanes.photoview.PhotoView
             android:id="@+id/image"
-            android:onClick="@{() -> viewModel.toggleFullScreen()}"
+            android:onClick="@{toggleFullScreenModeClickListener}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/illu"

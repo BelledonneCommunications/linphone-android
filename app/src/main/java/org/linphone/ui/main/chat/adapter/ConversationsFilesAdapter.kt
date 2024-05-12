@@ -136,7 +136,7 @@ class ConversationsFilesAdapter :
 
     private class FilesDiffCallback : DiffUtil.ItemCallback<FileModel>() {
         override fun areItemsTheSame(oldItem: FileModel, newItem: FileModel): Boolean {
-            return oldItem.file == newItem.file && oldItem.fileName == newItem.fileName
+            return oldItem.path == newItem.path && oldItem.fileName == newItem.fileName
         }
 
         override fun areContentsTheSame(oldItem: FileModel, newItem: FileModel): Boolean {

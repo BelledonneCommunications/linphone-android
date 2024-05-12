@@ -36,7 +36,7 @@
             android:scaleType="centerCrop"
             android:contentDescription="@{model.isVideoPreview ? @string/content_description_chat_bubble_video : @string/content_description_chat_bubble_image}"
             android:visibility="@{model.isImage || model.isVideoPreview ? View.VISIBLE : View.GONE}"
-            coilBubbleGrid="@{model.file}"
+            coilBubbleGrid="@{model.path}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 

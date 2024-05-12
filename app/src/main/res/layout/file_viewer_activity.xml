@@ -13,13 +13,19 @@
             type="View.OnClickListener" />
         <variable
             name="viewModel"
-            type="org.linphone.ui.main.file_media_viewer.viewmodel.FileViewModel" />
+            type="org.linphone.ui.file_viewer.viewmodel.FileViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/black">
+
+        <androidx.constraintlayout.widget.Group
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewModel.fullScreenMode ? View.GONE : View.VISIBLE}"
+            app:constraint_referenced_ids="back, title, share, save, file_name"/>
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/pdf_view_pager"
@@ -79,7 +85,6 @@
             android:padding="15dp"
             android:src="@drawable/caret_left"
             android:contentDescription="@string/content_description_go_back_icon"
-            android:visibility="@{viewModel.fullScreenMode ? View.GONE : View.VISIBLE}"
             app:tint="?attr/color_main1_500"
             app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintStart_toStartOf="parent"
@@ -94,7 +99,6 @@
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
             android:text=""
-            android:visibility="@{viewModel.fullScreenMode ? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toStartOf="@id/share"
             app:layout_constraintStart_toEndOf="@id/back"
             app:layout_constraintTop_toTopOf="parent"/>
@@ -109,7 +113,6 @@
             android:padding="15dp"
             android:src="@drawable/share_network"
             android:contentDescription="@string/content_description_share_file"
-            android:visibility="@{viewModel.fullScreenMode ? View.GONE : View.VISIBLE}"
             app:tint="?attr/color_main1_500"
             app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintEnd_toStartOf="@id/save"
@@ -125,7 +128,6 @@
             android:padding="15dp"
             android:src="@drawable/download_simple"
             android:contentDescription="@string/content_description_save_file"
-            android:visibility="@{viewModel.fullScreenMode ? View.GONE : View.VISIBLE}"
             app:tint="?attr/color_main1_500"
             app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintEnd_toEndOf="parent"
@@ -143,10 +145,22 @@
             android:textSize="12sp"
             android:textColor="?attr/color_main2_600"
             android:textAlignment="center"
-            android:visibility="@{viewModel.fullScreenMode ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
+
+        <LinearLayout
+            android:id="@+id/toasts_area"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/toast_top_margin"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            app:layout_constraintWidth_max="@dimen/toast_max_width"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

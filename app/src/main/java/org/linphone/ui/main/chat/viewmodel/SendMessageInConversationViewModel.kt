@@ -264,7 +264,7 @@ class SendMessageInConversationViewModel @UiThread constructor() : GenericViewMo
                     }
                     content.name = attachment.fileName
                     // Let the file body handler take care of the upload
-                    content.filePath = attachment.file
+                    content.filePath = attachment.path
 
                     message.addFileContent(content)
                 }
@@ -320,8 +320,8 @@ class SendMessageInConversationViewModel @UiThread constructor() : GenericViewMo
 
         val fileName = FileUtils.getNameFromFilePath(file)
         val timestamp = System.currentTimeMillis() / 1000
-        val model = FileModel(file, fileName, 0, timestamp, isEncrypted = false) { model ->
-            removeAttachment(model.file)
+        val model = FileModel(file, fileName, 0, timestamp, false, file) { model ->
+            removeAttachment(model.path)
         }
 
         list.add(model)
@@ -340,7 +340,7 @@ class SendMessageInConversationViewModel @UiThread constructor() : GenericViewMo
         val list = arrayListOf<FileModel>()
         list.addAll(attachments.value.orEmpty())
         val found = list.find {
-            it.file == file
+            it.path == file
         }
         if (found != null) {
             if (delete) {

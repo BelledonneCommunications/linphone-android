@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.main.file_media_viewer.fragment
+package org.linphone.ui.file_viewer.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -27,9 +27,10 @@ import androidx.annotation.UiThread
 import androidx.lifecycle.ViewModelProvider
 import org.linphone.core.tools.Log
 import org.linphone.databinding.FileMediaViewerChildFragmentBinding
-import org.linphone.ui.main.file_media_viewer.viewmodel.MediaViewModel
+import org.linphone.ui.file_viewer.viewmodel.MediaViewModel
 import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.ui.main.viewmodel.SharedMainViewModel
+import org.linphone.utils.FileUtils
 
 @UiThread
 class MediaViewerFragment : GenericMainFragment() {
@@ -40,6 +41,8 @@ class MediaViewerFragment : GenericMainFragment() {
     private lateinit var binding: FileMediaViewerChildFragmentBinding
 
     private lateinit var viewModel: MediaViewModel
+
+    var fullScreenChanged: ((fullScreen: Boolean) -> Unit)? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,6 +61,7 @@ class MediaViewerFragment : GenericMainFragment() {
         }
 
         viewModel = ViewModelProvider(this)[MediaViewModel::class.java]
+        viewModel.fullScreenMode.value = arguments?.getBoolean("fullScreen", true) ?: true
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
@@ -73,7 +77,8 @@ class MediaViewerFragment : GenericMainFragment() {
             return
         }
 
-        Log.i("$TAG Path argument is [$path]")
+        val exists = FileUtils.doesFileExist(path)
+        Log.i("$TAG Path argument is [$path], it ${if (exists) "exists" else "doesn't exist"}")
         viewModel.loadFile(path)
 
         viewModel.isVideo.observe(viewLifecycleOwner) { isVideo ->
@@ -94,17 +99,14 @@ class MediaViewerFragment : GenericMainFragment() {
             }
         }
 
-        viewModel.fullScreenMode.observe(viewLifecycleOwner) {
-            if (it != sharedViewModel.mediaViewerFullScreenMode.value) {
-                sharedViewModel.mediaViewerFullScreenMode.value = it
-            }
+        binding.setToggleFullScreenModeClickListener {
+            viewModel.toggleFullScreen()
+            fullScreenChanged?.invoke(viewModel.fullScreenMode.value == true)
         }
     }
 
     override fun onResume() {
         super.onResume()
-
-        viewModel.fullScreenMode.value = sharedViewModel.mediaViewerFullScreenMode.value
 
         if (viewModel.isVideo.value == true) {
             Log.i("$TAG Resumed, starting video player")

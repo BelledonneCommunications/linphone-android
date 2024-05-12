@@ -17,18 +17,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.main.file_media_viewer.adapter
+package org.linphone.ui.file_viewer.adapter
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import org.linphone.core.tools.Log
-import org.linphone.ui.main.chat.viewmodel.ConversationMediaListViewModel
-import org.linphone.ui.main.file_media_viewer.fragment.MediaViewerFragment
+import org.linphone.ui.file_viewer.fragment.MediaViewerFragment
+import org.linphone.ui.file_viewer.viewmodel.MediaListViewModel
 
-class MediaListAdapter(fragment: Fragment, private val viewModel: ConversationMediaListViewModel) : FragmentStateAdapter(
-    fragment
-) {
+class MediaListAdapter(
+    fragmentActivity: FragmentActivity,
+    private val viewModel: MediaListViewModel,
+    private val lambda: ((fullScreen: Boolean) -> Unit)
+) :
+    FragmentStateAdapter(fragmentActivity) {
     companion object {
         private const val TAG = "[Media List Adapter]"
     }
@@ -37,12 +41,22 @@ class MediaListAdapter(fragment: Fragment, private val viewModel: ConversationMe
         return viewModel.mediaList.value.orEmpty().size
     }
 
+    override fun getItemId(position: Int): Long {
+        return viewModel.mediaList.value.orEmpty().getOrNull(position)?.originalPath.hashCode().toLong()
+    }
+
+    override fun containsItem(itemId: Long): Boolean {
+        return viewModel.mediaList.value.orEmpty().any { it.originalPath.hashCode().toLong() == itemId }
+    }
+
     override fun createFragment(position: Int): Fragment {
         val fragment = MediaViewerFragment()
+        fragment.fullScreenChanged = lambda
         fragment.arguments = Bundle().apply {
-            val path = viewModel.mediaList.value.orEmpty().getOrNull(position)?.file
-            Log.i("$TAG Path is [$path] for position [$position]")
+            val path = viewModel.mediaList.value.orEmpty().getOrNull(position)?.path
+            Log.d("$TAG Path is [$path] for position [$position]")
             putString("path", path)
+            putBoolean("fullScreen", viewModel.fullScreenMode.value == true)
         }
         return fragment
     }

@@ -35,11 +35,12 @@ import org.linphone.utils.FileUtils
 import org.linphone.utils.TimestampUtils
 
 class FileModel @AnyThread constructor(
-    val file: String,
+    val path: String,
     val fileName: String,
     val fileSize: Long,
-    private val fileCreationTimestamp: Long,
-    private val isEncrypted: Boolean,
+    val fileCreationTimestamp: Long,
+    val isEncrypted: Boolean,
+    val originalPath: String,
     val isWaitingToBeDownloaded: Boolean = false,
     private val onClicked: ((model: FileModel) -> Unit)? = null
 ) {
@@ -82,7 +83,7 @@ class FileModel @AnyThread constructor(
         formattedFileSize.postValue(FileUtils.bytesToDisplayableSize(fileSize))
 
         if (!isWaitingToBeDownloaded) {
-            val extension = FileUtils.getExtensionFromFileName(file)
+            val extension = FileUtils.getExtensionFromFileName(path)
             isPdf = extension == "pdf"
 
             val mime = FileUtils.getMimeTypeFromExtension(extension)
@@ -113,9 +114,9 @@ class FileModel @AnyThread constructor(
     @AnyThread
     fun destroy() {
         if (isEncrypted) {
-            Log.i("$TAG [VFS] Deleting plain file in cache: $file")
+            Log.i("$TAG [VFS] Deleting plain file in cache: $path")
             scope.launch {
-                FileUtils.deleteFile(file)
+                FileUtils.deleteFile(path)
             }
         }
     }
@@ -127,22 +128,22 @@ class FileModel @AnyThread constructor(
 
     @AnyThread
     suspend fun deleteFile() {
-        Log.i("$TAG Deleting file [$file]")
-        FileUtils.deleteFile(file)
+        Log.i("$TAG Deleting file [$path]")
+        FileUtils.deleteFile(path)
     }
 
     private fun getDuration() {
         try {
             val retriever = MediaMetadataRetriever()
-            retriever.setDataSource(coreContext.context, Uri.parse(file))
+            retriever.setDataSource(coreContext.context, Uri.parse(path))
             val durationInMs = retriever.extractMetadata(METADATA_KEY_DURATION)?.toInt() ?: 0
             val seconds = durationInMs / 1000
             val duration = TimestampUtils.durationToString(seconds)
-            Log.d("$TAG Duration for file [$file] is $duration")
+            Log.d("$TAG Duration for file [$path] is $duration")
             audioVideoDuration.postValue(duration)
             retriever.release()
         } catch (e: Exception) {
-            Log.e("$TAG Failed to get duration for file [$file]: $e")
+            Log.e("$TAG Failed to get duration for file [$path]: $e")
         }
     }
 }

@@ -38,6 +38,7 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatMediaFragmentBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.chat.adapter.ConversationsFilesAdapter
+import org.linphone.ui.main.chat.model.FileModel
 import org.linphone.ui.main.chat.viewmodel.ConversationMediaListViewModel
 import org.linphone.ui.main.fragment.SlidingPaneChildFragment
 import org.linphone.utils.Event
@@ -83,7 +84,9 @@ class ConversationMediaListFragment : SlidingPaneChildFragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        viewModel = ViewModelProvider(this)[ConversationMediaListViewModel::class.java]
+        if (!::viewModel.isInitialized) {
+            viewModel = ViewModelProvider(this)[ConversationMediaListViewModel::class.java]
+        }
         binding.viewModel = viewModel
         observeToastEvents(viewModel)
 
@@ -126,8 +129,6 @@ class ConversationMediaListFragment : SlidingPaneChildFragment() {
                 return 1
             }
         }
-        // This isn't supported by GridLayoutManager, it will crash
-        // layoutManager.stackFromEnd = true
         binding.mediaList.layoutManager = layoutManager
 
         if (binding.mediaList.adapter != adapter) {
@@ -155,13 +156,14 @@ class ConversationMediaListFragment : SlidingPaneChildFragment() {
 
         viewModel.openMediaEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
-                Log.i("$TAG User clicked on file [${model.file}], let's display it in file viewer")
-                goToFileViewer(model.file)
+                Log.i("$TAG User clicked on file [${model.path}], let's display it in file viewer")
+                goToFileViewer(model)
             }
         }
     }
 
-    private fun goToFileViewer(path: String) {
+    private fun goToFileViewer(fileModel: FileModel) {
+        val path = fileModel.path
         Log.i("$TAG Navigating to file viewer fragment with path [$path]")
         val extension = FileUtils.getExtensionFromFileName(path)
         val mime = FileUtils.getMimeTypeFromExtension(extension)
@@ -171,6 +173,9 @@ class ConversationMediaListFragment : SlidingPaneChildFragment() {
             putString("localSipUri", viewModel.localSipUri)
             putString("remoteSipUri", viewModel.remoteSipUri)
             putString("path", path)
+            putBoolean("isEncrypted", fileModel.isEncrypted)
+            putLong("timestamp", fileModel.fileCreationTimestamp)
+            putString("originalPath", fileModel.originalPath)
         }
         when (FileUtils.getMimeType(mime)) {
             FileUtils.MimeType.Image, FileUtils.MimeType.Video, FileUtils.MimeType.Audio -> {

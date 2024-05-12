@@ -30,7 +30,7 @@
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             android:contentDescription="@{model.isVideoPreview ? @string/content_description_chat_bubble_video : @string/content_description_chat_bubble_image}"
-            coilBubble="@{model.file}"
+            coilBubble="@{model.path}"
             app:layout_constraintHeight_max="@dimen/chat_bubble_big_image_max_size"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

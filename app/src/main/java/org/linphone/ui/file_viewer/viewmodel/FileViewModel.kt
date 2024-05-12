@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.main.file_media_viewer.viewmodel
+package org.linphone.ui.file_viewer.viewmodel
 
 import android.graphics.Bitmap
 import android.graphics.pdf.PdfRenderer
@@ -119,14 +119,15 @@ class FileViewModel @UiThread constructor() : GenericViewModel() {
         mimeType.postValue(mime)
         when (FileUtils.getMimeType(mime)) {
             FileUtils.MimeType.Pdf -> {
-                Log.i("$TAG File [$file] seems to be a PDF")
+                Log.d("$TAG File [$file] seems to be a PDF")
                 loadPdf()
             }
             FileUtils.MimeType.PlainText -> {
-                Log.i("$TAG File [$file] seems to be plain text")
+                Log.d("$TAG File [$file] seems to be plain text")
                 loadPlainText()
             }
             else -> {
+                Log.e("$TAG Unexpected MIME type [$mime] for file at [$file]")
                 fileReadyEvent.value = Event(false)
             }
         }
@@ -158,7 +159,7 @@ class FileViewModel @UiThread constructor() : GenericViewModel() {
                     val page: PdfRenderer.Page = pdfRenderer.openPage(index)
                     currentPdfPage = page
 
-                    Log.i(
+                    Log.d(
                         "$TAG Page size is ${page.width}/${page.height}, screen size is $screenWidth/$screenHeight"
                     )
                     val bm = Bitmap.createBitmap(

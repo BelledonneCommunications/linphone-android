@@ -17,29 +17,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.main.chat.viewmodel
+package org.linphone.ui.file_viewer.viewmodel
 
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.chat.model.FileModel
-import org.linphone.utils.Event
+import org.linphone.ui.main.chat.viewmodel.AbstractConversationViewModel
+import org.linphone.utils.FileUtils
 import org.linphone.utils.LinphoneUtils
 
-class ConversationMediaListViewModel @UiThread constructor() : AbstractConversationViewModel() {
+class MediaListViewModel @UiThread constructor() : AbstractConversationViewModel() {
     companion object {
-        private const val TAG = "[Conversation Media List ViewModel]"
+        private const val TAG = "[Media List ViewModel]"
     }
 
     val mediaList = MutableLiveData<List<FileModel>>()
 
-    val openMediaEvent: MutableLiveData<Event<FileModel>> by lazy {
-        MutableLiveData<Event<FileModel>>()
-    }
+    val fullScreenMode = MutableLiveData<Boolean>()
+
+    val currentlyDisplayedFileName = MutableLiveData<String>()
 
     override fun beforeNotifyingChatRoomFound(sameOne: Boolean) {
         loadMediaList()
+    }
+
+    init {
+        fullScreenMode.value = true
     }
 
     override fun onCleared() {
@@ -48,14 +53,19 @@ class ConversationMediaListViewModel @UiThread constructor() : AbstractConversat
         mediaList.value.orEmpty().forEach(FileModel::destroy)
     }
 
+    @UiThread
+    fun initTempModel(path: String, timestamp: Long, isEncrypted: Boolean, originalPath: String) {
+        val name = FileUtils.getNameFromFilePath(path)
+        val model = FileModel(path, name, 0, timestamp, isEncrypted, originalPath)
+        mediaList.postValue(arrayListOf(model))
+    }
+
     @WorkerThread
     private fun loadMediaList() {
         val list = arrayListOf<FileModel>()
-        Log.i(
-            "$TAG Loading media contents for conversation [${LinphoneUtils.getChatRoomId(
-                chatRoom
-            )}]"
-        )
+        val chatRoomId = LinphoneUtils.getChatRoomId(chatRoom)
+        Log.i("$TAG Loading media contents for conversation [$chatRoomId]")
+
         val media = chatRoom.mediaContents
         Log.i("$TAG [${media.size}] media have been fetched")
         for (mediaContent in media) {
@@ -76,13 +86,11 @@ class ConversationMediaListViewModel @UiThread constructor() : AbstractConversat
             val size = mediaContent.size.toLong()
             val timestamp = mediaContent.creationTimestamp
             if (path.isNotEmpty() && name.isNotEmpty()) {
-                val model = FileModel(path, name, size, timestamp, isEncrypted, originalPath) {
-                    openMediaEvent.postValue(Event(it))
-                }
+                val model = FileModel(path, name, size, timestamp, isEncrypted, originalPath)
                 list.add(model)
             }
         }
-        Log.i("$TAG [${media.size}] media have been processed")
+        Log.i("$TAG [${list.size}] media have been processed")
         mediaList.postValue(list)
     }
 }

@@ -80,6 +80,7 @@ import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.chat.ConversationScrollListener
 import org.linphone.ui.main.chat.adapter.ConversationEventAdapter
 import org.linphone.ui.main.chat.adapter.MessageBottomSheetAdapter
+import org.linphone.ui.main.chat.model.FileModel
 import org.linphone.ui.main.chat.model.MessageDeliveryModel
 import org.linphone.ui.main.chat.model.MessageModel
 import org.linphone.ui.main.chat.model.MessageReactionsModel
@@ -614,10 +615,10 @@ class ConversationFragment : SlidingPaneChildFragment() {
         }
 
         viewModel.fileToDisplayEvent.observe(viewLifecycleOwner) {
-            it.consume { file ->
+            it.consume { model ->
                 if (messageLongPressDialog != null) return@consume
-                Log.i("$TAG User clicked on file [$file], let's display it in file viewer")
-                goToFileViewer(file)
+                Log.i("$TAG User clicked on file [${model.path}], let's display it in file viewer")
+                goToFileViewer(model)
             }
         }
 
@@ -892,7 +893,8 @@ class ConversationFragment : SlidingPaneChildFragment() {
         }
     }
 
-    private fun goToFileViewer(path: String) {
+    private fun goToFileViewer(fileModel: FileModel) {
+        val path = fileModel.path
         Log.i("$TAG Navigating to file viewer fragment with path [$path]")
         val extension = FileUtils.getExtensionFromFileName(path)
         val mime = FileUtils.getMimeTypeFromExtension(extension)
@@ -902,6 +904,9 @@ class ConversationFragment : SlidingPaneChildFragment() {
             putString("localSipUri", viewModel.localSipUri)
             putString("remoteSipUri", viewModel.remoteSipUri)
             putString("path", path)
+            putBoolean("isEncrypted", fileModel.isEncrypted)
+            putLong("timestamp", fileModel.fileCreationTimestamp)
+            putString("originalPath", fileModel.originalPath)
         }
         when (FileUtils.getMimeType(mime)) {
             FileUtils.MimeType.Image, FileUtils.MimeType.Video, FileUtils.MimeType.Audio -> {

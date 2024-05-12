@@ -118,7 +118,7 @@ class FileUtils {
                 type.startsWith("application/json") -> MimeType.PlainText
                 else -> MimeType.Unknown
             }
-            Log.i("$TAG MIME type for [$type] is [$mime]")
+            Log.d("$TAG MIME type for [$type] is [$mime]")
             return mime
         }
 
@@ -386,6 +386,11 @@ class FileUtils {
                     Log.e("$TAG File [$filePath] doesn't exists")
                 }
             }
+        }
+
+        fun doesFileExist(path: String): Boolean {
+            val file = File(path)
+            return file.exists()
         }
 
         @AnyThread

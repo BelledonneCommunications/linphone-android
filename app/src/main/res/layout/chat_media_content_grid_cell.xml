@@ -22,7 +22,7 @@
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
             android:contentDescription="@{model.isVideoPreview ? @string/content_description_chat_bubble_video : @string/content_description_chat_bubble_image}"
-            coilBubbleGrid="@{model.file}"
+            coilBubbleGrid="@{model.path}"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

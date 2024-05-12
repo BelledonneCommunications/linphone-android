@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.main.chat.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -36,6 +37,8 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatListFragmentBinding
 import org.linphone.ui.GenericActivity
+import org.linphone.ui.file_viewer.FileViewerActivity
+import org.linphone.ui.file_viewer.MediaViewerActivity
 import org.linphone.ui.main.chat.adapter.ConversationsListAdapter
 import org.linphone.ui.main.chat.viewmodel.ConversationsListViewModel
 import org.linphone.ui.main.fragment.AbstractMainFragment
@@ -85,9 +88,7 @@ class ConversationsListFragment : AbstractMainFragment() {
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
         if (
             findNavController().currentDestination?.id == R.id.startConversationFragment ||
-            findNavController().currentDestination?.id == R.id.meetingWaitingRoomFragment ||
-            findNavController().currentDestination?.id == R.id.fileViewerFragment ||
-            findNavController().currentDestination?.id == R.id.mediaListViewerFragment
+            findNavController().currentDestination?.id == R.id.meetingWaitingRoomFragment
         ) {
             // Holds fragment in place while new fragment slides over it
             return AnimationUtils.loadAnimation(activity, R.anim.hold)
@@ -232,24 +233,23 @@ class ConversationsListFragment : AbstractMainFragment() {
                 if (findNavController().currentDestination?.id == R.id.conversationsListFragment) {
                     val path = bundle.getString("path", "")
                     val isMedia = bundle.getBoolean("isMedia", false)
+                    if (path.isEmpty()) {
+                        Log.e("$TAG Can't navigate to file viewer for empty path!")
+                        return@consume
+                    }
+
                     Log.i(
                         "$TAG Navigating to ${if (isMedia) "media" else "file"} viewer fragment with path [$path]"
                     )
-                    val action = if (isMedia) {
-                        val localSipUri = bundle.getString("localSipUri", "")
-                        val remoteSipUri = bundle.getString("remoteSipUri", "")
-                        ConversationsListFragmentDirections.actionConversationsListFragmentToMediaListViewerFragment(
-                            localSipUri = localSipUri,
-                            remoteSipUri = remoteSipUri,
-                            path = path
-                        )
+                    if (isMedia) {
+                        val intent = Intent(requireActivity(), MediaViewerActivity::class.java)
+                        intent.putExtras(bundle)
+                        startActivity(intent)
                     } else {
-                        ConversationsListFragmentDirections.actionConversationsListFragmentToFileViewerFragment(
-                            path,
-                            null
-                        )
+                        val intent = Intent(requireActivity(), FileViewerActivity::class.java)
+                        intent.putExtras(bundle)
+                        startActivity(intent)
                     }
-                    findNavController().navigate(action)
                 }
             }
         }

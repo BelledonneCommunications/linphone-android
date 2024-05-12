@@ -1,121 +1,79 @@
-/*
- * Copyright (c) 2010-2023 Belledonne Communications SARL.
- *
- * This file is part of linphone-android
- * (see https://www.linphone.org).
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
-package org.linphone.ui.main.file_media_viewer.fragment
+package org.linphone.ui.file_viewer
 
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.core.content.FileProvider
-import androidx.core.view.doOnPreDraw
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
-import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
+import androidx.viewpager2.widget.ViewPager2
 import java.io.File
 import kotlinx.coroutines.launch
 import org.linphone.R
 import org.linphone.core.tools.Log
-import org.linphone.databinding.FileViewerFragmentBinding
-import org.linphone.ui.main.file_media_viewer.adapter.PdfPagesListAdapter
-import org.linphone.ui.main.file_media_viewer.viewmodel.FileViewModel
-import org.linphone.ui.main.fragment.GenericMainFragment
+import org.linphone.databinding.FileViewerActivityBinding
+import org.linphone.ui.GenericActivity
+import org.linphone.ui.file_viewer.adapter.PdfPagesListAdapter
+import org.linphone.ui.file_viewer.viewmodel.FileViewModel
 import org.linphone.utils.FileUtils
 
 @UiThread
-class FileViewerFragment : GenericMainFragment() {
+class FileViewerActivity : GenericActivity() {
     companion object {
-        private const val TAG = "[File Viewer Fragment]"
+        private const val TAG = "[File Viewer Activity]"
 
         private const val EXPORT_FILE_AS_DOCUMENT = 10
     }
 
-    private lateinit var binding: FileViewerFragmentBinding
+    private lateinit var binding: FileViewerActivityBinding
 
     private lateinit var viewModel: FileViewModel
 
     private lateinit var adapter: PdfPagesListAdapter
 
-    private val args: FileViewerFragmentArgs by navArgs()
-
-    private val pageChangedListener = object : OnPageChangeCallback() {
+    private val pageChangedListener = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
             viewModel.pdfCurrentPage.value = (position + 1).toString()
         }
     }
 
-    private var navBarDefaultColor: Int = -1
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        window.navigationBarColor = getColor(R.color.gray_900)
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FileViewerFragmentBinding.inflate(layoutInflater)
-        return binding.root
-    }
-
-    override fun goBack(): Boolean {
-        return findNavController().popBackStack()
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        postponeEnterTransition()
-        super.onViewCreated(view, savedInstanceState)
-
-        navBarDefaultColor = requireActivity().window.navigationBarColor
+        binding = DataBindingUtil.setContentView(this, R.layout.file_viewer_activity)
+        binding.lifecycleOwner = this
+        setUpToastsArea(binding.toastsArea)
 
         viewModel = ViewModelProvider(this)[FileViewModel::class.java]
-
-        binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
-        observeToastEvents(viewModel)
 
-        val path = args.path
-        val preLoadedContent = args.content
+        val args = intent.extras
+        val path = args?.getString("path")
+        if (path.isNullOrEmpty()) {
+            finish()
+            return
+        }
+
+        val preLoadedContent = args.getString("content")
         Log.i(
             "$TAG Path argument is [$path], pre loaded text content is ${if (preLoadedContent.isNullOrEmpty()) "not available" else "available, using it"}"
         )
         viewModel.loadFile(path, preLoadedContent)
 
         binding.setBackClickListener {
-            goBack()
+            finish()
         }
 
-        viewModel.fileReadyEvent.observe(viewLifecycleOwner) {
+        viewModel.fileReadyEvent.observe(this) {
             it.consume { done ->
-                if (done) {
-                    (view.parent as? ViewGroup)?.doOnPreDraw {
-                        startPostponedEnterTransition()
-                    }
-                } else {
-                    (view.parent as? ViewGroup)?.doOnPreDraw {
-                        Log.e("$TAG Failed to open file, going back")
-                        goBack()
-                    }
+                if (!done) {
+                    finish()
+                    Log.e("$TAG Failed to open file, going back")
                 }
             }
         }
@@ -124,7 +82,7 @@ class FileViewerFragment : GenericMainFragment() {
             shareFile()
         }
 
-        viewModel.pdfRendererReadyEvent.observe(viewLifecycleOwner) {
+        viewModel.pdfRendererReadyEvent.observe(this) {
             it.consume {
                 Log.i("$TAG PDF renderer is ready, attaching adapter to ViewPager")
                 if (viewModel.screenWidth == 0 || viewModel.screenHeight == 0) {
@@ -136,7 +94,7 @@ class FileViewerFragment : GenericMainFragment() {
             }
         }
 
-        viewModel.exportPlainTextFileEvent.observe(viewLifecycleOwner) {
+        viewModel.exportPlainTextFileEvent.observe(this) {
             it.consume { name ->
                 val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
                     addCategory(Intent.CATEGORY_OPENABLE)
@@ -147,7 +105,7 @@ class FileViewerFragment : GenericMainFragment() {
             }
         }
 
-        viewModel.exportPdfEvent.observe(viewLifecycleOwner) {
+        viewModel.exportPdfEvent.observe(this) {
             it.consume { name ->
                 val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
                     addCategory(Intent.CATEGORY_OPENABLE)
@@ -160,9 +118,6 @@ class FileViewerFragment : GenericMainFragment() {
     }
 
     override fun onResume() {
-        // Force this navigation bar color
-        requireActivity().window.navigationBarColor = requireContext().getColor(R.color.gray_900)
-
         super.onResume()
 
         updateScreenSize()
@@ -172,13 +127,6 @@ class FileViewerFragment : GenericMainFragment() {
     override fun onPause() {
         binding.pdfViewPager.unregisterOnPageChangeCallback(pageChangedListener)
         super.onPause()
-    }
-
-    override fun onDestroy() {
-        // Reset default navigation bar color
-        requireActivity().window.navigationBarColor = navBarDefaultColor
-
-        super.onDestroy()
     }
 
     @Deprecated("Deprecated in Java")
@@ -194,7 +142,7 @@ class FileViewerFragment : GenericMainFragment() {
 
     private fun updateScreenSize() {
         val displayMetrics = DisplayMetrics()
-        requireActivity().windowManager.defaultDisplay.getMetrics(displayMetrics)
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
         viewModel.screenHeight = displayMetrics.heightPixels
         viewModel.screenWidth = displayMetrics.widthPixels
         Log.i(
@@ -206,15 +154,15 @@ class FileViewerFragment : GenericMainFragment() {
         lifecycleScope.launch {
             val filePath = FileUtils.getProperFilePath(viewModel.getFilePath())
             val copy = FileUtils.getFilePath(
-                requireContext(),
+                baseContext,
                 Uri.parse(filePath),
                 overrideExisting = true,
                 copyToCache = true
             )
             if (!copy.isNullOrEmpty()) {
                 val publicUri = FileProvider.getUriForFile(
-                    requireContext(),
-                    requireContext().getString(R.string.file_provider),
+                    baseContext,
+                    getString(R.string.file_provider),
                     File(copy)
                 )
                 Log.i("$TAG Public URI for file is [$publicUri], starting intent chooser")

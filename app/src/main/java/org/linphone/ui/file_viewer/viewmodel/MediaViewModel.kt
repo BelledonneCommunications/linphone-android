@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.linphone.ui.main.file_media_viewer.viewmodel
+package org.linphone.ui.file_viewer.viewmodel
 
 import android.media.AudioAttributes
 import android.media.MediaPlayer
@@ -75,22 +75,24 @@ class MediaViewModel @UiThread constructor() : GenericViewModel() {
         val mime = FileUtils.getMimeTypeFromExtension(extension)
         when (FileUtils.getMimeType(mime)) {
             FileUtils.MimeType.Image -> {
-                Log.i("$TAG File [$file] seems to be an image")
+                Log.d("$TAG File [$file] seems to be an image")
                 isImage.value = true
                 path.value = file
             }
             FileUtils.MimeType.Video -> {
-                Log.i("$TAG File [$file] seems to be a video")
+                Log.d("$TAG File [$file] seems to be a video")
                 isVideo.value = true
                 isVideoPlaying.value = false
             }
             FileUtils.MimeType.Audio -> {
-                Log.i("$TAG File [$file] seems to be an audio file")
+                Log.d("$TAG File [$file] seems to be an audio file")
                 isAudio.value = true
 
                 initMediaPlayer()
             }
-            else -> { }
+            else -> {
+                Log.e("$TAG Unexpected MIME type [$mime] for file at [$file]")
+            }
         }
     }
 

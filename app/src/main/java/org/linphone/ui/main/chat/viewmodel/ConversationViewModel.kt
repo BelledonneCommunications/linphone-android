@@ -43,6 +43,7 @@ import org.linphone.core.Participant
 import org.linphone.core.ParticipantInfo
 import org.linphone.core.tools.Log
 import org.linphone.ui.main.chat.model.EventLogModel
+import org.linphone.ui.main.chat.model.FileModel
 import org.linphone.ui.main.chat.model.MessageModel
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
@@ -100,8 +101,8 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
         MutableLiveData<Event<Boolean>>()
     }
 
-    val fileToDisplayEvent: MutableLiveData<Event<String>> by lazy {
-        MutableLiveData<Event<String>>()
+    val fileToDisplayEvent: MutableLiveData<Event<FileModel>> by lazy {
+        MutableLiveData<Event<FileModel>>()
     }
 
     val conferenceToJoinEvent: MutableLiveData<Event<String>> by lazy {
@@ -664,8 +665,8 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
                 groupChatRoom,
                 index > 0,
                 index != groupedEventLogs.size - 1,
-                { file ->
-                    fileToDisplayEvent.postValue(Event(file))
+                { fileModel ->
+                    fileToDisplayEvent.postValue(Event(fileModel))
                 },
                 { conferenceUri ->
                     conferenceToJoinEvent.postValue(Event(conferenceUri))

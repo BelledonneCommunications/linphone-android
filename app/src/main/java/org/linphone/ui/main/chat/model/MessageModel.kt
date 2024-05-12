@@ -73,7 +73,7 @@ class MessageModel @WorkerThread constructor(
     val isForward: Boolean,
     isGroupedWithPreviousOne: Boolean,
     isGroupedWithNextOne: Boolean,
-    private val onContentClicked: ((file: String) -> Unit)? = null,
+    private val onContentClicked: ((fileModel: FileModel) -> Unit)? = null,
     private val onJoinConferenceClicked: ((uri: String) -> Unit)? = null,
     private val onWebUrlClicked: ((url: String) -> Unit)? = null,
     private val onContactClicked: ((friendRefKey: String) -> Unit)? = null,
@@ -355,13 +355,14 @@ class MessageModel @WorkerThread constructor(
 
                     checkAndRepairFilePathIfNeeded(content)
 
+                    val originalPath = content.filePath.orEmpty()
                     val path = if (isFileEncrypted) {
-                        Log.i(
+                        Log.d(
                             "$TAG [VFS] Content is encrypted, requesting plain file path for file [${content.filePath}]"
                         )
                         content.exportPlainFile()
                     } else {
-                        content.filePath ?: ""
+                        originalPath
                     }
                     val name = content.name ?: ""
                     if (path.isNotEmpty()) {
@@ -378,9 +379,10 @@ class MessageModel @WorkerThread constructor(
                                     name,
                                     fileSize,
                                     timestamp,
-                                    isFileEncrypted
+                                    isFileEncrypted,
+                                    originalPath
                                 ) { model ->
-                                    onContentClicked?.invoke(model.file)
+                                    onContentClicked?.invoke(model)
                                 }
                                 filesPath.add(fileModel)
 
@@ -392,9 +394,10 @@ class MessageModel @WorkerThread constructor(
                                     name,
                                     fileSize,
                                     timestamp,
-                                    isFileEncrypted
+                                    isFileEncrypted,
+                                    originalPath
                                 ) { model ->
-                                    onContentClicked?.invoke(model.file)
+                                    onContentClicked?.invoke(model)
                                 }
                                 filesPath.add(fileModel)
 
@@ -414,16 +417,17 @@ class MessageModel @WorkerThread constructor(
                     val timestamp = content.creationTimestamp
                     if (name.isNotEmpty()) {
                         val fileModel = if (isOutgoing && chatMessage.isFileTransferInProgress) {
-                            val path = content.filePath ?: ""
+                            val path = content.filePath.orEmpty()
                             FileModel(
                                 path,
                                 name,
                                 content.fileSize.toLong(),
                                 timestamp,
                                 isFileEncrypted,
+                                path,
                                 false
                             ) { model ->
-                                onContentClicked?.invoke(model.file)
+                                onContentClicked?.invoke(model)
                             }
                         } else {
                             FileModel(
@@ -432,6 +436,7 @@ class MessageModel @WorkerThread constructor(
                                 content.fileSize.toLong(),
                                 timestamp,
                                 isFileEncrypted,
+                                name,
                                 true
                             ) { model ->
                                 downloadContent(model, content)

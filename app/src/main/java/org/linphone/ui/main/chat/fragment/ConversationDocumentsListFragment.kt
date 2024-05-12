@@ -37,6 +37,7 @@ import org.linphone.core.tools.Log
 import org.linphone.databinding.ChatDocumentsFragmentBinding
 import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.chat.adapter.ConversationsFilesAdapter
+import org.linphone.ui.main.chat.model.FileModel
 import org.linphone.ui.main.chat.viewmodel.ConversationDocumentsListViewModel
 import org.linphone.ui.main.fragment.SlidingPaneChildFragment
 import org.linphone.utils.Event
@@ -126,13 +127,14 @@ class ConversationDocumentsListFragment : SlidingPaneChildFragment() {
 
         viewModel.openDocumentEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
-                Log.i("$TAG User clicked on file [${model.file}], let's display it in file viewer")
-                goToFileViewer(model.file)
+                Log.i("$TAG User clicked on file [${model.path}], let's display it in file viewer")
+                goToFileViewer(model)
             }
         }
     }
 
-    private fun goToFileViewer(path: String) {
+    private fun goToFileViewer(fileModel: FileModel) {
+        val path = fileModel.path
         Log.i("$TAG Navigating to file viewer fragment with path [$path]")
         val extension = FileUtils.getExtensionFromFileName(path)
         val mime = FileUtils.getMimeTypeFromExtension(extension)
@@ -142,6 +144,9 @@ class ConversationDocumentsListFragment : SlidingPaneChildFragment() {
             putString("localSipUri", viewModel.localSipUri)
             putString("remoteSipUri", viewModel.remoteSipUri)
             putString("path", path)
+            putBoolean("isEncrypted", fileModel.isEncrypted)
+            putLong("timestamp", fileModel.fileCreationTimestamp)
+            putString("originalPath", fileModel.originalPath)
         }
         when (FileUtils.getMimeType(mime)) {
             FileUtils.MimeType.Pdf, FileUtils.MimeType.PlainText -> {

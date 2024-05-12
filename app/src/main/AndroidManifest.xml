@@ -105,6 +105,16 @@
         </activity>
 
         <activity
+            android:name=".ui.file_viewer.MediaViewerActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true" />
+
+        <activity
+            android:name=".ui.file_viewer.FileViewerActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true" />
+
+        <activity
             android:name=".ui.welcome.WelcomeActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true" />

@@ -32,7 +32,7 @@ class EventLogModel @WorkerThread constructor(
     isFromGroup: Boolean = false,
     isGroupedWithPreviousOne: Boolean = false,
     isGroupedWithNextOne: Boolean = false,
-    onContentClicked: ((file: String) -> Unit)? = null,
+    onContentClicked: ((fileModel: FileModel) -> Unit)? = null,
     onJoinConferenceClicked: ((uri: String) -> Unit)? = null,
     onWebUrlClicked: ((url: String) -> Unit)? = null,
     onContactClicked: ((friendRefKey: String) -> Unit)? = null,

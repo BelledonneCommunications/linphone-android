@@ -32,6 +32,7 @@ import org.linphone.core.CorePreferences
 import org.linphone.core.tools.Log
 import org.linphone.databinding.HelpDebugFragmentBinding
 import org.linphone.ui.GenericActivity
+import org.linphone.ui.file_viewer.FileViewerActivity
 import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.ui.main.help.viewmodel.HelpViewModel
 
@@ -117,11 +118,12 @@ class DebugFragment : GenericMainFragment() {
         viewModel.showConfigFileEvent.observe(viewLifecycleOwner) {
             it.consume { content ->
                 if (findNavController().currentDestination?.id == R.id.debugFragment) {
-                    val action = DebugFragmentDirections.actionDebugFragmentToFileViewerFragment(
-                        CorePreferences.CONFIG_FILE_NAME,
-                        content
-                    )
-                    findNavController().navigate(action)
+                    val intent = Intent(requireActivity(), FileViewerActivity::class.java)
+                    val bundle = Bundle()
+                    bundle.putString("path", CorePreferences.CONFIG_FILE_NAME)
+                    bundle.putString("content", content)
+                    intent.putExtras(bundle)
+                    startActivity(intent)
                 }
             }
         }

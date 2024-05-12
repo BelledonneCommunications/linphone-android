@@ -47,6 +47,7 @@ class SingleSignOnViewModel : GenericViewModel() {
 
         private const val CLIENT_ID = "linphone"
         private const val REDIRECT_URI = "org.linphone:/openidcallback"
+        private const val OPEN_ID_WELL_KNOWN = ".well-known/openid-configuration"
     }
 
     val singleSignOnProcessCompletedEvent = MutableLiveData<Event<Boolean>>()
@@ -106,12 +107,12 @@ class SingleSignOnViewModel : GenericViewModel() {
                     Log.e(
                         "$TAG Failed to fetch configuration on [$singleSignOnUrl]: ${ex.errorDescription}"
                     )
-                    if (!singleSignOnUrl.endsWith(".well-known/openid-configuration")) {
-                        Log.w("$TAG Trying again appending .well-known/openid-configuration to URL")
+                    if (!singleSignOnUrl.endsWith(OPEN_ID_WELL_KNOWN)) {
+                        Log.w("$TAG Trying again appending [$OPEN_ID_WELL_KNOWN] to URL")
                         singleSignOnUrl = if (singleSignOnUrl.endsWith("/")) {
-                            "$singleSignOnUrl.well-known/openid-configuration"
+                            "$singleSignOnUrl$OPEN_ID_WELL_KNOWN"
                         } else {
-                            "$singleSignOnUrl/.well-known/openid-configuration"
+                            "$singleSignOnUrl/$OPEN_ID_WELL_KNOWN"
                         }
                         singleSignOn()
                         return@RetrieveConfigurationCallback
