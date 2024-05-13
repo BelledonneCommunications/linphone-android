@@ -20,10 +20,12 @@
 package org.linphone.ui.call
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.os.Bundle
+import android.os.PowerManager
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
 import androidx.core.view.WindowCompat
@@ -70,6 +72,8 @@ class CallActivity : GenericActivity() {
     private lateinit var callsViewModel: CallsViewModel
     private lateinit var callViewModel: CurrentCallViewModel
 
+    private lateinit var proximityWakeLock: PowerManager.WakeLock
+
     private var bottomSheetDialog: BottomSheetDialogFragment? = null
 
     private var isPipSupported = false
@@ -113,6 +117,16 @@ class CallActivity : GenericActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+        if (!powerManager.isWakeLockLevelSupported(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK)) {
+            Log.w("$TAG PROXIMITY_SCREEN_OFF_WAKE_LOCK isn't supported on this device!")
+        }
+
+        proximityWakeLock = powerManager.newWakeLock(
+            PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK,
+            "$packageName;proximity_sensor"
+        )
 
         binding = DataBindingUtil.setContentView(this, R.layout.call_activity)
         binding.lifecycleOwner = this
@@ -209,6 +223,11 @@ class CallActivity : GenericActivity() {
             }
         }
 
+        callViewModel.proximitySensorEnabled.observe(this) { enabled ->
+            Log.i("$TAG ${if (enabled) "Enabling" else "Disabling"} proximity sensor")
+            enableProximitySensor(enabled)
+        }
+
         callsViewModel.showIncomingCallEvent.observe(this) {
             it.consume {
                 val action = IncomingCallFragmentDirections.actionGlobalIncomingCallFragment()
@@ -291,6 +310,8 @@ class CallActivity : GenericActivity() {
     }
 
     override fun onPause() {
+        enableProximitySensor(false)
+
         super.onPause()
 
         bottomSheetDialog?.dismiss()
@@ -298,6 +319,8 @@ class CallActivity : GenericActivity() {
     }
 
     override fun onDestroy() {
+        enableProximitySensor(false)
+
         super.onDestroy()
 
         coreContext.postOnCoreThread { core ->
@@ -441,5 +464,17 @@ class CallActivity : GenericActivity() {
         val modalBottomSheet = ConferenceLayoutMenuDialogFragment(callViewModel.conferenceModel)
         modalBottomSheet.show(supportFragmentManager, ConferenceLayoutMenuDialogFragment.TAG)
         bottomSheetDialog = modalBottomSheet
+    }
+
+    private fun enableProximitySensor(enable: Boolean) {
+        if (enable && !proximityWakeLock.isHeld) {
+            Log.i("$TAG Acquiring PROXIMITY_SCREEN_OFF_WAKE_LOCK for 2 hours")
+            proximityWakeLock.acquire(7200 * 1000L) // 2 heures
+        } else if (!enable && proximityWakeLock.isHeld) {
+            Log.i(
+                "$TAG Asking to release PROXIMITY_SCREEN_OFF_WAKE_LOCK (next time sensor detects no proximity)"
+            )
+            proximityWakeLock.release(PowerManager.RELEASE_FLAG_WAIT_FOR_NO_PROXIMITY)
+        }
     }
 }

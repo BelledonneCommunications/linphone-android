@@ -152,6 +152,8 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
         MutableLiveData<Event<Boolean>>()
     }
 
+    val proximitySensorEnabled = MutableLiveData<Boolean>()
+
     // To synchronize chronometers in UI
     val callDuration = MutableLiveData<Int>()
 
@@ -385,6 +387,8 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
                 )
                 configureCall(call)
             }
+
+            updateProximitySensor()
         }
 
         @WorkerThread
@@ -401,9 +405,33 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
         }
     }
 
+    @WorkerThread
+    private fun updateProximitySensor() {
+        if (::currentCall.isInitialized) {
+            val callState = currentCall.state
+            if (LinphoneUtils.isCallIncoming(callState) || LinphoneUtils.isCallOutgoing(callState)) {
+                proximitySensorEnabled.postValue(false)
+            } else {
+                if (isSendingVideo.value == true || isReceivingVideo.value == true) {
+                    proximitySensorEnabled.postValue(false)
+                } else {
+                    val outputAudioDevice = currentCall.outputAudioDevice ?: coreContext.core.outputAudioDevice
+                    if (outputAudioDevice != null && outputAudioDevice.type == AudioDevice.Type.Earpiece) {
+                        proximitySensorEnabled.postValue(true)
+                    } else {
+                        proximitySensorEnabled.postValue(false)
+                    }
+                }
+            }
+        } else {
+            proximitySensorEnabled.postValue(false)
+        }
+    }
+
     init {
         fullScreenMode.value = false
         operationInProgress.value = false
+        proximitySensorEnabled.value = false
 
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
@@ -1086,6 +1114,8 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
             audioDevice?.type == AudioDevice.Type.Headphones || audioDevice?.type == AudioDevice.Type.Headset
         )
         isBluetoothEnabled.postValue(audioDevice?.type == AudioDevice.Type.Bluetooth)
+
+        updateProximitySensor()
     }
 
     @WorkerThread
@@ -1117,7 +1147,9 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
         isReceivingVideo.postValue(
             isReceived
         )
-        Log.i("$TAG Is video being sent? [$isSending] Is video being received? [$isReceived]")
+        Log.d("$TAG Is video being sent? [$isSending] Is video being received? [$isReceived]")
+
+        updateProximitySensor()
     }
 
     @AnyThread
