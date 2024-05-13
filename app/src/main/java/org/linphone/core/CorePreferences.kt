@@ -139,17 +139,25 @@ class CorePreferences @UiThread constructor(private val context: Context) {
         }
 
     @get:WorkerThread @set:WorkerThread
-    var themeMainColor: String
-        get() = config.getString("ui", "theme_main_color", "orange")!!
-        set(value) {
-            config.setString("ui", "theme_main_color", value)
-        }
-
-    @get:WorkerThread @set:WorkerThread
     var linphoneConfigurationVersion: Int
         get() = config.getInt("app", "config_version", 50200)
         set(value) {
             config.setInt("app", "config_version", value)
+        }
+
+    /** Allows to make screenshots */
+    @get:WorkerThread @set:WorkerThread
+    var enableSecureMode: Boolean
+        get() = config.getBool("ui", "enable_secure_mode", true)
+        set(value) {
+            config.setBool("ui", "enable_secure_mode", value)
+        }
+
+    @get:WorkerThread @set:WorkerThread
+    var themeMainColor: String
+        get() = config.getString("ui", "theme_main_color", "orange")!!
+        set(value) {
+            config.setString("ui", "theme_main_color", value)
         }
 
     @get:WorkerThread

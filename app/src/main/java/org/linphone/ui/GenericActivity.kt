@@ -24,6 +24,7 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.annotation.DrawableRes
 import androidx.annotation.MainThread
 import androidx.appcompat.app.AppCompatActivity
@@ -67,6 +68,8 @@ open class GenericActivity : AppCompatActivity() {
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, true)
+
+        enableWindowSecureMode(corePreferences.enableSecureMode)
 
         val nightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         val darkModeEnabled = corePreferences.darkMode
@@ -206,6 +209,35 @@ open class GenericActivity : AppCompatActivity() {
                         toastsArea.removeView(child)
                     }
                 }
+            }
+        }
+    }
+
+    private fun enableWindowSecureMode(enable: Boolean) {
+        val flags: Int = window.attributes.flags
+        if ((enable && flags and WindowManager.LayoutParams.FLAG_SECURE != 0) ||
+            (!enable && flags and WindowManager.LayoutParams.FLAG_SECURE == 0)
+        ) {
+            Log.d(
+                "$TAG Secure flag is already ${if (enable) "enabled" else "disabled"}, skipping..."
+            )
+            return
+        }
+
+        if (enable) {
+            Log.i("$TAG Secure flag added to window")
+            window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        } else {
+            Log.w("$TAG Secure flag cleared from window")
+            window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        }
+
+        if (window.decorView.isAttachedToWindow) {
+            Log.d("$TAG Redrawing window decorView to apply flag")
+            try {
+                windowManager.updateViewLayout(window.decorView, window.attributes)
+            } catch (ise: IllegalStateException) {
+                Log.e("$TAG Failed to update window's decorView layout: $ise")
             }
         }
     }
