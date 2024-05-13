@@ -197,7 +197,7 @@
                 android:textSize="14sp"
                 android:textColor="?attr/color_main2_600"
                 android:background="@drawable/edit_text_background"
-                android:inputType="text|textPersonName"
+                android:inputType="text|textPersonName|textCapSentences"
                 android:hint="@string/sip_address_display_name"
                 app:layout_constraintWidth_max="@dimen/text_input_max_width"
                 app:layout_constraintTop_toBottomOf="@id/display_name_label"
