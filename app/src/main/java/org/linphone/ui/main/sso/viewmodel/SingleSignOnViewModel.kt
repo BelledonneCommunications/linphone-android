@@ -33,6 +33,7 @@ import net.openid.appauth.AuthorizationResponse
 import net.openid.appauth.AuthorizationService
 import net.openid.appauth.AuthorizationServiceConfiguration
 import net.openid.appauth.ResponseTypeValues
+import org.json.JSONObject
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.core.Factory
 import org.linphone.core.tools.Log
@@ -326,6 +327,23 @@ class SingleSignOnViewModel : GenericViewModel() {
                 }
                 authInfo.accessToken = accessToken
                 authInfo.refreshToken = refreshToken
+
+                try {
+                    val data = authState.jsonSerializeString()
+                    val json = JSONObject(data)
+                    val lastTokenResponse = json.getJSONObject("mLastTokenResponse")
+                    val request = lastTokenResponse.getJSONObject("request")
+                    val config = request.getJSONObject("configuration")
+                    val tokenEndpoint = config.getString("tokenEndpoint")
+                    Log.i("$TAG Extracted [$tokenEndpoint] token endpoint URL")
+                    authInfo.tokenEndpointUri = tokenEndpoint
+                } catch (e: Exception) {
+                    Log.e(
+                        "$TAG Failed to extract tokenEndpoint from lastTokenResponse in AuthState's JSON: $e"
+                    )
+                }
+
+                authInfo.clientId = CLIENT_ID
                 core.addAuthInfo(authInfo)
 
                 Log.i(
