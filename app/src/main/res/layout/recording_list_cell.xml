@@ -57,10 +57,11 @@
 
             <ImageView
                 android:id="@+id/play_pause"
+                android:onClick="@{() -> model.togglePlayPause()}"
                 android:layout_width="@dimen/icon_size"
                 android:layout_height="@dimen/icon_size"
                 android:layout_marginEnd="16dp"
-                android:src="@drawable/play_fill"
+                android:src="@{model.isPlaying ? @drawable/pause_fill : @drawable/play_fill, default=@drawable/play_fill}"
                 app:layout_constraintTop_toTopOf="@id/title"
                 app:layout_constraintBottom_toBottomOf="@id/title"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -71,7 +72,6 @@
                 android:id="@+id/time"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
                 android:layout_marginTop="3dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
@@ -82,8 +82,43 @@
                 android:ellipsize="end"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/default_text_style_300"
+                android:id="@+id/duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@{model.formattedDuration, default=`00:42`}"
+                android:textSize="12sp"
+                android:textColor="?attr/color_main2_500"
+                android:maxLines="1"
+                android:ellipsize="end"
+                app:layout_constraintTop_toBottomOf="@id/time"
+                app:layout_constraintBottom_toTopOf="@id/progress"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/progress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="10dp"
+                android:max="@{model.duration, default=100}"
+                android:progress="@{model.position, default=75}"
+                app:trackCornerRadius="5dp"
+                app:trackThickness="10dp"
+                app:trackColor="?attr/color_main1_100"
+                app:indicatorColor="?attr/color_main1_500"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/duration"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

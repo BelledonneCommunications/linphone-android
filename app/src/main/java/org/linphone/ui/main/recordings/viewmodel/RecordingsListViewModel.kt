@@ -55,6 +55,11 @@ class RecordingsListViewModel @UiThread constructor() : GenericViewModel() {
         }
     }
 
+    override fun onCleared() {
+        recordings.value.orEmpty().forEach(RecordingModel::destroy)
+        super.onCleared()
+    }
+
     @UiThread
     fun openSearchBar() {
         searchBarVisible.value = true
@@ -82,7 +87,7 @@ class RecordingsListViewModel @UiThread constructor() : GenericViewModel() {
 
     @WorkerThread
     private fun computeList(filter: String) {
-        // TODO FIXME: use filter
+        recordings.value.orEmpty().forEach(RecordingModel::destroy)
         val list = arrayListOf<RecordingModel>()
 
         // TODO FIXME: also load recordings from previous Linphone versions
