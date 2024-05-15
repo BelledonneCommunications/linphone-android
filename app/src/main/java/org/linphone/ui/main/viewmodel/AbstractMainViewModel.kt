@@ -151,6 +151,7 @@ open class AbstractMainViewModel @UiThread constructor() : GenericViewModel() {
                     "$TAG Default account has changed [${defaultAccount.params.identityAddress?.asStringUriOnly()}]"
                 )
 
+                account.value?.destroy()
                 account.postValue(AccountModel(defaultAccount))
             }
 

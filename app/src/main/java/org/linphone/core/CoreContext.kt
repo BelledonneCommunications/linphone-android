@@ -140,6 +140,7 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
         ) {
             Log.i("$TAG Configuring state changed [$status], message is [$message]")
             if (status == ConfiguringState.Successful) {
+                corePreferences.firstLaunch = false
                 showGreenToastEvent.postValue(
                     Event(
                         Pair(

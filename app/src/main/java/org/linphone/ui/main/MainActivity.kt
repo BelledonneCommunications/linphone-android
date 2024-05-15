@@ -224,21 +224,6 @@ class MainActivity : GenericActivity() {
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
 
-        coreContext.postOnCoreThread { core ->
-            if (corePreferences.firstLaunch) {
-                Log.i("$TAG First time Linphone 6.0 has been started, showing Welcome activity")
-                corePreferences.firstLaunch = false
-                coreContext.postOnMainThread {
-                    startActivity(Intent(this, WelcomeActivity::class.java))
-                }
-            } else if (core.accountList.isEmpty()) {
-                Log.w("$TAG No account found, showing Assistant activity")
-                coreContext.postOnMainThread {
-                    startActivity(Intent(this, AssistantActivity::class.java))
-                }
-            }
-        }
-
         if (intent != null) {
             handleIntent(intent, false)
         } else {
@@ -362,87 +347,115 @@ class MainActivity : GenericActivity() {
 
     @MainThread
     private fun handleMainIntent(intent: Intent, isNewIntent: Boolean) {
-        // Prevent navigating to default fragment upon rotation (we only want to do it on first start)
-        if (intent.action == Intent.ACTION_MAIN && intent.type == null && intent.data == null && !isNewIntent) {
-            if (viewModel.mainIntentHandled) {
-                Log.d("$TAG Main intent without type nor data was already handled, do nothing")
-                return
+        coreContext.postOnCoreThread { core ->
+            if (corePreferences.firstLaunch) {
+                Log.i("$TAG First time Linphone 6.0 has been started, showing Welcome activity")
+                corePreferences.firstLaunch = false
+                coreContext.postOnMainThread {
+                    startActivity(Intent(this, WelcomeActivity::class.java))
+                }
+            } else if (core.accountList.isEmpty()) {
+                Log.w("$TAG No account found, showing Assistant activity")
+                coreContext.postOnMainThread {
+                    startActivity(Intent(this, AssistantActivity::class.java))
+                }
             } else {
-                viewModel.mainIntentHandled = true
-            }
-        }
-
-        if (intent.hasExtra("Chat")) {
-            Log.i("$TAG Intent has [Chat] extra")
-            try {
-                Log.i("$TAG Trying to go to Conversations fragment")
-                val args = intent.extras
-                val localSipUri = args?.getString("LocalSipUri", "")
-                val remoteSipUri = args?.getString("RemoteSipUri", "")
-                if (remoteSipUri.isNullOrEmpty() || localSipUri.isNullOrEmpty()) {
-                    Log.w("$TAG Found [Chat] extra but no local and/or remote SIP URI!")
-                } else {
-                    Log.i(
-                        "$TAG Found [Chat] extra with local [$localSipUri] and peer [$remoteSipUri] addresses"
-                    )
-                    val pair = Pair(localSipUri, remoteSipUri)
-                    sharedViewModel.showConversationEvent.value = Event(pair)
-                }
-                args?.clear()
-
-                if (findNavController().currentDestination?.id == R.id.conversationsListFragment) {
-                    Log.w(
-                        "$TAG Current destination is already conversations list, skipping navigation"
-                    )
-                } else {
-                    val action =
-                        ConversationsListFragmentDirections.actionGlobalConversationsListFragment()
-                    findNavController().navigate(action)
-                }
-            } catch (ise: IllegalStateException) {
-                Log.e("$TAG Can't navigate to Conversations fragment: $ise")
-            }
-        } else if (!isNewIntent) {
-            try {
-                val defaultFragmentId = getPreferences(Context.MODE_PRIVATE).getInt(
-                    DEFAULT_FRAGMENT_KEY,
-                    CONTACTS_FRAGMENT_ID
-                )
-                Log.i("$TAG Trying to navigate to set default destination [$defaultFragmentId]")
-                val args = intent.extras
-                try {
-                    val navOptionsBuilder = NavOptions.Builder()
-                    navOptionsBuilder.setPopUpTo(R.id.contactsListFragment, true)
-                    navOptionsBuilder.setLaunchSingleTop(true)
-                    val navOptions = navOptionsBuilder.build()
-                    when (defaultFragmentId) {
-                        HISTORY_FRAGMENT_ID -> {
-                            findNavController().navigate(
-                                R.id.historyListFragment,
-                                args,
-                                navOptions
+                coreContext.postOnMainThread {
+                    // Prevent navigating to default fragment upon rotation (we only want to do it on first start)
+                    if (intent.action == Intent.ACTION_MAIN && intent.type == null && intent.data == null && !isNewIntent) {
+                        if (viewModel.mainIntentHandled) {
+                            Log.d(
+                                "$TAG Main intent without type nor data was already handled, do nothing"
                             )
-                        }
-                        CHAT_FRAGMENT_ID -> {
-                            findNavController().navigate(
-                                R.id.conversationsListFragment,
-                                args,
-                                navOptions
-                            )
-                        }
-                        MEETINGS_FRAGMENT_ID -> {
-                            findNavController().navigate(
-                                R.id.meetingsListFragment,
-                                args,
-                                navOptions
-                            )
+                            return@postOnMainThread
+                        } else {
+                            viewModel.mainIntentHandled = true
                         }
                     }
-                } catch (ise: IllegalStateException) {
-                    Log.e("$TAG Can't navigate to Conversations fragment: $ise")
+
+                    if (intent.hasExtra("Chat")) {
+                        Log.i("$TAG Intent has [Chat] extra")
+                        try {
+                            Log.i("$TAG Trying to go to Conversations fragment")
+                            val args = intent.extras
+                            val localSipUri = args?.getString("LocalSipUri", "")
+                            val remoteSipUri = args?.getString("RemoteSipUri", "")
+                            if (remoteSipUri.isNullOrEmpty() || localSipUri.isNullOrEmpty()) {
+                                Log.w("$TAG Found [Chat] extra but no local and/or remote SIP URI!")
+                            } else {
+                                Log.i(
+                                    "$TAG Found [Chat] extra with local [$localSipUri] and peer [$remoteSipUri] addresses"
+                                )
+                                val pair = Pair(localSipUri, remoteSipUri)
+                                sharedViewModel.showConversationEvent.value = Event(pair)
+                            }
+                            args?.clear()
+
+                            if (findNavController().currentDestination?.id == R.id.conversationsListFragment) {
+                                Log.w(
+                                    "$TAG Current destination is already conversations list, skipping navigation"
+                                )
+                            } else {
+                                val action =
+                                    ConversationsListFragmentDirections.actionGlobalConversationsListFragment()
+                                findNavController().navigate(action)
+                            }
+                        } catch (ise: IllegalStateException) {
+                            Log.e("$TAG Can't navigate to Conversations fragment: $ise")
+                        }
+                    } else if (!isNewIntent) {
+                        try {
+                            val defaultFragmentId = getPreferences(Context.MODE_PRIVATE).getInt(
+                                DEFAULT_FRAGMENT_KEY,
+                                HISTORY_FRAGMENT_ID
+                            )
+                            Log.i(
+                                "$TAG Trying to navigate to set default destination [$defaultFragmentId]"
+                            )
+                            val args = intent.extras
+                            try {
+                                val navOptionsBuilder = NavOptions.Builder()
+                                navOptionsBuilder.setPopUpTo(R.id.historyListFragment, true)
+                                navOptionsBuilder.setLaunchSingleTop(true)
+                                val navOptions = navOptionsBuilder.build()
+                                when (defaultFragmentId) {
+                                    HISTORY_FRAGMENT_ID -> {
+                                        findNavController().navigate(
+                                            R.id.historyListFragment,
+                                            args,
+                                            navOptions
+                                        )
+                                    }
+                                    CONTACTS_FRAGMENT_ID -> {
+                                        findNavController().navigate(
+                                            R.id.contactsListFragment,
+                                            args,
+                                            navOptions
+                                        )
+                                    }
+                                    CHAT_FRAGMENT_ID -> {
+                                        findNavController().navigate(
+                                            R.id.conversationsListFragment,
+                                            args,
+                                            navOptions
+                                        )
+                                    }
+                                    MEETINGS_FRAGMENT_ID -> {
+                                        findNavController().navigate(
+                                            R.id.meetingsListFragment,
+                                            args,
+                                            navOptions
+                                        )
+                                    }
+                                }
+                            } catch (ise: IllegalStateException) {
+                                Log.e("$TAG Can't navigate to Conversations fragment: $ise")
+                            }
+                        } catch (ise: IllegalStateException) {
+                            Log.i("$TAG Failed to handle intent: $ise")
+                        }
+                    }
                 }
-            } catch (ise: IllegalStateException) {
-                Log.i("$TAG Failed to handle intent: $ise")
             }
         }
     }
@@ -584,12 +597,19 @@ class MainActivity : GenericActivity() {
     @MainThread
     private fun handleConfigIntent(uri: String) {
         val remoteConfigUri = uri.substring("linphone-config:".length)
+        val url = when {
+            remoteConfigUri.startsWith("http://") || remoteConfigUri.startsWith("https://") -> remoteConfigUri
+            remoteConfigUri.startsWith("file://") -> remoteConfigUri
+            else -> "https://$remoteConfigUri"
+        }
+
         coreContext.postOnCoreThread { core ->
-            coreContext.core.provisioningUri = remoteConfigUri
-            Log.w("$TAG Remote provisioning URL set to [$remoteConfigUri], restarting Core now")
-            coreContext.core.stop()
-            coreContext.core.start()
-            Log.i("$TAG Core restarted after remote provisioning URL was applied")
+            core.provisioningUri = url
+            Log.w("$TAG Remote provisioning URL set to [$url], restarting Core now")
+            core.stop()
+            Log.i("$TAG Core has been stopped, let's restart it")
+            core.start()
+            Log.i("$TAG Core has been restarted")
         }
     }
 
