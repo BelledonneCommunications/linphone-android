@@ -132,6 +132,10 @@ class SingleSignOnViewModel : GenericViewModel() {
                     Uri.parse(REDIRECT_URI) // the redirect URI to which the auth response is sent
                 )
 
+                // Needed for SDK to be able to refresh the token, otherwise it will return
+                // an invalid grant error with description "Session not active"
+                authRequestBuilder.setScopes("offline_access")
+
                 if (username.isNotEmpty()) {
                     authRequestBuilder.setLoginHint(username)
                 }
