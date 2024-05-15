@@ -58,13 +58,6 @@
                 app:constraint_referenced_ids="cancel_search, search, clear_field"
                 android:visibility="@{viewModel.searchBarVisible ? View.VISIBLE : View.GONE, default=gone}" />
 
-            <androidx.constraintlayout.widget.Barrier
-                android:id="@+id/top_bar_barrier"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:barrierDirection="bottom"
-                app:constraint_referenced_ids="title, search" />
-
             <ImageView
                 android:id="@+id/back"
                 android:layout_width="wrap_content"

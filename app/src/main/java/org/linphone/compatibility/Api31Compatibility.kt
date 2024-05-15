@@ -28,6 +28,7 @@ import android.content.Intent
 import android.graphics.RenderEffect
 import android.graphics.Shader
 import android.os.Build
+import android.os.Environment
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
@@ -91,6 +92,10 @@ class Api31Compatibility {
             } catch (e: Exception) {
                 Log.e("$TAG Can't start service as foreground! $e")
             }
+        }
+
+        fun getRecordingsDirectory(): String {
+            return Environment.DIRECTORY_RECORDINGS
         }
     }
 }

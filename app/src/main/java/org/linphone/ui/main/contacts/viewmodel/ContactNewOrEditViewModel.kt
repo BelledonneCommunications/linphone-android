@@ -180,7 +180,7 @@ class ContactNewOrEditViewModel @UiThread constructor() : GenericViewModel() {
                     if (picture.contains(TEMP_PICTURE_NAME)) {
                         val newFile = FileUtils.getFileStoragePath(
                             getPictureFileName(),
-                            true,
+                            isImage = true,
                             overrideExisting = true
                         )
                         val oldFile = Uri.parse(FileUtils.getProperFilePath(picture))

@@ -174,7 +174,7 @@
 
     <fragment
         android:id="@+id/recordingsFragment"
-        android:name="org.linphone.ui.main.recordings.RecordingsFragment"
+        android:name="org.linphone.ui.main.recordings.fragment.RecordingsFragment"
         android:label="RecordingsFragment"
         tools:layout="@layout/recordings_fragment" />
 

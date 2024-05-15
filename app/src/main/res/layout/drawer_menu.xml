@@ -167,7 +167,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:text="@string/recordings_title"
-            android:drawableStart="@drawable/microphone_stage"
+            android:drawableStart="@drawable/record_fill"
             android:drawableEnd="@drawable/caret_right"
             android:drawablePadding="8dp"
             android:visibility="@{viewModel.hideRecordings ? View.GONE : View.VISIBLE}"

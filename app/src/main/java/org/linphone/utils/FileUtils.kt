@@ -146,9 +146,10 @@ class FileUtils {
         fun getFileStoragePath(
             fileName: String,
             isImage: Boolean = false,
+            isRecording: Boolean = false,
             overrideExisting: Boolean = false
         ): File {
-            val path = getFileStorageDir(isImage)
+            val path = getFileStorageDir(isPicture = isImage, isRecording = isRecording)
             var file = File(path, fileName)
 
             if (!overrideExisting) {
@@ -246,7 +247,11 @@ class FileUtils {
                     val localFile: File = if (copyToCache) {
                         getFileStorageCacheDir(name, overrideExisting)
                     } else {
-                        getFileStoragePath(name, isImage, overrideExisting)
+                        getFileStoragePath(
+                            name,
+                            isImage = isImage,
+                            overrideExisting = overrideExisting
+                        )
                     }
                     copyFile(uri, localFile)
                     return@withContext localFile.absolutePath
@@ -455,7 +460,7 @@ class FileUtils {
         }
 
         @AnyThread
-        private fun getFileStorageDir(isPicture: Boolean = false): File {
+        fun getFileStorageDir(isPicture: Boolean = false, isRecording: Boolean = false): File {
             var path: File? = null
             if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
                 Log.w("$TAG External storage is mounted")
@@ -463,6 +468,9 @@ class FileUtils {
                 if (isPicture) {
                     Log.w("$TAG Using pictures directory instead of downloads")
                     directory = Environment.DIRECTORY_PICTURES
+                } else if (isRecording) {
+                    directory = Compatibility.getRecordingsDirectory()
+                    Log.w("$TAG Using [$directory] directory instead of downloads")
                 }
                 path = coreContext.context.getExternalFilesDir(directory)
             }

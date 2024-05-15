@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="deleteClickListener"
+            type="View.OnClickListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/color_main2_200">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/delete"
+            android:onClick="@{deleteClickListener}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/menu_delete_selected_item"
+            style="@style/context_menu_danger_action_label_style"
+            android:background="@drawable/menu_item_background"
+            android:layout_marginBottom="1dp"
+            android:drawableStart="@drawable/trash_simple"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

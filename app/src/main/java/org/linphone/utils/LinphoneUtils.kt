@@ -23,10 +23,6 @@ import androidx.annotation.AnyThread
 import androidx.annotation.DrawableRes
 import androidx.annotation.IntegerRes
 import androidx.annotation.WorkerThread
-import java.text.DateFormat
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.Account
@@ -48,7 +44,10 @@ class LinphoneUtils {
     companion object {
         private const val TAG = "[Linphone Utils]"
 
-        private const val RECORDING_DATE_PATTERN = "dd-MM-yyyy-HH-mm-ss"
+        const val RECORDING_FILE_NAME_HEADER = "call_recording_"
+        const val RECORDING_FILE_NAME_URI_TIMESTAMP_SEPARATOR = "_on_"
+        const val RECORDING_FILE_EXTENSION = ".mkv"
+
         private const val CHAT_ROOM_ID_SEPARATOR = "#~#"
 
         @WorkerThread
@@ -319,13 +318,8 @@ class LinphoneUtils {
 
         @WorkerThread
         fun getRecordingFilePathForAddress(address: Address): String {
-            val displayName = getDisplayName(address)
-            val dateFormat: DateFormat = SimpleDateFormat(
-                RECORDING_DATE_PATTERN,
-                Locale.getDefault()
-            )
-            val fileName = "${displayName}_${dateFormat.format(Date())}.mkv"
-            return FileUtils.getFileStoragePath(fileName).absolutePath
+            val fileName = "${RECORDING_FILE_NAME_HEADER}${address.asStringUriOnly()}${RECORDING_FILE_NAME_URI_TIMESTAMP_SEPARATOR}${System.currentTimeMillis()}$RECORDING_FILE_EXTENSION"
+            return FileUtils.getFileStoragePath(fileName, isRecording = true).absolutePath
         }
 
         @WorkerThread

@@ -186,7 +186,7 @@ class CorePreferences @UiThread constructor(private val context: Context) {
 
     @get:WorkerThread
     val disableCallRecordings: Boolean
-        get() = config.getBool("ui", "disable_call_recordings_feature", true) // TODO FIXME: not implemented yet
+        get() = config.getBool("ui", "disable_call_recordings_feature", false)
 
     @get:WorkerThread
     val oneAccountMax: Boolean

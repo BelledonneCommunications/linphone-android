@@ -74,7 +74,7 @@ class EditContactFragment : SlidingPaneChildFragment() {
             Log.i("$TAG Picture picked [$uri]")
             val localFileName = FileUtils.getFileStoragePath(
                 viewModel.getPictureFileName(),
-                true,
+                isImage = true,
                 overrideExisting = true
             )
             lifecycleScope.launch {
