@@ -73,6 +73,7 @@ class RecordingsFragment : GenericMainFragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = listViewModel
+        observeToastEvents(listViewModel)
 
         binding.setBackClickListener {
             goBack()
