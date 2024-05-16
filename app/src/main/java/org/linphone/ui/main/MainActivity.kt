@@ -29,14 +29,14 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.Gravity
-import androidx.annotation.MainThread
+import android.view.ViewTreeObserver
 import androidx.annotation.UiThread
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.doOnAttach
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import kotlinx.coroutines.Deferred
@@ -81,6 +81,20 @@ class MainActivity : GenericActivity() {
     private lateinit var sharedViewModel: SharedMainViewModel
 
     private var currentlyDisplayedAuthDialog: Dialog? = null
+
+    private var navigatedToDefaultFragment = false
+
+    private val destinationListener = object : NavController.OnDestinationChangedListener {
+        override fun onDestinationChanged(
+            controller: NavController,
+            destination: NavDestination,
+            arguments: Bundle?
+        ) {
+            Log.i("$TAG Latest visited fragment was restored")
+            navigatedToDefaultFragment = true
+            controller.removeOnDestinationChangedListener(this)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Must be done before the setContentView
@@ -165,14 +179,23 @@ class MainActivity : GenericActivity() {
             }
         }
 
-        binding.root.doOnAttach {
-            Log.i("$TAG Report UI has been fully drawn (TTFD)")
-            try {
-                reportFullyDrawn()
-            } catch (se: SecurityException) {
-                Log.e("$TAG Security exception when doing reportFullyDrawn(): $se")
+        // Wait for latest visited fragment to be displayed before hiding the splashscreen
+        binding.root.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+            override fun onPreDraw(): Boolean {
+                return if (navigatedToDefaultFragment) {
+                    Log.i("$TAG Report UI has been fully drawn (TTFD)")
+                    try {
+                        reportFullyDrawn()
+                    } catch (se: SecurityException) {
+                        Log.e("$TAG Security exception when doing reportFullyDrawn(): $se")
+                    }
+                    binding.root.viewTreeObserver.removeOnPreDrawListener(this)
+                    true
+                } else {
+                    false
+                }
             }
-        }
+        })
 
         coreContext.bearerAuthenticationRequestedEvent.observe(this) {
             it.consume { pair ->
@@ -224,8 +247,10 @@ class MainActivity : GenericActivity() {
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
 
+        goToLatestVisitedFragment()
+
         if (intent != null) {
-            handleIntent(intent, false)
+            handleIntent(intent)
         } else {
             // This should never happen!
             Log.e("$TAG onPostCreate called without intent !")
@@ -270,7 +295,7 @@ class MainActivity : GenericActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        handleIntent(intent, true)
+        handleIntent(intent)
     }
 
     @SuppressLint("RtlHardcoded")
@@ -294,8 +319,71 @@ class MainActivity : GenericActivity() {
         return findNavController(R.id.main_nav_host_fragment)
     }
 
-    @MainThread
-    private fun handleIntent(intent: Intent, isNewIntent: Boolean) {
+    private fun goToLatestVisitedFragment() {
+        try {
+            // Prevent navigating to default fragment upon rotation (we only want to do it on first start)
+            if (intent.action == Intent.ACTION_MAIN && intent.type == null && intent.data == null) {
+                if (viewModel.mainIntentHandled) {
+                    Log.d(
+                        "$TAG Main intent without type nor data was already handled, do nothing"
+                    )
+                } else {
+                    viewModel.mainIntentHandled = true
+                }
+            }
+
+            val defaultFragmentId = getPreferences(Context.MODE_PRIVATE).getInt(
+                DEFAULT_FRAGMENT_KEY,
+                HISTORY_FRAGMENT_ID
+            )
+            Log.i(
+                "$TAG Trying to navigate to set default destination [$defaultFragmentId]"
+            )
+            val args = intent.extras
+            try {
+                val navOptionsBuilder = NavOptions.Builder()
+                navOptionsBuilder.setPopUpTo(R.id.historyListFragment, true)
+                navOptionsBuilder.setLaunchSingleTop(true)
+                val navOptions = navOptionsBuilder.build()
+                when (defaultFragmentId) {
+                    CONTACTS_FRAGMENT_ID -> {
+                        findNavController().addOnDestinationChangedListener(destinationListener)
+                        findNavController().navigate(
+                            R.id.contactsListFragment,
+                            args,
+                            navOptions
+                        )
+                    }
+                    CHAT_FRAGMENT_ID -> {
+                        findNavController().addOnDestinationChangedListener(destinationListener)
+                        findNavController().navigate(
+                            R.id.conversationsListFragment,
+                            args,
+                            navOptions
+                        )
+                    }
+                    MEETINGS_FRAGMENT_ID -> {
+                        findNavController().addOnDestinationChangedListener(destinationListener)
+                        findNavController().navigate(
+                            R.id.meetingsListFragment,
+                            args,
+                            navOptions
+                        )
+                    }
+                    else -> {
+                        Log.i("$TAG Default fragment is the same as the latest visited one")
+                        navigatedToDefaultFragment = true
+                    }
+                }
+            } catch (ise: IllegalStateException) {
+                Log.e("$TAG Can't navigate to Conversations fragment: $ise")
+            }
+        } catch (ise: IllegalStateException) {
+            Log.i("$TAG Failed to handle intent: $ise")
+        }
+    }
+
+    private fun handleIntent(intent: Intent) {
         Log.i(
             "$TAG Handling intent action [${intent.action}], type [${intent.type}] and data [${intent.data}]"
         )
@@ -326,12 +414,11 @@ class MainActivity : GenericActivity() {
                 }
             }
             else -> {
-                handleMainIntent(intent, isNewIntent)
+                handleMainIntent(intent)
             }
         }
     }
 
-    @MainThread
     private fun handleLocusOrShortcut(id: String) {
         Log.i("$TAG Found locus ID [$id]")
         val pair = LinphoneUtils.getLocalAndPeerSipUrisFromChatRoomId(id)
@@ -345,8 +432,7 @@ class MainActivity : GenericActivity() {
         }
     }
 
-    @MainThread
-    private fun handleMainIntent(intent: Intent, isNewIntent: Boolean) {
+    private fun handleMainIntent(intent: Intent) {
         coreContext.postOnCoreThread { core ->
             if (corePreferences.firstLaunch) {
                 Log.i("$TAG First time Linphone 6.0 has been started, showing Welcome activity")
@@ -361,18 +447,6 @@ class MainActivity : GenericActivity() {
                 }
             } else {
                 coreContext.postOnMainThread {
-                    // Prevent navigating to default fragment upon rotation (we only want to do it on first start)
-                    if (intent.action == Intent.ACTION_MAIN && intent.type == null && intent.data == null && !isNewIntent) {
-                        if (viewModel.mainIntentHandled) {
-                            Log.d(
-                                "$TAG Main intent without type nor data was already handled, do nothing"
-                            )
-                            return@postOnMainThread
-                        } else {
-                            viewModel.mainIntentHandled = true
-                        }
-                    }
-
                     if (intent.hasExtra("Chat")) {
                         Log.i("$TAG Intent has [Chat] extra")
                         try {
@@ -404,64 +478,12 @@ class MainActivity : GenericActivity() {
                         } catch (ise: IllegalStateException) {
                             Log.e("$TAG Can't navigate to Conversations fragment: $ise")
                         }
-                    } else if (!isNewIntent) {
-                        try {
-                            val defaultFragmentId = getPreferences(Context.MODE_PRIVATE).getInt(
-                                DEFAULT_FRAGMENT_KEY,
-                                HISTORY_FRAGMENT_ID
-                            )
-                            Log.i(
-                                "$TAG Trying to navigate to set default destination [$defaultFragmentId]"
-                            )
-                            val args = intent.extras
-                            try {
-                                val navOptionsBuilder = NavOptions.Builder()
-                                navOptionsBuilder.setPopUpTo(R.id.historyListFragment, true)
-                                navOptionsBuilder.setLaunchSingleTop(true)
-                                val navOptions = navOptionsBuilder.build()
-                                when (defaultFragmentId) {
-                                    HISTORY_FRAGMENT_ID -> {
-                                        findNavController().navigate(
-                                            R.id.historyListFragment,
-                                            args,
-                                            navOptions
-                                        )
-                                    }
-                                    CONTACTS_FRAGMENT_ID -> {
-                                        findNavController().navigate(
-                                            R.id.contactsListFragment,
-                                            args,
-                                            navOptions
-                                        )
-                                    }
-                                    CHAT_FRAGMENT_ID -> {
-                                        findNavController().navigate(
-                                            R.id.conversationsListFragment,
-                                            args,
-                                            navOptions
-                                        )
-                                    }
-                                    MEETINGS_FRAGMENT_ID -> {
-                                        findNavController().navigate(
-                                            R.id.meetingsListFragment,
-                                            args,
-                                            navOptions
-                                        )
-                                    }
-                                }
-                            } catch (ise: IllegalStateException) {
-                                Log.e("$TAG Can't navigate to Conversations fragment: $ise")
-                            }
-                        } catch (ise: IllegalStateException) {
-                            Log.i("$TAG Failed to handle intent: $ise")
-                        }
                     }
                 }
             }
         }
     }
 
-    @MainThread
     private fun handleSendIntent(intent: Intent, multiple: Boolean) {
         val parcelablesUri = arrayListOf<Uri>()
 
@@ -550,7 +572,6 @@ class MainActivity : GenericActivity() {
         }
     }
 
-    @MainThread
     private fun parseShortcutIfAny(intent: Intent): Pair<String, String>? {
         val shortcutId = intent.getStringExtra("android.intent.extra.shortcut.ID") // Intent.EXTRA_SHORTCUT_ID
         if (shortcutId != null) {
@@ -562,7 +583,6 @@ class MainActivity : GenericActivity() {
         return null
     }
 
-    @MainThread
     private fun handleCallIntent(intent: Intent) {
         val uri = intent.data?.toString()
         if (uri.isNullOrEmpty()) {
@@ -595,7 +615,6 @@ class MainActivity : GenericActivity() {
         }
     }
 
-    @MainThread
     private fun handleConfigIntent(uri: String) {
         val remoteConfigUri = uri.substring("linphone-config:".length)
         val url = when {

@@ -699,6 +699,12 @@ class MessageModel @WorkerThread constructor(
 
     @WorkerThread
     private fun startVoiceRecordPlayer() {
+        if (voiceRecordAudioFocusRequest == null) {
+            voiceRecordAudioFocusRequest = AudioUtils.acquireAudioFocusForVoiceRecordingOrPlayback(
+                coreContext.context
+            )
+        }
+
         if (isPlayerClosed()) {
             Log.w("$TAG Player closed, let's open it first")
             initVoiceRecordPlayer()
@@ -709,12 +715,6 @@ class MessageModel @WorkerThread constructor(
             Log.w("$TAG Media volume is low, notifying user as they may not hear voice message")
             onRedToastToShow?.invoke(
                 Pair(R.string.toast_low_media_volume, R.drawable.speaker_slash)
-            )
-        }
-
-        if (voiceRecordAudioFocusRequest == null) {
-            voiceRecordAudioFocusRequest = AudioUtils.acquireAudioFocusForVoiceRecordingOrPlayback(
-                coreContext.context
             )
         }
 

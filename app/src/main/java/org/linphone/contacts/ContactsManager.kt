@@ -145,6 +145,7 @@ class ContactsManager @UiThread constructor() {
 
     @MainThread
     fun loadContacts(activity: MainActivity) {
+        Log.i("$TAG Starting contacts loader")
         val manager = LoaderManager.getInstance(activity)
         manager.restartLoader(0, null, ContactLoader())
     }
