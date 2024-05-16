@@ -47,8 +47,14 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
     val expandNetwork = MutableLiveData<Boolean>()
     val expandUserInterface = MutableLiveData<Boolean>()
 
+    val recreateActivityEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     // Security settings
     val isVfsEnabled = MutableLiveData<Boolean>()
+
+    val isUiSecureModeEnabled = MutableLiveData<Boolean>()
 
     // Calls settings
     val echoCancellerEnabled = MutableLiveData<Boolean>()
@@ -169,6 +175,8 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
         }
 
         coreContext.postOnCoreThread { core ->
+            isUiSecureModeEnabled.postValue(corePreferences.enableSecureMode)
+
             echoCancellerEnabled.postValue(core.isEchoCancellationEnabled)
             routeAudioToBluetooth.postValue(corePreferences.routeAudioToBluetoothIfAvailable)
             videoEnabled.postValue(core.isVideoEnabled)
@@ -208,6 +216,16 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
             }
         } else {
             Log.e("$TAG Failed to enable VFS!")
+        }
+    }
+
+    @UiThread
+    fun toggleUiSecureMode() {
+        val newValue = isUiSecureModeEnabled.value == false
+        coreContext.postOnCoreThread {
+            corePreferences.enableSecureMode = newValue
+            recreateActivityEvent.postValue(Event(true))
+            isUiSecureModeEnabled.postValue(newValue)
         }
     }
 

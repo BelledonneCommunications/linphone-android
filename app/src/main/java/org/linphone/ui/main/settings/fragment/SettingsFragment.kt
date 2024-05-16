@@ -121,6 +121,13 @@ class SettingsFragment : GenericMainFragment() {
             }
         }
 
+        viewModel.recreateActivityEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.w("$TAG Recreate Activity")
+                requireActivity().recreate()
+            }
+        }
+
         viewModel.addLdapServerEvent.observe(viewLifecycleOwner) {
             it.consume {
                 val action = SettingsFragmentDirections.actionSettingsFragmentToLdapServerConfigurationFragment(
