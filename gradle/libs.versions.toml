@@ -1,0 +1,73 @@
+[versions]
+agp = "8.4.0"
+kotlin = "1.9.23"
+gmsGoogleServices = "4.4.1"
+firebaseCrashlytics = "2.9.9"
+firebaseBomVersion = "32.8.1"
+ktlint = "11.3.1"
+
+annotations = "1.8.0"
+appcompat = "1.7.0-rc01"
+constraintLayout = "2.1.4"
+coreKtx = "1.13.1"
+splashscreen = "1.2.0-alpha01"
+telecom = "1.0.0-alpha03"
+media = "1.7.0"
+recyclerview = "1.3.2"
+slidingpanelayout = "1.2.0"
+window = "1.2.0"
+gridlayout = "1.0.0"
+securityCryptoKtx = "1.1.0-alpha06"
+navigation = "2.7.7"
+emoji2 = "1.4.0"
+flexbox = "3.0.0"
+material = "1.11.0"
+protobuf = "3.22.3"
+coil = "2.6.0"
+dotsIndicator = "5.0"
+photoview = "2.3.0"
+openidAppauth = "0.11.1"
+linphone = "5.4.+"
+
+[libraries]
+androidx-annotations = { group = "androidx.annotation", name = "annotation", version.ref = "annotations" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+androidx-constraint-layout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintLayout" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
+androidx-telecom = { group = "androidx.core", name = "core-telecom", version.ref = "telecom" }
+androidx-media = { group = "androidx.media", name = "media", version.ref = "media" }
+androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
+androidx-slidingpanelayout = { group = "androidx.slidingpanelayout", name = "slidingpanelayout", version.ref = "slidingpanelayout" }
+androidx-window = { group = "androidx.window", name = "window", version.ref = "window" }
+androidx-gridlayout = { group = "androidx.gridlayout", name = "gridlayout", version.ref = "gridlayout" }
+androidx-security-crypto-ktx = { group = "androidx.security", name = "security-crypto-ktx", version.ref = "securityCryptoKtx" }
+androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigation" }
+androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigation" }
+androidx-emoji2 = { group = "androidx.emoji2", name = "emoji2-emojipicker", version.ref = "emoji2" }
+
+google-firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBomVersion" }
+google-firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
+google-firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ndk" }
+google-flexbox = { group = "com.google.android.flexbox", name = "flexbox", version.ref = "flexbox" }
+google-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+google-protobuf = { group = "com.google.protobuf", name = "protobuf-javalite", version.ref = "protobuf" }
+
+coil = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
+coil-gif = { group = "io.coil-kt", name = "coil-gif", version.ref = "coil" }
+coil-svg = { group = "io.coil-kt", name = "coil-svg", version.ref = "coil" }
+coil-video = { group = "io.coil-kt", name = "coil-video", version.ref = "coil" }
+dots-indicator = { group = "com.tbuonomo", name = "dotsindicator", version.ref = "dotsIndicator" }
+photoview = { group = "com.github.chrisbanes", name = "PhotoView", version.ref = "photoview" }
+openid-appauth = { group = "net.openid", name = "appauth", version.ref = "openidAppauth" }
+
+linphone = { group = "org.linphone", name = "linphone-sdk-android", version.ref = "linphone" }
+
+[plugins]
+androidApplication = { id = "com.android.application", version.ref = "agp" }
+jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+navigation = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigation" }
+crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlytics" }
+googleGmsServices = { id = "com.google.gms.google-services", version.ref = "gmsGoogleServices" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
