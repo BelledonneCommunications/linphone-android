@@ -282,15 +282,18 @@ open class AbstractMainViewModel @UiThread constructor() : GenericViewModel() {
     fun updateAvailableMenus() {
         hideConversations.postValue(corePreferences.disableChat)
 
+        val conferencingAvailable = LinphoneUtils.isRemoteConferencingAvailable(
+            coreContext.core
+        )
         val hideGroupCall =
-            corePreferences.disableMeetings || !LinphoneUtils.isRemoteConferencingAvailable(
-                coreContext.core
-            )
+            coreContext.core.accountList.isEmpty() || corePreferences.disableMeetings || !conferencingAvailable
         hideMeetings.postValue(hideGroupCall)
     }
 
     @WorkerThread
     private fun configure() {
+        updateAvailableMenus()
+
         val core = coreContext.core
         val defaultAccount = core.defaultAccount
         if (defaultAccount != null || core.accountList.isNotEmpty()) {
@@ -300,7 +303,6 @@ open class AbstractMainViewModel @UiThread constructor() : GenericViewModel() {
 
             updateUnreadMessagesCount()
             updateMissedCallsCount()
-            updateAvailableMenus()
         } else {
             Log.e("$TAG Accounts list no supposed to be empty!")
         }
