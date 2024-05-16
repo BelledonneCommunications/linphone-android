@@ -384,7 +384,7 @@
     <string name="contact_dialog_devices_trust_help_message">Blah blah blah</string> <!-- TODO FIXME -->
     <string name="contact_dialog_delete_title">Supprimer %s ?</string>
     <string name="contact_dialog_delete_message">Ce contact sera définitivement supprimé.</string>
-    <string name="contact_dialog_pick_phone_number_or_sip_address_title">Quel numéro ou adresse appeler ?</string>
+    <string name="contact_dialog_pick_phone_number_or_sip_address_title">Choisissez un numéro ou adresse SIP</string>
 
     <string name="contact_presence_status_online">En ligne</string>
     <string name="contact_presence_status_was_online_on">En ligne il y a %s</string>

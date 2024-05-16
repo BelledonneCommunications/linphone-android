@@ -396,6 +396,7 @@ class MainActivity : GenericActivity() {
                                     "$TAG Current destination is already conversations list, skipping navigation"
                                 )
                             } else {
+                                // TODO: clear back stack?
                                 val action =
                                     ConversationsListFragmentDirections.actionGlobalConversationsListFragment()
                                 findNavController().navigate(action)
