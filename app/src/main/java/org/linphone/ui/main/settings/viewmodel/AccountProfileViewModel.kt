@@ -52,10 +52,6 @@ class AccountProfileViewModel @UiThread constructor() : GenericViewModel() {
 
     val selectedDialPlan = MutableLiveData<Int>()
 
-    val pushNotificationsAvailable = MutableLiveData<Boolean>()
-
-    val pushNotificationsEnabled = MutableLiveData<Boolean>()
-
     val registerEnabled = MutableLiveData<Boolean>()
 
     val showModeSelection = MutableLiveData<Boolean>()
@@ -83,7 +79,6 @@ class AccountProfileViewModel @UiThread constructor() : GenericViewModel() {
         expandDevices.value = false // TODO: set to true when feature will be available
 
         coreContext.postOnCoreThread { core ->
-            pushNotificationsAvailable.postValue(core.isPushNotificationAvailable)
             hideAccountSettings.postValue(corePreferences.hideAccountSettings)
             dialPlansLabelList.add("") // To allow removing selected dial plan
 
@@ -118,9 +113,6 @@ class AccountProfileViewModel @UiThread constructor() : GenericViewModel() {
                 accountModel.postValue(AccountModel(account))
                 isCurrentlySelectedModeSecure.postValue(account.isEndToEndEncryptionMandatory())
                 registerEnabled.postValue(account.params.isRegisterEnabled)
-                pushNotificationsEnabled.postValue(
-                    core.isPushNotificationAvailable && account.params.pushNotificationAllowed
-                )
 
                 sipAddress.postValue(account.params.identityAddress?.asStringUriOnly())
                 displayName.postValue(account.params.identityAddress?.displayName)
@@ -217,7 +209,6 @@ class AccountProfileViewModel @UiThread constructor() : GenericViewModel() {
             if (::account.isInitialized) {
                 val params = account.params
                 val copy = params.clone()
-                copy.pushNotificationAllowed = pushNotificationsEnabled.value == true
 
                 val address = params.identityAddress?.clone()
                 if (address != null) {
