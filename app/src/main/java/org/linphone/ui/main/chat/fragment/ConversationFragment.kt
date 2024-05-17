@@ -565,10 +565,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
         }
 
         binding.setWarningConversationDisabledClickListener {
-            Log.i(
-                "$TAG Navigating to account profile mode fragment to let user change mode to interop"
-            )
-            // TODO FIXME: show bottom dialog like for encrypted conversation
+            showUnsafeConversationDetailsBottomSheet()
         }
 
         sendMessageViewModel.emojiToAddEvent.observe(viewLifecycleOwner) {
@@ -1277,6 +1274,15 @@ class ConversationFragment : SlidingPaneChildFragment() {
             EndToEndEncryptionDetailsDialogFragment.TAG
         )
         bottomSheetDialog = e2eEncryptionDetailsBottomSheet
+    }
+
+    private fun showUnsafeConversationDetailsBottomSheet() {
+        val unsafeConversationDetailsBottomSheet = UnsafeConversationDetailsDialogFragment()
+        unsafeConversationDetailsBottomSheet.show(
+            requireActivity().supportFragmentManager,
+            UnsafeConversationDetailsDialogFragment.TAG
+        )
+        bottomSheetDialog = unsafeConversationDetailsBottomSheet
     }
 
     private fun showOpenOrExportFileDialog(path: String, mime: String) {

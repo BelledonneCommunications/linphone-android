@@ -234,7 +234,7 @@ class AudioUtils {
             val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
             val audioAttrs = AudioAttributesCompat.Builder()
                 .setUsage(AudioAttributesCompat.USAGE_MEDIA)
-                .setContentType(AudioAttributesCompat.CONTENT_TYPE_SPEECH)
+                .setContentType(AudioAttributesCompat.CONTENT_TYPE_MUSIC)
                 .build()
 
             val request =

@@ -451,7 +451,9 @@
     <string name="conversation_end_to_end_encrypted_bottom_sheet_message">Grâce à la technologie de chiffrement de bout en bout de &appName;, la confidentialité de vos messages, appels et réunions avec vos correspondants est garantie. Personne ne pourra déchiffrer vos conversations, pas même &appName;.</string>
     <string name="conversation_end_to_end_encrypted_bottom_sheet_link"><u>https://linphone.org/security</u></string>
     <string name="conversation_warning_disabled_because_not_secured_title">Cette conversation n\'est pas chiffrée !</string>
-    <string name="conversation_warning_disabled_because_not_secured_subtitle">Cette conversation a été désactivée car elle n\'est pas chiffrée. Vous pouvez l\'activer en changeant le mode de votre compte pour Intéropérable.</string>
+    <string name="conversation_warning_disabled_because_not_secured_subtitle">Cette conversation a été désactivée pour garantir votre sécurité.</string>
+    <string name="conversation_warning_disabled_encrypted_bottom_sheet_title">Chiffrement obligatoire</string>
+    <string name="conversation_warning_disabled_encrypted_bottom_sheet_message">Vous avez activé le chiffrement obligatoire. Vos conversations non chiffrées sont désactivées pour garantir votre sécurité. Vous pouvez recréer cette conversation ou bien désactiver le chiffrement obligatoire dans vos paramètres de compte.</string>
     <string name="conversation_dialog_set_subject">Nommer la conversation</string>
     <string name="conversation_dialog_edit_subject">Renommer la conversation</string>
     <string name="conversation_dialog_subject_hint">Nom de la conversation</string>

@@ -487,7 +487,9 @@
     <string name="conversation_end_to_end_encrypted_bottom_sheet_message">Thanks to end-to-end encryption technology in &appName;, messages, calls and meetings confidentiality are guaranteed. No-one can decrypt exchanged data, not even ourselves.</string>
     <string name="conversation_end_to_end_encrypted_bottom_sheet_link"><u>https://linphone.org/security</u></string>
     <string name="conversation_warning_disabled_because_not_secured_title">This conversation is not encrypted!</string>
-    <string name="conversation_warning_disabled_because_not_secured_subtitle">This conversation was disabled because it is not encrypted. You can enable it back by switching your account profile mode from Secure to Interoperable.</string>
+    <string name="conversation_warning_disabled_because_not_secured_subtitle">For your safety, this conversation was disabled.</string>
+    <string name="conversation_warning_disabled_encrypted_bottom_sheet_title">Mandatory encryption</string>
+    <string name="conversation_warning_disabled_encrypted_bottom_sheet_message"></string>
     <string name="conversation_dialog_set_subject">Set conversation subject</string>
     <string name="conversation_dialog_edit_subject">Edit conversation subject</string>
     <string name="conversation_dialog_subject_hint">Conversation subject</string>
