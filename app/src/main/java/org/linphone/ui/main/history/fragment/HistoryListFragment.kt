@@ -261,6 +261,7 @@ class HistoryListFragment : AbstractMainFragment() {
 
         Log.i("$TAG Fragment is resumed, resetting missed calls count")
         sharedViewModel.resetMissedCallsCountEvent.value = Event(true)
+        sharedViewModel.refreshDrawerMenuAccountsListEvent.value = Event(false)
 
         // Scroll to top to display latest call logs
         binding.historyList.scrollToPosition(0)

@@ -148,6 +148,15 @@ class DrawerMenuViewModel @UiThread constructor() : GenericViewModel() {
         }
     }
 
+    @UiThread
+    fun refreshAccountsNotificationsCount() {
+        coreContext.postOnCoreThread {
+            for (model in accounts.value.orEmpty()) {
+                model.computeNotificationsCount()
+            }
+        }
+    }
+
     @WorkerThread
     private fun computeAccountsList() {
         accounts.value.orEmpty().forEach(AccountModel::destroy)

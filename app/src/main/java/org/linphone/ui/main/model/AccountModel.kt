@@ -230,7 +230,7 @@ class AccountModel @WorkerThread constructor(
     }
 
     @WorkerThread
-    private fun computeNotificationsCount() {
+    fun computeNotificationsCount() {
         notificationsCount.postValue(account.unreadChatMessageCount + account.missedCallsCount)
     }
 }

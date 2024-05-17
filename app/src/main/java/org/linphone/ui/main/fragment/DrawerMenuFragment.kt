@@ -129,8 +129,12 @@ class DrawerMenuFragment : GenericMainFragment() {
         }
 
         sharedViewModel.refreshDrawerMenuAccountsListEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                viewModel.updateAccountsList()
+            it.consume { recreate ->
+                if (recreate) {
+                    viewModel.updateAccountsList()
+                } else {
+                    viewModel.refreshAccountsNotificationsCount()
+                }
             }
         }
     }
