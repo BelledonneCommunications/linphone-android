@@ -18,6 +18,10 @@
     <string name="start">Commencer</string>
     <string name="today">Aujourd\'hui</string>
     <string name="yesterday">Hier</string>
+    <plurals name="days" tools:ignore="MissingQuantity">
+        <item quantity="one">%s jour</item>
+        <item quantity="other">%s jours</item>
+    </plurals>
 
     <plurals name="selection_count_label" tools:ignore="MissingQuantity">
         <item quantity="one">%s selectionné</item>

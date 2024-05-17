@@ -27,6 +27,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
+import org.linphone.R
 
 class TimestampUtils {
     companion object {
@@ -215,6 +216,32 @@ class TimestampUtils {
             val millis = if (timestampInSecs) timestamp * 1000 else timestamp
             return dateFormat.format(Date(millis))
                 .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+        }
+
+        @AnyThread
+        fun formatLifetime(seconds: Long): String {
+            val days = seconds / 86400
+            val hours = seconds / 3600
+            return when {
+                days >= 1L -> AppUtils.getStringWithPlural(
+                    R.plurals.days,
+                    days.toInt(),
+                    "$days"
+                )
+                hours >= 1L -> {
+                    String.format(
+                        "%02d:%02d:%02d",
+                        seconds / 3600,
+                        (seconds % 3600) / 60,
+                        (seconds % 60)
+                    )
+                }
+                else -> String.format(
+                    "%02d:%02d",
+                    (seconds % 3600) / 60,
+                    (seconds % 60)
+                )
+            }
         }
 
         @AnyThread

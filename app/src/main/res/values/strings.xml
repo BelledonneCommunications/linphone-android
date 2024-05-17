@@ -53,6 +53,10 @@
     <string name="start">Start</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
+    <plurals name="days">
+        <item quantity="one">%s day</item>
+        <item quantity="other">%s days</item>
+    </plurals>
 
     <plurals name="selection_count_label">
         <item quantity="one">%s selected</item>

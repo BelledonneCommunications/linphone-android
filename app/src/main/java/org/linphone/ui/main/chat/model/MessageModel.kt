@@ -19,6 +19,7 @@
  */
 package org.linphone.ui.main.chat.model
 
+import android.os.CountDownTimer
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.Spanned
@@ -108,6 +109,10 @@ class MessageModel @WorkerThread constructor(
 
     val statusIcon = MutableLiveData<Int>()
 
+    val isEphemeral = MutableLiveData<Boolean>()
+
+    val ephemeralLifetime = MutableLiveData<String>()
+
     val text = MutableLiveData<Spannable>()
 
     val reactions = MutableLiveData<String>()
@@ -168,6 +173,8 @@ class MessageModel @WorkerThread constructor(
         stopVoiceRecordPlayer()
     }
     // End of voice record related fields
+
+    private lateinit var countDownTimer: CountDownTimer
 
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
@@ -234,12 +241,20 @@ class MessageModel @WorkerThread constructor(
             }
             model?.transferProgress?.postValue(percent)
         }
+
+        @WorkerThread
+        override fun onEphemeralMessageTimerStarted(message: ChatMessage) {
+            Log.d("$TAG Ephemeral timer started")
+            updateEphemeralTimer()
+        }
     }
 
     init {
         groupedWithNextMessage.postValue(isGroupedWithNextOne)
         groupedWithPreviousMessage.postValue(isGroupedWithPreviousOne)
         isPlayingVoiceRecord.postValue(false)
+        isEphemeral.postValue(chatMessage.isEphemeral)
+        updateEphemeralTimer()
 
         chatMessage.addListener(chatMessageListener)
         statusIcon.postValue(LinphoneUtils.getChatIconResId(chatMessage.state))
@@ -812,5 +827,34 @@ class MessageModel @WorkerThread constructor(
         }
 
         return ""
+    }
+
+    @WorkerThread
+    private fun updateEphemeralTimer() {
+        if (chatMessage.isEphemeral) {
+            if (chatMessage.ephemeralExpireTime == 0L) {
+                // This means the message hasn't been read by all participants yet, so the countdown hasn't started
+                // In this case we simply display the configured value for lifetime
+                ephemeralLifetime.postValue(
+                    TimestampUtils.formatLifetime(chatMessage.ephemeralLifetime)
+                )
+            } else {
+                // Countdown has started, display remaining time
+                val remaining = chatMessage.ephemeralExpireTime - (System.currentTimeMillis() / 1000)
+                ephemeralLifetime.postValue(TimestampUtils.formatLifetime(remaining))
+                if (!::countDownTimer.isInitialized) {
+                    countDownTimer = object : CountDownTimer(remaining * 1000, 1000) {
+                        override fun onFinish() {}
+
+                        override fun onTick(millisUntilFinished: Long) {
+                            ephemeralLifetime.postValue(
+                                TimestampUtils.formatLifetime(millisUntilFinished / 1000)
+                            )
+                        }
+                    }
+                    countDownTimer.start()
+                }
+            }
+        }
     }
 }

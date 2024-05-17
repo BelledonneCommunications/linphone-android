@@ -200,11 +200,34 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/default_text_style_300"
+                    android:id="@+id/ephemeral_timer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{model.ephemeralLifetime, default=`00:00`}"
+                    android:textSize="12sp"
+                    android:visibility="@{model.isEphemeral ? View.VISIBLE : View.GONE, default=gone}"/>
+
+                <ImageView
+                    style="@style/default_text_style_300"
+                    android:id="@+id/countdown_clock"
+                    android:layout_width="@dimen/small_icon_size"
+                    android:layout_height="@dimen/small_icon_size"
+                    android:layout_gravity="center_vertical|start"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/clock_countdown"
+                    app:tint="?attr/color_main2_600"
+                    android:visibility="@{model.isEphemeral ? View.VISIBLE : View.GONE, default=gone}" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/default_text_style_300"
                     android:id="@+id/date_time"
                     android:onClick="@{showDeliveryInfoClickListener}"
                     android:onLongClick="@{onLongClickListener}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
                     android:text="@{model.time, default=`13:40`}"
                     android:textSize="12sp" />
 
