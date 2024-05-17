@@ -489,7 +489,8 @@
     <string name="conversation_warning_disabled_because_not_secured_title">This conversation is not encrypted!</string>
     <string name="conversation_warning_disabled_because_not_secured_subtitle">For your safety, this conversation was disabled.</string>
     <string name="conversation_warning_disabled_encrypted_bottom_sheet_title">Mandatory encryption</string>
-    <string name="conversation_warning_disabled_encrypted_bottom_sheet_message"></string>
+    <string name="conversation_warning_disabled_encrypted_bottom_sheet_message">You enabled mandatory encryption. Non encrypted conversations are disabled for your safety. You can re-create this conversation or disable mandatory encryption in your account parameters.</string>
+    <string name="conversation_maximum_number_of_attachments_reached">Maximum number of attachments reached!</string>
     <string name="conversation_dialog_set_subject">Set conversation subject</string>
     <string name="conversation_dialog_edit_subject">Edit conversation subject</string>
     <string name="conversation_dialog_subject_hint">Conversation subject</string>

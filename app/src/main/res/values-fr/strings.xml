@@ -454,6 +454,7 @@
     <string name="conversation_warning_disabled_because_not_secured_subtitle">Cette conversation a été désactivée pour garantir votre sécurité.</string>
     <string name="conversation_warning_disabled_encrypted_bottom_sheet_title">Chiffrement obligatoire</string>
     <string name="conversation_warning_disabled_encrypted_bottom_sheet_message">Vous avez activé le chiffrement obligatoire. Vos conversations non chiffrées sont désactivées pour garantir votre sécurité. Vous pouvez recréer cette conversation ou bien désactiver le chiffrement obligatoire dans vos paramètres de compte.</string>
+    <string name="conversation_maximum_number_of_attachments_reached">Nombre maximum de fichiers atteint !</string>
     <string name="conversation_dialog_set_subject">Nommer la conversation</string>
     <string name="conversation_dialog_edit_subject">Renommer la conversation</string>
     <string name="conversation_dialog_subject_hint">Nom de la conversation</string>

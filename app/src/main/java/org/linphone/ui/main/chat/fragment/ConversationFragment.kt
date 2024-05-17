@@ -129,7 +129,9 @@ class ConversationFragment : SlidingPaneChildFragment() {
     private var filePathToExport: String? = null
 
     private val pickMedia = registerForActivityResult(
-        ActivityResultContracts.PickMultipleVisualMedia()
+        ActivityResultContracts.PickMultipleVisualMedia(
+            maxItems = SendMessageInConversationViewModel.MAX_FILES_TO_ATTACH
+        )
     ) { list ->
         if (!list.isNullOrEmpty()) {
             for (uri in list) {

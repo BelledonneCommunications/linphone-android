@@ -58,6 +58,8 @@ import org.linphone.utils.LinphoneUtils
 class SendMessageInConversationViewModel @UiThread constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Send Message In Conversation ViewModel]"
+
+        const val MAX_FILES_TO_ATTACH = 12
     }
 
     val textToSend = MutableLiveData<String>()
@@ -71,6 +73,8 @@ class SendMessageInConversationViewModel @UiThread constructor() : GenericViewMo
     val participants = MutableLiveData<ArrayList<ParticipantModel>>()
 
     val isFileAttachmentsListOpen = MutableLiveData<Boolean>()
+
+    val maxNumberOfAttachmentsReached = MutableLiveData<Boolean>()
 
     val attachments = MutableLiveData<ArrayList<FileModel>>()
 
@@ -147,6 +151,7 @@ class SendMessageInConversationViewModel @UiThread constructor() : GenericViewMo
         isEmojiPickerOpen.value = false
         isPlayingVoiceRecord.value = false
         isInCallConversation.value = false
+        maxNumberOfAttachmentsReached.value = false
     }
 
     override fun onCleared() {
@@ -309,12 +314,32 @@ class SendMessageInConversationViewModel @UiThread constructor() : GenericViewMo
         }
         val list = arrayListOf<FileModel>()
         attachments.value = list
+        maxNumberOfAttachmentsReached.value = false
 
         isFileAttachmentsListOpen.value = false
     }
 
     @UiThread
     fun addAttachment(file: String) {
+        if (attachments.value.orEmpty().size >= MAX_FILES_TO_ATTACH) {
+            Log.w(
+                "$TAG Max number of attachments [$MAX_FILES_TO_ATTACH] reached, file [$file] won't be attached"
+            )
+            showRedToastEvent.postValue(
+                Event(
+                    Pair(
+                        R.string.conversation_maximum_number_of_attachments_reached,
+                        R.drawable.warning_circle
+                    )
+                )
+            )
+            viewModelScope.launch {
+                Log.i("$TAG Deleting temporary file [$file]")
+                FileUtils.deleteFile(file)
+            }
+            return
+        }
+
         val list = arrayListOf<FileModel>()
         list.addAll(attachments.value.orEmpty())
 
@@ -326,6 +351,7 @@ class SendMessageInConversationViewModel @UiThread constructor() : GenericViewMo
 
         list.add(model)
         attachments.value = list
+        maxNumberOfAttachmentsReached.value = list.size >= MAX_FILES_TO_ATTACH
 
         if (list.isNotEmpty()) {
             isFileAttachmentsListOpen.value = true
@@ -353,6 +379,7 @@ class SendMessageInConversationViewModel @UiThread constructor() : GenericViewMo
             Log.w("$TAG Failed to find file attachment matching [$file]")
         }
         attachments.value = list
+        maxNumberOfAttachmentsReached.value = list.size >= MAX_FILES_TO_ATTACH
 
         if (list.isEmpty()) {
             isFileAttachmentsListOpen.value = false
