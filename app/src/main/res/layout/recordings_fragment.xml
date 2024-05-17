@@ -63,7 +63,7 @@
             app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/title"
-            app:tint="?attr/color_main1_500" />
+            app:tint="?attr/color_main2_500" />
 
         <ImageView
             android:id="@+id/cancel_search"
@@ -76,7 +76,7 @@
             app:layout_constraintBottom_toBottomOf="@id/search"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/search"
-            app:tint="?attr/color_main1_500" />
+            app:tint="?attr/color_main2_500" />
 
         <com.google.android.material.textfield.TextInputLayout
             style="?attr/textInputFilledStyle"
@@ -119,7 +119,7 @@
             app:layout_constraintBottom_toBottomOf="@id/search"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/search"
-            app:tint="?attr/color_main1_500" />
+            app:tint="?attr/color_main2_500" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recordings_list"
