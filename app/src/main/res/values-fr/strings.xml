@@ -630,6 +630,7 @@
 
     <!-- Call records -->
     <string name="recordings_title">Enregistrements</string>
+    <string name="recordings_list_empty">Aucun appel enregistré…</string>
 
     <!-- Various menu entries -->
     <string name="menu_add_address_to_contacts">Ajouter aux contacts</string>

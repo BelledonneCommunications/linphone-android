@@ -121,6 +121,32 @@
             app:layout_constraintTop_toTopOf="@id/search"
             app:tint="?attr/color_main2_500" />
 
+        <ImageView
+            android:id="@+id/no_recording_image"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:src="@drawable/illu"
+            android:contentDescription="@null"
+            app:layout_constraintHeight_max="200dp"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/no_recording_label" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/section_header_style"
+            android:id="@+id/no_recording_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/recordings_list_empty"
+            app:layout_constraintTop_toBottomOf="@id/no_recording_image"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recordings_list"
             android:layout_width="match_parent"

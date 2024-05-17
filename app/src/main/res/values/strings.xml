@@ -666,6 +666,7 @@
 
     <!-- Call records -->
     <string name="recordings_title">Recordings</string>
+    <string name="recordings_list_empty">No recording for the moment…</string>
 
     <!-- Various menu entries -->
     <string name="menu_add_address_to_contacts">Add to contacts</string>
