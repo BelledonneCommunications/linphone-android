@@ -130,7 +130,7 @@ class RecordingsListViewModel @UiThread constructor() : GenericViewModel() {
         }
         if (currentlyPlayedRecording != null && model != currentlyPlayedRecording) {
             Log.i("$TAG Recording model has changed, stopping player before starting it")
-            stop(model)
+            stop(currentlyPlayedRecording)
         }
 
         currentlyPlayedRecording = model
