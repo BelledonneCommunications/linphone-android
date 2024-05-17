@@ -250,6 +250,7 @@ class MainActivity : GenericActivity() {
         goToLatestVisitedFragment()
 
         if (intent != null) {
+            Log.d("$TAG Post create intent not null, handling it")
             handleIntent(intent)
         } else {
             // This should never happen!
@@ -295,6 +296,7 @@ class MainActivity : GenericActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
+        Log.d("$TAG Handling new intent")
         handleIntent(intent)
     }
 
@@ -327,6 +329,8 @@ class MainActivity : GenericActivity() {
                     Log.d(
                         "$TAG Main intent without type nor data was already handled, do nothing"
                     )
+                    navigatedToDefaultFragment = true
+                    return
                 } else {
                     viewModel.mainIntentHandled = true
                 }
@@ -446,9 +450,9 @@ class MainActivity : GenericActivity() {
                     startActivity(Intent(this, AssistantActivity::class.java))
                 }
             } else {
-                coreContext.postOnMainThread {
-                    if (intent.hasExtra("Chat")) {
-                        Log.i("$TAG Intent has [Chat] extra")
+                if (intent.hasExtra("Chat")) {
+                    Log.i("$TAG Intent has [Chat] extra")
+                    coreContext.postOnMainThread {
                         try {
                             Log.i("$TAG Trying to go to Conversations fragment")
                             val args = intent.extras
@@ -470,10 +474,15 @@ class MainActivity : GenericActivity() {
                                     "$TAG Current destination is already conversations list, skipping navigation"
                                 )
                             } else {
-                                // TODO: clear back stack?
-                                val action =
-                                    ConversationsListFragmentDirections.actionGlobalConversationsListFragment()
-                                findNavController().navigate(action)
+                                val navOptionsBuilder = NavOptions.Builder()
+                                navOptionsBuilder.setPopUpTo(R.id.historyListFragment, true)
+                                navOptionsBuilder.setLaunchSingleTop(true)
+                                val navOptions = navOptionsBuilder.build()
+                                findNavController().navigate(
+                                    R.id.conversationsListFragment,
+                                    args,
+                                    navOptions
+                                )
                             }
                         } catch (ise: IllegalStateException) {
                             Log.e("$TAG Can't navigate to Conversations fragment: $ise")
