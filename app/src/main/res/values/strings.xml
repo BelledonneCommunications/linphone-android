@@ -347,6 +347,7 @@
     <string name="account_settings_title">Account settings</string>
     <string name="account_settings_push_notification_title">Allow push notifications</string>
     <string name="account_settings_push_notification_not_available_title">Push notifications aren\'t available!</string>
+    <string name="account_settings_im_encryption_mandatory_title">IM encryption mandatory</string>
     <string name="account_settings_sip_proxy_url_title">SIP proxy server URL</string>
     <string name="account_settings_outbound_proxy_title">Outbound proxy</string>
     <string name="account_settings_stun_server_url_title">STUN server URL</string>

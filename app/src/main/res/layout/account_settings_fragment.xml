@@ -89,6 +89,34 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/push_notifications_switch"/>
 
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        style="@style/material_switch_style"
+                        android:id="@+id/im_encryption_mandatory_switch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:checked="@={viewModel.imEncryptionMandatory}"
+                        android:visibility="@{viewModel.imEncryptionMandatoryAvailable ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintTop_toBottomOf="@id/push_notifications_switch"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/settings_title_style"
+                        android:id="@+id/im_encryption_mandatory_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="10dp"
+                        android:text="@string/account_settings_im_encryption_mandatory_title"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:visibility="@{viewModel.imEncryptionMandatoryAvailable ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintTop_toTopOf="@id/im_encryption_mandatory_switch"
+                        app:layout_constraintBottom_toBottomOf="@id/im_encryption_mandatory_switch"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/im_encryption_mandatory_switch"/>
+
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/settings_title_style"
                         android:id="@+id/transport_title"
@@ -100,7 +128,7 @@
                         android:text="@string/assistant_sip_account_transport_protocol"
                         android:maxLines="2"
                         android:ellipsize="end"
-                        app:layout_constraintTop_toBottomOf="@id/push_notifications_switch"
+                        app:layout_constraintTop_toBottomOf="@id/im_encryption_mandatory_switch"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -303,7 +331,7 @@
                         android:layout_marginTop="20dp"
                         android:layout_marginEnd="16dp"
                         android:checked="@={viewModel.cpimInBasicChatRooms}"
-                        android:visibility="@{viewModel.isAccountInSecureMode ? View.GONE : View.VISIBLE}"
+                        android:visibility="@{viewModel.imEncryptionMandatory ? View.GONE : View.VISIBLE}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/bundle_mode_switch" />
 
@@ -317,7 +345,7 @@
                         android:text="@string/account_settings_cpim_in_basic_conversations_title"
                         android:maxLines="2"
                         android:ellipsize="end"
-                        android:visibility="@{viewModel.isAccountInSecureMode ? View.GONE : View.VISIBLE}"
+                        android:visibility="@{viewModel.imEncryptionMandatory ? View.GONE : View.VISIBLE}"
                         app:layout_constraintTop_toTopOf="@id/cpim_basic_chat_room_switch"
                         app:layout_constraintBottom_toBottomOf="@id/cpim_basic_chat_room_switch"
                         app:layout_constraintStart_toStartOf="parent"
@@ -380,6 +408,7 @@
                         android:background="@drawable/edit_text_background"
                         android:paddingStart="20dp"
                         android:paddingEnd="20dp"
+                        android:enabled="@{!viewModel.imEncryptionMandatory}"
                         android:text="@={viewModel.conferenceFactoryUri}"
                         android:inputType="text|textUri"
                         app:layout_constraintStart_toStartOf="parent"
@@ -443,6 +472,7 @@
                         android:background="@drawable/edit_text_background"
                         android:paddingStart="20dp"
                         android:paddingEnd="20dp"
+                        android:enabled="@{!viewModel.imEncryptionMandatory}"
                         android:text="@={viewModel.limeServerUrl}"
                         android:inputType="text|textUri"
                         app:layout_constraintStart_toStartOf="parent"

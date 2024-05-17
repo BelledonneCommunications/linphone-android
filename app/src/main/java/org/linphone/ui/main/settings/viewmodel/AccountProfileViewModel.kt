@@ -54,8 +54,6 @@ class AccountProfileViewModel @UiThread constructor() : GenericViewModel() {
 
     val registerEnabled = MutableLiveData<Boolean>()
 
-    val showModeSelection = MutableLiveData<Boolean>()
-
     val isCurrentlySelectedModeSecure = MutableLiveData<Boolean>()
 
     val devices = MutableLiveData<ArrayList<AccountDeviceModel>>()
@@ -116,16 +114,6 @@ class AccountProfileViewModel @UiThread constructor() : GenericViewModel() {
 
                 sipAddress.postValue(account.params.identityAddress?.asStringUriOnly())
                 displayName.postValue(account.params.identityAddress?.displayName)
-
-                val limeServerUrl = account.params.limeServerUrl
-                val conferenceFactoryUri = account.params.conferenceFactoryUri
-                val showMode = limeServerUrl.orEmpty().isNotEmpty() && conferenceFactoryUri.orEmpty().isNotEmpty()
-                if (!showMode) {
-                    Log.i(
-                        "$TAG Either LIME server URL or conference factory URI isn't set, hiding end-to-end encrypted/interop mode selection"
-                    )
-                }
-                showModeSelection.postValue(showMode)
 
                 val devicesList = arrayListOf<AccountDeviceModel>()
                 // TODO FIXME: use real devices list from API, not implemented yet

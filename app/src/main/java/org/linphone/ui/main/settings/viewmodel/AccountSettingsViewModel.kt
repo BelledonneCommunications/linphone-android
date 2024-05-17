@@ -20,6 +20,7 @@
 package org.linphone.ui.main.settings.viewmodel
 
 import androidx.annotation.UiThread
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import java.util.Locale
 import org.linphone.LinphoneApplication.Companion.coreContext
@@ -29,7 +30,6 @@ import org.linphone.core.NatPolicy
 import org.linphone.core.TransportType
 import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
-import org.linphone.ui.main.model.isEndToEndEncryptionMandatory
 import org.linphone.utils.Event
 
 class AccountSettingsViewModel @UiThread constructor() : GenericViewModel() {
@@ -37,11 +37,13 @@ class AccountSettingsViewModel @UiThread constructor() : GenericViewModel() {
         private const val TAG = "[Account Settings ViewModel]"
     }
 
-    val isAccountInSecureMode = MutableLiveData<Boolean>()
-
     val pushNotificationsAvailable = MutableLiveData<Boolean>()
 
     val pushNotificationsEnabled = MutableLiveData<Boolean>()
+
+    val imEncryptionMandatoryAvailable = MediatorLiveData<Boolean>()
+
+    val imEncryptionMandatory = MutableLiveData<Boolean>()
 
     val availableTransports = arrayListOf<String>()
 
@@ -78,6 +80,13 @@ class AccountSettingsViewModel @UiThread constructor() : GenericViewModel() {
         availableTransports.add(TransportType.Udp.name.uppercase(Locale.getDefault()))
         availableTransports.add(TransportType.Tcp.name.uppercase(Locale.getDefault()))
         availableTransports.add(TransportType.Tls.name.uppercase(Locale.getDefault()))
+
+        imEncryptionMandatoryAvailable.addSource(limeServerUrl) {
+            imEncryptionMandatoryAvailable.value = isImEncrptionMandatoryAvailable()
+        }
+        imEncryptionMandatoryAvailable.addSource(conferenceFactoryUri) {
+            imEncryptionMandatoryAvailable.value = isImEncrptionMandatoryAvailable()
+        }
     }
 
     @UiThread
@@ -90,14 +99,14 @@ class AccountSettingsViewModel @UiThread constructor() : GenericViewModel() {
                 Log.i("$TAG Found matching account [$found]")
                 account = found
 
-                isAccountInSecureMode.postValue(account.isEndToEndEncryptionMandatory())
-
                 val params = account.params
 
                 pushNotificationsAvailable.postValue(core.isPushNotificationAvailable)
                 pushNotificationsEnabled.postValue(
                     core.isPushNotificationAvailable && params.pushNotificationAllowed
                 )
+
+                imEncryptionMandatory.postValue(params.instantMessagingEncryptionMandatory)
 
                 val transportType = params.serverAddress?.transport ?: TransportType.Tls
                 selectedTransport.postValue(transportType)
@@ -141,6 +150,8 @@ class AccountSettingsViewModel @UiThread constructor() : GenericViewModel() {
             if (::account.isInitialized) {
                 val newParams = account.params.clone()
                 newParams.pushNotificationAllowed = pushNotificationsEnabled.value == true
+
+                newParams.instantMessagingEncryptionMandatory = imEncryptionMandatory.value == true
 
                 val server = sipProxyServer.value.orEmpty()
                 if (server.isNotEmpty()) {
@@ -186,5 +197,10 @@ class AccountSettingsViewModel @UiThread constructor() : GenericViewModel() {
                 Log.i("$TAG Changes have been saved")
             }
         }
+    }
+
+    @UiThread
+    fun isImEncrptionMandatoryAvailable(): Boolean {
+        return limeServerUrl.value.orEmpty().isNotEmpty() && conferenceFactoryUri.value.orEmpty().isNotEmpty()
     }
 }
