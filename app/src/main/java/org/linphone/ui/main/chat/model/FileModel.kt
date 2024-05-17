@@ -132,6 +132,7 @@ class FileModel @AnyThread constructor(
         FileUtils.deleteFile(path)
     }
 
+    @AnyThread
     private fun getDuration() {
         try {
             val retriever = MediaMetadataRetriever()

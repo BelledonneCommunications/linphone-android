@@ -53,17 +53,23 @@ class FileViewerActivity : GenericActivity() {
         binding.viewModel = viewModel
 
         val args = intent.extras
-        val path = args?.getString("path")
+        if (args == null) {
+            finish()
+            return
+        }
+
+        val path = args.getString("path")
         if (path.isNullOrEmpty()) {
             finish()
             return
         }
 
+        val timestamp = args.getLong("timestamp", -1)
         val preLoadedContent = args.getString("content")
         Log.i(
             "$TAG Path argument is [$path], pre loaded text content is ${if (preLoadedContent.isNullOrEmpty()) "not available" else "available, using it"}"
         )
-        viewModel.loadFile(path, preLoadedContent)
+        viewModel.loadFile(path, timestamp, preLoadedContent)
 
         binding.setBackClickListener {
             finish()

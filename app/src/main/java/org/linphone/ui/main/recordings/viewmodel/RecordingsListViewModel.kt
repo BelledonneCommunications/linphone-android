@@ -25,6 +25,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.media.AudioFocusRequestCompat
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.ticker
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -67,6 +68,7 @@ class RecordingsListViewModel @UiThread constructor() : GenericViewModel() {
     }
 
     private val tickerChannel = ticker(1000, 1000)
+    private var updatePositionJob: Job? = null
 
     init {
         searchBarVisible.value = false
@@ -166,7 +168,7 @@ class RecordingsListViewModel @UiThread constructor() : GenericViewModel() {
         player?.start()
         model.isPlaying.postValue(true)
 
-        viewModelScope.launch {
+        updatePositionJob = viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 for (tick in tickerChannel) {
                     coreContext.postOnCoreThread {
@@ -193,6 +195,8 @@ class RecordingsListViewModel @UiThread constructor() : GenericViewModel() {
 
         player?.pause()
         model.isPlaying.postValue(false)
+        updatePositionJob?.cancel()
+        updatePositionJob = null
     }
 
     @WorkerThread

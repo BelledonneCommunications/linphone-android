@@ -42,7 +42,8 @@ class MediaViewerActivity : GenericActivity() {
             val list = viewModel.mediaList.value.orEmpty()
             if (position >= 0 && position < list.size) {
                 val model = list[position]
-                viewModel.currentlyDisplayedFileName.value = "${model.fileName}\n${model.dateTime}"
+                viewModel.currentlyDisplayedFileName.value = model.fileName
+                viewModel.currentlyDisplayedFileDateTime.value = model.dateTime
             }
         }
     }

@@ -122,6 +122,8 @@ class DebugFragment : GenericMainFragment() {
                     val bundle = Bundle()
                     bundle.putString("path", CorePreferences.CONFIG_FILE_NAME)
                     bundle.putString("content", content)
+                    val nowInSeconds = System.currentTimeMillis() / 1000
+                    bundle.putLong("timestamp", nowInSeconds)
                     intent.putExtras(bundle)
                     startActivity(intent)
                 }

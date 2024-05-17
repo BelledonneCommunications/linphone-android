@@ -19,8 +19,11 @@
  */
 package org.linphone.ui.file_viewer.fragment
 
+import android.graphics.SurfaceTexture
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Surface
+import android.view.TextureView.SurfaceTextureListener
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
@@ -81,24 +84,6 @@ class MediaViewerFragment : GenericMainFragment() {
         Log.i("$TAG Path argument is [$path], it ${if (exists) "exists" else "doesn't exist"}")
         viewModel.loadFile(path)
 
-        viewModel.isVideo.observe(viewLifecycleOwner) { isVideo ->
-            if (isVideo) {
-                initVideoPlayer(path)
-            }
-        }
-
-        viewModel.toggleVideoPlayPauseEvent.observe(viewLifecycleOwner) {
-            it.consume { play ->
-                if (play) {
-                    Log.i("$TAG Starting video player")
-                    binding.videoPlayer.start()
-                } else {
-                    Log.i("$TAG Pausing video player")
-                    binding.videoPlayer.pause()
-                }
-            }
-        }
-
         binding.setToggleFullScreenModeClickListener {
             viewModel.toggleFullScreen()
             fullScreenChanged?.invoke(viewModel.fullScreenMode.value == true)
@@ -108,40 +93,47 @@ class MediaViewerFragment : GenericMainFragment() {
     override fun onResume() {
         super.onResume()
 
-        if (viewModel.isVideo.value == true) {
-            Log.i("$TAG Resumed, starting video player")
-            binding.videoPlayer.start()
-            viewModel.isVideoPlaying.value = true
+        val textureView = binding.videoPlayer
+        if (textureView.isAvailable) {
+            Log.i("$TAG Surface created, setting display in mediaPlayer")
+            viewModel.mediaPlayer.setSurface((Surface(textureView.surfaceTexture)))
+        } else {
+            Log.i("$TAG Surface not available yet, setting listener")
+            textureView.surfaceTextureListener = object : SurfaceTextureListener {
+                override fun onSurfaceTextureAvailable(
+                    surfaceTexture: SurfaceTexture,
+                    p1: Int,
+                    p2: Int
+                ) {
+                    Log.i("$TAG Surface available, setting display in mediaPlayer")
+                    viewModel.mediaPlayer.setSurface(Surface(surfaceTexture))
+                }
+
+                override fun onSurfaceTextureSizeChanged(
+                    surfaceTexture: SurfaceTexture,
+                    p1: Int,
+                    p2: Int
+                ) {
+                }
+
+                override fun onSurfaceTextureDestroyed(surfaceTexture: SurfaceTexture): Boolean {
+                    return true
+                }
+
+                override fun onSurfaceTextureUpdated(surfaceTexture: SurfaceTexture) {
+                }
+            }
         }
+
+        viewModel.play()
     }
 
     override fun onPause() {
-        if (binding.videoPlayer.isPlaying) {
-            Log.i("$TAG Paused, stopping video player")
-            binding.videoPlayer.pause()
-            viewModel.isVideoPlaying.value = false
-        }
-
-        if (viewModel.isAudioPlaying.value == true) {
-            Log.i("$TAG Paused, stopping audio player")
-            viewModel.pauseAudio()
+        if (viewModel.isMediaPlaying.value == true) {
+            Log.i("$TAG Paused, stopping media player")
+            viewModel.pause()
         }
 
         super.onPause()
-    }
-
-    override fun onDestroyView() {
-        binding.videoPlayer.stopPlayback()
-
-        super.onDestroyView()
-    }
-
-    private fun initVideoPlayer(path: String) {
-        Log.i("$TAG Creating video player for file [$path]")
-        binding.videoPlayer.setVideoPath(path)
-        binding.videoPlayer.setOnCompletionListener {
-            Log.i("$TAG End of file reached")
-            viewModel.isVideoPlaying.value = false
-        }
     }
 }

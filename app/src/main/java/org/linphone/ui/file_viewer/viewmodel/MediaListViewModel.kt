@@ -39,6 +39,8 @@ class MediaListViewModel @UiThread constructor() : AbstractConversationViewModel
 
     val currentlyDisplayedFileName = MutableLiveData<String>()
 
+    val currentlyDisplayedFileDateTime = MutableLiveData<String>()
+
     override fun beforeNotifyingChatRoomFound(sameOne: Boolean) {
         loadMediaList()
     }

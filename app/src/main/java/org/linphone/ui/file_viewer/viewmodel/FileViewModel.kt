@@ -40,6 +40,7 @@ import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
 import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
+import org.linphone.utils.TimestampUtils
 
 class FileViewModel @UiThread constructor() : GenericViewModel() {
     companion object {
@@ -63,6 +64,8 @@ class FileViewModel @UiThread constructor() : GenericViewModel() {
     val text = MutableLiveData<String>()
 
     val fileReadyEvent = MutableLiveData<Event<Boolean>>()
+
+    val dateTime = MutableLiveData<String>()
 
     val exportPlainTextFileEvent: MutableLiveData<Event<String>> by lazy {
         MutableLiveData<Event<String>>()
@@ -98,11 +101,17 @@ class FileViewModel @UiThread constructor() : GenericViewModel() {
     }
 
     @UiThread
-    fun loadFile(file: String, content: String? = null) {
+    fun loadFile(file: String, timestamp: Long, content: String? = null) {
         fullScreenMode.value = true
 
         val name = FileUtils.getNameFromFilePath(file)
         fileName.value = name
+
+        dateTime.value = TimestampUtils.toString(
+            timestamp,
+            shortDate = false,
+            hideYear = false
+        )
 
         if (!content.isNullOrEmpty()) {
             isText.value = true

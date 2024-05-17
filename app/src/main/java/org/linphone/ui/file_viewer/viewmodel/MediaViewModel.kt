@@ -23,10 +23,16 @@ import android.media.AudioAttributes
 import android.media.MediaPlayer
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.ticker
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
-import org.linphone.utils.Event
 import org.linphone.utils.FileUtils
+import org.linphone.utils.TimestampUtils
 
 class MediaViewModel @UiThread constructor() : GenericViewModel() {
     companion object {
@@ -43,24 +49,29 @@ class MediaViewModel @UiThread constructor() : GenericViewModel() {
 
     val isVideo = MutableLiveData<Boolean>()
 
-    val isVideoPlaying = MutableLiveData<Boolean>()
-
     val isAudio = MutableLiveData<Boolean>()
 
-    val isAudioPlaying = MutableLiveData<Boolean>()
+    val isMediaPlaying = MutableLiveData<Boolean>()
 
-    val toggleVideoPlayPauseEvent: MutableLiveData<Event<Boolean>> by lazy {
-        MutableLiveData<Event<Boolean>>()
-    }
+    val duration = MutableLiveData<Int>()
+
+    val formattedDuration = MutableLiveData<String>()
+
+    val position = MutableLiveData<Int>()
+
+    lateinit var mediaPlayer: MediaPlayer
 
     private lateinit var filePath: String
 
-    private lateinit var mediaPlayer: MediaPlayer
+    private val tickerChannel = ticker(1000, 1000)
+
+    private var updatePositionJob: Job? = null
 
     override fun onCleared() {
         if (::mediaPlayer.isInitialized) {
             mediaPlayer.release()
         }
+        stopUpdatePlaybackPosition()
 
         super.onCleared()
     }
@@ -81,14 +92,13 @@ class MediaViewModel @UiThread constructor() : GenericViewModel() {
             }
             FileUtils.MimeType.Video -> {
                 Log.d("$TAG File [$file] seems to be a video")
+                initMediaPlayer()
                 isVideo.value = true
-                isVideoPlaying.value = false
             }
             FileUtils.MimeType.Audio -> {
                 Log.d("$TAG File [$file] seems to be an audio file")
-                isAudio.value = true
-
                 initMediaPlayer()
+                isAudio.value = true
             }
             else -> {
                 Log.e("$TAG Unexpected MIME type [$mime] for file at [$file]")
@@ -102,35 +112,44 @@ class MediaViewModel @UiThread constructor() : GenericViewModel() {
     }
 
     @UiThread
-    fun playPauseVideo() {
-        val playVideo = isVideoPlaying.value == false
-        isVideoPlaying.value = playVideo
-        toggleVideoPlayPauseEvent.value = Event(playVideo)
-    }
-
-    @UiThread
-    fun playPauseAudio() {
+    fun togglePlayPause() {
         if (::mediaPlayer.isInitialized) {
             if (mediaPlayer.isPlaying) {
                 mediaPlayer.pause()
-                isAudioPlaying.value = false
+
+                isMediaPlaying.value = false
+                stopUpdatePlaybackPosition()
             } else {
                 mediaPlayer.start()
-                isAudioPlaying.value = true
+
+                isMediaPlaying.value = true
+                startUpdatePlaybackPosition()
             }
         }
     }
 
     @UiThread
-    fun pauseAudio() {
+    fun play() {
         if (::mediaPlayer.isInitialized) {
+            mediaPlayer.start()
+            startUpdatePlaybackPosition()
+            isMediaPlaying.value = true
+        }
+    }
+
+    @UiThread
+    fun pause() {
+        if (::mediaPlayer.isInitialized) {
+            isMediaPlaying.value = false
+            stopUpdatePlaybackPosition()
             mediaPlayer.pause()
         }
     }
 
     @UiThread
     private fun initMediaPlayer() {
-        isAudioPlaying.value = false
+        isMediaPlaying.value = false
+
         mediaPlayer = MediaPlayer().apply {
             setAudioAttributes(
                 AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).setUsage(
@@ -140,12 +159,39 @@ class MediaViewModel @UiThread constructor() : GenericViewModel() {
             setDataSource(filePath)
             setOnCompletionListener {
                 Log.i("$TAG Media player reached the end of file")
-                isAudioPlaying.postValue(false)
+                isMediaPlaying.postValue(false)
+                position.postValue(0)
+                stopUpdatePlaybackPosition()
+
+                // Leave full screen when playback is done
+                fullScreenMode.postValue(false)
             }
             prepare()
-            start()
-            isAudioPlaying.value = true
         }
-        Log.i("$TAG Media player for file [$filePath] created")
+
+        val durationInMillis = mediaPlayer.duration
+        position.value = 0
+        duration.value = durationInMillis
+        formattedDuration.value = TimestampUtils.durationToString(durationInMillis / 1000)
+        Log.i("$TAG Media player for file [$filePath] created, let's start it")
+    }
+
+    @UiThread
+    fun startUpdatePlaybackPosition() {
+        updatePositionJob = viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                for (tick in tickerChannel) {
+                    if (::mediaPlayer.isInitialized && mediaPlayer.isPlaying) {
+                        position.postValue(mediaPlayer.currentPosition)
+                    }
+                }
+            }
+        }
+    }
+
+    @UiThread
+    fun stopUpdatePlaybackPosition() {
+        updatePositionJob?.cancel()
+        updatePositionJob = null
     }
 }

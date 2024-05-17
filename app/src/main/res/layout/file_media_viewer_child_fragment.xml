@@ -19,22 +19,13 @@
         android:layout_height="match_parent"
         android:background="@color/black">
 
-        <ImageView
-            android:id="@+id/play_pause_audio_playback"
-            android:onClick="@{() -> viewModel.playPauseAudio()}"
+        <androidx.constraintlayout.widget.Group
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:contentDescription="@string/content_description_play_pause_video_playback"
-            android:src="@{viewModel.isAudioPlaying ? @drawable/pause_fill : @drawable/play_fill, default=@drawable/play_fill}"
-            android:visibility="@{viewModel.isAudio ? View.VISIBLE : View.GONE, default=gone}"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:tint="@color/white"/>
+            android:visibility="@{viewModel.fullScreenMode ? View.GONE : viewModel.isAudio || viewModel.isVideo ? View.VISIBLE : View.GONE}"
+            app:constraint_referenced_ids="play_pause_audio_playback, progress, duration" />
 
-        <VideoView
+        <TextureView
             android:id="@+id/video_player"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -45,30 +36,71 @@
             app:layout_constraintEnd_toEndOf="parent"/>
 
         <ImageView
-            android:id="@+id/play_pause_video_playback"
-            android:onClick="@{() -> viewModel.playPauseVideo()}"
+            android:id="@+id/audio_file_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:contentDescription="@string/content_description_play_pause_video_playback"
-            android:src="@{viewModel.isVideoPlaying ? @drawable/pause_fill : @drawable/play_fill, default=@drawable/play_fill}"
-            android:visibility="@{viewModel.isVideo &amp;&amp; !viewModel.fullScreenMode ? View.VISIBLE : View.GONE, default=gone}"
+            android:src="@drawable/music_notes"
+            android:contentDescription="@null"
+            android:visibility="@{viewModel.isAudio ? View.VISIBLE : View.GONE, default=gone}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:tint="@color/white"/>
+            app:tint="@color/white" />
 
         <com.github.chrisbanes.photoview.PhotoView
             android:id="@+id/image"
             android:onClick="@{toggleFullScreenModeClickListener}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/illu"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             coilFile="@{viewModel.path}"
             android:visibility="@{viewModel.isImage ? View.VISIBLE : View.GONE, default=gone}" />
+
+        <ImageView
+            android:id="@+id/play_pause_audio_playback"
+            android:onClick="@{() -> viewModel.togglePlayPause()}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="@dimen/screen_bottom_margin"
+            android:padding="8dp"
+            android:contentDescription="@string/content_description_play_pause_video_playback"
+            android:src="@{viewModel.isMediaPlaying ? @drawable/pause_fill : @drawable/play_fill, default=@drawable/play_fill}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:tint="@color/white"/>
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progress"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:max="@{viewModel.duration, default=100}"
+            android:progress="@{viewModel.position, default=75}"
+            app:trackCornerRadius="5dp"
+            app:trackThickness="10dp"
+            app:trackColor="?attr/color_main1_100"
+            app:indicatorColor="?attr/color_main1_500"
+            app:layout_constraintTop_toTopOf="@id/play_pause_audio_playback"
+            app:layout_constraintBottom_toBottomOf="@id/play_pause_audio_playback"
+            app:layout_constraintStart_toEndOf="@id/play_pause_audio_playback"
+            app:layout_constraintEnd_toStartOf="@id/duration"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_700"
+            android:id="@+id/duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="@{viewModel.formattedDuration, default=`00:42`}"
+            android:textSize="13sp"
+            android:textColor="@color/white"
+            app:layout_constraintTop_toTopOf="@id/play_pause_audio_playback"
+            app:layout_constraintBottom_toBottomOf="@id/play_pause_audio_playback"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

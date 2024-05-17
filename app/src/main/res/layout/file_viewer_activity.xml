@@ -25,7 +25,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="@{viewModel.fullScreenMode ? View.GONE : View.VISIBLE}"
-            app:constraint_referenced_ids="back, title, share, save, file_name"/>
+            app:constraint_referenced_ids="top_bar_background, back, file_name, share, save, date_time"/>
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/top_bar_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="back, date_time"
+            app:barrierDirection="bottom" />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/pdf_view_pager"
@@ -48,7 +55,7 @@
             android:text="@{viewModel.pdfCurrentPage + ` / ` + viewModel.pdfPages, default=`1 / 30`}"
             android:textColor="@color/white"
             android:background="#80000000"
-            app:layout_constraintBottom_toTopOf="@id/file_name"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/pdf_view_pager"
             app:layout_constraintEnd_toEndOf="@id/pdf_view_pager" />
 
@@ -75,79 +82,85 @@
 
         </ScrollView>
 
+        <View
+            android:id="@+id/top_bar_background"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/white"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/top_bar_barrier"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
         <ImageView
             android:id="@+id/back"
             android:onClick="@{backClickListener}"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:background="?attr/color_main2_000"
+            android:layout_height="@dimen/top_bar_height"
             android:adjustViewBounds="true"
             android:padding="15dp"
             android:src="@drawable/caret_left"
             android:contentDescription="@string/content_description_go_back_icon"
             app:tint="?attr/color_main1_500"
-            app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/title" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/main_page_title_style"
-            android:id="@+id/title"
+            style="@style/default_text_style_700"
+            android:id="@+id/file_name"
             android:layout_width="0dp"
-            android:layout_height="@dimen/top_bar_height"
-            android:background="?attr/color_main2_000"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp"
-            android:text=""
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.fileName, default=`nomdufichier.jpg`}"
+            android:textSize="13sp"
+            android:textColor="?attr/color_main2_600"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintEnd_toStartOf="@id/share"
             app:layout_constraintStart_toEndOf="@id/back"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/date_time"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/default_text_style_300"
+            android:id="@+id/date_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.dateTime, default=`envoyé le 02/05/2023 à 11h05`}"
+            android:textSize="12sp"
+            android:textColor="?attr/color_main2_500"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintTop_toBottomOf="@id/file_name"
+            app:layout_constraintBottom_toBottomOf="@id/back"
+            app:layout_constraintEnd_toStartOf="@id/share"
+            app:layout_constraintStart_toEndOf="@id/back"/>
 
         <ImageView
             android:id="@+id/share"
             android:onClick="@{shareClickListener}"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:background="?attr/color_main2_000"
+            android:layout_height="@dimen/top_bar_height"
             android:adjustViewBounds="true"
             android:padding="15dp"
             android:src="@drawable/share_network"
             android:contentDescription="@string/content_description_share_file"
             app:tint="?attr/color_main1_500"
-            app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintEnd_toStartOf="@id/save"
-            app:layout_constraintTop_toTopOf="@id/title" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/save"
             android:onClick="@{() -> viewModel.exportToMediaStore()}"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:background="?attr/color_main2_000"
+            android:layout_height="@dimen/top_bar_height"
             android:adjustViewBounds="true"
             android:padding="15dp"
             android:src="@drawable/download_simple"
             android:contentDescription="@string/content_description_save_file"
             app:tint="?attr/color_main1_500"
-            app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/title" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/default_text_style_300"
-            android:id="@+id/file_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="?attr/color_main2_000"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
-            android:text="@{viewModel.fileName, default=`nomdufichier.jpg\nenvoyé le 02/05/2023 à 11h05`}"
-            android:textSize="12sp"
-            android:textColor="?attr/color_main2_600"
-            android:textAlignment="center"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
             android:id="@+id/toasts_area"
