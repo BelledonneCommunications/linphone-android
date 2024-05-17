@@ -82,7 +82,7 @@ class DrawerMenuFragment : GenericMainFragment() {
 
         binding.setRecordingsClickListener {
             val navController = (requireActivity() as MainActivity).findNavController()
-            navController.navigate(R.id.action_global_recordingsFragment)
+            navController.navigate(R.id.action_global_recordingsListFragment)
             (requireActivity() as MainActivity).closeDrawerMenu()
         }
 

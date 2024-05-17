@@ -30,7 +30,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.launch
 import org.linphone.core.tools.Log
-import org.linphone.databinding.RecordingsFragmentBinding
+import org.linphone.databinding.RecordingsListFragmentBinding
 import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.ui.main.recordings.adapter.RecordingsListAdapter
 import org.linphone.ui.main.recordings.viewmodel.RecordingsListViewModel
@@ -39,12 +39,12 @@ import org.linphone.utils.hideKeyboard
 import org.linphone.utils.showKeyboard
 
 @UiThread
-class RecordingsFragment : GenericMainFragment() {
+class RecordingsListFragment : GenericMainFragment() {
     companion object {
         private const val TAG = "[Recordings List Fragment]"
     }
 
-    private lateinit var binding: RecordingsFragmentBinding
+    private lateinit var binding: RecordingsListFragmentBinding
 
     private lateinit var listViewModel: RecordingsListViewModel
 
@@ -63,7 +63,7 @@ class RecordingsFragment : GenericMainFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = RecordingsFragmentBinding.inflate(layoutInflater)
+        binding = RecordingsListFragmentBinding.inflate(layoutInflater)
         return binding.root
     }
 

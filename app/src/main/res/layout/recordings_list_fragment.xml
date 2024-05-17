@@ -16,31 +16,41 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/color_main2_000">
+        android:background="?attr/color_main2_000"
+        app:layout_constraintEnd_toStartOf="@+id/search"
+        app:layout_constraintStart_toStartOf="@+id/search">
 
         <androidx.constraintlayout.widget.Group
+            android:id="@+id/group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="cancel_search, search, clear_field"
-            android:visibility="@{viewModel.searchBarVisible ? View.VISIBLE : View.GONE, default=gone}" />
+            android:visibility="@{viewModel.recordings.empty ? View.VISIBLE : View.GONE}"
+            app:constraint_referenced_ids="no_recording_image, no_recording_label" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/group2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewModel.searchBarVisible ? View.VISIBLE : View.GONE, default=gone}"
+            app:constraint_referenced_ids="cancel_search, search, clear_field" />
 
         <ImageView
             android:id="@+id/back"
-            android:onClick="@{backClickListener}"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:adjustViewBounds="true"
+            android:contentDescription="@string/content_description_go_back_icon"
+            android:onClick="@{backClickListener}"
             android:padding="15dp"
             android:src="@drawable/caret_left"
-            android:contentDescription="@string/content_description_go_back_icon"
-            app:tint="?attr/color_main1_500"
             app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/title" />
+            app:layout_constraintTop_toTopOf="@id/title"
+            app:tint="?attr/color_main1_500" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/main_page_title_style"
             android:id="@+id/title"
+            style="@style/main_page_title_style"
             android:layout_width="0dp"
             android:layout_height="@dimen/top_bar_height"
             android:layout_marginStart="10dp"
@@ -49,17 +59,17 @@
             android:visibility="@{viewModel.searchBarVisible ? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toStartOf="@id/search_toggle"
             app:layout_constraintStart_toEndOf="@id/back"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/search_toggle"
-            android:onClick="@{() -> viewModel.openSearchBar()}"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
+            android:contentDescription="@string/content_description_open_filter"
+            android:onClick="@{() -> viewModel.openSearchBar()}"
             android:padding="15dp"
             android:src="@drawable/magnifying_glass"
             android:visibility="@{viewModel.searchBarVisible ? View.GONE : View.VISIBLE}"
-            android:contentDescription="@string/content_description_open_filter"
             app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/title"
@@ -67,29 +77,29 @@
 
         <ImageView
             android:id="@+id/cancel_search"
-            android:onClick="@{() -> viewModel.closeSearchBar()}"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
+            android:contentDescription="@string/content_description_cancel_filter"
+            android:onClick="@{() -> viewModel.closeSearchBar()}"
             android:padding="15dp"
             android:src="@drawable/caret_left"
-            android:contentDescription="@string/content_description_cancel_filter"
             app:layout_constraintBottom_toBottomOf="@id/search"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/search"
             app:tint="?attr/color_main2_500" />
 
         <com.google.android.material.textfield.TextInputLayout
-            style="?attr/textInputFilledStyle"
             android:id="@+id/search"
+            style="?attr/textInputFilledStyle"
             android:layout_width="0dp"
             android:layout_height="@dimen/top_bar_height"
             android:gravity="center_vertical"
             android:textColorHint="?attr/color_main2_400"
-            app:hintEnabled="false"
-            app:hintAnimationEnabled="false"
-            app:hintTextColor="?attr/color_main2_400"
             app:boxStrokeWidth="0dp"
             app:boxStrokeWidthFocused="0dp"
+            app:hintAnimationEnabled="false"
+            app:hintEnabled="false"
+            app:hintTextColor="?attr/color_main2_400"
             app:layout_constraintEnd_toStartOf="@id/clear_field"
             app:layout_constraintStart_toEndOf="@id/cancel_search"
             app:layout_constraintTop_toTopOf="parent">
@@ -97,25 +107,25 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textCursorDrawable="@null"
-                android:textSize="16sp"
+                android:background="@android:color/transparent"
                 android:inputType="text"
                 android:paddingVertical="1dp"
                 android:text="@={viewModel.searchFilter}"
-                android:background="@android:color/transparent" />
+                android:textCursorDrawable="@null"
+                android:textSize="16sp" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <ImageView
             android:id="@+id/clear_field"
-            android:onClick="@{() -> viewModel.clearFilter()}"
-            android:enabled="@{viewModel.searchFilter.length() > 0}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="6dp"
             android:layout_marginEnd="9dp"
-            android:src="@drawable/x"
             android:contentDescription="@string/content_description_clear_filter"
+            android:enabled="@{viewModel.searchFilter.length() > 0}"
+            android:onClick="@{() -> viewModel.clearFilter()}"
+            android:padding="6dp"
+            android:src="@drawable/x"
             app:layout_constraintBottom_toBottomOf="@id/search"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/search"
@@ -126,34 +136,34 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:src="@drawable/illu"
             android:contentDescription="@null"
-            app:layout_constraintHeight_max="200dp"
+            android:src="@drawable/illu"
+            app:layout_constraintBottom_toTopOf="@id/no_recording_label"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintVertical_chainStyle="packed"
-            app:layout_constraintTop_toBottomOf="@id/title"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_max="200dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/no_recording_label" />
+            app:layout_constraintTop_toBottomOf="@id/title"
+            app:layout_constraintVertical_chainStyle="packed" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/section_header_style"
             android:id="@+id/no_recording_label"
+            style="@style/section_header_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/recordings_list_empty"
-            app:layout_constraintTop_toBottomOf="@id/no_recording_image"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/no_recording_image" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recordings_list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="@dimen/top_bar_height"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/fetch_in_progress"
@@ -162,10 +172,10 @@
             android:indeterminate="true"
             android:visibility="@{viewModel.fetchInProgress ? View.VISIBLE : View.GONE}"
             app:indicatorColor="@color/main1_500"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

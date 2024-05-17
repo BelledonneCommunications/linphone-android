@@ -173,14 +173,14 @@
         app:launchSingleTop="true"/>
 
     <fragment
-        android:id="@+id/recordingsFragment"
-        android:name="org.linphone.ui.main.recordings.fragment.RecordingsFragment"
-        android:label="RecordingsFragment"
-        tools:layout="@layout/recordings_fragment" />
+        android:id="@+id/recordingsListFragment"
+        android:name="org.linphone.ui.main.recordings.fragment.RecordingsListFragment"
+        android:label="RecordingsListFragment"
+        tools:layout="@layout/recordings_list_fragment" />
 
     <action
-        android:id="@+id/action_global_recordingsFragment"
-        app:destination="@id/recordingsFragment"
+        android:id="@+id/action_global_recordingsListFragment"
+        app:destination="@id/recordingsListFragment"
         app:enterAnim="@anim/slide_in_right"
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@anim/slide_in_left"
