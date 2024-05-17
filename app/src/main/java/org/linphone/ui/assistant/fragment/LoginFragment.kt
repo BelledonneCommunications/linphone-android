@@ -98,10 +98,16 @@ class LoginFragment : GenericFragment() {
         }
 
         viewModel.accountLoggedInEvent.observe(viewLifecycleOwner) {
-            it.consume {
-                Log.i("$TAG Account successfully logged-in, go to profile mode fragment")
-                val action = LoginFragmentDirections.actionLoginFragmentToProfileModeFragment()
-                findNavController().navigate(action)
+            it.consume { firstAccount ->
+                Log.i("$TAG Account successfully logged-in")
+                if (firstAccount) {
+                    Log.i("$TAG First account, going to secure/interop mode chooser")
+                    val action = LoginFragmentDirections.actionLoginFragmentToProfileModeFragment()
+                    findNavController().navigate(action)
+                } else {
+                    Log.i("$TAG Not first account, leaving assistant")
+                    requireActivity().finish()
+                }
             }
         }
 

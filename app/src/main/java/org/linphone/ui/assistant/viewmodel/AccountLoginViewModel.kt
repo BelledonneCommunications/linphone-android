@@ -89,7 +89,7 @@ open class AccountLoginViewModel @UiThread constructor() : GenericViewModel() {
 
                     // Set new account as default
                     core.defaultAccount = newlyCreatedAccount
-                    accountLoggedInEvent.postValue(Event(true))
+                    accountLoggedInEvent.postValue(Event(core.accountList.size == 1))
                 } else if (state == RegistrationState.Failed) {
                     registrationInProgress.postValue(false)
                     core.removeListener(this)

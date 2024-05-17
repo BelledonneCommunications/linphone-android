@@ -568,8 +568,7 @@ class ConversationFragment : SlidingPaneChildFragment() {
             Log.i(
                 "$TAG Navigating to account profile mode fragment to let user change mode to interop"
             )
-            sharedViewModel.goToAccountProfileModeEvent.value = Event(true)
-            sharedViewModel.goToAccountProfileEvent.value = Event(true)
+            // TODO FIXME: show bottom dialog like for encrypted conversation
         }
 
         sendMessageViewModel.emojiToAddEvent.observe(viewLifecycleOwner) {
