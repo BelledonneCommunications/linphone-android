@@ -61,6 +61,8 @@ class AccountModel @WorkerThread constructor(
 
     val notificationsCount = MutableLiveData<Int>()
 
+    val voicemailCount = MutableLiveData<Int>()
+
     private val accountListener = object : AccountListenerStub() {
         @WorkerThread
         override fun onRegistrationStateChanged(
@@ -90,6 +92,7 @@ class AccountModel @WorkerThread constructor(
                 Log.i(
                     "$TAG [MWI] [$context]: new [$nbNew] urgent ($nbNewUrgent), old [$nbOld] urgent ($nbOldUrgent)"
                 )
+                voicemailCount.postValue(nbNew)
             }
         }
     }
@@ -115,6 +118,7 @@ class AccountModel @WorkerThread constructor(
         coreContext.core.addListener(coreListener)
 
         presenceStatus.postValue(ConsolidatedPresence.Offline)
+        voicemailCount.postValue(0)
 
         update()
     }
