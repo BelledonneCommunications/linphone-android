@@ -313,6 +313,8 @@
     <string name="settings_advanced_keep_alive_service_title">Keep app alive using Service</string>
     <string name="settings_advanced_remote_provisioning_url">Remote provisioning URL</string>
     <string name="settings_advanced_download_apply_remote_provisioning">Download &amp; apply</string>
+    <string name="settings_advanced_input_audio_device_title">Default input audio device</string>
+    <string name="settings_advanced_output_audio_device_title">Default output audio device</string>
 
     <!-- Account profile & settings -->
     <string name="manage_account_title">Manage account</string>

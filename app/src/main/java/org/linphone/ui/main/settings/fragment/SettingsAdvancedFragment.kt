@@ -23,8 +23,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.annotation.UiThread
 import androidx.lifecycle.ViewModelProvider
+import org.linphone.R
 import org.linphone.databinding.SettingsAdvancedFragmentBinding
 import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.ui.main.settings.viewmodel.SettingsViewModel
@@ -38,6 +41,24 @@ class SettingsAdvancedFragment : GenericMainFragment() {
     private lateinit var binding: SettingsAdvancedFragmentBinding
 
     private lateinit var viewModel: SettingsViewModel
+
+    private val inputAudioDeviceDropdownListener = object : AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            viewModel.setInputAudioDevice(position)
+        }
+
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+        }
+    }
+
+    private val outputAudioDeviceDropdownListener = object : AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            viewModel.setOutputAudioDevice(position)
+        }
+
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -62,6 +83,14 @@ class SettingsAdvancedFragment : GenericMainFragment() {
             goBack()
         }
 
+        viewModel.inputAudioDeviceIndex.observe(viewLifecycleOwner) {
+            setupInputAudioDevicePicker()
+        }
+
+        viewModel.outputAudioDeviceIndex.observe(viewLifecycleOwner) {
+            setupOutputAudioDevicePicker()
+        }
+
         startPostponedEnterTransition()
     }
 
@@ -69,5 +98,31 @@ class SettingsAdvancedFragment : GenericMainFragment() {
         viewModel.updateRemoteProvisioningUrl()
 
         super.onPause()
+    }
+
+    private fun setupInputAudioDevicePicker() {
+        val index = viewModel.inputAudioDeviceIndex.value ?: 0
+        val adapter = ArrayAdapter(
+            requireContext(),
+            R.layout.drop_down_item,
+            viewModel.inputAudioDeviceLabels
+        )
+        adapter.setDropDownViewResource(R.layout.generic_dropdown_cell)
+        binding.inputAudioDevice.adapter = adapter
+        binding.inputAudioDevice.onItemSelectedListener = inputAudioDeviceDropdownListener
+        binding.inputAudioDevice.setSelection(index)
+    }
+
+    private fun setupOutputAudioDevicePicker() {
+        val index = viewModel.outputAudioDeviceIndex.value ?: 0
+        val adapter = ArrayAdapter(
+            requireContext(),
+            R.layout.drop_down_item,
+            viewModel.outputAudioDeviceLabels
+        )
+        adapter.setDropDownViewResource(R.layout.generic_dropdown_cell)
+        binding.outputAudioDevice.adapter = adapter
+        binding.outputAudioDevice.onItemSelectedListener = outputAudioDeviceDropdownListener
+        binding.outputAudioDevice.setSelection(index)
     }
 }

@@ -21,11 +21,15 @@ package org.linphone.ui.main.settings.viewmodel
 
 import android.os.Vibrator
 import androidx.annotation.UiThread
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.LinphoneApplication.Companion.corePreferences
 import org.linphone.R
+import org.linphone.core.AudioDevice
 import org.linphone.core.Conference
+import org.linphone.core.Core
+import org.linphone.core.CoreListenerStub
 import org.linphone.core.FriendList
 import org.linphone.core.VFS
 import org.linphone.core.tools.Log
@@ -148,8 +152,27 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
 
     val remoteProvisioningUrl = MutableLiveData<String>()
 
+    val inputAudioDeviceIndex = MutableLiveData<Int>()
+    val inputAudioDeviceLabels = arrayListOf<String>()
+    private val inputAudioDeviceValues = arrayListOf<AudioDevice>()
+
+    val outputAudioDeviceIndex = MutableLiveData<Int>()
+    val outputAudioDeviceLabels = arrayListOf<String>()
+    private val outputAudioDeviceValues = arrayListOf<AudioDevice>()
+
+    private val coreListener = object : CoreListenerStub() {
+        override fun onAudioDevicesListUpdated(core: Core) {
+            Log.i(
+                "$TAG Audio devices list has changed, update available input/output audio devices list"
+            )
+            setupAudioDevices()
+        }
+    }
+
     init {
         coreContext.postOnCoreThread { core ->
+            core.addListener(coreListener)
+
             showConversationsSettings.postValue(!corePreferences.disableChat)
             showMeetingsSettings.postValue(!corePreferences.disableMeetings)
             ldapAvailable.postValue(core.ldapAvailable())
@@ -197,7 +220,17 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
             keepAliveThirdPartyAccountsService.postValue(corePreferences.keepServiceAlive)
 
             remoteProvisioningUrl.postValue(core.provisioningUri)
+
+            setupAudioDevices()
         }
+    }
+
+    override fun onCleared() {
+        coreContext.postOnCoreThread { core ->
+            core.removeListener(coreListener)
+        }
+
+        super.onCleared()
     }
 
     @UiThread
@@ -461,6 +494,60 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
             Log.i("$TAG Core has been stopped, restarting it")
             coreContext.core.start()
             Log.i("$TAG Core has been restarted")
+        }
+    }
+
+    @UiThread
+    fun setInputAudioDevice(index: Int) {
+        coreContext.postOnCoreThread { core ->
+            val audioDevice = inputAudioDeviceValues[index]
+            core.defaultInputAudioDevice = audioDevice
+        }
+    }
+
+    @UiThread
+    fun setOutputAudioDevice(index: Int) {
+        coreContext.postOnCoreThread { core ->
+            val audioDevice = outputAudioDeviceValues[index]
+            core.defaultOutputAudioDevice = audioDevice
+        }
+    }
+
+    @WorkerThread
+    private fun setupAudioDevices() {
+        val core = coreContext.core
+
+        inputAudioDeviceLabels.clear()
+        inputAudioDeviceValues.clear()
+        outputAudioDeviceLabels.clear()
+        outputAudioDeviceValues.clear()
+
+        var inputIndex = 0
+        val defaultInputAudioDevice = core.defaultInputAudioDevice
+        Log.i("$TAG Current default input audio device is [${defaultInputAudioDevice?.id}]")
+        for (audioDevice in core.extendedAudioDevices) {
+            if (audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityRecord)) {
+                inputAudioDeviceLabels.add(audioDevice.id)
+                inputAudioDeviceValues.add(audioDevice)
+                if (audioDevice.id == defaultInputAudioDevice?.id) {
+                    inputAudioDeviceIndex.postValue(inputIndex)
+                }
+                inputIndex += 1
+            }
+        }
+
+        var outputIndex = 0
+        val defaultOutputAudioDevice = core.defaultOutputAudioDevice
+        Log.i("$TAG Current default output audio device is [${defaultOutputAudioDevice?.id}]")
+        for (audioDevice in core.extendedAudioDevices) {
+            if (audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
+                outputAudioDeviceLabels.add(audioDevice.id)
+                outputAudioDeviceValues.add(audioDevice)
+                if (audioDevice.id == defaultOutputAudioDevice?.id) {
+                    outputAudioDeviceIndex.postValue(outputIndex)
+                }
+                outputIndex += 1
+            }
         }
     }
 }

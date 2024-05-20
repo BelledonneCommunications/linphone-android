@@ -9,4 +9,6 @@
     android:gravity="center_vertical"
     android:paddingStart="20dp"
     android:paddingEnd="20dp"
+    android:maxLines="1"
+    android:ellipsize="end"
     tools:ignore="HardcodedText" />
