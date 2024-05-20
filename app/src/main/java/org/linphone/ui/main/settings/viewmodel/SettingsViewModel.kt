@@ -35,6 +35,7 @@ import org.linphone.core.VFS
 import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
 import org.linphone.ui.main.settings.model.CardDavLdapModel
+import org.linphone.ui.main.settings.model.CodecModel
 import org.linphone.utils.AppUtils
 import org.linphone.utils.Event
 
@@ -152,13 +153,19 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
 
     val remoteProvisioningUrl = MutableLiveData<String>()
 
+    val expandAudioDevices = MutableLiveData<Boolean>()
     val inputAudioDeviceIndex = MutableLiveData<Int>()
     val inputAudioDeviceLabels = arrayListOf<String>()
     private val inputAudioDeviceValues = arrayListOf<AudioDevice>()
-
     val outputAudioDeviceIndex = MutableLiveData<Int>()
     val outputAudioDeviceLabels = arrayListOf<String>()
     private val outputAudioDeviceValues = arrayListOf<AudioDevice>()
+
+    val expandAudioCodecs = MutableLiveData<Boolean>()
+    val audioCodecs = MutableLiveData<List<CodecModel>>()
+
+    val expandVideoCodecs = MutableLiveData<Boolean>()
+    val videoCodecs = MutableLiveData<List<CodecModel>>()
 
     private val coreListener = object : CoreListenerStub() {
         override fun onAudioDevicesListUpdated(core: Core) {
@@ -188,6 +195,9 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
         expandMeetings.value = false
         expandNetwork.value = false
         expandUserInterface.value = false
+        expandAudioDevices.value = false
+        expandAudioCodecs.value = false
+        expandVideoCodecs.value = false
 
         isVfsEnabled.value = VFS.isEnabled(coreContext.context)
 
@@ -222,6 +232,7 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
             remoteProvisioningUrl.postValue(core.provisioningUri)
 
             setupAudioDevices()
+            setupCodecs()
         }
     }
 
@@ -498,6 +509,11 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
     }
 
     @UiThread
+    fun toggleAudioDevicesExpand() {
+        expandAudioDevices.value = expandAudioDevices.value == false
+    }
+
+    @UiThread
     fun setInputAudioDevice(index: Int) {
         coreContext.postOnCoreThread { core ->
             val audioDevice = inputAudioDeviceValues[index]
@@ -527,6 +543,8 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
         Log.i("$TAG Current default input audio device is [${defaultInputAudioDevice?.id}]")
         for (audioDevice in core.extendedAudioDevices) {
             if (audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityRecord)) {
+                if (audioDevice.id.contains("deprecated")) continue
+
                 inputAudioDeviceLabels.add(audioDevice.id)
                 inputAudioDeviceValues.add(audioDevice)
                 if (audioDevice.id == defaultInputAudioDevice?.id) {
@@ -541,6 +559,8 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
         Log.i("$TAG Current default output audio device is [${defaultOutputAudioDevice?.id}]")
         for (audioDevice in core.extendedAudioDevices) {
             if (audioDevice.hasCapability(AudioDevice.Capabilities.CapabilityPlay)) {
+                if (audioDevice.id.contains("deprecated")) continue
+
                 outputAudioDeviceLabels.add(audioDevice.id)
                 outputAudioDeviceValues.add(audioDevice)
                 if (audioDevice.id == defaultOutputAudioDevice?.id) {
@@ -549,5 +569,44 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
                 outputIndex += 1
             }
         }
+    }
+
+    @UiThread
+    fun toggleAudioCodecsExpand() {
+        expandAudioCodecs.value = expandAudioCodecs.value == false
+    }
+
+    @UiThread
+    fun toggleVideoCodecsExpand() {
+        expandVideoCodecs.value = expandVideoCodecs.value == false
+    }
+
+    @WorkerThread
+    private fun setupCodecs() {
+        val core = coreContext.core
+
+        val audioCodecsList = arrayListOf<CodecModel>()
+        for (payload in core.audioPayloadTypes) {
+            val model = CodecModel(
+                payload.mimeType,
+                payload.clockRate,
+                null,
+                true,
+                payload.enabled()
+            ) { enabled ->
+                payload.enable(enabled)
+            }
+            audioCodecsList.add(model)
+        }
+        audioCodecs.postValue(audioCodecsList)
+
+        val videoCodecsList = arrayListOf<CodecModel>()
+        for (payload in core.videoPayloadTypes) {
+            val model = CodecModel(payload.mimeType, -1, payload.recvFmtp, false, payload.enabled()) { enabled ->
+                payload.enable(enabled)
+            }
+            videoCodecsList.add(model)
+        }
+        videoCodecs.postValue(videoCodecsList)
     }
 }

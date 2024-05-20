@@ -141,92 +141,199 @@
                     app:layout_constraintTop_toBottomOf="@id/remote_provisioning"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/header_style"
-                    android:id="@+id/input_audio_device_label"
-                    android:layout_width="wrap_content"
+                    style="@style/section_header_style"
+                    android:id="@+id/audio_devices_title"
+                    android:onClick="@{() -> viewModel.toggleAudioDevicesExpand()}"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:padding="5dp"
+                    android:layout_marginStart="26dp"
+                    android:layout_marginEnd="26dp"
                     android:layout_marginTop="16dp"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
-                    android:text="@string/settings_advanced_input_audio_device_title"
+                    android:text="@string/settings_advanced_audio_devices_title"
+                    android:drawableEnd="@{viewModel.expandAudioDevices ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
+                    android:drawableTint="?attr/color_main2_600"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/download_and_apply"/>
 
-                <androidx.appcompat.widget.AppCompatSpinner
-                    style="@style/default_text_style"
-                    android:id="@+id/input_audio_device"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/audio_devices"
                     android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_marginEnd="16dp"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"
-                    android:textSize="14sp"
-                    android:textColor="@color/gray_main2_600"
-                    android:gravity="center_vertical"
-                    android:overlapAnchor="false"
-                    android:dropDownVerticalOffset="25dp"
-                    android:spinnerMode="dropdown"
-                    android:popupBackground="@drawable/shape_squircle_white_background"
-                    android:background="@drawable/edit_text_background"
-                    app:layout_constraintTop_toBottomOf="@id/input_audio_device_label"
-                    app:layout_constraintStart_toStartOf="@id/input_audio_device_label"
-                    app:layout_constraintEnd_toEndOf="parent" />
-
-                <ImageView
-                    android:id="@+id/input_audio_device_caret"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:src="@drawable/caret_down"
-                    android:contentDescription="@null"
-                    app:layout_constraintTop_toTopOf="@id/input_audio_device"
-                    app:layout_constraintBottom_toBottomOf="@id/input_audio_device"
-                    app:layout_constraintEnd_toEndOf="@id/input_audio_device"/>
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/header_style"
-                    android:id="@+id/output_audio_device_label"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
-                    android:text="@string/settings_advanced_output_audio_device_title"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/input_audio_device"/>
-
-                <androidx.appcompat.widget.AppCompatSpinner
-                    style="@style/default_text_style"
-                    android:id="@+id/output_audio_device"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
                     android:layout_marginEnd="16dp"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"
-                    android:textSize="14sp"
-                    android:textColor="@color/gray_main2_600"
-                    android:gravity="center_vertical"
-                    android:overlapAnchor="false"
-                    android:dropDownVerticalOffset="25dp"
-                    android:spinnerMode="dropdown"
-                    android:popupBackground="@drawable/shape_squircle_white_background"
-                    android:background="@drawable/edit_text_background"
-                    app:layout_constraintTop_toBottomOf="@id/output_audio_device_label"
-                    app:layout_constraintStart_toStartOf="@id/output_audio_device_label"
+                    android:paddingBottom="16dp"
+                    android:background="@drawable/shape_squircle_white_background"
+                    android:orientation="vertical"
+                    android:visibility="@{viewModel.expandAudioDevices ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintTop_toBottomOf="@id/audio_devices_title"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/header_style"
+                        android:id="@+id/input_audio_device_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:text="@string/settings_advanced_input_audio_device_title"
+                        android:visibility="@{viewModel.expandAudioDevices ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                    <androidx.appcompat.widget.AppCompatSpinner
+                        style="@style/default_text_style"
+                        android:id="@+id/input_audio_device"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="16dp"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
+                        android:textSize="14sp"
+                        android:textColor="@color/gray_main2_600"
+                        android:gravity="center_vertical"
+                        android:overlapAnchor="false"
+                        android:dropDownVerticalOffset="2dp"
+                        android:spinnerMode="dropdown"
+                        android:popupBackground="@drawable/shape_squircle_white_background"
+                        android:background="@drawable/edit_text_background"
+                        android:visibility="@{viewModel.expandAudioDevices ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintTop_toBottomOf="@id/input_audio_device_label"
+                        app:layout_constraintStart_toStartOf="@id/input_audio_device_label"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/input_audio_device_caret"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:src="@drawable/caret_down"
+                        android:contentDescription="@null"
+                        android:visibility="@{viewModel.expandAudioDevices ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintTop_toTopOf="@id/input_audio_device"
+                        app:layout_constraintBottom_toBottomOf="@id/input_audio_device"
+                        app:layout_constraintEnd_toEndOf="@id/input_audio_device"/>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/header_style"
+                        android:id="@+id/output_audio_device_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:text="@string/settings_advanced_output_audio_device_title"
+                        android:visibility="@{viewModel.expandAudioDevices ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/input_audio_device"/>
+
+                    <androidx.appcompat.widget.AppCompatSpinner
+                        style="@style/default_text_style"
+                        android:id="@+id/output_audio_device"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="16dp"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
+                        android:textSize="14sp"
+                        android:textColor="@color/gray_main2_600"
+                        android:gravity="center_vertical"
+                        android:overlapAnchor="false"
+                        android:dropDownVerticalOffset="2dp"
+                        android:spinnerMode="dropdown"
+                        android:popupBackground="@drawable/shape_squircle_white_background"
+                        android:background="@drawable/edit_text_background"
+                        android:visibility="@{viewModel.expandAudioDevices ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintTop_toBottomOf="@id/output_audio_device_label"
+                        app:layout_constraintStart_toStartOf="@id/output_audio_device_label"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/output_audio_device_caret"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:src="@drawable/caret_down"
+                        android:contentDescription="@null"
+                        android:visibility="@{viewModel.expandAudioDevices ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintTop_toTopOf="@id/output_audio_device"
+                        app:layout_constraintBottom_toBottomOf="@id/output_audio_device"
+                        app:layout_constraintEnd_toEndOf="@id/output_audio_device"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/section_header_style"
+                    android:id="@+id/audio_codecs_title"
+                    android:onClick="@{() -> viewModel.toggleAudioCodecsExpand()}"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:layout_marginStart="26dp"
+                    android:layout_marginEnd="26dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/settings_advanced_audio_codecs_title"
+                    android:drawableEnd="@{viewModel.expandAudioCodecs ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
+                    android:drawableTint="?attr/color_main2_600"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/audio_devices"/>
+
+                <LinearLayout
+                    android:id="@+id/audio_codecs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:orientation="vertical"
+                    android:paddingBottom="16dp"
+                    android:background="@drawable/shape_squircle_white_background"
+                    android:visibility="@{viewModel.expandAudioCodecs ? View.VISIBLE : View.GONE}"
+                    entries="@{viewModel.audioCodecs}"
+                    layout="@{@layout/settings_codec_list_cell}"
+                    app:layout_constraintTop_toBottomOf="@id/audio_codecs_title"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
 
-                <ImageView
-                    android:id="@+id/output_audio_device_caret"
-                    android:layout_width="wrap_content"
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/section_header_style"
+                    android:id="@+id/video_codecs_title"
+                    android:onClick="@{() -> viewModel.toggleVideoCodecsExpand()}"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:layout_marginStart="26dp"
+                    android:layout_marginEnd="26dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/settings_advanced_video_codecs_title"
+                    android:drawableEnd="@{viewModel.expandVideoCodecs ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
+                    android:drawableTint="?attr/color_main2_600"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/audio_codecs"/>
+
+                <LinearLayout
+                    android:id="@+id/video_codecs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:src="@drawable/caret_down"
-                    android:contentDescription="@null"
-                    app:layout_constraintTop_toTopOf="@id/output_audio_device"
-                    app:layout_constraintBottom_toBottomOf="@id/output_audio_device"
-                    app:layout_constraintEnd_toEndOf="@id/output_audio_device"/>
+                    android:layout_marginBottom="@dimen/screen_bottom_margin"
+                    android:orientation="vertical"
+                    android:paddingBottom="16dp"
+                    android:background="@drawable/shape_squircle_white_background"
+                    android:visibility="@{viewModel.expandVideoCodecs ? View.VISIBLE : View.GONE}"
+                    entries="@{viewModel.videoCodecs}"
+                    layout="@{@layout/settings_codec_list_cell}"
+                    app:layout_constraintTop_toBottomOf="@id/video_codecs_title"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

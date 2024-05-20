@@ -278,8 +278,11 @@
     <string name="settings_advanced_keep_alive_service_title">Garder l\'app en vie via un Service</string>
     <string name="settings_advanced_remote_provisioning_url">URL de configuration distante</string>
     <string name="settings_advanced_download_apply_remote_provisioning">Télécharger &amp; appliquer</string>
+    <string name="settings_advanced_audio_devices_title">Périphériques audio</string>
     <string name="settings_advanced_input_audio_device_title">Périphérique de capture par défaut</string>
     <string name="settings_advanced_output_audio_device_title">Périphérique d\'écoute par défaut</string>
+    <string name="settings_advanced_audio_codecs_title">Codecs audio</string>
+    <string name="settings_advanced_video_codecs_title">Codecs vidéo</string>
 
     <!-- Account profile & settings -->
     <string name="manage_account_title">Votre compte</string>
