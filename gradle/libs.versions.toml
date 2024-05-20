@@ -2,8 +2,8 @@
 agp = "8.4.0"
 kotlin = "1.9.23"
 gmsGoogleServices = "4.4.1"
-firebaseCrashlytics = "2.9.9"
-firebaseBomVersion = "32.8.1"
+firebaseCrashlytics = "3.0.1"
+firebaseBomVersion = "33.0.0"
 ktlint = "11.3.1"
 
 annotations = "1.8.0"
