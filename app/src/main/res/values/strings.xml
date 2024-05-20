@@ -308,6 +308,16 @@
     <string name="settings_user_interface_light_theme_label">Light theme</string>
     <string name="settings_user_interface_auto_theme_label">Auto</string>
     <string name="settings_user_interface_color_title">Main color</string>
+    <string name="settings_tunnel_title">Tunnel</string>
+    <string name="settings_tunnel_main_host_label">Host</string>
+    <string name="settings_tunnel_main_port_label">Port</string>
+    <string name="settings_tunnel_dual_mode_label">Use two servers</string>
+    <string name="settings_tunnel_second_host_label">Second host</string>
+    <string name="settings_tunnel_second_port_label">Second port</string>
+    <string name="settings_tunnel_mode_label">Mode</string>
+    <string name="settings_tunnel_mode_disabled_label">Disabled</string>
+    <string name="settings_tunnel_mode_always_label">Always</string>
+    <string name="settings_tunnel_mode_auto_label">Auto</string>
 
     <string name="settings_advanced_title">Advanced settings</string>
     <string name="settings_advanced_keep_alive_service_title">Keep app alive using Service</string>

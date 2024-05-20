@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="org.linphone.ui.main.settings.viewmodel.SettingsViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="20dp"
+        android:background="@drawable/shape_squircle_white_background">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/header_style"
+            android:id="@+id/tunnel_host_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="20dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:text="@string/settings_tunnel_main_host_label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatEditText
+            style="@style/default_text_style"
+            android:id="@+id/tunnel_host"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="16dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="@={viewModel.tunnelMainHost}"
+            android:textSize="14sp"
+            android:textColor="@color/gray_main2_600"
+            android:maxLines="1"
+            android:background="@drawable/edit_text_background"
+            android:inputType="text|textUri"
+            android:hint="@string/settings_tunnel_main_host_label"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintWidth_max="@dimen/text_input_max_width"
+            app:layout_constraintTop_toBottomOf="@id/tunnel_host_label"
+            app:layout_constraintStart_toStartOf="@id/tunnel_host_label"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/header_style"
+            android:id="@+id/tunnel_port_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:text="@string/settings_tunnel_main_port_label"
+            app:layout_constraintTop_toBottomOf="@id/tunnel_host"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatEditText
+            style="@style/default_text_style"
+            android:id="@+id/tunnel_port"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="16dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="@={viewModel.tunnelMainPort}"
+            android:textSize="14sp"
+            android:textColor="@color/gray_main2_600"
+            android:maxLines="1"
+            android:background="@drawable/edit_text_background"
+            android:inputType="number|numberSigned"
+            android:hint="@string/settings_tunnel_main_port_label"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintWidth_max="@dimen/text_input_max_width"
+            app:layout_constraintTop_toBottomOf="@id/tunnel_port_label"
+            app:layout_constraintStart_toStartOf="@id/tunnel_port_label"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/settings_title_style"
+            android:onClick="@{() -> viewModel.toggleTunnelDualMode()}"
+            android:id="@+id/tunnel_dual_mode_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/settings_tunnel_dual_mode_label"
+            android:maxLines="2"
+            android:ellipsize="end"
+            app:layout_constraintTop_toTopOf="@id/tunnel_dual_mode_switch"
+            app:layout_constraintBottom_toBottomOf="@id/tunnel_dual_mode_switch"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tunnel_dual_mode_switch"/>
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            style="@style/material_switch_style"
+            android:id="@+id/tunnel_dual_mode_switch"
+            android:onClick="@{() -> viewModel.toggleTunnelDualMode()}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:checked="@{viewModel.tunnelDualMode}"
+            app:layout_constraintTop_toBottomOf="@id/tunnel_port"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/header_style"
+            android:id="@+id/tunnel_dual_host_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:text="@string/settings_tunnel_second_host_label"
+            android:visibility="@{viewModel.tunnelDualMode ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintTop_toBottomOf="@id/tunnel_dual_mode_switch"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatEditText
+            style="@style/default_text_style"
+            android:id="@+id/tunnel_dual_host"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="16dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="@={viewModel.tunnelDualHost}"
+            android:textSize="14sp"
+            android:textColor="@color/gray_main2_600"
+            android:maxLines="1"
+            android:background="@drawable/edit_text_background"
+            android:inputType="text|textUri"
+            android:hint="@string/settings_tunnel_second_host_label"
+            android:visibility="@{viewModel.tunnelDualMode ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintWidth_max="@dimen/text_input_max_width"
+            app:layout_constraintTop_toBottomOf="@id/tunnel_dual_host_label"
+            app:layout_constraintStart_toStartOf="@id/tunnel_dual_host_label"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/header_style"
+            android:id="@+id/tunnel_dual_port_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:text="@string/settings_tunnel_second_port_label"
+            android:visibility="@{viewModel.tunnelDualMode ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintTop_toBottomOf="@id/tunnel_dual_host"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatEditText
+            style="@style/default_text_style"
+            android:id="@+id/tunnel_dual_port"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="16dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="@={viewModel.tunnelDualPort}"
+            android:textSize="14sp"
+            android:textColor="@color/gray_main2_600"
+            android:maxLines="1"
+            android:background="@drawable/edit_text_background"
+            android:inputType="number|numberSigned"
+            android:hint="@string/settings_tunnel_second_port_label"
+            android:visibility="@{viewModel.tunnelDualMode ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintWidth_max="@dimen/text_input_max_width"
+            app:layout_constraintTop_toBottomOf="@id/tunnel_dual_port_label"
+            app:layout_constraintStart_toStartOf="@id/tunnel_dual_port_label"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/header_style"
+            android:id="@+id/tunnel_mode_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:text="@string/settings_tunnel_mode_label"
+            app:layout_constraintTop_toBottomOf="@id/tunnel_dual_port"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            style="@style/default_text_style"
+            android:id="@+id/tunnel_mode_spinner"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="16dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:textSize="14sp"
+            android:textColor="@color/gray_main2_600"
+            android:gravity="center_vertical"
+            android:overlapAnchor="false"
+            android:dropDownVerticalOffset="2dp"
+            android:spinnerMode="dropdown"
+            android:popupBackground="@drawable/shape_squircle_white_background"
+            android:background="@drawable/edit_text_background"
+            app:layout_constraintTop_toBottomOf="@id/tunnel_mode_label"
+            app:layout_constraintStart_toStartOf="@id/tunnel_mode_label"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageView
+            android:id="@+id/tunnel_mode_caret"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/caret_down"
+            android:contentDescription="@null"
+            app:layout_constraintTop_toTopOf="@id/tunnel_mode_spinner"
+            app:layout_constraintBottom_toBottomOf="@id/tunnel_mode_spinner"
+            app:layout_constraintEnd_toEndOf="@id/tunnel_mode_spinner"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

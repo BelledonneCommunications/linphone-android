@@ -91,6 +91,15 @@ class SettingsFragment : GenericMainFragment() {
         }
     }
 
+    private val tunnelModeListener = object : AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            viewModel.tunnelModeIndex.value = position
+        }
+
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -212,6 +221,20 @@ class SettingsFragment : GenericMainFragment() {
             binding.userInterfaceSettings.colorSpinner.onItemSelectedListener = colorListener
         }
 
+        // Tunnel mode
+        val tunnelModeAdapter = ArrayAdapter(
+            requireContext(),
+            R.layout.drop_down_item,
+            viewModel.tunnelModeLabels
+        )
+        tunnelModeAdapter.setDropDownViewResource(R.layout.generic_dropdown_cell)
+        binding.tunnelSettings.tunnelModeSpinner.adapter = tunnelModeAdapter
+        binding.tunnelSettings.tunnelModeSpinner.onItemSelectedListener = tunnelModeListener
+
+        viewModel.tunnelModeIndex.observe(viewLifecycleOwner) { index ->
+            binding.tunnelSettings.tunnelModeSpinner.setSelection(index)
+        }
+
         startPostponedEnterTransition()
     }
 
@@ -220,5 +243,13 @@ class SettingsFragment : GenericMainFragment() {
 
         viewModel.reloadLdapServers()
         viewModel.reloadConfiguredCardDavServers()
+    }
+
+    override fun onPause() {
+        if (viewModel.isTunnelAvailable.value == true) {
+            viewModel.saveTunnelConfig()
+        }
+
+        super.onPause()
     }
 }

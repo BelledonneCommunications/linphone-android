@@ -63,8 +63,8 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/section_header_style"
-                    android:onClick="@{() -> viewModel.toggleSecurityExpand()}"
                     android:id="@+id/security"
+                    android:onClick="@{() -> viewModel.toggleSecurityExpand()}"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
@@ -86,14 +86,14 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:visibility="@{viewModel.expandSecurity ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewModel.expandSecurity ? View.VISIBLE : View.GONE, default=gone}"
                     app:layout_constraintTop_toBottomOf="@id/security"
                     bind:viewModel="@{viewModel}"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/section_header_style"
-                    android:onClick="@{() -> viewModel.toggleCallsExpand()}"
                     android:id="@+id/calls"
+                    android:onClick="@{() -> viewModel.toggleCallsExpand()}"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
@@ -115,14 +115,14 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewModel.expandCalls ? View.VISIBLE : View.GONE, default=gone}"
                     app:layout_constraintTop_toBottomOf="@id/calls"
                     bind:viewModel="@{viewModel}"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/section_header_style"
-                    android:onClick="@{() -> viewModel.toggleConversationsExpand()}"
                     android:id="@+id/chat"
+                    android:onClick="@{() -> viewModel.toggleConversationsExpand()}"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
@@ -145,14 +145,14 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:visibility="@{viewModel.expandConversations &amp;&amp; viewModel.showConversationsSettings ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewModel.expandConversations &amp;&amp; viewModel.showConversationsSettings ? View.VISIBLE : View.GONE, default=gone}"
                     app:layout_constraintTop_toBottomOf="@id/chat"
                     bind:viewModel="@{viewModel}"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/section_header_style"
-                    android:onClick="@{() -> viewModel.toggleContactsExpand()}"
                     android:id="@+id/contacts"
+                    android:onClick="@{() -> viewModel.toggleContactsExpand()}"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
@@ -175,14 +175,14 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:visibility="@{viewModel.expandContacts &amp;&amp; viewModel.showContactsSettings ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewModel.expandContacts &amp;&amp; viewModel.showContactsSettings ? View.VISIBLE : View.GONE, default=gone}"
                     app:layout_constraintTop_toBottomOf="@id/contacts"
                     bind:viewModel="@{viewModel}"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/section_header_style"
-                    android:onClick="@{() -> viewModel.toggleMeetingsExpand()}"
                     android:id="@+id/meetings"
+                    android:onClick="@{() -> viewModel.toggleMeetingsExpand()}"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
@@ -205,14 +205,14 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:visibility="@{viewModel.expandMeetings &amp;&amp; viewModel.showMeetingsSettings ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewModel.expandMeetings &amp;&amp; viewModel.showMeetingsSettings ? View.VISIBLE : View.GONE, default=gone}"
                     app:layout_constraintTop_toBottomOf="@id/meetings"
                     bind:viewModel="@{viewModel}"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/section_header_style"
-                    android:onClick="@{() -> viewModel.toggleNetworkExpand()}"
                     android:id="@+id/network"
+                    android:onClick="@{() -> viewModel.toggleNetworkExpand()}"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
@@ -234,14 +234,14 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:visibility="@{viewModel.expandNetwork ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewModel.expandNetwork ? View.VISIBLE : View.GONE, default=gone}"
                     app:layout_constraintTop_toBottomOf="@id/network"
                     bind:viewModel="@{viewModel}"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/section_header_style"
-                    android:onClick="@{() -> viewModel.toggleUserInterfaceExpand()}"
                     android:id="@+id/user_interface"
+                    android:onClick="@{() -> viewModel.toggleUserInterfaceExpand()}"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
@@ -263,8 +263,38 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:visibility="@{viewModel.expandUserInterface ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewModel.expandUserInterface ? View.VISIBLE : View.GONE, default=gone}"
                     app:layout_constraintTop_toBottomOf="@id/user_interface"
+                    bind:viewModel="@{viewModel}"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/section_header_style"
+                    android:id="@+id/tunnel"
+                    android:onClick="@{() -> viewModel.toggleTunnelExpand()}"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:layout_marginStart="26dp"
+                    android:layout_marginEnd="26dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/settings_tunnel_title"
+                    android:visibility="@{viewModel.isTunnelAvailable ? View.VISIBLE : View.GONE}"
+                    android:drawableEnd="@{viewModel.expandTunnel ? @drawable/caret_up : @drawable/caret_down, default=@drawable/caret_up}"
+                    android:drawableTint="?attr/color_main2_600"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/user_interface_settings"/>
+
+                <include
+                    android:id="@+id/tunnel_settings"
+                    layout="@layout/settings_tunnel"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:visibility="@{viewModel.isTunnelAvailable &amp;&amp; viewModel.expandTunnel ? View.VISIBLE : View.GONE, default=gone}"
+                    app:layout_constraintTop_toBottomOf="@id/tunnel"
                     bind:viewModel="@{viewModel}"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -284,7 +314,7 @@
                     app:layout_constraintVertical_bias="0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/user_interface_settings"
+                    app:layout_constraintTop_toBottomOf="@id/tunnel_settings"
                     app:layout_constraintBottom_toBottomOf="parent"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>

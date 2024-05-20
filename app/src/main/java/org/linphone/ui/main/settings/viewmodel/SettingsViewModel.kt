@@ -30,7 +30,9 @@ import org.linphone.core.AudioDevice
 import org.linphone.core.Conference
 import org.linphone.core.Core
 import org.linphone.core.CoreListenerStub
+import org.linphone.core.Factory
 import org.linphone.core.FriendList
+import org.linphone.core.Tunnel
 import org.linphone.core.VFS
 import org.linphone.core.tools.Log
 import org.linphone.ui.GenericViewModel
@@ -51,6 +53,8 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
     val expandMeetings = MutableLiveData<Boolean>()
     val expandNetwork = MutableLiveData<Boolean>()
     val expandUserInterface = MutableLiveData<Boolean>()
+    val expandTunnel = MutableLiveData<Boolean>()
+    val isTunnelAvailable = MutableLiveData<Boolean>()
 
     val recreateActivityEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
@@ -148,6 +152,19 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
         "purple"
     )
 
+    // Tunnel settings
+    val tunnelMainHost = MutableLiveData<String>()
+    val tunnelMainPort = MutableLiveData<String>()
+    val tunnelDualMode = MutableLiveData<Boolean>()
+    val tunnelDualHost = MutableLiveData<String>()
+    val tunnelDualPort = MutableLiveData<String>()
+    val tunnelModeIndex = MutableLiveData<Int>()
+    val tunnelModeLabels = arrayListOf(
+        AppUtils.getString(R.string.settings_tunnel_mode_disabled_label),
+        AppUtils.getString(R.string.settings_tunnel_mode_always_label),
+        AppUtils.getString(R.string.settings_tunnel_mode_auto_label)
+    )
+
     // Advanced settings
     val keepAliveThirdPartyAccountsService = MutableLiveData<Boolean>()
 
@@ -180,6 +197,7 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
         coreContext.postOnCoreThread { core ->
             core.addListener(coreListener)
 
+            isTunnelAvailable.postValue(core.tunnelAvailable())
             showConversationsSettings.postValue(!corePreferences.disableChat)
             showMeetingsSettings.postValue(!corePreferences.disableMeetings)
             ldapAvailable.postValue(core.ldapAvailable())
@@ -195,6 +213,7 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
         expandMeetings.value = false
         expandNetwork.value = false
         expandUserInterface.value = false
+        expandTunnel.value = false
         expandAudioDevices.value = false
         expandAudioCodecs.value = false
         expandVideoCodecs.value = false
@@ -226,6 +245,10 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
 
             theme.postValue(corePreferences.darkMode)
             color.postValue(corePreferences.themeMainColor)
+
+            if (core.tunnelAvailable()) {
+                setupTunnel()
+            }
 
             keepAliveThirdPartyAccountsService.postValue(corePreferences.keepServiceAlive)
 
@@ -463,6 +486,63 @@ class SettingsViewModel @UiThread constructor() : GenericViewModel() {
             Log.i("$TAG Color [$colorName] saved")
         }
         color.value = colorName
+    }
+
+    @UiThread
+    fun toggleTunnelExpand() {
+        expandTunnel.value = expandTunnel.value == false
+    }
+
+    @WorkerThread
+    private fun setupTunnel() {
+        // Tunnel mode values are 0, 1 and 2, we can use selected item position directly
+        val tunnelConfig = coreContext.core.tunnel
+        if (tunnelConfig != null) {
+            val mainTunnel = tunnelConfig.servers.firstOrNull()
+            if (mainTunnel != null) {
+                tunnelMainHost.postValue(mainTunnel.host)
+                tunnelMainPort.postValue(mainTunnel.port.toString())
+                if (tunnelConfig.isDualModeEnabled) {
+                    tunnelDualHost.postValue(mainTunnel.host2)
+                    tunnelDualPort.postValue(mainTunnel.port2.toString())
+                }
+            }
+            tunnelDualMode.postValue(tunnelConfig.isDualModeEnabled)
+            tunnelModeIndex.postValue(tunnelConfig.mode.ordinal)
+        } else {
+            Log.w("$TAG No tunnel config found!")
+            tunnelModeIndex.postValue(0)
+        }
+    }
+
+    @UiThread
+    fun toggleTunnelDualMode() {
+        tunnelDualMode.value = tunnelDualMode.value == false
+    }
+
+    @UiThread
+    fun saveTunnelConfig() {
+        coreContext.postOnCoreThread { core ->
+            if (core.tunnelAvailable()) {
+                val tunnel = core.tunnel
+                tunnel?.cleanServers()
+
+                val config = Factory.instance().createTunnelConfig()
+                config.host = tunnelMainHost.value.orEmpty()
+                config.port = tunnelMainPort.value?.toInt() ?: 0
+
+                tunnel?.isDualModeEnabled = tunnelDualMode.value == true
+                if (tunnelDualMode.value == true) {
+                    config.host2 = tunnelDualHost.value.orEmpty()
+                    config.port2 = tunnelDualPort.value?.toInt() ?: 0
+                }
+
+                tunnel?.mode = Tunnel.Mode.fromInt(tunnelModeIndex.value ?: 0)
+
+                tunnel?.addServer(config)
+                Log.i("$TAG Tunnel configuration added into Core")
+            }
+        }
     }
 
     @UiThread

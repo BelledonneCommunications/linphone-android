@@ -273,6 +273,16 @@
     <string name="settings_user_interface_light_theme_label">Clair</string>
     <string name="settings_user_interface_auto_theme_label">Auto</string>
     <string name="settings_user_interface_color_title">Couleur principale</string>
+    <string name="settings_tunnel_title">Tunnel</string>
+    <string name="settings_tunnel_main_host_label">Hôte</string>
+    <string name="settings_tunnel_main_port_label">Port</string>
+    <string name="settings_tunnel_dual_mode_label">Utiliser deux serveurs</string>
+    <string name="settings_tunnel_second_host_label">Hôte second serveur</string>
+    <string name="settings_tunnel_second_port_label">Port second serveur</string>
+    <string name="settings_tunnel_mode_label">Mode</string>
+    <string name="settings_tunnel_mode_disabled_label">Désactivé</string>
+    <string name="settings_tunnel_mode_always_label">Toujours</string>
+    <string name="settings_tunnel_mode_auto_label">Auto</string>
 
     <string name="settings_advanced_title">Paramètres avancés</string>
     <string name="settings_advanced_keep_alive_service_title">Garder l\'app en vie via un Service</string>
