@@ -69,6 +69,8 @@ class AccountSettingsViewModel @UiThread constructor() : GenericViewModel() {
 
     val bundleModeEnabled = MutableLiveData<Boolean>()
 
+    val voicemailUri = MutableLiveData<String>()
+
     val cpimInBasicChatRooms = MutableLiveData<Boolean>()
 
     val accountFoundEvent = MutableLiveData<Event<Boolean>>()
@@ -124,6 +126,8 @@ class AccountSettingsViewModel @UiThread constructor() : GenericViewModel() {
 
                 cpimInBasicChatRooms.postValue(params.isCpimInBasicChatRoomEnabled)
 
+                voicemailUri.postValue(params.mwiServerAddress?.asStringUriOnly().orEmpty())
+
                 expire.postValue(params.expires.toString())
 
                 conferenceFactoryUri.postValue(params.conferenceFactoryAddress?.asStringUriOnly())
@@ -176,6 +180,9 @@ class AccountSettingsViewModel @UiThread constructor() : GenericViewModel() {
                 newParams.isRtpBundleEnabled = bundleModeEnabled.value == true
 
                 newParams.isCpimInBasicChatRoomEnabled = cpimInBasicChatRooms.value == true
+
+                val mwiAddress = core.interpretUrl(voicemailUri.value.orEmpty(), false)
+                newParams.mwiServerAddress = mwiAddress
 
                 newParams.expires = expire.value?.toInt() ?: 31536000
 

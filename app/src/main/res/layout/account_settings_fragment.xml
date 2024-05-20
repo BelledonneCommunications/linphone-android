@@ -184,6 +184,7 @@
                         android:paddingEnd="20dp"
                         android:text="@={viewModel.sipProxyServer}"
                         android:inputType="text|textUri"
+                        android:hint="@string/account_settings_sip_proxy_url_title"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/sip_proxy_title"/>
@@ -241,6 +242,7 @@
                         android:paddingEnd="20dp"
                         android:text="@={viewModel.stunServer}"
                         android:inputType="text|textUri"
+                        android:hint="@string/account_settings_stun_server_url_title"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/stun_server_title"/>
@@ -323,6 +325,38 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/bundle_mode_switch"/>
 
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/settings_title_style"
+                        android:id="@+id/mwi_uri_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="@string/account_settings_mwi_uri_title"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        app:layout_constraintTop_toBottomOf="@id/bundle_mode_switch"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        style="@style/default_text_style"
+                        android:id="@+id/mwi_uri"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="16dp"
+                        android:background="@drawable/edit_text_background"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
+                        android:text="@={viewModel.voicemailUri}"
+                        android:inputType="text|textUri"
+                        android:hint="@string/account_settings_mwi_uri_title"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/mwi_uri_title"/>
+
                     <com.google.android.material.materialswitch.MaterialSwitch
                         style="@style/material_switch_style"
                         android:id="@+id/cpim_basic_chat_room_switch"
@@ -333,7 +367,7 @@
                         android:checked="@={viewModel.cpimInBasicChatRooms}"
                         android:visibility="@{viewModel.imEncryptionMandatory ? View.GONE : View.VISIBLE}"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/bundle_mode_switch" />
+                        app:layout_constraintTop_toBottomOf="@id/mwi_uri" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         style="@style/settings_title_style"
@@ -378,6 +412,7 @@
                         android:paddingEnd="20dp"
                         android:text="@={viewModel.expire}"
                         android:inputType="number"
+                        android:hint="@string/account_settings_expire_title"
                         app:layout_constraintVertical_bias="0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -411,6 +446,7 @@
                         android:enabled="@{!viewModel.imEncryptionMandatory}"
                         android:text="@={viewModel.conferenceFactoryUri}"
                         android:inputType="text|textUri"
+                        android:hint="@string/account_settings_conference_factory_uri_title"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/conference_factory_uri_title"/>
@@ -442,6 +478,7 @@
                         android:paddingEnd="20dp"
                         android:text="@={viewModel.audioVideoConferenceFactoryUri}"
                         android:inputType="text|textUri"
+                        android:hint="@string/account_settings_audio_video_conference_factory_uri_title"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/audio_video_conference_factory_uri_title"/>
@@ -475,6 +512,7 @@
                         android:enabled="@{!viewModel.imEncryptionMandatory}"
                         android:text="@={viewModel.limeServerUrl}"
                         android:inputType="text|textUri"
+                        android:hint="@string/account_settings_lime_server_url_title"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/lime_server_title"
