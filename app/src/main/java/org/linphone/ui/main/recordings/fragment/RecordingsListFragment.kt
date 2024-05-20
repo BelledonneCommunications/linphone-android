@@ -19,21 +19,30 @@
  */
 package org.linphone.ui.main.recordings.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
+import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import java.io.File
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.RecordingsListFragmentBinding
+import org.linphone.ui.GenericActivity
 import org.linphone.ui.main.fragment.GenericMainFragment
 import org.linphone.ui.main.recordings.adapter.RecordingsListAdapter
 import org.linphone.ui.main.recordings.viewmodel.RecordingsListViewModel
+import org.linphone.utils.AppUtils
+import org.linphone.utils.FileUtils
 import org.linphone.utils.RecyclerViewHeaderDecoration
 import org.linphone.utils.hideKeyboard
 import org.linphone.utils.showKeyboard
@@ -117,13 +126,17 @@ class RecordingsListFragment : GenericMainFragment() {
                         adapter.resetSelection()
                     },
                     { // onShare
+                        Log.i("$TAG Sharing call recording [${model.filePath}]")
+                        shareFile(model.filePath, model.fileName)
                         adapter.resetSelection()
                     },
                     { // onExport
+                        Log.i("$TAG Saving call recording [${model.filePath}]")
+                        exportFile(model.filePath)
                         adapter.resetSelection()
                     },
                     { // onDelete
-                        Log.i("$TAG Deleting meeting [${model.filePath}]")
+                        Log.i("$TAG Deleting call recording [${model.filePath}]")
                         lifecycleScope.launch {
                             model.delete()
                         }
@@ -141,5 +154,64 @@ class RecordingsListFragment : GenericMainFragment() {
 
         bottomSheetDialog?.dismiss()
         bottomSheetDialog = null
+    }
+
+    private fun exportFile(filePath: String) {
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                Log.i(
+                    "$TAG Export file [$filePath] to Android's MediaStore"
+                )
+                val mediaStorePath = FileUtils.addContentToMediaStore(filePath)
+                if (mediaStorePath.isNotEmpty()) {
+                    Log.i(
+                        "$TAG File [$filePath] has been successfully exported to MediaStore"
+                    )
+                    val message = AppUtils.getString(
+                        R.string.toast_file_successfully_exported_to_media_store
+                    )
+                    (requireActivity() as GenericActivity).showGreenToast(
+                        message,
+                        R.drawable.check
+                    )
+                } else {
+                    Log.e(
+                        "$TAG Failed to export file [$filePath] to MediaStore!"
+                    )
+                    val message = AppUtils.getString(
+                        R.string.toast_export_file_to_media_store_error
+                    )
+                    (requireActivity() as GenericActivity).showRedToast(
+                        message,
+                        R.drawable.warning_circle
+                    )
+                }
+            }
+        }
+    }
+
+    private fun shareFile(filePath: String, fileName: String) {
+        lifecycleScope.launch {
+            val publicUri = FileProvider.getUriForFile(
+                requireContext(),
+                getString(R.string.file_provider),
+                File(filePath)
+            )
+            Log.i(
+                "$TAG Public URI for file is [$publicUri], starting intent chooser"
+            )
+
+            val sendIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_STREAM, publicUri)
+                putExtra(Intent.EXTRA_SUBJECT, fileName)
+                type = FileUtils.getMimeTypeFromExtension(
+                    FileUtils.getExtensionFromFileName(fileName)
+                )
+            }
+
+            val shareIntent = Intent.createChooser(sendIntent, null)
+            startActivity(shareIntent)
+        }
     }
 }

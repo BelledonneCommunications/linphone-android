@@ -658,6 +658,8 @@
     <string name="menu_reply_to_chat_message">Répondre</string>
     <string name="menu_forward_chat_message">Transférer</string>
     <string name="menu_copy_chat_message">Copier le texte</string>
+    <string name="menu_export_selected_item">Télécharger</string>
+    <string name="menu_share_selected_item">Partager</string>
 
     <!-- Colors -->
     <string name="orange">Orange</string>

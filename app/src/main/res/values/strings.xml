@@ -694,6 +694,8 @@
     <string name="menu_reply_to_chat_message">Reply</string>
     <string name="menu_forward_chat_message">Forward</string>
     <string name="menu_copy_chat_message">Copy</string>
+    <string name="menu_export_selected_item">Download</string>
+    <string name="menu_share_selected_item">Share</string>
 
     <!-- Colors -->
     <string name="orange">Orange</string>

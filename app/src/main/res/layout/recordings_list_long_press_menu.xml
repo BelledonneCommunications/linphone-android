@@ -5,6 +5,12 @@
     <data>
         <import type="android.view.View" />
         <variable
+            name="shareClickListener"
+            type="View.OnClickListener" />
+        <variable
+            name="exportClickListener"
+            type="View.OnClickListener" />
+        <variable
             name="deleteClickListener"
             type="View.OnClickListener" />
     </data>
@@ -15,12 +21,40 @@
         android:background="?attr/color_main2_200">
 
         <androidx.appcompat.widget.AppCompatTextView
+            style="@style/context_menu_action_label_style"
+            android:id="@+id/share"
+            android:onClick="@{shareClickListener}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/menu_share_selected_item"
+            android:background="@drawable/menu_item_background"
+            android:layout_marginBottom="1dp"
+            android:drawableStart="@drawable/share_network"
+            app:layout_constraintBottom_toTopOf="@id/export"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/context_menu_action_label_style"
+            android:id="@+id/export"
+            android:onClick="@{exportClickListener}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/menu_export_selected_item"
+            android:background="@drawable/menu_item_background"
+            android:layout_marginBottom="1dp"
+            android:drawableStart="@drawable/download_simple"
+            app:layout_constraintBottom_toTopOf="@id/delete"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/context_menu_danger_action_label_style"
             android:id="@+id/delete"
             android:onClick="@{deleteClickListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/menu_delete_selected_item"
-            style="@style/context_menu_danger_action_label_style"
             android:background="@drawable/menu_item_background"
             android:layout_marginBottom="1dp"
             android:drawableStart="@drawable/trash_simple"

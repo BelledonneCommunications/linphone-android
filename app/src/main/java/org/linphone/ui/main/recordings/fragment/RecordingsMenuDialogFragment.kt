@@ -72,6 +72,16 @@ class RecordingsMenuDialogFragment(
             dismiss()
         }
 
+        view.setExportClickListener {
+            onExport?.invoke()
+            dismiss()
+        }
+
+        view.setShareClickListener {
+            onShare?.invoke()
+            dismiss()
+        }
+
         return view.root
     }
 }
