@@ -558,8 +558,9 @@ class ConferenceViewModel : ViewModel() {
         speakingParticipantFound.value = false
         speakingParticipantVideoEnabled.value = false
 
+        val conferenceAddress = conference.conferenceAddress ?: return
         val conferenceInfo = conference.core.findConferenceInformationFromUri(
-            conference.conferenceAddress
+            conferenceAddress
         )
         var allSpeaker = true
         for (info in conferenceInfo?.participantInfos.orEmpty()) {
@@ -668,8 +669,9 @@ class ConferenceViewModel : ViewModel() {
             "[Conference] New participant device found: ${device.name} (${device.address.asStringUriOnly()})"
         )
 
+        val conferenceAddress = conference.conferenceAddress ?: return
         val conferenceInfo = conference.core.findConferenceInformationFromUri(
-            conference.conferenceAddress
+            conferenceAddress
         )
         val info = conferenceInfo?.participantInfos?.find {
             it.address.weakEqual(device.address)
