@@ -322,6 +322,10 @@ class MainActivity : GenericActivity() {
         return findNavController(R.id.main_nav_host_fragment)
     }
 
+    fun loadContacts() {
+        coreContext.contactsManager.loadContacts(this)
+    }
+
     private fun goToLatestVisitedFragment() {
         try {
             // Prevent navigating to default fragment upon rotation (we only want to do it on first start)
@@ -645,10 +649,6 @@ class MainActivity : GenericActivity() {
             core.start()
             Log.i("$TAG Core has been restarted")
         }
-    }
-
-    private fun loadContacts() {
-        coreContext.contactsManager.loadContacts(this)
     }
 
     private fun showAuthenticationRequestedDialog(identity: String) {

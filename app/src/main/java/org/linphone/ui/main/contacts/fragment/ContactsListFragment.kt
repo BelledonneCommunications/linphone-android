@@ -19,7 +19,9 @@
  */
 package org.linphone.ui.main.contacts.fragment
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.view.Gravity
@@ -29,7 +31,9 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.PopupWindow
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.UiThread
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -42,6 +46,7 @@ import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.ContactsListFilterPopupMenuBinding
 import org.linphone.databinding.ContactsListFragmentBinding
+import org.linphone.ui.main.MainActivity
 import org.linphone.ui.main.contacts.adapter.ContactsListAdapter
 import org.linphone.ui.main.contacts.model.ContactAvatarModel
 import org.linphone.ui.main.contacts.viewmodel.ContactsListViewModel
@@ -64,6 +69,17 @@ class ContactsListFragment : AbstractMainFragment() {
     private lateinit var favouritesAdapter: ContactsListAdapter
 
     private var bottomSheetDialog: BottomSheetDialogFragment? = null
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            Log.i("$TAG READ_CONTACTS permission has been granted, start contacts loader")
+            (requireActivity() as MainActivity).loadContacts()
+        } else {
+            Log.w("$TAG READ_CONTACTS permission has been denied")
+        }
+    }
 
     override fun onDefaultAccountChanged() {
         Log.i(
@@ -196,6 +212,26 @@ class ContactsListFragment : AbstractMainFragment() {
         )
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.READ_CONTACTS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            Log.w("$TAG READ_CONTACTS permission wasn't granted yet, asking for it now")
+            requestPermissionLauncher.launch(Manifest.permission.READ_CONTACTS)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        bottomSheetDialog?.dismiss()
+        bottomSheetDialog = null
+    }
+
     private fun configureAdapter(adapter: ContactsListAdapter) {
         adapter.contactLongClickedEvent.observe(viewLifecycleOwner) {
             it.consume { model ->
@@ -229,13 +265,6 @@ class ContactsListFragment : AbstractMainFragment() {
                 sharedViewModel.showContactEvent.value = Event(model.id)
             }
         }
-    }
-
-    override fun onPause() {
-        super.onPause()
-
-        bottomSheetDialog?.dismiss()
-        bottomSheetDialog = null
     }
 
     private fun shareContact(name: String, file: File) {
