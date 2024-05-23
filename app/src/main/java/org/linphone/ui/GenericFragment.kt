@@ -49,7 +49,7 @@ abstract class GenericFragment : Fragment() {
             it.consume { pair ->
                 val message = getString(pair.first)
                 val icon = pair.second
-                (requireActivity() as GenericActivity).showRedToast(message, icon)
+                (requireActivity() as GenericActivity).showGreenToast(message, icon)
             }
         }
 
