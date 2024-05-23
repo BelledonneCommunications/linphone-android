@@ -72,5 +72,12 @@ class CardDavAddressBookConfigurationFragment : GenericMainFragment() {
         binding.setBackClickListener {
             goBack()
         }
+
+        viewModel.syncSuccessfulEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i("$TAG Sync successful, going back")
+                goBack()
+            }
+        }
     }
 }

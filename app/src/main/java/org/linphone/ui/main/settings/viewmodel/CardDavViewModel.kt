@@ -52,6 +52,8 @@ class CardDavViewModel : GenericViewModel() {
 
     val syncInProgress = MutableLiveData<Boolean>()
 
+    val syncSuccessfulEvent = MutableLiveData<Event<Boolean>>()
+
     private lateinit var friendList: FriendList
 
     private val friendListListener = object : FriendListListenerStub() {
@@ -75,6 +77,7 @@ class CardDavViewModel : GenericViewModel() {
                             )
                         )
                     )
+                    syncSuccessfulEvent.postValue(Event(true))
                 }
                 FriendList.SyncStatus.Failure -> {
                     syncInProgress.postValue(false)
