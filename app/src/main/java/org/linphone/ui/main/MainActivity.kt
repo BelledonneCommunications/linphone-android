@@ -53,6 +53,7 @@ import org.linphone.ui.GenericActivity
 import org.linphone.ui.assistant.AssistantActivity
 import org.linphone.ui.main.chat.fragment.ConversationsListFragmentDirections
 import org.linphone.ui.main.fragment.AuthRequestedDialogModel
+import org.linphone.ui.main.help.fragment.DebugFragmentDirections
 import org.linphone.ui.main.sso.fragment.SingleSignOnFragmentDirections
 import org.linphone.ui.main.viewmodel.MainViewModel
 import org.linphone.ui.main.viewmodel.SharedMainViewModel
@@ -559,6 +560,9 @@ class MainActivity : GenericActivity() {
                     )
                     sharedViewModel.showConversationEvent.value = Event(pair)
                 }
+
+                val action = DebugFragmentDirections.actionDebugFragmentToConversationsListFragment()
+                findNavController().navigate(action)
             } else {
                 val pair = parseShortcutIfAny(intent)
                 if (pair != null) {
@@ -569,14 +573,15 @@ class MainActivity : GenericActivity() {
                     )
                     sharedViewModel.showConversationEvent.value = Event(pair)
                 }
-            }
 
-            if (findNavController().currentDestination?.id == R.id.conversationsListFragment) {
-                Log.w("$TAG Current destination is already conversations list, skipping navigation")
-            } else {
-                val action =
-                    ConversationsListFragmentDirections.actionGlobalConversationsListFragment()
-                findNavController().navigate(action)
+                if (findNavController().currentDestination?.id == R.id.conversationsListFragment) {
+                    Log.w(
+                        "$TAG Current destination is already conversations list, skipping navigation"
+                    )
+                } else {
+                    val action = ConversationsListFragmentDirections.actionGlobalConversationsListFragment()
+                    findNavController().navigate(action)
+                }
             }
         }
     }
@@ -587,7 +592,7 @@ class MainActivity : GenericActivity() {
             Log.i("$TAG Found shortcut ID [$shortcutId]")
             return LinphoneUtils.getLocalAndPeerSipUrisFromChatRoomId(shortcutId)
         } else {
-            Log.i("$TAG No shortcut ID as found")
+            Log.i("$TAG No shortcut ID was found")
         }
         return null
     }
