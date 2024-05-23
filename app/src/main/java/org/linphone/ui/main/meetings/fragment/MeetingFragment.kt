@@ -151,6 +151,13 @@ class MeetingFragment : SlidingPaneChildFragment() {
             viewModel.showBackButton.value = slideable
         }
 
+        sharedViewModel.meetingEditedEvent.observe(viewLifecycleOwner) {
+            it.consume {
+                Log.i("$TAG Meeting with URI [$uri] has been edited, reloading info")
+                viewModel.refreshInfo(uri)
+            }
+        }
+
         viewModel.conferenceInfoFoundEvent.observe(viewLifecycleOwner) {
             it.consume { found ->
                 if (found) {

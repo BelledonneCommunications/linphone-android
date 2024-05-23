@@ -166,12 +166,6 @@ class ConversationViewModel @UiThread constructor() : AbstractConversationViewMo
         }
 
         @WorkerThread
-        override fun onChatMessageSent(chatRoom: ChatRoom, eventLog: EventLog) {
-            val message = eventLog.chatMessage
-            Log.i("$TAG Message [$message] has been sent")
-        }
-
-        @WorkerThread
         override fun onChatMessagesReceived(chatRoom: ChatRoom, eventLogs: Array<EventLog>) {
             Log.i("$TAG Received [${eventLogs.size}] new message(s)")
             computeComposingLabel()

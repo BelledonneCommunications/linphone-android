@@ -181,6 +181,7 @@ class EditMeetingFragment : SlidingPaneChildFragment() {
                     getString(R.string.meeting_info_updated_toast),
                     R.drawable.check
                 )
+                sharedViewModel.meetingEditedEvent.value = Event(true)
                 sharedViewModel.forceRefreshMeetingsListEvent.value = Event(true)
                 goBack()
             }

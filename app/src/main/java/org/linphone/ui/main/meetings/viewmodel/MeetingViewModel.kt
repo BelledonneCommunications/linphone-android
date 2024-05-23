@@ -192,6 +192,21 @@ class MeetingViewModel @UiThread constructor() : GenericViewModel() {
         }
     }
 
+    @UiThread
+    fun refreshInfo(uri: String) {
+        coreContext.postOnCoreThread { core ->
+            val address = Factory.instance().createAddress(uri)
+            if (address != null) {
+                val found = core.findConferenceInformationFromUri(address)
+                if (found != null) {
+                    Log.i("$TAG Conference info with SIP URI [$uri] was found, updating info")
+                    conferenceInfo = found
+                    configureConferenceInfo()
+                }
+            }
+        }
+    }
+
     @WorkerThread
     private fun configureConferenceInfo() {
         if (::conferenceInfo.isInitialized) {

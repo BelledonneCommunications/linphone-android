@@ -144,6 +144,10 @@ class SharedMainViewModel @UiThread constructor() : ViewModel() {
 
     var displayedMeeting: ConferenceInfo? = null // Prevents the need to go look for the conference info
 
+    val meetingEditedEvent: MutableLiveData<Event<Boolean>> by lazy {
+        MutableLiveData<Event<Boolean>>()
+    }
+
     val forceRefreshMeetingsListEvent: MutableLiveData<Event<Boolean>> by lazy {
         MutableLiveData<Event<Boolean>>()
     }
