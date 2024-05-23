@@ -704,12 +704,15 @@ class MessageModel @WorkerThread constructor(
 
         val path = voiceRecordPath
         Log.i("$TAG Opening voice record file [$path]")
-        voiceRecordPlayer.open(path)
-
-        val duration = voiceRecordPlayer.duration
-        voiceRecordingDuration.postValue(duration)
-        val formattedDuration = SimpleDateFormat("mm:ss", Locale.getDefault()).format(duration) // duration is in ms
-        formattedVoiceRecordingDuration.postValue(formattedDuration)
+        if (voiceRecordPlayer.open(path) == 0) {
+            val duration = voiceRecordPlayer.duration
+            voiceRecordingDuration.postValue(duration)
+            val formattedDuration =
+                SimpleDateFormat("mm:ss", Locale.getDefault()).format(duration) // duration is in ms
+            formattedVoiceRecordingDuration.postValue(formattedDuration)
+        } else {
+            Log.e("$TAG Player failed to open file at [$path]")
+        }
     }
 
     @WorkerThread
@@ -723,6 +726,17 @@ class MessageModel @WorkerThread constructor(
         if (isPlayerClosed()) {
             Log.w("$TAG Player closed, let's open it first")
             initVoiceRecordPlayer()
+
+            if (voiceRecordPlayer.state == Player.State.Closed) {
+                Log.e("$TAG It seems the player fails to open the file, abort playback")
+                onRedToastToShow?.invoke(
+                    Pair(
+                        R.string.conversation_failed_to_play_voice_recording_message,
+                        R.drawable.warning_circle
+                    )
+                )
+                return
+            }
         }
 
         val lowMediaVolume = AudioUtils.isMediaVolumeLow(coreContext.context)

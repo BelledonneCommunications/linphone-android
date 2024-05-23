@@ -479,6 +479,7 @@
     <string name="conversation_dialog_open_or_export_file_message">&appName; ne peut ouvrir ce fichier.\n\nVoulez-vous l\'ouvrir dans une autre app (si possible), ou le sauvegarder sur votre appareil ?</string>
     <string name="conversation_dialog_open_file_label">Ouvrir le fichier</string>
     <string name="conversation_dialog_export_file_label">Sauvegarder le fichier</string>
+    <string name="conversation_failed_to_play_voice_recording_message">Impossible de lire le message vocal !</string>
     <string name="conversation_message_deleted_toast">Le message a été supprimé</string>
     <string name="conversation_failed_to_create_toast">Échec de la création de la conversation !</string>
     <string name="conversation_invalid_participant_due_to_security_mode_toast">Pour des raisons de sécurité, la création d\'une conversation avec un participant d\'un domaine tiers est désactivé.</string>

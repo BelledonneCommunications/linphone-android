@@ -515,6 +515,7 @@
     <string name="conversation_dialog_open_or_export_file_message">&appName; can\'t open this file.\n\nDo you want to open it in another app (if possible), or export it on your device?</string>
     <string name="conversation_dialog_open_file_label">Open file</string>
     <string name="conversation_dialog_export_file_label">Export file</string>
+    <string name="conversation_failed_to_play_voice_recording_message">Voice recording cannot be played!</string>
     <string name="conversation_message_deleted_toast">Message has been deleted</string>
     <string name="conversation_failed_to_create_toast">Failed to create conversation!</string>
     <string name="conversation_invalid_participant_due_to_security_mode_toast">Can\'t create conversation with a participant not on the same domain due to security restrictions!</string>
