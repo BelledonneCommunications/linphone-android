@@ -26,6 +26,7 @@ import androidx.lifecycle.MutableLiveData
 class NewOrEditNumberOrAddressModel @WorkerThread constructor(
     defaultValue: String,
     val isSip: Boolean,
+    val label: String? = "",
     private val onValueNoLongerEmpty: (() -> Unit)? = null,
     private val onRemove: ((model: NewOrEditNumberOrAddressModel) -> Unit)? = null
 ) {

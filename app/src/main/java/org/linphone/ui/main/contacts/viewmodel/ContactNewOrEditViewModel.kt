@@ -29,6 +29,7 @@ import kotlinx.coroutines.launch
 import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.contacts.ContactLoader.Companion.LINPHONE_ADDRESS_BOOK_FRIEND_LIST
+import org.linphone.core.Factory
 import org.linphone.core.Friend
 import org.linphone.core.FriendList.Status
 import org.linphone.core.SubscribePolicy
@@ -108,8 +109,8 @@ class ContactNewOrEditViewModel @UiThread constructor() : GenericViewModel() {
                 for (address in friend.addresses) {
                     addSipAddress(address.asStringUriOnly())
                 }
-                for (number in friend.phoneNumbers) {
-                    addPhoneNumber(number)
+                for (number in friend.phoneNumbersWithLabel) {
+                    addPhoneNumber(number.phoneNumber, number.label)
                 }
 
                 company.postValue(friend.organization)
@@ -219,8 +220,10 @@ class ContactNewOrEditViewModel @UiThread constructor() : GenericViewModel() {
             }
             for (number in phoneNumbers) {
                 val data = number.value.value.orEmpty().trim()
+                val label = number.label.orEmpty()
                 if (data.isNotEmpty()) {
-                    friend.addPhoneNumber(data)
+                    val phoneNumber = Factory.instance().createFriendPhoneNumber(data, label)
+                    friend.addPhoneNumberWithLabel(phoneNumber)
                 }
             }
 
@@ -266,7 +269,7 @@ class ContactNewOrEditViewModel @UiThread constructor() : GenericViewModel() {
 
     @WorkerThread
     fun addSipAddress(address: String = "", requestFieldToBeAddedInUi: Boolean = false) {
-        val newModel = NewOrEditNumberOrAddressModel(address, true, {
+        val newModel = NewOrEditNumberOrAddressModel(address, true, "", {
             if (address.isEmpty()) {
                 addSipAddress(requestFieldToBeAddedInUi = true)
             }
@@ -281,8 +284,12 @@ class ContactNewOrEditViewModel @UiThread constructor() : GenericViewModel() {
     }
 
     @WorkerThread
-    private fun addPhoneNumber(number: String = "", requestFieldToBeAddedInUi: Boolean = false) {
-        val newModel = NewOrEditNumberOrAddressModel(number, false, {
+    private fun addPhoneNumber(
+        number: String = "",
+        label: String? = "",
+        requestFieldToBeAddedInUi: Boolean = false
+    ) {
+        val newModel = NewOrEditNumberOrAddressModel(number, false, label, {
             if (number.isEmpty()) {
                 addPhoneNumber(requestFieldToBeAddedInUi = true)
             }
