@@ -31,6 +31,7 @@ import android.os.Parcelable
 import android.view.Gravity
 import android.view.ViewTreeObserver
 import androidx.annotation.UiThread
+import androidx.car.app.connection.CarConnection
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -242,6 +243,18 @@ class MainActivity : GenericActivity() {
                 val icon = pair.second
                 showRedToast(message, icon)
             }
+        }
+
+        CarConnection(this).type.observe(this) {
+            val asString = when (it) {
+                CarConnection.CONNECTION_TYPE_NOT_CONNECTED -> "NOT CONNECTED"
+                CarConnection.CONNECTION_TYPE_PROJECTION -> "PROJECTION"
+                CarConnection.CONNECTION_TYPE_NATIVE -> "NATIVE"
+                else -> "UNEXPECTED ($it)"
+            }
+            Log.i("$TAG Car connection is [$asString]")
+            val projection = it == CarConnection.CONNECTION_TYPE_PROJECTION
+            coreContext.isConnectedToAndroidAuto = projection
         }
     }
 

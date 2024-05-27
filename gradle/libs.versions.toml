@@ -21,6 +21,7 @@ gridlayout = "1.0.0"
 securityCryptoKtx = "1.1.0-alpha06"
 navigation = "2.7.7"
 emoji2 = "1.4.0"
+car = "1.7.0-alpha02"
 flexbox = "3.0.0"
 material = "1.11.0"
 protobuf = "3.22.3"
@@ -47,6 +48,7 @@ androidx-security-crypto-ktx = { group = "androidx.security", name = "security-c
 androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigation" }
 androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigation" }
 androidx-emoji2 = { group = "androidx.emoji2", name = "emoji2-emojipicker", version.ref = "emoji2" }
+androidx-car = { group = "androidx.car.app", name = "app", version.ref = "car" }
 
 google-firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBomVersion" }
 google-firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }

@@ -75,6 +75,8 @@ class CoreContext @UiThread constructor(val context: Context) : HandlerThread("C
     var bearerAuthInfoPendingPasswordUpdate: AuthInfo? = null
     var digestAuthInfoPendingPasswordUpdate: AuthInfo? = null
 
+    var isConnectedToAndroidAuto: Boolean = false
+
     val bearerAuthenticationRequestedEvent: MutableLiveData<Event<Pair<String, String?>>> by lazy {
         MutableLiveData<Event<Pair<String, String?>>>()
     }

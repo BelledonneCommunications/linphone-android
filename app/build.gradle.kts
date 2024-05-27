@@ -175,6 +175,7 @@ dependencies {
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.emoji2)
+    implementation(libs.androidx.car)
 
     // https://github.com/google/flexbox-layout/blob/main/LICENSE Apache v2.0
     implementation(libs.google.flexbox)
