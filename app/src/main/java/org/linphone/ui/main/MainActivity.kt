@@ -480,7 +480,10 @@ class MainActivity : GenericActivity() {
                                 )
                             } else {
                                 val navOptionsBuilder = NavOptions.Builder()
-                                navOptionsBuilder.setPopUpTo(R.id.historyListFragment, true)
+                                navOptionsBuilder.setPopUpTo(
+                                    findNavController().currentDestination?.id ?: R.id.historyListFragment,
+                                    true
+                                )
                                 navOptionsBuilder.setLaunchSingleTop(true)
                                 val navOptions = navOptionsBuilder.build()
                                 findNavController().navigate(

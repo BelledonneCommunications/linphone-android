@@ -7,6 +7,7 @@ firebaseBomVersion = "33.0.0"
 ktlint = "11.3.1"
 
 annotations = "1.8.0"
+activity = "1.9.0"
 appcompat = "1.7.0-rc01"
 constraintLayout = "2.1.4"
 coreKtx = "1.13.1"
@@ -31,6 +32,7 @@ linphone = "5.4.+"
 
 [libraries]
 androidx-annotations = { group = "androidx.annotation", name = "annotation", version.ref = "annotations" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-constraint-layout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintLayout" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
