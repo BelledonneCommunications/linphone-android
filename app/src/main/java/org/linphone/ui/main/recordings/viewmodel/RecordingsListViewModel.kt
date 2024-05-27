@@ -24,6 +24,7 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.media.AudioFocusRequestCompat
+import java.util.regex.Pattern
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.ticker
@@ -43,6 +44,9 @@ import org.linphone.utils.FileUtils
 class RecordingsListViewModel @UiThread constructor() : GenericViewModel() {
     companion object {
         private const val TAG = "[Recordings List ViewModel]"
+
+        private val LEGACY_RECORD_PATTERN: Pattern =
+            Pattern.compile(".*/(.*)_(\\d{2}-\\d{2}-\\d{4}-\\d{2}-\\d{2}-\\d{2})\\..*")
     }
 
     val recordings = MutableLiveData<ArrayList<RecordingModel>>()
@@ -217,13 +221,35 @@ class RecordingsListViewModel @UiThread constructor() : GenericViewModel() {
         recordings.value.orEmpty().forEach(RecordingModel::destroy)
         val list = arrayListOf<RecordingModel>()
 
-        // TODO FIXME: also load recordings from previous Linphone versions
         for (file in FileUtils.getFileStorageDir(isRecording = true).listFiles().orEmpty()) {
             val path = file.path
             val name = file.name
-            Log.i("$TAG Found file $path")
-            list.add(
-                RecordingModel(
+
+            Log.d("$TAG Found file $path")
+            val model = RecordingModel(
+                path,
+                name,
+                { model ->
+                    onRecordingStartedPlaying(model)
+                },
+                { model ->
+                    onRecordingPaused(model)
+                }
+            )
+
+            if (filter.isEmpty() || model.sipUri.contains(filter)) {
+                Log.i("$TAG Added file $path")
+                list.add(model)
+            }
+        }
+        // Legacy path where to find recordings
+        for (file in FileUtils.getFileStorageDir().listFiles().orEmpty()) {
+            val path = file.path
+            val name = file.name
+
+            if (LEGACY_RECORD_PATTERN.matcher(path).matches()) {
+                Log.d("$TAG Found legacy file $path")
+                val model = RecordingModel(
                     path,
                     name,
                     { model ->
@@ -231,13 +257,19 @@ class RecordingsListViewModel @UiThread constructor() : GenericViewModel() {
                     },
                     { model ->
                         onRecordingPaused(model)
-                    }
+                    },
+                    true
                 )
-            )
+
+                if (filter.isEmpty() || model.sipUri.contains(filter)) {
+                    Log.i("$TAG Added legacy file $path")
+                    list.add(model)
+                }
+            }
         }
 
         list.sortBy {
-            it.filePath // TODO FIXME
+            it.timestamp
         }
         recordings.postValue(list)
     }

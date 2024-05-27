@@ -35,13 +35,18 @@ class RecordingModel @WorkerThread constructor(
     val filePath: String,
     val fileName: String,
     private val onPlay: ((model: RecordingModel) -> Unit),
-    private val onPause: ((model: RecordingModel) -> Unit)
+    private val onPause: ((model: RecordingModel) -> Unit),
+    isLegacy: Boolean = false
 ) {
     companion object {
         private const val TAG = "[Recording Model]"
     }
 
+    val sipUri: String
+
     val displayName: String
+
+    val timestamp: Long
 
     val month: String
 
@@ -58,35 +63,55 @@ class RecordingModel @WorkerThread constructor(
     init {
         isPlaying.postValue(false)
 
-        val withoutHeader = fileName.substring(LinphoneUtils.RECORDING_FILE_NAME_HEADER.length)
-        val indexOfSeparator = withoutHeader.indexOf(
-            LinphoneUtils.RECORDING_FILE_NAME_URI_TIMESTAMP_SEPARATOR
-        )
-        val sipUri = withoutHeader.substring(0, indexOfSeparator)
-        val timestamp = withoutHeader.substring(
-            indexOfSeparator + LinphoneUtils.RECORDING_FILE_NAME_URI_TIMESTAMP_SEPARATOR.length,
-            withoutHeader.length - LinphoneUtils.RECORDING_FILE_EXTENSION.length
-        )
-        Log.i("$TAG Extract SIP URI [$sipUri] and timestamp [$timestamp] from file [$fileName]")
+        if (isLegacy) {
+            val username = fileName.split("_")[0]
+            val sipAddress = coreContext.core.interpretUrl(username, false)
+            sipUri = sipAddress?.asStringUriOnly() ?: username
+            displayName = if (sipAddress != null) {
+                val contact = coreContext.contactsManager.findContactByAddress(sipAddress)
+                contact?.name ?: LinphoneUtils.getDisplayName(sipAddress)
+            } else {
+                sipUri
+            }
 
-        val parsedTimestamp = timestamp.toLong()
-        month = TimestampUtils.month(parsedTimestamp, timestampInSecs = false)
+            val parsedDate = fileName.split("_")[1]
+            val date = SimpleDateFormat("dd-MM-yyyy-HH-mm-ss", Locale.getDefault()).parse(
+                parsedDate
+            )
+            timestamp = date?.time ?: 0L
+        } else {
+            val withoutHeader = fileName.substring(LinphoneUtils.RECORDING_FILE_NAME_HEADER.length)
+            val indexOfSeparator = withoutHeader.indexOf(
+                LinphoneUtils.RECORDING_FILE_NAME_URI_TIMESTAMP_SEPARATOR
+            )
+            sipUri = withoutHeader.substring(0, indexOfSeparator)
+            val sipAddress = Factory.instance().createAddress(sipUri)
+            displayName = if (sipAddress != null) {
+                val contact = coreContext.contactsManager.findContactByAddress(sipAddress)
+                contact?.name ?: LinphoneUtils.getDisplayName(sipAddress)
+            } else {
+                sipUri
+            }
+
+            val parsedTimestamp = withoutHeader.substring(
+                indexOfSeparator + LinphoneUtils.RECORDING_FILE_NAME_URI_TIMESTAMP_SEPARATOR.length,
+                withoutHeader.length - LinphoneUtils.RECORDING_FILE_EXTENSION.length
+            )
+            Log.i(
+                "$TAG Extract SIP URI [$sipUri] and timestamp [$parsedTimestamp] from file [$fileName]"
+            )
+            timestamp = parsedTimestamp.toLong()
+        }
+
+        month = TimestampUtils.month(timestamp, timestampInSecs = false)
         val date = TimestampUtils.toString(
-            parsedTimestamp,
+            timestamp,
             timestampInSecs = false,
             onlyDate = true,
             shortDate = false
         )
-        val time = TimestampUtils.timeToString(parsedTimestamp, timestampInSecs = false)
+        val time = TimestampUtils.timeToString(timestamp, timestampInSecs = false)
         dateTime = "$date - $time"
-
-        val sipAddress = Factory.instance().createAddress(sipUri)
-        displayName = if (sipAddress != null) {
-            val contact = coreContext.contactsManager.findContactByAddress(sipAddress)
-            contact?.name ?: LinphoneUtils.getDisplayName(sipAddress)
-        } else {
-            sipUri
-        }
 
         val audioPlayer = coreContext.core.createLocalPlayer(null, null, null)
         if (audioPlayer != null) {
