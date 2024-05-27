@@ -265,7 +265,7 @@ class MeetingViewModel @UiThread constructor() : GenericViewModel() {
         for (info in conferenceInfo.participantInfos) {
             val participant = info.address
             val isOrganizer = organizer?.weakEqual(participant) ?: false
-            Log.i(
+            Log.d(
                 "$TAG Conference [${conferenceInfo.subject}] ${if (isOrganizer) "organizer" else "participant"} [${participant.asStringUriOnly()}] is a [${info.role}]"
             )
             if (isOrganizer) {
@@ -279,6 +279,9 @@ class MeetingViewModel @UiThread constructor() : GenericViewModel() {
                 speakersList.add(ParticipantModel(participant, isOrganizer))
             }
         }
+        Log.i(
+            "$TAG Found [${speakersList.size}] participants for conference [${conferenceInfo.uri?.asStringUriOnly()}]"
+        )
 
         if (allSpeaker) {
             Log.i("$TAG All participants have Speaker role, considering it is a meeting")

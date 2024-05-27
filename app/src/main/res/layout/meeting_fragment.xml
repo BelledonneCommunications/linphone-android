@@ -91,7 +91,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/title"
                 app:layout_constraintTop_toTopOf="@id/title" />
 
-            <ScrollView
+            <androidx.core.widget.NestedScrollView
                 android:id="@+id/scrollView"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -318,13 +318,15 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
                         android:nestedScrollingEnabled="true"
+                        app:layout_constrainedHeight="true"
                         app:layout_constraintTop_toBottomOf="@id/separator_4"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@id/participants_icon"
                         app:layout_constraintEnd_toEndOf="parent"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-            </ScrollView>
+            </androidx.core.widget.NestedScrollView>
 
             <View
                 android:id="@+id/separator_5"
