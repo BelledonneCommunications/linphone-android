@@ -411,8 +411,11 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
     private fun updateProximitySensor() {
         if (::currentCall.isInitialized) {
             val callState = currentCall.state
-            if (LinphoneUtils.isCallIncoming(callState) || LinphoneUtils.isCallOutgoing(callState)) {
+            if (LinphoneUtils.isCallIncoming(callState)) {
                 proximitySensorEnabled.postValue(false)
+            } else if (LinphoneUtils.isCallOutgoing(callState)) {
+                val videoEnabled = currentCall.params.isVideoEnabled
+                proximitySensorEnabled.postValue(!videoEnabled)
             } else {
                 if (isSendingVideo.value == true || isReceivingVideo.value == true) {
                     proximitySensorEnabled.postValue(false)
