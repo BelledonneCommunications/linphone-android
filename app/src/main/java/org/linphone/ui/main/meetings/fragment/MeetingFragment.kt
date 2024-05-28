@@ -38,6 +38,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import org.linphone.LinphoneApplication.Companion.coreContext
 import org.linphone.R
 import org.linphone.core.tools.Log
 import org.linphone.databinding.MeetingFragmentBinding
@@ -163,7 +164,6 @@ class MeetingFragment : SlidingPaneChildFragment() {
                 if (found) {
                     (view.parent as? ViewGroup)?.doOnPreDraw {
                         startPostponedEnterTransition()
-                        sharedViewModel.openSlidingPaneEvent.value = Event(true)
                     }
                 } else {
                     Log.e("$TAG Failed to find meeting with URI [$uri], going back")
@@ -177,6 +177,10 @@ class MeetingFragment : SlidingPaneChildFragment() {
         viewModel.participants.observe(viewLifecycleOwner) { items ->
             adapter.submitList(items)
             Log.i("$TAG Participants list updated with [${items.size}] items")
+
+            coreContext.postOnMainThread {
+                sharedViewModel.openSlidingPaneEvent.postValue(Event(true))
+            }
         }
 
         viewModel.conferenceInfoDeletedEvent.observe(viewLifecycleOwner) {
