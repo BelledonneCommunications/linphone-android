@@ -112,6 +112,8 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
 
     val isZrtpPq = MutableLiveData<Boolean>()
 
+    val isZrtp = MutableLiveData<Boolean>()
+
     val isMediaEncrypted = MutableLiveData<Boolean>()
 
     val hideVideo = MutableLiveData<Boolean>()
@@ -941,7 +943,7 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
 
     @WorkerThread
     private fun updateEncryption(): Boolean {
-        when (currentCall.currentParams.mediaEncryption) {
+        when (val mediaEncryption = currentCall.currentParams.mediaEncryption) {
             MediaEncryption.ZRTP -> {
                 val authToken = currentCall.authenticationToken
                 val isDeviceTrusted = currentCall.authenticationTokenVerified && authToken != null
@@ -965,7 +967,7 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
                 }
 
                 isMediaEncrypted.postValue(true)
-
+                isZrtp.postValue(true)
                 // When Post Quantum is available, ZRTP is Post Quantum if key exchange was made with Post Quantum algorithm
                 val stats = currentCall.getStats(StreamType.Audio)
                 isZrtpPq.postValue(
@@ -980,11 +982,15 @@ class CurrentCallViewModel @UiThread constructor() : GenericViewModel() {
                 return isDeviceTrusted
             }
             MediaEncryption.SRTP, MediaEncryption.DTLS -> {
+                Log.i("$TAG Current call media encryption is [$mediaEncryption]")
                 isMediaEncrypted.postValue(true)
+                isZrtp.postValue(false)
                 isZrtpPq.postValue(false)
             }
             else -> {
+                Log.w("$TAG Current call doesn't have any media encryption!")
                 isMediaEncrypted.postValue(false)
+                isZrtp.postValue(false)
                 isZrtpPq.postValue(false)
             }
         }

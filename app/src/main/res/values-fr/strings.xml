@@ -589,8 +589,9 @@
     <string name="call_state_resuming">Reprise…</string>
     <string name="call_state_ended">Terminé</string>
     <string name="call_zrtp_end_to_end_encrypted">Appel chiffré de bout en bout</string>
-    <string name="call_post_quantum_zrtp_end_to_end_encrypted">Appel chiffré de bout en bout</string>
+    <string name="call_post_quantum_zrtp_end_to_end_encrypted">Appel chiffré de bout en bout en post-quantique</string>
     <string name="call_do_zrtp_sas_validation_again">Faire la validation à nouveau</string>
+    <string name="call_srtp_point_to_point_encrypted">Appel chiffré de point à point</string>
     <string name="calls_list_title">Liste des appels</string>
     <string name="call_transfer_title">Transférer l\'appel vers</string>
     <string name="call_remote_is_recording">%s est en train d\'enregistrer</string>
