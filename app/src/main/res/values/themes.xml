@@ -8,7 +8,7 @@
     <!-- Base application theme. -->
     <style name="Theme.Linphone" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- https://developer.android.com/guide/topics/display-cutout#best_practices_for_display_cutout_support -->
-        <item name="android:windowLayoutInDisplayCutoutMode">always</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
         <!-- Customize your theme here. -->
         <item name="android:windowActivityTransitions">true</item>
         <item name="android:windowBackground">@color/white</item>
@@ -133,7 +133,7 @@
 
     <style name="Theme.LinphoneDialog" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:statusBarColor">@color/gray_600</item>
-        <item name="android:windowLayoutInDisplayCutoutMode">always</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
         <item name="android:windowActivityTransitions">true</item>
         <item name="android:windowAnimationStyle">@null</item>
         <item name="android:windowBackground">@color/transparent_color</item>
