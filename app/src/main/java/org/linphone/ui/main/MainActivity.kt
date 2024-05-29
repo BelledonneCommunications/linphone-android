@@ -32,6 +32,7 @@ import android.view.Gravity
 import android.view.ViewTreeObserver
 import androidx.annotation.UiThread
 import androidx.car.app.connection.CarConnection
+import androidx.core.os.bundleOf
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -361,12 +362,12 @@ class MainActivity : GenericActivity() {
             Log.i(
                 "$TAG Trying to navigate to set default destination [$defaultFragmentId]"
             )
-            val args = intent.extras
             try {
                 val navOptionsBuilder = NavOptions.Builder()
                 navOptionsBuilder.setPopUpTo(R.id.historyListFragment, true)
                 navOptionsBuilder.setLaunchSingleTop(true)
                 val navOptions = navOptionsBuilder.build()
+                val args = bundleOf()
                 when (defaultFragmentId) {
                     CONTACTS_FRAGMENT_ID -> {
                         findNavController().addOnDestinationChangedListener(destinationListener)
@@ -406,9 +407,12 @@ class MainActivity : GenericActivity() {
     }
 
     private fun handleIntent(intent: Intent) {
+        val extras = intent.extras
+        val hasExtra = extras != null && !extras.isEmpty
         Log.i(
-            "$TAG Handling intent action [${intent.action}], type [${intent.type}] and data [${intent.data}]"
+            "$TAG Handling intent action [${intent.action}], type [${intent.type}], data [${intent.data}] and has ${if (hasExtra) "extras" else "no extra"}"
         )
+        if (intent.action == null) return
 
         when (intent.action) {
             Intent.ACTION_SEND -> {
