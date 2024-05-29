@@ -118,7 +118,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="@{viewModel.fullScreenMode || viewModel.pipMode ? View.INVISIBLE : View.VISIBLE}"
-                app:constraint_referenced_ids="back, name, separator, chronometer" />
+                app:constraint_referenced_ids="back, name, separator" />
 
             <ImageView
                 android:id="@+id/back"
@@ -167,7 +167,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:visibility="@{viewModel.isPaused || viewModel.isPausedByRemote ? View.GONE : View.VISIBLE}"
+                android:visibility="@{viewModel.fullScreenMode || viewModel.pipMode || viewModel.isPaused || viewModel.isPausedByRemote ? View.GONE : View.VISIBLE}"
                 app:layout_constraintStart_toEndOf="@id/separator"
                 app:layout_constraintEnd_toStartOf="@id/paused_call_header"
                 app:layout_constraintTop_toTopOf="@id/name"/>
